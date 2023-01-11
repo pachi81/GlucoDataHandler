@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'de.michelinside.glucodatahandler'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "de.michelinside.glucodatahandler"
-        minSdk 23
-        targetSdk 32
+        minSdk 30
+        targetSdk 33
         versionCode 1
         versionName "0.1"
 
@@ -57,4 +57,5 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+    wearApp project(':glucodatawear')
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Glucose Data Handler</string>
+    <string name="app_name">GlucoDataHandler</string>
     <string name="activity_main_info_label">INFO: Damit das Plugin für Tasker funktioniert, muss in Juggluco unter Settings \"Glucodata Broadcast\" aktiviert werden. Danach kann in Tasker dieses Plugin als Ereignis Profil hinzugefügt werden.</string>
     <string name="info_label_per_minute">pro Minute</string>
     <string name="info_label_alarm">Alarm</string>

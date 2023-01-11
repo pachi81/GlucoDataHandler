@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Glucose Data Handler</string>
+    <string name="app_name">GlucoDataHandler</string>
     <string name="glucose_label">Glucose</string>
     <string name="glucose_html_label">Glucose value in unit from Juggluco settings</string>
     <string name="sensor_id_label">Sensor ID</string>
