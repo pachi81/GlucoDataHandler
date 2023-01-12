@@ -1,6 +1,6 @@
 # Glucose Data Handler
 
-This Android App provides an interface between Juggluco and Tasker.
+This Android and Wear OS App provides an interface between Juggluco and Tasker.
 It converts the Glucodata broadcast from Juggluco to an event for Tasker.
 This event can be used for Tasker profiles.
 
