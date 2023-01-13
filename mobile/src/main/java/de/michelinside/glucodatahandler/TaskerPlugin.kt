@@ -4,8 +4,10 @@ package de.michelinside.glucodatahandler
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import com.joaomgcd.taskerpluginlibrary.condition.TaskerPluginRunnerConditionEvent
 import com.joaomgcd.taskerpluginlibrary.config.*
+import com.joaomgcd.taskerpluginlibrary.extensions.requestQuery
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInputField
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInputRoot
@@ -57,7 +59,6 @@ class GlucodataValues constructor() {
 }
 
 class GlucodataValuesChangedRunner : TaskerPluginRunnerConditionEvent<GlucodataValues, GlucodataValues, GlucodataValues>() {
-
     override fun getSatisfiedCondition(context: Context, input: TaskerInput<GlucodataValues>, update: GlucodataValues?): TaskerPluginResultCondition<GlucodataValues> {
         return TaskerPluginResultConditionSatisfied(context, update)
     }
@@ -73,6 +74,7 @@ class GlucodataEvent : Activity(), TaskerPluginConfig<GlucodataValues> {
     override val context get() = applicationContext
     override fun assignFromInput(input: TaskerInput<GlucodataValues>) {}
     override val inputForTasker = TaskerInput(GlucodataValues())
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         GlucodataEventHelper(this).finishForTasker()

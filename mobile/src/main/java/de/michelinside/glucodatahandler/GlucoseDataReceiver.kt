@@ -10,7 +10,15 @@ import java.text.DateFormat
 import java.util.*
 import kotlin.math.abs
 
+interface ReceiveDataInterface {
+    fun OnReceiveData(context: Context)
+}
+
 object ReceiveData {
+    private val LOG_ID = "GlucoDataHandler.ReceiveData"
+    init {
+        Log.d(LOG_ID, "init called")
+    }
     var sensorID: String? = null
     var rawValue: Int = 0
     var glucose: Float = 0.0F
@@ -20,6 +28,7 @@ object ReceiveData {
     var timeDiff: Long = 0
     var delta: Float = 0.0F
     var rateLabel: String? = null
+    var dateformat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT)
 
     fun getAsString(context: Context): String {
         if (sensorID == null)
@@ -28,7 +37,7 @@ object ReceiveData {
                 context.getString(R.string.info_label_value) + ": " + glucose + " " + getUnit() + " " + getRateSymbol() + "\r\n" +
                 context.getString(R.string.info_label_delta) + ": " + delta + " " + getUnit() + " " + context.getString(R.string.info_label_per_minute) + "\r\n" +
                 context.getString(R.string.info_label_rate) + ": " + rate + " (" + rateLabel + ")\r\n" +
-                context.getString(R.string.info_label_timestamp) + ": " + GlucoseDataReceiver.dateformat.format(Date(time)) + "\r\n" +
+                context.getString(R.string.info_label_timestamp) + ": " + dateformat.format(Date(time)) + "\r\n" +
                 context.getString(R.string.info_label_timediff) + ": " + timeDiff + "ms\r\n" +
                 context.getString(R.string.info_label_alarm) + ": " + alarm
     }
@@ -58,9 +67,29 @@ object ReceiveData {
         if (rate > -3.5f) return "SingleDown"
         return if (java.lang.Float.isNaN(rate)) "" else "DoubleDown"
     }
+
+    private var notifiers = mutableSetOf<ReceiveDataInterface>()
+    fun addNotifier(notifier: ReceiveDataInterface)
+    {
+        Log.d(LOG_ID, "add notifier " + notifier.toString() )
+        notifiers.add(notifier)
+        Log.d(LOG_ID, "notifier size: " + notifiers.size.toString() )
+    }
+    fun remNotifier(notifier: ReceiveDataInterface)
+    {
+        Log.d(LOG_ID, "rem notifier " + notifier.toString() )
+        notifiers.remove(notifier)
+        Log.d(LOG_ID, "notifier size: " + notifiers.size.toString() )
+    }
+
+    fun notify(context: Context)
+    {
+        Log.d(LOG_ID, "Sending new data to " + notifiers.size.toString() + " notifier(s).")
+        notifiers.forEach{ it.OnReceiveData(context) }
+    }
 }
 
-class GlucoseDataReceiver : BroadcastReceiver() {
+open class GlucoseDataReceiverBase : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         try {
             val action = intent.action
@@ -69,7 +98,7 @@ class GlucoseDataReceiver : BroadcastReceiver() {
                 return
             }
             val extras = intent.extras
-            Log.i(LOG_ID, "Glucodata received from sensor: " +  extras!!.getString(SERIAL) + " - value: " + extras.getFloat(GLUCOSECUSTOM).toString() + " - timestamp: " + dateformat.format(Date(
+            Log.i(LOG_ID, "Glucodata received from sensor: " +  extras!!.getString(SERIAL) + " - value: " + extras.getFloat(GLUCOSECUSTOM).toString() + " - timestamp: " + ReceiveData.dateformat.format(Date(
                 extras.getLong(TIME)
             )))
 
@@ -100,16 +129,25 @@ class GlucoseDataReceiver : BroadcastReceiver() {
                 ReceiveData.rawValue = extras.getInt(MGDL)
                 ReceiveData.time = extras.getLong(TIME) //time in mmsec
 
-                GlucodataEvent::class.java.requestQuery(context, GlucodataValues() )
-                notifier?.newIntent()
+                notify(context)
+
             }
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "Exception: " + exc.message.toString() )
+            Log.e(LOG_ID, "Receive exception: " + exc.message.toString() )
+        }
+    }
+
+    open fun notify(context: Context)
+    {
+        try {
+            ReceiveData.notify(context)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Notify exception: " + exc.message.toString() )
         }
     }
 
     companion object {
-        private const val LOG_ID = "GlucoDataHandler.Receiver.Intent"
+        private const val LOG_ID = "GlucoDataHandler.Receiver.Base"
         private const val ACTION = "glucodata.Minute"
         private const val SERIAL = "glucodata.Minute.SerialNumber"
         private const val MGDL = "glucodata.Minute.mgdl"
@@ -117,10 +155,7 @@ class GlucoseDataReceiver : BroadcastReceiver() {
         private const val RATE = "glucodata.Minute.Rate"
         private const val ALARM = "glucodata.Minute.Alarm"
         private const val TIME = "glucodata.Minute.Time"
-        var dateformat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT)
-        var notifier: NewIntentReceiver? = null
     }
-
 
     fun getRateLabel(context: Context): String {
         if (ReceiveData.rate >= 3.5f) return context.getString(R.string.rate_double_up)
@@ -130,5 +165,15 @@ class GlucoseDataReceiver : BroadcastReceiver() {
         if (ReceiveData.rate > -2.0f) return context.getString(R.string.rate_forty_five_down)
         if (ReceiveData.rate > -3.5f) return context.getString(R.string.rate_single_down)
         return if (java.lang.Float.isNaN(ReceiveData.rate)) "" else context.getString(R.string.rate_double_down)
+    }
+}
+
+class GlucoseDataReceiver : GlucoseDataReceiverBase() {
+    private val LOG_ID = "GlucoDataHandler.Receiver.Mobile"
+    override fun notify(context: Context)
+    {
+        Log.d(LOG_ID, "sending new intent to tasker")
+        GlucodataEvent::class.java.requestQuery(context, GlucodataValues() )
+        super.notify(context)
     }
 }

@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -10,11 +11,8 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.TextView
 
-public interface NewIntentReceiver {
-    public fun newIntent()
-}
 
-class MainActivity : AppCompatActivity(), NewIntentReceiver {
+class MainActivity : AppCompatActivity(), ReceiveDataInterface {
     private lateinit var txtLastValue: TextView
     private lateinit var txtVersion: TextView
     private val LOG_ID = "GlucoDataHandler.Main"
@@ -39,7 +37,7 @@ class MainActivity : AppCompatActivity(), NewIntentReceiver {
 
     override fun onPause() {
         super.onPause()
-        GlucoseDataReceiver.notifier = null
+        ReceiveData.remNotifier(this)
         Log.d(LOG_ID, "onPause called")
     }
 
@@ -47,7 +45,7 @@ class MainActivity : AppCompatActivity(), NewIntentReceiver {
         super.onResume()
         Log.d(LOG_ID, "onResume called")
         update()
-        GlucoseDataReceiver.notifier = this
+        ReceiveData.addNotifier(this)
     }
 
     private fun update() {
@@ -55,7 +53,7 @@ class MainActivity : AppCompatActivity(), NewIntentReceiver {
         txtLastValue.text = ReceiveData.getAsString(this)
     }
 
-    override fun newIntent() {
+    override fun OnReceiveData(context: Context) {
         Log.d(LOG_ID, "new intent received")
         update()
     }
