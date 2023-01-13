@@ -2,21 +2,6 @@
 <resources>
     <string name="app_name">GlucoDataHandler</string>
     <string name="activity_main_info_label">INFO: Damit das Plugin für Tasker funktioniert, muss in Juggluco unter Settings \"Glucodata Broadcast\" aktiviert werden. Danach kann in Tasker dieses Plugin als Ereignis Profil hinzugefügt werden.</string>
-    <string name="info_label_per_minute">pro Minute</string>
-    <string name="info_label_alarm">Alarm</string>
-    <string name="info_label_timediff">Zeitdiff</string>
-    <string name="info_label_timestamp">Zeitpunkt</string>
-    <string name="info_label_rate">Änderungsrate</string>
-    <string name="info_label_delta">Delta</string>
-    <string name="info_label_value">Wert</string>
-    <string name="info_label_sensor_id">Sensor</string>
-    <string name="rate_double_down">schnell fallend</string>
-    <string name="rate_single_down">fallend</string>
-    <string name="rate_forty_five_down">leicht fallend</string>
-    <string name="rate_flat">gleichbleibend</string>
-    <string name="rate_forty_five_up">leicht steigend</string>
-    <string name="rate_single_up">steigend</string>
-    <string name="rate_double_up">schnell steigend</string>
     <string name="unit_html_label">Einheit des Glucose Wertes (mg/dl oder mmol/l)</string>
     <string name="unit_label">Einheit</string>
     <string name="delta_label">Delta</string>
@@ -41,5 +26,4 @@
     <string name="sensor_id_html_label">ID des aktuell verwendeten Sensors</string>
     <string name="glucose_label">Blutzuckerwert</string>
     <string name="glucose_html_label">Blutzuckerwert in der Einheit, welche in Juggluco konfiguriert ist</string>
-    <string name="no_data">Noch keine Daten empfangen!</string>
 </resources>

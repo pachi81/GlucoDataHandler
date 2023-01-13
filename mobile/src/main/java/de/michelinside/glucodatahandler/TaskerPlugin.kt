@@ -1,13 +1,11 @@
 package de.michelinside.glucodatahandler
 
-
+import de.michelinside.glucodatahandler.common.ReceiveData
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import com.joaomgcd.taskerpluginlibrary.condition.TaskerPluginRunnerConditionEvent
 import com.joaomgcd.taskerpluginlibrary.config.*
-import com.joaomgcd.taskerpluginlibrary.extensions.requestQuery
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInputField
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInputRoot

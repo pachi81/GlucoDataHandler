@@ -33,7 +33,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".GlucoseDataReceiver" android:enabled="true" android:exported="true">
+        <receiver android:name=".common.GlucoseDataReceiverBase" android:enabled="true" android:exported="true">
             <intent-filter>
                 <action android:name="glucodata.Minute"/>
             </intent-filter>

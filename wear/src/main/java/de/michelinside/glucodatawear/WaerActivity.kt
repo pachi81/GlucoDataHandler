@@ -1,16 +1,16 @@
 package de.michelinside.glucodatahandler
 
+import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.ReceiveDataInterface
 import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import de.michelinside.glucodatahandler.databinding.ActivityWaerBinding
 
-public interface NewIntentReceiver {
-    public fun newIntent()
-}
 
-class WaerActivity : Activity(), NewIntentReceiver {
+class WaerActivity : Activity(), ReceiveDataInterface {
 
     private val LOG_ID = "GlucoDataWear.Main"
     private lateinit var binding: ActivityWaerBinding
@@ -30,7 +30,7 @@ class WaerActivity : Activity(), NewIntentReceiver {
 
     override fun onPause() {
         super.onPause()
-        GlucoseDataReceiver.notifier = null
+        ReceiveData.remNotifier(this)
         Log.d(LOG_ID, "onPause called")
     }
 
@@ -38,7 +38,7 @@ class WaerActivity : Activity(), NewIntentReceiver {
         super.onResume()
         Log.d(LOG_ID, "onResume called")
         update()
-        GlucoseDataReceiver.notifier = this
+        ReceiveData.addNotifier(this)
     }
 
     private fun update() {
@@ -46,7 +46,7 @@ class WaerActivity : Activity(), NewIntentReceiver {
         txtLastValue.text = ReceiveData.getAsString(this)
     }
 
-    override fun newIntent() {
+    override fun OnReceiveData(context: Context) {
         Log.d(LOG_ID, "new intent received")
         update()
     }

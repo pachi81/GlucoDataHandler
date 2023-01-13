@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 rootProject.name = "GlucoDataHandler"
 include ':mobile'
 include ':wear'
+include ':common'

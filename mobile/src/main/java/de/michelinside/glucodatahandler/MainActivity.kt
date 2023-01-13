@@ -1,5 +1,7 @@
 package de.michelinside.glucodatahandler
 
+import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.ReceiveDataInterface
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
