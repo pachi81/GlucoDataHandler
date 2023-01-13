@@ -15,28 +15,41 @@
         app:layout_boxedEdges="all">
 
         <TextView
-            android:id="@+id/txtLastValue"
+            android:id="@+id/txtBgValue"
             android:layout_width="0dp"
-            android:layout_height="55dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/no_data"
+            android:layout_height="wrap_content"
+            android:text="---"
             android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="48sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.304" />
 
         <TextView
             android:id="@+id/txtVersion"
             android:layout_width="0dp"
-            android:layout_height="19dp"
-            android:layout_marginTop="120dp"
+            android:layout_height="wrap_content"
             android:text="1.0"
             android:textAlignment="center"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/txtValueInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_data"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/txtLastValue" />
+            app:layout_constraintTop_toBottomOf="@+id/txtBgValue" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.wear.widget.BoxInsetLayout>
