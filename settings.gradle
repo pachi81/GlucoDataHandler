@@ -13,4 +13,6 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "GlucoDataHandler"
-include ':app'
+include ':mobile'
+include ':wear'
+include ':common'

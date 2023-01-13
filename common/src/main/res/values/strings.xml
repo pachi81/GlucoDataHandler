@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="info_label_sensor_id">Sensor</string>
+    <string name="info_label_value">Value</string>
+    <string name="info_label_delta">Delta</string>
+    <string name="info_label_rate">Rate</string>
+    <string name="info_label_timestamp">Timestamp</string>
+    <string name="info_label_timediff">Timediff</string>
+    <string name="info_label_alarm">Alarm</string>
+    <string name="info_label_per_minute">per minute</string>
+    <string name="no_data">No broadcast received yet!</string>
+
+    <string name="rate_double_up">rising very quickly</string>
+    <string name="rate_single_up">rising quickly</string>
+    <string name="rate_forty_five_up">rising</string>
+    <string name="rate_flat">steady</string>
+    <string name="rate_forty_five_down">falling</string>
+    <string name="rate_single_down">falling quickly</string>
+    <string name="rate_double_down">falling very quickly</string>
+</resources>
