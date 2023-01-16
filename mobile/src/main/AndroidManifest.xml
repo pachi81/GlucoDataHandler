@@ -36,26 +36,28 @@
             <intent-filter>
                 <action android:name="net.dinglisch.android.tasker.ACTION_EDIT_EVENT" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/"
-                    android:scheme="wear" />
-            </intent-filter>
         </activity>
-        <receiver android:name=".GlucoseDataReceiver" android:enabled="true" android:exported="true">
+        <receiver android:name=".GlucoseDataReceiverMobile" android:enabled="true" android:exported="true">
             <intent-filter>
                 <action android:name="glucodata.Minute"/>
             </intent-filter>
         </receiver>
-        <service android:name=".common.GlucoDataService" android:enabled="true" android:exported="true" >
+        <receiver
+            android:name=".StartServiceAtBootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".GlucoDataServiceMobile" android:enabled="true" android:exported="true" >
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED" />
                 <data
                     android:host="*"
                     android:pathPrefix="/glucodata_intent"
-                    android:scheme="glucodata_intent_mobile" />
+                    android:scheme="glucodata_intent" />
             </intent-filter>
         </service>
     </application>

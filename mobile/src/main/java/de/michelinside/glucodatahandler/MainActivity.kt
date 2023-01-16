@@ -14,9 +14,10 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.TextView
 import com.google.android.gms.wearable.*
+import de.michelinside.glucodatahandler.common.ReceiveDataSource
 
 
-class MainActivity : AppCompatActivity(), ReceiveDataInterface, MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener {
+class MainActivity : AppCompatActivity(), ReceiveDataInterface {
     private lateinit var txtLastValue: TextView
     private lateinit var txtVersion: TextView
     private val LOG_ID = "GlucoDataHandler.Main"
@@ -35,7 +36,7 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface, MessageClient.On
             }
         }
 
-        var serviceIntent = Intent(this, GlucoDataService::class.java)
+        var serviceIntent = Intent(this, GlucoDataServiceMobile::class.java)
         this.startService(serviceIntent)
 
         txtVersion = findViewById(R.id.txtVersion)
@@ -45,8 +46,6 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface, MessageClient.On
     override fun onPause() {
         super.onPause()
         ReceiveData.remNotifier(this)
-        Wearable.getMessageClient(this).removeListener(this)
-        Wearable.getCapabilityClient(this).removeListener(this)
         Log.d(LOG_ID, "onPause called")
     }
 
@@ -55,9 +54,6 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface, MessageClient.On
         Log.d(LOG_ID, "onResume called")
         update()
         ReceiveData.addNotifier(this)
-        Wearable.getMessageClient(this).addListener(this)
-        Wearable.getCapabilityClient(this)
-            .addListener(this, Uri.parse("wear://"), CapabilityClient.FILTER_REACHABLE)
     }
 
     private fun update() {
@@ -65,18 +61,8 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface, MessageClient.On
         txtLastValue.text = ReceiveData.getAsString(this)
     }
 
-    override fun OnReceiveData(context: Context) {
+    override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
         Log.d(LOG_ID, "new intent received")
         update()
-    }
-
-    override fun onMessageReceived(p0: MessageEvent) {
-        txtVersion = findViewById(R.id.txtVersion)
-        txtVersion.text = "event!"
-        Log.d(LOG_ID, "onMessageReceived called" + p0?.toString())
-    }
-
-    override fun onCapabilityChanged(p0: CapabilityInfo) {
-        Log.d(LOG_ID, "onCapabilityChanged called" + p0?.toString())
     }
 }

@@ -9,7 +9,12 @@ import java.util.*
 import kotlin.math.abs
 
 interface ReceiveDataInterface {
-    fun OnReceiveData(context: Context)
+    fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?)
+}
+
+enum class ReceiveDataSource {
+    BROADCAST,
+    MESSAGECLIENT
 }
 
 object ReceiveData {
@@ -34,6 +39,7 @@ object ReceiveData {
     var delta: Float = 0.0F
     var rateLabel: String? = null
     var dateformat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT)
+    var source: ReceiveDataSource = ReceiveDataSource.BROADCAST
 
     fun getAsString(context: Context): String {
         if (sensorID == null)
@@ -44,7 +50,8 @@ object ReceiveData {
                 context.getString(R.string.info_label_rate) + ": " + rate + " (" + rateLabel + ")\r\n" +
                 context.getString(R.string.info_label_timestamp) + ": " + dateformat.format(Date(time)) + "\r\n" +
                 context.getString(R.string.info_label_timediff) + ": " + timeDiff + "ms\r\n" +
-                context.getString(R.string.info_label_alarm) + ": " + alarm
+                context.getString(R.string.info_label_alarm) + ": " + alarm + "\r\n" +
+                context.getString(R.string.info_label_source) + ": " + source
     }
 
     fun getUnit(): String {
@@ -97,13 +104,19 @@ object ReceiveData {
         Log.d(LOG_ID, "notifier size: " + notifiers.size.toString() )
     }
 
-    fun notify(context: Context)
+    fun notify(context: Context, dataSource: ReceiveDataSource, extras: Bundle?)
     {
         Log.d(LOG_ID, "Sending new data to " + notifiers.size.toString() + " notifier(s).")
-        notifiers.forEach{ it.OnReceiveData(context) }
+        notifiers.forEach{
+            try {
+                it.OnReceiveData(context, dataSource, extras)
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "OnReceiveData exception: " + exc.message.toString() )
+            }
+        }
     }
 
-    fun handleIntent(context: Context, extras: Bundle?) : Boolean
+    fun handleIntent(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) : Boolean
     {
         if (extras == null || extras.isEmpty) {
             return false
@@ -121,6 +134,7 @@ object ReceiveData {
             val curTimeDiff = extras.getLong(TIME) - time
             if(curTimeDiff > 50000) // check for new value received
             {
+                source = dataSource
                 sensorID = extras.getString(SERIAL) //Name of sensor
                 glucose = extras.getFloat(GLUCOSECUSTOM).toBigDecimal().setScale(1, RoundingMode.HALF_UP).toFloat() //Glucose value in unit in setting
                 rate = extras.getFloat(RATE) //Rate of change of glucose. See libre and dexcom label functions
@@ -145,7 +159,7 @@ object ReceiveData {
                 rawValue = extras.getInt(MGDL)
                 time = extras.getLong(TIME) //time in mmsec
 
-                notify(context)
+                notify(context, source, extras)
                 return true
             }
         } catch (exc: Exception) {

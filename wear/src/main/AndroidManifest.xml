@@ -33,18 +33,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".common.GlucoseDataReceiverBase" android:enabled="true" android:exported="true">
+        <receiver android:name=".common.GlucoseDataReceiver" android:enabled="true" android:exported="true">
             <intent-filter>
                 <action android:name="glucodata.Minute"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".StartServiceAtBootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
         <service android:name=".common.GlucoDataService" android:enabled="true" android:exported="true">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED" />
                 <data
                     android:host="*"
                     android:pathPrefix="/glucodata_intent"
-                    android:scheme="glucodata_intent_wear" />
+                    android:scheme="glucodata_intent" />
             </intent-filter>
         </service>
     </application>
