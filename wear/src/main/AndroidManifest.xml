@@ -38,6 +38,15 @@
                 <action android:name="glucodata.Minute"/>
             </intent-filter>
         </receiver>
+        <service android:name=".common.GlucoDataService" android:enabled="true" android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/glucodata_intent"
+                    android:scheme="glucodata_intent_wear" />
+            </intent-filter>
+        </service>
     </application>
     <queries>
         <package android:name="tk.glucodata"/>
