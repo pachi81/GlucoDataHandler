@@ -2,6 +2,7 @@ package de.michelinside.glucodatahandler
 
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.ReceiveDataInterface
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -12,9 +13,10 @@ import android.os.PowerManager
 import android.provider.Settings
 import android.util.Log
 import android.widget.TextView
+import com.google.android.gms.wearable.*
 
 
-class MainActivity : AppCompatActivity(), ReceiveDataInterface {
+class MainActivity : AppCompatActivity(), ReceiveDataInterface, MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener {
     private lateinit var txtLastValue: TextView
     private lateinit var txtVersion: TextView
     private val LOG_ID = "GlucoDataHandler.Main"
@@ -33,6 +35,9 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
             }
         }
 
+        var serviceIntent = Intent(this, GlucoDataService::class.java)
+        this.startService(serviceIntent)
+
         txtVersion = findViewById(R.id.txtVersion)
         txtVersion.text = BuildConfig.VERSION_NAME
     }
@@ -40,6 +45,8 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
     override fun onPause() {
         super.onPause()
         ReceiveData.remNotifier(this)
+        Wearable.getMessageClient(this).removeListener(this)
+        Wearable.getCapabilityClient(this).removeListener(this)
         Log.d(LOG_ID, "onPause called")
     }
 
@@ -48,6 +55,9 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
         Log.d(LOG_ID, "onResume called")
         update()
         ReceiveData.addNotifier(this)
+        Wearable.getMessageClient(this).addListener(this)
+        Wearable.getCapabilityClient(this)
+            .addListener(this, Uri.parse("wear://"), CapabilityClient.FILTER_REACHABLE)
     }
 
     private fun update() {
@@ -58,5 +68,15 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
     override fun OnReceiveData(context: Context) {
         Log.d(LOG_ID, "new intent received")
         update()
+    }
+
+    override fun onMessageReceived(p0: MessageEvent) {
+        txtVersion = findViewById(R.id.txtVersion)
+        txtVersion.text = "event!"
+        Log.d(LOG_ID, "onMessageReceived called" + p0?.toString())
+    }
+
+    override fun onCapabilityChanged(p0: CapabilityInfo) {
+        Log.d(LOG_ID, "onCapabilityChanged called" + p0?.toString())
     }
 }

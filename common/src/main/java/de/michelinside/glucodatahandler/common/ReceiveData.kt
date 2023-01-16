@@ -1,16 +1,26 @@
 package de.michelinside.glucodatahandler.common
 
 import android.content.Context
+import android.os.Bundle
 import android.util.Log
+import java.math.RoundingMode
 import java.text.DateFormat
 import java.util.*
+import kotlin.math.abs
 
 interface ReceiveDataInterface {
     fun OnReceiveData(context: Context)
 }
 
 object ReceiveData {
-    private val LOG_ID = "GlucoDataHandler.ReceiveData"
+    private const val LOG_ID = "GlucoDataHandler.ReceiveData"
+    private const val SERIAL = "glucodata.Minute.SerialNumber"
+    private const val MGDL = "glucodata.Minute.mgdl"
+    private const val GLUCOSECUSTOM = "glucodata.Minute.glucose"
+    private const val RATE = "glucodata.Minute.Rate"
+    private const val ALARM = "glucodata.Minute.Alarm"
+    private const val TIME = "glucodata.Minute.Time"
+
     init {
         Log.d(LOG_ID, "init called")
     }
@@ -63,6 +73,16 @@ object ReceiveData {
         return if (java.lang.Float.isNaN(rate)) "" else "DoubleDown"
     }
 
+    fun getRateLabel(context: Context): String {
+        if (ReceiveData.rate >= 3.5f) return context.getString(R.string.rate_double_up)
+        if (ReceiveData.rate >= 2.0f) return context.getString(R.string.rate_single_up)
+        if (ReceiveData.rate >= 1.0f) return context.getString(R.string.rate_forty_five_up)
+        if (ReceiveData.rate > -1.0f) return context.getString(R.string.rate_flat)
+        if (ReceiveData.rate > -2.0f) return context.getString(R.string.rate_forty_five_down)
+        if (ReceiveData.rate > -3.5f) return context.getString(R.string.rate_single_down)
+        return if (java.lang.Float.isNaN(ReceiveData.rate)) "" else context.getString(R.string.rate_double_down)
+    }
+
     private var notifiers = mutableSetOf<ReceiveDataInterface>()
     fun addNotifier(notifier: ReceiveDataInterface)
     {
@@ -81,5 +101,56 @@ object ReceiveData {
     {
         Log.d(LOG_ID, "Sending new data to " + notifiers.size.toString() + " notifier(s).")
         notifiers.forEach{ it.OnReceiveData(context) }
+    }
+
+    fun handleIntent(context: Context, extras: Bundle?) : Boolean
+    {
+        if (extras == null || extras.isEmpty) {
+            return false
+        }
+        try {
+            Log.i(
+                LOG_ID, "Glucodata received from sensor: " +  extras!!.getString(
+                    SERIAL
+                ) + " - value: " + extras.getFloat(GLUCOSECUSTOM).toString() + " - timestamp: " + dateformat.format(
+                Date(
+                    extras.getLong(TIME)
+                )
+            ))
+
+            val curTimeDiff = extras.getLong(TIME) - time
+            if(curTimeDiff > 50000) // check for new value received
+            {
+                sensorID = extras.getString(SERIAL) //Name of sensor
+                glucose = extras.getFloat(GLUCOSECUSTOM).toBigDecimal().setScale(1, RoundingMode.HALF_UP).toFloat() //Glucose value in unit in setting
+                rate = extras.getFloat(RATE) //Rate of change of glucose. See libre and dexcom label functions
+                rateLabel = getRateLabel(context)
+                alarm = extras.getInt(ALARM) //See showalarm.
+                if (time > 0) {
+                    timeDiff = curTimeDiff
+                    val timeDiffMinute = (timeDiff.toFloat()/60000).toBigDecimal().setScale(0, RoundingMode.HALF_UP).toInt()
+                    if(timeDiffMinute > 0) {
+                        delta =
+                            ((extras.getInt(MGDL) - rawValue) / timeDiffMinute).toFloat()
+                    } else {
+                        Log.w(LOG_ID, "Timediff is less than a minute: " + timeDiff + "ms")
+                    }
+                    val newRaw = extras.getInt(MGDL)
+                    if(newRaw!=glucose.toInt())  // mmol/l
+                    {
+                        val scale = if (abs(delta) > 1.0F) 1 else 2
+                        delta = (delta / 18.0182F).toBigDecimal().setScale( scale, RoundingMode.HALF_UP).toFloat()
+                    }
+                }
+                rawValue = extras.getInt(MGDL)
+                time = extras.getLong(TIME) //time in mmsec
+
+                notify(context)
+                return true
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Receive exception: " + exc.message.toString() )
+        }
+        return false
     }
 }
