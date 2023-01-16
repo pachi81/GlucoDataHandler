@@ -8,6 +8,7 @@
     <string name="info_label_delta">Delta</string>
     <string name="info_label_value">Wert</string>
     <string name="info_label_sensor_id">Sensor</string>
+    <string name="info_label_source">Quelle</string>
     <string name="no_data">Noch keine Daten empfangen!</string>
 
     <string name="rate_double_down">schnell fallend</string>

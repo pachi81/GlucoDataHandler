@@ -4,8 +4,10 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import com.joaomgcd.taskerpluginlibrary.condition.TaskerPluginRunnerConditionEvent
 import com.joaomgcd.taskerpluginlibrary.config.*
+import com.joaomgcd.taskerpluginlibrary.extensions.requestQuery
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInputField
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInputRoot
@@ -13,6 +15,8 @@ import com.joaomgcd.taskerpluginlibrary.output.TaskerOutputObject
 import com.joaomgcd.taskerpluginlibrary.output.TaskerOutputVariable
 import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultCondition
 import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultConditionSatisfied
+import de.michelinside.glucodatahandler.common.ReceiveDataInterface
+import de.michelinside.glucodatahandler.common.ReceiveDataSource
 import java.util.*
 
 @TaskerInputRoot
@@ -77,4 +81,17 @@ class GlucodataEvent : Activity(), TaskerPluginConfig<GlucodataValues> {
         super.onCreate(savedInstanceState)
         GlucodataEventHelper(this).finishForTasker()
     }
+}
+
+object TaskerDataReceiver: ReceiveDataInterface {
+    private val LOG_ID = "GlucoDataHandler.TaskerDataReceiver"
+    override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
+        try {
+            Log.d(LOG_ID, "sending new intent to tasker")
+            GlucodataEvent::class.java.requestQuery(context, GlucodataValues() )
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Receive exception: " + exc.message.toString() )
+        }
+    }
+
 }

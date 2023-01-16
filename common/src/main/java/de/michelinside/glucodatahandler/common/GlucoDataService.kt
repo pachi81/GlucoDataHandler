@@ -9,7 +9,7 @@ import android.util.Log
 import com.google.android.gms.wearable.*
 
 
-class GlucoDataService : Service(), MessageClient.OnMessageReceivedListener {
+open class GlucoDataService : WearableListenerService(), MessageClient.OnMessageReceivedListener {
     private val LOG_ID = "GlucoDataHandler.GlucoDataService"
 
     override fun onCreate() {
@@ -35,14 +35,11 @@ class GlucoDataService : Service(), MessageClient.OnMessageReceivedListener {
         Log.d(LOG_ID, "MessageClient added")
     }
 
+    open fun Create() {}
+
     override fun onDestroy() {
         super.onDestroy()
         Log.d(LOG_ID, "onDestroy called")
-    }
-
-    override fun onBind(intent: Intent?): IBinder? {
-        Log.d(LOG_ID, "onBind called")
-        return null
     }
 
     fun bytesToBundle(bytes: ByteArray): Bundle? {
@@ -57,7 +54,7 @@ class GlucoDataService : Service(), MessageClient.OnMessageReceivedListener {
     override fun onMessageReceived(p0: MessageEvent) {
         try {
             Log.d(LOG_ID, "onMessageReceived called: " + p0?.toString())
-            ReceiveData.handleIntent(this, bytesToBundle(p0.data))
+            ReceiveData.handleIntent(this, ReceiveDataSource.MESSAGECLIENT, bytesToBundle(p0.data))
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onMessageReceived exception: " + exc.message.toString() )
         }
