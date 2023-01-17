@@ -90,6 +90,10 @@ object ReceiveData {
         return if (java.lang.Float.isNaN(ReceiveData.rate)) "" else context.getString(R.string.rate_double_down)
     }
 
+    fun getTimeDiffMinute(): Long {
+        return (timeDiff.toFloat()/60000).toBigDecimal().setScale(0, RoundingMode.HALF_UP).toLong()
+    }
+
     private var notifiers = mutableSetOf<ReceiveDataInterface>()
     fun addNotifier(notifier: ReceiveDataInterface)
     {
@@ -123,7 +127,7 @@ object ReceiveData {
         }
         try {
             Log.i(
-                LOG_ID, "Glucodata received from sensor: " +  extras!!.getString(
+                LOG_ID, "Glucodata received from " + dataSource.toString() + " - sensor: " +  extras!!.getString(
                     SERIAL
                 ) + " - value: " + extras.getFloat(GLUCOSECUSTOM).toString() + " - timestamp: " + dateformat.format(
                 Date(
@@ -142,7 +146,7 @@ object ReceiveData {
                 alarm = extras.getInt(ALARM) //See showalarm.
                 if (time > 0) {
                     timeDiff = curTimeDiff
-                    val timeDiffMinute = (timeDiff.toFloat()/60000).toBigDecimal().setScale(0, RoundingMode.HALF_UP).toInt()
+                    val timeDiffMinute = getTimeDiffMinute()
                     if(timeDiffMinute > 0) {
                         delta =
                             ((extras.getInt(MGDL) - rawValue) / timeDiffMinute).toFloat()

@@ -1,2 +1,0 @@
-package de.michelinside.glucodatahandler
-
