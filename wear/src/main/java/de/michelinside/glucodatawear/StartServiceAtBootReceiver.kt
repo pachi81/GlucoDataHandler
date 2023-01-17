@@ -1,4 +1,4 @@
-package de.michelinside.glucodatawear
+package de.michelinside.glucodatahandler
 
 import android.content.BroadcastReceiver
 import android.content.Context

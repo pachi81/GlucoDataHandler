@@ -47,7 +47,6 @@ open class GlucoseDataReceiver: BroadcastReceiver() {
         }).start()
     }
 
-
     fun SendMessage(context: Context, glucodataIntent: ByteArray?)
     {
         try {
