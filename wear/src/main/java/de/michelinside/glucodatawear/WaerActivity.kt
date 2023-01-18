@@ -61,11 +61,8 @@ class WaerActivity : Activity(), ReceiveDataInterface {
     private fun update() {
         if(ReceiveData.time > 0) {
             txtBgValue = findViewById(R.id.txtBgValue)
-            txtBgValue.text = ReceiveData.glucose.toString() + " " + ReceiveData.getRateSymbol()
-            if (ReceiveData.alarm != 0)
-                txtBgValue.setTextColor(Color.RED)
-            else
-                txtBgValue.setTextColor(Color.WHITE)
+            txtBgValue.text = ReceiveData.getClucoseAsString() + " " + ReceiveData.getRateSymbol()
+            txtBgValue.setTextColor(ReceiveData.getClucoseColor())
             txtValueInfo = findViewById(R.id.txtValueInfo)
             txtValueInfo.text =
                 "Delta: " + ReceiveData.delta + " " + ReceiveData.getUnit() +

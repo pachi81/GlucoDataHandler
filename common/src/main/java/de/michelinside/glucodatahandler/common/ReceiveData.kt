@@ -1,8 +1,10 @@
 package de.michelinside.glucodatahandler.common
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import androidx.annotation.ColorInt
 import java.math.RoundingMode
 import java.text.DateFormat
 import java.util.*
@@ -54,13 +56,42 @@ object ReceiveData {
                 context.getString(R.string.info_label_source) + ": " + source
     }
 
+    fun isMmol(): Boolean {
+        return rawValue!= glucose.toInt()
+    }
+
+    fun getClucoseAsString(): String {
+        if((System.currentTimeMillis()- time) > (600 * 1000))
+            return "---"
+        if (isMmol())
+            return glucose.toString()
+        return rawValue.toString()
+    }
+
     fun getUnit(): String {
-        if (rawValue!= glucose.toInt())
+        if (isMmol())
             return "mmol/l"
         return "mg/dl"
     }
 
+    fun getClucoseColor(): Int {
+        if((System.currentTimeMillis()- time) > (300 * 1000))
+            return Color.GRAY
+        if(alarm!=0)
+            return Color.RED
+        if(isMmol()) {
+            if(glucose < 5.0 || glucose > 9.2 )
+                return Color.YELLOW
+        } else {
+            if(glucose < 90 || glucose > 165 )
+                return Color.YELLOW
+        }
+        return Color.GREEN
+    }
+
     fun getRateSymbol(): Char {
+        if((System.currentTimeMillis()- time) > (600 * 1000))
+            return '?'
         if (rate >= 3.5f) return '\u21C8'
         if (rate >= 2.0f) return '\u2191'
         if (rate >= 1.0f) return '\u2197'

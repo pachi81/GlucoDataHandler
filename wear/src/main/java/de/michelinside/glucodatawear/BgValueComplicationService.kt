@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler
 
+import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -7,8 +8,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.wear.watchface.complications.data.ComplicationData
 import androidx.wear.watchface.complications.data.ComplicationType
-import androidx.wear.watchface.complications.data.PlainComplicationText
-import androidx.wear.watchface.complications.data.ShortTextComplicationData
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
@@ -17,8 +16,8 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.ReceiveDataInterface
 import de.michelinside.glucodatahandler.common.ReceiveDataSource
 
-class BgValueComplicationService : SuspendingComplicationDataSourceService(), ReceiveDataInterface {
-    private val LOG_ID = "GlucoDataHandler.ShortBgValueComplicationService"
+abstract class BgValueComplicationService : SuspendingComplicationDataSourceService(), ReceiveDataInterface {
+    private val LOG_ID = "GlucoDataHandler.BgValueComplicationService"
     private var instanceMap = mutableMapOf<Int, ComplicationType> ()
 
     override fun onComplicationActivated(complicationInstanceId: Int, type: ComplicationType) {
@@ -41,28 +40,15 @@ class BgValueComplicationService : SuspendingComplicationDataSourceService(), Re
 
     override suspend fun onComplicationRequest(request: ComplicationRequest): ComplicationData? {
         Log.d(LOG_ID, "onComplicationRequest called for " + request.complicationType.toString())
-        if (request.complicationType != ComplicationType.SHORT_TEXT) {
-            return null
-        }
-        return getComplicationData(request.complicationType)
+        return getComplicationData(request)
     }
 
     override fun getPreviewData(type: ComplicationType): ComplicationData {
         Log.d(LOG_ID, "onComplicationRequest called for " + type.toString())
-        return getComplicationData(type)
+        return getComplicationData(ComplicationRequest(0, type))!!
     }
 
-    private fun getComplicationData(type: ComplicationType): ComplicationData {
-        Log.d(LOG_ID, "getComplicationData called for " + type.toString())
-        return ShortTextComplicationData.Builder(
-            text = PlainComplicationText.Builder(
-                text = ReceiveData.glucose.toString() + ReceiveData.getRateSymbol().toString()
-            ).build(),
-            contentDescription = PlainComplicationText.Builder(
-                text = getText(R.string.short_bg_value_content_description)
-            ).build()
-        ).build()
-    }
+    abstract fun getComplicationData(request: ComplicationRequest): ComplicationData?
 
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
         Log.d(LOG_ID, "Update " + instanceMap.size.toString() + " active complication(s)")
@@ -74,6 +60,21 @@ class BgValueComplicationService : SuspendingComplicationDataSourceService(), Re
                 )
                 .requestUpdate(it.key)
         }
+    }
+
+    fun getTapAction(id: Int): PendingIntent? {
+        return null
+        /*
+        var launchIntent: Intent? = null //packageManager.getLaunchIntentForPackage("tk.glucodata")
+        if(launchIntent == null)
+        {
+            Log.d(LOG_ID, "Juggluco not found, use own one")
+            launchIntent = Intent(this, WaerActivity::class.java)
+        }
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        return PendingIntent.getBroadcast(this, id, launchIntent, 0)
+
+         */
     }
 
 }
