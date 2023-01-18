@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.wear.watchface.complications.data.ComplicationData
 import androidx.wear.watchface.complications.data.ComplicationType
+import androidx.wear.watchface.complications.data.PlainComplicationText
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
@@ -23,7 +24,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     override fun onComplicationActivated(complicationInstanceId: Int, type: ComplicationType) {
         super.onComplicationActivated(complicationInstanceId, type)
         Log.d(LOG_ID, "onComplicationActivated called for id " + complicationInstanceId + " (" + type + ")" )
-        var serviceIntent = Intent(this, GlucoDataService::class.java)
+        val serviceIntent = Intent(this, GlucoDataService::class.java)
         this.startService(serviceIntent)
         if(instanceMap.isEmpty())
             ReceiveData.addNotifier(this)
@@ -62,19 +63,27 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         }
     }
 
-    fun getTapAction(id: Int): PendingIntent? {
-        return null
-        /*
-        var launchIntent: Intent? = null //packageManager.getLaunchIntentForPackage("tk.glucodata")
+    fun getTapAction(): PendingIntent? {
+        var launchIntent: Intent? = packageManager.getLaunchIntentForPackage("tk.glucodata")
         if(launchIntent == null)
         {
             Log.d(LOG_ID, "Juggluco not found, use own one")
             launchIntent = Intent(this, WaerActivity::class.java)
         }
-        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        return PendingIntent.getBroadcast(this, id, launchIntent, 0)
-
-         */
+        launchIntent.setAction(Intent.ACTION_MAIN)
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+        return PendingIntent.getActivity(applicationContext, System.currentTimeMillis().toInt(), launchIntent,  PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
+    fun getArrowIcon(): Int {
+        if((System.currentTimeMillis()- ReceiveData.time) > (600 * 1000))
+            return R.drawable.icon_question
+        if (ReceiveData.rate >= 3.5f) return R.drawable.icon_chevron_up
+        if (ReceiveData.rate >= 2.0f) return R.drawable.icon_stick_up
+        if (ReceiveData.rate >= 1.0f) return R.drawable.icon_stick_up_right
+        if (ReceiveData.rate > -1.0f) return R.drawable.icon_stick_right
+        if (ReceiveData.rate > -2.0f) return R.drawable.icon_stick_down_right
+        if (ReceiveData.rate > -3.5f) return R.drawable.icon_stick_down
+        return if (java.lang.Float.isNaN(ReceiveData.rate)) R.drawable.icon_question else R.drawable.icon_chevron_down
+    }
 }

@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler
 
+import android.graphics.drawable.Icon
 import android.util.Log
 import androidx.wear.watchface.complications.data.*
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
@@ -21,15 +22,18 @@ class RangeValueWithTitleComplication: BgValueComplicationService() {
         val contentDescription = PlainComplicationText.Builder(
             text = getText(R.string.range_bg_value_with_arrow_content_description)
         ).build()
+        val icon = MonochromaticImage.Builder(
+            image = Icon.createWithResource(this, getArrowIcon())
+        ).build()
         return RangedValueComplicationData.Builder(
             value = ReceiveData.rawValue.toFloat(),
             min = 20F,
             max = maxOf(300F, ReceiveData.rawValue.toFloat()),
             contentDescription = contentDescription
         )
-            .setText(text)
-            .setTitle(title)
-            .setTapAction(getTapAction(request.complicationInstanceId))
+            .setText(title)
+            .setMonochromaticImage(icon)
+            .setTapAction(getTapAction())
             .build()
     }
 }
@@ -54,7 +58,7 @@ class RangeValueOnlyComplication: BgValueComplicationService() {
             contentDescription = contentDescription
         )
             .setText(text)
-            .setTapAction(getTapAction(request.complicationInstanceId))
+            .setTapAction(getTapAction())
             .build()
     }
 }
