@@ -74,4 +74,16 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         return PendingIntent.getActivity(applicationContext, System.currentTimeMillis().toInt(), launchIntent,  PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
+    fun getArrowIcon(): Int {
+        if((System.currentTimeMillis()- ReceiveData.time) > (600 * 1000))
+            return R.drawable.icon_question
+        if (ReceiveData.rate >= 3.5f) return R.drawable.icon_chevron_up
+        if (ReceiveData.rate >= 2.0f) return R.drawable.icon_stick_up
+        if (ReceiveData.rate >= 1.0f) return R.drawable.icon_stick_up_right
+        if (ReceiveData.rate > -1.0f) return R.drawable.icon_stick_right
+        if (ReceiveData.rate > -2.0f) return R.drawable.icon_stick_down_right
+        if (ReceiveData.rate > -3.5f) return R.drawable.icon_stick_down
+        return if (java.lang.Float.isNaN(ReceiveData.rate)) R.drawable.icon_question else R.drawable.icon_chevron_down
+    }
+
 }
