@@ -51,4 +51,5 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation project(path: ':common')
     implementation 'androidx.wear.watchface:watchface-complications-data-source-ktx:1.0.1'
+    implementation 'androidx.wear.watchface:watchface-complications-rendering:1.1.1'
 }

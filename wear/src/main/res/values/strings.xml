@@ -1,7 +1,13 @@
 <resources>
     <string name="app_name">GlucoDataWear</string>
-    <string name="short_text_label">Short BG Value</string>
-    <string name="short_bg_value_content_description">Short BG value</string>
+    <string name="short_text_label">BG Value only</string>
+    <string name="short_bg_value_content_description">BG value only</string>
+    <string name="short_text_with_arrow_label">BG Value with direction</string>
+    <string name="short_bg_value_with_arrow_content_description">BG value with direction</string>
+    <string name="range_label">Range BG Value only</string>
+    <string name="range_bg_value_content_description">Range BG value only</string>
+    <string name="range_with_arrow_label">Range BG Value with direction</string>
+    <string name="range_bg_value_with_arrow_content_description">Range BG value with direction</string>
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
