@@ -26,7 +26,7 @@ class ShortTextWithTitleComplication: BgValueComplicationService() {
             PlainComplicationText.Builder(
                 text = ReceiveData.getClucoseAsString()
             ).build()
-        ).setTapAction(getTapAction(request.complicationInstanceId)).build()
+        ).setTapAction(getTapAction()).build()
     }
 }
 
@@ -44,6 +44,6 @@ class ShortTextOnlyComplication: BgValueComplicationService() {
             contentDescription = PlainComplicationText.Builder(
                 text = getText(R.string.short_bg_value_content_description)
             ).build()
-        ).setTapAction(getTapAction(request.complicationInstanceId)).build()
+        ).setTapAction(getTapAction()).build()
     }
 }

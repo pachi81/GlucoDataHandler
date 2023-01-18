@@ -29,7 +29,7 @@ class RangeValueWithTitleComplication: BgValueComplicationService() {
         )
             .setText(text)
             .setTitle(title)
-            .setTapAction(getTapAction(request.complicationInstanceId))
+            .setTapAction(getTapAction())
             .build()
     }
 }
@@ -54,7 +54,7 @@ class RangeValueOnlyComplication: BgValueComplicationService() {
             contentDescription = contentDescription
         )
             .setText(text)
-            .setTapAction(getTapAction(request.complicationInstanceId))
+            .setTapAction(getTapAction())
             .build()
     }
 }
