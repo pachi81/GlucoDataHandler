@@ -4,14 +4,14 @@
 
 - [x] Glucodata Receiver
 - [x] Tasker Event
-- [ ] Wear connection
+- [x] Wear connection
 - [ ] Send to xdrip
 - [ ] Re-send glucodata intent (received from wear)
 
 ## Wear app
 
-- [ ] Glucodata Receiver
-- [ ] Phone connection
-- [ ] Compilications
+- [x] Glucodata Receiver
+- [x] Phone connection
+- [x] Compilications
 - [ ] Tile?
 - [ ] own Watchface?

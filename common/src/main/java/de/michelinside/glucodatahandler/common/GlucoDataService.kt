@@ -1,9 +1,6 @@
 package de.michelinside.glucodatahandler.common
 
-import android.app.Service
-import android.content.Intent
 import android.os.Bundle
-import android.os.IBinder
 import android.os.Parcel
 import android.util.Log
 import com.google.android.gms.wearable.*
@@ -35,8 +32,6 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
         Log.d(LOG_ID, "MessageClient added")
     }
 
-    open fun Create() {}
-
     override fun onDestroy() {
         super.onDestroy()
         Log.d(LOG_ID, "onDestroy called")
@@ -53,7 +48,7 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
 
     override fun onMessageReceived(p0: MessageEvent) {
         try {
-            Log.d(LOG_ID, "onMessageReceived called: " + p0?.toString())
+            Log.d(LOG_ID, "onMessageReceived called: " + p0.toString())
             ReceiveData.handleIntent(this, ReceiveDataSource.MESSAGECLIENT, bytesToBundle(p0.data))
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onMessageReceived exception: " + exc.message.toString() )
