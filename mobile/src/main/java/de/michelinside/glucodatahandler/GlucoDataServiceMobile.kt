@@ -21,7 +21,7 @@ class GlucoDataServiceMobile: GlucoDataService(), ReceiveDataInterface {
                 Log.d(LOG_ID, "Resend Glucodata Broadcast")
                 val intent = Intent()
                 intent.action = Constants.GLUCODATA_BROADCAST_ACTION
-                intent.putExtras(extras!!)
+                intent.putExtras(extras)
                 context.sendBroadcast(intent)
             }
         } catch (exc: Exception) {

@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import androidx.annotation.ColorInt
 import java.math.RoundingMode
 import java.text.DateFormat
 import java.util.*
@@ -56,16 +55,29 @@ object ReceiveData {
                 context.getString(R.string.info_label_source) + ": " + source
     }
 
-    fun isMmol(): Boolean {
-        return rawValue!= glucose.toInt()
-    }
+    fun isMmol(): Boolean = rawValue != glucose.toInt()
+
+    fun isObsolete(): Boolean = (System.currentTimeMillis()- time) >= (600 * 1000)
 
     fun getClucoseAsString(): String {
-        if((System.currentTimeMillis()- time) > (600 * 1000))
+        if(isObsolete())
             return "---"
         if (isMmol())
             return glucose.toString()
         return rawValue.toString()
+    }
+
+    fun getDeltaAsString(): String {
+        if(isObsolete())
+            return "???"
+        var deltaVal = ""
+        if (delta > 0)
+            deltaVal += "+"
+        if( delta.toDouble() == Math.floor(delta.toDouble()) )
+            deltaVal += delta.toInt().toString()
+        else
+            deltaVal += delta.toString()
+        return deltaVal
     }
 
     fun getUnit(): String {
@@ -75,7 +87,7 @@ object ReceiveData {
     }
 
     fun getClucoseColor(): Int {
-        if((System.currentTimeMillis()- time) > (300 * 1000))
+        if(isObsolete())
             return Color.GRAY
         if(alarm!=0)
             return Color.RED
@@ -90,7 +102,7 @@ object ReceiveData {
     }
 
     fun getRateSymbol(): Char {
-        if((System.currentTimeMillis()- time) > (600 * 1000))
+        if(isObsolete())
             return '?'
         if (rate >= 3.5f) return '\u21C8'
         if (rate >= 2.0f) return '\u2191'
@@ -112,13 +124,13 @@ object ReceiveData {
     }
 
     fun getRateLabel(context: Context): String {
-        if (ReceiveData.rate >= 3.5f) return context.getString(R.string.rate_double_up)
-        if (ReceiveData.rate >= 2.0f) return context.getString(R.string.rate_single_up)
-        if (ReceiveData.rate >= 1.0f) return context.getString(R.string.rate_forty_five_up)
-        if (ReceiveData.rate > -1.0f) return context.getString(R.string.rate_flat)
-        if (ReceiveData.rate > -2.0f) return context.getString(R.string.rate_forty_five_down)
-        if (ReceiveData.rate > -3.5f) return context.getString(R.string.rate_single_down)
-        return if (java.lang.Float.isNaN(ReceiveData.rate)) "" else context.getString(R.string.rate_double_down)
+        if (rate >= 3.5f) return context.getString(R.string.rate_double_up)
+        if (rate >= 2.0f) return context.getString(R.string.rate_single_up)
+        if (rate >= 1.0f) return context.getString(R.string.rate_forty_five_up)
+        if (rate > -1.0f) return context.getString(R.string.rate_flat)
+        if (rate > -2.0f) return context.getString(R.string.rate_forty_five_down)
+        if (rate > -3.5f) return context.getString(R.string.rate_single_down)
+        return if (java.lang.Float.isNaN(rate)) "" else context.getString(R.string.rate_double_down)
     }
 
     fun getTimeDiffMinute(): Long {
@@ -158,7 +170,7 @@ object ReceiveData {
         }
         try {
             Log.i(
-                LOG_ID, "Glucodata received from " + dataSource.toString() + " - sensor: " +  extras!!.getString(
+                LOG_ID, "Glucodata received from " + dataSource.toString() + " - sensor: " +  extras.getString(
                     SERIAL
                 ) + " - value: " + extras.getFloat(GLUCOSECUSTOM).toString() + " - timestamp: " + dateformat.format(
                 Date(

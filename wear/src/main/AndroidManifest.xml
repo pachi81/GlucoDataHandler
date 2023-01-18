@@ -25,8 +25,7 @@
 
         <activity
             android:name=".WaerActivity"
-            android:exported="true"
-            android:label="@string/app_name">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -57,7 +56,24 @@
             </intent-filter>
         </service>
         <service
-            android:name=".ShortTextOnlyComplication"
+            android:name=".LongTextComplication"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/long_text_label"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="LONG_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+        </service>
+        <service
+            android:name=".ShortTextComplication"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/short_text_label"
@@ -74,7 +90,7 @@
                 android:value="300" />
         </service>
         <service
-            android:name=".ShortTextWithTitleComplication"
+            android:name=".ShortTextWithIconComplication"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/short_text_with_arrow_label"
@@ -91,7 +107,7 @@
                 android:value="300" />
         </service>
         <service
-            android:name=".RangeValueOnlyComplication"
+            android:name=".RangeValueComplication"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/range_label"
@@ -108,7 +124,7 @@
                 android:value="300" />
         </service>
         <service
-            android:name=".RangeValueWithTitleComplication"
+            android:name=".RangeValueWithIconComplication"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/range_with_arrow_label"

@@ -8,6 +8,9 @@
     <string name="range_bg_value_content_description">Range BG value only</string>
     <string name="range_with_arrow_label">Range BG Value with direction</string>
     <string name="range_bg_value_with_arrow_content_description">Range BG value with direction</string>
+
+    <string name="long_text_label">BG Value with direction and delta</string>
+    <string name="long_bg_value_content_description">BG Value with direction and delta</string>
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.

@@ -4,10 +4,12 @@ import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
 import androidx.wear.watchface.complications.data.ComplicationData
 import androidx.wear.watchface.complications.data.ComplicationType
+import androidx.wear.watchface.complications.data.MonochromaticImage
 import androidx.wear.watchface.complications.data.PlainComplicationText
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
@@ -17,30 +19,35 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.ReceiveDataInterface
 import de.michelinside.glucodatahandler.common.ReceiveDataSource
 
-abstract class BgValueComplicationService : SuspendingComplicationDataSourceService(), ReceiveDataInterface {
-    private val LOG_ID = "GlucoDataHandler.BgValueComplicationService"
-    private var instanceMap = mutableMapOf<Int, ComplicationType> ()
+abstract class BgValueComplicationService(type: ComplicationType) : SuspendingComplicationDataSourceService(), ReceiveDataInterface {
+    protected val LOG_ID = "GlucoDataHandler.Complication." + type.toString()
+    private var instanceIds = mutableListOf<Int> ()
+    val complicationTpe = type
 
     override fun onComplicationActivated(complicationInstanceId: Int, type: ComplicationType) {
         super.onComplicationActivated(complicationInstanceId, type)
         Log.d(LOG_ID, "onComplicationActivated called for id " + complicationInstanceId + " (" + type + ")" )
         val serviceIntent = Intent(this, GlucoDataService::class.java)
         this.startService(serviceIntent)
-        if(instanceMap.isEmpty())
+        if(instanceIds.isEmpty())
             ReceiveData.addNotifier(this)
-        instanceMap[complicationInstanceId] = type
+        instanceIds.add(complicationInstanceId)
     }
 
     override fun onComplicationDeactivated(complicationInstanceId: Int) {
         Log.d(LOG_ID, "onComplicationDeactivated called for id " + complicationInstanceId )
         super.onComplicationDeactivated(complicationInstanceId)
-        instanceMap.remove(complicationInstanceId)
-        if(instanceMap.isEmpty())
+        instanceIds.remove(complicationInstanceId)
+        if(instanceIds.isEmpty())
             ReceiveData.remNotifier(this)
     }
 
     override suspend fun onComplicationRequest(request: ComplicationRequest): ComplicationData? {
         Log.d(LOG_ID, "onComplicationRequest called for " + request.complicationType.toString())
+        if (request.complicationType != complicationTpe) {
+            Log.w(LOG_ID, "complication type: " + request.complicationType.toString() + " != " + complicationTpe.toString())
+            return null
+        }
         return getComplicationData(request)
     }
 
@@ -52,14 +59,14 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     abstract fun getComplicationData(request: ComplicationRequest): ComplicationData?
 
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
-        Log.d(LOG_ID, "Update " + instanceMap.size.toString() + " active complication(s)")
-        instanceMap.forEach {
+        Log.d(LOG_ID, "Update " + instanceIds.size.toString() + " active " + complicationTpe.toString() + " complication(s)")
+        instanceIds.forEach {
             ComplicationDataSourceUpdateRequester
                 .create(
                     context = context,
                     complicationDataSourceComponent = ComponentName(this, javaClass)
                 )
-                .requestUpdate(it.key)
+                .requestUpdate(it)
         }
     }
 
@@ -86,4 +93,23 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         if (ReceiveData.rate > -3.5f) return R.drawable.icon_stick_down
         return if (java.lang.Float.isNaN(ReceiveData.rate)) R.drawable.icon_question else R.drawable.icon_chevron_down
     }
+
+    open fun getIcon(): MonochromaticImage? = null
+
+    fun plainText(text: CharSequence): PlainComplicationText =
+        PlainComplicationText.Builder(text).build()
+
+    fun glucoseText(): PlainComplicationText =
+        plainText(ReceiveData.getClucoseAsString())
+
+    fun deltaText(): PlainComplicationText =
+        plainText(ReceiveData.getDeltaAsString())
+
+    fun resText(resId: Int): PlainComplicationText =
+        plainText(getText(resId))
+
+    fun arrowIcon(): MonochromaticImage =
+        MonochromaticImage.Builder(
+            image = Icon.createWithResource(this, getArrowIcon())
+        ).build()
 }
