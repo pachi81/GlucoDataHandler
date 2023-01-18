@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.wear.watchface.complications.data.ComplicationData
 import androidx.wear.watchface.complications.data.ComplicationType
+import androidx.wear.watchface.complications.data.PlainComplicationText
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
@@ -85,5 +86,4 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         if (ReceiveData.rate > -3.5f) return R.drawable.icon_stick_down
         return if (java.lang.Float.isNaN(ReceiveData.rate)) R.drawable.icon_question else R.drawable.icon_chevron_down
     }
-
 }

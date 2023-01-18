@@ -31,7 +31,7 @@ class RangeValueWithTitleComplication: BgValueComplicationService() {
             max = maxOf(300F, ReceiveData.rawValue.toFloat()),
             contentDescription = contentDescription
         )
-            .setText(text)
+            .setText(title)
             .setMonochromaticImage(icon)
             .setTapAction(getTapAction())
             .build()
