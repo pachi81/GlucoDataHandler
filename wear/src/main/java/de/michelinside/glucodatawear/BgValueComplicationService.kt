@@ -1,16 +1,18 @@
 package de.michelinside.glucodatahandler
 
+import android.R.color
 import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
-import androidx.wear.watchface.complications.data.ComplicationData
-import androidx.wear.watchface.complications.data.ComplicationType
-import androidx.wear.watchface.complications.data.MonochromaticImage
-import androidx.wear.watchface.complications.data.PlainComplicationText
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.wear.watchface.complications.data.*
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
@@ -18,6 +20,7 @@ import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.ReceiveDataInterface
 import de.michelinside.glucodatahandler.common.ReceiveDataSource
+
 
 abstract class BgValueComplicationService(type: ComplicationType) : SuspendingComplicationDataSourceService(), ReceiveDataInterface {
     protected val LOG_ID = "GlucoDataHandler.Complication." + type.toString()
@@ -103,7 +106,10 @@ abstract class BgValueComplicationService(type: ComplicationType) : SuspendingCo
         plainText(ReceiveData.getClucoseAsString())
 
     fun deltaText(): PlainComplicationText =
-        plainText(ReceiveData.getDeltaAsString())
+        plainText("Δ: " + ReceiveData.getDeltaAsString())
+
+    fun glucoseAndDeltaText(): PlainComplicationText =
+        plainText(ReceiveData.getClucoseAsString() + " Δ: " + ReceiveData.getDeltaAsString())
 
     fun resText(resId: Int): PlainComplicationText =
         plainText(getText(resId))
@@ -112,4 +118,16 @@ abstract class BgValueComplicationService(type: ComplicationType) : SuspendingCo
         MonochromaticImage.Builder(
             image = Icon.createWithResource(this, getArrowIcon())
         ).build()
+
+    fun arrowImage(): SmallImage {
+        var icon = Icon.createWithResource(this, getArrowIcon())
+        icon.setTint(ReceiveData.getClucoseColor())
+        icon.setTintMode(PorterDuff.Mode.SRC_IN)
+        return  SmallImage.Builder(
+            image = icon,
+            type = SmallImageType.ICON
+        )
+            .setAmbientImage(Icon.createWithResource(this, getArrowIcon()))
+            .build()
+    }
 }

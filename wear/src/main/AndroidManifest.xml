@@ -73,6 +73,23 @@
                 android:value="300" />
         </service>
         <service
+            android:name=".LongText2LinesComplication"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/long_text_2_lines_label"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="LONG_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+        </service>
+        <service
             android:name=".ShortTextComplication"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
