@@ -12,7 +12,7 @@ open class RangeValueComplication(descrResId: Int = R.string.range_bg_value_cont
         Log.d(LOG_ID, "getComplicationData called for " + request.complicationType.toString())
         return RangedValueComplicationData.Builder(
             value = ReceiveData.rawValue.toFloat(),
-            min = 20F,
+            min = 40F,
             max = maxOf(300F, ReceiveData.rawValue.toFloat()),
             contentDescription = resText(descriptionResourceId)
         )

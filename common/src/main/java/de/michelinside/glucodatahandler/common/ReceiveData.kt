@@ -73,7 +73,7 @@ object ReceiveData {
         var deltaVal = ""
         if (delta > 0)
             deltaVal += "+"
-        if( delta.toDouble() == Math.floor(delta.toDouble()) )
+        if( !isMmol() && delta.toDouble() == Math.floor(delta.toDouble()) )
             deltaVal += delta.toInt().toString()
         else
             deltaVal += delta.toString()
