@@ -28,5 +28,5 @@
     <string name="glucose_html_label">Blutzuckerwert in der Einheit, welche in Juggluco konfiguriert ist</string>
 
     <string name="activity_main_connected_label">Uhr: Verbunden (%1$d)</string>
-    <string name="activity_main_disconnected_label">Uhr: Nicht verbunden</string>
+    <string name="activity_main_disconnected_label">Uhr: Getrennt</string>
 </resources>
