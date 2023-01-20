@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import com.google.android.gms.wearable.CapabilityInfo
 import java.math.RoundingMode
 import java.text.DateFormat
 import java.util.*
@@ -15,7 +16,8 @@ interface ReceiveDataInterface {
 
 enum class ReceiveDataSource {
     BROADCAST,
-    MESSAGECLIENT
+    MESSAGECLIENT,
+    CAPILITY_INFO
 }
 
 object ReceiveData {
@@ -41,6 +43,7 @@ object ReceiveData {
     var rateLabel: String? = null
     var dateformat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT)
     var source: ReceiveDataSource = ReceiveDataSource.BROADCAST
+    var capabilityInfo: CapabilityInfo? = null
 
     fun getAsString(context: Context): String {
         if (sensorID == null)
@@ -214,4 +217,6 @@ object ReceiveData {
         }
         return false
     }
+
+
 }

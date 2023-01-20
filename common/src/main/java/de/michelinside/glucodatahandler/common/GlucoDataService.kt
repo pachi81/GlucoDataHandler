@@ -1,12 +1,14 @@
 package de.michelinside.glucodatahandler.common
 
+import android.net.Uri
 import android.os.Bundle
 import android.os.Parcel
 import android.util.Log
+import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.*
 
 
-open class GlucoDataService : WearableListenerService(), MessageClient.OnMessageReceivedListener {
+open class GlucoDataService : WearableListenerService(), MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener {
     private val LOG_ID = "GlucoDataHandler.GlucoDataService"
 
     override fun onCreate() {
@@ -30,6 +32,15 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
 
         Wearable.getMessageClient(this).addListener(this)
         Log.d(LOG_ID, "MessageClient added")
+        Wearable.getCapabilityClient(this).addListener(this,
+            Uri.parse("wear://"),
+            CapabilityClient.FILTER_REACHABLE)
+        Log.d(LOG_ID, "CapabilityClient added")
+        Thread(Runnable {
+            ReceiveData.capabilityInfo = Tasks.await(
+                Wearable.getCapabilityClient(this).getCapability(Constants.CAPABILITY, CapabilityClient.FILTER_REACHABLE))
+            Log.d(LOG_ID, ReceiveData.capabilityInfo!!.nodes.size.toString() + " nodes received")
+        }).start()
     }
 
     override fun onDestroy() {
@@ -53,5 +64,11 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onMessageReceived exception: " + exc.message.toString() )
         }
+    }
+
+    override fun onCapabilityChanged(capabilityInfo: CapabilityInfo) {
+        Log.w(LOG_ID, "onCapabilityChanged called: " + capabilityInfo.toString())
+        ReceiveData.capabilityInfo = capabilityInfo
+        ReceiveData.notify(this, ReceiveDataSource.CAPILITY_INFO, null)
     }
 }

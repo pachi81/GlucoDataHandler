@@ -20,6 +20,7 @@ import de.michelinside.glucodatahandler.common.ReceiveDataSource
 class MainActivity : AppCompatActivity(), ReceiveDataInterface {
     private lateinit var txtLastValue: TextView
     private lateinit var txtVersion: TextView
+    private lateinit var txtWearInfo: TextView
     private val LOG_ID = "GlucoDataHandler.Main"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +60,11 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
     private fun update() {
         txtLastValue = findViewById(R.id.txtLastValue)
         txtLastValue.text = ReceiveData.getAsString(this)
+        txtWearInfo = findViewById(R.id.txtWearInfo)
+        if (ReceiveData.capabilityInfo != null && ReceiveData.capabilityInfo!!.nodes.size > 0)
+            txtWearInfo.text = String.format(resources.getText(R.string.activity_main_connected_label).toString(), ReceiveData.capabilityInfo!!.nodes.size)
+        else
+            txtWearInfo.text = resources.getText(R.string.activity_main_disconnected_label)
     }
 
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {

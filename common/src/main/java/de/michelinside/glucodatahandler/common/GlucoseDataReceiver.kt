@@ -50,10 +50,13 @@ open class GlucoseDataReceiver: BroadcastReceiver() {
     fun SendMessage(context: Context, glucodataIntent: ByteArray?)
     {
         try {
-            val capabilityInfo: CapabilityInfo = Tasks.await(
-                Wearable.getCapabilityClient(context).getCapability(Constants.CAPABILITY, CapabilityClient.FILTER_REACHABLE))
-            Log.d(LOG_ID, "nodes received")
-            val nodes = capabilityInfo.nodes
+
+            if (ReceiveData.capabilityInfo == null) {
+                ReceiveData.capabilityInfo = Tasks.await(
+                    Wearable.getCapabilityClient(context).getCapability(Constants.CAPABILITY, CapabilityClient.FILTER_REACHABLE))
+                Log.d(LOG_ID, ReceiveData.capabilityInfo!!.nodes.size.toString() + " nodes received")
+            }
+            val nodes = ReceiveData.capabilityInfo!!.nodes
             //val nodes = Tasks.await(Wearable.getNodeClient(context).connectedNodes)
             Log.d(LOG_ID, nodes.size.toString() + " nodes found")
             if( nodes.size > 0 ) {

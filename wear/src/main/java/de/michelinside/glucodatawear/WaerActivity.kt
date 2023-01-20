@@ -30,6 +30,7 @@ class WaerActivity : Activity(), ReceiveDataInterface {
     private lateinit var txtBgValue: TextView
     private lateinit var txtVersion: TextView
     private lateinit var txtValueInfo: TextView
+    private lateinit var txtConnInfo: TextView
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +68,11 @@ class WaerActivity : Activity(), ReceiveDataInterface {
             txtValueInfo.text =
                 "Delta: " + ReceiveData.delta + " " + ReceiveData.getUnit() +
                         "\n" + ReceiveData.dateformat.format(Date(ReceiveData.time))
+            txtConnInfo = findViewById(R.id.txtConnInfo)
+            if (ReceiveData.capabilityInfo != null && ReceiveData.capabilityInfo!!.nodes.size > 0)
+                txtConnInfo.text = resources.getText(R.string.activity_connected_label)
+            else
+                txtConnInfo.text = resources.getText(R.string.activity_disconnected_label)
         }
     }
 

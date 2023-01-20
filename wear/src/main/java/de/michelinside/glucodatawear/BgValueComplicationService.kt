@@ -25,32 +25,49 @@ abstract class BgValueComplicationService(type: ComplicationType) : SuspendingCo
     var descriptionResId: Int = R.string.app_name
 
     override fun onCreate() {
-        super.onCreate()
-        Log.d(LOG_ID, "onCreate called")
-        descriptionResId = this.applicationInfo.labelRes
+        try {
+            super.onCreate()
+            Log.d(LOG_ID, "onCreate called")
+            descriptionResId = this.applicationInfo.labelRes
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
+        }
     }
 
     override fun onComplicationActivated(complicationInstanceId: Int, type: ComplicationType) {
-        super.onComplicationActivated(complicationInstanceId, type)
-        Log.d(LOG_ID, "onComplicationActivated called for id " + complicationInstanceId + " (" + type + ")" )
-        val serviceIntent = Intent(this, GlucoDataService::class.java)
-        this.startService(serviceIntent)
-        ActiveComplicationHandler.addInstance(complicationInstanceId, ComponentName(this, javaClass))
+        try {
+            super.onComplicationActivated(complicationInstanceId, type)
+            Log.d(LOG_ID, "onComplicationActivated called for id " + complicationInstanceId + " (" + type + ")" )
+            val serviceIntent = Intent(this, GlucoDataService::class.java)
+            this.startService(serviceIntent)
+            ActiveComplicationHandler.addInstance(complicationInstanceId, ComponentName(this, javaClass))
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onComplicationActivated exception: " + exc.message.toString() )
+        }
     }
 
     override fun onComplicationDeactivated(complicationInstanceId: Int) {
-        Log.d(LOG_ID, "onComplicationDeactivated called for id " + complicationInstanceId )
-        super.onComplicationDeactivated(complicationInstanceId)
-        ActiveComplicationHandler.remInstance(complicationInstanceId)
+        try {
+            Log.d(LOG_ID, "onComplicationDeactivated called for id " + complicationInstanceId )
+            super.onComplicationDeactivated(complicationInstanceId)
+            ActiveComplicationHandler.remInstance(complicationInstanceId)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onComplicationDeactivated exception: " + exc.message.toString() )
+        }
     }
 
     override suspend fun onComplicationRequest(request: ComplicationRequest): ComplicationData? {
-        Log.d(LOG_ID, "onComplicationRequest called for " + request.complicationType.toString())
-        if (!isTypeSupported(request.complicationType)) {
-            Log.w(LOG_ID, "invalid complication type: " + request.complicationType.toString())
-            return null
+        try {
+            Log.d(LOG_ID, "onComplicationRequest called for " + request.complicationType.toString())
+            if (!isTypeSupported(request.complicationType)) {
+                Log.w(LOG_ID, "invalid complication type: " + request.complicationType.toString())
+                return null
+            }
+            return getComplicationData(request)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onComplicationRequest exception: " + exc.message.toString() )
         }
-        return getComplicationData(request)
+        return null
     }
 
     override fun getPreviewData(type: ComplicationType): ComplicationData {
@@ -167,14 +184,16 @@ object ActiveComplicationHandler: ReceiveDataInterface {
 
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
         Log.d(LOG_ID, "Update " + instanceContextMap.size.toString() + " active complication(s)")
-        instanceContextMap.forEach {
-            Log.d(LOG_ID, "Update " + it.value.toString() + " id: " + it.key.toString())
-            ComplicationDataSourceUpdateRequester
-                .create(
-                    context = context,
-                    complicationDataSourceComponent = it.value
-                )
-                .requestUpdate(it.key)
+        if (dataSource != ReceiveDataSource.CAPILITY_INFO) {
+            instanceContextMap.forEach {
+                Log.d(LOG_ID, "Update " + it.value.toString() + " id: " + it.key.toString())
+                ComplicationDataSourceUpdateRequester
+                    .create(
+                        context = context,
+                        complicationDataSourceComponent = it.value
+                    )
+                    .requestUpdate(it.key)
+            }
         }
     }
 

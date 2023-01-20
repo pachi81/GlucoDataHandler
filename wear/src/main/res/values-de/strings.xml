@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">GlucoDataWear</string>
+    <string name="activity_connected_label">Handy: Verbunden</string>
+    <string name="activity_disconnected_label">Handy: Getrennt</string>
 
     <string name="short_value">Zuckerwert</string>
     <string name="short_value_icon">Zuckerwert mit Icon</string>
