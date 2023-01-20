@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">GlucoDataWear</string>
-    <string name="activity_connected_label">Phone: Connected</string>
-    <string name="activity_disconnected_label">Phone: Disconnected</string>
+    <string name="activity_connected_label">Phone: connected</string>
+    <string name="activity_disconnected_label">Phone: disconnected</string>
 
     <string name="short_value">Glucose</string>
     <string name="short_value_icon">Glucose with icon</string>
