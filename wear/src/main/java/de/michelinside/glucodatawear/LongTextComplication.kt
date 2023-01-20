@@ -29,6 +29,6 @@ class LongText2LinesComplication: LongTextComplication() {
     override fun getText(): PlainComplicationText =
         glucoseText()
 
-    override fun getTitle(): PlainComplicationText? =
-        deltaText()
+    override fun getTitle(): PlainComplicationText =
+        deltaWithIconText()
 }
