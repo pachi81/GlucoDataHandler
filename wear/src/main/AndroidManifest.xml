@@ -59,7 +59,7 @@
             android:name=".LongTextComplication"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
-            android:label="@string/long_text_label"
+            android:label="@string/long_value_arrow_delta"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
@@ -76,7 +76,7 @@
             android:name=".LongText2LinesComplication"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
-            android:label="@string/long_text_2_lines_label"
+            android:label="@string/long_value_arrow_delta_2_lines"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
@@ -93,7 +93,7 @@
             android:name=".ShortTextComplication"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
-            android:label="@string/short_text_label"
+            android:label="@string/short_value"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
@@ -110,7 +110,7 @@
             android:name=".ShortTextWithIconComplication"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
-            android:label="@string/short_text_with_arrow_label"
+            android:label="@string/short_value_arrow"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
@@ -127,7 +127,7 @@
             android:name=".RangeValueComplication"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
-            android:label="@string/range_label"
+            android:label="@string/range_value"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
@@ -144,7 +144,7 @@
             android:name=".RangeValueWithIconComplication"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
-            android:label="@string/range_with_arrow_label"
+            android:label="@string/range_value_arrow"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />

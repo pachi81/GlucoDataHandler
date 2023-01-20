@@ -1,17 +1,13 @@
 package de.michelinside.glucodatahandler
 
-import android.R.color
 import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
-import android.graphics.drawable.Drawable
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.wear.watchface.complications.data.*
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
@@ -22,27 +18,23 @@ import de.michelinside.glucodatahandler.common.ReceiveDataInterface
 import de.michelinside.glucodatahandler.common.ReceiveDataSource
 
 
-abstract class BgValueComplicationService(type: ComplicationType) : SuspendingComplicationDataSourceService(), ReceiveDataInterface {
+abstract class BgValueComplicationService(type: ComplicationType) : SuspendingComplicationDataSourceService() {
     protected val LOG_ID = "GlucoDataHandler.Complication." + type.toString()
-    private var instanceIds = mutableListOf<Int> ()
     val complicationTpe = type
+    var descriptionResId: Int = this.applicationInfo.labelRes
 
     override fun onComplicationActivated(complicationInstanceId: Int, type: ComplicationType) {
         super.onComplicationActivated(complicationInstanceId, type)
         Log.d(LOG_ID, "onComplicationActivated called for id " + complicationInstanceId + " (" + type + ")" )
         val serviceIntent = Intent(this, GlucoDataService::class.java)
         this.startService(serviceIntent)
-        if(instanceIds.isEmpty())
-            ReceiveData.addNotifier(this)
-        instanceIds.add(complicationInstanceId)
+        ActiveComplicationHandler.addInstance(complicationInstanceId, this)
     }
 
     override fun onComplicationDeactivated(complicationInstanceId: Int) {
         Log.d(LOG_ID, "onComplicationDeactivated called for id " + complicationInstanceId )
         super.onComplicationDeactivated(complicationInstanceId)
-        instanceIds.remove(complicationInstanceId)
-        if(instanceIds.isEmpty())
-            ReceiveData.remNotifier(this)
+        ActiveComplicationHandler.remInstance(complicationInstanceId)
     }
 
     override suspend fun onComplicationRequest(request: ComplicationRequest): ComplicationData? {
@@ -60,18 +52,6 @@ abstract class BgValueComplicationService(type: ComplicationType) : SuspendingCo
     }
 
     abstract fun getComplicationData(request: ComplicationRequest): ComplicationData?
-
-    override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
-        Log.d(LOG_ID, "Update " + instanceIds.size.toString() + " active " + complicationTpe.toString() + " complication(s)")
-        instanceIds.forEach {
-            ComplicationDataSourceUpdateRequester
-                .create(
-                    context = context,
-                    complicationDataSourceComponent = ComponentName(this, javaClass)
-                )
-                .requestUpdate(it)
-        }
-    }
 
     fun getTapAction(): PendingIntent? {
         var launchIntent: Intent? = packageManager.getLaunchIntentForPackage("tk.glucodata")
@@ -98,6 +78,7 @@ abstract class BgValueComplicationService(type: ComplicationType) : SuspendingCo
     }
 
     open fun getIcon(): MonochromaticImage? = null
+    open fun getTitle(): PlainComplicationText? = null
 
     fun plainText(text: CharSequence): PlainComplicationText =
         PlainComplicationText.Builder(text).build()
@@ -114,13 +95,16 @@ abstract class BgValueComplicationService(type: ComplicationType) : SuspendingCo
     fun resText(resId: Int): PlainComplicationText =
         plainText(getText(resId))
 
+    fun descriptionText(): PlainComplicationText =
+        resText(descriptionResId)
+
     fun arrowIcon(): MonochromaticImage =
         MonochromaticImage.Builder(
             image = Icon.createWithResource(this, getArrowIcon())
         ).build()
 
     fun arrowImage(): SmallImage {
-        var icon = Icon.createWithResource(this, getArrowIcon())
+        val icon = Icon.createWithResource(this, getArrowIcon())
         icon.setTint(ReceiveData.getClucoseColor())
         icon.setTintMode(PorterDuff.Mode.SRC_IN)
         return  SmallImage.Builder(
@@ -130,4 +114,37 @@ abstract class BgValueComplicationService(type: ComplicationType) : SuspendingCo
             .setAmbientImage(Icon.createWithResource(this, getArrowIcon()))
             .build()
     }
+
+}
+
+object ActiveComplicationHandler: ReceiveDataInterface {
+    private val LOG_ID = "GlucoDataHandler.ActiveComplicationHandler"
+    private var instanceContextMap = mutableMapOf<Int, Context> ()
+
+    fun addInstance(instanceId: Int, context: Context)
+    {
+        if(instanceContextMap.isEmpty())
+            ReceiveData.addNotifier(this)
+        instanceContextMap[instanceId] = context
+    }
+
+    fun remInstance(instanceId: Int)
+    {
+        instanceContextMap.remove(instanceId)
+        if(instanceContextMap.isEmpty())
+            ReceiveData.remNotifier(this)
+    }
+
+    override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
+        Log.d(LOG_ID, "Update " + instanceContextMap.size.toString() + " active complication(s)")
+        instanceContextMap.forEach {
+            ComplicationDataSourceUpdateRequester
+                .create(
+                    context = context,
+                    complicationDataSourceComponent = ComponentName(it.value, javaClass)
+                )
+                .requestUpdate(it.key)
+        }
+    }
+
 }

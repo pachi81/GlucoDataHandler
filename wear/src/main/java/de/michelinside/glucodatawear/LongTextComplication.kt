@@ -3,17 +3,11 @@ package de.michelinside.glucodatahandler
 import android.util.Log
 import androidx.wear.watchface.complications.data.*
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
-import de.michelinside.glucodatahandler.common.ReceiveData
 
-open class LongTextComplication(descrResId: Int = R.string.long_bg_value_content_description): BgValueComplicationService(ComplicationType.LONG_TEXT) {
-    private val descriptionResourceId = descrResId
+open class LongTextComplication: BgValueComplicationService(ComplicationType.LONG_TEXT) {
 
     open fun getText(): PlainComplicationText {
         return glucoseAndDeltaText()
-    }
-
-    open fun getTitle(): PlainComplicationText? {
-        return null
     }
 
     override fun getComplicationData(request: ComplicationRequest): ComplicationData? {
@@ -21,7 +15,7 @@ open class LongTextComplication(descrResId: Int = R.string.long_bg_value_content
 
         return LongTextComplicationData.Builder(
             getText(),
-            resText(descriptionResourceId)
+            descriptionText()
         )
             .setTitle(getTitle())
             .setSmallImage(arrowImage())
@@ -30,7 +24,7 @@ open class LongTextComplication(descrResId: Int = R.string.long_bg_value_content
     }
 }
 
-class LongText2LinesComplication: LongTextComplication(R.string.long_2_lines_bg_value_content_description) {
+class LongText2LinesComplication: LongTextComplication() {
 
     override fun getText(): PlainComplicationText =
         glucoseText()

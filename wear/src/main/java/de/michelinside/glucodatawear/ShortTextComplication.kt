@@ -7,15 +7,14 @@ import androidx.wear.watchface.complications.data.MonochromaticImage
 import androidx.wear.watchface.complications.data.ShortTextComplicationData
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 
-open class ShortTextComplication(descrResId: Int = R.string.short_bg_value_content_description):  BgValueComplicationService(ComplicationType.SHORT_TEXT) {
-    private val descriptionResourceId = descrResId
+open class ShortTextComplication:  BgValueComplicationService(ComplicationType.SHORT_TEXT) {
 
     override fun getComplicationData(request: ComplicationRequest): ComplicationData? {
         Log.d(LOG_ID, "getComplicationData called for " + request.complicationType.toString())
 
         return ShortTextComplicationData.Builder(
             glucoseText(),
-            resText(descriptionResourceId)
+            descriptionText()
         )
             .setMonochromaticImage(getIcon())
             .setTapAction(getTapAction())
@@ -23,6 +22,6 @@ open class ShortTextComplication(descrResId: Int = R.string.short_bg_value_conte
     }
 }
 
-class ShortTextWithIconComplication: ShortTextComplication(R.string.short_bg_value_with_arrow_content_description) {
+class ShortTextWithIconComplication: ShortTextComplication() {
     override fun getIcon(): MonochromaticImage? = arrowIcon()
 }
