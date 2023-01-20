@@ -7,4 +7,6 @@ object Constants {
     const val GLUCOSE_CONVERSION_FACTOR = 18.0182F
     const val GLUCOSE_MIN_VALUE = 40
     const val GLUCOSE_MAX_VALUE = 400
+    const val SHARED_PREF_TAG = "GlucoDataHandlerPrefs"
+    const val SHARED_PREF_SEND_TO_GLUCODATA_AOD = "send_to_glucodata_aod"
 }

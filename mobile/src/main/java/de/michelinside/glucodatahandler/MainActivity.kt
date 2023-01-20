@@ -1,10 +1,8 @@
 package de.michelinside.glucodatahandler
 
-import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.ReceiveDataInterface
-import de.michelinside.glucodatahandler.common.GlucoDataService
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -12,15 +10,18 @@ import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
 import android.util.Log
+import android.widget.Switch
 import android.widget.TextView
 import com.google.android.gms.wearable.*
-import de.michelinside.glucodatahandler.common.ReceiveDataSource
+import de.michelinside.glucodatahandler.common.*
 
 
 class MainActivity : AppCompatActivity(), ReceiveDataInterface {
     private lateinit var txtLastValue: TextView
     private lateinit var txtVersion: TextView
     private lateinit var txtWearInfo: TextView
+    private lateinit var switchSendToAod: Switch
+    private lateinit var sharedPref: SharedPreferences
     private val LOG_ID = "GlucoDataHandler.Main"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,11 +38,27 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
             }
         }
 
+        sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+
         var serviceIntent = Intent(this, GlucoDataServiceMobile::class.java)
         this.startService(serviceIntent)
 
         txtVersion = findViewById(R.id.txtVersion)
         txtVersion.text = BuildConfig.VERSION_NAME
+
+        switchSendToAod = findViewById(R.id.switchSendToAod)
+        switchSendToAod.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, false)
+        switchSendToAod.setOnCheckedChangeListener { _, isChecked ->
+            Log.d(LOG_ID, "Send to AOD changed: " + isChecked.toString())
+            try {
+                with (sharedPref.edit()) {
+                    putBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, isChecked)
+                    apply()
+                }
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "Changing send to AOD exception: " + exc.message.toString() )
+            }
+        }
     }
 
     override fun onPause() {
