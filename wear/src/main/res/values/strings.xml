@@ -8,6 +8,7 @@
     <string name="long_value_arrow_delta">Glucose, trend and delta</string>
     <string name="long_value_arrow_delta_2_lines">Glucose, trend and delta in 2 lines</string>
     <string name="short_delta">Delta</string>
+    <string name="short_delta_arrow">Delta and trend</string>
     <string name="short_delta_icon">Delta with Icon</string>
     <string name="image_arrow">Colored trend</string>
 </resources>
