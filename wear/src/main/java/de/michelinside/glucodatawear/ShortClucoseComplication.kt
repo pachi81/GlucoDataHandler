@@ -34,7 +34,7 @@ open class ShortClucoseComplication:  BgValueComplicationService(ComplicationTyp
             return RangedValueComplicationData.Builder(
                 value = maxOf(0F, ReceiveData.rawValue.toFloat()-40),
                 min = 0F,
-                max = maxOf(280F, ReceiveData.rawValue.toFloat()-40),
+                max = maxOf(240F, ReceiveData.rawValue.toFloat()-40),
                 contentDescription = descriptionText()
             )
                 .setTitle(getTitle())
@@ -61,6 +61,11 @@ class ShortGlucoseWithDeltaComplication: ShortClucoseComplication() {
 }
 
 class ShortDeltaComplication: ShortClucoseComplication() {
+    override fun getText(): PlainComplicationText = deltaText()
+}
+
+class ShortDeltaWithTrendComplication: ShortClucoseComplication() {
+    override fun getIcon(): MonochromaticImage = arrowIcon()
     override fun getText(): PlainComplicationText = deltaText()
 }
 

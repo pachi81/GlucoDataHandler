@@ -9,6 +9,7 @@
     <string name="long_value_arrow_delta">Zuckerwert, Trendpfeil und Delta</string>
     <string name="long_value_arrow_delta_2_lines">Zuckerwert, Trendpfeil und Delta in 2 Zeilen</string>
     <string name="short_delta">Delta</string>
+    <string name="short_delta_arrow">Delta und Trendpfeil</string>
     <string name="short_delta_icon">Delta mit Icon</string>
     <string name="image_arrow">Farbiger Trendpfeil</string>
 </resources>
