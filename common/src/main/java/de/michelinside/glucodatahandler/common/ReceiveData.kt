@@ -137,7 +137,7 @@ object ReceiveData {
     }
 
     fun getTimeDiffMinute(): Long {
-        return (timeDiff.toFloat()/60000).toBigDecimal().setScale(0, RoundingMode.HALF_UP).toLong()
+        return Utils.round(timeDiff.toFloat()/60000, 0).toLong()
     }
 
     private var notifiers = mutableSetOf<ReceiveDataInterface>()
@@ -186,7 +186,7 @@ object ReceiveData {
             {
                 source = dataSource
                 sensorID = extras.getString(SERIAL) //Name of sensor
-                glucose = extras.getFloat(GLUCOSECUSTOM).toBigDecimal().setScale(1, RoundingMode.HALF_UP).toFloat() //Glucose value in unit in setting
+                glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
                 rate = extras.getFloat(RATE) //Rate of change of glucose. See libre and dexcom label functions
                 rateLabel = getRateLabel(context)
                 alarm = extras.getInt(ALARM) //See showalarm.
@@ -202,8 +202,7 @@ object ReceiveData {
                     val newRaw = extras.getInt(MGDL)
                     if(newRaw!=glucose.toInt())  // mmol/l
                     {
-                        val scale = if (abs(delta) > 1.0F) 1 else 2
-                        delta = (delta / 18.0182F).toBigDecimal().setScale( scale, RoundingMode.HALF_UP).toFloat()
+                        delta = Utils.round(delta / Constants.GLUCOSE_CONVERSION_FACTOR, if (abs(delta) > 1.0F) 1 else 2)
                     }
                 }
                 rawValue = extras.getInt(MGDL)
