@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GlucoDataWear</string>
+
+    <string name="short_value">Zuckerwert</string>
+    <string name="short_value_icon">Zuckerwert mit Icon</string>
+    <string name="short_value_arrow">Zuckerwert und Trendpfeil</string>
+    <string name="short_value_delta">Zuckerwert und Delta</string>
+    <string name="long_value_arrow_delta">Zuckerwert, Trendpfeil und Delta</string>
+    <string name="long_value_arrow_delta_2_lines">Zuckerwert, Trendpfeil und Delta in 2 Zeilen</string>
+    <string name="short_delta">Delta</string>
+    <string name="short_delta_icon">Delta mit Icon</string>
+    <string name="image_arrow">Farbiger Trendpfeil</string>
+</resources>

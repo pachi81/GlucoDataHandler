@@ -1,20 +1,13 @@
 <resources>
     <string name="app_name">GlucoDataWear</string>
-    <string name="short_text_label">BG Value only</string>
-    <string name="short_bg_value_content_description">BG value only</string>
-    <string name="short_text_with_arrow_label">BG Value with direction</string>
-    <string name="short_bg_value_with_arrow_content_description">BG value with direction</string>
-    <string name="range_label">Range BG Value only</string>
-    <string name="range_bg_value_content_description">Range BG value only</string>
-    <string name="range_with_arrow_label">Range BG Value with direction</string>
-    <string name="range_bg_value_with_arrow_content_description">Range BG value with direction</string>
 
-    <string name="long_text_label">Long BG Value with direction and delta</string>
-    <string name="long_bg_value_content_description">Long BG Value with direction and delta</string>
-    <string name="long_text_2_lines_label">Long BG Value with direction and delta in 2 lines</string>
-    <string name="long_2_lines_bg_value_content_description">Long BG Value with direction and delta in 2 lines</string>
-    <!--
-    This string is used for square devices and overridden by hello_world in
-    values-round/strings.xml for round devices.
-    -->
+    <string name="short_value">Glucose</string>
+    <string name="short_value_icon">Glucose with icon</string>
+    <string name="short_value_arrow">Glucose and trend</string>
+    <string name="short_value_delta">Glucose and delta</string>
+    <string name="long_value_arrow_delta">Glucose, trend and delta</string>
+    <string name="long_value_arrow_delta_2_lines">Glucose, trend and delta in 2 lines</string>
+    <string name="short_delta">Delta</string>
+    <string name="short_delta_icon">Delta with Icon</string>
+    <string name="image_arrow">Colored trend</string>
 </resources>
