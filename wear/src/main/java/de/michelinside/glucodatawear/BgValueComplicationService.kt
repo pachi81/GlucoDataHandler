@@ -13,7 +13,6 @@ import androidx.wear.watchface.complications.data.*
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
-import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.ReceiveDataInterface
 import de.michelinside.glucodatahandler.common.ReceiveDataSource
@@ -38,9 +37,8 @@ abstract class BgValueComplicationService(type: ComplicationType) : SuspendingCo
         try {
             super.onComplicationActivated(complicationInstanceId, type)
             Log.d(LOG_ID, "onComplicationActivated called for id " + complicationInstanceId + " (" + type + ")" )
-            val serviceIntent = Intent(this, GlucoDataService::class.java)
+            val serviceIntent = Intent(this, GlucoDataServiceWear::class.java)
             this.startService(serviceIntent)
-            ActiveComplicationHandler.addInstance(complicationInstanceId, ComponentName(this, javaClass))
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onComplicationActivated exception: " + exc.message.toString() )
         }
@@ -50,7 +48,6 @@ abstract class BgValueComplicationService(type: ComplicationType) : SuspendingCo
         try {
             Log.d(LOG_ID, "onComplicationDeactivated called for id " + complicationInstanceId )
             super.onComplicationDeactivated(complicationInstanceId)
-            ActiveComplicationHandler.remInstance(complicationInstanceId)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onComplicationDeactivated exception: " + exc.message.toString() )
         }
@@ -166,35 +163,32 @@ abstract class BgValueComplicationService(type: ComplicationType) : SuspendingCo
 
 object ActiveComplicationHandler: ReceiveDataInterface {
     private val LOG_ID = "GlucoDataHandler.ActiveComplicationHandler"
-    private var instanceContextMap = mutableMapOf<Int, ComponentName> ()
 
-    fun addInstance(instanceId: Int, providerComponent: ComponentName)
-    {
-        if(instanceContextMap.isEmpty())
-            ReceiveData.addNotifier(this)
-        instanceContextMap[instanceId] = providerComponent
-    }
-
-    fun remInstance(instanceId: Int)
-    {
-        instanceContextMap.remove(instanceId)
-        if(instanceContextMap.isEmpty())
-            ReceiveData.remNotifier(this)
-    }
+    val complicationClassSet = mutableSetOf<Class<*>>(
+        LongTextComplication::class.java,
+        LongText2LinesComplication::class.java,
+        ShortClucoseComplication::class.java,
+        ShortGlucoseWithIconComplication::class.java,
+        ShortGlucoseWithTrendComplication::class.java,
+        ShortGlucoseWithTrendRangeComplication::class.java,
+        ShortGlucoseWithDeltaComplication::class.java,
+        ShortDeltaComplication::class.java,
+        ShortDeltaWithTrendComplication::class.java,
+        ShortDeltaWithIconComplication::class.java,
+        SmallImageComplication::class.java
+    )
 
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
-        Log.d(LOG_ID, "Update " + instanceContextMap.size.toString() + " active complication(s)")
+        Log.i(LOG_ID, "Update " + complicationClassSet.size.toString() + " complication classes")
         if (dataSource != ReceiveDataSource.CAPILITY_INFO) {
-            instanceContextMap.forEach {
-                Log.d(LOG_ID, "Update " + it.value.toString() + " id: " + it.key.toString())
+            complicationClassSet.forEach {
                 ComplicationDataSourceUpdateRequester
                     .create(
                         context = context,
-                        complicationDataSourceComponent = it.value
+                        complicationDataSourceComponent = ComponentName(context, it)
                     )
-                    .requestUpdate(it.key)
+                    .requestUpdateAll()
             }
         }
     }
-
 }

@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import de.michelinside.glucodatahandler.common.GlucoDataService
 
 class StartServiceAtBootReceiver: BroadcastReceiver() {
 
@@ -12,7 +11,7 @@ class StartServiceAtBootReceiver: BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (Intent.ACTION_BOOT_COMPLETED == intent.action) {
             Log.d(LOG_ID, "Start Service after booting")
-            var serviceIntent = Intent(context, GlucoDataService::class.java)
+            var serviceIntent = Intent(context, GlucoDataServiceWear::class.java)
             context.startService(serviceIntent)
         }
     }

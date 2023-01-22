@@ -6,6 +6,7 @@
     <string name="short_value">Glucose</string>
     <string name="short_value_icon">Glucose with icon</string>
     <string name="short_value_arrow">Glucose and trend</string>
+    <string name="short_value_trend_range">Glucose and trend-range (if supported)</string>
     <string name="short_value_delta">Glucose and delta</string>
     <string name="long_value_arrow_delta">Glucose, delta and trend</string>
     <string name="long_value_arrow_delta_2_lines">Long glucose, trend and delta in 2 lines</string>

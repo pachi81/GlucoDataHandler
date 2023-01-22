@@ -7,6 +7,7 @@
     <string name="short_value">Zuckerwert</string>
     <string name="short_value_icon">Zuckerwert mit Icon</string>
     <string name="short_value_arrow">Zuckerwert und Trendpfeil</string>
+    <string name="short_value_trend_range">Zuckerwert and Trendkreis (wenn unterstützt)</string>
     <string name="short_value_delta">Zuckerwert und Delta</string>
     <string name="long_value_arrow_delta">Zuckerwert, Trendpfeil und Delta</string>
     <string name="long_value_arrow_delta_2_lines">Zuckerwert, Trendpfeil und Delta in 2 Zeilen</string>
