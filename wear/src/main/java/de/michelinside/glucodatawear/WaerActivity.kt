@@ -11,12 +11,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
-import com.google.android.gms.wearable.CapabilityClient
-import com.google.android.gms.wearable.CapabilityInfo
-import com.google.android.gms.wearable.Wearable
-import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveDataSource
 import de.michelinside.glucodatahandler.databinding.ActivityWaerBinding
 import java.util.*
@@ -39,7 +33,7 @@ class WaerActivity : Activity(), ReceiveDataInterface {
         binding = ActivityWaerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        var serviceIntent = Intent(this, GlucoDataService::class.java)
+        var serviceIntent = Intent(this, GlucoDataServiceWear::class.java)
         this.startService(serviceIntent)
 
         txtVersion = findViewById(R.id.txtVersion)

@@ -64,6 +64,22 @@ class ShortGlucoseWithTrendComplication: ShortClucoseComplication() {
     override fun getIcon(): MonochromaticImage = arrowIcon()
 }
 
+class ShortGlucoseWithTrendRangeComplication: ShortClucoseComplication() {
+    override fun getRangeValueComplicationData(): RangedValueComplicationData {
+        return RangedValueComplicationData.Builder(
+            value = Utils.rangeValue( ReceiveData.rate, -3.8F, +3.8F),
+            min = 0F,
+            max = 4F,
+            contentDescription = descriptionText()
+        )
+            .setTitle(getTitle())
+            .setText(getText())
+            .setMonochromaticImage(getIcon())
+            .setTapAction(getTapAction())
+            .build()
+    }
+}
+
 class ShortGlucoseWithDeltaComplication: ShortClucoseComplication() {
     override fun getTitle(): PlainComplicationText = deltaText()
 }
@@ -72,8 +88,6 @@ open class ShortDeltaComplication: ShortClucoseComplication() {
     override fun getText(): PlainComplicationText = deltaText()
 
     override fun getRangeValueComplicationData(): RangedValueComplicationData {
-        // for any reason, the min value seems to be ignored, so start at zero (which is 40)
-        // and substract the 40 from the value
         return RangedValueComplicationData.Builder(
             value = Utils.rangeValue( ReceiveData.rate, -3.8F, +3.8F),
             min = 0F,

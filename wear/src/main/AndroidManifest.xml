@@ -45,7 +45,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <service android:name=".common.GlucoDataService" android:enabled="true" android:exported="true">
+        <service android:name=".GlucoDataServiceWear" android:enabled="true" android:exported="true">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
                 <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED" />
@@ -141,6 +141,23 @@
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
+        </service>
+        <service
+            android:name=".ShortGlucoseWithTrendRangeComplication"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/short_value_trend_range"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="RANGED_VALUE" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="60" />
         </service>
         <service
             android:name=".ShortGlucoseWithDeltaComplication"
