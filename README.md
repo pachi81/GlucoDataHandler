@@ -4,6 +4,8 @@ This Android and Wear OS App receives glucodata broadcasts from Juggluco (mobile
 The mobile version provides a tasker event plugin to handle these data in tasker.
 The wear version provides some complication, which can be used in every watchface with complication support.
 
+The wear version is a standalone version, you don´t need the mobile version, if you don´t have problems with the communication between the mobile and wear version of Juggluco. If you have any troubles or you can not install Juggluco on your mobile device for any reason, you can use my both apps which are also exchanging the glucodata broadcast.
+
 ## Installation
 ### Mobile
 Install the last released version and start it once. 
