@@ -1,26 +1,28 @@
 package de.michelinside.glucodatahandler
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Icon
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.wear.watchface.complications.data.*
+import androidx.wear.watchface.complications.datasource.ComplicationDataSourceService
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
-import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.ReceiveDataInterface
-import de.michelinside.glucodatahandler.common.ReceiveDataSource
+import de.michelinside.glucodatahandler.common.*
 
 
-abstract class BgValueComplicationService(type: ComplicationType) : SuspendingComplicationDataSourceService() {
-    protected val LOG_ID = "GlucoDataHandler.Complication." + type.toString()
-    val complicationTpe = type
+abstract class BgValueComplicationService : SuspendingComplicationDataSourceService() {
+    protected val LOG_ID = "GlucoDataHandler.BgValueComplicationService"
     var descriptionResId: Int = R.string.app_name
 
     override fun onCreate() {
@@ -56,10 +58,6 @@ abstract class BgValueComplicationService(type: ComplicationType) : SuspendingCo
     override suspend fun onComplicationRequest(request: ComplicationRequest): ComplicationData? {
         try {
             Log.d(LOG_ID, "onComplicationRequest called for " + request.complicationType.toString())
-            if (!isTypeSupported(request.complicationType)) {
-                Log.w(LOG_ID, "invalid complication type: " + request.complicationType.toString())
-                return null
-            }
             return getComplicationData(request)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onComplicationRequest exception: " + exc.message.toString() )
@@ -72,10 +70,81 @@ abstract class BgValueComplicationService(type: ComplicationType) : SuspendingCo
         return getComplicationData(ComplicationRequest(0, type))!!
     }
 
-    open fun isTypeSupported(type: ComplicationType): Boolean =
-        type == complicationTpe
+    private fun getComplicationData(request: ComplicationRequest): ComplicationData? {
+        return when(request.complicationType) {
+            ComplicationType.SHORT_TEXT -> getShortTextComplicationData()
+            ComplicationType.RANGED_VALUE -> getRangeValueComplicationData()
+            ComplicationType.LONG_TEXT -> getLongTextComplicationData()
+            ComplicationType.SMALL_IMAGE -> getSmallImageComplicationData()
+            ComplicationType.MONOCHROMATIC_IMAGE -> getIconComplicationData()
+            else -> {
+                Log.e(LOG_ID, "Unsupported type: " + request.complicationType)
+                null
+            }
+        }
+    }
 
-    abstract fun getComplicationData(request: ComplicationRequest): ComplicationData?
+    private fun getShortTextComplicationData(): ComplicationData {
+        return ShortTextComplicationData.Builder(
+            getText(),
+            descriptionText()
+        )
+            .setTitle(getTitle())
+            .setMonochromaticImage(getIcon())
+            .setTapAction(getTapAction())
+            .build()
+    }
+
+    open fun getRangeValueComplicationData(): ComplicationData {
+        // for any reason, the min value seems to be ignored, so start at zero (which is 40)
+        // and substract the 40 from the value
+        val value = ReceiveData.rawValue.toFloat() - Constants.GLUCOSE_MIN_VALUE
+        val max = 280F - Constants.GLUCOSE_MIN_VALUE
+        return RangedValueComplicationData.Builder(
+            value = Utils.rangeValue(value, 0F, max),
+            min = 0F,
+            max = 240F,
+            contentDescription = descriptionText()
+        )
+            .setTitle(getTitle())
+            .setText(getText())
+            .setMonochromaticImage(getIcon())
+            .setTapAction(getTapAction())
+            .build()
+    }
+
+    private fun getLongTextComplicationData(): ComplicationData {
+        return LongTextComplicationData.Builder(
+            getText(),
+            descriptionText()
+        )
+            .setTitle(getTitle())
+            .setSmallImage(arrowImage())
+            .setTapAction(getTapAction())
+            .build()
+    }
+
+    private fun getSmallImageComplicationData(): ComplicationData {
+        return SmallImageComplicationData.Builder (
+            smallImage = arrowImage(),
+            contentDescription = descriptionText()
+        )
+            .setTapAction(getTapAction())
+            .build()
+    }
+
+    private fun getIconComplicationData(): ComplicationData {
+        return MonochromaticImageComplicationData.Builder (
+            arrowIcon(),
+            descriptionText()
+        )
+            .setTapAction(getTapAction())
+            .build()
+    }
+
+    open fun getIcon(): MonochromaticImage? = null
+    open fun getTitle(): PlainComplicationText? = null
+    open fun getText(): PlainComplicationText = glucoseText()
 
     fun getTapAction(): PendingIntent? {
         var launchIntent: Intent? = packageManager.getLaunchIntentForPackage("tk.glucodata")
@@ -84,7 +153,7 @@ abstract class BgValueComplicationService(type: ComplicationType) : SuspendingCo
             Log.d(LOG_ID, "Juggluco not found, use own one")
             launchIntent = Intent(this, WaerActivity::class.java)
         }
-        launchIntent.setAction(Intent.ACTION_MAIN)
+        launchIntent.action = Intent.ACTION_MAIN
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
         return PendingIntent.getActivity(applicationContext, System.currentTimeMillis().toInt(), launchIntent,  PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
     }
@@ -93,16 +162,21 @@ abstract class BgValueComplicationService(type: ComplicationType) : SuspendingCo
         if((System.currentTimeMillis()- ReceiveData.time) > (600 * 1000))
             return R.drawable.icon_question
         if (ReceiveData.rate >= 3.5f) return R.drawable.icon_chevron_up
-        if (ReceiveData.rate >= 2.0f) return R.drawable.icon_stick_up
-        if (ReceiveData.rate >= 1.0f) return R.drawable.icon_stick_up_right
-        if (ReceiveData.rate > -1.0f) return R.drawable.icon_stick_right
-        if (ReceiveData.rate > -2.0f) return R.drawable.icon_stick_down_right
-        if (ReceiveData.rate > -3.5f) return R.drawable.icon_stick_down
+        if (ReceiveData.rate >= 2.0f) return R.drawable.arrow_up_90
+        if (ReceiveData.rate >= 1.66f) return R.drawable.arrow_up_75
+        if (ReceiveData.rate >= 1.33f) return R.drawable.arrow_up_60
+        if (ReceiveData.rate >= 1.0f) return R.drawable.arrow_up_45
+        if (ReceiveData.rate >= 0.66f) return R.drawable.arrow_up_30
+        if (ReceiveData.rate >= 0.33f) return R.drawable.arrow_up_15
+        if (ReceiveData.rate > -0.33f) return R.drawable.arrow_right
+        if (ReceiveData.rate > -0.66f) return R.drawable.arrow_down_15
+        if (ReceiveData.rate > -1.0f) return R.drawable.arrow_down_30
+        if (ReceiveData.rate > -1.33f) return R.drawable.arrow_down_45
+        if (ReceiveData.rate > -1.66f) return R.drawable.arrow_down_60
+        if (ReceiveData.rate > -2.0f) return R.drawable.arrow_down_75
+        if (ReceiveData.rate > -3.5f) return R.drawable.arrow_down_90
         return if (java.lang.Float.isNaN(ReceiveData.rate)) R.drawable.icon_question else R.drawable.icon_chevron_down
     }
-
-    open fun getIcon(): MonochromaticImage? = null
-    open fun getTitle(): PlainComplicationText? = null
 
     fun plainText(text: CharSequence): PlainComplicationText =
         PlainComplicationText.Builder(text).build()
@@ -162,25 +236,48 @@ abstract class BgValueComplicationService(type: ComplicationType) : SuspendingCo
 }
 
 object ActiveComplicationHandler: ReceiveDataInterface {
-    private val LOG_ID = "GlucoDataHandler.ActiveComplicationHandler"
+    private const val LOG_ID = "GlucoDataHandler.ActiveComplicationHandler"
 
     val complicationClassSet = mutableSetOf<Class<*>>(
         LongTextComplication::class.java,
-        LongText2LinesComplication::class.java,
         ShortClucoseComplication::class.java,
         ShortGlucoseWithIconComplication::class.java,
         ShortGlucoseWithTrendComplication::class.java,
         ShortGlucoseWithTrendRangeComplication::class.java,
+        ShortGlucoseWithDeltaAndTrendRangeComplication::class.java,
         ShortGlucoseWithDeltaComplication::class.java,
         ShortDeltaComplication::class.java,
         ShortDeltaWithTrendComplication::class.java,
         ShortDeltaWithIconComplication::class.java,
-        SmallImageComplication::class.java
+        SmallImageComplication::class.java,
+        IconComplication::class.java
     )
+
+    @SuppressLint("QueryPermissionsNeeded")
+    private fun getPackages(context: Context): PackageInfo {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return context.packageManager.getPackageInfo(context.packageName, PackageManager.PackageInfoFlags.of(PackageManager.GET_SERVICES.toLong()))
+        } else {
+            @Suppress("DEPRECATION") return context.packageManager.getPackageInfo(context.packageName, PackageManager.GET_SERVICES)
+        }
+    }
 
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
         Log.i(LOG_ID, "Update " + complicationClassSet.size.toString() + " complication classes")
-        if (dataSource != ReceiveDataSource.CAPILITY_INFO) {
+        val packageInfo = getPackages(context)
+        Log.w(LOG_ID, "Got " + packageInfo.services.size + " services: ")
+        packageInfo.services.forEach {
+            val isComplication =  BgValueComplicationService::class.java.isAssignableFrom(Class.forName(it.name))
+            if(isComplication) {
+                ComplicationDataSourceUpdateRequester
+                    .create(
+                        context = context,
+                        complicationDataSourceComponent = ComponentName(context, it.name)
+                    )
+                    .requestUpdateAll()
+            }
+        }
+        /*if (dataSource != ReceiveDataSource.CAPILITY_INFO) {
             complicationClassSet.forEach {
                 ComplicationDataSourceUpdateRequester
                     .create(
@@ -189,6 +286,6 @@ object ActiveComplicationHandler: ReceiveDataInterface {
                     )
                     .requestUpdateAll()
             }
-        }
+        }*/
     }
 }

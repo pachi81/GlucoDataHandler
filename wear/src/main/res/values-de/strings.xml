@@ -15,4 +15,5 @@
     <string name="short_delta_arrow">Delta und Trendpfeil</string>
     <string name="short_delta_icon">Delta mit Icon</string>
     <string name="image_arrow">Farbiger Trendpfeil</string>
+    <string name="icon_arrow">Trendpfeil</string>
 </resources>

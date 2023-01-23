@@ -14,4 +14,5 @@
     <string name="short_delta_arrow">Delta and trend</string>
     <string name="short_delta_icon">Delta with Icon</string>
     <string name="image_arrow">Colored trend</string>
+    <string name="icon_arrow">Trend icon</string>
 </resources>
