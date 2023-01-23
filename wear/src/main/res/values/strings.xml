@@ -10,7 +10,6 @@
     <string name="short_value_delta_trend_range">Glucose, delta and trend-range (if supported)</string>
     <string name="short_value_delta">Glucose and delta</string>
     <string name="long_value_arrow_delta">Glucose, delta and trend</string>
-    <string name="long_value_arrow_delta_2_lines">Long glucose, trend and delta in 2 lines</string>
     <string name="short_delta">Delta</string>
     <string name="short_delta_arrow">Delta and trend</string>
     <string name="short_delta_icon">Delta with Icon</string>

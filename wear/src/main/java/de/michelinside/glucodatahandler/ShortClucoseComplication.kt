@@ -16,6 +16,15 @@ class ShortGlucoseWithTrendComplication: BgValueComplicationService() {
     override fun getIcon(): MonochromaticImage = arrowIcon()
 }
 
+class ShortGlucoseWithDeltaComplication: ShortClucoseComplication() {
+    override fun getTitle(): PlainComplicationText = deltaText()
+}
+
+class ShortGlucoseWithDeltaAndTrendComplication: ShortClucoseComplication() {
+    override fun getTitle(): PlainComplicationText = deltaText()
+    override fun getIcon(): MonochromaticImage = arrowIcon()
+}
+
 open class ShortGlucoseWithTrendRangeComplication: BgValueComplicationService() {
     override fun getRangeValueComplicationData(): ComplicationData {
         return RangedValueComplicationData.Builder(
@@ -33,10 +42,6 @@ open class ShortGlucoseWithTrendRangeComplication: BgValueComplicationService() 
 }
 
 class ShortGlucoseWithDeltaAndTrendRangeComplication: ShortGlucoseWithTrendRangeComplication() {
-    override fun getTitle(): PlainComplicationText = deltaText()
-}
-
-class ShortGlucoseWithDeltaComplication: ShortClucoseComplication() {
     override fun getTitle(): PlainComplicationText = deltaText()
 }
 
