@@ -5,7 +5,6 @@ import de.michelinside.glucodatahandler.common.ReceiveDataInterface
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -14,7 +13,6 @@ import androidx.annotation.RequiresApi
 import de.michelinside.glucodatahandler.common.ReceiveDataSource
 import de.michelinside.glucodatahandler.databinding.ActivityWaerBinding
 import java.util.*
-import kotlin.coroutines.cancellation.CancellationException
 
 
 class WaerActivity : Activity(), ReceiveDataInterface {
@@ -33,7 +31,7 @@ class WaerActivity : Activity(), ReceiveDataInterface {
         binding = ActivityWaerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        var serviceIntent = Intent(this, GlucoDataServiceWear::class.java)
+        val serviceIntent = Intent(this, GlucoDataServiceWear::class.java)
         this.startService(serviceIntent)
 
         txtVersion = findViewById(R.id.txtVersion)

@@ -1,7 +1,6 @@
 package de.michelinside.glucodatahandler
 
 import android.util.Log
-import de.michelinside.glucodatahandler.ActiveComplicationHandler
 import de.michelinside.glucodatahandler.common.*
 
 class GlucoDataServiceWear: GlucoDataService() {
