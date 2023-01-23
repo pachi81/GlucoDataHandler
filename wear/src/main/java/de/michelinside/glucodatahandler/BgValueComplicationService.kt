@@ -95,14 +95,12 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     }
 
     open fun getRangeValueComplicationData(): ComplicationData {
-        // for any reason, the min value seems to be ignored, so start at zero (which is 40)
-        // and substract the 40 from the value
-        val value = ReceiveData.rawValue.toFloat() - Constants.GLUCOSE_MIN_VALUE
-        val max = 280F - Constants.GLUCOSE_MIN_VALUE
+        val value = ReceiveData.glucose
+        val max = if(ReceiveData.isMmol()) 16F else 280F
         return RangedValueComplicationData.Builder(
             value = Utils.rangeValue(value, 0F, max),
             min = 0F,
-            max = 240F,
+            max = max,
             contentDescription = descriptionText()
         )
             .setTitle(getTitle())
