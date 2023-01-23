@@ -232,26 +232,10 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
             .setAmbientImage(ambientArrowIcon())
             .build()
     }
-
 }
 
 object ActiveComplicationHandler: ReceiveDataInterface {
     private const val LOG_ID = "GlucoDataHandler.ActiveComplicationHandler"
-
-    val complicationClassSet = mutableSetOf<Class<*>>(
-        LongTextComplication::class.java,
-        ShortClucoseComplication::class.java,
-        ShortGlucoseWithIconComplication::class.java,
-        ShortGlucoseWithTrendComplication::class.java,
-        ShortGlucoseWithTrendRangeComplication::class.java,
-        ShortGlucoseWithDeltaAndTrendRangeComplication::class.java,
-        ShortGlucoseWithDeltaComplication::class.java,
-        ShortDeltaComplication::class.java,
-        ShortDeltaWithTrendComplication::class.java,
-        ShortDeltaWithIconComplication::class.java,
-        SmallImageComplication::class.java,
-        IconComplication::class.java
-    )
 
     @SuppressLint("QueryPermissionsNeeded")
     private fun getPackages(context: Context): PackageInfo {
@@ -263,9 +247,8 @@ object ActiveComplicationHandler: ReceiveDataInterface {
     }
 
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
-        Log.i(LOG_ID, "Update " + complicationClassSet.size.toString() + " complication classes")
         val packageInfo = getPackages(context)
-        Log.w(LOG_ID, "Got " + packageInfo.services.size + " services: ")
+        Log.w(LOG_ID, "Got " + packageInfo.services.size + " services.")
         packageInfo.services.forEach {
             val isComplication =  BgValueComplicationService::class.java.isAssignableFrom(Class.forName(it.name))
             if(isComplication) {
@@ -277,15 +260,5 @@ object ActiveComplicationHandler: ReceiveDataInterface {
                     .requestUpdateAll()
             }
         }
-        /*if (dataSource != ReceiveDataSource.CAPILITY_INFO) {
-            complicationClassSet.forEach {
-                ComplicationDataSourceUpdateRequester
-                    .create(
-                        context = context,
-                        complicationDataSourceComponent = ComponentName(context, it)
-                    )
-                    .requestUpdateAll()
-            }
-        }*/
     }
 }
