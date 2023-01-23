@@ -1,19 +1,25 @@
 # Glucose Data Handler
 
-This Android and Wear OS App provides an interface between Juggluco and Tasker.
-It converts the Glucodata broadcast from Juggluco to an event for Tasker.
-This event can be used for Tasker profiles.
+This Android and Wear OS App receives glucodata broadcasts from Juggluco (mobile or/and wear version).
+The mobile version provides a tasker event plugin to handle these data in tasker.
+The wear version provides some complication, which can be used in every watchface with complication support.
 
 ## Installation
+### Mobile
 Install the last released version and start it once. 
 You will be asked to disable battery optimization. Please turn it off.
+
+### Wear
+A guide to install an apk on wear can be found [here](https://forum.xda-developers.com/t/how-to-install-apps-on-wear-os-all-methods.4510255/).
 
 ## Configuration
 In Juggluco activate "Glucodata broadcast" in the settings menu.
 
+### Wear complications
+There are several complications for the different types of wear os complications.
 
-If all works like expected you can create a new profile in Tasker and select as event the plugin Juggluco Tasker Plugin.
-Now you can use the variables for anything you like to do with.
+**IMPORTANT:** Not all complications are fully supported by any watchface. For example the SHORT_TEXT type supports an icon, a text and a title, but the most watchfaces only show icon and text or text and title, but there are some, showing all 3 types in one.
+Also the RANGE_VALUE complication is handled different in each watchface. Some watchfaces supports negativ values for the range circle. To test, if your watchface supports negativ range values, you can use my *Test range complication ...* complication to verify it.
 
 ### Tasker Variables
 
