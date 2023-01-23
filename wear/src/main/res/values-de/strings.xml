@@ -8,6 +8,7 @@
     <string name="short_value_icon">Zuckerwert mit Icon</string>
     <string name="short_value_arrow">Zuckerwert und Trendpfeil</string>
     <string name="short_value_trend_range">Zuckerwert and Trendkreis (wenn unterstützt)</string>
+    <string name="short_value_delta_trend_range">Zuckerwert, Delta and Trendkreis (wenn unterstützt)</string>
     <string name="short_value_delta">Zuckerwert und Delta</string>
     <string name="long_value_arrow_delta">Zuckerwert, Trendpfeil und Delta</string>
     <string name="long_value_arrow_delta_2_lines">Zuckerwert, Trendpfeil und Delta in 2 Zeilen</string>
@@ -15,4 +16,6 @@
     <string name="short_delta_arrow">Delta und Trendpfeil</string>
     <string name="short_delta_icon">Delta mit Icon</string>
     <string name="image_arrow">Farbiger Trendpfeil</string>
+    <string name="icon_arrow">Trendpfeil</string>
+    <string name="test_neg_range">Test Range complication mit negativen Werten (für Trendkreis Unterstützung)</string>
 </resources>

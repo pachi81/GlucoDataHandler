@@ -7,6 +7,7 @@
     <string name="short_value_icon">Glucose with icon</string>
     <string name="short_value_arrow">Glucose and trend</string>
     <string name="short_value_trend_range">Glucose and trend-range (if supported)</string>
+    <string name="short_value_delta_trend_range">Glucose, delta and trend-range (if supported)</string>
     <string name="short_value_delta">Glucose and delta</string>
     <string name="long_value_arrow_delta">Glucose, delta and trend</string>
     <string name="long_value_arrow_delta_2_lines">Long glucose, trend and delta in 2 lines</string>
@@ -14,4 +15,6 @@
     <string name="short_delta_arrow">Delta and trend</string>
     <string name="short_delta_icon">Delta with Icon</string>
     <string name="image_arrow">Colored trend</string>
+    <string name="icon_arrow">Trend icon</string>
+    <string name="test_neg_range">Test Range complication with negative values (for trend-range support)</string>
 </resources>
