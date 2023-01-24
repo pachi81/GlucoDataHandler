@@ -19,6 +19,13 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
     override fun onCreate() {
         super.onCreate()
         Log.d(LOG_ID, "onCreate called")
+
+        val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+
+        ReceiveData.targetMin = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MIN, ReceiveData.targetMin)
+        ReceiveData.targetMax = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, ReceiveData.targetMax)
+        Log.i(LOG_ID, "min/max set: " + ReceiveData.targetMin.toString() + "/" + ReceiveData.targetMax.toString())
+
         ReceiveData.addNotifier(this)
         Wearable.getMessageClient(this).addListener(this)
         Log.d(LOG_ID, "MessageClient added")
@@ -85,8 +92,8 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
     }
 
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
-        Log.d(LOG_ID, "Forward received intent.extras")
-        if (extras != null) {
+        if (dataSource != ReceiveDataSource.MESSAGECLIENT && extras != null) {
+            Log.d(LOG_ID, "Forward received intent.extras")
             Thread {
                 SendMessage(context, Utils.bundleToBytes(extras))
             }.start()

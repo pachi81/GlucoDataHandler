@@ -51,11 +51,11 @@ class WaerActivity : Activity(), ReceiveDataInterface {
             numMin = findViewById(R.id.numMin)
             numMax = findViewById(R.id.numMax)
 
-            numMin.setText(sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MIN, ReceiveData.targetMin).toString())
-            numMax.setText(sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, ReceiveData.targetMax).toString())
-
             numMin.addTextChangedListener(EditTextWatcher(Constants.SHARED_PREF_TARGET_MIN, sharedPref))
             numMax.addTextChangedListener(EditTextWatcher(Constants.SHARED_PREF_TARGET_MAX, sharedPref))
+
+            numMin.setText(sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MIN, ReceiveData.targetMin).toString())
+            numMax.setText(sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, ReceiveData.targetMax).toString())
 
             switchForground = findViewById(R.id.switchForground)
             switchForground.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)

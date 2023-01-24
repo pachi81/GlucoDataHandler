@@ -241,10 +241,12 @@ object ReceiveData {
                         {
                             targetMin = Utils.mgToMmol(targetMin)
                             targetMax = Utils.mgToMmol(targetMax)
+                            Log.i(LOG_ID, "min/max changed from mg/dl to mmol/l: " + targetMin.toString() + "/" + targetMax.toString())
                         }
                     } else if (targetMin < 20F) {
                         targetMin = Utils.mmolToMg(targetMin)
                         targetMax = Utils.mmolToMg(targetMax)
+                        Log.i(LOG_ID, "min/max changed from mmol/l to mg/dl: " + targetMin.toString() + "/" + targetMax.toString())
                     }
                 }
                 rawValue = extras.getInt(MGDL)
