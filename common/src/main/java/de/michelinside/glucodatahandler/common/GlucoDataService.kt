@@ -1,24 +1,73 @@
 package de.michelinside.glucodatahandler.common
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Parcel
 import android.util.Log
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.*
+import kotlin.coroutines.cancellation.CancellationException
 
 
-open class GlucoDataService : WearableListenerService(), MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener {
+open class GlucoDataService : WearableListenerService(), MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener, ReceiveDataInterface {
     private val LOG_ID = "GlucoDataHandler.GlucoDataService"
 
     override fun onCreate() {
         super.onCreate()
         Log.d(LOG_ID, "onCreate called")
-        /*if (Build.VERSION.SDK_INT >= 26) {
-            val CHANNEL_ID = "my_channel_01"
+        ReceiveData.addNotifier(this)
+        Wearable.getMessageClient(this).addListener(this)
+        Log.d(LOG_ID, "MessageClient added")
+        Wearable.getCapabilityClient(this).addListener(this,
+            Uri.parse("wear://"),
+            CapabilityClient.FILTER_REACHABLE)
+        Log.d(LOG_ID, "CapabilityClient added")
+        Thread {
+            ReceiveData.capabilityInfo = Tasks.await(
+                Wearable.getCapabilityClient(this)
+                    .getCapability(Constants.CAPABILITY, CapabilityClient.FILTER_REACHABLE)
+            )
+            Log.d(LOG_ID, ReceiveData.capabilityInfo!!.nodes.size.toString() + " nodes received")
+        }.start()
+    }
+
+    override fun onDestroy() {
+        ReceiveData.remNotifier(this)
+        Wearable.getMessageClient(this).removeListener(this)
+        Wearable.getCapabilityClient(this).removeListener(this)
+        super.onDestroy()
+        Log.d(LOG_ID, "onDestroy called")
+    }
+
+    override fun onMessageReceived(p0: MessageEvent) {
+        try {
+            Log.d(LOG_ID, "onMessageReceived called: " + p0.toString())
+            ReceiveData.handleIntent(this, ReceiveDataSource.MESSAGECLIENT, Utils.bytesToBundle(p0.data))
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onMessageReceived exception: " + exc.message.toString() )
+        }
+    }
+
+    override fun onCapabilityChanged(capabilityInfo: CapabilityInfo) {
+        Log.i(LOG_ID, "onCapabilityChanged called: " + capabilityInfo.toString())
+        ReceiveData.capabilityInfo = capabilityInfo
+        ReceiveData.notify(this, ReceiveDataSource.CAPILITY_INFO, ReceiveData.curExtraBundle)
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.d(LOG_ID, "onStartCommand called")
+        super.onStartCommand(intent, flags, startId)
+        val isForeground = intent?.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
+        if (isForeground == true) {
+            Log.i(LOG_ID, "Starting service in foreground!")
+            val CHANNEL_ID = "glucodatahandler_service_01"
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                "Channel human readable title",
+                "Foregorund GlucoDataService",
                 NotificationManager.IMPORTANCE_DEFAULT
             )
             (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(
@@ -28,47 +77,61 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
                 .setContentTitle("")
                 .setContentText("").build()
             startForeground(1, notification)
-        }*/
-
-        Wearable.getMessageClient(this).addListener(this)
-        Log.d(LOG_ID, "MessageClient added")
-        Wearable.getCapabilityClient(this).addListener(this,
-            Uri.parse("wear://"),
-            CapabilityClient.FILTER_REACHABLE)
-        Log.d(LOG_ID, "CapabilityClient added")
-        Thread(Runnable {
-            ReceiveData.capabilityInfo = Tasks.await(
-                Wearable.getCapabilityClient(this).getCapability(Constants.CAPABILITY, CapabilityClient.FILTER_REACHABLE))
-            Log.d(LOG_ID, ReceiveData.capabilityInfo!!.nodes.size.toString() + " nodes received")
-        }).start()
+        } else if ( intent?.getBooleanExtra(Constants.ACTION_STOP_FOREGROUND, false) == true ) {
+            Log.i(LOG_ID, "Stopping service in foreground!")
+            stopForeground(STOP_FOREGROUND_REMOVE)
+        }
+        return START_STICKY  // keep alive
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(LOG_ID, "onDestroy called")
-    }
-
-    fun bytesToBundle(bytes: ByteArray): Bundle? {
-        val parcel = Parcel.obtain()
-        parcel.unmarshall(bytes, 0, bytes.size)
-        parcel.setDataPosition(0)
-        val bundle = parcel.readBundle(GlucoDataService::class.java.getClassLoader())
-        parcel.recycle()
-        return bundle
-    }
-
-    override fun onMessageReceived(p0: MessageEvent) {
-        try {
-            Log.d(LOG_ID, "onMessageReceived called: " + p0.toString())
-            ReceiveData.handleIntent(this, ReceiveDataSource.MESSAGECLIENT, bytesToBundle(p0.data))
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "onMessageReceived exception: " + exc.message.toString() )
+    override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
+        Log.d(LOG_ID, "Forward received intent.extras")
+        if (extras != null) {
+            Thread {
+                SendMessage(context, Utils.bundleToBytes(extras))
+            }.start()
         }
     }
 
-    override fun onCapabilityChanged(capabilityInfo: CapabilityInfo) {
-        Log.w(LOG_ID, "onCapabilityChanged called: " + capabilityInfo.toString())
-        ReceiveData.capabilityInfo = capabilityInfo
-        ReceiveData.notify(this, ReceiveDataSource.CAPILITY_INFO, null)
+    fun SendMessage(context: Context, glucodataIntent: ByteArray?)
+    {
+        try {
+
+            if (ReceiveData.capabilityInfo == null) {
+                ReceiveData.capabilityInfo = Tasks.await(
+                    Wearable.getCapabilityClient(context).getCapability(Constants.CAPABILITY, CapabilityClient.FILTER_REACHABLE))
+                Log.d(LOG_ID, ReceiveData.capabilityInfo!!.nodes.size.toString() + " nodes received")
+            }
+            val nodes = ReceiveData.capabilityInfo!!.nodes
+            //val nodes = Tasks.await(Wearable.getNodeClient(context).connectedNodes)
+            Log.d(LOG_ID, nodes.size.toString() + " nodes found")
+            if( nodes.size > 0 ) {
+                // Send a message to all nodes in parallel
+                nodes.map { node ->
+                    Wearable.getMessageClient(context).sendMessage(
+                        node.id,
+                        Constants.GLUCODATA_INTENT_MESSAGE_PATH,
+                        glucodataIntent
+                    ).apply {
+                        addOnSuccessListener {
+                            Log.d(
+                                LOG_ID,
+                                "Data send to node " + node.toString()
+                            )
+                        }
+                        addOnFailureListener {
+                            Log.e(
+                                LOG_ID,
+                                "Failed to send data to node " + node.toString()
+                            )
+                        }
+                    }
+                }
+            }
+        } catch (cancellationException: CancellationException) {
+            throw cancellationException
+        } catch (exception: Exception) {
+            Log.e(LOG_ID, "Sending message failed: $exception")
+        }
     }
 }

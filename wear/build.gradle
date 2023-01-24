@@ -42,7 +42,7 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'com.google.android.gms:play-services-wearable:18.0.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -50,7 +50,9 @@ dependencies {
     implementation 'androidx.wear:wear:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation project(path: ':common')
-    implementation 'androidx.wear.watchface:watchface-complications-data-source-ktx:1.0.1'
+    implementation 'androidx.wear.watchface:watchface-complications-data-source-ktx:1.1.1'
     implementation 'androidx.wear.watchface:watchface-complications-rendering:1.1.1'
     implementation 'androidx.appcompat:appcompat-resources:1.6.0'
+    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.6.0'
 }

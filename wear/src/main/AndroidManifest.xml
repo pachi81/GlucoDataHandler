@@ -60,7 +60,7 @@
         <service
             android:name=".LongTextComplication"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@drawable/glucose"
             android:label="@string/long_value_arrow_delta"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -77,7 +77,7 @@
         <service
             android:name=".ShortClucoseComplication"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@drawable/glucose"
             android:label="@string/short_value"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -94,7 +94,7 @@
         <service
             android:name=".ShortGlucoseWithIconComplication"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@drawable/glucose"
             android:label="@string/short_value_icon"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -111,7 +111,7 @@
         <service
             android:name=".ShortGlucoseWithTrendComplication"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@drawable/glucose"
             android:label="@string/short_value_arrow"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -128,7 +128,7 @@
         <service
             android:name=".ShortGlucoseWithTrendRangeComplication"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@drawable/glucose"
             android:label="@string/short_value_trend_range"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -145,7 +145,7 @@
         <service
             android:name=".ShortGlucoseWithDeltaAndTrendRangeComplication"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@drawable/glucose"
             android:label="@string/short_value_delta_trend_range"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -162,7 +162,7 @@
         <service
             android:name=".ShortGlucoseWithDeltaComplication"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@drawable/glucose"
             android:label="@string/short_value_delta"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -179,7 +179,7 @@
         <service
             android:name=".ShortGlucoseWithDeltaAndTrendComplication"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@drawable/glucose"
             android:label="@string/long_value_arrow_delta"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -196,7 +196,7 @@
         <service
             android:name=".ShortDeltaComplication"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@drawable/icon_delta"
             android:label="@string/short_delta"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -213,7 +213,7 @@
         <service
             android:name=".ShortDeltaWithTrendComplication"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@drawable/icon_delta"
             android:label="@string/short_delta_arrow"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -230,7 +230,7 @@
         <service
             android:name=".ShortDeltaWithIconComplication"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@drawable/icon_delta"
             android:label="@string/short_delta_icon"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -247,7 +247,7 @@
         <service
             android:name=".SmallImageComplication"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@drawable/arrow_up_15"
             android:label="@string/image_arrow"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -264,7 +264,7 @@
         <service
             android:name=".IconComplication"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@drawable/arrow_up_15"
             android:label="@string/icon_arrow"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>

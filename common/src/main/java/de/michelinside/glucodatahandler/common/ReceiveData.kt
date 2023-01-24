@@ -2,22 +2,28 @@ package de.michelinside.glucodatahandler.common
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
 import com.google.android.gms.wearable.CapabilityInfo
-import java.math.RoundingMode
 import java.text.DateFormat
 import java.util.*
 import kotlin.math.abs
+
 
 interface ReceiveDataInterface {
     fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?)
 }
 
-enum class ReceiveDataSource {
-    BROADCAST,
-    MESSAGECLIENT,
-    CAPILITY_INFO
+enum class ReceiveDataSource(private val resId: Int) {
+    BROADCAST(R.string.source_broadcast),
+    MESSAGECLIENT(R.string.source_message_client),
+    CAPILITY_INFO(R.string.source_capility_info);
+
+    fun getResId(): Int {
+        return resId
+    }
 }
 
 object ReceiveData {
@@ -44,6 +50,9 @@ object ReceiveData {
     var dateformat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT)
     var source: ReceiveDataSource = ReceiveDataSource.BROADCAST
     var capabilityInfo: CapabilityInfo? = null
+    var targetMin = 90F
+    var targetMax = 165F
+    var curExtraBundle: Bundle? = null
 
     fun getAsString(context: Context): String {
         if (sensorID == null)
@@ -55,7 +64,7 @@ object ReceiveData {
                 context.getString(R.string.info_label_timestamp) + ": " + dateformat.format(Date(time)) + "\r\n" +
                 context.getString(R.string.info_label_timediff) + ": " + timeDiff + "ms\r\n" +
                 context.getString(R.string.info_label_alarm) + ": " + alarm + "\r\n" +
-                context.getString(R.string.info_label_source) + ": " + source
+                context.getString(R.string.info_label_source) + ": " + context.getString(source.getResId())
     }
 
     fun isMmol(): Boolean = rawValue != glucose.toInt()
@@ -94,13 +103,9 @@ object ReceiveData {
             return Color.GRAY
         if(alarm!=0)
             return Color.RED
-        if(isMmol()) {
-            if(glucose < 5.0 || glucose > 9.2 )
-                return Color.YELLOW
-        } else {
-            if(glucose < 90 || glucose > 165 )
-                return Color.YELLOW
-        }
+        if(glucose < targetMin || glucose > targetMax )
+            return Color.YELLOW
+
         return Color.GREEN
     }
 
@@ -134,6 +139,33 @@ object ReceiveData {
         if (rate > -2.0f) return context.getString(R.string.rate_forty_five_down)
         if (rate > -3.5f) return context.getString(R.string.rate_single_down)
         return if (java.lang.Float.isNaN(rate)) "" else context.getString(R.string.rate_double_down)
+    }
+
+    fun getArrowIconRes(): Int {
+        if((System.currentTimeMillis()- time) > (600 * 1000))
+            return R.drawable.icon_question
+        if (rate >= 3.5f) return R.drawable.icon_chevron_up
+        if (rate >= 2.0f) return R.drawable.arrow_up_90
+        if (rate >= 1.66f) return R.drawable.arrow_up_75
+        if (rate >= 1.33f) return R.drawable.arrow_up_60
+        if (rate >= 1.0f) return R.drawable.arrow_up_45
+        if (rate >= 0.66f) return R.drawable.arrow_up_30
+        if (rate >= 0.33f) return R.drawable.arrow_up_15
+        if (rate > -0.33f) return R.drawable.arrow_right
+        if (rate > -0.66f) return R.drawable.arrow_down_15
+        if (rate > -1.0f) return R.drawable.arrow_down_30
+        if (rate > -1.33f) return R.drawable.arrow_down_45
+        if (rate > -1.66f) return R.drawable.arrow_down_60
+        if (rate > -2.0f) return R.drawable.arrow_down_75
+        if (rate > -3.5f) return R.drawable.arrow_down_90
+        return if (java.lang.Float.isNaN(rate)) R.drawable.icon_question else R.drawable.icon_chevron_down
+    }
+
+    fun getArrowIcon(context: Context): Icon {
+        val icon = Icon.createWithResource(context, getArrowIconRes())
+        icon.setTint(getClucoseColor())
+        icon.setTintMode(PorterDuff.Mode.SRC_IN)
+        return icon
     }
 
     fun getTimeDiffMinute(): Long {
@@ -184,6 +216,7 @@ object ReceiveData {
             val curTimeDiff = extras.getLong(TIME) - time
             if(curTimeDiff > 50000) // check for new value received
             {
+                curExtraBundle = extras
                 source = dataSource
                 sensorID = extras.getString(SERIAL) //Name of sensor
                 glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
@@ -202,7 +235,16 @@ object ReceiveData {
                     val newRaw = extras.getInt(MGDL)
                     if(newRaw!=glucose.toInt())  // mmol/l
                     {
-                        delta = Utils.round(delta / Constants.GLUCOSE_CONVERSION_FACTOR, if (abs(delta) > 1.0F) 1 else 2)
+                        delta = Utils.mgToMmol(delta, if (abs(delta) > 1.0F) 1 else 2)
+
+                        if(targetMin >= Constants.GLUCOSE_MIN_VALUE.toFloat())
+                        {
+                            targetMin = Utils.mgToMmol(targetMin)
+                            targetMax = Utils.mgToMmol(targetMax)
+                        }
+                    } else if (targetMin < 20F) {
+                        targetMin = Utils.mmolToMg(targetMin)
+                        targetMax = Utils.mmolToMg(targetMax)
                     }
                 }
                 rawValue = extras.getInt(MGDL)
@@ -212,7 +254,7 @@ object ReceiveData {
                 return true
             }
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "Receive exception: " + exc.message.toString() )
+            Log.e(LOG_ID, "Receive exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
         }
         return false
     }
