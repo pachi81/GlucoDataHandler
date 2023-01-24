@@ -16,19 +16,15 @@
 
         <TextView
             android:id="@+id/txtBgValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="79dp"
+            android:layout_height="24dp"
             android:text="---"
-            android:textAlignment="center"
+            android:textAlignment="viewEnd"
             android:textColor="#FFFFFF"
-            android:textSize="48sp"
+            android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.166" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/txtVersion"
@@ -48,6 +44,7 @@
             android:layout_height="wrap_content"
             android:text="@string/no_data"
             android:textAlignment="center"
+            android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtBgValue" />
@@ -61,7 +58,76 @@
             app:layout_constraintBottom_toTopOf="@+id/txtVersion"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtValueInfo"
+            app:layout_constraintVertical_bias="0.977" />
+
+        <ImageView
+            android:id="@+id/viewIcon"
+            android:layout_width="38dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/icon_question"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/txtBgValue"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Switch
+            android:id="@+id/switchForground"
+            android:layout_width="145dp"
+            android:layout_height="23dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/activity_switch_foreground"
+            android:textAlignment="viewStart"
+            app:layout_constraintBottom_toTopOf="@+id/txtConnInfo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <EditText
+            android:id="@+id/numMin"
+            android:layout_width="50dp"
+            android:layout_height="33dp"
+            android:layout_marginStart="16dp"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            android:text="5.0"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@+id/switchForground"
+            app:layout_constraintEnd_toStartOf="@+id/numMax"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <EditText
+            android:id="@+id/numMax"
+            android:layout_width="50dp"
+            android:layout_height="33dp"
+            android:layout_marginEnd="28dp"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            android:text="5.0"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@+id/switchForground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:layout_constraintVertical_bias="1.0"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="102dp"
+            android:layout_height="14dp"
+            android:layout_marginTop="12dp"
+            android:text="@string/activity_target_range"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toTopOf="@+id/numMin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.559"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtValueInfo" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.wear.widget.BoxInsetLayout>

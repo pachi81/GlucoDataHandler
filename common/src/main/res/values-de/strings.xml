@@ -18,4 +18,8 @@
     <string name="rate_forty_five_up">leicht steigend</string>
     <string name="rate_single_up">steigend</string>
     <string name="rate_double_up">schnell steigend</string>
+
+    <string name="source_broadcast">Juggluco</string>
+    <string name="source_message_client">Uhr</string>
+    <string name="source_capility_info">Intern</string>
 </resources>

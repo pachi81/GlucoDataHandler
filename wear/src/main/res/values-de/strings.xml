@@ -3,6 +3,8 @@
     <string name="app_name">GlucoDataWear</string>
     <string name="activity_connected_label">Handy: verbunden</string>
     <string name="activity_disconnected_label">Handy: getrennt</string>
+    <string name="activity_switch_foreground">Vordergrund</string>
+    <string name="activity_target_range">Zielbereich:</string>
 
     <string name="short_value">Zuckerwert</string>
     <string name="short_value_icon">Zuckerwert mit Icon</string>

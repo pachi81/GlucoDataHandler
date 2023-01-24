@@ -29,6 +29,11 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
             super.onCreate()
             Log.d(LOG_ID, "onCreate called")
             descriptionResId = this.applicationInfo.labelRes
+
+            val serviceIntent = Intent(this, GlucoDataServiceWear::class.java)
+            val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            serviceIntent.putExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false))
+            this.startService(serviceIntent)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -38,8 +43,6 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         try {
             super.onComplicationActivated(complicationInstanceId, type)
             Log.d(LOG_ID, "onComplicationActivated called for id " + complicationInstanceId + " (" + type + ")" )
-            val serviceIntent = Intent(this, GlucoDataServiceWear::class.java)
-            this.startService(serviceIntent)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onComplicationActivated exception: " + exc.message.toString() )
         }
@@ -95,14 +98,12 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     }
 
     open fun getRangeValueComplicationData(): ComplicationData {
-        // for any reason, the min value seems to be ignored, so start at zero (which is 40)
-        // and substract the 40 from the value
-        val value = ReceiveData.rawValue.toFloat() - Constants.GLUCOSE_MIN_VALUE
-        val max = 280F - Constants.GLUCOSE_MIN_VALUE
+        val value = ReceiveData.glucose
+        val max = if(ReceiveData.isMmol()) 16F else 280F
         return RangedValueComplicationData.Builder(
             value = Utils.rangeValue(value, 0F, max),
             min = 0F,
-            max = 240F,
+            max = max,
             contentDescription = descriptionText()
         )
             .setTitle(getTitle())
@@ -157,25 +158,6 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         return PendingIntent.getActivity(applicationContext, System.currentTimeMillis().toInt(), launchIntent,  PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
-    fun getArrowIcon(): Int {
-        if((System.currentTimeMillis()- ReceiveData.time) > (600 * 1000))
-            return R.drawable.icon_question
-        if (ReceiveData.rate >= 3.5f) return R.drawable.icon_chevron_up
-        if (ReceiveData.rate >= 2.0f) return R.drawable.arrow_up_90
-        if (ReceiveData.rate >= 1.66f) return R.drawable.arrow_up_75
-        if (ReceiveData.rate >= 1.33f) return R.drawable.arrow_up_60
-        if (ReceiveData.rate >= 1.0f) return R.drawable.arrow_up_45
-        if (ReceiveData.rate >= 0.66f) return R.drawable.arrow_up_30
-        if (ReceiveData.rate >= 0.33f) return R.drawable.arrow_up_15
-        if (ReceiveData.rate > -0.33f) return R.drawable.arrow_right
-        if (ReceiveData.rate > -0.66f) return R.drawable.arrow_down_15
-        if (ReceiveData.rate > -1.0f) return R.drawable.arrow_down_30
-        if (ReceiveData.rate > -1.33f) return R.drawable.arrow_down_45
-        if (ReceiveData.rate > -1.66f) return R.drawable.arrow_down_60
-        if (ReceiveData.rate > -2.0f) return R.drawable.arrow_down_75
-        if (ReceiveData.rate > -3.5f) return R.drawable.arrow_down_90
-        return if (java.lang.Float.isNaN(ReceiveData.rate)) R.drawable.icon_question else R.drawable.icon_chevron_down
-    }
 
     fun plainText(text: CharSequence): PlainComplicationText =
         PlainComplicationText.Builder(text).build()
@@ -200,7 +182,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     fun arrowIcon(): MonochromaticImage =
         MonochromaticImage.Builder(
-            image = Icon.createWithResource(this, getArrowIcon())
+            image = Icon.createWithResource(this, ReceiveData.getArrowIconRes())
         ).build()
 
     fun glucoseIcon(): MonochromaticImage =
@@ -209,7 +191,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         ).build()
 
     fun ambientArrowIcon(): Icon {
-        val icon = Icon.createWithResource(this, getArrowIcon())
+        val icon = Icon.createWithResource(this, ReceiveData.getArrowIconRes())
         icon.setTint(Color.GRAY)
         icon.setTintMode(PorterDuff.Mode.SRC_IN)
         return icon
@@ -221,11 +203,8 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         ).build()
 
     fun arrowImage(): SmallImage {
-        val icon = Icon.createWithResource(this, getArrowIcon())
-        icon.setTint(ReceiveData.getClucoseColor())
-        icon.setTintMode(PorterDuff.Mode.SRC_IN)
         return  SmallImage.Builder(
-            image = icon,
+            image = ReceiveData.getArrowIcon(this),
             type = SmallImageType.ICON
         )
             .setAmbientImage(ambientArrowIcon())

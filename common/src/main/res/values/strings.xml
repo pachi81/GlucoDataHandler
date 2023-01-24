@@ -18,4 +18,9 @@
     <string name="rate_forty_five_down">falling</string>
     <string name="rate_single_down">falling quickly</string>
     <string name="rate_double_down">falling very quickly</string>
+
+    <string name="source_broadcast">Juggluco</string>
+    <string name="source_message_client">Wear</string>
+    <string name="source_capility_info">Internal</string>
+
 </resources>
