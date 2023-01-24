@@ -15,6 +15,7 @@ import kotlin.coroutines.cancellation.CancellationException
 
 open class GlucoDataService : WearableListenerService(), MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener, ReceiveDataInterface {
     private val LOG_ID = "GlucoDataHandler.GlucoDataService"
+    private var isForegroundService = false
 
     override fun onCreate() {
         super.onCreate()
@@ -69,7 +70,8 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
         Log.d(LOG_ID, "onStartCommand called")
         super.onStartCommand(intent, flags, startId)
         val isForeground = intent?.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
-        if (isForeground == true) {
+        if (isForeground == true && !isForegroundService) {
+            isForegroundService = true
             Log.i(LOG_ID, "Starting service in foreground!")
             val CHANNEL_ID = "glucodatahandler_service_01"
             val channel = NotificationChannel(
@@ -84,7 +86,8 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
                 .setContentTitle("")
                 .setContentText("").build()
             startForeground(1, notification)
-        } else if ( intent?.getBooleanExtra(Constants.ACTION_STOP_FOREGROUND, false) == true ) {
+        } else if ( isForegroundService && intent?.getBooleanExtra(Constants.ACTION_STOP_FOREGROUND, false) == true ) {
+            isForegroundService = false
             Log.i(LOG_ID, "Stopping service in foreground!")
             stopForeground(STOP_FOREGROUND_REMOVE)
         }
