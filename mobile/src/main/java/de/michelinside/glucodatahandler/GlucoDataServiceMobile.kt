@@ -16,6 +16,7 @@ class GlucoDataServiceMobile: GlucoDataService(), ReceiveDataInterface {
 
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
         try {
+            super.OnReceiveData(context, dataSource, extras)
             if (dataSource == ReceiveDataSource.MESSAGECLIENT && extras != null)
             {
                 val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)

@@ -16,10 +16,10 @@
     <string name="alarm_html_label">Alarm von Juggluco (0: kein Alarm, 6: hoch, 7: niedrig)</string>
     <string name="dexcom_label">Dexcom Bezeichnung</string>
     <string name="dexcom_html_label">Dexcom spezifische Bezeichnung (en)</string>
-    <string name="rate_label">Änderungsrate</string>
-    <string name="rate_html_label">Änderungsrate des Blutzuckerwertes</string>
-    <string name="rate_label_label">Änderungsrate als Text</string>
-    <string name="rate_label_html_label">Änderungsrate des Blutzuckerwertes in Worten</string>
+    <string name="rate_label">Trend</string>
+    <string name="rate_html_label">Trend des Blutzuckerwertes</string>
+    <string name="rate_label_label">Trend als Text</string>
+    <string name="rate_label_html_label">Trend des Blutzuckerwertes in Worten</string>
     <string name="raw_value_label">Rohdaten</string>
     <string name="raw_value_html_label">Blutzuckerwert in der urprünglischen Einheit mg/dl</string>
     <string name="sensor_id_label">Sensor ID</string>

@@ -4,7 +4,7 @@
     <string name="info_label_alarm">Alarm</string>
     <string name="info_label_timediff">Zeitdiff</string>
     <string name="info_label_timestamp">Zeitpunkt</string>
-    <string name="info_label_rate">Änderungsrate</string>
+    <string name="info_label_rate">Trend</string>
     <string name="info_label_delta">Delta</string>
     <string name="info_label_value">Wert</string>
     <string name="info_label_sensor_id">Sensor</string>
