@@ -172,7 +172,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         plainText(ReceiveData.getDeltaAsString())
 
     fun trendText(): PlainComplicationText =
-        plainText(if (ReceiveData.rate>= 0) "+" else "" + ReceiveData.rate.toString())
+        plainText((if (ReceiveData.rate > 0) "+" else "") + ReceiveData.rate.toString())
 
     fun glucoseAndDeltaText(): PlainComplicationText =
         plainText(ReceiveData.getClucoseAsString() + "  Δ: " + ReceiveData.getDeltaAsString())
