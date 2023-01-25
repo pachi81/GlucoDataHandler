@@ -69,7 +69,7 @@ object ReceiveData {
 
     fun isMmol(): Boolean = rawValue != glucose.toInt()
 
-    fun isObsolete(): Boolean = (System.currentTimeMillis()- time) >= (600 * 1000)
+    fun isObsolete(timeoutSec: Int = 600): Boolean = (System.currentTimeMillis()- time) >= (timeoutSec * 1000)
 
     fun getClucoseAsString(): String {
         if(isObsolete())
@@ -80,7 +80,7 @@ object ReceiveData {
     }
 
     fun getDeltaAsString(): String {
-        if(isObsolete())
+        if(isObsolete(300))
             return "???"
         var deltaVal = ""
         if (delta > 0)
@@ -99,7 +99,7 @@ object ReceiveData {
     }
 
     fun getClucoseColor(): Int {
-        if(isObsolete())
+        if(isObsolete(300))
             return Color.GRAY
         if(alarm!=0)
             return Color.RED
@@ -110,7 +110,7 @@ object ReceiveData {
     }
 
     fun getRateSymbol(): Char {
-        if(isObsolete())
+        if(isObsolete(300))
             return '?'
         if (rate >= 3.5f) return '\u21C8'
         if (rate >= 2.0f) return '\u2191'
@@ -142,9 +142,10 @@ object ReceiveData {
     }
 
     fun getArrowIconRes(): Int {
-        if((System.currentTimeMillis()- time) > (600 * 1000))
+        if(isObsolete(300))
             return R.drawable.icon_question
-        if (rate >= 3.5f) return R.drawable.icon_chevron_up
+        if (rate >= 3.0f) return R.drawable.icon_chevron_double_up
+        if (rate >= 2.5f) return R.drawable.icon_chevron_up
         if (rate >= 2.0f) return R.drawable.arrow_up_90
         if (rate >= 1.66f) return R.drawable.arrow_up_75
         if (rate >= 1.33f) return R.drawable.arrow_up_60
@@ -157,8 +158,9 @@ object ReceiveData {
         if (rate > -1.33f) return R.drawable.arrow_down_45
         if (rate > -1.66f) return R.drawable.arrow_down_60
         if (rate > -2.0f) return R.drawable.arrow_down_75
-        if (rate > -3.5f) return R.drawable.arrow_down_90
-        return if (java.lang.Float.isNaN(rate)) R.drawable.icon_question else R.drawable.icon_chevron_down
+        if (rate > -2.5f) return R.drawable.arrow_down_90
+        if (rate > -3.0f) return R.drawable.icon_chevron_down
+        return if (java.lang.Float.isNaN(rate)) R.drawable.icon_question else R.drawable.icon_chevron_double_down
     }
 
     fun getArrowIcon(context: Context): Icon {
@@ -191,6 +193,7 @@ object ReceiveData {
         Log.d(LOG_ID, "Sending new data to " + notifiers.size.toString() + " notifier(s).")
         notifiers.forEach{
             try {
+                Log.d(LOG_ID, "Sending new data to " + it.toString())
                 it.OnReceiveData(context, dataSource, extras)
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "OnReceiveData exception: " + exc.message.toString() )
@@ -205,13 +208,10 @@ object ReceiveData {
         }
         try {
             Log.i(
-                LOG_ID, "Glucodata received from " + dataSource.toString() + " - sensor: " +  extras.getString(
-                    SERIAL
-                ) + " - value: " + extras.getFloat(GLUCOSECUSTOM).toString() + " - timestamp: " + dateformat.format(
-                Date(
-                    extras.getLong(TIME)
-                )
-            ))
+                LOG_ID, "Glucodata received from " + dataSource.toString() + ": " +
+                        extras.toString() +
+                        " - timestamp: " + dateformat.format(Date(extras.getLong(TIME)))
+            )
 
             val curTimeDiff = extras.getLong(TIME) - time
             if(curTimeDiff > 50000) // check for new value received

@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">GlucoDataWear</string>
+    <string name="forground_notification_descr">Receiving data for complications</string>
+
     <string name="activity_connected_label">Phone: connected</string>
     <string name="activity_disconnected_label">Phone: disconnected</string>
     <string name="activity_switch_foreground">Foreground</string>
