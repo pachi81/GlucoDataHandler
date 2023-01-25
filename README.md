@@ -1,5 +1,7 @@
 # Glucose Data Handler
 
+<img src='images/watch.png' width=100>
+
 This Android and Wear OS App receives glucodata broadcasts from Juggluco (mobile or/and wear version).
 The mobile version provides a tasker event plugin to handle these data in tasker.
 The wear version provides some complication, which can be used in every watchface with complication support.
@@ -25,7 +27,10 @@ In Juggluco activate "Glucodata broadcast" in the settings menu.
 * Foreground: only if you have trouble with updating complications (also try deactivating Play Protect as this kills non Playstore apps)
 
 #### Complications
-There are several complications for the different types of wear os complications.
+There are several complications for the different types of wear os complications, which provides:
+* Glucose value (used also for range circle)
+* Delta value (per minute)
+* Rate (trend) as value, arrow and range (For range the watchface must support negative values! You can try if with the test complication.)
 
 **IMPORTANT:** Not all complications are fully supported by any watchface. For example the SHORT_TEXT type supports an icon, a text and a title, but the most watchfaces only show icon and text or text and title, but there are some, showing all 3 types in one.
 Also the RANGE_VALUE complication is handled different in each watchface. Some watchfaces supports negativ values for the range circle. To test, if your watchface supports negativ range values, you can use my *Test range complication ...* complication to verify it.
