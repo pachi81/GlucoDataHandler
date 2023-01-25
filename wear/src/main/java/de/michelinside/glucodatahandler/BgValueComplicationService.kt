@@ -155,7 +155,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         }
         launchIntent.action = Intent.ACTION_MAIN
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-        return PendingIntent.getActivity(applicationContext, System.currentTimeMillis().toInt(), launchIntent,  PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        return PendingIntent.getActivity(applicationContext, 2, launchIntent,  PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
 
@@ -170,6 +170,9 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     fun deltaText(): PlainComplicationText =
         plainText(ReceiveData.getDeltaAsString())
+
+    fun trendText(): PlainComplicationText =
+        plainText(if (ReceiveData.rate>= 0) "+" else "" + ReceiveData.rate.toString())
 
     fun glucoseAndDeltaText(): PlainComplicationText =
         plainText(ReceiveData.getClucoseAsString() + "  Δ: " + ReceiveData.getDeltaAsString())
@@ -202,6 +205,12 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
             image = Icon.createWithResource(this, R.drawable.icon_delta)
         ).build()
 
+
+    fun trendIcon(): MonochromaticImage =
+        MonochromaticImage.Builder(
+            image = Icon.createWithResource(this, R.drawable.icon_rate)
+        ).build()
+
     fun arrowImage(): SmallImage {
         return  SmallImage.Builder(
             image = ReceiveData.getArrowIcon(this),
@@ -226,7 +235,7 @@ object ActiveComplicationHandler: ReceiveDataInterface {
 
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
         val packageInfo = getPackages(context)
-        Log.w(LOG_ID, "Got " + packageInfo.services.size + " services.")
+        Log.d(LOG_ID, "Got " + packageInfo.services.size + " services.")
         packageInfo.services.forEach {
             val isComplication =  BgValueComplicationService::class.java.isAssignableFrom(Class.forName(it.name))
             if(isComplication) {
