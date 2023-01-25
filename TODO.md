@@ -6,7 +6,7 @@
 - [x] Tasker Event
 - [x] Wear connection
 - [ ] Send to xdrip
-- [ ] Re-send glucodata intent (received from wear)
+- [x] Re-send glucodata intent (received from wear)
 
 ## Wear app
 

@@ -17,7 +17,14 @@ A guide to install an apk on wear can be found [here](https://forum.xda-develope
 ## Configuration
 In Juggluco activate "Glucodata broadcast" in the settings menu.
 
-### Wear complications
+### Wear
+
+#### Settings
+
+* Target range: set your target glucose range needed for yellow color of the rate image (red color is set for an alarm)
+* Foreground: only if you have trouble with updating complications (also try deactivating Play Protect as this kills non Playstore apps)
+
+#### Complications
 There are several complications for the different types of wear os complications.
 
 **IMPORTANT:** Not all complications are fully supported by any watchface. For example the SHORT_TEXT type supports an icon, a text and a title, but the most watchfaces only show icon and text or text and title, but there are some, showing all 3 types in one.
