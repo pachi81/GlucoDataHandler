@@ -14,6 +14,7 @@
     <string name="short_value_arrow">Glucose and trend</string>
     <string name="short_value_trend_range">Glucose and trend-range (if supported)</string>
     <string name="short_value_delta_trend_range">Glucose, delta and trend-range (if supported)</string>
+    <string name="short_delta_trend_arrow_range">Delta, trend-arrow and trend-range (if supported)</string>
     <string name="short_value_delta">Glucose and delta</string>
     <string name="long_value_arrow_delta">Glucose, delta and trend</string>
     <string name="short_value_rate">Glucose and trend-value</string>

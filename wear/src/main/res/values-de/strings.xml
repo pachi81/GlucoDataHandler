@@ -12,8 +12,9 @@
     <string name="icon_value">Einfarbiger Zuckerwert</string>
     <string name="short_value_icon">Zuckerwert mit Icon</string>
     <string name="short_value_arrow">Zuckerwert und Trendpfeil</string>
-    <string name="short_value_trend_range">Zuckerwert and Trendkreis (wenn unterstützt)</string>
-    <string name="short_value_delta_trend_range">Zuckerwert, Delta and Trendkreis (wenn unterstützt)</string>
+    <string name="short_value_trend_range">Zuckerwert und Trendkreis (wenn unterstützt)</string>
+    <string name="short_value_delta_trend_range">Zuckerwert, Delta und Trendkreis (wenn unterstützt)</string>
+    <string name="short_delta_trend_arrow_range">Delta, Trendpfeil und -kreis (wenn unterstützt)</string>
     <string name="short_value_delta">Zuckerwert und Delta</string>
     <string name="long_value_arrow_delta">Zuckerwert, Trendpfeil und Delta</string>
     <string name="short_value_rate">Zuckerwert und Trendwert</string>

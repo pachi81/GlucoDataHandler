@@ -48,6 +48,11 @@ class ShortGlucoseWithDeltaAndTrendRangeComplication: ShortGlucoseWithTrendRange
     override fun getTitle(): PlainComplicationText = deltaText()
 }
 
+class ShortDeltaWithTrendArrowAndTrendRangeComplication: ShortGlucoseWithTrendRangeComplication() {
+    override fun getText(): PlainComplicationText = deltaText()
+    override fun getIcon(): MonochromaticImage = arrowIcon()
+}
+
 open class ShortDeltaComplication: ShortClucoseComplication() {
     override fun getText(): PlainComplicationText = deltaText()
 }

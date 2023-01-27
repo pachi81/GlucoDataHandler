@@ -279,6 +279,23 @@
                 android:value="300" />
         </service>
         <service
+            android:name=".ShortDeltaWithTrendArrowAndTrendRangeComplication"
+            android:exported="true"
+            android:icon="@drawable/icon_delta"
+            android:label="@string/short_delta_trend_arrow_range"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT,RANGED_VALUE,LONG_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+        </service>
+        <service
             android:name=".ShortDeltaWithIconComplication"
             android:exported="true"
             android:icon="@drawable/icon_delta"
