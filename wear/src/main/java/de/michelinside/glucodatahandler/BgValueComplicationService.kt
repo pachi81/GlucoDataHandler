@@ -222,7 +222,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     }
 
     fun getGlucoseAsIcon(): Icon {
-        return Icon.createWithBitmap(Utils.textToBitmap(ReceiveData.getClucoseAsString(), ReceiveData.getClucoseColor(true)))
+        return Icon.createWithBitmap(Utils.textToBitmap(ReceiveData.getClucoseAsString(), Color.WHITE))
     }
 }
 
