@@ -5,7 +5,6 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.Utils
 
 open class ShortClucoseComplication:  BgValueComplicationService() {
-
 }
 
 class ShortGlucoseWithIconComplication: BgValueComplicationService() {

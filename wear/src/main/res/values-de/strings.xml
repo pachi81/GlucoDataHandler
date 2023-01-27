@@ -8,6 +8,8 @@
     <string name="activity_target_range">Zielbereich:</string>
 
     <string name="short_value">Zuckerwert</string>
+    <string name="image_value">Farbiger Zuckerwert</string>
+    <string name="icon_value">Einfarbiger Zuckerwert</string>
     <string name="short_value_icon">Zuckerwert mit Icon</string>
     <string name="short_value_arrow">Zuckerwert und Trendpfeil</string>
     <string name="short_value_trend_range">Zuckerwert and Trendkreis (wenn unterstützt)</string>

@@ -17,6 +17,12 @@ class GlucoDataServiceWear: GlucoDataService() {
         ReceiveData.addNotifier(ActiveComplicationHandler)
     }
 
+    override fun onCreate() {
+        Log.d(LOG_ID, "onCreate called")
+        super.onCreate()
+        ActiveComplicationHandler.OnReceiveData(this, ReceiveDataSource.CAPILITY_INFO, null)
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         try {
             Log.d(LOG_ID, "onStartCommand called")

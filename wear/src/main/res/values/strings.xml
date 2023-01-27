@@ -8,6 +8,8 @@
     <string name="activity_target_range">Target range:</string>
 
     <string name="short_value">Glucose</string>
+    <string name="image_value">Colored glucose</string>
+    <string name="icon_value">Monochrome glucose</string>
     <string name="short_value_icon">Glucose with icon</string>
     <string name="short_value_arrow">Glucose and trend</string>
     <string name="short_value_trend_range">Glucose and trend-range (if supported)</string>

@@ -1,10 +1,16 @@
 package de.michelinside.glucodatahandler.common
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Rect
 import android.os.Bundle
 import android.os.Parcel
+import android.util.Log
 import java.math.RoundingMode
 
 object Utils {
+    private val LOG_ID = "GlucoDataHandler.Utils"
     fun round(value: Float, scale: Int): Float {
         return value.toBigDecimal().setScale( scale, RoundingMode.HALF_UP).toFloat()
     }
@@ -25,7 +31,6 @@ object Utils {
         return round(value * Constants.GLUCOSE_CONVERSION_FACTOR, 0)
     }
 
-
     fun bytesToBundle(bytes: ByteArray): Bundle? {
         val parcel = Parcel.obtain()
         parcel.unmarshall(bytes, 0, bytes.size)
@@ -41,5 +46,39 @@ object Utils {
         val bytes = parcel.marshall()
         parcel.recycle()
         return bytes
+    }
+
+    fun textToBitmap(text: String, color: Int): Bitmap? {
+        try {
+            Log.w(LOG_ID, "Create bitmap for " + text + " with color: " + color.toString())
+            val size = 100
+            val textSize = 90F
+            val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888 )
+            val canvas = Canvas(bitmap)
+            val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+            paint.color = color
+            paint.textSize = textSize
+            val boundsText = Rect()
+            paint.getTextBounds(text, 0, text.length, boundsText)
+            // re-calculate size depending on the bound width -> use minOf for preventing oversize signs
+            paint.textSize = minOf( bitmap.height.toFloat(), (textSize - 1) * bitmap.width / boundsText.width() )
+            paint.getTextBounds(text, 0, text.length, boundsText)
+            if(boundsText.width() > 96)
+                paint.textSize = paint.textSize-(boundsText.width() - 96)
+            var x = 0
+            var y = (bitmap.height + boundsText.height()) / 2
+            if (paint.textSize == size.toFloat()) {
+                x = (bitmap.width - boundsText.width()) / 2
+                if (text == "---") {
+                    y = 80  // special case
+                }
+            }
+
+            canvas.drawText(text, x.toFloat(), y.toFloat(), paint)
+            return bitmap
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Cannot create text icon: " + exc.message.toString())
+            return null
+        }
     }
 }
