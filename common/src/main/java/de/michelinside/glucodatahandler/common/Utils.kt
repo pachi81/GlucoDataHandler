@@ -1,9 +1,6 @@
 package de.michelinside.glucodatahandler.common
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Rect
+import android.graphics.*
 import android.os.Bundle
 import android.os.Parcel
 import android.util.Log
@@ -55,6 +52,8 @@ object Utils {
             val textSize = 90F
             val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888 )
             val canvas = Canvas(bitmap)
+            bitmap.eraseColor(Color.TRANSPARENT)
+            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
             val paint = Paint(Paint.ANTI_ALIAS_FLAG)
             paint.color = color
             paint.textSize = textSize

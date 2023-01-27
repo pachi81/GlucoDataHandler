@@ -1,6 +1,7 @@
 package de.michelinside.glucodatahandler.common
 
 import android.content.Context
+import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -37,6 +38,11 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
                 )
                 Log.d(LOG_ID, ReceiveData.capabilityInfo!!.nodes.size.toString() + " nodes received")
             }.start()
+
+            Log.d(LOG_ID, "Register Receiver")
+            val intentFilter = IntentFilter()
+            intentFilter.addAction("glucodata.Minute")
+            registerReceiver(GlucoseDataReceiver(), intentFilter)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.toString())
         }
