@@ -12,8 +12,8 @@
       "filters": [],
       "attributes": [],
       "versionCode": 1,
-      "versionName": "0.5",
-      "outputFile": "GlucoDataHandler.apk"
+      "versionName": "0.6",
+      "outputFile": "GlucoDataHandler-Wear.apk"
     }
   ],
   "elementType": "File"

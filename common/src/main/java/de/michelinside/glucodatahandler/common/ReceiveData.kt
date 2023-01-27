@@ -98,9 +98,11 @@ object ReceiveData {
         return "mg/dl"
     }
 
-    fun getClucoseColor(): Int {
+    fun getClucoseColor(monoChrome: Boolean = false): Int {
         if(isObsolete(300))
             return Color.GRAY
+        if (monoChrome)
+            return Color.WHITE
         if(alarm!=0)
             return Color.RED
         if(glucose < targetMin || glucose > targetMax )
@@ -144,8 +146,7 @@ object ReceiveData {
     fun getArrowIconRes(): Int {
         if(isObsolete(300))
             return R.drawable.icon_question
-        if (rate >= 3.0f) return R.drawable.icon_chevron_double_up
-        if (rate >= 2.5f) return R.drawable.icon_chevron_up
+        if (rate >= 3.0f) return R.drawable.arrow_double_up
         if (rate >= 2.0f) return R.drawable.arrow_up_90
         if (rate >= 1.66f) return R.drawable.arrow_up_75
         if (rate >= 1.33f) return R.drawable.arrow_up_60
@@ -158,9 +159,8 @@ object ReceiveData {
         if (rate > -1.33f) return R.drawable.arrow_down_45
         if (rate > -1.66f) return R.drawable.arrow_down_60
         if (rate > -2.0f) return R.drawable.arrow_down_75
-        if (rate > -2.5f) return R.drawable.arrow_down_90
-        if (rate > -3.0f) return R.drawable.icon_chevron_down
-        return if (java.lang.Float.isNaN(rate)) R.drawable.icon_question else R.drawable.icon_chevron_double_down
+        if (rate > -3.0f) return R.drawable.arrow_down_90
+        return if (java.lang.Float.isNaN(rate)) R.drawable.icon_question else R.drawable.arrow_double_down
     }
 
     fun getArrowIcon(context: Context): Icon {

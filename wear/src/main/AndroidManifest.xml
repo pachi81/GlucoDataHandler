@@ -37,14 +37,14 @@
                 <action android:name="glucodata.Minute"/>
             </intent-filter>
         </receiver>
-        <receiver
+<!--        <receiver
             android:name=".StartServiceAtBootReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
-        </receiver>
+        </receiver>-->
         <service android:name=".GlucoDataServiceWear" android:enabled="true" android:exported="true">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
@@ -86,7 +86,41 @@
 
             <meta-data
                 android:name="android.support.wearable.complications.SUPPORTED_TYPES"
-                android:value="SHORT_TEXT,RANGED_VALUE" />
+                android:value="RANGED_VALUE,SHORT_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+        </service>
+        <service
+            android:name=".SmallValueImageComplication"
+            android:exported="true"
+            android:icon="@drawable/glucose"
+            android:label="@string/image_value"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SMALL_IMAGE" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+        </service>
+        <service
+            android:name=".ValueIconComplication"
+            android:exported="true"
+            android:icon="@drawable/glucose"
+            android:label="@string/icon_value"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="ICON" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
@@ -313,7 +347,7 @@
                 android:value="300" />
         </service>
         <service
-            android:name=".SmallImageComplication"
+            android:name=".SmallTrendImageComplication"
             android:exported="true"
             android:icon="@drawable/arrow_up_15"
             android:label="@string/image_arrow"
@@ -330,7 +364,7 @@
                 android:value="300" />
         </service>
         <service
-            android:name=".IconComplication"
+            android:name=".TrendIconComplication"
             android:exported="true"
             android:icon="@drawable/arrow_up_15"
             android:label="@string/icon_arrow"

@@ -126,16 +126,16 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     private fun getSmallImageComplicationData(): ComplicationData {
         return SmallImageComplicationData.Builder (
-            smallImage = arrowImage(),
+            smallImage = getImage()!!,
             contentDescription = descriptionText()
         )
             .setTapAction(getTapAction())
             .build()
     }
 
-    private fun getIconComplicationData(): ComplicationData {
+    open fun getIconComplicationData(): ComplicationData {
         return MonochromaticImageComplicationData.Builder (
-            arrowIcon(),
+            getIcon()!!,
             descriptionText()
         )
             .setTapAction(getTapAction())
@@ -145,6 +145,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     open fun getIcon(): MonochromaticImage? = null
     open fun getTitle(): PlainComplicationText? = null
     open fun getText(): PlainComplicationText = glucoseText()
+    open fun getImage(): SmallImage? = null
 
     fun getTapAction(): PendingIntent? {
         var launchIntent: Intent? = packageManager.getLaunchIntentForPackage("tk.glucodata")
@@ -185,8 +186,8 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     fun arrowIcon(): MonochromaticImage =
         MonochromaticImage.Builder(
-            image = Icon.createWithResource(this, ReceiveData.getArrowIconRes())
-        ).build()
+            image = ambientArrowIcon()
+        ).setAmbientImage(ambientArrowIcon()).build()
 
     fun glucoseIcon(): MonochromaticImage =
         MonochromaticImage.Builder(
@@ -195,7 +196,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     fun ambientArrowIcon(): Icon {
         val icon = Icon.createWithResource(this, ReceiveData.getArrowIconRes())
-        icon.setTint(Color.GRAY)
+        icon.setTint(Color.WHITE)
         icon.setTintMode(PorterDuff.Mode.SRC_IN)
         return icon
     }
@@ -219,10 +220,17 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
             .setAmbientImage(ambientArrowIcon())
             .build()
     }
+
+    fun getGlucoseAsIcon(): Icon {
+        return Icon.createWithBitmap(Utils.textToBitmap(ReceiveData.getClucoseAsString(), ReceiveData.getClucoseColor(true)))
+    }
 }
 
 object ActiveComplicationHandler: ReceiveDataInterface {
     private const val LOG_ID = "GlucoDataHandler.ActiveComplicationHandler"
+    init {
+        Log.d(LOG_ID, "init called")
+    }
 
     @SuppressLint("QueryPermissionsNeeded")
     private fun getPackages(context: Context): PackageInfo {
