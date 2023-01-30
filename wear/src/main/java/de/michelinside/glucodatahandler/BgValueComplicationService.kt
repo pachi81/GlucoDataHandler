@@ -9,6 +9,7 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable.ConstantState
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
@@ -18,6 +19,7 @@ import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUp
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
 import de.michelinside.glucodatahandler.common.*
+import kotlin.random.Random
 
 
 abstract class BgValueComplicationService : SuspendingComplicationDataSourceService() {
@@ -148,15 +150,33 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     open fun getImage(): SmallImage? = null
 
     fun getTapAction(): PendingIntent? {
-        var launchIntent: Intent? = packageManager.getLaunchIntentForPackage("tk.glucodata")
-        if(launchIntent == null)
-        {
-            Log.d(LOG_ID, "Juggluco not found, use own one")
-            launchIntent = Intent(this, WaerActivity::class.java)
+        if (BuildConfig.DEBUG) {
+            // for debug create dummy broadcast (to check in emulator)
+            val intent = Intent(Constants.GLUCODATA_BROADCAST_ACTION)
+            val raw = Random.nextInt(40, 400)
+            val rate = Random.nextFloat() + Random.nextInt(-4, 4).toFloat()
+            intent.putExtra(ReceiveData.SERIAL, "WUSEL_DUSEL")
+            intent.putExtra(ReceiveData.MGDL, raw)
+            intent.putExtra(ReceiveData.GLUCOSECUSTOM, raw.toFloat())
+            intent.putExtra(ReceiveData.RATE, rate)
+            intent.putExtra(ReceiveData.TIME, System.currentTimeMillis())
+            intent.putExtra(ReceiveData.ALARM, 0)
+            return PendingIntent.getBroadcast(this, 3, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        } else {
+            var launchIntent: Intent? = packageManager.getLaunchIntentForPackage("tk.glucodata")
+            if (launchIntent == null) {
+                Log.d(LOG_ID, "Juggluco not found, use own one")
+                launchIntent = Intent(this, WaerActivity::class.java)
+            }
+            launchIntent.action = Intent.ACTION_MAIN
+            launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+            return PendingIntent.getActivity(
+                applicationContext,
+                2,
+                launchIntent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
         }
-        launchIntent.action = Intent.ACTION_MAIN
-        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-        return PendingIntent.getActivity(applicationContext, 2, launchIntent,  PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
 
@@ -221,8 +241,8 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
             .build()
     }
 
-    fun getGlucoseAsIcon(): Icon {
-        return Icon.createWithBitmap(Utils.textToBitmap(ReceiveData.getClucoseAsString(), Color.WHITE))
+    fun getGlucoseAsIcon(color: Int = Color.WHITE): Icon {
+        return Icon.createWithBitmap(Utils.textToBitmap(ReceiveData.getClucoseAsString(), color))
     }
 }
 
