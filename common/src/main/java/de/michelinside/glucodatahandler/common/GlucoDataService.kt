@@ -12,6 +12,7 @@ import kotlin.coroutines.cancellation.CancellationException
 
 open class GlucoDataService : WearableListenerService(), MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener, ReceiveDataInterface {
     private val LOG_ID = "GlucoDataHandler.GlucoDataService"
+    private lateinit var receiver: GlucoseDataReceiver
 
     override fun onCreate() {
         try {
@@ -42,7 +43,8 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
             Log.d(LOG_ID, "Register Receiver")
             val intentFilter = IntentFilter()
             intentFilter.addAction("glucodata.Minute")
-            registerReceiver(GlucoseDataReceiver(), intentFilter)
+            receiver = GlucoseDataReceiver()
+            registerReceiver(receiver, intentFilter)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.toString())
         }
@@ -51,6 +53,7 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
     override fun onDestroy() {
         try {
             Log.d(LOG_ID, "onDestroy called")
+            unregisterReceiver(receiver)
             ReceiveData.remNotifier(this)
             Wearable.getMessageClient(this).removeListener(this)
             Wearable.getCapabilityClient(this).removeListener(this)

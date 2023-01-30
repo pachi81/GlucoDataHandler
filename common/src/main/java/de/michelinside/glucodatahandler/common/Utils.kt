@@ -47,7 +47,7 @@ object Utils {
 
     fun textToBitmap(text: String, color: Int): Bitmap? {
         try {
-            Log.w(LOG_ID, "Create bitmap for " + text + " with color: " + color.toString())
+            Log.d(LOG_ID, "Create bitmap for " + text + " with color: " + color.toString())
             val size = 100
             val textSize = 90F
             val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888 )

@@ -28,12 +28,12 @@ enum class ReceiveDataSource(private val resId: Int) {
 
 object ReceiveData {
     private const val LOG_ID = "GlucoDataHandler.ReceiveData"
-    private const val SERIAL = "glucodata.Minute.SerialNumber"
-    private const val MGDL = "glucodata.Minute.mgdl"
-    private const val GLUCOSECUSTOM = "glucodata.Minute.glucose"
-    private const val RATE = "glucodata.Minute.Rate"
-    private const val ALARM = "glucodata.Minute.Alarm"
-    private const val TIME = "glucodata.Minute.Time"
+    const val SERIAL = "glucodata.Minute.SerialNumber"
+    const val MGDL = "glucodata.Minute.mgdl"
+    const val GLUCOSECUSTOM = "glucodata.Minute.glucose"
+    const val RATE = "glucodata.Minute.Rate"
+    const val ALARM = "glucodata.Minute.Alarm"
+    const val TIME = "glucodata.Minute.Time"
 
     init {
         Log.d(LOG_ID, "init called")
