@@ -54,11 +54,11 @@ object ReceiveData {
     var targetMax = 165F
     var curExtraBundle: Bundle? = null
 
-    fun getAsString(context: Context): String {
+    fun getAsString(context: Context, withValue: Boolean = true): String {
         if (sensorID == null)
             return context.getString(R.string.no_data)
-        return context.getString(R.string.info_label_sensor_id) + ": " + sensorID + "\r\n" +
-                context.getString(R.string.info_label_value) + ": " + glucose + " " + getRateSymbol() + "\r\n" +
+        return (if (withValue) context.getString(R.string.info_label_value) + ": " + glucose + " " + getRateSymbol() + "\r\n" else "" ) +
+                context.getString(R.string.info_label_sensor_id) + ": " + sensorID + "\r\n" +
                 context.getString(R.string.info_label_delta) + ": " + delta + " " + getUnit() + " " + context.getString(R.string.info_label_per_minute) + "\r\n" +
                 context.getString(R.string.info_label_rate) + ": " + rate + " (" + rateLabel + ")\r\n" +
                 context.getString(R.string.info_label_timestamp) + ": " + dateformat.format(Date(time)) + "\r\n" +

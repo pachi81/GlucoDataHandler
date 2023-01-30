@@ -115,9 +115,7 @@ class WaerActivity : Activity(), ReceiveDataInterface {
             viewIcon = findViewById(R.id.viewIcon)
             viewIcon.setImageIcon(ReceiveData.getArrowIcon(this))
             txtValueInfo = findViewById(R.id.txtValueInfo)
-            txtValueInfo.text =
-                "Delta: " + ReceiveData.delta + " " + ReceiveData.getUnit() +
-                        "\n" + ReceiveData.dateformat.format(Date(ReceiveData.time))
+            txtValueInfo.text = ReceiveData.getAsString(this, false)
             txtConnInfo = findViewById(R.id.txtConnInfo)
             if (ReceiveData.capabilityInfo != null && ReceiveData.capabilityInfo!!.nodes.size > 0)
                 txtConnInfo.text = resources.getText(R.string.activity_connected_label)

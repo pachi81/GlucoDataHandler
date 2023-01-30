@@ -28,5 +28,7 @@
     <string name="short_rate_arrow">Trend value and arrow</string>
     <string name="short_rate_icon">Trend value with icon</string>
 
+    <string name="source_message_client">Phone</string>
+
 
 </resources>

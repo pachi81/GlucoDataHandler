@@ -45,10 +45,10 @@ object Utils {
         return bytes
     }
 
-    fun textToBitmap(text: String, color: Int): Bitmap? {
+    fun textToBitmap(text: String, color: Int, roundTargert: Boolean = false): Bitmap? {
         try {
             val size = 100
-            val textSize = 90F
+            val textSize = if(roundTargert) { if (text.contains(".")) 70F else 85F } else 100F
             val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888 )
             val canvas = Canvas(bitmap)
             bitmap.eraseColor(Color.TRANSPARENT)
@@ -56,24 +56,20 @@ object Utils {
             val paint = Paint(Paint.ANTI_ALIAS_FLAG)
             paint.color = color
             paint.textSize = textSize
+            paint.textAlign = Paint.Align.CENTER
             val boundsText = Rect()
             paint.getTextBounds(text, 0, text.length, boundsText)
-            // re-calculate size depending on the bound width -> use minOf for preventing oversize signs
-            paint.textSize = minOf( bitmap.height.toFloat(), (textSize - 1) * bitmap.width / boundsText.width() )
-            paint.getTextBounds(text, 0, text.length, boundsText)
-            if(boundsText.width() > 90)
-                paint.textSize = paint.textSize-(boundsText.width() - 90)
-            var x = 4
-            var y = ((bitmap.height + boundsText.height()) / 2) - 3
-            if (paint.textSize == size.toFloat()) {
-                x = (bitmap.width - boundsText.width()) / 2
-                if (text == "---") {
-                    y = 80  // special case
-                }
+            paint.textSize = minOf( textSize, (textSize - 1) * bitmap.width / boundsText.width() )
+            if(paint.textSize < textSize) {
+                // re-calculate size depending on the bound width -> use minOf for preventing oversize signs
+                paint.getTextBounds(text, 0, text.length, boundsText)
             }
+            Log.d(LOG_ID, "height: " + boundsText.height().toString() + " width:" + boundsText.width().toString() + " text-size:" + paint.textSize.toString())
 
-            Log.d(LOG_ID, "Create bitmap for " + text + " - x:" + x.toString() + " y:" + y.toString() + " text-size:" + paint.textSize.toString())
-            canvas.drawText(text, x.toFloat(), y.toFloat(), paint)
+            val y = if (text == "---") 80 else ((bitmap.height + boundsText.height()) / 2) - 3
+
+            Log.d(LOG_ID, "Create bitmap for " + text + " - y:" + y.toString() + " text-size:" + paint.textSize.toString())
+            canvas.drawText(text, size.toFloat()/2, y.toFloat(), paint)
             return bitmap
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Cannot create text icon: " + exc.message.toString())
