@@ -32,6 +32,14 @@ class SmallValueImageComplication: BgValueComplicationService() {
 }
 
 class ValueIconComplication: BgValueComplicationService() {
+    override fun getImage(): SmallImage {
+        return  SmallImage.Builder(
+            image = getGlucoseAsIcon(),
+            type = SmallImageType.PHOTO
+        ).setAmbientImage(getGlucoseAsIcon())
+            .build()
+    }
+
     override fun getIconComplicationData(): ComplicationData {
         val imageIcon = MonochromaticImage.Builder(
             image = getGlucoseAsIcon()
