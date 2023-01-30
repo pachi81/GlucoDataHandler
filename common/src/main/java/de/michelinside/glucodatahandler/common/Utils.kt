@@ -47,7 +47,6 @@ object Utils {
 
     fun textToBitmap(text: String, color: Int): Bitmap? {
         try {
-            Log.d(LOG_ID, "Create bitmap for " + text + " with color: " + color.toString())
             val size = 100
             val textSize = 90F
             val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888 )
@@ -65,7 +64,7 @@ object Utils {
             if(boundsText.width() > 90)
                 paint.textSize = paint.textSize-(boundsText.width() - 90)
             var x = 4
-            var y = (bitmap.height + boundsText.height()) / 2
+            var y = ((bitmap.height + boundsText.height()) / 2) - 3
             if (paint.textSize == size.toFloat()) {
                 x = (bitmap.width - boundsText.width()) / 2
                 if (text == "---") {
@@ -73,6 +72,7 @@ object Utils {
                 }
             }
 
+            Log.d(LOG_ID, "Create bitmap for " + text + " - x:" + x.toString() + " y:" + y.toString() + " text-size:" + paint.textSize.toString())
             canvas.drawText(text, x.toFloat(), y.toFloat(), paint)
             return bitmap
         } catch (exc: Exception) {

@@ -144,7 +144,7 @@ object ReceiveData {
     }
 
     fun getArrowIconRes(): Int {
-        if(isObsolete(300))
+        if(isObsolete(300) || java.lang.Float.isNaN(rate))
             return R.drawable.icon_question
         if (rate >= 3.0f) return R.drawable.arrow_double_up
         if (rate >= 2.0f) return R.drawable.arrow_up_90
@@ -160,7 +160,7 @@ object ReceiveData {
         if (rate > -1.66f) return R.drawable.arrow_down_60
         if (rate > -2.0f) return R.drawable.arrow_down_75
         if (rate > -3.0f) return R.drawable.arrow_down_90
-        return if (java.lang.Float.isNaN(rate)) R.drawable.icon_question else R.drawable.arrow_double_down
+        return R.drawable.arrow_double_down
     }
 
     fun getArrowIcon(context: Context): Icon {
