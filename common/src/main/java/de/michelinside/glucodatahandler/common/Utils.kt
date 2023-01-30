@@ -62,9 +62,9 @@ object Utils {
             // re-calculate size depending on the bound width -> use minOf for preventing oversize signs
             paint.textSize = minOf( bitmap.height.toFloat(), (textSize - 1) * bitmap.width / boundsText.width() )
             paint.getTextBounds(text, 0, text.length, boundsText)
-            if(boundsText.width() > 96)
-                paint.textSize = paint.textSize-(boundsText.width() - 96)
-            var x = 0
+            if(boundsText.width() > 90)
+                paint.textSize = paint.textSize-(boundsText.width() - 90)
+            var x = 4
             var y = (bitmap.height + boundsText.height()) / 2
             if (paint.textSize == size.toFloat()) {
                 x = (bitmap.width - boundsText.width()) / 2
