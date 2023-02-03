@@ -8,16 +8,23 @@
     tools:context=".WaerActivity"
     tools:deviceIds="wear">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:padding="10dp">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_boxedEdges="all">
 
         <TextView
             android:id="@+id/txtBgValue"
             android:layout_width="79dp"
             android:layout_height="24dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
             android:text="---"
             android:textAlignment="viewEnd"
             android:textColor="#FFFFFF"
@@ -30,6 +37,7 @@
             android:id="@+id/txtVersion"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:text="1.0"
             android:textAlignment="center"
             android:textSize="10sp"
@@ -40,8 +48,9 @@
 
         <TextView
             android:id="@+id/txtValueInfo"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:text="@string/no_data"
             android:textAlignment="center"
             android:textSize="12sp"
@@ -66,6 +75,7 @@
             android:layout_width="38dp"
             android:layout_height="24dp"
             android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
             android:src="@drawable/icon_question"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -74,8 +84,8 @@
 
         <Switch
             android:id="@+id/switchForground"
-            android:layout_width="145dp"
-            android:layout_height="23dp"
+            android:layout_width="151dp"
+            android:layout_height="35dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:text="@string/activity_switch_foreground"
@@ -87,47 +97,49 @@
 
         <EditText
             android:id="@+id/numMin"
-            android:layout_width="50dp"
-            android:layout_height="33dp"
+            android:layout_width="48dp"
+            android:layout_height="40dp"
             android:layout_marginStart="16dp"
             android:ems="10"
             android:inputType="numberDecimal"
             android:text="5.0"
-            android:textSize="12sp"
+            android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@+id/switchForground"
             app:layout_constraintEnd_toStartOf="@+id/numMax"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.622"
             app:layout_constraintStart_toStartOf="parent"
             tools:ignore="TouchTargetSizeCheck" />
 
         <EditText
             android:id="@+id/numMax"
-            android:layout_width="50dp"
-            android:layout_height="33dp"
-            android:layout_marginEnd="28dp"
+            android:layout_width="48dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="40dp"
             android:ems="10"
             android:inputType="numberDecimal"
             android:text="5.0"
-            android:textSize="12sp"
+            android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@+id/switchForground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView"
-            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintVertical_bias="0.0"
             tools:ignore="TouchTargetSizeCheck" />
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="102dp"
-            android:layout_height="14dp"
-            android:layout_marginTop="12dp"
+            android:layout_height="16dp"
+            android:layout_marginTop="10dp"
             android:text="@string/activity_target_range"
-            android:textSize="10sp"
+            android:textSize="12sp"
             app:layout_constraintBottom_toTopOf="@+id/numMin"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.559"
+            app:layout_constraintHorizontal_bias="0.252"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtValueInfo" />
+            app:layout_constraintTop_toBottomOf="@+id/txtValueInfo"
+            app:layout_constraintVertical_bias="0.0" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </androidx.wear.widget.BoxInsetLayout>

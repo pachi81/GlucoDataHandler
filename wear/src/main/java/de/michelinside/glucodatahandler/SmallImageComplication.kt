@@ -15,18 +15,11 @@ class TrendIconComplication: BgValueComplicationService() {
 }
 
 class SmallValueImageComplication: BgValueComplicationService() {
-    private fun getColoredIcon(): Icon {
-        val icon = getGlucoseAsIcon(ReceiveData.getClucoseColor())
-        icon.setTint(ReceiveData.getClucoseColor())
-        icon.setTintMode(PorterDuff.Mode.SRC_IN)
-        return icon
-    }
-
     override fun getImage(): SmallImage {
         return  SmallImage.Builder(
-            image = getGlucoseAsIcon(ReceiveData.getClucoseColor()),
+            image = getGlucoseAsIcon(ReceiveData.getClucoseColor(), true),
             type = SmallImageType.PHOTO
-        ).setAmbientImage(getGlucoseAsIcon())
+        ).setAmbientImage(getGlucoseAsIcon(forImage = true))
             .build()
     }
 }
@@ -34,7 +27,7 @@ class SmallValueImageComplication: BgValueComplicationService() {
 class ValueIconComplication: BgValueComplicationService() {
     override fun getImage(): SmallImage {
         return  SmallImage.Builder(
-            image = getGlucoseAsIcon(),
+            image = getGlucoseAsIcon(forImage = true),
             type = SmallImageType.PHOTO
         ).setAmbientImage(getGlucoseAsIcon())
             .build()
