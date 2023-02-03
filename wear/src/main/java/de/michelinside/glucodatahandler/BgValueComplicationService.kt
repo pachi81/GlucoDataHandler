@@ -152,16 +152,18 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     fun getTapAction(): PendingIntent? {
         if (BuildConfig.DEBUG) {
             // for debug create dummy broadcast (to check in emulator)
-            val useMmol = true
+            val useMmol = Random.nextBoolean()
             val time = if(ReceiveData.time==0L) System.currentTimeMillis() else ReceiveData.time+60000L
             val intent = Intent(Constants.GLUCODATA_BROADCAST_ACTION)
-            var raw = if(ReceiveData.time==0L || ReceiveData.rawValue == 400) 40 else ReceiveData.rawValue + 1 //Random.nextInt(40, 400)
+            val raw = Random.nextInt(40, 400)
+            val glucose = if(useMmol) Utils.mgToMmol(raw.toFloat()) else raw.toFloat()
+            /*var raw = if(ReceiveData.time==0L || ReceiveData.rawValue == 400) 40 else ReceiveData.rawValue + 1
             var glucose = if(useMmol) Utils.mgToMmol(raw.toFloat()) else raw.toFloat()
             if(useMmol && glucose == ReceiveData.glucose) {
                 raw += 1
                 glucose = Utils.mgToMmol(raw.toFloat())
-            }
-            val rate = Random.nextFloat() + Random.nextInt(-4, 4).toFloat()
+            }*/
+            val rate = Utils.round(Random.nextFloat() + Random.nextInt(-4, 4).toFloat(), 2)
             intent.putExtra(ReceiveData.SERIAL, "WUSEL_DUSEL")
             intent.putExtra(ReceiveData.MGDL, raw)
             intent.putExtra(ReceiveData.GLUCOSECUSTOM, glucose)

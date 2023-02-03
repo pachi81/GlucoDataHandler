@@ -65,7 +65,8 @@ object Utils {
                 paint.getTextBounds(text, 0, text.length, boundsText)
             }
             Log.d(LOG_ID, "height: " + boundsText.height().toString() + " width:" + boundsText.width().toString() + " text-size:" + paint.textSize.toString())
-
+            if(roundTargert && boundsText.width() > 90)
+                paint.textSize = paint.textSize-(boundsText.width() - 90)
             val y = if (text == "---") 80 else ((bitmap.height + boundsText.height()) / 2) - 3
 
             Log.d(LOG_ID, "Create bitmap for " + text + " - y:" + y.toString() + " text-size:" + paint.textSize.toString())
