@@ -12,7 +12,7 @@ android {
         minSdk 26
         targetSdk 33
         versionCode 1
-        versionName "0.6"
+        versionName "0.6.1"
     }
 
     buildTypes {
@@ -53,6 +53,6 @@ dependencies {
     implementation 'androidx.wear.watchface:watchface-complications-data-source-ktx:1.1.1'
     implementation 'androidx.wear.watchface:watchface-complications-rendering:1.1.1'
     implementation 'androidx.appcompat:appcompat-resources:1.6.0'
-    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.6.0'
 }

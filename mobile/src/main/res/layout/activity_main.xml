@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <Switch
+        android:id="@+id/switchSendToXdrip"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/pref_switch_send_to_xdrip"
+        android:textAlignment="textStart"
+        app:layout_constraintBottom_toTopOf="@+id/switchSendToAod"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <TextView
         android:id="@+id/txtLastValue"
         android:layout_width="351dp"
@@ -61,6 +74,7 @@
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="40dp"
         android:text="@string/pref_switch_send_to_aod"
+        android:textAlignment="textStart"
         app:layout_constraintBottom_toTopOf="@+id/txtWearInfo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"

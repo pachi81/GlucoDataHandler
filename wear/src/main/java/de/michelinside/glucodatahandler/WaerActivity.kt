@@ -6,7 +6,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,11 +14,9 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveDataSource
 import de.michelinside.glucodatahandler.databinding.ActivityWaerBinding
-import java.util.*
 
 
 class WaerActivity : Activity(), ReceiveDataInterface {
@@ -77,10 +74,7 @@ class WaerActivity : Activity(), ReceiveDataInterface {
                 }
             }
 
-            val serviceIntent = Intent(this, GlucoDataServiceWear::class.java)
-            serviceIntent.putExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, switchForground.isChecked)
-            this.startService(serviceIntent)
-
+            GlucoDataServiceWear.start(this)
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }

@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PowerManager
@@ -12,7 +11,6 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.Switch
 import android.widget.TextView
-import com.google.android.gms.wearable.*
 import de.michelinside.glucodatahandler.common.*
 
 
@@ -21,27 +19,28 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
     private lateinit var txtVersion: TextView
     private lateinit var txtWearInfo: TextView
     private lateinit var switchSendToAod: Switch
+    private lateinit var switchSendToXdrip: Switch
     private lateinit var sharedPref: SharedPreferences
     private val LOG_ID = "GlucoDataHandler.Main"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Log.d(LOG_ID, "onCreate called")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val intent = Intent()
-            val packageName = packageName
-            val pm = getSystemService(POWER_SERVICE) as PowerManager
-            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-                intent.data = Uri.parse("package:$packageName")
-                startActivity(intent)
-            }
+        val intent = Intent()
+        val packageName = packageName
+        val pm = getSystemService(POWER_SERVICE) as PowerManager
+        if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+            intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+            intent.data = Uri.parse("package:$packageName")
+            startActivity(intent)
         }
 
         sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
 
-        var serviceIntent = Intent(this, GlucoDataServiceMobile::class.java)
-        this.startService(serviceIntent)
+        if (!GlucoDataService.running) {
+            val serviceIntent = Intent(this, GlucoDataServiceMobile::class.java)
+            this.startService(serviceIntent)
+        }
 
         txtVersion = findViewById(R.id.txtVersion)
         txtVersion.text = BuildConfig.VERSION_NAME
@@ -57,6 +56,19 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
                 }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "Changing send to AOD exception: " + exc.message.toString() )
+            }
+        }
+        switchSendToXdrip = findViewById(R.id.switchSendToXdrip)
+        switchSendToXdrip.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_XDRIP, false)
+        switchSendToXdrip.setOnCheckedChangeListener { _, isChecked ->
+            Log.d(LOG_ID, "Send to xDrip changed: " + isChecked.toString())
+            try {
+                with (sharedPref.edit()) {
+                    putBoolean(Constants.SHARED_PREF_SEND_TO_XDRIP, isChecked)
+                    apply()
+                }
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "Changing send to xDrip exception: " + exc.message.toString() )
             }
         }
     }

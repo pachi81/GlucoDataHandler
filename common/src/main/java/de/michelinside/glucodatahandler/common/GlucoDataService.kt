@@ -14,10 +14,16 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
     private val LOG_ID = "GlucoDataHandler.GlucoDataService"
     private lateinit var receiver: GlucoseDataReceiver
 
+    companion object GlucoDataService {
+        private var isRunning = false
+        val running get() = isRunning
+    }
+
     override fun onCreate() {
         try {
             super.onCreate()
-            Log.d(LOG_ID, "onCreate called")
+            Log.i(LOG_ID, "onCreate called")
+            isRunning = true
 
             val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
 
@@ -52,12 +58,13 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
 
     override fun onDestroy() {
         try {
-            Log.d(LOG_ID, "onDestroy called")
+            Log.w(LOG_ID, "onDestroy called")
             unregisterReceiver(receiver)
             ReceiveData.remNotifier(this)
             Wearable.getMessageClient(this).removeListener(this)
             Wearable.getCapabilityClient(this).removeListener(this)
             super.onDestroy()
+            isRunning = false
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.toString())
         }

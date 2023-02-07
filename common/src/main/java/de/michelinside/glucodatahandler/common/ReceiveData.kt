@@ -47,7 +47,7 @@ object ReceiveData {
     var timeDiff: Long = 0
     var delta: Float = 0.0F
     var rateLabel: String? = null
-    var dateformat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT)
+    var dateformat: DateFormat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT)
     var source: ReceiveDataSource = ReceiveDataSource.BROADCAST
     var capabilityInfo: CapabilityInfo? = null
     var targetMin = 90F
