@@ -36,8 +36,10 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
 
         sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
 
-        val serviceIntent = Intent(this, GlucoDataServiceMobile::class.java)
-        this.startService(serviceIntent)
+        if (!GlucoDataService.running) {
+            val serviceIntent = Intent(this, GlucoDataServiceMobile::class.java)
+            this.startService(serviceIntent)
+        }
 
         txtVersion = findViewById(R.id.txtVersion)
         txtVersion.text = BuildConfig.VERSION_NAME

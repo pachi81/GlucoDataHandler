@@ -74,10 +74,7 @@ class WaerActivity : Activity(), ReceiveDataInterface {
                 }
             }
 
-            val serviceIntent = Intent(this, GlucoDataServiceWear::class.java)
-            serviceIntent.putExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, switchForground.isChecked)
-            this.startService(serviceIntent)
-
+            GlucoDataServiceWear.start(this)
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }

@@ -31,10 +31,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
             Log.d(LOG_ID, "onCreate called")
             descriptionResId = this.applicationInfo.labelRes
 
-            val serviceIntent = Intent(this, GlucoDataServiceWear::class.java)
-            val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-            serviceIntent.putExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false))
-            this.startService(serviceIntent)
+            GlucoDataServiceWear.start(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -256,17 +253,28 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
 object ActiveComplicationHandler: ReceiveDataInterface {
     private const val LOG_ID = "GlucoDataHandler.ActiveComplicationHandler"
+    private var packageInfo: PackageInfo? = null
     init {
         Log.d(LOG_ID, "init called")
     }
 
     @SuppressLint("QueryPermissionsNeeded")
     private fun getPackages(context: Context): PackageInfo {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            return context.packageManager.getPackageInfo(context.packageName, PackageManager.PackageInfoFlags.of(PackageManager.GET_SERVICES.toLong()))
-        } else {
-            @Suppress("DEPRECATION") return context.packageManager.getPackageInfo(context.packageName, PackageManager.GET_SERVICES)
+        if (packageInfo == null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                packageInfo = context.packageManager.getPackageInfo(
+                    context.packageName,
+                    PackageManager.PackageInfoFlags.of(PackageManager.GET_SERVICES.toLong())
+                )
+            } else {
+                @Suppress("DEPRECATION")
+                packageInfo = context.packageManager.getPackageInfo(
+                    context.packageName,
+                    PackageManager.GET_SERVICES
+                )
+            }
         }
+        return packageInfo!!
     }
 
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
