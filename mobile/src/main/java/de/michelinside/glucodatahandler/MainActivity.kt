@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
     private lateinit var txtVersion: TextView
     private lateinit var txtWearInfo: TextView
     private lateinit var switchSendToAod: Switch
+    private lateinit var switchSendToXdrip: Switch
     private lateinit var sharedPref: SharedPreferences
     private val LOG_ID = "GlucoDataHandler.Main"
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +56,19 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
                 }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "Changing send to AOD exception: " + exc.message.toString() )
+            }
+        }
+        switchSendToXdrip = findViewById(R.id.switchSendToXdrip)
+        switchSendToXdrip.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_XDRIP, false)
+        switchSendToXdrip.setOnCheckedChangeListener { _, isChecked ->
+            Log.d(LOG_ID, "Send to xDrip changed: " + isChecked.toString())
+            try {
+                with (sharedPref.edit()) {
+                    putBoolean(Constants.SHARED_PREF_SEND_TO_XDRIP, isChecked)
+                    apply()
+                }
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "Changing send to xDrip exception: " + exc.message.toString() )
             }
         }
     }
