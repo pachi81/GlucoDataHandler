@@ -1,7 +1,5 @@
 package de.michelinside.glucodatahandler
 
-import android.graphics.*
-import android.graphics.drawable.Icon
 import androidx.wear.watchface.complications.data.*
 import de.michelinside.glucodatahandler.common.ReceiveData
 

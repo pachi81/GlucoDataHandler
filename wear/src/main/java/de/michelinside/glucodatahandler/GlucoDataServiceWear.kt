@@ -31,9 +31,9 @@ class GlucoDataServiceWear: GlucoDataService() {
             if (isForeground == true && !isForegroundService) {
                 isForegroundService = true
                 Log.i(LOG_ID, "Starting service in foreground!")
-                val CHANNEL_ID = "glucodatahandler_service_01"
+                val channelId = "glucodatahandler_service_01"
                 val channel = NotificationChannel(
-                    CHANNEL_ID,
+                    channelId,
                     "Foregorund GlucoDataService",
                     NotificationManager.IMPORTANCE_DEFAULT
                 )
@@ -47,7 +47,7 @@ class GlucoDataServiceWear: GlucoDataService() {
                     notificationIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
                 )
 
-                val notification: Notification = Notification.Builder(this, CHANNEL_ID)
+                val notification: Notification = Notification.Builder(this, channelId)
                     .setContentTitle(getString(R.string.app_name))
                     .setContentText(getString(R.string.forground_notification_descr))
                     .setSmallIcon(R.mipmap.ic_launcher)

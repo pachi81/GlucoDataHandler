@@ -9,7 +9,6 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.PorterDuff
-import android.graphics.drawable.Drawable.ConstantState
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
