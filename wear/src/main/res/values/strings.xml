@@ -5,6 +5,7 @@
     <string name="activity_connected_label" tools:ignore="MissingTranslation">Phone: connected</string>
     <string name="activity_disconnected_label" tools:ignore="MissingTranslation">Phone: disconnected</string>
     <string name="activity_switch_foreground" tools:ignore="MissingTranslation">Foreground</string>
+    <string name="activity_switch_notification" tools:ignore="MissingTranslation">Vibration</string>
     <string name="activity_target_range" tools:ignore="MissingTranslation">Target range:</string>
 
     <string name="short_value" tools:ignore="MissingTranslation">Glucose</string>

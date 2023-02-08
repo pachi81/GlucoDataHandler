@@ -3,7 +3,7 @@ package de.michelinside.glucodatahandler.common
 import android.content.Context
 import android.content.IntentFilter
 import android.net.Uri
-import android.os.Bundle
+import android.os.*
 import android.util.Log
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.*
@@ -13,6 +13,8 @@ import kotlin.coroutines.cancellation.CancellationException
 open class GlucoDataService : WearableListenerService(), MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener, ReceiveDataInterface {
     private val LOG_ID = "GlucoDataHandler.GlucoDataService"
     private lateinit var receiver: GlucoseDataReceiver
+    private var lastAlarmTime = 0L
+    private var lastAlarmType = ReceiveData.AlarmType.NONE
 
     companion object GlucoDataService {
         private var isRunning = false
@@ -89,6 +91,30 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
         }
     }
 
+    fun getVibrationPattern(alarmType: ReceiveData.AlarmType): LongArray? {
+        return when(alarmType) {
+            ReceiveData.AlarmType.LOW_ALARM -> longArrayOf(0, 800, 500, 800, 500, 800, 500)
+            ReceiveData.AlarmType.LOW -> longArrayOf(0, 700, 500, 700, 500)
+            ReceiveData.AlarmType.HIGH -> longArrayOf(0, 400, 500, 400, 500)
+            ReceiveData.AlarmType.HIGH_ALARM -> longArrayOf(0, 600, 500, 600, 500, 600, 500)
+            else -> null
+        }
+    }
+
+    fun vibrate(alarmType: ReceiveData.AlarmType) {
+        val vibratePattern = getVibrationPattern(alarmType) ?: return
+        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager =
+                getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            vibratorManager.defaultVibrator
+        } else {
+            @Suppress("DEPRECATION")
+            getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        }
+        Log.d(LOG_ID, "vibration for " + alarmType.toString())
+        vibrator.vibrate(VibrationEffect.createWaveform(vibratePattern, -1))
+    }
+
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnReceiveData for source " + dataSource.toString() + " and extras " + extras.toString())
@@ -96,6 +122,33 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
                 Thread {
                     SendMessage(context, Utils.bundleToBytes(extras))
                 }.start()
+            }
+            val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            if (sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)) {
+                val curAlarmType = ReceiveData.getAlarmType()
+                val forceAlarm = (ReceiveData.alarm and 8) != 0 // alarm triggered by Juggluco
+                if (curAlarmType == ReceiveData.AlarmType.LOW_ALARM || curAlarmType == ReceiveData.AlarmType.LOW)
+                {
+                    // Low alarm only, if the values are still falling!
+                    val durLow = sharedPref.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_LOW, 20) * 60 * 1000
+                    if( forceAlarm || curAlarmType != lastAlarmType || ((ReceiveData.delta < 0F || ReceiveData.rate < 0F) && (ReceiveData.time - lastAlarmTime >= durLow)) )
+                    {
+                        lastAlarmTime = ReceiveData.time
+                        lastAlarmType = curAlarmType
+                        vibrate(curAlarmType)
+                    }
+                }
+                else if (curAlarmType == ReceiveData.AlarmType.HIGH_ALARM || curAlarmType == ReceiveData.AlarmType.HIGH)
+                {
+                    // High alarm only, if the values are still rising!
+                    val durHigh = sharedPref.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_HIGH, 30) * 60 * 1000
+                    if( forceAlarm || curAlarmType != lastAlarmType || ((ReceiveData.delta > 0F || ReceiveData.rate > 0F) && (ReceiveData.time - lastAlarmTime >= durHigh)) )
+                    {
+                        lastAlarmTime = ReceiveData.time
+                        lastAlarmType = curAlarmType
+                        vibrate(curAlarmType)
+                    }
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnReceiveData exception: " + exc.toString())

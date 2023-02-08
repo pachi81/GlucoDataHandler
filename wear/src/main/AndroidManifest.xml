@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <uses-feature android:name="android.hardware.type.watch" />
 
@@ -32,7 +34,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".common.GlucoseDataReceiver" android:enabled="true" android:exported="true">
+        <receiver android:name=".common.GlucoseDataReceiver" android:enabled="true" android:exported="true"
+            tools:ignore="ExportedReceiver">
             <intent-filter>
                 <action android:name="glucodata.Minute"/>
             </intent-filter>
