@@ -35,6 +35,15 @@ object ReceiveData {
     const val ALARM = "glucodata.Minute.Alarm"
     const val TIME = "glucodata.Minute.Time"
 
+    enum class AlarmType {
+        NONE,
+        LOW_ALARM,
+        LOW,
+        OK,
+        HIGH,
+        HIGH_ALARM
+    }
+
     init {
         Log.d(LOG_ID, "init called")
     }
@@ -98,17 +107,34 @@ object ReceiveData {
         return "mg/dl"
     }
 
+    fun getAlarmType(): AlarmType {
+        if(isObsolete(300))
+            return AlarmType.NONE
+        if(alarm==6)
+            return AlarmType.HIGH_ALARM
+        if(alarm==7)
+            return AlarmType.LOW_ALARM
+        if(glucose < targetMin )
+            return AlarmType.LOW
+        if(glucose > targetMax )
+            return AlarmType.HIGH
+        return AlarmType.OK
+    }
+
     fun getClucoseColor(monoChrome: Boolean = false): Int {
         if(isObsolete(300))
             return Color.GRAY
         if (monoChrome)
             return Color.WHITE
-        if(alarm!=0)
-            return Color.RED
-        if(glucose < targetMin || glucose > targetMax )
-            return Color.YELLOW
 
-        return Color.GREEN
+        return when(getAlarmType()) {
+            AlarmType.NONE -> Color.GRAY
+            AlarmType.LOW_ALARM -> Color.RED
+            AlarmType.LOW -> Color.YELLOW
+            AlarmType.OK -> Color.GREEN
+            AlarmType.HIGH -> Color.YELLOW
+            AlarmType.HIGH_ALARM -> Color.RED
+        }
     }
 
     fun getRateSymbol(): Char {
@@ -222,7 +248,7 @@ object ReceiveData {
                 glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
                 rate = extras.getFloat(RATE) //Rate of change of glucose. See libre and dexcom label functions
                 rateLabel = getRateLabel(context)
-                alarm = extras.getInt(ALARM) //See showalarm.
+                alarm = extras.getInt(ALARM) and 7 // if bit 8 is set, then an alarm is triggered
                 if (time > 0) {
                     timeDiff = curTimeDiff
                     val timeDiffMinute = getTimeDiffMinute()

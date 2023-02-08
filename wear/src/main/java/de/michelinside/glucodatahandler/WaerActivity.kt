@@ -6,7 +6,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Bundle
+import android.os.*
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -31,6 +31,7 @@ class WaerActivity : Activity(), ReceiveDataInterface {
     private lateinit var numMin: EditText
     private lateinit var numMax: EditText
     private lateinit var switchForground: Switch
+    private lateinit var switchNotifcation: Switch
     private lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,6 +72,20 @@ class WaerActivity : Activity(), ReceiveDataInterface {
                     this.startService(serviceIntent)
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Changing foreground service exception: " + exc.message.toString() )
+                }
+            }
+
+            switchNotifcation = findViewById(R.id.switchNotifcation)
+            switchNotifcation.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)
+            switchNotifcation.setOnCheckedChangeListener { _, isChecked ->
+                Log.d(LOG_ID, "Notification changed: " + isChecked.toString())
+                try {
+                    with (sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_NOTIFICATION, isChecked)
+                        apply()
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Changing notification exception: " + exc.message.toString() )
                 }
             }
 
