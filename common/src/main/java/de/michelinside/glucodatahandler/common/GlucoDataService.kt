@@ -131,7 +131,7 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
                 {
                     // Low alarm only, if the values are still falling!
                     val durLow = sharedPref.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_LOW, 20) * 60 * 1000
-                    if( forceAlarm || curAlarmType != lastAlarmType || ((ReceiveData.delta <= 0F || ReceiveData.rate <= 0F) && (ReceiveData.time - lastAlarmTime >= durLow)) )
+                    if( forceAlarm || curAlarmType != lastAlarmType || ((ReceiveData.delta < 0F || ReceiveData.rate < 0F) && (ReceiveData.time - lastAlarmTime >= durLow)) )
                     {
                         lastAlarmTime = ReceiveData.time
                         lastAlarmType = curAlarmType
@@ -142,7 +142,7 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
                 {
                     // High alarm only, if the values are still rising!
                     val durHigh = sharedPref.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_HIGH, 30) * 60 * 1000
-                    if( forceAlarm || curAlarmType != lastAlarmType || ((ReceiveData.delta >= 0F || ReceiveData.rate >= 0F) && (ReceiveData.time - lastAlarmTime >= durHigh)) )
+                    if( forceAlarm || curAlarmType != lastAlarmType || ((ReceiveData.delta > 0F || ReceiveData.rate > 0F) && (ReceiveData.time - lastAlarmTime >= durHigh)) )
                     {
                         lastAlarmTime = ReceiveData.time
                         lastAlarmType = curAlarmType
