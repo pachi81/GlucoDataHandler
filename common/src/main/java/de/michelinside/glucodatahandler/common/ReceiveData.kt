@@ -110,9 +110,9 @@ object ReceiveData {
     fun getAlarmType(): AlarmType {
         if(isObsolete(300))
             return AlarmType.NONE
-        if(alarm==6)
+        if((alarm and 7) == 6)
             return AlarmType.HIGH_ALARM
-        if(alarm==7)
+        if((alarm and 7) == 7)
             return AlarmType.LOW_ALARM
         if(glucose < targetMin )
             return AlarmType.LOW
@@ -248,7 +248,7 @@ object ReceiveData {
                 glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
                 rate = extras.getFloat(RATE) //Rate of change of glucose. See libre and dexcom label functions
                 rateLabel = getRateLabel(context)
-                alarm = extras.getInt(ALARM) and 7 // if bit 8 is set, then an alarm is triggered
+                alarm = extras.getInt(ALARM) // if bit 8 is set, then an alarm is triggered
                 if (time > 0) {
                     timeDiff = curTimeDiff
                     val timeDiffMinute = getTimeDiffMinute()
