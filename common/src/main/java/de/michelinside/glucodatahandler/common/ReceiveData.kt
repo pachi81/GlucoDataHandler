@@ -265,13 +265,13 @@ object ReceiveData {
 
                         if(targetMin >= Constants.GLUCOSE_MIN_VALUE.toFloat())
                         {
-                            targetMin = Utils.mgToMmol(targetMin)
-                            targetMax = Utils.mgToMmol(targetMax)
+                            updateTarget(context, true, Utils.mgToMmol(targetMin))
+                            updateTarget(context, false, Utils.mgToMmol(targetMax))
                             Log.i(LOG_ID, "min/max changed from mg/dl to mmol/l: " + targetMin.toString() + "/" + targetMax.toString())
                         }
                     } else if (targetMin < 20F) {
-                        targetMin = Utils.mmolToMg(targetMin)
-                        targetMax = Utils.mmolToMg(targetMax)
+                        updateTarget(context, true, Utils.mmolToMg(targetMin))
+                        updateTarget(context, false, Utils.mmolToMg(targetMax))
                         Log.i(LOG_ID, "min/max changed from mmol/l to mg/dl: " + targetMin.toString() + "/" + targetMax.toString())
                     }
                 }
@@ -287,5 +287,18 @@ object ReceiveData {
         return false
     }
 
+    fun updateTarget(context: Context, min: Boolean, value: Float) {
+        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            if (min) {
+                putFloat(Constants.SHARED_PREF_TARGET_MIN, value.toString().toFloat())
+                targetMin = value
+            } else {
+                putFloat(Constants.SHARED_PREF_TARGET_MAX, value.toString().toFloat())
+                targetMax = value
+            }
+            apply()
+        }
+    }
 
 }

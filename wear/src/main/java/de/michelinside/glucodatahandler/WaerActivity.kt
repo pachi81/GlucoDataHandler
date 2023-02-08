@@ -49,8 +49,8 @@ class WaerActivity : Activity(), ReceiveDataInterface {
             numMin = findViewById(R.id.numMin)
             numMax = findViewById(R.id.numMax)
 
-            numMin.addTextChangedListener(EditTextWatcher(Constants.SHARED_PREF_TARGET_MIN, sharedPref))
-            numMax.addTextChangedListener(EditTextWatcher(Constants.SHARED_PREF_TARGET_MAX, sharedPref))
+            numMin.addTextChangedListener(EditTargetChanger(true, this))
+            numMax.addTextChangedListener(EditTargetChanger(false, this))
 
             numMin.setText(sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MIN, ReceiveData.targetMin).toString())
             numMax.setText(sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, ReceiveData.targetMax).toString())
@@ -139,9 +139,9 @@ class WaerActivity : Activity(), ReceiveDataInterface {
     }
 }
 
-class EditTextWatcher(pref: String, sharedPrefs: SharedPreferences): TextWatcher {
-    private val sharedPref = sharedPrefs
-    private val prefIdx = pref
+class EditTargetChanger(minTarget: Boolean, ctx: Context): TextWatcher {
+    private val context = ctx
+    private val min = minTarget
     private val LOG_ID = "GlucoDataHandler.EditChangeWatch"
 
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -150,16 +150,9 @@ class EditTextWatcher(pref: String, sharedPrefs: SharedPreferences): TextWatcher
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
         Log.d(LOG_ID, "onTextChanged: s=" + s + " start=" + start.toString() + " before=" + before.toString() + " count=" + count.toString())
         try {
-            if(prefIdx == Constants.SHARED_PREF_TARGET_MIN)
-                ReceiveData.targetMin = s.toString().toFloat()
-            else
-                ReceiveData.targetMax = s.toString().toFloat()
-            with (sharedPref.edit()) {
-                putFloat(prefIdx, s.toString().toFloat())
-                apply()
-            }
+            ReceiveData.updateTarget(context, min, s.toString().toFloat())
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "Changing " + prefIdx + " exception: " + exc.message.toString() )
+            Log.e(LOG_ID, "Changing target exception: " + exc.message.toString() )
         }
     }
 
