@@ -28,6 +28,9 @@
     <string name="activity_main_info_label" tools:ignore="MissingTranslation">INFO: To receiving data from Juggluco, please open Juggluco, go to settings and activate \"Glucodata Broadcast\". Then you can add this plugin as a tasker event profile.</string>
     <string name="activity_main_connected_label" tools:ignore="MissingTranslation">Wear: connected (%1$d)</string>
     <string name="activity_main_disconnected_label" tools:ignore="MissingTranslation">Wear: disconnected</string>
+    <string name="activity_switch_notification" tools:ignore="MissingTranslation">Vibration</string>
+    <string name="activity_target_range" tools:ignore="MissingTranslation">Target range:</string>
+
     <string name="pref_switch_send_to_aod" tools:ignore="MissingTranslation">Forward wear data to Glucodata AOD</string>
     <string name="pref_switch_send_to_xdrip" tools:ignore="MissingTranslation">Send to xDrip</string>
 

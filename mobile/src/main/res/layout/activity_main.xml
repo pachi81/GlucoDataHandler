@@ -6,6 +6,60 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="40dp"
+        android:text="@string/activity_target_range"
+        android:textAlignment="viewStart"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/switchNotification"
+        app:layout_constraintEnd_toStartOf="@+id/numMin"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/numMax"
+        android:layout_width="48dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="92dp"
+        android:layout_marginBottom="20dp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:text="5.0"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/switchNotification"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <EditText
+        android:id="@+id/numMin"
+        android:layout_width="48dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="52dp"
+        android:layout_marginBottom="20dp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:text="5.0"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/switchNotification"
+        app:layout_constraintEnd_toStartOf="@+id/numMax"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <Switch
+        android:id="@+id/switchNotification"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/activity_switch_notification"
+        android:textAlignment="textStart"
+        app:layout_constraintBottom_toTopOf="@+id/switchSendToXdrip"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
     <Switch
         android:id="@+id/switchSendToXdrip"
         android:layout_width="0dp"
