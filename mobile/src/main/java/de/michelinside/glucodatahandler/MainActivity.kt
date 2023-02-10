@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
 import android.util.Log
+import android.widget.EditText
 import android.widget.Switch
 import android.widget.TextView
 import de.michelinside.glucodatahandler.common.*
@@ -20,6 +21,9 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
     private lateinit var txtWearInfo: TextView
     private lateinit var switchSendToAod: Switch
     private lateinit var switchSendToXdrip: Switch
+    private lateinit var numMin: EditText
+    private lateinit var numMax: EditText
+    private lateinit var switchNotifcation: Switch
     private lateinit var sharedPref: SharedPreferences
     private val LOG_ID = "GlucoDataHandler.Main"
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,12 +39,20 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
             startActivity(intent)
         }
 
-        sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-
         if (!GlucoDataService.running) {
             val serviceIntent = Intent(this, GlucoDataServiceMobile::class.java)
             this.startService(serviceIntent)
         }
+
+        sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        numMin = findViewById(R.id.numMin)
+        numMax = findViewById(R.id.numMax)
+
+        numMin.addTextChangedListener(EditTargetChanger(true, this))
+        numMax.addTextChangedListener(EditTargetChanger(false, this))
+
+        numMin.setText(sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MIN, ReceiveData.targetMin).toString())
+        numMax.setText(sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, ReceiveData.targetMax).toString())
 
         txtVersion = findViewById(R.id.txtVersion)
         txtVersion.text = BuildConfig.VERSION_NAME
@@ -69,6 +81,20 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
                 }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "Changing send to xDrip exception: " + exc.message.toString() )
+            }
+        }
+
+        switchNotifcation = findViewById(R.id.switchNotification)
+        switchNotifcation.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)
+        switchNotifcation.setOnCheckedChangeListener { _, isChecked ->
+            Log.d(LOG_ID, "Notification changed: " + isChecked.toString())
+            try {
+                with (sharedPref.edit()) {
+                    putBoolean(Constants.SHARED_PREF_NOTIFICATION, isChecked)
+                    apply()
+                }
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "Changing notification exception: " + exc.message.toString() )
             }
         }
     }

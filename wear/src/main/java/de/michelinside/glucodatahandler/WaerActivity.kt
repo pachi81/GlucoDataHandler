@@ -1,21 +1,16 @@
 package de.michelinside.glucodatahandler
 
-import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.ReceiveDataInterface
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.*
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
-import de.michelinside.glucodatahandler.common.Constants
-import de.michelinside.glucodatahandler.common.ReceiveDataSource
+import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.databinding.ActivityWaerBinding
 
 
@@ -30,8 +25,8 @@ class WaerActivity : Activity(), ReceiveDataInterface {
     private lateinit var viewIcon: ImageView
     private lateinit var numMin: EditText
     private lateinit var numMax: EditText
-    private lateinit var switchForground: Switch
     private lateinit var switchNotifcation: Switch
+    private lateinit var switchForground: Switch
     private lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -137,26 +132,4 @@ class WaerActivity : Activity(), ReceiveDataInterface {
         Log.d(LOG_ID, "new intent received from: " + dataSource.toString())
         update()
     }
-}
-
-class EditTargetChanger(minTarget: Boolean, ctx: Context): TextWatcher {
-    private val context = ctx
-    private val min = minTarget
-    private val LOG_ID = "GlucoDataHandler.EditChangeWatch"
-
-    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-    }
-
-    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-        Log.d(LOG_ID, "onTextChanged: s=" + s + " start=" + start.toString() + " before=" + before.toString() + " count=" + count.toString())
-        try {
-            ReceiveData.updateTarget(context, min, s.toString().toFloat())
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "Changing target exception: " + exc.message.toString() )
-        }
-    }
-
-    override fun afterTextChanged(s: Editable?) {
-    }
-
 }
