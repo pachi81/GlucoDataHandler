@@ -15,6 +15,7 @@
         android:text="@string/activity_target_range"
         android:textAlignment="viewStart"
         android:textSize="14sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/switchNotification"
         app:layout_constraintEnd_toStartOf="@+id/numMin"
         app:layout_constraintHorizontal_bias="0.0"
@@ -30,6 +31,7 @@
         android:inputType="numberDecimal"
         android:text="5.0"
         android:textSize="14sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/switchNotification"
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="TouchTargetSizeCheck" />
@@ -44,6 +46,7 @@
         android:inputType="numberDecimal"
         android:text="5.0"
         android:textSize="14sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/switchNotification"
         app:layout_constraintEnd_toStartOf="@+id/numMax"
         tools:ignore="TouchTargetSizeCheck" />
@@ -57,6 +60,7 @@
         android:layout_marginBottom="10dp"
         android:text="@string/activity_switch_notification"
         android:textAlignment="textStart"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/switchSendToXdrip"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
