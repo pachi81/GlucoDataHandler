@@ -8,7 +8,6 @@ import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
@@ -222,8 +221,8 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     fun ambientArrowIcon(): Icon {
         val icon = Icon.createWithResource(this, ReceiveData.getArrowIconRes())
-        icon.setTint(Color.WHITE)
-        icon.setTintMode(PorterDuff.Mode.SRC_IN)
+        //icon.setTint(Color.WHITE)
+        //icon.setTintMode(PorterDuff.Mode.SRC_IN)
         return icon
     }
 
