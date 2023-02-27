@@ -53,6 +53,15 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
             intentFilter.addAction("glucodata.Minute")
             receiver = GlucoseDataReceiver()
             registerReceiver(receiver, intentFilter)
+            if (BuildConfig.DEBUG) {
+                Thread {
+                    while (true) {
+                        // create Thread which send dummy intents
+                        this.sendBroadcast(Utils.getDummyGlucodataIntent(true))
+                        Thread.sleep(10000)
+                    }
+                }.start()
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.toString())
         }

@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
@@ -148,25 +149,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     fun getTapAction(): PendingIntent? {
         if (BuildConfig.DEBUG) {
             // for debug create dummy broadcast (to check in emulator)
-            val useMmol = false //Random.nextBoolean()
-            val time = if(ReceiveData.time==0L) System.currentTimeMillis() else ReceiveData.time+60000L
-            val intent = Intent(Constants.GLUCODATA_BROADCAST_ACTION)
-            /*val raw = Random.nextInt(40, 400)
-            val glucose = if(useMmol) Utils.mgToMmol(raw.toFloat()) else raw.toFloat()*/
-            var raw = if(ReceiveData.time==0L || ReceiveData.rawValue == 400) 40 else ReceiveData.rawValue + 1
-            var glucose = if(useMmol) Utils.mgToMmol(raw.toFloat()) else raw.toFloat()
-            if(useMmol && glucose == ReceiveData.glucose) {
-                raw += 1
-                glucose = Utils.mgToMmol(raw.toFloat())
-            }
-            val rate = Utils.round(Random.nextFloat() + Random.nextInt(-4, 4).toFloat(), 2)
-            intent.putExtra(ReceiveData.SERIAL, "WUSEL_DUSEL")
-            intent.putExtra(ReceiveData.MGDL, raw)
-            intent.putExtra(ReceiveData.GLUCOSECUSTOM, glucose)
-            intent.putExtra(ReceiveData.RATE, rate)
-            intent.putExtra(ReceiveData.TIME, time)
-            intent.putExtra(ReceiveData.ALARM, if (raw <= 70) 7 else if (raw >= 250) 6 else 0)
-            return PendingIntent.getBroadcast(this, 3, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+            return PendingIntent.getBroadcast(this, 3, Utils.getDummyGlucodataIntent(true), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         } else {
             var launchIntent: Intent? = packageManager.getLaunchIntentForPackage("tk.glucodata")
             if (launchIntent == null) {
@@ -221,8 +204,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     fun ambientArrowIcon(): Icon {
         val icon = Icon.createWithResource(this, ReceiveData.getArrowIconRes())
-        //icon.setTint(Color.WHITE)
-        //icon.setTintMode(PorterDuff.Mode.SRC_IN)
+        Log.d(LOG_ID, icon.toString())
         return icon
     }
 

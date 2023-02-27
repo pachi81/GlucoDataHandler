@@ -1,10 +1,13 @@
 package de.michelinside.glucodatahandler.common
 
+import android.app.PendingIntent
+import android.content.Intent
 import android.graphics.*
 import android.os.Bundle
 import android.os.Parcel
 import android.util.Log
 import java.math.RoundingMode
+import kotlin.random.Random
 
 object Utils {
     private val LOG_ID = "GlucoDataHandler.Utils"
@@ -76,5 +79,33 @@ object Utils {
             Log.e(LOG_ID, "Cannot create text icon: " + exc.message.toString())
             return null
         }
+    }
+
+    fun getDummyGlucodataIntent(random: Boolean = true) : Intent {
+        val useMmol = false //Random.nextBoolean()
+        val time = if(ReceiveData.time==0L) System.currentTimeMillis() else ReceiveData.time+60000L
+        val intent = Intent(Constants.GLUCODATA_BROADCAST_ACTION)
+        var raw: Int
+        var glucose: Float
+        if (random) {
+            raw = Random.nextInt(40, 400)
+            glucose = if(useMmol) mgToMmol(raw.toFloat()) else raw.toFloat()
+        } else {
+            raw =
+                if (ReceiveData.time == 0L || ReceiveData.rawValue == 400) 40 else ReceiveData.rawValue + 1
+            glucose = if (useMmol) mgToMmol(raw.toFloat()) else raw.toFloat()
+            if (useMmol && glucose == ReceiveData.glucose) {
+                raw += 1
+                glucose = mgToMmol(raw.toFloat())
+            }
+        }
+        val rate = round(Random.nextFloat() + Random.nextInt(-4, 4).toFloat(), 2)
+        intent.putExtra(ReceiveData.SERIAL, "WUSEL_DUSEL")
+        intent.putExtra(ReceiveData.MGDL, raw)
+        intent.putExtra(ReceiveData.GLUCOSECUSTOM, glucose)
+        intent.putExtra(ReceiveData.RATE, rate)
+        intent.putExtra(ReceiveData.TIME, time)
+        intent.putExtra(ReceiveData.ALARM, if (raw <= 70) 7 else if (raw >= 250) 6 else 0)
+        return intent
     }
 }

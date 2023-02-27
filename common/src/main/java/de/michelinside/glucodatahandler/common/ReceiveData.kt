@@ -240,7 +240,7 @@ object ReceiveData {
             )
 
             val curTimeDiff = extras.getLong(TIME) - time
-            if(curTimeDiff > 50000) // check for new value received
+            if(curTimeDiff > 5000) // check for new value received
             {
                 curExtraBundle = extras
                 source = dataSource
@@ -252,11 +252,10 @@ object ReceiveData {
                 if (time > 0) {
                     timeDiff = curTimeDiff
                     val timeDiffMinute = getTimeDiffMinute()
-                    if(timeDiffMinute > 0) {
-                        delta =
-                            ((extras.getInt(MGDL) - rawValue) / timeDiffMinute).toFloat()
+                    if(timeDiffMinute > 1) {
+                        delta = ((extras.getInt(MGDL) - rawValue) / timeDiffMinute).toFloat()
                     } else {
-                        Log.w(LOG_ID, "Timediff is less than a minute: " + timeDiff + "ms")
+                        delta = (extras.getInt(MGDL) - rawValue).toFloat()
                     }
                     val newRaw = extras.getInt(MGDL)
                     if(newRaw!=glucose.toInt())  // mmol/l
