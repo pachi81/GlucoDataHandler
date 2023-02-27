@@ -53,7 +53,7 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
             intentFilter.addAction("glucodata.Minute")
             receiver = GlucoseDataReceiver()
             registerReceiver(receiver, intentFilter)
-            if (BuildConfig.DEBUG) {
+            if (BuildConfig.DEBUG && sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)) {
                 Thread {
                     while (true) {
                         // create Thread which send dummy intents

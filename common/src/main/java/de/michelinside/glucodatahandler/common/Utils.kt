@@ -1,6 +1,5 @@
 package de.michelinside.glucodatahandler.common
 
-import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.*
 import android.os.Bundle
@@ -81,15 +80,80 @@ object Utils {
         }
     }
 
+    fun rotateBitmap(bitmap: Bitmap, rotationAngleDegree: Int): Bitmap? {
+        val w = bitmap.width
+        val h = bitmap.height
+        var newW = w
+        var newH = h
+        if (rotationAngleDegree == 90 || rotationAngleDegree == 270) {
+            newW = h
+            newH = w
+        }
+        val rotatedBitmap = Bitmap.createBitmap(newW, newH, bitmap.config)
+        val canvas = Canvas(rotatedBitmap)
+        val rect = Rect(0, 0, newW, newH)
+        val matrix = Matrix()
+        val px = rect.exactCenterX()
+        val py = rect.exactCenterY()
+        matrix.postTranslate((-bitmap.width / 2).toFloat(), (-bitmap.height / 2).toFloat())
+        matrix.postRotate(rotationAngleDegree.toFloat())
+        matrix.postTranslate(px, py)
+        canvas.drawBitmap(
+            bitmap,
+            matrix,
+            Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG or Paint.FILTER_BITMAP_FLAG)
+        )
+        matrix.reset()
+        return rotatedBitmap
+    }
+
+    fun rateToBitmap(rate: Float, color: Int, roundTargert: Boolean = false): Bitmap? {
+        try {
+            val size = 100
+            val textSize = if(roundTargert) 130F else 150F
+            val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888 )
+            val canvas = Canvas(bitmap)
+            bitmap.eraseColor(Color.TRANSPARENT)
+            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
+            val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+            paint.color = color
+            paint.textSize = textSize
+            paint.textAlign = Paint.Align.CENTER
+            paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            val boundsText = Rect()
+            var text: String
+            var degrees = 0
+            if(rate >= 3F)
+                text = "⇈"
+            else if ( rate <= -3F )
+                text = "⇊"
+            else {
+                text = "↑"
+                degrees = round(-(maxOf(-2F, minOf(2F, rate)) - 2F) * 180F/4F, 0).toInt()
+            }
+            paint.getTextBounds(text, 0, text.length, boundsText)
+            val y = ((bitmap.height + boundsText.height()) / 2) - 3
+
+            Log.d(LOG_ID, "Create bitmap for " + text + "(rate: " + rate + ") - y:" + y.toString() + " - text-size:" + paint.textSize.toString() + " - degrees:" + degrees )
+            canvas.drawText(text, size.toFloat()/2, y.toFloat(), paint)
+            return rotateBitmap(bitmap, degrees)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Cannot create rate icon: " + exc.message.toString())
+            return null
+        }
+    }
+
     fun getDummyGlucodataIntent(random: Boolean = true) : Intent {
         val useMmol = false //Random.nextBoolean()
-        val time = if(ReceiveData.time==0L) System.currentTimeMillis() else ReceiveData.time+60000L
+        val time = System.currentTimeMillis()
         val intent = Intent(Constants.GLUCODATA_BROADCAST_ACTION)
         var raw: Int
         var glucose: Float
+        val rate: Float
         if (random) {
             raw = Random.nextInt(40, 400)
             glucose = if(useMmol) mgToMmol(raw.toFloat()) else raw.toFloat()
+            rate = round(Random.nextFloat() + Random.nextInt(-4, 4).toFloat(), 2)
         } else {
             raw =
                 if (ReceiveData.time == 0L || ReceiveData.rawValue == 400) 40 else ReceiveData.rawValue + 1
@@ -98,8 +162,8 @@ object Utils {
                 raw += 1
                 glucose = mgToMmol(raw.toFloat())
             }
+            rate = if (ReceiveData.time == 0L || ReceiveData.rate >= 4F) -4F else ReceiveData.rate + 0.5F
         }
-        val rate = round(Random.nextFloat() + Random.nextInt(-4, 4).toFloat(), 2)
         intent.putExtra(ReceiveData.SERIAL, "WUSEL_DUSEL")
         intent.putExtra(ReceiveData.MGDL, raw)
         intent.putExtra(ReceiveData.GLUCOSECUSTOM, glucose)
