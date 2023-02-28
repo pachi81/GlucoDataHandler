@@ -56,7 +56,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     override suspend fun onComplicationRequest(request: ComplicationRequest): ComplicationData? {
         try {
-            Log.d(LOG_ID, "onComplicationRequest called for " + request.complicationInstanceId.toString() + " with type " + request.complicationType.toString())
+            Log.d(LOG_ID, "onComplicationRequest called for " + javaClass.simpleName + " ID " + request.complicationInstanceId.toString() + " with type " + request.complicationType.toString())
             GlucoDataServiceWear.start(this)
             // add here, because onComplicationActivated is not called after restart...
             ActiveComplicationHandler.addComplication(request.complicationInstanceId, ComponentName(this, javaClass))
@@ -113,7 +113,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
             .build()
     }
 
-    private fun getLongTextComplicationData(): ComplicationData {
+    open fun getLongTextComplicationData(): ComplicationData {
         return LongTextComplicationData.Builder(
             getText(),
             descriptionText()
@@ -217,6 +217,15 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         MonochromaticImage.Builder(
             image = Icon.createWithResource(this, R.drawable.icon_rate)
         ).build()
+
+
+    fun glucoseImage(): SmallImage {
+        return SmallImage.Builder(
+            image = getGlucoseAsIcon(ReceiveData.getClucoseColor(), true),
+            type = SmallImageType.PHOTO
+        ).setAmbientImage(getGlucoseAsIcon(forImage = true))
+            .build()
+    }
 
     fun arrowImage(): SmallImage {
         return  SmallImage.Builder(

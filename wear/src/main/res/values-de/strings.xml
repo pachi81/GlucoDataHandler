@@ -9,7 +9,7 @@
     <string name="activity_target_range">Zielbereich:</string>
 
     <string name="short_value">Zuckerwert</string>
-    <string name="image_value">Zuckerwert (groß, farbig)</string>
+    <string name="image_value">Zuckerwert (sehr groß und farbig)</string>
     <string name="icon_value">Zuckerwert (groß)</string>
     <string name="short_value_icon">Zuckerwert mit Icon</string>
     <string name="short_value_arrow">Zuckerwert und Trendpfeil</string>
