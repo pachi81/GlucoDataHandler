@@ -30,7 +30,7 @@ android {
                         // on below line we are setting a
                         // name to our apk as GlucoDataHandler.apk
                     output ->
-                        def name = "GlucoDataHandler.apk"
+                        def name = "GlucoDataHandler_" + versionName + ".apk"
                         // on below line we are setting the
                         // outputFile Name to our apk file.
                         output.outputFileName = name
