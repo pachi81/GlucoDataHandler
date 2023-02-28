@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Parcel
 import android.util.Log
 import java.math.RoundingMode
+import kotlin.math.abs
 import kotlin.random.Random
 
 object Utils {
@@ -110,7 +111,24 @@ object Utils {
     fun rateToBitmap(rate: Float, color: Int, roundTargert: Boolean = false): Bitmap? {
         try {
             val size = 100
-            val textSize = if(roundTargert) 130F else 150F
+            var textSize = if(roundTargert) 130F else 150F
+            val text: String
+            val degrees: Int
+            if(rate >= 3F) {
+                text = "⇈"
+                textSize -= 5F
+                degrees = 0
+            } else if ( rate <= -3F ) {
+                text = "⇊"
+                textSize -= 5F
+                degrees = 0
+            } else if (rate >= 0F) {
+                text = "↑"
+                degrees = round(abs(minOf(2F, rate)-2F) * 90F/2F, 0).toInt()
+            } else {  // < 0
+                text = "↓"
+                degrees = round((maxOf(-2F, rate) + 2F) * -90F/2F, 0).toInt()
+            }
             val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888 )
             val canvas = Canvas(bitmap)
             bitmap.eraseColor(Color.TRANSPARENT)
@@ -121,16 +139,6 @@ object Utils {
             paint.textAlign = Paint.Align.CENTER
             paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             val boundsText = Rect()
-            var text: String
-            var degrees = 0
-            if(rate >= 3F)
-                text = "⇈"
-            else if ( rate <= -3F )
-                text = "⇊"
-            else {
-                text = "↑"
-                degrees = round(-(maxOf(-2F, minOf(2F, rate)) - 2F) * 180F/4F, 0).toInt()
-            }
             paint.getTextBounds(text, 0, text.length, boundsText)
             val y = ((bitmap.height + boundsText.height()) / 2) - 3
 

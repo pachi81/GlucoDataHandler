@@ -34,7 +34,7 @@ class ValueIconComplication: BgValueComplicationService() {
     override fun getIconComplicationData(): ComplicationData {
         val imageIcon = MonochromaticImage.Builder(
             image = getGlucoseAsIcon()
-        ).build()
+        ).setAmbientImage(getGlucoseAsIcon()).build()
 
         return MonochromaticImageComplicationData.Builder(
             imageIcon,
