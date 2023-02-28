@@ -12,7 +12,7 @@ android {
         minSdk 26
         targetSdk 33
         versionCode 1
-        versionName "0.7.1"
+        versionName "0.7.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -30,7 +30,7 @@ android {
                         // on below line we are setting a
                         // name to our apk as GlucoDataHandler.apk
                     output ->
-                        def name = "GlucoDataHandler.apk"
+                        def name = "GlucoDataHandler_" + versionName + ".apk"
                         // on below line we are setting the
                         // outputFile Name to our apk file.
                         output.outputFileName = name
@@ -49,7 +49,7 @@ android {
 
 dependencies {
     implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.joaomgcd:taskerpluginlibrary:0.4.4'

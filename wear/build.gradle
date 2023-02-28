@@ -12,7 +12,7 @@ android {
         minSdk 26
         targetSdk 33
         versionCode 1
-        versionName "0.7.1"
+        versionName "0.7.3"
     }
 
     buildTypes {
@@ -28,7 +28,7 @@ android {
                         // on below line we are setting a
                         // name to our apk as GlucoDataHandler.apk
                     output ->
-                        def name = "GlucoDataHandler-Wear.apk"
+                        def name = "GlucoDataHandler-Wear_" + versionName + ".apk"
                         // on below line we are setting the
                         // outputFile Name to our apk file.
                         output.outputFileName = name
@@ -52,7 +52,7 @@ dependencies {
     implementation project(path: ':common')
     implementation 'androidx.wear.watchface:watchface-complications-data-source-ktx:1.1.1'
     implementation 'androidx.wear.watchface:watchface-complications-rendering:1.1.1'
-    implementation 'androidx.appcompat:appcompat-resources:1.6.0'
+    implementation 'androidx.appcompat:appcompat-resources:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
-    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
 }

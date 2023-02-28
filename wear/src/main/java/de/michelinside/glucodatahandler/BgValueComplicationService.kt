@@ -8,7 +8,6 @@ import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
@@ -18,7 +17,6 @@ import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUp
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
 import de.michelinside.glucodatahandler.common.*
-import kotlin.random.Random
 
 
 abstract class BgValueComplicationService : SuspendingComplicationDataSourceService() {
@@ -49,6 +47,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     override fun onComplicationDeactivated(complicationInstanceId: Int) {
         try {
             Log.d(LOG_ID, "onComplicationDeactivated called for id " + complicationInstanceId )
+            ActiveComplicationHandler.remComplication(complicationInstanceId)
             super.onComplicationDeactivated(complicationInstanceId)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onComplicationDeactivated exception: " + exc.message.toString() )
@@ -57,8 +56,10 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     override suspend fun onComplicationRequest(request: ComplicationRequest): ComplicationData? {
         try {
-            Log.d(LOG_ID, "onComplicationRequest called for " + request.complicationType.toString())
+            Log.d(LOG_ID, "onComplicationRequest called for " + javaClass.simpleName + " ID " + request.complicationInstanceId.toString() + " with type " + request.complicationType.toString())
             GlucoDataServiceWear.start(this)
+            // add here, because onComplicationActivated is not called after restart...
+            ActiveComplicationHandler.addComplication(request.complicationInstanceId, ComponentName(this, javaClass))
             return getComplicationData(request)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onComplicationRequest exception: " + exc.message.toString() )
@@ -112,7 +113,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
             .build()
     }
 
-    private fun getLongTextComplicationData(): ComplicationData {
+    open fun getLongTextComplicationData(): ComplicationData {
         return LongTextComplicationData.Builder(
             getText(),
             descriptionText()
@@ -149,25 +150,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     fun getTapAction(): PendingIntent? {
         if (BuildConfig.DEBUG) {
             // for debug create dummy broadcast (to check in emulator)
-            val useMmol = false //Random.nextBoolean()
-            val time = if(ReceiveData.time==0L) System.currentTimeMillis() else ReceiveData.time+60000L
-            val intent = Intent(Constants.GLUCODATA_BROADCAST_ACTION)
-            /*val raw = Random.nextInt(40, 400)
-            val glucose = if(useMmol) Utils.mgToMmol(raw.toFloat()) else raw.toFloat()*/
-            var raw = if(ReceiveData.time==0L || ReceiveData.rawValue == 400) 40 else ReceiveData.rawValue + 1
-            var glucose = if(useMmol) Utils.mgToMmol(raw.toFloat()) else raw.toFloat()
-            if(useMmol && glucose == ReceiveData.glucose) {
-                raw += 1
-                glucose = Utils.mgToMmol(raw.toFloat())
-            }
-            val rate = Utils.round(Random.nextFloat() + Random.nextInt(-4, 4).toFloat(), 2)
-            intent.putExtra(ReceiveData.SERIAL, "WUSEL_DUSEL")
-            intent.putExtra(ReceiveData.MGDL, raw)
-            intent.putExtra(ReceiveData.GLUCOSECUSTOM, glucose)
-            intent.putExtra(ReceiveData.RATE, rate)
-            intent.putExtra(ReceiveData.TIME, time)
-            intent.putExtra(ReceiveData.ALARM, if (raw <= 70) 7 else if (raw >= 250) 6 else 0)
-            return PendingIntent.getBroadcast(this, 3, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+            return PendingIntent.getBroadcast(this, 3, Utils.getDummyGlucodataIntent(false), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         } else {
             var launchIntent: Intent? = packageManager.getLaunchIntentForPackage("tk.glucodata")
             if (launchIntent == null) {
@@ -212,8 +195,8 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     fun arrowIcon(): MonochromaticImage =
         MonochromaticImage.Builder(
-            image = ambientArrowIcon()
-        ).setAmbientImage(ambientArrowIcon()).build()
+            image = getRateAsIcon()
+        ).setAmbientImage(getRateAsIcon()).build()
 
     fun glucoseIcon(): MonochromaticImage =
         MonochromaticImage.Builder(
@@ -221,10 +204,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         ).build()
 
     fun ambientArrowIcon(): Icon {
-        val icon = Icon.createWithResource(this, ReceiveData.getArrowIconRes())
-        icon.setTint(Color.WHITE)
-        icon.setTintMode(PorterDuff.Mode.SRC_IN)
-        return icon
+        return getRateAsIcon(forImage = true)
     }
 
     fun deltaIcon(): MonochromaticImage =
@@ -238,9 +218,18 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
             image = Icon.createWithResource(this, R.drawable.icon_rate)
         ).build()
 
+
+    fun glucoseImage(): SmallImage {
+        return SmallImage.Builder(
+            image = getGlucoseAsIcon(ReceiveData.getClucoseColor(), true),
+            type = SmallImageType.PHOTO
+        ).setAmbientImage(getGlucoseAsIcon(forImage = true))
+            .build()
+    }
+
     fun arrowImage(): SmallImage {
         return  SmallImage.Builder(
-            image = ReceiveData.getArrowIcon(this),
+            image = getRateAsIcon(ReceiveData.getClucoseColor(), true),
             type = SmallImageType.PHOTO
         )
             .setAmbientImage(ambientArrowIcon())
@@ -250,13 +239,27 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     fun getGlucoseAsIcon(color: Int = Color.WHITE, forImage: Boolean = false): Icon {
         return Icon.createWithBitmap(Utils.textToBitmap(ReceiveData.getClucoseAsString(), color, forImage))
     }
+
+    fun getRateAsIcon(color: Int = Color.WHITE, forImage: Boolean = false): Icon {
+        return Icon.createWithBitmap(Utils.rateToBitmap(ReceiveData.rate, color, forImage))
+    }
+
 }
 
 object ActiveComplicationHandler: ReceiveDataInterface {
     private const val LOG_ID = "GlucoDataHandler.ActiveComplicationHandler"
     private var packageInfo: PackageInfo? = null
+    private var complicationClasses = mutableMapOf<Int, ComponentName>()
     init {
         Log.d(LOG_ID, "init called")
+    }
+
+    fun addComplication(id: Int, component: ComponentName) {
+        complicationClasses[id] = component
+    }
+
+    fun remComplication(id: Int) {
+        complicationClasses.remove(id)
     }
 
     @SuppressLint("QueryPermissionsNeeded")
@@ -279,18 +282,38 @@ object ActiveComplicationHandler: ReceiveDataInterface {
     }
 
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
-        val packageInfo = getPackages(context)
-        Log.d(LOG_ID, "Got " + packageInfo.services.size + " services.")
-        packageInfo.services.forEach {
-            val isComplication =  BgValueComplicationService::class.java.isAssignableFrom(Class.forName(it.name))
-            if(isComplication) {
-                ComplicationDataSourceUpdateRequester
-                    .create(
-                        context = context,
-                        complicationDataSourceComponent = ComponentName(context, it.name)
-                    )
-                    .requestUpdateAll()
+        Thread {
+            Thread.sleep(200)  // some delay for let other tasks run...
+            if (complicationClasses.isEmpty()) {
+                val packageInfo = getPackages(context)
+                Log.d(LOG_ID, "Got " + packageInfo.services.size + " services.")
+                packageInfo.services.forEach {
+                    val isComplication =
+                        BgValueComplicationService::class.java.isAssignableFrom(Class.forName(it.name))
+                    if (isComplication) {
+                        Thread.sleep(10)
+                        ComplicationDataSourceUpdateRequester
+                            .create(
+                                context = context,
+                                complicationDataSourceComponent = ComponentName(context, it.name)
+                            )
+                            .requestUpdateAll()
+                    }
+                }
+            } else {
+                Log.d(LOG_ID, "Update " + complicationClasses.size + " complications.")
+                // upgrade all at once can cause a disappear of icon and images in ambient mode,
+                // so use some delay!
+                complicationClasses.forEach {
+                    Thread.sleep(100)
+                    ComplicationDataSourceUpdateRequester
+                        .create(
+                            context = context,
+                            complicationDataSourceComponent = it.value
+                        )
+                        .requestUpdate(it.key)
+                }
             }
-        }
+        }.start()
     }
 }

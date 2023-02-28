@@ -26,6 +26,15 @@ class ShortGlucoseWithTrendTextComplication: ShortClucoseComplication() {
 class ShortGlucoseWithDeltaAndTrendComplication: ShortClucoseComplication() {
     override fun getTitle(): PlainComplicationText = deltaText()
     override fun getIcon(): MonochromaticImage = arrowIcon()
+    override fun getLongTextComplicationData(): ComplicationData {
+        return LongTextComplicationData.Builder(
+            plainText(" Δ: " + ReceiveData.getDeltaAsString() + "   " + ReceiveData.getRateSymbol().toString() + " (" + (if (ReceiveData.rate > 0) "+" else "") + ReceiveData.rate.toString() + ")"),
+            descriptionText()
+        )
+            .setSmallImage(glucoseImage())
+            .setTapAction(getTapAction())
+            .build()
+    }
 }
 
 open class ShortGlucoseWithTrendRangeComplication: BgValueComplicationService() {

@@ -138,34 +138,34 @@ object ReceiveData {
     }
 
     fun getRateSymbol(): Char {
-        if(isObsolete(300))
+        if(isObsolete(300) || java.lang.Float.isNaN(rate))
             return '?'
-        if (rate >= 3.5f) return '\u21C8'
-        if (rate >= 2.0f) return '\u2191'
-        if (rate >= 1.0f) return '\u2197'
-        if (rate > -1.0f) return '\u2192'
-        if (rate > -2.0f) return '\u2198'
-        if (rate > -3.5f) return '\u2193'
-        return if (java.lang.Float.isNaN(rate)) '?' else '\u21CA'
+        if (rate >= 3.0f) return '⇈'
+        if (rate >= 2.0f) return '↑'
+        if (rate >= 1.0f) return '↗'
+        if (rate > -1.0f) return '→'
+        if (rate > -2.0f) return '↘'
+        if (rate > -3.0f) return '↓'
+        return '⇊'
     }
 
     fun getDexcomLabel(): String {
-        if (rate >= 3.5f) return "DoubleUp"
+        if (rate >= 3.0f) return "DoubleUp"
         if (rate >= 2.0f) return "SingleUp"
         if (rate >= 1.0f) return "FortyFiveUp"
         if (rate > -1.0f) return "Flat"
         if (rate > -2.0f) return "FortyFiveDown"
-        if (rate > -3.5f) return "SingleDown"
+        if (rate > -3.0f) return "SingleDown"
         return if (java.lang.Float.isNaN(rate)) "" else "DoubleDown"
     }
 
     fun getRateLabel(context: Context): String {
-        if (rate >= 3.5f) return context.getString(R.string.rate_double_up)
+        if (rate >= 3.0f) return context.getString(R.string.rate_double_up)
         if (rate >= 2.0f) return context.getString(R.string.rate_single_up)
         if (rate >= 1.0f) return context.getString(R.string.rate_forty_five_up)
         if (rate > -1.0f) return context.getString(R.string.rate_flat)
         if (rate > -2.0f) return context.getString(R.string.rate_forty_five_down)
-        if (rate > -3.5f) return context.getString(R.string.rate_single_down)
+        if (rate > -3.0f) return context.getString(R.string.rate_single_down)
         return if (java.lang.Float.isNaN(rate)) "" else context.getString(R.string.rate_double_down)
     }
 
@@ -240,7 +240,7 @@ object ReceiveData {
             )
 
             val curTimeDiff = extras.getLong(TIME) - time
-            if(curTimeDiff > 50000) // check for new value received
+            if(curTimeDiff > 1000) // check for new value received
             {
                 curExtraBundle = extras
                 source = dataSource
@@ -252,11 +252,10 @@ object ReceiveData {
                 if (time > 0) {
                     timeDiff = curTimeDiff
                     val timeDiffMinute = getTimeDiffMinute()
-                    if(timeDiffMinute > 0) {
-                        delta =
-                            ((extras.getInt(MGDL) - rawValue) / timeDiffMinute).toFloat()
+                    if(timeDiffMinute > 1) {
+                        delta = ((extras.getInt(MGDL) - rawValue) / timeDiffMinute).toFloat()
                     } else {
-                        Log.w(LOG_ID, "Timediff is less than a minute: " + timeDiff + "ms")
+                        delta = (extras.getInt(MGDL) - rawValue).toFloat()
                     }
                     val newRaw = extras.getInt(MGDL)
                     if(newRaw!=glucose.toInt())  // mmol/l

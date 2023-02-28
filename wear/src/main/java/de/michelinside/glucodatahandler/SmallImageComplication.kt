@@ -1,7 +1,6 @@
 package de.michelinside.glucodatahandler
 
 import androidx.wear.watchface.complications.data.*
-import de.michelinside.glucodatahandler.common.ReceiveData
 
 
 class SmallTrendImageComplication: BgValueComplicationService() {
@@ -13,13 +12,7 @@ class TrendIconComplication: BgValueComplicationService() {
 }
 
 class SmallValueImageComplication: BgValueComplicationService() {
-    override fun getImage(): SmallImage {
-        return  SmallImage.Builder(
-            image = getGlucoseAsIcon(ReceiveData.getClucoseColor(), true),
-            type = SmallImageType.PHOTO
-        ).setAmbientImage(getGlucoseAsIcon(forImage = true))
-            .build()
-    }
+    override fun getImage(): SmallImage = glucoseImage()
 }
 
 class ValueIconComplication: BgValueComplicationService() {
@@ -34,7 +27,7 @@ class ValueIconComplication: BgValueComplicationService() {
     override fun getIconComplicationData(): ComplicationData {
         val imageIcon = MonochromaticImage.Builder(
             image = getGlucoseAsIcon()
-        ).build()
+        ).setAmbientImage(getGlucoseAsIcon()).build()
 
         return MonochromaticImageComplicationData.Builder(
             imageIcon,
