@@ -145,7 +145,7 @@
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
-        <service
+        <!--<service
             android:name=".ShortGlucoseWithTrendRangeComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
@@ -162,7 +162,7 @@
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="60" />
         </service>
-        <!--<service
+        <service
             android:name=".ShortGlucoseWithDeltaAndTrendRangeComplication"
             android:exported="true"
             android:icon="@drawable/glucose"

@@ -19,34 +19,31 @@ In Juggluco activate "Glucodata broadcast" in the settings menu.
 
 #### Settings
 
+<img src='images/settings_wear.png' width=200>
+
 * Target range: set your target glucose range needed for yellow color of the rate image (red color is set for an alarm)
+* Vibration: the watch vibrate if the target range is left and repeat it as long as the target range is left
 * Foreground: only if you have trouble with updating complications (also try deactivating Play Protect as this kills non Playstore apps)
 
 #### Complications
 There are several complications for the different types of wear OS complications, which provides:
 * Glucose value (used also for range circle)
+
+<img src='images/complications_glucose1.png' width=200>
+<img src='images/complications_glucose2.png' width=200>
+
 * Delta value (per minute)
-* Rate (trend) as value, arrow and range (For range the watchface must support negative values! You can try if with the test complication.)
+
+<img src='images/complications_delta.png' width=200>
+
+* Rate (trend) as value and arrow
+
+<img src='images/complications_rate.png' width=200>
 
 **IMPORTANT:** Not all complications are fully supported by any watchface. For example the SHORT_TEXT type supports an icon, a text and a title, but the most watchfaces only show icon and text or text and title, but there are some, showing all 3 types in one.
-Also the RANGE_VALUE complication is handled different in each watchface. Some watchfaces supports negative values for the range circle. To test, if your watchface supports negative range values, you can use my *Test range complication ...* complication to verify it.
+Also the RANGE_VALUE complication is handled different in each watchface.
 
-### Tasker Variables
+### Tasker
 
-The event contains these variables:
+-> [Tasker support](./TASKER.md)
 
-
-| Tasker Variable | glucodata.Minute Variable | Description                                                                            |
-| ----------------- | --------------------------- | ---------------------------------------------------------------------------------------- |
-| %alarm          | Alarm                     | Alarm value set by Juggluco (0: no value, 6: high glucose value, 7: low glucose value) |
-| %arrow          | -                         | Calculate unicode arrow for the current rate value                                     |
-| %delta          | -                         | Delta per minute between the current and the last value (mg/dl or mmol/l)              |
-| %dexcomlabel    | -                         | Calculated dexcom specific label for the current rate value                            |
-| %glucose        | glucose                   | Glucose value in the unit, defined in Juggluco app (mg/dl or mmol/l)                   |
-| %rate           | Rate                      | Rate of change of the glucose value                                                    |
-| %ratelabel      | -                         | Calculated label for the current rate value                                            |
-| %rawvalue       | mgdl                      | Glucose value in mg/dl                                                                 |
-| %sensorid       | SerialNumber              | Serial number of the current used sensor                                               |
-| %time           | Time                      | Timestamp in ms since 1.1.1970                                                         |
-| %timediff       | -                         | Duration in ms between the current and the previous received value                     |
-| %unit           | -                         | Unit of the glucose value, either mg/dl or mmol/l                                      |
