@@ -162,7 +162,7 @@
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="60" />
         </service>
-        <service
+        <!--<service
             android:name=".ShortGlucoseWithDeltaAndTrendRangeComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
@@ -178,7 +178,7 @@
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="60" />
-        </service>
+        </service>-->
         <service
             android:name=".ShortGlucoseWithDeltaComplication"
             android:exported="true"
@@ -264,7 +264,7 @@
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
-        <service
+        <!--<service
             android:name=".ShortDeltaWithTrendArrowAndTrendRangeComplication"
             android:exported="true"
             android:icon="@drawable/icon_delta"
@@ -280,7 +280,7 @@
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
-        </service>
+        </service>-->
         <service
             android:name=".ShortDeltaWithIconComplication"
             android:exported="true"
@@ -383,7 +383,7 @@
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
-        <service
+        <!--<service
             android:name=".TestNegativeRangeComplication"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
@@ -399,7 +399,7 @@
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="60" />
-        </service>
+        </service>-->
     </application>
     <queries>
         <package android:name="tk.glucodata"/>
