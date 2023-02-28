@@ -2,7 +2,6 @@ package de.michelinside.glucodatahandler.common
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
@@ -68,7 +67,7 @@ object ReceiveData {
             return context.getString(R.string.no_data)
         return (if (withValue) context.getString(R.string.info_label_value) + ": " + glucose + " " + getRateSymbol() + "\r\n" else "" ) +
                 context.getString(R.string.info_label_sensor_id) + ": " + sensorID + "\r\n" +
-                context.getString(R.string.info_label_delta) + ": " + delta + " " + getUnit() + " " + context.getString(R.string.info_label_per_minute) + "\r\n" +
+                context.getString(R.string.info_label_delta) + ": " + getDeltaAsString() + " " + getUnit() + " " + context.getString(R.string.info_label_per_minute) + "\r\n" +
                 context.getString(R.string.info_label_rate) + ": " + rate + " (" + rateLabel + ")\r\n" +
                 context.getString(R.string.info_label_timestamp) + ": " + dateformat.format(Date(time)) + "\r\n" +
                 context.getString(R.string.info_label_timediff) + ": " + timeDiff + "ms\r\n" +
@@ -76,7 +75,11 @@ object ReceiveData {
                 context.getString(R.string.info_label_source) + ": " + context.getString(source.getResId())
     }
 
-    fun isMmol(): Boolean = rawValue != glucose.toInt()
+    fun isMmol(): Boolean {
+        if (time > 0L)
+            return rawValue != glucose.toInt()
+        return targetMin < Constants.GLUCOSE_MIN_VALUE.toFloat()
+    }
 
     fun isObsolete(timeoutSec: Int = 600): Boolean = (System.currentTimeMillis()- time) >= (timeoutSec * 1000)
 
@@ -169,31 +172,8 @@ object ReceiveData {
         return if (java.lang.Float.isNaN(rate)) "" else context.getString(R.string.rate_double_down)
     }
 
-    fun getArrowIconRes(): Int {
-        if(isObsolete(300) || java.lang.Float.isNaN(rate))
-            return R.drawable.icon_question
-        if (rate >= 3.0f) return R.drawable.arrow_double_up
-        if (rate >= 2.0f) return R.drawable.arrow_up_90
-        if (rate >= 1.66f) return R.drawable.arrow_up_75
-        if (rate >= 1.33f) return R.drawable.arrow_up_60
-        if (rate >= 1.0f) return R.drawable.arrow_up_45
-        if (rate >= 0.66f) return R.drawable.arrow_up_30
-        if (rate >= 0.33f) return R.drawable.arrow_up_15
-        if (rate > -0.33f) return R.drawable.arrow_right
-        if (rate > -0.66f) return R.drawable.arrow_down_15
-        if (rate > -1.0f) return R.drawable.arrow_down_30
-        if (rate > -1.33f) return R.drawable.arrow_down_45
-        if (rate > -1.66f) return R.drawable.arrow_down_60
-        if (rate > -2.0f) return R.drawable.arrow_down_75
-        if (rate > -3.0f) return R.drawable.arrow_down_90
-        return R.drawable.arrow_double_down
-    }
-
-    fun getArrowIcon(context: Context): Icon {
-        val icon = Icon.createWithResource(context, getArrowIconRes())
-        icon.setTint(getClucoseColor())
-        icon.setTintMode(PorterDuff.Mode.SRC_IN)
-        return icon
+    fun getArrowIcon(): Icon {
+        return Icon.createWithBitmap(Utils.rateToBitmap(rate, getClucoseColor()))
     }
 
     fun getTimeDiffMinute(): Long {
@@ -257,25 +237,25 @@ object ReceiveData {
                     } else {
                         delta = (extras.getInt(MGDL) - rawValue).toFloat()
                     }
-                    val newRaw = extras.getInt(MGDL)
-                    if(newRaw!=glucose.toInt())  // mmol/l
-                    {
-                        delta = Utils.mgToMmol(delta, if (abs(delta) > 1.0F) 1 else 2)
-
-                        if(targetMin >= Constants.GLUCOSE_MIN_VALUE.toFloat())
-                        {
-                            updateTarget(context, true, Utils.mgToMmol(targetMin))
-                            updateTarget(context, false, Utils.mgToMmol(targetMax))
-                            Log.i(LOG_ID, "min/max changed from mg/dl to mmol/l: " + targetMin.toString() + "/" + targetMax.toString())
-                        }
-                    } else if (targetMin < 20F) {
-                        updateTarget(context, true, Utils.mmolToMg(targetMin))
-                        updateTarget(context, false, Utils.mmolToMg(targetMax))
-                        Log.i(LOG_ID, "min/max changed from mmol/l to mg/dl: " + targetMin.toString() + "/" + targetMax.toString())
-                    }
                 }
+
                 rawValue = extras.getInt(MGDL)
                 time = extras.getLong(TIME) //time in mmsec
+                if(rawValue!=glucose.toInt())  // mmol/l
+                {
+                    delta = Utils.mgToMmol(delta, if (abs(delta) > 1.0F) 1 else 2)
+
+                    if(targetMin >= Constants.GLUCOSE_MIN_VALUE.toFloat())
+                    {
+                        updateTarget(context, true, Utils.mgToMmol(targetMin))
+                        updateTarget(context, false, Utils.mgToMmol(targetMax))
+                        Log.i(LOG_ID, "min/max changed from mg/dl to mmol/l: " + targetMin.toString() + "/" + targetMax.toString())
+                    }
+                } else if (targetMin < 20F) {
+                    updateTarget(context, true, Utils.mmolToMg(targetMin))
+                    updateTarget(context, false, Utils.mmolToMg(targetMax))
+                    Log.i(LOG_ID, "min/max changed from mmol/l to mg/dl: " + targetMin.toString() + "/" + targetMax.toString())
+                }
 
                 notify(context, source, extras)
                 return true

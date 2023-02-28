@@ -24,7 +24,7 @@
             android:layout_width="79dp"
             android:layout_height="24dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:text="---"
             android:textAlignment="viewEnd"
             android:textColor="#FFFFFF"
@@ -72,10 +72,10 @@
 
         <ImageView
             android:id="@+id/viewIcon"
-            android:layout_width="38dp"
-            android:layout_height="24dp"
+            android:layout_width="30dp"
+            android:layout_height="21dp"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="12dp"
             android:src="@drawable/icon_question"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"

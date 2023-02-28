@@ -28,6 +28,7 @@ class WaerActivity : Activity(), ReceiveDataInterface {
     private lateinit var switchNotifcation: Switch
     private lateinit var switchForground: Switch
     private lateinit var sharedPref: SharedPreferences
+    private var useMmol: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -47,6 +48,7 @@ class WaerActivity : Activity(), ReceiveDataInterface {
             numMin.addTextChangedListener(EditTargetChanger(true, this))
             numMax.addTextChangedListener(EditTargetChanger(false, this))
 
+            useMmol = ReceiveData.isMmol()
             numMin.setText(sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MIN, ReceiveData.targetMin).toString())
             numMax.setText(sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, ReceiveData.targetMax).toString())
 
@@ -117,7 +119,7 @@ class WaerActivity : Activity(), ReceiveDataInterface {
             txtBgValue.text = ReceiveData.getClucoseAsString()
             txtBgValue.setTextColor(ReceiveData.getClucoseColor())
             viewIcon = findViewById(R.id.viewIcon)
-            viewIcon.setImageIcon(ReceiveData.getArrowIcon(this))
+            viewIcon.setImageIcon(ReceiveData.getArrowIcon())
             txtValueInfo = findViewById(R.id.txtValueInfo)
             txtValueInfo.text = ReceiveData.getAsString(this, false)
             txtConnInfo = findViewById(R.id.txtConnInfo)
@@ -125,6 +127,18 @@ class WaerActivity : Activity(), ReceiveDataInterface {
                 txtConnInfo.text = resources.getText(R.string.activity_connected_label)
             else
                 txtConnInfo.text = resources.getText(R.string.activity_disconnected_label)
+
+        }
+        if (useMmol != ReceiveData.isMmol()) {
+            useMmol = ReceiveData.isMmol()
+            Log.d(LOG_ID, "Use mmmol: " + useMmol.toString())
+            if (useMmol) {
+                numMin.setText(sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MIN, ReceiveData.targetMin).toString())
+                numMax.setText(sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, ReceiveData.targetMax).toString())
+            } else {
+                numMin.setText(sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MIN, ReceiveData.targetMin).toInt().toString())
+                numMax.setText(sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, ReceiveData.targetMax).toInt().toString())
+            }
         }
     }
 
