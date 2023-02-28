@@ -16,7 +16,8 @@ class EditTargetChanger(minTarget: Boolean, ctx: Context): TextWatcher {
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
         Log.d(LOG_ID, "onTextChanged: s=" + s + " start=" + start.toString() + " before=" + before.toString() + " count=" + count.toString())
         try {
-            ReceiveData.updateTarget(context, min, s.toString().toFloat())
+            if (s != null && s.isNotEmpty())
+                ReceiveData.updateTarget(context, min, s.toString().toFloat())
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Changing target exception: " + exc.message.toString() )
         }
