@@ -53,14 +53,38 @@ object ReceiveData {
     var alarm: Int = 0
     var time: Long = 0
     var timeDiff: Long = 0
-    var delta: Float = 0.0F
     var rateLabel: String? = null
     var dateformat: DateFormat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT)
     var source: ReceiveDataSource = ReceiveDataSource.BROADCAST
     var capabilityInfo: CapabilityInfo? = null
-    var targetMin = 90F
-    var targetMax = 165F
     var curExtraBundle: Bundle? = null
+    var targetMinValue = 90F
+    val targetMin: Float get() {
+        if(isMmol)  // mmol/l
+        {
+            return Utils.mgToMmol(targetMinValue, 1)
+        }
+        return targetMinValue
+    }
+    var targetMaxValue = 165F
+    val targetMax: Float get() {
+        if(isMmol)  // mmol/l
+        {
+            return Utils.mgToMmol(targetMaxValue, 1)
+        }
+        return targetMaxValue
+    }
+
+    private var deltaValue: Float = 0.0F
+    val delta: Float get() {
+        if(isMmol)  // mmol/l
+        {
+            return Utils.mgToMmol(deltaValue, if (abs(deltaValue) > 1.0F) 1 else 2)
+        }
+        return deltaValue
+    }
+    private var isMmolValue = false
+    val isMmol get() = isMmolValue
 
     fun getAsString(context: Context, withValue: Boolean = true): String {
         if (sensorID == null)
@@ -75,18 +99,12 @@ object ReceiveData {
                 context.getString(R.string.info_label_source) + ": " + context.getString(source.getResId())
     }
 
-    fun isMmol(): Boolean {
-        if (time > 0L)
-            return rawValue != glucose.toInt()
-        return Utils.isMmolValue(targetMin)
-    }
-
     fun isObsolete(timeoutSec: Int = 600): Boolean = (System.currentTimeMillis()- time) >= (timeoutSec * 1000)
 
     fun getClucoseAsString(): String {
         if(isObsolete())
             return "---"
-        if (isMmol())
+        if (isMmol)
             return glucose.toString()
         return rawValue.toString()
     }
@@ -97,7 +115,7 @@ object ReceiveData {
         var deltaVal = ""
         if (delta > 0)
             deltaVal += "+"
-        if( !isMmol() && delta.toDouble() == Math.floor(delta.toDouble()) )
+        if( !isMmol && delta.toDouble() == Math.floor(delta.toDouble()) )
             deltaVal += delta.toInt().toString()
         else
             deltaVal += delta.toString()
@@ -111,7 +129,7 @@ object ReceiveData {
     }
 
     fun getUnit(): String {
-        if (isMmol())
+        if (isMmol)
             return "mmol/l"
         return "mg/dl"
     }
@@ -239,30 +257,15 @@ object ReceiveData {
                     timeDiff = curTimeDiff
                     val timeDiffMinute = getTimeDiffMinute()
                     if(timeDiffMinute > 1) {
-                        delta = ((extras.getInt(MGDL) - rawValue) / timeDiffMinute).toFloat()
+                        deltaValue = ((extras.getInt(MGDL) - rawValue) / timeDiffMinute).toFloat()
                     } else {
-                        delta = (extras.getInt(MGDL) - rawValue).toFloat()
+                        deltaValue = (extras.getInt(MGDL) - rawValue).toFloat()
                     }
                 }
 
                 rawValue = extras.getInt(MGDL)
                 time = extras.getLong(TIME) //time in mmsec
-                if(rawValue!=glucose.toInt())  // mmol/l
-                {
-                    delta = Utils.mgToMmol(delta, if (abs(delta) > 1.0F) 1 else 2)
-
-                    if(!Utils.isMmolValue(targetMin))
-                    {
-                        updateTarget(context, true, Utils.mgToMmol(targetMin))
-                        updateTarget(context, false, Utils.mgToMmol(targetMax))
-                        Log.i(LOG_ID, "min/max changed from mg/dl to mmol/l: " + targetMin.toString() + "/" + targetMax.toString())
-                    }
-                } else if (Utils.isMmolValue(targetMin)) {
-                    updateTarget(context, true, Utils.mmolToMg(targetMin))
-                    updateTarget(context, false, Utils.mmolToMg(targetMax))
-                    Log.i(LOG_ID, "min/max changed from mmol/l to mg/dl: " + targetMin.toString() + "/" + targetMax.toString())
-                }
-
+                changeIsMmol(rawValue!=glucose.toInt(), context)
                 notify(context, source, extras)
                 return true
             }
@@ -272,15 +275,40 @@ object ReceiveData {
         return false
     }
 
-    fun updateTarget(context: Context, min: Boolean, value: Float) {
+    fun changeIsMmol(newValue: Boolean, context: Context) {
+        if (isMmol != newValue) {
+            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            isMmolValue = newValue
+            Log.i(LOG_ID, "Unit changed to " + if(isMmolValue) "mmol/l" else "mg/dl")
+            with(sharedPref.edit()) {
+                putBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
+                apply()
+            }
+        }
+    }
+
+    fun readTargets(context: Context) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        targetMinValue = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MIN, targetMin)
+        targetMaxValue = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, targetMax)
+        isMmolValue = sharedPref.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
+        Log.i(LOG_ID, "min/max set: " + targetMin.toString() + "/" + targetMax.toString())
+    }
+
+    fun writeTarget(context: Context, min: Boolean, value: Float) {
+        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        var mgdlValue = value
+        if (Utils.isMmolValue(mgdlValue)) {
+            mgdlValue = Utils.mmolToMg(value)
+        }
+        Log.i(LOG_ID, "New target" + (if (min) "Min" else "Max") + " value: " + mgdlValue.toString())
         with(sharedPref.edit()) {
             if (min) {
-                putFloat(Constants.SHARED_PREF_TARGET_MIN, value.toString().toFloat())
-                targetMin = value
+                putFloat(Constants.SHARED_PREF_TARGET_MIN, mgdlValue.toString().toFloat())
+                targetMinValue = mgdlValue
             } else {
-                putFloat(Constants.SHARED_PREF_TARGET_MAX, value.toString().toFloat())
-                targetMax = value
+                putFloat(Constants.SHARED_PREF_TARGET_MAX, mgdlValue.toString().toFloat())
+                targetMaxValue = mgdlValue
             }
             apply()
         }
