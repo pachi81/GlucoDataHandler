@@ -307,7 +307,7 @@ object ActiveComplicationHandler: ReceiveDataInterface {
                 // upgrade all at once can cause a disappear of icon and images in ambient mode,
                 // so use some delay!
                 complicationClasses.forEach {
-                    Thread.sleep(100)
+                    //Thread.sleep(100)
                     ComplicationDataSourceUpdateRequester
                         .create(
                             context = context,
