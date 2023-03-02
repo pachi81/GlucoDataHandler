@@ -155,7 +155,7 @@ object Utils {
     }
 
     fun getDummyGlucodataIntent(random: Boolean = true) : Intent {
-        var useMmol = false
+        var useMmol = true
         val time = System.currentTimeMillis()
         val intent = Intent(Constants.GLUCODATA_BROADCAST_ACTION)
         var raw: Int

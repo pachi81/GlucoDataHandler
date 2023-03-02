@@ -291,7 +291,17 @@ object ReceiveData {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         targetMinValue = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MIN, targetMin)
         targetMaxValue = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, targetMax)
-        isMmolValue = sharedPref.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
+        if(sharedPref.contains(Constants.SHARED_PREF_USE_MMOL))
+            isMmolValue = sharedPref.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
+        else {
+            Log.i(LOG_ID, "Upgrade to new mmol handling!")
+            val useMmol = Utils.isMmolValue(targetMinValue)
+            if (useMmol) {
+                changeIsMmol(useMmol, context)
+                writeTarget(context, true, targetMinValue)
+                writeTarget(context, false, targetMaxValue)
+            }
+        }
         Log.i(LOG_ID, "min/max set: " + targetMin.toString() + "/" + targetMax.toString())
     }
 
