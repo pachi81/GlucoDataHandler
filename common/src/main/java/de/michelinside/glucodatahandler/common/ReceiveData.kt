@@ -78,7 +78,7 @@ object ReceiveData {
     fun isMmol(): Boolean {
         if (time > 0L)
             return rawValue != glucose.toInt()
-        return targetMin < Constants.GLUCOSE_MIN_VALUE.toFloat()
+        return Utils.isMmolValue(targetMin)
     }
 
     fun isObsolete(timeoutSec: Int = 600): Boolean = (System.currentTimeMillis()- time) >= (timeoutSec * 1000)
@@ -251,13 +251,13 @@ object ReceiveData {
                 {
                     delta = Utils.mgToMmol(delta, if (abs(delta) > 1.0F) 1 else 2)
 
-                    if(targetMin >= Constants.GLUCOSE_MIN_VALUE.toFloat())
+                    if(!Utils.isMmolValue(targetMin))
                     {
                         updateTarget(context, true, Utils.mgToMmol(targetMin))
                         updateTarget(context, false, Utils.mgToMmol(targetMax))
                         Log.i(LOG_ID, "min/max changed from mg/dl to mmol/l: " + targetMin.toString() + "/" + targetMax.toString())
                     }
-                } else if (targetMin < 20F) {
+                } else if (Utils.isMmolValue(targetMin)) {
                     updateTarget(context, true, Utils.mmolToMg(targetMin))
                     updateTarget(context, false, Utils.mmolToMg(targetMax))
                     Log.i(LOG_ID, "min/max changed from mmol/l to mg/dl: " + targetMin.toString() + "/" + targetMax.toString())

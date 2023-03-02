@@ -23,6 +23,8 @@ object Utils {
         return value
     }
 
+    fun isMmolValue(value: Float): Boolean = value < Constants.GLUCOSE_MIN_VALUE.toFloat()
+
     fun mgToMmol(value: Float, scale: Int = 1): Float {
         return round(value / Constants.GLUCOSE_CONVERSION_FACTOR, scale)
     }
