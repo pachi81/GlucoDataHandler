@@ -28,6 +28,8 @@ class WaerActivity : Activity(), ReceiveDataInterface {
     private lateinit var switchNotifcation: Switch
     private lateinit var switchForground: Switch
     private lateinit var sharedPref: SharedPreferences
+    private lateinit var numMinChanger: EditTargetChanger
+    private lateinit var numMaxChanger: EditTargetChanger
     private var useMmol: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,17 +43,18 @@ class WaerActivity : Activity(), ReceiveDataInterface {
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
 
-            sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             numMin = findViewById(R.id.numMin)
             numMax = findViewById(R.id.numMax)
+            numMinChanger = EditTargetChanger(true, this)
+            numMaxChanger = EditTargetChanger(false, this)
+            numMin.addTextChangedListener(numMinChanger)
+            numMax.addTextChangedListener(numMaxChanger)
 
-            numMin.addTextChangedListener(EditTargetChanger(true, this))
-            numMax.addTextChangedListener(EditTargetChanger(false, this))
+            ReceiveData.readTargets(this)
+            useMmol = ReceiveData.isMmol
+            updateMinMax()
 
-            useMmol = ReceiveData.isMmol()
-            numMin.setText(sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MIN, ReceiveData.targetMin).toString())
-            numMax.setText(sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, ReceiveData.targetMax).toString())
-
+            sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             switchForground = findViewById(R.id.switchForground)
             switchForground.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
             switchForground.setOnCheckedChangeListener { _, isChecked ->
@@ -129,17 +132,30 @@ class WaerActivity : Activity(), ReceiveDataInterface {
                 txtConnInfo.text = resources.getText(R.string.activity_disconnected_label)
 
         }
-        if (useMmol != ReceiveData.isMmol()) {
-            useMmol = ReceiveData.isMmol()
-            Log.d(LOG_ID, "Use mmmol: " + useMmol.toString())
-            if (useMmol) {
-                numMin.setText(sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MIN, ReceiveData.targetMin).toString())
-                numMax.setText(sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, ReceiveData.targetMax).toString())
-            } else {
-                numMin.setText(sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MIN, ReceiveData.targetMin).toInt().toString())
-                numMax.setText(sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, ReceiveData.targetMax).toInt().toString())
-            }
+        if (useMmol != ReceiveData.isMmol) {
+            useMmol = ReceiveData.isMmol
+            updateMinMax()
         }
+    }
+
+    private fun updateMinMax() {
+        try {
+            Log.d(LOG_ID, "Update min/max values in UI")
+            numMinChanger.updateInProgress = true
+            numMaxChanger.updateInProgress = true
+            numMin.setText(getTargetString(ReceiveData.targetMin))
+            numMax.setText(getTargetString(ReceiveData.targetMax))
+        } catch( exc: Exception ) {
+            Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
+        }
+        numMinChanger.updateInProgress = false
+        numMaxChanger.updateInProgress = false
+    }
+
+    private fun getTargetString(value: Float): String {
+        if (useMmol)
+            return value.toString()
+        return value.toInt().toString()
     }
 
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {

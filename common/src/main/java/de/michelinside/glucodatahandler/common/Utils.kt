@@ -23,6 +23,8 @@ object Utils {
         return value
     }
 
+    fun isMmolValue(value: Float): Boolean = value < Constants.GLUCOSE_MIN_VALUE.toFloat()
+
     fun mgToMmol(value: Float, scale: Int = 1): Float {
         return round(value / Constants.GLUCOSE_CONVERSION_FACTOR, scale)
     }
@@ -48,7 +50,7 @@ object Utils {
         return bytes
     }
 
-    fun textToBitmap(text: String, color: Int, roundTargert: Boolean = false): Bitmap? {
+    fun textToBitmap(text: String, color: Int, roundTargert: Boolean = false, strikeThrough: Boolean = false): Bitmap? {
         try {
             val size = 100
             val textSize = if(roundTargert) { if (text.contains(".")) 70F else 85F } else 100F
@@ -60,6 +62,7 @@ object Utils {
             paint.color = color
             paint.textSize = textSize
             paint.textAlign = Paint.Align.CENTER
+            paint.isStrikeThruText = strikeThrough
             val boundsText = Rect()
             paint.getTextBounds(text, 0, text.length, boundsText)
             paint.textSize = minOf( textSize, (textSize - 1) * bitmap.width / boundsText.width() )

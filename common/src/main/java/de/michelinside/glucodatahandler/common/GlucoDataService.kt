@@ -27,11 +27,9 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
             Log.i(LOG_ID, "onCreate called")
             isRunning = true
 
-            val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            ReceiveData.readTargets(this)
 
-            ReceiveData.targetMin = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MIN, ReceiveData.targetMin)
-            ReceiveData.targetMax = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, ReceiveData.targetMax)
-            Log.i(LOG_ID, "min/max set: " + ReceiveData.targetMin.toString() + "/" + ReceiveData.targetMax.toString())
+            val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
 
             ReceiveData.addNotifier(this)
             Wearable.getMessageClient(this).addListener(this)
