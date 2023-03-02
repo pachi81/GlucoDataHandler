@@ -104,6 +104,12 @@ object ReceiveData {
         return deltaVal
     }
 
+    fun getRateAsString(): String {
+        if(isObsolete(300))
+            return "???"
+        return (if (rate > 0) "+" else "") + rate.toString()
+    }
+
     fun getUnit(): String {
         if (isMmol())
             return "mmol/l"

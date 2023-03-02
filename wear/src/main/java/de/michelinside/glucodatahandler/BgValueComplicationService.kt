@@ -69,7 +69,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     override fun getPreviewData(type: ComplicationType): ComplicationData {
         Log.d(LOG_ID, "onComplicationRequest called for " + type.toString())
-        return getComplicationData(ComplicationRequest(0, type))!!
+        return getComplicationData(ComplicationRequest(0, type,false))!!
     }
 
     private fun getComplicationData(request: ComplicationRequest): ComplicationData? {
@@ -182,7 +182,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         plainText(ReceiveData.getDeltaAsString())
 
     fun trendText(): PlainComplicationText =
-        plainText((if (ReceiveData.rate > 0) "+" else "") + ReceiveData.rate.toString())
+        plainText(ReceiveData.getRateAsString())
 
     fun glucoseAndDeltaText(): PlainComplicationText =
         plainText(ReceiveData.getClucoseAsString() + "  Δ: " + ReceiveData.getDeltaAsString())
@@ -237,10 +237,12 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     }
 
     fun getGlucoseAsIcon(color: Int = Color.WHITE, forImage: Boolean = false): Icon {
-        return Icon.createWithBitmap(Utils.textToBitmap(ReceiveData.getClucoseAsString(), color, forImage))
+        return Icon.createWithBitmap(Utils.textToBitmap(ReceiveData.getClucoseAsString(), color, forImage, ReceiveData.isObsolete(300) && !ReceiveData.isObsolete()))
     }
 
     fun getRateAsIcon(color: Int = Color.WHITE, forImage: Boolean = false): Icon {
+        if (ReceiveData.isObsolete(300))
+            return Icon.createWithBitmap(Utils.textToBitmap("?", Color.GRAY, forImage))
         return Icon.createWithBitmap(Utils.rateToBitmap(ReceiveData.rate, color, forImage))
     }
 
