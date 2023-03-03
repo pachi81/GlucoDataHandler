@@ -49,35 +49,39 @@ object ActiveComplicationHandler: ReceiveDataInterface {
 
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
         Thread {
-            if (complicationClasses.isEmpty()) {
-                val packageInfo = getPackages(context)
-                Log.d(LOG_ID, "Got " + packageInfo.services.size + " services.")
-                packageInfo.services.forEach {
-                    val isComplication =
-                        BgValueComplicationService::class.java.isAssignableFrom(Class.forName(it.name))
-                    if (isComplication) {
-                        Thread.sleep(10)
+            try {
+                if (complicationClasses.isEmpty()) {
+                    val packageInfo = getPackages(context)
+                    Log.d(LOG_ID, "Got " + packageInfo.services.size + " services.")
+                    packageInfo.services.forEach {
+                        val isComplication =
+                            BgValueComplicationService::class.java.isAssignableFrom(Class.forName(it.name))
+                        if (isComplication) {
+                            Thread.sleep(10)
+                            ComplicationDataSourceUpdateRequester
+                                .create(
+                                    context = context,
+                                    complicationDataSourceComponent = ComponentName(context, it.name)
+                                )
+                                .requestUpdateAll()
+                        }
+                    }
+                } else {
+                    Log.d(LOG_ID, "Update " + complicationClasses.size + " complications.")
+                    // upgrade all at once can cause a disappear of icon and images in ambient mode,
+                    // so use some delay!
+                    complicationClasses.forEach {
+                        Thread.sleep(50)  // add delay to prevent disappearing complication icons in ambient mode
                         ComplicationDataSourceUpdateRequester
                             .create(
                                 context = context,
-                                complicationDataSourceComponent = ComponentName(context, it.name)
+                                complicationDataSourceComponent = it.value
                             )
-                            .requestUpdateAll()
+                            .requestUpdate(it.key)
                     }
                 }
-            } else {
-                Log.d(LOG_ID, "Update " + complicationClasses.size + " complications.")
-                // upgrade all at once can cause a disappear of icon and images in ambient mode,
-                // so use some delay!
-                complicationClasses.forEach {
-                    Thread.sleep(50)  // add delay to prevent disappearing complication icons in ambient mode
-                    ComplicationDataSourceUpdateRequester
-                        .create(
-                            context = context,
-                            complicationDataSourceComponent = it.value
-                        )
-                        .requestUpdate(it.key)
-                }
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "Update complication exception: " + exc.toString())
             }
         }.start()
     }

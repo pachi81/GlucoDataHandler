@@ -12,6 +12,7 @@ import android.util.Log
 import android.widget.EditText
 import android.widget.Switch
 import android.widget.TextView
+import androidx.core.view.isVisible
 import de.michelinside.glucodatahandler.common.*
 
 
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Log.d(LOG_ID, "onCreate called")
+
         val intent = Intent()
         val packageName = packageName
         val pm = getSystemService(POWER_SERVICE) as PowerManager
@@ -85,6 +87,8 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
         }
 
         switchNotifcation = findViewById(R.id.switchNotification)
+        if(BuildConfig.DEBUG)
+            switchNotifcation.isVisible = true  // for activating dummy glucodata intents
         switchNotifcation.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)
         switchNotifcation.setOnCheckedChangeListener { _, isChecked ->
             Log.d(LOG_ID, "Notification changed: " + isChecked.toString())

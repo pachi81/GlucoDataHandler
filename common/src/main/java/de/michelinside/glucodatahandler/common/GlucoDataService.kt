@@ -39,11 +39,15 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
                 CapabilityClient.FILTER_REACHABLE)
             Log.d(LOG_ID, "CapabilityClient added")
             Thread {
-                ReceiveData.capabilityInfo = Tasks.await(
-                    Wearable.getCapabilityClient(this)
-                        .getCapability(Constants.CAPABILITY, CapabilityClient.FILTER_REACHABLE)
-                )
-                Log.d(LOG_ID, ReceiveData.capabilityInfo!!.nodes.size.toString() + " nodes received")
+                try {
+                    ReceiveData.capabilityInfo = Tasks.await(
+                        Wearable.getCapabilityClient(this)
+                            .getCapability(Constants.CAPABILITY, CapabilityClient.FILTER_REACHABLE)
+                    )
+                    Log.d(LOG_ID, ReceiveData.capabilityInfo!!.nodes.size.toString() + " nodes received")
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "CAPABILITY exception: " + exc.toString())
+                }
             }.start()
 
             Log.d(LOG_ID, "Register Receiver")
@@ -53,10 +57,14 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
             registerReceiver(receiver, intentFilter)
             if (BuildConfig.DEBUG && sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)) {
                 Thread {
-                    while (true) {
-                        // create Thread which send dummy intents
-                        this.sendBroadcast(Utils.getDummyGlucodataIntent(true))
-                        Thread.sleep(10000)
+                    try {
+                        while (true) {
+                            // create Thread which send dummy intents
+                            this.sendBroadcast(Utils.getDummyGlucodataIntent(true))
+                            Thread.sleep(10000)
+                        }
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "Send dummy glucodata exception: " + exc.toString())
                     }
                 }.start()
             }
@@ -128,7 +136,11 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
             Log.d(LOG_ID, "OnReceiveData for source " + dataSource.toString() + " and extras " + extras.toString())
             if (dataSource != ReceiveDataSource.MESSAGECLIENT && extras != null) {
                 Thread {
-                    SendMessage(context, Utils.bundleToBytes(extras))
+                    try {
+                        SendMessage(context, Utils.bundleToBytes(extras))
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "SendMessage exception: " + exc.toString())
+                    }
                 }.start()
             }
             val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
