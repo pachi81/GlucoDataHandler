@@ -79,6 +79,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
             ComplicationType.LONG_TEXT -> getLongTextComplicationData()
             ComplicationType.SMALL_IMAGE -> getSmallImageComplicationData()
             ComplicationType.MONOCHROMATIC_IMAGE -> getIconComplicationData()
+            ComplicationType.PHOTO_IMAGE -> getLargeImageComplicationData()
             else -> {
                 Log.e(LOG_ID, "Unsupported type: " + request.complicationType)
                 null
@@ -127,6 +128,15 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     private fun getSmallImageComplicationData(): ComplicationData {
         return SmallImageComplicationData.Builder (
             smallImage = getImage()!!,
+            contentDescription = descriptionText()
+        )
+            .setTapAction(getTapAction())
+            .build()
+    }
+
+    private fun getLargeImageComplicationData(): ComplicationData {
+        return PhotoImageComplicationData.Builder (
+            photoImage = getGlucoseAsIcon(ReceiveData.getClucoseColor(), true),
             contentDescription = descriptionText()
         )
             .setTapAction(getTapAction())
