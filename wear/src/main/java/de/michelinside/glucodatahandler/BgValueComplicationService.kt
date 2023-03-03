@@ -79,6 +79,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
             ComplicationType.LONG_TEXT -> getLongTextComplicationData()
             ComplicationType.SMALL_IMAGE -> getSmallImageComplicationData()
             ComplicationType.MONOCHROMATIC_IMAGE -> getIconComplicationData()
+            ComplicationType.PHOTO_IMAGE -> getLargeImageComplicationData()
             else -> {
                 Log.e(LOG_ID, "Unsupported type: " + request.complicationType)
                 null
@@ -127,6 +128,15 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     private fun getSmallImageComplicationData(): ComplicationData {
         return SmallImageComplicationData.Builder (
             smallImage = getImage()!!,
+            contentDescription = descriptionText()
+        )
+            .setTapAction(getTapAction())
+            .build()
+    }
+
+    private fun getLargeImageComplicationData(): ComplicationData {
+        return PhotoImageComplicationData.Builder (
+            photoImage = getGlucoseAsIcon(ReceiveData.getClucoseColor(), true),
             contentDescription = descriptionText()
         )
             .setTapAction(getTapAction())
@@ -285,7 +295,6 @@ object ActiveComplicationHandler: ReceiveDataInterface {
 
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
         Thread {
-            Thread.sleep(200)  // some delay for let other tasks run...
             if (complicationClasses.isEmpty()) {
                 val packageInfo = getPackages(context)
                 Log.d(LOG_ID, "Got " + packageInfo.services.size + " services.")
@@ -307,7 +316,7 @@ object ActiveComplicationHandler: ReceiveDataInterface {
                 // upgrade all at once can cause a disappear of icon and images in ambient mode,
                 // so use some delay!
                 complicationClasses.forEach {
-                    //Thread.sleep(100)
+                    Thread.sleep(10)  // add delay to prevent disappearing complication icons in ambient mode
                     ComplicationDataSourceUpdateRequester
                         .create(
                             context = context,
