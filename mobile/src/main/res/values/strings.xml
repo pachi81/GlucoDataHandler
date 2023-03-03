@@ -25,7 +25,7 @@
     <string name="unit_label" tools:ignore="MissingTranslation">Unit</string>
     <string name="unit_html_label" tools:ignore="MissingTranslation">Unit of the glucose value (mg/dl or mmol/l)</string>
 
-    <string name="activity_main_info_label" tools:ignore="MissingTranslation">INFO: To receiving data from Juggluco, please open Juggluco, go to settings and activate \"Glucodata Broadcast\". Then you can add this plugin as a tasker event profile.</string>
+    <string name="activity_main_info_label" tools:ignore="MissingTranslation">INFO: To receiving data from Juggluco, please open Juggluco, go to settings and activate \"Glucodata Broadcast\" for "de.michelinside.glucodatahandler".</string>
     <string name="activity_main_connected_label" tools:ignore="MissingTranslation">Wear: connected (%1$d)</string>
     <string name="activity_main_disconnected_label" tools:ignore="MissingTranslation">Wear: disconnected</string>
     <string name="activity_switch_notification" tools:ignore="MissingTranslation">Vibration</string>
