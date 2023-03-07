@@ -37,6 +37,19 @@ class ShortGlucoseWithDeltaAndTrendComplication: ShortClucoseComplication() {
     }
 }
 
+class LongGlucoseWithDeltaAndTrendAndTimeComplication: ShortClucoseComplication() {
+    override fun getLongTextComplicationData(): ComplicationData {
+        return LongTextComplicationData.Builder(
+            plainText(" Δ: " + ReceiveData.getDeltaAsString() + "   " + ReceiveData.getRateSymbol().toString() + " (" + ReceiveData.getRateAsString() + ")"),
+            descriptionText()
+        )
+            .setTitle(timeText())
+            .setSmallImage(glucoseImage())
+            .setTapAction(getTapAction())
+            .build()
+    }
+}
+
 open class ShortGlucoseWithTrendRangeComplication: BgValueComplicationService() {
     override fun getRangeValueComplicationData(): ComplicationData {
         return RangedValueComplicationData.Builder(

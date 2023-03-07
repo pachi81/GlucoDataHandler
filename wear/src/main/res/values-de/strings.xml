@@ -18,6 +18,7 @@
     <string name="short_delta_trend_arrow_range">Delta, Trendpfeil und -kreis (wenn unterstützt)</string>
     <string name="short_value_delta">Zuckerwert und Delta</string>
     <string name="long_value_arrow_delta">Zuckerwert, Trendpfeil und Delta</string>
+    <string name="long_value_arrow_delta_time">Zuckerwert, Trendpfeil, Delta und Zeitpunkt</string>
     <string name="short_value_rate">Zuckerwert und Trendwert</string>
     <string name="short_delta">Delta</string>
     <string name="short_delta_arrow">Delta und Trendpfeil</string>

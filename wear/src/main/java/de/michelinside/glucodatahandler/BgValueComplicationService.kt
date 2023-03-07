@@ -10,6 +10,7 @@ import androidx.wear.watchface.complications.data.*
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
 import de.michelinside.glucodatahandler.common.*
+import java.util.*
 
 
 abstract class BgValueComplicationService : SuspendingComplicationDataSourceService() {
@@ -184,6 +185,9 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     fun deltaText(): PlainComplicationText =
         plainText(ReceiveData.getDeltaAsString())
 
+    fun timeText(): PlainComplicationText =
+        plainText(ReceiveData.timeformat.format(Date(ReceiveData.time)))
+
     fun trendText(): PlainComplicationText =
         plainText(ReceiveData.getRateAsString())
 
@@ -246,7 +250,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     fun getRateAsIcon(color: Int = Color.WHITE, forImage: Boolean = false): Icon {
         if (ReceiveData.isObsolete(300))
             return Icon.createWithBitmap(Utils.textToBitmap("?", Color.GRAY, forImage))
-        return Icon.createWithBitmap(Utils.rateToBitmap(ReceiveData.rate, color, forImage))
+        return Icon.createWithBitmap(Utils.rateToBitmap(ReceiveData.rate, color))
     }
 
 }

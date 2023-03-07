@@ -177,7 +177,6 @@ object Utils {
             }
             if ((ReceiveData.rate >= 3.5F && rateDelta > 0F) || (ReceiveData.rate <= -3.5F && rateDelta < 0F)) {
                 rateDelta *= -1F
-                Log.e(LOG_ID, "Change rate delta " + rateDelta.toString() + " rate: " + ReceiveData.rate.toString())
             }
             rate = if (ReceiveData.time == 0L) -3.5F else ReceiveData.rate + rateDelta
         }

@@ -18,6 +18,7 @@
     <string name="short_delta_trend_arrow_range" tools:ignore="MissingTranslation">Delta, trend-arrow and trend-range (if supported)</string>
     <string name="short_value_delta" tools:ignore="MissingTranslation">Glucose and delta</string>
     <string name="long_value_arrow_delta" tools:ignore="MissingTranslation">Glucose, delta and trend</string>
+    <string name="long_value_arrow_delta_time" tools:ignore="MissingTranslation">Glucose, delta, trend and timestamp</string>
     <string name="short_value_rate" tools:ignore="MissingTranslation">Glucose and trend-value</string>
     <string name="short_delta" tools:ignore="MissingTranslation">Delta</string>
     <string name="short_delta_arrow" tools:ignore="MissingTranslation">Delta and trend</string>
