@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
 import android.util.Log
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Switch
 import android.widget.TextView
@@ -25,13 +26,14 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
     private lateinit var numMin: EditText
     private lateinit var numMax: EditText
     private lateinit var switchNotifcation: Switch
+    private lateinit var btnSelectTarget: Button
     private lateinit var sharedPref: SharedPreferences
     private val LOG_ID = "GlucoDataHandler.Main"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Log.d(LOG_ID, "onCreate called")
-
+        context = this
         val intent = Intent()
         val packageName = packageName
         val pm = getSystemService(POWER_SERVICE) as PowerManager
@@ -47,6 +49,7 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
         }
 
         sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+
         numMin = findViewById(R.id.numMin)
         numMax = findViewById(R.id.numMax)
 
@@ -60,10 +63,25 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
         txtVersion.text = BuildConfig.VERSION_NAME
 
         switchSendToAod = findViewById(R.id.switchSendToAod)
+        btnSelectTarget = findViewById(R.id.btnSelectTarget)
         switchSendToAod.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, false)
+
+        if(!sharedPref.contains(Constants.SHARED_PREF_GLUCODATA_RECEIVERS)) {
+            val receivers = HashSet<String>()
+            if (switchSendToAod.isChecked)
+                receivers.add("de.metalgearsonic.glucodata.aod")
+            Log.i(LOG_ID, "Upgrade receivers to " + receivers.toString())
+            with(sharedPref.edit()) {
+                putStringSet(Constants.SHARED_PREF_GLUCODATA_RECEIVERS, receivers)
+                apply()
+            }
+        }
+
+        btnSelectTarget.isVisible = switchSendToAod.isChecked
         switchSendToAod.setOnCheckedChangeListener { _, isChecked ->
             Log.d(LOG_ID, "Send to AOD changed: " + isChecked.toString())
             try {
+                btnSelectTarget.isVisible = isChecked
                 with (sharedPref.edit()) {
                     putBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, isChecked)
                     apply()
@@ -72,6 +90,12 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
                 Log.e(LOG_ID, "Changing send to AOD exception: " + exc.message.toString() )
             }
         }
+        btnSelectTarget.setOnClickListener {
+            val selectDialog = SelectReceiverFragment()
+            selectDialog.show(this.supportFragmentManager, "selectReceiver")
+        }
+
+
         switchSendToXdrip = findViewById(R.id.switchSendToXdrip)
         switchSendToXdrip.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_XDRIP, false)
         switchSendToXdrip.setOnCheckedChangeListener { _, isChecked ->
@@ -129,5 +153,12 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
         Log.d(LOG_ID, "new intent received")
         update()
+    }
+
+    companion object {
+        private var context: Context? = null
+        fun getContext(): Context {
+            return context!!
+        }
     }
 }

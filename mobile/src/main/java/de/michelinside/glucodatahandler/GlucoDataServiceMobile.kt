@@ -38,15 +38,27 @@ class GlucoDataServiceMobile: GlucoDataService(), ReceiveDataInterface {
                     context.sendBroadcast(intent)
                 }
 
-                if (dataSource == ReceiveDataSource.MESSAGECLIENT) {
+                if (dataSource == ReceiveDataSource.MESSAGECLIENT || dataSource == ReceiveDataSource.BROADCAST) {
+                    // forward every broadcast, because the receiver can be defined in Juggluco, too
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, false)) {
-                        Log.d(LOG_ID, "Resend Glucodata Broadcast to glucodata AOD")
-                        val intent = Intent()
-                        intent.action = Constants.GLUCODATA_BROADCAST_ACTION
-                        intent.putExtras(extras)
-                        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-                        intent.setPackage("de.metalgearsonic.glucodata.aod")
-                        context.sendBroadcast(intent)
+                        var receivers = sharedPref.getStringSet(Constants.SHARED_PREF_GLUCODATA_RECEIVERS, HashSet<String>())
+                        Log.d(LOG_ID, "Resend Glucodata Broadcast to " + receivers?.size.toString() + " receivers")
+                        if (receivers == null || receivers.size == 0) {
+                            receivers = setOf("")
+                        }
+                        for( receiver in receivers ) {
+                            val intent = Intent()
+                            intent.action = Constants.GLUCODATA_BROADCAST_ACTION
+                            intent.putExtras(extras)
+                            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                            if (!receiver.isEmpty()) {
+                                intent.setPackage(receiver)
+                                Log.d(LOG_ID, "Send glucodata broadcast to " + receiver.toString())
+                            } else {
+                                Log.d(LOG_ID, "Send global glucodata broadcast")
+                            }
+                            context.sendBroadcast(intent)
+                        }
                     }
                 }
             }
