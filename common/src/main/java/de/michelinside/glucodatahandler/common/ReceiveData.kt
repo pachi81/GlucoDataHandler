@@ -54,7 +54,8 @@ object ReceiveData {
     var time: Long = 0
     var timeDiff: Long = 0
     var rateLabel: String? = null
-    var dateformat: DateFormat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT)
+    var dateformat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT)
+    var timeformat = DateFormat.getTimeInstance(DateFormat.DEFAULT)
     var source: ReceiveDataSource = ReceiveDataSource.BROADCAST
     var capabilityInfo: CapabilityInfo? = null
     var curExtraBundle: Bundle? = null

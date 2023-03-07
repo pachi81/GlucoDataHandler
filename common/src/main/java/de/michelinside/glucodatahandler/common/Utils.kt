@@ -111,10 +111,10 @@ object Utils {
         return rotatedBitmap
     }
 
-    fun rateToBitmap(rate: Float, color: Int, roundTargert: Boolean = false): Bitmap? {
+    fun rateToBitmap(rate: Float, color: Int): Bitmap? {
         try {
             val size = 100
-            var textSize = if(roundTargert) 130F else 150F
+            var textSize = 100F
             val text: String
             val degrees: Int
             if(rate >= 3F) {
@@ -154,6 +154,7 @@ object Utils {
         }
     }
 
+    private var rateDelta = 0.5F
     fun getDummyGlucodataIntent(random: Boolean = true) : Intent {
         var useMmol = true
         val time = System.currentTimeMillis()
@@ -174,7 +175,11 @@ object Utils {
                 raw += 1
                 glucose = mgToMmol(raw.toFloat())
             }
-            rate = if (ReceiveData.time == 0L || ReceiveData.rate >= 4F) -4F else ReceiveData.rate + 0.5F
+            if ((ReceiveData.rate >= 3.5F && rateDelta > 0F) || (ReceiveData.rate <= -3.5F && rateDelta < 0F)) {
+                rateDelta *= -1F
+                Log.e(LOG_ID, "Change rate delta " + rateDelta.toString() + " rate: " + ReceiveData.rate.toString())
+            }
+            rate = if (ReceiveData.time == 0L) -3.5F else ReceiveData.rate + rateDelta
         }
         intent.putExtra(ReceiveData.SERIAL, "WUSEL_DUSEL")
         intent.putExtra(ReceiveData.MGDL, raw)
