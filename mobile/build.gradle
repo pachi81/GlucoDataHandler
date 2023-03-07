@@ -12,7 +12,7 @@ android {
         minSdk 26
         targetSdk 33
         versionCode 1
-        versionName "0.7.5"
+        versionName "0.7.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -60,4 +60,16 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     wearApp project(':wear')
+}
+
+afterEvaluate {
+    def assembleRelease = tasks.getByPath(':mobile:assembleRelease')
+    def copyAndroidApksPostBuild = tasks.register('copyAndroidApksPostBuild', Copy) {
+        dependsOn assembleRelease
+        from "${projectDir}/release"
+        include '**/*.apk'
+        into "D:/Daten/Michel/OneDrive/Projekte/Release"
+    }
+
+    assembleRelease.finalizedBy(copyAndroidApksPostBuild)
 }

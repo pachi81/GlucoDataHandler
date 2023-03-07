@@ -12,7 +12,7 @@ android {
         minSdk 26
         targetSdk 33
         versionCode 1
-        versionName "0.7.5"
+        versionName "0.7.7"
     }
 
     buildTypes {
@@ -55,4 +55,16 @@ dependencies {
     implementation 'androidx.appcompat:appcompat-resources:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
+}
+
+afterEvaluate {
+    def assembleRelease = tasks.getByPath(':wear:assembleRelease')
+    def copyAndroidApksPostBuild = tasks.register('copyAndroidApksPostBuild', Copy) {
+        dependsOn assembleRelease
+        from "${projectDir}/../mobile/release"
+        include '**/*.apk'
+        into "D:/Daten/Michel/OneDrive/Projekte/Release"
+    }
+
+    assembleRelease.finalizedBy(copyAndroidApksPostBuild)
 }

@@ -22,4 +22,6 @@ object Constants {
     const val SHARED_PREF_NOTIFY_DURATION_LOW = "notify_duration_low"
     const val SHARED_PREF_NOTIFY_DURATION_HIGH = "notify_duration_high"
     const val SHARED_PREF_USE_MMOL = "use_mmol"
+    const val SHARED_PREF_GLUCODATA_RECEIVER_SHOW_ALL = "show_all_glucodata_receivers"
+    const val SHARED_PREF_GLUCODATA_RECEIVERS = "glucodata_receivers"
 }
