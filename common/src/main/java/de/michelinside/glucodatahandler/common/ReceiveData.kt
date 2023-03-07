@@ -245,7 +245,7 @@ object ReceiveData {
             )
 
             val curTimeDiff = extras.getLong(TIME) - time
-            if(curTimeDiff > 1000) // check for new value received
+            if(curTimeDiff >= 1000) // check for new value received
             {
                 curExtraBundle = extras
                 source = dataSource
