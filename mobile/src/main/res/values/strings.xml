@@ -26,7 +26,7 @@
     <string name="unit_html_label">Unit of the glucose value (mg/dl or mmol/l)</string>
 
     <string name="activity_main_info_label">INFO: To receiving data from Juggluco, please open Juggluco, go to settings and activate \"Glucodata Broadcast\" for "de.michelinside.glucodatahandler".</string>
-    <string name="activity_main_connected_label">Wear: connected (%1$d)</string>
+    <string name="activity_main_connected_label">Wear: connected (%1$s)</string>
     <string name="activity_main_disconnected_label">Wear: disconnected</string>
     <string name="activity_switch_notification">Vibration</string>
     <string name="activity_target_range">Target range:</string>
@@ -37,6 +37,7 @@
 
     <string name="select_receiver_show_all">Show all</string>
     <string name="select_receiver_no_glucodata_receiver">No receiver found!</string>
+    <string name="select_receiver_info">INFO:\nNo receiver = global broadcast</string>
     <string name="button_ok">OK</string>
     <string name="button_cancel">Cancel</string>
 

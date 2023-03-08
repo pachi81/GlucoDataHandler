@@ -117,24 +117,28 @@ class WaerActivity : Activity(), ReceiveDataInterface {
     }
 
     private fun update() {
-        if(ReceiveData.time > 0) {
-            txtBgValue = findViewById(R.id.txtBgValue)
-            txtBgValue.text = ReceiveData.getClucoseAsString()
-            txtBgValue.setTextColor(ReceiveData.getClucoseColor())
-            viewIcon = findViewById(R.id.viewIcon)
-            viewIcon.setImageIcon(ReceiveData.getArrowIcon())
-            txtValueInfo = findViewById(R.id.txtValueInfo)
-            txtValueInfo.text = ReceiveData.getAsString(this, false)
-            txtConnInfo = findViewById(R.id.txtConnInfo)
-            if (ReceiveData.capabilityInfo != null && ReceiveData.capabilityInfo!!.nodes.size > 0)
-                txtConnInfo.text = resources.getText(R.string.activity_connected_label)
-            else
-                txtConnInfo.text = resources.getText(R.string.activity_disconnected_label)
+        try {
+            if(ReceiveData.time > 0) {
+                txtBgValue = findViewById(R.id.txtBgValue)
+                txtBgValue.text = ReceiveData.getClucoseAsString()
+                txtBgValue.setTextColor(ReceiveData.getClucoseColor())
+                viewIcon = findViewById(R.id.viewIcon)
+                viewIcon.setImageIcon(ReceiveData.getArrowIcon())
+                txtValueInfo = findViewById(R.id.txtValueInfo)
+                txtValueInfo.text = ReceiveData.getAsString(this, false)
+                txtConnInfo = findViewById(R.id.txtConnInfo)
+                if (ReceiveData.connectedNodes.size > 0) {
+                    txtConnInfo.text = String.format(resources.getText(R.string.activity_connected_label).toString(), ReceiveData.getBatterLevelsAsString())
+                } else
+                    txtConnInfo.text = resources.getText(R.string.activity_disconnected_label)
 
-        }
-        if (useMmol != ReceiveData.isMmol) {
-            useMmol = ReceiveData.isMmol
-            updateMinMax()
+            }
+            if (useMmol != ReceiveData.isMmol) {
+                useMmol = ReceiveData.isMmol
+                updateMinMax()
+            }
+        } catch( exc: Exception ) {
+            Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
     }
 

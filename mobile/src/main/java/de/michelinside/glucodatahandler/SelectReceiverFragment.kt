@@ -39,6 +39,11 @@ class SelectReceiverFragment : DialogFragment() {
             super.onViewCreated(view, savedInstanceState)
 
             sharedPref = MainActivity.getContext().getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            val savedReceivers = sharedPref.getStringSet(Constants.SHARED_PREF_GLUCODATA_RECEIVERS, HashSet<String>())
+            if(savedReceivers!=null) {
+                Log.d(LOG_ID, savedReceivers.size.toString() + " receivers loaded: " + savedReceivers.toString())
+                receiverSet.addAll(savedReceivers)
+            }
 
             btnOK = view.findViewById<Button>(R.id.btnOK)
             btnOK.setOnClickListener {
@@ -79,9 +84,6 @@ class SelectReceiverFragment : DialogFragment() {
 
     private fun updateReceivers(view: View, all: Boolean) {
         try {
-            val savedReceivers = sharedPref.getStringSet(Constants.SHARED_PREF_GLUCODATA_RECEIVERS, HashSet<String>())
-            Log.d(LOG_ID, savedReceivers?.size.toString() + " receivers loaded: " + savedReceivers?.toString())
-
             val receiverLayout = view.findViewById<LinearLayout>(R.id.receiverLayout)
             val receivers = getReceivers(MainActivity.getContext(), all)
             Log.d(LOG_ID, receivers.size.toString() + " receivers found!" )
@@ -91,6 +93,7 @@ class SelectReceiverFragment : DialogFragment() {
             } else
                 receiverScrollView.layoutParams.height = WRAP_CONTENT
             receiverLayout.removeAllViews()
+            val currentReceivers = receiverSet.toHashSet()
             receiverSet.clear()
             if (receivers.size == 0) {
                 val txt = TextView(MainActivity.getContext())
@@ -98,10 +101,10 @@ class SelectReceiverFragment : DialogFragment() {
                 receiverLayout.addView(txt)
             }
             else {
-                for (recv in receivers.toSortedMap()) {
+                for (receiver in receivers.toSortedMap(String.CASE_INSENSITIVE_ORDER)) {
                     val ch = CheckBox(MainActivity.getContext())
-                    ch.text = recv.key
-                    ch.hint = recv.value
+                    ch.text = receiver.key
+                    ch.hint = receiver.value
                     ch.setOnCheckedChangeListener { buttonView, isChecked ->
                         if (isChecked) {
                             receiverSet.add(buttonView.hint.toString())
@@ -109,9 +112,9 @@ class SelectReceiverFragment : DialogFragment() {
                             receiverSet.remove(buttonView.hint.toString())
                         }
                     }
-                    if (savedReceivers!!.contains(recv.value) ) {
+                    if (currentReceivers.contains(receiver.value) ) {
                         ch.isChecked = true
-                        receiverSet.add(recv.value)
+                        receiverSet.add(receiver.value)
                     }
                     receiverLayout.addView(ch)
                 }
@@ -123,6 +126,10 @@ class SelectReceiverFragment : DialogFragment() {
 
     private fun getReceivers(context: Context, all: Boolean): HashMap<String, String> {
         val names = HashMap<String, String>()
+        if (BuildConfig.DEBUG) {
+            names["Wusel Dusel"] = "wusel.dusel"
+            names["dummy"] = "dummy"
+        }
         val receivers: List<ResolveInfo>
         if (all) {
             val intent = Intent(Intent.ACTION_MAIN)

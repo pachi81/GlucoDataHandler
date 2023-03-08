@@ -15,7 +15,7 @@ class GlucoDataServiceWear: GlucoDataService() {
     private var isForegroundService = false
     init {
         Log.d(LOG_ID, "init called")
-        ReceiveData.addNotifier(ActiveComplicationHandler)
+        ReceiveData.addNotifier(ActiveComplicationHandler, mutableSetOf(ReceiveDataSource.MESSAGECLIENT,ReceiveDataSource.BROADCAST,ReceiveDataSource.BATTERY_LEVEL))
     }
 
     companion object GlucoDataServiceWear {

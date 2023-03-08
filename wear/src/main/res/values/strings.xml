@@ -1,36 +1,37 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name" tools:ignore="MissingTranslation">GlucoDataWear</string>
-    <string name="forground_notification_descr" tools:ignore="MissingTranslation">Receiving data for complications</string>
+<resources>
+    <string name="app_name">GlucoDataWear</string>
+    <string name="forground_notification_descr">Receiving data for complications</string>
 
-    <string name="activity_connected_label" tools:ignore="MissingTranslation">Phone: connected</string>
-    <string name="activity_disconnected_label" tools:ignore="MissingTranslation">Phone: disconnected</string>
-    <string name="activity_switch_foreground" tools:ignore="MissingTranslation">Foreground</string>
-    <string name="activity_switch_notification" tools:ignore="MissingTranslation">Vibration</string>
-    <string name="activity_target_range" tools:ignore="MissingTranslation">Target range:</string>
+    <string name="activity_connected_label">Phone: connected (%1$s)</string>
+    <string name="activity_disconnected_label">Phone: disconnected</string>
+    <string name="activity_switch_foreground">Foreground</string>
+    <string name="activity_switch_notification">Vibration</string>
+    <string name="activity_target_range">Target range:</string>
 
-    <string name="short_value" tools:ignore="MissingTranslation">Glucose</string>
-    <string name="image_value" tools:ignore="MissingTranslation">Glucose (very big and colored)</string>
-    <string name="icon_value" tools:ignore="MissingTranslation">Glucose (big)</string>
-    <string name="short_value_icon" tools:ignore="MissingTranslation">Glucose with icon</string>
-    <string name="short_value_arrow" tools:ignore="MissingTranslation">Glucose and trend</string>
-    <string name="short_value_trend_range" tools:ignore="MissingTranslation">Glucose and trend-range (if supported)</string>
-    <string name="short_value_delta_trend_range" tools:ignore="MissingTranslation">Glucose, delta and trend-range (if supported)</string>
-    <string name="short_delta_trend_arrow_range" tools:ignore="MissingTranslation">Delta, trend-arrow and trend-range (if supported)</string>
-    <string name="short_value_delta" tools:ignore="MissingTranslation">Glucose and delta</string>
-    <string name="long_value_arrow_delta" tools:ignore="MissingTranslation">Glucose, delta and trend</string>
-    <string name="long_value_arrow_delta_time" tools:ignore="MissingTranslation">Glucose, delta, trend and timestamp</string>
-    <string name="short_value_rate" tools:ignore="MissingTranslation">Glucose and trend-value</string>
-    <string name="short_delta" tools:ignore="MissingTranslation">Delta</string>
-    <string name="short_delta_arrow" tools:ignore="MissingTranslation">Delta and trend</string>
-    <string name="short_delta_icon" tools:ignore="MissingTranslation">Delta with Icon</string>
-    <string name="image_arrow" tools:ignore="MissingTranslation">Trend (big, colored)</string>
-    <string name="icon_arrow" tools:ignore="MissingTranslation">Trend icon</string>
-    <string name="test_neg_range" tools:ignore="MissingTranslation">Test Range complication with negative values (for trend-range support)</string>
-    <string name="short_rate" tools:ignore="MissingTranslation">Trend value</string>
-    <string name="short_rate_arrow" tools:ignore="MissingTranslation">Trend value and arrow</string>
-    <string name="short_rate_icon" tools:ignore="MissingTranslation">Trend value with icon</string>
+    <string name="short_value">Glucose</string>
+    <string name="image_value">Glucose (very big and colored)</string>
+    <string name="icon_value">Glucose (big)</string>
+    <string name="short_value_icon">Glucose with icon</string>
+    <string name="short_value_arrow">Glucose and trend</string>
+    <string name="short_value_trend_range">Glucose and trend-range (if supported)</string>
+    <string name="short_value_delta_trend_range">Glucose, delta and trend-range (if supported)</string>
+    <string name="short_delta_trend_arrow_range">Delta, trend-arrow and trend-range (if supported)</string>
+    <string name="short_value_delta">Glucose and delta</string>
+    <string name="long_value_arrow_delta">Glucose, delta and trend</string>
+    <string name="long_value_arrow_delta_time">Glucose, delta, trend and timestamp</string>
+    <string name="short_value_rate">Glucose and trend-value</string>
+    <string name="short_delta">Delta</string>
+    <string name="short_delta_arrow">Delta and trend</string>
+    <string name="short_delta_icon">Delta with Icon</string>
+    <string name="image_arrow">Trend (big, colored)</string>
+    <string name="icon_arrow">Trend icon</string>
+    <string name="test_neg_range">Test Range complication with negative values (for trend-range support)</string>
+    <string name="short_rate">Trend value</string>
+    <string name="short_rate_arrow">Trend value and arrow</string>
+    <string name="short_rate_icon">Trend value with icon</string>
+    <string name="battery_level">Battery level (wear and connected phone)</string>
 
-    <string name="source_message_client" tools:ignore="MissingTranslation">Phone</string>
+    <string name="source_message_client">Phone</string>
 
 
 </resources>

@@ -1,6 +1,7 @@
 package de.michelinside.glucodatahandler.common
 
 import android.content.Context
+import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.*
@@ -13,6 +14,7 @@ import kotlin.coroutines.cancellation.CancellationException
 open class GlucoDataService : WearableListenerService(), MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener, ReceiveDataInterface {
     private val LOG_ID = "GlucoDataHandler.GlucoDataService"
     private lateinit var receiver: GlucoseDataReceiver
+    private lateinit var batteryReceiver: BatteryReceiver
     private var lastAlarmTime = 0L
     private var lastAlarmType = ReceiveData.AlarmType.OK
 
@@ -40,21 +42,22 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
             Log.d(LOG_ID, "CapabilityClient added")
             Thread {
                 try {
-                    ReceiveData.capabilityInfo = Tasks.await(
+                    ReceiveData.connectedNodes = Tasks.await(
                         Wearable.getCapabilityClient(this)
                             .getCapability(Constants.CAPABILITY, CapabilityClient.FILTER_REACHABLE)
-                    )
-                    Log.d(LOG_ID, ReceiveData.capabilityInfo!!.nodes.size.toString() + " nodes received")
+                    ).nodes
+                    Log.i(LOG_ID, ReceiveData.connectedNodes.size.toString() + " nodes connected")
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "CAPABILITY exception: " + exc.toString())
                 }
             }.start()
 
             Log.d(LOG_ID, "Register Receiver")
-            val intentFilter = IntentFilter()
-            intentFilter.addAction("glucodata.Minute")
             receiver = GlucoseDataReceiver()
-            registerReceiver(receiver, intentFilter)
+            registerReceiver(receiver, IntentFilter("glucodata.Minute"))
+            batteryReceiver = BatteryReceiver()
+            registerReceiver(batteryReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+
             if (BuildConfig.DEBUG && sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)) {
                 Thread {
                     try {
@@ -89,8 +92,19 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
 
     override fun onMessageReceived(p0: MessageEvent) {
         try {
-            Log.d(LOG_ID, "onMessageReceived called: " + p0.toString())
-            ReceiveData.handleIntent(this, ReceiveDataSource.MESSAGECLIENT, Utils.bytesToBundle(p0.data))
+            Log.i(LOG_ID, "onMessageReceived called: " + p0.toString())
+            val extras = Utils.bytesToBundle(p0.data)
+            if(extras!= null) {
+                if (extras.containsKey("level")) {
+                    val level = extras.getInt("level", -1)
+                    Log.i(LOG_ID, "Battery level received from " + p0.sourceNodeId + ": " + level + "%")
+                    if (level >= 0)
+                        ReceiveData.nodeBatteryLevel[p0.sourceNodeId] = level
+                }
+                if(p0.path == Constants.GLUCODATA_INTENT_MESSAGE_PATH) {
+                    ReceiveData.handleIntent(this, ReceiveDataSource.MESSAGECLIENT, extras)
+                }
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onMessageReceived exception: " + exc.message.toString() )
         }
@@ -99,8 +113,11 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
     override fun onCapabilityChanged(capabilityInfo: CapabilityInfo) {
         try {
             Log.i(LOG_ID, "onCapabilityChanged called: " + capabilityInfo.toString())
-            ReceiveData.capabilityInfo = capabilityInfo
-            ReceiveData.notify(this, ReceiveDataSource.CAPILITY_INFO, ReceiveData.curExtraBundle)
+            ReceiveData.connectedNodes = capabilityInfo.nodes
+            Log.d(LOG_ID, "Connected nodes changed: " + ReceiveData.connectedNodes.size.toString())
+            if(ReceiveData.connectedNodes.size > 0) {
+                ReceiveData.notify(this, ReceiveDataSource.CAPILITY_INFO, ReceiveData.curExtraBundle)
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCapabilityChanged exception: " + exc.toString())
         }
@@ -137,54 +154,59 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
             if (dataSource != ReceiveDataSource.MESSAGECLIENT && extras != null) {
                 Thread {
                     try {
-                        SendMessage(context, Utils.bundleToBytes(extras))
+                        if (dataSource != ReceiveDataSource.BATTERY_LEVEL && BatteryReceiver.batteryPercentage > 0) {
+                            extras.putInt("level", BatteryReceiver.batteryPercentage)
+                        }
+                        SendMessage(context, dataSource, Utils.bundleToBytes(extras))
                     } catch (exc: Exception) {
                         Log.e(LOG_ID, "SendMessage exception: " + exc.toString())
                     }
                 }.start()
             }
-            val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-            if (sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)) {
-                val curAlarmType = ReceiveData.getAlarmType()
-                val forceAlarm = (ReceiveData.alarm and 8) != 0 // alarm triggered by Juggluco
-                Log.d(LOG_ID, "Check vibration: force=" + forceAlarm.toString() +
-                        " - curAlarmType=" + curAlarmType.toString() +
-                        " - lastAlarmType=" + lastAlarmType.toString() +
-                        " - lastAlarmTime=" + lastAlarmTime.toString() +
-                        " - time=" + ReceiveData.time.toString() +
-                        " - delta=" + ReceiveData.delta.toString() +
-                        " - rate=" + ReceiveData.rate.toString() +
-                        " - diff=" + (ReceiveData.time - lastAlarmTime).toString()
-                )
-                if (curAlarmType == ReceiveData.AlarmType.LOW_ALARM || curAlarmType == ReceiveData.AlarmType.LOW)
-                {
-                    // Low alarm only, if the values are still falling!
-                    val durLow: Long
-                    if (BuildConfig.DEBUG)
-                        durLow = 1000
-                    else
-                        durLow = sharedPref.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_LOW, 15) * 60 * 1000
-                    if( forceAlarm || curAlarmType < lastAlarmType || ((ReceiveData.delta < 0F || ReceiveData.rate < 0F) && (ReceiveData.time - lastAlarmTime >= durLow)) )
+            if (dataSource == ReceiveDataSource.MESSAGECLIENT || dataSource == ReceiveDataSource.BROADCAST) {
+                val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                if (sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)) {
+                    val curAlarmType = ReceiveData.getAlarmType()
+                    val forceAlarm = (ReceiveData.alarm and 8) != 0 // alarm triggered by Juggluco
+                    Log.d(LOG_ID, "Check vibration: force=" + forceAlarm.toString() +
+                            " - curAlarmType=" + curAlarmType.toString() +
+                            " - lastAlarmType=" + lastAlarmType.toString() +
+                            " - lastAlarmTime=" + lastAlarmTime.toString() +
+                            " - time=" + ReceiveData.time.toString() +
+                            " - delta=" + ReceiveData.delta.toString() +
+                            " - rate=" + ReceiveData.rate.toString() +
+                            " - diff=" + (ReceiveData.time - lastAlarmTime).toString()
+                    )
+                    if (curAlarmType == ReceiveData.AlarmType.LOW_ALARM || curAlarmType == ReceiveData.AlarmType.LOW)
                     {
-                        if( vibrate(curAlarmType) ) {
-                            lastAlarmTime = ReceiveData.time
-                            lastAlarmType = curAlarmType
+                        // Low alarm only, if the values are still falling!
+                        val durLow: Long
+                        if (BuildConfig.DEBUG)
+                            durLow = 1000
+                        else
+                            durLow = sharedPref.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_LOW, 15) * 60 * 1000
+                        if( forceAlarm || curAlarmType < lastAlarmType || ((ReceiveData.delta < 0F || ReceiveData.rate < 0F) && (ReceiveData.time - lastAlarmTime >= durLow)) )
+                        {
+                            if( vibrate(curAlarmType) ) {
+                                lastAlarmTime = ReceiveData.time
+                                lastAlarmType = curAlarmType
+                            }
                         }
                     }
-                }
-                else if (curAlarmType == ReceiveData.AlarmType.HIGH_ALARM || curAlarmType == ReceiveData.AlarmType.HIGH)
-                {
-                    // High alarm only, if the values are still rising!
-                    val durHigh: Long
-                    if (BuildConfig.DEBUG)
-                        durHigh = 1000
-                    else
-                        durHigh = sharedPref.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_HIGH, 20) * 60 * 1000
-                    if( forceAlarm || curAlarmType > lastAlarmType || ((ReceiveData.delta > 0F || ReceiveData.rate > 0F) && (ReceiveData.time - lastAlarmTime >= durHigh)) )
+                    else if (curAlarmType == ReceiveData.AlarmType.HIGH_ALARM || curAlarmType == ReceiveData.AlarmType.HIGH)
                     {
-                        if( vibrate(curAlarmType) ) {
-                            lastAlarmTime = ReceiveData.time
-                            lastAlarmType = curAlarmType
+                        // High alarm only, if the values are still rising!
+                        val durHigh: Long
+                        if (BuildConfig.DEBUG)
+                            durHigh = 1000
+                        else
+                            durHigh = sharedPref.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_HIGH, 20) * 60 * 1000
+                        if( forceAlarm || curAlarmType > lastAlarmType || ((ReceiveData.delta > 0F || ReceiveData.rate > 0F) && (ReceiveData.time - lastAlarmTime >= durHigh)) )
+                        {
+                            if( vibrate(curAlarmType) ) {
+                                lastAlarmTime = ReceiveData.time
+                                lastAlarmType = curAlarmType
+                            }
                         }
                     }
                 }
@@ -194,36 +216,33 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
         }
     }
 
-    fun SendMessage(context: Context, glucodataIntent: ByteArray?)
+    fun SendMessage(context: Context, dataSource: ReceiveDataSource, extras: ByteArray?)
     {
         try {
-
-            if (ReceiveData.capabilityInfo == null) {
-                ReceiveData.capabilityInfo = Tasks.await(
-                    Wearable.getCapabilityClient(context).getCapability(Constants.CAPABILITY, CapabilityClient.FILTER_REACHABLE))
-                Log.d(LOG_ID, ReceiveData.capabilityInfo!!.nodes.size.toString() + " nodes received")
+            if (ReceiveData.connectedNodes.size == 0) {
+                ReceiveData.connectedNodes = Tasks.await(
+                    Wearable.getCapabilityClient(context).getCapability(Constants.CAPABILITY, CapabilityClient.FILTER_REACHABLE)).nodes
+                Log.d(LOG_ID, ReceiveData.connectedNodes.size.toString() + " nodes received")
             }
-            val nodes = ReceiveData.capabilityInfo!!.nodes
-            //val nodes = Tasks.await(Wearable.getNodeClient(context).connectedNodes)
-            Log.d(LOG_ID, nodes.size.toString() + " nodes found")
-            if( nodes.size > 0 ) {
+            Log.d(LOG_ID, ReceiveData.connectedNodes.size.toString() + " nodes found for sending message to")
+            if( ReceiveData.connectedNodes.size > 0 ) {
                 // Send a message to all nodes in parallel
-                nodes.map { node ->
+                ReceiveData.connectedNodes.map { node ->
                     Wearable.getMessageClient(context).sendMessage(
                         node.id,
-                        Constants.GLUCODATA_INTENT_MESSAGE_PATH,
-                        glucodataIntent
+                        if(dataSource == ReceiveDataSource.BATTERY_LEVEL) Constants.BATTERY_INTENT_MESSAGE_PATH else Constants.GLUCODATA_INTENT_MESSAGE_PATH,
+                        extras
                     ).apply {
                         addOnSuccessListener {
                             Log.i(
                                 LOG_ID,
-                                "Data send to node " + node.toString()
+                                dataSource.toString() + " data send to node " + node.toString()
                             )
                         }
                         addOnFailureListener {
                             Log.e(
                                 LOG_ID,
-                                "Failed to send data to node " + node.toString()
+                                "Failed to send " + dataSource.toString() + " data to node " + node.toString()
                             )
                         }
                     }

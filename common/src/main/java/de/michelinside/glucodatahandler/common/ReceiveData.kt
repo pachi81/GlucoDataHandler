@@ -5,7 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
-import com.google.android.gms.wearable.CapabilityInfo
+import com.google.android.gms.wearable.Node
 import java.text.DateFormat
 import java.util.*
 import kotlin.math.abs
@@ -18,7 +18,8 @@ interface ReceiveDataInterface {
 enum class ReceiveDataSource(private val resId: Int) {
     BROADCAST(R.string.source_broadcast),
     MESSAGECLIENT(R.string.source_message_client),
-    CAPILITY_INFO(R.string.source_capility_info);
+    CAPILITY_INFO(R.string.source_capility_info),
+    BATTERY_LEVEL(R.string.source_battery_level);
 
     fun getResId(): Int {
         return resId
@@ -57,7 +58,8 @@ object ReceiveData {
     var dateformat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT)
     var timeformat = DateFormat.getTimeInstance(DateFormat.DEFAULT)
     var source: ReceiveDataSource = ReceiveDataSource.BROADCAST
-    var capabilityInfo: CapabilityInfo? = null
+    var connectedNodes = mutableSetOf<Node>()
+    val nodeBatteryLevel = mutableMapOf<String,Int>()
     var curExtraBundle: Bundle? = null
     var targetMinValue = 90F
     val targetMin: Float get() {
@@ -205,11 +207,11 @@ object ReceiveData {
         return Utils.round(timeDiff.toFloat()/60000, 0).toLong()
     }
 
-    private var notifiers = mutableSetOf<ReceiveDataInterface>()
-    fun addNotifier(notifier: ReceiveDataInterface)
+    private var notifiers = mutableMapOf<ReceiveDataInterface, MutableSet<ReceiveDataSource>?>()
+    fun addNotifier(notifier: ReceiveDataInterface, sourceFilter: MutableSet<ReceiveDataSource>? = null)
     {
         Log.d(LOG_ID, "add notifier " + notifier.toString() )
-        notifiers.add(notifier)
+        notifiers[notifier] = sourceFilter
         Log.d(LOG_ID, "notifier size: " + notifiers.size.toString() )
     }
     fun remNotifier(notifier: ReceiveDataInterface)
@@ -224,8 +226,10 @@ object ReceiveData {
         Log.d(LOG_ID, "Sending new data to " + notifiers.size.toString() + " notifier(s).")
         notifiers.forEach{
             try {
-                Log.d(LOG_ID, "Sending new data to " + it.toString())
-                it.OnReceiveData(context, dataSource, extras)
+                if (it.value == null || it.value!!.contains(dataSource)) {
+                    Log.d(LOG_ID, "Sending new data from " + dataSource.toString() + " to " + it.toString())
+                    it.key.OnReceiveData(context, dataSource, extras)
+                }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "OnReceiveData exception: " + exc.message.toString() )
             }
@@ -326,6 +330,26 @@ object ReceiveData {
             }
             apply()
         }
+    }
+
+    fun getBatterLevels(): List<Int> {
+        val batterLevels = mutableListOf<Int>()
+        connectedNodes.map { node ->
+            if (nodeBatteryLevel.containsKey(node.id)) {
+                Log.d(LOG_ID, node.id + " found: " + nodeBatteryLevel.getValue(node.id).toString())
+                batterLevels.add(nodeBatteryLevel.getValue(node.id))
+            }
+            else {
+                Log.d(LOG_ID, node.id + " not found!")
+                batterLevels.add(-1)
+            }
+        }
+        return batterLevels
+    }
+
+    fun getBatterLevelsAsString(): String {
+        val batterLevels = getBatterLevels()
+        return batterLevels.joinToString { if (it > 0) it.toString() + "%" else "?%"}
     }
 
 }

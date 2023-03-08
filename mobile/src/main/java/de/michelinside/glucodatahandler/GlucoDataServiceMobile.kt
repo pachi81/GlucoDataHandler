@@ -10,7 +10,7 @@ class GlucoDataServiceMobile: GlucoDataService(), ReceiveDataInterface {
     private val LOG_ID = "GlucoDataHandler.GlucoDataServiceMobile"
     init {
         Log.d(LOG_ID, "init called")
-        ReceiveData.addNotifier(TaskerDataReceiver)
+        ReceiveData.addNotifier(TaskerDataReceiver, mutableSetOf(ReceiveDataSource.BROADCAST,ReceiveDataSource.MESSAGECLIENT))
         ReceiveData.addNotifier(this)
     }
 

@@ -1,6 +1,7 @@
 package de.michelinside.glucodatahandler
 
 import androidx.wear.watchface.complications.data.*
+import de.michelinside.glucodatahandler.common.BatteryReceiver
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.Utils
 
@@ -98,3 +99,16 @@ class ShortTrendWithTrendArrowComplication: ShortTrendComplication() {
 class ShortTrendWithIconComplication: ShortTrendComplication() {
     override fun getIcon(): MonochromaticImage = trendIcon()
 }
+
+class BatteryLevelComplication: BgValueComplicationService() {
+    override fun getTitle(): PlainComplicationText? {
+        val levels = ReceiveData.getBatterLevels()
+        if (levels.isNotEmpty() && levels[0] > 0) {
+            return plainText("\uD83D\uDCF1" + levels[0].toString() + "%")
+        }
+        return null
+    }
+    override fun getText(): PlainComplicationText =
+        plainText("⌚" + BatteryReceiver.batteryPercentage.toString() + "%")
+}
+

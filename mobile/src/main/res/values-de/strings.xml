@@ -27,7 +27,7 @@
     <string name="glucose_html_label">Blutzuckerwert in der Einheit, welche in Juggluco konfiguriert ist</string>
 
     <string name="activity_main_info_label">INFO: Aktiviere in Juggluco unter Einstellungen \"Glucodata Broadcast\" und wähle \"de.michelinside.glucodatahandler\" aus.</string>
-    <string name="activity_main_connected_label">Uhr: verbunden (%1$d)</string>
+    <string name="activity_main_connected_label">Uhr: verbunden (%1$s)</string>
     <string name="activity_main_disconnected_label">Uhr: getrennt</string>
     <string name="activity_target_range">Zielbereich:</string>
     <string name="activity_switch_notification">Vibrieren</string>
@@ -37,6 +37,7 @@
 
     <string name="select_receiver_show_all">Zeige alle</string>
     <string name="select_receiver_no_glucodata_receiver">Kein Empfänger gefunden!</string>
+    <string name="select_receiver_info">INFO:\nKein Empfänger = Globaler Broadcast</string>
     <string name="button_ok">OK</string>
     <string name="button_cancel">Abbrechen</string>
 </resources>

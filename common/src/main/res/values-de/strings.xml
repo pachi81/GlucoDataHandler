@@ -22,4 +22,5 @@
     <string name="source_broadcast">Juggluco</string>
     <string name="source_message_client">Uhr</string>
     <string name="source_capility_info">Intern</string>
+    <string name="source_battery_level">Akku</string>
 </resources>
