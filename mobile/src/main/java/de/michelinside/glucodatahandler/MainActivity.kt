@@ -141,13 +141,19 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
     }
 
     private fun update() {
-        txtLastValue = findViewById(R.id.txtLastValue)
-        txtLastValue.text = ReceiveData.getAsString(this)
-        txtWearInfo = findViewById(R.id.txtWearInfo)
-        if (ReceiveData.capabilityInfo != null && ReceiveData.capabilityInfo!!.nodes.size > 0)
-            txtWearInfo.text = String.format(resources.getText(R.string.activity_main_connected_label).toString(), ReceiveData.capabilityInfo!!.nodes.size)
-        else
-            txtWearInfo.text = resources.getText(R.string.activity_main_disconnected_label)
+        try {
+            txtLastValue = findViewById(R.id.txtLastValue)
+            txtLastValue.text = ReceiveData.getAsString(this)
+            txtWearInfo = findViewById(R.id.txtWearInfo)
+            if (ReceiveData.connectedNodes.size > 0) {
+                txtWearInfo.text = String.format(resources.getText(R.string.activity_main_connected_label).toString(), ReceiveData.getBatterLevelsAsString())
+            }
+            else
+                txtWearInfo.text = resources.getText(R.string.activity_main_disconnected_label)
+
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "update exception: " + exc.message.toString() )
+        }
     }
 
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {

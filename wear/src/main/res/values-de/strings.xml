@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">GlucoDataWear</string>
     <string name="forground_notification_descr">Datenverarbeitung für Complications</string>
-    <string name="activity_connected_label">Handy: verbunden</string>
+    <string name="activity_connected_label">Handy: verbunden (%1$s)</string>
     <string name="activity_disconnected_label">Handy: getrennt</string>
     <string name="activity_switch_foreground">Vordergrund</string>
     <string name="activity_switch_notification">Vibrieren</string>

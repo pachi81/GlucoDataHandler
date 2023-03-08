@@ -75,7 +75,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
             ComplicationType.MONOCHROMATIC_IMAGE -> getIconComplicationData()
             ComplicationType.PHOTO_IMAGE -> getLargeImageComplicationData()
             else -> {
-                Log.e(LOG_ID, "Unsupported type: " + request.complicationType)
+                Log.w(LOG_ID, "Unsupported type: " + request.complicationType)
                 null
             }
         }

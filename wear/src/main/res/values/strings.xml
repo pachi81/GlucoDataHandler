@@ -2,7 +2,7 @@
     <string name="app_name" tools:ignore="MissingTranslation">GlucoDataWear</string>
     <string name="forground_notification_descr" tools:ignore="MissingTranslation">Receiving data for complications</string>
 
-    <string name="activity_connected_label" tools:ignore="MissingTranslation">Phone: connected</string>
+    <string name="activity_connected_label" tools:ignore="MissingTranslation">Phone: connected (%1$s)</string>
     <string name="activity_disconnected_label" tools:ignore="MissingTranslation">Phone: disconnected</string>
     <string name="activity_switch_foreground" tools:ignore="MissingTranslation">Foreground</string>
     <string name="activity_switch_notification" tools:ignore="MissingTranslation">Vibration</string>

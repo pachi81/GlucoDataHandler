@@ -54,7 +54,6 @@
                 <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED" />
                 <data
                     android:host="*"
-                    android:pathPrefix="/glucodata_intent"
                     android:scheme="glucodata_intent" />
             </intent-filter>
         </service>
