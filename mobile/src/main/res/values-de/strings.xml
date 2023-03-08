@@ -37,6 +37,7 @@
 
     <string name="select_receiver_show_all">Zeige alle</string>
     <string name="select_receiver_no_glucodata_receiver">Kein Empfänger gefunden!</string>
+    <string name="select_receiver_info">INFO:\nKein Empfänger = Globaler Broadcast</string>
     <string name="button_ok">OK</string>
     <string name="button_cancel">Abbrechen</string>
 </resources>
