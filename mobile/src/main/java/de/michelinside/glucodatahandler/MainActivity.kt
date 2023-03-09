@@ -11,8 +11,8 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Switch
 import android.widget.TextView
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.isVisible
 import de.michelinside.glucodatahandler.common.*
 
@@ -21,11 +21,11 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
     private lateinit var txtLastValue: TextView
     private lateinit var txtVersion: TextView
     private lateinit var txtWearInfo: TextView
-    private lateinit var switchSendToAod: Switch
-    private lateinit var switchSendToXdrip: Switch
+    private lateinit var switchSendToAod: SwitchCompat
+    private lateinit var switchSendToXdrip: SwitchCompat
     private lateinit var numMin: EditText
     private lateinit var numMax: EditText
-    private lateinit var switchNotifcation: Switch
+    private lateinit var switchNotifcation: SwitchCompat
     private lateinit var btnSelectTarget: Button
     private lateinit var sharedPref: SharedPreferences
     private val LOG_ID = "GlucoDataHandler.Main"

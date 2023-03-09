@@ -51,7 +51,7 @@
         app:layout_constraintEnd_toStartOf="@+id/numMax"
         tools:ignore="TouchTargetSizeCheck" />
 
-    <Switch
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switchNotification"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -64,7 +64,8 @@
         app:layout_constraintBottom_toTopOf="@+id/switchSendToXdrip"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-    <Switch
+
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switchSendToXdrip"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -124,7 +125,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Switch
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switchSendToAod"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

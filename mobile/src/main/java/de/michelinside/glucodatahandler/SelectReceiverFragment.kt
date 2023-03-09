@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.*
+import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.DialogFragment
 import de.michelinside.glucodatahandler.common.Constants
 
@@ -20,7 +21,7 @@ class SelectReceiverFragment : DialogFragment() {
     private val LOG_ID = "GlucoDataHandler.SelectReceiver"
     private lateinit var btnOK: Button
     private lateinit var btnCancel: Button
-    private lateinit var showAllSwitch: Switch
+    private lateinit var showAllSwitch: SwitchCompat
     private lateinit var sharedPref: SharedPreferences
     private var receiverSet = HashSet<String>()
 
@@ -56,7 +57,7 @@ class SelectReceiverFragment : DialogFragment() {
                 dismiss()
             }
 
-            showAllSwitch = view.findViewById<Switch>(R.id.showAllSwitch)
+            showAllSwitch = view.findViewById<SwitchCompat>(R.id.showAllSwitch)
             showAllSwitch.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_GLUCODATA_RECEIVER_SHOW_ALL, false)
             showAllSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
                 updateReceivers(view, isChecked)
