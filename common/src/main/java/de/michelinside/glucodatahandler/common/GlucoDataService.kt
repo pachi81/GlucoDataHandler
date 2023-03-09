@@ -3,18 +3,16 @@ package de.michelinside.glucodatahandler.common
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.Uri
 import android.os.*
 import android.util.Log
-import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.*
-import kotlin.coroutines.cancellation.CancellationException
 
 
-open class GlucoDataService : WearableListenerService(), MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener, ReceiveDataInterface {
+open class GlucoDataService : WearableListenerService(), ReceiveDataInterface {
     private val LOG_ID = "GlucoDataHandler.GlucoDataService"
     private lateinit var receiver: GlucoseDataReceiver
     private lateinit var batteryReceiver: BatteryReceiver
+    private val connection = WearPhoneConnection()
     private var lastAlarmTime = 0L
     private var lastAlarmType = ReceiveData.AlarmType.OK
 
@@ -34,23 +32,7 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
             val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
 
             ReceiveData.addNotifier(this)
-            Wearable.getMessageClient(this).addListener(this)
-            Log.d(LOG_ID, "MessageClient added")
-            Wearable.getCapabilityClient(this).addListener(this,
-                Uri.parse("wear://"),
-                CapabilityClient.FILTER_REACHABLE)
-            Log.d(LOG_ID, "CapabilityClient added")
-            Thread {
-                try {
-                    ReceiveData.connectedNodes = Tasks.await(
-                        Wearable.getCapabilityClient(this)
-                            .getCapability(Constants.CAPABILITY, CapabilityClient.FILTER_REACHABLE)
-                    ).nodes
-                    Log.i(LOG_ID, ReceiveData.connectedNodes.size.toString() + " nodes connected")
-                } catch (exc: Exception) {
-                    Log.e(LOG_ID, "CAPABILITY exception: " + exc.toString())
-                }
-            }.start()
+            connection.open(this)
 
             Log.d(LOG_ID, "Register Receiver")
             receiver = GlucoseDataReceiver()
@@ -81,8 +63,7 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
             Log.w(LOG_ID, "onDestroy called")
             unregisterReceiver(receiver)
             ReceiveData.remNotifier(this)
-            Wearable.getMessageClient(this).removeListener(this)
-            Wearable.getCapabilityClient(this).removeListener(this)
+            connection.close()
             super.onDestroy()
             isRunning = false
         } catch (exc: Exception) {
@@ -90,38 +71,6 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
         }
     }
 
-    override fun onMessageReceived(p0: MessageEvent) {
-        try {
-            Log.i(LOG_ID, "onMessageReceived called: " + p0.toString())
-            val extras = Utils.bytesToBundle(p0.data)
-            if(extras!= null) {
-                if (extras.containsKey("level")) {
-                    val level = extras.getInt("level", -1)
-                    Log.i(LOG_ID, "Battery level received from " + p0.sourceNodeId + ": " + level + "%")
-                    if (level >= 0)
-                        ReceiveData.nodeBatteryLevel[p0.sourceNodeId] = level
-                }
-                if(p0.path == Constants.GLUCODATA_INTENT_MESSAGE_PATH) {
-                    ReceiveData.handleIntent(this, ReceiveDataSource.MESSAGECLIENT, extras)
-                }
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "onMessageReceived exception: " + exc.message.toString() )
-        }
-    }
-
-    override fun onCapabilityChanged(capabilityInfo: CapabilityInfo) {
-        try {
-            Log.i(LOG_ID, "onCapabilityChanged called: " + capabilityInfo.toString())
-            ReceiveData.connectedNodes = capabilityInfo.nodes
-            Log.d(LOG_ID, "Connected nodes changed: " + ReceiveData.connectedNodes.size.toString())
-            if(ReceiveData.connectedNodes.size > 0) {
-                ReceiveData.notify(this, ReceiveDataSource.CAPILITY_INFO, ReceiveData.curExtraBundle)
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "onCapabilityChanged exception: " + exc.toString())
-        }
-    }
 
     fun getVibrationPattern(alarmType: ReceiveData.AlarmType): LongArray? {
         return when(alarmType) {
@@ -151,13 +100,10 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnReceiveData for source " + dataSource.toString() + " and extras " + extras.toString())
-            if (dataSource != ReceiveDataSource.MESSAGECLIENT && extras != null) {
+            if (dataSource != ReceiveDataSource.MESSAGECLIENT) {
                 Thread {
                     try {
-                        if (dataSource != ReceiveDataSource.BATTERY_LEVEL && BatteryReceiver.batteryPercentage > 0) {
-                            extras.putInt("level", BatteryReceiver.batteryPercentage)
-                        }
-                        SendMessage(context, dataSource, Utils.bundleToBytes(extras))
+                        connection.sendMessage(context, dataSource, extras)
                     } catch (exc: Exception) {
                         Log.e(LOG_ID, "SendMessage exception: " + exc.toString())
                     }
@@ -185,7 +131,7 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
                             durLow = 1000
                         else
                             durLow = sharedPref.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_LOW, 15) * 60 * 1000
-                        if( forceAlarm || curAlarmType < lastAlarmType || ((ReceiveData.delta < 0F || ReceiveData.rate < 0F) && (ReceiveData.time - lastAlarmTime >= durLow)) )
+                        if( forceAlarm || (curAlarmType < lastAlarmType && (ReceiveData.delta < 0F || ReceiveData.rate < 0F) && (ReceiveData.time - lastAlarmTime >= durLow)) )
                         {
                             if( vibrate(curAlarmType) ) {
                                 lastAlarmTime = ReceiveData.time
@@ -201,7 +147,7 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
                             durHigh = 1000
                         else
                             durHigh = sharedPref.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_HIGH, 20) * 60 * 1000
-                        if( forceAlarm || curAlarmType > lastAlarmType || ((ReceiveData.delta > 0F || ReceiveData.rate > 0F) && (ReceiveData.time - lastAlarmTime >= durHigh)) )
+                        if( forceAlarm || (curAlarmType > lastAlarmType && (ReceiveData.delta > 0F || ReceiveData.rate > 0F) && (ReceiveData.time - lastAlarmTime >= durHigh)) )
                         {
                             if( vibrate(curAlarmType) ) {
                                 lastAlarmTime = ReceiveData.time
@@ -213,45 +159,6 @@ open class GlucoDataService : WearableListenerService(), MessageClient.OnMessage
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnReceiveData exception: " + exc.toString())
-        }
-    }
-
-    fun SendMessage(context: Context, dataSource: ReceiveDataSource, extras: ByteArray?)
-    {
-        try {
-            if (ReceiveData.connectedNodes.size == 0) {
-                ReceiveData.connectedNodes = Tasks.await(
-                    Wearable.getCapabilityClient(context).getCapability(Constants.CAPABILITY, CapabilityClient.FILTER_REACHABLE)).nodes
-                Log.d(LOG_ID, ReceiveData.connectedNodes.size.toString() + " nodes received")
-            }
-            Log.d(LOG_ID, ReceiveData.connectedNodes.size.toString() + " nodes found for sending message to")
-            if( ReceiveData.connectedNodes.size > 0 ) {
-                // Send a message to all nodes in parallel
-                ReceiveData.connectedNodes.map { node ->
-                    Wearable.getMessageClient(context).sendMessage(
-                        node.id,
-                        if(dataSource == ReceiveDataSource.BATTERY_LEVEL) Constants.BATTERY_INTENT_MESSAGE_PATH else Constants.GLUCODATA_INTENT_MESSAGE_PATH,
-                        extras
-                    ).apply {
-                        addOnSuccessListener {
-                            Log.i(
-                                LOG_ID,
-                                dataSource.toString() + " data send to node " + node.toString()
-                            )
-                        }
-                        addOnFailureListener {
-                            Log.e(
-                                LOG_ID,
-                                "Failed to send " + dataSource.toString() + " data to node " + node.toString()
-                            )
-                        }
-                    }
-                }
-            }
-        } catch (cancellationException: CancellationException) {
-            throw cancellationException
-        } catch (exception: Exception) {
-            Log.e(LOG_ID, "Sending message failed: $exception")
         }
     }
 }

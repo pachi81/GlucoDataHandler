@@ -43,6 +43,8 @@ object Utils {
     }
 
     fun bundleToBytes(bundle: Bundle?): ByteArray? {
+        if (bundle==null)
+            return null
         val parcel = Parcel.obtain()
         parcel.writeBundle(bundle)
         val bytes = parcel.marshall()

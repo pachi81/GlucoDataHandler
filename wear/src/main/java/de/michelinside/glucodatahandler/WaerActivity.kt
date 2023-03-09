@@ -127,8 +127,8 @@ class WaerActivity : Activity(), ReceiveDataInterface {
                 txtValueInfo = findViewById(R.id.txtValueInfo)
                 txtValueInfo.text = ReceiveData.getAsString(this, false)
                 txtConnInfo = findViewById(R.id.txtConnInfo)
-                if (ReceiveData.connectedNodes.size > 0) {
-                    txtConnInfo.text = String.format(resources.getText(R.string.activity_connected_label).toString(), ReceiveData.getBatterLevelsAsString())
+                if (WearPhoneConnection.nodesConnected) {
+                    txtConnInfo.text = String.format(resources.getText(R.string.activity_connected_label).toString(), WearPhoneConnection.getBatterLevelsAsString())
                 } else
                     txtConnInfo.text = resources.getText(R.string.activity_disconnected_label)
 

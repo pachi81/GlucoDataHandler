@@ -142,11 +142,12 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
 
     private fun update() {
         try {
+            Log.d(LOG_ID, "update values")
             txtLastValue = findViewById(R.id.txtLastValue)
             txtLastValue.text = ReceiveData.getAsString(this)
             txtWearInfo = findViewById(R.id.txtWearInfo)
-            if (ReceiveData.connectedNodes.size > 0) {
-                txtWearInfo.text = String.format(resources.getText(R.string.activity_main_connected_label).toString(), ReceiveData.getBatterLevelsAsString())
+            if (WearPhoneConnection.nodesConnected) {
+                txtWearInfo.text = String.format(resources.getText(R.string.activity_main_connected_label).toString(), WearPhoneConnection.getBatterLevelsAsString())
             }
             else
                 txtWearInfo.text = resources.getText(R.string.activity_main_disconnected_label)
