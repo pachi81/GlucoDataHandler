@@ -170,9 +170,6 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     val level = extras.getInt(BatteryReceiver.LEVEL, -1)
                     Log.d(LOG_ID, "Battery level received for node " + p0.sourceNodeId + ": " + level + "%")
                     setNodeBatteryLevel(p0.sourceNodeId, level)
-                    if(p0.path == Constants.BATTERY_INTENT_MESSAGE_PATH) {
-                        ReceiveData.notify(context, ReceiveDataSource.BATTERY_LEVEL, extras)
-                    }
                 }
 
                 if(p0.path == Constants.GLUCODATA_INTENT_MESSAGE_PATH || extras.containsKey(ReceiveData.SERIAL)) {
