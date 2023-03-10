@@ -33,7 +33,6 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Log.d(LOG_ID, "onCreate called")
-        context = this
         val intent = Intent()
         val packageName = packageName
         val pm = getSystemService(POWER_SERVICE) as PowerManager
@@ -160,12 +159,5 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
         Log.d(LOG_ID, "new intent received")
         update()
-    }
-
-    companion object {
-        private var context: Context? = null
-        fun getContext(): Context {
-            return context!!
-        }
     }
 }
