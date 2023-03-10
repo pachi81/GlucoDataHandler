@@ -15,7 +15,7 @@ class BatteryReceiver: BroadcastReceiver() {
             }
             val curValue = intent.extras!!.getInt(LEVEL, -1)
             Log.i(LOG_ID, "Received batter level: " + curValue.toString() + "%")
-            if (curValue >= 0) {
+            if (curValue >= 0 && curValue != batteryPercentage) {
                 batteryPercentage = curValue
                 ReceiveData.notify(context, ReceiveDataSource.BATTERY_LEVEL, batteryBundle)
             }
