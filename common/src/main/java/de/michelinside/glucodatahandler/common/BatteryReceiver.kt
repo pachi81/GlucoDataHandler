@@ -13,13 +13,11 @@ class BatteryReceiver: BroadcastReceiver() {
             if (intent.extras == null || intent.extras!!.isEmpty) {
                 return
             }
-            val curValue = intent.extras!!.getInt("level", -1)
+            val curValue = intent.extras!!.getInt(LEVEL, -1)
             Log.i(LOG_ID, "Received batter level: " + curValue.toString() + "%")
             if (curValue >= 0) {
                 batteryPercentage = curValue
-                val extra = Bundle()
-                extra.putInt("level", curValue)
-                ReceiveData.notify(context, ReceiveDataSource.BATTERY_LEVEL, extra)
+                ReceiveData.notify(context, ReceiveDataSource.BATTERY_LEVEL, batteryBundle)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "BatteryReceiver exception: " + exc.message.toString() )
@@ -27,6 +25,12 @@ class BatteryReceiver: BroadcastReceiver() {
     }
 
     companion object {
+        const val LEVEL = "level"
         var batteryPercentage: Int = 0
+        val batteryBundle: Bundle get() {
+            val extra = Bundle()
+            extra.putInt(LEVEL, batteryPercentage)
+            return extra
+        }
     }
 }

@@ -11,8 +11,8 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Switch
 import android.widget.TextView
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.isVisible
 import de.michelinside.glucodatahandler.common.*
 
@@ -21,11 +21,11 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
     private lateinit var txtLastValue: TextView
     private lateinit var txtVersion: TextView
     private lateinit var txtWearInfo: TextView
-    private lateinit var switchSendToAod: Switch
-    private lateinit var switchSendToXdrip: Switch
+    private lateinit var switchSendToAod: SwitchCompat
+    private lateinit var switchSendToXdrip: SwitchCompat
     private lateinit var numMin: EditText
     private lateinit var numMax: EditText
-    private lateinit var switchNotifcation: Switch
+    private lateinit var switchNotifcation: SwitchCompat
     private lateinit var btnSelectTarget: Button
     private lateinit var sharedPref: SharedPreferences
     private val LOG_ID = "GlucoDataHandler.Main"
@@ -33,7 +33,6 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Log.d(LOG_ID, "onCreate called")
-        context = this
         val intent = Intent()
         val packageName = packageName
         val pm = getSystemService(POWER_SERVICE) as PowerManager
@@ -142,11 +141,12 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
 
     private fun update() {
         try {
+            Log.d(LOG_ID, "update values")
             txtLastValue = findViewById(R.id.txtLastValue)
             txtLastValue.text = ReceiveData.getAsString(this)
             txtWearInfo = findViewById(R.id.txtWearInfo)
-            if (ReceiveData.connectedNodes.size > 0) {
-                txtWearInfo.text = String.format(resources.getText(R.string.activity_main_connected_label).toString(), ReceiveData.getBatterLevelsAsString())
+            if (WearPhoneConnection.nodesConnected) {
+                txtWearInfo.text = String.format(resources.getText(R.string.activity_main_connected_label).toString(), WearPhoneConnection.getBatterLevelsAsString())
             }
             else
                 txtWearInfo.text = resources.getText(R.string.activity_main_disconnected_label)
@@ -159,12 +159,5 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
         Log.d(LOG_ID, "new intent received")
         update()
-    }
-
-    companion object {
-        private var context: Context? = null
-        fun getContext(): Context {
-            return context!!
-        }
     }
 }

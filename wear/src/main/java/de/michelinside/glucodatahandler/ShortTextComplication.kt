@@ -4,6 +4,7 @@ import androidx.wear.watchface.complications.data.*
 import de.michelinside.glucodatahandler.common.BatteryReceiver
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.Utils
+import de.michelinside.glucodatahandler.common.WearPhoneConnection
 
 open class ShortClucoseComplication:  BgValueComplicationService() {
 }
@@ -102,7 +103,7 @@ class ShortTrendWithIconComplication: ShortTrendComplication() {
 
 class BatteryLevelComplication: BgValueComplicationService() {
     override fun getTitle(): PlainComplicationText? {
-        val levels = ReceiveData.getBatterLevels()
+        val levels = WearPhoneConnection.getBatterLevels()
         if (levels.isNotEmpty() && levels[0] > 0) {
             return plainText("\uD83D\uDCF1" + levels[0].toString() + "%")
         }

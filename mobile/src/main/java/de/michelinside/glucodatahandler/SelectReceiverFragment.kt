@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.*
+import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.DialogFragment
 import de.michelinside.glucodatahandler.common.Constants
 
@@ -20,7 +21,7 @@ class SelectReceiverFragment : DialogFragment() {
     private val LOG_ID = "GlucoDataHandler.SelectReceiver"
     private lateinit var btnOK: Button
     private lateinit var btnCancel: Button
-    private lateinit var showAllSwitch: Switch
+    private lateinit var showAllSwitch: SwitchCompat
     private lateinit var sharedPref: SharedPreferences
     private var receiverSet = HashSet<String>()
 
@@ -38,7 +39,7 @@ class SelectReceiverFragment : DialogFragment() {
             Log.d(LOG_ID, "onViewCreated called")
             super.onViewCreated(view, savedInstanceState)
 
-            sharedPref = MainActivity.getContext().getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            sharedPref = requireContext().getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             val savedReceivers = sharedPref.getStringSet(Constants.SHARED_PREF_GLUCODATA_RECEIVERS, HashSet<String>())
             if(savedReceivers!=null) {
                 Log.d(LOG_ID, savedReceivers.size.toString() + " receivers loaded: " + savedReceivers.toString())
@@ -56,7 +57,7 @@ class SelectReceiverFragment : DialogFragment() {
                 dismiss()
             }
 
-            showAllSwitch = view.findViewById<Switch>(R.id.showAllSwitch)
+            showAllSwitch = view.findViewById<SwitchCompat>(R.id.showAllSwitch)
             showAllSwitch.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_GLUCODATA_RECEIVER_SHOW_ALL, false)
             showAllSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
                 updateReceivers(view, isChecked)
@@ -85,7 +86,7 @@ class SelectReceiverFragment : DialogFragment() {
     private fun updateReceivers(view: View, all: Boolean) {
         try {
             val receiverLayout = view.findViewById<LinearLayout>(R.id.receiverLayout)
-            val receivers = getReceivers(MainActivity.getContext(), all)
+            val receivers = getReceivers(all)
             Log.d(LOG_ID, receivers.size.toString() + " receivers found!" )
             val receiverScrollView = view.findViewById<ScrollView>(R.id.receiverScrollView)
             if (receivers.size > 5) {
@@ -96,13 +97,13 @@ class SelectReceiverFragment : DialogFragment() {
             val currentReceivers = receiverSet.toHashSet()
             receiverSet.clear()
             if (receivers.size == 0) {
-                val txt = TextView(MainActivity.getContext())
+                val txt = TextView(requireContext())
                 txt.setText(R.string.select_receiver_no_glucodata_receiver)
                 receiverLayout.addView(txt)
             }
             else {
                 for (receiver in receivers.toSortedMap(String.CASE_INSENSITIVE_ORDER)) {
-                    val ch = CheckBox(MainActivity.getContext())
+                    val ch = CheckBox(requireContext())
                     ch.text = receiver.key
                     ch.hint = receiver.value
                     ch.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -124,7 +125,7 @@ class SelectReceiverFragment : DialogFragment() {
         }
     }
 
-    private fun getReceivers(context: Context, all: Boolean): HashMap<String, String> {
+    private fun getReceivers(all: Boolean): HashMap<String, String> {
         val names = HashMap<String, String>()
         if (BuildConfig.DEBUG) {
             names["Wusel Dusel"] = "wusel.dusel"
@@ -134,15 +135,15 @@ class SelectReceiverFragment : DialogFragment() {
         if (all) {
             val intent = Intent(Intent.ACTION_MAIN)
             intent.addCategory(Intent.CATEGORY_LAUNCHER)
-            receivers = context.packageManager.queryIntentActivities(intent, PackageManager.GET_META_DATA)
+            receivers = requireContext().packageManager.queryIntentActivities(intent, PackageManager.GET_META_DATA)
         } else {
             val intent = Intent(Constants.GLUCODATA_BROADCAST_ACTION)
-            receivers = context.packageManager.queryBroadcastReceivers(intent, PackageManager.GET_META_DATA)
+            receivers = requireContext().packageManager.queryBroadcastReceivers(intent, PackageManager.GET_META_DATA)
         }
         for (resolveInfo in receivers) {
             val pkgName = resolveInfo.activityInfo.packageName
-            val name = resolveInfo.activityInfo.loadLabel(context.packageManager).toString()
-            if (pkgName != null && pkgName != context.packageName ) {
+            val name = resolveInfo.activityInfo.loadLabel(requireContext().packageManager).toString()
+            if (pkgName != null && pkgName != requireContext().packageName ) {
                 names[name] = pkgName
             }
         }

@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
-import com.google.android.gms.wearable.Node
 import java.text.DateFormat
 import java.util.*
 import kotlin.math.abs
@@ -58,8 +57,6 @@ object ReceiveData {
     var dateformat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT)
     var timeformat = DateFormat.getTimeInstance(DateFormat.DEFAULT)
     var source: ReceiveDataSource = ReceiveDataSource.BROADCAST
-    var connectedNodes = mutableSetOf<Node>()
-    val nodeBatteryLevel = mutableMapOf<String,Int>()
     var curExtraBundle: Bundle? = null
     var targetMinValue = 90F
     val targetMin: Float get() {
@@ -330,26 +327,6 @@ object ReceiveData {
             }
             apply()
         }
-    }
-
-    fun getBatterLevels(): List<Int> {
-        val batterLevels = mutableListOf<Int>()
-        connectedNodes.map { node ->
-            if (nodeBatteryLevel.containsKey(node.id)) {
-                Log.d(LOG_ID, node.id + " found: " + nodeBatteryLevel.getValue(node.id).toString())
-                batterLevels.add(nodeBatteryLevel.getValue(node.id))
-            }
-            else {
-                Log.d(LOG_ID, node.id + " not found!")
-                batterLevels.add(-1)
-            }
-        }
-        return batterLevels
-    }
-
-    fun getBatterLevelsAsString(): String {
-        val batterLevels = getBatterLevels()
-        return batterLevels.joinToString { if (it > 0) it.toString() + "%" else "?%"}
     }
 
 }
