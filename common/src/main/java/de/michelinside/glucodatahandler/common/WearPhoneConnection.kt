@@ -89,9 +89,12 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
     }
 
     private fun setConnectedNodes(nodes: MutableSet<Node>) {
-        connectedNodes = nodes.associateBy({it.id}, {it})
-        Log.i(LOG_ID, "Connected nodes: " + connectedNodes.toString())
-        if(nodesConnected) {
+        val curNodes = connectedNodes.keys.toSortedSet()
+        val newNodes = nodes.map { it.id }.toSortedSet()
+        Log.d(LOG_ID, "Check node change, current: " + curNodes.toString() + " - new: " + newNodes.toString())
+        if (curNodes.size != newNodes.size || curNodes != newNodes ) {
+            connectedNodes = nodes.associateBy({it.id}, {it})
+            Log.i(LOG_ID, "Connected nodes changed: " + connectedNodes.toString())
             ReceiveData.notify(context, ReceiveDataSource.CAPILITY_INFO, ReceiveData.curExtraBundle)
         }
     }
@@ -124,8 +127,9 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     extras.putInt("level", BatteryReceiver.batteryPercentage)
                 }
                 // Send a message to all nodes in parallel
-                connectedNodes.forEach { node ->
-                    Thread {
+                Thread {
+                    var sendFailure = false
+                    connectedNodes.forEach { node ->
                         try {
                             if (dataSource == ReceiveDataSource.CAPILITY_INFO)
                                 Thread.sleep(1000)  // wait a bit after the connection has changed
@@ -141,17 +145,20 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                                     )
                                 }
                                 addOnFailureListener {
-                                    Log.e(
+                                    Log.w(
                                         LOG_ID,
                                         "Failed to send " + dataSource.toString() + " data to node " + node.value.toString()
                                     )
+                                    sendFailure = true
                                 }
                             }
                         } catch (exc: Exception) {
                             Log.e(LOG_ID, "sendMessage to " + node.value.toString() + " exception: " + exc.toString())
                         }
-                    }.start()
-                }
+                    }
+                    if(sendFailure)
+                        checkForConnectedNodes()
+                }.start()
             }
         } catch (cancellationException: CancellationException) {
             throw cancellationException

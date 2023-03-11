@@ -94,7 +94,6 @@ object ReceiveData {
                 context.getString(R.string.info_label_delta) + ": " + getDeltaAsString() + " " + getUnit() + " " + context.getString(R.string.info_label_per_minute) + "\r\n" +
                 context.getString(R.string.info_label_rate) + ": " + rate + " (" + rateLabel + ")\r\n" +
                 context.getString(R.string.info_label_timestamp) + ": " + dateformat.format(Date(time)) + "\r\n" +
-                context.getString(R.string.info_label_timediff) + ": " + timeDiff + "ms\r\n" +
                 context.getString(R.string.info_label_alarm) + ": " + alarm + "\r\n" +
                 context.getString(R.string.info_label_source) + ": " + context.getString(source.getResId())
     }
