@@ -1,0 +1,19 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Theme.GlucoDataHandler" parent="@style/Theme.MaterialComponents">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">#005CCC</item>
+        <item name="colorPrimaryVariant">#4000FF</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">#0099FF</item>
+        <item name="colorSecondaryVariant">#4000FF</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">#005CCC</item>
+        <!-- Customize your theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+    </style>
+</resources>
