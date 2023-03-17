@@ -127,38 +127,40 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     extras.putInt("level", BatteryReceiver.batteryPercentage)
                 }
                 // Send a message to all nodes in parallel
-                Thread {
-                    var sendFailure = false
-                    connectedNodes.forEach { node ->
+                connectedNodes.forEach { node ->
+                    Thread {
                         try {
                             if (dataSource == ReceiveDataSource.CAPILITY_INFO)
                                 Thread.sleep(1000)  // wait a bit after the connection has changed
-                            Wearable.getMessageClient(context).sendMessage(
-                                node.key,
-                                getPath(dataSource),
-                                Utils.bundleToBytes(extras)
-                            ).apply {
-                                addOnSuccessListener {
-                                    Log.i(
-                                        LOG_ID,
-                                        dataSource.toString() + " data send to node " + node.value.toString()
-                                    )
+                            var retryCount = 0
+                            do {
+                                var sendFailure = false
+                                Wearable.getMessageClient(context).sendMessage(
+                                    node.key,
+                                    getPath(dataSource),
+                                    Utils.bundleToBytes(extras)
+                                ).apply {
+                                    addOnSuccessListener {
+                                        Log.i(
+                                            LOG_ID,
+                                            dataSource.toString() + " data send to node " + node.value.toString()
+                                        )
+                                    }
+                                    addOnFailureListener {
+                                        retryCount++
+                                        Log.w(
+                                            LOG_ID,
+                                            "Failed " + retryCount.toString() + ". time to send " + dataSource.toString() + " data to node " + node.value.toString()
+                                        )
+                                        sendFailure = true
+                                    }
                                 }
-                                addOnFailureListener {
-                                    Log.w(
-                                        LOG_ID,
-                                        "Failed to send " + dataSource.toString() + " data to node " + node.value.toString()
-                                    )
-                                    sendFailure = true
-                                }
-                            }
+                            } while(sendFailure && retryCount < 3)
                         } catch (exc: Exception) {
                             Log.e(LOG_ID, "sendMessage to " + node.value.toString() + " exception: " + exc.toString())
                         }
-                    }
-                    if(sendFailure)
-                        checkForConnectedNodes()
-                }.start()
+                    }.start()
+                }
             }
         } catch (cancellationException: CancellationException) {
             throw cancellationException
