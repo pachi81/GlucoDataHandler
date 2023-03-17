@@ -151,7 +151,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     open fun getText(): PlainComplicationText = glucoseText()
     open fun getImage(): SmallImage? = null
 
-    fun getTapAction(): PendingIntent? {
+    open fun getTapAction(): PendingIntent? {
         if (BuildConfig.DEBUG) {
             // for debug create dummy broadcast (to check in emulator)
             return PendingIntent.getBroadcast(this, 3, Utils.getDummyGlucodataIntent(false), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
@@ -251,6 +251,18 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         if (ReceiveData.isObsolete(300))
             return Icon.createWithBitmap(Utils.textToBitmap("?", Color.GRAY, forImage))
         return Icon.createWithBitmap(Utils.rateToBitmap(ReceiveData.rate, color))
+    }
+
+    fun getGlucoseTrendIcon(color: Int, width: Int = 100, height: Int = 100): Icon {
+        return Icon.createWithBitmap(Utils.textRateToBitmap(ReceiveData.getClucoseAsString(), ReceiveData.rate, color, ReceiveData.isObsolete(300), ReceiveData.isObsolete(300) && !ReceiveData.isObsolete(),width, height))
+    }
+
+    fun getGlucoseTrendImage(): SmallImage {
+        return  SmallImage.Builder(
+            image = getGlucoseTrendIcon(ReceiveData.getClucoseColor()),
+            type = SmallImageType.PHOTO
+        ).setAmbientImage(getGlucoseTrendIcon(Color.WHITE))
+            .build()
     }
 
 }

@@ -52,14 +52,18 @@ object Utils {
         return bytes
     }
 
-    fun textToBitmap(text: String, color: Int, roundTargert: Boolean = false, strikeThrough: Boolean = false, width: Int = 100, height: Int = 100, top: Boolean = false): Bitmap? {
+    private fun isShortText(text: String): Boolean = text.length <= (if (text.contains(".")) 3 else 2)
+
+    fun textToBitmap(text: String, color: Int, roundTargert: Boolean = false, strikeThrough: Boolean = false, width: Int = 100, height: Int = 100, top: Boolean = false, bold: Boolean = false): Bitmap? {
         try {
             var maxTextSize = minOf(width,height).toFloat()
             if(roundTargert) {
-                if (text.contains("."))
-                    maxTextSize *= 0.7F
-                else
-                    maxTextSize *= 0.85F
+                if (!top || !isShortText(text) ) {
+                    if (text.contains("."))
+                        maxTextSize *= 0.7F
+                    else
+                        maxTextSize *= 0.85F
+                }
             }
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888 )
             val canvas = Canvas(bitmap)
@@ -70,6 +74,8 @@ object Utils {
             paint.textSize = maxTextSize
             paint.textAlign = Paint.Align.CENTER
             paint.isStrikeThruText = strikeThrough
+            if (bold)
+                paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             val boundsText = Rect()
             paint.getTextBounds(text, 0, text.length, boundsText)
             paint.textSize = minOf( maxTextSize, (maxTextSize - 1) * bitmap.width / boundsText.width() )
@@ -81,7 +87,16 @@ object Utils {
             val maxTextWidthRoundTarget = round(width.toFloat()*0.9F, 0).toInt()
             if(roundTargert && boundsText.width() > maxTextWidthRoundTarget)
                 paint.textSize = paint.textSize-(boundsText.width() - maxTextWidthRoundTarget)
-            val y = if (text == "---") round(height.toFloat()*0.8F, 0).toInt() else if (top) boundsText.height() else ((bitmap.height + boundsText.height()) / 2) - 3
+            val y =
+                if (text == "---")
+                    if (top)
+                        round(height.toFloat() * 0.5F,0).toInt()
+                    else
+                        round(height.toFloat() * 0.8F,0).toInt()
+                else if (top)
+                    boundsText.height()
+                else
+                    ((bitmap.height + boundsText.height()) / 2) - 3
 
             Log.d(LOG_ID, "Create bitmap for " + text + " - y:" + y.toString() + " text-size:" + paint.textSize.toString())
             canvas.drawText(text, width.toFloat()/2, y.toFloat(), paint)
@@ -161,13 +176,14 @@ object Utils {
         }
     }
 
-    fun textRateToBitmap(text: String, rate: Float, color: Int, strikeThrough: Boolean = false, width: Int = 100, height: Int = 100): Bitmap? {
+    fun textRateToBitmap(text: String, rate: Float, color: Int, obsolete: Boolean = false, strikeThrough: Boolean, width: Int = 100, height: Int = 100): Bitmap? {
         try {
-            val padding = height.toFloat()*0.05F
-            val rateSize = round(height * 0.4F, 0).toInt()
+            val padding = if (isShortText(text)) 0F else height.toFloat()*0.05F
+            val rateFactor = if (isShortText(text)) 0.5F else 0.45F
+            val rateSize = round(height * rateFactor, 0).toInt()
             val textHeight = height - rateSize - round(padding,0).toInt()
-            val textBitmap = textToBitmap(text, color, true, strikeThrough, width, textHeight, true)
-            val rateBitmap = rateToBitmap(rate, color, rateSize, rateSize)
+            val textBitmap = textToBitmap(text, color, true, strikeThrough, width, textHeight, true, false)
+            val rateBitmap = if (obsolete) textToBitmap("?", color, true, false, rateSize, rateSize ) else rateToBitmap(rate, color, rateSize, rateSize)
             val comboBitmap = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888)
             val comboImage = Canvas(comboBitmap)
             comboImage.drawBitmap(rateBitmap!!, ((height-rateSize)/2).toFloat(), padding, null)
@@ -182,7 +198,7 @@ object Utils {
     private var rateDelta = 0.5F
     private var rawDelta = 5
     fun getDummyGlucodataIntent(random: Boolean = true) : Intent {
-        var useMmol = false
+        var useMmol = true
         val time =  if (ReceiveData.time < System.currentTimeMillis()) System.currentTimeMillis() + 1000 else ReceiveData.time + 1000
         val intent = Intent(Constants.GLUCODATA_BROADCAST_ACTION)
         var raw: Int
