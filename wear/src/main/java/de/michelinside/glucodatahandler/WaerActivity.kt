@@ -143,11 +143,13 @@ class WaerActivity : AppCompatActivity(), ReceiveDataInterface {
 
     private fun updateMinMax() {
         try {
-            Log.d(LOG_ID, "Update min/max values in UI")
+            val minVal = getTargetString(ReceiveData.targetMin)
+            val maxVal = getTargetString(ReceiveData.targetMax)
+            Log.d(LOG_ID, "Update min/max values in UI: " + minVal + "/" + maxVal + " " + ReceiveData.getUnit())
             numMinChanger.updateInProgress = true
             numMaxChanger.updateInProgress = true
-            numMin.setText(getTargetString(ReceiveData.targetMin))
-            numMax.setText(getTargetString(ReceiveData.targetMax))
+            numMin.setText(minVal)
+            numMax.setText(maxVal)
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }

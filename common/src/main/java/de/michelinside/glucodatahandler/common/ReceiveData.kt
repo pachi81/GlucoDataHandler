@@ -58,7 +58,7 @@ object ReceiveData {
     var timeformat = DateFormat.getTimeInstance(DateFormat.DEFAULT)
     var source: ReceiveDataSource = ReceiveDataSource.BROADCAST
     var curExtraBundle: Bundle? = null
-    var targetMinValue = 90F
+    private var targetMinValue = 90F
     val targetMin: Float get() {
         if(isMmol)  // mmol/l
         {
@@ -66,7 +66,7 @@ object ReceiveData {
         }
         return targetMinValue
     }
-    var targetMaxValue = 165F
+    private var targetMaxValue = 165F
     val targetMax: Float get() {
         if(isMmol)  // mmol/l
         {
@@ -290,8 +290,8 @@ object ReceiveData {
 
     fun readTargets(context: Context) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-        targetMinValue = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MIN, targetMin)
-        targetMaxValue = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, targetMax)
+        targetMinValue = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MIN, targetMinValue)
+        targetMaxValue = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, targetMaxValue)
         if(sharedPref.contains(Constants.SHARED_PREF_USE_MMOL))
             isMmolValue = sharedPref.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
         else {
@@ -306,7 +306,7 @@ object ReceiveData {
                 apply()
             }
         }
-        Log.i(LOG_ID, "min/max set: " + targetMin.toString() + "/" + targetMax.toString())
+        Log.i(LOG_ID, "Raw min/max set: " + targetMinValue.toString() + "/" + targetMaxValue.toString() + " mg/dl")
     }
 
     fun writeTarget(context: Context, min: Boolean, value: Float) {

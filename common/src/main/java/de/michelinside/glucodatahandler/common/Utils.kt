@@ -182,7 +182,7 @@ object Utils {
     private var rateDelta = 0.5F
     private var rawDelta = 5
     fun getDummyGlucodataIntent(random: Boolean = true) : Intent {
-        var useMmol = true
+        var useMmol = false
         val time =  if (ReceiveData.time < System.currentTimeMillis()) System.currentTimeMillis() + 1000 else ReceiveData.time + 1000
         val intent = Intent(Constants.GLUCODATA_BROADCAST_ACTION)
         var raw: Int
