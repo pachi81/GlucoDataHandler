@@ -103,7 +103,7 @@ open class GlucoDataService : WearableListenerService(), ReceiveDataInterface {
             if (dataSource != ReceiveDataSource.MESSAGECLIENT) {
                 Thread {
                     try {
-                        connection.sendMessage(context, dataSource, extras)
+                        connection.sendMessage(dataSource, extras)
                     } catch (exc: Exception) {
                         Log.e(LOG_ID, "SendMessage exception: " + exc.toString())
                     }

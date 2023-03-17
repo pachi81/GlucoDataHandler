@@ -118,7 +118,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             else -> Constants.GLUCODATA_INTENT_MESSAGE_PATH
         }
 
-    fun sendMessage(context: Context, dataSource: ReceiveDataSource, extras: Bundle?)
+    fun sendMessage(dataSource: ReceiveDataSource, extras: Bundle?)
     {
         try {
             if( nodesConnected ) {
@@ -132,30 +132,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                         try {
                             if (dataSource == ReceiveDataSource.CAPILITY_INFO)
                                 Thread.sleep(1000)  // wait a bit after the connection has changed
-                            var retryCount = 0
-                            do {
-                                var sendFailure = false
-                                Wearable.getMessageClient(context).sendMessage(
-                                    node.key,
-                                    getPath(dataSource),
-                                    Utils.bundleToBytes(extras)
-                                ).apply {
-                                    addOnSuccessListener {
-                                        Log.i(
-                                            LOG_ID,
-                                            dataSource.toString() + " data send to node " + node.value.toString()
-                                        )
-                                    }
-                                    addOnFailureListener {
-                                        retryCount++
-                                        Log.w(
-                                            LOG_ID,
-                                            "Failed " + retryCount.toString() + ". time to send " + dataSource.toString() + " data to node " + node.value.toString()
-                                        )
-                                        sendFailure = true
-                                    }
-                                }
-                            } while(sendFailure && retryCount < 3)
+                            sendMessage(node.value, getPath(dataSource), Utils.bundleToBytes(extras), dataSource)
                         } catch (exc: Exception) {
                             Log.e(LOG_ID, "sendMessage to " + node.value.toString() + " exception: " + exc.toString())
                         }
@@ -166,6 +143,33 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             throw cancellationException
         } catch (exception: Exception) {
             Log.e(LOG_ID, "Sending message failed: $exception")
+        }
+    }
+
+    private fun sendMessage(node: Node, path: String, data: ByteArray?, dataSource: ReceiveDataSource, retryCount: Long = 0L) {
+        if (retryCount > 0) {
+            Log.i(LOG_ID, "Sleep " + (retryCount*2).toString() + " seconds, before retry sending.")
+            Thread.sleep(retryCount * 2000)
+        }
+        Wearable.getMessageClient(context).sendMessage(
+            node.id,
+            path,
+            data
+        ).apply {
+            addOnSuccessListener {
+                Log.i(
+                    LOG_ID,
+                    dataSource.toString() + " data send to node " + node.toString()
+                )
+            }
+            addOnFailureListener {
+                Log.w(
+                    LOG_ID,
+                    "Failed " + (retryCount+1).toString() + ". time to send " + dataSource.toString() + " data to node " + node.toString()
+                )
+                if (retryCount < 3)
+                    sendMessage(node, path, data, dataSource, retryCount+1)
+            }
         }
     }
 
@@ -189,9 +193,9 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 if(p0.path == Constants.REQUEST_DATA_MESSAGE_PATH) {
                     Log.d(LOG_ID, "Data request received from " + p0.sourceNodeId)
                     if (ReceiveData.curExtraBundle != null)
-                        sendMessage(context, ReceiveDataSource.BROADCAST, ReceiveData.curExtraBundle)
+                        sendMessage(ReceiveDataSource.BROADCAST, ReceiveData.curExtraBundle)
                     else if (BatteryReceiver.batteryPercentage > 0) {
-                        sendMessage(context, ReceiveDataSource.BATTERY_LEVEL, BatteryReceiver.batteryBundle)
+                        sendMessage(ReceiveDataSource.BATTERY_LEVEL, BatteryReceiver.batteryBundle)
                     }
 
                 }
