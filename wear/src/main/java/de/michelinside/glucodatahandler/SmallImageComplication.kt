@@ -1,6 +1,7 @@
 package de.michelinside.glucodatahandler
 
 import androidx.wear.watchface.complications.data.*
+import de.michelinside.glucodatahandler.common.ReceiveData
 
 
 class SmallTrendImageComplication: BgValueComplicationService() {
@@ -13,6 +14,20 @@ class TrendIconComplication: BgValueComplicationService() {
 
 class SmallValueImageComplication: BgValueComplicationService() {
     override fun getImage(): SmallImage = glucoseImage()
+}
+
+class SmallImageGlucoseWithTrendComplication: BgValueComplicationService() {
+
+    override fun getImage(): SmallImage = getGlucoseTrendImage()
+
+    override fun getLargeImageComplicationData(): ComplicationData {
+        return PhotoImageComplicationData.Builder (
+            photoImage = getGlucoseTrendIcon(ReceiveData.getClucoseColor(), 500, 500),
+            contentDescription = descriptionText()
+        )
+            .setTapAction(getTapAction())
+            .build()
+    }
 }
 
 class ValueIconComplication: BgValueComplicationService() {

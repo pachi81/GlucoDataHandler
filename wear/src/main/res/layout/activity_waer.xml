@@ -113,7 +113,7 @@
             app:layout_constraintVertical_bias="0.0"
             tools:ignore="TouchTargetSizeCheck" />
 
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchNotifcation"
             android:layout_width="0dp"
             android:layout_height="35dp"
@@ -123,9 +123,10 @@
             android:textAlignment="viewStart"
             app:layout_constraintBottom_toTopOf="@+id/switchForground"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
 
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchForground"
             android:layout_width="0dp"
             android:layout_height="35dp"

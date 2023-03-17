@@ -1,6 +1,5 @@
 package de.michelinside.glucodatahandler
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -8,13 +7,13 @@ import android.os.*
 import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.Switch
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.databinding.ActivityWaerBinding
+import androidx.appcompat.widget.SwitchCompat
 
-
-class WaerActivity : Activity(), ReceiveDataInterface {
+class WaerActivity : AppCompatActivity(), ReceiveDataInterface {
 
     private val LOG_ID = "GlucoDataHandler.Main"
     private lateinit var binding: ActivityWaerBinding
@@ -25,8 +24,8 @@ class WaerActivity : Activity(), ReceiveDataInterface {
     private lateinit var viewIcon: ImageView
     private lateinit var numMin: EditText
     private lateinit var numMax: EditText
-    private lateinit var switchNotifcation: Switch
-    private lateinit var switchForground: Switch
+    private lateinit var switchNotifcation: SwitchCompat
+    private lateinit var switchForground: SwitchCompat
     private lateinit var sharedPref: SharedPreferences
     private lateinit var numMinChanger: EditTargetChanger
     private lateinit var numMaxChanger: EditTargetChanger
@@ -144,11 +143,13 @@ class WaerActivity : Activity(), ReceiveDataInterface {
 
     private fun updateMinMax() {
         try {
-            Log.d(LOG_ID, "Update min/max values in UI")
+            val minVal = getTargetString(ReceiveData.targetMin)
+            val maxVal = getTargetString(ReceiveData.targetMax)
+            Log.d(LOG_ID, "Update min/max values in UI: " + minVal + "/" + maxVal + " " + ReceiveData.getUnit())
             numMinChanger.updateInProgress = true
             numMaxChanger.updateInProgress = true
-            numMin.setText(getTargetString(ReceiveData.targetMin))
-            numMax.setText(getTargetString(ReceiveData.targetMax))
+            numMin.setText(minVal)
+            numMax.setText(maxVal)
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }

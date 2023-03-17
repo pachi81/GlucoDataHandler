@@ -13,6 +13,7 @@
     <string name="icon_value">Zuckerwert (groß)</string>
     <string name="short_value_icon">Zuckerwert mit Icon</string>
     <string name="short_value_arrow">Zuckerwert und Trendpfeil</string>
+    <string name="short_value_arrow_image">Zuckerwert und Trendpfeil (groß und farbig)</string>
     <string name="short_value_trend_range">Zuckerwert und Trendkreis (wenn unterstützt)</string>
     <string name="short_value_delta_trend_range">Zuckerwert, Delta und Trendkreis (wenn unterstützt)</string>
     <string name="short_delta_trend_arrow_range">Delta, Trendpfeil und -kreis (wenn unterstützt)</string>
@@ -29,7 +30,7 @@
     <string name="short_rate">Trendwert</string>
     <string name="short_rate_arrow">Trendwert und -pfeil</string>
     <string name="short_rate_icon">Trendwert mit Icon</string>
-    <string name="battery_level">Akku (Uhr und verbundenes Telefon)</string>
+    <string name="battery_level">Akku (Uhr und Telefon)</string>
 
     <string name="source_message_client">Telefon</string>
 </resources>

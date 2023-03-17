@@ -1,5 +1,7 @@
 package de.michelinside.glucodatahandler
 
+import android.app.PendingIntent
+import android.content.Intent
 import androidx.wear.watchface.complications.data.*
 import de.michelinside.glucodatahandler.common.BatteryReceiver
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -42,11 +44,11 @@ class ShortGlucoseWithDeltaAndTrendComplication: ShortClucoseComplication() {
 class LongGlucoseWithDeltaAndTrendAndTimeComplication: ShortClucoseComplication() {
     override fun getLongTextComplicationData(): ComplicationData {
         return LongTextComplicationData.Builder(
-            plainText(" Δ: " + ReceiveData.getDeltaAsString() + "   " + ReceiveData.getRateSymbol().toString() + " (" + ReceiveData.getRateAsString() + ")"),
+            plainText(" Δ: " + ReceiveData.getDeltaAsString()),
             descriptionText()
         )
             .setTitle(timeText())
-            .setSmallImage(glucoseImage())
+            .setSmallImage(getGlucoseTrendImage())
             .setTapAction(getTapAction())
             .build()
     }
@@ -102,6 +104,17 @@ class ShortTrendWithIconComplication: ShortTrendComplication() {
 }
 
 class BatteryLevelComplication: BgValueComplicationService() {
+    override fun getTapAction(): PendingIntent? {
+        val launchIntent = Intent(this, WaerActivity::class.java)
+        launchIntent.action = Intent.ACTION_MAIN
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+        return PendingIntent.getActivity(
+            applicationContext,
+            3,
+            launchIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+    }
     override fun getTitle(): PlainComplicationText? {
         val levels = WearPhoneConnection.getBatterLevels()
         if (levels.isNotEmpty() && levels[0] > 0) {
