@@ -128,9 +128,9 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
             .build()
     }
 
-    private fun getLargeImageComplicationData(): ComplicationData {
+    open fun getLargeImageComplicationData(): ComplicationData {
         return PhotoImageComplicationData.Builder (
-            photoImage = getGlucoseAsIcon(ReceiveData.getClucoseColor(), true),
+            photoImage = getGlucoseAsIcon(ReceiveData.getClucoseColor(), true, 500,500),
             contentDescription = descriptionText()
         )
             .setTapAction(getTapAction())
@@ -243,8 +243,8 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
             .build()
     }
 
-    fun getGlucoseAsIcon(color: Int = Color.WHITE, forImage: Boolean = false): Icon {
-        return Icon.createWithBitmap(Utils.textToBitmap(ReceiveData.getClucoseAsString(), color, forImage, ReceiveData.isObsolete(300) && !ReceiveData.isObsolete()))
+    fun getGlucoseAsIcon(color: Int = Color.WHITE, forImage: Boolean = false, width: Int = 100, height: Int = 100): Icon {
+        return Icon.createWithBitmap(Utils.textToBitmap(ReceiveData.getClucoseAsString(), color, forImage, ReceiveData.isObsolete(300) && !ReceiveData.isObsolete(),width, height))
     }
 
     fun getRateAsIcon(color: Int = Color.WHITE, forImage: Boolean = false): Icon {

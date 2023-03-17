@@ -52,33 +52,39 @@ object Utils {
         return bytes
     }
 
-    fun textToBitmap(text: String, color: Int, roundTargert: Boolean = false, strikeThrough: Boolean = false): Bitmap? {
+    fun textToBitmap(text: String, color: Int, roundTargert: Boolean = false, strikeThrough: Boolean = false, width: Int = 100, height: Int = 100, top: Boolean = false): Bitmap? {
         try {
-            val size = 100
-            val textSize = if(roundTargert) { if (text.contains(".")) 70F else 85F } else 100F
-            val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888 )
+            var maxTextSize = minOf(width,height).toFloat()
+            if(roundTargert) {
+                if (text.contains("."))
+                    maxTextSize *= 0.7F
+                else
+                    maxTextSize *= 0.85F
+            }
+            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888 )
             val canvas = Canvas(bitmap)
             bitmap.eraseColor(Color.TRANSPARENT)
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
             val paint = Paint(Paint.ANTI_ALIAS_FLAG)
             paint.color = color
-            paint.textSize = textSize
+            paint.textSize = maxTextSize
             paint.textAlign = Paint.Align.CENTER
             paint.isStrikeThruText = strikeThrough
             val boundsText = Rect()
             paint.getTextBounds(text, 0, text.length, boundsText)
-            paint.textSize = minOf( textSize, (textSize - 1) * bitmap.width / boundsText.width() )
-            if(paint.textSize < textSize) {
+            paint.textSize = minOf( maxTextSize, (maxTextSize - 1) * bitmap.width / boundsText.width() )
+            if(paint.textSize < maxTextSize) {
                 // re-calculate size depending on the bound width -> use minOf for preventing oversize signs
                 paint.getTextBounds(text, 0, text.length, boundsText)
             }
             Log.d(LOG_ID, "height: " + boundsText.height().toString() + " width:" + boundsText.width().toString() + " text-size:" + paint.textSize.toString())
-            if(roundTargert && boundsText.width() > 90)
-                paint.textSize = paint.textSize-(boundsText.width() - 90)
-            val y = if (text == "---") 80 else ((bitmap.height + boundsText.height()) / 2) - 3
+            val maxTextWidthRoundTarget = round(width.toFloat()*0.9F, 0).toInt()
+            if(roundTargert && boundsText.width() > maxTextWidthRoundTarget)
+                paint.textSize = paint.textSize-(boundsText.width() - maxTextWidthRoundTarget)
+            val y = if (text == "---") round(height.toFloat()*0.8F, 0).toInt() else if (top) boundsText.height() else ((bitmap.height + boundsText.height()) / 2) - 3
 
             Log.d(LOG_ID, "Create bitmap for " + text + " - y:" + y.toString() + " text-size:" + paint.textSize.toString())
-            canvas.drawText(text, size.toFloat()/2, y.toFloat(), paint)
+            canvas.drawText(text, width.toFloat()/2, y.toFloat(), paint)
             return bitmap
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Cannot create text icon: " + exc.message.toString())
@@ -113,19 +119,18 @@ object Utils {
         return rotatedBitmap
     }
 
-    fun rateToBitmap(rate: Float, color: Int): Bitmap? {
+    fun rateToBitmap(rate: Float, color: Int, width: Int = 100, height: Int = 100): Bitmap? {
         try {
-            val size = 100
-            var textSize = 100F
+            var textSize = minOf(width,height).toFloat()
             val text: String
             val degrees: Int
             if(rate >= 3F) {
                 text = "⇈"
-                textSize -= 5F
+                textSize -= textSize*0.05F
                 degrees = 0
             } else if ( rate <= -3F ) {
                 text = "⇊"
-                textSize -= 5F
+                textSize -= textSize*0.05F
                 degrees = 0
             } else if (rate >= 0F) {
                 text = "↑"
@@ -134,7 +139,7 @@ object Utils {
                 text = "↓"
                 degrees = round((maxOf(-2F, rate) + 2F) * -90F/2F, 0).toInt()
             }
-            val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888 )
+            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888 )
             val canvas = Canvas(bitmap)
             bitmap.eraseColor(Color.TRANSPARENT)
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
@@ -148,8 +153,26 @@ object Utils {
             val y = ((bitmap.height + boundsText.height()) / 2) - 3
 
             Log.d(LOG_ID, "Create bitmap for " + text + "(rate: " + rate + ") - y:" + y.toString() + " - text-size:" + paint.textSize.toString() + " - degrees:" + degrees )
-            canvas.drawText(text, size.toFloat()/2, y.toFloat(), paint)
+            canvas.drawText(text, width.toFloat()/2, y.toFloat(), paint)
             return rotateBitmap(bitmap, degrees)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Cannot create rate icon: " + exc.message.toString())
+            return null
+        }
+    }
+
+    fun textRateToBitmap(text: String, rate: Float, color: Int, strikeThrough: Boolean = false, width: Int = 100, height: Int = 100): Bitmap? {
+        try {
+            val padding = height.toFloat()*0.05F
+            val rateSize = round(height * 0.4F, 0).toInt()
+            val textHeight = height - rateSize - round(padding,0).toInt()
+            val textBitmap = textToBitmap(text, color, true, strikeThrough, width, textHeight, true)
+            val rateBitmap = rateToBitmap(rate, color, rateSize, rateSize)
+            val comboBitmap = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888)
+            val comboImage = Canvas(comboBitmap)
+            comboImage.drawBitmap(rateBitmap!!, ((height-rateSize)/2).toFloat(), padding, null)
+            comboImage.drawBitmap(textBitmap!!, 0F, rateBitmap.height.toFloat()+padding, null)
+            return comboBitmap
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Cannot create rate icon: " + exc.message.toString())
             return null

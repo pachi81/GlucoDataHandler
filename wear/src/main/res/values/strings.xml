@@ -13,6 +13,7 @@
     <string name="icon_value">Glucose (big)</string>
     <string name="short_value_icon">Glucose with icon</string>
     <string name="short_value_arrow">Glucose and trend</string>
+    <string name="short_value_arrow_image">Glucose and trend (big and colored)</string>
     <string name="short_value_trend_range">Glucose and trend-range (if supported)</string>
     <string name="short_value_delta_trend_range">Glucose, delta and trend-range (if supported)</string>
     <string name="short_delta_trend_arrow_range">Delta, trend-arrow and trend-range (if supported)</string>
