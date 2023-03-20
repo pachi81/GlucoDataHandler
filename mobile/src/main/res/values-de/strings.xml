@@ -12,7 +12,7 @@
     <string name="time_label">Zeitpunkt</string>
     <string name="time_html_label">Zeitpunkt des Blutzuckerwertes in Millisekunden (seit 1.1.1970)</string>
     <string name="alarm_label">Alarm</string>
-    <string name="alarm_html_label">Alarm von Juggluco (0: kein Alarm, 6: hoch, 7: niedrig)</string>
+    <string name="alarm_html_label">Alarm von Juggluco (0: kein Alarm, 6/14: hoch, 7/15: niedrig)</string>
     <string name="dexcom_label">Dexcom Bezeichnung</string>
     <string name="dexcom_html_label">Dexcom spezifische Bezeichnung (en)</string>
     <string name="rate_label">Trend</string>

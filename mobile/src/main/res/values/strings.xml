@@ -13,7 +13,7 @@
     <string name="dexcom_label">DexcomLabel</string>
     <string name="dexcom_html_label">Rate label for Dexcom</string>
     <string name="alarm_label">Alarm</string>
-    <string name="alarm_html_label">Alarm value (0: no alarm, 6: high, 7: low)</string>
+    <string name="alarm_html_label">Alarm value (0: no alarm, 6/14: high, 7/15: low)</string>
     <string name="time_label">Time</string>
     <string name="time_html_label">Time in msec</string>
     <string name="time_diff_label">TimeDiff</string>

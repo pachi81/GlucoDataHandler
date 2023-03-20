@@ -42,7 +42,7 @@ class GlucodataValues {
     val arrow: String = ReceiveData.getRateSymbol().toString()
     @field:TaskerInputField("alarm")
     @get:TaskerOutputVariable("alarm", R.string.alarm_label, R.string.alarm_html_label)
-    val alarm: Int = ReceiveData.alarm and 7
+    val alarm: Int = ReceiveData.alarm
     @field:TaskerInputField("time")
     @get:TaskerOutputVariable("time", R.string.time_label, R.string.time_html_label)
     val time: Long = ReceiveData.time
