@@ -1,12 +1,8 @@
 package de.michelinside.glucodatahandler
 
-import android.app.PendingIntent
-import android.content.Intent
 import androidx.wear.watchface.complications.data.*
-import de.michelinside.glucodatahandler.common.BatteryReceiver
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.Utils
-import de.michelinside.glucodatahandler.common.WearPhoneConnection
 
 open class ShortClucoseComplication:  BgValueComplicationService() {
 }
@@ -103,26 +99,4 @@ class ShortTrendWithIconComplication: ShortTrendComplication() {
     override fun getIcon(): MonochromaticImage = trendIcon()
 }
 
-class BatteryLevelComplication: BgValueComplicationService() {
-    override fun getTapAction(): PendingIntent? {
-        val launchIntent = Intent(this, WaerActivity::class.java)
-        launchIntent.action = Intent.ACTION_MAIN
-        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-        return PendingIntent.getActivity(
-            applicationContext,
-            3,
-            launchIntent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-    }
-    override fun getTitle(): PlainComplicationText? {
-        val levels = WearPhoneConnection.getBatterLevels()
-        if (levels.isNotEmpty() && levels[0] > 0) {
-            return plainText("\uD83D\uDCF1" + levels[0].toString() + "%")
-        }
-        return null
-    }
-    override fun getText(): PlainComplicationText =
-        plainText("⌚" + BatteryReceiver.batteryPercentage.toString() + "%")
-}
 

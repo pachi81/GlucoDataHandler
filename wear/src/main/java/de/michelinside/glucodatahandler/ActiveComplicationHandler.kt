@@ -16,6 +16,7 @@ object ActiveComplicationHandler: ReceiveDataInterface {
     private const val LOG_ID = "GlucoDataHandler.ActiveComplicationHandler"
     private var packageInfo: PackageInfo? = null
     private var complicationClasses = mutableMapOf<Int, ComponentName>()
+    private var noComplication = false   // check complications at least one time
     init {
         Log.d(LOG_ID, "init called")
     }
@@ -26,6 +27,7 @@ object ActiveComplicationHandler: ReceiveDataInterface {
 
     fun remComplication(id: Int) {
         complicationClasses.remove(id)
+        noComplication = complicationClasses.isEmpty()
     }
 
     @SuppressLint("QueryPermissionsNeeded")
@@ -50,7 +52,21 @@ object ActiveComplicationHandler: ReceiveDataInterface {
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
         Thread {
             try {
-                if (complicationClasses.isEmpty()) {
+                if (complicationClasses.isNotEmpty()) {
+                    Log.d(LOG_ID, "Update " + complicationClasses.size + " complication(s).")
+                    // upgrade all at once can cause a disappear of icon and images in ambient mode,
+                    // so use some delay!
+                    complicationClasses.forEach {
+                        Thread.sleep(50)  // add delay to prevent disappearing complication icons in ambient mode
+                        ComplicationDataSourceUpdateRequester
+                            .create(
+                                context = context,
+                                complicationDataSourceComponent = it.value
+                            )
+                            .requestUpdate(it.key)
+                    }
+                } else if (!noComplication) {
+                    noComplication = true  // disable to prevent re-updating complications, if there is none...
                     val packageInfo = getPackages(context)
                     Log.d(LOG_ID, "Got " + packageInfo.services.size + " services.")
                     packageInfo.services.forEach {
@@ -65,19 +81,6 @@ object ActiveComplicationHandler: ReceiveDataInterface {
                                 )
                                 .requestUpdateAll()
                         }
-                    }
-                } else {
-                    Log.d(LOG_ID, "Update " + complicationClasses.size + " complications.")
-                    // upgrade all at once can cause a disappear of icon and images in ambient mode,
-                    // so use some delay!
-                    complicationClasses.forEach {
-                        Thread.sleep(50)  // add delay to prevent disappearing complication icons in ambient mode
-                        ComplicationDataSourceUpdateRequester
-                            .create(
-                                context = context,
-                                complicationDataSourceComponent = it.value
-                            )
-                            .requestUpdate(it.key)
                     }
                 }
             } catch (exc: Exception) {
