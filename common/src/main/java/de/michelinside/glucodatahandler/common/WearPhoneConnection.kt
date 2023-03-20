@@ -95,6 +95,13 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         if (curNodes.size != newNodes.size || curNodes != newNodes ) {
             connectedNodes = nodes.associateBy({it.id}, {it})
             Log.i(LOG_ID, "Connected nodes changed: " + connectedNodes.toString())
+            curNodes.removeAll(newNodes)  // remove not change ids from curNodes
+            curNodes.forEach {
+                if (nodeBatteryLevel.containsKey(it)) {
+                    Log.d(LOG_ID, "Remove battery level for id " + it)
+                    nodeBatteryLevel.remove(it)// remove all battery levels from not connected nodes
+                }
+            }
             ReceiveData.notify(context, ReceiveDataSource.CAPILITY_INFO, ReceiveData.curExtraBundle)
         }
     }
@@ -107,8 +114,13 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
     }
 
     private fun setNodeBatteryLevel(nodeId: String, level: Int) {
-        if (level >= 0)
+        if (level >= 0 && (!nodeBatteryLevel.containsKey(nodeId) || nodeBatteryLevel.getValue(nodeId) != level )) {
+            Log.d(LOG_ID, "Setting new battery level for node " + nodeId + ": " + level + "%")
             nodeBatteryLevel[nodeId] = level
+            val extra = Bundle()
+            extra.putInt(BatteryReceiver.LEVEL, level)
+            ReceiveData.notify(context, ReceiveDataSource.NODE_BATTERY_LEVEL, extra)
+        }
     }
 
     private fun getPath(dataSource: ReceiveDataSource) =
@@ -121,7 +133,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
     fun sendMessage(dataSource: ReceiveDataSource, extras: Bundle?)
     {
         try {
-            if( nodesConnected ) {
+            if( nodesConnected && dataSource != ReceiveDataSource.NODE_BATTERY_LEVEL ) {
                 Log.d(LOG_ID, connectedNodes.size.toString() + " nodes found for sending message to")
                 if (extras != null && dataSource != ReceiveDataSource.BATTERY_LEVEL && BatteryReceiver.batteryPercentage > 0) {
                     extras.putInt("level", BatteryReceiver.batteryPercentage)

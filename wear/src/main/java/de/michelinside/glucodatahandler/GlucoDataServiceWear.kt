@@ -16,7 +16,7 @@ class GlucoDataServiceWear: GlucoDataService() {
     init {
         Log.d(LOG_ID, "init called")
         ReceiveData.addNotifier(ActiveComplicationHandler, mutableSetOf(ReceiveDataSource.MESSAGECLIENT,ReceiveDataSource.BROADCAST))
-        ReceiveData.addNotifier(BatteryLevelComplicationUpdater, mutableSetOf(ReceiveDataSource.CAPILITY_INFO,ReceiveDataSource.BATTERY_LEVEL))
+        ReceiveData.addNotifier(BatteryLevelComplicationUpdater, mutableSetOf(ReceiveDataSource.CAPILITY_INFO,ReceiveDataSource.BATTERY_LEVEL, ReceiveDataSource.NODE_BATTERY_LEVEL))
     }
 
     companion object GlucoDataServiceWear {

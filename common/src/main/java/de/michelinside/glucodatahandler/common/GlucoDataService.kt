@@ -100,7 +100,7 @@ open class GlucoDataService : WearableListenerService(), ReceiveDataInterface {
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnReceiveData for source " + dataSource.toString() + " and extras " + extras.toString())
-            if (dataSource != ReceiveDataSource.MESSAGECLIENT) {
+            if (dataSource != ReceiveDataSource.MESSAGECLIENT && dataSource != ReceiveDataSource.NODE_BATTERY_LEVEL) {
                 Thread {
                     try {
                         connection.sendMessage(dataSource, extras)
