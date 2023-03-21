@@ -95,11 +95,16 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         if (curNodes.size != newNodes.size || curNodes != newNodes ) {
             connectedNodes = nodes.associateBy({it.id}, {it})
             Log.i(LOG_ID, "Connected nodes changed: " + connectedNodes.toString())
-            curNodes.removeAll(newNodes)  // remove not change ids from curNodes
-            curNodes.forEach {
-                if (nodeBatteryLevel.containsKey(it)) {
-                    Log.d(LOG_ID, "Remove battery level for id " + it)
-                    nodeBatteryLevel.remove(it)// remove all battery levels from not connected nodes
+            if(newNodes.isEmpty()) {
+                Log.d(LOG_ID, "Clear battery levels for " + nodeBatteryLevel.keys.toString())
+                nodeBatteryLevel.clear()
+            } else if (curNodes.isNotEmpty() && nodeBatteryLevel.isNotEmpty()) {
+                curNodes.removeAll(newNodes)  // remove not change ids from curNodes
+                curNodes.forEach {
+                    if (nodeBatteryLevel.containsKey(it)) {
+                        Log.d(LOG_ID, "Remove battery level for id " + it)
+                        nodeBatteryLevel.remove(it)// remove all battery levels from not connected nodes
+                    }
                 }
             }
             ReceiveData.notify(context, ReceiveDataSource.CAPILITY_INFO, ReceiveData.curExtraBundle)
@@ -160,27 +165,29 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
     private fun sendMessage(node: Node, path: String, data: ByteArray?, dataSource: ReceiveDataSource, retryCount: Long = 0L) {
         if (retryCount > 0) {
-            Log.i(LOG_ID, "Sleep " + (retryCount*2).toString() + " seconds, before retry sending.")
-            Thread.sleep(retryCount * 2000)
+            Log.i(LOG_ID, "Sleep " + (retryCount).toString() + " seconds, before retry sending.")
+            Thread.sleep(retryCount * 1000)
         }
-        Wearable.getMessageClient(context).sendMessage(
-            node.id,
-            path,
-            data
-        ).apply {
-            addOnSuccessListener {
-                Log.i(
-                    LOG_ID,
-                    dataSource.toString() + " data send to node " + node.toString()
-                )
-            }
-            addOnFailureListener {
-                Log.w(
-                    LOG_ID,
-                    "Failed " + (retryCount+1).toString() + ". time to send " + dataSource.toString() + " data to node " + node.toString()
-                )
-                if (retryCount < 3)
-                    sendMessage(node, path, data, dataSource, retryCount+1)
+        if (connectedNodes.containsKey(node.id)) {
+            Wearable.getMessageClient(context).sendMessage(
+                node.id,
+                path,
+                data
+            ).apply {
+                addOnSuccessListener {
+                    Log.i(
+                        LOG_ID,
+                        dataSource.toString() + " data send to node " + node.toString()
+                    )
+                }
+                addOnFailureListener {
+                    Log.w(
+                        LOG_ID,
+                        "Failed " + (retryCount+1).toString() + ". time to send " + dataSource.toString() + " data to node " + node.toString()
+                    )
+                    if (retryCount < 2)
+                        sendMessage(node, path, data, dataSource, retryCount+1)
+                }
             }
         }
     }
