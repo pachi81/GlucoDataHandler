@@ -13,17 +13,13 @@ Download and install `GlucoDataHandler.apk` (allow install from unknown source i
 
 <img src='images/download.png' width=350>
 
-Open the app, it will look like this:
-
-<img src='images/installed.png' width=400>
-
-Open Juggluco and enable `Glucodata broadcast` in Settings. Save and Ok.
+Open Juggluco and enable `Glucodata broadcast` and select `de.michelinside.glucodatahandler` in Settings. Save and Ok.
 
 <img src='images/broadcast.png' width=700>
 
-You should now also see your BG display in the GlucoDataHandler app.
+Open the app, you should now also see your BG display in the GlucoDataHandler app.
 
-<img src='images/broadcast_ok.png' width=300>
+<img src='images/installed.png' width=400>
 
 ## 2 - Install GlucoDataHandler on your watch
 

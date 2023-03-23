@@ -3,10 +3,13 @@
 ## Phone app
 
 - [x] Glucodata Receiver
-- [x] Tasker Event
+- [x] Tasker Glucodata Event
 - [x] Wear connection
-- [ ] Send to xdrip
-- [x] Re-send glucodata intent (received from wear)
+- [x] Send to xdrip
+- [x] Forward glucodata intent
+- [ ] Phone widget
+- [ ] Tasker wear connection event
+- [ ] Change settings using tasker
 
 ## Wear app
 
