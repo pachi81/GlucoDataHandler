@@ -64,7 +64,9 @@ class BatteryLevelComplication: SuspendingComplicationDataSourceService() {
     }
 
     private fun getTitle(): PlainComplicationText? {
-        val levels = WearPhoneConnection.getBatterLevels()
+        val levels =
+            if(BuildConfig.DEBUG) mutableListOf<Int>(BatteryReceiver.batteryPercentage)
+            else WearPhoneConnection.getBatterLevels()
         if (levels.isNotEmpty() && levels[0] > 0) {
             return plainText("\uD83D\uDCF1" + levels[0].toString() + "%")
         }

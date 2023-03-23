@@ -18,7 +18,8 @@ enum class ReceiveDataSource(private val resId: Int) {
     BROADCAST(R.string.source_broadcast),
     MESSAGECLIENT(R.string.source_message_client),
     CAPILITY_INFO(R.string.source_capility_info),
-    BATTERY_LEVEL(R.string.source_battery_level);
+    BATTERY_LEVEL(R.string.source_battery_level),
+    NODE_BATTERY_LEVEL(R.string.source_node_battery_level);
 
     fun getResId(): Int {
         return resId

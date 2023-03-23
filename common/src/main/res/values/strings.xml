@@ -23,5 +23,6 @@
     <string name="source_message_client">Wear</string>
     <string name="source_capility_info">Internal</string>
     <string name="source_battery_level">Battery level</string>
+    <string name="source_node_battery_level">Node battery level</string>
 
 </resources>
