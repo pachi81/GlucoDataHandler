@@ -3,6 +3,7 @@ package de.michelinside.glucodatahandler
 import androidx.wear.watchface.complications.data.*
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.Utils
+import java.util.*
 
 open class ShortClucoseComplication:  BgValueComplicationService() {
 }
@@ -50,11 +51,28 @@ class LongGlucoseWithDeltaAndTrendAndTimeComplication: ShortClucoseComplication(
     }
 }
 
+class TimeStampComplication: BgValueComplicationService() {
+    override fun getText(): PlainComplicationText = timeText()
+
+    override fun getRangeValueComplicationData(): ComplicationData {
+        val time = Date(ReceiveData.time)
+        val value = (time.minutes * 60 + time.seconds).toFloat()
+        return RangedValueComplicationData.Builder(
+            value = value,
+            min = 0F,
+            max = 3600F,
+            contentDescription = descriptionText()
+        )
+            .setText(getText())
+            .build()
+    }
+}
+
 open class ShortGlucoseWithTrendRangeComplication: BgValueComplicationService() {
     override fun getRangeValueComplicationData(): ComplicationData {
         return RangedValueComplicationData.Builder(
-            value = Utils.rangeValue( ReceiveData.rate, -3.5F, +3.5F),
-            min = 0F,
+            value = Utils.rangeValue( ReceiveData.rate, -4F, +4F),
+            min = -4F,
             max = 4F,
             contentDescription = descriptionText()
         )
@@ -98,5 +116,4 @@ class ShortTrendWithTrendArrowComplication: ShortTrendComplication() {
 class ShortTrendWithIconComplication: ShortTrendComplication() {
     override fun getIcon(): MonochromaticImage = trendIcon()
 }
-
 
