@@ -31,6 +31,7 @@
     <string name="activity_main_disconnected_label">Uhr: getrennt</string>
     <string name="activity_target_range">Zielbereich:</string>
     <string name="activity_switch_notification">Vibrieren</string>
+    <string name="activity_switch_car_notification">Android Auto Benachrichtigung</string>
     <string name="pref_switch_send_to_aod">Glucodata Broadcast weiterleiten</string>
     <string name="pref_button_select_target">Empfänger definieren</string>
     <string name="pref_switch_send_to_xdrip">An xDrip senden</string>

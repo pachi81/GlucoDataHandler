@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/switchCarNotifications"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
@@ -16,7 +17,7 @@
         android:textAlignment="viewStart"
         android:textSize="14sp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/switchNotification"
+        app:layout_constraintBottom_toTopOf="@+id/switchCarNotification"
         app:layout_constraintEnd_toStartOf="@+id/numMin"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
@@ -32,7 +33,7 @@
         android:text="5.0"
         android:textSize="14sp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/switchNotification"
+        app:layout_constraintBottom_toTopOf="@+id/switchCarNotification"
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="TouchTargetSizeCheck" />
 
@@ -47,19 +48,20 @@
         android:text="5.0"
         android:textSize="14sp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/switchNotification"
+        app:layout_constraintBottom_toTopOf="@+id/switchCarNotification"
         app:layout_constraintEnd_toStartOf="@+id/numMax"
         tools:ignore="TouchTargetSizeCheck" />
 
     <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/switchNotification"
+        android:id="@+id/switchCarNotification"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
-        android:text="@string/activity_switch_notification"
+        android:checked="true"
+        android:text="@string/activity_switch_car_notification"
         android:textAlignment="textStart"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/switchSendToXdrip"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
