@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler.common
 
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -16,15 +17,22 @@ open class GlucoDataService : WearableListenerService(), ReceiveDataInterface {
     private var lastAlarmTime = 0L
     private var lastAlarmType = ReceiveData.AlarmType.OK
 
-    companion object GlucoDataService {
+    companion object {
         private var isRunning = false
         val running get() = isRunning
+        private var service: GlucoDataService? = null
+        val context: Context? get() {
+            if(service != null)
+                return service!!.applicationContext
+            return null
+        }
     }
 
     override fun onCreate() {
         try {
             super.onCreate()
             Log.i(LOG_ID, "onCreate called")
+            service = this
             isRunning = true
 
             ReceiveData.readTargets(this)
@@ -65,6 +73,7 @@ open class GlucoDataService : WearableListenerService(), ReceiveDataInterface {
             ReceiveData.remNotifier(this)
             connection.close()
             super.onDestroy()
+            service = null
             isRunning = false
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.toString())

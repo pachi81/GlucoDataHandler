@@ -109,17 +109,18 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
             }
         }
 
-        switchNotifcation = findViewById(R.id.switchNotification)
-        if(BuildConfig.DEBUG)
-            switchNotifcation.isVisible = true  // for activating dummy glucodata intents
-        switchNotifcation.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)
+        switchNotifcation = findViewById(R.id.switchCarNotification)
+        switchNotifcation.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, true)
         switchNotifcation.setOnCheckedChangeListener { _, isChecked ->
-            Log.d(LOG_ID, "Notification changed: " + isChecked.toString())
+            Log.d(LOG_ID, "Car Notification changed: " + isChecked.toString())
             try {
+                CarModeReceiver.enable_notification = isChecked
                 with (sharedPref.edit()) {
-                    putBoolean(Constants.SHARED_PREF_NOTIFICATION, isChecked)
+                    putBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, isChecked)
                     apply()
                 }
+                if(isChecked)
+                    CarModeReceiver.showNotification(this)
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "Changing notification exception: " + exc.message.toString() )
             }

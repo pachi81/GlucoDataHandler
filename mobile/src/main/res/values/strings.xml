@@ -30,6 +30,7 @@
     <string name="activity_main_disconnected_label">Wear: disconnected</string>
     <string name="activity_switch_notification">Vibration</string>
     <string name="activity_target_range">Target range:</string>
+    <string name="activity_switch_car_notification">Android Auto notifications</string>
 
     <string name="pref_switch_send_to_aod">Forward glucodata broadcast</string>
     <string name="pref_button_select_target">Identify receiver</string>
