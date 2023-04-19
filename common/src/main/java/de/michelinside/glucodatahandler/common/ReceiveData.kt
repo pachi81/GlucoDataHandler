@@ -156,11 +156,11 @@ object ReceiveData {
 
         return when(getAlarmType()) {
             AlarmType.NONE -> Color.GRAY
-            AlarmType.LOW_ALARM -> Color.RED
+            AlarmType.LOW_ALARM -> Color.parseColor("#fb4f29")
             AlarmType.LOW -> Color.YELLOW
             AlarmType.OK -> Color.GREEN
             AlarmType.HIGH -> Color.YELLOW
-            AlarmType.HIGH_ALARM -> Color.RED
+            AlarmType.HIGH_ALARM -> Color.parseColor("#fb4f29")
         }
     }
 
