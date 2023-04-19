@@ -5,11 +5,11 @@ plugins {
 
 android {
     namespace 'de.michelinside.glucodatahandler.common'
-    compileSdk 33
+    compileSdk rootProject.compileSdk
 
     defaultConfig {
-        minSdk 26
-        targetSdk 33
+        minSdk rootProject.minSdk
+        targetSdk rootProject.targetSdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
