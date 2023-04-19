@@ -6,12 +6,12 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.media.AudioAttributes
 import android.os.Bundle
 import android.util.Log
 import androidx.car.app.connection.CarConnection
+import androidx.car.app.notification.CarNotificationManager
+import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.Person
 import androidx.core.app.RemoteInput
 import androidx.core.graphics.drawable.IconCompat
@@ -28,7 +28,7 @@ object CarModeReceiver: ReceiveDataInterface {
     private val NOTIFICATION_ID = 789
     private var init = false
     @SuppressLint("StaticFieldLeak")
-    private lateinit var notificationMgr: NotificationManagerCompat
+    private lateinit var notificationMgr: CarNotificationManager
     private var show_notification = true
     private var car_connected = false
 
@@ -42,20 +42,13 @@ object CarModeReceiver: ReceiveDataInterface {
 
 
     private fun createNotificationChannel(context: Context) {
-        notificationMgr = NotificationManagerCompat.from(context)
-        val notificationChannel = NotificationChannel(
+        notificationMgr = CarNotificationManager.from(context)
+        val notificationChannel = NotificationChannelCompat.Builder(
             CHANNEL_ID,
-            CHANNEL_NAME,
             NotificationManager.IMPORTANCE_HIGH
         )
-        val builder = AudioAttributes.Builder()
-        builder.setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-        builder.setUsage(AudioAttributes.USAGE_NOTIFICATION)
         notificationChannel.setSound(null, null)   // silent
-        val group = NotificationChannelGroup(GROUND_ID, GROUND_NAME)
-        notificationMgr.createNotificationChannelGroup(group)
-        notificationChannel.group = GROUND_ID
-        notificationMgr.createNotificationChannel(notificationChannel)
+        notificationMgr.createNotificationChannel(notificationChannel.setName(CHANNEL_NAME).build())
     }
 
     fun addNotification(context: Context) {
@@ -96,9 +89,9 @@ object CarModeReceiver: ReceiveDataInterface {
             Log.d(LOG_ID, "onConnectionStateUpdated: " + message + " (" + connectionState.toString() + ")")
             if (connectionState == CarConnection.CONNECTION_TYPE_NOT_CONNECTED)  {
                 Log.d(LOG_ID, "Exited Car Mode")
+                cancelNotification()
                 car_connected = false
                 ReceiveData.remNotifier(this)
-                notificationMgr.cancel(NOTIFICATION_ID)  // remove notification
             } else {
                 Log.d(LOG_ID, "Entered Car Mode")
                 car_connected = true
@@ -122,21 +115,32 @@ object CarModeReceiver: ReceiveDataInterface {
         }
     }
 
+    fun cancelNotification() {
+        notificationMgr.cancel(NOTIFICATION_ID)  // remove notification
+    }
+
     fun showNotification(context: Context) {
         try {
             if (enable_notification && car_connected) {
+                val intent = Intent("DoNothing") //new Intent(this, PopupReplyReceiver.class);
+                val pendingIntent = PendingIntent.getBroadcast(
+                    context,
+                    1,
+                    intent,
+                    PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                )
                 Log.d(LOG_ID, "showNotification called")
                 val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setLargeIcon(getRateAsIcon())
-                    .setContentTitle(ReceiveData.timeformat.format(Date(ReceiveData.time)))
+                    .setContentTitle("Delta: " + ReceiveData.getDeltaAsString())
                     .setContentText("Delta: " + ReceiveData.getDeltaAsString())
                     .setWhen(ReceiveData.time)
                     .setStyle(createMessageStyle())
                     .addAction(createReplyAction(context))
                     .addAction(createDismissAction(context))
                     .setSilent(true)
-                notificationMgr.notify(NOTIFICATION_ID, builder.build())
+                notificationMgr.notify(NOTIFICATION_ID, builder)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "showNotification exception: " + exc.toString() )

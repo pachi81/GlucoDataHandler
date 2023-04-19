@@ -121,6 +121,8 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
                 }
                 if(isChecked)
                     CarModeReceiver.showNotification(this)
+                else
+                    CarModeReceiver.cancelNotification()
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "Changing notification exception: " + exc.message.toString() )
             }
