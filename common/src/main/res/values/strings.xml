@@ -2,6 +2,7 @@
 <resources>
     <string name="info_label_sensor_id">Sensor</string>
     <string name="info_label_value">Value</string>
+    <string name="info_label_raw">Raw</string>
     <string name="info_label_delta">Delta</string>
     <string name="info_label_rate">Rate</string>
     <string name="info_label_timestamp">Timestamp</string>

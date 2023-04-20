@@ -5,14 +5,14 @@ plugins {
 
 android {
     namespace 'de.michelinside.glucodatahandler'
-    compileSdk 33
+    compileSdk rootProject.compileSdk
 
     defaultConfig {
         applicationId "de.michelinside.glucodatahandler"
-        minSdk 26
-        targetSdk 33
-        versionCode 1
-        versionName "0.8.2"
+        minSdk rootProject.minSdk
+        targetSdk rootProject.targetSdk
+        versionCode rootProject.versionCode
+        versionName rootProject.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -56,8 +56,7 @@ dependencies {
     implementation project(path: ':common')
     implementation 'com.google.android.gms:play-services-tasks:18.0.2'
     implementation 'com.google.android.gms:play-services-wearable:18.0.0'
-    implementation 'androidx.car.app:app-projected:1.2.0'
-    implementation 'androidx.car.app:app:1.2.0'
+    implementation "androidx.car.app:app:1.2.0"
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -70,7 +69,7 @@ afterEvaluate {
         dependsOn assembleRelease
         from "${projectDir}/release"
         include '**/*.apk'
-        into "D:/Daten/Michel/OneDrive/Projekte/Release"
+        into rootProject.releasePath
     }
 
     assembleRelease.finalizedBy(copyAndroidApksPostBuild)

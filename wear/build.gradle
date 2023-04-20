@@ -5,14 +5,14 @@ plugins {
 
 android {
     namespace 'de.michelinside.glucodatahandler'
-    compileSdk 33
+    compileSdk rootProject.compileSdk
 
     defaultConfig {
         applicationId "de.michelinside.glucodatahandler"
-        minSdk 26
-        targetSdk 33
-        versionCode 1
-        versionName "0.8.1"
+        minSdk rootProject.minSdk
+        targetSdk rootProject.targetSdk
+        versionCode rootProject.versionCode
+        versionName rootProject.versionName
     }
 
     buildTypes {
@@ -63,7 +63,7 @@ afterEvaluate {
         dependsOn assembleRelease
         from "${projectDir}/../mobile/release"
         include '**/*.apk'
-        into "D:/Daten/Michel/OneDrive/Projekte/Release"
+        into rootProject.releasePath
     }
 
     assembleRelease.finalizedBy(copyAndroidApksPostBuild)

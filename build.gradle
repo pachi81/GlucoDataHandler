@@ -4,3 +4,10 @@ plugins {
     id 'com.android.library' version '7.3.1' apply false
     id 'org.jetbrains.kotlin.android' version '1.7.20' apply false
 }
+
+project.ext.set("versionCode", 1)
+project.ext.set("versionName", "0.8.3")
+project.ext.set("compileSdk", 33)
+project.ext.set("targetSdk", 33)
+project.ext.set("minSdk", 26)
+project.ext.set("releasePath", "D:/Daten/Michel/OneDrive/Projekte/Release")

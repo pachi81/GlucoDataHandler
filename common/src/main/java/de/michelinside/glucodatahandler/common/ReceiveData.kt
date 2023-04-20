@@ -90,12 +90,12 @@ object ReceiveData {
     fun getAsString(context: Context, withValue: Boolean = true): String {
         if (sensorID == null)
             return context.getString(R.string.no_data)
-        return (if (withValue) context.getString(R.string.info_label_value) + ": " + glucose + " " + getRateSymbol() + "\r\n" else "" ) +
-                context.getString(R.string.info_label_sensor_id) + ": " + sensorID + "\r\n" +
-                context.getString(R.string.info_label_delta) + ": " + getDeltaAsString() + " " + getUnit() + " " + context.getString(R.string.info_label_per_minute) + "\r\n" +
-                context.getString(R.string.info_label_rate) + ": " + rate + " (" + rateLabel + ")\r\n" +
-                context.getString(R.string.info_label_timestamp) + ": " + dateformat.format(Date(time)) + "\r\n" +
+        return (if (isMmol) context.getString(R.string.info_label_raw) + ": " + rawValue + " mg/dl\r\n" else "" ) +
+                context.getString(R.string.info_label_delta) + ": " + getDeltaAsString() + " " + getUnit() + "\r\n" +
+                context.getString(R.string.info_label_rate) + ": " + rate + "\r\n" +
+                context.getString(R.string.info_label_timestamp) + ": " + timeformat.format(Date(time)) + "\r\n" +
                 context.getString(R.string.info_label_alarm) + ": " + alarm + "\r\n" +
+                context.getString(R.string.info_label_sensor_id) + ": " + sensorID + "\r\n" +
                 context.getString(R.string.info_label_source) + ": " + context.getString(source.getResId())
     }
 
@@ -156,11 +156,11 @@ object ReceiveData {
 
         return when(getAlarmType()) {
             AlarmType.NONE -> Color.GRAY
-            AlarmType.LOW_ALARM -> Color.RED
+            AlarmType.LOW_ALARM -> Color.parseColor("#fb4f29")
             AlarmType.LOW -> Color.YELLOW
             AlarmType.OK -> Color.GREEN
             AlarmType.HIGH -> Color.YELLOW
-            AlarmType.HIGH_ALARM -> Color.RED
+            AlarmType.HIGH_ALARM -> Color.parseColor("#fb4f29")
         }
     }
 
