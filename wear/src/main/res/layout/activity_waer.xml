@@ -21,14 +21,14 @@
 
         <TextView
             android:id="@+id/txtBgValue"
-            android:layout_width="79dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="8dp"
+            android:layout_width="87dp"
+            android:layout_height="61dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="12dp"
             android:text="---"
             android:textAlignment="viewEnd"
             android:textColor="#FFFFFF"
-            android:textSize="20sp"
+            android:textSize="45sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -72,13 +72,13 @@
 
         <ImageView
             android:id="@+id/viewIcon"
-            android:layout_width="30dp"
-            android:layout_height="21dp"
+            android:layout_width="57dp"
+            android:layout_height="57dp"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:src="@drawable/icon_question"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.024"
             app:layout_constraintStart_toEndOf="@+id/txtBgValue"
             app:layout_constraintTop_toTopOf="parent" />
 

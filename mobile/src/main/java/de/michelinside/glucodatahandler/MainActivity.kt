@@ -11,6 +11,7 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.isVisible
@@ -18,6 +19,8 @@ import de.michelinside.glucodatahandler.common.*
 
 
 class MainActivity : AppCompatActivity(), ReceiveDataInterface {
+    private lateinit var txtBgValue: TextView
+    private lateinit var viewIcon: ImageView
     private lateinit var txtLastValue: TextView
     private lateinit var txtVersion: TextView
     private lateinit var txtWearInfo: TextView
@@ -28,7 +31,11 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
     private lateinit var switchNotifcation: SwitchCompat
     private lateinit var btnSelectTarget: Button
     private lateinit var sharedPref: SharedPreferences
+    private lateinit var numMinChanger: EditTargetChanger
+    private lateinit var numMaxChanger: EditTargetChanger
+    private var useMmol: Boolean = false
     private val LOG_ID = "GlucoDataHandler.Main"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -47,16 +54,23 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
             this.startService(serviceIntent)
         }
 
+        txtBgValue = findViewById(R.id.txtBgValue)
+        viewIcon = findViewById(R.id.viewIcon)
+        txtLastValue = findViewById(R.id.txtLastValue)
+        txtWearInfo = findViewById(R.id.txtWearInfo)
+
         sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
 
         numMin = findViewById(R.id.numMin)
         numMax = findViewById(R.id.numMax)
+        numMinChanger = EditTargetChanger(true, this)
+        numMaxChanger = EditTargetChanger(false, this)
+        numMin.addTextChangedListener(numMinChanger)
+        numMax.addTextChangedListener(numMaxChanger)
 
-        numMin.addTextChangedListener(EditTargetChanger(true, this))
-        numMax.addTextChangedListener(EditTargetChanger(false, this))
-
-        numMin.setText(sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MIN, ReceiveData.targetMin).toString())
-        numMax.setText(sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, ReceiveData.targetMax).toString())
+        ReceiveData.readTargets(this)
+        useMmol = ReceiveData.isMmol
+        updateMinMax()
 
         txtVersion = findViewById(R.id.txtVersion)
         txtVersion.text = BuildConfig.VERSION_NAME
@@ -142,18 +156,45 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
         ReceiveData.addNotifier(this)
     }
 
+    private fun getTargetString(value: Float): String {
+        if (useMmol)
+            return value.toString()
+        return value.toInt().toString()
+    }
+
+    private fun updateMinMax() {
+        try {
+            val minVal = getTargetString(ReceiveData.targetMin)
+            val maxVal = getTargetString(ReceiveData.targetMax)
+            Log.d(LOG_ID, "Update min/max values in UI: " + minVal + "/" + maxVal + " " + ReceiveData.getUnit())
+            numMinChanger.updateInProgress = true
+            numMaxChanger.updateInProgress = true
+            numMin.setText(minVal)
+            numMax.setText(maxVal)
+        } catch( exc: Exception ) {
+            Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
+        }
+        numMinChanger.updateInProgress = false
+        numMaxChanger.updateInProgress = false
+    }
+
     private fun update() {
         try {
             Log.d(LOG_ID, "update values")
-            txtLastValue = findViewById(R.id.txtLastValue)
+            txtBgValue.text = ReceiveData.getClucoseAsString()
+            txtBgValue.setTextColor(ReceiveData.getClucoseColor())
+            viewIcon.setImageIcon(ReceiveData.getArrowIcon())
             txtLastValue.text = ReceiveData.getAsString(this)
-            txtWearInfo = findViewById(R.id.txtWearInfo)
             if (WearPhoneConnection.nodesConnected) {
                 txtWearInfo.text = String.format(resources.getText(R.string.activity_main_connected_label).toString(), WearPhoneConnection.getBatterLevelsAsString())
             }
             else
                 txtWearInfo.text = resources.getText(R.string.activity_main_disconnected_label)
 
+            if (useMmol != ReceiveData.isMmol) {
+                useMmol = ReceiveData.isMmol
+                updateMinMax()
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
         }

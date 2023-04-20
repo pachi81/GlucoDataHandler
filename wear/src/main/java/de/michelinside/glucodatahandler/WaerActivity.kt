@@ -18,10 +18,10 @@ class WaerActivity : AppCompatActivity(), ReceiveDataInterface {
     private val LOG_ID = "GlucoDataHandler.Main"
     private lateinit var binding: ActivityWaerBinding
     private lateinit var txtBgValue: TextView
+    private lateinit var viewIcon: ImageView
     private lateinit var txtVersion: TextView
     private lateinit var txtValueInfo: TextView
     private lateinit var txtConnInfo: TextView
-    private lateinit var viewIcon: ImageView
     private lateinit var numMin: EditText
     private lateinit var numMax: EditText
     private lateinit var switchNotifcation: SwitchCompat
@@ -38,6 +38,11 @@ class WaerActivity : AppCompatActivity(), ReceiveDataInterface {
 
             binding = ActivityWaerBinding.inflate(layoutInflater)
             setContentView(binding.root)
+
+            txtBgValue = findViewById(R.id.txtBgValue)
+            viewIcon = findViewById(R.id.viewIcon)
+            txtValueInfo = findViewById(R.id.txtValueInfo)
+            txtConnInfo = findViewById(R.id.txtConnInfo)
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
@@ -118,14 +123,10 @@ class WaerActivity : AppCompatActivity(), ReceiveDataInterface {
     private fun update() {
         try {
             if(ReceiveData.time > 0) {
-                txtBgValue = findViewById(R.id.txtBgValue)
                 txtBgValue.text = ReceiveData.getClucoseAsString()
                 txtBgValue.setTextColor(ReceiveData.getClucoseColor())
-                viewIcon = findViewById(R.id.viewIcon)
                 viewIcon.setImageIcon(ReceiveData.getArrowIcon())
-                txtValueInfo = findViewById(R.id.txtValueInfo)
                 txtValueInfo.text = ReceiveData.getAsString(this, false)
-                txtConnInfo = findViewById(R.id.txtConnInfo)
                 if (WearPhoneConnection.nodesConnected) {
                     txtConnInfo.text = String.format(resources.getText(R.string.activity_connected_label).toString(), WearPhoneConnection.getBatterLevelsAsString())
                 } else
