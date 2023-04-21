@@ -134,8 +134,8 @@ object CarModeReceiver: ReceiveDataInterface {
                     .setSilent(true)
                     .extend (
                         CarAppExtender.Builder()
-                        .setImportance(NotificationManager.IMPORTANCE_HIGH)
-                        .build()
+                            .setImportance(NotificationManager.IMPORTANCE_HIGH)
+                            .build()
                     )
                 notificationMgr.notify(NOTIFICATION_ID, builder)
             }
@@ -151,13 +151,14 @@ object CarModeReceiver: ReceiveDataInterface {
     fun getRateAsIcon(): Bitmap? {
         if (ReceiveData.isObsolete(300))
             return Utils.textToBitmap("?", Color.GRAY, false)
-        return Utils.rateToBitmap(ReceiveData.rate, ReceiveData.getClucoseColor())
+        return Utils.rateToBitmap(ReceiveData.rate, ReceiveData.getClucoseColor(), resizeFactor = 0.75F)
     }
 
     private fun createMessageStyle(): NotificationCompat.MessagingStyle {
         val person = Person.Builder()
             .setIcon(IconCompat.createWithBitmap(getRateAsIcon()!!))
             .setName(ReceiveData.getClucoseAsString())
+            .setImportant(true)
             .build()
         val messagingStyle = NotificationCompat.MessagingStyle(person)
         messagingStyle.conversationTitle = ReceiveData.getClucoseAsString()
