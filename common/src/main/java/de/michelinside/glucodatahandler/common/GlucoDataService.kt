@@ -1,6 +1,5 @@
 package de.michelinside.glucodatahandler.common
 
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -13,6 +12,7 @@ open class GlucoDataService : WearableListenerService(), ReceiveDataInterface {
     private val LOG_ID = "GlucoDataHandler.GlucoDataService"
     private lateinit var receiver: GlucoseDataReceiver
     private lateinit var batteryReceiver: BatteryReceiver
+    private lateinit var xDripReceiver: XDripBroadcastReceiver
     private val connection = WearPhoneConnection()
     private var lastAlarmTime = 0L
     private var lastAlarmType = ReceiveData.AlarmType.OK
@@ -47,6 +47,8 @@ open class GlucoDataService : WearableListenerService(), ReceiveDataInterface {
             registerReceiver(receiver, IntentFilter("glucodata.Minute"))
             batteryReceiver = BatteryReceiver()
             registerReceiver(batteryReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+            xDripReceiver = XDripBroadcastReceiver()
+            registerReceiver(xDripReceiver,IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"))
 
             if (BuildConfig.DEBUG && sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)) {
                 Thread {
@@ -70,6 +72,8 @@ open class GlucoDataService : WearableListenerService(), ReceiveDataInterface {
         try {
             Log.w(LOG_ID, "onDestroy called")
             unregisterReceiver(receiver)
+            unregisterReceiver(batteryReceiver)
+            unregisterReceiver(xDripReceiver)
             ReceiveData.remNotifier(this)
             connection.close()
             super.onDestroy()

@@ -10,7 +10,7 @@
     <string name="info_label_alarm">Alarm</string>
     <string name="info_label_source">Source</string>
     <string name="info_label_per_minute">per minute</string>
-    <string name="no_data">No broadcast received yet!\nINFO: To receiving data from Juggluco, please open Juggluco, go to settings and activate \"Glucodata Broadcast\" for "de.michelinside.glucodatahandler".</string>
+    <string name="no_data">No broadcast received yet!\nINFO: To receiving data from Juggluco, please open Juggluco, go to settings and activate \"Glucodata Broadcast\" for "de.michelinside.glucodatahandler"\nTo receive from xDrip+ activate local broadcast and select no receiver!.</string>
 
     <string name="rate_double_up">rising very quickly</string>
     <string name="rate_single_up">rising quickly</string>
@@ -20,7 +20,7 @@
     <string name="rate_single_down">falling quickly</string>
     <string name="rate_double_down">falling very quickly</string>
 
-    <string name="source_broadcast">Juggluco</string>
+    <string name="source_broadcast">Broadcast</string>
     <string name="source_message_client">Wear</string>
     <string name="source_capility_info">Internal</string>
     <string name="source_battery_level">Battery level</string>

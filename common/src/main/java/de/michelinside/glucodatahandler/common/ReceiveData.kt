@@ -88,7 +88,7 @@ object ReceiveData {
     val isMmol get() = isMmolValue
 
     fun getAsString(context: Context): String {
-        if (sensorID == null)
+        if (time == 0L)
             return context.getString(R.string.no_data)
         return (context.getString(R.string.info_label_delta) + ": " + getDeltaAsString() + " " + getUnit() + "\r\n" +
                 context.getString(R.string.info_label_rate) + ": " + rate + "\r\n" +
