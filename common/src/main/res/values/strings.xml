@@ -10,7 +10,7 @@
     <string name="info_label_alarm">Alarm</string>
     <string name="info_label_source">Source</string>
     <string name="info_label_per_minute">per minute</string>
-    <string name="no_data">No broadcast received yet!</string>
+    <string name="no_data">No broadcast received yet!\nINFO: To receiving data from Juggluco, please open Juggluco, go to settings and activate \"Glucodata Broadcast\" for "de.michelinside.glucodatahandler".</string>
 
     <string name="rate_double_up">rising very quickly</string>
     <string name="rate_single_up">rising quickly</string>

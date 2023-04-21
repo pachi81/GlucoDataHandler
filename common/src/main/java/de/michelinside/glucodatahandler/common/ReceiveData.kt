@@ -87,14 +87,14 @@ object ReceiveData {
     private var isMmolValue = false
     val isMmol get() = isMmolValue
 
-    fun getAsString(context: Context, withValue: Boolean = true): String {
+    fun getAsString(context: Context): String {
         if (sensorID == null)
             return context.getString(R.string.no_data)
-        return (if (isMmol) context.getString(R.string.info_label_raw) + ": " + rawValue + " mg/dl\r\n" else "" ) +
-                context.getString(R.string.info_label_delta) + ": " + getDeltaAsString() + " " + getUnit() + "\r\n" +
+        return (context.getString(R.string.info_label_delta) + ": " + getDeltaAsString() + " " + getUnit() + "\r\n" +
                 context.getString(R.string.info_label_rate) + ": " + rate + "\r\n" +
                 context.getString(R.string.info_label_timestamp) + ": " + timeformat.format(Date(time)) + "\r\n" +
                 context.getString(R.string.info_label_alarm) + ": " + alarm + "\r\n" +
+                if (isMmol) context.getString(R.string.info_label_raw) + ": " + rawValue + " mg/dl\r\n" else "" ) +
                 context.getString(R.string.info_label_sensor_id) + ": " + sensorID + "\r\n" +
                 context.getString(R.string.info_label_source) + ": " + context.getString(source.getResId())
     }

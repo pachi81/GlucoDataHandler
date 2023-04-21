@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.car.app.connection.CarConnection
+import androidx.car.app.notification.CarAppExtender
 import androidx.car.app.notification.CarNotificationManager
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
@@ -23,8 +24,6 @@ object CarModeReceiver: ReceiveDataInterface {
     private val LOG_ID = "GlucoDataHandler.CarModeReceiver"
     private val CHANNEL_ID = "GlucoDataNotify_Car"
     private val CHANNEL_NAME = "Notification for Android Auto"
-    private val GROUND_ID = "notify"
-    private val GROUND_NAME = "Notification"
     private val NOTIFICATION_ID = 789
     private var init = false
     @SuppressLint("StaticFieldLeak")
@@ -122,13 +121,6 @@ object CarModeReceiver: ReceiveDataInterface {
     fun showNotification(context: Context) {
         try {
             if (enable_notification && car_connected) {
-                val intent = Intent("DoNothing") //new Intent(this, PopupReplyReceiver.class);
-                val pendingIntent = PendingIntent.getBroadcast(
-                    context,
-                    1,
-                    intent,
-                    PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-                )
                 Log.d(LOG_ID, "showNotification called")
                 val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                     .setSmallIcon(R.mipmap.ic_launcher)
@@ -140,6 +132,11 @@ object CarModeReceiver: ReceiveDataInterface {
                     .addAction(createReplyAction(context))
                     .addAction(createDismissAction(context))
                     .setSilent(true)
+                    .extend (
+                        CarAppExtender.Builder()
+                        .setImportance(NotificationManager.IMPORTANCE_HIGH)
+                        .build()
+                    )
                 notificationMgr.notify(NOTIFICATION_ID, builder)
             }
         } catch (exc: Exception) {

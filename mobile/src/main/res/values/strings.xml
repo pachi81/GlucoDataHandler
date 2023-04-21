@@ -25,7 +25,6 @@
     <string name="unit_label">Unit</string>
     <string name="unit_html_label">Unit of the glucose value (mg/dl or mmol/l)</string>
 
-    <string name="activity_main_info_label">INFO: To receiving data from Juggluco, please open Juggluco, go to settings and activate \"Glucodata Broadcast\" for "de.michelinside.glucodatahandler".</string>
     <string name="activity_main_connected_label">Wear: connected (%1$s)</string>
     <string name="activity_main_disconnected_label">Wear: disconnected</string>
     <string name="activity_switch_notification">Vibration</string>

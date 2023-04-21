@@ -126,7 +126,7 @@ class WaerActivity : AppCompatActivity(), ReceiveDataInterface {
                 txtBgValue.text = ReceiveData.getClucoseAsString()
                 txtBgValue.setTextColor(ReceiveData.getClucoseColor())
                 viewIcon.setImageIcon(ReceiveData.getArrowIcon())
-                txtValueInfo.text = ReceiveData.getAsString(this, false)
+                txtValueInfo.text = ReceiveData.getAsString(this)
                 if (WearPhoneConnection.nodesConnected) {
                     txtConnInfo.text = String.format(resources.getText(R.string.activity_connected_label).toString(), WearPhoneConnection.getBatterLevelsAsString())
                 } else
