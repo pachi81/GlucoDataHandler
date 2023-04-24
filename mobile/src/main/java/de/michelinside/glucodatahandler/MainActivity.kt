@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -154,6 +156,22 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
         Log.d(LOG_ID, "onResume called")
         update()
         ReceiveData.addNotifier(this)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        Log.d(LOG_ID, "onCreateOptionsMenu called")
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu_items, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        Log.d(LOG_ID, "onOptionsItemSelected for " + item.itemId.toString())
+        if (item.itemId == R.id.action_settings) {
+            // show settings menu
+            Log.i(LOG_ID, "Show settings menu")
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun getTargetString(value: Float): String {

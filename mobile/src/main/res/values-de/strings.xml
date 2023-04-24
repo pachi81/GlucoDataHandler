@@ -40,4 +40,6 @@
     <string name="select_receiver_info">INFO:\nKein Empfänger = Globaler Broadcast</string>
     <string name="button_ok">OK</string>
     <string name="button_cancel">Abbrechen</string>
+
+    <string name="menu_settings">Einstellungen</string>
 </resources>
