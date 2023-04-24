@@ -40,6 +40,12 @@
                 <action android:name="glucodata.Minute"/>
             </intent-filter>
         </receiver>
+        <receiver android:name=".common.XDripBroadcastReceiver" android:enabled="true" android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="com.eveningoutpost.dexdrip.BgEstimate"/>
+            </intent-filter>
+        </receiver>
 <!--        <receiver
             android:name=".StartServiceAtBootReceiver"
             android:enabled="true"

@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.car.app.connection.CarConnection
+import androidx.car.app.notification.CarAppExtender
 import androidx.car.app.notification.CarNotificationManager
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
@@ -20,17 +21,17 @@ import java.util.*
 
 
 object CarModeReceiver: ReceiveDataInterface {
-    private val LOG_ID = "GlucoDataHandler.CarModeReceiver"
-    private val CHANNEL_ID = "GlucoDataNotify_Car"
-    private val CHANNEL_NAME = "Notification for Android Auto"
-    private val GROUND_ID = "notify"
-    private val GROUND_NAME = "Notification"
-    private val NOTIFICATION_ID = 789
+    private const val LOG_ID = "GlucoDataHandler.CarModeReceiver"
+    private const val CHANNEL_ID = "GlucoDataNotify_Car"
+    private const val CHANNEL_NAME = "Notification for Android Auto"
+    private const val NOTIFICATION_ID = 789
     private var init = false
     @SuppressLint("StaticFieldLeak")
     private lateinit var notificationMgr: CarNotificationManager
     private var show_notification = true
     private var car_connected = false
+    @SuppressLint("StaticFieldLeak")
+    private lateinit var notificationCompat: NotificationCompat.Builder
 
     var enable_notification : Boolean get() {
         return show_notification
@@ -39,7 +40,6 @@ object CarModeReceiver: ReceiveDataInterface {
         show_notification = value
         Log.d(LOG_ID, "show_notification set to " + show_notification.toString())
     }
-
 
     private fun createNotificationChannel(context: Context) {
         notificationMgr = CarNotificationManager.from(context)
@@ -51,13 +51,30 @@ object CarModeReceiver: ReceiveDataInterface {
         notificationMgr.createNotificationChannel(notificationChannel.setName(CHANNEL_NAME).build())
     }
 
-    fun addNotification(context: Context) {
+    private fun createNofitication(context: Context) {
+        createNotificationChannel(context)
+        notificationCompat = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentTitle(context.getString(R.string.app_name))
+            .setContentText("Android Auto")
+            .addAction(createReplyAction(context))
+            .addAction(createDismissAction(context))
+            .setSilent(true)
+            .setPriority(NotificationCompat.PRIORITY_MIN)
+            .extend (
+                CarAppExtender.Builder()
+                    .setImportance(NotificationManager.IMPORTANCE_HIGH)
+                    .build()
+            )
+    }
+
+    fun initNotification(context: Context) {
         try {
             if(!init) {
                 Log.d(LOG_ID, "addNotification called")
                 val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 enable_notification = sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, enable_notification)
-                createNotificationChannel(context)
+                createNofitication(context)
                 CarConnection(context).type.observeForever(::onConnectionStateUpdated)
                 init = true
             }
@@ -66,7 +83,7 @@ object CarModeReceiver: ReceiveDataInterface {
         }
     }
 
-    fun remNotification(context: Context) {
+    fun cleanupNotification(context: Context) {
         try {
             if (init) {
                 Log.d(LOG_ID, "remNotification called")
@@ -89,7 +106,7 @@ object CarModeReceiver: ReceiveDataInterface {
             Log.d(LOG_ID, "onConnectionStateUpdated: " + message + " (" + connectionState.toString() + ")")
             if (connectionState == CarConnection.CONNECTION_TYPE_NOT_CONNECTED)  {
                 Log.d(LOG_ID, "Exited Car Mode")
-                cancelNotification()
+                removeNotification()
                 car_connected = false
                 ReceiveData.remNotifier(this)
             } else {
@@ -98,8 +115,8 @@ object CarModeReceiver: ReceiveDataInterface {
                 ReceiveData.addNotifier(this, mutableSetOf(
                     ReceiveDataSource.BROADCAST,
                     ReceiveDataSource.MESSAGECLIENT))
-                if(!ReceiveData.isObsolete() && GlucoDataService.context != null)
-                    showNotification(GlucoDataService.context!!)
+                if(!ReceiveData.isObsolete())
+                    showNotification()
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnReceiveData exception: " + exc.message.toString() )
@@ -109,38 +126,25 @@ object CarModeReceiver: ReceiveDataInterface {
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
         Log.d(LOG_ID, "OnReceiveData called")
         try {
-            showNotification(context)
+            showNotification()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnReceiveData exception: " + exc.message.toString() )
         }
     }
 
-    fun cancelNotification() {
+    fun removeNotification() {
         notificationMgr.cancel(NOTIFICATION_ID)  // remove notification
     }
 
-    fun showNotification(context: Context) {
+    fun showNotification() {
         try {
             if (enable_notification && car_connected) {
-                val intent = Intent("DoNothing") //new Intent(this, PopupReplyReceiver.class);
-                val pendingIntent = PendingIntent.getBroadcast(
-                    context,
-                    1,
-                    intent,
-                    PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-                )
                 Log.d(LOG_ID, "showNotification called")
-                val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-                    .setSmallIcon(R.mipmap.ic_launcher)
+                notificationCompat
                     .setLargeIcon(getRateAsIcon())
-                    .setContentTitle("Delta: " + ReceiveData.getDeltaAsString())
-                    .setContentText("Delta: " + ReceiveData.getDeltaAsString())
                     .setWhen(ReceiveData.time)
                     .setStyle(createMessageStyle())
-                    .addAction(createReplyAction(context))
-                    .addAction(createDismissAction(context))
-                    .setSilent(true)
-                notificationMgr.notify(NOTIFICATION_ID, builder)
+                notificationMgr.notify(NOTIFICATION_ID, notificationCompat)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "showNotification exception: " + exc.toString() )
@@ -154,13 +158,14 @@ object CarModeReceiver: ReceiveDataInterface {
     fun getRateAsIcon(): Bitmap? {
         if (ReceiveData.isObsolete(300))
             return Utils.textToBitmap("?", Color.GRAY, false)
-        return Utils.rateToBitmap(ReceiveData.rate, ReceiveData.getClucoseColor())
+        return Utils.rateToBitmap(ReceiveData.rate, ReceiveData.getClucoseColor(), resizeFactor = 0.75F)
     }
 
     private fun createMessageStyle(): NotificationCompat.MessagingStyle {
         val person = Person.Builder()
             .setIcon(IconCompat.createWithBitmap(getRateAsIcon()!!))
             .setName(ReceiveData.getClucoseAsString())
+            .setImportant(true)
             .build()
         val messagingStyle = NotificationCompat.MessagingStyle(person)
         messagingStyle.conversationTitle = ReceiveData.getClucoseAsString()

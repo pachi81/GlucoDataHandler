@@ -134,7 +134,7 @@ object Utils {
         return rotatedBitmap
     }
 
-    fun rateToBitmap(rate: Float, color: Int, width: Int = 100, height: Int = 100): Bitmap? {
+    fun rateToBitmap(rate: Float, color: Int, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F): Bitmap? {
         try {
             var textSize = minOf(width,height).toFloat()
             val text: String
@@ -154,6 +154,7 @@ object Utils {
                 text = "↓"
                 degrees = round((maxOf(-2F, rate) + 2F) * -90F/2F, 0).toInt()
             }
+            textSize *= resizeFactor
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888 )
             val canvas = Canvas(bitmap)
             bitmap.eraseColor(Color.TRANSPARENT)

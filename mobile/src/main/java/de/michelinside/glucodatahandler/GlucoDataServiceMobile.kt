@@ -1,9 +1,7 @@
 package de.michelinside.glucodatahandler
 
-import android.app.UiModeManager
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.*
@@ -20,7 +18,7 @@ class GlucoDataServiceMobile: GlucoDataService(), ReceiveDataInterface {
         try {
             Log.d(LOG_ID, "onCreate called")
             super.onCreate()
-            CarModeReceiver.addNotification(applicationContext)
+            CarModeReceiver.initNotification(applicationContext)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -29,7 +27,7 @@ class GlucoDataServiceMobile: GlucoDataService(), ReceiveDataInterface {
     override fun onDestroy() {
         try {
             Log.d(LOG_ID, "onDestroy called")
-            CarModeReceiver.remNotification(applicationContext)
+            CarModeReceiver.cleanupNotification(applicationContext)
             super.onDestroy()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )

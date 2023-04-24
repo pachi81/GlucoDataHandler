@@ -26,7 +26,6 @@
     <string name="glucose_label">Blutzuckerwert</string>
     <string name="glucose_html_label">Blutzuckerwert in der Einheit, welche in Juggluco konfiguriert ist</string>
 
-    <string name="activity_main_info_label">INFO: Aktiviere in Juggluco unter Einstellungen \"Glucodata Broadcast\" und wähle \"de.michelinside.glucodatahandler\" aus.</string>
     <string name="activity_main_connected_label">Uhr: verbunden (%1$s)</string>
     <string name="activity_main_disconnected_label">Uhr: getrennt</string>
     <string name="activity_target_range">Zielbereich:</string>

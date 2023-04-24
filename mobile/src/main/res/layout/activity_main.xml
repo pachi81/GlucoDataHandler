@@ -12,33 +12,33 @@
         android:layout_width="57dp"
         android:layout_height="57dp"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:src="@drawable/icon_question"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.052"
         app:layout_constraintStart_toEndOf="@+id/txtBgValue"
-        app:layout_constraintTop_toBottomOf="@+id/txtInfo" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/txtBgValue"
         android:layout_width="122dp"
         android:layout_height="58dp"
         android:layout_marginStart="76dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:text="---"
         android:textAlignment="viewEnd"
-        android:textColor="#FFFFFF"
+        android:textColor="#757575"
         android:textSize="45sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtInfo" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_marginStart="30dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="10dp"
         android:text="@string/activity_target_range"
         android:textAlignment="viewStart"
         android:textSize="14sp"
@@ -53,7 +53,6 @@
         android:layout_width="48dp"
         android:layout_height="40dp"
         android:layout_marginEnd="92dp"
-        android:layout_marginBottom="5dp"
         android:ems="10"
         android:inputType="numberDecimal"
         android:text="5.0"
@@ -68,7 +67,6 @@
         android:layout_width="48dp"
         android:layout_height="40dp"
         android:layout_marginEnd="52dp"
-        android:layout_marginBottom="5dp"
         android:ems="10"
         android:inputType="numberDecimal"
         android:text="5.0"
@@ -116,20 +114,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtBgValue" />
-
-    <TextView
-        android:id="@+id/txtInfo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:text="@string/activity_main_info_label"
-        android:textAlignment="viewStart"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/txtVersion"
