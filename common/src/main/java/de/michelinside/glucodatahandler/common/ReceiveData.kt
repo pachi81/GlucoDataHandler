@@ -1,6 +1,7 @@
 package de.michelinside.glucodatahandler.common
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.os.Bundle
@@ -289,13 +290,16 @@ object ReceiveData {
         }
     }
 
-    fun readTargets(context: Context) {
-        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+    fun updateSettings(sharedPref: SharedPreferences) {
         targetMinValue = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MIN, targetMinValue)
         targetMaxValue = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, targetMaxValue)
-        if(sharedPref.contains(Constants.SHARED_PREF_USE_MMOL))
-            isMmolValue = sharedPref.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
-        else {
+        isMmolValue = sharedPref.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
+        Log.i(LOG_ID, "Raw min/max set: " + targetMinValue.toString() + "/" + targetMaxValue.toString() + " mg/dl - unit: " + getUnit())
+    }
+
+    fun readTargets(context: Context) {
+        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        if(!sharedPref.contains(Constants.SHARED_PREF_USE_MMOL)) {
             Log.i(LOG_ID, "Upgrade to new mmol handling!")
             isMmolValue = Utils.isMmolValue(targetMinValue)
             if (isMmol) {
@@ -307,7 +311,7 @@ object ReceiveData {
                 apply()
             }
         }
-        Log.i(LOG_ID, "Raw min/max set: " + targetMinValue.toString() + "/" + targetMaxValue.toString() + " mg/dl")
+        updateSettings(sharedPref)
     }
 
     fun writeTarget(context: Context, min: Boolean, value: Float) {

@@ -199,14 +199,13 @@ object Utils {
     private var rateDelta = 0.5F
     private var rawDelta = 5
     fun getDummyGlucodataIntent(random: Boolean = true) : Intent {
-        var useMmol = true
+        var useMmol = ReceiveData.isMmol
         val time =  if (ReceiveData.time < System.currentTimeMillis()) System.currentTimeMillis() + 1000 else ReceiveData.time + 1000
         val intent = Intent(Constants.GLUCODATA_BROADCAST_ACTION)
         var raw: Int
         var glucose: Float
         val rate: Float
         if (random) {
-            useMmol = Random.nextBoolean()
             raw = Random.nextInt(40, 400)
             glucose = if(useMmol) mgToMmol(raw.toFloat()) else raw.toFloat()
             rate = round(Random.nextFloat() + Random.nextInt(-4, 4).toFloat(), 2)

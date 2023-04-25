@@ -27,4 +27,6 @@ object Constants {
     const val SHARED_PREF_USE_MMOL = "use_mmol"
     const val SHARED_PREF_GLUCODATA_RECEIVER_SHOW_ALL = "show_all_glucodata_receivers"
     const val SHARED_PREF_GLUCODATA_RECEIVERS = "glucodata_receivers"
+    const val SHARED_PREF_LOW_GLUCOSE = "low_glucose"
+    const val SHARED_PREF_HIGH_GLUCOSE = "high_glucose"
 }

@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
@@ -12,11 +11,12 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.isVisible
+import androidx.preference.PreferenceManager
 import de.michelinside.glucodatahandler.common.*
 
 
@@ -27,15 +27,8 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
     private lateinit var txtVersion: TextView
     private lateinit var txtWearInfo: TextView
     private lateinit var switchSendToAod: SwitchCompat
-    private lateinit var switchSendToXdrip: SwitchCompat
-    private lateinit var numMin: EditText
-    private lateinit var numMax: EditText
-    private lateinit var switchNotifcation: SwitchCompat
     private lateinit var btnSelectTarget: Button
     private lateinit var sharedPref: SharedPreferences
-    private lateinit var numMinChanger: EditTargetChanger
-    private lateinit var numMaxChanger: EditTargetChanger
-    private var useMmol: Boolean = false
     private val LOG_ID = "GlucoDataHandler.Main"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,23 +49,16 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
             this.startService(serviceIntent)
         }
 
+
         txtBgValue = findViewById(R.id.txtBgValue)
         viewIcon = findViewById(R.id.viewIcon)
         txtLastValue = findViewById(R.id.txtLastValue)
         txtWearInfo = findViewById(R.id.txtWearInfo)
 
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
         sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
 
-        numMin = findViewById(R.id.numMin)
-        numMax = findViewById(R.id.numMax)
-        numMinChanger = EditTargetChanger(true, this)
-        numMaxChanger = EditTargetChanger(false, this)
-        numMin.addTextChangedListener(numMinChanger)
-        numMax.addTextChangedListener(numMaxChanger)
-
         ReceiveData.readTargets(this)
-        useMmol = ReceiveData.isMmol
-        updateMinMax()
 
         txtVersion = findViewById(R.id.txtVersion)
         txtVersion.text = BuildConfig.VERSION_NAME
@@ -109,40 +95,6 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
             val selectDialog = SelectReceiverFragment()
             selectDialog.show(this.supportFragmentManager, "selectReceiver")
         }
-
-
-        switchSendToXdrip = findViewById(R.id.switchSendToXdrip)
-        switchSendToXdrip.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_XDRIP, false)
-        switchSendToXdrip.setOnCheckedChangeListener { _, isChecked ->
-            Log.d(LOG_ID, "Send to xDrip changed: " + isChecked.toString())
-            try {
-                with (sharedPref.edit()) {
-                    putBoolean(Constants.SHARED_PREF_SEND_TO_XDRIP, isChecked)
-                    apply()
-                }
-            } catch (exc: Exception) {
-                Log.e(LOG_ID, "Changing send to xDrip exception: " + exc.message.toString() )
-            }
-        }
-
-        switchNotifcation = findViewById(R.id.switchCarNotification)
-        switchNotifcation.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, true)
-        switchNotifcation.setOnCheckedChangeListener { _, isChecked ->
-            Log.d(LOG_ID, "Car Notification changed: " + isChecked.toString())
-            try {
-                CarModeReceiver.enable_notification = isChecked
-                with (sharedPref.edit()) {
-                    putBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, isChecked)
-                    apply()
-                }
-                if(isChecked)
-                    CarModeReceiver.showNotification()
-                else
-                    CarModeReceiver.removeNotification()
-            } catch (exc: Exception) {
-                Log.e(LOG_ID, "Changing notification exception: " + exc.message.toString() )
-            }
-        }
     }
 
     override fun onPause() {
@@ -168,32 +120,11 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Log.d(LOG_ID, "onOptionsItemSelected for " + item.itemId.toString())
         if (item.itemId == R.id.action_settings) {
-            // show settings menu
-            Log.i(LOG_ID, "Show settings menu")
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+            return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun getTargetString(value: Float): String {
-        if (useMmol)
-            return value.toString()
-        return value.toInt().toString()
-    }
-
-    private fun updateMinMax() {
-        try {
-            val minVal = getTargetString(ReceiveData.targetMin)
-            val maxVal = getTargetString(ReceiveData.targetMax)
-            Log.d(LOG_ID, "Update min/max values in UI: " + minVal + "/" + maxVal + " " + ReceiveData.getUnit())
-            numMinChanger.updateInProgress = true
-            numMaxChanger.updateInProgress = true
-            numMin.setText(minVal)
-            numMax.setText(maxVal)
-        } catch( exc: Exception ) {
-            Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
-        }
-        numMinChanger.updateInProgress = false
-        numMaxChanger.updateInProgress = false
     }
 
     private fun update() {
@@ -208,11 +139,6 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
             }
             else
                 txtWearInfo.text = resources.getText(R.string.activity_main_disconnected_label)
-
-            if (useMmol != ReceiveData.isMmol) {
-                useMmol = ReceiveData.isMmol
-                updateMinMax()
-            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
         }
