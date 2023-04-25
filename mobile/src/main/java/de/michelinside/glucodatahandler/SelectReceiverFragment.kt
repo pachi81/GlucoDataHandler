@@ -59,7 +59,7 @@ class SelectReceiverFragment : DialogFragment() {
 
             showAllSwitch = view.findViewById<SwitchCompat>(R.id.showAllSwitch)
             showAllSwitch.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_GLUCODATA_RECEIVER_SHOW_ALL, false)
-            showAllSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            showAllSwitch.setOnCheckedChangeListener { _, isChecked ->
                 updateReceivers(view, isChecked)
             }
 
