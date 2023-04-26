@@ -107,7 +107,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     }
                 }
             }
-            ReceiveData.notify(context, ReceiveDataSource.CAPILITY_INFO, ReceiveData.curExtraBundle)
+            ReceiveData.notify(context, ReceiveDataSource.CAPILITY_INFO, ReceiveData.createExtras())
         }
     }
 
@@ -211,8 +211,9 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
                 if(p0.path == Constants.REQUEST_DATA_MESSAGE_PATH) {
                     Log.d(LOG_ID, "Data request received from " + p0.sourceNodeId)
-                    if (ReceiveData.curExtraBundle != null)
-                        sendMessage(ReceiveDataSource.BROADCAST, ReceiveData.curExtraBundle)
+                    val glucodataBundle = ReceiveData.createExtras()
+                    if (glucodataBundle != null)
+                        sendMessage(ReceiveDataSource.BROADCAST, glucodataBundle)
                     else if (BatteryReceiver.batteryPercentage > 0) {
                         sendMessage(ReceiveDataSource.BATTERY_LEVEL, BatteryReceiver.batteryBundle)
                     }
