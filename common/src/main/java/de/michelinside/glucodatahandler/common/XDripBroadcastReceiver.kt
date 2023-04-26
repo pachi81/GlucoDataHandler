@@ -15,10 +15,6 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
         const val RAW = "com.eveningoutpost.dexdrip.Extras.Raw"
         const val SOURCE_DESC = "com.eveningoutpost.dexdrip.Extras.SourceDesc"
         const val SOURCE_INFO = "com.eveningoutpost.dexdrip.Extras.SourceInfo"
-        const val NOISE = "com.eveningoutpost.dexdrip.Extras.Noise"
-        const val NOISE_WARNING = "com.eveningoutpost.dexdrip.Extras.NoiseWarning"
-        const val NOISE_LEVEL = "com.eveningoutpost.dexdrip.Extras.NsNoiseLevel"
-        const val NOISE_BLOCK_LEVEL = "com.eveningoutpost.dexdrip.Extras.NoiseBlockLevel"
     }
     private val LOG_ID = "GlucoDataHandler.XDripBroadcastReceiver"
 
@@ -41,25 +37,21 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
                             " - Slope: " + slope.toString() +
                             " - SlopeName: " + extras.getString(BG_SLOPE_NAME) +
                             " - Raw: " + extras.getDouble(RAW).toString() +
-                            " - Source: " + extras.getString(SOURCE_INFO) + " (" + extras.getString(SOURCE_DESC) + ")" +
-                            " - Noise: " + extras.getDouble(NOISE).toString() +
-                            " - Noise-Warning: " + extras.getInt(NOISE_WARNING).toString() +
-                            " - Noise-Blocklevel: " + extras.getInt(NOISE_BLOCK_LEVEL).toString() +
-                            " - NS Noise-Level: " + extras.getString(NOISE_LEVEL)
+                            " - Source: " + extras.getString(SOURCE_INFO) + " (" + extras.getString(SOURCE_DESC) + ")"
                     )
 
                     val glucoExtras = Bundle()
                     glucoExtras.putLong(ReceiveData.TIME, extras.getLong(TIME))
+                    val mgdl = extras.getDouble(BG_ESTIMATE).toFloat()
                     if (ReceiveData.isMmol) {
-                        glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, Utils.mgToMmol(extras.getDouble(BG_ESTIMATE).toFloat()))
+                        glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, Utils.mgToMmol(mgdl))
                     } else {
-                        glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, extras.getDouble(BG_ESTIMATE).toFloat())
+                        glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, mgdl)
                     }
                     glucoExtras.putInt(ReceiveData.MGDL, extras.getDouble(BG_ESTIMATE).toInt())
                     glucoExtras.putString(ReceiveData.SERIAL, source)
                     glucoExtras.putFloat(ReceiveData.RATE, slope)
                     glucoExtras.putInt(ReceiveData.ALARM, 0)
-
                     ReceiveData.handleIntent(context, ReceiveDataSource.BROADCAST, glucoExtras)
                 }
             }

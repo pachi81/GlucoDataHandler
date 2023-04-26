@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/pref_target_range"
+        app:iconSpaceReserved="false">
+        <de.michelinside.glucodatahandler.GlucoseEditPreference
+            android:defaultValue="0"
+            android:inputType="numberDecimal"
+            android:key="high_glucose"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_high_value"
+            android:summary="@string/pref_high_value_summary"
+            app:iconSpaceReserved="false" />
+        <de.michelinside.glucodatahandler.GlucoseEditPreference
+            android:defaultValue="0"
+            android:inputType="numberDecimal"
+            android:key="target_max_value"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_target_max_value"
+            android:summary="@string/pref_target_max_value_summary"
+            app:iconSpaceReserved="false" />
+        <de.michelinside.glucodatahandler.GlucoseEditPreference
+            android:defaultValue="0"
+            android:inputType="numberDecimal"
+            android:key="target_min_value"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_target_min_value"
+            android:summary="@string/pref_target_min_value_summary"
+            app:iconSpaceReserved="false" />
+        <de.michelinside.glucodatahandler.GlucoseEditPreference
+            android:defaultValue="0"
+            android:inputType="numberDecimal"
+            android:key="low_glucose"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_low_value"
+            android:summary="@string/pref_low_value_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_cat_android_auto"
+        app:iconSpaceReserved="false">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="car_notification"
+            android:summary="@string/pref_switch_car_notification_summary"
+            android:title="@string/pref_switch_car_notification"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_cat_xdrip"
+        app:iconSpaceReserved="false">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="send_to_xdrip"
+            android:summary="@string/pref_switch_send_to_xdrip_summary"
+            android:title="@string/pref_switch_send_to_xdrip"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="use_mmol"
+            android:summary="@string/pref_switch_use_mmol_summary"
+            android:title="@string/pref_switch_use_mmol"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
+        android:title="@string/pref_cat_forward_broadcast"
+        app:iconSpaceReserved="false">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="send_to_glucodata_aod"
+            android:summary="@string/pref_switch_send_to_aod_summary"
+            android:title="@string/pref_switch_send_to_aod"
+            app:iconSpaceReserved="false" />
+        <de.michelinside.glucodatahandler.SelectReceiverPreference
+            android:defaultValue=""
+            android:key="glucodata_receivers"
+            android:summary="@string/pref_button_select_target_summary"
+            android:title="@string/pref_button_select_target"
+            app:enabled="false"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <androidx.preference.SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="notification"
+        android:title="@string/pref_switch_notification"
+        app:iconSpaceReserved="false"
+        app:isPreferenceVisible="false" />
+
+</PreferenceScreen>

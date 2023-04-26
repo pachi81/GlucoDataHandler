@@ -28,16 +28,37 @@
 
     <string name="activity_main_connected_label">Uhr: verbunden (%1$s)</string>
     <string name="activity_main_disconnected_label">Uhr: getrennt</string>
-    <string name="activity_target_range">Zielbereich:</string>
-    <string name="activity_switch_notification">Vibrieren</string>
-    <string name="activity_switch_car_notification">Android Auto Benachrichtigung</string>
-    <string name="pref_switch_send_to_aod">Glucodata Broadcast weiterleiten</string>
+
+    <string name="pref_cat_android_auto">Android Auto</string>
+    <string name="pref_cat_xdrip">xDrip+</string>
+    <string name="pref_cat_forward_broadcast">Glucodata Broadcast</string>
+
+    <string name="pref_target_range">Zielbereich</string>
+    <string name="pref_switch_notification">Dummy Werte</string>
+    <string name="pref_switch_car_notification">Android Auto Benachrichtigung</string>
+    <string name="pref_switch_car_notification_summary">Um Benachrichtigungen in Android Auto zu erhalten, müssen die Entwicklereinstellung aktiviert werden. Dafür mehrfach in Android Auto auf Version klicken. Danach in den Entwicklereinstellungen "Unbekannte Quellen" aktivieren.</string>
+    <string name="pref_switch_send_to_aod">Glucodata Broadcast senden</string>
+    <string name="pref_switch_send_to_aod_summary">Glucodata Broadcast für neue Werte von allen Quellen an spezifische Empfänger senden</string>
     <string name="pref_button_select_target">Empfänger definieren</string>
+    <string name="pref_button_select_target_summary">Empfänger auswählen, an die der Broadcast gesendet wird. Wenn kein Empfänger ausgewählt wurde, wird ein globaler Broadcast gesendet, welcher von allen Apps empfangen wird, welche sich auf diesen Broadcast registriert haben.</string>
     <string name="pref_switch_send_to_xdrip">An xDrip senden</string>
+    <string name="pref_switch_send_to_xdrip_summary">Weiterleiten von Glucose Werten zu xDrip+.\nWICHTIG: diese Einstellung muss deaktiviert sein, um Werte von xDrip+ zu empfangen!</string>
+    <string name="pref_switch_use_mmol">mmol/l</string>
+    <string name="pref_switch_use_mmol_summary">Konvertiere Werte von xDrip+ in mmol/l</string>
+    <string name="pref_high_value">Hoher Glukoswert</string>
+    <string name="pref_high_value_summary">Werte oberhalb dieser Grenze werden rot angezeigt. Wenn in Juggluco der Alarm für hohen Glukosewert aktiviert ist, muss der Wert nicht gesetzt werden.</string>
+    <string name="pref_target_max_value">Obere Grenze</string>
+    <string name="pref_target_max_value_summary">Obere Grenze für den Zielbereich</string>
+    <string name="pref_target_min_value">Untere Grenze</string>
+    <string name="pref_target_min_value_summary">Untere Grenze für den Zielbereich</string>
+    <string name="pref_low_value">Niedriger Glukosewert</string>
+    <string name="pref_low_value_summary">Werte unterhalb dieser Grenze werden rot angezeigt. Wenn in Juggluco der Alarm für niedrigen Glukosewert aktiviert ist, muss der Wert nicht gesetzt werden.</string>
 
     <string name="select_receiver_show_all">Zeige alle</string>
     <string name="select_receiver_no_glucodata_receiver">Kein Empfänger gefunden!</string>
     <string name="select_receiver_info">INFO:\nKein Empfänger = Globaler Broadcast</string>
     <string name="button_ok">OK</string>
     <string name="button_cancel">Abbrechen</string>
+
+    <string name="menu_settings">Einstellungen</string>
 </resources>

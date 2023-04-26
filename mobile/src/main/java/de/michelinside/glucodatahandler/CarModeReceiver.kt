@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
@@ -68,12 +69,21 @@ object CarModeReceiver: ReceiveDataInterface {
             )
     }
 
+    fun updateSettings(sharedPref: SharedPreferences) {
+        enable_notification = sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, enable_notification)
+        if(init && car_connected) {
+            if(enable_notification)
+                showNotification()
+            else
+                removeNotification()
+        }
+    }
+
     fun initNotification(context: Context) {
         try {
             if(!init) {
                 Log.d(LOG_ID, "addNotification called")
-                val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-                enable_notification = sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, enable_notification)
+                updateSettings(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE))
                 createNofitication(context)
                 CarConnection(context).type.observeForever(::onConnectionStateUpdated)
                 init = true

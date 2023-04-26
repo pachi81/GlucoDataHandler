@@ -1,6 +1,7 @@
 package de.michelinside.glucodatahandler.common
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.os.Bundle
@@ -59,6 +60,8 @@ object ReceiveData {
     var timeformat = DateFormat.getTimeInstance(DateFormat.DEFAULT)
     var source: ReceiveDataSource = ReceiveDataSource.BROADCAST
     var curExtraBundle: Bundle? = null
+    private var lowValue: Float = 70F
+    private var highValue: Float = 250F
     private var targetMinValue = 90F
     val targetMin: Float get() {
         if(isMmol)  // mmol/l
@@ -141,9 +144,9 @@ object ReceiveData {
             return AlarmType.HIGH_ALARM
         if((alarm and 7) == 7)
             return AlarmType.LOW_ALARM
-        if(glucose < targetMin )
+        if(targetMin > 0 && glucose < targetMin )
             return AlarmType.LOW
-        if(glucose > targetMax )
+        if(targetMax > 0 && glucose > targetMax )
             return AlarmType.HIGH
         return AlarmType.OK
     }
@@ -266,6 +269,12 @@ object ReceiveData {
                 }
 
                 rawValue = extras.getInt(MGDL)
+                if (alarm == 0) {
+                    if(lowValue >= 0F && rawValue <= lowValue)
+                        alarm = 7
+                    else if(highValue >= 0F && rawValue >= highValue)
+                        alarm = 6
+                }
                 time = extras.getLong(TIME) //time in mmsec
                 changeIsMmol(rawValue!=glucose.toInt(), context)
                 notify(context, source, extras)
@@ -289,13 +298,18 @@ object ReceiveData {
         }
     }
 
-    fun readTargets(context: Context) {
-        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+    fun updateSettings(sharedPref: SharedPreferences) {
         targetMinValue = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MIN, targetMinValue)
         targetMaxValue = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, targetMaxValue)
-        if(sharedPref.contains(Constants.SHARED_PREF_USE_MMOL))
-            isMmolValue = sharedPref.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
-        else {
+        lowValue = sharedPref.getFloat(Constants.SHARED_PREF_LOW_GLUCOSE, lowValue)
+        highValue = sharedPref.getFloat(Constants.SHARED_PREF_HIGH_GLUCOSE, highValue)
+        isMmolValue = sharedPref.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
+        Log.i(LOG_ID, "Raw low/min/max/high set: " + lowValue.toString() + "/" + targetMinValue.toString() + "/" + targetMaxValue.toString() + "/" + highValue.toString() + " mg/dl - unit: " + getUnit())
+    }
+
+    fun readTargets(context: Context) {
+        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        if(!sharedPref.contains(Constants.SHARED_PREF_USE_MMOL)) {
             Log.i(LOG_ID, "Upgrade to new mmol handling!")
             isMmolValue = Utils.isMmolValue(targetMinValue)
             if (isMmol) {
@@ -307,7 +321,7 @@ object ReceiveData {
                 apply()
             }
         }
-        Log.i(LOG_ID, "Raw min/max set: " + targetMinValue.toString() + "/" + targetMaxValue.toString() + " mg/dl")
+        updateSettings(sharedPref)
     }
 
     fun writeTarget(context: Context, min: Boolean, value: Float) {
