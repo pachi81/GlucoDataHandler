@@ -30,7 +30,7 @@
 
     <string name="pref_cat_android_auto">Android Auto</string>
     <string name="pref_cat_xdrip">xDrip+</string>
-    <string name="pref_cat_forward_broadcast">Forward Juggluco broadcast</string>
+    <string name="pref_cat_forward_broadcast">Glucodata broadcast</string>
     <string name="pref_target_range">Target range</string>
 
     <string name="pref_switch_notification">Dummy values</string>
@@ -44,10 +44,10 @@
     <string name="pref_low_value_summary">Values lower then this border are shown in red color. If you have activated low alarm in Juggluco, you do not have to set this value.</string>
     <string name="pref_switch_car_notification">Android Auto notifications</string>
     <string name="pref_switch_car_notification_summary">To get notifications in Android Auto, you have to activate developer settings in Android Auto by clicking several times on the version. Then you have to enable "Unknown sources" in the developer settings menu.</string>
-    <string name="pref_switch_send_to_aod">Forward glucodata broadcast</string>
-    <string name="pref_switch_send_to_aod_summary">Forward glucodata broadcast from all sources to specified receivers</string>
+    <string name="pref_switch_send_to_aod">Send glucodata broadcast</string>
+    <string name="pref_switch_send_to_aod_summary">Send glucodata broadcast for new values from all sources to specified receivers</string>
     <string name="pref_button_select_target">Identify receiver</string>
-    <string name="pref_button_select_target_summary">Choose receivers sending the glucodata broadcast to. If no receiver is selected, a global broadcast is send and all app registering for this broadcast can receive it.</string>
+    <string name="pref_button_select_target_summary">Choose receivers sending the glucodata broadcast to. If no receiver is selected, a global broadcast is send and all apps registered for this broadcast can receive it.</string>
     <string name="pref_switch_send_to_xdrip">Send to xDrip</string>
     <string name="pref_switch_send_to_xdrip_summary">Forward glucose values to xDrip+.\nIMPORTANT: this must be off to receive values from xDrip+!</string>
     <string name="pref_switch_use_mmol">Use mmol/l</string>

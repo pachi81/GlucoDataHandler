@@ -15,10 +15,6 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
         const val RAW = "com.eveningoutpost.dexdrip.Extras.Raw"
         const val SOURCE_DESC = "com.eveningoutpost.dexdrip.Extras.SourceDesc"
         const val SOURCE_INFO = "com.eveningoutpost.dexdrip.Extras.SourceInfo"
-        const val NOISE = "com.eveningoutpost.dexdrip.Extras.Noise"
-        const val NOISE_WARNING = "com.eveningoutpost.dexdrip.Extras.NoiseWarning"
-        const val NOISE_LEVEL = "com.eveningoutpost.dexdrip.Extras.NsNoiseLevel"
-        const val NOISE_BLOCK_LEVEL = "com.eveningoutpost.dexdrip.Extras.NoiseBlockLevel"
     }
     private val LOG_ID = "GlucoDataHandler.XDripBroadcastReceiver"
 
@@ -41,11 +37,7 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
                             " - Slope: " + slope.toString() +
                             " - SlopeName: " + extras.getString(BG_SLOPE_NAME) +
                             " - Raw: " + extras.getDouble(RAW).toString() +
-                            " - Source: " + extras.getString(SOURCE_INFO) + " (" + extras.getString(SOURCE_DESC) + ")" +
-                            " - Noise: " + extras.getDouble(NOISE).toString() +
-                            " - Noise-Warning: " + extras.getInt(NOISE_WARNING).toString() +
-                            " - Noise-Blocklevel: " + extras.getInt(NOISE_BLOCK_LEVEL).toString() +
-                            " - NS Noise-Level: " + extras.getString(NOISE_LEVEL)
+                            " - Source: " + extras.getString(SOURCE_INFO) + " (" + extras.getString(SOURCE_DESC) + ")"
                     )
 
                     val glucoExtras = Bundle()
