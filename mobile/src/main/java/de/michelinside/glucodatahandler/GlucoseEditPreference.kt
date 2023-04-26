@@ -40,22 +40,31 @@ class GlucoseEditPreference : EditTextPreference, OnBindEditTextListener {
 
     override fun persistString(value: String?): Boolean {
         Log.i(LOG_ID, "persistString called with value " + value)
-        if (Utils.isMmolValue(value!!.toFloat()))
-            return persistFloat(Utils.mmolToMg(value.toFloat()))
-        return persistFloat(value.toFloat())
+        try {
+            if (Utils.isMmolValue(value!!.toFloat()))
+                return persistFloat(Utils.mmolToMg(value.toFloat()))
+            return persistFloat(value.toFloat())
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "persistString exception: " + exc.toString())
+        }
+        return false
     }
 
     override fun onBindEditText(editText: EditText) {
         Log.i(LOG_ID, "onBindEditText called " + editText.text)
-        editText.inputType = if (ReceiveData.isMmol) InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL else InputType.TYPE_CLASS_NUMBER
-        var value = editText.getText().toString().toFloat()
-        if (!ReceiveData.isMmol) {
-            if(Utils.isMmolValue(value))
-                value = Utils.mmolToMg(value)
-            editText.setText(value.toInt().toString())
-        } else if (ReceiveData.isMmol && !Utils.isMmolValue(value)) {
-            editText.setText(Utils.mgToMmol(value).toString())
+        try {
+            editText.inputType = if (ReceiveData.isMmol) InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL else InputType.TYPE_CLASS_NUMBER
+            var value = editText.getText().toString().toFloat()
+            if (!ReceiveData.isMmol) {
+                if(Utils.isMmolValue(value))
+                    value = Utils.mmolToMg(value)
+                editText.setText(value.toInt().toString())
+            } else if (ReceiveData.isMmol && !Utils.isMmolValue(value)) {
+                editText.setText(Utils.mgToMmol(value).toString())
+            }
+            Log.i(LOG_ID, "onBindEditText new text: " + editText.text)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onBindEditText exception: " + exc.toString())
         }
-        Log.i(LOG_ID, "onBindEditText new text: " + editText.text)
     }
 }

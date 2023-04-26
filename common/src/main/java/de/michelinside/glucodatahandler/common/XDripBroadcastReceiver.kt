@@ -3,7 +3,6 @@ package de.michelinside.glucodatahandler.common
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 
@@ -20,12 +19,6 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
         const val NOISE_WARNING = "com.eveningoutpost.dexdrip.Extras.NoiseWarning"
         const val NOISE_LEVEL = "com.eveningoutpost.dexdrip.Extras.NsNoiseLevel"
         const val NOISE_BLOCK_LEVEL = "com.eveningoutpost.dexdrip.Extras.NoiseBlockLevel"
-        private var lowValue: Float = 70F
-        private var highValue: Float = 250F
-        fun updateSettings(sharedPref: SharedPreferences) {
-            lowValue = sharedPref.getFloat(Constants.SHARED_PREF_LOW_GLUCOSE, lowValue)
-            highValue = sharedPref.getFloat(Constants.SHARED_PREF_HIGH_GLUCOSE, highValue)
-        }
     }
     private val LOG_ID = "GlucoDataHandler.XDripBroadcastReceiver"
 
@@ -66,13 +59,7 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
                     glucoExtras.putInt(ReceiveData.MGDL, extras.getDouble(BG_ESTIMATE).toInt())
                     glucoExtras.putString(ReceiveData.SERIAL, source)
                     glucoExtras.putFloat(ReceiveData.RATE, slope)
-                    if (mgdl >= highValue)
-                        glucoExtras.putInt(ReceiveData.ALARM, 6)
-                    else if (mgdl <= lowValue)
-                        glucoExtras.putInt(ReceiveData.ALARM, 7)
-                    else
-                        glucoExtras.putInt(ReceiveData.ALARM, 0)
-
+                    glucoExtras.putInt(ReceiveData.ALARM, 0)
                     ReceiveData.handleIntent(context, ReceiveDataSource.BROADCAST, glucoExtras)
                 }
             }

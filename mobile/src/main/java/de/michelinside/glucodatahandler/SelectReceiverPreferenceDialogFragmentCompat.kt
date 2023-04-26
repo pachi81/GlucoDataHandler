@@ -7,92 +7,91 @@ import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.*
+import android.widget.CheckBox
+import android.widget.LinearLayout
+import android.widget.ScrollView
+import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
-import androidx.fragment.app.DialogFragment
+import androidx.preference.PreferenceDialogFragmentCompat
 import de.michelinside.glucodatahandler.common.Constants
 
 
-class SelectReceiverFragment : DialogFragment() {
-    private val LOG_ID = "GlucoDataHandler.SelectReceiver"
-    private lateinit var btnOK: Button
-    private lateinit var btnCancel: Button
+class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat() {
+    companion object {
+        private val LOG_ID = "GlucoDataHandler.SelectReceiverPreferenceDialog"
+        fun initial(key: String) : SelectReceiverPreferenceDialogFragmentCompat {
+            Log.d(LOG_ID, "initial called for key: " +  key )
+            val dialog = SelectReceiverPreferenceDialogFragmentCompat()
+            val bundle = Bundle(1)
+            bundle.putString(ARG_KEY, key)
+            dialog.arguments = bundle
+            return dialog
+        }
+    }
+    private var receiverSet = HashSet<String>()
     private lateinit var showAllSwitch: SwitchCompat
     private lateinit var sharedPref: SharedPreferences
-    private var receiverSet = HashSet<String>()
+    private var selectReceiverPreference: SelectReceiverPreference? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        Log.d(LOG_ID, "onCreateView called")
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_select_receiver, container, false)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.d(LOG_ID, "onCreate called with bundle: " +  savedInstanceState?.toString() )
+        try {
+            selectReceiverPreference = preference as SelectReceiverPreference
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Setting preference exception: " + exc.toString())
+        }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onBindDialogView(view: View) {
+        super.onBindDialogView(view)
+        Log.d(LOG_ID, "onBindDialogView called for view: " +  view.transitionName.toString() + " preference " + preference.javaClass )
         try {
-            Log.d(LOG_ID, "onViewCreated called")
-            super.onViewCreated(view, savedInstanceState)
+            val savedReceivers = selectReceiverPreference!!.getReceivers()
+            Log.d(LOG_ID, savedReceivers.size.toString() + " receivers loaded: " + savedReceivers.toString())
+            receiverSet.addAll(savedReceivers)
 
             sharedPref = requireContext().getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-            val savedReceivers = sharedPref.getStringSet(Constants.SHARED_PREF_GLUCODATA_RECEIVERS, HashSet<String>())
-            if(savedReceivers!=null) {
-                Log.d(LOG_ID, savedReceivers.size.toString() + " receivers loaded: " + savedReceivers.toString())
-                receiverSet.addAll(savedReceivers)
-            }
-
-            btnOK = view.findViewById<Button>(R.id.btnOK)
-            btnOK.setOnClickListener {
-                save()
-                dismiss()
-            }
-
-            btnCancel = view.findViewById<Button>(R.id.btnCancel)
-            btnCancel.setOnClickListener {
-                dismiss()
-            }
-
-            showAllSwitch = view.findViewById<SwitchCompat>(R.id.showAllSwitch)
+            showAllSwitch = view.findViewById(R.id.showAllSwitch)
             showAllSwitch.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_GLUCODATA_RECEIVER_SHOW_ALL, false)
             showAllSwitch.setOnCheckedChangeListener { _, isChecked ->
                 updateReceivers(view, isChecked)
             }
 
             updateReceivers(view, showAllSwitch.isChecked)
-
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "onViewCreated exception: " + exc.message.toString() )
+            Log.e(LOG_ID, "onBindDialogView exception: " + exc.toString())
         }
     }
 
-    private fun save() {
+    override fun onDialogClosed(positiveResult: Boolean) {
+        Log.d(LOG_ID, "onDialogClosed called with positiveResult: " +  positiveResult.toString() )
         try {
-            Log.d(LOG_ID, "Saving "+ receiverSet.size.toString() + " receivers: " + receiverSet.toString())
-            with(sharedPref.edit()) {
-                putStringSet(Constants.SHARED_PREF_GLUCODATA_RECEIVERS, receiverSet)
-                putBoolean(Constants.SHARED_PREF_GLUCODATA_RECEIVER_SHOW_ALL, showAllSwitch.isChecked)
-                apply()
+            if(positiveResult) {
+                with(sharedPref.edit()) {
+                    putBoolean(Constants.SHARED_PREF_GLUCODATA_RECEIVER_SHOW_ALL, showAllSwitch.isChecked)
+                    apply()
+                }
+                selectReceiverPreference!!.setReceivers(receiverSet)
             }
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "save exception: " + exc.message.toString() )
+            Log.e(LOG_ID, "onDialogClosed exception: " + exc.toString())
         }
     }
+
 
     private fun updateReceivers(view: View, all: Boolean) {
         try {
-            val receiverLayout = view.findViewById<LinearLayout>(R.id.receiverLayout)
+            val receiverLayout = view.findViewById<LinearLayout>(de.michelinside.glucodatahandler.R.id.receiverLayout)
             val receivers = getReceivers(all)
             Log.d(LOG_ID, receivers.size.toString() + " receivers found!" )
-            val receiverScrollView = view.findViewById<ScrollView>(R.id.receiverScrollView)
+            val receiverScrollView = view.findViewById<ScrollView>(de.michelinside.glucodatahandler.R.id.receiverScrollView)
             if (receivers.size > 5) {
                 receiverScrollView.layoutParams.height = resources.displayMetrics.heightPixels/2
             } else
-                receiverScrollView.layoutParams.height = WRAP_CONTENT
+                receiverScrollView.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
             receiverLayout.removeAllViews()
             val currentReceivers = receiverSet.toHashSet()
             receiverSet.clear()

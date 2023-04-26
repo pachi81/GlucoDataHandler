@@ -10,12 +10,9 @@ import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SwitchCompat
-import androidx.core.view.isVisible
 import androidx.preference.PreferenceManager
 import de.michelinside.glucodatahandler.common.*
 
@@ -26,8 +23,6 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
     private lateinit var txtLastValue: TextView
     private lateinit var txtVersion: TextView
     private lateinit var txtWearInfo: TextView
-    private lateinit var switchSendToAod: SwitchCompat
-    private lateinit var btnSelectTarget: Button
     private lateinit var sharedPref: SharedPreferences
     private val LOG_ID = "GlucoDataHandler.Main"
 
@@ -63,37 +58,17 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
         txtVersion = findViewById(R.id.txtVersion)
         txtVersion.text = BuildConfig.VERSION_NAME
 
-        switchSendToAod = findViewById(R.id.switchSendToAod)
-        btnSelectTarget = findViewById(R.id.btnSelectTarget)
-        switchSendToAod.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, false)
+        val sendToAod = sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, false)
 
         if(!sharedPref.contains(Constants.SHARED_PREF_GLUCODATA_RECEIVERS)) {
             val receivers = HashSet<String>()
-            if (switchSendToAod.isChecked)
+            if (sendToAod)
                 receivers.add("de.metalgearsonic.glucodata.aod")
             Log.i(LOG_ID, "Upgrade receivers to " + receivers.toString())
             with(sharedPref.edit()) {
                 putStringSet(Constants.SHARED_PREF_GLUCODATA_RECEIVERS, receivers)
                 apply()
             }
-        }
-
-        btnSelectTarget.isVisible = switchSendToAod.isChecked
-        switchSendToAod.setOnCheckedChangeListener { _, isChecked ->
-            Log.d(LOG_ID, "Send to AOD changed: " + isChecked.toString())
-            try {
-                btnSelectTarget.isVisible = isChecked
-                with (sharedPref.edit()) {
-                    putBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, isChecked)
-                    apply()
-                }
-            } catch (exc: Exception) {
-                Log.e(LOG_ID, "Changing send to AOD exception: " + exc.message.toString() )
-            }
-        }
-        btnSelectTarget.setOnClickListener {
-            val selectDialog = SelectReceiverFragment()
-            selectDialog.show(this.supportFragmentManager, "selectReceiver")
         }
     }
 

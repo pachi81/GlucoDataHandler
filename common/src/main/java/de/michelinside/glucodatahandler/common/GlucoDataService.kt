@@ -47,7 +47,6 @@ open class GlucoDataService : WearableListenerService(), ReceiveDataInterface {
             registerReceiver(receiver, IntentFilter("glucodata.Minute"))
             batteryReceiver = BatteryReceiver()
             registerReceiver(batteryReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-            XDripBroadcastReceiver.updateSettings(sharedPref)
             xDripReceiver = XDripBroadcastReceiver()
             registerReceiver(xDripReceiver,IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"))
 

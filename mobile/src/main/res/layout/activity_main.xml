@@ -12,7 +12,7 @@
         android:layout_width="57dp"
         android:layout_height="57dp"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="100dp"
         android:src="@drawable/icon_question"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.052"
@@ -24,7 +24,7 @@
         android:layout_width="122dp"
         android:layout_height="58dp"
         android:layout_marginStart="76dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="100dp"
         android:text="---"
         android:textAlignment="viewEnd"
         android:textColor="#757575"
@@ -65,29 +65,5 @@
         app:layout_constraintBottom_toTopOf="@+id/txtVersion"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/switchSendToAod"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="80dp"
-        android:text="@string/pref_switch_send_to_aod"
-        android:textAlignment="textStart"
-        app:layout_constraintBottom_toTopOf="@+id/txtWearInfo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/btnSelectTarget"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="30dp"
-        android:text="@string/pref_button_select_target"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switchSendToAod" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

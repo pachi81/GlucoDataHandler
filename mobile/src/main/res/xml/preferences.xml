@@ -8,11 +8,11 @@
         <de.michelinside.glucodatahandler.GlucoseEditPreference
             android:defaultValue="0"
             android:inputType="numberDecimal"
-            android:key="target_min_value"
+            android:key="high_glucose"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="@string/pref_target_min_value"
-            android:summary="@string/pref_target_min_value_summary"
+            android:title="@string/pref_high_value"
+            android:summary="@string/pref_high_value_summary"
             app:iconSpaceReserved="false" />
         <de.michelinside.glucodatahandler.GlucoseEditPreference
             android:defaultValue="0"
@@ -22,6 +22,24 @@
             android:singleLine="true"
             android:title="@string/pref_target_max_value"
             android:summary="@string/pref_target_max_value_summary"
+            app:iconSpaceReserved="false" />
+        <de.michelinside.glucodatahandler.GlucoseEditPreference
+            android:defaultValue="0"
+            android:inputType="numberDecimal"
+            android:key="target_min_value"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_target_min_value"
+            android:summary="@string/pref_target_min_value_summary"
+            app:iconSpaceReserved="false" />
+        <de.michelinside.glucodatahandler.GlucoseEditPreference
+            android:defaultValue="0"
+            android:inputType="numberDecimal"
+            android:key="low_glucose"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_low_value"
+            android:summary="@string/pref_low_value_summary"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory
@@ -49,23 +67,24 @@
             android:summary="@string/pref_switch_use_mmol_summary"
             android:title="@string/pref_switch_use_mmol"
             app:iconSpaceReserved="false" />
-        <de.michelinside.glucodatahandler.GlucoseEditPreference
-            android:defaultValue="0"
-            android:inputType="numberDecimal"
-            android:key="low_glucose"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/pref_low_value"
-            android:summary="@string/pref_low_value_summary"
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
+        android:title="@string/pref_cat_forward_broadcast"
+        app:iconSpaceReserved="false">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="send_to_glucodata_aod"
+            android:summary="@string/pref_switch_send_to_aod_summary"
+            android:title="@string/pref_switch_send_to_aod"
             app:iconSpaceReserved="false" />
-        <de.michelinside.glucodatahandler.GlucoseEditPreference
-            android:defaultValue="0"
-            android:inputType="numberDecimal"
-            android:key="high_glucose"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/pref_high_value"
-            android:summary="@string/pref_high_value_summary"
+        <de.michelinside.glucodatahandler.SelectReceiverPreference
+            android:defaultValue=""
+            android:key="glucodata_receivers"
+            android:summary="@string/pref_button_select_target_summary"
+            android:title="@string/pref_button_select_target"
+            app:enabled="false"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
