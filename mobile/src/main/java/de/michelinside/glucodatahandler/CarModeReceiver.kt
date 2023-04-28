@@ -59,8 +59,8 @@ object CarModeReceiver: ReceiveDataInterface {
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(context.getString(R.string.app_name))
             .setContentText("Android Auto")
-            .addAction(createReplyAction(context))
-            .addAction(createDismissAction(context))
+            .addInvisibleAction(createReplyAction(context))
+            .addInvisibleAction(createDismissAction(context))
             .setSilent(true)
             .setPriority(NotificationCompat.PRIORITY_MIN)
             .extend (
@@ -198,7 +198,7 @@ object CarModeReceiver: ReceiveDataInterface {
             PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         return NotificationCompat.Action.Builder(R.mipmap.ic_launcher, "Reply", pendingIntent)
-            .setAllowGeneratedReplies(true)
+            //.setAllowGeneratedReplies(true)
             .setSemanticAction(NotificationCompat.Action.SEMANTIC_ACTION_REPLY)
             .setShowsUserInterface(false)
             .addRemoteInput(remoteInputWear)
