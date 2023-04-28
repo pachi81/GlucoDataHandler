@@ -53,7 +53,7 @@
         </activity>
 
         <receiver
-            android:name=".GlucoseDataReceiverMobile"
+            android:name=".common.GlucoseDataReceiver"
             android:enabled="true"
             android:exported="true"
             tools:ignore="ExportedReceiver">

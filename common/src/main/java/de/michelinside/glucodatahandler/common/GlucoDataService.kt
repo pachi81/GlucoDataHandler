@@ -7,8 +7,13 @@ import android.os.*
 import android.util.Log
 import com.google.android.gms.wearable.*
 
+enum class AppSource {
+    NOT_SET,
+    PHONE_APP,
+    WEAR_APP;
+}
 
-open class GlucoDataService : WearableListenerService(), ReceiveDataInterface {
+open class GlucoDataService(source: AppSource) : WearableListenerService(), ReceiveDataInterface {
     private val LOG_ID = "GlucoDataHandler.GlucoDataService"
     private lateinit var receiver: GlucoseDataReceiver
     private lateinit var batteryReceiver: BatteryReceiver
@@ -17,7 +22,9 @@ open class GlucoDataService : WearableListenerService(), ReceiveDataInterface {
     private var lastAlarmTime = 0L
     private var lastAlarmType = ReceiveData.AlarmType.OK
 
+
     companion object {
+        var appSource = AppSource.NOT_SET
         private var isRunning = false
         val running get() = isRunning
         private var service: GlucoDataService? = null
@@ -26,6 +33,10 @@ open class GlucoDataService : WearableListenerService(), ReceiveDataInterface {
                 return service!!.applicationContext
             return null
         }
+    }
+
+    init {
+        appSource = source
     }
 
     override fun onCreate() {
@@ -38,8 +49,15 @@ open class GlucoDataService : WearableListenerService(), ReceiveDataInterface {
             ReceiveData.readTargets(this)
 
             val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            val filter = mutableSetOf(
+                ReceiveDataSource.BROADCAST,
+                ReceiveDataSource.MESSAGECLIENT,
+                ReceiveDataSource.CAPILITY_INFO,
+                ReceiveDataSource.BATTERY_LEVEL)
+            if (appSource == AppSource.PHONE_APP)
+                filter.add(ReceiveDataSource.SETTINGS)   // only send setting changes from phone to wear!
+            ReceiveData.addNotifier(this, filter)
 
-            ReceiveData.addNotifier(this)
             connection.open(this)
 
             Log.d(LOG_ID, "Register Receiver")
