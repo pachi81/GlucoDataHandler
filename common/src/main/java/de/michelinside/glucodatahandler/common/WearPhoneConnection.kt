@@ -211,7 +211,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 }
 
                 if (p0.path == Constants.SETTINGS_INTENT_MESSAGE_PATH || extras.containsKey(Constants.SETTINGS_BUNDLE)) {
-                    Log.w(LOG_ID, "Settings values receceived from " + p0.sourceNodeId + ": " + extras.toString())
+                    Log.d(LOG_ID, "Settings receceived from " + p0.sourceNodeId + ": " + extras.toString())
                     val bundle = if (extras.containsKey(Constants.SETTINGS_BUNDLE)) extras.getBundle(Constants.SETTINGS_BUNDLE) else extras
                     ReceiveData.setSettings(context, bundle!!)
                 }
@@ -226,7 +226,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     }
                     if (bundle != null) {
                         if (GlucoDataService.appSource == AppSource.PHONE_APP) {
-                            Log.w(LOG_ID, "Sending settings values")
+                            Log.d(LOG_ID, "Adding settings for sending")
                             bundle.putBundle(Constants.SETTINGS_BUNDLE, ReceiveData.getSettingsBundle())
                         }
                         sendMessage(source, bundle)
