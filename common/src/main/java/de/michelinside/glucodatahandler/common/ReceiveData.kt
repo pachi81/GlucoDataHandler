@@ -59,7 +59,6 @@ object ReceiveData {
     var dateformat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT)
     var timeformat = DateFormat.getTimeInstance(DateFormat.DEFAULT)
     var source: ReceiveDataSource = ReceiveDataSource.BROADCAST
-    var curExtraBundle: Bundle? = null
     private var lowValue: Float = 70F
     private var highValue: Float = 250F
     private var targetMinValue = 90F
@@ -251,7 +250,6 @@ object ReceiveData {
             val curTimeDiff = extras.getLong(TIME) - time
             if(curTimeDiff >= 1000) // check for new value received
             {
-                curExtraBundle = extras
                 source = dataSource
                 sensorID = extras.getString(SERIAL) //Name of sensor
                 glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
@@ -277,7 +275,7 @@ object ReceiveData {
                 }
                 time = extras.getLong(TIME) //time in mmsec
                 changeIsMmol(rawValue!=glucose.toInt(), context)
-                notify(context, source, extras)
+                notify(context, source, createExtras())  // re-create extras to have all changed value inside...
                 return true
             }
         } catch (exc: Exception) {
@@ -341,6 +339,19 @@ object ReceiveData {
             }
             apply()
         }
+    }
+
+    fun createExtras(): Bundle? {
+        if(time == 0L)
+            return null
+        val extras = Bundle()
+        extras.putLong(TIME, time)
+        extras.putFloat(GLUCOSECUSTOM, glucose)
+        extras.putInt(MGDL, rawValue)
+        extras.putString(SERIAL, sensorID)
+        extras.putFloat(RATE, rate)
+        extras.putInt(ALARM, alarm)
+        return extras
     }
 
 }
