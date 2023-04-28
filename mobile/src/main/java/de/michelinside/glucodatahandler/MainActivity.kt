@@ -82,7 +82,12 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
         super.onResume()
         Log.d(LOG_ID, "onResume called")
         update()
-        ReceiveData.addNotifier(this)
+        ReceiveData.addNotifier(this, mutableSetOf(
+            ReceiveDataSource.BROADCAST,
+            ReceiveDataSource.MESSAGECLIENT,
+            ReceiveDataSource.CAPILITY_INFO,
+            ReceiveDataSource.NODE_BATTERY_LEVEL,
+            ReceiveDataSource.SETTINGS))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

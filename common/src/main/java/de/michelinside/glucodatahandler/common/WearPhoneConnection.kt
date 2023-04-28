@@ -132,6 +132,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         when(dataSource) {
             ReceiveDataSource.BATTERY_LEVEL -> Constants.BATTERY_INTENT_MESSAGE_PATH
             ReceiveDataSource.CAPILITY_INFO -> Constants.REQUEST_DATA_MESSAGE_PATH
+            ReceiveDataSource.SETTINGS -> Constants.SETTINGS_INTENT_MESSAGE_PATH
             else -> Constants.GLUCODATA_INTENT_MESSAGE_PATH
         }
 
@@ -141,7 +142,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             if( nodesConnected && dataSource != ReceiveDataSource.NODE_BATTERY_LEVEL ) {
                 Log.d(LOG_ID, connectedNodes.size.toString() + " nodes found for sending message to")
                 if (extras != null && dataSource != ReceiveDataSource.BATTERY_LEVEL && BatteryReceiver.batteryPercentage > 0) {
-                    extras.putInt("level", BatteryReceiver.batteryPercentage)
+                    extras.putInt(BatteryReceiver.LEVEL, BatteryReceiver.batteryPercentage)
                 }
                 // Send a message to all nodes in parallel
                 connectedNodes.forEach { node ->
@@ -209,15 +210,27 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     ReceiveData.handleIntent(context, ReceiveDataSource.MESSAGECLIENT, extras)
                 }
 
+                if (p0.path == Constants.SETTINGS_INTENT_MESSAGE_PATH || extras.containsKey(Constants.SETTINGS_BUNDLE)) {
+                    Log.w(LOG_ID, "Settings values receceived from " + p0.sourceNodeId + ": " + extras.toString())
+                    val bundle = if (extras.containsKey(Constants.SETTINGS_BUNDLE)) extras.getBundle(Constants.SETTINGS_BUNDLE) else extras
+                    ReceiveData.setSettings(context, bundle!!)
+                }
+
                 if(p0.path == Constants.REQUEST_DATA_MESSAGE_PATH) {
                     Log.d(LOG_ID, "Data request received from " + p0.sourceNodeId)
-                    val glucodataBundle = ReceiveData.createExtras()
-                    if (glucodataBundle != null)
-                        sendMessage(ReceiveDataSource.BROADCAST, glucodataBundle)
-                    else if (BatteryReceiver.batteryPercentage > 0) {
-                        sendMessage(ReceiveDataSource.BATTERY_LEVEL, BatteryReceiver.batteryBundle)
+                    var bundle = ReceiveData.createExtras()
+                    var source = ReceiveDataSource.BROADCAST
+                    if( bundle == null && BatteryReceiver.batteryPercentage > 0) {
+                        bundle = BatteryReceiver.batteryBundle
+                        source = ReceiveDataSource.BATTERY_LEVEL
                     }
-
+                    if (bundle != null) {
+                        if (GlucoDataService.appSource == AppSource.PHONE_APP) {
+                            Log.w(LOG_ID, "Sending settings values")
+                            bundle.putBundle(Constants.SETTINGS_BUNDLE, ReceiveData.getSettingsBundle())
+                        }
+                        sendMessage(source, bundle)
+                    }
                 }
             }
         } catch (exc: Exception) {

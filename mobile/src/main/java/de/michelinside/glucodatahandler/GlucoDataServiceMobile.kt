@@ -6,12 +6,11 @@ import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.*
 
-class GlucoDataServiceMobile: GlucoDataService(), ReceiveDataInterface {
+class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), ReceiveDataInterface {
     private val LOG_ID = "GlucoDataHandler.GlucoDataServiceMobile"
     init {
         Log.d(LOG_ID, "init called")
         ReceiveData.addNotifier(TaskerDataReceiver, mutableSetOf(ReceiveDataSource.BROADCAST,ReceiveDataSource.MESSAGECLIENT))
-        ReceiveData.addNotifier(this)
     }
 
     override fun onCreate() {

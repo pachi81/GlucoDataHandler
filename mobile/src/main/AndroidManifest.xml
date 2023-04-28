@@ -37,7 +37,8 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/menu_settings"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
@@ -53,7 +54,7 @@
         </activity>
 
         <receiver
-            android:name=".GlucoseDataReceiverMobile"
+            android:name=".common.GlucoseDataReceiver"
             android:enabled="true"
             android:exported="true"
             tools:ignore="ExportedReceiver">

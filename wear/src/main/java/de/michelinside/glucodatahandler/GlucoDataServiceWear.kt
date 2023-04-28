@@ -11,18 +11,18 @@ import android.util.Log
 import de.michelinside.glucodatahandler.common.*
 
 
-class GlucoDataServiceWear: GlucoDataService() {
+class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
     private var isForegroundService = false
     init {
         Log.d(LOG_ID, "init called")
-        ReceiveData.addNotifier(ActiveComplicationHandler, mutableSetOf(ReceiveDataSource.MESSAGECLIENT,ReceiveDataSource.BROADCAST))
+        ReceiveData.addNotifier(ActiveComplicationHandler, mutableSetOf(ReceiveDataSource.MESSAGECLIENT,ReceiveDataSource.BROADCAST,ReceiveDataSource.SETTINGS))
         ReceiveData.addNotifier(BatteryLevelComplicationUpdater, mutableSetOf(ReceiveDataSource.CAPILITY_INFO,ReceiveDataSource.BATTERY_LEVEL, ReceiveDataSource.NODE_BATTERY_LEVEL))
     }
 
     companion object GlucoDataServiceWear {
         private val LOG_ID = "GlucoDataHandler.GlucoDataServiceWear"
         fun start(context: Context) {
-            if (!GlucoDataService.running) {
+            if (!running) {
                 try {
                     val serviceIntent = Intent(
                         context,

@@ -8,6 +8,7 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.ReceiveDataSource
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GlucoDataHandler.SettingsFragment"
@@ -59,6 +60,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 Constants.SHARED_PREF_LOW_GLUCOSE,
                 Constants.SHARED_PREF_HIGH_GLUCOSE -> {
                     ReceiveData.updateSettings(sharedPreferences!!)
+                    ReceiveData.notify(requireContext(), ReceiveDataSource.SETTINGS, ReceiveData.getSettingsBundle())
                 }
                 Constants.SHARED_PREF_CAR_NOTIFICATION -> {
                     CarModeReceiver.updateSettings(sharedPreferences!!)

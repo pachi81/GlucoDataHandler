@@ -20,7 +20,8 @@ enum class ReceiveDataSource(private val resId: Int) {
     MESSAGECLIENT(R.string.source_message_client),
     CAPILITY_INFO(R.string.source_capility_info),
     BATTERY_LEVEL(R.string.source_battery_level),
-    NODE_BATTERY_LEVEL(R.string.source_node_battery_level);
+    NODE_BATTERY_LEVEL(R.string.source_node_battery_level),
+    SETTINGS(R.string.source_settings);
 
     fun getResId(): Int {
         return resId
@@ -59,8 +60,22 @@ object ReceiveData {
     var dateformat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT)
     var timeformat = DateFormat.getTimeInstance(DateFormat.DEFAULT)
     var source: ReceiveDataSource = ReceiveDataSource.BROADCAST
-    private var lowValue: Float = 70F
-    private var highValue: Float = 250F
+    private var lowValue: Float = 0F
+    private val low: Float get() {
+        if(isMmol && lowValue > 0F)  // mmol/l
+        {
+            return Utils.mgToMmol(lowValue, 1)
+        }
+        return lowValue
+    }
+    private var highValue: Float = 0F
+    private val high: Float get() {
+        if(isMmol && highValue > 0F)  // mmol/l
+        {
+            return Utils.mgToMmol(highValue, 1)
+        }
+        return highValue
+    }
     private var targetMinValue = 90F
     val targetMin: Float get() {
         if(isMmol)  // mmol/l
@@ -139,9 +154,9 @@ object ReceiveData {
     fun getAlarmType(): AlarmType {
         if(isObsolete(300))
             return AlarmType.NONE
-        if((alarm and 7) == 6)
+        if(((alarm and 7) == 6) || (high > 0F && glucose >= high))
             return AlarmType.HIGH_ALARM
-        if((alarm and 7) == 7)
+        if(((alarm and 7) == 7) || (low > 0F && glucose <= low))
             return AlarmType.LOW_ALARM
         if(targetMin > 0 && glucose < targetMin )
             return AlarmType.LOW
@@ -207,7 +222,7 @@ object ReceiveData {
     }
 
     private var notifiers = mutableMapOf<ReceiveDataInterface, MutableSet<ReceiveDataSource>?>()
-    fun addNotifier(notifier: ReceiveDataInterface, sourceFilter: MutableSet<ReceiveDataSource>? = null)
+    fun addNotifier(notifier: ReceiveDataInterface, sourceFilter: MutableSet<ReceiveDataSource>)
     {
         Log.d(LOG_ID, "add notifier " + notifier.toString() )
         notifiers[notifier] = sourceFilter
@@ -268,9 +283,9 @@ object ReceiveData {
 
                 rawValue = extras.getInt(MGDL)
                 if (alarm == 0) {
-                    if(lowValue >= 0F && rawValue <= lowValue)
+                    if(low > 0F && glucose <= low)
                         alarm = 7
-                    else if(highValue >= 0F && rawValue >= highValue)
+                    else if(high > 0F && glucose >= high)
                         alarm = 6
                 }
                 time = extras.getLong(TIME) //time in mmsec
@@ -294,6 +309,29 @@ object ReceiveData {
                 apply()
             }
         }
+    }
+
+    fun setSettings(context: Context, bundle: Bundle) {
+        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putFloat(Constants.SHARED_PREF_TARGET_MIN, bundle.getFloat(Constants.SHARED_PREF_TARGET_MIN, targetMinValue))
+            putFloat(Constants.SHARED_PREF_TARGET_MAX, bundle.getFloat(Constants.SHARED_PREF_TARGET_MAX, targetMaxValue))
+            putFloat(Constants.SHARED_PREF_LOW_GLUCOSE, bundle.getFloat(Constants.SHARED_PREF_LOW_GLUCOSE, lowValue))
+            putFloat(Constants.SHARED_PREF_HIGH_GLUCOSE, bundle.getFloat(Constants.SHARED_PREF_HIGH_GLUCOSE, highValue))
+            putBoolean(Constants.SHARED_PREF_USE_MMOL, bundle.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol))
+            apply()
+        }
+        updateSettings(sharedPref)
+    }
+
+    fun getSettingsBundle(): Bundle {
+        val bundle = Bundle()
+        bundle.putFloat(Constants.SHARED_PREF_TARGET_MIN, targetMinValue)
+        bundle.putFloat(Constants.SHARED_PREF_TARGET_MAX, targetMaxValue)
+        bundle.putFloat(Constants.SHARED_PREF_LOW_GLUCOSE, lowValue)
+        bundle.putFloat(Constants.SHARED_PREF_HIGH_GLUCOSE, highValue)
+        bundle.putBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
+        return bundle
     }
 
     fun updateSettings(sharedPref: SharedPreferences) {
