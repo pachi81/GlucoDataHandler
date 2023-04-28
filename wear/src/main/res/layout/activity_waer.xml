@@ -83,48 +83,19 @@
             app:layout_constraintStart_toEndOf="@+id/txtBgValue"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/numMin"
-            android:layout_width="48dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="16dp"
-            android:ems="10"
-            android:inputType="numberDecimal"
-            android:text="5.0"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@+id/numMax"
-            app:layout_constraintHorizontal_bias="0.622"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
-            app:layout_constraintBottom_toTopOf="@+id/switchNotifcation"
-            tools:ignore="TouchTargetSizeCheck" />
-
-        <EditText
-            android:id="@+id/numMax"
-            android:layout_width="48dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="40dp"
-            android:ems="10"
-            android:inputType="numberDecimal"
-            android:text="5.0"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@+id/switchNotifcation"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
-            app:layout_constraintVertical_bias="0.0"
-            tools:ignore="TouchTargetSizeCheck" />
-
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchNotifcation"
             android:layout_width="0dp"
             android:layout_height="35dp"
             android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
             android:text="@string/activity_switch_notification"
             android:textAlignment="viewStart"
             app:layout_constraintBottom_toTopOf="@+id/switchForground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtValueInfo"
             tools:ignore="TouchTargetSizeCheck" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -139,22 +110,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:ignore="TouchTargetSizeCheck" />
-
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="102dp"
-            android:layout_height="16dp"
-            android:layout_marginTop="10dp"
-            android:text="@string/activity_target_range"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toTopOf="@+id/numMin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.252"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtValueInfo"
-            app:layout_constraintVertical_bias="0.0" />
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
