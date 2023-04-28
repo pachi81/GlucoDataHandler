@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.*
 import android.util.Log
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -22,14 +21,9 @@ class WaerActivity : AppCompatActivity(), ReceiveDataInterface {
     private lateinit var txtVersion: TextView
     private lateinit var txtValueInfo: TextView
     private lateinit var txtConnInfo: TextView
-    private lateinit var numMin: EditText
-    private lateinit var numMax: EditText
     private lateinit var switchNotifcation: SwitchCompat
     private lateinit var switchForground: SwitchCompat
     private lateinit var sharedPref: SharedPreferences
-    private lateinit var numMinChanger: EditTargetChanger
-    private lateinit var numMaxChanger: EditTargetChanger
-    private var useMmol: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -47,16 +41,7 @@ class WaerActivity : AppCompatActivity(), ReceiveDataInterface {
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
 
-            numMin = findViewById(R.id.numMin)
-            numMax = findViewById(R.id.numMax)
-            numMinChanger = EditTargetChanger(true, this)
-            numMaxChanger = EditTargetChanger(false, this)
-            numMin.addTextChangedListener(numMinChanger)
-            numMax.addTextChangedListener(numMaxChanger)
-
             ReceiveData.readTargets(this)
-            useMmol = ReceiveData.isMmol
-            updateMinMax()
 
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             switchForground = findViewById(R.id.switchForground)
@@ -138,35 +123,9 @@ class WaerActivity : AppCompatActivity(), ReceiveDataInterface {
                     txtConnInfo.text = resources.getText(R.string.activity_disconnected_label)
 
             }
-            if (useMmol != ReceiveData.isMmol) {
-                useMmol = ReceiveData.isMmol
-                updateMinMax()
-            }
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
-    }
-
-    private fun updateMinMax() {
-        try {
-            val minVal = getTargetString(ReceiveData.targetMin)
-            val maxVal = getTargetString(ReceiveData.targetMax)
-            Log.d(LOG_ID, "Update min/max values in UI: " + minVal + "/" + maxVal + " " + ReceiveData.getUnit())
-            numMinChanger.updateInProgress = true
-            numMaxChanger.updateInProgress = true
-            numMin.setText(minVal)
-            numMax.setText(maxVal)
-        } catch( exc: Exception ) {
-            Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
-        }
-        numMinChanger.updateInProgress = false
-        numMaxChanger.updateInProgress = false
-    }
-
-    private fun getTargetString(value: Float): String {
-        if (useMmol)
-            return value.toString()
-        return value.toInt().toString()
     }
 
     override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
