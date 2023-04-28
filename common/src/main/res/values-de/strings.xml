@@ -26,4 +26,5 @@
     <string name="source_battery_level">Akku</string>
     <string name="source_node_battery_level">Knoten Akku</string>
     <string name="source_settings">Einstellungen geändert</string>
+    <string name="source_car_connection">Android Auto Verbindung</string>
 </resources>

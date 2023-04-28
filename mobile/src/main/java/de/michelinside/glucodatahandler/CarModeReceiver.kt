@@ -31,6 +31,7 @@ object CarModeReceiver: ReceiveDataInterface {
     private lateinit var notificationMgr: CarNotificationManager
     private var show_notification = true
     private var car_connected = false
+    val connected: Boolean get() = car_connected
     @SuppressLint("StaticFieldLeak")
     private lateinit var notificationCompat: NotificationCompat.Builder
 
@@ -128,6 +129,7 @@ object CarModeReceiver: ReceiveDataInterface {
                 if(!ReceiveData.isObsolete())
                     showNotification()
             }
+            ReceiveData.notify(GlucoDataService.context!!, ReceiveDataSource.CAR_CONNECTION, null)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnReceiveData exception: " + exc.message.toString() )
         }

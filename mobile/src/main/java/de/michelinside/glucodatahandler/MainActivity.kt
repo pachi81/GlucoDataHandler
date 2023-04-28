@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
     private lateinit var txtLastValue: TextView
     private lateinit var txtVersion: TextView
     private lateinit var txtWearInfo: TextView
+    private lateinit var txtCarInfo: TextView
     private lateinit var sharedPref: SharedPreferences
     private val LOG_ID = "GlucoDataHandler.Main"
 
@@ -49,6 +50,7 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
         viewIcon = findViewById(R.id.viewIcon)
         txtLastValue = findViewById(R.id.txtLastValue)
         txtWearInfo = findViewById(R.id.txtWearInfo)
+        txtCarInfo = findViewById(R.id.txtCarInfo)
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
         sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -87,7 +89,8 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
             ReceiveDataSource.MESSAGECLIENT,
             ReceiveDataSource.CAPILITY_INFO,
             ReceiveDataSource.NODE_BATTERY_LEVEL,
-            ReceiveDataSource.SETTINGS))
+            ReceiveDataSource.SETTINGS,
+            ReceiveDataSource.CAR_CONNECTION))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -119,6 +122,7 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
             }
             else
                 txtWearInfo.text = resources.getText(R.string.activity_main_disconnected_label)
+            txtCarInfo.text = if (CarModeReceiver.connected) resources.getText(R.string.activity_main_car_connected_label) else resources.getText(R.string.activity_main_car_disconnected_label)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
         }
