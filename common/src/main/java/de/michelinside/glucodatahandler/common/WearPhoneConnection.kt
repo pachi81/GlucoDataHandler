@@ -214,6 +214,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     Log.d(LOG_ID, "Settings receceived from " + p0.sourceNodeId + ": " + extras.toString())
                     val bundle = if (extras.containsKey(Constants.SETTINGS_BUNDLE)) extras.getBundle(Constants.SETTINGS_BUNDLE) else extras
                     ReceiveData.setSettings(context, bundle!!)
+                    ReceiveData.notify(context, ReceiveDataSource.SETTINGS, bundle)
                 }
 
                 if(p0.path == Constants.REQUEST_DATA_MESSAGE_PATH) {
