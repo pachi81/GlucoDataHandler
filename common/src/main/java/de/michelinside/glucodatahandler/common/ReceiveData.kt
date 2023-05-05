@@ -37,6 +37,7 @@ object ReceiveData {
     const val RATE = "glucodata.Minute.Rate"
     const val ALARM = "glucodata.Minute.Alarm"
     const val TIME = "glucodata.Minute.Time"
+    const val DELTA = "glucodata.Minute.Delta"
 
     enum class AlarmType {
         NONE,
@@ -276,7 +277,10 @@ object ReceiveData {
                 rate = extras.getFloat(RATE) //Rate of change of glucose. See libre and dexcom label functions
                 rateLabel = getRateLabel(context)
                 alarm = extras.getInt(ALARM) // if bit 8 is set, then an alarm is triggered
-                if (time > 0) {
+                deltaValue = Float.NaN
+                if (extras.containsKey(DELTA)) {
+                    deltaValue = extras.getFloat(DELTA, Float.NaN)
+                } else if (time > 0) {
                     // calculate delta value
                     timeDiff = curTimeDiff
                     val timeDiffMinute = getTimeDiffMinute()
@@ -417,6 +421,7 @@ object ReceiveData {
         extras.putString(SERIAL, sensorID)
         extras.putFloat(RATE, rate)
         extras.putInt(ALARM, alarm)
+        extras.putFloat(DELTA, deltaValue)
         return extras
     }
 
