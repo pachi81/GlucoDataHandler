@@ -74,7 +74,7 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Rece
                         while (true) {
                             // create Thread which send dummy intents
                             this.sendBroadcast(Utils.getDummyGlucodataIntent(true))
-                            Thread.sleep(10000)
+                            Thread.sleep(40000)
                         }
                     } catch (exc: Exception) {
                         Log.e(LOG_ID, "Send dummy glucodata exception: " + exc.toString())

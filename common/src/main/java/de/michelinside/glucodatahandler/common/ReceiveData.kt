@@ -94,9 +94,9 @@ object ReceiveData {
         return targetMaxValue
     }
 
-    private var deltaValue: Float = 0.0F
+    private var deltaValue: Float = Float.NaN
     val delta: Float get() {
-        if(isMmol)  // mmol/l
+        if(isMmol && !deltaValue.isNaN())  // mmol/l
         {
             return Utils.mgToMmol(deltaValue, if (abs(deltaValue) > 1.0F) 1 else 2)
         }
@@ -104,6 +104,7 @@ object ReceiveData {
     }
     private var isMmolValue = false
     val isMmol get() = isMmolValue
+    private var use5minDelta = false
 
     fun getAsString(context: Context): String {
         if (time == 0L)
@@ -128,7 +129,7 @@ object ReceiveData {
     }
 
     fun getDeltaAsString(): String {
-        if(isObsolete(300))
+        if(isObsolete(300) || deltaValue.isNaN())
             return "???"
         var deltaVal = ""
         if (delta > 0)
@@ -273,12 +274,20 @@ object ReceiveData {
                 rateLabel = getRateLabel(context)
                 alarm = extras.getInt(ALARM) // if bit 8 is set, then an alarm is triggered
                 if (time > 0) {
+                    // calculate delta value
                     timeDiff = curTimeDiff
                     val timeDiffMinute = getTimeDiffMinute()
-                    if(timeDiffMinute > 1) {
-                        deltaValue = ((extras.getInt(MGDL) - rawValue) / timeDiffMinute).toFloat()
+                    if (timeDiffMinute == 0L) {
+                        Log.w(LOG_ID, "Time diff is less than a minute! Can not calculate delta value!")
+                        deltaValue = Float.NaN
                     } else {
                         deltaValue = (extras.getInt(MGDL) - rawValue).toFloat()
+                        val deltaTime = if(use5minDelta) 5L else 1L
+                        if(timeDiffMinute != deltaTime) {
+                            val factor: Float = timeDiffMinute.toFloat() / deltaTime.toFloat()
+                            Log.d(LOG_ID, "Divide delta " + deltaValue.toString() + " with factor " + factor.toString() + " for time diff: " + timeDiffMinute.toString() + " minute(s)")
+                            deltaValue /= factor
+                        }
                     }
                 }
 
@@ -320,6 +329,7 @@ object ReceiveData {
             putFloat(Constants.SHARED_PREF_LOW_GLUCOSE, bundle.getFloat(Constants.SHARED_PREF_LOW_GLUCOSE, lowValue))
             putFloat(Constants.SHARED_PREF_HIGH_GLUCOSE, bundle.getFloat(Constants.SHARED_PREF_HIGH_GLUCOSE, highValue))
             putBoolean(Constants.SHARED_PREF_USE_MMOL, bundle.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol))
+            putBoolean(Constants.SHARED_PREF_FIVE_MINUTE_DELTA, bundle.getBoolean(Constants.SHARED_PREF_FIVE_MINUTE_DELTA, use5minDelta))
             apply()
         }
         updateSettings(sharedPref)
@@ -332,6 +342,7 @@ object ReceiveData {
         bundle.putFloat(Constants.SHARED_PREF_LOW_GLUCOSE, lowValue)
         bundle.putFloat(Constants.SHARED_PREF_HIGH_GLUCOSE, highValue)
         bundle.putBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
+        bundle.putBoolean(Constants.SHARED_PREF_FIVE_MINUTE_DELTA, use5minDelta)
         return bundle
     }
 
@@ -341,7 +352,8 @@ object ReceiveData {
         lowValue = sharedPref.getFloat(Constants.SHARED_PREF_LOW_GLUCOSE, lowValue)
         highValue = sharedPref.getFloat(Constants.SHARED_PREF_HIGH_GLUCOSE, highValue)
         isMmolValue = sharedPref.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
-        Log.i(LOG_ID, "Raw low/min/max/high set: " + lowValue.toString() + "/" + targetMinValue.toString() + "/" + targetMaxValue.toString() + "/" + highValue.toString() + " mg/dl - unit: " + getUnit())
+        use5minDelta = sharedPref.getBoolean(Constants.SHARED_PREF_FIVE_MINUTE_DELTA, use5minDelta)
+        Log.i(LOG_ID, "Raw low/min/max/high set: " + lowValue.toString() + "/" + targetMinValue.toString() + "/" + targetMaxValue.toString() + "/" + highValue.toString() + " mg/dl - unit: " + getUnit() + " - 5 min delta: " + use5minDelta)
     }
 
     fun readTargets(context: Context) {

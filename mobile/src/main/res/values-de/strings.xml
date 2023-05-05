@@ -55,6 +55,8 @@
     <string name="pref_target_min_value_summary">Untere Grenze für den Zielbereich.</string>
     <string name="pref_low_value">Niedriger Glukosewert</string>
     <string name="pref_low_value_summary">Werte unterhalb dieser Grenze werden rot angezeigt.\nWenn in Juggluco der Alarm für niedrigen Glukosewert aktiviert ist, muss der Wert nicht gesetzt werden.</string>
+    <string name="pref_switch_use_5_min_delta">5 Minuten Delta</string>
+    <string name="pref_switch_use_5_min_delta_summary">Für Delta Werte im 5 Minuten Intervall, ansonsten wird der Delta Wert pro Minute angezeigt.</string>
 
     <string name="select_receiver_show_all">Zeige alle</string>
     <string name="select_receiver_no_glucodata_receiver">Kein Empfänger gefunden!</string>

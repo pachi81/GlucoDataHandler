@@ -58,7 +58,8 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 Constants.SHARED_PREF_TARGET_MIN,
                 Constants.SHARED_PREF_TARGET_MAX,
                 Constants.SHARED_PREF_LOW_GLUCOSE,
-                Constants.SHARED_PREF_HIGH_GLUCOSE -> {
+                Constants.SHARED_PREF_HIGH_GLUCOSE,
+                Constants.SHARED_PREF_FIVE_MINUTE_DELTA -> {
                     ReceiveData.updateSettings(sharedPreferences!!)
                     ReceiveData.notify(requireContext(), ReceiveDataSource.SETTINGS, ReceiveData.getSettingsBundle())
                 }
