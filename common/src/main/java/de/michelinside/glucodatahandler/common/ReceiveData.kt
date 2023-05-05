@@ -105,6 +105,9 @@ object ReceiveData {
     private var isMmolValue = false
     val isMmol get() = isMmolValue
     private var use5minDelta = false
+    private var colorAlarm: Int = Color.RED
+    private var colorOutOfRange: Int = Color.YELLOW
+    private var colorOK: Int = Color.GREEN
 
     fun getAsString(context: Context): String {
         if (time == 0L)
@@ -175,11 +178,11 @@ object ReceiveData {
 
         return when(getAlarmType()) {
             AlarmType.NONE -> Color.GRAY
-            AlarmType.LOW_ALARM -> Color.parseColor("#fb4f29")
-            AlarmType.LOW -> Color.YELLOW
-            AlarmType.OK -> Color.GREEN
-            AlarmType.HIGH -> Color.YELLOW
-            AlarmType.HIGH_ALARM -> Color.parseColor("#fb4f29")
+            AlarmType.LOW_ALARM -> colorAlarm
+            AlarmType.LOW -> colorOutOfRange
+            AlarmType.OK -> colorOK
+            AlarmType.HIGH -> colorOutOfRange
+            AlarmType.HIGH_ALARM -> colorAlarm
         }
     }
 
@@ -330,6 +333,9 @@ object ReceiveData {
             putFloat(Constants.SHARED_PREF_HIGH_GLUCOSE, bundle.getFloat(Constants.SHARED_PREF_HIGH_GLUCOSE, highValue))
             putBoolean(Constants.SHARED_PREF_USE_MMOL, bundle.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol))
             putBoolean(Constants.SHARED_PREF_FIVE_MINUTE_DELTA, bundle.getBoolean(Constants.SHARED_PREF_FIVE_MINUTE_DELTA, use5minDelta))
+            putInt(Constants.SHARED_PREF_COLOR_OK, bundle.getInt(Constants.SHARED_PREF_COLOR_OK, colorOK))
+            putInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, bundle.getInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, colorOutOfRange))
+            putInt(Constants.SHARED_PREF_COLOR_ALARM, bundle.getInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm))
             apply()
         }
         updateSettings(sharedPref)
@@ -343,6 +349,9 @@ object ReceiveData {
         bundle.putFloat(Constants.SHARED_PREF_HIGH_GLUCOSE, highValue)
         bundle.putBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
         bundle.putBoolean(Constants.SHARED_PREF_FIVE_MINUTE_DELTA, use5minDelta)
+        bundle.putInt(Constants.SHARED_PREF_COLOR_OK, colorOK)
+        bundle.putInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, colorOutOfRange)
+        bundle.putInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm)
         return bundle
     }
 
@@ -353,7 +362,13 @@ object ReceiveData {
         highValue = sharedPref.getFloat(Constants.SHARED_PREF_HIGH_GLUCOSE, highValue)
         isMmolValue = sharedPref.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
         use5minDelta = sharedPref.getBoolean(Constants.SHARED_PREF_FIVE_MINUTE_DELTA, use5minDelta)
-        Log.i(LOG_ID, "Raw low/min/max/high set: " + lowValue.toString() + "/" + targetMinValue.toString() + "/" + targetMaxValue.toString() + "/" + highValue.toString() + " mg/dl - unit: " + getUnit() + " - 5 min delta: " + use5minDelta)
+        colorOK = sharedPref.getInt(Constants.SHARED_PREF_COLOR_OK, colorOK)
+        colorOutOfRange = sharedPref.getInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, colorOutOfRange)
+        colorAlarm = sharedPref.getInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm)
+        Log.i(LOG_ID, "Raw low/min/max/high set: " + lowValue.toString() + "/" + targetMinValue.toString() + "/" + targetMaxValue.toString() + "/" + highValue.toString()
+                + " mg/dl - unit: " + getUnit()
+                + " - 5 min delta: " + use5minDelta
+                + " - alarm/out/ok colors: " + colorAlarm.toString() + "/" + colorOutOfRange.toString() + "/" + colorOK.toString())
     }
 
     fun readTargets(context: Context) {

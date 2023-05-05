@@ -32,4 +32,7 @@ object Constants {
     const val SHARED_PREF_LOW_GLUCOSE = "low_glucose"
     const val SHARED_PREF_HIGH_GLUCOSE = "high_glucose"
     const val SHARED_PREF_FIVE_MINUTE_DELTA = "five_minute_delta"
+    const val SHARED_PREF_COLOR_ALARM = "color_alarm"
+    const val SHARED_PREF_COLOR_OUT_OF_RANGE = "color_out_of_range"
+    const val SHARED_PREF_COLOR_OK = "color_ok"
 }
