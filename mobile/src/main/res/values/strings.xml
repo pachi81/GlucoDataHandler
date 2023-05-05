@@ -34,6 +34,7 @@
     <string name="pref_cat_xdrip">xDrip+</string>
     <string name="pref_cat_forward_broadcast">Glucodata broadcast</string>
     <string name="pref_target_range">Target range</string>
+    <string name="pref_cat_colors">Colors</string>
 
     <string name="pref_switch_notification">Dummy values</string>
     <string name="pref_high_value">High glucose</string>
@@ -54,6 +55,14 @@
     <string name="pref_switch_send_to_xdrip_summary">Forward glucose values to xDrip+.\nIMPORTANT: this must be off to receive values from xDrip+!</string>
     <string name="pref_switch_use_mmol">Use mmol/l</string>
     <string name="pref_switch_use_mmol_summary">Convert values from xDrip+ to mmol/l.</string>
+    <string name="pref_switch_use_5_min_delta">5 minute delta</string>
+    <string name="pref_switch_use_5_min_delta_summary">Switch this on to use delta values for 5 minute interval, otherwise 1 minute interval is used.</string>
+    <string name="pref_color_alarm">High/low color</string>
+    <string name="pref_color_alarm_summary">Color for high and low glucose values.</string>
+    <string name="pref_color_out_of_range">Out of range color</string>
+    <string name="pref_color_out_of_range_summary">Color for glucose values out of the target range.</string>
+    <string name="pref_color_ok">Target color</string>
+    <string name="pref_color_ok_summary">Color for glucose values in the target range.</string>
 
     <string name="select_receiver_show_all">Show all</string>
     <string name="select_receiver_no_glucodata_receiver">No receiver found!</string>

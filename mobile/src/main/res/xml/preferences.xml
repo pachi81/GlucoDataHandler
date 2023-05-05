@@ -43,6 +43,31 @@
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory
+        android:title="@string/pref_cat_colors"
+        app:iconSpaceReserved="false">
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:defaultValue="@color/red"
+            android:key="color_alarm"
+            android:title="@string/pref_color_alarm"
+            app:cpv_dialogTitle="@string/pref_color_alarm"
+            android:summary="@string/pref_color_alarm_summary"
+            app:iconSpaceReserved="false"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:defaultValue="@color/yellow"
+            android:key="color_out_of_range"
+            android:title="@string/pref_color_out_of_range"
+            app:cpv_dialogTitle="@string/pref_color_out_of_range"
+            android:summary="@string/pref_color_out_of_range_summary"
+            app:iconSpaceReserved="false"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:defaultValue="@color/green"
+            android:key="color_ok"
+            android:title="@string/pref_color_ok"
+            app:cpv_dialogTitle="@string/pref_color_ok"
+            android:summary="@string/pref_color_ok_summary"
+            app:iconSpaceReserved="false"/>
+    </PreferenceCategory>
+    <PreferenceCategory
         android:title="@string/pref_cat_android_auto"
         app:iconSpaceReserved="false">
         <androidx.preference.SwitchPreferenceCompat
@@ -66,6 +91,12 @@
             android:key="use_mmol"
             android:summary="@string/pref_switch_use_mmol_summary"
             android:title="@string/pref_switch_use_mmol"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="five_minute_delta"
+            android:summary="@string/pref_switch_use_5_min_delta_summary"
+            android:title="@string/pref_switch_use_5_min_delta"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
