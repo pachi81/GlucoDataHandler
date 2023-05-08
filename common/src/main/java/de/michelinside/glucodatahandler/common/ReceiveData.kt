@@ -287,6 +287,8 @@ object ReceiveData {
                     if (timeDiffMinute == 0L) {
                         Log.w(LOG_ID, "Time diff is less than a minute! Can not calculate delta value!")
                         deltaValue = Float.NaN
+                    } else if (timeDiffMinute > 10L) {
+                        deltaValue = Float.NaN   // no delta calculation for too high time diffs
                     } else {
                         deltaValue = (extras.getInt(MGDL) - rawValue).toFloat()
                         val deltaTime = if(use5minDelta) 5L else 1L
