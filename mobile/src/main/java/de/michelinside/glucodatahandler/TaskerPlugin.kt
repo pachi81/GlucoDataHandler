@@ -15,8 +15,7 @@ import com.joaomgcd.taskerpluginlibrary.output.TaskerOutputObject
 import com.joaomgcd.taskerpluginlibrary.output.TaskerOutputVariable
 import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultCondition
 import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultConditionSatisfied
-import de.michelinside.glucodatahandler.common.ReceiveDataInterface
-import de.michelinside.glucodatahandler.common.ReceiveDataSource
+import de.michelinside.glucodatahandler.common.notifier.*
 import java.util.*
 
 @TaskerInputRoot
@@ -83,9 +82,9 @@ class GlucodataEvent : Activity(), TaskerPluginConfig<GlucodataValues> {
     }
 }
 
-object TaskerDataReceiver: ReceiveDataInterface {
+object TaskerDataReceiver: NotifierInterface {
     private val LOG_ID = "GlucoDataHandler.TaskerDataReceiver"
-    override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "sending new intent to tasker")
             GlucodataEvent::class.java.requestQuery(context, GlucodataValues() )

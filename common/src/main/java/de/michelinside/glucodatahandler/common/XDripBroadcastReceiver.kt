@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.notifier.*
 
 open class XDripBroadcastReceiver: BroadcastReceiver() {
     companion object {
@@ -52,7 +53,7 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
                     glucoExtras.putString(ReceiveData.SERIAL, source)
                     glucoExtras.putFloat(ReceiveData.RATE, slope)
                     glucoExtras.putInt(ReceiveData.ALARM, 0)
-                    ReceiveData.handleIntent(context, ReceiveDataSource.BROADCAST, glucoExtras)
+                    ReceiveData.handleIntent(context, NotifyDataSource.BROADCAST, glucoExtras)
                 }
             }
         } catch (exc: Exception) {

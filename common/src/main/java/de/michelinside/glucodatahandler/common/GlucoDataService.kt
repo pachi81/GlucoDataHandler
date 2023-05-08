@@ -6,6 +6,7 @@ import android.content.IntentFilter
 import android.os.*
 import android.util.Log
 import com.google.android.gms.wearable.*
+import de.michelinside.glucodatahandler.common.notifier.*
 
 enum class AppSource {
     NOT_SET,
@@ -13,7 +14,7 @@ enum class AppSource {
     WEAR_APP;
 }
 
-open class GlucoDataService(source: AppSource) : WearableListenerService(), ReceiveDataInterface {
+open class GlucoDataService(source: AppSource) : WearableListenerService(), NotifierInterface {
     private val LOG_ID = "GlucoDataHandler.GlucoDataService"
     private lateinit var receiver: GlucoseDataReceiver
     private lateinit var batteryReceiver: BatteryReceiver
@@ -50,13 +51,13 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Rece
 
             val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             val filter = mutableSetOf(
-                ReceiveDataSource.BROADCAST,
-                ReceiveDataSource.MESSAGECLIENT,
-                ReceiveDataSource.CAPILITY_INFO,
-                ReceiveDataSource.BATTERY_LEVEL)
+                NotifyDataSource.BROADCAST,
+                NotifyDataSource.MESSAGECLIENT,
+                NotifyDataSource.CAPILITY_INFO,
+                NotifyDataSource.BATTERY_LEVEL)
             if (appSource == AppSource.PHONE_APP)
-                filter.add(ReceiveDataSource.SETTINGS)   // only send setting changes from phone to wear!
-            ReceiveData.addNotifier(this, filter)
+                filter.add(NotifyDataSource.SETTINGS)   // only send setting changes from phone to wear!
+            InternalNotifier.addNotifier(this, filter)
 
             connection.open(this)
 
@@ -92,7 +93,7 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Rece
             unregisterReceiver(receiver)
             unregisterReceiver(batteryReceiver)
             unregisterReceiver(xDripReceiver)
-            ReceiveData.remNotifier(this)
+            InternalNotifier.remNotifier(this)
             connection.close()
             super.onDestroy()
             service = null
@@ -128,10 +129,10 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Rece
         return true
     }
 
-    override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnReceiveData for source " + dataSource.toString() + " and extras " + extras.toString())
-            if (dataSource != ReceiveDataSource.MESSAGECLIENT && dataSource != ReceiveDataSource.NODE_BATTERY_LEVEL) {
+            if (dataSource != NotifyDataSource.MESSAGECLIENT && dataSource != NotifyDataSource.NODE_BATTERY_LEVEL) {
                 Thread {
                     try {
                         connection.sendMessage(dataSource, extras)
@@ -140,7 +141,7 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Rece
                     }
                 }.start()
             }
-            if (dataSource == ReceiveDataSource.MESSAGECLIENT || dataSource == ReceiveDataSource.BROADCAST) {
+            if (dataSource == NotifyDataSource.MESSAGECLIENT || dataSource == NotifyDataSource.BROADCAST) {
                 val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 if (sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)) {
                     val curAlarmType = ReceiveData.getAlarmType()

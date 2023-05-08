@@ -18,10 +18,11 @@ import androidx.core.app.Person
 import androidx.core.app.RemoteInput
 import androidx.core.graphics.drawable.IconCompat
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.notifier.*
 import java.util.*
 
 
-object CarModeReceiver: ReceiveDataInterface {
+object CarModeReceiver: NotifierInterface {
     private const val LOG_ID = "GlucoDataHandler.CarModeReceiver"
     private const val CHANNEL_ID = "GlucoDataNotify_Car"
     private const val CHANNEL_NAME = "Notification for Android Auto"
@@ -119,23 +120,23 @@ object CarModeReceiver: ReceiveDataInterface {
                 Log.d(LOG_ID, "Exited Car Mode")
                 removeNotification()
                 car_connected = false
-                ReceiveData.remNotifier(this)
+                InternalNotifier.remNotifier(this)
             } else {
                 Log.d(LOG_ID, "Entered Car Mode")
                 car_connected = true
-                ReceiveData.addNotifier(this, mutableSetOf(
-                    ReceiveDataSource.BROADCAST,
-                    ReceiveDataSource.MESSAGECLIENT))
+                InternalNotifier.addNotifier(this, mutableSetOf(
+                    NotifyDataSource.BROADCAST,
+                    NotifyDataSource.MESSAGECLIENT))
                 if(!ReceiveData.isObsolete())
                     showNotification()
             }
-            ReceiveData.notify(GlucoDataService.context!!, ReceiveDataSource.CAR_CONNECTION, null)
+            InternalNotifier.notify(GlucoDataService.context!!, NotifyDataSource.CAR_CONNECTION, null)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnReceiveData exception: " + exc.message.toString() )
         }
     }
 
-    override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
         Log.d(LOG_ID, "OnReceiveData called")
         try {
             showNotification()

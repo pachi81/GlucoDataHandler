@@ -8,7 +8,7 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.ReceiveDataSource
+import de.michelinside.glucodatahandler.common.notifier.*
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GlucoDataHandler.SettingsFragment"
@@ -64,7 +64,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 Constants.SHARED_PREF_COLOR_OUT_OF_RANGE,
                 Constants.SHARED_PREF_COLOR_OK -> {
                     ReceiveData.updateSettings(sharedPreferences!!)
-                    ReceiveData.notify(requireContext(), ReceiveDataSource.SETTINGS, ReceiveData.getSettingsBundle())
+                    InternalNotifier.notify(requireContext(), NotifyDataSource.SETTINGS, ReceiveData.getSettingsBundle())
                 }
                 Constants.SHARED_PREF_CAR_NOTIFICATION -> {
                     CarModeReceiver.updateSettings(sharedPreferences!!)

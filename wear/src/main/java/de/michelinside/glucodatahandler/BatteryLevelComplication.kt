@@ -14,6 +14,7 @@ import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUp
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.notifier.*
 
 class BatteryLevelComplication: SuspendingComplicationDataSourceService() {
     protected val LOG_ID = "GlucoDataHandler.BatteryLevelComplication"
@@ -77,9 +78,9 @@ class BatteryLevelComplication: SuspendingComplicationDataSourceService() {
         plainText("⌚" + BatteryReceiver.batteryPercentage.toString() + "%")
 }
 
-object BatteryLevelComplicationUpdater: ReceiveDataInterface {
+object BatteryLevelComplicationUpdater: NotifierInterface {
     val LOG_ID = "GlucoDataHandler.BatteryLevelComplicationUpdater"
-    override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
         Log.d(LOG_ID, "OnReceiveData called for source " + dataSource.toString() )
         ComplicationDataSourceUpdateRequester
             .create(
