@@ -132,7 +132,7 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
 
     override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
         try {
-            Log.d(LOG_ID, "OnReceiveData for source " + dataSource.toString() + " and extras " + extras.toString())
+            Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString() + " and extras " + extras.toString())
             if (dataSource != NotifyDataSource.MESSAGECLIENT && dataSource != NotifyDataSource.NODE_BATTERY_LEVEL) {
                 Thread {
                     try {
@@ -191,7 +191,7 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
                 }
             }
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "OnReceiveData exception: " + exc.toString())
+            Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString())
         }
     }
 }

@@ -83,7 +83,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 }
             }
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "OnReceiveData exception: " + exc.message.toString() )
+            Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() )
         }
     }
 }

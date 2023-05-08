@@ -132,16 +132,16 @@ object CarModeReceiver: NotifierInterface {
             }
             InternalNotifier.notify(GlucoDataService.context!!, NotifyDataSource.CAR_CONNECTION, null)
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "OnReceiveData exception: " + exc.message.toString() )
+            Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() )
         }
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
-        Log.d(LOG_ID, "OnReceiveData called")
+        Log.d(LOG_ID, "OnNotifyData called")
         try {
             showNotification()
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "OnReceiveData exception: " + exc.message.toString() )
+            Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() )
         }
     }
 

@@ -30,7 +30,7 @@ object InternalNotifier {
                     it.key.OnNotifyData(context, dataSource, extras)
                 }
             } catch (exc: Exception) {
-                Log.e(LOG_ID, "OnReceiveData exception: " + exc.message.toString() )
+                Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() )
             }
         }
     }
