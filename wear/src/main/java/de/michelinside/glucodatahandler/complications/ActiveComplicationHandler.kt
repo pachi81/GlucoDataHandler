@@ -1,3 +1,5 @@
+package de.michelinside.glucodatahandler.complications
+
 import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
@@ -7,12 +9,11 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
-import de.michelinside.glucodatahandler.BgValueComplicationService
 import de.michelinside.glucodatahandler.common.notifier.*
 
 
 object ActiveComplicationHandler: NotifierInterface {
-    private const val LOG_ID = "GlucoDataHandler.ActiveComplicationHandler"
+    private const val LOG_ID = "GlucoDataHandler.de.michelinside.glucodatahandler.complications.ActiveComplicationHandler"
     private var packageInfo: PackageInfo? = null
     private var complicationClasses = mutableMapOf<Int, ComponentName>()
     private var noComplication = false   // check complications at least one time

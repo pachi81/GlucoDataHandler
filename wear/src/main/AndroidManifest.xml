@@ -66,7 +66,7 @@
 
         <!-- ****************************** Complications  ****************************** -->
         <service
-            android:name=".ShortClucoseComplication"
+            android:name=".complications.ShortClucoseComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
             android:label="@string/short_value"
@@ -83,7 +83,7 @@
                 android:value="300" />
         </service>
         <service
-            android:name=".SmallValueImageComplication"
+            android:name=".complications.SmallValueImageComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
             android:label="@string/image_value"
@@ -100,7 +100,7 @@
                 android:value="300" />
         </service>
         <service
-            android:name=".ValueIconComplication"
+            android:name=".complications.ValueIconComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
             android:label="@string/icon_value"
@@ -117,7 +117,7 @@
                 android:value="300" />
         </service>
         <service
-            android:name=".ShortGlucoseWithIconComplication"
+            android:name=".complications.ShortGlucoseWithIconComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
             android:label="@string/short_value_icon"
@@ -134,7 +134,7 @@
                 android:value="300" />
         </service>
         <service
-            android:name=".ShortGlucoseWithTrendComplication"
+            android:name=".complications.ShortGlucoseWithTrendComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
             android:label="@string/short_value_arrow"
@@ -151,7 +151,7 @@
                 android:value="300" />
         </service>
         <service
-            android:name=".SmallImageGlucoseWithTrendComplication"
+            android:name=".complications.SmallImageGlucoseWithTrendComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
             android:label="@string/short_value_arrow_image"
@@ -168,7 +168,7 @@
                 android:value="300" />
         </service>
         <service
-            android:name=".ShortGlucoseWithTrendRangeComplication"
+            android:name=".complications.ShortGlucoseWithTrendRangeComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
             android:label="@string/short_value_trend_range"
@@ -202,7 +202,7 @@
                 android:value="60" />
         </service>-->
         <service
-            android:name=".ShortGlucoseWithDeltaComplication"
+            android:name=".complications.ShortGlucoseWithDeltaComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
             android:label="@string/short_value_delta"
@@ -219,7 +219,7 @@
                 android:value="300" />
         </service>
         <service
-            android:name=".ShortGlucoseWithDeltaAndTrendComplication"
+            android:name=".complications.ShortGlucoseWithDeltaAndTrendComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
             android:label="@string/long_value_arrow_delta"
@@ -236,7 +236,7 @@
                 android:value="300" />
         </service>
         <service
-            android:name=".LongGlucoseWithDeltaAndTrendAndTimeComplication"
+            android:name=".complications.LongGlucoseWithDeltaAndTrendAndTimeComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
             android:label="@string/long_value_arrow_delta_time"
@@ -253,7 +253,7 @@
                 android:value="300" />
         </service>
         <service
-            android:name=".ShortGlucoseWithTrendTextComplication"
+            android:name=".complications.ShortGlucoseWithTrendTextComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
             android:label="@string/short_value_rate"
@@ -270,7 +270,7 @@
                 android:value="300" />
         </service>
         <service
-            android:name=".ShortDeltaComplication"
+            android:name=".complications.ShortDeltaComplication"
             android:exported="true"
             android:icon="@drawable/icon_delta"
             android:label="@string/short_delta"
@@ -287,7 +287,7 @@
                 android:value="300" />
         </service>
         <service
-            android:name=".ShortDeltaWithTrendComplication"
+            android:name=".complications.ShortDeltaWithTrendComplication"
             android:exported="true"
             android:icon="@drawable/icon_delta"
             android:label="@string/short_delta_arrow"
@@ -321,7 +321,7 @@
                 android:value="300" />
         </service>-->
         <service
-            android:name=".ShortDeltaWithIconComplication"
+            android:name=".complications.ShortDeltaWithIconComplication"
             android:exported="true"
             android:icon="@drawable/icon_delta"
             android:label="@string/short_delta_icon"
@@ -338,7 +338,7 @@
                 android:value="300" />
         </service>
         <service
-            android:name=".ShortTrendComplication"
+            android:name=".complications.ShortTrendComplication"
             android:exported="true"
             android:icon="@drawable/icon_rate"
             android:label="@string/short_rate"
@@ -355,7 +355,7 @@
                 android:value="300" />
         </service>
         <service
-            android:name=".ShortTrendWithTrendArrowComplication"
+            android:name=".complications.ShortTrendWithTrendArrowComplication"
             android:exported="true"
             android:icon="@drawable/icon_rate"
             android:label="@string/short_rate_arrow"
@@ -372,7 +372,7 @@
                 android:value="300" />
         </service>
         <service
-            android:name=".ShortTrendWithIconComplication"
+            android:name=".complications.ShortTrendWithIconComplication"
             android:exported="true"
             android:icon="@drawable/icon_rate"
             android:label="@string/short_rate_icon"
@@ -389,7 +389,7 @@
                 android:value="300" />
         </service>
         <service
-            android:name=".SmallTrendImageComplication"
+            android:name=".complications.SmallTrendImageComplication"
             android:exported="true"
             android:icon="@drawable/arrow_up_15"
             android:label="@string/image_arrow"
@@ -406,7 +406,7 @@
                 android:value="300" />
         </service>
         <service
-            android:name=".TrendIconComplication"
+            android:name=".complications.TrendIconComplication"
             android:exported="true"
             android:icon="@drawable/arrow_up_15"
             android:label="@string/icon_arrow"
@@ -423,7 +423,7 @@
                 android:value="300" />
         </service>
         <service
-            android:name=".TimeStampComplication"
+            android:name=".complications.TimeStampComplication"
             android:exported="true"
             android:icon="@drawable/clock"
             android:label="@string/timestamp"
@@ -439,7 +439,7 @@
                 android:value="300" />
         </service>
         <service
-            android:name=".BatteryLevelComplication"
+            android:name=".complications.BatteryLevelComplication"
             android:exported="true"
             android:icon="@drawable/battery"
             android:label="@string/battery_level"

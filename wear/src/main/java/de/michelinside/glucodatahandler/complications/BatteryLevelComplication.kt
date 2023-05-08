@@ -1,4 +1,4 @@
-package de.michelinside.glucodatahandler
+package de.michelinside.glucodatahandler.complications
 
 import android.app.PendingIntent
 import android.content.ComponentName
@@ -13,6 +13,9 @@ import androidx.wear.watchface.complications.data.ShortTextComplicationData
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
+import de.michelinside.glucodatahandler.BuildConfig
+import de.michelinside.glucodatahandler.GlucoDataServiceWear
+import de.michelinside.glucodatahandler.WaerActivity
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
 

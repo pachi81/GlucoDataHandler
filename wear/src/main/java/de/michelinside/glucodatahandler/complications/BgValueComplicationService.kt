@@ -1,4 +1,4 @@
-package de.michelinside.glucodatahandler
+package de.michelinside.glucodatahandler.complications
 
 import android.app.PendingIntent
 import android.content.ComponentName
@@ -9,6 +9,10 @@ import android.util.Log
 import androidx.wear.watchface.complications.data.*
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
+import de.michelinside.glucodatahandler.BuildConfig
+import de.michelinside.glucodatahandler.GlucoDataServiceWear
+import de.michelinside.glucodatahandler.R
+import de.michelinside.glucodatahandler.WaerActivity
 import de.michelinside.glucodatahandler.common.*
 import java.util.*
 
@@ -53,7 +57,10 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
             Log.d(LOG_ID, "onComplicationRequest called for " + javaClass.simpleName + " ID " + request.complicationInstanceId.toString() + " with type " + request.complicationType.toString())
             GlucoDataServiceWear.start(this)
             // add here, because onComplicationActivated is not called after restart...
-            ActiveComplicationHandler.addComplication(request.complicationInstanceId, ComponentName(this, javaClass))
+            ActiveComplicationHandler.addComplication(
+                request.complicationInstanceId,
+                ComponentName(this, javaClass)
+            )
             return getComplicationData(request)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onComplicationRequest exception: " + exc.message.toString() )
