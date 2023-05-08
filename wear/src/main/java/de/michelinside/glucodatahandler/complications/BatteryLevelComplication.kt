@@ -18,6 +18,7 @@ import de.michelinside.glucodatahandler.GlucoDataServiceWear
 import de.michelinside.glucodatahandler.WaerActivity
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
+import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 
 class BatteryLevelComplication: SuspendingComplicationDataSourceService() {
     protected val LOG_ID = "GlucoDataHandler.BatteryLevelComplication"

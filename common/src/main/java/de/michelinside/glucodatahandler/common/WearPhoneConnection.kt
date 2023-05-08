@@ -7,6 +7,7 @@ import android.util.Log
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.*
 import de.michelinside.glucodatahandler.common.notifier.*
+import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import kotlinx.coroutines.*
 import java.util.*
 import kotlin.coroutines.cancellation.CancellationException

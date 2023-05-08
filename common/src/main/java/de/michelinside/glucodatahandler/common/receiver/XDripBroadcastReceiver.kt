@@ -1,10 +1,13 @@
-package de.michelinside.glucodatahandler.common
+package de.michelinside.glucodatahandler.common.receiver
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.Utils
 import de.michelinside.glucodatahandler.common.notifier.*
 
 open class XDripBroadcastReceiver: BroadcastReceiver() {
@@ -29,8 +32,10 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
             if (!sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_XDRIP, false)) {  // only receive values, if send is disabled!
                 if (intent.extras != null) {
                     val extras = intent.extras!!
-                    val slope = Utils.round((extras.getDouble(BG_SLOPE)*60000).toFloat(), 2)
-                    var source: String? = if(extras.containsKey(SOURCE_INFO)) extras.getString(SOURCE_INFO) else extras.getString(SOURCE_DESC)
+                    val slope = Utils.round((extras.getDouble(BG_SLOPE) * 60000).toFloat(), 2)
+                    var source: String? = if(extras.containsKey(SOURCE_INFO)) extras.getString(
+                        SOURCE_INFO
+                    ) else extras.getString(SOURCE_DESC)
                     if (source == null)
                         source = "xDrip+"
                     Log.i(LOG_ID, "Glucose: " + extras.getDouble(BG_ESTIMATE).toString() +
@@ -38,7 +43,9 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
                             " - Slope: " + slope.toString() +
                             " - SlopeName: " + extras.getString(BG_SLOPE_NAME) +
                             " - Raw: " + extras.getDouble(RAW).toString() +
-                            " - Source: " + extras.getString(SOURCE_INFO) + " (" + extras.getString(SOURCE_DESC) + ")"
+                            " - Source: " + extras.getString(SOURCE_INFO) + " (" + extras.getString(
+                        SOURCE_DESC
+                    ) + ")"
                     )
 
                     val glucoExtras = Bundle()

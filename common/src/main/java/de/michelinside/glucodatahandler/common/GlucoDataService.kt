@@ -7,6 +7,7 @@ import android.os.*
 import android.util.Log
 import com.google.android.gms.wearable.*
 import de.michelinside.glucodatahandler.common.notifier.*
+import de.michelinside.glucodatahandler.common.receiver.*
 
 enum class AppSource {
     NOT_SET,

@@ -34,13 +34,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".common.GlucoseDataReceiver" android:enabled="true" android:exported="true"
+        <receiver android:name=".common.receiver.GlucoseDataReceiver" android:enabled="true" android:exported="true"
             tools:ignore="ExportedReceiver">
             <intent-filter>
                 <action android:name="glucodata.Minute"/>
             </intent-filter>
         </receiver>
-        <receiver android:name=".common.XDripBroadcastReceiver" android:enabled="true" android:exported="true"
+        <receiver android:name=".common.receiver.XDripBroadcastReceiver" android:enabled="true" android:exported="true"
             tools:ignore="ExportedReceiver">
             <intent-filter>
                 <action android:name="com.eveningoutpost.dexdrip.BgEstimate"/>
