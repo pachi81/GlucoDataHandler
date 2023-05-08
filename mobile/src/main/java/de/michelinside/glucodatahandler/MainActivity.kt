@@ -91,7 +91,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             NotifyDataSource.CAPILITY_INFO,
             NotifyDataSource.NODE_BATTERY_LEVEL,
             NotifyDataSource.SETTINGS,
-            NotifyDataSource.CAR_CONNECTION))
+            NotifyDataSource.CAR_CONNECTION,
+            NotifyDataSource.OBSOLETE_VALUE))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

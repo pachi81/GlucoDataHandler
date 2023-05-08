@@ -28,7 +28,9 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface {
 
             InternalNotifier.addNotifier(this, mutableSetOf(
                 NotifyDataSource.BROADCAST,
-                NotifyDataSource.MESSAGECLIENT))
+                NotifyDataSource.MESSAGECLIENT,
+                NotifyDataSource.SETTINGS,
+                NotifyDataSource.OBSOLETE_VALUE))
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -91,7 +93,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface {
     private fun createMediaItem(): MediaBrowserCompat.MediaItem {
         val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
             .setMediaId(MEDIA_ROOT_ID)
-            .setTitle("Delta: " + ReceiveData.getDeltaAsString() + " " + ReceiveData.timeformat.format(Date(ReceiveData.time)))
+            .setTitle("Delta: " + ReceiveData.getDeltaAsString() + "\n" + ReceiveData.timeformat.format(Date(ReceiveData.time)))
             //.setSubtitle(ReceiveData.timeformat.format(Date(ReceiveData.time)))
             .setIconBitmap(getIcon()!!)
         return MediaBrowserCompat.MediaItem(

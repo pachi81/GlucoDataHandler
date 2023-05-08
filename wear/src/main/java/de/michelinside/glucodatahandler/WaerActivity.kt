@@ -105,7 +105,8 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 NotifyDataSource.MESSAGECLIENT,
                 NotifyDataSource.CAPILITY_INFO,
                 NotifyDataSource.NODE_BATTERY_LEVEL,
-                NotifyDataSource.SETTINGS))
+                NotifyDataSource.SETTINGS,
+                NotifyDataSource.OBSOLETE_VALUE))
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }

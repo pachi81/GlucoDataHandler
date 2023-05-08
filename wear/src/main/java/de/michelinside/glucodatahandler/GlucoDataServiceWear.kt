@@ -15,7 +15,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
     private var isForegroundService = false
     init {
         Log.d(LOG_ID, "init called")
-        InternalNotifier.addNotifier(ActiveComplicationHandler, mutableSetOf(NotifyDataSource.MESSAGECLIENT,NotifyDataSource.BROADCAST,NotifyDataSource.SETTINGS))
+        InternalNotifier.addNotifier(ActiveComplicationHandler, mutableSetOf(NotifyDataSource.MESSAGECLIENT,NotifyDataSource.BROADCAST,NotifyDataSource.SETTINGS,NotifyDataSource.OBSOLETE_VALUE))
         InternalNotifier.addNotifier(BatteryLevelComplicationUpdater, mutableSetOf(NotifyDataSource.CAPILITY_INFO,NotifyDataSource.BATTERY_LEVEL, NotifyDataSource.NODE_BATTERY_LEVEL))
     }
 

@@ -9,7 +9,8 @@ enum class NotifyDataSource(private val resId: Int) {
     BATTERY_LEVEL(R.string.source_battery_level),
     NODE_BATTERY_LEVEL(R.string.source_node_battery_level),
     SETTINGS(R.string.source_settings),
-    CAR_CONNECTION(R.string.source_car_connection);
+    CAR_CONNECTION(R.string.source_car_connection),
+    OBSOLETE_VALUE(R.string.source_obsolete);
 
     fun getResId(): Int {
         return resId
