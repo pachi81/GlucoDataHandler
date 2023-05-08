@@ -56,7 +56,8 @@ class TimeStampComplication: BgValueComplicationService() {
 
     override fun getRangeValueComplicationData(): ComplicationData {
         val time = Date(ReceiveData.time)
-        val value = (time.minutes * 60 + time.seconds).toFloat()
+
+        val value = if (ReceiveData.isObsolete(3600)) -1F else (time.minutes * 60 + time.seconds).toFloat()
         return RangedValueComplicationData.Builder(
             value = value,
             min = 0F,

@@ -5,12 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.notifier.*
 
-class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), ReceiveDataInterface {
+class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInterface {
     private val LOG_ID = "GlucoDataHandler.GlucoDataServiceMobile"
     init {
         Log.d(LOG_ID, "init called")
-        ReceiveData.addNotifier(TaskerDataReceiver, mutableSetOf(ReceiveDataSource.BROADCAST,ReceiveDataSource.MESSAGECLIENT))
+        InternalNotifier.addNotifier(TaskerDataReceiver, mutableSetOf(NotifyDataSource.BROADCAST,NotifyDataSource.MESSAGECLIENT))
     }
 
     override fun onCreate() {
@@ -33,11 +34,11 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), ReceiveData
         }
     }
 
-    override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
         try {
-            super.OnReceiveData(context, dataSource, extras)
+            super.OnNotifyData(context, dataSource, extras)
             if (extras != null) {
-                if (dataSource == ReceiveDataSource.MESSAGECLIENT || dataSource == ReceiveDataSource.BROADCAST) {
+                if (dataSource == NotifyDataSource.MESSAGECLIENT || dataSource == NotifyDataSource.BROADCAST) {
                     val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_XDRIP, false)) {
                         Log.d(LOG_ID, "Send bg value to xDrip")

@@ -49,13 +49,13 @@
     <string name="pref_switch_use_mmol">mmol/l</string>
     <string name="pref_switch_use_mmol_summary">Konvertiere Werte von xDrip+ in mmol/l.</string>
     <string name="pref_high_value">Hoher Glukosewert</string>
-    <string name="pref_high_value_summary">Werte oberhalb dieser Grenze werden rot angezeigt.\nWenn in Juggluco der Alarm für hohen Glukosewert aktiviert ist, muss der Wert nicht gesetzt werden.</string>
+    <string name="pref_high_value_summary">Grenze für hohe Glukosewerte.\nWenn in Juggluco der Alarm für hohen Glukosewert aktiviert ist, muss der Wert nicht gesetzt werden.</string>
     <string name="pref_target_max_value">Obere Grenze</string>
     <string name="pref_target_max_value_summary">Obere Grenze für den Zielbereich.</string>
     <string name="pref_target_min_value">Untere Grenze</string>
     <string name="pref_target_min_value_summary">Untere Grenze für den Zielbereich.</string>
     <string name="pref_low_value">Niedriger Glukosewert</string>
-    <string name="pref_low_value_summary">Werte unterhalb dieser Grenze werden rot angezeigt.\nWenn in Juggluco der Alarm für niedrigen Glukosewert aktiviert ist, muss der Wert nicht gesetzt werden.</string>
+    <string name="pref_low_value_summary">Grenze für niedrige Glukosewerte.\nWenn in Juggluco der Alarm für niedrigen Glukosewert aktiviert ist, muss der Wert nicht gesetzt werden.</string>
     <string name="pref_switch_use_5_min_delta">5 Minuten Delta</string>
     <string name="pref_switch_use_5_min_delta_summary">Für Delta Werte im 5 Minuten Intervall, ansonsten wird der Delta Wert pro Minute angezeigt.</string>
     <string name="pref_color_alarm">Hohe/Niedrige Werte</string>

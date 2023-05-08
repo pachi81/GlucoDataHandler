@@ -1,6 +1,5 @@
 package de.michelinside.glucodatahandler
 
-import ActiveComplicationHandler
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -9,18 +8,20 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.notifier.*
 
 
 class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
     private var isForegroundService = false
     init {
         Log.d(LOG_ID, "init called")
-        ReceiveData.addNotifier(ActiveComplicationHandler, mutableSetOf(ReceiveDataSource.MESSAGECLIENT,ReceiveDataSource.BROADCAST,ReceiveDataSource.SETTINGS))
-        ReceiveData.addNotifier(BatteryLevelComplicationUpdater, mutableSetOf(ReceiveDataSource.CAPILITY_INFO,ReceiveDataSource.BATTERY_LEVEL, ReceiveDataSource.NODE_BATTERY_LEVEL))
+        InternalNotifier.addNotifier(ActiveComplicationHandler, mutableSetOf(NotifyDataSource.MESSAGECLIENT,NotifyDataSource.BROADCAST,NotifyDataSource.SETTINGS))
+        InternalNotifier.addNotifier(BatteryLevelComplicationUpdater, mutableSetOf(NotifyDataSource.CAPILITY_INFO,NotifyDataSource.BATTERY_LEVEL, NotifyDataSource.NODE_BATTERY_LEVEL))
     }
 
     companion object GlucoDataServiceWear {
         private val LOG_ID = "GlucoDataHandler.GlucoDataServiceWear"
+        fun isWearOS3(): Boolean = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R
         fun start(context: Context) {
             if (!running) {
                 try {
@@ -34,7 +35,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
                     )
                     serviceIntent.putExtra(
                         Constants.SHARED_PREF_FOREGROUND_SERVICE,
-                        sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
+                        sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, isWearOS3())
                     )
                     context.startService(serviceIntent)
                 } catch (exc: Exception) {
@@ -50,7 +51,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
     override fun onCreate() {
         Log.d(LOG_ID, "onCreate called")
         super.onCreate()
-        ActiveComplicationHandler.OnReceiveData(this, ReceiveDataSource.CAPILITY_INFO, null)
+        ActiveComplicationHandler.OnNotifyData(this, NotifyDataSource.CAPILITY_INFO, null)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

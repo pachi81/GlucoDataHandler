@@ -53,7 +53,10 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
             Log.d(LOG_ID, "onComplicationRequest called for " + javaClass.simpleName + " ID " + request.complicationInstanceId.toString() + " with type " + request.complicationType.toString())
             GlucoDataServiceWear.start(this)
             // add here, because onComplicationActivated is not called after restart...
-            ActiveComplicationHandler.addComplication(request.complicationInstanceId, ComponentName(this, javaClass))
+            ActiveComplicationHandler.addComplication(
+                request.complicationInstanceId,
+                ComponentName(this, javaClass)
+            )
             return getComplicationData(request)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onComplicationRequest exception: " + exc.message.toString() )

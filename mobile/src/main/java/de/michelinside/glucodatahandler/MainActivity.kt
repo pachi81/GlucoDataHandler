@@ -15,9 +15,10 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.notifier.*
 
 
-class MainActivity : AppCompatActivity(), ReceiveDataInterface {
+class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtBgValue: TextView
     private lateinit var viewIcon: ImageView
     private lateinit var txtLastValue: TextView
@@ -76,7 +77,7 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
 
     override fun onPause() {
         super.onPause()
-        ReceiveData.remNotifier(this)
+        InternalNotifier.remNotifier(this)
         Log.d(LOG_ID, "onPause called")
     }
 
@@ -84,13 +85,13 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
         super.onResume()
         Log.d(LOG_ID, "onResume called")
         update()
-        ReceiveData.addNotifier(this, mutableSetOf(
-            ReceiveDataSource.BROADCAST,
-            ReceiveDataSource.MESSAGECLIENT,
-            ReceiveDataSource.CAPILITY_INFO,
-            ReceiveDataSource.NODE_BATTERY_LEVEL,
-            ReceiveDataSource.SETTINGS,
-            ReceiveDataSource.CAR_CONNECTION))
+        InternalNotifier.addNotifier(this, mutableSetOf(
+            NotifyDataSource.BROADCAST,
+            NotifyDataSource.MESSAGECLIENT,
+            NotifyDataSource.CAPILITY_INFO,
+            NotifyDataSource.NODE_BATTERY_LEVEL,
+            NotifyDataSource.SETTINGS,
+            NotifyDataSource.CAR_CONNECTION))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -128,7 +129,7 @@ class MainActivity : AppCompatActivity(), ReceiveDataInterface {
         }
     }
 
-    override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
         Log.d(LOG_ID, "new intent received")
         update()
     }

@@ -6,28 +6,11 @@ import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.notifier.*
 import java.text.DateFormat
 import java.util.*
 import kotlin.math.abs
 
-
-interface ReceiveDataInterface {
-    fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?)
-}
-
-enum class ReceiveDataSource(private val resId: Int) {
-    BROADCAST(R.string.source_broadcast),
-    MESSAGECLIENT(R.string.source_message_client),
-    CAPILITY_INFO(R.string.source_capility_info),
-    BATTERY_LEVEL(R.string.source_battery_level),
-    NODE_BATTERY_LEVEL(R.string.source_node_battery_level),
-    SETTINGS(R.string.source_settings),
-    CAR_CONNECTION(R.string.source_car_connection);
-
-    fun getResId(): Int {
-        return resId
-    }
-}
 
 object ReceiveData {
     private const val LOG_ID = "GlucoDataHandler.ReceiveData"
@@ -61,7 +44,7 @@ object ReceiveData {
     var rateLabel: String? = null
     var dateformat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT)
     var timeformat = DateFormat.getTimeInstance(DateFormat.DEFAULT)
-    var source: ReceiveDataSource = ReceiveDataSource.BROADCAST
+    var source: NotifyDataSource = NotifyDataSource.BROADCAST
     private var lowValue: Float = 0F
     private val low: Float get() {
         if(isMmol && lowValue > 0F)  // mmol/l
@@ -227,36 +210,8 @@ object ReceiveData {
         return Utils.round(timeDiff.toFloat()/60000, 0).toLong()
     }
 
-    private var notifiers = mutableMapOf<ReceiveDataInterface, MutableSet<ReceiveDataSource>?>()
-    fun addNotifier(notifier: ReceiveDataInterface, sourceFilter: MutableSet<ReceiveDataSource>)
-    {
-        Log.d(LOG_ID, "add notifier " + notifier.toString() )
-        notifiers[notifier] = sourceFilter
-        Log.d(LOG_ID, "notifier size: " + notifiers.size.toString() )
-    }
-    fun remNotifier(notifier: ReceiveDataInterface)
-    {
-        Log.d(LOG_ID, "rem notifier " + notifier.toString() )
-        notifiers.remove(notifier)
-        Log.d(LOG_ID, "notifier size: " + notifiers.size.toString() )
-    }
 
-    fun notify(context: Context, dataSource: ReceiveDataSource, extras: Bundle?)
-    {
-        Log.d(LOG_ID, "Sending new data to " + notifiers.size.toString() + " notifier(s).")
-        notifiers.forEach{
-            try {
-                if (it.value == null || it.value!!.contains(dataSource)) {
-                    Log.d(LOG_ID, "Sending new data from " + dataSource.toString() + " to " + it.toString())
-                    it.key.OnReceiveData(context, dataSource, extras)
-                }
-            } catch (exc: Exception) {
-                Log.e(LOG_ID, "OnReceiveData exception: " + exc.message.toString() )
-            }
-        }
-    }
-
-    fun handleIntent(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) : Boolean
+    fun handleIntent(context: Context, dataSource: NotifyDataSource, extras: Bundle?) : Boolean
     {
         if (extras == null || extras.isEmpty) {
             return false
@@ -287,6 +242,8 @@ object ReceiveData {
                     if (timeDiffMinute == 0L) {
                         Log.w(LOG_ID, "Time diff is less than a minute! Can not calculate delta value!")
                         deltaValue = Float.NaN
+                    } else if (timeDiffMinute > 10L) {
+                        deltaValue = Float.NaN   // no delta calculation for too high time diffs
                     } else {
                         deltaValue = (extras.getInt(MGDL) - rawValue).toFloat()
                         val deltaTime = if(use5minDelta) 5L else 1L
@@ -307,7 +264,7 @@ object ReceiveData {
                 }
                 time = extras.getLong(TIME) //time in mmsec
                 changeIsMmol(rawValue!=glucose.toInt(), context)
-                notify(context, source, createExtras())  // re-create extras to have all changed value inside...
+                InternalNotifier.notify(context, source, createExtras())  // re-create extras to have all changed value inside...
                 return true
             }
         } catch (exc: Exception) {

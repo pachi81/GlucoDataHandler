@@ -1,9 +1,12 @@
-package de.michelinside.glucodatahandler.common
+package de.michelinside.glucodatahandler.common.receiver
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
 
 
 open class GlucoseDataReceiver: BroadcastReceiver() {
@@ -16,7 +19,7 @@ open class GlucoseDataReceiver: BroadcastReceiver() {
                 return
             }
 
-            ReceiveData.handleIntent(context, ReceiveDataSource.BROADCAST, intent.extras)
+            ReceiveData.handleIntent(context, NotifyDataSource.BROADCAST, intent.extras)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Receive exception: " + exc.message.toString() )
         }

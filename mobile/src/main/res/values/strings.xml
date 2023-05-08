@@ -38,13 +38,13 @@
 
     <string name="pref_switch_notification">Dummy values</string>
     <string name="pref_high_value">High glucose</string>
-    <string name="pref_high_value_summary">Values higher then this border are shown in red color.\nIf you have activated high alarm in Juggluco, you do not have to set this value.</string>
+    <string name="pref_high_value_summary">Border for high glucose values.\nIf you have activated high alarm in Juggluco, you do not have to set this value.</string>
     <string name="pref_target_max_value">Target top glucose</string>
     <string name="pref_target_max_value_summary">Top value for the target range.</string>
     <string name="pref_target_min_value">Target bottom glucose</string>
     <string name="pref_target_min_value_summary">Bottom value for the target range.</string>
     <string name="pref_low_value">Low glucose</string>
-    <string name="pref_low_value_summary">Values lower then this border are shown in red color.\nIf you have activated low alarm in Juggluco, you do not have to set this value.</string>
+    <string name="pref_low_value_summary">Border for low glucose values.\nIf you have activated low alarm in Juggluco, you do not have to set this value.</string>
     <string name="pref_switch_car_notification">Android Auto notifications</string>
     <string name="pref_switch_car_notification_summary">To get notifications in Android Auto, you have to activate developer settings in Android Auto by clicking several times on the version. Then you have to enable "Unknown sources" in the developer settings menu.</string>
     <string name="pref_switch_send_to_aod">Send glucodata broadcast</string>

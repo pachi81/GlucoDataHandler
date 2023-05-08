@@ -1,10 +1,11 @@
-package de.michelinside.glucodatahandler.common
+package de.michelinside.glucodatahandler.common.receiver
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.notifier.*
 
 class BatteryReceiver: BroadcastReceiver() {
     private val LOG_ID = "GlucoDataHandler.BatteryReceiver"
@@ -17,7 +18,7 @@ class BatteryReceiver: BroadcastReceiver() {
             Log.i(LOG_ID, "Received batter level: " + curValue.toString() + "%")
             if (curValue >= 0 && curValue != batteryPercentage) {
                 batteryPercentage = curValue
-                ReceiveData.notify(context, ReceiveDataSource.BATTERY_LEVEL, batteryBundle)
+                InternalNotifier.notify(context, NotifyDataSource.BATTERY_LEVEL, batteryBundle)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "BatteryReceiver exception: " + exc.message.toString() )

@@ -1,3 +1,5 @@
+package de.michelinside.glucodatahandler
+
 import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
@@ -7,12 +9,10 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
-import de.michelinside.glucodatahandler.BgValueComplicationService
-import de.michelinside.glucodatahandler.common.ReceiveDataInterface
-import de.michelinside.glucodatahandler.common.ReceiveDataSource
+import de.michelinside.glucodatahandler.common.notifier.*
 
 
-object ActiveComplicationHandler: ReceiveDataInterface {
+object ActiveComplicationHandler: NotifierInterface {
     private const val LOG_ID = "GlucoDataHandler.ActiveComplicationHandler"
     private var packageInfo: PackageInfo? = null
     private var complicationClasses = mutableMapOf<Int, ComponentName>()
@@ -49,7 +49,7 @@ object ActiveComplicationHandler: ReceiveDataInterface {
         return packageInfo!!
     }
 
-    override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
         Thread {
             try {
                 if (complicationClasses.isNotEmpty()) {
@@ -72,6 +72,7 @@ object ActiveComplicationHandler: ReceiveDataInterface {
                     packageInfo.services.forEach {
                         val isComplication =
                             BgValueComplicationService::class.java.isAssignableFrom(Class.forName(it.name))
+                        Log.d(LOG_ID, it.name + ": " + isComplication)
                         if (isComplication) {
                             Thread.sleep(10)
                             ComplicationDataSourceUpdateRequester

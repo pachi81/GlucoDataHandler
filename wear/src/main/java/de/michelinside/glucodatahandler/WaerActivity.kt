@@ -11,8 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.databinding.ActivityWaerBinding
 import androidx.appcompat.widget.SwitchCompat
+import de.michelinside.glucodatahandler.common.notifier.*
 
-class WaerActivity : AppCompatActivity(), ReceiveDataInterface {
+class WaerActivity : AppCompatActivity(), NotifierInterface {
 
     private val LOG_ID = "GlucoDataHandler.Main"
     private lateinit var binding: ActivityWaerBinding
@@ -45,7 +46,7 @@ class WaerActivity : AppCompatActivity(), ReceiveDataInterface {
 
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             switchForground = findViewById(R.id.switchForground)
-            switchForground.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
+            switchForground.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, GlucoDataServiceWear.isWearOS3())
             switchForground.setOnCheckedChangeListener { _, isChecked ->
                 Log.d(LOG_ID, "Foreground service changed: " + isChecked.toString())
                 try {
@@ -87,7 +88,7 @@ class WaerActivity : AppCompatActivity(), ReceiveDataInterface {
     override fun onPause() {
         try {
             super.onPause()
-            ReceiveData.remNotifier(this)
+            InternalNotifier.remNotifier(this)
             Log.d(LOG_ID, "onPause called")
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
@@ -99,12 +100,12 @@ class WaerActivity : AppCompatActivity(), ReceiveDataInterface {
             super.onResume()
             Log.d(LOG_ID, "onResume called")
             update()
-            ReceiveData.addNotifier(this, mutableSetOf(
-                ReceiveDataSource.BROADCAST,
-                ReceiveDataSource.MESSAGECLIENT,
-                ReceiveDataSource.CAPILITY_INFO,
-                ReceiveDataSource.NODE_BATTERY_LEVEL,
-                ReceiveDataSource.SETTINGS))
+            InternalNotifier.addNotifier(this, mutableSetOf(
+                NotifyDataSource.BROADCAST,
+                NotifyDataSource.MESSAGECLIENT,
+                NotifyDataSource.CAPILITY_INFO,
+                NotifyDataSource.NODE_BATTERY_LEVEL,
+                NotifyDataSource.SETTINGS))
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
@@ -128,7 +129,7 @@ class WaerActivity : AppCompatActivity(), ReceiveDataInterface {
         }
     }
 
-    override fun OnReceiveData(context: Context, dataSource: ReceiveDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
         Log.d(LOG_ID, "new intent received from: " + dataSource.toString())
         update()
     }
