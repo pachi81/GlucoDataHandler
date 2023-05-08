@@ -1,4 +1,4 @@
-package de.michelinside.glucodatahandler.complications
+package de.michelinside.glucodatahandler
 
 import android.annotation.SuppressLint
 import android.content.ComponentName
@@ -13,7 +13,7 @@ import de.michelinside.glucodatahandler.common.notifier.*
 
 
 object ActiveComplicationHandler: NotifierInterface {
-    private const val LOG_ID = "GlucoDataHandler.de.michelinside.glucodatahandler.complications.ActiveComplicationHandler"
+    private const val LOG_ID = "GlucoDataHandler.ActiveComplicationHandler"
     private var packageInfo: PackageInfo? = null
     private var complicationClasses = mutableMapOf<Int, ComponentName>()
     private var noComplication = false   // check complications at least one time
@@ -72,6 +72,7 @@ object ActiveComplicationHandler: NotifierInterface {
                     packageInfo.services.forEach {
                         val isComplication =
                             BgValueComplicationService::class.java.isAssignableFrom(Class.forName(it.name))
+                        Log.d(LOG_ID, it.name + ": " + isComplication)
                         if (isComplication) {
                             Thread.sleep(10)
                             ComplicationDataSourceUpdateRequester

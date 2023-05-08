@@ -1,6 +1,5 @@
 package de.michelinside.glucodatahandler
 
-import de.michelinside.glucodatahandler.complications.ActiveComplicationHandler
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -10,7 +9,6 @@ import android.content.Intent
 import android.util.Log
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
-import de.michelinside.glucodatahandler.complications.BatteryLevelComplicationUpdater
 
 
 class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {

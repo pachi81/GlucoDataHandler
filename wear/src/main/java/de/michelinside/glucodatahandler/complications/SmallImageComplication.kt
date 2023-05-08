@@ -1,4 +1,4 @@
-package de.michelinside.glucodatahandler.complications
+package de.michelinside.glucodatahandler
 
 import androidx.wear.watchface.complications.data.*
 import de.michelinside.glucodatahandler.common.ReceiveData

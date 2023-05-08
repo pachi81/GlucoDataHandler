@@ -66,122 +66,122 @@
 
         <!-- ****************************** Complications  ****************************** -->
         <service
-            android:name=".complications.ShortClucoseComplication"
+            android:name=".ShortClucoseComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
             android:label="@string/short_value"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="RANGED_VALUE,SHORT_TEXT" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
         <service
-            android:name=".complications.SmallValueImageComplication"
+            android:name=".SmallValueImageComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
             android:label="@string/image_value"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="SMALL_IMAGE, LARGE_IMAGE" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
         <service
-            android:name=".complications.ValueIconComplication"
+            android:name=".ValueIconComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
             android:label="@string/icon_value"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="ICON, SMALL_IMAGE" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
         <service
-            android:name=".complications.ShortGlucoseWithIconComplication"
+            android:name=".ShortGlucoseWithIconComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
             android:label="@string/short_value_icon"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="SHORT_TEXT,RANGED_VALUE,LONG_TEXT" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
         <service
-            android:name=".complications.ShortGlucoseWithTrendComplication"
+            android:name=".ShortGlucoseWithTrendComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
             android:label="@string/short_value_arrow"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="SHORT_TEXT,RANGED_VALUE" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
         <service
-            android:name=".complications.SmallImageGlucoseWithTrendComplication"
+            android:name=".SmallImageGlucoseWithTrendComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
             android:label="@string/short_value_arrow_image"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="SMALL_IMAGE,LARGE_IMAGE" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
         <service
-            android:name=".complications.ShortGlucoseWithTrendRangeComplication"
+            android:name=".ShortGlucoseWithTrendRangeComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
             android:label="@string/short_value_trend_range"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="RANGED_VALUE" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="60" />
         </service>
         <!--<service
@@ -191,116 +191,116 @@
             android:label="@string/short_value_delta_trend_range"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="RANGED_VALUE" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="60" />
         </service>-->
         <service
-            android:name=".complications.ShortGlucoseWithDeltaComplication"
+            android:name=".ShortGlucoseWithDeltaComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
             android:label="@string/short_value_delta"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="SHORT_TEXT,RANGED_VALUE" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
         <service
-            android:name=".complications.ShortGlucoseWithDeltaAndTrendComplication"
+            android:name=".ShortGlucoseWithDeltaAndTrendComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
             android:label="@string/long_value_arrow_delta"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="LONG_TEXT,SHORT_TEXT,RANGED_VALUE" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
         <service
-            android:name=".complications.LongGlucoseWithDeltaAndTrendAndTimeComplication"
+            android:name=".LongGlucoseWithDeltaAndTrendAndTimeComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
             android:label="@string/long_value_arrow_delta_time"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="LONG_TEXT" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
         <service
-            android:name=".complications.ShortGlucoseWithTrendTextComplication"
+            android:name=".ShortGlucoseWithTrendTextComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
             android:label="@string/short_value_rate"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="SHORT_TEXT,RANGED_VALUE" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
         <service
-            android:name=".complications.ShortDeltaComplication"
+            android:name=".ShortDeltaComplication"
             android:exported="true"
             android:icon="@drawable/icon_delta"
             android:label="@string/short_delta"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="SHORT_TEXT" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
         <service
-            android:name=".complications.ShortDeltaWithTrendComplication"
+            android:name=".ShortDeltaWithTrendComplication"
             android:exported="true"
             android:icon="@drawable/icon_delta"
             android:label="@string/short_delta_arrow"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="SHORT_TEXT,LONG_TEXT" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
         <!--<service
@@ -310,148 +310,148 @@
             android:label="@string/short_delta_trend_arrow_range"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="SHORT_TEXT,RANGED_VALUE,LONG_TEXT" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>-->
         <service
-            android:name=".complications.ShortDeltaWithIconComplication"
+            android:name=".ShortDeltaWithIconComplication"
             android:exported="true"
             android:icon="@drawable/icon_delta"
             android:label="@string/short_delta_icon"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="SHORT_TEXT" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
         <service
-            android:name=".complications.ShortTrendComplication"
+            android:name=".ShortTrendComplication"
             android:exported="true"
             android:icon="@drawable/icon_rate"
             android:label="@string/short_rate"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="SHORT_TEXT" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
         <service
-            android:name=".complications.ShortTrendWithTrendArrowComplication"
+            android:name=".ShortTrendWithTrendArrowComplication"
             android:exported="true"
             android:icon="@drawable/icon_rate"
             android:label="@string/short_rate_arrow"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="SHORT_TEXT,LONG_TEXT" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
         <service
-            android:name=".complications.ShortTrendWithIconComplication"
+            android:name=".ShortTrendWithIconComplication"
             android:exported="true"
             android:icon="@drawable/icon_rate"
             android:label="@string/short_rate_icon"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="SHORT_TEXT" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
         <service
-            android:name=".complications.SmallTrendImageComplication"
+            android:name=".SmallTrendImageComplication"
             android:exported="true"
             android:icon="@drawable/arrow_up_15"
             android:label="@string/image_arrow"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="SMALL_IMAGE" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
         <service
-            android:name=".complications.TrendIconComplication"
+            android:name=".TrendIconComplication"
             android:exported="true"
             android:icon="@drawable/arrow_up_15"
             android:label="@string/icon_arrow"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="ICON" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
         <service
-            android:name=".complications.TimeStampComplication"
+            android:name=".TimeStampComplication"
             android:exported="true"
             android:icon="@drawable/clock"
             android:label="@string/timestamp"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="SHORT_TEXT,RANGED_VALUE" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
         <service
-            android:name=".complications.BatteryLevelComplication"
+            android:name=".BatteryLevelComplication"
             android:exported="true"
             android:icon="@drawable/battery"
             android:label="@string/battery_level"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="SHORT_TEXT" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
         <!--<service
@@ -461,14 +461,14 @@
             android:label="@string/test_neg_range"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.ACTION_COMPLICATION_UPDATE_REQUEST" />
             </intent-filter>
 
             <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:name="android.support.wearable.SUPPORTED_TYPES"
                 android:value="RANGED_VALUE" />
             <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:name="android.support.wearable.UPDATE_PERIOD_SECONDS"
                 android:value="60" />
         </service>-->
     </application>
