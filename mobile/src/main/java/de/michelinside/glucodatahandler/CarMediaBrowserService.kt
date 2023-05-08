@@ -91,8 +91,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface {
     private fun createMediaItem(): MediaBrowserCompat.MediaItem {
         val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
             .setMediaId(MEDIA_ROOT_ID)
-            .setTitle("Delta: " + ReceiveData.getDeltaAsString())
-            .setSubtitle(ReceiveData.timeformat.format(Date(ReceiveData.time)))
+            .setTitle("Delta: " + ReceiveData.getDeltaAsString() + " " + ReceiveData.timeformat.format(Date(ReceiveData.time)))
+            //.setSubtitle(ReceiveData.timeformat.format(Date(ReceiveData.time)))
             .setIconBitmap(getIcon()!!)
         return MediaBrowserCompat.MediaItem(
             mediaDescriptionBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE)
