@@ -84,7 +84,7 @@ object CarModeReceiver: NotifierInterface {
     fun initNotification(context: Context) {
         try {
             if(!init) {
-                Log.d(LOG_ID, "addNotification called")
+                Log.d(LOG_ID, "initNotification called")
                 updateSettings(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE))
                 createNofitication(context)
                 CarConnection(context).type.observeForever(::onConnectionStateUpdated)
