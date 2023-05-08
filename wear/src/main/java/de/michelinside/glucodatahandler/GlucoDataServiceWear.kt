@@ -21,6 +21,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
 
     companion object GlucoDataServiceWear {
         private val LOG_ID = "GlucoDataHandler.GlucoDataServiceWear"
+        fun isWearOS3(): Boolean = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R
         fun start(context: Context) {
             if (!running) {
                 try {
@@ -34,7 +35,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
                     )
                     serviceIntent.putExtra(
                         Constants.SHARED_PREF_FOREGROUND_SERVICE,
-                        sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
+                        sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, isWearOS3())
                     )
                     context.startService(serviceIntent)
                 } catch (exc: Exception) {

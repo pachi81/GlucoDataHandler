@@ -45,7 +45,7 @@ class WaerActivity : AppCompatActivity(), ReceiveDataInterface {
 
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             switchForground = findViewById(R.id.switchForground)
-            switchForground.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
+            switchForground.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, GlucoDataServiceWear.isWearOS3())
             switchForground.setOnCheckedChangeListener { _, isChecked ->
                 Log.d(LOG_ID, "Foreground service changed: " + isChecked.toString())
                 try {
