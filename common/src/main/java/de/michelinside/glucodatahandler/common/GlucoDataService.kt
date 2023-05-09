@@ -25,7 +25,6 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
     private var lastAlarmType = ReceiveData.AlarmType.OK
     private val handler = Handler(Looper.getMainLooper())
 
-
     companion object {
         var appSource = AppSource.NOT_SET
         private var isRunning = false
@@ -130,7 +129,6 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
         vibrator.vibrate(VibrationEffect.createWaveform(vibratePattern, -1))
         return true
     }
-
 
     private val obsoleteNotification = object:  Runnable { // Do something here on the main thread
         override fun run() {
