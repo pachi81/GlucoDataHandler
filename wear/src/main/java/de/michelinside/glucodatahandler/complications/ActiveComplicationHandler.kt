@@ -72,7 +72,6 @@ object ActiveComplicationHandler: NotifierInterface {
                     packageInfo.services.forEach {
                         val isComplication =
                             BgValueComplicationService::class.java.isAssignableFrom(Class.forName(it.name))
-                        Log.d(LOG_ID, it.name + ": " + isComplication)
                         if (isComplication) {
                             Thread.sleep(10)
                             ComplicationDataSourceUpdateRequester

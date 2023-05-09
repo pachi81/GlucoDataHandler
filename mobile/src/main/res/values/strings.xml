@@ -46,7 +46,7 @@
     <string name="pref_low_value">Low glucose</string>
     <string name="pref_low_value_summary">Border for low glucose values.\nIf you have activated low alarm in Juggluco, you do not have to set this value.</string>
     <string name="pref_switch_car_notification">Android Auto notifications</string>
-    <string name="pref_switch_car_notification_summary">To get notifications in Android Auto, you have to activate developer settings in Android Auto by clicking several times on the version. Then you have to enable "Unknown sources" in the developer settings menu.</string>
+    <string name="pref_switch_car_notification_summary">Instead of notifications, this app also offers a dummy media implementation.\nFor using this app in Android Auto, you have to activate developer settings in Android Auto by clicking several times on the version. Then you have to enable "Unknown sources" in the developer settings menu.</string>
     <string name="pref_switch_send_to_aod">Send glucodata broadcast</string>
     <string name="pref_switch_send_to_aod_summary">Send glucodata broadcast for new values received from any source.</string>
     <string name="pref_button_select_target">Identify receiver</string>

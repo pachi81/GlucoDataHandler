@@ -15,13 +15,12 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
     private var isForegroundService = false
     init {
         Log.d(LOG_ID, "init called")
-        InternalNotifier.addNotifier(ActiveComplicationHandler, mutableSetOf(NotifyDataSource.MESSAGECLIENT,NotifyDataSource.BROADCAST,NotifyDataSource.SETTINGS))
+        InternalNotifier.addNotifier(ActiveComplicationHandler, mutableSetOf(NotifyDataSource.MESSAGECLIENT,NotifyDataSource.BROADCAST,NotifyDataSource.SETTINGS,NotifyDataSource.OBSOLETE_VALUE))
         InternalNotifier.addNotifier(BatteryLevelComplicationUpdater, mutableSetOf(NotifyDataSource.CAPILITY_INFO,NotifyDataSource.BATTERY_LEVEL, NotifyDataSource.NODE_BATTERY_LEVEL))
     }
 
     companion object GlucoDataServiceWear {
         private val LOG_ID = "GlucoDataHandler.GlucoDataServiceWear"
-        fun isWearOS3(): Boolean = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R
         fun start(context: Context) {
             if (!running) {
                 try {
@@ -35,7 +34,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
                     )
                     serviceIntent.putExtra(
                         Constants.SHARED_PREF_FOREGROUND_SERVICE,
-                        sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, isWearOS3())
+                        sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
                     )
                     context.startService(serviceIntent)
                 } catch (exc: Exception) {
@@ -58,7 +57,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
         try {
             Log.d(LOG_ID, "onStartCommand called")
             super.onStartCommand(intent, flags, startId)
-            val isForeground = intent?.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
+            val isForeground = intent?.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
             if (isForeground == true && !isForegroundService) {
                 isForegroundService = true
                 Log.i(LOG_ID, "Starting service in foreground!")
@@ -66,7 +65,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
                 val channel = NotificationChannel(
                     channelId,
                     "Foregorund GlucoDataService",
-                    NotificationManager.IMPORTANCE_DEFAULT
+                    NotificationManager.IMPORTANCE_MIN
                 )
                 (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(
                     channel
@@ -83,6 +82,8 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
                     .setContentText(getString(R.string.forground_notification_descr))
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
+                    .setOnlyAlertOnce(true)
                     .build()
                 startForeground(1, notification)
             } else if ( isForegroundService && intent?.getBooleanExtra(Constants.ACTION_STOP_FOREGROUND, false) == true ) {

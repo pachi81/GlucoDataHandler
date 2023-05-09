@@ -6,7 +6,8 @@ import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
-import de.michelinside.glucodatahandler.common.notifier.*
+import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
+import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
 import java.text.DateFormat
 import java.util.*
 import kotlin.math.abs
@@ -31,9 +32,6 @@ object ReceiveData {
         HIGH_ALARM
     }
 
-    init {
-        Log.d(LOG_ID, "init called")
-    }
     var sensorID: String? = null
     var rawValue: Int = 0
     var glucose: Float = 0.0F
@@ -92,6 +90,10 @@ object ReceiveData {
     private var colorAlarm: Int = Color.RED
     private var colorOutOfRange: Int = Color.YELLOW
     private var colorOK: Int = Color.GREEN
+
+    init {
+        Log.d(LOG_ID, "init called")
+    }
 
     fun getAsString(context: Context): String {
         if (time == 0L)
@@ -210,7 +212,6 @@ object ReceiveData {
         return Utils.round(timeDiff.toFloat()/60000, 0).toLong()
     }
 
-
     fun handleIntent(context: Context, dataSource: NotifyDataSource, extras: Bundle?) : Boolean
     {
         if (extras == null || extras.isEmpty) {
@@ -262,7 +263,7 @@ object ReceiveData {
                     else if(high > 0F && glucose >= high)
                         alarm = 6
                 }
-                time = extras.getLong(TIME) //time in mmsec
+                time = extras.getLong(TIME) //time in msec
                 changeIsMmol(rawValue!=glucose.toInt(), context)
                 InternalNotifier.notify(context, source, createExtras())  // re-create extras to have all changed value inside...
                 return true
