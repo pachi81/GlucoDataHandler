@@ -1,10 +1,9 @@
+[Deutsche Version](INSTALLATION_DE.md)
+
 # Install
 
-This is a basic install: Juggluco is installed on your phone, connected to your sensor and your smartwatch will display the values when connected to the phone.
-
 ## Prerequisite
-
-Your smartwatch must be paired with the smartphone you will use to setup GlucoDataHandler.
+Juggluco or xDrip+ is installed on your phone or wear and connected to your sensor.
 
 ## 1 - Install GlucoDataHandler on your phone
 

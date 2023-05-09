@@ -1,11 +1,13 @@
+[Deutsche Version](README_DE.md)
+
 # Glucose Data Handler
 ## Features
 
 * receives glucose values from Juggluco
 * receives glucose values from xDrip+
-* provide several **complications** in the Wear OS version
-* provide **Android Auto** support
-* provide **Tasker Event** for new glucose values
+* provide several **[complications](#complications)** in the Wear OS version
+* provide **[Android Auto](#android-auto)** support
+* provide **[Tasker Event](#tasker)** for new glucose values
 * send glucodata broadcasts to other apps (which supports this broadcast)
 
 ## Installation
@@ -41,11 +43,11 @@ There are several complications for the different types of wear OS complications
 <img src='images/complications_large_1.png' width=200>
 <img src='images/complications_large_2.png' width=200>
 
-* Delta value (per minute)
+* Delta value (per minute or per 5 minutes)
 
 <img src='images/complications_delta.png' width=200>
 
-* Rate (trend) as value and arrow (the arrow rotate dynamically between +2.0 (↑) and  -2.0 (↓) and shows double arrows from +3.0 (⇈) and -3.0 (⇊) )
+* Rate (trend) as value and arrow (the arrow rotate dynamically between +2.0 (↑) and -2.0 (↓) and shows double arrows from +3.0 (⇈) and from -3.0 (⇊))
 
 <img src='images/complications_rate.png' width=200>
 
@@ -60,8 +62,8 @@ Also the RANGE_VALUE complication is handled different in each watchface.
 
 This app supports Android Auto.
 
-#### Option #1: Using dummy media implementation
-If you are not using any Android Auto media app for listen music, you can use GlucoDataHandler to display its values in the media tap:
+#### Option #1: Using dummy media player
+If you are not using any Android Auto media player for listen music, you can use GlucoDataHandler to display its values in the media tap:
 
 <img src='images/AA_media.png' width=300>
 
