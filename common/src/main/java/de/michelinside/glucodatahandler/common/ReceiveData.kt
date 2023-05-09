@@ -5,8 +5,6 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
@@ -92,7 +90,6 @@ object ReceiveData {
     private var colorAlarm: Int = Color.RED
     private var colorOutOfRange: Int = Color.YELLOW
     private var colorOK: Int = Color.GREEN
-    private val handler = Handler(Looper.getMainLooper())
 
     init {
         Log.d(LOG_ID, "init called")
@@ -215,25 +212,6 @@ object ReceiveData {
         return Utils.round(timeDiff.toFloat()/60000, 0).toLong()
     }
 
-    private val obsoleteNotification = object:  Runnable { // Do something here on the main thread
-        override fun run() {
-            Log.w(LOG_ID, "Obsolete value notification!")
-            try {
-                if (GlucoDataService.running)
-                    InternalNotifier.notify(GlucoDataService.context!!, NotifyDataSource.OBSOLETE_VALUE, null)
-                else
-                    Log.e(LOG_ID, "GlucoDataService is not running!")
-                if (!isObsolete()) {
-                    // not yet obsolete, restart
-                    Log.d(LOG_ID, "Restart obsolete notification delay")
-                    handler.postDelayed(this, 300 * 1000)
-                }
-            } catch (exc: Exception) {
-                Log.e(LOG_ID, "obsoleteNotification: " + exc.toString() + "\n" + exc.stackTraceToString() )
-            }
-        }
-    }
-
     fun handleIntent(context: Context, dataSource: NotifyDataSource, extras: Bundle?) : Boolean
     {
         if (extras == null || extras.isEmpty) {
@@ -249,7 +227,6 @@ object ReceiveData {
             val curTimeDiff = extras.getLong(TIME) - time
             if(curTimeDiff >= 1000) // check for new value received
             {
-                handler.removeCallbacks(obsoleteNotification)
                 source = dataSource
                 sensorID = extras.getString(SERIAL) //Name of sensor
                 glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
@@ -289,9 +266,6 @@ object ReceiveData {
                 time = extras.getLong(TIME) //time in msec
                 changeIsMmol(rawValue!=glucose.toInt(), context)
                 InternalNotifier.notify(context, source, createExtras())  // re-create extras to have all changed value inside...
-                val delayTime = 300 * 1000 - (System.currentTimeMillis()-time)
-                Log.d(LOG_ID, "Start obsolete notification delay in " + delayTime.toString() + "ms")
-                handler.postDelayed(obsoleteNotification, delayTime)
                 return true
             }
         } catch (exc: Exception) {
