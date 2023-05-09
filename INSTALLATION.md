@@ -13,11 +13,21 @@ Download and install `GlucoDataHandler.apk` (allow install from unknown source i
 
 <img src='images/download.png' width=350>
 
-Open Juggluco and enable `Glucodata broadcast` and select `de.michelinside.glucodatahandler` in Settings. Save and Ok.
+### Configure Juggluco
+If you are using Juggluco to receive glucose values, open Juggluco and enable `Glucodata broadcast` and select `de.michelinside.glucodatahandler` in Settings. Save and Ok.
 
 <img src='images/broadcast.png' width=700>
 
-Open the app, you should now also see your BG display in the GlucoDataHandler app.
+### Configure xDrip+
+If you are using xDrip+ to receive glucose values, open xDrip+, go to setting and select Inter-app settings
+* Enable "Broadcast locally"
+* Enable "Compatible Broadcast"
+* Check "Identify receiver" to be empty
+  
+<img src='images/xDrip_InterAppSettings_EN.png' width=340>
+
+### Check mobile app
+Open the app and wait for a glucose value to be displayed in the GlucoDataHandler app.
 
 <img src='images/installed.png' width=400>
 
@@ -43,17 +53,19 @@ Download `GlucoDataHandler-Wear.apk` on your computer,install ADB, enable develo
 adb install -r GlucoDataHandler-Wear.apk
 ```
 
-### Other methods
+### More information
 
-See [here](https://forum.xda-developers.com/t/how-to-install-apps-on-wear-os-all-methods.4510255/).
+See [here](https://forum.xda-developers.com/t/how-to-install-apps-on-wear-os-all-methods.4510255/) for more information.
+
+### Check installation
 
 You should now have the GlucoDataHandler app on your watch.
 
 <img src='images/watch_apps.png' width=300>
 
-Open it and setup the range.
+Open the app and make sure "Foreground" is activated (recommended).
 
-<img src='images/watch_setup.png' width=300>
+<img src='images/watch_gdh_app.png' width=300>
 
 ## 3 - Setup a complication
 
@@ -74,3 +86,28 @@ You can customize other fields with different information.
 And you should be set.
 
 <img src='images/complication4.png' width=300>
+
+## 4 - Setup Android Auto
+
+To activate GlucoDataHandler for Android Auto, you have to do the following steps:
+
+### 1. Activate developer mode
+
+* open Android Auto app
+* scroll down to the Version
+* tap several times on the Version until a popup appears to "Allow development settings"
+* press "OK"
+
+### 2. Activate "Unknwon sources"
+
+* open Android Auto app
+* open in the 3-dot menu the "Developer settings"
+* scroll down to "Unknown source"
+* enable it
+
+### 3. Set Notifications settings
+
+* open Android Auto app
+* scroll down to "Notifications"
+* enable "Show conversations"
+* enable "Show first line of conversations"
