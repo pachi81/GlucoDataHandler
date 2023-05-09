@@ -5,9 +5,9 @@
 
 * receives glucose values from Juggluco
 * receives glucose values from xDrip+
-* provide several **[complications](#complications)** in the Wear OS version
+* provide several **[complications](#complications)** for Wear OS
 * provide **[Android Auto](#android-auto)** support
-* provide **[Tasker Event](#tasker)** for new glucose values
+* provide **[Tasker event](#tasker)** for new glucose values
 * send glucodata broadcasts to other apps (which supports this broadcast)
 
 ## Installation

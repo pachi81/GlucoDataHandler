@@ -8,7 +8,7 @@
 * stellt mehrere ****[Complications](#complications)**** für Wear OS zur Verfügung
 * unterstützt **[Android Auto](#android-auto)**
 * unterstützt **[Tasker Ereignisse](#tasker)** für neue Glukose Werte
-* sendet glucodata Broadcasts an andere Apps (die dies unterstützen)
+* sendet Glucodata Broadcasts an andere Apps (die dies unterstützen)
 
 ## Installation
 
