@@ -3,15 +3,16 @@ package de.michelinside.glucodatahandler
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Paint
 import android.os.*
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import de.michelinside.glucodatahandler.common.*
-import de.michelinside.glucodatahandler.databinding.ActivityWaerBinding
 import androidx.appcompat.widget.SwitchCompat
+import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
+import de.michelinside.glucodatahandler.databinding.ActivityWaerBinding
 
 class WaerActivity : AppCompatActivity(), NotifierInterface {
 
@@ -46,7 +47,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
 
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             switchForground = findViewById(R.id.switchForground)
-            switchForground.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, GlucoDataServiceWear.isWearOS3())
+            switchForground.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
             switchForground.setOnCheckedChangeListener { _, isChecked ->
                 Log.d(LOG_ID, "Foreground service changed: " + isChecked.toString())
                 try {
@@ -117,6 +118,11 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
             if(ReceiveData.time > 0) {
                 txtBgValue.text = ReceiveData.getClucoseAsString()
                 txtBgValue.setTextColor(ReceiveData.getClucoseColor())
+                if (ReceiveData.isObsolete(300) && !ReceiveData.isObsolete()) {
+                    txtBgValue.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+                } else {
+                    txtBgValue.paintFlags = 0
+                }
                 viewIcon.setImageIcon(ReceiveData.getArrowIcon())
                 txtValueInfo.text = ReceiveData.getAsString(this)
                 if (WearPhoneConnection.nodesConnected) {

@@ -3,6 +3,7 @@ package de.michelinside.glucodatahandler
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Paint
 import android.net.Uri
 import android.os.Bundle
 import android.os.PowerManager
@@ -117,6 +118,11 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Log.d(LOG_ID, "update values")
             txtBgValue.text = ReceiveData.getClucoseAsString()
             txtBgValue.setTextColor(ReceiveData.getClucoseColor())
+            if (ReceiveData.isObsolete(300) && !ReceiveData.isObsolete()) {
+                txtBgValue.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+            } else {
+                txtBgValue.paintFlags = 0
+            }
             viewIcon.setImageIcon(ReceiveData.getArrowIcon())
             txtLastValue.text = ReceiveData.getAsString(this)
             if (WearPhoneConnection.nodesConnected) {
