@@ -53,7 +53,7 @@ dependencies {
     implementation 'androidx.wear.watchface:watchface-complications-data-source-ktx:1.1.1'
     implementation 'androidx.wear.watchface:watchface-complications-rendering:1.1.1'
     implementation 'androidx.appcompat:appcompat-resources:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
 }
 

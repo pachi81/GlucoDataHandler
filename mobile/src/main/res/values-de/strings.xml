@@ -39,7 +39,7 @@
     <string name="pref_target_range">Zielbereich</string>
     <string name="pref_switch_notification">Dummy Werte</string>
     <string name="pref_switch_car_notification">Android Auto Benachrichtigung</string>
-    <string name="pref_switch_car_notification_summary">Um Benachrichtigungen in Android Auto zu erhalten, müssen die Entwicklereinstellungen aktiviert werden. Dafür mehrfach in Android Auto auf Version klicken. Danach in den Entwicklereinstellungen "Unbekannte Quellen" aktivieren.</string>
+    <string name="pref_switch_car_notification_summary">Anstelle der Benachrichtigung, stellt die App auch einen Dummy-Mediadienst zur Verfügung.\nUm diese App in Android Auto zu verwenden, müssen die Entwicklereinstellungen aktiviert werden. Dafür mehrfach in Android Auto auf Version klicken. Danach in den Entwicklereinstellungen "Unbekannte Quellen" aktivieren.</string>
     <string name="pref_switch_send_to_aod">Glucodata Broadcast senden</string>
     <string name="pref_switch_send_to_aod_summary">Glucodata Broadcast für neue Werte von allen Quellen senden.</string>
     <string name="pref_button_select_target">Empfänger definieren</string>
