@@ -107,7 +107,7 @@ object ReceiveData {
                 context.getString(R.string.info_label_source) + ": " + context.getString(source.getResId())
     }
 
-    fun isObsolete(timeoutSec: Int = 600): Boolean = (System.currentTimeMillis()- time) >= (timeoutSec * 1000)
+    fun isObsolete(timeoutSec: Int = Constants.VALUE_OBSOLETE_LONG_SEC): Boolean = (System.currentTimeMillis()- time) >= (timeoutSec * 1000)
 
     fun getClucoseAsString(): String {
         if(isObsolete())
@@ -118,7 +118,7 @@ object ReceiveData {
     }
 
     fun getDeltaAsString(): String {
-        if(isObsolete(300) || deltaValue.isNaN())
+        if(isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) || deltaValue.isNaN())
             return "???"
         var deltaVal = ""
         if (delta > 0)
@@ -131,7 +131,7 @@ object ReceiveData {
     }
 
     fun getRateAsString(): String {
-        if(isObsolete(300))
+        if(isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
             return "???"
         return (if (rate > 0) "+" else "") + rate.toString()
     }
@@ -143,7 +143,7 @@ object ReceiveData {
     }
 
     fun getAlarmType(): AlarmType {
-        if(isObsolete(300))
+        if(isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
             return AlarmType.NONE
         if(((alarm and 7) == 6) || (high > 0F && glucose >= high))
             return AlarmType.HIGH_ALARM
@@ -157,7 +157,7 @@ object ReceiveData {
     }
 
     fun getClucoseColor(monoChrome: Boolean = false): Int {
-        if(isObsolete(300))
+        if(isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
             return Color.GRAY
         if (monoChrome)
             return Color.WHITE
@@ -173,7 +173,7 @@ object ReceiveData {
     }
 
     fun getRateSymbol(): Char {
-        if(isObsolete(300) || java.lang.Float.isNaN(rate))
+        if(isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) || java.lang.Float.isNaN(rate))
             return '?'
         if (rate >= 3.0f) return '⇈'
         if (rate >= 2.0f) return '↑'

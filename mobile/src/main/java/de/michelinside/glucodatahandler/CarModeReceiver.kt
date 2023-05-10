@@ -165,11 +165,11 @@ object CarModeReceiver: NotifierInterface {
     }
 /*
     fun getGlucoseAsIcon(): Bitmap? {
-        return Utils.textToBitmap(ReceiveData.getClucoseAsString(), ReceiveData.getClucoseColor(), false, ReceiveData.isObsolete(300) && !ReceiveData.isObsolete(), 300, 300)
+        return Utils.textToBitmap(ReceiveData.getClucoseAsString(), ReceiveData.getClucoseColor(), false, ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(), 300, 300)
     }
 */
     fun getRateAsIcon(): Bitmap? {
-        if (ReceiveData.isObsolete(300))
+        if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
             return Utils.textToBitmap("?", Color.GRAY, false)
         return Utils.rateToBitmap(ReceiveData.rate, ReceiveData.getClucoseColor(), resizeFactor = 0.75F)
     }

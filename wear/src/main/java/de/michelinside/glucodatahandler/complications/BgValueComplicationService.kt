@@ -244,17 +244,17 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     }
 
     fun getGlucoseAsIcon(color: Int = Color.WHITE, forImage: Boolean = false, width: Int = 100, height: Int = 100): Icon {
-        return Icon.createWithBitmap(Utils.textToBitmap(ReceiveData.getClucoseAsString(), color, forImage, ReceiveData.isObsolete(300) && !ReceiveData.isObsolete(),width, height))
+        return Icon.createWithBitmap(Utils.textToBitmap(ReceiveData.getClucoseAsString(), color, forImage, ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height))
     }
 
     fun getRateAsIcon(color: Int = Color.WHITE, forImage: Boolean = false): Icon {
-        if (ReceiveData.isObsolete(300))
+        if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
             return Icon.createWithBitmap(Utils.textToBitmap("?", Color.GRAY, forImage))
         return Icon.createWithBitmap(Utils.rateToBitmap(ReceiveData.rate, color))
     }
 
     fun getGlucoseTrendIcon(color: Int, width: Int = 100, height: Int = 100): Icon {
-        return Icon.createWithBitmap(Utils.textRateToBitmap(ReceiveData.getClucoseAsString(), ReceiveData.rate, color, ReceiveData.isObsolete(300), ReceiveData.isObsolete(300) && !ReceiveData.isObsolete(),width, height))
+        return Icon.createWithBitmap(Utils.textRateToBitmap(ReceiveData.getClucoseAsString(), ReceiveData.rate, color, ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC), ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height))
     }
 
     fun getGlucoseTrendImage(): SmallImage {
