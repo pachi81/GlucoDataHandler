@@ -78,8 +78,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
                 )
 
                 val notification: Notification = Notification.Builder(this, channelId)
-                    .setContentTitle(getString(R.string.app_name))
-                    .setContentText(getString(R.string.forground_notification_descr))
+                    .setContentTitle(getString(R.string.forground_notification_descr))
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentIntent(pendingIntent)
                     .setAutoCancel(true)
