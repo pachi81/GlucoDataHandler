@@ -8,6 +8,9 @@ import android.util.Log
 import com.google.android.gms.wearable.*
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.*
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledFuture
+import java.util.concurrent.TimeUnit
 
 enum class AppSource {
     NOT_SET,
@@ -23,7 +26,8 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
     private val connection = WearPhoneConnection()
     private var lastAlarmTime = 0L
     private var lastAlarmType = ReceiveData.AlarmType.OK
-    private val handler = Handler(Looper.getMainLooper())
+    private val executor = Executors.newSingleThreadScheduledExecutor()
+    private var executorTask: ScheduledFuture<*>? = null
 
     companion object {
         var appSource = AppSource.NOT_SET
@@ -137,8 +141,11 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
                 InternalNotifier.notify(applicationContext, NotifyDataSource.OBSOLETE_VALUE, null)
                 if (!ReceiveData.isObsolete()) {
                     // not yet obsolete, restart
-                    Log.d(LOG_ID, "Restart obsolete notification delay")
-                    handler.postDelayed(this, 300 * 1000)
+                    val delayTime = Constants.VALUE_OBSOLETE_LONG_SEC * 1000 - (System.currentTimeMillis()- ReceiveData.time)
+                    if (delayTime > 0) {
+                        Log.d(LOG_ID, "Restart obsolete notification delay in " + delayTime.toString() + "ms")
+                        executorTask = executor.schedule(this, delayTime, TimeUnit.MILLISECONDS)
+                    }
                 }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "obsoleteNotification: " + exc.toString() + "\n" + exc.stackTraceToString() )
@@ -159,10 +166,11 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
                 }.start()
             }
             if (dataSource == NotifyDataSource.MESSAGECLIENT || dataSource == NotifyDataSource.BROADCAST) {
-                handler.removeCallbacks(obsoleteNotification)
-                val delayTime = 300 * 1000 - (System.currentTimeMillis()- ReceiveData.time)
+                if (executorTask != null)
+                    executorTask!!.cancel(true)
+                val delayTime = Constants.VALUE_OBSOLETE_SHORT_SEC * 1000 - (System.currentTimeMillis()- ReceiveData.time)
                 Log.d(LOG_ID, "Start obsolete notification delay in " + delayTime.toString() + "ms")
-                handler.postDelayed(obsoleteNotification, delayTime)
+                executorTask = executor.schedule(obsoleteNotification, delayTime, TimeUnit.MILLISECONDS)
                 val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 if (sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)) {
                     val curAlarmType = ReceiveData.getAlarmType()
