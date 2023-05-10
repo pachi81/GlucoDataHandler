@@ -52,7 +52,7 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
             service = this
             isRunning = true
 
-            ReceiveData.readTargets(this)
+            ReceiveData.initData(this)
 
             val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             val filter = mutableSetOf(
@@ -141,7 +141,7 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
                 InternalNotifier.notify(applicationContext, NotifyDataSource.OBSOLETE_VALUE, null)
                 if (!ReceiveData.isObsolete()) {
                     // not yet obsolete, restart
-                    val delayTime = Constants.VALUE_OBSOLETE_LONG_SEC * 1000 - (System.currentTimeMillis()- ReceiveData.time)
+                    val delayTime = (Constants.VALUE_OBSOLETE_LONG_SEC * 1000) - (System.currentTimeMillis()- ReceiveData.time) + 1000
                     if (delayTime > 0) {
                         Log.d(LOG_ID, "Restart obsolete notification delay in " + delayTime.toString() + "ms")
                         executorTask = executor.schedule(this, delayTime, TimeUnit.MILLISECONDS)
@@ -168,7 +168,7 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
             if (dataSource == NotifyDataSource.MESSAGECLIENT || dataSource == NotifyDataSource.BROADCAST) {
                 if (executorTask != null)
                     executorTask!!.cancel(true)
-                val delayTime = Constants.VALUE_OBSOLETE_SHORT_SEC * 1000 - (System.currentTimeMillis()- ReceiveData.time)
+                val delayTime = (Constants.VALUE_OBSOLETE_SHORT_SEC * 1000) - (System.currentTimeMillis()- ReceiveData.time) + 1000
                 Log.d(LOG_ID, "Start obsolete notification delay in " + delayTime.toString() + "ms")
                 executorTask = executor.schedule(obsoleteNotification, delayTime, TimeUnit.MILLISECONDS)
                 val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)

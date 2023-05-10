@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
         sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
 
-        ReceiveData.readTargets(this)
+        ReceiveData.initData(this)
 
         txtVersion = findViewById(R.id.txtVersion)
         txtVersion.text = BuildConfig.VERSION_NAME

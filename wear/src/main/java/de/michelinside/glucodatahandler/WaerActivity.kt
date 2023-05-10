@@ -43,7 +43,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
 
-            ReceiveData.readTargets(this)
+            ReceiveData.initData(this)
 
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             switchForground = findViewById(R.id.switchForground)

@@ -90,9 +90,23 @@ object ReceiveData {
     private var colorAlarm: Int = Color.RED
     private var colorOutOfRange: Int = Color.YELLOW
     private var colorOK: Int = Color.GREEN
+    private var initialized = false
 
     init {
         Log.d(LOG_ID, "init called")
+    }
+
+    fun initData(context: Context) {
+        Log.d(LOG_ID, "initData called")
+        try {
+            if (!initialized) {
+                readTargets(context)
+                loadExtras(context)
+                initialized = true
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "initData exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
+        }
     }
 
     fun getAsString(context: Context): String {
@@ -266,6 +280,7 @@ object ReceiveData {
                 time = extras.getLong(TIME) //time in msec
                 changeIsMmol(rawValue!=glucose.toInt(), context)
                 InternalNotifier.notify(context, source, createExtras())  // re-create extras to have all changed value inside...
+                saveExtras(context)
                 return true
             }
         } catch (exc: Exception) {
@@ -333,7 +348,7 @@ object ReceiveData {
                 + " - alarm/out/ok colors: " + colorAlarm.toString() + "/" + colorOutOfRange.toString() + "/" + colorOK.toString())
     }
 
-    fun readTargets(context: Context) {
+    private fun readTargets(context: Context) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         if(!sharedPref.contains(Constants.SHARED_PREF_USE_MMOL)) {
             Log.i(LOG_ID, "Upgrade to new mmol handling!")
@@ -350,7 +365,7 @@ object ReceiveData {
         updateSettings(sharedPref)
     }
 
-    fun writeTarget(context: Context, min: Boolean, value: Float) {
+    private fun writeTarget(context: Context, min: Boolean, value: Float) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         var mgdlValue = value
         if (Utils.isMmolValue(mgdlValue)) {
@@ -383,4 +398,44 @@ object ReceiveData {
         return extras
     }
 
+    private fun saveExtras(context: Context) {
+        try {
+            Log.d(LOG_ID, "Saving extras")
+            val sharedPref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, Context.MODE_PRIVATE)
+            with(sharedPref.edit()) {
+                putLong(TIME, time)
+                putFloat(GLUCOSECUSTOM, glucose)
+                putInt(MGDL, rawValue)
+                putString(SERIAL, sensorID)
+                putFloat(RATE, rate)
+                putInt(ALARM, alarm)
+                putFloat(DELTA, deltaValue)
+                apply()
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Saving extras exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
+        }
+    }
+
+    private fun loadExtras(context: Context) {
+        try {
+            if (time == 0L) {
+                val sharedPref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, Context.MODE_PRIVATE)
+                if (sharedPref.contains(TIME)) {
+                    Log.i(LOG_ID, "Read saved values...")
+                    val extras = Bundle()
+                    extras.putLong(TIME, sharedPref.getLong(TIME, time))
+                    extras.putFloat(GLUCOSECUSTOM, sharedPref.getFloat(GLUCOSECUSTOM, glucose))
+                    extras.putInt(MGDL, sharedPref.getInt(MGDL, rawValue))
+                    extras.putString(SERIAL, sharedPref.getString(SERIAL, sensorID))
+                    extras.putFloat(RATE, sharedPref.getFloat(RATE, rate))
+                    extras.putInt(ALARM, sharedPref.getInt(ALARM, alarm))
+                    extras.putFloat(DELTA, sharedPref.getFloat(DELTA, deltaValue))
+                    handleIntent(context, NotifyDataSource.BROADCAST, extras)
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Reading extras exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
+        }
+    }
 }
