@@ -22,6 +22,7 @@ object ReceiveData {
     const val ALARM = "glucodata.Minute.Alarm"
     const val TIME = "glucodata.Minute.Time"
     const val DELTA = "glucodata.Minute.Delta"
+    private lateinit var alarmRecv: ObsoleteAlarm
 
     enum class AlarmType {
         NONE,
@@ -78,11 +79,13 @@ object ReceiveData {
 
     private var deltaValue: Float = Float.NaN
     val delta: Float get() {
-        if(isMmol && !deltaValue.isNaN())  // mmol/l
+        if( deltaValue.isNaN() )
+            return deltaValue
+        if(isMmol)  // mmol/l
         {
             return Utils.mgToMmol(deltaValue, if (abs(deltaValue) > 1.0F) 1 else 2)
         }
-        return deltaValue
+        return Utils.round(deltaValue, 1)
     }
     private var isMmolValue = false
     val isMmol get() = isMmolValue
@@ -100,6 +103,7 @@ object ReceiveData {
         Log.d(LOG_ID, "initData called")
         try {
             if (!initialized) {
+                alarmRecv = ObsoleteAlarm()
                 readTargets(context)
                 loadExtras(context)
                 initialized = true
@@ -241,6 +245,7 @@ object ReceiveData {
             val curTimeDiff = extras.getLong(TIME) - time
             if(curTimeDiff >= 1000) // check for new value received
             {
+                alarmRecv.cancelAlarm(context)
                 source = dataSource
                 sensorID = extras.getString(SERIAL) //Name of sensor
                 glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
@@ -281,6 +286,8 @@ object ReceiveData {
                 changeIsMmol(rawValue!=glucose.toInt(), context)
                 InternalNotifier.notify(context, source, createExtras())  // re-create extras to have all changed value inside...
                 saveExtras(context)
+                val delayTime = (Constants.VALUE_OBSOLETE_SHORT_SEC * 1000) - (System.currentTimeMillis()- ReceiveData.time) + 100
+                alarmRecv.setAlarm(context, delayTime)
                 return true
             }
         } catch (exc: Exception) {

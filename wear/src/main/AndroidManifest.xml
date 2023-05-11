@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <uses-feature android:name="android.hardware.type.watch" />
 
@@ -46,6 +47,8 @@
                 <action android:name="com.eveningoutpost.dexdrip.BgEstimate"/>
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".common.ObsoleteAlarm" />
 <!--        <receiver
             android:name=".StartServiceAtBootReceiver"
             android:enabled="true"

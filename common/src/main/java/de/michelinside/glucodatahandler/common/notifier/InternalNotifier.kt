@@ -9,7 +9,7 @@ object InternalNotifier {
     private var notifiers = mutableMapOf<NotifierInterface, MutableSet<NotifyDataSource>?>()
     fun addNotifier(notifier: NotifierInterface, sourceFilter: MutableSet<NotifyDataSource>)
     {
-        Log.d(LOG_ID, "add notifier " + notifier.toString() )
+        Log.d(LOG_ID, "add notifier " + notifier.toString() + " - filter: " + sourceFilter.toString() )
         notifiers[notifier] = sourceFilter
         Log.d(LOG_ID, "notifier size: " + notifiers.size.toString() )
     }
