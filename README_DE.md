@@ -10,6 +10,9 @@
 * unterstützt **[Tasker Ereignisse](#tasker)** für neue Glukose Werte
 * sendet Glucodata Broadcasts an andere Apps (die dies unterstützen)
 
+## Download
+Die neuste Version kann [hier](https://github.com/pachi81/GlucoDataHandler/releases) heruntergeladen werden.
+
 ## Installation
 
 -> [Installationsanleitung](./INSTALLATION_DE.md)

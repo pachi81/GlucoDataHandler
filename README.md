@@ -10,6 +10,9 @@
 * provide **[Tasker event](#tasker)** for new glucose values
 * send glucodata broadcasts to other apps (which supports this broadcast)
 
+## Download
+You can download the current version [here](https://github.com/pachi81/GlucoDataHandler/releases).
+
 ## Installation
 
 -> [Installation instruction](./INSTALLATION.md)
