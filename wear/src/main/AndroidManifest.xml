@@ -48,7 +48,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".common.ObsoleteAlarm" />
+            android:name=".common.notifier.ObsoleteNotifier" />
 <!--        <receiver
             android:name=".StartServiceAtBootReceiver"
             android:enabled="true"

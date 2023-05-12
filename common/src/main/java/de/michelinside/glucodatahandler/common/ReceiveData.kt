@@ -6,8 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
-import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
-import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
+import de.michelinside.glucodatahandler.common.notifier.*
 import java.text.DateFormat
 import java.util.*
 import kotlin.math.abs
@@ -22,7 +21,7 @@ object ReceiveData {
     const val ALARM = "glucodata.Minute.Alarm"
     const val TIME = "glucodata.Minute.Time"
     const val DELTA = "glucodata.Minute.Delta"
-    private lateinit var alarmRecv: ObsoleteAlarm
+    private lateinit var obsoleteNotify: ObsoleteNotifier
 
     enum class AlarmType {
         NONE,
@@ -103,7 +102,7 @@ object ReceiveData {
         Log.d(LOG_ID, "initData called")
         try {
             if (!initialized) {
-                alarmRecv = ObsoleteAlarm()
+                obsoleteNotify = ObsoleteNotifier()
                 readTargets(context)
                 loadExtras(context)
                 initialized = true
@@ -245,7 +244,7 @@ object ReceiveData {
             val curTimeDiff = extras.getLong(TIME) - time
             if(curTimeDiff >= 1000) // check for new value received
             {
-                alarmRecv.cancelAlarm(context)
+                obsoleteNotify.cancel(context)
                 source = dataSource
                 sensorID = extras.getString(SERIAL) //Name of sensor
                 glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
@@ -286,8 +285,7 @@ object ReceiveData {
                 changeIsMmol(rawValue!=glucose.toInt(), context)
                 InternalNotifier.notify(context, source, createExtras())  // re-create extras to have all changed value inside...
                 saveExtras(context)
-                val delayTime = (Constants.VALUE_OBSOLETE_SHORT_SEC * 1000) - (System.currentTimeMillis()- ReceiveData.time) + 100
-                alarmRecv.setAlarm(context, delayTime)
+                obsoleteNotify.schedule(context)
                 return true
             }
         } catch (exc: Exception) {
