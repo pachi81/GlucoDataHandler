@@ -71,6 +71,8 @@
 
     <string name="menu_settings">Settings</string>
     <string name="menu_help">Help</string>
+    <string name="menu_update">Check for updates</string>
 
     <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
+    <string name="update_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/releases</string>
 </resources>

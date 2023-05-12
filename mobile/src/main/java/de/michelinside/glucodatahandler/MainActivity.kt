@@ -14,6 +14,7 @@ import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuCompat
 import androidx.preference.PreferenceManager
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -114,6 +115,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Log.d(LOG_ID, "onCreateOptionsMenu called")
             val inflater = menuInflater
             inflater.inflate(R.menu.menu_items, menu)
+            MenuCompat.setGroupDividerEnabled(menu!!, true);
             return true
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreateOptionsMenu exception: " + exc.message.toString() )
@@ -124,14 +126,29 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         try {
             Log.d(LOG_ID, "onOptionsItemSelected for " + item.itemId.toString())
-            if (item.itemId == R.id.action_settings) {
-                val intent = Intent(this, SettingsActivity::class.java)
-                startActivity(intent)
-                return true
-            } else if (item.itemId == R.id.action_help) {
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(resources.getText(R.string.help_link).toString()))
-                startActivity(browserIntent)
-                return true
+            when(item.itemId) {
+                R.id.action_settings -> {
+                    val intent = Intent(this, SettingsActivity::class.java)
+                    startActivity(intent)
+                    return true
+                }
+                R.id.action_update -> {
+                    val browserIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(resources.getText(R.string.update_link).toString())
+                    )
+                    startActivity(browserIntent)
+                    return true
+                }
+                R.id.action_help -> {
+                    val browserIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(resources.getText(R.string.help_link).toString())
+                    )
+                    startActivity(browserIntent)
+                    return true
+                }
+                else -> return super.onOptionsItemSelected(item)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onOptionsItemSelected exception: " + exc.message.toString() )
