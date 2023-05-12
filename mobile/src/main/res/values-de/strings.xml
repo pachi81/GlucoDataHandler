@@ -71,4 +71,7 @@
     <string name="button_cancel">Abbrechen</string>
 
     <string name="menu_settings">Einstellungen</string>
+    <string name="menu_help">Hilfe</string>
+
+    <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README_DE.md</string>
 </resources>
