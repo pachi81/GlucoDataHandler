@@ -14,6 +14,26 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         InternalNotifier.addNotifier(TaskerDataReceiver, mutableSetOf(NotifyDataSource.BROADCAST,NotifyDataSource.MESSAGECLIENT))
     }
 
+    companion object {
+        private val LOG_ID = "GlucoDataHandler.GlucoDataServiceWear"
+        fun start(context: Context) {
+            if (!running) {
+                try {
+                    val serviceIntent = Intent(
+                        context,
+                        GlucoDataServiceMobile::class.java
+                    )
+                    context.startService(serviceIntent)
+                } catch (exc: Exception) {
+                    Log.e(
+                        LOG_ID,
+                        "GlucoDataServiceMobile::start exception: " + exc.message.toString()
+                    )
+                }
+            }
+        }
+    }
+
     override fun onCreate() {
         try {
             Log.d(LOG_ID, "onCreate called")
@@ -36,6 +56,8 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
 
     override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
         try {
+            Log.d(LOG_ID, "OnNotifyData called for source " + dataSource.toString())
+            start(context)
             super.OnNotifyData(context, dataSource, extras)
             if (extras != null) {
                 if (dataSource == NotifyDataSource.MESSAGECLIENT || dataSource == NotifyDataSource.BROADCAST) {

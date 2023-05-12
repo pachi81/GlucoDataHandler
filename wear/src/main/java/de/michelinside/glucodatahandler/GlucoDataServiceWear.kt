@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
@@ -19,14 +20,14 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
         InternalNotifier.addNotifier(BatteryLevelComplicationUpdater, mutableSetOf(NotifyDataSource.CAPILITY_INFO,NotifyDataSource.BATTERY_LEVEL, NotifyDataSource.NODE_BATTERY_LEVEL))
     }
 
-    companion object GlucoDataServiceWear {
+    companion object {
         private val LOG_ID = "GlucoDataHandler.GlucoDataServiceWear"
         fun start(context: Context) {
             if (!running) {
                 try {
                     val serviceIntent = Intent(
                         context,
-                        de.michelinside.glucodatahandler.GlucoDataServiceWear::class.java
+                        GlucoDataServiceWear::class.java
                     )
                     val sharedPref = context.getSharedPreferences(
                         Constants.SHARED_PREF_TAG,
@@ -96,4 +97,14 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
         return START_STICKY  // keep alive
     }
 
+
+    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
+        try {
+            Log.d(LOG_ID, "OnNotifyData called for source " + dataSource.toString())
+            start(context)
+            super.OnNotifyData(context, dataSource, extras)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString())
+        }
+    }
 }

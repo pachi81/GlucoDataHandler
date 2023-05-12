@@ -42,10 +42,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             startActivity(intent)
         }
 
-        if (!GlucoDataService.running) {
-            val serviceIntent = Intent(this, GlucoDataServiceMobile::class.java)
-            this.startService(serviceIntent)
-        }
+        GlucoDataServiceMobile.start(this)
 
 
         txtBgValue = findViewById(R.id.txtBgValue)

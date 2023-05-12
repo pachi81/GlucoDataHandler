@@ -55,7 +55,7 @@ class ObsoleteNotifier: BroadcastReceiver() {
     }
 
     fun cancel(context: Context) {
-        Log.d(LOG_ID, "cancelAlarm")
+        Log.d(LOG_ID, "cancel called")
         val intent = Intent(context, ObsoleteNotifier::class.java)
         val sender = PendingIntent.getBroadcast(context, 42, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager

@@ -23,8 +23,6 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
     private val connection = WearPhoneConnection()
     private var lastAlarmTime = 0L
     private var lastAlarmType = ReceiveData.AlarmType.OK
-    //private val executor = Executors.newSingleThreadScheduledExecutor()
-    //private var executorTask: ScheduledFuture<*>? = null
 
     companion object {
         var appSource = AppSource.NOT_SET
@@ -56,7 +54,8 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
                 NotifyDataSource.BROADCAST,
                 NotifyDataSource.MESSAGECLIENT,
                 NotifyDataSource.CAPILITY_INFO,
-                NotifyDataSource.BATTERY_LEVEL)
+                NotifyDataSource.BATTERY_LEVEL,
+                NotifyDataSource.OBSOLETE_VALUE)   // to trigger re-start for the case of stopped by the system
             if (appSource == AppSource.PHONE_APP)
                 filter.add(NotifyDataSource.SETTINGS)   // only send setting changes from phone to wear!
             InternalNotifier.addNotifier(this, filter)
@@ -95,7 +94,6 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
             unregisterReceiver(receiver)
             unregisterReceiver(batteryReceiver)
             unregisterReceiver(xDripReceiver)
-            InternalNotifier.remNotifier(this)
             connection.close()
             super.onDestroy()
             service = null
@@ -104,7 +102,6 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
             Log.e(LOG_ID, "onDestroy exception: " + exc.toString())
         }
     }
-
 
     fun getVibrationPattern(alarmType: ReceiveData.AlarmType): LongArray? {
         return when(alarmType) {
@@ -130,26 +127,7 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
         vibrator.vibrate(VibrationEffect.createWaveform(vibratePattern, -1))
         return true
     }
-/*
-    private val obsoleteNotification = object:  Runnable { // Do something here on the main thread
-        override fun run() {
-            Log.w(LOG_ID, "Obsolete value notification!")
-            try {
-                InternalNotifier.notify(applicationContext, NotifyDataSource.OBSOLETE_VALUE, null)
-                if (!ReceiveData.isObsolete()) {
-                    // not yet obsolete, restart
-                    val delayTime = (Constants.VALUE_OBSOLETE_LONG_SEC * 1000) - (System.currentTimeMillis()- ReceiveData.time) + 1000
-                    if (delayTime > 0) {
-                        Log.d(LOG_ID, "Restart obsolete notification delay in " + delayTime.toString() + "ms")
-                        executorTask = executor.schedule(this, delayTime, TimeUnit.MILLISECONDS)
-                    }
-                }
-            } catch (exc: Exception) {
-                Log.e(LOG_ID, "obsoleteNotification: " + exc.toString() + "\n" + exc.stackTraceToString() )
-            }
-        }
-    }
-*/
+
     override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString() + " and extras " + extras.toString())
@@ -163,11 +141,6 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
                 }.start()
             }
             if (dataSource == NotifyDataSource.MESSAGECLIENT || dataSource == NotifyDataSource.BROADCAST) {
-                /*if (executorTask != null)
-                    executorTask!!.cancel(true)
-                val delayTime = (Constants.VALUE_OBSOLETE_SHORT_SEC * 1000) - (System.currentTimeMillis()- ReceiveData.time) + 1000
-                Log.d(LOG_ID, "Start obsolete notification delay in " + delayTime.toString() + "ms")
-                executorTask = executor.schedule(obsoleteNotification, delayTime, TimeUnit.MILLISECONDS)*/
                 val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 if (sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)) {
                     val curAlarmType = ReceiveData.getAlarmType()
