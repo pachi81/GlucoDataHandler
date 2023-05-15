@@ -10,12 +10,14 @@ import androidx.wear.watchface.complications.data.*
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
 import de.michelinside.glucodatahandler.common.*
+import java.text.DateFormat
 import java.util.*
 
 
 abstract class BgValueComplicationService : SuspendingComplicationDataSourceService() {
     protected val LOG_ID = "GlucoDataHandler.BgValueComplicationService"
     var descriptionResId: Int = R.string.app_name
+    val shortTimeformat = DateFormat.getTimeInstance(DateFormat.SHORT)
 
     override fun onCreate() {
         try {
@@ -185,8 +187,11 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     fun deltaText(): PlainComplicationText =
         plainText(ReceiveData.getDeltaAsString())
 
-    fun timeText(): PlainComplicationText =
-        plainText(ReceiveData.timeformat.format(Date(ReceiveData.time)))
+    fun timeText(short: Boolean = false): PlainComplicationText {
+        if (short)
+            return plainText(shortTimeformat.format(Date(ReceiveData.time)))
+        return plainText(ReceiveData.timeformat.format(Date(ReceiveData.time)))
+    }
 
     fun trendText(): PlainComplicationText =
         plainText(ReceiveData.getRateAsString())

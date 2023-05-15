@@ -30,7 +30,7 @@
     <string name="short_rate">Trend value</string>
     <string name="short_rate_arrow">Trend value and arrow</string>
     <string name="short_rate_icon">Trend value with icon</string>
-    <string name="timestamp">Timestamp</string>
+    <string name="timestamp">Glucose timestamp</string>
     <string name="battery_level">Battery level (wear and phone)</string>
 
     <string name="source_message_client">Phone</string>

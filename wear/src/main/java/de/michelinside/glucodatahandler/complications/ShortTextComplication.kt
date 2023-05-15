@@ -52,7 +52,7 @@ class LongGlucoseWithDeltaAndTrendAndTimeComplication: ShortClucoseComplication(
 }
 
 class TimeStampComplication: BgValueComplicationService() {
-    override fun getText(): PlainComplicationText = timeText()
+    override fun getText(): PlainComplicationText = timeText(true)
 
     override fun getRangeValueComplicationData(): ComplicationData {
         val time = Date(ReceiveData.time)
