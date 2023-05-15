@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Log.d(LOG_ID, "onCreateOptionsMenu called")
             val inflater = menuInflater
             inflater.inflate(R.menu.menu_items, menu)
-            MenuCompat.setGroupDividerEnabled(menu!!, true);
+            MenuCompat.setGroupDividerEnabled(menu!!, true)
             return true
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreateOptionsMenu exception: " + exc.message.toString() )
@@ -144,6 +144,14 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
                         Uri.parse(resources.getText(R.string.help_link).toString())
+                    )
+                    startActivity(browserIntent)
+                    return true
+                }
+                R.id.action_support -> {
+                    val browserIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(resources.getText(R.string.support_link).toString())
                     )
                     startActivity(browserIntent)
                     return true
