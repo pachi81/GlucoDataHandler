@@ -65,7 +65,7 @@ Die Wear OS version stellt mehrere Complications zur Verfügung:
 Die App unterstützt Android Auto auf zweit Arten:
 
 #### Option #1: Dummy Media Player
-Wenn sie nicht über Android Auto Musik hören, können sie Media Player Unterstützung verwenden:
+Wenn sie nicht über Android Auto Musik hören, können sie die Media Player Unterstützung verwenden:
 
 <img src='images/AA_media.png' width=300>
 
