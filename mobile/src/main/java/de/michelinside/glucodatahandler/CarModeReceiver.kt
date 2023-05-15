@@ -5,8 +5,6 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Bitmap
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.car.app.connection.CarConnection
@@ -154,7 +152,7 @@ object CarModeReceiver: NotifierInterface {
             if (enable_notification && car_connected) {
                 Log.d(LOG_ID, "showNotification called")
                 notificationCompat
-                    .setLargeIcon(getRateAsIcon())
+                    .setLargeIcon(ReceiveData.getArrowBitmap())
                     .setWhen(ReceiveData.time)
                     .setStyle(createMessageStyle())
                 notificationMgr.notify(NOTIFICATION_ID, notificationCompat)
@@ -165,18 +163,13 @@ object CarModeReceiver: NotifierInterface {
     }
 /*
     fun getGlucoseAsIcon(): Bitmap? {
-        return Utils.textToBitmap(ReceiveData.getClucoseAsString(), ReceiveData.getClucoseColor(), false, ReceiveData.isObsolete(300) && !ReceiveData.isObsolete(), 300, 300)
+        return Utils.textToBitmap(ReceiveData.getClucoseAsString(), ReceiveData.getClucoseColor(), false, ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(), 300, 300)
     }
 */
-    fun getRateAsIcon(): Bitmap? {
-        if (ReceiveData.isObsolete(300))
-            return Utils.textToBitmap("?", Color.GRAY, false)
-        return Utils.rateToBitmap(ReceiveData.rate, ReceiveData.getClucoseColor(), resizeFactor = 0.75F)
-    }
 
     private fun createMessageStyle(): NotificationCompat.MessagingStyle {
         val person = Person.Builder()
-            .setIcon(IconCompat.createWithBitmap(getRateAsIcon()!!))
+            .setIcon(IconCompat.createWithBitmap(ReceiveData.getArrowBitmap()!!))
             .setName(ReceiveData.getClucoseAsString())
             .setImportant(true)
             .build()

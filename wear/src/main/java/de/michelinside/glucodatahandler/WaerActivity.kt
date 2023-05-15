@@ -43,7 +43,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
 
-            ReceiveData.readTargets(this)
+            ReceiveData.initData(this)
 
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             switchForground = findViewById(R.id.switchForground)
@@ -118,7 +118,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
             if(ReceiveData.time > 0) {
                 txtBgValue.text = ReceiveData.getClucoseAsString()
                 txtBgValue.setTextColor(ReceiveData.getClucoseColor())
-                if (ReceiveData.isObsolete(300) && !ReceiveData.isObsolete()) {
+                if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete()) {
                     txtBgValue.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
                 } else {
                     txtBgValue.paintFlags = 0

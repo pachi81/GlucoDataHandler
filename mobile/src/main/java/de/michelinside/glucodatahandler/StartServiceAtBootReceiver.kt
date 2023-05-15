@@ -13,8 +13,7 @@ class StartServiceAtBootReceiver: BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (Intent.ACTION_BOOT_COMPLETED == intent.action && !GlucoDataService.running) {
             Log.d(LOG_ID, "Start Service after booting")
-            val serviceIntent = Intent(context, GlucoDataServiceMobile::class.java)
-            context.startService(serviceIntent)
+            GlucoDataServiceMobile.start(context)
         }
     }
 }

@@ -10,12 +10,14 @@ import androidx.wear.watchface.complications.data.*
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
 import de.michelinside.glucodatahandler.common.*
+import java.text.DateFormat
 import java.util.*
 
 
 abstract class BgValueComplicationService : SuspendingComplicationDataSourceService() {
     protected val LOG_ID = "GlucoDataHandler.BgValueComplicationService"
     var descriptionResId: Int = R.string.app_name
+    val shortTimeformat = DateFormat.getTimeInstance(DateFormat.SHORT)
 
     override fun onCreate() {
         try {
@@ -185,8 +187,11 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     fun deltaText(): PlainComplicationText =
         plainText(ReceiveData.getDeltaAsString())
 
-    fun timeText(): PlainComplicationText =
-        plainText(ReceiveData.timeformat.format(Date(ReceiveData.time)))
+    fun timeText(short: Boolean = false): PlainComplicationText {
+        if (short)
+            return plainText(shortTimeformat.format(Date(ReceiveData.time)))
+        return plainText(ReceiveData.timeformat.format(Date(ReceiveData.time)))
+    }
 
     fun trendText(): PlainComplicationText =
         plainText(ReceiveData.getRateAsString())
@@ -244,17 +249,17 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     }
 
     fun getGlucoseAsIcon(color: Int = Color.WHITE, forImage: Boolean = false, width: Int = 100, height: Int = 100): Icon {
-        return Icon.createWithBitmap(Utils.textToBitmap(ReceiveData.getClucoseAsString(), color, forImage, ReceiveData.isObsolete(300) && !ReceiveData.isObsolete(),width, height))
+        return Icon.createWithBitmap(Utils.textToBitmap(ReceiveData.getClucoseAsString(), color, forImage, ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height))
     }
 
     fun getRateAsIcon(color: Int = Color.WHITE, forImage: Boolean = false): Icon {
-        if (ReceiveData.isObsolete(300))
+        if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
             return Icon.createWithBitmap(Utils.textToBitmap("?", Color.GRAY, forImage))
         return Icon.createWithBitmap(Utils.rateToBitmap(ReceiveData.rate, color))
     }
 
     fun getGlucoseTrendIcon(color: Int, width: Int = 100, height: Int = 100): Icon {
-        return Icon.createWithBitmap(Utils.textRateToBitmap(ReceiveData.getClucoseAsString(), ReceiveData.rate, color, ReceiveData.isObsolete(300), ReceiveData.isObsolete(300) && !ReceiveData.isObsolete(),width, height))
+        return Icon.createWithBitmap(Utils.textRateToBitmap(ReceiveData.getClucoseAsString(), ReceiveData.rate, color, ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC), ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height))
     }
 
     fun getGlucoseTrendImage(): SmallImage {

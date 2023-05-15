@@ -30,7 +30,7 @@
     <string name="short_rate">Trendwert</string>
     <string name="short_rate_arrow">Trendwert und -pfeil</string>
     <string name="short_rate_icon">Trendwert mit Icon</string>
-    <string name="timestamp">Zeitpunkt</string>
+    <string name="timestamp">Zeitpunkt des Zuckerwertes</string>
     <string name="battery_level">Akku (Uhr und Telefon)</string>
 
     <string name="source_message_client">Telefon</string>

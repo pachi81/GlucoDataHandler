@@ -23,7 +23,6 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
     private val connection = WearPhoneConnection()
     private var lastAlarmTime = 0L
     private var lastAlarmType = ReceiveData.AlarmType.OK
-    private val handler = Handler(Looper.getMainLooper())
 
     companion object {
         var appSource = AppSource.NOT_SET
@@ -48,14 +47,15 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
             service = this
             isRunning = true
 
-            ReceiveData.readTargets(this)
+            ReceiveData.initData(this)
 
             val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             val filter = mutableSetOf(
                 NotifyDataSource.BROADCAST,
                 NotifyDataSource.MESSAGECLIENT,
                 NotifyDataSource.CAPILITY_INFO,
-                NotifyDataSource.BATTERY_LEVEL)
+                NotifyDataSource.BATTERY_LEVEL,
+                NotifyDataSource.OBSOLETE_VALUE)   // to trigger re-start for the case of stopped by the system
             if (appSource == AppSource.PHONE_APP)
                 filter.add(NotifyDataSource.SETTINGS)   // only send setting changes from phone to wear!
             InternalNotifier.addNotifier(this, filter)
@@ -94,7 +94,6 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
             unregisterReceiver(receiver)
             unregisterReceiver(batteryReceiver)
             unregisterReceiver(xDripReceiver)
-            InternalNotifier.remNotifier(this)
             connection.close()
             super.onDestroy()
             service = null
@@ -103,7 +102,6 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
             Log.e(LOG_ID, "onDestroy exception: " + exc.toString())
         }
     }
-
 
     fun getVibrationPattern(alarmType: ReceiveData.AlarmType): LongArray? {
         return when(alarmType) {
@@ -130,22 +128,6 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
         return true
     }
 
-    private val obsoleteNotification = object:  Runnable { // Do something here on the main thread
-        override fun run() {
-            Log.w(LOG_ID, "Obsolete value notification!")
-            try {
-                InternalNotifier.notify(applicationContext, NotifyDataSource.OBSOLETE_VALUE, null)
-                if (!ReceiveData.isObsolete()) {
-                    // not yet obsolete, restart
-                    Log.d(LOG_ID, "Restart obsolete notification delay")
-                    handler.postDelayed(this, 300 * 1000)
-                }
-            } catch (exc: Exception) {
-                Log.e(LOG_ID, "obsoleteNotification: " + exc.toString() + "\n" + exc.stackTraceToString() )
-            }
-        }
-    }
-
     override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString() + " and extras " + extras.toString())
@@ -159,10 +141,6 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
                 }.start()
             }
             if (dataSource == NotifyDataSource.MESSAGECLIENT || dataSource == NotifyDataSource.BROADCAST) {
-                handler.removeCallbacks(obsoleteNotification)
-                val delayTime = 300 * 1000 - (System.currentTimeMillis()- ReceiveData.time)
-                Log.d(LOG_ID, "Start obsolete notification delay in " + delayTime.toString() + "ms")
-                handler.postDelayed(obsoleteNotification, delayTime)
                 val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 if (sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)) {
                     val curAlarmType = ReceiveData.getAlarmType()

@@ -2,12 +2,12 @@ package de.michelinside.glucodatahandler.common
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
-import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
-import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
+import de.michelinside.glucodatahandler.common.notifier.*
 import java.text.DateFormat
 import java.util.*
 import kotlin.math.abs
@@ -22,6 +22,7 @@ object ReceiveData {
     const val ALARM = "glucodata.Minute.Alarm"
     const val TIME = "glucodata.Minute.Time"
     const val DELTA = "glucodata.Minute.Delta"
+    private lateinit var obsoleteNotify: ObsoleteNotifier
 
     enum class AlarmType {
         NONE,
@@ -78,11 +79,13 @@ object ReceiveData {
 
     private var deltaValue: Float = Float.NaN
     val delta: Float get() {
-        if(isMmol && !deltaValue.isNaN())  // mmol/l
+        if( deltaValue.isNaN() )
+            return deltaValue
+        if(isMmol)  // mmol/l
         {
             return Utils.mgToMmol(deltaValue, if (abs(deltaValue) > 1.0F) 1 else 2)
         }
-        return deltaValue
+        return Utils.round(deltaValue, 1)
     }
     private var isMmolValue = false
     val isMmol get() = isMmolValue
@@ -90,9 +93,24 @@ object ReceiveData {
     private var colorAlarm: Int = Color.RED
     private var colorOutOfRange: Int = Color.YELLOW
     private var colorOK: Int = Color.GREEN
+    private var initialized = false
 
     init {
         Log.d(LOG_ID, "init called")
+    }
+
+    fun initData(context: Context) {
+        Log.d(LOG_ID, "initData called")
+        try {
+            if (!initialized) {
+                obsoleteNotify = ObsoleteNotifier()
+                readTargets(context)
+                loadExtras(context)
+                initialized = true
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "initData exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
+        }
     }
 
     fun getAsString(context: Context): String {
@@ -107,7 +125,7 @@ object ReceiveData {
                 context.getString(R.string.info_label_source) + ": " + context.getString(source.getResId())
     }
 
-    fun isObsolete(timeoutSec: Int = 600): Boolean = (System.currentTimeMillis()- time) >= (timeoutSec * 1000)
+    fun isObsolete(timeoutSec: Int = Constants.VALUE_OBSOLETE_LONG_SEC): Boolean = (System.currentTimeMillis()- time) >= (timeoutSec * 1000)
 
     fun getClucoseAsString(): String {
         if(isObsolete())
@@ -118,7 +136,7 @@ object ReceiveData {
     }
 
     fun getDeltaAsString(): String {
-        if(isObsolete(300) || deltaValue.isNaN())
+        if(isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) || deltaValue.isNaN())
             return "???"
         var deltaVal = ""
         if (delta > 0)
@@ -131,7 +149,7 @@ object ReceiveData {
     }
 
     fun getRateAsString(): String {
-        if(isObsolete(300))
+        if(isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
             return "???"
         return (if (rate > 0) "+" else "") + rate.toString()
     }
@@ -143,7 +161,7 @@ object ReceiveData {
     }
 
     fun getAlarmType(): AlarmType {
-        if(isObsolete(300))
+        if(isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
             return AlarmType.NONE
         if(((alarm and 7) == 6) || (high > 0F && glucose >= high))
             return AlarmType.HIGH_ALARM
@@ -157,7 +175,7 @@ object ReceiveData {
     }
 
     fun getClucoseColor(monoChrome: Boolean = false): Int {
-        if(isObsolete(300))
+        if(isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
             return Color.GRAY
         if (monoChrome)
             return Color.WHITE
@@ -173,7 +191,7 @@ object ReceiveData {
     }
 
     fun getRateSymbol(): Char {
-        if(isObsolete(300) || java.lang.Float.isNaN(rate))
+        if(isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) || java.lang.Float.isNaN(rate))
             return '?'
         if (rate >= 3.0f) return '⇈'
         if (rate >= 2.0f) return '↑'
@@ -204,8 +222,14 @@ object ReceiveData {
         return if (java.lang.Float.isNaN(rate)) "" else context.getString(R.string.rate_double_down)
     }
 
-    fun getArrowIcon(): Icon {
-        return Icon.createWithBitmap(Utils.rateToBitmap(rate, getClucoseColor()))
+    fun getArrowBitmap(roundTarget: Boolean = false): Bitmap? {
+        if (isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
+            return Utils.textToBitmap("?", Color.GRAY, roundTarget)
+        return Utils.rateToBitmap(rate, getClucoseColor(), resizeFactor = 0.75F)
+    }
+
+    fun getArrowIcon(roundTarget: Boolean = false): Icon {
+        return Icon.createWithBitmap(getArrowBitmap(roundTarget))
     }
 
     fun getTimeDiffMinute(): Long {
@@ -227,6 +251,7 @@ object ReceiveData {
             val curTimeDiff = extras.getLong(TIME) - time
             if(curTimeDiff >= 1000) // check for new value received
             {
+                obsoleteNotify.cancel(context)
                 source = dataSource
                 sensorID = extras.getString(SERIAL) //Name of sensor
                 glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
@@ -266,6 +291,8 @@ object ReceiveData {
                 time = extras.getLong(TIME) //time in msec
                 changeIsMmol(rawValue!=glucose.toInt(), context)
                 InternalNotifier.notify(context, source, createExtras())  // re-create extras to have all changed value inside...
+                saveExtras(context)
+                obsoleteNotify.schedule(context)
                 return true
             }
         } catch (exc: Exception) {
@@ -333,7 +360,7 @@ object ReceiveData {
                 + " - alarm/out/ok colors: " + colorAlarm.toString() + "/" + colorOutOfRange.toString() + "/" + colorOK.toString())
     }
 
-    fun readTargets(context: Context) {
+    private fun readTargets(context: Context) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         if(!sharedPref.contains(Constants.SHARED_PREF_USE_MMOL)) {
             Log.i(LOG_ID, "Upgrade to new mmol handling!")
@@ -350,7 +377,7 @@ object ReceiveData {
         updateSettings(sharedPref)
     }
 
-    fun writeTarget(context: Context, min: Boolean, value: Float) {
+    private fun writeTarget(context: Context, min: Boolean, value: Float) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         var mgdlValue = value
         if (Utils.isMmolValue(mgdlValue)) {
@@ -383,4 +410,44 @@ object ReceiveData {
         return extras
     }
 
+    private fun saveExtras(context: Context) {
+        try {
+            Log.d(LOG_ID, "Saving extras")
+            val sharedPref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, Context.MODE_PRIVATE)
+            with(sharedPref.edit()) {
+                putLong(TIME, time)
+                putFloat(GLUCOSECUSTOM, glucose)
+                putInt(MGDL, rawValue)
+                putString(SERIAL, sensorID)
+                putFloat(RATE, rate)
+                putInt(ALARM, alarm)
+                putFloat(DELTA, deltaValue)
+                apply()
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Saving extras exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
+        }
+    }
+
+    private fun loadExtras(context: Context) {
+        try {
+            if (time == 0L) {
+                val sharedPref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, Context.MODE_PRIVATE)
+                if (sharedPref.contains(TIME)) {
+                    Log.i(LOG_ID, "Read saved values...")
+                    val extras = Bundle()
+                    extras.putLong(TIME, sharedPref.getLong(TIME, time))
+                    extras.putFloat(GLUCOSECUSTOM, sharedPref.getFloat(GLUCOSECUSTOM, glucose))
+                    extras.putInt(MGDL, sharedPref.getInt(MGDL, rawValue))
+                    extras.putString(SERIAL, sharedPref.getString(SERIAL, sensorID))
+                    extras.putFloat(RATE, sharedPref.getFloat(RATE, rate))
+                    extras.putInt(ALARM, sharedPref.getInt(ALARM, alarm))
+                    extras.putFloat(DELTA, sharedPref.getFloat(DELTA, deltaValue))
+                    handleIntent(context, NotifyDataSource.BROADCAST, extras)
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Reading extras exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
+        }
+    }
 }
