@@ -31,20 +31,17 @@ Die neuste Version kann [hier](https://github.com/pachi81/GlucoDataHandler/relea
 
 Die einzelnen Einstellungen sind in der App entsprechend beschrieben. Sobald die Smartwatch verbunden ist, werden die Einstellungen übermittelt.
 
-<img src='images/settings_phone_1_DE.png' width=300>
-<img src='images/settings_phone_2_DE.png' width=300>
+<img src='images/settings_phone_1_DE.png' width=300> <img src='images/settings_phone_2_DE.png' width=300>
 
 #### Complications
 Die Wear OS version stellt mehrere Complications zur Verfügung:
 * Glukose Werte:
 
-<img src='images/complications_glucose1.png' width=200>
-<img src='images/complications_glucose2.png' width=200>
+<img src='images/complications_glucose1.png' width=200> <img src='images/complications_glucose2.png' width=200>
 
 * Glukose Wert als Hintergrund (wenn vom Watchface unterstützt und anscheinend nur unter Wear OS 3 verfügbar):
 
-<img src='images/complications_large_1.png' width=200>
-<img src='images/complications_large_2.png' width=200>
+<img src='images/complications_large_1.png' width=200> <img src='images/complications_large_2.png' width=200>
 
 * Delta Werte (pro Minute, bzw. pro 5 Minuten, wenn entsprechend aktiviert):
 
@@ -75,8 +72,7 @@ WICHTIG: da die App selber keine Musik abspielt, sollte man alle anderen Media P
 
 Alternativ zum Media Player kann die Android Auto Benachrichtigung verwendet werden:
 
-<img src='images/AA_notification.png' width=300>
-<img src='images/AA_notification_view.png' width=300>
+<img src='images/AA_notification.png' width=300> <img src='images/AA_notification_view.png' width=300>
 
 INFO: das Benachrichtigungs Popup erscheint bei jedem neuen Wert.
 

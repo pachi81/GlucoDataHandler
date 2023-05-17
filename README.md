@@ -31,20 +31,17 @@ You can download the current version [here](https://github.com/pachi81/GlucoData
 
 The settings for the phone are described in the app itself. The settings from the phone will be send to the wear, if it is connected.
 
-<img src='images/settings_phone_1.png' width=300>
-<img src='images/settings_phone_2.png' width=300>
+<img src='images/settings_phone_1.png' width=300> <img src='images/settings_phone_2.png' width=300>
 
 #### Complications
 There are several complications for the different types of wear OS complications, which provides:
 * Glucose value (used also for range circle)
 
-<img src='images/complications_glucose1.png' width=200>
-<img src='images/complications_glucose2.png' width=200>
+<img src='images/complications_glucose1.png' width=200> <img src='images/complications_glucose2.png' width=200>
 
 * Glucose value as background image (if supported by watch face and it seems to be only available in Wear OS 3)
 
-<img src='images/complications_large_1.png' width=200>
-<img src='images/complications_large_2.png' width=200>
+<img src='images/complications_large_1.png' width=200> <img src='images/complications_large_2.png' width=200>
 
 * Delta value (per minute or per 5 minutes)
 
@@ -76,8 +73,7 @@ IMPORTANT: it is recommended to disable all other media apps in the Android Auto
 
 You can also use notifications:
 
-<img src='images/AA_notification.png' width=300>
-<img src='images/AA_notification_view.png' width=300>
+<img src='images/AA_notification.png' width=300> <img src='images/AA_notification_view.png' width=300>
 
 INFO: the notification popup is shown for every new value.
 
