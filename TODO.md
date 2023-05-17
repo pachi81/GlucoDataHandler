@@ -7,9 +7,14 @@
 - [x] Wear connection
 - [x] Send to xdrip
 - [x] Forward glucodata intent
+- [x] Receive xDrip+ broadcast
+- [x] Android Auto implementation
 - [ ] Phone widget
 - [ ] Tasker wear connection event
-- [ ] Change settings using tasker
+- [ ] Tasker obsolete value event
+- [ ] Tasker Android Auto event
+- [ ] AOD?
+
 
 ## Wear app
 
