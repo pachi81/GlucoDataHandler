@@ -76,6 +76,10 @@ Alternativ zum Media Player kann die Android Auto Benachrichtigung verwendet wer
 
 INFO: das Benachrichtigungs Popup erscheint bei jedem neuen Wert.
 
+#### Option #3: APP verwenden
+
+<img src='images/AA_App.png' width=300>
+
 ### Tasker
 
 -> [Tasker support](./TASKER.md)

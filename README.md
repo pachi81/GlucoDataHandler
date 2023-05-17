@@ -75,7 +75,9 @@ You can also use notifications:
 
 <img src='images/AA_notification.png' width=300> <img src='images/AA_notification_view.png' width=300>
 
-INFO: the notification popup is shown for every new value.
+#### Option #3: Using the app
+
+<img src='images/AA_App.png' width=300>
 
 ### Tasker
 
