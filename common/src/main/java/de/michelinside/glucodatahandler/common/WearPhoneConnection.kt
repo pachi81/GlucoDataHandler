@@ -207,9 +207,19 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     setNodeBatteryLevel(p0.sourceNodeId, level)
                 }
 
+                var forceSend = false
                 if(p0.path == Constants.GLUCODATA_INTENT_MESSAGE_PATH || extras.containsKey(ReceiveData.SERIAL)) {
                     Log.d(LOG_ID, "Glucodata values receceived from " + p0.sourceNodeId + ": " + extras.toString())
-                    ReceiveData.handleIntent(context, NotifyDataSource.MESSAGECLIENT, extras)
+                    if (extras.containsKey(ReceiveData.TIME)) {
+                        Log.d(LOG_ID, "Received data from: " +
+                                ReceiveData.timeformat.format((extras.getLong(ReceiveData.TIME))) +
+                                " - current value time: " +
+                                ReceiveData.timeformat.format((ReceiveData.time)))
+                        if (extras.getLong(ReceiveData.TIME) >= ReceiveData.time)
+                            ReceiveData.handleIntent(context, NotifyDataSource.MESSAGECLIENT, extras)
+                        else
+                            forceSend = true  //  received data is older than current one, send current one
+                    }
                 }
 
                 if (p0.path == Constants.SETTINGS_INTENT_MESSAGE_PATH || extras.containsKey(Constants.SETTINGS_BUNDLE)) {
@@ -219,7 +229,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     InternalNotifier.notify(context, NotifyDataSource.SETTINGS, bundle)
                 }
 
-                if(p0.path == Constants.REQUEST_DATA_MESSAGE_PATH) {
+                if(p0.path == Constants.REQUEST_DATA_MESSAGE_PATH || forceSend) {
                     Log.d(LOG_ID, "Data request received from " + p0.sourceNodeId)
                     var bundle = ReceiveData.createExtras()
                     var source = NotifyDataSource.BROADCAST
