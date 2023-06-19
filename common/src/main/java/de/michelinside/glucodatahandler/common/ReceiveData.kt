@@ -137,7 +137,7 @@ object ReceiveData {
 
     fun getDeltaAsString(): String {
         if(isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) || deltaValue.isNaN())
-            return "???"
+            return "--"
         var deltaVal = ""
         if (delta > 0)
             deltaVal += "+"
@@ -150,7 +150,7 @@ object ReceiveData {
 
     fun getRateAsString(): String {
         if(isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
-            return "???"
+            return "--"
         return (if (rate > 0) "+" else "") + rate.toString()
     }
 
@@ -280,16 +280,18 @@ object ReceiveData {
                         }
                     }
                 }
-
                 rawValue = extras.getInt(MGDL)
+                time = extras.getLong(TIME) //time in msec
+                changeIsMmol(rawValue!=glucose.toInt(), context)
+
+                // check for alarm
                 if (alarm == 0) {
                     if(low > 0F && glucose <= low)
                         alarm = 7
                     else if(high > 0F && glucose >= high)
                         alarm = 6
                 }
-                time = extras.getLong(TIME) //time in msec
-                changeIsMmol(rawValue!=glucose.toInt(), context)
+
                 InternalNotifier.notify(context, source, createExtras())  // re-create extras to have all changed value inside...
                 saveExtras(context)
                 obsoleteNotify.schedule(context)
