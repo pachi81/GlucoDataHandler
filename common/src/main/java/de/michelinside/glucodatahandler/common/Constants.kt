@@ -21,10 +21,8 @@ object Constants {
     const val SHARED_PREF_TAG = "GlucoDataHandlerPrefs"
     const val SHARED_PREF_SEND_TO_GLUCODATA_AOD = "send_to_glucodata_aod"
     const val SHARED_PREF_SEND_TO_XDRIP = "send_to_xdrip"
-    const val SHARED_PREF_FOREGROUND_SERVICE = "foreground_service"
     const val SHARED_PREF_TARGET_MIN = "target_min_value"
     const val SHARED_PREF_TARGET_MAX = "target_max_value"
-    const val SHARED_PREF_NOTIFICATION = "notification"
     const val SHARED_PREF_CAR_NOTIFICATION = "car_notification"
     const val SHARED_PREF_NOTIFY_DURATION_LOW = "notify_duration_low"
     const val SHARED_PREF_NOTIFY_DURATION_HIGH = "notify_duration_high"
@@ -37,4 +35,9 @@ object Constants {
     const val SHARED_PREF_COLOR_ALARM = "color_alarm"
     const val SHARED_PREF_COLOR_OUT_OF_RANGE = "color_out_of_range"
     const val SHARED_PREF_COLOR_OK = "color_ok"
+
+    // Wear only preferences
+    const val SHARED_PREF_NOTIFICATION = "notification"
+    const val SHARED_PREF_FOREGROUND_SERVICE = "foreground_service"
+    const val SHARED_PREF_WEAR_COLORED_AOD = "colored_aod"
 }

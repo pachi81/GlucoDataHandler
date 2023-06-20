@@ -6,6 +6,7 @@
     <string name="activity_disconnected_label">Phone: disconnected</string>
     <string name="activity_switch_foreground">Foreground</string>
     <string name="activity_switch_notification">Vibration</string>
+    <string name="activity_switch_colored_aod">Colored AOD</string>
     <string name="activity_target_range">Target range:</string>
 
     <string name="short_value">Glucose</string>

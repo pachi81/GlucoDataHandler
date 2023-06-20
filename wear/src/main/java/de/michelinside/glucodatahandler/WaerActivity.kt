@@ -23,6 +23,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtVersion: TextView
     private lateinit var txtValueInfo: TextView
     private lateinit var txtConnInfo: TextView
+    private lateinit var switchColoredAod: SwitchCompat
     private lateinit var switchNotifcation: SwitchCompat
     private lateinit var switchForground: SwitchCompat
     private lateinit var sharedPref: SharedPreferences
@@ -77,6 +78,22 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                     }
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Changing notification exception: " + exc.message.toString() )
+                }
+            }
+
+            switchColoredAod = findViewById(R.id.switchColoredAod)
+            switchColoredAod.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false)
+            switchColoredAod.setOnCheckedChangeListener { _, isChecked ->
+                Log.d(LOG_ID, "Colored AOD changed: " + isChecked.toString())
+                try {
+                    with (sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, isChecked)
+                        apply()
+                    }
+                    // trigger update of each complication on change
+                    ActiveComplicationHandler.OnNotifyData(this, NotifyDataSource.BROADCAST, null)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Changing colored AOD exception: " + exc.message.toString() )
                 }
             }
 

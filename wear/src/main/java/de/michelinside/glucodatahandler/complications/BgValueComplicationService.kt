@@ -2,7 +2,9 @@ package de.michelinside.glucodatahandler
 
 import android.app.PendingIntent
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.util.Log
@@ -17,13 +19,15 @@ import java.util.*
 abstract class BgValueComplicationService : SuspendingComplicationDataSourceService() {
     protected val LOG_ID = "GlucoDataHandler.BgValueComplicationService"
     var descriptionResId: Int = R.string.app_name
-    val shortTimeformat = DateFormat.getTimeInstance(DateFormat.SHORT)
+    val shortTimeformat: DateFormat = DateFormat.getTimeInstance(DateFormat.SHORT)
+    protected lateinit var sharedPref: SharedPreferences
 
     override fun onCreate() {
         try {
             super.onCreate()
             Log.d(LOG_ID, "onCreate called")
             descriptionResId = this.applicationInfo.labelRes
+            sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
 
             GlucoDataServiceWear.start(this)
         } catch (exc: Exception) {
@@ -215,10 +219,6 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
             image = Icon.createWithResource(this, R.drawable.glucose)
         ).build()
 
-    fun ambientArrowIcon(): Icon {
-        return getRateAsIcon(forImage = true)
-    }
-
     fun deltaIcon(): MonochromaticImage =
         MonochromaticImage.Builder(
             image = Icon.createWithResource(this, R.drawable.icon_delta)
@@ -235,8 +235,14 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         return SmallImage.Builder(
             image = getGlucoseAsIcon(ReceiveData.getClucoseColor(), true),
             type = SmallImageType.PHOTO
-        ).setAmbientImage(getGlucoseAsIcon(forImage = true))
+        ).setAmbientImage(ambientGlucoseAsIcon(forImage = true))
             .build()
+    }
+
+    fun ambientGlucoseAsIcon(forImage: Boolean = false): Icon? {
+        if (sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false))
+            return null
+        return getGlucoseAsIcon(forImage = forImage)
     }
 
     fun arrowImage(): SmallImage {
@@ -246,6 +252,26 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         )
             .setAmbientImage(ambientArrowIcon())
             .build()
+    }
+
+    fun ambientArrowIcon(): Icon? {
+        if (sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false))
+            return null
+        return getRateAsIcon(forImage = true)
+    }
+
+    fun getGlucoseTrendImage(): SmallImage {
+        return  SmallImage.Builder(
+            image = getGlucoseTrendIcon(ReceiveData.getClucoseColor()),
+            type = SmallImageType.PHOTO
+        ).setAmbientImage(ambientGlucoseTrendImage())
+            .build()
+    }
+
+    fun ambientGlucoseTrendImage(): Icon? {
+        if (sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false))
+            return null
+        return getGlucoseTrendIcon(Color.WHITE)
     }
 
     fun getGlucoseAsIcon(color: Int = Color.WHITE, forImage: Boolean = false, width: Int = 100, height: Int = 100): Icon {
@@ -260,14 +286,6 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     fun getGlucoseTrendIcon(color: Int, width: Int = 100, height: Int = 100): Icon {
         return Icon.createWithBitmap(Utils.textRateToBitmap(ReceiveData.getClucoseAsString(), ReceiveData.rate, color, ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC), ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height))
-    }
-
-    fun getGlucoseTrendImage(): SmallImage {
-        return  SmallImage.Builder(
-            image = getGlucoseTrendIcon(ReceiveData.getClucoseColor()),
-            type = SmallImageType.PHOTO
-        ).setAmbientImage(getGlucoseTrendIcon(Color.WHITE))
-            .build()
     }
 
 }

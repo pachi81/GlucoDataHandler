@@ -6,6 +6,7 @@
     <string name="activity_disconnected_label">Handy: getrennt</string>
     <string name="activity_switch_foreground">Vordergrund</string>
     <string name="activity_switch_notification">Vibrieren</string>
+    <string name="activity_switch_colored_aod">Farbiges AOD</string>
     <string name="activity_target_range">Zielbereich:</string>
 
     <string name="short_value">Zuckerwert</string>
