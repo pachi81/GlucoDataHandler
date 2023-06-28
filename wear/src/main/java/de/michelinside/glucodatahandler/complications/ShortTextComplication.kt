@@ -53,6 +53,7 @@ class LongGlucoseWithDeltaAndTrendAndTimeComplication: ShortClucoseComplication(
 
 class TimeStampComplication: BgValueComplicationService() {
     override fun getText(): PlainComplicationText = timeText(true)
+    override fun getIcon(): MonochromaticImage = glucoseIcon()
 
     override fun getRangeValueComplicationData(): ComplicationData {
         val time = Date(ReceiveData.time)
@@ -65,6 +66,7 @@ class TimeStampComplication: BgValueComplicationService() {
             contentDescription = descriptionText()
         )
             .setText(getText())
+            .setMonochromaticImage(getIcon())
             .build()
     }
 }
