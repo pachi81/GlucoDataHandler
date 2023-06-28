@@ -93,7 +93,7 @@
 
                 <data
                     android:host="*"
-                    android:scheme="glucodata_intent" />
+                    android:scheme="glucodata_intent_wear" />
             </intent-filter>
         </service>
 

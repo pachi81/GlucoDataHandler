@@ -1,7 +1,8 @@
 package de.michelinside.glucodatahandler.common
 
 object Constants {
-    const val CAPABILITY = "glucodata_intent"
+    const val CAPABILITY_PHONE = "glucodata_intent_mobile"
+    const val CAPABILITY_WEAR = "glucodata_intent_wear"
     const val GLUCODATA_INTENT_MESSAGE_PATH = "/glucodata_intent"
     const val BATTERY_INTENT_MESSAGE_PATH = "/battery_intent"
     const val SETTINGS_INTENT_MESSAGE_PATH = "/settings_intent"

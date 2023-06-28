@@ -2,6 +2,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools"
 tools:keep="@array/android_wear_capabilities">
 <string-array name="android_wear_capabilities">
-    <item>glucodata_intent</item>
+    <item>glucodata_intent_mobile</item>
 </string-array>
 </resources>
