@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GlucoDataHandler</string>
+    <string name="glucose_label">Glukoza</string>
+    <string name="glucose_html_label">Wartość glukozy w jednostkach z ustawień Juggluco</string>
+    <string name="sensor_id_label">Numer sensora</string>
+    <string name="sensor_id_html_label">Numer aktualnie aktywnego sensora</string>
+    <string name="raw_value_label">Wartość surowa</string>
+    <string name="raw_value_html_label">Wartość glukozy w mg/dl</string>
+    <string name="rate_label">Tempo</string>
+    <string name="rate_html_label">Tempo zmiany stężenia glukozy</string>
+    <string name="rate_label_label">Etykieta tempa</string>
+    <string name="rate_label_html_label">Etykieta bieżącego tempa</string>
+    <string name="dexcom_label">DexcomLabel</string>
+    <string name="dexcom_html_label">Etykieta tempa dla Dexcom</string>
+    <string name="alarm_label">Alarm</string>
+    <string name="alarm_html_label">Wartość alarmu (0: brak alarmu, 6/14: wysoki, 7/15: niski)</string>
+    <string name="time_label">Czas</string>
+    <string name="time_html_label">Czas w msec</string>
+    <string name="time_diff_label">Różnica czasu</string>
+    <string name="time_diff_html_label">Różnica czasu między tą a poprzednią wartością w msec</string>
+    <string name="arrow_label">Strzałka</string>
+    <string name="arrow_html_label">Strzałka kierunku w kodzie Unicode</string>
+    <string name="delta_label">Delta</string>
+    <string name="delta_html_label">Delta bieżącej i poprzedniej wartości glukozy (na minutę)</string>
+    <string name="unit_label">Jednostka</string>
+    <string name="unit_html_label">Jednostka wartości glukozy (mg/dl lub mmol/l)</string>
+
+    <string name="activity_main_connected_label">Zegarek: połączony (%1$s)</string>
+    <string name="activity_main_disconnected_label">Zegarek: odłączony</string>
+    <string name="activity_main_car_connected_label">Android Auto: podłączony</string>
+    <string name="activity_main_car_disconnected_label">Android Auto: odłączony</string>
+
+    <string name="pref_cat_android_auto">Android Auto</string>
+    <string name="pref_cat_xdrip">xDrip+</string>
+    <string name="pref_cat_forward_broadcast">Glucodata broadcast (Transmisja danych Glucodata)</string>
+    <string name="pref_target_range">Zakres docelowy</string>
+    <string name="pref_cat_colors">Kolory</string>
+
+    <string name="pref_switch_notification">Wartości fikcyjne</string>
+    <string name="pref_high_value">Wysoki poziom stęż. glukozy</string>
+    <string name="pref_high_value_summary">Granica dla wysokich wartości stężenia glukozy.\nJeśli aktywowałeś alarm wysokiego stęż. glukozy w Juggluco, nie musisz ustawiać tej wartości.</string>
+    <string name="pref_target_max_value">Górna granica zakresu docelowego</string>
+    <string name="pref_target_max_value_summary">Najwyższa wartość dla zakresu docelowego.</string>
+    <string name="pref_target_min_value">Dolna granica zakresu docelowego</string>
+    <string name="pref_target_min_value_summary">Dolna wartość dla zakresu docelowego.</string>
+    <string name="pref_low_value">Niski poziom stęż. glukozy</string>
+    <string name="pref_low_value_summary">Granica dla niskich wartości glukozy.\nJeśli aktywowałeś alarm niskiego stęż. glukozy w Juggluco, nie musisz ustawiać tej wartości.</string>
+    <string name="pref_switch_car_notification">Powiadomienia w Android Auto</string>
+    <string name="pref_switch_car_notification_summary">Zamiast powiadomień aplikacja ta oferuje również wdrożenie fikcyjnych multimediów. Aby korzystać z tej aplikacji w Android Auto, musisz aktywować ustawienia programisty w Android Auto, klikając kilka razy na oznaczenie wersji. Następnie należy włączyć opcję &quot;Nieznane źródła&quot; w menu ustawień programisty.</string>
+    <string name="pref_switch_send_to_aod">Wyślij transmisję „glucodata broadcast”</string>
+    <string name="pref_switch_send_to_aod_summary">Wyślij transmisję „glucodata broadcast” dla nowych wartości otrzymanych z dowolnego źródła.</string>
+    <string name="pref_button_select_target">Identyfikacja odbiornika</string>
+    <string name="pref_button_select_target_summary">Wybierz odbiorniki, do których wysyłana jest transmisja „glucodata broadcast”. Jeśli nie wybrano żadnego odbiornika, wysyłana jest transmisja globalna i wszystkie aplikacje zarejestrowane dla tej transmisji mogą ją odbierać.</string>
+    <string name="pref_switch_send_to_xdrip">Wyślij do xDrip</string>
+    <string name="pref_switch_send_to_xdrip_summary">Przekazuj wartości glukozy do xDrip+.\n WAŻNE: ta opcja musi być wyłączona, aby odbierać wartości z xDrip+!</string>
+    <string name="pref_switch_use_mmol">Użyj mmol/l</string>
+    <string name="pref_switch_use_mmol_summary">Konwersja wartości z xDrip+ na mmol/l.</string>
+    <string name="pref_switch_use_5_min_delta">5-minutowa delta</string>
+    <string name="pref_switch_use_5_min_delta_summary">Włącz tę opcję, aby używać wartości delta dla odstępu czasu wynoszącego 5 minut, w przeciwnym razie używany jest odstęp 1-minutowy.</string>
+    <string name="pref_color_alarm">Kolor wysokiego/niskiego stęż. glukozy</string>
+    <string name="pref_color_alarm_summary">Kolor dla wysokich i niskich wartości stężenia glukozy.</string>
+    <string name="pref_color_out_of_range">Kolor poza zakresem</string>
+    <string name="pref_color_out_of_range_summary">Kolor dla wartości stęż. glukozy poza zakresem docelowym.</string>
+    <string name="pref_color_ok">Kolor w zakresie docelowym</string>
+    <string name="pref_color_ok_summary">Kolor dla wartości stęż. glukozy w zakresie docelowym.</string>
+
+    <string name="select_receiver_show_all">Pokaż wszystko</string>
+    <string name="select_receiver_no_glucodata_receiver">Nie znaleziono odbiornika!</string>
+    <string name="button_ok">OK</string>
+    <string name="button_cancel">Anuluj</string>
+
+    <string name="menu_settings">Ustawienia</string>
+    <string name="menu_group_github" translatable="false">GitHub</string>
+    <string name="menu_update">Aktualizacje</string>
+    <string name="menu_support" translatable="false">Wsparcie</string>
+    <string name="menu_help">Pomoc</string>
+
+    <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
+    <string name="update_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/releases</string>
+    <string name="support_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/issues</string>
+</resources>
