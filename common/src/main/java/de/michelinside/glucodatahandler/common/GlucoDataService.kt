@@ -49,6 +49,8 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
 
             ReceiveData.initData(this)
 
+            connection.open(this)
+
             val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             val filter = mutableSetOf(
                 NotifyDataSource.BROADCAST,
@@ -59,8 +61,6 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
             if (appSource == AppSource.PHONE_APP)
                 filter.add(NotifyDataSource.SETTINGS)   // only send setting changes from phone to wear!
             InternalNotifier.addNotifier(this, filter)
-
-            connection.open(this)
 
             Log.d(LOG_ID, "Register Receiver")
             receiver = GlucoseDataReceiver()
@@ -134,7 +134,7 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
             if (dataSource != NotifyDataSource.MESSAGECLIENT && dataSource != NotifyDataSource.NODE_BATTERY_LEVEL) {
                 Thread {
                     try {
-                        connection.sendMessage(dataSource, extras)
+                        connection.sendMessage(dataSource, extras, null)
                     } catch (exc: Exception) {
                         Log.e(LOG_ID, "SendMessage exception: " + exc.toString())
                     }

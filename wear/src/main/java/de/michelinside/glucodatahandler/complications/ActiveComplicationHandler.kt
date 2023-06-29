@@ -17,6 +17,7 @@ object ActiveComplicationHandler: NotifierInterface {
     private var packageInfo: PackageInfo? = null
     private var complicationClasses = mutableMapOf<Int, ComponentName>()
     private var noComplication = false   // check complications at least one time
+
     init {
         Log.d(LOG_ID, "init called")
     }

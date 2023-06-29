@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GlucoDataWear</string>
+    <string name="forground_notification_descr">Otrzymywanie danych do komplikacji</string>
+
+    <string name="activity_connected_label">Telefon: połączony (%1$s)</string>
+    <string name="activity_disconnected_label">Telefon: rozłączony</string>
+    <string name="activity_switch_foreground">Pierwszy plan</string>
+    <string name="activity_switch_notification">Wibracje</string>
+    <string name="activity_target_range">Zakres docelowy:</string>
+    <string name="activity_switch_colored_aod">Kolorowy AOD</string>
+
+    <string name="short_value">Glukoza</string>
+    <string name="image_value">Glukoza (bardzo duża i kolorowa)</string>
+    <string name="icon_value">Glukoza (duża)</string>
+    <string name="short_value_icon">Glukoza z ikoną</string>
+    <string name="short_value_arrow">Glukoza i trend</string>
+    <string name="short_value_arrow_image">Glukoza i trend (duży i kolorowy)</string>
+    <string name="short_value_trend_range">Glukoza i zakres trendu (jeśli obsługiwane)</string>
+    <string name="short_value_delta_trend_range">Glukoza, delta i zakres trendu (jeśli obsługiwane)</string>
+    <string name="short_delta_trend_arrow_range">Delta, strzałka trendu i zakres trendu (jeśli obsługiwane)</string>
+    <string name="short_value_delta">Glukoza i delta</string>
+    <string name="long_value_arrow_delta">Glukoza, delta i trend</string>
+    <string name="long_value_arrow_delta_time">Glukoza, delta, trend i znacznik czasu</string>
+    <string name="short_value_rate">Glukoza i wartość trendu</string>
+    <string name="short_delta">Delta</string>
+    <string name="short_delta_arrow">Delta i trend</string>
+    <string name="short_delta_icon">Delta z ikoną</string>
+    <string name="image_arrow">Trend (duży, kolorowy)</string>
+    <string name="icon_arrow">Ikona trendu</string>
+    <string name="test_neg_range">Testowa komplikacja zakresu z wartościami ujemnymi (dla wsparcia zakresu trendu)</string>
+    <string name="short_rate">Wartość trendu</string>
+    <string name="short_rate_arrow">Wartość trendu i strzałka</string>
+    <string name="short_rate_icon">Wartość trendu z ikoną</string>
+    <string name="timestamp">Znacznik czasu glukozy</string>
+    <string name="battery_level">Poziom baterii (zegarek  i telefon)</string>
+
+    <string name="source_message_client">Telefon</string>
+
+</resources>

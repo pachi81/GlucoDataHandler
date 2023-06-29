@@ -83,18 +83,32 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switchNotifcation"
+            android:id="@+id/switchColoredAod"
             android:layout_width="0dp"
             android:layout_height="35dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/activity_switch_colored_aod"
+            android:textAlignment="viewStart"
+            app:layout_constraintBottom_toTopOf="@+id/switchNotifcation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtValueInfo"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchNotifcation"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:text="@string/activity_switch_notification"
             android:textAlignment="viewStart"
             app:layout_constraintBottom_toTopOf="@+id/switchForground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtValueInfo"
+            app:layout_constraintTop_toBottomOf="@+id/switchColoredAod"
             tools:ignore="TouchTargetSizeCheck" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -109,6 +123,7 @@
             app:layout_constraintBottom_toTopOf="@+id/txtConnInfo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/switchNotifcation"
             tools:ignore="TouchTargetSizeCheck" />
 
 

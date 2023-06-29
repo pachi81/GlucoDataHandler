@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="info_label_sensor_id">Sensor</string>
+    <string name="info_label_value">Wartość</string>
+    <string name="info_label_raw">Surowe</string>
+    <string name="info_label_delta">Delta</string>
+    <string name="info_label_rate">Tempo</string>
+    <string name="info_label_timestamp">Znacznik czasu</string>
+    <string name="info_label_timediff">Różnica czasu</string>
+    <string name="info_label_alarm">Alarm</string>
+    <string name="info_label_source">Źródło</string>
+    <string name="info_label_per_minute">na min.</string>
+    <string name="no_data">Nie otrzymano jeszcze transmisji!\nINFORMACJA: Aby otrzymać dane z Juggluco, otwórz aplikację Juggluco, przejdź do ustawień i aktywuj \&quot;Glucodata Broadcast\&quot; dla &quot;de.michelinside.glucodatahandler&quot;\nAby odbierać dane z xDrip+, aktywuj lokalną transmisję i wybierz brak odbiornika.</string>
+
+    <string name="rate_double_up">rośnie bardzo szybko</string>
+    <string name="rate_single_up">rośnie szybko</string>
+    <string name="rate_forty_five_up">rośnie</string>
+    <string name="rate_flat">stabilny</string>
+    <string name="rate_forty_five_down">spada</string>
+    <string name="rate_single_down">spada szybko</string>
+    <string name="rate_double_down">spada bardzo szybko</string>
+
+    <string name="source_broadcast">Broadcast - Transmisja</string>
+    <string name="source_message_client">Zegarek</string>
+    <string name="source_capility_info">Wewnętrzne</string>
+    <string name="source_battery_level">Poziom baterii</string>
+    <string name="source_node_battery_level">Poziom baterii węzła</string>
+    <string name="source_settings">Ustawienia zostały zmienione</string>
+    <string name="source_car_connection">Połączenie z Android Auto</string>
+    <string name="source_obsolete">Wartość przestarzała</string>
+
+</resources>
