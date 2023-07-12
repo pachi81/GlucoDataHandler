@@ -7,11 +7,11 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.Utils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
@@ -106,17 +106,19 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         notificationMgr.cancel(NOTIFICATION_ID)  // remove notification
     }
 
-    private fun getGlucoseAsIcon(color: Int = Color.WHITE, forImage: Boolean = false, width: Int = 100, height: Int = 100): Icon {
-        return Icon.createWithBitmap(
-            Utils.textToBitmap(ReceiveData.getClucoseAsString(), color, forImage, ReceiveData.isObsolete(
-                Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height))
+    private fun getStatusBarIcon(): Icon {
+        return when(statusBarIcon) {
+            StatusBarIcon.GLUCOSE -> Utils.getGlucoseAsIcon()
+            StatusBarIcon.TREND -> Utils.getRateAsIcon()
+            else -> Icon.createWithResource(GlucoDataService.context, R.mipmap.ic_launcher)
+        }
     }
 
     private fun showNotification() {
         try {
             Log.d(LOG_ID, "showNotification called")
             val notification = notificationCompat
-                .setSmallIcon(getGlucoseAsIcon(ReceiveData.getClucoseColor()))
+                .setSmallIcon(getStatusBarIcon())
                 .setLargeIcon(Utils.getRateAsBitmap())
                 .setWhen(ReceiveData.time)
                 .setContentTitle(ReceiveData.getClucoseAsString())
