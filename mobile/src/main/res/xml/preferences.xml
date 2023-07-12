@@ -2,6 +2,23 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <PreferenceCategory android:title="@string/pref_cat_general"
+        app:iconSpaceReserved="false">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="permanent_notification"
+            android:summary="@string/pref_notification_summary"
+            android:title="@string/pref_notification"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.ListPreference
+            android:defaultValue="0"
+            android:entries="@array/pref_status_bar_icon_labels"
+            android:entryValues="@array/pref_status_bar_icon_values"
+            android:key="status_bar_notification_icon"
+            android:summary="@string/pref_notification_icon_summary"
+            android:title="@string/pref_notification_icon"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_target_range"
         app:iconSpaceReserved="false">

@@ -1,2 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Label ordering must match values -->
+    <array name="pref_status_bar_icon_labels">
+        <item>@string/pref_status_bar_icon_app</item>
+        <item>@string/pref_status_bar_icon_glucose</item>
+        <item>@string/pref_status_bar_icon_trend</item>
+    </array>
+    <array name="pref_status_bar_icon_values">
+        <item>"app"</item>
+        <item>"glucose"</item>
+        <item>"trend"</item>
+    </array>
 </resources>
