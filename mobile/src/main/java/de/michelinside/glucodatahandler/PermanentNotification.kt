@@ -85,11 +85,9 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     private fun createNofitication(context: Context) {
         createNotificationChannel(context)
         val launchIntent = Intent(context, MainActivity::class.java)
-        launchIntent.action = Intent.ACTION_MAIN
-        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
         val pendingIntent: PendingIntent = PendingIntent.getActivity(
             context,
-            2,
+            4,
             launchIntent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
@@ -99,6 +97,11 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setContentIntent(pendingIntent)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
+            .setAutoCancel(false)
+            .setShowWhen(true)
+            .setColorized(true)
+            .setCategory(Notification.CATEGORY_ALARM)
+            .setVisibility(Notification.VISIBILITY_PUBLIC)
     }
 
 
@@ -124,8 +127,8 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
                 .setContentTitle(ReceiveData.getClucoseAsString())
                 .setContentText("Delta: " + ReceiveData.getDeltaAsString())
                 .setColor(ReceiveData.getClucoseColor())
-                .setColorized(true)
                 .build()
+            notification.flags = notification.flags or Notification.FLAG_NO_CLEAR
             notificationMgr.notify(
                 NOTIFICATION_ID,
                 notification
