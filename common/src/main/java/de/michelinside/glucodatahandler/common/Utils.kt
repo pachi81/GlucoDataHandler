@@ -2,6 +2,7 @@ package de.michelinside.glucodatahandler.common
 
 import android.content.Intent
 import android.graphics.*
+import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.os.Parcel
 import android.util.Log
@@ -233,4 +234,31 @@ object Utils {
         intent.putExtra(ReceiveData.ALARM, if (raw <= 70) 7 else if (raw >= 250) 6 else 0)
         return intent
     }
+
+
+    fun getGlucoseAsBitmap(color: Int? = null, forImage: Boolean = false, width: Int = 100, height: Int = 100): Bitmap? {
+        return textToBitmap(ReceiveData.getClucoseAsString(),color ?: ReceiveData.getClucoseColor(), forImage, ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height)
+    }
+    fun getGlucoseAsIcon(color: Int? = null, forImage: Boolean = false, width: Int = 100, height: Int = 100): Icon {
+        return Icon.createWithBitmap(getGlucoseAsBitmap(color, forImage, width, height))
+    }
+
+    fun getRateAsBitmap(color: Int? = null, forImage: Boolean = false, resizeFactor: Float = 1F): Bitmap? {
+        if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
+            return textToBitmap("?", Color.GRAY, forImage)
+        return rateToBitmap(ReceiveData.rate, color ?: ReceiveData.getClucoseColor(), resizeFactor = resizeFactor)
+    }
+
+    fun getRateAsIcon(color: Int? = null, forImage: Boolean = false, resizeFactor: Float = 1F): Icon {
+        return Icon.createWithBitmap(getRateAsBitmap(color, forImage, resizeFactor))
+    }
+
+    fun getGlucoseTrendBitmap(color: Int? = null, width: Int = 100, height: Int = 100): Bitmap? {
+        return textRateToBitmap(ReceiveData.getClucoseAsString(), ReceiveData.rate, color ?: ReceiveData.getClucoseColor(), ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC), ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height)
+    }
+
+    fun getGlucoseTrendIcon(color: Int? = null, width: Int = 100, height: Int = 100): Icon {
+        return Icon.createWithBitmap(getGlucoseTrendBitmap(color, width, height))
+    }
+
 }

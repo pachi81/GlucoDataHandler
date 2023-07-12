@@ -117,7 +117,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             Log.d(LOG_ID, "showNotification called")
             val notification = notificationCompat
                 .setSmallIcon(getGlucoseAsIcon(ReceiveData.getClucoseColor()))
-                .setLargeIcon(ReceiveData.getArrowBitmap())
+                .setLargeIcon(Utils.getRateAsBitmap())
                 .setWhen(ReceiveData.time)
                 .setContentTitle(ReceiveData.getClucoseAsString())
                 .setContentText("Delta: " + ReceiveData.getDeltaAsString())

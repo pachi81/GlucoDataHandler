@@ -140,7 +140,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 } else {
                     txtBgValue.paintFlags = 0
                 }
-                viewIcon.setImageIcon(ReceiveData.getArrowIcon())
+                viewIcon.setImageIcon(Utils.getRateAsIcon())
                 txtValueInfo.text = ReceiveData.getAsString(this)
                 if (WearPhoneConnection.nodesConnected) {
                     txtConnInfo.text = String.format(resources.getText(R.string.activity_connected_label).toString(), WearPhoneConnection.getBatterLevelsAsString())

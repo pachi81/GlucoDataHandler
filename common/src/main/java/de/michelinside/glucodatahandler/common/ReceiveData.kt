@@ -2,9 +2,7 @@ package de.michelinside.glucodatahandler.common
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.notifier.*
@@ -220,16 +218,6 @@ object ReceiveData {
         if (rate > -2.0f) return context.getString(R.string.rate_forty_five_down)
         if (rate > -3.0f) return context.getString(R.string.rate_single_down)
         return if (java.lang.Float.isNaN(rate)) "" else context.getString(R.string.rate_double_down)
-    }
-
-    fun getArrowBitmap(roundTarget: Boolean = false): Bitmap? {
-        if (isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
-            return Utils.textToBitmap("?", Color.GRAY, roundTarget)
-        return Utils.rateToBitmap(rate, getClucoseColor(), resizeFactor = 0.75F)
-    }
-
-    fun getArrowIcon(roundTarget: Boolean = false): Icon {
-        return Icon.createWithBitmap(getArrowBitmap(roundTarget))
     }
 
     fun getTimeDiffMinute(): Long {

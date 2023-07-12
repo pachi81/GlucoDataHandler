@@ -136,7 +136,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     open fun getLargeImageComplicationData(): ComplicationData {
         return PhotoImageComplicationData.Builder (
-            photoImage = getGlucoseAsIcon(ReceiveData.getClucoseColor(), true, 500,500),
+            photoImage = Utils.getGlucoseAsIcon(ReceiveData.getClucoseColor(), true, 500,500),
             contentDescription = descriptionText()
         )
             .setTapAction(getTapAction())
@@ -211,8 +211,8 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     fun arrowIcon(): MonochromaticImage =
         MonochromaticImage.Builder(
-            image = getRateAsIcon()
-        ).setAmbientImage(getRateAsIcon()).build()
+            image = Utils.getRateAsIcon(color = Color.WHITE)
+        ).setAmbientImage(Utils.getRateAsIcon(color = Color.WHITE)).build()
 
     fun glucoseIcon(): MonochromaticImage =
         MonochromaticImage.Builder(
@@ -233,7 +233,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     fun glucoseImage(): SmallImage {
         return SmallImage.Builder(
-            image = getGlucoseAsIcon(ReceiveData.getClucoseColor(), true),
+            image = Utils.getGlucoseAsIcon(ReceiveData.getClucoseColor(), true),
             type = SmallImageType.PHOTO
         ).setAmbientImage(ambientGlucoseAsIcon(forImage = true))
             .build()
@@ -242,12 +242,12 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     fun ambientGlucoseAsIcon(forImage: Boolean = false): Icon? {
         if (sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false))
             return null
-        return getGlucoseAsIcon(forImage = forImage)
+        return Utils.getGlucoseAsIcon(color = Color.WHITE, forImage = forImage)
     }
 
     fun arrowImage(): SmallImage {
         return  SmallImage.Builder(
-            image = getRateAsIcon(ReceiveData.getClucoseColor(), true),
+            image = Utils.getRateAsIcon(ReceiveData.getClucoseColor(), true),
             type = SmallImageType.PHOTO
         )
             .setAmbientImage(ambientArrowIcon())
@@ -257,12 +257,12 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     fun ambientArrowIcon(): Icon? {
         if (sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false))
             return null
-        return getRateAsIcon(forImage = true)
+        return Utils.getRateAsIcon(color = Color.WHITE, forImage = true)
     }
 
     fun getGlucoseTrendImage(): SmallImage {
         return  SmallImage.Builder(
-            image = getGlucoseTrendIcon(ReceiveData.getClucoseColor()),
+            image = Utils.getGlucoseTrendIcon(ReceiveData.getClucoseColor()),
             type = SmallImageType.PHOTO
         ).setAmbientImage(ambientGlucoseTrendImage())
             .build()
@@ -271,21 +271,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     fun ambientGlucoseTrendImage(): Icon? {
         if (sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false))
             return null
-        return getGlucoseTrendIcon(Color.WHITE)
-    }
-
-    fun getGlucoseAsIcon(color: Int = Color.WHITE, forImage: Boolean = false, width: Int = 100, height: Int = 100): Icon {
-        return Icon.createWithBitmap(Utils.textToBitmap(ReceiveData.getClucoseAsString(), color, forImage, ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height))
-    }
-
-    fun getRateAsIcon(color: Int = Color.WHITE, forImage: Boolean = false): Icon {
-        if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
-            return Icon.createWithBitmap(Utils.textToBitmap("?", Color.GRAY, forImage))
-        return Icon.createWithBitmap(Utils.rateToBitmap(ReceiveData.rate, color))
-    }
-
-    fun getGlucoseTrendIcon(color: Int, width: Int = 100, height: Int = 100): Icon {
-        return Icon.createWithBitmap(Utils.textRateToBitmap(ReceiveData.getClucoseAsString(), ReceiveData.rate, color, ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC), ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height))
+        return Utils.getGlucoseTrendIcon(Color.WHITE)
     }
 
 }

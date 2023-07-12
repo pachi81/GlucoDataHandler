@@ -152,7 +152,7 @@ object CarModeReceiver: NotifierInterface {
             if (enable_notification && car_connected) {
                 Log.d(LOG_ID, "showNotification called")
                 notificationCompat
-                    .setLargeIcon(ReceiveData.getArrowBitmap())
+                    .setLargeIcon(Utils.getRateAsBitmap(resizeFactor = 0.75F))
                     .setWhen(ReceiveData.time)
                     .setStyle(createMessageStyle())
                 notificationMgr.notify(NOTIFICATION_ID, notificationCompat)
@@ -169,7 +169,7 @@ object CarModeReceiver: NotifierInterface {
 
     private fun createMessageStyle(): NotificationCompat.MessagingStyle {
         val person = Person.Builder()
-            .setIcon(IconCompat.createWithBitmap(ReceiveData.getArrowBitmap()!!))
+            .setIcon(IconCompat.createWithBitmap(Utils.getRateAsBitmap(resizeFactor = 0.75F)!!))
             .setName(ReceiveData.getClucoseAsString())
             .setImportant(true)
             .build()
