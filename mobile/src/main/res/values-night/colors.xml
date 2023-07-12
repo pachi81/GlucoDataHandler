@@ -10,5 +10,5 @@
     <color name="red">#FFFF0000</color>
     <color name="yellow">#FFFFFF00</color>
     <color name="green">#FF00FF00</color>
-    <color name="text_color">@color/black</color>
+    <color name="text_color">@color/white</color>
 </resources>

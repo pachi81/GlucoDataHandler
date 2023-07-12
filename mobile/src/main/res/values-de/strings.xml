@@ -67,10 +67,10 @@
     <string name="pref_color_ok_summary">Farbe für Glukosewerte im Zielbereich.</string>
     <string name="pref_notification">Benachrichtigung</string>
     <string name="pref_notification_summary">Zeigt eine Benachrichtigung über den aktuellen Glucosewert in der Statusbar.</string>
-    <string name="pref_notification_icon">Statusbar icon</string>
+    <string name="pref_notification_icon">Statusbar Icon</string>
     <string name="pref_notification_icon_summary">Art des Statusbar Icons für die Benachrichtigung.</string>
 
-    <string name="pref_status_bar_icon_app">App icon</string>
+    <string name="pref_status_bar_icon_app">App Icon</string>
     <string name="pref_status_bar_icon_glucose">Zuckerwert</string>
     <string name="pref_status_bar_icon_trend">Trendpfeil</string>
 

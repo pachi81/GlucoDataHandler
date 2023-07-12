@@ -10,6 +10,7 @@ import android.content.SharedPreferences
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
+import android.widget.RemoteViews
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -100,7 +101,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setAutoCancel(false)
             .setShowWhen(true)
             .setColorized(true)
-            .setCategory(Notification.CATEGORY_ALARM)
+            .setCategory(Notification.CATEGORY_STATUS)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
     }
 
@@ -111,8 +112,8 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
     private fun getStatusBarIcon(): Icon {
         return when(statusBarIcon) {
-            StatusBarIcon.GLUCOSE -> Utils.getGlucoseAsIcon()
-            StatusBarIcon.TREND -> Utils.getRateAsIcon()
+            StatusBarIcon.GLUCOSE -> Utils.getGlucoseAsIcon(forImage=true)
+            StatusBarIcon.TREND -> Utils.getRateAsIcon(forImage=true, resizeFactor=1.5F)
             else -> Icon.createWithResource(GlucoDataService.context, R.mipmap.ic_launcher)
         }
     }
@@ -120,14 +121,24 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     private fun showNotification() {
         try {
             Log.d(LOG_ID, "showNotification called")
+            val remoteViews = RemoteViews(GlucoDataService.context!!.packageName, R.layout.notification)
+            remoteViews.setTextViewText(R.id.glucose, ReceiveData.getClucoseAsString())
+            remoteViews.setTextColor(R.id.glucose, ReceiveData.getClucoseColor())
+            remoteViews.setImageViewBitmap(R.id.trendImage, Utils.getRateAsBitmap())
+            remoteViews.setTextViewText(R.id.deltaText, "Delta: " + ReceiveData.getDeltaAsString())
+            //remoteViews.setTextColor(R.id.deltaText, )
+
             val notification = notificationCompat
                 .setSmallIcon(getStatusBarIcon())
-                .setLargeIcon(Utils.getRateAsBitmap())
                 .setWhen(ReceiveData.time)
                 .setContentTitle(ReceiveData.getClucoseAsString())
                 .setContentText("Delta: " + ReceiveData.getDeltaAsString())
+                .setCustomContentView(remoteViews)
+                .setCustomBigContentView(null)
                 .setColor(ReceiveData.getClucoseColor())
+                .setStyle(Notification.DecoratedCustomViewStyle())
                 .build()
+            notification.visibility
             notification.flags = notification.flags or Notification.FLAG_NO_CLEAR
             notificationMgr.notify(
                 NOTIFICATION_ID,
