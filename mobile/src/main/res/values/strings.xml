@@ -64,10 +64,10 @@
     <string name="pref_color_out_of_range_summary">Color for glucose values out of the target range.</string>
     <string name="pref_color_ok">Target color</string>
     <string name="pref_color_ok_summary">Color for glucose values in the target range.</string>
-    <string name="pref_notification" translatable="false">Permanent notification</string>
-    <string name="pref_notification_summary" translatable="false">Shows an permanent nofitication of the current glucose values in the status bar.</string>
+    <string name="pref_notification" translatable="false">Notification</string>
+    <string name="pref_notification_summary" translatable="false">Shows a permanent notification with the current trend arrow, glucose and delta value in the status bar.</string>
     <string name="pref_notification_icon" translatable="false">Status bar icon</string>
-    <string name="pref_notification_icon_summary" translatable="false">Type of small status bar icon for the permanent notification.</string>
+    <string name="pref_notification_icon_summary" translatable="false">Style of the small status bar icon of the notification.</string>
 
     <string name="pref_status_bar_icon_app" translatable="false">App icon</string>
     <string name="pref_status_bar_icon_glucose" translatable="false">Glucose value</string>

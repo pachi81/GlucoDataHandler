@@ -66,7 +66,7 @@
     <string name="pref_color_ok">Werte im Zielbereich</string>
     <string name="pref_color_ok_summary">Farbe für Glukosewerte im Zielbereich.</string>
     <string name="pref_notification">Benachrichtigung</string>
-    <string name="pref_notification_summary">Zeigt eine Benachrichtigung über den aktuellen Glucosewert in der Statusbar.</string>
+    <string name="pref_notification_summary">Zeigt eine permanente Benachrichtigung mit dem aktuellen Trendpfeil, dem Glucose- und Deltawert in der Statusbar.</string>
     <string name="pref_notification_icon">Statusbar Icon</string>
     <string name="pref_notification_icon_summary">Art des Statusbar Icons für die Benachrichtigung.</string>
 
