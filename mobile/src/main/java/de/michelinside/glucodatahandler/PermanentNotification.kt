@@ -7,6 +7,8 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
@@ -126,7 +128,11 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             remoteViews.setTextColor(R.id.glucose, ReceiveData.getClucoseColor())
             remoteViews.setImageViewBitmap(R.id.trendImage, Utils.getRateAsBitmap())
             remoteViews.setTextViewText(R.id.deltaText, "Delta: " + ReceiveData.getDeltaAsString())
-            //remoteViews.setTextColor(R.id.deltaText, )
+            if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) {
+                if (!ReceiveData.isObsolete())
+                    remoteViews.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
+                remoteViews.setTextColor(R.id.deltaText, Color.GRAY )
+            }
 
             val notification = notificationCompat
                 .setSmallIcon(getStatusBarIcon())
