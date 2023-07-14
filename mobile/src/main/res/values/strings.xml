@@ -51,7 +51,7 @@
     <string name="pref_switch_send_to_aod">Send glucodata broadcast</string>
     <string name="pref_switch_send_to_aod_summary">Send glucodata broadcast for new values received from any source.</string>
     <string name="pref_button_select_target">Identify receiver</string>
-    <string name="pref_button_select_target_summary">Choose receivers sending the glucodata broadcast to. If no receiver is selected, a global broadcast is send and all apps registered for this broadcast can receive it.</string>
+    <string name="pref_button_select_target_summary">Choose receivers sending the glucodata broadcast to. A global broadcast will send to every app registering dynamically on the broadcast.</string>
     <string name="pref_switch_send_to_xdrip">Send to xDrip</string>
     <string name="pref_switch_send_to_xdrip_summary">Forward glucose values to xDrip+.\nIMPORTANT: this must be off to receive values from xDrip+!</string>
     <string name="pref_switch_use_mmol">Use mmol/l</string>
@@ -73,6 +73,7 @@
     <string name="pref_status_bar_icon_glucose" translatable="false">Glucose value</string>
     <string name="pref_status_bar_icon_trend" translatable="false">Trend arrow</string>
 
+    <string name="pref_global_broadcast" translatable="false">Global broadcast</string>
 
     <string name="select_receiver_show_all">Show all</string>
     <string name="select_receiver_no_glucodata_receiver">No receiver found!</string>

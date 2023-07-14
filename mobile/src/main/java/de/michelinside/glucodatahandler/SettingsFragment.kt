@@ -1,14 +1,19 @@
 package de.michelinside.glucodatahandler
 
+import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
 import android.os.Bundle
 import android.util.Log
+import androidx.preference.MultiSelectListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.notifier.*
+import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
+import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GlucoDataHandler.SettingsFragment"
@@ -24,6 +29,12 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                     findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_NOTIFICATION)
                 notifySwitch!!.isVisible = true
             }
+
+            val selectTargets = findPreference<MultiSelectListPreference>(Constants.SHARED_PREF_GLUCODATA_RECEIVERS)
+            val receivers = getReceivers()
+            // force "global broadcast" to be the first entry
+            selectTargets!!.entries = arrayOf<CharSequence>(resources.getString(R.string.pref_global_broadcast)) + receivers.keys.toTypedArray()
+            selectTargets.entryValues = arrayOf<CharSequence>("") + receivers.values.toTypedArray()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
         }
@@ -95,8 +106,31 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     }
 
     fun updateEnableStates(sharedPreferences: SharedPreferences) {
-        val pref = findPreference<SelectReceiverPreference>(Constants.SHARED_PREF_GLUCODATA_RECEIVERS)
+        val pref = findPreference<MultiSelectListPreference>(Constants.SHARED_PREF_GLUCODATA_RECEIVERS)
         if (pref != null)
             pref.isEnabled = sharedPreferences.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, false)
+    }
+
+    private fun getReceivers(): HashMap<String, String> {
+        val names = HashMap<String, String>()
+        try {
+            val receivers: List<ResolveInfo>
+            val intent = Intent(Constants.GLUCODATA_BROADCAST_ACTION)
+            receivers = requireContext().packageManager.queryBroadcastReceivers(
+                intent,
+                PackageManager.GET_META_DATA
+            )
+            for (resolveInfo in receivers) {
+                val pkgName = resolveInfo.activityInfo.packageName
+                val name =
+                    resolveInfo.activityInfo.loadLabel(requireContext().packageManager).toString()
+                if (pkgName != null && pkgName != requireContext().packageName) {
+                    names[name] = pkgName
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "getReceivers exception: " + exc.toString())
+        }
+        return names
     }
 }

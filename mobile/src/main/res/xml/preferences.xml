@@ -127,12 +127,10 @@
             android:summary="@string/pref_switch_send_to_aod_summary"
             android:title="@string/pref_switch_send_to_aod"
             app:iconSpaceReserved="false" />
-        <de.michelinside.glucodatahandler.SelectReceiverPreference
-            android:defaultValue=""
+        <androidx.preference.MultiSelectListPreference
             android:key="glucodata_receivers"
             android:summary="@string/pref_button_select_target_summary"
             android:title="@string/pref_button_select_target"
-            app:enabled="false"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 

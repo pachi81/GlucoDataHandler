@@ -65,6 +65,8 @@
     <string name="pref_color_ok">Kolor w zakresie docelowym</string>
     <string name="pref_color_ok_summary">Kolor dla wartości stęż. glukozy w zakresie docelowym.</string>
 
+    <string name="pref_global_broadcast">Transmisja globalna</string>
+
     <string name="select_receiver_show_all">Pokaż wszystko</string>
     <string name="select_receiver_no_glucodata_receiver">Nie znaleziono odbiornika!</string>
     <string name="button_ok">OK</string>
