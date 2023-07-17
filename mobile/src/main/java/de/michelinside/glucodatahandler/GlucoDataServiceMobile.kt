@@ -38,6 +38,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         try {
             Log.d(LOG_ID, "onCreate called")
             super.onCreate()
+            PermanentNotification.create(applicationContext)
             CarModeReceiver.initNotification(applicationContext)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
@@ -47,6 +48,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
     override fun onDestroy() {
         try {
             Log.d(LOG_ID, "onDestroy called")
+            PermanentNotification.destroy()
             CarModeReceiver.cleanupNotification(applicationContext)
             super.onDestroy()
         } catch (exc: Exception) {

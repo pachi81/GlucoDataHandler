@@ -31,6 +31,7 @@
     <string name="activity_main_car_connected_label">Android Auto: verbunden</string>
     <string name="activity_main_car_disconnected_label">Android Auto: getrennt</string>
 
+    <string name="pref_cat_general">Allgemein</string>
     <string name="pref_cat_android_auto">Android Auto</string>
     <string name="pref_cat_xdrip">xDrip+</string>
     <string name="pref_cat_forward_broadcast">Glucodata Broadcast</string>
@@ -43,7 +44,7 @@
     <string name="pref_switch_send_to_aod">Glucodata Broadcast senden</string>
     <string name="pref_switch_send_to_aod_summary">Glucodata Broadcast für neue Werte von allen Quellen senden.</string>
     <string name="pref_button_select_target">Empfänger definieren</string>
-    <string name="pref_button_select_target_summary">Empfänger auswählen, an die der Broadcast gesendet wird. Wenn kein Empfänger ausgewählt wurde, wird ein globaler Broadcast gesendet, welcher von allen Apps empfangen wird, welche sich für diesen Broadcast intern registriert haben.</string>
+    <string name="pref_button_select_target_summary">Empfänger auswählen, an die der Broadcast gesendet wird. Ein globaler Broadcast kann von allen Apps empfangen werden, welche sich für diesen Broadcast intern registriert haben.</string>
     <string name="pref_switch_send_to_xdrip">An xDrip senden</string>
     <string name="pref_switch_send_to_xdrip_summary">Weiterleiten von Glucose Werten zu xDrip+.\nWICHTIG: diese Einstellung muss deaktiviert sein, um Werte von xDrip+ zu empfangen!</string>
     <string name="pref_switch_use_mmol">mmol/l</string>
@@ -64,6 +65,16 @@
     <string name="pref_color_out_of_range_summary">Farbe für Glukosewerte außerhalb des Zielbereichs.</string>
     <string name="pref_color_ok">Werte im Zielbereich</string>
     <string name="pref_color_ok_summary">Farbe für Glukosewerte im Zielbereich.</string>
+    <string name="pref_notification">Benachrichtigung</string>
+    <string name="pref_notification_summary">Zeigt eine permanente Benachrichtigung mit dem aktuellen Trendpfeil, dem Glucose- und Deltawert in der Statusbar.</string>
+    <string name="pref_notification_icon">Statusbar Icon</string>
+    <string name="pref_notification_icon_summary">Art des Statusbar Icons für die Benachrichtigung.</string>
+
+    <string name="pref_status_bar_icon_app">App Icon</string>
+    <string name="pref_status_bar_icon_glucose">Zuckerwert</string>
+    <string name="pref_status_bar_icon_trend">Trendpfeil</string>
+
+    <string name="pref_global_broadcast">Globaler Broadcast</string>
 
     <string name="select_receiver_show_all">Zeige alle</string>
     <string name="select_receiver_no_glucodata_receiver">Kein Empfänger gefunden!</string>

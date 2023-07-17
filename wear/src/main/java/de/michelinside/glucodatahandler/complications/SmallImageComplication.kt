@@ -1,7 +1,9 @@
 package de.michelinside.glucodatahandler
 
+import android.graphics.Color
 import androidx.wear.watchface.complications.data.*
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.Utils
 
 
 class SmallTrendImageComplication: BgValueComplicationService() {
@@ -22,7 +24,7 @@ class SmallImageGlucoseWithTrendComplication: BgValueComplicationService() {
 
     override fun getLargeImageComplicationData(): ComplicationData {
         return PhotoImageComplicationData.Builder (
-            photoImage = getGlucoseTrendIcon(ReceiveData.getClucoseColor(), 500, 500),
+            photoImage = Utils.getGlucoseTrendIcon(ReceiveData.getClucoseColor(), 500, 500),
             contentDescription = descriptionText()
         )
             .setTapAction(getTapAction())
@@ -33,16 +35,16 @@ class SmallImageGlucoseWithTrendComplication: BgValueComplicationService() {
 class ValueIconComplication: BgValueComplicationService() {
     override fun getImage(): SmallImage {
         return  SmallImage.Builder(
-            image = getGlucoseAsIcon(forImage = true),
+            image = Utils.getGlucoseAsIcon(color = Color.WHITE, forImage = true),
             type = SmallImageType.PHOTO
-        ).setAmbientImage(getGlucoseAsIcon())
+        ).setAmbientImage(Utils.getGlucoseAsIcon(color = Color.WHITE))
             .build()
     }
 
     override fun getIconComplicationData(): ComplicationData {
         val imageIcon = MonochromaticImage.Builder(
-            image = getGlucoseAsIcon()
-        ).setAmbientImage(getGlucoseAsIcon()).build()
+            image = Utils.getGlucoseAsIcon(color = Color.WHITE)
+        ).setAmbientImage(Utils.getGlucoseAsIcon(color = Color.WHITE)).build()
 
         return MonochromaticImageComplicationData.Builder(
             imageIcon,
