@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">GlucoDataHandler</string>
     <string name="glucose_label">Glukoza</string>
@@ -18,7 +17,7 @@
     <string name="time_label">Czas</string>
     <string name="time_html_label">Czas w msec</string>
     <string name="time_diff_label">Różnica czasu</string>
-    <string name="time_diff_html_label">Różnica czasu między tą a poprzednią wartością w msec</string>
+    <string name="time_diff_html_label">Różnica czasu między tą a poprzednią wartością w ms</string>
     <string name="arrow_label">Strzałka</string>
     <string name="arrow_html_label">Strzałka kierunku w kodzie Unicode</string>
     <string name="delta_label">Delta</string>
@@ -27,45 +26,54 @@
     <string name="unit_html_label">Jednostka wartości glukozy (mg/dl lub mmol/l)</string>
 
     <string name="activity_main_connected_label">Zegarek: połączony (%1$s)</string>
-    <string name="activity_main_disconnected_label">Zegarek: odłączony</string>
-    <string name="activity_main_car_connected_label">Android Auto: podłączony</string>
-    <string name="activity_main_car_disconnected_label">Android Auto: odłączony</string>
+    <string name="activity_main_disconnected_label">Zegarek: niepołączony</string>
+    <string name="activity_main_car_connected_label">Android Auto: połączony</string>
+    <string name="activity_main_car_disconnected_label">Android Auto: niepołączony</string>
 
+    <string name="pref_cat_general" translatable="false">Ogólne</string>
     <string name="pref_cat_android_auto">Android Auto</string>
-    <string name="pref_cat_xdrip">xDrip+</string>
-    <string name="pref_cat_forward_broadcast">Glucodata broadcast (Transmisja danych Glucodata)</string>
+    <string name="pref_cat_xdrip">XDrip+</string>
+    <string name="pref_cat_forward_broadcast">Glucodata broadcast (Transmisja danych dot. glukozy)</string>
     <string name="pref_target_range">Zakres docelowy</string>
     <string name="pref_cat_colors">Kolory</string>
 
     <string name="pref_switch_notification">Wartości fikcyjne</string>
-    <string name="pref_high_value">Wysoki poziom stęż. glukozy</string>
+    <string name="pref_high_value">Wysokie stęż. glukozy</string>
     <string name="pref_high_value_summary">Granica dla wysokich wartości stężenia glukozy.\nJeśli aktywowałeś alarm wysokiego stęż. glukozy w Juggluco, nie musisz ustawiać tej wartości.</string>
     <string name="pref_target_max_value">Górna granica zakresu docelowego</string>
     <string name="pref_target_max_value_summary">Najwyższa wartość dla zakresu docelowego.</string>
     <string name="pref_target_min_value">Dolna granica zakresu docelowego</string>
-    <string name="pref_target_min_value_summary">Dolna wartość dla zakresu docelowego.</string>
-    <string name="pref_low_value">Niski poziom stęż. glukozy</string>
+    <string name="pref_target_min_value_summary">Najniższa wartość dla zakresu docelowego.</string>
+    <string name="pref_low_value">Niskie stęż. glukozy</string>
     <string name="pref_low_value_summary">Granica dla niskich wartości glukozy.\nJeśli aktywowałeś alarm niskiego stęż. glukozy w Juggluco, nie musisz ustawiać tej wartości.</string>
     <string name="pref_switch_car_notification">Powiadomienia w Android Auto</string>
-    <string name="pref_switch_car_notification_summary">Zamiast powiadomień aplikacja ta oferuje również wdrożenie fikcyjnych multimediów. Aby korzystać z tej aplikacji w Android Auto, musisz aktywować ustawienia programisty w Android Auto, klikając kilka razy na oznaczenie wersji. Następnie należy włączyć opcję &quot;Nieznane źródła&quot; w menu ustawień programisty.</string>
+    <string name="pref_switch_car_notification_summary">Zamiast powiadomień aplikacja ta oferuje również wdrożenie fikcyjnych multimediów. Aby korzystać z tej aplikacji w Android Auto, musisz aktywować ustawienia programisty w Android Auto, klikając kilka razy na oznaczenie wersji. Następnie należy włączyć opcję „Nieznane źródła” w menu ustawień dewelopera.</string>
     <string name="pref_switch_send_to_aod">Wyślij transmisję „glucodata broadcast”</string>
     <string name="pref_switch_send_to_aod_summary">Wyślij transmisję „glucodata broadcast” dla nowych wartości otrzymanych z dowolnego źródła.</string>
     <string name="pref_button_select_target">Identyfikacja odbiornika</string>
-    <string name="pref_button_select_target_summary">Wybierz odbiorniki, do których wysyłana jest transmisja „glucodata broadcast”. Jeśli nie wybrano żadnego odbiornika, wysyłana jest transmisja globalna i wszystkie aplikacje zarejestrowane dla tej transmisji mogą ją odbierać.</string>
+    <string name="pref_button_select_target_summary">Wybierz odbiorniki, do których wysyłana jest transmisja „glucodata broadcast”. Transmisja globalna będzie wysyłana do każdej aplikacji dynamicznie odbierającej tę transmisję.</string>
     <string name="pref_switch_send_to_xdrip">Wyślij do xDrip</string>
     <string name="pref_switch_send_to_xdrip_summary">Przekazuj wartości glukozy do xDrip+.\n WAŻNE: ta opcja musi być wyłączona, aby odbierać wartości z xDrip+!</string>
     <string name="pref_switch_use_mmol">Użyj mmol/l</string>
     <string name="pref_switch_use_mmol_summary">Konwersja wartości z xDrip+ na mmol/l.</string>
     <string name="pref_switch_use_5_min_delta">5-minutowa delta</string>
     <string name="pref_switch_use_5_min_delta_summary">Włącz tę opcję, aby używać wartości delta dla odstępu czasu wynoszącego 5 minut, w przeciwnym razie używany jest odstęp 1-minutowy.</string>
-    <string name="pref_color_alarm">Kolor wysokiego/niskiego stęż. glukozy</string>
+    <string name="pref_color_alarm">Kolor dla wysokiego/niskiego stęż. glukozy</string>
     <string name="pref_color_alarm_summary">Kolor dla wysokich i niskich wartości stężenia glukozy.</string>
     <string name="pref_color_out_of_range">Kolor poza zakresem</string>
     <string name="pref_color_out_of_range_summary">Kolor dla wartości stęż. glukozy poza zakresem docelowym.</string>
     <string name="pref_color_ok">Kolor w zakresie docelowym</string>
     <string name="pref_color_ok_summary">Kolor dla wartości stęż. glukozy w zakresie docelowym.</string>
+    <string name="pref_notification" translatable="false">Powiadomienie</string>
+    <string name="pref_notification_summary" translatable="false">Wyświetla stałe powiadomienie z bieżącą strzałką trendu, wartością stęż. glukozy i deltą na pasku stanu.</string>
+    <string name="pref_notification_icon" translatable="false">Ikona w pasku stanu</string>
+    <string name="pref_notification_icon_summary" translatable="false">Styl małej ikony w pasku stanu w powiadomieniu.</string>
 
-    <string name="pref_global_broadcast">Transmisja globalna</string>
+    <string name="pref_status_bar_icon_app" translatable="false">Ikona aplikacji</string>
+    <string name="pref_status_bar_icon_glucose" translatable="false">Wartość glukozy</string>
+    <string name="pref_status_bar_icon_trend" translatable="false">Strzałka trendu</string>
+
+    <string name="pref_global_broadcast" translatable="false">Transmisja globalna</string>
 
     <string name="select_receiver_show_all">Pokaż wszystko</string>
     <string name="select_receiver_no_glucodata_receiver">Nie znaleziono odbiornika!</string>
