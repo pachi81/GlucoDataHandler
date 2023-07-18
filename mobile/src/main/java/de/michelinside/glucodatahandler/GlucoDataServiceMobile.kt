@@ -40,6 +40,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             super.onCreate()
             PermanentNotification.create(applicationContext)
             CarModeReceiver.initNotification(applicationContext)
+            GlucoseTrendDeltaWidget.create(applicationContext)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }

@@ -89,4 +89,7 @@
     <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
     <string name="update_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/releases</string>
     <string name="support_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/issues</string>
+
+    <string name="widget_glucose_trend_delta_timestamp">Glukoza, trend, delta i znacznik czasu</string>
+    <string name="widget_glucose_trend">Glukoza i trend</string>
 </resources>

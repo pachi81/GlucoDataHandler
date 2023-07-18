@@ -1,5 +1,7 @@
 package de.michelinside.glucodatahandler.common
 
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.graphics.*
 import android.graphics.drawable.Icon
@@ -51,6 +53,27 @@ object Utils {
         val bytes = parcel.marshall()
         parcel.recycle()
         return bytes
+    }
+
+    fun dumpBundle(bundle: Bundle?): String {
+        if (bundle == null) {
+            return "NULL"
+        }
+        var string = "Bundle{"
+        for (key in bundle.keySet()) {
+            string += " " + key + " => " + (if (bundle[key] != null) bundle[key].toString() else "NULL") + ";"
+        }
+        string += " }Bundle"
+        return string
+    }
+
+    fun getAppIntent(context: Context, activityClass: Class<*>, requestCode: Int): PendingIntent {
+        return PendingIntent.getActivity(
+            context,
+            requestCode,
+            Intent(context, activityClass),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
     }
 
     private fun isShortText(text: String): Boolean = text.length <= (if (text.contains(".")) 3 else 2)
@@ -235,22 +258,22 @@ object Utils {
         return intent
     }
 
-
     fun getGlucoseAsBitmap(color: Int? = null, forImage: Boolean = false, width: Int = 100, height: Int = 100): Bitmap? {
         return textToBitmap(ReceiveData.getClucoseAsString(),color ?: ReceiveData.getClucoseColor(), forImage, ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height)
     }
+
     fun getGlucoseAsIcon(color: Int? = null, forImage: Boolean = false, width: Int = 100, height: Int = 100): Icon {
         return Icon.createWithBitmap(getGlucoseAsBitmap(color, forImage, width, height))
     }
 
-    fun getRateAsBitmap(color: Int? = null, forImage: Boolean = false, resizeFactor: Float = 1F): Bitmap? {
+    fun getRateAsBitmap(color: Int? = null, forImage: Boolean = false, resizeFactor: Float = 1F, width: Int = 100, height: Int = 100): Bitmap? {
         if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
-            return textToBitmap("?", Color.GRAY, forImage)
-        return rateToBitmap(ReceiveData.rate, color ?: ReceiveData.getClucoseColor(), resizeFactor = resizeFactor)
+            return textToBitmap("?", Color.GRAY, forImage, width = width, height = height)
+        return rateToBitmap(ReceiveData.rate, color ?: ReceiveData.getClucoseColor(), resizeFactor = resizeFactor, width = width, height = height)
     }
 
-    fun getRateAsIcon(color: Int? = null, forImage: Boolean = false, resizeFactor: Float = 1F): Icon {
-        return Icon.createWithBitmap(getRateAsBitmap(color, forImage, resizeFactor))
+    fun getRateAsIcon(color: Int? = null, forImage: Boolean = false, resizeFactor: Float = 1F, width: Int = 100, height: Int = 100): Icon {
+        return Icon.createWithBitmap(getRateAsBitmap(color, forImage, resizeFactor, width, height))
     }
 
     fun getGlucoseTrendBitmap(color: Int? = null, width: Int = 100, height: Int = 100): Bitmap? {

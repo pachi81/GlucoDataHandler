@@ -1,0 +1,55 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/widget"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent_widget_background">
+
+    <ImageView
+        android:id="@+id/glucose"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/timeText"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/trendImage"
+        android:gravity="center"
+        android:layout_marginStart="12dp"
+        android:src="@drawable/icon_question"/>
+
+    <TextView
+        android:id="@+id/timeText"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/deltaText"
+        android:gravity="center"
+        android:text="23:59"
+        android:textSize="14sp"
+        android:textColor="@color/transparent_widget_textcolor"
+        tools:ignore="HardcodedText" />
+
+    <ImageView
+        android:id="@+id/trendImage"
+        android:layout_width="55dp"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/deltaText"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@string/info_label_rate"
+        android:gravity="center"
+        android:src="@drawable/icon_question" />
+
+    <TextView
+        android:id="@+id/deltaText"
+        android:layout_width="55dp"
+        android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:text="+0.06"
+        android:textSize="20sp"
+        android:textColor="@color/transparent_widget_textcolor"
+        tools:ignore="HardcodedText" />
+</RelativeLayout>
