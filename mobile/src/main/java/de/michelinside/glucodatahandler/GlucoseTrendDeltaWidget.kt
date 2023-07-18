@@ -137,8 +137,8 @@ class GlucoseTrendDeltaWidget : AppWidgetProvider(), NotifierInterface {
         } else {
             remoteViews = RemoteViews(context.packageName, R.layout.glucose_trend_delta_widget)
             val size = maxOf(width, height)
-            remoteViews.setImageViewBitmap(R.id.glucose, Utils.getGlucoseAsBitmap(forImage = false, width = size, height = size))
-            remoteViews.setImageViewBitmap(R.id.trendImage, Utils.getRateAsBitmap(forImage = false, width = size, height = size, resizeFactor = 1F))
+            remoteViews.setImageViewBitmap(R.id.glucose, Utils.getGlucoseAsBitmap(roundTarget = false, width = size, height = size))
+            remoteViews.setImageViewBitmap(R.id.trendImage, Utils.getRateAsBitmap(roundTarget = false, width = size, height = size, resizeFactor = 1F))
             remoteViews.setTextViewText(R.id.timeText, shortTimeformat.format(Date(ReceiveData.time)))
             remoteViews.setTextViewText(R.id.deltaText, ReceiveData.getDeltaAsString())
             val trendWitdh = maxOf(55F, width.toFloat()*2/5)

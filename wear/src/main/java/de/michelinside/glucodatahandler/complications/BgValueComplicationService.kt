@@ -242,7 +242,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     fun ambientGlucoseAsIcon(forImage: Boolean = false): Icon? {
         if (sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false))
             return null
-        return Utils.getGlucoseAsIcon(color = Color.WHITE, forImage = forImage)
+        return Utils.getGlucoseAsIcon(color = Color.WHITE, roundTarget = forImage)
     }
 
     fun arrowImage(): SmallImage {
@@ -257,7 +257,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     fun ambientArrowIcon(): Icon? {
         if (sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false))
             return null
-        return Utils.getRateAsIcon(color = Color.WHITE, forImage = true)
+        return Utils.getRateAsIcon(color = Color.WHITE, roundTarget = true)
     }
 
     fun getGlucoseTrendImage(): SmallImage {

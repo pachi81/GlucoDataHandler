@@ -78,10 +78,10 @@ object Utils {
 
     private fun isShortText(text: String): Boolean = text.length <= (if (text.contains(".")) 3 else 2)
 
-    fun textToBitmap(text: String, color: Int, roundTargert: Boolean = false, strikeThrough: Boolean = false, width: Int = 100, height: Int = 100, top: Boolean = false, bold: Boolean = false): Bitmap? {
+    fun textToBitmap(text: String, color: Int, roundTarget: Boolean = false, strikeThrough: Boolean = false, width: Int = 100, height: Int = 100, top: Boolean = false, bold: Boolean = false): Bitmap? {
         try {
             var maxTextSize = minOf(width,height).toFloat()
-            if(roundTargert) {
+            if(roundTarget) {
                 if (!top || !isShortText(text) ) {
                     if (text.contains("."))
                         maxTextSize *= 0.7F
@@ -109,7 +109,7 @@ object Utils {
             }
             Log.d(LOG_ID, "height: " + boundsText.height().toString() + " width:" + boundsText.width().toString() + " text-size:" + paint.textSize.toString())
             val maxTextWidthRoundTarget = round(width.toFloat()*0.9F, 0).toInt()
-            if(roundTargert && boundsText.width() > maxTextWidthRoundTarget)
+            if(roundTarget && boundsText.width() > maxTextWidthRoundTarget)
                 paint.textSize = paint.textSize-(boundsText.width() - maxTextWidthRoundTarget)
             val y =
                 if (text == "---")
@@ -258,22 +258,22 @@ object Utils {
         return intent
     }
 
-    fun getGlucoseAsBitmap(color: Int? = null, forImage: Boolean = false, width: Int = 100, height: Int = 100): Bitmap? {
-        return textToBitmap(ReceiveData.getClucoseAsString(),color ?: ReceiveData.getClucoseColor(), forImage, ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height)
+    fun getGlucoseAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100): Bitmap? {
+        return textToBitmap(ReceiveData.getClucoseAsString(),color ?: ReceiveData.getClucoseColor(), roundTarget, ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height)
     }
 
-    fun getGlucoseAsIcon(color: Int? = null, forImage: Boolean = false, width: Int = 100, height: Int = 100): Icon {
-        return Icon.createWithBitmap(getGlucoseAsBitmap(color, forImage, width, height))
+    fun getGlucoseAsIcon(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100): Icon {
+        return Icon.createWithBitmap(getGlucoseAsBitmap(color, roundTarget, width, height))
     }
 
-    fun getRateAsBitmap(color: Int? = null, forImage: Boolean = false, resizeFactor: Float = 1F, width: Int = 100, height: Int = 100): Bitmap? {
+    fun getRateAsBitmap(color: Int? = null, roundTarget: Boolean = false, resizeFactor: Float = 1F, width: Int = 100, height: Int = 100): Bitmap? {
         if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
-            return textToBitmap("?", Color.GRAY, forImage, width = width, height = height)
+            return textToBitmap("?", Color.GRAY, roundTarget, width = width, height = height)
         return rateToBitmap(ReceiveData.rate, color ?: ReceiveData.getClucoseColor(), resizeFactor = resizeFactor, width = width, height = height)
     }
 
-    fun getRateAsIcon(color: Int? = null, forImage: Boolean = false, resizeFactor: Float = 1F, width: Int = 100, height: Int = 100): Icon {
-        return Icon.createWithBitmap(getRateAsBitmap(color, forImage, resizeFactor, width, height))
+    fun getRateAsIcon(color: Int? = null, roundTarget: Boolean = false, resizeFactor: Float = 1F, width: Int = 100, height: Int = 100): Icon {
+        return Icon.createWithBitmap(getRateAsBitmap(color, roundTarget, resizeFactor, width, height))
     }
 
     fun getGlucoseTrendBitmap(color: Int? = null, width: Int = 100, height: Int = 100): Bitmap? {
