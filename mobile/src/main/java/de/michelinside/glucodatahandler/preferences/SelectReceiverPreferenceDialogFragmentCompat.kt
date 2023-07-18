@@ -1,4 +1,4 @@
-package de.michelinside.glucodatahandler
+package de.michelinside.glucodatahandler.preferences
 
 import android.content.Context
 import android.content.Intent
@@ -15,6 +15,8 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.preference.PreferenceDialogFragmentCompat
+import de.michelinside.glucodatahandler.BuildConfig
+import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 
 
@@ -84,10 +86,10 @@ class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCom
 
     private fun updateReceivers(view: View, all: Boolean) {
         try {
-            val receiverLayout = view.findViewById<LinearLayout>(de.michelinside.glucodatahandler.R.id.receiverLayout)
+            val receiverLayout = view.findViewById<LinearLayout>(R.id.receiverLayout)
             val receivers = getReceivers(all)
             Log.d(LOG_ID, receivers.size.toString() + " receivers found!" )
-            val receiverScrollView = view.findViewById<ScrollView>(de.michelinside.glucodatahandler.R.id.receiverScrollView)
+            val receiverScrollView = view.findViewById<ScrollView>(R.id.receiverScrollView)
             if (receivers.size > 5) {
                 receiverScrollView.layoutParams.height = resources.displayMetrics.heightPixels/2
             } else

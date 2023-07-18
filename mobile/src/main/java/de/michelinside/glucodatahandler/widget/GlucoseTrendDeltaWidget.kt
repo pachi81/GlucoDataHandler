@@ -1,4 +1,4 @@
-package de.michelinside.glucodatahandler
+package de.michelinside.glucodatahandler.widget
 
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
@@ -10,6 +10,8 @@ import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.widget.RemoteViews
+import de.michelinside.glucodatahandler.MainActivity
+import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.Utils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier

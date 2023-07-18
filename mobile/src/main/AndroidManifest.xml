@@ -32,7 +32,7 @@
         android:theme="@style/Theme.GlucoDataHandler"
         tools:targetApi="31">
         <receiver
-            android:name=".GlucoseTrendDeltaWidget"
+            android:name=".widget.GlucoseTrendDeltaWidget"
             android:label="@string/widget_glucose_trend_delta_timestamp"
             android:exported="false">
             <intent-filter>
@@ -122,7 +122,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".CarMediaBrowserService"
+            android:name=".android_auto.CarMediaBrowserService"
             android:exported="true"
             tools:ignore="ExportedService">
             <intent-filter>

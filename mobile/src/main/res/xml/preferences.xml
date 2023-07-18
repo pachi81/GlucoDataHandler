@@ -22,7 +22,7 @@
     <PreferenceCategory
         android:title="@string/pref_target_range"
         app:iconSpaceReserved="false">
-        <de.michelinside.glucodatahandler.GlucoseEditPreference
+        <de.michelinside.glucodatahandler.preferences.GlucoseEditPreference
             android:defaultValue="0"
             android:inputType="numberDecimal"
             android:key="high_glucose"
@@ -31,7 +31,7 @@
             android:title="@string/pref_high_value"
             android:summary="@string/pref_high_value_summary"
             app:iconSpaceReserved="false" />
-        <de.michelinside.glucodatahandler.GlucoseEditPreference
+        <de.michelinside.glucodatahandler.preferences.GlucoseEditPreference
             android:defaultValue="0"
             android:inputType="numberDecimal"
             android:key="target_max_value"
@@ -40,7 +40,7 @@
             android:title="@string/pref_target_max_value"
             android:summary="@string/pref_target_max_value_summary"
             app:iconSpaceReserved="false" />
-        <de.michelinside.glucodatahandler.GlucoseEditPreference
+        <de.michelinside.glucodatahandler.preferences.GlucoseEditPreference
             android:defaultValue="0"
             android:inputType="numberDecimal"
             android:key="target_min_value"
@@ -49,7 +49,7 @@
             android:title="@string/pref_target_min_value"
             android:summary="@string/pref_target_min_value_summary"
             app:iconSpaceReserved="false" />
-        <de.michelinside.glucodatahandler.GlucoseEditPreference
+        <de.michelinside.glucodatahandler.preferences.GlucoseEditPreference
             android:defaultValue="0"
             android:inputType="numberDecimal"
             android:key="low_glucose"

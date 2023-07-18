@@ -1,10 +1,11 @@
-package de.michelinside.glucodatahandler
+package de.michelinside.glucodatahandler.preferences
 
 import android.content.Context
 import android.content.res.TypedArray
 import android.util.AttributeSet
 import android.util.Log
 import androidx.preference.DialogPreference
+import de.michelinside.glucodatahandler.R
 
 
 class SelectReceiverPreference : DialogPreference {

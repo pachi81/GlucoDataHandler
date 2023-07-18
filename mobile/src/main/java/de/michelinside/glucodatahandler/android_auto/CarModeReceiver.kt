@@ -1,4 +1,4 @@
-package de.michelinside.glucodatahandler
+package de.michelinside.glucodatahandler.android_auto
 
 import android.annotation.SuppressLint
 import android.app.*
@@ -15,6 +15,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.Person
 import androidx.core.app.RemoteInput
 import androidx.core.graphics.drawable.IconCompat
+import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
 import java.util.*
@@ -85,7 +86,7 @@ object CarModeReceiver: NotifierInterface {
                 Log.d(LOG_ID, "initNotification called")
                 updateSettings(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE))
                 createNofitication(context)
-                CarConnection(context).type.observeForever(::onConnectionStateUpdated)
+                CarConnection(context).type.observeForever(CarModeReceiver::onConnectionStateUpdated)
                 init = true
             }
         } catch (exc: Exception) {
@@ -97,7 +98,7 @@ object CarModeReceiver: NotifierInterface {
         try {
             if (init) {
                 Log.d(LOG_ID, "remNotification called")
-                CarConnection(context).type.removeObserver(::onConnectionStateUpdated)
+                CarConnection(context).type.removeObserver(CarModeReceiver::onConnectionStateUpdated)
                 init = false
             }
         } catch (exc: Exception) {
