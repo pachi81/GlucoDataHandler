@@ -14,7 +14,8 @@
         android:layout_alignParentTop="true"
         android:layout_toStartOf="@+id/trendImage"
         android:gravity="center"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="6dp"
         android:src="@drawable/icon_question"/>
 
     <TextView
@@ -38,6 +39,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:contentDescription="@string/info_label_rate"
+        android:layout_marginEnd="6dp"
+        android:layout_marginTop="6dp"
         android:gravity="center"
         android:src="@drawable/icon_question" />
 

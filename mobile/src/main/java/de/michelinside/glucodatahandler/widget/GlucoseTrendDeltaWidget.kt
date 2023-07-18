@@ -123,12 +123,16 @@ class GlucoseTrendDeltaWidget : AppWidgetProvider(), NotifierInterface {
         val maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH)
         val minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
 
-        Log.d(LOG_ID, "Portrait width/height=" + minWidth + "/" + maxHeight + " - landscape: " + maxWidth + "/" + minHeight )
+        //Log.d(LOG_ID, "Portrait width/height=" + minWidth + "/" + maxHeight + " - landscape: " + maxWidth + "/" + minHeight )
 
         val isPortrait = true   // todo: check for portrait mode for tablets!?
 
         val width = if (isPortrait) minWidth else maxWidth
         val height = if (isPortrait) maxHeight else minHeight
+
+        val ratio = width.toFloat() / height.toFloat()
+
+        Log.d(LOG_ID, "Screen width/height=" + width + "/" + height + " --- ratio=" + ratio)
 
         val remoteViews: RemoteViews
         if (width <= 110) {
@@ -139,14 +143,29 @@ class GlucoseTrendDeltaWidget : AppWidgetProvider(), NotifierInterface {
         } else {
             remoteViews = RemoteViews(context.packageName, R.layout.glucose_trend_delta_widget)
             val size = maxOf(width, height)
-            remoteViews.setImageViewBitmap(R.id.glucose, Utils.getGlucoseAsBitmap(roundTarget = false, width = size, height = size))
+            remoteViews.setImageViewBitmap(R.id.glucose, Utils.getGlucoseAsBitmap(roundTarget = false, width = width, height = height))
             remoteViews.setImageViewBitmap(R.id.trendImage, Utils.getRateAsBitmap(roundTarget = false, width = size, height = size, resizeFactor = 1F))
             remoteViews.setTextViewText(R.id.timeText, shortTimeformat.format(Date(ReceiveData.time)))
             remoteViews.setTextViewText(R.id.deltaText, ReceiveData.getDeltaAsString())
-            val trendWitdh = maxOf(55F, width.toFloat()*2/5)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                remoteViews.setViewLayoutWidth(R.id.deltaText, trendWitdh, TypedValue.COMPLEX_UNIT_DIP)
+                val trendWidthFactor: Float
+                val text = ReceiveData.getClucoseAsString()
+                if (text.contains(".")) {
+                    if (text.length == 3)
+                        trendWidthFactor = 0.4F
+                    else
+                        trendWidthFactor = 0.3F
+                } else {
+                    if (text.length == 2)
+                        trendWidthFactor = 0.4F
+                    else
+                        trendWidthFactor = 0.3F
+                }
+                val trendWitdh = width.toFloat()*trendWidthFactor
+                val deltaWitdh = maxOf(55F, trendWitdh)
+                Log.d(LOG_ID, "trendWitdh=" + trendWitdh + " --- deltaWitdh=" + deltaWitdh + " --- factor=" + trendWidthFactor)
                 remoteViews.setViewLayoutWidth(R.id.trendImage, trendWitdh, TypedValue.COMPLEX_UNIT_DIP)
+                remoteViews.setViewLayoutWidth(R.id.deltaText, deltaWitdh, TypedValue.COMPLEX_UNIT_DIP)
             }
         }
 

@@ -78,18 +78,44 @@ object Utils {
 
     private fun isShortText(text: String): Boolean = text.length <= (if (text.contains(".")) 3 else 2)
 
+    private fun calcMaxTextSizeForBitmap(bitmap: Bitmap, text: String, roundTarget: Boolean, maxTextSize: Float, top: Boolean, bold: Boolean): Float {
+        var result: Float = maxTextSize
+        if(roundTarget) {
+            if (!top || !isShortText(text) ) {
+                if (text.contains("."))
+                    result *= 0.7F
+                else
+                    result *= 0.85F
+            }
+        } else {
+            val fullText: String
+            if (text.contains(".")) {
+                if (text.length == 3)
+                    fullText = "0.0"
+                else
+                    fullText = "00.0"
+            } else {
+                if (text.length == 2)
+                    fullText = "00"
+                else
+                    fullText = "000"
+            }
+            val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+            paint.textSize = maxTextSize
+            paint.textAlign = Paint.Align.CENTER
+            if (bold)
+                paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            val boundsText = Rect()
+            paint.getTextBounds(fullText, 0, fullText.length, boundsText)
+            result = minOf( maxTextSize, (maxTextSize - 1) * bitmap.width / boundsText.width() )
+        }
+        return result
+    }
+
     fun textToBitmap(text: String, color: Int, roundTarget: Boolean = false, strikeThrough: Boolean = false, width: Int = 100, height: Int = 100, top: Boolean = false, bold: Boolean = false): Bitmap? {
         try {
-            var maxTextSize = minOf(width,height).toFloat()
-            if(roundTarget) {
-                if (!top || !isShortText(text) ) {
-                    if (text.contains("."))
-                        maxTextSize *= 0.7F
-                    else
-                        maxTextSize *= 0.85F
-                }
-            }
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888 )
+            val maxTextSize = calcMaxTextSizeForBitmap(bitmap, text, roundTarget, minOf(width,height).toFloat(), top, bold)
             val canvas = Canvas(bitmap)
             bitmap.eraseColor(Color.TRANSPARENT)
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
@@ -107,7 +133,7 @@ object Utils {
                 // re-calculate size depending on the bound width -> use minOf for preventing oversize signs
                 paint.getTextBounds(text, 0, text.length, boundsText)
             }
-            Log.d(LOG_ID, "height: " + boundsText.height().toString() + " width:" + boundsText.width().toString() + " text-size:" + paint.textSize.toString())
+            Log.d(LOG_ID, "height: " + boundsText.height().toString() + " width:" + boundsText.width().toString() + " text-size:" + paint.textSize.toString() + " maxTextSize:" + maxTextSize.toString())
             val maxTextWidthRoundTarget = round(width.toFloat()*0.9F, 0).toInt()
             if(roundTarget && boundsText.width() > maxTextWidthRoundTarget)
                 paint.textSize = paint.textSize-(boundsText.width() - maxTextWidthRoundTarget)
