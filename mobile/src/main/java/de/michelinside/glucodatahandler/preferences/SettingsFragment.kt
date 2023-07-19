@@ -6,10 +6,7 @@ import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.os.Bundle
 import android.util.Log
-import androidx.preference.MultiSelectListPreference
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreferenceCompat
+import androidx.preference.*
 import de.michelinside.glucodatahandler.BuildConfig
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
@@ -83,6 +80,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 Constants.SHARED_PREF_CAR_NOTIFICATION -> {
                     CarModeReceiver.updateSettings(sharedPreferences!!)
                 }
+                Constants.SHARED_PREF_PERMANENT_NOTIFICATION,
                 Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD -> {
                     updateEnableStates(sharedPreferences!!)
                 }
@@ -109,9 +107,12 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     }
 
     fun updateEnableStates(sharedPreferences: SharedPreferences) {
-        val pref = findPreference<MultiSelectListPreference>(Constants.SHARED_PREF_GLUCODATA_RECEIVERS)
-        if (pref != null)
-            pref.isEnabled = sharedPreferences.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, false)
+        val prefRecv = findPreference<MultiSelectListPreference>(Constants.SHARED_PREF_GLUCODATA_RECEIVERS)
+        if (prefRecv != null)
+            prefRecv.isEnabled = sharedPreferences.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, false)
+        val prefNotify = findPreference<ListPreference>(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON)
+        if (prefNotify != null)
+            prefNotify.isEnabled = sharedPreferences.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION, false)
     }
 
     private fun getReceivers(): HashMap<String, String> {
