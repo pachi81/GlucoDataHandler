@@ -1,46 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widget"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparent_widget_background">
+    android:background="@color/transparent_widget_background"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/timeText"
-        android:layout_marginTop="4dp"
         android:layout_width="match_parent"
-        android:layout_height="16dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginEnd="6dp"
+        android:maxLines="1"
         android:gravity="center"
         android:text="23:59"
         android:textColor="@color/transparent_widget_textcolor"
-        android:textSize="10sp"
-        tools:ignore="HardcodedText,SmallSp" />
+        tools:ignore="HardcodedText,SmallSp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMaxTextSize="20sp"
+        android:autoSizeStepGranularity="1sp"/>
 
     <ImageView
         android:id="@+id/glucose_trend"
+        android:contentDescription="@string/widget_glucose_trend"
+        android:layout_weight="2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/timeText"
-        android:layout_above="@id/deltaText"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
+        android:layout_height="0dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="6dp"
         android:src="@drawable/icon_question" />
 
     <TextView
         android:id="@+id/deltaText"
-        android:layout_marginBottom="4dp"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="16dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
+        android:layout_height="0dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginEnd="6dp"
+        android:maxLines="1"
         android:gravity="center"
         android:text="+0.06"
         android:textColor="@color/transparent_widget_textcolor"
-        android:textSize="12sp"
-        tools:ignore="HardcodedText" />
-</RelativeLayout>
+        tools:ignore="HardcodedText"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMaxTextSize="24sp"
+        android:autoSizeStepGranularity="1sp" />
+</LinearLayout>

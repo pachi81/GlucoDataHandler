@@ -5,10 +5,8 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.util.TypedValue
 import android.widget.RemoteViews
 import de.michelinside.glucodatahandler.MainActivity
 import de.michelinside.glucodatahandler.R
@@ -135,16 +133,12 @@ class GlucoseTrendDeltaWidget : AppWidgetProvider(), NotifierInterface {
         Log.d(LOG_ID, "Screen width/height=" + width + "/" + height + " --- ratio=" + ratio)
 
         val remoteViews: RemoteViews
-        if (width <= 110) {
+        if (width <= 110 || ratio < 0.5F) {
             remoteViews = RemoteViews(context.packageName, R.layout.glucose_trend_widget)
             remoteViews.setImageViewBitmap(R.id.glucose_trend, Utils.getGlucoseTrendBitmap(width = width, height = width))
-            remoteViews.setTextViewText(R.id.timeText, shortTimeformat.format(Date(ReceiveData.time)))
-            remoteViews.setTextViewText(R.id.deltaText, ReceiveData.getDeltaAsString())
         } else {
             val size = maxOf(width, height)
-            var longWidget = false
             if (ratio > 2.8F) {
-                longWidget = true
                 remoteViews = RemoteViews(context.packageName, R.layout.glucose_trend_delta_widget_long)
                 remoteViews.setImageViewBitmap(R.id.glucose, Utils.getGlucoseAsBitmap(roundTarget = false, width = size, height = size))
             } else {
@@ -152,35 +146,10 @@ class GlucoseTrendDeltaWidget : AppWidgetProvider(), NotifierInterface {
                 remoteViews.setImageViewBitmap(R.id.glucose, Utils.getGlucoseAsBitmap(roundTarget = false, width = width, height = height))
             }
             remoteViews.setImageViewBitmap(R.id.trendImage, Utils.getRateAsBitmap(roundTarget = false, width = size, height = size, resizeFactor = 1F))
-            remoteViews.setTextViewText(R.id.timeText, shortTimeformat.format(Date(ReceiveData.time)))
-            remoteViews.setTextViewText(R.id.deltaText, ReceiveData.getDeltaAsString())
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                val trendWidthFactor: Float
-                if (longWidget) {
-                    trendWidthFactor = 0.25F
-                } else {
-                    val text = ReceiveData.getClucoseAsString()
-                    if (text.contains(".")) {
-                        if (text.length == 3)
-                            trendWidthFactor = 0.4F
-                        else
-                            trendWidthFactor = 0.3F
-                    } else {
-                        if (text.length == 2)
-                            trendWidthFactor = 0.4F
-                        else
-                            trendWidthFactor = 0.3F
-                    }
-                }
-                val trendWitdh = width.toFloat()*trendWidthFactor
-                remoteViews.setViewLayoutWidth(R.id.trendImage, trendWitdh, TypedValue.COMPLEX_UNIT_DIP)
-                if (!longWidget) {
-                    val deltaWitdh = maxOf(55F, trendWitdh)
-                    remoteViews.setViewLayoutWidth(R.id.deltaText, deltaWitdh, TypedValue.COMPLEX_UNIT_DIP)
-                }
-            }
         }
 
+        remoteViews.setTextViewText(R.id.timeText, shortTimeformat.format(Date(ReceiveData.time)))
+        remoteViews.setTextViewText(R.id.deltaText, ReceiveData.getDeltaAsString())
         remoteViews.setOnClickPendingIntent(R.id.widget, Utils.getAppIntent(context, MainActivity::class.java, 5))
 
         // Instruct the widget manager to update the widget

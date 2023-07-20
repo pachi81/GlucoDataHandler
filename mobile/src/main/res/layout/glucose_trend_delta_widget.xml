@@ -1,58 +1,77 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widget"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparent_widget_background">
+    android:background="@color/transparent_widget_background"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_weight="3"
+        android:layout_height="0dp"
+        android:minWidth="60dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="6dp"
+        android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/glucose"
-        android:layout_width="wrap_content"
+        android:contentDescription="@string/glucose_html_label"
+        android:layout_weight="3"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_above="@+id/timeText"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/trendImage"
         android:gravity="center"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="6dp"
-        android:src="@drawable/icon_question"/>
-
-    <TextView
-        android:id="@+id/timeText"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/deltaText"
-        android:gravity="center"
-        android:text="23:59"
-        android:textSize="14sp"
-        android:textColor="@color/transparent_widget_textcolor"
-        tools:ignore="HardcodedText" />
+        android:src="@drawable/icon_question"
+        tools:ignore="NestedWeights" />
 
     <ImageView
         android:id="@+id/trendImage"
-        android:layout_width="55dp"
+        android:layout_weight="2"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_above="@+id/deltaText"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:contentDescription="@string/info_label_rate"
-        android:layout_marginEnd="6dp"
-        android:layout_marginTop="6dp"
+        android:contentDescription="@string/rate_html_label"
         android:gravity="center"
+        android:layout_marginStart="6dp"
         android:src="@drawable/icon_question" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/deltaText"
-        android:layout_width="55dp"
-        android:layout_height="30dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:gravity="center"
-        android:text="+0.06"
-        android:textSize="20sp"
-        android:textColor="@color/transparent_widget_textcolor"
-        tools:ignore="HardcodedText" />
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:minWidth="60dp"
+        android:layout_weight="1"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginBottom="6dp"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/timeText"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="23:59"
+            android:maxLines="1"
+            android:autoSizeMaxTextSize="20sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:textColor="@color/transparent_widget_textcolor"
+            tools:ignore="HardcodedText,NestedWeights" />
+
+        <TextView
+            android:id="@+id/deltaText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="+0.06"
+            android:maxLines="1"
+            android:autoSizeMaxTextSize="24sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:textColor="@color/transparent_widget_textcolor"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
+</LinearLayout>
