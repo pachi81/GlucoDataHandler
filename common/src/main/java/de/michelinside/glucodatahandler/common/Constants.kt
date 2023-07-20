@@ -25,8 +25,6 @@ object Constants {
     const val SHARED_PREF_TARGET_MIN = "target_min_value"
     const val SHARED_PREF_TARGET_MAX = "target_max_value"
     const val SHARED_PREF_CAR_NOTIFICATION = "car_notification"
-    const val SHARED_PREF_PERMANENT_NOTIFICATION = "permanent_notification"
-    const val SHARED_PREF_PERMANENT_NOTIFICATION_ICON = "status_bar_notification_icon"
     const val SHARED_PREF_NOTIFY_DURATION_LOW = "notify_duration_low"
     const val SHARED_PREF_NOTIFY_DURATION_HIGH = "notify_duration_high"
     const val SHARED_PREF_USE_MMOL = "use_mmol"
@@ -38,6 +36,9 @@ object Constants {
     const val SHARED_PREF_COLOR_ALARM = "color_alarm"
     const val SHARED_PREF_COLOR_OUT_OF_RANGE = "color_out_of_range"
     const val SHARED_PREF_COLOR_OK = "color_ok"
+    const val SHARED_PREF_PERMANENT_NOTIFICATION = "permanent_notification"
+    const val SHARED_PREF_PERMANENT_NOTIFICATION_ICON = "status_bar_notification_icon"
+    const val SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON = "status_bar_notification_big_icon"
 
     // Wear only preferences
     const val SHARED_PREF_NOTIFICATION = "notification"

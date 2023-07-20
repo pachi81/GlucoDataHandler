@@ -104,9 +104,10 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     }
 
     private fun getStatusBarIcon(): Icon {
+        val bigIcon = sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON, false)
         return when(statusBarIcon) {
-            StatusBarIcon.GLUCOSE -> Utils.getGlucoseAsIcon(roundTarget=true)
-            StatusBarIcon.TREND -> Utils.getRateAsIcon(roundTarget=true)
+            StatusBarIcon.GLUCOSE -> Utils.getGlucoseAsIcon(roundTarget=!bigIcon)
+            StatusBarIcon.TREND -> Utils.getRateAsIcon(roundTarget=true, resizeFactor = if (bigIcon) 1.5F else 1F)
             else -> Icon.createWithResource(GlucoDataService.context, R.mipmap.ic_launcher)
         }
     }
@@ -177,7 +178,8 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called for key " + key)
             if (key == Constants.SHARED_PREF_PERMANENT_NOTIFICATION ||
-                key == Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON) {
+                key == Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON ||
+                key == Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON) {
                 updatePreferences()
             }
         } catch (exc: Exception) {

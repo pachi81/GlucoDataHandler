@@ -110,9 +110,12 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         val prefRecv = findPreference<MultiSelectListPreference>(Constants.SHARED_PREF_GLUCODATA_RECEIVERS)
         if (prefRecv != null)
             prefRecv.isEnabled = sharedPreferences.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, false)
-        val prefNotify = findPreference<ListPreference>(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON)
-        if (prefNotify != null)
-            prefNotify.isEnabled = sharedPreferences.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION, false)
+        val prefNotifyIcon = findPreference<ListPreference>(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON)
+        if (prefNotifyIcon != null)
+            prefNotifyIcon.isEnabled = sharedPreferences.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION, false)
+        val prefNotifyBigIcon = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON)
+        if (prefNotifyBigIcon != null)
+            prefNotifyBigIcon.isEnabled = sharedPreferences.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION, false)
     }
 
     private fun getReceivers(): HashMap<String, String> {

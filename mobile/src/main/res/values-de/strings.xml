@@ -69,6 +69,8 @@
     <string name="pref_notification_summary">Zeigt eine permanente Benachrichtigung mit dem aktuellen Trendpfeil, dem Glucose- und Deltawert in der Statusbar.</string>
     <string name="pref_notification_icon">Statusbar Icon</string>
     <string name="pref_notification_icon_summary">Art des Statusbar Icons für die Benachrichtigung.</string>
+    <string name="pref_notification_big_icon" translatable="false">Großes Statusbar Icon</string>
+    <string name="pref_notification_big_icon_summary" translatable="false">Größeres Icon in der Statusbar. Auf einigen Smartphones kann es abgeschnitten werden.</string>
 
     <string name="pref_status_bar_icon_app">App Icon</string>
     <string name="pref_status_bar_icon_glucose">Zuckerwert</string>

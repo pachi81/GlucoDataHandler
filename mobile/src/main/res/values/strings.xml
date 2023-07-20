@@ -68,6 +68,8 @@
     <string name="pref_notification_summary" translatable="false">Shows a permanent notification with the current trend arrow, glucose and delta value in the status bar.</string>
     <string name="pref_notification_icon" translatable="false">Status bar icon</string>
     <string name="pref_notification_icon_summary" translatable="false">Style of the small status bar icon of the notification.</string>
+    <string name="pref_notification_big_icon" translatable="false">Big status bar icon</string>
+    <string name="pref_notification_big_icon_summary" translatable="false">Bigger icon in the status bar. You have to verify, if the icon is cut, if it gets to big.</string>
 
     <string name="pref_status_bar_icon_app" translatable="false">App icon</string>
     <string name="pref_status_bar_icon_glucose" translatable="false">Glucose value</string>
