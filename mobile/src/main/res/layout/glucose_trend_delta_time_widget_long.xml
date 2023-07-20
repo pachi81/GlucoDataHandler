@@ -33,18 +33,44 @@
         android:gravity="center"
         android:src="@drawable/icon_question" />
 
-    <TextView
-        android:id="@+id/deltaText"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:gravity="center"
         android:minWidth="60dp"
         android:layout_weight="2"
-        android:autoSizeMaxTextSize="24sp"
-        android:autoSizeStepGranularity="1sp"
-        android:autoSizeTextType="uniform"
-        android:gravity="center"
-        android:text="+0.06"
-        android:maxLines="1"
-        android:textColor="@color/transparent_widget_textcolor"
-        tools:ignore="HardcodedText" />
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginEnd="6dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/timeText"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:autoSizeMaxTextSize="20sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:gravity="center"
+            android:text="23:59 PM"
+            android:maxLines="1"
+            android:textColor="@color/transparent_widget_textcolor"
+            tools:ignore="HardcodedText,NestedWeights" />
+
+        <TextView
+            android:id="@+id/deltaText"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:autoSizeMaxTextSize="24sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:gravity="center"
+            android:text="+0.06"
+            android:maxLines="1"
+            android:textColor="@color/transparent_widget_textcolor"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
 </LinearLayout>

@@ -87,6 +87,8 @@
 
     <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README_DE.md</string>
 
-    <string name="widget_glucose_trend_delta_timestamp">Zuckerwert, Trendpfeil, Delta und Zeitpunkt</string>
+    <string name="widget_glucose">Zuckerwert</string>
     <string name="widget_glucose_trend">Zuckerwert und Trendpfeil</string>
+    <string name="widget_glucose_trend_delta">Zuckerwert, Trendpfeil und Delta</string>
+    <string name="widget_glucose_trend_delta_timestamp">Zuckerwert, Trendpfeil, Delta und Zeitpunkt</string>
 </resources>

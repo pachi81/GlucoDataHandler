@@ -90,6 +90,8 @@
     <string name="update_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/releases</string>
     <string name="support_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/issues</string>
 
-    <string name="widget_glucose_trend_delta_timestamp">Glucose, trend, delta and timestamp</string>
+    <string name="widget_glucose">Glucose</string>
     <string name="widget_glucose_trend">Glucose and trend</string>
+    <string name="widget_glucose_trend_delta">Glucose, trend and delta</string>
+    <string name="widget_glucose_trend_delta_timestamp">Glucose, trend, delta and timestamp</string>
 </resources>
