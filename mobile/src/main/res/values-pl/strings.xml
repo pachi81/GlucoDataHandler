@@ -68,8 +68,8 @@
     <string name="pref_notification_summary" translatable="false">Wyświetla stałe powiadomienie z bieżącą strzałką trendu, wartością stęż. glukozy i deltą na pasku stanu.</string>
     <string name="pref_notification_icon" translatable="false">Ikona w pasku stanu</string>
     <string name="pref_notification_icon_summary" translatable="false">Styl małej ikony w pasku stanu w powiadomieniu.</string>
-    <string name="pref_notification_big_icon" translatable="false">Big status bar icon</string>
-    <string name="pref_notification_big_icon_summary" translatable="false">Bigger icon in the status bar. You have to verify, if the icon is cut, if it gets to big.</string>
+    <string name="pref_notification_big_icon" translatable="false">Duża ikona w pasku stanu</string>
+    <string name="pref_notification_big_icon_summary" translatable="false">Większa ikona w pasku stanu. Należy sprawdzić, czy ikona nie jest ucięta, jeżeli będzie zbyt duza.</string>
 
     <string name="pref_status_bar_icon_app" translatable="false">Ikona aplikacji</string>
     <string name="pref_status_bar_icon_glucose" translatable="false">Wartość glukozy</string>
