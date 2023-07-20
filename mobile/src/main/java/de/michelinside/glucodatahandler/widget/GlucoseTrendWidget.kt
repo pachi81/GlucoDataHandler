@@ -7,13 +7,13 @@ import android.util.Log
 /**
  * Implementation of App Widget functionality.
  */
-class GlucoseTrendDeltaWidget : GlucoseBaseWidget(GlucoseTrendDeltaWidget::class.java, true) {
+class GlucoseTrendWidget : GlucoseBaseWidget(GlucoseTrendWidget::class.java, false) {
 
     companion object {
         private val LOG_ID = "GlucoDataHandler.GlucoseTrendDeltaWidget"
         fun create(context: Context) {
             Log.d(LOG_ID, "create called")
-            triggerUpdate(context, GlucoseTrendDeltaWidget::class.java)
+            triggerUpdate(context, GlucoseTrendWidget::class.java)
         }
     }
 }

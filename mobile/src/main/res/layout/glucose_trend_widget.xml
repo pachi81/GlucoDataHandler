@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widget"
@@ -7,49 +6,35 @@
     android:background="@color/transparent_widget_background"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/timeText"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
-        android:layout_marginEnd="6dp"
-        android:maxLines="1"
+        android:layout_height="match_parent"
+        android:minWidth="60dp"
+        android:layout_margin="6dp"
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
+
+    <TextView
+        android:id="@+id/glucose"
+        android:contentDescription="@string/glucose_html_label"
+        android:layout_weight="3"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:gravity="center"
-        android:text="23:59"
-        android:textColor="@color/transparent_widget_textcolor"
-        tools:ignore="HardcodedText,SmallSp"
+        android:autoSizeStepGranularity="1sp"
         android:autoSizeTextType="uniform"
-        android:autoSizeMaxTextSize="20sp"
-        android:autoSizeStepGranularity="1sp"/>
+        android:text="333"
+        android:maxLines="1"
+        tools:ignore="HardcodedText,NestedWeights" />
 
     <ImageView
-        android:id="@+id/glucose_trend"
-        android:contentDescription="@string/widget_glucose_trend"
+        android:id="@+id/trendImage"
         android:layout_weight="2"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="6dp"
-        android:layout_marginEnd="6dp"
-        android:src="@drawable/icon_question" />
-
-    <TextView
-        android:id="@+id/deltaText"
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
-        android:layout_marginEnd="6dp"
-        android:maxLines="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/rate_html_label"
         android:gravity="center"
-        android:text="+0.06"
-        android:textColor="@color/transparent_widget_textcolor"
-        tools:ignore="HardcodedText"
-        android:autoSizeTextType="uniform"
-        android:autoSizeMaxTextSize="24sp"
-        android:autoSizeStepGranularity="1sp" />
+        android:layout_marginStart="6dp"
+        android:src="@drawable/icon_question" />
+    </LinearLayout>
 </LinearLayout>

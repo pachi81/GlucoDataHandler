@@ -106,7 +106,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     private fun getStatusBarIcon(): Icon {
         return when(statusBarIcon) {
             StatusBarIcon.GLUCOSE -> Utils.getGlucoseAsIcon(roundTarget=true)
-            StatusBarIcon.TREND -> Utils.getRateAsIcon(roundTarget=true, resizeFactor=1.2F)
+            StatusBarIcon.TREND -> Utils.getRateAsIcon(roundTarget=true)
             else -> Icon.createWithResource(GlucoDataService.context, R.mipmap.ic_launcher)
         }
     }
