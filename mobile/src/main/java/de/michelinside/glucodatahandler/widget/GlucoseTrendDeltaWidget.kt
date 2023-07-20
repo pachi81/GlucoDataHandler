@@ -5,11 +5,13 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.widget.RemoteViews
 import de.michelinside.glucodatahandler.MainActivity
 import de.michelinside.glucodatahandler.R
+import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.Utils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
@@ -140,10 +142,17 @@ class GlucoseTrendDeltaWidget : AppWidgetProvider(), NotifierInterface {
             val size = maxOf(width, height)
             if (ratio > 2.8F) {
                 remoteViews = RemoteViews(context.packageName, R.layout.glucose_trend_delta_widget_long)
-                remoteViews.setImageViewBitmap(R.id.glucose, Utils.getGlucoseAsBitmap(roundTarget = false, width = size, height = size))
+                //remoteViews.setImageViewBitmap(R.id.glucose, Utils.getGlucoseAsBitmap(roundTarget = false, width = size, height = size))
             } else {
                 remoteViews = RemoteViews(context.packageName, R.layout.glucose_trend_delta_widget)
-                remoteViews.setImageViewBitmap(R.id.glucose, Utils.getGlucoseAsBitmap(roundTarget = false, width = width, height = height))
+                //remoteViews.setImageViewBitmap(R.id.glucose, Utils.getGlucoseAsBitmap(roundTarget = false, width = width, height = height))
+            }
+            remoteViews.setTextViewText(R.id.glucose, ReceiveData.getClucoseAsString())
+            remoteViews.setTextColor(R.id.glucose, ReceiveData.getClucoseColor())
+            if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete()) {
+                remoteViews.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG)
+            } else {
+                remoteViews.setInt(R.id.glucose, "setPaintFlags", 0)
             }
             remoteViews.setImageViewBitmap(R.id.trendImage, Utils.getRateAsBitmap(roundTarget = false, width = size, height = size, resizeFactor = 1F))
         }

@@ -16,15 +16,18 @@
         android:layout_marginTop="6dp"
         android:orientation="horizontal">
 
-    <ImageView
+    <TextView
         android:id="@+id/glucose"
         android:contentDescription="@string/glucose_html_label"
         android:layout_weight="3"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:src="@drawable/icon_question"
-        tools:ignore="NestedWeights" />
+        android:autoSizeStepGranularity="1sp"
+        android:autoSizeTextType="uniform"
+        android:text="333"
+        android:maxLines="1"
+        tools:ignore="HardcodedText,NestedWeights" />
 
     <ImageView
         android:id="@+id/trendImage"
