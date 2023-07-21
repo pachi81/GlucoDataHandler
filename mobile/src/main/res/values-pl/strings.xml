@@ -30,7 +30,7 @@
     <string name="activity_main_car_connected_label">Android Auto: połączony</string>
     <string name="activity_main_car_disconnected_label">Android Auto: niepołączony</string>
 
-    <string name="pref_cat_general" translatable="false">Ogólne</string>
+    <string name="pref_cat_general">Ogólne</string>
     <string name="pref_cat_android_auto">Android Auto</string>
     <string name="pref_cat_xdrip">XDrip+</string>
     <string name="pref_cat_forward_broadcast">Glucodata broadcast (Transmisja danych dot. glukozy)</string>
@@ -64,18 +64,25 @@
     <string name="pref_color_out_of_range_summary">Kolor dla wartości stęż. glukozy poza zakresem docelowym.</string>
     <string name="pref_color_ok">Kolor w zakresie docelowym</string>
     <string name="pref_color_ok_summary">Kolor dla wartości stęż. glukozy w zakresie docelowym.</string>
-    <string name="pref_notification" translatable="false">Powiadomienie</string>
-    <string name="pref_notification_summary" translatable="false">Wyświetla stałe powiadomienie z bieżącą strzałką trendu, wartością stęż. glukozy i deltą na pasku stanu.</string>
-    <string name="pref_notification_icon" translatable="false">Ikona w pasku stanu</string>
-    <string name="pref_notification_icon_summary" translatable="false">Styl małej ikony w pasku stanu w powiadomieniu.</string>
-    <string name="pref_notification_big_icon" translatable="false">Duża ikona w pasku stanu</string>
-    <string name="pref_notification_big_icon_summary" translatable="false">Większa ikona w pasku stanu. Należy sprawdzić, czy ikona nie jest ucięta, jeżeli będzie zbyt duża.</string>
+    <string name="pref_notification">Powiadomienie</string>
+    <string name="pref_notification_summary">Wyświetla stałe powiadomienie z bieżącą strzałką trendu, wartością stęż. glukozy i deltą na pasku stanu.</string>
+    <string name="pref_notification_icon">Ikona w pasku stanu</string>
+    <string name="pref_notification_icon_summary">Styl małej ikony w pasku stanu w powiadomieniu.</string>
+    <string name="pref_notification_big_icon">Duża ikona w pasku stanu</string>
+    <string name="pref_notification_big_icon_summary">Większa ikona w pasku stanu. Należy sprawdzić, czy ikona nie jest ucięta, jeżeli będzie zbyt duża.</string>
+    <string name="pref_notification_no_content">Hide content</string>
+    <string name="pref_notification_no_content_summary">The will remove the content of the notification, to have only a small notification with the related icon.</string>
+    <string name="pref_second_notification">2. powiadomienie</string>
+    <string name="pref_second_notification_summary">Show a second notification without content to have an additional icon in the status bar.</string>
+    <string name="pref_second_notification_icon">2. ikona w pasku stanu</string>
+    <string name="pref_second_notification_icon_summary">Styl małej ikony w pasku stanu w 2. powiadomieniu.</string>
 
-    <string name="pref_status_bar_icon_app" translatable="false">Ikona aplikacji</string>
-    <string name="pref_status_bar_icon_glucose" translatable="false">Wartość glukozy</string>
-    <string name="pref_status_bar_icon_trend" translatable="false">Strzałka trendu</string>
+    <string name="pref_status_bar_icon_app">Ikona aplikacji</string>
+    <string name="pref_status_bar_icon_glucose">Wartość glukozy</string>
+    <string name="pref_status_bar_icon_trend">Strzałka trendu</string>
+    <string name="pref_status_bar_icon_delta">Delta</string>
 
-    <string name="pref_global_broadcast" translatable="false">Transmisja globalna</string>
+    <string name="pref_global_broadcast">Transmisja globalna</string>
 
     <string name="select_receiver_show_all">Pokaż wszystko</string>
     <string name="select_receiver_no_glucodata_receiver">Nie znaleziono odbiornika!</string>
@@ -83,14 +90,14 @@
     <string name="button_cancel">Anuluj</string>
 
     <string name="menu_settings">Ustawienia</string>
-    <string name="menu_group_github" translatable="false">GitHub</string>
+    <string name="menu_group_github">GitHub</string>
     <string name="menu_update">Aktualizacje</string>
-    <string name="menu_support" translatable="false">Wsparcie</string>
+    <string name="menu_support">Wsparcie</string>
     <string name="menu_help">Pomoc</string>
 
     <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
-    <string name="update_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/releases</string>
-    <string name="support_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/issues</string>
+    <string name="update_link">https://github.com/pachi81/GlucoDataHandler/releases</string>
+    <string name="support_link">https://github.com/pachi81/GlucoDataHandler/issues</string>
 
     <string name="widget_glucose">Glukoza</string>
     <string name="widget_glucose_trend">Glukoza i trend</string>

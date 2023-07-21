@@ -292,6 +292,14 @@ object Utils {
         return Icon.createWithBitmap(getGlucoseAsBitmap(color, roundTarget, width, height))
     }
 
+    fun getDeltaAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100): Bitmap? {
+        return textToBitmap(ReceiveData.getDeltaAsString(),color ?: ReceiveData.getClucoseColor(), roundTarget, false, width, height)
+    }
+
+    fun getDeltaAsIcon(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100): Icon {
+        return Icon.createWithBitmap(getDeltaAsBitmap(color, roundTarget, width, height))
+    }
+
     fun getRateAsBitmap(color: Int? = null, roundTarget: Boolean = false, resizeFactor: Float = 1F, width: Int = 100, height: Int = 100): Bitmap? {
         if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
             return textToBitmap("?", Color.GRAY, roundTarget, width = width, height = height)

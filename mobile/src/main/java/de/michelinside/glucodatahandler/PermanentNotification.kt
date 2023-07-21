@@ -33,7 +33,8 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     enum class StatusBarIcon(val pref: String) {
         APP("app"),
         GLUCOSE("glucose"),
-        TREND("trend")
+        TREND("trend"),
+        DELTA("delta")
     }
 
     private var statusBarIcon: StatusBarIcon = StatusBarIcon.APP
@@ -108,6 +109,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         return when(statusBarIcon) {
             StatusBarIcon.GLUCOSE -> Utils.getGlucoseAsIcon(roundTarget=!bigIcon)
             StatusBarIcon.TREND -> Utils.getRateAsIcon(roundTarget=true, resizeFactor = if (bigIcon) 1.5F else 1F)
+            StatusBarIcon.DELTA -> Utils.getDeltaAsIcon(roundTarget=!bigIcon)
             else -> Icon.createWithResource(GlucoDataService.context, R.mipmap.ic_launcher)
         }
     }
@@ -152,6 +154,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             statusBarIcon = when(sharedPref.getString(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, StatusBarIcon.APP.pref)) {
                 StatusBarIcon.GLUCOSE.pref -> StatusBarIcon.GLUCOSE
                 StatusBarIcon.TREND.pref -> StatusBarIcon.TREND
+                StatusBarIcon.DELTA.pref -> StatusBarIcon.DELTA
                 else -> StatusBarIcon.APP
             }
             if (sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION, false)) {
