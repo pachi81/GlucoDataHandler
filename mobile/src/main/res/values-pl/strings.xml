@@ -68,7 +68,7 @@
     <string name="pref_notification_summary">Wyświetla stałe powiadomienie z bieżącą strzałką trendu, wartością stęż. glukozy i deltą na pasku stanu.</string>
     <string name="pref_notification_icon">Ikona w pasku stanu</string>
     <string name="pref_notification_icon_summary">Styl małej ikony w pasku stanu w powiadomieniu.</string>
-    <string name="pref_notification_big_icon">Duży Ikona w pasku stanu</string>
+    <string name="pref_notification_big_icon">Duża ikona w pasku stanu</string>
     <string name="pref_notification_big_icon_summary">Większa ikona na pasku stanu. Należy sprawdzić, czy ikona jest przycięta, czy staje się zbyt duża.</string>
     <string name="pref_notification_no_content">Ukryj treść</string>
     <string name="pref_notification_no_content_summary">Ta opcja powoduje usunięcie treści powiadomienia, aby widoczne było tylko małe powiadomienie z powiązaną ikoną.</string>
@@ -96,8 +96,6 @@
     <string name="menu_help">Pomoc</string>
 
     <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
-    <string name="update_link">https://github.com/pachi81/GlucoDataHandler/releases</string>
-    <string name="support_link">https://github.com/pachi81/GlucoDataHandler/issues</string>
 
     <string name="widget_glucose">Glukoza</string>
     <string name="widget_glucose_trend">Glukoza i trend</string>
