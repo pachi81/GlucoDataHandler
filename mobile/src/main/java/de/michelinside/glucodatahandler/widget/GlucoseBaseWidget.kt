@@ -23,45 +23,42 @@ import java.text.DateFormat
 import java.util.*
 
 
-enum class WidgetType {
-    GLUCOSE,
-    GLUCOSE_TREND,
-    GLUCOSE_TREND_DELTA,
-    GLUCOSE_TREND_DELTA_TIME;
+enum class WidgetType(val cls: Class<*>) {
+    GLUCOSE(GlucoseWidget::class.java),
+    GLUCOSE_TREND(GlucoseTrendWidget::class.java),
+    GLUCOSE_TREND_DELTA(GlucoseTrendDeltaWidget::class.java),
+    GLUCOSE_TREND_DELTA_TIME(GlucoseTrendDeltaTimeWidget::class.java);
 }
 
-open class GlucoseBaseWidget(private val type: WidgetType): AppWidgetProvider(), NotifierInterface {
-    val shortTimeformat: DateFormat = DateFormat.getTimeInstance(DateFormat.SHORT)
-    protected var init = false
+abstract class GlucoseBaseWidget(private val type: WidgetType,
+                                 private val hasTrend: Boolean = false,
+                                 private val hasDelta: Boolean = false,
+                                 private val hasTime: Boolean = false): AppWidgetProvider(), NotifierInterface {
+    private val shortTimeFormat: DateFormat = DateFormat.getTimeInstance(DateFormat.SHORT)
+    private var init = false
 
     companion object {
-        private val LOG_ID = "GlucoDataHandler.GlucoseBaseWidget"
+        private const val LOG_ID = "GlucoDataHandler.GlucoseBaseWidget"
 
-        private fun getWidgetClass(type: WidgetType): Class<*> {
-            return when(type) {
-                WidgetType.GLUCOSE -> GlucoseWidget::class.java
-                WidgetType.GLUCOSE_TREND -> GlucoseTrendWidget::class.java
-                WidgetType.GLUCOSE_TREND_DELTA -> GlucoseTrendDeltaWidget::class.java
-                WidgetType.GLUCOSE_TREND_DELTA_TIME -> GlucoseTrendDeltaTimeWidget::class.java
+        protected fun getCurrentWidgetIds(context: Context, type: WidgetType): IntArray {
+            val component = ComponentName(
+                context,
+                type.cls
+            )
+            with(AppWidgetManager.getInstance(context)) {
+                return getAppWidgetIds(component)
             }
         }
 
         fun updateWidgets(context: Context) {
             enumValues<WidgetType>().forEach {
-                val widgetClass = getWidgetClass(it)
-                val component = ComponentName(
-                    context,
-                    widgetClass
-                )
-                with(AppWidgetManager.getInstance(context)) {
-                    val appWidgetIds = getAppWidgetIds(component)
-                    if (appWidgetIds.isNotEmpty()) {
-                        Log.i(LOG_ID, "Trigger update of " + appWidgetIds.size + " widget(s)")
-                        val intent = Intent(context, widgetClass)
-                        intent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-                        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds)
-                        context.sendBroadcast(intent)
-                    }
+                val appWidgetIds = getCurrentWidgetIds(context, it)
+                if (appWidgetIds.isNotEmpty()) {
+                    Log.i(LOG_ID, "Trigger update of " + appWidgetIds.size + " widget(s) with type " + it.toString())
+                    val intent = Intent(context, it.cls)
+                    intent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds)
+                    context.sendBroadcast(intent)
                 }
             }
         }
@@ -116,34 +113,21 @@ open class GlucoseBaseWidget(private val type: WidgetType): AppWidgetProvider(),
 
     override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
         Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString())
-        val component = ComponentName(context,
-            getWidgetClass(type))
+        val component = ComponentName(context, type.cls)
         with(AppWidgetManager.getInstance(context)) {
             val appWidgetIds = getAppWidgetIds(component)
             onUpdate(context, this, appWidgetIds )
         }
     }
 
-    private fun hasTrend(): Boolean {
-        return when(type) {
-            WidgetType.GLUCOSE_TREND,
-            WidgetType.GLUCOSE_TREND_DELTA,
-            WidgetType.GLUCOSE_TREND_DELTA_TIME -> true
-            else -> false
-        }
+    abstract fun getLayout(): Int
+
+    open fun getShortLayout(): Int {
+        return getLayout()
     }
-    private fun hasDelta(): Boolean {
-        return when(type) {
-            WidgetType.GLUCOSE_TREND_DELTA,
-            WidgetType.GLUCOSE_TREND_DELTA_TIME -> true
-            else -> false
-        }
-    }
-    private fun hasTime(): Boolean {
-        return when(type) {
-            WidgetType.GLUCOSE_TREND_DELTA_TIME -> true
-            else -> false
-        }
+
+    open fun getLongLayout(): Int {
+        return getLayout()
     }
 
     private fun getRemoteViews(context: Context, width: Int, height: Int): RemoteViews {
@@ -152,30 +136,12 @@ open class GlucoseBaseWidget(private val type: WidgetType): AppWidgetProvider(),
         val shortWidget = (width <= 110 || ratio < 0.5F)
         val longWidget = ratio > 2.8F
         val size = maxOf(width, height)
-        val remoteViews = when(type) {
-            WidgetType.GLUCOSE -> {
-                RemoteViews(context.packageName, R.layout.glucose_widget)
-            }
-            WidgetType.GLUCOSE_TREND -> {
-                if (shortWidget) {
-                    RemoteViews(context.packageName, R.layout.glucose_trend_widget_short)
-                } else {
-                    RemoteViews(context.packageName, R.layout.glucose_trend_widget)
-                }
-            }
-            WidgetType.GLUCOSE_TREND_DELTA,
-            WidgetType.GLUCOSE_TREND_DELTA_TIME -> {
-                if (shortWidget) {
-                    RemoteViews(context.packageName, if (type == WidgetType.GLUCOSE_TREND_DELTA_TIME) R.layout.glucose_trend_delta_time_widget_short else R.layout.glucose_trend_delta_widget_short)
-                } else if (longWidget) {
-                    RemoteViews(context.packageName, if (type == WidgetType.GLUCOSE_TREND_DELTA_TIME) R.layout.glucose_trend_delta_time_widget_long else R.layout.glucose_trend_delta_widget_long)
-                } else {
-                    RemoteViews(context.packageName, if (type == WidgetType.GLUCOSE_TREND_DELTA_TIME) R.layout.glucose_trend_delta_time_widget else R.layout.glucose_trend_delta_widget)
-                }
-            }
-        }
 
-        if (!hasTrend() || !shortWidget) {
+        val layout = if (shortWidget) getShortLayout() else if (longWidget) getLongLayout() else getLayout()
+        val remoteViews = RemoteViews(context.packageName, layout)
+
+        if (!hasTrend || !shortWidget) {
+            // short widget with trend, using the glucose+trend image
             remoteViews.setTextViewText(R.id.glucose, ReceiveData.getClucoseAsString())
             remoteViews.setTextColor(R.id.glucose, ReceiveData.getClucoseColor())
             if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete()) {
@@ -185,17 +151,17 @@ open class GlucoseBaseWidget(private val type: WidgetType): AppWidgetProvider(),
             }
         }
 
-        if (hasTrend()) {
+        if (hasTrend) {
             if (shortWidget)
                 remoteViews.setImageViewBitmap(R.id.glucose_trend, Utils.getGlucoseTrendBitmap(width = width, height = width))
             else
                 remoteViews.setImageViewBitmap(R.id.trendImage, Utils.getRateAsBitmap(roundTarget = false, width = size, height = size))
         }
 
-        if (hasTime()) {
-            remoteViews.setTextViewText(R.id.timeText, shortTimeformat.format(Date(ReceiveData.time)))
+        if (hasTime) {
+            remoteViews.setTextViewText(R.id.timeText, shortTimeFormat.format(Date(ReceiveData.time)))
         }
-        if (hasDelta())
+        if (hasDelta)
             remoteViews.setTextViewText(R.id.deltaText, ReceiveData.getDeltaAsString())
         return remoteViews
     }
