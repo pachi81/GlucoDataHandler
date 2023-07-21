@@ -89,7 +89,9 @@ object Utils {
             }
         } else {
             val fullText: String
-            if (text.contains(".")) {
+            if (text.contains("+") || text.contains("-")) {
+                fullText = text // delta value
+            } else if (text.contains(".")) {
                 if (text.length == 3)
                     fullText = "0.0"
                 else
@@ -293,7 +295,7 @@ object Utils {
     }
 
     fun getDeltaAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100): Bitmap? {
-        return textToBitmap(ReceiveData.getDeltaAsString(),color ?: ReceiveData.getClucoseColor(), roundTarget, false, width, height)
+        return textToBitmap(ReceiveData.getDeltaAsString(),color ?: ReceiveData.getClucoseColor(true), roundTarget, false, width, height)
     }
 
     fun getDeltaAsIcon(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100): Icon {

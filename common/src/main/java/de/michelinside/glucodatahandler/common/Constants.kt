@@ -38,6 +38,9 @@ object Constants {
     const val SHARED_PREF_COLOR_OK = "color_ok"
     const val SHARED_PREF_PERMANENT_NOTIFICATION = "permanent_notification"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_ICON = "status_bar_notification_icon"
+    const val SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY = "permanent_notification_empty"
+    const val SHARED_PREF_SECOND_PERMANENT_NOTIFICATION = "second_permanent_notification"
+    const val SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON = "second_status_bar_notification_icon"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON = "status_bar_notification_big_icon"
 
     // Wear only preferences

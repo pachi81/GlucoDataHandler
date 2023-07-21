@@ -81,6 +81,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                     CarModeReceiver.updateSettings(sharedPreferences!!)
                 }
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION,
+                Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION,
                 Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD -> {
                     updateEnableStates(sharedPreferences!!)
                 }
@@ -106,16 +107,30 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         }
     }
 
+    fun <T : Preference?> setEnableState(sharedPreferences: SharedPreferences, key: String, enableKey: String, defValue: Boolean = false) {
+        val pref = findPreference<T>(key)
+        if (pref != null)
+            pref.isEnabled = sharedPreferences.getBoolean(enableKey, defValue)
+    }
+
     fun updateEnableStates(sharedPreferences: SharedPreferences) {
-        val prefRecv = findPreference<MultiSelectListPreference>(Constants.SHARED_PREF_GLUCODATA_RECEIVERS)
-        if (prefRecv != null)
-            prefRecv.isEnabled = sharedPreferences.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, false)
-        val prefNotifyIcon = findPreference<ListPreference>(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON)
-        if (prefNotifyIcon != null)
-            prefNotifyIcon.isEnabled = sharedPreferences.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION, false)
-        val prefNotifyBigIcon = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON)
-        if (prefNotifyBigIcon != null)
-            prefNotifyBigIcon.isEnabled = sharedPreferences.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION, false)
+        try {
+            setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_GLUCODATA_RECEIVERS, Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD)
+            setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION)
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, Constants.SHARED_PREF_PERMANENT_NOTIFICATION)
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION)
+            val secondNotification = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION)
+            if (secondNotification != null) {
+                val notifyEnabled = sharedPreferences.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION, false)
+                secondNotification.isEnabled = notifyEnabled
+                if (!notifyEnabled)
+                    secondNotification.isChecked = false
+            }
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, Constants.SHARED_PREF_PERMANENT_NOTIFICATION)
+            setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
+        }
     }
 
     private fun getReceivers(): HashMap<String, String> {

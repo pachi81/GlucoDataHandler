@@ -30,7 +30,7 @@
     <string name="activity_main_car_connected_label">Android Auto: połączony</string>
     <string name="activity_main_car_disconnected_label">Android Auto: niepołączony</string>
 
-    <string name="pref_cat_general">Ogólne</string>
+    <string name="pref_cat_notification">Powiadomienie</string>
     <string name="pref_cat_android_auto">Android Auto</string>
     <string name="pref_cat_xdrip">XDrip+</string>
     <string name="pref_cat_forward_broadcast">Glucodata broadcast (Transmisja danych dot. glukozy)</string>
