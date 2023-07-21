@@ -69,7 +69,7 @@
     <string name="pref_notification_icon" translatable="false">Ikona w pasku stanu</string>
     <string name="pref_notification_icon_summary" translatable="false">Styl małej ikony w pasku stanu w powiadomieniu.</string>
     <string name="pref_notification_big_icon" translatable="false">Duża ikona w pasku stanu</string>
-    <string name="pref_notification_big_icon_summary" translatable="false">Większa ikona w pasku stanu. Należy sprawdzić, czy ikona nie jest ucięta, jeżeli będzie zbyt duża .</string>
+    <string name="pref_notification_big_icon_summary" translatable="false">Większa ikona w pasku stanu. Należy sprawdzić, czy ikona nie jest ucięta, jeżeli będzie zbyt duża.</string>
 
     <string name="pref_status_bar_icon_app" translatable="false">Ikona aplikacji</string>
     <string name="pref_status_bar_icon_glucose" translatable="false">Wartość glukozy</string>
