@@ -35,7 +35,7 @@ class SmallImageGlucoseWithTrendComplication: BgValueComplicationService() {
 class ValueIconComplication: BgValueComplicationService() {
     override fun getImage(): SmallImage {
         return  SmallImage.Builder(
-            image = Utils.getGlucoseAsIcon(color = Color.WHITE, forImage = true),
+            image = Utils.getGlucoseAsIcon(color = Color.WHITE, roundTarget = true),
             type = SmallImageType.PHOTO
         ).setAmbientImage(Utils.getGlucoseAsIcon(color = Color.WHITE))
             .build()

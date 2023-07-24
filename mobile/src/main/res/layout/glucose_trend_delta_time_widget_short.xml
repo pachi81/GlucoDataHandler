@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/widget"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent_widget_background"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/timeText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginEnd="6dp"
+        android:maxLines="1"
+        android:gravity="center"
+        android:text="23:59"
+        android:textColor="@color/transparent_widget_textcolor"
+        tools:ignore="HardcodedText,SmallSp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMaxTextSize="20sp"
+        android:autoSizeStepGranularity="1sp"/>
+
+    <ImageView
+        android:id="@+id/glucose_trend"
+        android:contentDescription="@string/widget_glucose_trend"
+        android:layout_weight="8"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="6dp"
+        android:src="@drawable/icon_question" />
+
+    <TextView
+        android:id="@+id/deltaText"
+        android:layout_weight="3"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginEnd="6dp"
+        android:maxLines="1"
+        android:gravity="center"
+        android:text="+0.06"
+        android:textColor="@color/transparent_widget_textcolor"
+        tools:ignore="HardcodedText"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMaxTextSize="24sp"
+        android:autoSizeStepGranularity="1sp" />
+</LinearLayout>

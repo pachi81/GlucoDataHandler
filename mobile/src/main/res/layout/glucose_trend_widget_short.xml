@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent_widget_background"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/glucose_trend"
+        android:contentDescription="@string/widget_glucose_trend"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="6dp"
+        android:src="@drawable/icon_question" />
+
+</LinearLayout>

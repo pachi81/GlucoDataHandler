@@ -3,9 +3,7 @@ package de.michelinside.glucodatahandler
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Paint
@@ -28,6 +26,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     private const val CHANNEL_ID = "GlucoDataNotify_permanent"
     private const val CHANNEL_NAME = "Permanent notification"
     private const val NOTIFICATION_ID = 123
+    private const val SECOND_NOTIFICATION_ID = 124
     private lateinit var notificationMgr: NotificationManager
     private lateinit var notificationCompat: Notification.Builder
     private lateinit var sharedPref: SharedPreferences
@@ -35,10 +34,9 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     enum class StatusBarIcon(val pref: String) {
         APP("app"),
         GLUCOSE("glucose"),
-        TREND("trend")
+        TREND("trend"),
+        DELTA("delta")
     }
-
-    private var statusBarIcon: StatusBarIcon = StatusBarIcon.APP
 
     fun create(context: Context) {
         try {
@@ -57,7 +55,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             Log.d(LOG_ID, "destroy called")
             InternalNotifier.remNotifier(this)
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
-            removeNotification()
+            removeNotifications()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "destroy exception: " + exc.toString() )
         }
@@ -66,7 +64,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnNotifyData called")
-            showNotification()
+            showNotifications()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString() )
         }
@@ -87,17 +85,10 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
     private fun createNofitication(context: Context) {
         createNotificationChannel(context)
-        val launchIntent = Intent(context, MainActivity::class.java)
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(
-            context,
-            4,
-            launchIntent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
 
         notificationCompat = Notification.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentIntent(pendingIntent)
+            .setContentIntent(Utils.getAppIntent(context, MainActivity::class.java, 4, false))
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setAutoCancel(false)
@@ -108,46 +99,53 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     }
 
 
-    private fun removeNotification() {
+    private fun removeNotifications() {
         notificationMgr.cancel(NOTIFICATION_ID)  // remove notification
+        notificationMgr.cancel(SECOND_NOTIFICATION_ID)
     }
 
-    private fun getStatusBarIcon(): Icon {
-        return when(statusBarIcon) {
-            StatusBarIcon.GLUCOSE -> Utils.getGlucoseAsIcon(forImage=true)
-            StatusBarIcon.TREND -> Utils.getRateAsIcon(forImage=true, resizeFactor=1.5F)
+    private fun getStatusBarIcon(iconKey: String): Icon {
+        val bigIcon = sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON, false)
+        return when(sharedPref.getString(iconKey, StatusBarIcon.APP.pref)) {
+            StatusBarIcon.GLUCOSE.pref -> Utils.getGlucoseAsIcon(roundTarget=!bigIcon)
+            StatusBarIcon.TREND.pref -> Utils.getRateAsIcon(roundTarget=true, resizeFactor = if (bigIcon) 1.5F else 1F)
+            StatusBarIcon.DELTA.pref -> Utils.getDeltaAsIcon(roundTarget=!bigIcon)
             else -> Icon.createWithResource(GlucoDataService.context, R.mipmap.ic_launcher)
         }
     }
 
-    private fun showNotification() {
+    private fun showNotification(notificaitonId: Int, withContent: Boolean, iconKey: String, colored: Boolean) {
         try {
             Log.d(LOG_ID, "showNotification called")
-            val remoteViews = RemoteViews(GlucoDataService.context!!.packageName, R.layout.notification)
-            remoteViews.setTextViewText(R.id.glucose, ReceiveData.getClucoseAsString())
-            remoteViews.setTextColor(R.id.glucose, ReceiveData.getClucoseColor())
-            remoteViews.setImageViewBitmap(R.id.trendImage, Utils.getRateAsBitmap())
-            remoteViews.setTextViewText(R.id.deltaText, "Delta: " + ReceiveData.getDeltaAsString())
-            if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) {
-                if (!ReceiveData.isObsolete())
-                    remoteViews.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
-                remoteViews.setTextColor(R.id.deltaText, Color.GRAY )
+            var remoteViews: RemoteViews? = null
+            if (withContent) {
+                remoteViews = RemoteViews(GlucoDataService.context!!.packageName, R.layout.notification)
+                remoteViews.setTextViewText(R.id.glucose, ReceiveData.getClucoseAsString())
+                remoteViews.setTextColor(R.id.glucose, ReceiveData.getClucoseColor())
+                remoteViews.setImageViewBitmap(R.id.trendImage, Utils.getRateAsBitmap())
+                remoteViews.setTextViewText(R.id.deltaText, "Delta: " + ReceiveData.getDeltaAsString())
+                if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) {
+                    if (!ReceiveData.isObsolete())
+                        remoteViews.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
+                    remoteViews.setTextColor(R.id.deltaText, Color.GRAY )
+                }
             }
 
             val notification = notificationCompat
-                .setSmallIcon(getStatusBarIcon())
+                .setSmallIcon(getStatusBarIcon(iconKey))
                 .setWhen(ReceiveData.time)
-                .setContentTitle(ReceiveData.getClucoseAsString())
-                .setContentText("Delta: " + ReceiveData.getDeltaAsString())
                 .setCustomContentView(remoteViews)
                 .setCustomBigContentView(null)
-                .setColor(ReceiveData.getClucoseColor())
+                .setColor(ReceiveData.getClucoseColor(!colored))
                 .setStyle(Notification.DecoratedCustomViewStyle())
+                .setContentTitle(if (withContent) ReceiveData.getClucoseAsString() else "")
+                .setContentText(if (withContent) "Delta: " + ReceiveData.getDeltaAsString() else "")
                 .build()
+
             notification.visibility
             notification.flags = notification.flags or Notification.FLAG_NO_CLEAR
             notificationMgr.notify(
-                NOTIFICATION_ID,
+                notificaitonId,
                 notification
             )
         } catch (exc: Exception) {
@@ -155,13 +153,17 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         }
     }
 
+    private fun showNotifications() {
+        showNotification(NOTIFICATION_ID, !sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false), Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, true)
+        if (sharedPref.getBoolean(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, false)) {
+            showNotification(SECOND_NOTIFICATION_ID, false, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, false)
+        } else {
+            notificationMgr.cancel(SECOND_NOTIFICATION_ID)
+        }
+    }
+
     private fun updatePreferences() {
         try {
-            statusBarIcon = when(sharedPref.getString(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, StatusBarIcon.APP.pref)) {
-                StatusBarIcon.GLUCOSE.pref -> StatusBarIcon.GLUCOSE
-                StatusBarIcon.TREND.pref -> StatusBarIcon.TREND
-                else -> StatusBarIcon.APP
-            }
             if (sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION, false)) {
                 Log.i(LOG_ID, "activate permanent notification")
                 val filter = mutableSetOf(
@@ -170,12 +172,12 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
                     NotifyDataSource.SETTINGS,
                     NotifyDataSource.OBSOLETE_VALUE)   // to trigger re-start for the case of stopped by the system
                 InternalNotifier.addNotifier(this, filter)
-                showNotification()
+                showNotifications()
             }
             else {
                 Log.i(LOG_ID, "deactivate permanent notification")
                 InternalNotifier.remNotifier(this)
-                removeNotification()
+                removeNotifications()
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updatePreferences exception: " + exc.toString() )
@@ -185,9 +187,15 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called for key " + key)
-            if (key == Constants.SHARED_PREF_PERMANENT_NOTIFICATION ||
-                key == Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON) {
-                updatePreferences()
+            when(key) {
+                Constants.SHARED_PREF_PERMANENT_NOTIFICATION,
+                Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON,
+                Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION,
+                Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON,
+                Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON,
+                Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY -> {
+                    updatePreferences()
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString() )

@@ -1,4 +1,4 @@
-package de.michelinside.glucodatahandler
+package de.michelinside.glucodatahandler.android_auto
 
 import android.content.Context
 import android.graphics.Bitmap

@@ -1,5 +1,7 @@
 package de.michelinside.glucodatahandler.common
 
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.graphics.*
 import android.graphics.drawable.Icon
@@ -53,20 +55,76 @@ object Utils {
         return bytes
     }
 
+    fun dumpBundle(bundle: Bundle?): String {
+        if (bundle == null) {
+            return "NULL"
+        }
+        var string = "Bundle{"
+        for (key in bundle.keySet()) {
+            string += " " + key + " => " + (if (bundle[key] != null) bundle[key].toString() else "NULL") + ";"
+        }
+        string += " }Bundle"
+        return string
+    }
+
+    fun getAppIntent(context: Context, activityClass: Class<*>, requestCode: Int, useExternalApp: Boolean = false): PendingIntent {
+        var launchIntent: Intent? = null
+        if (useExternalApp) {
+            launchIntent = context.packageManager.getLaunchIntentForPackage("tk.glucodata")
+        }
+        if (launchIntent == null) {
+            launchIntent = Intent(context, activityClass)
+        }
+        return PendingIntent.getActivity(
+            context,
+            requestCode,
+            launchIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+    }
+
     private fun isShortText(text: String): Boolean = text.length <= (if (text.contains(".")) 3 else 2)
 
-    fun textToBitmap(text: String, color: Int, roundTargert: Boolean = false, strikeThrough: Boolean = false, width: Int = 100, height: Int = 100, top: Boolean = false, bold: Boolean = false): Bitmap? {
-        try {
-            var maxTextSize = minOf(width,height).toFloat()
-            if(roundTargert) {
-                if (!top || !isShortText(text) ) {
-                    if (text.contains("."))
-                        maxTextSize *= 0.7F
-                    else
-                        maxTextSize *= 0.85F
-                }
+    private fun calcMaxTextSizeForBitmap(bitmap: Bitmap, text: String, roundTarget: Boolean, maxTextSize: Float, top: Boolean, bold: Boolean): Float {
+        var result: Float = maxTextSize
+        if(roundTarget) {
+            if (!top || !isShortText(text) ) {
+                if (text.contains("."))
+                    result *= 0.7F
+                else
+                    result *= 0.85F
             }
+        } else {
+            val fullText: String
+            if (text.contains("+") || text.contains("-")) {
+                fullText = text // delta value
+            } else if (text.contains(".")) {
+                if (text.length == 3)
+                    fullText = "0.0"
+                else
+                    fullText = "00.0"
+            } else {
+                if (text.length == 2)
+                    fullText = "00"
+                else
+                    fullText = "000"
+            }
+            val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+            paint.textSize = maxTextSize
+            paint.textAlign = Paint.Align.CENTER
+            if (bold)
+                paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            val boundsText = Rect()
+            paint.getTextBounds(fullText, 0, fullText.length, boundsText)
+            result = minOf( maxTextSize, (maxTextSize - 1) * bitmap.width / boundsText.width() )
+        }
+        return result
+    }
+
+    fun textToBitmap(text: String, color: Int, roundTarget: Boolean = false, strikeThrough: Boolean = false, width: Int = 100, height: Int = 100, top: Boolean = false, bold: Boolean = false): Bitmap? {
+        try {
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888 )
+            val maxTextSize = calcMaxTextSizeForBitmap(bitmap, text, roundTarget, minOf(width,height).toFloat(), top, bold)
             val canvas = Canvas(bitmap)
             bitmap.eraseColor(Color.TRANSPARENT)
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
@@ -84,12 +142,12 @@ object Utils {
                 // re-calculate size depending on the bound width -> use minOf for preventing oversize signs
                 paint.getTextBounds(text, 0, text.length, boundsText)
             }
-            Log.d(LOG_ID, "height: " + boundsText.height().toString() + " width:" + boundsText.width().toString() + " text-size:" + paint.textSize.toString())
+            Log.d(LOG_ID, "height: " + boundsText.height().toString() + " width:" + boundsText.width().toString() + " text-size:" + paint.textSize.toString() + " maxTextSize:" + maxTextSize.toString())
             val maxTextWidthRoundTarget = round(width.toFloat()*0.9F, 0).toInt()
-            if(roundTargert && boundsText.width() > maxTextWidthRoundTarget)
+            if(roundTarget && boundsText.width() > maxTextWidthRoundTarget)
                 paint.textSize = paint.textSize-(boundsText.width() - maxTextWidthRoundTarget)
             val y =
-                if (text == "---")
+                if (text == "---" || text == "--")
                     if (top)
                         round(height.toFloat() * 0.5F,0).toInt()
                     else
@@ -235,22 +293,30 @@ object Utils {
         return intent
     }
 
-
-    fun getGlucoseAsBitmap(color: Int? = null, forImage: Boolean = false, width: Int = 100, height: Int = 100): Bitmap? {
-        return textToBitmap(ReceiveData.getClucoseAsString(),color ?: ReceiveData.getClucoseColor(), forImage, ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height)
-    }
-    fun getGlucoseAsIcon(color: Int? = null, forImage: Boolean = false, width: Int = 100, height: Int = 100): Icon {
-        return Icon.createWithBitmap(getGlucoseAsBitmap(color, forImage, width, height))
+    fun getGlucoseAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100): Bitmap? {
+        return textToBitmap(ReceiveData.getClucoseAsString(),color ?: ReceiveData.getClucoseColor(), roundTarget, ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height)
     }
 
-    fun getRateAsBitmap(color: Int? = null, forImage: Boolean = false, resizeFactor: Float = 1F): Bitmap? {
+    fun getGlucoseAsIcon(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100): Icon {
+        return Icon.createWithBitmap(getGlucoseAsBitmap(color, roundTarget, width, height))
+    }
+
+    fun getDeltaAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100): Bitmap? {
+        return textToBitmap(ReceiveData.getDeltaAsString(),color ?: ReceiveData.getClucoseColor(true), roundTarget, false, width, height)
+    }
+
+    fun getDeltaAsIcon(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100): Icon {
+        return Icon.createWithBitmap(getDeltaAsBitmap(color, roundTarget, width, height))
+    }
+
+    fun getRateAsBitmap(color: Int? = null, roundTarget: Boolean = false, resizeFactor: Float = 1F, width: Int = 100, height: Int = 100): Bitmap? {
         if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
-            return textToBitmap("?", Color.GRAY, forImage)
-        return rateToBitmap(ReceiveData.rate, color ?: ReceiveData.getClucoseColor(), resizeFactor = resizeFactor)
+            return textToBitmap("?", Color.GRAY, roundTarget, width = width, height = height)
+        return rateToBitmap(ReceiveData.rate, color ?: ReceiveData.getClucoseColor(), resizeFactor = resizeFactor, width = width, height = height)
     }
 
-    fun getRateAsIcon(color: Int? = null, forImage: Boolean = false, resizeFactor: Float = 1F): Icon {
-        return Icon.createWithBitmap(getRateAsBitmap(color, forImage, resizeFactor))
+    fun getRateAsIcon(color: Int? = null, roundTarget: Boolean = false, resizeFactor: Float = 1F, width: Int = 100, height: Int = 100): Icon {
+        return Icon.createWithBitmap(getRateAsBitmap(color, roundTarget, resizeFactor, width, height))
     }
 
     fun getGlucoseTrendBitmap(color: Int? = null, width: Int = 100, height: Int = 100): Bitmap? {

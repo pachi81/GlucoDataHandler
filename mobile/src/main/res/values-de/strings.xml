@@ -31,7 +31,7 @@
     <string name="activity_main_car_connected_label">Android Auto: verbunden</string>
     <string name="activity_main_car_disconnected_label">Android Auto: getrennt</string>
 
-    <string name="pref_cat_general">Allgemein</string>
+    <string name="pref_cat_notification">Benachrichtigung</string>
     <string name="pref_cat_android_auto">Android Auto</string>
     <string name="pref_cat_xdrip">xDrip+</string>
     <string name="pref_cat_forward_broadcast">Glucodata Broadcast</string>
@@ -69,10 +69,19 @@
     <string name="pref_notification_summary">Zeigt eine permanente Benachrichtigung mit dem aktuellen Trendpfeil, dem Glucose- und Deltawert in der Statusbar.</string>
     <string name="pref_notification_icon">Statusbar Icon</string>
     <string name="pref_notification_icon_summary">Art des Statusbar Icons für die Benachrichtigung.</string>
+    <string name="pref_notification_big_icon" translatable="false">Großes Statusbar Icon</string>
+    <string name="pref_notification_big_icon_summary" translatable="false">Größeres Icon in der Statusbar. Auf einigen Smartphones kann es abgeschnitten werden.</string>
+    <string name="pref_notification_no_content">Leerer Inhalt</string>
+    <string name="pref_notification_no_content_summary">Wenn nur das Statusbar Icon von Interesse ist, kann der Inhalt der Benachrichtigung entfernt werden.</string>
+    <string name="pref_second_notification">2. Benachrichtiung</string>
+    <string name="pref_second_notification_summary">Zeigt eine weitere Benachrichtigung ohne Inhalt an, um ein zusätzliches Statusbar Icon hinzuzufügen.</string>
+    <string name="pref_second_notification_icon">2. Statusbar Icon</string>
+    <string name="pref_second_notification_icon_summary">Art des Statusbar Icons für die zweite Benachrichtigung.</string>
 
     <string name="pref_status_bar_icon_app">App Icon</string>
     <string name="pref_status_bar_icon_glucose">Zuckerwert</string>
     <string name="pref_status_bar_icon_trend">Trendpfeil</string>
+    <string name="pref_status_bar_icon_delta">Delta</string>
 
     <string name="pref_global_broadcast">Globaler Broadcast</string>
 
@@ -86,4 +95,9 @@
     <string name="menu_update">Aktualisierungen</string>
 
     <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README_DE.md</string>
+
+    <string name="widget_glucose">Zuckerwert</string>
+    <string name="widget_glucose_trend">Zuckerwert und Trendpfeil</string>
+    <string name="widget_glucose_trend_delta">Zuckerwert, Trendpfeil und Delta</string>
+    <string name="widget_glucose_trend_delta_timestamp">Zuckerwert, Trendpfeil, Delta und Zeitpunkt</string>
 </resources>

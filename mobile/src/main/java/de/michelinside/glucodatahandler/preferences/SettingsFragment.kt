@@ -1,4 +1,4 @@
-package de.michelinside.glucodatahandler
+package de.michelinside.glucodatahandler.preferences
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -6,10 +6,10 @@ import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.os.Bundle
 import android.util.Log
-import androidx.preference.MultiSelectListPreference
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreferenceCompat
+import androidx.preference.*
+import de.michelinside.glucodatahandler.BuildConfig
+import de.michelinside.glucodatahandler.R
+import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
@@ -80,6 +80,8 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 Constants.SHARED_PREF_CAR_NOTIFICATION -> {
                     CarModeReceiver.updateSettings(sharedPreferences!!)
                 }
+                Constants.SHARED_PREF_PERMANENT_NOTIFICATION,
+                Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION,
                 Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD -> {
                     updateEnableStates(sharedPreferences!!)
                 }
@@ -105,10 +107,23 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         }
     }
 
-    fun updateEnableStates(sharedPreferences: SharedPreferences) {
-        val pref = findPreference<MultiSelectListPreference>(Constants.SHARED_PREF_GLUCODATA_RECEIVERS)
+    fun <T : Preference?> setEnableState(sharedPreferences: SharedPreferences, key: String, enableKey: String, secondEnableKey: String? = null, defValue: Boolean = false) {
+        val pref = findPreference<T>(key)
         if (pref != null)
-            pref.isEnabled = sharedPreferences.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, false)
+            pref.isEnabled = sharedPreferences.getBoolean(enableKey, defValue) && (if (secondEnableKey != null) sharedPreferences.getBoolean(secondEnableKey, defValue) else true)
+    }
+
+    fun updateEnableStates(sharedPreferences: SharedPreferences) {
+        try {
+            setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_GLUCODATA_RECEIVERS, Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD)
+            setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION)
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, Constants.SHARED_PREF_PERMANENT_NOTIFICATION)
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION)
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, Constants.SHARED_PREF_PERMANENT_NOTIFICATION)
+            setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
+        }
     }
 
     private fun getReceivers(): HashMap<String, String> {

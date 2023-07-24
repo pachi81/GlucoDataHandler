@@ -1,4 +1,4 @@
-package de.michelinside.glucodatahandler
+package de.michelinside.glucodatahandler.preferences
 
 import android.content.Context
 import android.text.InputType

@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
+import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
 
 class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInterface {
     private val LOG_ID = "GlucoDataHandler.GlucoDataServiceMobile"
@@ -40,6 +42,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             super.onCreate()
             PermanentNotification.create(applicationContext)
             CarModeReceiver.initNotification(applicationContext)
+            GlucoseBaseWidget.updateWidgets(applicationContext)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
