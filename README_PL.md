@@ -24,7 +24,7 @@ Aktualną wersję można pobrać [tutaj](https://github.com/pachi81/GlucoDataHan
 
 ### Zegarek
 
-<img src='images/settings_wear.png' width=200>
+<img src='images/pl/settings_wear.png' width=200>
 
 - Wibracja: zegarek wibruje, jeśli zakres docelowy został przekroczony i powtarza wibracje tak długo, jak długo glukoza pozostaje poza zakresem docelowym
 - Pierwszy plan: opcja zalecana, aby zapobiec zamykaniu tej aplikacji przez Wear OS (spróbuj również dezaktywować Play Protect, ponieważ funkcja ta zamyka aplikacje spoza Sklepu Play)
