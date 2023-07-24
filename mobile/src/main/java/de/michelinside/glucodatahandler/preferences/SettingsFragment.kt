@@ -107,10 +107,10 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         }
     }
 
-    fun <T : Preference?> setEnableState(sharedPreferences: SharedPreferences, key: String, enableKey: String, defValue: Boolean = false) {
+    fun <T : Preference?> setEnableState(sharedPreferences: SharedPreferences, key: String, enableKey: String, secondEnableKey: String? = null, defValue: Boolean = false) {
         val pref = findPreference<T>(key)
         if (pref != null)
-            pref.isEnabled = sharedPreferences.getBoolean(enableKey, defValue)
+            pref.isEnabled = sharedPreferences.getBoolean(enableKey, defValue) && (if (secondEnableKey != null) sharedPreferences.getBoolean(secondEnableKey, defValue) else true)
     }
 
     fun updateEnableStates(sharedPreferences: SharedPreferences) {
@@ -119,15 +119,8 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION)
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, Constants.SHARED_PREF_PERMANENT_NOTIFICATION)
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION)
-            val secondNotification = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION)
-            if (secondNotification != null) {
-                val notifyEnabled = sharedPreferences.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION, false)
-                secondNotification.isEnabled = notifyEnabled
-                if (!notifyEnabled)
-                    secondNotification.isChecked = false
-            }
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, Constants.SHARED_PREF_PERMANENT_NOTIFICATION)
-            setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION)
+            setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
         }

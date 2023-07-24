@@ -88,7 +88,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
         notificationCompat = Notification.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentIntent(Utils.getAppIntent(context, MainActivity::class.java, 4))
+            .setContentIntent(Utils.getAppIntent(context, MainActivity::class.java, 4, false))
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setAutoCancel(false)
