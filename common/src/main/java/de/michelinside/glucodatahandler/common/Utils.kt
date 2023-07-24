@@ -67,11 +67,18 @@ object Utils {
         return string
     }
 
-    fun getAppIntent(context: Context, activityClass: Class<*>, requestCode: Int): PendingIntent {
+    fun getAppIntent(context: Context, activityClass: Class<*>, requestCode: Int, useExternalApp: Boolean = false): PendingIntent {
+        var launchIntent: Intent? = null
+        if (useExternalApp) {
+            launchIntent = context.packageManager.getLaunchIntentForPackage("tk.glucodata")
+        }
+        if (launchIntent == null) {
+            launchIntent = Intent(context, activityClass)
+        }
         return PendingIntent.getActivity(
             context,
             requestCode,
-            Intent(context, activityClass),
+            launchIntent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
     }
@@ -140,7 +147,7 @@ object Utils {
             if(roundTarget && boundsText.width() > maxTextWidthRoundTarget)
                 paint.textSize = paint.textSize-(boundsText.width() - maxTextWidthRoundTarget)
             val y =
-                if (text == "---")
+                if (text == "---" || text == "--")
                     if (top)
                         round(height.toFloat() * 0.5F,0).toInt()
                     else

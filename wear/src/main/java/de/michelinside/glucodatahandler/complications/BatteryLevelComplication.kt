@@ -1,9 +1,7 @@
 package de.michelinside.glucodatahandler
 
-import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.wear.watchface.complications.data.ComplicationData
@@ -46,24 +44,12 @@ class BatteryLevelComplication: SuspendingComplicationDataSourceService() {
             plainText(getText(this.applicationInfo.labelRes))
         )
             .setTitle(getTitle())
-            .setTapAction(getTapAction())
+            .setTapAction(Utils.getAppIntent(applicationContext, WaerActivity::class.java, 3, false))
             .build()
     }
 
     private fun plainText(text: CharSequence): PlainComplicationText =
         PlainComplicationText.Builder(text).build()
-
-    private fun getTapAction(): PendingIntent? {
-        val launchIntent = Intent(this, WaerActivity::class.java)
-        launchIntent.action = Intent.ACTION_MAIN
-        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-        return PendingIntent.getActivity(
-            applicationContext,
-            3,
-            launchIntent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-    }
 
     private fun getTitle(): PlainComplicationText? {
         val levels =

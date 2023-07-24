@@ -194,7 +194,7 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
             val pendingIntent = PendingIntent.getBroadcast(context, 5, Utils.getDummyGlucodataIntent(false), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
             remoteViews.setOnClickPendingIntent(R.id.widget, pendingIntent)
         } else {
-            remoteViews.setOnClickPendingIntent(R.id.widget, Utils.getAppIntent(context, MainActivity::class.java, 5))
+            remoteViews.setOnClickPendingIntent(R.id.widget, Utils.getAppIntent(context, MainActivity::class.java, 5, true))
         }
 
         // Instruct the widget manager to update the widget

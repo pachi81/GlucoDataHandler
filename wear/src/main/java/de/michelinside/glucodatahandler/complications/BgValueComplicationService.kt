@@ -3,7 +3,6 @@ package de.michelinside.glucodatahandler
 import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.Icon
@@ -157,11 +156,12 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     open fun getText(): PlainComplicationText = glucoseText()
     open fun getImage(): SmallImage? = null
 
-    open fun getTapAction(): PendingIntent? {
+    open fun getTapAction(useExternalApp: Boolean = true): PendingIntent? {
         if (BuildConfig.DEBUG) {
             // for debug create dummy broadcast (to check in emulator)
             return PendingIntent.getBroadcast(this, 3, Utils.getDummyGlucodataIntent(false), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         } else {
+            /*
             var launchIntent: Intent? = packageManager.getLaunchIntentForPackage("tk.glucodata")
             if (launchIntent == null) {
                 Log.d(LOG_ID, "Juggluco not found, use own one")
@@ -174,7 +174,8 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
                 2,
                 launchIntent,
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-            )
+            )*/
+            return Utils.getAppIntent(applicationContext, WaerActivity::class.java, 2, useExternalApp)
         }
     }
 
