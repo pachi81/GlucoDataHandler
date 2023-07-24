@@ -1,4 +1,5 @@
-[Deutsche Version](INSTALLATION_DE.md)
+[<img src='images/de.png' height=10> Deutsche Version](INSTALLATION_DE.md)  
+[<img src='images/pl.png' height=10> wersja polska](INSTALLATION_PL.md)
 
 # Install
 
@@ -23,7 +24,7 @@ If you are using xDrip+ to receive glucose values, open xDrip+, go to setting an
 * Enable "Compatible Broadcast"
 * Check "Identify receiver" to be empty
   
-<img src='images/xDrip_InterAppSettings_EN.png' width=340>
+<img src='images/xDrip_InterAppSettings.png' width=340>
 
 ### Check mobile app
 Open the app and wait for a glucose value to be displayed in the GlucoDataHandler app.

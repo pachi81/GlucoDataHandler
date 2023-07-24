@@ -1,4 +1,5 @@
-[English version](README.md)
+[<img src='images/en.png' height=10> English version](README.md)  
+[<img src='images/pl.png' height=10> wersja polska](README_PL.md)
 
 # Glucose Data Handler
 ## Features
@@ -21,7 +22,7 @@ Die neuste Version kann [hier](https://github.com/pachi81/GlucoDataHandler/relea
 
 ### Smartwatch
 
-<img src='images/settings_wear_DE.png' width=200>
+<img src='images/de/settings_wear.png' width=200>
 
 * Vibrieren: die Uhr vibriert, wenn der Zielbereich verlassen wird in regelmäßigen Intervallen
 * Vordergrund: um zu verhindern, dass Wear OS die App beendet, empfehle ich diese Einstellung zu aktivieren
@@ -31,7 +32,7 @@ Die neuste Version kann [hier](https://github.com/pachi81/GlucoDataHandler/relea
 
 Die einzelnen Einstellungen sind in der App entsprechend beschrieben. Sobald die Smartwatch verbunden ist, werden die Einstellungen übermittelt.
 
-<img src='images/settings_phone_1_DE.png' width=300> <img src='images/settings_phone_2_DE.png' width=300>
+<img src='images/de/settings_phone_1.png' width=300> <img src='images/de/settings_phone_2.png' width=300>
 
 #### Complications
 Die Wear OS version stellt mehrere Complications zur Verfügung:

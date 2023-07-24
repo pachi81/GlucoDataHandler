@@ -1,4 +1,5 @@
-[English version](INSTALLATION.md)
+[<img src='images/en.png' height=10> English version](INSTALLATION.md)  
+[<img src='images/pl.png' height=10> wersja polska](INSTALLATION_PL.md)
 
 # Installation
 
@@ -25,12 +26,12 @@ Für die Benutzer von xDrip+, in den Einstellung den Eintrag Inter-App Einstellu
 * "Kompatible Broadcast" aktivieren
 * prüfen, ob "Identifiziere Empfänger" leer ist  
   
-<img src='images/xDrip_InterAppSettings_DE.png' width=340>
+<img src='images/de/xDrip_InterAppSettings.png' width=340>
 
 ### Installation prüfen
 Nun die GlucoDataHandler App öffnen und warten, bis ein neue Werte empfangen wurde.
 
-<img src='images/installed_DE.png' width=400>
+<img src='images/de/installed.png' width=400>
 
 ## 2 - Installation GlucoDataHandler auf dem Smartwatch
 
@@ -74,7 +75,7 @@ Eine genauere Anleitung der Installationsmöglichkeiten gibt es [hier](https://f
 
 Die App auf der Smartwatch öffnen und nachdem sie die Werte entweder von Juggluco oder GlucoDataHandler auf dem Smartphone empfangen hat, sie es dann so aus:
 
-<img src='images/watch_gdh_app_DE.png' width=300>
+<img src='images/de/watch_gdh_app.png' width=300>
 
 ## 3 - Complications auf der Smartwatch verwenden
 

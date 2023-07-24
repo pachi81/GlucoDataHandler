@@ -1,4 +1,5 @@
-[Deutsche Version](README_DE.md)
+[<img src='images/de.png' height=10> Deutsche Version](README_DE.md)  
+[<img src='images/pl.png' height=10> wersja polska](README_PL.md)
 
 # Glucose Data Handler
 ## Features
