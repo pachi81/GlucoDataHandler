@@ -1,5 +1,5 @@
 [<img src='images/en.png' height=10> English version](README.md)  
-[<img src='images/pl.png' height=10> wersja polska](README_PL.md)
+[<img src='images/pl.png' height=10> Wersja polska](README_PL.md)
 
 # Glucose Data Handler
 ## Features

@@ -1,5 +1,5 @@
 [<img src='images/en.png' height=10> English version](INSTALLATION.md)  
-[<img src='images/pl.png' height=10> wersja polska](INSTALLATION_PL.md)
+[<img src='images/pl.png' height=10> Wersja polska](INSTALLATION_PL.md)
 
 # Installation
 
