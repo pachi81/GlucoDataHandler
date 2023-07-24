@@ -95,7 +95,7 @@
     <string name="menu_support">Wsparcie</string>
     <string name="menu_help">Pomoc</string>
 
-    <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
+    <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README_PL.md</string>
 
     <string name="widget_glucose">Glukoza</string>
     <string name="widget_glucose_trend">Glukoza i trend</string>
