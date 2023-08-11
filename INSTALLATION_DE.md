@@ -24,7 +24,7 @@ Anschließend speichern und mit OK beenden.
 Für die Benutzer von xDrip+, in den Einstellung den Eintrag Inter-App Einstellungen öffnen und wie folgt konfigurieren:
 * "Lokaler Broadcast" aktivieren
 * "Kompatible Broadcast" aktivieren
-* prüfen, ob "Identifiziere Empfänger" leer ist  
+* prüfen, ob "Identifiziere Empfänger" leer ist; ist bereits ein Eintrag vorhanden, dann eine neue Zeile mit `de.michelinside.glucodatahandler` hinzufügen
   
 <img src='images/de/xDrip_InterAppSettings.png' width=340>
 

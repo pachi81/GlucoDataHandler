@@ -22,7 +22,7 @@ If you are using Juggluco to receive glucose values, open Juggluco and enable `G
 If you are using xDrip+ to receive glucose values, open xDrip+, go to setting and select Inter-app settings
 * Enable "Broadcast locally"
 * Enable "Compatible Broadcast"
-* Check "Identify receiver" to be empty
+* Check "Identify receiver" to be empty or if there is already an entry, add a new line with `de.michelinside.glucodatahandler`
   
 <img src='images/xDrip_InterAppSettings.png' width=340>
 
