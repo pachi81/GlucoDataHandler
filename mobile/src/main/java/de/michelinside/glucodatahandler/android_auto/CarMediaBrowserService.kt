@@ -2,21 +2,28 @@ package de.michelinside.glucodatahandler.android_auto
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.media.session.PlaybackState
 import android.os.Bundle
+import android.os.SystemClock
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
+import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.media.MediaBrowserServiceCompat
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.Utils
-import de.michelinside.glucodatahandler.common.notifier.*
+import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
+import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
+import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
 import java.util.*
 
 class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface {
     private val LOG_ID = "GlucoDataHandler.CarMediaBrowserService"
     private val MEDIA_ROOT_ID = "root"
+    private val MEDIA_GLUCOSE_ID = "glucose_value"
     private lateinit var session: MediaSessionCompat
 
     override fun onCreate() {
@@ -87,18 +94,51 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface {
         }
     }
 
-    fun getIcon(): Bitmap? {
+    private fun getIcon(size: Int = 100): Bitmap? {
         return Utils.textRateToBitmap(ReceiveData.getClucoseAsString(), ReceiveData.rate, ReceiveData.getClucoseColor(), ReceiveData.isObsolete(
-            Constants.VALUE_OBSOLETE_SHORT_SEC), ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete())
+            Constants.VALUE_OBSOLETE_SHORT_SEC), ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),
+            size, size)
     }
 
     private fun createMediaItem(): MediaBrowserCompat.MediaItem {
+        val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        if (sharedPref.getBoolean(Constants.SHARED_PREF_CAR_MEDIA,false)) {
+            session.setPlaybackState(buildState(PlaybackState.STATE_PAUSED))
+            session.setMetadata(
+                MediaMetadataCompat.Builder()
+                    .putString(
+                        MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE,
+                        ReceiveData.getClucoseAsString() + " (" + ReceiveData.getDeltaAsString() + ")"
+                    )
+                    .putString(
+                        MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE,
+                        ReceiveData.timeformat.format(Date(ReceiveData.time))
+                    )
+                    .putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, getIcon(400)!!)
+                    .build()
+            )
+        } else {
+            session.setPlaybackState(buildState(PlaybackState.STATE_NONE))
+        }
         val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
-            .setMediaId(MEDIA_ROOT_ID)
+            .setMediaId(MEDIA_GLUCOSE_ID)
             .setTitle("Delta: " + ReceiveData.getDeltaAsString() + "\n" + ReceiveData.timeformat.format(Date(ReceiveData.time)))
             //.setSubtitle(ReceiveData.timeformat.format(Date(ReceiveData.time)))
             .setIconBitmap(getIcon()!!)
         return MediaBrowserCompat.MediaItem(
             mediaDescriptionBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE)
     }
+
+    private fun buildState(state: Int): PlaybackStateCompat? {
+        return PlaybackStateCompat.Builder()
+            .setState(
+                state,
+                0,
+                1f,
+                SystemClock.elapsedRealtime()
+            )
+            .build()
+    }
+
 }
+
