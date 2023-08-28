@@ -114,7 +114,7 @@
         android:title="@string/pref_cat_android_auto"
         app:iconSpaceReserved="false">
         <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="car_media"
             android:summary="@string/pref_switch_car_media_summary"
             android:title="@string/pref_switch_car_media"

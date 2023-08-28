@@ -1,6 +1,7 @@
 package de.michelinside.glucodatahandler.android_auto
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.media.session.PlaybackState
 import android.os.Bundle
@@ -24,14 +25,30 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface {
     private val LOG_ID = "GlucoDataHandler.CarMediaBrowserService"
     private val MEDIA_ROOT_ID = "root"
     private val MEDIA_GLUCOSE_ID = "glucose_value"
+    private lateinit var  sharedPref: SharedPreferences
     private lateinit var session: MediaSessionCompat
 
     override fun onCreate() {
         Log.d(LOG_ID, "onCreate")
         try {
             super.onCreate()
+            sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
 
             session = MediaSessionCompat(this, "MyMusicService")
+            // Callbacks to handle events from the user (play, pause, search)
+            session.setCallback(object : MediaSessionCompat.Callback() {
+                override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {
+                    Log.i(LOG_ID, "onPlayFromMediaId: " + mediaId)
+                    if (!sharedPref.getBoolean(Constants.SHARED_PREF_CAR_MEDIA,true)) {
+                        with(sharedPref.edit()) {
+                            putBoolean(Constants.SHARED_PREF_CAR_MEDIA,true)
+                            apply()
+                        }
+                        createMediaItem()
+                    }
+                }
+            })
+
             sessionToken = session.sessionToken
 
             InternalNotifier.addNotifier(this, mutableSetOf(
@@ -101,8 +118,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface {
     }
 
     private fun createMediaItem(): MediaBrowserCompat.MediaItem {
-        val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-        if (sharedPref.getBoolean(Constants.SHARED_PREF_CAR_MEDIA,false)) {
+        if (sharedPref.getBoolean(Constants.SHARED_PREF_CAR_MEDIA,true)) {
             session.setPlaybackState(buildState(PlaybackState.STATE_PAUSED))
             session.setMetadata(
                 MediaMetadataCompat.Builder()
