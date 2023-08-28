@@ -131,7 +131,7 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
     override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString() + " and extras " + extras.toString())
-            if (dataSource != NotifyDataSource.MESSAGECLIENT && dataSource != NotifyDataSource.NODE_BATTERY_LEVEL) {
+            if (dataSource != NotifyDataSource.MESSAGECLIENT && dataSource != NotifyDataSource.NODE_BATTERY_LEVEL && (dataSource != NotifyDataSource.SETTINGS || extras != null)) {
                 Thread {
                     try {
                         connection.sendMessage(dataSource, extras, null)

@@ -80,6 +80,9 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 Constants.SHARED_PREF_CAR_NOTIFICATION -> {
                     CarModeReceiver.updateSettings(sharedPreferences!!)
                 }
+                Constants.SHARED_PREF_CAR_MEDIA -> {
+                    InternalNotifier.notify(requireContext(), NotifyDataSource.SETTINGS, null)
+                }
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION,
                 Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION,
                 Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD -> {
