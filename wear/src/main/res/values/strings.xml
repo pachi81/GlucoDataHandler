@@ -25,6 +25,7 @@
     <string name="short_delta">Delta</string>
     <string name="short_delta_arrow">Delta and trend</string>
     <string name="short_delta_icon">Delta with Icon</string>
+    <string name="short_delta_time">Delta and timestamp</string>
     <string name="image_arrow">Trend (big, colored)</string>
     <string name="icon_arrow">Trend icon</string>
     <string name="test_neg_range">Test Range complication with negative values (for trend-range support)</string>

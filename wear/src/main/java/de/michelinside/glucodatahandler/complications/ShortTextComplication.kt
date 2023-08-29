@@ -108,6 +108,10 @@ class ShortDeltaWithIconComplication: ShortDeltaComplication() {
     override fun getIcon(): MonochromaticImage = deltaIcon()
 }
 
+class ShortDeltaWithTimeComplication: ShortDeltaComplication() {
+    override fun getTitle(): PlainComplicationText = timeText(true)
+}
+
 open class ShortTrendComplication: ShortClucoseComplication() {
     override fun getText(): PlainComplicationText = trendText()
 }
