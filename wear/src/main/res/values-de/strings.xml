@@ -8,6 +8,7 @@
     <string name="activity_switch_notification">Vibrieren</string>
     <string name="activity_switch_colored_aod">Farbiges AOD</string>
     <string name="activity_target_range">Zielbereich:</string>
+    <string name="activity_large_arrow_icon">Großer Trendpfeil</string>
 
     <string name="short_value">Zuckerwert</string>
     <string name="image_value">Zuckerwert (sehr groß und farbig)</string>

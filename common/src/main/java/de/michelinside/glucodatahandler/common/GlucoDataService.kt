@@ -3,6 +3,7 @@ package de.michelinside.glucodatahandler.common
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.SharedPreferences
 import android.os.*
 import android.util.Log
 import com.google.android.gms.wearable.*
@@ -34,6 +35,12 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
                 return service!!.applicationContext
             return null
         }
+        val sharedPref: SharedPreferences? get() {
+            if (context != null) {
+                return context!!.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            }
+            return null
+        }
     }
 
     init {
@@ -51,7 +58,6 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
 
             connection.open(this)
 
-            val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             val filter = mutableSetOf(
                 NotifyDataSource.BROADCAST,
                 NotifyDataSource.MESSAGECLIENT,
@@ -70,7 +76,7 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
             xDripReceiver = XDripBroadcastReceiver()
             registerReceiver(xDripReceiver,IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"))
 
-            if (BuildConfig.DEBUG && sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)) {
+            if (BuildConfig.DEBUG && sharedPref!!.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)) {
                 Thread {
                     try {
                         while (true) {
@@ -141,8 +147,7 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
                 }.start()
             }
             if (dataSource == NotifyDataSource.MESSAGECLIENT || dataSource == NotifyDataSource.BROADCAST) {
-                val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-                if (sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)) {
+                if (sharedPref!!.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)) {
                     val curAlarmType = ReceiveData.getAlarmType()
                     val forceAlarm = (ReceiveData.alarm and 8) != 0 // alarm triggered by Juggluco
                     Log.d(LOG_ID, "Check vibration: force=" + forceAlarm.toString() +
@@ -161,7 +166,7 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
                         if (BuildConfig.DEBUG)
                             durLow = 1000
                         else
-                            durLow = sharedPref.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_LOW, 15) * 60 * 1000
+                            durLow = sharedPref!!.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_LOW, 15) * 60 * 1000
                         if( forceAlarm || (curAlarmType < lastAlarmType && (ReceiveData.delta < 0F || ReceiveData.rate < 0F) && (ReceiveData.time - lastAlarmTime >= durLow)) )
                         {
                             if( vibrate(curAlarmType) ) {
@@ -177,7 +182,7 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
                         if (BuildConfig.DEBUG)
                             durHigh = 1000
                         else
-                            durHigh = sharedPref.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_HIGH, 20) * 60 * 1000
+                            durHigh = sharedPref!!.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_HIGH, 20) * 60 * 1000
                         if( forceAlarm || (curAlarmType > lastAlarmType && (ReceiveData.delta > 0F || ReceiveData.rate > 0F) && (ReceiveData.time - lastAlarmTime >= durHigh)) )
                         {
                             if( vibrate(curAlarmType) ) {

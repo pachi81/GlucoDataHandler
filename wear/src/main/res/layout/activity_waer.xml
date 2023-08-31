@@ -31,7 +31,8 @@
             android:textSize="45sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/txtVersion"
@@ -44,7 +45,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/txtValueInfo"
@@ -77,10 +79,9 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="16dp"
             android:src="@drawable/icon_question"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.024"
             app:layout_constraintStart_toEndOf="@+id/txtBgValue"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchColoredAod"
@@ -91,10 +92,24 @@
             android:layout_marginEnd="10dp"
             android:text="@string/activity_switch_colored_aod"
             android:textAlignment="viewStart"
-            app:layout_constraintBottom_toTopOf="@+id/switchNotifcation"
+            app:layout_constraintBottom_toTopOf="@+id/switchLargeTrendArrow"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtValueInfo"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchLargeTrendArrow"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/activity_large_arrow_icon"
+            android:textAlignment="viewStart"
+            app:layout_constraintBottom_toTopOf="@+id/switchNotifcation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/switchColoredAod"
             tools:ignore="TouchTargetSizeCheck" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -108,7 +123,7 @@
             app:layout_constraintBottom_toTopOf="@+id/switchForground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/switchColoredAod"
+            app:layout_constraintTop_toBottomOf="@+id/switchLargeTrendArrow"
             tools:ignore="TouchTargetSizeCheck" />
 
         <androidx.appcompat.widget.SwitchCompat

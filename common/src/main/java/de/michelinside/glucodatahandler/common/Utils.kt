@@ -214,6 +214,9 @@ object Utils {
                 degrees = round((maxOf(-2F, rate) + 2F) * -90F/2F, 0).toInt()
             }
             textSize *= resizeFactor
+            if (GlucoDataService.sharedPref != null && !GlucoDataService.sharedPref!!.getBoolean(Constants.SHARED_PREF_LARGE_ARROW_ICON, true)) {
+                textSize *= 0.8F
+            }
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888 )
             val canvas = Canvas(bitmap)
             bitmap.eraseColor(Color.TRANSPARENT)

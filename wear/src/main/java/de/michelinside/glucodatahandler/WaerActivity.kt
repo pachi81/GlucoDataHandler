@@ -24,6 +24,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtValueInfo: TextView
     private lateinit var txtConnInfo: TextView
     private lateinit var switchColoredAod: SwitchCompat
+    private lateinit var switchLargeTrendArrow: SwitchCompat
     private lateinit var switchNotifcation: SwitchCompat
     private lateinit var switchForground: SwitchCompat
     private lateinit var sharedPref: SharedPreferences
@@ -91,9 +92,26 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                         apply()
                     }
                     // trigger update of each complication on change
-                    ActiveComplicationHandler.OnNotifyData(this, NotifyDataSource.BROADCAST, null)
+                    ActiveComplicationHandler.OnNotifyData(this, NotifyDataSource.SETTINGS, null)
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Changing colored AOD exception: " + exc.message.toString() )
+                }
+            }
+
+            switchLargeTrendArrow = findViewById(R.id.switchLargeTrendArrow)
+            switchLargeTrendArrow.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_LARGE_ARROW_ICON, true)
+            switchLargeTrendArrow.setOnCheckedChangeListener { _, isChecked ->
+                Log.d(LOG_ID, "Large arrow icon changed: " + isChecked.toString())
+                try {
+                    with (sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_LARGE_ARROW_ICON, isChecked)
+                        apply()
+                    }
+                    // trigger update of each complication on change
+                    ActiveComplicationHandler.OnNotifyData(this, NotifyDataSource.SETTINGS, null)
+                    update()
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Changing large arrow icon exception: " + exc.message.toString() )
                 }
             }
 

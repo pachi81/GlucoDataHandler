@@ -9,6 +9,7 @@
     <string name="activity_switch_notification">Wibracje</string>
     <string name="activity_target_range">Zakres docelowy:</string>
     <string name="activity_switch_colored_aod">Kolorowy AOD</string>
+    <string name="activity_large_arrow_icon">Duża trend ikona</string>
 
     <string name="short_value">Glukoza</string>
     <string name="image_value">Glukoza (bardzo duża i kolorowa)</string>

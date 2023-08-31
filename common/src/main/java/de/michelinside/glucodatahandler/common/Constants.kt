@@ -43,6 +43,7 @@ object Constants {
     const val SHARED_PREF_SECOND_PERMANENT_NOTIFICATION = "second_permanent_notification"
     const val SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON = "second_status_bar_notification_icon"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON = "status_bar_notification_big_icon"
+    const val SHARED_PREF_LARGE_ARROW_ICON = "large_arrow_icon"
 
     // Wear only preferences
     const val SHARED_PREF_NOTIFICATION = "notification"
