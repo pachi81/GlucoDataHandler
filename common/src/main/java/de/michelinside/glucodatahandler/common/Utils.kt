@@ -193,7 +193,7 @@ object Utils {
         return rotatedBitmap
     }
 
-    fun rateToBitmap(rate: Float, color: Int, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F): Bitmap? {
+    fun rateToBitmap(rate: Float, color: Int, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, strikeThrough: Boolean = false): Bitmap? {
         try {
             var textSize = minOf(width,height).toFloat()
             val text: String
@@ -223,6 +223,7 @@ object Utils {
             paint.textSize = textSize
             paint.textAlign = Paint.Align.CENTER
             paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            paint.isStrikeThruText = strikeThrough
             val boundsText = Rect()
             paint.getTextBounds(text, 0, text.length, boundsText)
             val y = ((bitmap.height + boundsText.height()) / 2) - 3
@@ -243,7 +244,7 @@ object Utils {
             val rateSize = round(height * rateFactor, 0).toInt()
             val textHeight = height - rateSize - round(padding,0).toInt()
             val textBitmap = textToBitmap(text, color, true, strikeThrough, width, textHeight, true, false)
-            val rateBitmap = if (obsolete) textToBitmap("?", color, true, false, rateSize, rateSize ) else rateToBitmap(rate, color, rateSize, rateSize)
+            val rateBitmap = rateToBitmap(rate, color, rateSize, rateSize, strikeThrough =  obsolete)
             val comboBitmap = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888)
             val comboImage = Canvas(comboBitmap)
             comboImage.drawBitmap(rateBitmap!!, ((height-rateSize)/2).toFloat(), padding, null)
@@ -310,9 +311,7 @@ object Utils {
     }
 
     fun getRateAsBitmap(color: Int? = null, roundTarget: Boolean = false, resizeFactor: Float = 1F, width: Int = 100, height: Int = 100): Bitmap? {
-        if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
-            return textToBitmap("?", Color.GRAY, roundTarget, width = width, height = height)
-        return rateToBitmap(ReceiveData.rate, color ?: ReceiveData.getClucoseColor(), resizeFactor = resizeFactor, width = width, height = height)
+        return rateToBitmap(ReceiveData.rate, color ?: ReceiveData.getClucoseColor(), resizeFactor = resizeFactor, width = width, height = height, strikeThrough = ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
     }
 
     fun getRateAsIcon(color: Int? = null, roundTarget: Boolean = false, resizeFactor: Float = 1F, width: Int = 100, height: Int = 100): Icon {
