@@ -78,6 +78,10 @@
     <string name="pref_second_notification_summary">Show a second notification without content to have an additional icon in the status bar.</string>
     <string name="pref_second_notification_icon">2. status bar icon</string>
     <string name="pref_second_notification_icon_summary">Style of the small status bar icon of the second notification.</string>
+    <string name="pref_floating_widget">Floating widget</string>
+    <string name="pref_floating_widget_summary">Show glucose, trend, delta and time as floating widget.</string>
+    <string name="pref_floating_widget_size">Floating widget size</string>
+    <string name="pref_floating_widget_size_summary">Increase size of the floating widget</string>
 
     <string name="pref_status_bar_icon_app">App icon</string>
     <string name="pref_status_bar_icon_glucose">Glucose value</string>

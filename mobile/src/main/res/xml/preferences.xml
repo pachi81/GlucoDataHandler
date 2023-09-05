@@ -109,6 +109,22 @@
             android:summary="@string/pref_notification_big_icon_summary"
             android:title="@string/pref_notification_big_icon"
             app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="floating_widget"
+            android:summary="@string/pref_floating_widget_summary"
+            android:title="@string/pref_floating_widget"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SeekBarPreference
+            android:defaultValue="1"
+            app:showSeekBarValue="true"
+            app:seekBarIncrement="1"
+            app:min="1"
+            android:max="10"
+            android:key="floating_widget_size"
+            android:summary="@string/pref_floating_widget_size_summary"
+            android:title="@string/pref_floating_widget_size"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_cat_android_auto"

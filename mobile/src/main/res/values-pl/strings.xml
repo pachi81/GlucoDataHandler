@@ -78,6 +78,10 @@
     <string name="pref_second_notification_summary">Pokaż drugie powiadomienie bez treści, aby widoczna była dodatkowa ikona na pasku stanu.</string>
     <string name="pref_second_notification_icon">Druga ikona w pasku stanu</string>
     <string name="pref_second_notification_icon_summary">Styl małej ikony w pasku stanu w drugim powiadomieniu.</string>
+    <string name="pref_floating_widget">Floating widget</string>
+    <string name="pref_floating_widget_summary">Show glucose, trend, delta and time as floating widget.</string>
+    <string name="pref_floating_widget_size">Floating widget size</string>
+    <string name="pref_floating_widget_size_summary">Increase size of the floating widget</string>
 
     <string name="pref_status_bar_icon_app">Ikona aplikacji</string>
     <string name="pref_status_bar_icon_glucose">Wartość glukozy</string>

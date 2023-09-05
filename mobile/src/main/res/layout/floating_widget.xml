@@ -1,0 +1,53 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/widget"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent_widget_background"
+    android:padding="2dp">
+    <TableRow>
+    <TextView
+        android:id="@+id/glucose"
+        android:contentDescription="@string/glucose_html_label"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="1"
+        android:textSize="60sp"
+        android:maxLines="1"
+        tools:ignore="HardcodedText,NestedWeights" />
+
+    <ImageView
+        android:id="@+id/trendImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/rate_html_label"
+        android:minWidth="65dp"
+        android:gravity="center"
+        android:src="@drawable/icon_question" />
+    </TableRow>
+
+    <TableRow>
+    <TextView
+        android:id="@+id/timeText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:text="23:59 PM"
+        android:textColor="@color/transparent_widget_textcolor"
+        tools:ignore="HardcodedText,NestedWeights,SmallSp"/>
+
+    <TextView
+        android:id="@+id/deltaText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:text="+0.06"
+        android:maxLines="1"
+        android:textColor="@color/transparent_widget_textcolor"
+        tools:ignore="HardcodedText,SmallSp" />
+    </TableRow>
+</TableLayout>

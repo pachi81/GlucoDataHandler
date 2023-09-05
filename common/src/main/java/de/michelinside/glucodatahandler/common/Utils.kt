@@ -8,9 +8,11 @@ import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.os.Parcel
 import android.util.Log
+import android.util.TypedValue
 import java.math.RoundingMode
 import kotlin.math.abs
 import kotlin.random.Random
+
 
 object Utils {
     private val LOG_ID = "GlucoDataHandler.Utils"
@@ -34,6 +36,22 @@ object Utils {
 
     fun mmolToMg(value: Float): Float {
         return round(value * Constants.GLUCOSE_CONVERSION_FACTOR, 0)
+    }
+
+    fun dpToPx(dp: Float, context: Context): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp,
+            context.resources.displayMetrics
+        ).toInt()
+    }
+
+    fun spToPx(sp: Float, context: Context): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_SP,
+            sp,
+            context.resources.displayMetrics
+        ).toInt()
     }
 
     fun bytesToBundle(bytes: ByteArray): Bundle? {

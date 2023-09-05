@@ -44,6 +44,10 @@ object Constants {
     const val SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON = "second_status_bar_notification_icon"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON = "status_bar_notification_big_icon"
     const val SHARED_PREF_LARGE_ARROW_ICON = "large_arrow_icon"
+    const val SHARED_PREF_FLOATING_WIDGET = "floating_widget"
+    const val SHARED_PREF_FLOATING_WIDGET_SIZE = "floating_widget_size"
+    const val SHARED_PREF_FLOATING_WIDGET_X = "floating_widget_x"
+    const val SHARED_PREF_FLOATING_WIDGET_Y = "floating_widget_y"
 
     // Wear only preferences
     const val SHARED_PREF_NOTIFICATION = "notification"
