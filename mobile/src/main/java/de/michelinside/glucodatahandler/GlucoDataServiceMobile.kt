@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler
 
+import android.app.Notification
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -19,22 +20,8 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
     }
 
     companion object {
-        private val LOG_ID = "GlucoDataHandler.GlucoDataServiceWear"
         fun start(context: Context) {
-            if (!running) {
-                try {
-                    val serviceIntent = Intent(
-                        context,
-                        GlucoDataServiceMobile::class.java
-                    )
-                    context.startService(serviceIntent)
-                } catch (exc: Exception) {
-                    Log.e(
-                        LOG_ID,
-                        "GlucoDataServiceMobile::start exception: " + exc.message.toString()
-                    )
-                }
-            }
+            start(context, GlucoDataServiceMobile::class.java)
         }
     }
 
@@ -50,6 +37,10 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
+    }
+
+    override fun getNotification(): Notification {
+        return PermanentNotification.getNotification(!sharedPref!!.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false), Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, true)
     }
 
     override fun onDestroy() {

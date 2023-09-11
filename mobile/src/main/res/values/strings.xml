@@ -31,6 +31,7 @@
     <string name="activity_main_car_disconnected_label">Android Auto: disconnected</string>
 
     <string name="pref_cat_notification">Notification</string>
+    <string name="pref_cat_floating_widget">Floating widget</string>
     <string name="pref_cat_android_auto">Android Auto</string>
     <string name="pref_cat_xdrip">xDrip+</string>
     <string name="pref_cat_forward_broadcast">Glucodata broadcast</string>
@@ -80,8 +81,8 @@
     <string name="pref_second_notification_icon_summary">Style of the small status bar icon of the second notification.</string>
     <string name="pref_floating_widget">Floating widget</string>
     <string name="pref_floating_widget_summary">Show glucose, trend, delta and time as floating widget.</string>
-    <string name="pref_floating_widget_size">Floating widget size</string>
-    <string name="pref_floating_widget_size_summary">Increase size of the floating widget</string>
+    <string name="pref_floating_widget_size">Widget size</string>
+    <string name="pref_floating_widget_size_summary">Change size of the floating widget</string>
 
     <string name="pref_status_bar_icon_app">App icon</string>
     <string name="pref_status_bar_icon_glucose">Glucose value</string>

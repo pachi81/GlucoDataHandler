@@ -31,6 +31,7 @@
     <string name="activity_main_car_disconnected_label">Android Auto: niepołączony</string>
 
     <string name="pref_cat_notification">Powiadomienie</string>
+    <string name="pref_cat_floating_widget">Floating widget</string>
     <string name="pref_cat_android_auto">Android Auto</string>
     <string name="pref_cat_xdrip">XDrip+</string>
     <string name="pref_cat_forward_broadcast">Glucodata broadcast (Transmisja danych dot. glukozy)</string>
@@ -80,8 +81,8 @@
     <string name="pref_second_notification_icon_summary">Styl małej ikony w pasku stanu w drugim powiadomieniu.</string>
     <string name="pref_floating_widget">Floating widget</string>
     <string name="pref_floating_widget_summary">Show glucose, trend, delta and time as floating widget.</string>
-    <string name="pref_floating_widget_size">Floating widget size</string>
-    <string name="pref_floating_widget_size_summary">Increase size of the floating widget</string>
+    <string name="pref_floating_widget_size">Widget size</string>
+    <string name="pref_floating_widget_size_summary">Change size of the floating widget</string>
 
     <string name="pref_status_bar_icon_app">Ikona aplikacji</string>
     <string name="pref_status_bar_icon_glucose">Wartość glukozy</string>

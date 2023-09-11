@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler.common
 
+import android.app.Notification
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -16,8 +17,7 @@ enum class AppSource {
     WEAR_APP;
 }
 
-open class GlucoDataService(source: AppSource) : WearableListenerService(), NotifierInterface {
-    private val LOG_ID = "GlucoDataHandler.GlucoDataService"
+abstract class GlucoDataService(source: AppSource) : WearableListenerService(), NotifierInterface {
     private lateinit var receiver: GlucoseDataReceiver
     private lateinit var batteryReceiver: BatteryReceiver
     private lateinit var xDripReceiver: XDripBroadcastReceiver
@@ -26,6 +26,10 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
     private var lastAlarmType = ReceiveData.AlarmType.OK
 
     companion object {
+        private val LOG_ID = "GlucoDataHandler.GlucoDataService"
+        private var isForegroundService = false
+        val foreground get() = isForegroundService
+        const val NOTIFICATION_ID = 123
         var appSource = AppSource.NOT_SET
         private var isRunning = false
         val running get() = isRunning
@@ -41,10 +45,57 @@ open class GlucoDataService(source: AppSource) : WearableListenerService(), Noti
             }
             return null
         }
+
+        fun start(context: Context, cls: Class<*>) {
+            if (!running) {
+                try {
+                    val serviceIntent = Intent(
+                        context,
+                        cls
+                    )
+                    val sharedPref = context.getSharedPreferences(
+                        Constants.SHARED_PREF_TAG,
+                        Context.MODE_PRIVATE
+                    )
+                    serviceIntent.putExtra(
+                        Constants.SHARED_PREF_FOREGROUND_SERVICE,
+                        sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
+                    )
+                    context.startService(serviceIntent)
+                } catch (exc: Exception) {
+                    Log.e(
+                        LOG_ID,
+                        "start exception: " + exc.message.toString()
+                    )
+                }
+            }
+        }
     }
 
     init {
         appSource = source
+    }
+
+    abstract fun getNotification() : Notification
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        try {
+            Log.d(LOG_ID, "onStartCommand called")
+            super.onStartCommand(intent, flags, startId)
+            val isForeground = intent?.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
+            if (isForeground == true && !isForegroundService) {
+                isForegroundService = true
+                Log.i(LOG_ID, "Starting service in foreground!")
+                startForeground(NOTIFICATION_ID, getNotification())
+            } else if ( isForegroundService && intent?.getBooleanExtra(Constants.ACTION_STOP_FOREGROUND, false) == true ) {
+                isForegroundService = false
+                Log.i(LOG_ID, "Stopping service in foreground!")
+                stopForeground(STOP_FOREGROUND_REMOVE)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onStartCommand exception: " + exc.toString())
+        }
+        return START_STICKY  // keep alive
     }
 
     override fun onCreate() {
