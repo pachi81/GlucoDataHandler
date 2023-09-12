@@ -40,7 +40,10 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
     }
 
     override fun getNotification(): Notification {
-        return PermanentNotification.getNotification(!sharedPref!!.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false), Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, true)
+        return PermanentNotification.getNotification(
+            !sharedPref!!.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false),
+            Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON
+        )
     }
 
     override fun onDestroy() {
@@ -105,7 +108,6 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                     }
                 }
             }
-            floatingWidget.update()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() )
         }

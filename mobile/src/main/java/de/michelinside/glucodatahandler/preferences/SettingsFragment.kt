@@ -9,7 +9,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.preference.*
@@ -44,7 +43,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             selectTargets!!.entries = arrayOf<CharSequence>(resources.getString(R.string.pref_global_broadcast)) + receivers.keys.toTypedArray()
             selectTargets.entryValues = arrayOf<CharSequence>("") + receivers.values.toTypedArray()
 
-            activityResultOverlayLauncher = registerForActivityResult<Intent, ActivityResult>(
+            activityResultOverlayLauncher = registerForActivityResult(
                 ActivityResultContracts.StartActivityForResult()
             ) { result ->
                 if (result.resultCode != Activity.RESULT_OK) {
@@ -97,20 +96,15 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 Constants.SHARED_PREF_CAR_NOTIFICATION -> {
                     CarModeReceiver.updateSettings(sharedPreferences!!)
                 }
-                Constants.SHARED_PREF_FLOATING_WIDGET_SIZE,
-                Constants.SHARED_PREF_CAR_MEDIA -> {
-                    InternalNotifier.notify(requireContext(), NotifyDataSource.SETTINGS, null)
-                }
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION,
                 Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION,
                 Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD -> {
                     updateEnableStates(sharedPreferences!!)
                 }
                 Constants.SHARED_PREF_FLOATING_WIDGET -> {
-                    if (sharedPreferences!!.getBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false) && !Settings.canDrawOverlays(requireContext())) {
+                    updateEnableStates(sharedPreferences!!)
+                    if (sharedPreferences.getBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false) && !Settings.canDrawOverlays(requireContext())) {
                         getPermission()
-                    } else {
-                        InternalNotifier.notify(requireContext(), NotifyDataSource.SETTINGS, null)
                     }
                 }
             }
@@ -161,6 +155,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION)
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, Constants.SHARED_PREF_PERMANENT_NOTIFICATION)
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION)
+            setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, Constants.SHARED_PREF_FLOATING_WIDGET)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
         }

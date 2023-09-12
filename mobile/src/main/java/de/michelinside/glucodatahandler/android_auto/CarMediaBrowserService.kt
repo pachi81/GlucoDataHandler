@@ -21,7 +21,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
 import java.util.*
 
-class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface {
+class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GlucoDataHandler.CarMediaBrowserService"
     private val MEDIA_ROOT_ID = "root"
     private val MEDIA_GLUCOSE_ID = "glucose_value"
@@ -33,6 +33,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface {
         try {
             super.onCreate()
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            sharedPref.registerOnSharedPreferenceChangeListener(this)
 
             session = MediaSessionCompat(this, "MyMusicService")
             // Callbacks to handle events from the user (play, pause, search)
@@ -65,6 +66,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface {
         Log.d(LOG_ID, "onDestroy")
         try {
             InternalNotifier.remNotifier(this)
+            sharedPref.unregisterOnSharedPreferenceChangeListener(this)
             session.release()
             super.onDestroy()
         } catch (exc: Exception) {
@@ -106,6 +108,19 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface {
         Log.d(LOG_ID, "OnNotifyData called")
         try {
             notifyChildrenChanged(MEDIA_ROOT_ID)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() )
+        }
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        Log.d(LOG_ID, "onSharedPreferenceChanged called for key " + key)
+        try {
+            when(key) {
+                Constants.SHARED_PREF_CAR_MEDIA -> {
+                    notifyChildrenChanged(MEDIA_ROOT_ID)
+                }
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() )
         }

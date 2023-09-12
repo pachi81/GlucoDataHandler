@@ -69,18 +69,16 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         }
     }
 
-
     private fun createNotificationChannel(context: Context) {
         notificationMgr = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notificationChannel = NotificationChannel(
             CHANNEL_ID,
             CHANNEL_NAME,
-            NotificationManager.IMPORTANCE_HIGH
+            NotificationManager.IMPORTANCE_DEFAULT
         )
         notificationChannel.setSound(null, null)   // silent
         notificationMgr.createNotificationChannel(notificationChannel)
     }
-
 
     private fun createNofitication(context: Context) {
         createNotificationChannel(context)
@@ -114,7 +112,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         }
     }
 
-    fun getNotification(withContent: Boolean, iconKey: String, colored: Boolean) : Notification {
+    fun getNotification(withContent: Boolean, iconKey: String) : Notification {
         Log.d(LOG_ID, "showNotification called")
         var remoteViews: RemoteViews? = null
         if (withContent) {
@@ -135,6 +133,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setWhen(ReceiveData.time)
             .setCustomContentView(remoteViews)
             .setCustomBigContentView(null)
+            .setColorized(false)
             .setStyle(Notification.DecoratedCustomViewStyle())
             .setContentTitle(if (withContent) ReceiveData.getClucoseAsString() else "")
             .setContentText(if (withContent) "Delta: " + ReceiveData.getDeltaAsString() else "")
@@ -149,7 +148,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         try {
             notificationMgr.notify(
                 id,
-                getNotification(withContent, iconKey, colored)
+                getNotification(withContent, iconKey)
             )
         } catch (exc: Exception) {
             Log.e(LOG_ID, "showNotification exception: " + exc.toString() )
@@ -157,7 +156,6 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     }
 
     private fun showNotifications() {
-        //showNotification(NOTIFICATION_ID, !sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false), Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, true)
         showPrimaryNotification(true)
         if (sharedPref.getBoolean(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, false)) {
             showNotification(SECOND_NOTIFICATION_ID, false, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, false)
@@ -168,9 +166,9 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
     private fun showPrimaryNotification(show: Boolean) {
         Log.d(LOG_ID, "showPrimaryNotification " + show)
-        if (show && GlucoDataService.foreground) {
-            showNotification(GlucoDataService.NOTIFICATION_ID, !sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false), Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, true)
-        } else {
+        showNotification(GlucoDataService.NOTIFICATION_ID, !sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false), Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, true)
+        if (show != GlucoDataService.foreground) {
+            Log.d(LOG_ID, "change foreground notification mode")
             with(sharedPref.edit()) {
                 putBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, show)
                 apply()
@@ -184,7 +182,6 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             GlucoDataService.context!!.startService(serviceIntent)
         }
     }
-
 
     private fun updatePreferences() {
         try {
