@@ -13,4 +13,14 @@
         <item>"trend"</item>
         <item>"delta"</item>
     </array>
+    <array name="tasker_supported_settings_labels">
+        <item>@string/pref_floating_widget</item>
+        <item>@string/pref_notification</item>
+        <item>@string/pref_switch_car_notification</item>
+    </array>
+    <array name="tasker_supported_settings_values">
+        <item>"floating_widget"</item>
+        <item>"permanent_notification"</item>
+        <item>"car_notification"</item>
+    </array>
 </resources>
