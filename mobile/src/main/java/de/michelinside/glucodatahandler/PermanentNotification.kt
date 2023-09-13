@@ -25,9 +25,12 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     private const val LOG_ID = "GlucoDataHandler.PermanentNotification"
     private const val CHANNEL_ID = "GlucoDataNotify_permanent"
     private const val CHANNEL_NAME = "Permanent notification"
+    private const val FOREGROUND_CHANNEL_ID = "GlucoDataNotify_foreground"
+    private const val FOREGROUND_CHANNEL_NAME = "Foreground notification"
     private const val SECOND_NOTIFICATION_ID = 124
     private lateinit var notificationMgr: NotificationManager
     private lateinit var notificationCompat: Notification.Builder
+    private lateinit var foregroundNotificationCompat: Notification.Builder
     private lateinit var sharedPref: SharedPreferences
 
     enum class StatusBarIcon(val pref: String) {
@@ -78,6 +81,14 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         )
         notificationChannel.setSound(null, null)   // silent
         notificationMgr.createNotificationChannel(notificationChannel)
+        notificationMgr = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val foregroundChannel = NotificationChannel(
+            FOREGROUND_CHANNEL_ID,
+            FOREGROUND_CHANNEL_NAME,
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+        notificationChannel.setSound(null, null)   // silent
+        notificationMgr.createNotificationChannel(foregroundChannel)
     }
 
     private fun createNofitication(context: Context) {
@@ -88,7 +99,18 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setContentIntent(Utils.getAppIntent(context, MainActivity::class.java, 4, false))
             .setOngoing(true)
             .setOnlyAlertOnce(true)
-            .setAutoCancel(true)
+            .setAutoCancel(false)
+            .setShowWhen(true)
+            .setColorized(true)
+            .setCategory(Notification.CATEGORY_STATUS)
+            .setVisibility(Notification.VISIBILITY_PUBLIC)
+
+        foregroundNotificationCompat = Notification.Builder(context, FOREGROUND_CHANNEL_ID)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentIntent(Utils.getAppIntent(context, MainActivity::class.java, 4, false))
+            .setOngoing(true)
+            .setOnlyAlertOnce(true)
+            .setAutoCancel(false)
             .setShowWhen(true)
             .setColorized(true)
             .setCategory(Notification.CATEGORY_STATUS)
@@ -112,7 +134,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         }
     }
 
-    fun getNotification(withContent: Boolean, iconKey: String) : Notification {
+    fun getNotification(withContent: Boolean, iconKey: String, foreground: Boolean) : Notification {
         Log.d(LOG_ID, "showNotification called")
         var remoteViews: RemoteViews? = null
         if (withContent) {
@@ -128,7 +150,8 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             }
         }
 
-        val notification = notificationCompat
+        val notificationBuilder = if(foreground) foregroundNotificationCompat else notificationCompat
+        val notification = notificationBuilder
             .setSmallIcon(getStatusBarIcon(iconKey))
             .setWhen(ReceiveData.time)
             .setCustomContentView(remoteViews)
@@ -144,11 +167,11 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         return notification
     }
 
-    private fun showNotification(id: Int, withContent: Boolean, iconKey: String, colored: Boolean) {
+    private fun showNotification(id: Int, withContent: Boolean, iconKey: String, foreground: Boolean) {
         try {
             notificationMgr.notify(
                 id,
-                getNotification(withContent, iconKey)
+                getNotification(withContent, iconKey, foreground)
             )
         } catch (exc: Exception) {
             Log.e(LOG_ID, "showNotification exception: " + exc.toString() )
@@ -166,7 +189,8 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
     private fun showPrimaryNotification(show: Boolean) {
         Log.d(LOG_ID, "showPrimaryNotification " + show)
-        showNotification(GlucoDataService.NOTIFICATION_ID, !sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false), Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, true)
+        if (show)
+            showNotification(GlucoDataService.NOTIFICATION_ID, !sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false), Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, true)
         if (show != GlucoDataService.foreground) {
             Log.d(LOG_ID, "change foreground notification mode")
             with(sharedPref.edit()) {
