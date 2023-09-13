@@ -216,14 +216,17 @@ object Utils {
             var textSize = minOf(width,height).toFloat()
             val text: String
             val degrees: Int
+            var shortArrowRate = 0.8F
             if(rate >= 3F) {
                 text = "⇈"
                 textSize -= textSize*0.05F
                 degrees = 0
+                shortArrowRate = 0.7F
             } else if ( rate <= -3F ) {
                 text = "⇊"
                 textSize -= textSize*0.05F
                 degrees = 0
+                shortArrowRate = 0.7F
             } else if (rate >= 0F) {
                 text = "↑"
                 degrees = round(abs(minOf(2F, rate)-2F) * 90F/2F, 0).toInt()
@@ -233,7 +236,7 @@ object Utils {
             }
             textSize *= resizeFactor
             if (GlucoDataService.sharedPref != null && !GlucoDataService.sharedPref!!.getBoolean(Constants.SHARED_PREF_LARGE_ARROW_ICON, true)) {
-                textSize *= 0.8F
+                textSize *= shortArrowRate
             }
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888 )
             val canvas = Canvas(bitmap)
