@@ -82,8 +82,10 @@
     <string name="pref_second_notification_icon_summary">Art des Statusbar Icons für die zweite Benachrichtigung.</string>
     <string name="pref_floating_widget">Schwebendes Widget</string>
     <string name="pref_floating_widget_summary">Zeigt Trendpfeil, den Glucose-, Deltawert und Zeipunkt als schwebendes Widget.</string>
-    <string name="pref_floating_widget_size">Größe des Widgets</string>
+    <string name="pref_floating_widget_size">Größe</string>
     <string name="pref_floating_widget_size_summary">Größe des schwebenden Widgets ändern</string>
+    <string name="pref_floating_widget_style">Stil</string>
+    <string name="pref_floating_widget_style_summary">Stil des schwebenden Widgets.</string>
 
     <string name="pref_status_bar_icon_app">App Icon</string>
     <string name="pref_status_bar_icon_glucose">Zuckerwert</string>

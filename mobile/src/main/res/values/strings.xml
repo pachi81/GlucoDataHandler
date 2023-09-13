@@ -80,9 +80,11 @@
     <string name="pref_second_notification_icon">2. status bar icon</string>
     <string name="pref_second_notification_icon_summary">Style of the small status bar icon of the second notification.</string>
     <string name="pref_floating_widget">Floating widget</string>
-    <string name="pref_floating_widget_summary">Show glucose, trend, delta and time as floating widget.</string>
-    <string name="pref_floating_widget_size">Widget size</string>
+    <string name="pref_floating_widget_summary">Show glucose, trend, delta and time as floating widget.\nPlease also activate notification for preventing android to kill the app.</string>
+    <string name="pref_floating_widget_size">Size</string>
     <string name="pref_floating_widget_size_summary">Change size of the floating widget</string>
+    <string name="pref_floating_widget_style">Style</string>
+    <string name="pref_floating_widget_style_summary">Style of the floating widget.</string>
 
     <string name="pref_status_bar_icon_app">App icon</string>
     <string name="pref_status_bar_icon_glucose">Glucose value</string>
