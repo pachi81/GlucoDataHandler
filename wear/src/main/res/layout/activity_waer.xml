@@ -19,21 +19,43 @@
         android:layout_height="wrap_content"
         app:layout_boxedEdges="all">
 
+        <LinearLayout
+            android:id="@+id/test"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            tools:ignore="UselessParent">
         <TextView
             android:id="@+id/txtBgValue"
-            android:layout_width="87dp"
-            android:layout_height="61dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="12dp"
+            android:layout_weight="4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:text="---"
+            android:maxLines="1"
             android:textAlignment="viewEnd"
             android:textColor="#FFFFFF"
-            android:textSize="45sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="HardcodedText" />
 
+        <ImageView
+            android:id="@+id/viewIcon"
+            android:layout_weight="3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/icon_question"
+            android:paddingVertical="2dp"
+            tools:ignore="ContentDescription" />
+
+    </LinearLayout>
         <TextView
             android:id="@+id/txtVersion"
             android:layout_width="0dp"
@@ -59,7 +81,7 @@
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtBgValue" />
+            app:layout_constraintTop_toBottomOf="@+id/test" />
 
         <TextView
             android:id="@+id/txtConnInfo"
@@ -72,16 +94,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <ImageView
-            android:id="@+id/viewIcon"
-            android:layout_width="57dp"
-            android:layout_height="57dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="16dp"
-            android:src="@drawable/icon_question"
-            app:layout_constraintStart_toEndOf="@+id/txtBgValue"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchColoredAod"
