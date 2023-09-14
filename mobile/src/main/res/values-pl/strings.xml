@@ -92,6 +92,7 @@
     <string name="pref_status_bar_icon_delta">Delta</string>
 
     <string name="pref_global_broadcast">Transmisja globalna</string>
+    <string name="pref_wear_notification">Zegarek: wibracje</string>
 
     <string name="select_receiver_show_all">Pokaż wszystko</string>
     <string name="select_receiver_no_glucodata_receiver">Nie znaleziono odbiornika!</string>

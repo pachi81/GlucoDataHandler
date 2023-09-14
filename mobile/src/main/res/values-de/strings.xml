@@ -93,6 +93,7 @@
     <string name="pref_status_bar_icon_delta">Delta</string>
 
     <string name="pref_global_broadcast">Globaler Broadcast</string>
+    <string name="pref_wear_notification">Uhr: Vibration</string>
 
     <string name="select_receiver_show_all">Zeige alle</string>
     <string name="select_receiver_no_glucodata_receiver">Kein Empfänger gefunden!</string>

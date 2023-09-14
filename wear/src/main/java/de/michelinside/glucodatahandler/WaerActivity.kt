@@ -174,5 +174,9 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
     override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
         Log.d(LOG_ID, "new intent received from: " + dataSource.toString())
         update()
+        if (dataSource == NotifyDataSource.SETTINGS) {
+            if (extras != null && extras.containsKey(Constants.SHARED_PREF_NOTIFICATION))
+                switchNotifcation.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)
+        }
     }
 }

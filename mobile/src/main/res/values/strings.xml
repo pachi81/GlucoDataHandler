@@ -91,6 +91,8 @@
     <string name="pref_status_bar_icon_trend">Trend arrow</string>
     <string name="pref_status_bar_icon_delta">Delta</string>
 
+    <string name="pref_wear_notification">Wear: vibration</string>
+
     <string name="pref_global_broadcast">Global broadcast</string>
 
     <string name="select_receiver_show_all">Show all</string>

@@ -33,7 +33,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         var appSource = AppSource.NOT_SET
         private var isRunning = false
         val running get() = isRunning
-        private var service: GlucoDataService? = null
+        var service: GlucoDataService? = null
         val context: Context? get() {
             if(service != null)
                 return service!!.applicationContext
@@ -185,17 +185,21 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         return true
     }
 
+    fun sendToConnectedDevices(dataSource: NotifyDataSource, extras: Bundle) {
+        Thread {
+            try {
+                connection.sendMessage(dataSource, extras, null)
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "SendMessage exception: " + exc.toString())
+            }
+        }.start()
+    }
+
     override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString() + " and extras " + extras.toString())
             if (dataSource != NotifyDataSource.MESSAGECLIENT && dataSource != NotifyDataSource.NODE_BATTERY_LEVEL && (dataSource != NotifyDataSource.SETTINGS || extras != null)) {
-                Thread {
-                    try {
-                        connection.sendMessage(dataSource, extras, null)
-                    } catch (exc: Exception) {
-                        Log.e(LOG_ID, "SendMessage exception: " + exc.toString())
-                    }
-                }.start()
+                sendToConnectedDevices(dataSource, extras!!)
             }
             if (dataSource == NotifyDataSource.MESSAGECLIENT || dataSource == NotifyDataSource.BROADCAST) {
                 if (sharedPref!!.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)) {
