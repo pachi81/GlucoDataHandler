@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler
 
+import android.annotation.SuppressLint
 import de.michelinside.glucodatahandler.common.ReceiveData
 import android.app.Activity
 import android.content.Context
@@ -20,7 +21,8 @@ import java.util.*
 
 @TaskerInputRoot
 @TaskerOutputObject()
-class GlucodataValues {
+@SuppressLint("NonConstantResourceId")
+open class GlucodataValues {
     @field:TaskerInputField("glucose")
     @get:TaskerOutputVariable("glucose", R.string.glucose_label, R.string.glucose_html_label)
     val glucose: Float = ReceiveData.glucose
@@ -59,6 +61,15 @@ class GlucodataValues {
     val dexcomLabel: String = ReceiveData.getDexcomLabel()
 }
 
+@TaskerInputRoot
+@TaskerOutputObject()
+@SuppressLint("NonConstantResourceId")
+class GlucodataObsoleteValues : GlucodataValues() {
+    @field:TaskerInputField("obsolete_time")
+    @get:TaskerOutputVariable("obsolete_time", R.string.obsolete_time_label, R.string.obsolete_time_html_label)
+    val obsolete_time: Long = ReceiveData.getTimeSinceLastValueMinute()
+}
+
 class GlucodataValuesChangedRunner : TaskerPluginRunnerConditionEvent<GlucodataValues, GlucodataValues, GlucodataValues>() {
     override fun getSatisfiedCondition(context: Context, input: TaskerInput<GlucodataValues>, update: GlucodataValues?): TaskerPluginResultCondition<GlucodataValues> {
         return TaskerPluginResultConditionSatisfied(context, update)
@@ -82,12 +93,40 @@ class GlucodataEvent : Activity(), TaskerPluginConfig<GlucodataValues> {
     }
 }
 
+
+class GlucodataOsoleteValuesChangedRunner : TaskerPluginRunnerConditionEvent<GlucodataObsoleteValues, GlucodataObsoleteValues, GlucodataObsoleteValues>() {
+    override fun getSatisfiedCondition(context: Context, input: TaskerInput<GlucodataObsoleteValues>, update: GlucodataObsoleteValues?): TaskerPluginResultCondition<GlucodataObsoleteValues> {
+        return TaskerPluginResultConditionSatisfied(context, update)
+    }
+}
+
+class GlucodataObsoleteEventHelper(config: TaskerPluginConfig<GlucodataObsoleteValues>) : TaskerPluginConfigHelper<GlucodataObsoleteValues, GlucodataObsoleteValues, GlucodataOsoleteValuesChangedRunner>(config) {
+    override val runnerClass = GlucodataOsoleteValuesChangedRunner::class.java
+    override val inputClass = GlucodataObsoleteValues::class.java
+    override val outputClass = GlucodataObsoleteValues::class.java
+}
+
+class GlucodataObsoleteEvent : Activity(), TaskerPluginConfig<GlucodataObsoleteValues> {
+    override val context: Context get() = applicationContext
+    override fun assignFromInput(input: TaskerInput<GlucodataObsoleteValues>) {}
+    override val inputForTasker = TaskerInput(GlucodataObsoleteValues())
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        GlucodataObsoleteEventHelper(this).finishForTasker()
+    }
+}
+
 object TaskerDataReceiver: NotifierInterface {
     private val LOG_ID = "GlucoDataHandler.TaskerDataReceiver"
     override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
         try {
-            Log.d(LOG_ID, "sending new intent to tasker")
-            GlucodataEvent::class.java.requestQuery(context, GlucodataValues() )
+            Log.d(LOG_ID, "sending new intent to tasker for source " + dataSource.toString())
+            if (dataSource == NotifyDataSource.OBSOLETE_VALUE) {
+                GlucodataObsoleteEvent::class.java.requestQuery(context, GlucodataObsoleteValues())
+            } else {
+                GlucodataEvent::class.java.requestQuery(context, GlucodataValues())
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Receive exception: " + exc.message.toString() )
         }

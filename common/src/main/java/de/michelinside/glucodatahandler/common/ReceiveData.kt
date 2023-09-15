@@ -217,11 +217,15 @@ object ReceiveData {
         if (rate > -1.0f) return context.getString(R.string.rate_flat)
         if (rate > -2.0f) return context.getString(R.string.rate_forty_five_down)
         if (rate > -3.0f) return context.getString(R.string.rate_single_down)
-        return if (java.lang.Float.isNaN(rate)) "" else context.getString(R.string.rate_double_down)
+        return if (rate.isNaN()) "" else context.getString(R.string.rate_double_down)
     }
 
     fun getTimeDiffMinute(): Long {
         return Utils.round(timeDiff.toFloat()/60000, 0).toLong()
+    }
+
+    fun getTimeSinceLastValueMinute(): Long {
+        return Utils.round((System.currentTimeMillis()-time).toFloat()/60000, 0).toLong()
     }
 
     fun handleIntent(context: Context, dataSource: NotifyDataSource, extras: Bundle?) : Boolean

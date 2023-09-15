@@ -16,7 +16,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
     private lateinit var floatingWidget: FloatingWidget
     init {
         Log.d(LOG_ID, "init called")
-        InternalNotifier.addNotifier(TaskerDataReceiver, mutableSetOf(NotifyDataSource.BROADCAST,NotifyDataSource.MESSAGECLIENT))
+        InternalNotifier.addNotifier(TaskerDataReceiver, mutableSetOf(NotifyDataSource.BROADCAST,NotifyDataSource.MESSAGECLIENT,NotifyDataSource.OBSOLETE_VALUE))
     }
 
     companion object {

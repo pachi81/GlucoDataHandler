@@ -111,7 +111,16 @@
             android:name=".GlucodataEvent"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
-            android:label="Glucodata">
+            android:label="@string/tasker_event_glucodata">
+            <intent-filter>
+                <action android:name="net.dinglisch.android.tasker.ACTION_EDIT_EVENT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".GlucodataObsoleteEvent"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/tasker_event_glucodata_obsolete">
             <intent-filter>
                 <action android:name="net.dinglisch.android.tasker.ACTION_EDIT_EVENT" />
             </intent-filter>

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">GlucoDataHandler</string>
+
+    <string name="tasker_event_glucodata">Neuer Glucose Wert</string>
+    <string name="tasker_event_glucodata_obsolete">Veralteter Wert</string>
+
     <string name="unit_html_label">Einheit des Glucose Wertes (mg/dl oder mmol/l)</string>
     <string name="unit_label">Einheit</string>
     <string name="delta_label">Delta</string>
@@ -25,6 +29,8 @@
     <string name="sensor_id_html_label">ID des aktuell verwendeten Sensors</string>
     <string name="glucose_label">Blutzuckerwert</string>
     <string name="glucose_html_label">Blutzuckerwert in der Einheit, welche in Juggluco konfiguriert ist</string>
+    <string name="obsolete_time_label">Zeit seit letztem Wert</string>
+    <string name="obsolete_time_html_label">Zeit in Minuten (5 or 10) seit der letzte Wert empfangen wurde.</string>
 
     <string name="activity_main_connected_label">Uhr: verbunden (%1$s)</string>
     <string name="activity_main_disconnected_label">Uhr: getrennt</string>
@@ -110,4 +116,5 @@
     <string name="widget_glucose_trend">Zuckerwert und Trendpfeil</string>
     <string name="widget_glucose_trend_delta">Zuckerwert, Trendpfeil und Delta</string>
     <string name="widget_glucose_trend_delta_timestamp">Zuckerwert, Trendpfeil, Delta und Zeitpunkt</string>
+
 </resources>

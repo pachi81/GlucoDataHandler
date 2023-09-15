@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">GlucoDataHandler</string>
+
+
+    <string name="tasker_event_glucodata">New glucose value</string>
+    <string name="tasker_event_glucodata_obsolete">Obsolete value</string>
+
     <string name="glucose_label">Glucose</string>
     <string name="glucose_html_label">Glucose value in unit from Juggluco settings</string>
     <string name="sensor_id_label">Sensor ID</string>
@@ -24,6 +29,8 @@
     <string name="delta_html_label">Delta of current and previous glucose value (per minute)</string>
     <string name="unit_label">Unit</string>
     <string name="unit_html_label">Unit of the glucose value (mg/dl or mmol/l)</string>
+    <string name="obsolete_time_label">Time since last value</string>
+    <string name="obsolete_time_html_label">Time in minutes (5 or 10) since last value was received.</string>
 
     <string name="activity_main_connected_label">Wear: connected (%1$s)</string>
     <string name="activity_main_disconnected_label">Wear: disconnected</string>
