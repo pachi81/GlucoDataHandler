@@ -213,6 +213,9 @@ object Utils {
 
     fun rateToBitmap(rate: Float, color: Int, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, strikeThrough: Boolean = false): Bitmap? {
         try {
+            if (rate.isNaN()) {
+                return textToBitmap("?", color, true, false, width, height )
+            }
             var textSize = minOf(width,height).toFloat()
             val text: String
             val degrees: Int
