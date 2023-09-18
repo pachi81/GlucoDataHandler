@@ -117,7 +117,6 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 NotifyDataSource.OBSOLETE_VALUE)   // to trigger re-start for the case of stopped by the system
             if (appSource == AppSource.PHONE_APP) {
                 filter.add(NotifyDataSource.SETTINGS)   // only send setting changes from phone to wear!
-                filter.add(NotifyDataSource.CAR_CONNECTION)
             }
             InternalNotifier.addNotifier(this, filter)
 

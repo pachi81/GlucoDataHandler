@@ -18,6 +18,7 @@ import androidx.core.graphics.drawable.IconCompat
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
+import de.michelinside.glucodatahandler.tasker.setAndroidAutoConnectionState
 import java.util.*
 
 
@@ -119,10 +120,12 @@ object CarModeReceiver: NotifierInterface {
                 Log.d(LOG_ID, "Exited Car Mode")
                 removeNotification()
                 car_connected = false
+                GlucoDataService.context?.setAndroidAutoConnectionState(false)
                 InternalNotifier.remNotifier(this)
             } else {
                 Log.d(LOG_ID, "Entered Car Mode")
                 car_connected = true
+                GlucoDataService.context?.setAndroidAutoConnectionState(true)
                 InternalNotifier.addNotifier(this, mutableSetOf(
                     NotifyDataSource.BROADCAST,
                     NotifyDataSource.MESSAGECLIENT))
