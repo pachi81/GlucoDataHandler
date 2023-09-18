@@ -4,8 +4,10 @@
 
     <string name="tasker_event_glucodata">Neuer Glucose Wert</string>
     <string name="tasker_event_glucodata_obsolete">Veralteter Wert</string>
+    <string name="tasker_event_glucodata_alarn">Glucose Alarm</string>
     <string name="tasker_wear_connection_state">Uhr Verbindung</string>
     <string name="tasker_android_auto_connection_state">Android Auto Verbindung</string>
+    <string name="tasker_target_range_state">Glucose Bereich geändert</string>
 
     <string name="unit_html_label">Einheit des Glucose Wertes (mg/dl oder mmol/l)</string>
     <string name="unit_label">Einheit</string>

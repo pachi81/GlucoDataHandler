@@ -4,8 +4,10 @@
 
     <string name="tasker_event_glucodata">New glucose value</string>
     <string name="tasker_event_glucodata_obsolete">Obsolete value</string>
+    <string name="tasker_event_glucodata_alarn">Glucose alarm</string>
     <string name="tasker_wear_connection_state">Wear connection</string>
     <string name="tasker_android_auto_connection_state">Android Auto connection</string>
+    <string name="tasker_target_range_state">Glucose range change</string>
 
     <string name="glucose_label">Glucose</string>
     <string name="glucose_html_label">Glucose value in unit from Juggluco settings</string>
