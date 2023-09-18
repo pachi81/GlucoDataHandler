@@ -76,7 +76,7 @@
     <string name="pref_color_ok">Kolor w zakresie docelowym</string>
     <string name="pref_color_ok_summary">Kolor dla wartości stęż. glukozy w zakresie docelowym.</string>
     <string name="pref_notification">Powiadomienie</string>
-    <string name="pref_notification_summary">Wyświetla stałe powiadomienie z bieżącą strzałką trendu, wartością stęż. glukozy i deltą na pasku stanu.</string>
+    <string name="pref_notification_summary">Wyświetla stałe powiadomienie z bieżącą strzałką trendu, wartością stęż. glukozy i deltą na pasku stanu.\nThis notification prevents Android stopping this app.</string>
     <string name="pref_notification_icon">Ikona w pasku stanu</string>
     <string name="pref_notification_icon_summary">Styl małej ikony w pasku stanu w powiadomieniu.</string>
     <string name="pref_notification_big_icon">Duża ikona w pasku stanu</string>

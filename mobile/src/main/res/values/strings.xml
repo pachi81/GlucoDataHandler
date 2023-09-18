@@ -77,7 +77,7 @@
     <string name="pref_color_ok">Target color</string>
     <string name="pref_color_ok_summary">Color for glucose values in the target range.</string>
     <string name="pref_notification">Notification</string>
-    <string name="pref_notification_summary">Shows a permanent notification with the current trend arrow, glucose and delta value in the status bar.</string>
+    <string name="pref_notification_summary">Shows a permanent notification with the current trend arrow, glucose and delta value in the status bar.\nThis notification prevents Android stopping this app.</string>
     <string name="pref_notification_icon">Status bar icon</string>
     <string name="pref_notification_icon_summary">Style of the small status bar icon of the notification.</string>
     <string name="pref_notification_big_icon">Big status bar icon</string>
