@@ -28,15 +28,16 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         private var connectedNodes = Collections.synchronizedMap(mutableMapOf<String,Node>())
         private val nodeBatteryLevel = Collections.synchronizedMap(mutableMapOf<String,Int>())
         val nodesConnected: Boolean get() = connectedNodes.size>0
-        fun getBatterLevels(): List<Int> {
-            val batterLevels = connectedNodes.map { node ->
+        fun getBatterLevels(addMissing: Boolean = true): List<Int> {
+            val batterLevels = mutableListOf<Int>()
+            connectedNodes.forEach { node ->
                 (if (nodeBatteryLevel.containsKey(node.key)) {
-                    nodeBatteryLevel.getValue(node.key)
+                    batterLevels.add(nodeBatteryLevel.getValue(node.key))
                 }
-                else {
-                    -1
+                else if (addMissing) {
+                    batterLevels.add(-1)
                 })
-            }.toList()
+            }
             return batterLevels
         }
 

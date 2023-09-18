@@ -115,8 +115,10 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 NotifyDataSource.CAPILITY_INFO,
                 NotifyDataSource.BATTERY_LEVEL,
                 NotifyDataSource.OBSOLETE_VALUE)   // to trigger re-start for the case of stopped by the system
-            if (appSource == AppSource.PHONE_APP)
+            if (appSource == AppSource.PHONE_APP) {
                 filter.add(NotifyDataSource.SETTINGS)   // only send setting changes from phone to wear!
+                filter.add(NotifyDataSource.CAR_CONNECTION)
+            }
             InternalNotifier.addNotifier(this, filter)
 
             Log.d(LOG_ID, "Register Receiver")
@@ -198,7 +200,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
     override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString() + " and extras " + extras.toString())
-            if (dataSource != NotifyDataSource.MESSAGECLIENT && dataSource != NotifyDataSource.NODE_BATTERY_LEVEL && (dataSource != NotifyDataSource.SETTINGS || extras != null)) {
+            if (dataSource != NotifyDataSource.MESSAGECLIENT && dataSource != NotifyDataSource.NODE_BATTERY_LEVEL && (dataSource != NotifyDataSource.SETTINGS || extras != null) && (dataSource != NotifyDataSource.CAR_CONNECTION) ) {
                 sendToConnectedDevices(dataSource, extras!!)
             }
             if (dataSource == NotifyDataSource.MESSAGECLIENT || dataSource == NotifyDataSource.BROADCAST) {

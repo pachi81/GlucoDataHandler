@@ -134,6 +134,24 @@
                 <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".tasker.WearConnectionState"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/tasker_wear_connection_state">
+            <intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.EDIT_CONDITION" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".tasker.AndroidAutoConnectionState"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/tasker_android_auto_connection_state">
+            <intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.EDIT_CONDITION" />
+            </intent-filter>
+        </activity>
 
         <receiver
             android:name=".common.receiver.GlucoseDataReceiver"

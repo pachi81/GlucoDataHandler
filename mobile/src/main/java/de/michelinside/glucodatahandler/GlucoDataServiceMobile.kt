@@ -8,6 +8,8 @@ import android.util.Log
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
+import de.michelinside.glucodatahandler.tasker.setAndroidAutoConnectionState
+import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.widget.FloatingWidget
 import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
 
@@ -63,6 +65,13 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             Log.d(LOG_ID, "OnNotifyData called for source " + dataSource.toString())
             start(context)
             super.OnNotifyData(context, dataSource, extras)
+            if (dataSource == NotifyDataSource.CAPILITY_INFO) {
+                context.setWearConnectionState(WearPhoneConnection.nodesConnected)
+            }
+            if (dataSource == NotifyDataSource.CAR_CONNECTION) {
+                // only count nodes, which have already communicated...
+                context.setAndroidAutoConnectionState(CarModeReceiver.connected)
+            }
             if (extras != null) {
                 if (dataSource == NotifyDataSource.MESSAGECLIENT || dataSource == NotifyDataSource.BROADCAST) {
                     val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
