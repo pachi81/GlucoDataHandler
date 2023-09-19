@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">GlucoDataHandler</string>
 
-    <string name="tasker_event_glucodata">New glucose value</string>
-    <string name="tasker_event_glucodata_obsolete">Obsolete value</string>
-    <string name="tasker_event_glucodata_alarn">Glucose alarm</string>
-    <string name="tasker_wear_connection_state">Wear connection</string>
-    <string name="tasker_android_auto_connection_state">Android Auto connection</string>
-    <string name="tasker_target_range_state">Glucose range change</string>
+    <string name="tasker_event_glucodata">Nowa wartość glukozy</string>
+    <string name="tasker_event_glucodata_obsolete">Wartość przestarzała</string>
+    <string name="tasker_event_glucodata_alarn">Alarm dotyczący stężenia glukozy</string>
+    <string name="tasker_wear_connection_state">Połączenie z zegarkiem</string>
+    <string name="tasker_android_auto_connection_state">Połączenie z Android Auto</string>
+    <string name="tasker_target_range_state">Zmiana zakresu stężenia glukozy</string>
 
     <string name="glucose_label">Glukoza</string>
     <string name="glucose_html_label">Wartość glukozy w jednostkach z ustawień Juggluco</string>
@@ -32,8 +32,8 @@
     <string name="delta_html_label">Delta bieżącej i poprzedniej wartości glukozy (na minutę)</string>
     <string name="unit_label">Jednostka</string>
     <string name="unit_html_label">Jednostka wartości glukozy (mg/dl lub mmol/l)</string>
-    <string name="obsolete_time_label">Time since last value</string>
-    <string name="obsolete_time_html_label">Time in minutes (5 or 10) since last value was received.</string>
+    <string name="obsolete_time_label">Czas od ostatniej wartości</string>
+    <string name="obsolete_time_html_label">Czas w minutach (5 lub 10) od otrzymania ostatniej wartości.</string>
 
     <string name="activity_main_connected_label">Zegarek: połączony (%1$s)</string>
     <string name="activity_main_disconnected_label">Zegarek: niepołączony</string>
@@ -41,7 +41,7 @@
     <string name="activity_main_car_disconnected_label">Android Auto: niepołączony</string>
 
     <string name="pref_cat_notification">Powiadomienie</string>
-    <string name="pref_cat_floating_widget">Floating widget</string>
+    <string name="pref_cat_floating_widget">Pływający widget</string>
     <string name="pref_cat_android_auto">Android Auto</string>
     <string name="pref_cat_xdrip">XDrip+</string>
     <string name="pref_cat_forward_broadcast">Glucodata broadcast (Transmisja danych dot. glukozy)</string>
@@ -78,7 +78,7 @@
     <string name="pref_color_ok">Kolor w zakresie docelowym</string>
     <string name="pref_color_ok_summary">Kolor dla wartości stęż. glukozy w zakresie docelowym.</string>
     <string name="pref_notification">Powiadomienie</string>
-    <string name="pref_notification_summary">Wyświetla stałe powiadomienie z bieżącą strzałką trendu, wartością stęż. glukozy i deltą na pasku stanu.\nThis notification prevents Android stopping this app.</string>
+    <string name="pref_notification_summary">Wyświetla stałe powiadomienie z bieżącą strzałką trendu, wartością stęż. glukozy i deltą na pasku stanu.\n To powiadomienie zapobiega zatrzymaniu tej aplikacji przez system Android.</string>
     <string name="pref_notification_icon">Ikona w pasku stanu</string>
     <string name="pref_notification_icon_summary">Styl małej ikony w pasku stanu w powiadomieniu.</string>
     <string name="pref_notification_big_icon">Duża ikona w pasku stanu</string>
@@ -89,20 +89,21 @@
     <string name="pref_second_notification_summary">Pokaż drugie powiadomienie bez treści, aby widoczna była dodatkowa ikona na pasku stanu.</string>
     <string name="pref_second_notification_icon">Druga ikona w pasku stanu</string>
     <string name="pref_second_notification_icon_summary">Styl małej ikony w pasku stanu w drugim powiadomieniu.</string>
-    <string name="pref_floating_widget">Floating widget</string>
-    <string name="pref_floating_widget_summary">Show glucose, trend, delta and time as floating widget.</string>
-    <string name="pref_floating_widget_size">Size</string>
-    <string name="pref_floating_widget_size_summary">Change size of the floating widget</string>
-    <string name="pref_floating_widget_style">Style</string>
-    <string name="pref_floating_widget_style_summary">Style of the floating widget.</string>
+    <string name="pref_floating_widget">Pływający widget</string>
+    <string name="pref_floating_widget_summary">Pokazuje poziom glukozy, trend, deltę i czas jako pływający widget.\nNależy również aktywować powiadomienie, aby zapobiec zamknięciu aplikacji przez system Android.</string>
+    <string name="pref_floating_widget_size">Rozmiar</string>
+    <string name="pref_floating_widget_size_summary">Zmiana rozmiaru pływającego widżetu</string>
+    <string name="pref_floating_widget_style">Styl</string>
+    <string name="pref_floating_widget_style_summary">Styl pływającego widżetu.</string>
 
     <string name="pref_status_bar_icon_app">Ikona aplikacji</string>
     <string name="pref_status_bar_icon_glucose">Wartość glukozy</string>
     <string name="pref_status_bar_icon_trend">Strzałka trendu</string>
     <string name="pref_status_bar_icon_delta">Delta</string>
 
-    <string name="pref_global_broadcast">Transmisja globalna</string>
     <string name="pref_wear_notification">Zegarek: wibracje</string>
+
+    <string name="pref_global_broadcast">Transmisja globalna</string>
 
     <string name="select_receiver_show_all">Pokaż wszystko</string>
     <string name="select_receiver_no_glucodata_receiver">Nie znaleziono odbiornika!</string>
@@ -110,12 +111,14 @@
     <string name="button_cancel">Anuluj</string>
 
     <string name="menu_settings">Ustawienia</string>
-    <string name="menu_group_github">GitHub</string>
+    <string name="menu_group_github" translatable="false">GitHub</string>
     <string name="menu_update">Aktualizacje</string>
-    <string name="menu_support">Wsparcie</string>
+    <string name="menu_support" translatable="false">Wsparcie</string>
     <string name="menu_help">Pomoc</string>
 
-    <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README_PL.md</string>
+    <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
+    <string name="update_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/releases</string>
+    <string name="support_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/issues</string>
 
     <string name="widget_glucose">Glukoza</string>
     <string name="widget_glucose_trend">Glukoza i trend</string>
