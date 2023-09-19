@@ -1,13 +1,11 @@
 <resources>
     <string name="app_name">GlucoDataHandler</string>
-
     <string name="tasker_event_glucodata">Nowa wartość glukozy</string>
     <string name="tasker_event_glucodata_obsolete">Wartość przestarzała</string>
     <string name="tasker_event_glucodata_alarn">Alarm dotyczący stężenia glukozy</string>
     <string name="tasker_wear_connection_state">Połączenie z zegarkiem</string>
     <string name="tasker_android_auto_connection_state">Połączenie z Android Auto</string>
     <string name="tasker_target_range_state">Zmiana zakresu stężenia glukozy</string>
-
     <string name="glucose_label">Glukoza</string>
     <string name="glucose_html_label">Wartość glukozy w jednostkach z ustawień Juggluco</string>
     <string name="sensor_id_label">Numer sensora</string>
@@ -34,12 +32,10 @@
     <string name="unit_html_label">Jednostka wartości glukozy (mg/dl lub mmol/l)</string>
     <string name="obsolete_time_label">Czas od ostatniej wartości</string>
     <string name="obsolete_time_html_label">Czas w minutach (5 lub 10) od otrzymania ostatniej wartości.</string>
-
     <string name="activity_main_connected_label">Zegarek: połączony (%1$s)</string>
     <string name="activity_main_disconnected_label">Zegarek: niepołączony</string>
     <string name="activity_main_car_connected_label">Android Auto: połączony</string>
     <string name="activity_main_car_disconnected_label">Android Auto: niepołączony</string>
-
     <string name="pref_cat_notification">Powiadomienie</string>
     <string name="pref_cat_floating_widget">Pływający widget</string>
     <string name="pref_cat_android_auto">Android Auto</string>
@@ -47,7 +43,6 @@
     <string name="pref_cat_forward_broadcast">Glucodata broadcast (Transmisja danych dot. glukozy)</string>
     <string name="pref_target_range">Zakres docelowy</string>
     <string name="pref_cat_colors">Kolory</string>
-
     <string name="pref_switch_notification">Wartości fikcyjne</string>
     <string name="pref_high_value">Wysokie stęż. glukozy</string>
     <string name="pref_high_value_summary">Granica dla wysokich wartości stężenia glukozy.\nJeśli aktywowałeś alarm wysokiego stęż. glukozy w Juggluco, nie musisz ustawiać tej wartości.</string>
@@ -95,31 +90,24 @@
     <string name="pref_floating_widget_size_summary">Zmiana rozmiaru pływającego widżetu</string>
     <string name="pref_floating_widget_style">Styl</string>
     <string name="pref_floating_widget_style_summary">Styl pływającego widżetu.</string>
-
     <string name="pref_status_bar_icon_app">Ikona aplikacji</string>
     <string name="pref_status_bar_icon_glucose">Wartość glukozy</string>
     <string name="pref_status_bar_icon_trend">Strzałka trendu</string>
     <string name="pref_status_bar_icon_delta">Delta</string>
-
     <string name="pref_wear_notification">Zegarek: wibracje</string>
-
     <string name="pref_global_broadcast">Transmisja globalna</string>
-
     <string name="select_receiver_show_all">Pokaż wszystko</string>
     <string name="select_receiver_no_glucodata_receiver">Nie znaleziono odbiornika!</string>
     <string name="button_ok">OK</string>
     <string name="button_cancel">Anuluj</string>
-
     <string name="menu_settings">Ustawienia</string>
     <string name="menu_group_github" translatable="false">GitHub</string>
     <string name="menu_update">Aktualizacje</string>
     <string name="menu_support" translatable="false">Wsparcie</string>
     <string name="menu_help">Pomoc</string>
-
     <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
     <string name="update_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/releases</string>
     <string name="support_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/issues</string>
-
     <string name="widget_glucose">Glukoza</string>
     <string name="widget_glucose_trend">Glukoza i trend</string>
     <string name="widget_glucose_trend_delta">Glukoza, trend i delta</string>
