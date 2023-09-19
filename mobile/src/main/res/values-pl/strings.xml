@@ -73,7 +73,7 @@
     <string name="pref_color_ok">Kolor w zakresie docelowym</string>
     <string name="pref_color_ok_summary">Kolor dla wartości stęż. glukozy w zakresie docelowym.</string>
     <string name="pref_notification">Powiadomienie</string>
-    <string name="pref_notification_summary">Wyświetla stałe powiadomienie z bieżącą strzałką trendu, wartością stęż. glukozy i deltą na pasku stanu.\n To powiadomienie zapobiega zatrzymaniu tej aplikacji przez system Android.</string>
+    <string name="pref_notification_summary">Wyświetla stałe powiadomienie z bieżącą strzałką trendu, wartością stęż. glukozy i deltą na pasku stanu.\nTo powiadomienie zapobiega zatrzymaniu tej aplikacji przez system Android.</string>
     <string name="pref_notification_icon">Ikona w pasku stanu</string>
     <string name="pref_notification_icon_summary">Styl małej ikony w pasku stanu w powiadomieniu.</string>
     <string name="pref_notification_big_icon">Duża ikona w pasku stanu</string>
@@ -105,9 +105,7 @@
     <string name="menu_update">Aktualizacje</string>
     <string name="menu_support" translatable="false">Wsparcie</string>
     <string name="menu_help">Pomoc</string>
-    <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
-    <string name="update_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/releases</string>
-    <string name="support_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/issues</string>
+    <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README_PL.md</string>
     <string name="widget_glucose">Glukoza</string>
     <string name="widget_glucose_trend">Glukoza i trend</string>
     <string name="widget_glucose_trend_delta">Glukoza, trend i delta</string>
