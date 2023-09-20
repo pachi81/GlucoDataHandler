@@ -1,5 +1,5 @@
-[<img src='images/de.png' height=10> Deutsche Version](README_DE.md)  
-[<img src='images/pl.png' height=10> Wersja polska](README_PL.md)
+[<img src='images/en.png' height=10> Wersja w j. angielskim](README.md)  
+[<img src='images/de.png' height=10> Wersja w j. niemieckim](README_DE.md)
 
 # Glucose Data Handler
 ## Funkcje
@@ -18,13 +18,13 @@ Aktualną wersję można pobrać [tutaj](https://github.com/pachi81/GlucoDataHan
 
 ## Instalacja
 
--> [Instrukcja instalacji](./INSTALLATION.md)
+-> [Instrukcja instalacji](./INSTALLATION_PL.md)
 
 ## Ustawienia
 
 ## Zegarek
 
-<img src='images/settings_wear.png' width=200>
+<img src='images/pl/settings_wear.png' width=200>
 
 * Wibracja: zegarek wibruje, jeśli zakres docelowy został przekroczony i powtarza wibracje tak długo, jak długo glukoza pozostaje poza zakresem docelowym
 * Kolorowy AOD: niektóre tarcze zegarków obsługują tylko kolorowe komplikacje dla zawsze włączonego ekranu w trybie AOD, jeśli nie ma monochromatycznego, musisz aktywować tę funkcję
@@ -69,7 +69,7 @@ Istnieje kilka komplikacji dla różnych typów komplikacji w ramach Wear OS, kt
 
 <img src='images/complications_delta.png' width=200>
 
-* Tempo (trend) jako wartość i strzałka (strzałka obraca się dynamicznie między +36 (+2,0) (↑) a -36 (-2,0)(↓) i pokazuje podwójne strzałki od +54 (+3,0) (⇈) i od -54 (-3,0) (⇊))
+* Tempo (trend) jako wartość i strzałka (strzałka obraca się dynamicznie między +2,0 (↑) a -2,0(↓) i pokazuje podwójne strzałki od +3,0 (⇈) i od -3,0 (⇊))
 
 <img src='images/complications_rate.png' width=200>
 
