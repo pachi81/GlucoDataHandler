@@ -93,6 +93,17 @@ class GlucodataEvent : Activity(), TaskerPluginConfig<GlucodataValues> {
     }
 }
 
+class GlucodataAlarmEvent : Activity(), TaskerPluginConfig<GlucodataValues> {
+    override val context: Context get() = applicationContext
+    override fun assignFromInput(input: TaskerInput<GlucodataValues>) {}
+    override val inputForTasker = TaskerInput(GlucodataValues())
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        GlucodataEventHelper(this).finishForTasker()
+    }
+}
+
 
 class GlucodataOsoleteValuesChangedRunner : TaskerPluginRunnerConditionEvent<GlucodataObsoleteValues, GlucodataObsoleteValues, GlucodataObsoleteValues>() {
     override fun getSatisfiedCondition(context: Context, input: TaskerInput<GlucodataObsoleteValues>, update: GlucodataObsoleteValues?): TaskerPluginResultCondition<GlucodataObsoleteValues> {
@@ -125,6 +136,9 @@ object TaskerDataReceiver: NotifierInterface {
             if (dataSource == NotifyDataSource.OBSOLETE_VALUE) {
                 GlucodataObsoleteEvent::class.java.requestQuery(context, GlucodataObsoleteValues())
             } else {
+                if ( extras != null && extras.containsKey(ReceiveData.ALARM) && (extras.getInt(ReceiveData.ALARM,0) and 8) != 0) {
+                    GlucodataAlarmEvent::class.java.requestQuery(context, GlucodataValues())
+                }
                 GlucodataEvent::class.java.requestQuery(context, GlucodataValues())
             }
         } catch (exc: Exception) {

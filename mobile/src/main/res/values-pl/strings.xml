@@ -2,7 +2,7 @@
     <string name="app_name">GlucoDataHandler</string>
     <string name="tasker_event_glucodata">Nowa wartość glukozy</string>
     <string name="tasker_event_glucodata_obsolete">Wartość przestarzała</string>
-    <string name="tasker_event_glucodata_alarn">Alarm dotyczący stężenia glukozy</string>
+    <string name="tasker_event_glucodata_alarm">Alarm dotyczący stężenia glukozy</string>
     <string name="tasker_wear_connection_state">Połączenie z zegarkiem</string>
     <string name="tasker_android_auto_connection_state">Połączenie z Android Auto</string>
     <string name="tasker_target_range_state">Zmiana zakresu stężenia glukozy</string>
