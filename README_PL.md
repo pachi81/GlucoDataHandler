@@ -36,7 +36,7 @@ Aktualną wersję można pobrać [tutaj](https://github.com/pachi81/GlucoDataHan
 
 Ustawienia dla aplikacji na telefon opisane są w samej aplikacji. Ustawienia z telefonu zostaną przesłane do zegarka, jeśli jest on podłączony.
 
-<img src='images/settings_phone_1.png' width=300>
+<img src='images/pl/settings_phone_1.jpg' width=300> <img src='images/pl/settings_phone_2.jpg' width=300> <img src='images/pl/settings_phone_3.jpg' width=300> <img src='images/pl/settings_phone_4.jpg' width=300>
 
 ## Widgety
 Dostępnych jest kilka rodzajów widgetów na telefon:
