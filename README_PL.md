@@ -1,5 +1,5 @@
-[<img src='images/en.png' height=10> Wersja w j. angielskim](README.md)  
-[<img src='images/de.png' height=10> Wersja w j. niemieckim](README_DE.md)
+[<img src='images/en.png' height=10> English version](README.md)  
+[<img src='images/de.png' height=10> Deutsche Version](README_DE.md)
 
 # Glucose Data Handler
 ## Funkcje
