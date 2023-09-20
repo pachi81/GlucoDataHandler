@@ -85,7 +85,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         val foregroundChannel = NotificationChannel(
             FOREGROUND_CHANNEL_ID,
             FOREGROUND_CHANNEL_NAME,
-            NotificationManager.IMPORTANCE_DEFAULT
+            NotificationManager.IMPORTANCE_HIGH
         )
         notificationChannel.setSound(null, null)   // silent
         notificationMgr.createNotificationChannel(foregroundChannel)
