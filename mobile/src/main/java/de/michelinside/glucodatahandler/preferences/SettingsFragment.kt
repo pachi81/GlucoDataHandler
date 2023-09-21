@@ -91,7 +91,9 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 Constants.SHARED_PREF_COLOR_OUT_OF_RANGE,
                 Constants.SHARED_PREF_COLOR_OK -> {
                     ReceiveData.updateSettings(sharedPreferences!!)
-                    InternalNotifier.notify(requireContext(), NotifyDataSource.SETTINGS, ReceiveData.getSettingsBundle())
+                    val extras = Bundle()
+                    extras.putBundle(Constants.SETTINGS_BUNDLE, ReceiveData.getSettingsBundle())
+                    InternalNotifier.notify(requireContext(), NotifyDataSource.SETTINGS, extras)
                 }
                 Constants.SHARED_PREF_CAR_NOTIFICATION -> {
                     CarModeReceiver.updateSettings(sharedPreferences!!)

@@ -87,7 +87,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             FOREGROUND_CHANNEL_NAME,
             NotificationManager.IMPORTANCE_HIGH
         )
-        notificationChannel.setSound(null, null)   // silent
+        foregroundChannel.setSound(null, null)   // silent
         notificationMgr.createNotificationChannel(foregroundChannel)
     }
 

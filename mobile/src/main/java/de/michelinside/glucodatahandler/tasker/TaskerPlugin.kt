@@ -136,7 +136,8 @@ object TaskerDataReceiver: NotifierInterface {
             if (dataSource == NotifyDataSource.OBSOLETE_VALUE) {
                 GlucodataObsoleteEvent::class.java.requestQuery(context, GlucodataObsoleteValues())
             } else {
-                if ( extras != null && extras.containsKey(ReceiveData.ALARM) && (extras.getInt(ReceiveData.ALARM,0) and 8) != 0) {
+                if ((ReceiveData.alarm and 8) != 0) {
+                    Log.d(LOG_ID, "sending alarm event")
                     GlucodataAlarmEvent::class.java.requestQuery(context, GlucodataValues())
                 }
                 GlucodataEvent::class.java.requestQuery(context, GlucodataValues())

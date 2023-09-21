@@ -243,7 +243,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
                 if (extras.containsKey(Constants.SETTINGS_BUNDLE)) {
                     Log.d(LOG_ID, "Glucose settings receceived from " + p0.sourceNodeId + ": " + extras.toString())
-                    val bundle = if (extras.containsKey(Constants.SETTINGS_BUNDLE)) extras.getBundle(Constants.SETTINGS_BUNDLE) else extras
+                    val bundle = extras.getBundle(Constants.SETTINGS_BUNDLE)
                     ReceiveData.setSettings(context, bundle!!)
                     InternalNotifier.notify(context, NotifyDataSource.SETTINGS, bundle)
                 }
