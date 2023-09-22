@@ -36,7 +36,6 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
     private lateinit var txtDelta: TextView
     private lateinit var txtTime: TextView
     private lateinit var sharedPref: SharedPreferences
-    private val shortTimeFormat: DateFormat = DateFormat.getTimeInstance(DateFormat.SHORT)
     private val LOG_ID = "GlucoDataHandler.FloatingWidget"
 
     @SuppressLint("InflateParams")
@@ -107,7 +106,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
         }
         viewIcon.setImageIcon(Utils.getRateAsIcon())
         txtDelta.text =ReceiveData.getDeltaAsString()
-        txtTime.text = shortTimeFormat.format(Date(ReceiveData.time))
+        txtTime.text = ReceiveData.getElapsedTimeMinuteAsString(context, false)
 
         val resizeFactor = sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, 3).toFloat()
         txtBgValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+resizeFactor*4f)
@@ -124,7 +123,8 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
                     NotifyDataSource.BROADCAST,
                     NotifyDataSource.MESSAGECLIENT,
                     NotifyDataSource.SETTINGS,
-                    NotifyDataSource.OBSOLETE_VALUE)   // to trigger re-start for the case of stopped by the system
+                    NotifyDataSource.OBSOLETE_VALUE,
+                    NotifyDataSource.TIME_VALUE)   // to trigger re-start for the case of stopped by the system
                 InternalNotifier.addNotifier(this, filter)
                 if (Settings.canDrawOverlays(context)) {
                     setContent()

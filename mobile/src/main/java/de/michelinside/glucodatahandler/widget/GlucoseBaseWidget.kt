@@ -20,7 +20,6 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
 import java.text.DateFormat
-import java.util.*
 
 
 enum class WidgetType(val cls: Class<*>) {
@@ -34,7 +33,6 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
                                  private val hasTrend: Boolean = false,
                                  private val hasDelta: Boolean = false,
                                  private val hasTime: Boolean = false): AppWidgetProvider(), NotifierInterface {
-    private val shortTimeFormat: DateFormat = DateFormat.getTimeInstance(DateFormat.SHORT)
     private var init = false
 
     companion object {
@@ -86,7 +84,8 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
                 NotifyDataSource.BROADCAST,
                 NotifyDataSource.MESSAGECLIENT,
                 NotifyDataSource.SETTINGS,
-                NotifyDataSource.OBSOLETE_VALUE
+                NotifyDataSource.OBSOLETE_VALUE,
+                NotifyDataSource.TIME_VALUE
             )   // to trigger re-start for the case of stopped by the system
             InternalNotifier.addNotifier(this, filter)
             init = true
@@ -159,7 +158,7 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
         }
 
         if (hasTime) {
-            remoteViews.setTextViewText(R.id.timeText, shortTimeFormat.format(Date(ReceiveData.time)))
+            remoteViews.setTextViewText(R.id.timeText, ReceiveData.getElapsedTimeMinuteAsString(context, false))
         }
         if (hasDelta)
             remoteViews.setTextViewText(R.id.deltaText, ReceiveData.getDeltaAsString())

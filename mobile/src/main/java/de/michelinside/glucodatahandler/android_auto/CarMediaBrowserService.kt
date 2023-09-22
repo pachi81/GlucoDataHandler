@@ -19,7 +19,6 @@ import de.michelinside.glucodatahandler.common.Utils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
-import java.util.*
 
 class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GlucoDataHandler.CarMediaBrowserService"
@@ -56,7 +55,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 NotifyDataSource.BROADCAST,
                 NotifyDataSource.MESSAGECLIENT,
                 NotifyDataSource.SETTINGS,
-                NotifyDataSource.OBSOLETE_VALUE))
+                NotifyDataSource.OBSOLETE_VALUE,
+                NotifyDataSource.TIME_VALUE))
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -143,7 +143,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                     )
                     .putString(
                         MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE,
-                        ReceiveData.timeformat.format(Date(ReceiveData.time))
+                        ReceiveData.getElapsedTimeMinuteAsString(this, false)
                     )
                     .putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, getIcon(400)!!)
                     .build()
@@ -153,7 +153,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         }
         val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
             .setMediaId(MEDIA_GLUCOSE_ID)
-            .setTitle("Delta: " + ReceiveData.getDeltaAsString() + "\n" + ReceiveData.timeformat.format(Date(ReceiveData.time)))
+            .setTitle("Delta: " + ReceiveData.getDeltaAsString() + "\n" + ReceiveData.getElapsedTimeMinuteAsString(this, false))
             //.setSubtitle(ReceiveData.timeformat.format(Date(ReceiveData.time)))
             .setIconBitmap(getIcon()!!)
         return MediaBrowserCompat.MediaItem(

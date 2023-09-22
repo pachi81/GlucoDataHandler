@@ -16,8 +16,8 @@ import kotlin.random.Random
 
 object Utils {
     private val LOG_ID = "GlucoDataHandler.Utils"
-    fun round(value: Float, scale: Int): Float {
-        return value.toBigDecimal().setScale( scale, RoundingMode.HALF_UP).toFloat()
+    fun round(value: Float, scale: Int, roundingMode: RoundingMode = RoundingMode.HALF_UP): Float {
+        return value.toBigDecimal().setScale( scale, roundingMode).toFloat()
     }
 
     fun rangeValue(value: Float, min: Float, max: Float): Float {

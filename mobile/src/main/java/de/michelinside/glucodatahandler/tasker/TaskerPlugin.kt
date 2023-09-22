@@ -67,7 +67,7 @@ open class GlucodataValues {
 class GlucodataObsoleteValues : GlucodataValues() {
     @field:TaskerInputField("obsolete_time")
     @get:TaskerOutputVariable("obsolete_time", R.string.obsolete_time_label, R.string.obsolete_time_html_label)
-    val obsolete_time: Long = ReceiveData.getTimeSinceLastValueMinute()
+    val obsolete_time: Long = ReceiveData.getElapsedTimeMinute()
 }
 
 class GlucodataValuesChangedRunner : TaskerPluginRunnerConditionEvent<GlucodataValues, GlucodataValues, GlucodataValues>() {

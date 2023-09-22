@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.notifier.*
+import java.math.RoundingMode
 import java.text.DateFormat
 import java.util.*
 import kotlin.math.abs
@@ -224,8 +225,19 @@ object ReceiveData {
         return Utils.round(timeDiff.toFloat()/60000, 0).toLong()
     }
 
-    fun getTimeSinceLastValueMinute(): Long {
-        return Utils.round((System.currentTimeMillis()-time).toFloat()/60000, 0).toLong()
+    fun getElapsedTimeMinute(roundingMode: RoundingMode = RoundingMode.HALF_UP): Long {
+        return Utils.round((System.currentTimeMillis()-time).toFloat()/60000, 0, roundingMode).toLong()
+    }
+
+    fun getElapsedTimeMinuteAsString(context: Context, short: Boolean): String {
+        if (time == 0L)
+            return "--"
+        val elapsed_time = getElapsedTimeMinute()
+        if (elapsed_time > 60)
+            return context.getString(R.string.elapsed_time_hour)
+        if (short)
+            return String.format(context.getString(R.string.elapsed_time_short), elapsed_time)
+        return String.format(context.getString(R.string.elapsed_time_long), elapsed_time)
     }
 
     fun handleIntent(context: Context, dataSource: NotifyDataSource, extras: Bundle?) : Boolean
@@ -243,7 +255,6 @@ object ReceiveData {
             val curTimeDiff = extras.getLong(TIME) - time
             if(curTimeDiff >= 1000) // check for new value received
             {
-                obsoleteNotify.cancel(context)
                 source = dataSource
                 sensorID = extras.getString(SERIAL) //Name of sensor
                 glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting

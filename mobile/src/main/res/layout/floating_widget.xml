@@ -16,7 +16,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="1"
+                    android:text="---"
                     android:textSize="60sp"
                     android:maxLines="1"
                     tools:ignore="HardcodedText,NestedWeights" />
@@ -29,7 +29,7 @@
                     android:textSize="18sp"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:text="23:59 PM"
+                    android:text="--"
                     android:textColor="@color/transparent_widget_textcolor"
                     tools:ignore="HardcodedText,NestedWeights,SmallSp"/>
             </TableRow>
@@ -57,7 +57,7 @@
                     android:layout_height="match_parent"
                     android:textSize="18sp"
                     android:gravity="center"
-                    android:text="+0.06"
+                    android:text="--"
                     android:maxLines="1"
                     android:textColor="@color/transparent_widget_textcolor"
                     tools:ignore="HardcodedText,SmallSp" />

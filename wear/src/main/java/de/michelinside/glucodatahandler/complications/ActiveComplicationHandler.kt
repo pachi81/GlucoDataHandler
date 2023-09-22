@@ -58,7 +58,8 @@ object ActiveComplicationHandler: NotifierInterface {
                     // upgrade all at once can cause a disappear of icon and images in ambient mode,
                     // so use some delay!
                     complicationClasses.forEach {
-                        Thread.sleep(50)  // add delay to prevent disappearing complication icons in ambient mode
+                        if (dataSource != NotifyDataSource.TIME_VALUE)
+                            Thread.sleep(50)  // add delay to prevent disappearing complication icons in ambient mode
                         ComplicationDataSourceUpdateRequester
                             .create(
                                 context = context,
@@ -74,7 +75,8 @@ object ActiveComplicationHandler: NotifierInterface {
                         val isComplication =
                             BgValueComplicationService::class.java.isAssignableFrom(Class.forName(it.name))
                         if (isComplication) {
-                            Thread.sleep(10)
+                            if (dataSource != NotifyDataSource.TIME_VALUE)
+                                Thread.sleep(10)
                             ComplicationDataSourceUpdateRequester
                                 .create(
                                     context = context,

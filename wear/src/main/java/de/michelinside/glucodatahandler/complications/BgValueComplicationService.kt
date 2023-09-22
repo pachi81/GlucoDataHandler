@@ -12,7 +12,6 @@ import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
 import de.michelinside.glucodatahandler.common.*
 import java.text.DateFormat
-import java.util.*
 
 
 abstract class BgValueComplicationService : SuspendingComplicationDataSourceService() {
@@ -193,9 +192,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         plainText(ReceiveData.getDeltaAsString())
 
     fun timeText(short: Boolean = false): PlainComplicationText {
-        if (short)
-            return plainText(shortTimeformat.format(Date(ReceiveData.time)))
-        return plainText(ReceiveData.timeformat.format(Date(ReceiveData.time)))
+        return plainText(ReceiveData.getElapsedTimeMinuteAsString(this, short))
     }
 
     fun trendText(): PlainComplicationText =
