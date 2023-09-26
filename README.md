@@ -30,7 +30,7 @@ You can download the current version [here](https://github.com/pachi81/GlucoData
 * Colored AOD: some watchfaces only support colored complications for the always on display, if there is no monochrom one, then you have to activate this feature
 * Big trend-arrow: for watches like Samsung Galaxy Watch 5 Pro until Wear OS 3, the trend arrow is rendered too big, so you can disable this setting to have a smaller trend-arrow
 * Foreground: recommended to prevent Wear OS from closing this app (also try deactivating Play Protect as this kills non Playstore apps)
-* Relative time: shows the relative time since the last value was received instead of the timestamp of the last value. This may not work correct on some watches related to Android battery optimizations.
+* Relative time: shows the relative time in minutes since the last value was received instead of the timestamp of the last value. This may not work correct on some watches related to Android battery optimizations.
 * other settings: all other settings are made in the phone app
 
 ### Phone
