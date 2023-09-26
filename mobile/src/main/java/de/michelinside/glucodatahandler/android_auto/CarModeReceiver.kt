@@ -22,7 +22,7 @@ import de.michelinside.glucodatahandler.tasker.setAndroidAutoConnectionState
 import java.util.*
 
 
-object CarModeReceiver: NotifierInterface {
+object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
     private const val LOG_ID = "GlucoDataHandler.CarModeReceiver"
     private const val CHANNEL_ID = "GlucoDataNotify_Car"
     private const val CHANNEL_NAME = "Notification for Android Auto"
@@ -71,7 +71,7 @@ object CarModeReceiver: NotifierInterface {
             )
     }
 
-    fun updateSettings(sharedPref: SharedPreferences) {
+    private fun updateSettings(sharedPref: SharedPreferences) {
         enable_notification = sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, enable_notification)
         if(init && car_connected) {
             if(enable_notification)
@@ -85,7 +85,9 @@ object CarModeReceiver: NotifierInterface {
         try {
             if(!init) {
                 Log.d(LOG_ID, "initNotification called")
-                updateSettings(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE))
+                val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                sharedPref.registerOnSharedPreferenceChangeListener(this)
+                updateSettings(sharedPref)
                 createNofitication(context)
                 CarConnection(context).type.observeForever(CarModeReceiver::onConnectionStateUpdated)
                 init = true
@@ -100,6 +102,8 @@ object CarModeReceiver: NotifierInterface {
             if (init) {
                 Log.d(LOG_ID, "remNotification called")
                 CarConnection(context).type.removeObserver(CarModeReceiver::onConnectionStateUpdated)
+                val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                sharedPref.unregisterOnSharedPreferenceChangeListener(this)
                 init = false
             }
         } catch (exc: Exception) {
@@ -165,11 +169,6 @@ object CarModeReceiver: NotifierInterface {
             Log.e(LOG_ID, "showNotification exception: " + exc.toString() )
         }
     }
-/*
-    fun getGlucoseAsIcon(): Bitmap? {
-        return Utils.textToBitmap(ReceiveData.getClucoseAsString(), ReceiveData.getClucoseColor(), false, ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(), 300, 300)
-    }
-*/
 
     private fun createMessageStyle(): NotificationCompat.MessagingStyle {
         val person = Person.Builder()
@@ -219,5 +218,18 @@ object CarModeReceiver: NotifierInterface {
             .setSemanticAction(NotificationCompat.Action.SEMANTIC_ACTION_MARK_AS_READ)
             .setShowsUserInterface(false)
             .build()
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        try {
+            Log.d(LOG_ID, "onSharedPreferenceChanged called for key " + key)
+            when(key) {
+                Constants.SHARED_PREF_CAR_NOTIFICATION -> {
+                    updateSettings(sharedPreferences!!)
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
+        }
     }
 }

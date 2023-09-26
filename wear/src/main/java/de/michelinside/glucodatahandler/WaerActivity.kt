@@ -92,7 +92,6 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                         putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, isChecked)
                         apply()
                     }
-                    ReceiveData.updateSettings(sharedPref)
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Changing relative time exception: " + exc.message.toString() )
                 }

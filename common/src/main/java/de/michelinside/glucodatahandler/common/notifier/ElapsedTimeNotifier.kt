@@ -16,8 +16,8 @@ import java.text.DateFormat
 import java.util.*
 
 
-class ObsoleteNotifier: BroadcastReceiver(), SharedPreferences.OnSharedPreferenceChangeListener {
-    private val LOG_ID = "GlucoDataHandler.ObsoleteNotifier"
+class ElapsedTimeNotifier: BroadcastReceiver(), SharedPreferences.OnSharedPreferenceChangeListener {
+    private val LOG_ID = "GlucoDataHandler.ElapsedTimeNotifier"
     private val timeformat = DateFormat.getTimeInstance(DateFormat.DEFAULT)
 
     companion object {
@@ -25,8 +25,8 @@ class ObsoleteNotifier: BroadcastReceiver(), SharedPreferences.OnSharedPreferenc
         private var alarmManager: AlarmManager? = null
         private var nextObsoleteNotifySec = -1
         private var elapsedMinute = -1L
-        private var triggerTimeValues = false
         private var init: Boolean = false
+        var relativeTime = false
     }
 
     private val active: Boolean get() = (ReceiveData.getElapsedTimeMinute(RoundingMode.DOWN) <= 60)
@@ -40,7 +40,7 @@ class ObsoleteNotifier: BroadcastReceiver(), SharedPreferences.OnSharedPreferenc
         if (active) {
             if (pendingIntent == null) {
                 Log.d(LOG_ID, "init pendingIntent")
-                val i = Intent(context, ObsoleteNotifier::class.java)
+                val i = Intent(context, ElapsedTimeNotifier::class.java)
                 pendingIntent = PendingIntent.getBroadcast(
                     context,
                     42,
@@ -90,14 +90,14 @@ class ObsoleteNotifier: BroadcastReceiver(), SharedPreferences.OnSharedPreferenc
                 Log.d(LOG_ID, "send obsolete notifier")
                 InternalNotifier.notify(context, NotifyDataSource.OBSOLETE_VALUE, null)
             }
-            if (triggerTimeValues)
+            if (relativeTime)
                 InternalNotifier.notify(context, NotifyDataSource.TIME_VALUE, null)
             elapsedMinute = ReceiveData.getElapsedTimeMinute(RoundingMode.DOWN)
         }
     }
 
     private fun getTimeDelay(): Long {
-        if (triggerTimeValues) {
+        if (relativeTime) {
             return 60000L - (System.currentTimeMillis() - ReceiveData.time).mod(60000L) + 100
         } else if (!ReceiveData.isObsolete()) {
             val delayTimeSec = if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) Constants.VALUE_OBSOLETE_LONG_SEC else Constants.VALUE_OBSOLETE_SHORT_SEC
@@ -154,7 +154,7 @@ class ObsoleteNotifier: BroadcastReceiver(), SharedPreferences.OnSharedPreferenc
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
             if (sharedPreferences != null && key == Constants.SHARED_PREF_RELATIVE_TIME) {
-                triggerTimeValues = sharedPreferences.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, false)
+                relativeTime = sharedPreferences.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, false)
                 InternalNotifier.notify(GlucoDataService.context!!, NotifyDataSource.TIME_VALUE, null)
                 if (alarmManager!=null)
                     startTimer(GlucoDataService.context!!)

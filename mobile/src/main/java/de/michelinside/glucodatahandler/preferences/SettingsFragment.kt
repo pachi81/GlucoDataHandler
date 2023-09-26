@@ -14,9 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.preference.*
 import de.michelinside.glucodatahandler.BuildConfig
 import de.michelinside.glucodatahandler.R
-import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
-import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
 
@@ -81,24 +79,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
         try {
             when(key) {
-                Constants.SHARED_PREF_USE_MMOL,
-                Constants.SHARED_PREF_TARGET_MIN,
-                Constants.SHARED_PREF_TARGET_MAX,
-                Constants.SHARED_PREF_LOW_GLUCOSE,
-                Constants.SHARED_PREF_HIGH_GLUCOSE,
-                Constants.SHARED_PREF_FIVE_MINUTE_DELTA,
-                Constants.SHARED_PREF_COLOR_ALARM,
-                Constants.SHARED_PREF_COLOR_OUT_OF_RANGE,
-                Constants.SHARED_PREF_COLOR_OK,
-                Constants.SHARED_PREF_RELATIVE_TIME -> {
-                    ReceiveData.updateSettings(sharedPreferences!!)
-                    val extras = Bundle()
-                    extras.putBundle(Constants.SETTINGS_BUNDLE, ReceiveData.getSettingsBundle())
-                    InternalNotifier.notify(requireContext(), NotifyDataSource.SETTINGS, extras)
-                }
-                Constants.SHARED_PREF_CAR_NOTIFICATION -> {
-                    CarModeReceiver.updateSettings(sharedPreferences!!)
-                }
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION,
                 Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION,
                 Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD -> {

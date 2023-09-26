@@ -12,7 +12,7 @@ import java.util.*
 import kotlin.math.abs
 
 
-object ReceiveData {
+object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private const val LOG_ID = "GlucoDataHandler.ReceiveData"
     const val SERIAL = "glucodata.Minute.SerialNumber"
     const val MGDL = "glucodata.Minute.mgdl"
@@ -21,7 +21,7 @@ object ReceiveData {
     const val ALARM = "glucodata.Minute.Alarm"
     const val TIME = "glucodata.Minute.Time"
     const val DELTA = "glucodata.Minute.Delta"
-    private lateinit var obsoleteNotify: ObsoleteNotifier
+    private lateinit var obsoleteNotify: ElapsedTimeNotifier
 
     enum class AlarmType {
         NONE,
@@ -93,7 +93,6 @@ object ReceiveData {
     private var colorAlarm: Int = Color.RED
     private var colorOutOfRange: Int = Color.YELLOW
     private var colorOK: Int = Color.GREEN
-    private var useRelativeTime = false
     private var initialized = false
 
     init {
@@ -104,7 +103,7 @@ object ReceiveData {
         Log.d(LOG_ID, "initData called")
         try {
             if (!initialized) {
-                obsoleteNotify = ObsoleteNotifier()
+                obsoleteNotify = ElapsedTimeNotifier()
                 readTargets(context)
                 loadExtras(context)
                 initialized = true
@@ -234,7 +233,7 @@ object ReceiveData {
     fun getElapsedTimeMinuteAsString(context: Context, short: Boolean = true): String {
         if (time == 0L)
             return "--"
-        if (useRelativeTime) {
+        if (ElapsedTimeNotifier.relativeTime) {
             val elapsed_time = getElapsedTimeMinute()
             if (elapsed_time > 60)
                 return context.getString(R.string.elapsed_time_hour)
@@ -364,7 +363,6 @@ object ReceiveData {
         colorOK = sharedPref.getInt(Constants.SHARED_PREF_COLOR_OK, colorOK)
         colorOutOfRange = sharedPref.getInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, colorOutOfRange)
         colorAlarm = sharedPref.getInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm)
-        useRelativeTime = sharedPref.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, useRelativeTime)
         Log.i(LOG_ID, "Raw low/min/max/high set: " + lowValue.toString() + "/" + targetMinValue.toString() + "/" + targetMaxValue.toString() + "/" + highValue.toString()
                 + " mg/dl - unit: " + getUnit()
                 + " - 5 min delta: " + use5minDelta
@@ -373,6 +371,7 @@ object ReceiveData {
 
     private fun readTargets(context: Context) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        sharedPref.registerOnSharedPreferenceChangeListener(this)
         if(!sharedPref.contains(Constants.SHARED_PREF_USE_MMOL)) {
             Log.i(LOG_ID, "Upgrade to new mmol handling!")
             isMmolValue = Utils.isMmolValue(targetMinValue)
@@ -459,6 +458,30 @@ object ReceiveData {
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Reading extras exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
+        }
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        try {
+            Log.d(LOG_ID, "onSharedPreferenceChanged called for key " + key)
+            when(key) {
+                Constants.SHARED_PREF_USE_MMOL,
+                Constants.SHARED_PREF_TARGET_MIN,
+                Constants.SHARED_PREF_TARGET_MAX,
+                Constants.SHARED_PREF_LOW_GLUCOSE,
+                Constants.SHARED_PREF_HIGH_GLUCOSE,
+                Constants.SHARED_PREF_FIVE_MINUTE_DELTA,
+                Constants.SHARED_PREF_COLOR_ALARM,
+                Constants.SHARED_PREF_COLOR_OUT_OF_RANGE,
+                Constants.SHARED_PREF_COLOR_OK -> {
+                    updateSettings(sharedPreferences!!)
+                    val extras = Bundle()
+                    extras.putBundle(Constants.SETTINGS_BUNDLE, ReceiveData.getSettingsBundle())
+                    InternalNotifier.notify(GlucoDataService.context!!, NotifyDataSource.SETTINGS, extras)
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
         }
     }
 }

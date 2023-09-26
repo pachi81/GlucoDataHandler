@@ -48,7 +48,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".common.notifier.ObsoleteNotifier" />
+            android:name=".common.notifier.ElapsedTimeNotifier" />
 <!--        <receiver
             android:name=".StartServiceAtBootReceiver"
             android:enabled="true"

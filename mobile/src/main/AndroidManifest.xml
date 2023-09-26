@@ -188,7 +188,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".common.notifier.ObsoleteNotifier" />
+        <receiver android:name=".common.notifier.ElapsedTimeNotifier" />
 
         <service
             android:name=".GlucoDataServiceMobile"
