@@ -23,7 +23,6 @@ import de.michelinside.glucodatahandler.common.Utils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
-import java.text.DateFormat
 import java.util.*
 
 
@@ -106,7 +105,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
         }
         viewIcon.setImageIcon(Utils.getRateAsIcon())
         txtDelta.text =ReceiveData.getDeltaAsString()
-        txtTime.text = ReceiveData.getElapsedTimeMinuteAsString(context, false)
+        txtTime.text = ReceiveData.getElapsedTimeMinuteAsString(context)
 
         val resizeFactor = sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, 3).toFloat()
         txtBgValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+resizeFactor*4f)

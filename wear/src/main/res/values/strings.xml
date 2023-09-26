@@ -37,6 +37,7 @@
     <string name="battery_level">Battery level (wear and phone)</string>
 
     <string name="source_message_client">Phone</string>
+    <string name="activity_switch_relative_time">Relative time</string>
 
 
 </resources>

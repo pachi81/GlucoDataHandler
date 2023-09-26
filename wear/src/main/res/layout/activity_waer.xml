@@ -117,10 +117,24 @@
             android:layout_height="35dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
             android:text="@string/activity_switch_foreground"
             android:textAlignment="viewStart"
             app:layout_constraintTop_toBottomOf="@+id/switchNotifcation"
+            app:layout_constraintBottom_toTopOf="@+id/switchRelativeTime"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchRelativeTime"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/activity_switch_relative_time"
+            android:textAlignment="viewStart"
+            app:layout_constraintTop_toBottomOf="@+id/switchForground"
             app:layout_constraintBottom_toTopOf="@+id/txtConnInfo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -133,7 +147,7 @@
             android:layout_marginTop="10dp"
             android:text="@string/activity_disconnected_label"
             android:textSize="14sp"
-            app:layout_constraintTop_toBottomOf="@+id/switchForground"
+            app:layout_constraintTop_toBottomOf="@+id/switchRelativeTime"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

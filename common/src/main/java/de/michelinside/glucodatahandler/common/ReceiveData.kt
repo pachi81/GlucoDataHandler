@@ -42,6 +42,7 @@ object ReceiveData {
     var rateLabel: String? = null
     var dateformat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT)
     var timeformat = DateFormat.getTimeInstance(DateFormat.DEFAULT)
+    var shorttimeformat = DateFormat.getTimeInstance(DateFormat.SHORT)
     var source: NotifyDataSource = NotifyDataSource.BROADCAST
     private var lowValue: Float = 0F
     private val low: Float get() {
@@ -92,6 +93,7 @@ object ReceiveData {
     private var colorAlarm: Int = Color.RED
     private var colorOutOfRange: Int = Color.YELLOW
     private var colorOK: Int = Color.GREEN
+    private var useRelativeTime = false
     private var initialized = false
 
     init {
@@ -229,15 +231,18 @@ object ReceiveData {
         return Utils.round((System.currentTimeMillis()-time).toFloat()/60000, 0, roundingMode).toLong()
     }
 
-    fun getElapsedTimeMinuteAsString(context: Context, short: Boolean): String {
+    fun getElapsedTimeMinuteAsString(context: Context, short: Boolean = true): String {
         if (time == 0L)
             return "--"
-        val elapsed_time = getElapsedTimeMinute()
-        if (elapsed_time > 60)
-            return context.getString(R.string.elapsed_time_hour)
-        if (short)
-            return String.format(context.getString(R.string.elapsed_time_short), elapsed_time)
-        return String.format(context.getString(R.string.elapsed_time_long), elapsed_time)
+        if (useRelativeTime) {
+            val elapsed_time = getElapsedTimeMinute()
+            if (elapsed_time > 60)
+                return context.getString(R.string.elapsed_time_hour)
+            return String.format(context.getString(R.string.elapsed_time), elapsed_time)
+        } else if (short)
+            return shorttimeformat.format(Date(time))
+        else
+            return timeformat.format(Date(time))
     }
 
     fun handleIntent(context: Context, dataSource: NotifyDataSource, extras: Bundle?) : Boolean
@@ -359,6 +364,7 @@ object ReceiveData {
         colorOK = sharedPref.getInt(Constants.SHARED_PREF_COLOR_OK, colorOK)
         colorOutOfRange = sharedPref.getInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, colorOutOfRange)
         colorAlarm = sharedPref.getInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm)
+        useRelativeTime = sharedPref.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, useRelativeTime)
         Log.i(LOG_ID, "Raw low/min/max/high set: " + lowValue.toString() + "/" + targetMinValue.toString() + "/" + targetMaxValue.toString() + "/" + highValue.toString()
                 + " mg/dl - unit: " + getUnit()
                 + " - 5 min delta: " + use5minDelta
@@ -418,7 +424,7 @@ object ReceiveData {
     private fun saveExtras(context: Context) {
         try {
             Log.d(LOG_ID, "Saving extras")
-            val sharedPref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, Context.MODE_PRIVATE)
+            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             with(sharedPref.edit()) {
                 putLong(TIME, time)
                 putFloat(GLUCOSECUSTOM, glucose)
@@ -437,7 +443,7 @@ object ReceiveData {
     private fun loadExtras(context: Context) {
         try {
             if (time == 0L) {
-                val sharedPref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, Context.MODE_PRIVATE)
+                val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 if (sharedPref.contains(TIME)) {
                     Log.i(LOG_ID, "Read saved values...")
                     val extras = Bundle()

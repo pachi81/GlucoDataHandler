@@ -12,8 +12,7 @@
     <string name="info_label_per_minute">na min.</string>
     <string name="no_data">Nie otrzymano jeszcze transmisji!\nINFORMACJA: Aby otrzymać dane z Juggluco, otwórz aplikację Juggluco, przejdź do ustawień i aktywuj \&quot;Glucodata Broadcast\&quot; dla &quot;de.michelinside.glucodatahandler&quot;\nAby odbierać dane z xDrip+, aktywuj lokalną transmisję i wybierz brak odbiornika.</string>
 
-    <string name="elapsed_time_short">%1$d m</string>
-    <string name="elapsed_time_long">%1$d min</string>
+    <string name="elapsed_time">%1$d min</string>
     <string name="elapsed_time_hour">\> 1h</string>
 
     <string name="rate_double_up">rośnie bardzo szybko</string>

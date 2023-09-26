@@ -3,6 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
+        android:title="@string/pref_cat_general"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="0">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="relative_time"
+            android:summary="@string/pref_relative_time_summary"
+            android:title="@string/pref_relative_time"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
         android:title="@string/pref_target_range"
         app:iconSpaceReserved="false"
         app:initialExpandedChildrenCount="0">

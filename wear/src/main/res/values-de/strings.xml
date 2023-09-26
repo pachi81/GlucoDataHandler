@@ -37,4 +37,5 @@
     <string name="battery_level">Akku (Uhr und Telefon)</string>
 
     <string name="source_message_client">Telefon</string>
+    <string name="activity_switch_relative_time">Relative Zeit</string>
 </resources>

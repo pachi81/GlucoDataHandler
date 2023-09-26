@@ -19,7 +19,6 @@ import de.michelinside.glucodatahandler.common.Utils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
-import java.text.DateFormat
 
 
 enum class WidgetType(val cls: Class<*>) {
@@ -158,7 +157,7 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
         }
 
         if (hasTime) {
-            remoteViews.setTextViewText(R.id.timeText, ReceiveData.getElapsedTimeMinuteAsString(context, false))
+            remoteViews.setTextViewText(R.id.timeText, ReceiveData.getElapsedTimeMinuteAsString(context))
         }
         if (hasDelta)
             remoteViews.setTextViewText(R.id.deltaText, ReceiveData.getDeltaAsString())

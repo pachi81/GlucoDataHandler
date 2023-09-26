@@ -49,6 +49,7 @@ object Constants {
     const val SHARED_PREF_FLOATING_WIDGET_SIZE = "floating_widget_size"
     const val SHARED_PREF_FLOATING_WIDGET_X = "floating_widget_x"
     const val SHARED_PREF_FLOATING_WIDGET_Y = "floating_widget_y"
+    const val SHARED_PREF_RELATIVE_TIME = "relative_time"
 
     const val WIDGET_STYLE_GLUCOSE = "glucose"
     const val WIDGET_STYLE_GLUCOSE_TREND = "glucose_trend"

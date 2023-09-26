@@ -27,6 +27,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var switchLargeTrendArrow: SwitchCompat
     private lateinit var switchNotifcation: SwitchCompat
     private lateinit var switchForground: SwitchCompat
+    private lateinit var switchRelativeTime: SwitchCompat
     private lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,6 +80,21 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                     }
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Changing notification exception: " + exc.message.toString() )
+                }
+            }
+
+            switchRelativeTime = findViewById(R.id.switchRelativeTime)
+            switchRelativeTime.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, false)
+            switchRelativeTime.setOnCheckedChangeListener { _, isChecked ->
+                Log.d(LOG_ID, "Relative time changed: " + isChecked.toString())
+                try {
+                    with (sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, isChecked)
+                        apply()
+                    }
+                    ReceiveData.updateSettings(sharedPref)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Changing relative time exception: " + exc.message.toString() )
                 }
             }
 

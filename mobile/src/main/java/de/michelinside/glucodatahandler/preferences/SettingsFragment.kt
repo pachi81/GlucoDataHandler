@@ -89,7 +89,8 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 Constants.SHARED_PREF_FIVE_MINUTE_DELTA,
                 Constants.SHARED_PREF_COLOR_ALARM,
                 Constants.SHARED_PREF_COLOR_OUT_OF_RANGE,
-                Constants.SHARED_PREF_COLOR_OK -> {
+                Constants.SHARED_PREF_COLOR_OK,
+                Constants.SHARED_PREF_RELATIVE_TIME -> {
                     ReceiveData.updateSettings(sharedPreferences!!)
                     val extras = Bundle()
                     extras.putBundle(Constants.SETTINGS_BUNDLE, ReceiveData.getSettingsBundle())
