@@ -38,6 +38,6 @@
     <string name="battery_level">Poziom baterii (zegarek  i telefon)</string>
 
     <string name="source_message_client">Telefon</string>
-    <string name="activity_switch_relative_time">Relative time</string>
+    <string name="activity_switch_relative_time">Czas relatywny</string>
 
 </resources>
