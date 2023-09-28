@@ -191,10 +191,6 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     fun deltaText(): PlainComplicationText =
         plainText(ReceiveData.getDeltaAsString())
 
-    fun timeText(short: Boolean = false): PlainComplicationText {
-        return plainText(ReceiveData.getElapsedTimeMinuteAsString(this, short))
-    }
-
     fun trendText(): PlainComplicationText =
         plainText(ReceiveData.getRateAsString())
 
