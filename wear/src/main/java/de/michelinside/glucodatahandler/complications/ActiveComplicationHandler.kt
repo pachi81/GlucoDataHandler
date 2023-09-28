@@ -73,7 +73,21 @@ object ActiveComplicationHandler: NotifierInterface {
                     Log.d(LOG_ID, "Got " + packageInfo.services.size + " services.")
                     packageInfo.services.forEach {
                         val isComplication =
-                            BgValueComplicationService::class.java.isAssignableFrom(Class.forName(it.name))
+                            if (dataSource == NotifyDataSource.TIME_VALUE) {
+                                // only update time complications
+                                TimeComplicationBase::class.java.isAssignableFrom(
+                                    Class.forName(
+                                        it.name
+                                    )
+                                )
+                            } else {
+                                BgValueComplicationService::class.java.isAssignableFrom(
+                                    Class.forName(
+                                        it.name
+                                    )
+                                )
+                            }
+
                         if (isComplication) {
                             if (dataSource != NotifyDataSource.TIME_VALUE)
                                 Thread.sleep(10)
