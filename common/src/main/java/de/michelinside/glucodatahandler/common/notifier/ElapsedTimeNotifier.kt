@@ -5,7 +5,6 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
@@ -36,6 +35,7 @@ class ElapsedTimeNotifier: BroadcastReceiver(), SharedPreferences.OnSharedPrefer
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
             onSharedPreferenceChanged(sharedPref,Constants.SHARED_PREF_RELATIVE_TIME)
+            init = true
         }
         if (active) {
             if (pendingIntent == null) {
@@ -51,7 +51,6 @@ class ElapsedTimeNotifier: BroadcastReceiver(), SharedPreferences.OnSharedPrefer
             if (alarmManager == null) {
                 Log.d(LOG_ID, "init alarmManager")
                 alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                context.registerReceiver(this, IntentFilter(Intent.ACTION_TIME_TICK))
             }
             elapsedMinute = ReceiveData.getElapsedTimeMinute(RoundingMode.DOWN)
             nextObsoleteNotifySec = Constants.VALUE_OBSOLETE_SHORT_SEC
@@ -62,10 +61,8 @@ class ElapsedTimeNotifier: BroadcastReceiver(), SharedPreferences.OnSharedPrefer
         try {
             Log.d(LOG_ID, "onReceive: " + intent.toString())
             notify(context)
-            if (intent?.action != Intent.ACTION_TIME_TICK) {
-                // re-schedule, if needed
-                startTimer(context)
-            }
+            // re-schedule, if needed
+            startTimer(context)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onReceive exception: " + exc.toString() )
         }
@@ -98,7 +95,7 @@ class ElapsedTimeNotifier: BroadcastReceiver(), SharedPreferences.OnSharedPrefer
 
     private fun getTimeDelay(): Long {
         if (relativeTime) {
-            return 60000L - (System.currentTimeMillis() - ReceiveData.time).mod(60000L) + 100
+            return 60000L - (System.currentTimeMillis() - ReceiveData.time).mod(60000L) + 3000
         } else if (!ReceiveData.isObsolete()) {
             val delayTimeSec = if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) Constants.VALUE_OBSOLETE_LONG_SEC else Constants.VALUE_OBSOLETE_SHORT_SEC
             return (delayTimeSec * 1000) - (System.currentTimeMillis()- ReceiveData.time) + 100
@@ -129,7 +126,6 @@ class ElapsedTimeNotifier: BroadcastReceiver(), SharedPreferences.OnSharedPrefer
             Log.d(LOG_ID, "stopTimer called")
             alarmManager!!.cancel(pendingIntent!!)
             alarmManager = null
-            context.unregisterReceiver(this)
         }
     }
 
