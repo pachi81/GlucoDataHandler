@@ -465,20 +465,26 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called for key " + key)
-            when(key) {
-                Constants.SHARED_PREF_USE_MMOL,
-                Constants.SHARED_PREF_TARGET_MIN,
-                Constants.SHARED_PREF_TARGET_MAX,
-                Constants.SHARED_PREF_LOW_GLUCOSE,
-                Constants.SHARED_PREF_HIGH_GLUCOSE,
-                Constants.SHARED_PREF_FIVE_MINUTE_DELTA,
-                Constants.SHARED_PREF_COLOR_ALARM,
-                Constants.SHARED_PREF_COLOR_OUT_OF_RANGE,
-                Constants.SHARED_PREF_COLOR_OK -> {
-                    updateSettings(sharedPreferences!!)
-                    val extras = Bundle()
-                    extras.putBundle(Constants.SETTINGS_BUNDLE, getSettingsBundle())
-                    InternalNotifier.notify(GlucoDataService.context!!, NotifyDataSource.SETTINGS, extras)
+            if (GlucoDataService.context != null) {
+                when (key) {
+                    Constants.SHARED_PREF_USE_MMOL,
+                    Constants.SHARED_PREF_TARGET_MIN,
+                    Constants.SHARED_PREF_TARGET_MAX,
+                    Constants.SHARED_PREF_LOW_GLUCOSE,
+                    Constants.SHARED_PREF_HIGH_GLUCOSE,
+                    Constants.SHARED_PREF_FIVE_MINUTE_DELTA,
+                    Constants.SHARED_PREF_COLOR_ALARM,
+                    Constants.SHARED_PREF_COLOR_OUT_OF_RANGE,
+                    Constants.SHARED_PREF_COLOR_OK -> {
+                        updateSettings(sharedPreferences!!)
+                        val extras = Bundle()
+                        extras.putBundle(Constants.SETTINGS_BUNDLE, getSettingsBundle())
+                        InternalNotifier.notify(
+                            GlucoDataService.context!!,
+                            NotifyDataSource.SETTINGS,
+                            extras
+                        )
+                    }
                 }
             }
         } catch (exc: Exception) {
