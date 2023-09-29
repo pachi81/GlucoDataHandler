@@ -121,17 +121,20 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
         Log.d(LOG_ID, "update called")
         try {
             if (sharedPref.getBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false)) {
-                val filter = mutableSetOf(
-                    NotifyDataSource.BROADCAST,
-                    NotifyDataSource.MESSAGECLIENT,
-                    NotifyDataSource.SETTINGS,
-                    NotifyDataSource.OBSOLETE_VALUE,
-                    NotifyDataSource.TIME_VALUE)   // to trigger re-start for the case of stopped by the system
-                InternalNotifier.addNotifier(this, filter)
                 if (Settings.canDrawOverlays(context)) {
+                    // to trigger re-start for the case of stopped by the system
                     setContent()
                     //getting windows services and adding the floating view to it
                     if (windowManager == null) {
+                        val filter = mutableSetOf(
+                            NotifyDataSource.BROADCAST,
+                            NotifyDataSource.MESSAGECLIENT,
+                            NotifyDataSource.SETTINGS,
+                            NotifyDataSource.OBSOLETE_VALUE)
+                        if(txtTime.visibility == VISIBLE) {
+                            filter.add(NotifyDataSource.TIME_VALUE)
+                        }
+                        InternalNotifier.addNotifier(this, filter)
                         createWindow()
                     } else {
                         Log.d(LOG_ID, "update window")
