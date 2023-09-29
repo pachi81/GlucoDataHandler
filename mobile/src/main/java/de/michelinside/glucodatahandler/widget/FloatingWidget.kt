@@ -35,6 +35,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
     private lateinit var txtDelta: TextView
     private lateinit var txtTime: TextView
     private lateinit var sharedPref: SharedPreferences
+    private lateinit var sharedInternalPref: SharedPreferences
     private val LOG_ID = "GlucoDataHandler.FloatingWidget"
 
     @SuppressLint("InflateParams")
@@ -42,6 +43,8 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
         Log.d(LOG_ID, "create called")
         sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         sharedPref.registerOnSharedPreferenceChangeListener(this)
+
+        sharedInternalPref = context.getSharedPreferences(Constants.SHARED_PREF_INTERNAL_TAG, Context.MODE_PRIVATE)
 
         //getting the widget layout from xml using layout inflater
         floatingView = LayoutInflater.from(context).inflate(R.layout.floating_widget, null)
@@ -155,8 +158,8 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
             PixelFormat.TRANSLUCENT
         )
         params.gravity = Gravity.TOP or Gravity.START
-        params.x = maxOf(sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_X, 100), 0)
-        params.y = maxOf(sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_Y, 100), 0)
+        params.x = maxOf(sharedInternalPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_X, 100), 0)
+        params.y = maxOf(sharedInternalPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_Y, 100), 0)
 
         windowManager = context.getSystemService(WINDOW_SERVICE) as WindowManager?
         windowManager!!.addView(floatingView, params)
@@ -199,7 +202,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
                     }
                     MotionEvent.ACTION_UP -> {
                         // only check duration, if there was no movement...
-                        with(sharedPref.edit()) {
+                        with(sharedInternalPref.edit()) {
                             putInt(Constants.SHARED_PREF_FLOATING_WIDGET_X,params.x)
                             putInt(Constants.SHARED_PREF_FLOATING_WIDGET_Y,params.y)
                             apply()
