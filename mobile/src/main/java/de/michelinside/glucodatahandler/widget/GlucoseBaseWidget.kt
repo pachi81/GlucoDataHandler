@@ -67,12 +67,22 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
         appWidgetIds: IntArray
     ) {
         // There may be multiple widgets active, so update all of them
-        Log.d(LOG_ID, "onUpdate called for " + appWidgetIds.size.toString() + " widgets")
+        Log.d(LOG_ID, "onUpdate called for " + appWidgetIds + " widgets")
         if (!init)
             onEnabled(context)
         for (appWidgetId in appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId)
         }
+    }
+
+    override fun onDeleted(context: Context?, appWidgetIds: IntArray?) {
+        Log.i(LOG_ID, "onDeleted called for " + appWidgetIds + " widgets")
+        super.onDeleted(context, appWidgetIds)
+    }
+
+    override fun onRestored(context: Context?, oldWidgetIds: IntArray?, newWidgetIds: IntArray?) {
+        Log.i(LOG_ID, "onRestored called for old " + oldWidgetIds + " and new " + newWidgetIds + " widgets")
+        super.onRestored(context, oldWidgetIds, newWidgetIds)
     }
 
     override fun onEnabled(context: Context) {
@@ -83,9 +93,10 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
                 NotifyDataSource.BROADCAST,
                 NotifyDataSource.MESSAGECLIENT,
                 NotifyDataSource.SETTINGS,
-                NotifyDataSource.OBSOLETE_VALUE,
-                NotifyDataSource.TIME_VALUE
+                NotifyDataSource.OBSOLETE_VALUE
             )   // to trigger re-start for the case of stopped by the system
+            if (hasTime)
+                filter.add(NotifyDataSource.TIME_VALUE)
             InternalNotifier.addNotifier(this, filter)
             init = true
         }
