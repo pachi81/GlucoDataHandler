@@ -423,8 +423,9 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private fun saveExtras(context: Context) {
         try {
             Log.d(LOG_ID, "Saving extras")
-            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-            with(sharedPref.edit()) {
+            // use own tag to prevent trigger onChange event at every time!
+            val sharedGlucosePref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, Context.MODE_PRIVATE)
+            with(sharedGlucosePref.edit()) {
                 putLong(TIME, time)
                 putFloat(GLUCOSECUSTOM, glucose)
                 putInt(MGDL, rawValue)
@@ -442,17 +443,17 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private fun loadExtras(context: Context) {
         try {
             if (time == 0L) {
-                val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-                if (sharedPref.contains(TIME)) {
+                val sharedGlucosePref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, Context.MODE_PRIVATE)
+                if (sharedGlucosePref.contains(TIME)) {
                     Log.i(LOG_ID, "Read saved values...")
                     val extras = Bundle()
-                    extras.putLong(TIME, sharedPref.getLong(TIME, time))
-                    extras.putFloat(GLUCOSECUSTOM, sharedPref.getFloat(GLUCOSECUSTOM, glucose))
-                    extras.putInt(MGDL, sharedPref.getInt(MGDL, rawValue))
-                    extras.putString(SERIAL, sharedPref.getString(SERIAL, sensorID))
-                    extras.putFloat(RATE, sharedPref.getFloat(RATE, rate))
-                    extras.putInt(ALARM, sharedPref.getInt(ALARM, alarm))
-                    extras.putFloat(DELTA, sharedPref.getFloat(DELTA, deltaValue))
+                    extras.putLong(TIME, sharedGlucosePref.getLong(TIME, time))
+                    extras.putFloat(GLUCOSECUSTOM, sharedGlucosePref.getFloat(GLUCOSECUSTOM, glucose))
+                    extras.putInt(MGDL, sharedGlucosePref.getInt(MGDL, rawValue))
+                    extras.putString(SERIAL, sharedGlucosePref.getString(SERIAL, sensorID))
+                    extras.putFloat(RATE, sharedGlucosePref.getFloat(RATE, rate))
+                    extras.putInt(ALARM, sharedGlucosePref.getInt(ALARM, alarm))
+                    extras.putFloat(DELTA, sharedGlucosePref.getFloat(DELTA, deltaValue))
                     handleIntent(context, NotifyDataSource.BROADCAST, extras)
                 }
             }
@@ -476,7 +477,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 Constants.SHARED_PREF_COLOR_OK -> {
                     updateSettings(sharedPreferences!!)
                     val extras = Bundle()
-                    extras.putBundle(Constants.SETTINGS_BUNDLE, ReceiveData.getSettingsBundle())
+                    extras.putBundle(Constants.SETTINGS_BUNDLE, getSettingsBundle())
                     InternalNotifier.notify(GlucoDataService.context!!, NotifyDataSource.SETTINGS, extras)
                 }
             }
