@@ -16,7 +16,6 @@ import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.Utils
-import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
 
@@ -32,10 +31,12 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
                                  private val hasTrend: Boolean = false,
                                  private val hasDelta: Boolean = false,
                                  private val hasTime: Boolean = false): AppWidgetProvider(), NotifierInterface {
-    private var init = false
+    init {
+        Log.d(LOG_ID, "init called for "+ this.toString())
+    }
 
     companion object {
-        private const val LOG_ID = "GlucoDataHandler.GlucoseBaseWidget"
+        private const val LOG_ID = "GlucoDataHandler.widget.GlucoseBaseWidget"
 
         protected fun getCurrentWidgetIds(context: Context, type: WidgetType): IntArray {
             val component = ComponentName(
@@ -49,14 +50,17 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
 
         fun updateWidgets(context: Context) {
             enumValues<WidgetType>().forEach {
-                val appWidgetIds = getCurrentWidgetIds(context, it)
-                if (appWidgetIds.isNotEmpty()) {
-                    Log.i(LOG_ID, "Trigger update of " + appWidgetIds.size + " widget(s) with type " + it.toString())
-                    val intent = Intent(context, it.cls)
-                    intent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds)
-                    context.sendBroadcast(intent)
-                }
+                updateWidgets(context, it)
+            }
+        }
+        fun updateWidgets(context: Context, type: WidgetType) {
+            val appWidgetIds = getCurrentWidgetIds(context, type)
+            if (appWidgetIds.isNotEmpty()) {
+                Log.i(LOG_ID, "Trigger update of " + appWidgetIds.size + " widget(s) with type " + type.toString())
+                val intent = Intent(context, type.cls)
+                intent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+                intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds)
+                context.sendBroadcast(intent)
             }
         }
     }
@@ -67,46 +71,33 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
         appWidgetIds: IntArray
     ) {
         // There may be multiple widgets active, so update all of them
-        Log.d(LOG_ID, "onUpdate called for " + appWidgetIds.contentToString() + " widgets")
-        if (!init)
-            onEnabled(context)
+        Log.d(LOG_ID, "onUpdate called for " + this.toString() + " - ids: " + appWidgetIds.contentToString())
+        onEnabled(context)
         for (appWidgetId in appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId)
         }
     }
 
     override fun onDeleted(context: Context?, appWidgetIds: IntArray?) {
-        Log.i(LOG_ID, "onDeleted called for " + appWidgetIds?.contentToString() + " widgets")
+        Log.i(LOG_ID, "onDeleted called for " + this.toString() + " - ids: " + appWidgetIds?.contentToString() )
         super.onDeleted(context, appWidgetIds)
     }
 
     override fun onRestored(context: Context?, oldWidgetIds: IntArray?, newWidgetIds: IntArray?) {
-        Log.i(LOG_ID, "onRestored called for old " + oldWidgetIds?.contentToString() + " and new " + newWidgetIds?.contentToString() + " widgets")
+        Log.i(LOG_ID, "onRestored called for " + this.toString() + " - old ids: " + oldWidgetIds?.contentToString() + " - new ids: " + newWidgetIds?.contentToString())
         super.onRestored(context, oldWidgetIds, newWidgetIds)
     }
 
     override fun onEnabled(context: Context) {
         // Enter relevant functionality for when the first widget is created
-        if (!init) {
-            Log.d(LOG_ID, "onEnabled called")
-            val filter = mutableSetOf(
-                NotifyDataSource.BROADCAST,
-                NotifyDataSource.MESSAGECLIENT,
-                NotifyDataSource.SETTINGS,
-                NotifyDataSource.OBSOLETE_VALUE
-            )   // to trigger re-start for the case of stopped by the system
-            if (hasTime)
-                filter.add(NotifyDataSource.TIME_VALUE)
-            InternalNotifier.addNotifier(this, filter)
-            init = true
-        }
+        Log.d(LOG_ID, "onEnabled called for " + this.toString())
+        ActiveWidgetHandler.addWidget(type)
     }
 
     override fun onDisabled(context: Context) {
         // Enter relevant functionality for when the last widget is disabled
-        Log.d(LOG_ID, "onDisabled called")
-        InternalNotifier.remNotifier(this)
-        init = false
+        Log.d(LOG_ID, "onDisabled calledd for " + this.toString())
+        ActiveWidgetHandler.remWidget(type)
     }
 
     override fun onAppWidgetOptionsChanged(
