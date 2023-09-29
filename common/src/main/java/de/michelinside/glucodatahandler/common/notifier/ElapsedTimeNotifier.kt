@@ -28,7 +28,12 @@ class ElapsedTimeNotifier: BroadcastReceiver(), SharedPreferences.OnSharedPrefer
         var relativeTime = false
     }
 
-    private val active: Boolean get() = (ReceiveData.getElapsedTimeMinute(RoundingMode.DOWN) <= 60)
+    private val active: Boolean get() {
+        if(relativeTime)
+            return (ReceiveData.getElapsedTimeMinute(RoundingMode.DOWN) <= 60)
+        else
+            return nextObsoleteNotifySec > 0
+    }
 
     private fun init(context: Context) {
         if (!init) {
@@ -53,7 +58,10 @@ class ElapsedTimeNotifier: BroadcastReceiver(), SharedPreferences.OnSharedPrefer
                 alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             }
             elapsedMinute = ReceiveData.getElapsedTimeMinute(RoundingMode.DOWN)
-            nextObsoleteNotifySec = Constants.VALUE_OBSOLETE_SHORT_SEC
+            if (elapsedMinute < Constants.VALUE_OBSOLETE_SHORT_SEC/60)
+                nextObsoleteNotifySec = Constants.VALUE_OBSOLETE_SHORT_SEC
+            else if (elapsedMinute < Constants.VALUE_OBSOLETE_LONG_SEC/60)
+                nextObsoleteNotifySec = Constants.VALUE_OBSOLETE_LONG_SEC
         }
     }
 
@@ -104,9 +112,9 @@ class ElapsedTimeNotifier: BroadcastReceiver(), SharedPreferences.OnSharedPrefer
     }
 
     private fun startTimer(context: Context) {
+        Log.d(LOG_ID, "startTimer called")
         val delayMs = getTimeDelay()
         if (delayMs > 0 && alarmManager != null && active) {
-            Log.d(LOG_ID, "startTimer called")
             val timeMs = System.currentTimeMillis()+delayMs
             Log.d(LOG_ID, "schedule obsolete notification in " + delayMs.toString() + "ms at " + timeformat.format(
                 Date(timeMs)
@@ -151,9 +159,12 @@ class ElapsedTimeNotifier: BroadcastReceiver(), SharedPreferences.OnSharedPrefer
             Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
             if (sharedPreferences != null && key == Constants.SHARED_PREF_RELATIVE_TIME) {
                 relativeTime = sharedPreferences.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, false)
-                InternalNotifier.notify(GlucoDataService.context!!, NotifyDataSource.TIME_VALUE, null)
-                if (alarmManager!=null)
-                    startTimer(GlucoDataService.context!!)
+                Log.d(LOG_ID, "relativeTime changed to " + relativeTime)
+                if (GlucoDataService.context != null) {
+                    InternalNotifier.notify(GlucoDataService.context!!, NotifyDataSource.TIME_VALUE, null)
+                    if (alarmManager!=null)
+                        startTimer(GlucoDataService.context!!)
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "cancel exception: " + exc.message.toString() )
