@@ -67,7 +67,7 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
         appWidgetIds: IntArray
     ) {
         // There may be multiple widgets active, so update all of them
-        Log.d(LOG_ID, "onUpdate called for " + appWidgetIds + " widgets")
+        Log.d(LOG_ID, "onUpdate called for " + appWidgetIds.contentToString() + " widgets")
         if (!init)
             onEnabled(context)
         for (appWidgetId in appWidgetIds) {
@@ -76,12 +76,12 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
     }
 
     override fun onDeleted(context: Context?, appWidgetIds: IntArray?) {
-        Log.i(LOG_ID, "onDeleted called for " + appWidgetIds + " widgets")
+        Log.i(LOG_ID, "onDeleted called for " + appWidgetIds?.contentToString() + " widgets")
         super.onDeleted(context, appWidgetIds)
     }
 
     override fun onRestored(context: Context?, oldWidgetIds: IntArray?, newWidgetIds: IntArray?) {
-        Log.i(LOG_ID, "onRestored called for old " + oldWidgetIds + " and new " + newWidgetIds + " widgets")
+        Log.i(LOG_ID, "onRestored called for old " + oldWidgetIds?.contentToString() + " and new " + newWidgetIds?.contentToString() + " widgets")
         super.onRestored(context, oldWidgetIds, newWidgetIds)
     }
 

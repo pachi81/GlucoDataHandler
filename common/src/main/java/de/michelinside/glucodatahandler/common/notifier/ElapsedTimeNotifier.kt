@@ -90,7 +90,7 @@ class ElapsedTimeNotifier: BroadcastReceiver(), SharedPreferences.OnSharedPrefer
 
     private fun notify(context: Context) {
         if (elapsedMinute != ReceiveData.getElapsedTimeMinute(RoundingMode.DOWN)) {
-            Log.d(LOG_ID, "notify after " + ReceiveData.getElapsedTimeMinute(RoundingMode.DOWN) + " minute")
+            Log.i(LOG_ID, "notify after " + ReceiveData.getElapsedTimeMinute(RoundingMode.DOWN) + " minute")
             if (obsoleteNotify()) {
                 Log.d(LOG_ID, "send obsolete notifier")
                 InternalNotifier.notify(context, NotifyDataSource.OBSOLETE_VALUE, null)
