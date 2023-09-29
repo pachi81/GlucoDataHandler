@@ -24,8 +24,6 @@ Die neuste Version kann [hier](https://github.com/pachi81/GlucoDataHandler/relea
 
 ### Smartwatch
 
-<img src='images/de/settings_wear.png' width=200>
-
 * Vibrieren: die Uhr vibriert, wenn der Zielbereich verlassen wird in regelmäßigen Intervallen
 * Farbiges AOD: Manche Watchfaces zeigen im Ambient-Mode (AOD) auch farbige Complications (Bilder) an, aber nur, wenn kein monochromes Bild vorhanden ist 
 -> dies kann man mit dieser Einstellung erzwingen, dann wird kein monochromes Bild für den Ambient Mode zur Verfügung gestellt. Wenn dann im Ambient-Mode nichts zu sehen ist, muss man die Einstellung rückgängig machen
@@ -37,8 +35,6 @@ Die neuste Version kann [hier](https://github.com/pachi81/GlucoDataHandler/relea
 ### Smartphone
 
 Die einzelnen Einstellungen sind in der App entsprechend beschrieben. Sobald die Smartwatch verbunden ist, werden die Einstellungen übermittelt.
-
-<img src='images/de/settings_phone_1.png' width=300>
 
 ## Widgets
 Es gibt verschiedene Arten von Widgets:

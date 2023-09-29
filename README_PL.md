@@ -26,20 +26,16 @@ Aktualną wersję można pobrać [tutaj](https://github.com/pachi81/GlucoDataHan
 
 ## Zegarek
 
-<img src='images/pl/settings_wear.png' width=200>
-
-- Wibracja: zegarek wibruje, jeśli zakres docelowy został przekroczony i powtarza wibracje tak długo, jak długo glukoza pozostaje poza zakresem docelowym
-- Kolorowy AOD: niektóre tarcze zegarków obsługują tylko kolorowe komplikacje dla zawsze włączonego ekranu w trybie AOD, jeśli nie ma monochromatycznego, musisz aktywować tę funkcję
-- Duża strzałka trendu: w przypadku zegarków takich jak Samsung Galaxy Watch 5 Pro do wersji Wear OS 3 strzałka trendu jest zbyt duża, więc można wyłączyć to ustawienie, aby uzyskać mniejszą strzałkę trendu
-- Pierwszy plan: opcja zalecana, aby zapobiec zamykaniu tej aplikacji przez Wear OS (spróbuj również dezaktywować Play Protect, ponieważ funkcja ta zamyka aplikacje spoza Sklepu Play)
-- Czas względny: pokazuje względny czas w minutach od otrzymania ostatniej wartości zamiast znacznika czasu ostatniej wartości. Może to nie działać poprawnie na niektórych zegarkach w związku z optymalizacją baterii systemu Android.
-- Inne ustawienia: wszystkie inne ustawienia wprowadza się w aplikacji na telefonie
+* Wibracja: zegarek wibruje, jeśli zakres docelowy został przekroczony i powtarza wibracje tak długo, jak długo glukoza pozostaje poza zakresem docelowym
+* Kolorowy AOD: niektóre tarcze zegarków obsługują tylko kolorowe komplikacje dla zawsze włączonego ekranu w trybie AOD, jeśli nie ma monochromatycznego, musisz aktywować tę funkcję
+* Duża strzałka trendu: w przypadku zegarków takich jak Samsung Galaxy Watch 5 Pro do wersji Wear OS 3 strzałka trendu jest zbyt duża, więc można wyłączyć to ustawienie, aby uzyskać mniejszą strzałkę trendu
+* Pierwszy plan: opcja zalecana, aby zapobiec zamykaniu tej aplikacji przez Wear OS (spróbuj również dezaktywować Play Protect, ponieważ funkcja ta zamyka aplikacje spoza Sklepu Play)
+* Czas względny: pokazuje względny czas w minutach od otrzymania ostatniej wartości zamiast znacznika czasu ostatniej wartości. Może to nie działać poprawnie na niektórych zegarkach w związku z optymalizacją baterii systemu Android.
+* Inne ustawienia: wszystkie inne ustawienia wprowadza się w aplikacji na telefonie
 
 ### Telefon
 
 Ustawienia dla aplikacji na telefon opisane są w samej aplikacji. Ustawienia z telefonu zostaną przesłane do zegarka, jeśli jest on podłączony.
-
-<img src='images/pl/settings_phone_1.jpg' width=300> <img src='images/pl/settings_phone_2.jpg' width=300> <img src='images/pl/settings_phone_3.jpg' width=300> <img src='images/pl/settings_phone_4.jpg' width=300>
 
 ## Widgety
 Dostępnych jest kilka rodzajów widgetów na telefon:

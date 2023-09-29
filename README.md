@@ -24,8 +24,6 @@ You can download the current version [here](https://github.com/pachi81/GlucoData
 
 ### Wear
 
-<img src='images/settings_wear.png' width=200>
-
 * Vibration: the watch vibrate if the target range is left and repeat it as long as the target range is left
 * Colored AOD: some watchfaces only support colored complications for the always on display, if there is no monochrom one, then you have to activate this feature
 * Big trend-arrow: for watches like Samsung Galaxy Watch 5 Pro until Wear OS 3, the trend arrow is rendered too big, so you can disable this setting to have a smaller trend-arrow
@@ -36,8 +34,6 @@ You can download the current version [here](https://github.com/pachi81/GlucoData
 ### Phone
 
 The settings for the phone are described in the app itself. The settings from the phone will be send to the wear, if it is connected.
-
-<img src='images/settings_phone_1.png' width=300>
 
 ## Widgets
 There are several types of widgets for the phone:
