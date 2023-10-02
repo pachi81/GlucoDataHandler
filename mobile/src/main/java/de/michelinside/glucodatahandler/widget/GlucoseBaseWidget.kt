@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.RemoteViews
 import de.michelinside.glucodatahandler.BuildConfig
+import de.michelinside.glucodatahandler.GlucoDataServiceMobile
 import de.michelinside.glucodatahandler.MainActivity
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
@@ -91,6 +92,7 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
     override fun onEnabled(context: Context) {
         // Enter relevant functionality for when the first widget is created
         Log.d(LOG_ID, "onEnabled called for " + this.toString())
+        GlucoDataServiceMobile.start(context)
         ActiveWidgetHandler.addWidget(type)
     }
 
