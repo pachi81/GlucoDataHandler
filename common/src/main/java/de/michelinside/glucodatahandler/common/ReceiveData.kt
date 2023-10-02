@@ -250,7 +250,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             return false
         }
         try {
-            Log.i(
+            Log.d(
                 LOG_ID, "Glucodata received from " + dataSource.toString() + ": " +
                         extras.toString() +
                         " - timestamp: " + dateformat.format(Date(extras.getLong(TIME)))
@@ -259,6 +259,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             val curTimeDiff = extras.getLong(TIME) - time
             if(curTimeDiff >= 1000) // check for new value received
             {
+                Log.i(
+                    LOG_ID, "Glucodata received from " + dataSource.toString() + ": " +
+                            extras.toString() +
+                            " - timestamp: " + dateformat.format(Date(extras.getLong(TIME)))
+                )
                 source = dataSource
                 sensorID = extras.getString(SERIAL) //Name of sensor
                 glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting

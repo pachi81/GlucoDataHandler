@@ -1,6 +1,7 @@
 package de.michelinside.glucodatahandler.preferences
 
 import android.content.Context
+import android.content.res.TypedArray
 import android.text.InputType
 import android.util.AttributeSet
 import android.util.Log
@@ -11,7 +12,10 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.Utils
 
 class GlucoseEditPreference : EditTextPreference, OnBindEditTextListener {
-    private val LOG_ID = "GlucoDataHandler.GlucoseEditPreference"
+    companion object {
+        private val LOG_ID = "GlucoDataHandler.GlucoseEditPreference"
+    }
+    private var defaultValue = 0F
     constructor(context: Context?) : super(context!!)  {
         initDialog()
     }
@@ -25,6 +29,7 @@ class GlucoseEditPreference : EditTextPreference, OnBindEditTextListener {
     }
 
     fun initDialog() {
+        Log.d(LOG_ID, "initDialog called")
         setOnBindEditTextListener(this)
     }
 
@@ -33,9 +38,18 @@ class GlucoseEditPreference : EditTextPreference, OnBindEditTextListener {
         return super.persistFloat(value)
     }
 
+    override fun onGetDefaultValue(a: TypedArray, index: Int): Any? {
+        Log.d(LOG_ID, "onGetDefaultValue called")
+        val value = super.onGetDefaultValue(a, index)
+        if (value != null)
+            defaultValue = value.toString().toFloat()
+        Log.d(LOG_ID, "Using default value: " + defaultValue)
+        return value
+    }
+
     override fun getPersistedString(defaultReturnValue: String?): String {
         Log.i(LOG_ID, "getPersistedString called")
-        return getPersistedFloat(0.0F).toString()
+        return getPersistedFloat(defaultValue).toString()
     }
 
     override fun persistString(value: String?): Boolean {
