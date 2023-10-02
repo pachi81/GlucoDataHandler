@@ -29,8 +29,12 @@ class GlucoseEditPreference : EditTextPreference, OnBindEditTextListener {
     }
 
     fun initDialog() {
-        Log.d(LOG_ID, "initDialog called")
-        setOnBindEditTextListener(this)
+        try {
+            Log.d(LOG_ID, "initDialog called")
+            setOnBindEditTextListener(this)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "initDialog exception: " + exc.toString())
+        }
     }
 
     override fun persistFloat(value: Float): Boolean {
@@ -41,9 +45,13 @@ class GlucoseEditPreference : EditTextPreference, OnBindEditTextListener {
     override fun onGetDefaultValue(a: TypedArray, index: Int): Any? {
         Log.d(LOG_ID, "onGetDefaultValue called")
         val value = super.onGetDefaultValue(a, index)
-        if (value != null)
-            defaultValue = value.toString().toFloat()
-        Log.d(LOG_ID, "Using default value: " + defaultValue)
+        try {
+            if (value != null)
+                defaultValue = value.toString().toFloat()
+            Log.d(LOG_ID, "Using default value: " + defaultValue)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onGetDefaultValue exception: " + exc.toString())
+        }
         return value
     }
 
