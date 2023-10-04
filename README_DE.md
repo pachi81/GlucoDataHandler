@@ -37,11 +37,9 @@ Die neuste Version kann [hier](https://github.com/pachi81/GlucoDataHandler/relea
 Die einzelnen Einstellungen sind in der App entsprechend beschrieben. Sobald die Smartwatch verbunden ist, werden die Einstellungen übermittelt.
 
 ## Widgets
-Es gibt verschiedene Arten von Widgets:
+Es gibt verschiedene Arten von Widgets und ein schwebendes Widget:
 
-<img src='images/widgets.jpg' width=200>
-
-Weiterhin gibt es ein Schwebendes Widget, welches zusätzlich über Tasker de-/aktiviert werden kann.
+<img src='images/widgets.jpg' width=200>  <img src='images/de/FloatingWidget.jpg' width=200>
 
 ## Benachrichtigungen
 Es gibt 2 Benachrichtigungen um zusätzliche Icons in der Statusbar zur Verfügung zu haben.
