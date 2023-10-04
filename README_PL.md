@@ -38,11 +38,10 @@ Aktualną wersję można pobrać [tutaj](https://github.com/pachi81/GlucoDataHan
 Ustawienia dla aplikacji na telefon opisane są w samej aplikacji. Ustawienia z telefonu zostaną przesłane do zegarka, jeśli jest on podłączony.
 
 ## Widgety
-Dostępnych jest kilka rodzajów widgetów na telefon:
-
-<img src='images/widgets.jpg' width=200>
-
+Dostępnych jest kilka rodzajów widgetów na telefon.
 Dostępny jest również pływający widget, który może być obsługiwany przez aplikację Tasker.
+
+<img src='images/widgets.jpg' width=200>  <img src='images/pl/FloatingWidget.jpg' width=200>
 
 ## Powiadomienia
 Dostępne są dwa powiadomienia, które można aktywować. Dla każdego powiadomienia można wybrać ikonę, która pojawi się na pasku stanu telefonu.
