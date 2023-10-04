@@ -9,13 +9,13 @@ object InternalNotifier {
     private var notifiers = mutableMapOf<NotifierInterface, MutableSet<NotifyDataSource>?>()
     fun addNotifier(notifier: NotifierInterface, sourceFilter: MutableSet<NotifyDataSource>)
     {
-        Log.d(LOG_ID, "add notifier " + notifier.toString() + " - filter: " + sourceFilter.toString() )
+        Log.i(LOG_ID, "add notifier " + notifier.toString() + " - filter: " + sourceFilter.toString() )
         notifiers[notifier] = sourceFilter
         Log.d(LOG_ID, "notifier size: " + notifiers.size.toString() )
     }
     fun remNotifier(notifier: NotifierInterface)
     {
-        Log.d(LOG_ID, "rem notifier " + notifier.toString() )
+        Log.i(LOG_ID, "rem notifier " + notifier.toString() )
         notifiers.remove(notifier)
         Log.d(LOG_ID, "notifier size: " + notifiers.size.toString() )
     }

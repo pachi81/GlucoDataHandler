@@ -43,6 +43,21 @@ object Constants {
     const val SHARED_PREF_SECOND_PERMANENT_NOTIFICATION = "second_permanent_notification"
     const val SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON = "second_status_bar_notification_icon"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON = "status_bar_notification_big_icon"
+    const val SHARED_PREF_LARGE_ARROW_ICON = "large_arrow_icon"
+    const val SHARED_PREF_FLOATING_WIDGET = "floating_widget"
+    const val SHARED_PREF_FLOATING_WIDGET_STYLE = "floating_widget_style"
+    const val SHARED_PREF_FLOATING_WIDGET_SIZE = "floating_widget_size"
+    const val SHARED_PREF_RELATIVE_TIME = "relative_time"
+
+    // internal app preferences (not changed by settings) -> use separate tag for not trigger onChanged events
+    const val SHARED_PREF_INTERNAL_TAG = "GlucoDataHandlerInternalAppPrefs"
+    const val SHARED_PREF_FLOATING_WIDGET_X = "floating_widget_x"
+    const val SHARED_PREF_FLOATING_WIDGET_Y = "floating_widget_y"
+
+    const val WIDGET_STYLE_GLUCOSE = "glucose"
+    const val WIDGET_STYLE_GLUCOSE_TREND = "glucose_trend"
+    const val WIDGET_STYLE_GLUCOSE_TREND_DELTA = "glucose_trend_delta"
+    const val WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA = "glucose_trend_delta_time"
 
     // Wear only preferences
     const val SHARED_PREF_NOTIFICATION = "notification"

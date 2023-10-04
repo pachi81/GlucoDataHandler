@@ -28,15 +28,16 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         private var connectedNodes = Collections.synchronizedMap(mutableMapOf<String,Node>())
         private val nodeBatteryLevel = Collections.synchronizedMap(mutableMapOf<String,Int>())
         val nodesConnected: Boolean get() = connectedNodes.size>0
-        fun getBatterLevels(): List<Int> {
-            val batterLevels = connectedNodes.map { node ->
+        fun getBatterLevels(addMissing: Boolean = true): List<Int> {
+            val batterLevels = mutableListOf<Int>()
+            connectedNodes.forEach { node ->
                 (if (nodeBatteryLevel.containsKey(node.key)) {
-                    nodeBatteryLevel.getValue(node.key)
+                    batterLevels.add(nodeBatteryLevel.getValue(node.key))
                 }
-                else {
-                    -1
+                else if (addMissing) {
+                    batterLevels.add(-1)
                 })
-            }.toList()
+            }
             return batterLevels
         }
 
@@ -240,11 +241,35 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     }
                 }
 
-                if (p0.path == Constants.SETTINGS_INTENT_MESSAGE_PATH || extras.containsKey(Constants.SETTINGS_BUNDLE)) {
-                    Log.d(LOG_ID, "Settings receceived from " + p0.sourceNodeId + ": " + extras.toString())
-                    val bundle = if (extras.containsKey(Constants.SETTINGS_BUNDLE)) extras.getBundle(Constants.SETTINGS_BUNDLE) else extras
+                if (extras.containsKey(Constants.SETTINGS_BUNDLE)) {
+                    Log.d(LOG_ID, "Glucose settings receceived from " + p0.sourceNodeId + ": " + extras.toString())
+                    val bundle = extras.getBundle(Constants.SETTINGS_BUNDLE)
                     ReceiveData.setSettings(context, bundle!!)
                     InternalNotifier.notify(context, NotifyDataSource.SETTINGS, bundle)
+                }
+
+                if (p0.path == Constants.SETTINGS_INTENT_MESSAGE_PATH) {
+                    // check for other settings send...
+                    extras.remove(Constants.SETTINGS_BUNDLE)
+                    extras.remove(BatteryReceiver.LEVEL)
+                    if (!extras.isEmpty) {
+                        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                        val keys = extras.keySet()
+                        Log.d(LOG_ID, keys.size.toString() + " settings received")
+                        with(sharedPref.edit()) {
+                            keys.forEach {
+                                try {
+                                    val value = extras.getBoolean(it)
+                                    Log.d(LOG_ID, "Setting value " + value + " for " + it)
+                                        putBoolean(it, value)
+                                } catch (exc: ClassCastException) {
+                                    Log.w(LOG_ID,"Getting value for key " + it + " caused exception: " + exc.message)
+                                }
+                            }
+                            apply()
+                        }
+                        InternalNotifier.notify(context, NotifyDataSource.SETTINGS, extras)
+                    }
                 }
 
                 if(p0.path == Constants.REQUEST_DATA_MESSAGE_PATH || forceSend) {

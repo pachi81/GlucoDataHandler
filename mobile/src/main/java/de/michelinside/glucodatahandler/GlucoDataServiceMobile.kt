@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler
 
+import android.app.Notification
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -7,32 +8,21 @@ import android.util.Log
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
+import de.michelinside.glucodatahandler.tasker.setWearConnectionState
+import de.michelinside.glucodatahandler.widget.FloatingWidget
 import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
 
 class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInterface {
     private val LOG_ID = "GlucoDataHandler.GlucoDataServiceMobile"
+    private lateinit var floatingWidget: FloatingWidget
     init {
         Log.d(LOG_ID, "init called")
-        InternalNotifier.addNotifier(TaskerDataReceiver, mutableSetOf(NotifyDataSource.BROADCAST,NotifyDataSource.MESSAGECLIENT))
+        InternalNotifier.addNotifier(TaskerDataReceiver, mutableSetOf(NotifyDataSource.BROADCAST,NotifyDataSource.MESSAGECLIENT,NotifyDataSource.OBSOLETE_VALUE))
     }
 
     companion object {
-        private val LOG_ID = "GlucoDataHandler.GlucoDataServiceWear"
         fun start(context: Context) {
-            if (!running) {
-                try {
-                    val serviceIntent = Intent(
-                        context,
-                        GlucoDataServiceMobile::class.java
-                    )
-                    context.startService(serviceIntent)
-                } catch (exc: Exception) {
-                    Log.e(
-                        LOG_ID,
-                        "GlucoDataServiceMobile::start exception: " + exc.message.toString()
-                    )
-                }
-            }
+            start(context, GlucoDataServiceMobile::class.java)
         }
     }
 
@@ -40,12 +30,21 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         try {
             Log.d(LOG_ID, "onCreate called")
             super.onCreate()
+            floatingWidget = FloatingWidget(this)
             PermanentNotification.create(applicationContext)
             CarModeReceiver.initNotification(applicationContext)
             GlucoseBaseWidget.updateWidgets(applicationContext)
+            floatingWidget.create()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
+    }
+
+    override fun getNotification(): Notification {
+        return PermanentNotification.getNotification(
+            !sharedPref!!.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false),
+            Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, true
+        )
     }
 
     override fun onDestroy() {
@@ -53,6 +52,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             Log.d(LOG_ID, "onDestroy called")
             PermanentNotification.destroy()
             CarModeReceiver.cleanupNotification(applicationContext)
+            floatingWidget.destroy()
             super.onDestroy()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )
@@ -64,6 +64,9 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             Log.d(LOG_ID, "OnNotifyData called for source " + dataSource.toString())
             start(context)
             super.OnNotifyData(context, dataSource, extras)
+            if (dataSource == NotifyDataSource.CAPILITY_INFO) {
+                context.setWearConnectionState(WearPhoneConnection.nodesConnected)
+            }
             if (extras != null) {
                 if (dataSource == NotifyDataSource.MESSAGECLIENT || dataSource == NotifyDataSource.BROADCAST) {
                     val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)

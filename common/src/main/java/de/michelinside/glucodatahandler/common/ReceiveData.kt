@@ -6,12 +6,13 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.notifier.*
+import java.math.RoundingMode
 import java.text.DateFormat
 import java.util.*
 import kotlin.math.abs
 
 
-object ReceiveData {
+object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private const val LOG_ID = "GlucoDataHandler.ReceiveData"
     const val SERIAL = "glucodata.Minute.SerialNumber"
     const val MGDL = "glucodata.Minute.mgdl"
@@ -20,7 +21,7 @@ object ReceiveData {
     const val ALARM = "glucodata.Minute.Alarm"
     const val TIME = "glucodata.Minute.Time"
     const val DELTA = "glucodata.Minute.Delta"
-    private lateinit var obsoleteNotify: ObsoleteNotifier
+    private lateinit var obsoleteNotify: ElapsedTimeNotifier
 
     enum class AlarmType {
         NONE,
@@ -41,6 +42,7 @@ object ReceiveData {
     var rateLabel: String? = null
     var dateformat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT)
     var timeformat = DateFormat.getTimeInstance(DateFormat.DEFAULT)
+    var shorttimeformat = DateFormat.getTimeInstance(DateFormat.SHORT)
     var source: NotifyDataSource = NotifyDataSource.BROADCAST
     private var lowValue: Float = 0F
     private val low: Float get() {
@@ -101,7 +103,7 @@ object ReceiveData {
         Log.d(LOG_ID, "initData called")
         try {
             if (!initialized) {
-                obsoleteNotify = ObsoleteNotifier()
+                obsoleteNotify = ElapsedTimeNotifier()
                 readTargets(context)
                 loadExtras(context)
                 initialized = true
@@ -217,11 +219,29 @@ object ReceiveData {
         if (rate > -1.0f) return context.getString(R.string.rate_flat)
         if (rate > -2.0f) return context.getString(R.string.rate_forty_five_down)
         if (rate > -3.0f) return context.getString(R.string.rate_single_down)
-        return if (java.lang.Float.isNaN(rate)) "" else context.getString(R.string.rate_double_down)
+        return if (rate.isNaN()) "" else context.getString(R.string.rate_double_down)
     }
 
     fun getTimeDiffMinute(): Long {
         return Utils.round(timeDiff.toFloat()/60000, 0).toLong()
+    }
+
+    fun getElapsedTimeMinute(roundingMode: RoundingMode = RoundingMode.HALF_UP): Long {
+        return Utils.round((System.currentTimeMillis()-time).toFloat()/60000, 0, roundingMode).toLong()
+    }
+
+    fun getElapsedTimeMinuteAsString(context: Context, short: Boolean = true): String {
+        if (time == 0L)
+            return "--"
+        if (ElapsedTimeNotifier.relativeTime) {
+            val elapsed_time = getElapsedTimeMinute()
+            if (elapsed_time > 60)
+                return context.getString(R.string.elapsed_time_hour)
+            return String.format(context.getString(R.string.elapsed_time), elapsed_time)
+        } else if (short)
+            return shorttimeformat.format(Date(time))
+        else
+            return timeformat.format(Date(time))
     }
 
     fun handleIntent(context: Context, dataSource: NotifyDataSource, extras: Bundle?) : Boolean
@@ -230,7 +250,7 @@ object ReceiveData {
             return false
         }
         try {
-            Log.i(
+            Log.d(
                 LOG_ID, "Glucodata received from " + dataSource.toString() + ": " +
                         extras.toString() +
                         " - timestamp: " + dateformat.format(Date(extras.getLong(TIME)))
@@ -239,7 +259,11 @@ object ReceiveData {
             val curTimeDiff = extras.getLong(TIME) - time
             if(curTimeDiff >= 1000) // check for new value received
             {
-                obsoleteNotify.cancel(context)
+                Log.i(
+                    LOG_ID, "Glucodata received from " + dataSource.toString() + ": " +
+                            extras.toString() +
+                            " - timestamp: " + dateformat.format(Date(extras.getLong(TIME)))
+                )
                 source = dataSource
                 sensorID = extras.getString(SERIAL) //Name of sensor
                 glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
@@ -352,6 +376,7 @@ object ReceiveData {
 
     private fun readTargets(context: Context) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        sharedPref.registerOnSharedPreferenceChangeListener(this)
         if(!sharedPref.contains(Constants.SHARED_PREF_USE_MMOL)) {
             Log.i(LOG_ID, "Upgrade to new mmol handling!")
             isMmolValue = Utils.isMmolValue(targetMinValue)
@@ -403,8 +428,9 @@ object ReceiveData {
     private fun saveExtras(context: Context) {
         try {
             Log.d(LOG_ID, "Saving extras")
-            val sharedPref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, Context.MODE_PRIVATE)
-            with(sharedPref.edit()) {
+            // use own tag to prevent trigger onChange event at every time!
+            val sharedGlucosePref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, Context.MODE_PRIVATE)
+            with(sharedGlucosePref.edit()) {
                 putLong(TIME, time)
                 putFloat(GLUCOSECUSTOM, glucose)
                 putInt(MGDL, rawValue)
@@ -422,22 +448,52 @@ object ReceiveData {
     private fun loadExtras(context: Context) {
         try {
             if (time == 0L) {
-                val sharedPref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, Context.MODE_PRIVATE)
-                if (sharedPref.contains(TIME)) {
+                val sharedGlucosePref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, Context.MODE_PRIVATE)
+                if (sharedGlucosePref.contains(TIME)) {
                     Log.i(LOG_ID, "Read saved values...")
                     val extras = Bundle()
-                    extras.putLong(TIME, sharedPref.getLong(TIME, time))
-                    extras.putFloat(GLUCOSECUSTOM, sharedPref.getFloat(GLUCOSECUSTOM, glucose))
-                    extras.putInt(MGDL, sharedPref.getInt(MGDL, rawValue))
-                    extras.putString(SERIAL, sharedPref.getString(SERIAL, sensorID))
-                    extras.putFloat(RATE, sharedPref.getFloat(RATE, rate))
-                    extras.putInt(ALARM, sharedPref.getInt(ALARM, alarm))
-                    extras.putFloat(DELTA, sharedPref.getFloat(DELTA, deltaValue))
+                    extras.putLong(TIME, sharedGlucosePref.getLong(TIME, time))
+                    extras.putFloat(GLUCOSECUSTOM, sharedGlucosePref.getFloat(GLUCOSECUSTOM, glucose))
+                    extras.putInt(MGDL, sharedGlucosePref.getInt(MGDL, rawValue))
+                    extras.putString(SERIAL, sharedGlucosePref.getString(SERIAL, sensorID))
+                    extras.putFloat(RATE, sharedGlucosePref.getFloat(RATE, rate))
+                    extras.putInt(ALARM, sharedGlucosePref.getInt(ALARM, alarm))
+                    extras.putFloat(DELTA, sharedGlucosePref.getFloat(DELTA, deltaValue))
                     handleIntent(context, NotifyDataSource.BROADCAST, extras)
                 }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Reading extras exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
+        }
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        try {
+            Log.d(LOG_ID, "onSharedPreferenceChanged called for key " + key)
+            if (GlucoDataService.context != null) {
+                when (key) {
+                    Constants.SHARED_PREF_USE_MMOL,
+                    Constants.SHARED_PREF_TARGET_MIN,
+                    Constants.SHARED_PREF_TARGET_MAX,
+                    Constants.SHARED_PREF_LOW_GLUCOSE,
+                    Constants.SHARED_PREF_HIGH_GLUCOSE,
+                    Constants.SHARED_PREF_FIVE_MINUTE_DELTA,
+                    Constants.SHARED_PREF_COLOR_ALARM,
+                    Constants.SHARED_PREF_COLOR_OUT_OF_RANGE,
+                    Constants.SHARED_PREF_COLOR_OK -> {
+                        updateSettings(sharedPreferences!!)
+                        val extras = Bundle()
+                        extras.putBundle(Constants.SETTINGS_BUNDLE, getSettingsBundle())
+                        InternalNotifier.notify(
+                            GlucoDataService.context!!,
+                            NotifyDataSource.SETTINGS,
+                            extras
+                        )
+                    }
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
         }
     }
 }

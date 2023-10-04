@@ -8,6 +8,7 @@
     <string name="activity_switch_notification">Vibration</string>
     <string name="activity_switch_colored_aod">Colored AOD</string>
     <string name="activity_target_range">Target range:</string>
+    <string name="activity_large_arrow_icon">Big trend-arrow</string>
 
     <string name="short_value">Glucose</string>
     <string name="image_value">Glucose (very big and colored)</string>
@@ -25,6 +26,7 @@
     <string name="short_delta">Delta</string>
     <string name="short_delta_arrow">Delta and trend</string>
     <string name="short_delta_icon">Delta with Icon</string>
+    <string name="short_delta_time">Delta and timestamp</string>
     <string name="image_arrow">Trend (big, colored)</string>
     <string name="icon_arrow">Trend icon</string>
     <string name="test_neg_range">Test Range complication with negative values (for trend-range support)</string>
@@ -35,6 +37,7 @@
     <string name="battery_level">Battery level (wear and phone)</string>
 
     <string name="source_message_client">Phone</string>
+    <string name="activity_switch_relative_time">Relative time</string>
 
 
 </resources>

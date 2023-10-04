@@ -9,6 +9,7 @@
     <string name="activity_switch_notification">Wibracje</string>
     <string name="activity_target_range">Zakres docelowy:</string>
     <string name="activity_switch_colored_aod">Kolorowy AOD</string>
+    <string name="activity_large_arrow_icon">Duża strzałka trendu</string>
 
     <string name="short_value">Glukoza</string>
     <string name="image_value">Glukoza (bardzo duża i kolorowa)</string>
@@ -26,6 +27,7 @@
     <string name="short_delta">Delta</string>
     <string name="short_delta_arrow">Delta i trend</string>
     <string name="short_delta_icon">Delta z ikoną</string>
+    <string name="short_delta_time">Delta i znacznik czasu</string>
     <string name="image_arrow">Trend (duży, kolorowy)</string>
     <string name="icon_arrow">Ikona trendu</string>
     <string name="test_neg_range">Testowa komplikacja zakresu z wartościami ujemnymi (dla wsparcia zakresu trendu)</string>
@@ -36,5 +38,6 @@
     <string name="battery_level">Poziom baterii (zegarek  i telefon)</string>
 
     <string name="source_message_client">Telefon</string>
+    <string name="activity_switch_relative_time">Czas względny</string>
 
 </resources>

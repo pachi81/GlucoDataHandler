@@ -7,33 +7,45 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/viewIcon"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="100dp"
-        android:src="@drawable/icon_question"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.053"
-        app:layout_constraintStart_toEndOf="@+id/txtBgValue"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/info_label_rate"/>
 
-    <TextView
-        android:id="@+id/txtBgValue"
-        android:layout_width="136dp"
-        android:layout_height="85dp"
+    <LinearLayout
+        android:id="@+id/layout_glucose_trend"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
         android:layout_marginStart="60dp"
         android:layout_marginTop="100dp"
-        android:text="---"
-        android:textAlignment="viewEnd"
-        android:textColor="#757575"
-        android:textSize="60sp"
-        android:textStyle="bold"
+        android:layout_marginEnd="60dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="HardcodedText" />
+        tools:ignore="UselessParent">
+
+        <TextView
+            android:id="@+id/txtBgValue"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:maxLines="1"
+            android:text="---"
+            android:textAlignment="viewEnd"
+            android:textColor="#757575"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
+        <ImageView
+            android:id="@+id/viewIcon"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:paddingVertical="2dp"
+            android:src="@drawable/icon_question"
+            tools:ignore="ContentDescription" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/txtLastValue"
@@ -47,7 +59,7 @@
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtBgValue" />
+        app:layout_constraintTop_toBottomOf="@+id/layout_glucose_trend" />
 
     <TextView
         android:id="@+id/txtWearInfo"

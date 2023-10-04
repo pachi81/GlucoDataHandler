@@ -19,9 +19,8 @@ import de.michelinside.glucodatahandler.common.Utils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
-import java.util.*
 
-class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface {
+class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GlucoDataHandler.CarMediaBrowserService"
     private val MEDIA_ROOT_ID = "root"
     private val MEDIA_GLUCOSE_ID = "glucose_value"
@@ -33,6 +32,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface {
         try {
             super.onCreate()
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            sharedPref.registerOnSharedPreferenceChangeListener(this)
 
             session = MediaSessionCompat(this, "MyMusicService")
             // Callbacks to handle events from the user (play, pause, search)
@@ -55,7 +55,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface {
                 NotifyDataSource.BROADCAST,
                 NotifyDataSource.MESSAGECLIENT,
                 NotifyDataSource.SETTINGS,
-                NotifyDataSource.OBSOLETE_VALUE))
+                NotifyDataSource.OBSOLETE_VALUE,
+                NotifyDataSource.TIME_VALUE))
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -65,6 +66,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface {
         Log.d(LOG_ID, "onDestroy")
         try {
             InternalNotifier.remNotifier(this)
+            sharedPref.unregisterOnSharedPreferenceChangeListener(this)
             session.release()
             super.onDestroy()
         } catch (exc: Exception) {
@@ -111,6 +113,19 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface {
         }
     }
 
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        Log.d(LOG_ID, "onSharedPreferenceChanged called for key " + key)
+        try {
+            when(key) {
+                Constants.SHARED_PREF_CAR_MEDIA -> {
+                    notifyChildrenChanged(MEDIA_ROOT_ID)
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() )
+        }
+    }
+
     private fun getIcon(size: Int = 100): Bitmap? {
         return Utils.textRateToBitmap(ReceiveData.getClucoseAsString(), ReceiveData.rate, ReceiveData.getClucoseColor(), ReceiveData.isObsolete(
             Constants.VALUE_OBSOLETE_SHORT_SEC), ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),
@@ -128,7 +143,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface {
                     )
                     .putString(
                         MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE,
-                        ReceiveData.timeformat.format(Date(ReceiveData.time))
+                        ReceiveData.getElapsedTimeMinuteAsString(this)
                     )
                     .putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, getIcon(400)!!)
                     .build()
@@ -138,7 +153,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface {
         }
         val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
             .setMediaId(MEDIA_GLUCOSE_ID)
-            .setTitle("Delta: " + ReceiveData.getDeltaAsString() + "\n" + ReceiveData.timeformat.format(Date(ReceiveData.time)))
+            .setTitle("Delta: " + ReceiveData.getDeltaAsString() + "\n" + ReceiveData.getElapsedTimeMinuteAsString(this))
             //.setSubtitle(ReceiveData.timeformat.format(Date(ReceiveData.time)))
             .setIconBitmap(getIcon()!!)
         return MediaBrowserCompat.MediaItem(

@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">GlucoDataHandler</string>
+
+
+    <string name="tasker_event_glucodata">New glucose value</string>
+    <string name="tasker_event_glucodata_obsolete">Obsolete value</string>
+    <string name="tasker_event_glucodata_alarm">Glucose alarm</string>
+    <string name="tasker_wear_connection_state">Wear connection</string>
+    <string name="tasker_android_auto_connection_state">Android Auto connection</string>
+    <string name="tasker_target_range_state">Glucose range change</string>
+
     <string name="glucose_label">Glucose</string>
     <string name="glucose_html_label">Glucose value in unit from Juggluco settings</string>
     <string name="sensor_id_label">Sensor ID</string>
@@ -24,13 +33,17 @@
     <string name="delta_html_label">Delta of current and previous glucose value (per minute)</string>
     <string name="unit_label">Unit</string>
     <string name="unit_html_label">Unit of the glucose value (mg/dl or mmol/l)</string>
+    <string name="obsolete_time_label">Time since last value</string>
+    <string name="obsolete_time_html_label">Time in minutes (5 or 10) since last value was received.</string>
 
     <string name="activity_main_connected_label">Wear: connected (%1$s)</string>
     <string name="activity_main_disconnected_label">Wear: disconnected</string>
     <string name="activity_main_car_connected_label">Android Auto: connected</string>
     <string name="activity_main_car_disconnected_label">Android Auto: disconnected</string>
 
+    <string name="pref_cat_general">General</string>
     <string name="pref_cat_notification">Notification</string>
+    <string name="pref_cat_floating_widget">Floating widget</string>
     <string name="pref_cat_android_auto">Android Auto</string>
     <string name="pref_cat_xdrip">xDrip+</string>
     <string name="pref_cat_forward_broadcast">Glucodata broadcast</string>
@@ -67,7 +80,7 @@
     <string name="pref_color_ok">Target color</string>
     <string name="pref_color_ok_summary">Color for glucose values in the target range.</string>
     <string name="pref_notification">Notification</string>
-    <string name="pref_notification_summary">Shows a permanent notification with the current trend arrow, glucose and delta value in the status bar.</string>
+    <string name="pref_notification_summary">Shows a permanent notification with the current trend arrow, glucose and delta value in the status bar.\nThis notification prevents Android stopping this app.</string>
     <string name="pref_notification_icon">Status bar icon</string>
     <string name="pref_notification_icon_summary">Style of the small status bar icon of the notification.</string>
     <string name="pref_notification_big_icon">Big status bar icon</string>
@@ -78,11 +91,21 @@
     <string name="pref_second_notification_summary">Show a second notification without content to have an additional icon in the status bar.</string>
     <string name="pref_second_notification_icon">2. status bar icon</string>
     <string name="pref_second_notification_icon_summary">Style of the small status bar icon of the second notification.</string>
+    <string name="pref_floating_widget">Floating widget</string>
+    <string name="pref_floating_widget_summary">Show glucose, trend, delta and time as floating widget.\nPlease also activate notification for preventing android to kill the app.</string>
+    <string name="pref_floating_widget_size">Size</string>
+    <string name="pref_floating_widget_size_summary">Change size of the floating widget</string>
+    <string name="pref_floating_widget_style">Style</string>
+    <string name="pref_floating_widget_style_summary">Style of the floating widget.</string>
+    <string name="pref_relative_time">Relative time</string>
+    <string name="pref_relative_time_summary">Use relative time instead of glucose timestamp for widgets.\nRelative time depends on the battery settings on your device and may not work correct.</string>
 
     <string name="pref_status_bar_icon_app">App icon</string>
     <string name="pref_status_bar_icon_glucose">Glucose value</string>
     <string name="pref_status_bar_icon_trend">Trend arrow</string>
     <string name="pref_status_bar_icon_delta">Delta</string>
+
+    <string name="pref_wear_notification">Wear: vibration</string>
 
     <string name="pref_global_broadcast">Global broadcast</string>
 

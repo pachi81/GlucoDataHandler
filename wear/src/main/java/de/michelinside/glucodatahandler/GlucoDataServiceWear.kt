@@ -13,38 +13,31 @@ import de.michelinside.glucodatahandler.common.notifier.*
 
 
 class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
-    private var isForegroundService = false
+    private val LOG_ID = "GlucoDataHandler.GlucoDataServiceWear"
     init {
         Log.d(LOG_ID, "init called")
-        InternalNotifier.addNotifier(ActiveComplicationHandler, mutableSetOf(NotifyDataSource.MESSAGECLIENT,NotifyDataSource.BROADCAST,NotifyDataSource.SETTINGS,NotifyDataSource.OBSOLETE_VALUE))
-        InternalNotifier.addNotifier(BatteryLevelComplicationUpdater, mutableSetOf(NotifyDataSource.CAPILITY_INFO,NotifyDataSource.BATTERY_LEVEL, NotifyDataSource.NODE_BATTERY_LEVEL))
+        InternalNotifier.addNotifier(
+            ActiveComplicationHandler, mutableSetOf(
+                NotifyDataSource.MESSAGECLIENT,
+                NotifyDataSource.BROADCAST,
+                NotifyDataSource.SETTINGS,
+                NotifyDataSource.OBSOLETE_VALUE,
+                NotifyDataSource.TIME_VALUE
+            )
+        )
+        InternalNotifier.addNotifier(
+            BatteryLevelComplicationUpdater,
+            mutableSetOf(
+                NotifyDataSource.CAPILITY_INFO,
+                NotifyDataSource.BATTERY_LEVEL,
+                NotifyDataSource.NODE_BATTERY_LEVEL
+            )
+        )
     }
 
     companion object {
-        private val LOG_ID = "GlucoDataHandler.GlucoDataServiceWear"
         fun start(context: Context) {
-            if (!running) {
-                try {
-                    val serviceIntent = Intent(
-                        context,
-                        GlucoDataServiceWear::class.java
-                    )
-                    val sharedPref = context.getSharedPreferences(
-                        Constants.SHARED_PREF_TAG,
-                        Context.MODE_PRIVATE
-                    )
-                    serviceIntent.putExtra(
-                        Constants.SHARED_PREF_FOREGROUND_SERVICE,
-                        sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
-                    )
-                    context.startService(serviceIntent)
-                } catch (exc: Exception) {
-                    Log.e(
-                        LOG_ID,
-                        "GlucoDataServiceWear::start exception: " + exc.message.toString()
-                    )
-                }
-            }
+            start(context, GlucoDataServiceWear::class.java)
         }
     }
 
@@ -54,50 +47,6 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
         ActiveComplicationHandler.OnNotifyData(this, NotifyDataSource.CAPILITY_INFO, null)
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        try {
-            Log.d(LOG_ID, "onStartCommand called")
-            super.onStartCommand(intent, flags, startId)
-            val isForeground = intent?.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
-            if (isForeground == true && !isForegroundService) {
-                isForegroundService = true
-                Log.i(LOG_ID, "Starting service in foreground!")
-                val channelId = "glucodatahandler_service_01"
-                val channel = NotificationChannel(
-                    channelId,
-                    "Foregorund GlucoDataService",
-                    NotificationManager.IMPORTANCE_MIN
-                )
-                (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(
-                    channel
-                )
-                val notificationIntent = Intent(this, WaerActivity::class.java)
-
-                val pendingIntent = PendingIntent.getActivity(
-                    this, 1,
-                    notificationIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-                )
-
-                val notification: Notification = Notification.Builder(this, channelId)
-                    .setContentTitle(getString(R.string.forground_notification_descr))
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentIntent(pendingIntent)
-                    .setAutoCancel(true)
-                    .setOnlyAlertOnce(true)
-                    .build()
-                startForeground(1, notification)
-            } else if ( isForegroundService && intent?.getBooleanExtra(Constants.ACTION_STOP_FOREGROUND, false) == true ) {
-                isForegroundService = false
-                Log.i(LOG_ID, "Stopping service in foreground!")
-                stopForeground(STOP_FOREGROUND_REMOVE)
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "onStartCommand exception: " + exc.toString())
-        }
-        return START_STICKY  // keep alive
-    }
-
-
     override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnNotifyData called for source " + dataSource.toString())
@@ -106,5 +55,31 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString())
         }
+    }
+
+    override fun getNotification(): Notification {
+        val channelId = "glucodatahandler_service_01"
+        val channel = NotificationChannel(
+            channelId,
+            "Foregorund GlucoDataService",
+            NotificationManager.IMPORTANCE_MIN
+        )
+        (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(
+            channel
+        )
+        val notificationIntent = Intent(this, WaerActivity::class.java)
+
+        val pendingIntent = PendingIntent.getActivity(
+            this, 1,
+            notificationIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        return Notification.Builder(this, channelId)
+            .setContentTitle(getString(R.string.forground_notification_descr))
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .setOnlyAlertOnce(true)
+            .build()
     }
 }

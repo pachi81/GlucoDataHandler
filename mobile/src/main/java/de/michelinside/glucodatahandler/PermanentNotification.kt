@@ -4,6 +4,7 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Paint
@@ -20,15 +21,16 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
 
 
-
 object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
     private const val LOG_ID = "GlucoDataHandler.PermanentNotification"
     private const val CHANNEL_ID = "GlucoDataNotify_permanent"
     private const val CHANNEL_NAME = "Permanent notification"
-    private const val NOTIFICATION_ID = 123
+    private const val FOREGROUND_CHANNEL_ID = "GlucoDataNotify_foreground"
+    private const val FOREGROUND_CHANNEL_NAME = "Foreground notification"
     private const val SECOND_NOTIFICATION_ID = 124
     private lateinit var notificationMgr: NotificationManager
     private lateinit var notificationCompat: Notification.Builder
+    private lateinit var foregroundNotificationCompat: Notification.Builder
     private lateinit var sharedPref: SharedPreferences
 
     enum class StatusBarIcon(val pref: String) {
@@ -70,18 +72,24 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         }
     }
 
-
     private fun createNotificationChannel(context: Context) {
         notificationMgr = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notificationChannel = NotificationChannel(
             CHANNEL_ID,
             CHANNEL_NAME,
-            NotificationManager.IMPORTANCE_HIGH
+            NotificationManager.IMPORTANCE_DEFAULT
         )
         notificationChannel.setSound(null, null)   // silent
         notificationMgr.createNotificationChannel(notificationChannel)
+        notificationMgr = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val foregroundChannel = NotificationChannel(
+            FOREGROUND_CHANNEL_ID,
+            FOREGROUND_CHANNEL_NAME,
+            NotificationManager.IMPORTANCE_HIGH
+        )
+        foregroundChannel.setSound(null, null)   // silent
+        notificationMgr.createNotificationChannel(foregroundChannel)
     }
-
 
     private fun createNofitication(context: Context) {
         createNotificationChannel(context)
@@ -96,11 +104,23 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setColorized(true)
             .setCategory(Notification.CATEGORY_STATUS)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
+
+        foregroundNotificationCompat = Notification.Builder(context, FOREGROUND_CHANNEL_ID)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentIntent(Utils.getAppIntent(context, MainActivity::class.java, 4, false))
+            .setOngoing(true)
+            .setOnlyAlertOnce(true)
+            .setAutoCancel(false)
+            .setShowWhen(true)
+            .setColorized(true)
+            .setCategory(Notification.CATEGORY_STATUS)
+            .setVisibility(Notification.VISIBILITY_PUBLIC)
     }
 
 
     private fun removeNotifications() {
-        notificationMgr.cancel(NOTIFICATION_ID)  // remove notification
+        //notificationMgr.cancel(NOTIFICATION_ID)  // remove notification
+        showPrimaryNotification(false)
         notificationMgr.cancel(SECOND_NOTIFICATION_ID)
     }
 
@@ -114,39 +134,44 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         }
     }
 
-    private fun showNotification(notificaitonId: Int, withContent: Boolean, iconKey: String, colored: Boolean) {
-        try {
-            Log.d(LOG_ID, "showNotification called")
-            var remoteViews: RemoteViews? = null
-            if (withContent) {
-                remoteViews = RemoteViews(GlucoDataService.context!!.packageName, R.layout.notification)
-                remoteViews.setTextViewText(R.id.glucose, ReceiveData.getClucoseAsString())
-                remoteViews.setTextColor(R.id.glucose, ReceiveData.getClucoseColor())
-                remoteViews.setImageViewBitmap(R.id.trendImage, Utils.getRateAsBitmap())
-                remoteViews.setTextViewText(R.id.deltaText, "Delta: " + ReceiveData.getDeltaAsString())
-                if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) {
-                    if (!ReceiveData.isObsolete())
-                        remoteViews.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
-                    remoteViews.setTextColor(R.id.deltaText, Color.GRAY )
-                }
+    fun getNotification(withContent: Boolean, iconKey: String, foreground: Boolean) : Notification {
+        Log.d(LOG_ID, "showNotification called")
+        var remoteViews: RemoteViews? = null
+        if (withContent) {
+            remoteViews = RemoteViews(GlucoDataService.context!!.packageName, R.layout.notification)
+            remoteViews.setTextViewText(R.id.glucose, ReceiveData.getClucoseAsString())
+            remoteViews.setTextColor(R.id.glucose, ReceiveData.getClucoseColor())
+            remoteViews.setImageViewBitmap(R.id.trendImage, Utils.getRateAsBitmap())
+            remoteViews.setTextViewText(R.id.deltaText, "Delta: " + ReceiveData.getDeltaAsString())
+            if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) {
+                if (!ReceiveData.isObsolete())
+                    remoteViews.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
+                remoteViews.setTextColor(R.id.deltaText, Color.GRAY )
             }
+        }
 
-            val notification = notificationCompat
-                .setSmallIcon(getStatusBarIcon(iconKey))
-                .setWhen(ReceiveData.time)
-                .setCustomContentView(remoteViews)
-                .setCustomBigContentView(null)
-                .setColor(ReceiveData.getClucoseColor(!colored))
-                .setStyle(Notification.DecoratedCustomViewStyle())
-                .setContentTitle(if (withContent) ReceiveData.getClucoseAsString() else "")
-                .setContentText(if (withContent) "Delta: " + ReceiveData.getDeltaAsString() else "")
-                .build()
+        val notificationBuilder = if(foreground) foregroundNotificationCompat else notificationCompat
+        val notification = notificationBuilder
+            .setSmallIcon(getStatusBarIcon(iconKey))
+            .setWhen(ReceiveData.time)
+            .setCustomContentView(remoteViews)
+            .setCustomBigContentView(null)
+            .setColorized(false)
+            .setStyle(Notification.DecoratedCustomViewStyle())
+            .setContentTitle(if (withContent) ReceiveData.getClucoseAsString() else "")
+            .setContentText(if (withContent) "Delta: " + ReceiveData.getDeltaAsString() else "")
+            .build()
 
-            notification.visibility
-            notification.flags = notification.flags or Notification.FLAG_NO_CLEAR
+        notification.visibility
+        notification.flags = notification.flags or Notification.FLAG_NO_CLEAR
+        return notification
+    }
+
+    private fun showNotification(id: Int, withContent: Boolean, iconKey: String, foreground: Boolean) {
+        try {
             notificationMgr.notify(
-                notificaitonId,
-                notification
+                id,
+                getNotification(withContent, iconKey, foreground)
             )
         } catch (exc: Exception) {
             Log.e(LOG_ID, "showNotification exception: " + exc.toString() )
@@ -154,11 +179,31 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     }
 
     private fun showNotifications() {
-        showNotification(NOTIFICATION_ID, !sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false), Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, true)
+        showPrimaryNotification(true)
         if (sharedPref.getBoolean(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, false)) {
             showNotification(SECOND_NOTIFICATION_ID, false, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, false)
         } else {
             notificationMgr.cancel(SECOND_NOTIFICATION_ID)
+        }
+    }
+
+    private fun showPrimaryNotification(show: Boolean) {
+        Log.d(LOG_ID, "showPrimaryNotification " + show)
+        if (show)
+            showNotification(GlucoDataService.NOTIFICATION_ID, !sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false), Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, true)
+        if (show != GlucoDataService.foreground) {
+            Log.d(LOG_ID, "change foreground notification mode")
+            with(sharedPref.edit()) {
+                putBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, show)
+                apply()
+            }
+            val serviceIntent =
+                Intent(GlucoDataService.context!!, GlucoDataServiceMobile::class.java)
+            if (show)
+                serviceIntent.putExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
+            else
+                serviceIntent.putExtra(Constants.ACTION_STOP_FOREGROUND, true)
+            GlucoDataService.context!!.startService(serviceIntent)
         }
     }
 

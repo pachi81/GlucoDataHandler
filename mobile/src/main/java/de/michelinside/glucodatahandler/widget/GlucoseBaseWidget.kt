@@ -11,16 +11,14 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.RemoteViews
 import de.michelinside.glucodatahandler.BuildConfig
+import de.michelinside.glucodatahandler.GlucoDataServiceMobile
 import de.michelinside.glucodatahandler.MainActivity
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.Utils
-import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
-import java.text.DateFormat
-import java.util.*
 
 
 enum class WidgetType(val cls: Class<*>) {
@@ -34,11 +32,12 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
                                  private val hasTrend: Boolean = false,
                                  private val hasDelta: Boolean = false,
                                  private val hasTime: Boolean = false): AppWidgetProvider(), NotifierInterface {
-    private val shortTimeFormat: DateFormat = DateFormat.getTimeInstance(DateFormat.SHORT)
-    private var init = false
+    init {
+        Log.d(LOG_ID, "init called for "+ this.toString())
+    }
 
     companion object {
-        private const val LOG_ID = "GlucoDataHandler.GlucoseBaseWidget"
+        private const val LOG_ID = "GlucoDataHandler.widget.GlucoseBaseWidget"
 
         protected fun getCurrentWidgetIds(context: Context, type: WidgetType): IntArray {
             val component = ComponentName(
@@ -51,15 +50,26 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
         }
 
         fun updateWidgets(context: Context) {
-            enumValues<WidgetType>().forEach {
-                val appWidgetIds = getCurrentWidgetIds(context, it)
+            try {
+                enumValues<WidgetType>().forEach {
+                    updateWidgets(context, it)
+                }
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "Exception in updateWidgets: " + exc.message.toString())
+            }
+        }
+        fun updateWidgets(context: Context, type: WidgetType) {
+            try {
+                val appWidgetIds = getCurrentWidgetIds(context, type)
                 if (appWidgetIds.isNotEmpty()) {
-                    Log.i(LOG_ID, "Trigger update of " + appWidgetIds.size + " widget(s) with type " + it.toString())
-                    val intent = Intent(context, it.cls)
+                    Log.i(LOG_ID, "Trigger update of " + appWidgetIds.size + " widget(s) with type " + type.toString())
+                    val intent = Intent(context, type.cls)
                     intent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
                     intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds)
                     context.sendBroadcast(intent)
                 }
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "Exception in updateWidgets: " + exc.message.toString())
             }
         }
     }
@@ -69,35 +79,55 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
-        // There may be multiple widgets active, so update all of them
-        Log.d(LOG_ID, "onUpdate called for " + appWidgetIds.size.toString() + " widgets")
-        if (!init)
+        try {
+            // There may be multiple widgets active, so update all of them
+            Log.d(LOG_ID, "onUpdate called for " + this.toString() + " - ids: " + appWidgetIds.contentToString())
             onEnabled(context)
-        for (appWidgetId in appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId)
+            for (appWidgetId in appWidgetIds) {
+                updateAppWidget(context, appWidgetManager, appWidgetId)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Exception in onUpdate: " + exc.message.toString())
+        }
+    }
+
+    override fun onDeleted(context: Context?, appWidgetIds: IntArray?) {
+        try {
+            Log.i(LOG_ID, "onDeleted called for " + this.toString() + " - ids: " + appWidgetIds?.contentToString() )
+            super.onDeleted(context, appWidgetIds)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Exception in onDeleted: " + exc.message.toString())
+        }
+    }
+
+    override fun onRestored(context: Context?, oldWidgetIds: IntArray?, newWidgetIds: IntArray?) {
+        try {
+            Log.i(LOG_ID, "onRestored called for " + this.toString() + " - old ids: " + oldWidgetIds?.contentToString() + " - new ids: " + newWidgetIds?.contentToString())
+            super.onRestored(context, oldWidgetIds, newWidgetIds)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Exception in onRestored: " + exc.message.toString())
         }
     }
 
     override fun onEnabled(context: Context) {
-        // Enter relevant functionality for when the first widget is created
-        if (!init) {
-            Log.d(LOG_ID, "onEnabled called")
-            val filter = mutableSetOf(
-                NotifyDataSource.BROADCAST,
-                NotifyDataSource.MESSAGECLIENT,
-                NotifyDataSource.SETTINGS,
-                NotifyDataSource.OBSOLETE_VALUE
-            )   // to trigger re-start for the case of stopped by the system
-            InternalNotifier.addNotifier(this, filter)
-            init = true
+        try {
+            // Enter relevant functionality for when the first widget is created
+            Log.d(LOG_ID, "onEnabled called for " + this.toString())
+            GlucoDataServiceMobile.start(context)
+            ActiveWidgetHandler.addWidget(type)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Exception in onEnabled: " + exc.message.toString())
         }
     }
 
     override fun onDisabled(context: Context) {
-        // Enter relevant functionality for when the last widget is disabled
-        Log.d(LOG_ID, "onDisabled called")
-        InternalNotifier.remNotifier(this)
-        init = false
+        try {
+            // Enter relevant functionality for when the last widget is disabled
+            Log.d(LOG_ID, "onDisabled calledd for " + this.toString())
+            ActiveWidgetHandler.remWidget(type)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Exception in onDisabled: " + exc.message.toString())
+        }
     }
 
     override fun onAppWidgetOptionsChanged(
@@ -106,17 +136,25 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
         appWidgetId: Int,
         newOptions: Bundle?
     ) {
-        Log.d(LOG_ID, "onAppWidgetOptionsChanged called for ID " + appWidgetId.toString())
-        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
-        updateAppWidget(context!!, appWidgetManager!!, appWidgetId)
+        try {
+            Log.d(LOG_ID, "onAppWidgetOptionsChanged called for ID " + appWidgetId.toString())
+            super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
+            updateAppWidget(context!!, appWidgetManager!!, appWidgetId)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Exception in onAppWidgetOptionsChanged: " + exc.message.toString())
+        }
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
-        Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString())
-        val component = ComponentName(context, type.cls)
-        with(AppWidgetManager.getInstance(context)) {
-            val appWidgetIds = getAppWidgetIds(component)
-            onUpdate(context, this, appWidgetIds )
+        try {
+            Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString())
+            val component = ComponentName(context, type.cls)
+            with(AppWidgetManager.getInstance(context)) {
+                val appWidgetIds = getAppWidgetIds(component)
+                onUpdate(context, this, appWidgetIds )
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Exception in OnNotifyData: " + exc.message.toString())
         }
     }
 
@@ -159,7 +197,7 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
         }
 
         if (hasTime) {
-            remoteViews.setTextViewText(R.id.timeText, shortTimeFormat.format(Date(ReceiveData.time)))
+            remoteViews.setTextViewText(R.id.timeText, ReceiveData.getElapsedTimeMinuteAsString(context))
         }
         if (hasDelta)
             remoteViews.setTextViewText(R.id.deltaText, ReceiveData.getDeltaAsString())
@@ -171,33 +209,37 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int
     ) {
-        // Construct the RemoteViews object
-        Log.d(LOG_ID, "updateAppWidget called for ID " + appWidgetId.toString())
-        val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
-        // portrait
-        val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
-        val maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT)
-        // landscape
-        val maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH)
-        val minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
+        try {
+            // Construct the RemoteViews object
+            Log.d(LOG_ID, "updateAppWidget called for ID " + appWidgetId.toString())
+            val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
+            // portrait
+            val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
+            val maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT)
+            // landscape
+            val maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH)
+            val minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
 
-        //Log.d(LOG_ID, "Portrait width/height=" + minWidth + "/" + maxHeight + " - landscape: " + maxWidth + "/" + minHeight )
+            //Log.d(LOG_ID, "Portrait width/height=" + minWidth + "/" + maxHeight + " - landscape: " + maxWidth + "/" + minHeight )
 
-        val isPortrait = true   // todo: check for portrait mode for tablets!?
+            val isPortrait = true   // todo: check for portrait mode for tablets!?
 
-        val width = if (isPortrait) minWidth else maxWidth
-        val height = if (isPortrait) maxHeight else minHeight
+            val width = if (isPortrait) minWidth else maxWidth
+            val height = if (isPortrait) maxHeight else minHeight
 
-        val remoteViews = getRemoteViews(context, width, height)
-        if (BuildConfig.DEBUG) {
-            // for debug create dummy broadcast (to check in emulator)
-            val pendingIntent = PendingIntent.getBroadcast(context, 5, Utils.getDummyGlucodataIntent(false), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-            remoteViews.setOnClickPendingIntent(R.id.widget, pendingIntent)
-        } else {
-            remoteViews.setOnClickPendingIntent(R.id.widget, Utils.getAppIntent(context, MainActivity::class.java, 5, true))
+            val remoteViews = getRemoteViews(context, width, height)
+            if (BuildConfig.DEBUG) {
+                // for debug create dummy broadcast (to check in emulator)
+                val pendingIntent = PendingIntent.getBroadcast(context, 5, Utils.getDummyGlucodataIntent(false), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+                remoteViews.setOnClickPendingIntent(R.id.widget, pendingIntent)
+            } else {
+                remoteViews.setOnClickPendingIntent(R.id.widget, Utils.getAppIntent(context, MainActivity::class.java, 5, true))
+            }
+
+            // Instruct the widget manager to update the widget
+            appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Exception in updateAppWidget: " + exc.message.toString())
         }
-
-        // Instruct the widget manager to update the widget
-        appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
     }
 }

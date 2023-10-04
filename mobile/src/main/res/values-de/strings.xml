@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">GlucoDataHandler</string>
+
+    <string name="tasker_event_glucodata">Neuer Glucose Wert</string>
+    <string name="tasker_event_glucodata_obsolete">Veralteter Wert</string>
+    <string name="tasker_event_glucodata_alarm">Glucose Alarm</string>
+    <string name="tasker_wear_connection_state">Uhr Verbindung</string>
+    <string name="tasker_android_auto_connection_state">Android Auto Verbindung</string>
+    <string name="tasker_target_range_state">Glucose Bereich geändert</string>
+
     <string name="unit_html_label">Einheit des Glucose Wertes (mg/dl oder mmol/l)</string>
     <string name="unit_label">Einheit</string>
     <string name="delta_label">Delta</string>
@@ -25,13 +33,17 @@
     <string name="sensor_id_html_label">ID des aktuell verwendeten Sensors</string>
     <string name="glucose_label">Blutzuckerwert</string>
     <string name="glucose_html_label">Blutzuckerwert in der Einheit, welche in Juggluco konfiguriert ist</string>
+    <string name="obsolete_time_label">Zeit seit letztem Wert</string>
+    <string name="obsolete_time_html_label">Zeit in Minuten (5 or 10) seit der letzte Wert empfangen wurde.</string>
 
     <string name="activity_main_connected_label">Uhr: verbunden (%1$s)</string>
     <string name="activity_main_disconnected_label">Uhr: getrennt</string>
     <string name="activity_main_car_connected_label">Android Auto: verbunden</string>
     <string name="activity_main_car_disconnected_label">Android Auto: getrennt</string>
 
+    <string name="pref_cat_general">Allgemein</string>
     <string name="pref_cat_notification">Benachrichtigung</string>
+    <string name="pref_cat_floating_widget">Schwebendes Widget</string>
     <string name="pref_cat_android_auto">Android Auto</string>
     <string name="pref_cat_xdrip">xDrip+</string>
     <string name="pref_cat_forward_broadcast">Glucodata Broadcast</string>
@@ -68,7 +80,7 @@
     <string name="pref_color_ok">Werte im Zielbereich</string>
     <string name="pref_color_ok_summary">Farbe für Glukosewerte im Zielbereich.</string>
     <string name="pref_notification">Benachrichtigung</string>
-    <string name="pref_notification_summary">Zeigt eine permanente Benachrichtigung mit dem aktuellen Trendpfeil, dem Glucose- und Deltawert in der Statusbar.</string>
+    <string name="pref_notification_summary">Zeigt eine permanente Benachrichtigung mit dem aktuellen Trendpfeil, dem Glucose- und Deltawert in der Statusbar.\nDiese Benachrichtigung hindert Android daran, die App im Hintergrund zu Beenden.</string>
     <string name="pref_notification_icon">Statusbar Icon</string>
     <string name="pref_notification_icon_summary">Art des Statusbar Icons für die Benachrichtigung.</string>
     <string name="pref_notification_big_icon" translatable="false">Großes Statusbar Icon</string>
@@ -79,6 +91,14 @@
     <string name="pref_second_notification_summary">Zeigt eine weitere Benachrichtigung ohne Inhalt an, um ein zusätzliches Statusbar Icon hinzuzufügen.</string>
     <string name="pref_second_notification_icon">2. Statusbar Icon</string>
     <string name="pref_second_notification_icon_summary">Art des Statusbar Icons für die zweite Benachrichtigung.</string>
+    <string name="pref_floating_widget">Schwebendes Widget</string>
+    <string name="pref_floating_widget_summary">Zeigt Trendpfeil, den Glucose-, Deltawert und Zeipunkt als schwebendes Widget.</string>
+    <string name="pref_floating_widget_size">Größe</string>
+    <string name="pref_floating_widget_size_summary">Größe des schwebenden Widgets ändern</string>
+    <string name="pref_floating_widget_style">Stil</string>
+    <string name="pref_floating_widget_style_summary">Stil des schwebenden Widgets.</string>
+    <string name="pref_relative_time">Relative Zeit</string>
+    <string name="pref_relative_time_summary">Relative Zeit anstatt des festen Glucose Zeitpunktes verwenden.\nJe nach den Batterieoptimierungen des Gerätes kann es sein, dass dies nicht korrekt funktioniert.</string>
 
     <string name="pref_status_bar_icon_app">App Icon</string>
     <string name="pref_status_bar_icon_glucose">Zuckerwert</string>
@@ -86,6 +106,7 @@
     <string name="pref_status_bar_icon_delta">Delta</string>
 
     <string name="pref_global_broadcast">Globaler Broadcast</string>
+    <string name="pref_wear_notification">Uhr: Vibration</string>
 
     <string name="select_receiver_show_all">Zeige alle</string>
     <string name="select_receiver_no_glucodata_receiver">Kein Empfänger gefunden!</string>
@@ -102,4 +123,5 @@
     <string name="widget_glucose_trend">Zuckerwert und Trendpfeil</string>
     <string name="widget_glucose_trend_delta">Zuckerwert, Trendpfeil und Delta</string>
     <string name="widget_glucose_trend_delta_timestamp">Zuckerwert, Trendpfeil, Delta und Zeitpunkt</string>
+
 </resources>

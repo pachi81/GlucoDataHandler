@@ -24,8 +24,10 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtValueInfo: TextView
     private lateinit var txtConnInfo: TextView
     private lateinit var switchColoredAod: SwitchCompat
+    private lateinit var switchLargeTrendArrow: SwitchCompat
     private lateinit var switchNotifcation: SwitchCompat
     private lateinit var switchForground: SwitchCompat
+    private lateinit var switchRelativeTime: SwitchCompat
     private lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,6 +83,20 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 }
             }
 
+            switchRelativeTime = findViewById(R.id.switchRelativeTime)
+            switchRelativeTime.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, false)
+            switchRelativeTime.setOnCheckedChangeListener { _, isChecked ->
+                Log.d(LOG_ID, "Relative time changed: " + isChecked.toString())
+                try {
+                    with (sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, isChecked)
+                        apply()
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Changing relative time exception: " + exc.message.toString() )
+                }
+            }
+
             switchColoredAod = findViewById(R.id.switchColoredAod)
             switchColoredAod.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false)
             switchColoredAod.setOnCheckedChangeListener { _, isChecked ->
@@ -91,9 +107,26 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                         apply()
                     }
                     // trigger update of each complication on change
-                    ActiveComplicationHandler.OnNotifyData(this, NotifyDataSource.BROADCAST, null)
+                    ActiveComplicationHandler.OnNotifyData(this, NotifyDataSource.SETTINGS, null)
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Changing colored AOD exception: " + exc.message.toString() )
+                }
+            }
+
+            switchLargeTrendArrow = findViewById(R.id.switchLargeTrendArrow)
+            switchLargeTrendArrow.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_LARGE_ARROW_ICON, true)
+            switchLargeTrendArrow.setOnCheckedChangeListener { _, isChecked ->
+                Log.d(LOG_ID, "Large arrow icon changed: " + isChecked.toString())
+                try {
+                    with (sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_LARGE_ARROW_ICON, isChecked)
+                        apply()
+                    }
+                    // trigger update of each complication on change
+                    ActiveComplicationHandler.OnNotifyData(this, NotifyDataSource.SETTINGS, null)
+                    update()
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Changing large arrow icon exception: " + exc.message.toString() )
                 }
             }
 
@@ -156,5 +189,9 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
     override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
         Log.d(LOG_ID, "new intent received from: " + dataSource.toString())
         update()
+        if (dataSource == NotifyDataSource.SETTINGS) {
+            if (extras != null && extras.containsKey(Constants.SHARED_PREF_NOTIFICATION))
+                switchNotifcation.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)
+        }
     }
 }

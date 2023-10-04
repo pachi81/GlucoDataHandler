@@ -8,6 +8,7 @@
     <string name="activity_switch_notification">Vibrieren</string>
     <string name="activity_switch_colored_aod">Farbiges AOD</string>
     <string name="activity_target_range">Zielbereich:</string>
+    <string name="activity_large_arrow_icon">Großer Trendpfeil</string>
 
     <string name="short_value">Zuckerwert</string>
     <string name="image_value">Zuckerwert (sehr groß und farbig)</string>
@@ -25,6 +26,7 @@
     <string name="short_delta">Delta</string>
     <string name="short_delta_arrow">Delta und Trendpfeil</string>
     <string name="short_delta_icon">Delta mit Icon</string>
+    <string name="short_delta_time">Delta und Zeitpunkt</string>
     <string name="image_arrow">Trendpfeil (groß, farbig)</string>
     <string name="icon_arrow">Trendpfeil</string>
     <string name="test_neg_range">Test Range complication mit negativen Werten (für Trendkreis Unterstützung)</string>
@@ -35,4 +37,5 @@
     <string name="battery_level">Akku (Uhr und Telefon)</string>
 
     <string name="source_message_client">Telefon</string>
+    <string name="activity_switch_relative_time">Relative Zeit</string>
 </resources>

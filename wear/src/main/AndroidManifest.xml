@@ -48,7 +48,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".common.notifier.ObsoleteNotifier" />
+            android:name=".common.notifier.ElapsedTimeNotifier" />
 <!--        <receiver
             android:name=".StartServiceAtBootReceiver"
             android:enabled="true"
@@ -328,6 +328,23 @@
             android:exported="true"
             android:icon="@drawable/icon_delta"
             android:label="@string/short_delta_icon"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+        </service>
+        <service
+            android:name=".ShortDeltaWithTimeComplication"
+            android:exported="true"
+            android:icon="@drawable/icon_delta"
+            android:label="@string/short_delta_time"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />

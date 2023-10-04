@@ -3,8 +3,26 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
+        android:title="@string/pref_cat_general"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="0">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="use_mmol"
+            android:summary="@string/pref_switch_use_mmol_summary"
+            android:title="@string/pref_switch_use_mmol"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="relative_time"
+            android:summary="@string/pref_relative_time_summary"
+            android:title="@string/pref_relative_time"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
         android:title="@string/pref_target_range"
-        app:iconSpaceReserved="false">
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="0">
         <de.michelinside.glucodatahandler.preferences.GlucoseEditPreference
             android:defaultValue="0"
             android:inputType="numberDecimal"
@@ -15,7 +33,7 @@
             android:summary="@string/pref_high_value_summary"
             app:iconSpaceReserved="false" />
         <de.michelinside.glucodatahandler.preferences.GlucoseEditPreference
-            android:defaultValue="0"
+            android:defaultValue="165"
             android:inputType="numberDecimal"
             android:key="target_max_value"
             android:selectAllOnFocus="true"
@@ -24,7 +42,7 @@
             android:summary="@string/pref_target_max_value_summary"
             app:iconSpaceReserved="false" />
         <de.michelinside.glucodatahandler.preferences.GlucoseEditPreference
-            android:defaultValue="0"
+            android:defaultValue="90"
             android:inputType="numberDecimal"
             android:key="target_min_value"
             android:selectAllOnFocus="true"
@@ -44,7 +62,8 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_cat_colors"
-        app:iconSpaceReserved="false">
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="0">
         <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
             android:defaultValue="@color/red"
             android:key="color_alarm"
@@ -67,8 +86,39 @@
             android:summary="@string/pref_color_ok_summary"
             app:iconSpaceReserved="false"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_cat_notification"
-        app:iconSpaceReserved="false">
+    <PreferenceCategory
+        android:title="@string/pref_cat_floating_widget"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="0">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="floating_widget"
+            android:summary="@string/pref_floating_widget_summary"
+            android:title="@string/pref_floating_widget"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.ListPreference
+            android:defaultValue="glucose_trend_delta_time"
+            android:entries="@array/pref_floating_widget_style_labels"
+            android:entryValues="@array/pref_floating_widget_style_values"
+            android:key="floating_widget_style"
+            android:summary="@string/pref_floating_widget_style_summary"
+            android:title="@string/pref_floating_widget_style"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SeekBarPreference
+            android:defaultValue="3"
+            app:showSeekBarValue="true"
+            app:seekBarIncrement="1"
+            app:min="1"
+            android:max="10"
+            android:key="floating_widget_size"
+            android:summary="@string/pref_floating_widget_size_summary"
+            android:title="@string/pref_floating_widget_size"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_cat_notification"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="0">
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="permanent_notification"
@@ -112,7 +162,8 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_cat_android_auto"
-        app:iconSpaceReserved="false">
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="0">
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="car_media"
@@ -128,18 +179,13 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_cat_xdrip"
-        app:iconSpaceReserved="false">
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="0">
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="send_to_xdrip"
             android:summary="@string/pref_switch_send_to_xdrip_summary"
             android:title="@string/pref_switch_send_to_xdrip"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="use_mmol"
-            android:summary="@string/pref_switch_use_mmol_summary"
-            android:title="@string/pref_switch_use_mmol"
             app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
@@ -152,7 +198,8 @@
 
     <PreferenceCategory
         android:title="@string/pref_cat_forward_broadcast"
-        app:iconSpaceReserved="false">
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="0">
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="send_to_glucodata_aod"

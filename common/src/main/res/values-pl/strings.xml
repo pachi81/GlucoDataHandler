@@ -12,6 +12,9 @@
     <string name="info_label_per_minute">na min.</string>
     <string name="no_data">Nie otrzymano jeszcze transmisji!\nINFORMACJA: Aby otrzymać dane z Juggluco, otwórz aplikację Juggluco, przejdź do ustawień i aktywuj \&quot;Glucodata Broadcast\&quot; dla &quot;de.michelinside.glucodatahandler&quot;\nAby odbierać dane z xDrip+, aktywuj lokalną transmisję i wybierz brak odbiornika.</string>
 
+    <string name="elapsed_time">%1$d min</string>
+    <string name="elapsed_time_hour">\> 1h</string>
+
     <string name="rate_double_up">rośnie bardzo szybko</string>
     <string name="rate_single_up">rośnie szybko</string>
     <string name="rate_forty_five_up">rośnie</string>
@@ -28,5 +31,6 @@
     <string name="source_settings">Ustawienia zostały zmienione</string>
     <string name="source_car_connection">Połączenie z Android Auto</string>
     <string name="source_obsolete">Wartość przestarzała</string>
+    <string name="time_value">Time changed</string>
 
 </resources>

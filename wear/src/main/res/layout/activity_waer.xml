@@ -19,33 +19,43 @@
         android:layout_height="wrap_content"
         app:layout_boxedEdges="all">
 
+        <LinearLayout
+            android:id="@+id/test"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            tools:ignore="UselessParent">
         <TextView
             android:id="@+id/txtBgValue"
-            android:layout_width="87dp"
-            android:layout_height="61dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="12dp"
+            android:layout_weight="4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:text="---"
+            android:maxLines="1"
             android:textAlignment="viewEnd"
             android:textColor="#FFFFFF"
-            android:textSize="45sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            tools:ignore="HardcodedText" />
 
-        <TextView
-            android:id="@+id/txtVersion"
+        <ImageView
+            android:id="@+id/viewIcon"
+            android:layout_weight="3"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="1.0"
-            android:textAlignment="center"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:layout_height="match_parent"
+            android:src="@drawable/icon_question"
+            android:paddingVertical="2dp"
+            tools:ignore="ContentDescription" />
 
+    </LinearLayout>
         <TextView
             android:id="@+id/txtValueInfo"
             android:layout_width="150dp"
@@ -57,45 +67,7 @@
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtBgValue" />
-
-        <TextView
-            android:id="@+id/txtConnInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/activity_disconnected_label"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@+id/txtVersion"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <ImageView
-            android:id="@+id/viewIcon"
-            android:layout_width="57dp"
-            android:layout_height="57dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="16dp"
-            android:src="@drawable/icon_question"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.024"
-            app:layout_constraintStart_toEndOf="@+id/txtBgValue"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switchColoredAod"
-            android:layout_width="0dp"
-            android:layout_height="35dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="10dp"
-            android:text="@string/activity_switch_colored_aod"
-            android:textAlignment="viewStart"
-            app:layout_constraintBottom_toTopOf="@+id/switchNotifcation"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtValueInfo"
-            tools:ignore="TouchTargetSizeCheck" />
+            app:layout_constraintTop_toBottomOf="@+id/test" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchNotifcation"
@@ -103,12 +75,40 @@
             android:layout_height="35dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
+            android:layout_marginTop="20dp"
             android:text="@string/activity_switch_notification"
             android:textAlignment="viewStart"
+            app:layout_constraintTop_toBottomOf="@+id/txtValueInfo"
+            app:layout_constraintBottom_toTopOf="@+id/switchColoredAod"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchColoredAod"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/activity_switch_colored_aod"
+            android:textAlignment="viewStart"
+            app:layout_constraintTop_toBottomOf="@+id/switchNotifcation"
+            app:layout_constraintBottom_toTopOf="@+id/switchLargeTrendArrow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchLargeTrendArrow"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/activity_large_arrow_icon"
+            android:textAlignment="viewStart"
+            app:layout_constraintTop_toBottomOf="@+id/switchColoredAod"
             app:layout_constraintBottom_toTopOf="@+id/switchForground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/switchColoredAod"
             tools:ignore="TouchTargetSizeCheck" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -117,15 +117,55 @@
             android:layout_height="35dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
             android:text="@string/activity_switch_foreground"
             android:textAlignment="viewStart"
+            app:layout_constraintTop_toBottomOf="@+id/switchNotifcation"
+            app:layout_constraintBottom_toTopOf="@+id/switchRelativeTime"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchRelativeTime"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/activity_switch_relative_time"
+            android:textAlignment="viewStart"
+            app:layout_constraintTop_toBottomOf="@+id/switchForground"
             app:layout_constraintBottom_toTopOf="@+id/txtConnInfo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/switchNotifcation"
             tools:ignore="TouchTargetSizeCheck" />
 
+        <TextView
+            android:id="@+id/txtConnInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/activity_disconnected_label"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@+id/switchRelativeTime"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/txtVersion"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="1.0"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            app:layout_constraintTop_toBottomOf="@+id/txtConnInfo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="HardcodedText" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

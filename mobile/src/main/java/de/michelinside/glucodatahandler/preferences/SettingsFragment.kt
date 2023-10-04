@@ -1,22 +1,27 @@
 package de.michelinside.glucodatahandler.preferences
 
+import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.preference.*
 import de.michelinside.glucodatahandler.BuildConfig
 import de.michelinside.glucodatahandler.R
-import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
-import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
 
+
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GlucoDataHandler.SettingsFragment"
+    private lateinit var activityResultOverlayLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         Log.d(LOG_ID, "onCreatePreferences called")
@@ -35,6 +40,15 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             // force "global broadcast" to be the first entry
             selectTargets!!.entries = arrayOf<CharSequence>(resources.getString(R.string.pref_global_broadcast)) + receivers.keys.toTypedArray()
             selectTargets.entryValues = arrayOf<CharSequence>("") + receivers.values.toTypedArray()
+
+            activityResultOverlayLauncher = registerForActivityResult(
+                ActivityResultContracts.StartActivityForResult()
+            ) { result ->
+                if (result.resultCode != Activity.RESULT_OK) {
+                    InternalNotifier.notify(requireContext(), NotifyDataSource.SETTINGS, null)
+                }
+                // Do next thing
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
         }
@@ -65,32 +79,32 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
         try {
             when(key) {
-                Constants.SHARED_PREF_USE_MMOL,
-                Constants.SHARED_PREF_TARGET_MIN,
-                Constants.SHARED_PREF_TARGET_MAX,
-                Constants.SHARED_PREF_LOW_GLUCOSE,
-                Constants.SHARED_PREF_HIGH_GLUCOSE,
-                Constants.SHARED_PREF_FIVE_MINUTE_DELTA,
-                Constants.SHARED_PREF_COLOR_ALARM,
-                Constants.SHARED_PREF_COLOR_OUT_OF_RANGE,
-                Constants.SHARED_PREF_COLOR_OK -> {
-                    ReceiveData.updateSettings(sharedPreferences!!)
-                    InternalNotifier.notify(requireContext(), NotifyDataSource.SETTINGS, ReceiveData.getSettingsBundle())
-                }
-                Constants.SHARED_PREF_CAR_NOTIFICATION -> {
-                    CarModeReceiver.updateSettings(sharedPreferences!!)
-                }
-                Constants.SHARED_PREF_CAR_MEDIA -> {
-                    InternalNotifier.notify(requireContext(), NotifyDataSource.SETTINGS, null)
-                }
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION,
                 Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION,
                 Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD -> {
                     updateEnableStates(sharedPreferences!!)
                 }
+                Constants.SHARED_PREF_FLOATING_WIDGET -> {
+                    updateEnableStates(sharedPreferences!!)
+                    if (sharedPreferences.getBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false) && !Settings.canDrawOverlays(requireContext())) {
+                        getPermission()
+                    }
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
+        }
+    }
+
+    private fun getPermission() {
+        try {
+            val intent = Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:" + requireContext().packageName)
+            )
+            activityResultOverlayLauncher.launch(intent)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "getPermission exception: " + exc.toString())
         }
     }
 
@@ -124,6 +138,8 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION)
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, Constants.SHARED_PREF_PERMANENT_NOTIFICATION)
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION)
+            setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, Constants.SHARED_PREF_FLOATING_WIDGET)
+            setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_STYLE, Constants.SHARED_PREF_FLOATING_WIDGET)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
         }
