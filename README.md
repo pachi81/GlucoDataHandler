@@ -36,11 +36,9 @@ You can download the current version [here](https://github.com/pachi81/GlucoData
 The settings for the phone are described in the app itself. The settings from the phone will be send to the wear, if it is connected.
 
 ## Widgets
-There are several types of widgets for the phone:
+There are several types of widgets and a floating widget for the phone:
 
-<img src='images/widgets.jpg' width=200>
-
-There is also a floating widget, which can be controlled by Tasker.
+<img src='images/widgets.jpg' width=200>  <img src='images/FloatingWidget.jpg' width=200>
 
 ## Notifications
 There are two notifciations which can be activated. For each notification the icon can be choosen, which will appear in the status bar of your phone.
