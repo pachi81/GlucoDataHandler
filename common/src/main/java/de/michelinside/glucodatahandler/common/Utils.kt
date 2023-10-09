@@ -283,34 +283,46 @@ object Utils {
         }
     }
 
-    private var rateDelta = 0.5F
+    private var rateDelta = 0.1F
     private var rawDelta = 5
     fun getDummyGlucodataIntent(random: Boolean = true) : Intent {
         val useMmol = ReceiveData.isMmol
-        val time =  if (!random) System.currentTimeMillis() else if (ReceiveData.time < System.currentTimeMillis()) System.currentTimeMillis() + 1000 else ReceiveData.time + 1000
+        val first = ReceiveData.time == 0L
+        ReceiveData.time = System.currentTimeMillis()-60000
+        val time =  System.currentTimeMillis()
         val intent = Intent(Constants.GLUCODATA_BROADCAST_ACTION)
         var raw: Int
         var glucose: Float
-        val rate: Float
+        var rate: Float
         if (random) {
             raw = Random.nextInt(40, 400)
             glucose = if(useMmol) mgToMmol(raw.toFloat()) else raw.toFloat()
             rate = round(Random.nextFloat() + Random.nextInt(-4, 4).toFloat(), 2)
         } else {
-            if ((ReceiveData.rawValue == 200 && rawDelta > 0) || (ReceiveData.rawValue == 40 && rawDelta < 0)) {
+            if ((ReceiveData.rawValue >= 200 && rawDelta > 0) || (ReceiveData.rawValue <= 40 && rawDelta < 0)) {
                 rawDelta *= -1
             }
             raw =
-                if (ReceiveData.time == 0L || ReceiveData.rawValue == 400) Constants.GLUCOSE_MIN_VALUE else ReceiveData.rawValue + rawDelta
+                if (first || ReceiveData.rawValue == 400) Constants.GLUCOSE_MIN_VALUE else ReceiveData.rawValue + rawDelta
             glucose = if (useMmol) mgToMmol(raw.toFloat()) else raw.toFloat()
             if (useMmol && glucose == ReceiveData.glucose) {
                 raw += 1
                 glucose = mgToMmol(raw.toFloat())
             }
-            if ((ReceiveData.rate >= 3.5F && rateDelta > 0F) || (ReceiveData.rate <= -3.5F && rateDelta < 0F)) {
-                rateDelta *= -1F
+            if (ReceiveData.rate >= 3.5F) {
+                rateDelta = -0.1F
+                rate = 2F
+            } else if (ReceiveData.rate <= -3.5F) {
+                rateDelta = 0.1F
+                rate = -2F
+            } else {
+                rate = if (first) -3.5F else ReceiveData.rate + rateDelta
             }
-            rate = if (ReceiveData.time == 0L) -3.5F else ReceiveData.rate + rateDelta
+            if (rate > 2F && rateDelta > 0)
+                rate = 3.5F
+            else if (rate < -2F && rateDelta < 0)
+                    rate = -3.5F
+
         }
         intent.putExtra(ReceiveData.SERIAL, "WUSEL_DUSEL")
         intent.putExtra(ReceiveData.MGDL, raw)

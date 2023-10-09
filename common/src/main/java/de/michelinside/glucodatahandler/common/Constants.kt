@@ -63,4 +63,8 @@ object Constants {
     const val SHARED_PREF_NOTIFICATION = "notification"
     const val SHARED_PREF_FOREGROUND_SERVICE = "foreground_service"
     const val SHARED_PREF_WEAR_COLORED_AOD = "colored_aod"
+
+
+
+    const val SHARED_PREF_DUMMY_VALUES = "dummy_values"
 }

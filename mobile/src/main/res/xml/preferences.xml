@@ -215,7 +215,7 @@
 
     <androidx.preference.SwitchPreferenceCompat
         android:defaultValue="false"
-        android:key="notification"
+        android:key="dummy_values"
         android:title="@string/pref_switch_notification"
         app:iconSpaceReserved="false"
         app:isPreferenceVisible="false" />

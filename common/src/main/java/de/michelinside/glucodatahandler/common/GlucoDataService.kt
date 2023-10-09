@@ -129,13 +129,14 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             xDripReceiver = XDripBroadcastReceiver()
             registerReceiver(xDripReceiver,IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"))
 
-            if (BuildConfig.DEBUG && sharedPref!!.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)) {
+            if (BuildConfig.DEBUG && sharedPref!!.getBoolean(Constants.SHARED_PREF_DUMMY_VALUES, false)) {
                 Thread {
                     try {
+                        ReceiveData.time = 0L
                         while (true) {
                             // create Thread which send dummy intents
-                            this.sendBroadcast(Utils.getDummyGlucodataIntent(true))
-                            Thread.sleep(40000)
+                            this.sendBroadcast(Utils.getDummyGlucodataIntent(false))
+                            Thread.sleep(1000)
                         }
                     } catch (exc: Exception) {
                         Log.e(LOG_ID, "Send dummy glucodata exception: " + exc.toString())

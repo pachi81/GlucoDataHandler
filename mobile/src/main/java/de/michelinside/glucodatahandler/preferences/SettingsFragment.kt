@@ -31,7 +31,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
             if (BuildConfig.DEBUG) {
                 val notifySwitch =
-                    findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_NOTIFICATION)
+                    findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_DUMMY_VALUES)
                 notifySwitch!!.isVisible = true
             }
 
