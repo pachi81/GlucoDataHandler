@@ -72,7 +72,7 @@
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchNotifcation"
             android:layout_width="0dp"
-            android:layout_height="35dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="20dp"
@@ -86,7 +86,7 @@
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchColoredAod"
             android:layout_width="0dp"
-            android:layout_height="35dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:text="@string/activity_switch_colored_aod"
@@ -100,7 +100,7 @@
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchLargeTrendArrow"
             android:layout_width="0dp"
-            android:layout_height="35dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:text="@string/activity_large_arrow_icon"
@@ -114,7 +114,7 @@
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchForground"
             android:layout_width="0dp"
-            android:layout_height="35dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:text="@string/activity_switch_foreground"
@@ -128,7 +128,7 @@
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchRelativeTime"
             android:layout_width="0dp"
-            android:layout_height="35dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"

@@ -32,6 +32,7 @@
         android:textColor="@color/transparent_widget_textcolor"
         tools:ignore="HardcodedText"
         android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="1sp"
         android:autoSizeMaxTextSize="24sp"
         android:autoSizeStepGranularity="1sp" />
 </LinearLayout>

@@ -22,8 +22,9 @@
         android:textColor="@color/transparent_widget_textcolor"
         tools:ignore="HardcodedText,SmallSp"
         android:autoSizeTextType="uniform"
-        android:autoSizeMaxTextSize="20sp"
-        android:autoSizeStepGranularity="1sp"/>
+        android:autoSizeMinTextSize="1dp"
+        android:autoSizeMaxTextSize="20dp"
+        android:autoSizeStepGranularity="1dp"/>
 
     <ImageView
         android:id="@+id/glucose_trend"
@@ -50,6 +51,7 @@
         android:textColor="@color/transparent_widget_textcolor"
         tools:ignore="HardcodedText"
         android:autoSizeTextType="uniform"
-        android:autoSizeMaxTextSize="24sp"
-        android:autoSizeStepGranularity="1sp" />
+        android:autoSizeMinTextSize="1dp"
+        android:autoSizeMaxTextSize="24dp"
+        android:autoSizeStepGranularity="1dp" />
 </LinearLayout>

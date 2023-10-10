@@ -47,6 +47,8 @@ object Constants {
     const val SHARED_PREF_FLOATING_WIDGET = "floating_widget"
     const val SHARED_PREF_FLOATING_WIDGET_STYLE = "floating_widget_style"
     const val SHARED_PREF_FLOATING_WIDGET_SIZE = "floating_widget_size"
+    const val SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY = "floating_widget_transparency"
+    const val SHARED_PREF_WIDGET_TRANSPARENCY = "widget_transparency"
     const val SHARED_PREF_RELATIVE_TIME = "relative_time"
 
     // internal app preferences (not changed by settings) -> use separate tag for not trigger onChanged events
@@ -63,4 +65,8 @@ object Constants {
     const val SHARED_PREF_NOTIFICATION = "notification"
     const val SHARED_PREF_FOREGROUND_SERVICE = "foreground_service"
     const val SHARED_PREF_WEAR_COLORED_AOD = "colored_aod"
+
+
+
+    const val SHARED_PREF_DUMMY_VALUES = "dummy_values"
 }

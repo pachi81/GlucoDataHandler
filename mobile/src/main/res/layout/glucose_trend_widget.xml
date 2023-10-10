@@ -21,6 +21,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:autoSizeMinTextSize="1sp"
         android:autoSizeStepGranularity="1sp"
         android:autoSizeTextType="uniform"
         android:text="333"
