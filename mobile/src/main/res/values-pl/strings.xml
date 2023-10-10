@@ -95,10 +95,10 @@
     <string name="pref_floating_widget_size_summary">Zmiana rozmiaru pływającego widżetu</string>
     <string name="pref_floating_widget_style">Styl</string>
     <string name="pref_floating_widget_style_summary">Styl pływającego widżetu.</string>
-    <string name="pref_floating_widget_transparency">Transparency</string>
-    <string name="pref_floating_widget_transparency_summary">Background transparency for floating widget.</string>
-    <string name="pref_widget_transparency">Widget transparency</string>
-    <string name="pref_widget_transparency_summary">Background transparency for widgets.</string>
+    <string name="pref_floating_widget_transparency">Przezroczystość</string>
+    <string name="pref_floating_widget_transparency_summary">Przezroczystość tła pływającego widgetu.</string>
+    <string name="pref_widget_transparency">Przezroczystość widgetu</string>
+    <string name="pref_widget_transparency_summary">Przezroczystość tła widgetów.</string>
     <string name="pref_relative_time">Czas względny</string>
     <string name="pref_relative_time_summary">Używaj czasu względnego zamiast znacznika czasu glukozy dla widżetów.\nCzas względny zależy od ustawień baterii w urządzeniu i może nie działać poprawnie.</string>
 
