@@ -56,10 +56,11 @@
         android:layout_marginEnd="20dp"
         android:text="@string/no_data"
         android:textAlignment="center"
-        android:textSize="20sp"
+        android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_glucose_trend" />
+        app:layout_constraintTop_toBottomOf="@+id/layout_glucose_trend"
+        tools:ignore="SpUsage" />
 
     <TextView
         android:id="@+id/txtWearInfo"
@@ -67,6 +68,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:text="@string/activity_main_disconnected_label"
+        android:textSize="14dp"
+        tools:ignore="SpUsage"
         app:layout_constraintBottom_toTopOf="@+id/txtCarInfo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -79,7 +82,9 @@
         android:text="@string/activity_main_car_disconnected_label"
         app:layout_constraintBottom_toTopOf="@+id/txtVersion"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="14dp"
+        tools:ignore="SpUsage" />
 
     <TextView
         android:id="@+id/txtVersion"
@@ -90,6 +95,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="HardcodedText" />
+        android:textSize="14dp"
+        tools:ignore="HardcodedText,SpUsage" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

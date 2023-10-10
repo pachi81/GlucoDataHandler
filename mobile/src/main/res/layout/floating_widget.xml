@@ -1,67 +1,67 @@
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widget"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@color/transparent_widget_background"
     android:padding="2dp">
-    <TableRow>
-        <TableLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <TableRow>
-                <TextView
-                    android:id="@+id/glucose"
-                    android:contentDescription="@string/glucose_html_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="---"
-                    android:textSize="60sp"
-                    android:maxLines="1"
-                    tools:ignore="HardcodedText,NestedWeights" />
-            </TableRow>
-            <TableRow>
-                <TextView
-                    android:id="@+id/timeText"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textSize="18sp"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:text="--"
-                    android:textColor="@color/transparent_widget_textcolor"
-                    tools:ignore="HardcodedText,NestedWeights,SmallSp"/>
-            </TableRow>
-        </TableLayout>
-
-        <TableLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
-            <TableRow
-                android:layout_height="0dp"
-                android:layout_weight="1">
-            <ImageView
-                android:id="@+id/trendImage"
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TableRow>
+            <TextView
+                android:id="@+id/glucose"
+                android:contentDescription="@string/glucose_html_label"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:contentDescription="@string/rate_html_label"
-                android:minWidth="65dp"
                 android:gravity="center"
-                android:src="@drawable/icon_question" />
-            </TableRow>
-            <TableRow>
-                <TextView
-                    android:id="@+id/deltaText"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textSize="18sp"
-                    android:gravity="center"
-                    android:text="--"
-                    android:maxLines="1"
-                    android:textColor="@color/transparent_widget_textcolor"
-                    tools:ignore="HardcodedText,SmallSp" />
-            </TableRow>
-        </TableLayout>
-    </TableRow>
-</TableLayout>
+                android:text="---"
+                android:textSize="60sp"
+                android:maxLines="1"
+                tools:ignore="HardcodedText,NestedWeights" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/timeText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="--"
+                android:textColor="@color/transparent_widget_textcolor"
+                tools:ignore="HardcodedText,NestedWeights,SmallSp"/>
+        </TableRow>
+    </TableLayout>
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="6dp">
+        <TableRow
+            android:layout_height="0dp"
+            android:layout_weight="1">
+        <ImageView
+            android:id="@+id/trendImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/rate_html_label"
+            android:minWidth="65dp"
+            android:gravity="center"
+            android:src="@drawable/icon_question" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/deltaText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:text="--"
+                android:maxLines="1"
+                android:textColor="@color/transparent_widget_textcolor"
+                tools:ignore="HardcodedText,SmallSp" />
+        </TableRow>
+    </TableLayout>
+</TableRow>

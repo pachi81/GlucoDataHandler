@@ -230,13 +230,13 @@ object Utils {
                 textSize -= textSize*0.05F
                 degrees = 0
                 shortArrowRate = 0.7F
-            } else if (rate >= 0F) {
+            } else {
                 text = "↑"
-                degrees = round(abs(minOf(2F, rate)-2F) * 90F/2F, 0).toInt()
-            } else {  // < 0
+                degrees = round(abs(maxOf(-2F, minOf(2F, rate))-2F) * 90F/2F, 0).toInt()
+            } /*else {  // < 0
                 text = "↓"
                 degrees = round((maxOf(-2F, rate) + 2F) * -90F/2F, 0).toInt()
-            }
+            }*/
             textSize *= resizeFactor
             if (GlucoDataService.sharedPref != null && !GlucoDataService.sharedPref!!.getBoolean(Constants.SHARED_PREF_LARGE_ARROW_ICON, true)) {
                 textSize *= shortArrowRate
