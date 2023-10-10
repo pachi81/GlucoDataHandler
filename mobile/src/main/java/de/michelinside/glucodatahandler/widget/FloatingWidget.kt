@@ -168,6 +168,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
         windowManager!!.addView(floatingView, params)
 
         val widget = floatingView.findViewById<View>(R.id.widget)
+        widget.setBackgroundColor(Utils.getBackgroundColor(sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY, 3)))
         widget.setOnClickListener {
             Log.d(LOG_ID, "onClick called")
             var launchIntent: Intent? =
@@ -242,7 +243,8 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
             when(key) {
                 Constants.SHARED_PREF_FLOATING_WIDGET,
                 Constants.SHARED_PREF_FLOATING_WIDGET_SIZE,
-                Constants.SHARED_PREF_FLOATING_WIDGET_STYLE -> {
+                Constants.SHARED_PREF_FLOATING_WIDGET_STYLE,
+                Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY -> {
                     remove()
                     update()
                 }

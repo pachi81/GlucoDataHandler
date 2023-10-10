@@ -101,6 +101,14 @@ object Utils {
         )
     }
 
+    fun getBackgroundColor(transparancyFactor: Int) : Int {
+        if( transparancyFactor <= 0 )
+            return 0
+        val transparency = 255 * minOf(10, transparancyFactor) / 10
+        return transparency shl (4*6)
+    }
+
+
     private fun isShortText(text: String): Boolean = text.length <= (if (text.contains(".")) 3 else 2)
 
     private fun calcMaxTextSizeForBitmap(bitmap: Bitmap, text: String, roundTarget: Boolean, maxTextSize: Float, top: Boolean, bold: Boolean): Float {

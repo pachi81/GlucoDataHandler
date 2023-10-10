@@ -114,7 +114,7 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
             // Enter relevant functionality for when the first widget is created
             Log.d(LOG_ID, "onEnabled called for " + this.toString())
             GlucoDataServiceMobile.start(context)
-            ActiveWidgetHandler.addWidget(type)
+            ActiveWidgetHandler.addWidget(type, context)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Exception in onEnabled: " + exc.message.toString())
         }
@@ -124,7 +124,7 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
         try {
             // Enter relevant functionality for when the last widget is disabled
             Log.d(LOG_ID, "onDisabled calledd for " + this.toString())
-            ActiveWidgetHandler.remWidget(type)
+            ActiveWidgetHandler.remWidget(type, context)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Exception in onDisabled: " + exc.message.toString())
         }
@@ -177,6 +177,9 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
 
         val layout = if (shortWidget) getShortLayout() else if (longWidget) getLongLayout() else getLayout()
         val remoteViews = RemoteViews(context.packageName, layout)
+
+        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        remoteViews.setInt(R.id.widget, "setBackgroundColor", Utils.getBackgroundColor(sharedPref.getInt(Constants.SHARED_PREF_WIDGET_TRANSPARENCY, 3)))
 
         if (!hasTrend || !shortWidget) {
             // short widget with trend, using the glucose+trend image
