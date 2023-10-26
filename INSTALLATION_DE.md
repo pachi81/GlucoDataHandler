@@ -62,10 +62,31 @@ Eine Anleitung gibt es auch in diesem [Video (en)](https://www.youtube.com/watch
 Die Datei `GlucoDataHandler-Wear.apk` auf dem Computer herunterladen und mit dem Befehl installieren: 
 
 ```
-adb install -r GlucoDataHandler-Wear.apk
+adb install -r -g GlucoDataHandler-Wear.apk
 ```
 
 Eine genauere Anleitung gibt es [hier](https://www.a7la-home.com/de/how-to-install-apks-on-wear-os-smartwatches).
+
+### Wear OS 4
+Mit Wear OS 4 muss man die Uhr erst mit dem Telefon oder dem Computer verbinden.
+
+Für Wear Installer 2 gibt es dafür ein [Video](https://youtu.be/abgN4jQqHb0).
+
+Auf dem Computer is es ähnlich:
+
+* ADB Debugging auf der Uhr aktivieren
+* Wireless Debugging auf der Uhr aktivieren
+* Auf der Uhr Neues Gerät koppeln drücken
+* Mit den Daten aus diesem Dialog auf dem Computer folgendes eingeben:
+```
+adb pair [ip]:[port] [pairing-code]
+```
+
+Das Koppeln ist pro Gerät nur einmal erforderlich. Danach muss man sich nur mit der Uhr verbinden. Es ist dabei aber wichtig, dass man nun auch den Port (nicht aus dem Koppeldialog) mit angibt:
+
+```
+adb connect [ip]:[port]
+```
 
 ### Mehr Informationen
 
