@@ -63,11 +63,14 @@ For computer, the handling is similar:
 * activate Wireless Debugging on your watch
 * press Pair new device on your watch
 * on computer type: 
-```adb pair [ip]:[port] [pairing-code]```
-* after pairing is done, you have to use ip and port (not from pairing) to connect to your watch: 
-```adb connect [ip]:[port]```
+```
+adb pair [ip]:[port] [pairing-code]
+```
 
-The pairing has to be done only once for each device. After a device is paired, you only have to connect with ip AND(!) port to the device the next time.
+The pairing has to be done only once for each device. After a device is paired, you only have to connect with ip AND(!) port (not from pairing) to the device the next time:
+```
+adb connect [ip]:[port]
+```
 
 ### More information
 
