@@ -50,8 +50,24 @@ Follow the instructions in [this video](https://www.youtube.com/watch?v=8HsfWPTF
 Download `GlucoDataHandler-Wear.apk` on your computer,install ADB, enable developer mode on the watch (see the videos above), once connected type this command in ADB, from the folder where you downloaded the wear extension file.
 
 ```
-adb install -r GlucoDataHandler-Wear.apk
+adb install -r -g GlucoDataHandler-Wear.apk
 ```
+
+### Wear OS 4
+
+With Wear OS 4, you have to pair you phone/computer first with your watch. In Wear Installer 2 there is an [introduction video](https://youtu.be/abgN4jQqHb0) for. 
+
+For computer, the handling is similar:
+
+* activate ADB Debugging on your watch
+* activate Wireless Debugging on your watch
+* press Pair new device on your watch
+* on computer type: 
+```adb pair [ip]:[port] [pairing-code]```
+* after pairing is done, you have to use ip and port (not from pairing) to connect to your watch: 
+```adb connect [ip]:[port]```
+
+The pairing has to be done only once for each device. After a device is paired, you only have to connect with ip AND(!) port to the device the next time.
 
 ### More information
 
