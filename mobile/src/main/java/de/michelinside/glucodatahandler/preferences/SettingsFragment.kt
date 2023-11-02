@@ -1,6 +1,5 @@
 package de.michelinside.glucodatahandler.preferences
 
-import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -15,8 +14,6 @@ import androidx.preference.*
 import de.michelinside.glucodatahandler.BuildConfig
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
-import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
-import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
 
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -44,10 +41,20 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             activityResultOverlayLauncher = registerForActivityResult(
                 ActivityResultContracts.StartActivityForResult()
             ) { result ->
-                if (result.resultCode != Activity.RESULT_OK) {
-                    InternalNotifier.notify(requireContext(), NotifyDataSource.SETTINGS, null)
+                if (!Settings.canDrawOverlays(requireContext())) {
+                    Log.w(LOG_ID, "Overlay permission denied!")
+                } else {
+                    // setting to true
+                    Log.i(LOG_ID, "Overlay permission granted!")
+                    val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_FLOATING_WIDGET)
+                    if (pref != null) {
+                        pref.isChecked = true
+                    }
+                    with(preferenceManager.sharedPreferences!!.edit()) {
+                        putBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, true)
+                        apply()
+                    }
                 }
-                // Do next thing
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
@@ -87,7 +94,16 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 Constants.SHARED_PREF_FLOATING_WIDGET -> {
                     updateEnableStates(sharedPreferences!!)
                     if (sharedPreferences.getBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false) && !Settings.canDrawOverlays(requireContext())) {
-                        getPermission()
+                        // as long as permission is not granted, disable immediately
+                        val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_FLOATING_WIDGET)
+                        if (pref != null) {
+                            pref.isChecked = false
+                        }
+                        with(preferenceManager.sharedPreferences!!.edit()) {
+                            putBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false)
+                            apply()
+                        }
+                        requestOverlayPermission()
                     }
                 }
             }
@@ -96,7 +112,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         }
     }
 
-    private fun getPermission() {
+    private fun requestOverlayPermission() {
         try {
             val intent = Intent(
                 Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
@@ -104,7 +120,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             )
             activityResultOverlayLauncher.launch(intent)
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "getPermission exception: " + exc.toString())
+            Log.e(LOG_ID, "requestOverlayPermission exception: " + exc.toString())
         }
     }
 
