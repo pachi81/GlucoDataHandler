@@ -69,7 +69,7 @@ afterEvaluate {
     def assembleRelease = tasks.getByPath(':wear:assembleRelease')
     def copyAndroidApksPostBuild = tasks.register('copyAndroidApksPostBuild', Copy) {
         dependsOn assembleRelease
-        from "${projectDir}/../mobile/release"
+        from "${projectDir}/release"
         include '**/*.apk'
         into rootProject.releasePath
     }
