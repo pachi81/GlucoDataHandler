@@ -6,8 +6,8 @@ plugins {
 }
 
 project.ext.set("versionCode", 1)
-project.ext.set("versionName", "0.9.6.1")
-project.ext.set("compileSdk", 33)
-project.ext.set("targetSdk", 33)
+project.ext.set("versionName", "0.9.6.2")
+project.ext.set("compileSdk", 34)
+project.ext.set("targetSdk", 31)
 project.ext.set("minSdk", 26)
 project.ext.set("releasePath", "D:/Daten/Michel/OneDrive/Projekte/Release")
