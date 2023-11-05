@@ -33,4 +33,104 @@
     <string name="source_obsolete">Wartość przestarzała</string>
     <string name="time_value">Time changed</string>
 
+
+    <string name="app_name">GlucoDataHandler</string>
+    <string name="tasker_event_glucodata">Nowa wartość glukozy</string>
+    <string name="tasker_event_glucodata_obsolete">Wartość przestarzała</string>
+    <string name="tasker_event_glucodata_alarm">Alarm dotyczący stężenia glukozy</string>
+    <string name="tasker_wear_connection_state">Połączenie z zegarkiem</string>
+    <string name="tasker_android_auto_connection_state">Połączenie z Android Auto</string>
+    <string name="tasker_target_range_state">Zmiana zakresu stężenia glukozy</string>
+
+    <string name="activity_main_connected_label">Zegarek: połączony (%1$s)</string>
+    <string name="activity_main_disconnected_label">Zegarek: niepołączony</string>
+    <string name="activity_main_car_connected_label">Android Auto: połączony</string>
+    <string name="activity_main_car_disconnected_label">Android Auto: niepołączony</string>
+
+    <string name="pref_cat_general">Ogólne</string>
+    <string name="pref_cat_notification">Powiadomienie</string>
+    <string name="pref_cat_widgets">Widgety</string>
+    <string name="pref_cat_android_auto">Android Auto</string>
+    <string name="pref_cat_xdrip">XDrip+</string>
+    <string name="pref_cat_forward_broadcast">Glucodata broadcast (Transmisja danych dot. glukozy)</string>
+    <string name="pref_target_range">Zakres docelowy</string>
+    <string name="pref_cat_colors">Kolory</string>
+
+    <string name="pref_switch_notification">Wartości fikcyjne</string>
+    <string name="pref_high_value">Wysokie stęż. glukozy</string>
+    <string name="pref_high_value_summary">Granica dla wysokich wartości stężenia glukozy.\nJeśli aktywowałeś alarm wysokiego stęż. glukozy w Juggluco, nie musisz ustawiać tej wartości.</string>
+    <string name="pref_target_max_value">Górna granica zakresu docelowego</string>
+    <string name="pref_target_max_value_summary">Najwyższa wartość dla zakresu docelowego.</string>
+    <string name="pref_target_min_value">Dolna granica zakresu docelowego</string>
+    <string name="pref_target_min_value_summary">Najniższa wartość dla zakresu docelowego.</string>
+    <string name="pref_low_value">Niskie stęż. glukozy</string>
+    <string name="pref_low_value_summary">Granica dla niskich wartości glukozy.\nJeśli aktywowałeś alarm niskiego stęż. glukozy w Juggluco, nie musisz ustawiać tej wartości.</string>
+    <string name="pref_switch_car_notification">Powiadomienia w Android Auto</string>
+    <string name="pref_switch_car_notification_summary">Powiadomienie dla Android Auto.\nAby korzystać z tej aplikacji w Android Auto, musisz aktywować ustawienia programisty w Android Auto, klikając kilka razy na oznaczenie wersji. Następnie należy włączyć opcję „Nieznane źródła” w menu ustawień dewelopera.</string>
+    <string name="pref_switch_car_media">Odtwarzacz fikcyjnych multimediów</string>
+    <string name="pref_switch_car_media_summary">Wyświetl wartość glukozy jako bieżący utwór dla Android Auto.</string>
+    <string name="pref_switch_send_to_aod">Wyślij transmisję „glucodata broadcast”</string>
+    <string name="pref_switch_send_to_aod_summary">Wyślij transmisję „glucodata broadcast” dla nowych wartości otrzymanych z dowolnego źródła.</string>
+    <string name="pref_button_select_target">Identyfikacja odbiornika</string>
+    <string name="pref_button_select_target_summary">Wybierz odbiorniki, do których wysyłana jest transmisja „glucodata broadcast”. Transmisja globalna będzie wysyłana do każdej aplikacji dynamicznie odbierającej tę transmisję.</string>
+    <string name="pref_switch_send_to_xdrip">Wyślij do xDrip</string>
+    <string name="pref_switch_send_to_xdrip_summary">Przekazuj wartości glukozy do xDrip+.\n WAŻNE: ta opcja musi być wyłączona, aby odbierać wartości z xDrip+!</string>
+    <string name="pref_switch_use_mmol">Użyj mmol/l</string>
+    <string name="pref_switch_use_mmol_summary">Konwersja wartości z xDrip+ na mmol/l.</string>
+    <string name="pref_switch_use_5_min_delta">5-minutowa delta</string>
+    <string name="pref_switch_use_5_min_delta_summary">Włącz tę opcję, aby używać wartości delta dla odstępu czasu wynoszącego 5 minut, w przeciwnym razie używany jest odstęp 1-minutowy.</string>
+    <string name="pref_color_alarm">Kolor dla wysokiego/niskiego stęż. glukozy</string>
+    <string name="pref_color_alarm_summary">Kolor dla wysokich i niskich wartości stężenia glukozy.</string>
+    <string name="pref_color_out_of_range">Kolor poza zakresem</string>
+    <string name="pref_color_out_of_range_summary">Kolor dla wartości stęż. glukozy poza zakresem docelowym.</string>
+    <string name="pref_color_ok">Kolor w zakresie docelowym</string>
+    <string name="pref_color_ok_summary">Kolor dla wartości stęż. glukozy w zakresie docelowym.</string>
+    <string name="pref_notification">Powiadomienie</string>
+    <string name="pref_notification_summary">Wyświetla stałe powiadomienie z bieżącą strzałką trendu, wartością stęż. glukozy i deltą na pasku stanu.\nTo powiadomienie zapobiega zatrzymaniu tej aplikacji przez system Android.</string>
+    <string name="pref_notification_icon">Ikona w pasku stanu</string>
+    <string name="pref_notification_icon_summary">Styl małej ikony w pasku stanu w powiadomieniu.</string>
+    <string name="pref_notification_big_icon">Duża ikona w pasku stanu</string>
+    <string name="pref_notification_big_icon_summary">Większa ikona na pasku stanu. Należy sprawdzić, czy ikona jest przycięta, czy staje się zbyt duża.</string>
+    <string name="pref_notification_no_content">Ukryj treść</string>
+    <string name="pref_notification_no_content_summary">Ta opcja powoduje usunięcie treści powiadomienia, aby widoczne było tylko małe powiadomienie z powiązaną ikoną.</string>
+    <string name="pref_second_notification">Drugie powiadomienie</string>
+    <string name="pref_second_notification_summary">Pokaż drugie powiadomienie bez treści, aby widoczna była dodatkowa ikona na pasku stanu.</string>
+    <string name="pref_second_notification_icon">Druga ikona w pasku stanu</string>
+    <string name="pref_second_notification_icon_summary">Styl małej ikony w pasku stanu w drugim powiadomieniu.</string>
+    <string name="pref_floating_widget">Pływający widget</string>
+    <string name="pref_floating_widget_summary">Pokazuje poziom glukozy, trend, deltę i czas jako pływający widget.\nNależy również aktywować powiadomienie, aby zapobiec zamknięciu aplikacji przez system Android.</string>
+    <string name="pref_floating_widget_size">Rozmiar</string>
+    <string name="pref_floating_widget_size_summary">Zmiana rozmiaru pływającego widżetu</string>
+    <string name="pref_floating_widget_style">Styl</string>
+    <string name="pref_floating_widget_style_summary">Styl pływającego widżetu.</string>
+    <string name="pref_floating_widget_transparency">Przezroczystość</string>
+    <string name="pref_floating_widget_transparency_summary">Przezroczystość tła pływającego widgetu.</string>
+    <string name="pref_widget_transparency">Przezroczystość widgetu</string>
+    <string name="pref_widget_transparency_summary">Przezroczystość tła widgetów.</string>
+    <string name="pref_relative_time">Czas względny</string>
+    <string name="pref_relative_time_summary">Używaj czasu względnego zamiast znacznika czasu glukozy dla widżetów.\nCzas względny zależy od ustawień baterii w urządzeniu i może nie działać poprawnie.</string>
+
+    <string name="pref_status_bar_icon_app">Ikona aplikacji</string>
+    <string name="pref_status_bar_icon_glucose">Wartość glukozy</string>
+    <string name="pref_status_bar_icon_trend">Strzałka trendu</string>
+    <string name="pref_status_bar_icon_delta">Delta</string>
+
+    <string name="pref_wear_notification">Zegarek: wibracje</string>
+    <string name="pref_global_broadcast">Transmisja globalna</string>
+
+    <string name="select_receiver_show_all">Pokaż wszystko</string>
+    <string name="select_receiver_no_glucodata_receiver">Nie znaleziono odbiornika!</string>
+    <string name="button_ok">OK</string>
+    <string name="button_cancel">Anuluj</string>
+    <string name="menu_settings">Ustawienia</string>
+    <string name="menu_group_github" translatable="false">GitHub</string>
+    <string name="menu_update">Aktualizacje</string>
+    <string name="menu_support" translatable="false">Wsparcie</string>
+    <string name="menu_help">Pomoc</string>
+    <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README_PL.md</string>
+
+    <string name="widget_glucose">Glukoza</string>
+    <string name="widget_glucose_trend">Glukoza i trend</string>
+    <string name="widget_glucose_trend_delta">Glukoza, trend i delta</string>
+    <string name="widget_glucose_trend_delta_timestamp">Glukoza, trend, delta i znacznik czasu</string>
 </resources>

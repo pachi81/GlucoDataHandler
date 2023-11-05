@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="glucose_label">Glukoza</string>
+    <string name="glucose_html_label">Wartość glukozy w jednostkach z ustawień Juggluco</string>
+    <string name="sensor_id_label">Numer sensora</string>
+    <string name="sensor_id_html_label">Numer aktualnie aktywnego sensora</string>
+    <string name="raw_value_label">Wartość surowa</string>
+    <string name="raw_value_html_label">Wartość glukozy w mg/dl</string>
+    <string name="rate_label">Tempo</string>
+    <string name="rate_html_label">Tempo zmiany stężenia glukozy</string>
+    <string name="rate_label_label">Etykieta tempa</string>
+    <string name="rate_label_html_label">Etykieta bieżącego tempa</string>
+    <string name="dexcom_label">DexcomLabel</string>
+    <string name="dexcom_html_label">Etykieta tempa dla Dexcom</string>
+    <string name="alarm_label">Alarm</string>
+    <string name="alarm_html_label">Wartość alarmu (0: brak alarmu, 6/14: wysoki, 7/15: niski)</string>
+    <string name="time_label">Czas</string>
+    <string name="time_html_label">Czas w msec</string>
+    <string name="time_diff_label">Różnica czasu</string>
+    <string name="time_diff_html_label">Różnica czasu między tą a poprzednią wartością w ms</string>
+    <string name="arrow_label">Strzałka</string>
+    <string name="arrow_html_label">Strzałka kierunku w kodzie Unicode</string>
+    <string name="delta_label">Delta</string>
+    <string name="delta_html_label">Delta bieżącej i poprzedniej wartości glukozy (na minutę)</string>
+    <string name="unit_label">Jednostka</string>
+    <string name="unit_html_label">Jednostka wartości glukozy (mg/dl lub mmol/l)</string>
+    <string name="obsolete_time_label">Czas od ostatniej wartości</string>
+    <string name="obsolete_time_html_label">Czas w minutach (5 lub 10) od otrzymania ostatniej wartości.</string>
+</resources>
