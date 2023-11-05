@@ -9,6 +9,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.notifier.*
 
 
@@ -75,7 +76,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
         )
 
         return Notification.Builder(this, channelId)
-            .setContentTitle(getString(R.string.forground_notification_descr))
+            .setContentTitle(getString(CR.string.forground_notification_descr))
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)

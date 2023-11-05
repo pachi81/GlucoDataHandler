@@ -24,7 +24,7 @@
     <string name="rate_double_up">schnell steigend</string>
 
     <string name="source_broadcast">Broadcast</string>
-    <string name="source_message_client">Uhr</string>
+    <string name="source_message_client">Intern</string>
     <string name="source_capility_info">Intern</string>
     <string name="source_battery_level">Akku</string>
     <string name="source_node_battery_level">Knoten Akku</string>
@@ -133,4 +133,43 @@
     <string name="widget_glucose_trend">Zuckerwert und Trendpfeil</string>
     <string name="widget_glucose_trend_delta">Zuckerwert, Trendpfeil und Delta</string>
     <string name="widget_glucose_trend_delta_timestamp">Zuckerwert, Trendpfeil, Delta und Zeitpunkt</string>
+
+    <!-- wear -->
+
+    <string name="forground_notification_descr">Datenverarbeitung für Complications</string>
+    <string name="activity_connected_label">Handy: verbunden (%1$s)</string>
+    <string name="activity_disconnected_label">Handy: getrennt</string>
+    <string name="activity_switch_foreground">Vordergrund</string>
+    <string name="activity_switch_notification">Vibrieren</string>
+    <string name="activity_switch_colored_aod">Farbiges AOD</string>
+    <string name="activity_target_range">Zielbereich:</string>
+    <string name="activity_large_arrow_icon">Großer Trendpfeil</string>
+
+    <string name="short_value">Zuckerwert</string>
+    <string name="image_value">Zuckerwert (sehr groß und farbig)</string>
+    <string name="icon_value">Zuckerwert (groß)</string>
+    <string name="short_value_icon">Zuckerwert mit Icon</string>
+    <string name="short_value_arrow">Zuckerwert und Trendpfeil</string>
+    <string name="short_value_arrow_image">Zuckerwert und Trendpfeil (groß und farbig)</string>
+    <string name="short_value_trend_range">Zuckerwert und Trendkreis (wenn unterstützt)</string>
+    <string name="short_value_delta_trend_range">Zuckerwert, Delta und Trendkreis (wenn unterstützt)</string>
+    <string name="short_delta_trend_arrow_range">Delta, Trendpfeil und -kreis (wenn unterstützt)</string>
+    <string name="short_value_delta">Zuckerwert und Delta</string>
+    <string name="long_value_arrow_delta">Zuckerwert, Trendpfeil und Delta</string>
+    <string name="long_value_arrow_delta_time">Zuckerwert, Trendpfeil, Delta und Zeitpunkt</string>
+    <string name="short_value_rate">Zuckerwert und Trendwert</string>
+    <string name="short_delta">Delta</string>
+    <string name="short_delta_arrow">Delta und Trendpfeil</string>
+    <string name="short_delta_icon">Delta mit Icon</string>
+    <string name="short_delta_time">Delta und Zeitpunkt</string>
+    <string name="image_arrow">Trendpfeil (groß, farbig)</string>
+    <string name="icon_arrow">Trendpfeil</string>
+    <string name="test_neg_range">Test Range complication mit negativen Werten (für Trendkreis Unterstützung)</string>
+    <string name="short_rate">Trendwert</string>
+    <string name="short_rate_arrow">Trendwert und -pfeil</string>
+    <string name="short_rate_icon">Trendwert mit Icon</string>
+    <string name="timestamp">Zeitpunkt des Zuckerwertes</string>
+    <string name="battery_level">Akku (Uhr und Telefon)</string>
+
+    <string name="activity_switch_relative_time">Relative Zeit</string>
 </resources>

@@ -11,12 +11,13 @@ import androidx.wear.watchface.complications.data.*
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.R as CR
 import java.text.DateFormat
 
 
 abstract class BgValueComplicationService : SuspendingComplicationDataSourceService() {
     protected val LOG_ID = "GlucoDataHandler.BgValueComplicationService"
-    var descriptionResId: Int = R.string.app_name
+    var descriptionResId: Int = CR.string.app_name
     val shortTimeformat: DateFormat = DateFormat.getTimeInstance(DateFormat.SHORT)
     protected lateinit var sharedPref: SharedPreferences
 
