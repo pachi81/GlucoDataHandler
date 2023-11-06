@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">GlucoDataHandler</string>
+
     <string name="info_label_sensor_id">Sensor</string>
     <string name="info_label_value">Wartość</string>
     <string name="info_label_raw">Surowe</string>
@@ -33,8 +35,25 @@
     <string name="source_obsolete">Wartość przestarzała</string>
     <string name="time_value">Time changed</string>
 
+    <string name="button_ok">OK</string>
+    <string name="button_cancel">Anuluj</string>
 
-    <string name="app_name">GlucoDataHandler</string>
+    <!-- mobile -->
+
+    <string name="activity_main_connected_label">Zegarek: połączony (%1$s)</string>
+    <string name="activity_main_disconnected_label">Zegarek: niepołączony</string>
+    <string name="activity_main_car_connected_label">Android Auto: połączony</string>
+    <string name="activity_main_car_disconnected_label">Android Auto: niepołączony</string>
+
+    <string name="menu_settings">Ustawienia</string>
+    <string name="menu_group_github" translatable="false">GitHub</string>
+    <string name="menu_update">Aktualizacje</string>
+    <string name="menu_support" translatable="false">Wsparcie</string>
+    <string name="menu_help">Pomoc</string>
+    <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README_PL.md</string>
+
+    <!-- tasker -->
+
     <string name="tasker_event_glucodata">Nowa wartość glukozy</string>
     <string name="tasker_event_glucodata_obsolete">Wartość przestarzała</string>
     <string name="tasker_event_glucodata_alarm">Alarm dotyczący stężenia glukozy</string>
@@ -42,10 +61,7 @@
     <string name="tasker_android_auto_connection_state">Połączenie z Android Auto</string>
     <string name="tasker_target_range_state">Zmiana zakresu stężenia glukozy</string>
 
-    <string name="activity_main_connected_label">Zegarek: połączony (%1$s)</string>
-    <string name="activity_main_disconnected_label">Zegarek: niepołączony</string>
-    <string name="activity_main_car_connected_label">Android Auto: połączony</string>
-    <string name="activity_main_car_disconnected_label">Android Auto: niepołączony</string>
+    <!-- settings -->
 
     <string name="pref_cat_general">Ogólne</string>
     <string name="pref_cat_notification">Powiadomienie</string>
@@ -120,14 +136,6 @@
 
     <string name="select_receiver_show_all">Pokaż wszystko</string>
     <string name="select_receiver_no_glucodata_receiver">Nie znaleziono odbiornika!</string>
-    <string name="button_ok">OK</string>
-    <string name="button_cancel">Anuluj</string>
-    <string name="menu_settings">Ustawienia</string>
-    <string name="menu_group_github" translatable="false">GitHub</string>
-    <string name="menu_update">Aktualizacje</string>
-    <string name="menu_support" translatable="false">Wsparcie</string>
-    <string name="menu_help">Pomoc</string>
-    <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README_PL.md</string>
 
     <string name="widget_glucose">Glukoza</string>
     <string name="widget_glucose_trend">Glukoza i trend</string>
@@ -140,11 +148,13 @@
 
     <string name="activity_connected_label">Telefon: połączony (%1$s)</string>
     <string name="activity_disconnected_label">Telefon: rozłączony</string>
+
     <string name="activity_switch_foreground">Pierwszy plan</string>
     <string name="activity_switch_notification">Wibracje</string>
-    <string name="activity_target_range">Zakres docelowy:</string>
     <string name="activity_switch_colored_aod">Kolorowy AOD</string>
     <string name="activity_large_arrow_icon">Duża strzałka trendu</string>
+
+    <!-- complications -->
 
     <string name="short_value">Glukoza</string>
     <string name="image_value">Glukoza (bardzo duża i kolorowa)</string>
@@ -172,5 +182,4 @@
     <string name="timestamp">Znacznik czasu glukozy</string>
     <string name="battery_level">Poziom baterii (zegarek  i telefon)</string>
 
-    <string name="activity_switch_relative_time">Czas względny</string>
 </resources>

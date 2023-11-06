@@ -35,7 +35,27 @@
     <string name="source_obsolete">Obsolete value</string>
     <string name="time_value">Time changed</string>
 
+    <string name="button_ok">OK</string>
+    <string name="button_cancel">Cancel</string>
+
     <!-- mobile -->
+
+    <string name="activity_main_connected_label">Wear: connected (%1$s)</string>
+    <string name="activity_main_disconnected_label">Wear: disconnected</string>
+    <string name="activity_main_car_connected_label">Android Auto: connected</string>
+    <string name="activity_main_car_disconnected_label">Android Auto: disconnected</string>
+
+    <string name="menu_settings">Settings</string>
+    <string name="menu_group_github"  translatable="false">GitHub</string>
+    <string name="menu_update">Updates</string>
+    <string name="menu_support"  translatable="false">Support</string>
+    <string name="menu_help">Help</string>
+
+    <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
+    <string name="update_link"  translatable="false">https://github.com/pachi81/GlucoDataHandler/releases</string>
+    <string name="support_link"  translatable="false">https://github.com/pachi81/GlucoDataHandler/issues</string>
+
+    <!-- tasker -->
 
     <string name="tasker_event_glucodata">New glucose value</string>
     <string name="tasker_event_glucodata_obsolete">Obsolete value</string>
@@ -44,11 +64,7 @@
     <string name="tasker_android_auto_connection_state">Android Auto connection</string>
     <string name="tasker_target_range_state">Glucose range change</string>
 
-
-    <string name="activity_main_connected_label">Wear: connected (%1$s)</string>
-    <string name="activity_main_disconnected_label">Wear: disconnected</string>
-    <string name="activity_main_car_connected_label">Android Auto: connected</string>
-    <string name="activity_main_car_disconnected_label">Android Auto: disconnected</string>
+    <!-- settings -->
 
     <string name="pref_cat_general">General</string>
     <string name="pref_cat_notification">Notification</string>
@@ -124,24 +140,11 @@
 
     <string name="select_receiver_show_all">Show all</string>
     <string name="select_receiver_no_glucodata_receiver">No receiver found!</string>
-    <string name="button_ok">OK</string>
-    <string name="button_cancel">Cancel</string>
-
-    <string name="menu_settings">Settings</string>
-    <string name="menu_group_github"  translatable="false">GitHub</string>
-    <string name="menu_update">Updates</string>
-    <string name="menu_support"  translatable="false">Support</string>
-    <string name="menu_help">Help</string>
-
-    <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
-    <string name="update_link"  translatable="false">https://github.com/pachi81/GlucoDataHandler/releases</string>
-    <string name="support_link"  translatable="false">https://github.com/pachi81/GlucoDataHandler/issues</string>
 
     <string name="widget_glucose">Glucose</string>
     <string name="widget_glucose_trend">Glucose and trend</string>
     <string name="widget_glucose_trend_delta">Glucose, trend and delta</string>
     <string name="widget_glucose_trend_delta_timestamp">Glucose, trend, delta and timestamp</string>
-
 
     <!-- wear -->
 
@@ -149,11 +152,13 @@
 
     <string name="activity_connected_label">Phone: connected (%1$s)</string>
     <string name="activity_disconnected_label">Phone: disconnected</string>
+
     <string name="activity_switch_foreground">Foreground</string>
+    <string name="activity_large_arrow_icon">Big trend-arrow</string>
     <string name="activity_switch_notification">Vibration</string>
     <string name="activity_switch_colored_aod">Colored AOD</string>
-    <string name="activity_target_range">Target range:</string>
-    <string name="activity_large_arrow_icon">Big trend-arrow</string>
+
+    <!-- complications -->
 
     <string name="short_value">Glucose</string>
     <string name="image_value">Glucose (very big and colored)</string>
@@ -180,6 +185,4 @@
     <string name="short_rate_icon">Trend value with icon</string>
     <string name="timestamp">Glucose timestamp</string>
     <string name="battery_level">Battery level (wear and phone)</string>
-
-    <string name="activity_switch_relative_time">Relative time</string>
 </resources>
