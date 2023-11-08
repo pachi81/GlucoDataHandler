@@ -24,7 +24,7 @@ import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
-
+import de.michelinside.glucodatahandler.common.R as CR
 
 class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtBgValue: TextView
@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 R.id.action_update -> {
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse(resources.getText(R.string.update_link).toString())
+                        Uri.parse(resources.getText(CR.string.update_link).toString())
                     )
                     startActivity(browserIntent)
                     return true
@@ -145,7 +145,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 R.id.action_help -> {
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse(resources.getText(R.string.help_link).toString())
+                        Uri.parse(resources.getText(CR.string.help_link).toString())
                     )
                     startActivity(browserIntent)
                     return true
@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 R.id.action_support -> {
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse(resources.getText(R.string.support_link).toString())
+                        Uri.parse(resources.getText(CR.string.support_link).toString())
                     )
                     startActivity(browserIntent)
                     return true
@@ -179,11 +179,11 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             viewIcon.setImageIcon(Utils.getRateAsIcon())
             txtLastValue.text = ReceiveData.getAsString(this)
             if (WearPhoneConnection.nodesConnected) {
-                txtWearInfo.text = String.format(resources.getText(R.string.activity_main_connected_label).toString(), WearPhoneConnection.getBatterLevelsAsString())
+                txtWearInfo.text = String.format(resources.getText(CR.string.activity_main_connected_label).toString(), WearPhoneConnection.getBatterLevelsAsString())
             }
             else
-                txtWearInfo.text = resources.getText(R.string.activity_main_disconnected_label)
-            txtCarInfo.text = if (CarModeReceiver.connected) resources.getText(R.string.activity_main_car_connected_label) else resources.getText(R.string.activity_main_car_disconnected_label)
+                txtWearInfo.text = resources.getText(CR.string.activity_main_disconnected_label)
+            txtCarInfo.text = if (CarModeReceiver.connected) resources.getText(CR.string.activity_main_car_connected_label) else resources.getText(CR.string.activity_main_car_disconnected_label)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
         }

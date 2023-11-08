@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.databinding.ActivityWaerBinding
@@ -176,9 +177,9 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 viewIcon.setImageIcon(Utils.getRateAsIcon())
                 txtValueInfo.text = ReceiveData.getAsString(this)
                 if (WearPhoneConnection.nodesConnected) {
-                    txtConnInfo.text = String.format(resources.getText(R.string.activity_connected_label).toString(), WearPhoneConnection.getBatterLevelsAsString())
+                    txtConnInfo.text = String.format(resources.getText(CR.string.activity_connected_label).toString(), WearPhoneConnection.getBatterLevelsAsString())
                 } else
-                    txtConnInfo.text = resources.getText(R.string.activity_disconnected_label)
+                    txtConnInfo.text = resources.getText(CR.string.activity_disconnected_label)
 
             }
         } catch( exc: Exception ) {

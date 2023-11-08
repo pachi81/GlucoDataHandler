@@ -16,6 +16,7 @@ import androidx.core.app.Person
 import androidx.core.app.RemoteInput
 import androidx.core.graphics.drawable.IconCompat
 import de.michelinside.glucodatahandler.R
+import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.tasker.setAndroidAutoConnectionState
@@ -58,7 +59,7 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         createNotificationChannel(context)
         notificationCompat = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle(context.getString(R.string.app_name))
+            .setContentTitle(context.getString(CR.string.app_name))
             .setContentText("Android Auto")
             .addInvisibleAction(createReplyAction(context))
             .addInvisibleAction(createDismissAction(context))

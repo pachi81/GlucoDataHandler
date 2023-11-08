@@ -18,6 +18,7 @@ import androidx.preference.PreferenceDialogFragmentCompat
 import de.michelinside.glucodatahandler.BuildConfig
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.R as CR
 
 
 class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat() {
@@ -99,7 +100,7 @@ class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCom
             receiverSet.clear()
             if (receivers.size == 0) {
                 val txt = TextView(requireContext())
-                txt.setText(R.string.select_receiver_no_glucodata_receiver)
+                txt.setText(CR.string.select_receiver_no_glucodata_receiver)
                 receiverLayout.addView(txt)
             }
             else {
