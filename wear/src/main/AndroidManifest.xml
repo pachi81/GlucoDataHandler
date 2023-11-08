@@ -48,7 +48,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".common.notifier.ElapsedTimeNotifier" />
+            android:name=".common.tasks.BackgroundAlarmReceiver" />
 <!--        <receiver
             android:name=".StartServiceAtBootReceiver"
             android:enabled="true"
