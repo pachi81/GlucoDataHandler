@@ -37,7 +37,7 @@ object BackgroundTaskService: SharedPreferences.OnSharedPreferenceChangeListener
     private var lastElapsedMinute = 0L
     private val elapsedTimeMinute: Long
         get() {
-            return ReceiveData.getElapsedTimeMinute(RoundingMode.DOWN)
+            return ReceiveData.getElapsedTimeMinute()
         }
 
     private fun initBackgroundTasks() {

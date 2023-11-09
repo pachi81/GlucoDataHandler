@@ -225,7 +225,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return Utils.round(timeDiff.toFloat()/60000, 0).toLong()
     }
 
-    fun getElapsedTimeMinute(roundingMode: RoundingMode = RoundingMode.HALF_UP): Long {
+    fun getElapsedTimeMinute(roundingMode: RoundingMode = RoundingMode.DOWN): Long {
         return Utils.round((System.currentTimeMillis()-time).toFloat()/60000, 0, roundingMode).toLong()
     }
 
