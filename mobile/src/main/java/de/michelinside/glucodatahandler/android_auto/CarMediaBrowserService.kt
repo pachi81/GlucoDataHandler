@@ -55,7 +55,6 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 NotifyDataSource.BROADCAST,
                 NotifyDataSource.MESSAGECLIENT,
                 NotifyDataSource.SETTINGS,
-                NotifyDataSource.OBSOLETE_VALUE,
                 NotifyDataSource.TIME_VALUE))
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )

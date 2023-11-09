@@ -129,10 +129,11 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
                         val filter = mutableSetOf(
                             NotifyDataSource.BROADCAST,
                             NotifyDataSource.MESSAGECLIENT,
-                            NotifyDataSource.SETTINGS,
-                            NotifyDataSource.OBSOLETE_VALUE)
+                            NotifyDataSource.SETTINGS)
                         if(txtTime.visibility == VISIBLE) {
                             filter.add(NotifyDataSource.TIME_VALUE)
+                        } else {
+                            filter.add(NotifyDataSource.OBSOLETE_VALUE)
                         }
                         InternalNotifier.addNotifier(this, filter)
                         createWindow()

@@ -28,10 +28,11 @@ object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPrefere
                         NotifyDataSource.BROADCAST,
                         NotifyDataSource.MESSAGECLIENT,
                         NotifyDataSource.SETTINGS,
-                        NotifyDataSource.OBSOLETE_VALUE
                     )   // to trigger re-start for the case of stopped by the system
                     if(activeWidgets.contains(WidgetType.GLUCOSE_TREND_DELTA_TIME))
                         filter.add(NotifyDataSource.TIME_VALUE)
+                    else
+                        filter.add(NotifyDataSource.OBSOLETE_VALUE)
                     InternalNotifier.addNotifier(this, filter)
                 }
                 if (activeWidgets.size == 1)

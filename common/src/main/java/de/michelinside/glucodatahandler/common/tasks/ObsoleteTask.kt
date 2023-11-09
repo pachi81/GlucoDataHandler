@@ -17,6 +17,10 @@ class ObsoleteTask : BackgroundTask() {
         Handler(context.mainLooper).post {
             Log.d(LOG_ID, "send obsolete notifier")
             InternalNotifier.notify(context, NotifyDataSource.OBSOLETE_VALUE, null)
+            if (!ElapsedTimeTask.relativeTime) {// also send time_value, if the ElapsedTimeTask not running
+                Log.d(LOG_ID, "send time notifier")
+                InternalNotifier.notify(context, NotifyDataSource.TIME_VALUE, null)
+            }
         }
     }
 
