@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.PowerManager
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -26,6 +27,7 @@ object BackgroundTaskService: SharedPreferences.OnSharedPreferenceChangeListener
     NotifierInterface {
     private val LOG_ID = "GlucoDataHandler.Task.BackgroundTaskService"
     private const val EXTRA_DELAY_MS = 3000L
+    private const val WAKE_LOCK_TIMEOUT = 10000L // 10 seconds
 
     private var backgroundTaskList = mutableListOf<BackgroundTask>()
     private var interval = -1L
@@ -54,15 +56,27 @@ object BackgroundTaskService: SharedPreferences.OnSharedPreferenceChangeListener
         try {
             if (lastElapsedMinute != elapsedTimeMinute) {
                 Thread {
-                    backgroundTaskList.forEach {
-                        if (elapsedTimeMinute.mod(it.getIntervalMinute()) == 0L && it.active(elapsedTimeMinute)) {
-                            try {
-                                Log.w(LOG_ID, "execute after " + elapsedTimeMinute + " min: " + it)
-                                it.execute(context)
-                            } catch (ex: Exception) {
-                                Log.e(LOG_ID, "exception while execute task " + it + ": " + ex)
+                    val wakeLock: PowerManager.WakeLock =
+                        (context.getSystemService(Context.POWER_SERVICE) as PowerManager).run {
+                            newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "GlucoDataHandler::BackgroundTaskTag").apply {
+                                acquire(WAKE_LOCK_TIMEOUT)
                             }
                         }
+                    try {
+                        backgroundTaskList.forEach {
+                            if (elapsedTimeMinute.mod(it.getIntervalMinute()) == 0L && it.active(elapsedTimeMinute)) {
+                                try {
+                                    Log.w(LOG_ID, "execute after " + elapsedTimeMinute + " min: " + it)
+                                    it.execute(context)
+                                } catch (ex: Exception) {
+                                    Log.e(LOG_ID, "exception while execute task " + it + ": " + ex)
+                                }
+                            }
+                        }
+                    } catch (ex: Exception) {
+                        Log.e(LOG_ID, "exception while executing tasks: " + ex)
+                    } finally {
+                        wakeLock.release()
                     }
                 }.start()
             }

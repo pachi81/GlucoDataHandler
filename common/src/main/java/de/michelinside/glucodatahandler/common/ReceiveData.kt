@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
+import android.os.PowerManager
 import android.util.Log
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
@@ -22,6 +23,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     const val ALARM = "glucodata.Minute.Alarm"
     const val TIME = "glucodata.Minute.Time"
     const val DELTA = "glucodata.Minute.Delta"
+    private const val WAKE_LOCK_TIMEOUT = 10000L // 10 seconds
 
     enum class AlarmType {
         NONE,
@@ -248,6 +250,13 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         if (extras == null || extras.isEmpty) {
             return false
         }
+        var result = false
+        val wakeLock: PowerManager.WakeLock =
+            (context.getSystemService(Context.POWER_SERVICE) as PowerManager).run {
+                newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "GlucoDataHandler::BackgroundTaskTag").apply {
+                    acquire(WAKE_LOCK_TIMEOUT)
+                }
+            }
         try {
             Log.d(
                 LOG_ID, "Glucodata received from " + dataSource.toString() + ": " +
@@ -305,12 +314,14 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
 
                 InternalNotifier.notify(context, source, createExtras())  // re-create extras to have all changed value inside...
                 saveExtras(context)
-                return true
+                result = true
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Receive exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
+        } finally {
+            wakeLock.release()
         }
-        return false
+        return result
     }
 
     fun changeIsMmol(newValue: Boolean, context: Context) {
