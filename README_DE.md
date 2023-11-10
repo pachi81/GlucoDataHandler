@@ -102,3 +102,8 @@ INFO: das Benachrichtigungs Popup erscheint bei jedem neuen Wert.
 
 -> [Tasker Integration](./TASKER.md)
 
+
+# Unterstützt meine Arbeit
+[🍺 Buy me a beer](https://www.buymeacoffee.com/pachi81)
+
+[Paypal me](https://paypal.me/pachi81)

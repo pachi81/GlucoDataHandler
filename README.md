@@ -100,3 +100,7 @@ You can also use notifications:
 
 -> [Tasker support](./TASKER.md)
 
+# Support my work
+[🍺 Buy me a beer](https://www.buymeacoffee.com/pachi81)
+
+[Paypal me](https://paypal.me/pachi81)

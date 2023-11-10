@@ -7,11 +7,11 @@
 
 * odbiera wartości glukozy z Juggluco
 * odbiera wartości glukozy z xDrip+
-* udostępnia kilka **[widgetów](#Widgety)** i pływający widget dla telefonu
-* udostępnia opcjonalne **[powiadomienia](#Powiadomienia)** z różnymi ikonami dla telefonu
-* udostępnia kilka **[komplikacj](#Komplikacje)** dla Wear OS
+* udostępnia kilka **[widgetów](#widgety)** i pływający widget dla telefonu
+* udostępnia opcjonalne **[powiadomienia](#powiadomienia)** z różnymi ikonami dla telefonu
+* udostępnia kilka **[komplikacj](#komplikacje)** dla Wear OS
 * umożliwia połączenie z **[Android Auto](#android-auto)**
-* Integracja z aplikacją **[Tasker](#Aplikacja Tasker)**
+* Integracja z aplikacją **[Tasker](#aplikacja-tasker)**
 * wysyła transmisje danych o glukozie do innych aplikacji (które obsługują tę transmisję)
 
 ## Pobierz
@@ -102,3 +102,9 @@ Można również korzystać z powiadomień:
 ## Aplikacja Tasker
 
 -> [Obsługa aplikacji Tasker](./TASKER.md)
+
+
+# Wesprzyj moją pracę
+[🍺 Buy me a beer](https://www.buymeacoffee.com/pachi81)
+
+[Paypal me](https://paypal.me/pachi81)
