@@ -46,8 +46,11 @@
     <string name="activity_main_car_disconnected_label">Android Auto: getrennt</string>
 
     <string name="menu_settings">Einstellungen</string>
-    <string name="menu_help">Hilfe</string>
+    <string name="menu_sources">Quellen</string>
+    <string name="menu_group_github">GitHub</string>
     <string name="menu_update">Aktualisierungen</string>
+    <string name="menu_support">Support</string>
+    <string name="menu_help">Hilfe</string>
 
     <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README_DE.md</string>
 
@@ -59,6 +62,25 @@
     <string name="tasker_wear_connection_state">Uhr Verbindung</string>
     <string name="tasker_android_auto_connection_state">Android Auto Verbindung</string>
     <string name="tasker_target_range_state">Glucose Bereich geändert</string>
+
+    <!-- sources -->
+    <string name="src_cat_libreview">LibreView Datenquelle</string>
+
+    <string name="src_libre_enabled">Aktiv</string>
+    <string name="src_libre_enabled_summary">Aktiviere LibreView Datenquelle</string>
+    <string name="src_libre_user">Benutzer</string>
+    <string name="src_libre_user_summary">Benutzername für das Login in LibreView</string>
+    <string name="src_libre_password">Passwort</string>
+    <string name="src_libre_password_summary">Passwort für das Login in LibreView</string>
+    <string name="src_libre_interval">Intervall</string>
+    <string name="src_libre_interval_summary">Intervall für das Abrufen der Daten von LibreView.</string>
+    <string name="src_libre_delay">Wartezeit</string>
+    <string name="src_libre_delay_summary">Wartezeit in Sekunden bis die Daten von LibreView abgerufen werden, da es eine gewisse Zeit dauert, bis die Daten verfügbar sind.</string>
+
+    <string name="source_request_interval_1">1 min</string>
+    <string name="source_request_interval_5">5 min</string>
+    <string name="source_request_interval_10">10 min</string>
+    <string name="source_request_interval_15">15 min</string>
 
     <!-- settings -->
 

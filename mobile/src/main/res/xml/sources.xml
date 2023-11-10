@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/pref_cat_general"
+        app:iconSpaceReserved="false">
+        <androidx.preference.ListPreference
+            android:defaultValue="1"
+            android:entries="@array/source_request_interval_labels"
+            android:entryValues="@array/source_request_interval_values"
+            android:key="source_interval"
+            android:title="@string/src_libre_interval"
+            android:summary="@string/src_libre_interval_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SeekBarPreference
+            android:defaultValue="10"
+            app:showSeekBarValue="true"
+            app:seekBarIncrement="10"
+            app:min="0"
+            android:max="50"
+            android:key="source_delay"
+            android:title="@string/src_libre_delay"
+            android:summary="@string/src_libre_delay_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/src_cat_libreview"
+        app:iconSpaceReserved="false">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="source_libre_enabled"
+            android:title="@string/src_libre_enabled"
+            android:summary="@string/src_libre_enabled_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.EditTextPreference
+            android:defaultValue=""
+            android:key="source_libre_user"
+            android:title="@string/src_libre_user"
+            android:summary="@string/src_libre_user_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.EditTextPreference
+            android:defaultValue=""
+            android:key="source_libre_password"
+            android:title="@string/src_libre_password"
+            android:summary="@string/src_libre_password_summary"
+            android:inputType="textPassword"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+</PreferenceScreen>

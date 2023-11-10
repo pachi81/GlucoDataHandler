@@ -66,7 +66,13 @@ object Constants {
     const val SHARED_PREF_FOREGROUND_SERVICE = "foreground_service"
     const val SHARED_PREF_WEAR_COLORED_AOD = "colored_aod"
 
+    // Data source preferences
+    const val SHARED_PREF_SOURCE_INTERVAL="source_interval"
+    const val SHARED_PREF_SOURCE_DELAY="source_delay"
 
+    const val SHARED_PREF_LIBRE_ENABLED="source_libre_enabled"
+    const val SHARED_PREF_LIBRE_USER="source_libre_user"
+    const val SHARED_PREF_LIBRE_PASSWORD="source_libre_password"
 
     const val SHARED_PREF_DUMMY_VALUES = "dummy_values"
 }

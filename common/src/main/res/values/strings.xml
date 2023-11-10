@@ -46,9 +46,10 @@
     <string name="activity_main_car_disconnected_label">Android Auto: disconnected</string>
 
     <string name="menu_settings">Settings</string>
-    <string name="menu_group_github"  translatable="false">GitHub</string>
+    <string name="menu_sources">Sources</string>
+    <string name="menu_group_github">GitHub</string>
     <string name="menu_update">Updates</string>
-    <string name="menu_support"  translatable="false">Support</string>
+    <string name="menu_support">Support</string>
     <string name="menu_help">Help</string>
 
     <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
@@ -63,6 +64,25 @@
     <string name="tasker_wear_connection_state">Wear connection</string>
     <string name="tasker_android_auto_connection_state">Android Auto connection</string>
     <string name="tasker_target_range_state">Glucose range change</string>
+
+    <!-- sources -->
+    <string name="src_cat_libreview">LibreView Follower</string>
+
+    <string name="src_libre_enabled">Enable</string>
+    <string name="src_libre_enabled_summary">Enable LibreView follower</string>
+    <string name="src_libre_user">User</string>
+    <string name="src_libre_user_summary">Username for login to LibreView</string>
+    <string name="src_libre_password">Password</string>
+    <string name="src_libre_password_summary">Password for login to LibreView</string>
+    <string name="src_libre_interval">Interval</string>
+    <string name="src_libre_interval_summary">Interval of requesting data from LibreView.</string>
+    <string name="src_libre_delay">Delay</string>
+    <string name="src_libre_delay_summary">Delay in seconds before requesting the data from cloud, because if takes some time until the data is present there.</string>
+
+    <string name="source_request_interval_1">1 min</string>
+    <string name="source_request_interval_5">5 min</string>
+    <string name="source_request_interval_10">10 min</string>
+    <string name="source_request_interval_15">15 min</string>
 
     <!-- settings -->
 

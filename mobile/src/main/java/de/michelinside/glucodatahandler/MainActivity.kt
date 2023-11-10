@@ -131,6 +131,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             when(item.itemId) {
                 R.id.action_settings -> {
                     val intent = Intent(this, SettingsActivity::class.java)
+                    intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.SETTINGS_FRAGMENT.value)
+                    startActivity(intent)
+                    return true
+                }
+                R.id.action_sources -> {
+                    val intent = Intent(this, SettingsActivity::class.java)
+                    intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.SORUCE_FRAGMENT.value)
                     startActivity(intent)
                     return true
                 }

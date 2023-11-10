@@ -9,6 +9,13 @@
             app:showAsAction="never" />
     </group>
     <group
+        android:id="@+id/group_sources">
+        <item
+            android:id="@+id/action_sources"
+            android:title="@string/menu_sources"
+            app:showAsAction="never" />
+    </group>
+    <group
         android:id="@+id/group_github">
         <item
             android:id="@+id/group_github_title"
