@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
+import android.os.PowerManager
 import android.util.Log
 import de.michelinside.glucodatahandler.common.notifier.*
+import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
 import java.math.RoundingMode
 import java.text.DateFormat
 import java.util.*
@@ -21,7 +23,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     const val ALARM = "glucodata.Minute.Alarm"
     const val TIME = "glucodata.Minute.Time"
     const val DELTA = "glucodata.Minute.Delta"
-    private lateinit var obsoleteNotify: ElapsedTimeNotifier
+    private const val WAKE_LOCK_TIMEOUT = 10000L // 10 seconds
 
     enum class AlarmType {
         NONE,
@@ -103,7 +105,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         Log.d(LOG_ID, "initData called")
         try {
             if (!initialized) {
-                obsoleteNotify = ElapsedTimeNotifier()
                 readTargets(context)
                 loadExtras(context)
                 initialized = true
@@ -226,14 +227,14 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return Utils.round(timeDiff.toFloat()/60000, 0).toLong()
     }
 
-    fun getElapsedTimeMinute(roundingMode: RoundingMode = RoundingMode.HALF_UP): Long {
+    fun getElapsedTimeMinute(roundingMode: RoundingMode = RoundingMode.DOWN): Long {
         return Utils.round((System.currentTimeMillis()-time).toFloat()/60000, 0, roundingMode).toLong()
     }
 
     fun getElapsedTimeMinuteAsString(context: Context, short: Boolean = true): String {
         if (time == 0L)
             return "--"
-        if (ElapsedTimeNotifier.relativeTime) {
+        if (ElapsedTimeTask.relativeTime) {
             val elapsed_time = getElapsedTimeMinute()
             if (elapsed_time > 60)
                 return context.getString(R.string.elapsed_time_hour)
@@ -249,6 +250,13 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         if (extras == null || extras.isEmpty) {
             return false
         }
+        var result = false
+        val wakeLock: PowerManager.WakeLock =
+            (context.getSystemService(Context.POWER_SERVICE) as PowerManager).run {
+                newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "GlucoDataHandler::BackgroundTaskTag").apply {
+                    acquire(WAKE_LOCK_TIMEOUT)
+                }
+            }
         try {
             Log.d(
                 LOG_ID, "Glucodata received from " + dataSource.toString() + ": " +
@@ -306,13 +314,14 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
 
                 InternalNotifier.notify(context, source, createExtras())  // re-create extras to have all changed value inside...
                 saveExtras(context)
-                obsoleteNotify.schedule(context)
-                return true
+                result = true
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Receive exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
+        } finally {
+            wakeLock.release()
         }
-        return false
+        return result
     }
 
     fun changeIsMmol(newValue: Boolean, context: Context) {

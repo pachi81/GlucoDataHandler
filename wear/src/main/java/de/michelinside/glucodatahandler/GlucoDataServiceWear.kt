@@ -22,7 +22,6 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
                 NotifyDataSource.MESSAGECLIENT,
                 NotifyDataSource.BROADCAST,
                 NotifyDataSource.SETTINGS,
-                NotifyDataSource.OBSOLETE_VALUE,
                 NotifyDataSource.TIME_VALUE
             )
         )

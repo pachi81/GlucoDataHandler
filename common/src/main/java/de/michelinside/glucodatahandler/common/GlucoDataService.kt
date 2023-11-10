@@ -10,6 +10,7 @@ import android.util.Log
 import com.google.android.gms.wearable.*
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.*
+import de.michelinside.glucodatahandler.common.tasks.BackgroundTaskService
 
 enum class AppSource {
     NOT_SET,
@@ -107,6 +108,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             isRunning = true
 
             ReceiveData.initData(this)
+            BackgroundTaskService.run(this)
 
             connection.open(this)
 
@@ -154,6 +156,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             unregisterReceiver(receiver)
             unregisterReceiver(batteryReceiver)
             unregisterReceiver(xDripReceiver)
+            BackgroundTaskService.stop()
             connection.close()
             super.onDestroy()
             service = null

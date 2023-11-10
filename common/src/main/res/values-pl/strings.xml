@@ -169,6 +169,7 @@
     <string name="long_value_arrow_delta">Glukoza, delta i trend</string>
     <string name="long_value_arrow_delta_time">Glukoza, delta, trend i znacznik czasu</string>
     <string name="short_value_rate">Glukoza i wartość trendu</string>
+    <string name="icon_delta">Delta (duża)</string>
     <string name="short_delta">Delta</string>
     <string name="short_delta_arrow">Delta i trend</string>
     <string name="short_delta_icon">Delta z ikoną</string>

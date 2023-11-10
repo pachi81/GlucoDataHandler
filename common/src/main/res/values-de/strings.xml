@@ -168,6 +168,7 @@
     <string name="long_value_arrow_delta">Zuckerwert, Trendpfeil und Delta</string>
     <string name="long_value_arrow_delta_time">Zuckerwert, Trendpfeil, Delta und Zeitpunkt</string>
     <string name="short_value_rate">Zuckerwert und Trendwert</string>
+    <string name="icon_delta">Delta (groß)</string>
     <string name="short_delta">Delta</string>
     <string name="short_delta_arrow">Delta und Trendpfeil</string>
     <string name="short_delta_icon">Delta mit Icon</string>
