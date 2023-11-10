@@ -54,3 +54,26 @@ class ValueIconComplication: BgValueComplicationService() {
             .build()
     }
 }
+
+class DeltaIconComplication: BgValueComplicationService() {
+    override fun getImage(): SmallImage {
+        return  SmallImage.Builder(
+            image = Utils.getDeltaAsIcon(color = Color.WHITE, roundTarget = true),
+            type = SmallImageType.PHOTO
+        ).setAmbientImage(Utils.getDeltaAsIcon(color = Color.WHITE))
+            .build()
+    }
+
+    override fun getIconComplicationData(): ComplicationData {
+        val imageIcon = MonochromaticImage.Builder(
+            image = Utils.getDeltaAsIcon(color = Color.WHITE)
+        ).setAmbientImage(Utils.getDeltaAsIcon(color = Color.WHITE)).build()
+
+        return MonochromaticImageComplicationData.Builder(
+            imageIcon,
+            descriptionText()
+        )
+            .setTapAction(getTapAction())
+            .build()
+    }
+}
