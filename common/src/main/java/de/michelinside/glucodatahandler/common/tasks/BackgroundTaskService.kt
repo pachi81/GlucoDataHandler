@@ -44,6 +44,7 @@ object BackgroundTaskService: SharedPreferences.OnSharedPreferenceChangeListener
 
     private fun initBackgroundTasks() {
         backgroundTaskList.clear()
+        backgroundTaskList.add(LibreViewSourceTask())
         backgroundTaskList.add(ElapsedTimeTask())
         backgroundTaskList.add(ObsoleteTask())
 
@@ -178,15 +179,17 @@ object BackgroundTaskService: SharedPreferences.OnSharedPreferenceChangeListener
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         try {
-            Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
-            var changed = false
-            backgroundTaskList.forEach {
-                if (it.checkPreferenceChanged(sharedPreferences,key, context))
-                    changed = true
-            }
-            if (changed) {
-                calculateInterval()
-            }
+            if (sharedPreferences != null) {
+                    Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
+                    var changed = false
+                    backgroundTaskList.forEach {
+                        if (it.checkPreferenceChanged(sharedPreferences, key, context))
+                            changed = true
+                    }
+                    if (changed) {
+                        calculateInterval()
+                    }
+                }
         } catch (ex: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged: " + ex)
         }
