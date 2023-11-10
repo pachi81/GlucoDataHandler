@@ -11,6 +11,7 @@ import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +25,8 @@ import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
+import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
+import de.michelinside.glucodatahandler.common.tasks.LibreViewSourceTask
 import de.michelinside.glucodatahandler.common.R as CR
 
 class MainActivity : AppCompatActivity(), NotifierInterface {
@@ -33,6 +36,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtVersion: TextView
     private lateinit var txtWearInfo: TextView
     private lateinit var txtCarInfo: TextView
+    private lateinit var txtSourceInfo: TextView
     private lateinit var sharedPref: SharedPreferences
     private val LOG_ID = "GlucoDataHandler.Main"
 
@@ -58,6 +62,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             txtLastValue = findViewById(R.id.txtLastValue)
             txtWearInfo = findViewById(R.id.txtWearInfo)
             txtCarInfo = findViewById(R.id.txtCarInfo)
+            txtSourceInfo = findViewById(R.id.txtSourceInfo)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -191,6 +196,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             else
                 txtWearInfo.text = resources.getText(CR.string.activity_main_disconnected_label)
             txtCarInfo.text = if (CarModeReceiver.connected) resources.getText(CR.string.activity_main_car_connected_label) else resources.getText(CR.string.activity_main_car_disconnected_label)
+            txtSourceInfo.text =  String.format(resources.getText(CR.string.activity_main_source_label).toString(), LibreViewSourceTask.getState(this))
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
         }

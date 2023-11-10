@@ -73,6 +73,9 @@ object Constants {
     const val SHARED_PREF_LIBRE_ENABLED="source_libre_enabled"
     const val SHARED_PREF_LIBRE_USER="source_libre_user"
     const val SHARED_PREF_LIBRE_PASSWORD="source_libre_password"
+    const val SHARED_PREF_LIBRE_TOKEN="source_libre_token"
+    const val SHARED_PREF_LIBRE_TOKEN_EXPIRE="source_libre_token_expire"
+    const val SHARED_PREF_LIBRE_REGION="source_libre_region"
 
     const val SHARED_PREF_DUMMY_VALUES = "dummy_values"
 }

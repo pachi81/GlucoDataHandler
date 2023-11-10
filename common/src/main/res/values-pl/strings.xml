@@ -56,6 +56,7 @@
 
     <!-- tasker -->
 
+    <string name="activity_main_source_label">LibreView: %1$s</string>
     <string name="tasker_event_glucodata">Nowa wartość glukozy</string>
     <string name="tasker_event_glucodata_obsolete">Wartość przestarzała</string>
     <string name="tasker_event_glucodata_alarm">Alarm dotyczący stężenia glukozy</string>
@@ -81,6 +82,12 @@
     <string name="source_request_interval_5">5 min</string>
     <string name="source_request_interval_10">10 min</string>
     <string name="source_request_interval_15">15 min</string>
+
+    <!-- LibreView source -->
+    <string name="state_disabled">disabled</string>
+    <string name="state_not_connected">not connected</string>
+    <string name="state_connected">connected</string>
+    <string name="state_error">error: %s</string>
 
     <!-- settings -->
 

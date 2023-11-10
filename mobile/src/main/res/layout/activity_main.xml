@@ -63,6 +63,18 @@
         tools:ignore="SpUsage" />
 
     <TextView
+        android:id="@+id/txtSourceInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="LibreView error: -"
+        android:textSize="14dp"
+        tools:ignore="SpUsage"
+        app:layout_constraintBottom_toTopOf="@+id/txtWearInfo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
         android:id="@+id/txtWearInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

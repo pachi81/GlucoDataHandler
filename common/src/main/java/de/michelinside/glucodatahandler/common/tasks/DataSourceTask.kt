@@ -11,7 +11,7 @@ abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
     private val LOG_ID = "GlucoDataHandler.Task.DataSourceTask"
 
     companion object {
-        private var enabled = false
+        var enabled = false
         private var delay = 10L
         private var interval = 1L
         var editSettings = false
@@ -20,14 +20,18 @@ abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
     abstract fun executeRequest()
 
     override fun execute(context: Context) {
+        Log.i(LOG_ID, "execute in " + delay + " seconds")
+        if (delay > 0L)
+            Executors.newSingleThreadScheduledExecutor().schedule({run()}, delay, TimeUnit.SECONDS)
+        else
+            run()
+    }
+
+    protected fun run() {
         if (editSettings) {
             Log.w(LOG_ID, "Not execute data source during changing settings")
         } else {
-            Log.i(LOG_ID, "execute in " + delay + " seconds")
-            if (delay > 0L)
-                Executors.newSingleThreadScheduledExecutor().schedule({executeRequest()}, delay, TimeUnit.SECONDS)
-            else
-                executeRequest()
+            executeRequest()
         }
     }
 
