@@ -28,18 +28,25 @@ abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
     }
 
     protected fun run() {
-        if (editSettings) {
-            Log.w(LOG_ID, "Not execute data source during changing settings")
-        } else {
-            executeRequest()
+        if (enabled) {
+            if (editSettings) {
+                Log.w(LOG_ID, "Not execute data source during changing settings")
+            } else {
+                executeRequest()
+            }
         }
     }
 
     protected fun triggerDirectExecution() {
-        if(enabled && !editSettings) {
-            // trigger direct execution!
-            Log.i(LOG_ID, "Trigger execution")
-            Executors.newSingleThreadScheduledExecutor().execute { run() }
+        if(enabled) {
+            if(editSettings) {
+                Log.i(LOG_ID, "Trigger execution in 10 seconds")
+                Executors.newSingleThreadScheduledExecutor().schedule({run()}, 10, TimeUnit.SECONDS)
+            } else {
+                // trigger direct execution!
+                Log.i(LOG_ID, "Trigger execution")
+                Executors.newSingleThreadScheduledExecutor().execute { run() }
+            }
         }
     }
 
