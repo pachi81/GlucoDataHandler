@@ -9,13 +9,11 @@ import java.util.concurrent.TimeUnit
 
 abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
     private val LOG_ID = "GlucoDataHandler.Task.DataSourceTask"
+    private var enabled = false
+    private var delay = 10L
+    private var interval = 1L
 
     companion object {
-        var enabled = false
-        private var enabledChanged = false
-        private var delay = 10L
-        private var interval = 1L
-        private var editSettingsActive = false
         var editSettings = false
     }
 

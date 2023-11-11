@@ -43,7 +43,8 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
         const val LOGIN_ENDPOINT = "/llu/auth/login"
         const val CONNECTION_ENDPOINT = "/llu/connections"
         fun getState(context: Context): String {
-            if (!enabled) {
+            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            if (!sharedPref.getBoolean(Constants.SHARED_PREF_LIBRE_ENABLED, false)) {
                 return context.resources.getString(R.string.state_disabled)
             }
             if (lastError.isNotEmpty()) {
