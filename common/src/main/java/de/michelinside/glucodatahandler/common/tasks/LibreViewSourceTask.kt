@@ -33,6 +33,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
         private var lastError = ""
         private var user = ""
         private var password = ""
+        private var reconnect = false
         private var token = ""
         private var tokenExpire = 0L
         private var region = ""
@@ -202,6 +203,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
                             with(GlucoDataService.sharedPref!!.edit()) {
                                 putString(Constants.SHARED_PREF_LIBRE_TOKEN, token)
                                 putLong(Constants.SHARED_PREF_LIBRE_TOKEN_EXPIRE, tokenExpire)
+                                putBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false)
                                 apply()
                             }
                         }
@@ -214,9 +216,16 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
 
     private fun login(): Boolean {
         try {
-            if (token.isNotEmpty() && tokenExpire <= System.currentTimeMillis()) {
+            if (token.isNotEmpty() && (reconnect || tokenExpire <= System.currentTimeMillis())) {
                 Log.i(LOG_ID, "Token expired!")
                 token = ""
+                if (reconnect) {
+                    reconnect = false
+                    with(GlucoDataService.sharedPref!!.edit()) {
+                        putBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false)
+                        apply()
+                    }
+                }
             }
             if (token.isEmpty()) {
                 return handleLoginResponse(executeRequest(createRequest(LOGIN_ENDPOINT)))
@@ -342,6 +351,11 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
                     if (password != sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, "")) {
                         password = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, "")!!.trim()
                         token = ""
+                    }
+                }
+                Constants.SHARED_PREF_LIBRE_RECONNECT -> {
+                    if (reconnect != sharedPreferences.getBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false)) {
+                        reconnect = sharedPreferences.getBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false)
                     }
                 }
             }

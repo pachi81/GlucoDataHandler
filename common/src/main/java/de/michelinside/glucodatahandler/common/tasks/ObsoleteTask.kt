@@ -25,6 +25,6 @@ class ObsoleteTask : BackgroundTask() {
     }
 
     override fun active(elapsetTimeMinute: Long): Boolean {
-        return  elapsetTimeMinute > 0 && elapsetTimeMinute <= 10
+        return  elapsetTimeMinute <= 10
     }
 }
