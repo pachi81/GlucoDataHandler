@@ -12,7 +12,6 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.R
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
@@ -21,7 +20,6 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import java.util.concurrent.TimeUnit
 
 
 // API docu: https://libreview-unofficial.stoplight.io/
@@ -37,7 +35,6 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
         private var token = ""
         private var tokenExpire = 0L
         private var region = ""
-        private var httpClient: OkHttpClient? = null
         const val server = "https://api.libreview.io"
         const val region_server = "https://api-%s.libreview.io"
         const val LOGIN_ENDPOINT = "/llu/auth/login"
@@ -79,18 +76,6 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
     private fun getUrl(endpoint: String): String {
         val url = if(region.isEmpty()) server else region_server.format(region)
         return url + endpoint
-    }
-
-    protected fun getHttpClient(): OkHttpClient {
-        if (httpClient != null) {
-            return httpClient!!
-        }
-        val builder = OkHttpClient().newBuilder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(20, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-        httpClient = builder.build()
-        return httpClient!!
     }
 
     private fun createRequest(endpoint: String): Request {

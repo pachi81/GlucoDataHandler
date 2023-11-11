@@ -36,7 +36,7 @@ object BackgroundTaskService: SharedPreferences.OnSharedPreferenceChangeListener
     private var pendingIntent: PendingIntent? = null
     private var alarmManager: AlarmManager? = null
     private val timeformat = DateFormat.getTimeInstance(DateFormat.DEFAULT)
-    private var lastElapsedMinute = 0L
+    private var lastElapsedMinute = -1L
     private val elapsedTimeMinute: Long
         get() {
             return ReceiveData.getElapsedTimeMinute()
@@ -51,6 +51,7 @@ object BackgroundTaskService: SharedPreferences.OnSharedPreferenceChangeListener
         backgroundTaskList.forEach {
             it.checkPreferenceChanged(sharedPref, null, context)
         }
+        executeTasks()
     }
 
     private fun executeTasks() {

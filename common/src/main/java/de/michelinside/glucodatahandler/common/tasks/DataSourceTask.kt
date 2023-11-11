@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
+import okhttp3.OkHttpClient
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
@@ -14,6 +15,7 @@ abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
     private var interval = 1L
 
     companion object {
+        private var httpClient: OkHttpClient? = null
         var editSettings = false
     }
 
@@ -48,6 +50,18 @@ abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
                 Executors.newSingleThreadScheduledExecutor().execute { run() }
             }
         }
+    }
+
+    protected fun getHttpClient(): OkHttpClient {
+        if (httpClient != null) {
+            return httpClient!!
+        }
+        val builder = OkHttpClient().newBuilder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(20, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+        httpClient = builder.build()
+        return httpClient!!
     }
 
     override fun getIntervalMinute(): Long {
