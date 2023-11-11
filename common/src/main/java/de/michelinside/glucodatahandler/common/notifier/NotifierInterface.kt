@@ -4,5 +4,5 @@ import android.content.Context
 import android.os.Bundle
 
 interface NotifierInterface {
-    fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?)
+    fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?)
 }

@@ -18,7 +18,7 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.Utils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
-import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
 
 
 object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -63,7 +63,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         }
     }
 
-    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnNotifyData called")
             showNotifications()
@@ -212,10 +212,10 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             if (sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION, false)) {
                 Log.i(LOG_ID, "activate permanent notification")
                 val filter = mutableSetOf(
-                    NotifyDataSource.BROADCAST,
-                    NotifyDataSource.MESSAGECLIENT,
-                    NotifyDataSource.SETTINGS,
-                    NotifyDataSource.OBSOLETE_VALUE)   // to trigger re-start for the case of stopped by the system
+                    NotifySource.BROADCAST,
+                    NotifySource.MESSAGECLIENT,
+                    NotifySource.SETTINGS,
+                    NotifySource.OBSOLETE_VALUE)   // to trigger re-start for the case of stopped by the system
                 InternalNotifier.addNotifier(this, filter)
                 showNotifications()
             }

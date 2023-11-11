@@ -7,12 +7,12 @@ import android.os.Bundle
 import android.os.PowerManager
 import android.util.Log
 import de.michelinside.glucodatahandler.common.notifier.*
+import de.michelinside.glucodatahandler.common.tasks.DataSource
 import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
 import java.math.RoundingMode
 import java.text.DateFormat
 import java.util.*
 import kotlin.math.abs
-
 
 object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private const val LOG_ID = "GlucoDataHandler.ReceiveData"
@@ -23,6 +23,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     const val ALARM = "glucodata.Minute.Alarm"
     const val TIME = "glucodata.Minute.Time"
     const val DELTA = "glucodata.Minute.Delta"
+    const val SOURCE_RES_ID = "source_resid"
     private const val WAKE_LOCK_TIMEOUT = 10000L // 10 seconds
 
     enum class AlarmType {
@@ -45,7 +46,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var dateformat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT)
     var timeformat = DateFormat.getTimeInstance(DateFormat.DEFAULT)
     var shorttimeformat = DateFormat.getTimeInstance(DateFormat.SHORT)
-    var source: NotifyDataSource = NotifyDataSource.BROADCAST
+    private var source: DataSource = DataSource.JUGGLUCO
     private var lowValue: Float = 0F
     private val low: Float get() {
         if(isMmol && lowValue > 0F)  // mmol/l
@@ -123,7 +124,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 context.getString(R.string.info_label_alarm) + ": " + alarm + "\r\n" +
                 if (isMmol) context.getString(R.string.info_label_raw) + ": " + rawValue + " mg/dl\r\n" else "" ) +
                 context.getString(R.string.info_label_sensor_id) + ": " + sensorID + "\r\n" +
-                context.getString(R.string.info_label_source) + ": " + context.getString(source.getResId())
+                context.getString(R.string.info_label_source) + ": " + context.getString(source.resId)
     }
 
     fun isObsolete(timeoutSec: Int = Constants.VALUE_OBSOLETE_LONG_SEC): Boolean = (System.currentTimeMillis()- time) >= (timeoutSec * 1000)
@@ -245,7 +246,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             return timeformat.format(Date(time))
     }
 
-    fun handleIntent(context: Context, dataSource: NotifyDataSource, extras: Bundle?) : Boolean
+    fun handleIntent(context: Context, dataSource: DataSource, extras: Bundle?, interApp: Boolean = false) : Boolean
     {
         if (extras == null || extras.isEmpty) {
             return false
@@ -312,7 +313,9 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                         alarm = 6
                 }
 
-                InternalNotifier.notify(context, source, createExtras())  // re-create extras to have all changed value inside...
+                val notifySource = if(interApp) NotifySource.MESSAGECLIENT else NotifySource.BROADCAST
+
+                InternalNotifier.notify(context, notifySource, createExtras())  // re-create extras to have all changed value inside...
                 saveExtras(context)
                 result = true
             }
@@ -447,6 +450,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 putFloat(RATE, rate)
                 putInt(ALARM, alarm)
                 putFloat(DELTA, deltaValue)
+                putInt(SOURCE_RES_ID, source.resId)
                 apply()
             }
         } catch (exc: Exception) {
@@ -468,7 +472,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     extras.putFloat(RATE, sharedGlucosePref.getFloat(RATE, rate))
                     extras.putInt(ALARM, sharedGlucosePref.getInt(ALARM, alarm))
                     extras.putFloat(DELTA, sharedGlucosePref.getFloat(DELTA, deltaValue))
-                    handleIntent(context, NotifyDataSource.BROADCAST, extras)
+                    handleIntent(context, DataSource.fromResId(sharedGlucosePref.getInt(SOURCE_RES_ID,DataSource.JUGGLUCO.resId)), extras)
                 }
             }
         } catch (exc: Exception) {
@@ -495,7 +499,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                         extras.putBundle(Constants.SETTINGS_BUNDLE, getSettingsBundle())
                         InternalNotifier.notify(
                             GlucoDataService.context!!,
-                            NotifyDataSource.SETTINGS,
+                            NotifySource.SETTINGS,
                             extras
                         )
                     }

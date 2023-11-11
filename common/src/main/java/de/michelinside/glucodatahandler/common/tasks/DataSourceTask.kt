@@ -12,8 +12,10 @@ abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
 
     companion object {
         var enabled = false
+        private var enabledChanged = false
         private var delay = 10L
         private var interval = 1L
+        private var editSettingsActive = false
         var editSettings = false
     }
 
@@ -32,6 +34,14 @@ abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
             Log.w(LOG_ID, "Not execute data source during changing settings")
         } else {
             executeRequest()
+        }
+    }
+
+    protected fun triggerDirectExecution() {
+        if(enabled && !editSettings) {
+            // trigger direct execution!
+            Log.i(LOG_ID, "Trigger execution")
+            Executors.newSingleThreadScheduledExecutor().execute { run() }
         }
     }
 
@@ -55,6 +65,7 @@ abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
                 enabledKey -> {
                     if (enabled != sharedPreferences.getBoolean(enabledKey, false)) {
                         enabled = sharedPreferences.getBoolean(enabledKey, false)
+                        triggerDirectExecution()
                         result = true
                     }
                 }

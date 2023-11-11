@@ -130,10 +130,10 @@ class GlucodataObsoleteEvent : Activity(), TaskerPluginConfig<GlucodataObsoleteV
 
 object TaskerDataReceiver: NotifierInterface {
     private val LOG_ID = "GlucoDataHandler.Tasker.DataAction"
-    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "sending new intent to tasker for source " + dataSource.toString())
-            if (dataSource == NotifyDataSource.OBSOLETE_VALUE) {
+            if (dataSource == NotifySource.OBSOLETE_VALUE) {
                 GlucodataObsoleteEvent::class.java.requestQuery(context, GlucodataObsoleteValues())
             } else {
                 if ((ReceiveData.alarm and 8) != 0) {

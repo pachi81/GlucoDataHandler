@@ -6,7 +6,7 @@ plugins {
 }
 
 project.ext.set("versionCode", 1)
-project.ext.set("versionName", "0.9.6.6")
+project.ext.set("versionName", "0.9.6.7")
 project.ext.set("compileSdk", 34)
 project.ext.set("targetSdk", 31)
 project.ext.set("minSdk", 26)

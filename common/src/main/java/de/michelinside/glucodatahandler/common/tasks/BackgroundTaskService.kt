@@ -15,7 +15,7 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.Utils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
-import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import java.math.RoundingMode
 import java.text.DateFormat
 import java.util.Calendar
@@ -36,7 +36,7 @@ object BackgroundTaskService: SharedPreferences.OnSharedPreferenceChangeListener
     private var pendingIntent: PendingIntent? = null
     private var alarmManager: AlarmManager? = null
     private val timeformat = DateFormat.getTimeInstance(DateFormat.DEFAULT)
-    private var lastElapsedMinute = -1L
+    private var lastElapsedMinute = 0L
     private val elapsedTimeMinute: Long
         get() {
             return ReceiveData.getElapsedTimeMinute()
@@ -51,8 +51,6 @@ object BackgroundTaskService: SharedPreferences.OnSharedPreferenceChangeListener
         backgroundTaskList.forEach {
             it.checkPreferenceChanged(sharedPref, null, context)
         }
-        // trigger tasks after startup
-        executeTasks()
     }
 
     private fun executeTasks() {
@@ -197,7 +195,7 @@ object BackgroundTaskService: SharedPreferences.OnSharedPreferenceChangeListener
         }
     }
 
-    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString())
             // restart time
@@ -214,7 +212,7 @@ object BackgroundTaskService: SharedPreferences.OnSharedPreferenceChangeListener
             sharedPref.registerOnSharedPreferenceChangeListener(this)
             InternalNotifier.addNotifier(
                 this,
-                mutableSetOf(NotifyDataSource.BROADCAST, NotifyDataSource.MESSAGECLIENT)
+                mutableSetOf(NotifySource.BROADCAST, NotifySource.MESSAGECLIENT)
             )
             initBackgroundTasks()
             calculateInterval()  // this will start the time

@@ -8,7 +8,7 @@ import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
-import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
 
 object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
     private const val LOG_ID = "GlucoDataHandler.widget.ActiveWidgetHandler"
@@ -25,14 +25,14 @@ object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPrefere
                 Log.i(LOG_ID, "add widget " + type.toString() + " new size " + activeWidgets.size)
                 if (activeWidgets.size == 1 || type == WidgetType.GLUCOSE_TREND_DELTA_TIME) {
                     val filter = mutableSetOf(
-                        NotifyDataSource.BROADCAST,
-                        NotifyDataSource.MESSAGECLIENT,
-                        NotifyDataSource.SETTINGS,
+                        NotifySource.BROADCAST,
+                        NotifySource.MESSAGECLIENT,
+                        NotifySource.SETTINGS,
                     )   // to trigger re-start for the case of stopped by the system
                     if(activeWidgets.contains(WidgetType.GLUCOSE_TREND_DELTA_TIME))
-                        filter.add(NotifyDataSource.TIME_VALUE)
+                        filter.add(NotifySource.TIME_VALUE)
                     else
-                        filter.add(NotifyDataSource.OBSOLETE_VALUE)
+                        filter.add(NotifySource.OBSOLETE_VALUE)
                     InternalNotifier.addNotifier(this, filter)
                 }
                 if (activeWidgets.size == 1)
@@ -53,10 +53,10 @@ object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPrefere
             } else if (type == WidgetType.GLUCOSE_TREND_DELTA_TIME) {
                 // re-add filter to remove TIME_VALUE
                 val filter = mutableSetOf(
-                    NotifyDataSource.BROADCAST,
-                    NotifyDataSource.MESSAGECLIENT,
-                    NotifyDataSource.SETTINGS,
-                    NotifyDataSource.OBSOLETE_VALUE
+                    NotifySource.BROADCAST,
+                    NotifySource.MESSAGECLIENT,
+                    NotifySource.SETTINGS,
+                    NotifySource.OBSOLETE_VALUE
                 )
                 InternalNotifier.addNotifier(this, filter)
             }
@@ -65,10 +65,10 @@ object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPrefere
         }
     }
 
-    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString())
         activeWidgets.forEach {
-            if (dataSource != NotifyDataSource.TIME_VALUE || it == WidgetType.GLUCOSE_TREND_DELTA_TIME)
+            if (dataSource != NotifySource.TIME_VALUE || it == WidgetType.GLUCOSE_TREND_DELTA_TIME)
                 GlucoseBaseWidget.updateWidgets(context, it)
         }
     }
@@ -79,7 +79,7 @@ object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPrefere
             if (GlucoDataService.context != null) {
                 when (key) {
                     Constants.SHARED_PREF_WIDGET_TRANSPARENCY -> {
-                        OnNotifyData(GlucoDataService.context!!, NotifyDataSource.SETTINGS, null)
+                        OnNotifyData(GlucoDataService.context!!, NotifySource.SETTINGS, null)
                     }
                 }
             }

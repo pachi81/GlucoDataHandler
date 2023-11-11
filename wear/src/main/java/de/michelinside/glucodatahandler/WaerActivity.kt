@@ -108,7 +108,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                         apply()
                     }
                     // trigger update of each complication on change
-                    ActiveComplicationHandler.OnNotifyData(this, NotifyDataSource.SETTINGS, null)
+                    ActiveComplicationHandler.OnNotifyData(this, NotifySource.SETTINGS, null)
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Changing colored AOD exception: " + exc.message.toString() )
                 }
@@ -124,7 +124,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                         apply()
                     }
                     // trigger update of each complication on change
-                    ActiveComplicationHandler.OnNotifyData(this, NotifyDataSource.SETTINGS, null)
+                    ActiveComplicationHandler.OnNotifyData(this, NotifySource.SETTINGS, null)
                     update()
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Changing large arrow icon exception: " + exc.message.toString() )
@@ -153,12 +153,12 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
             Log.d(LOG_ID, "onResume called")
             update()
             InternalNotifier.addNotifier(this, mutableSetOf(
-                NotifyDataSource.BROADCAST,
-                NotifyDataSource.MESSAGECLIENT,
-                NotifyDataSource.CAPILITY_INFO,
-                NotifyDataSource.NODE_BATTERY_LEVEL,
-                NotifyDataSource.SETTINGS,
-                NotifyDataSource.OBSOLETE_VALUE))
+                NotifySource.BROADCAST,
+                NotifySource.MESSAGECLIENT,
+                NotifySource.CAPILITY_INFO,
+                NotifySource.NODE_BATTERY_LEVEL,
+                NotifySource.SETTINGS,
+                NotifySource.OBSOLETE_VALUE))
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
@@ -187,10 +187,10 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
         }
     }
 
-    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.d(LOG_ID, "new intent received from: " + dataSource.toString())
         update()
-        if (dataSource == NotifyDataSource.SETTINGS) {
+        if (dataSource == NotifySource.SETTINGS) {
             if (extras != null && extras.containsKey(Constants.SHARED_PREF_NOTIFICATION))
                 switchNotifcation.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)
         }

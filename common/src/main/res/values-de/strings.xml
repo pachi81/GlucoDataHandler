@@ -26,7 +26,7 @@
     <string name="rate_double_up">schnell steigend</string>
 
     <string name="source_broadcast">Broadcast</string>
-    <string name="source_message_client">Intern</string>
+    <string name="source_message_client">Message client</string>
     <string name="source_capility_info">Intern</string>
     <string name="source_battery_level">Akku</string>
     <string name="source_node_battery_level">Knoten Akku</string>
@@ -65,6 +65,9 @@
     <string name="tasker_target_range_state">Glucose Bereich geändert</string>
 
     <!-- sources -->
+    <string name="source_phone">Telefon</string>
+    <string name="source_wear">Uhr</string>
+
     <string name="src_cat_libreview">LibreView Datenquelle</string>
 
     <string name="src_libre_enabled">Aktiv</string>

@@ -67,7 +67,7 @@ class BatteryLevelComplication: SuspendingComplicationDataSourceService() {
 
 object BatteryLevelComplicationUpdater: NotifierInterface {
     val LOG_ID = "GlucoDataHandler.BatteryLevelComplicationUpdater"
-    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.d(LOG_ID, "OnNotifyData called for source " + dataSource.toString() )
         ComplicationDataSourceUpdateRequester
             .create(

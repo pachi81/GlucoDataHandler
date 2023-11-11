@@ -9,7 +9,7 @@ import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
-import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.R
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
@@ -70,7 +70,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
         lastError = error
         Handler(GlucoDataService.context!!.mainLooper).post {
             // dummy broadcast to update main
-            InternalNotifier.notify(GlucoDataService.context!!, NotifyDataSource.CAPILITY_INFO, null)
+            InternalNotifier.notify(GlucoDataService.context!!, NotifySource.CAPILITY_INFO, null)
         }
     }
 
@@ -301,10 +301,10 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
                         if (data.has("sensor")) {
                             val sensor = data.optJSONObject("sensor")
                             if (sensor != null && sensor.has("sn"))
-                                glucoExtras.putString(ReceiveData.SERIAL, "LibreLink - " +  sensor.optString("sn"))
+                                glucoExtras.putString(ReceiveData.SERIAL, sensor.optString("sn"))
                         }
                         Handler(GlucoDataService.context!!.mainLooper).post {
-                            ReceiveData.handleIntent(GlucoDataService.context!!, NotifyDataSource.BROADCAST, glucoExtras)
+                            ReceiveData.handleIntent(GlucoDataService.context!!, DataSource.LIBREVIEW, glucoExtras)
                         }
                     }
                 }
@@ -321,7 +321,6 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
     }
 
     override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {
-        val result = super.checkPreferenceChanged(sharedPreferences, key, context)
         if (key == null) {
             user = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_USER, "")!!.trim()
             password = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, "")!!.trim()
@@ -347,6 +346,6 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
                 }
             }
         }
-        return result
+        return super.checkPreferenceChanged(sharedPreferences, key, context)
     }
 }

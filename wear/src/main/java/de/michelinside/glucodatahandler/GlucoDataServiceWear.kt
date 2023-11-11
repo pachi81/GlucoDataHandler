@@ -19,18 +19,18 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
         Log.d(LOG_ID, "init called")
         InternalNotifier.addNotifier(
             ActiveComplicationHandler, mutableSetOf(
-                NotifyDataSource.MESSAGECLIENT,
-                NotifyDataSource.BROADCAST,
-                NotifyDataSource.SETTINGS,
-                NotifyDataSource.TIME_VALUE
+                NotifySource.MESSAGECLIENT,
+                NotifySource.BROADCAST,
+                NotifySource.SETTINGS,
+                NotifySource.TIME_VALUE
             )
         )
         InternalNotifier.addNotifier(
             BatteryLevelComplicationUpdater,
             mutableSetOf(
-                NotifyDataSource.CAPILITY_INFO,
-                NotifyDataSource.BATTERY_LEVEL,
-                NotifyDataSource.NODE_BATTERY_LEVEL
+                NotifySource.CAPILITY_INFO,
+                NotifySource.BATTERY_LEVEL,
+                NotifySource.NODE_BATTERY_LEVEL
             )
         )
     }
@@ -44,10 +44,10 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
     override fun onCreate() {
         Log.d(LOG_ID, "onCreate called")
         super.onCreate()
-        ActiveComplicationHandler.OnNotifyData(this, NotifyDataSource.CAPILITY_INFO, null)
+        ActiveComplicationHandler.OnNotifyData(this, NotifySource.CAPILITY_INFO, null)
     }
 
-    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnNotifyData called for source " + dataSource.toString())
             start(context)

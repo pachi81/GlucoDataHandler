@@ -18,7 +18,7 @@ class BatteryReceiver: BroadcastReceiver() {
             Log.i(LOG_ID, "Received batter level: " + curValue.toString() + "%")
             if (curValue >= 0 && curValue != batteryPercentage) {
                 batteryPercentage = curValue
-                InternalNotifier.notify(context, NotifyDataSource.BATTERY_LEVEL, batteryBundle)
+                InternalNotifier.notify(context, NotifySource.BATTERY_LEVEL, batteryBundle)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "BatteryReceiver exception: " + exc.message.toString() )

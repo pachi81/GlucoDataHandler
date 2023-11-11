@@ -11,7 +11,6 @@ import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -24,8 +23,7 @@ import de.michelinside.glucodatahandler.common.Utils
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
-import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
-import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.tasks.LibreViewSourceTask
 import de.michelinside.glucodatahandler.common.R as CR
 
@@ -105,13 +103,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Log.d(LOG_ID, "onResume called")
             update()
             InternalNotifier.addNotifier(this, mutableSetOf(
-                NotifyDataSource.BROADCAST,
-                NotifyDataSource.MESSAGECLIENT,
-                NotifyDataSource.CAPILITY_INFO,
-                NotifyDataSource.NODE_BATTERY_LEVEL,
-                NotifyDataSource.SETTINGS,
-                NotifyDataSource.CAR_CONNECTION,
-                NotifyDataSource.OBSOLETE_VALUE))
+                NotifySource.BROADCAST,
+                NotifySource.MESSAGECLIENT,
+                NotifySource.CAPILITY_INFO,
+                NotifySource.NODE_BATTERY_LEVEL,
+                NotifySource.SETTINGS,
+                NotifySource.CAR_CONNECTION,
+                NotifySource.OBSOLETE_VALUE))
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
         }
@@ -202,7 +200,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         }
     }
 
-    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.d(LOG_ID, "new intent received")
         update()
     }

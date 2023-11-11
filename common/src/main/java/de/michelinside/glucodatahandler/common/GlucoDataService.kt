@@ -113,13 +113,13 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             connection.open(this)
 
             val filter = mutableSetOf(
-                NotifyDataSource.BROADCAST,
-                NotifyDataSource.MESSAGECLIENT,
-                NotifyDataSource.CAPILITY_INFO,
-                NotifyDataSource.BATTERY_LEVEL,
-                NotifyDataSource.OBSOLETE_VALUE)   // to trigger re-start for the case of stopped by the system
+                NotifySource.BROADCAST,
+                NotifySource.MESSAGECLIENT,
+                NotifySource.CAPILITY_INFO,
+                NotifySource.BATTERY_LEVEL,
+                NotifySource.OBSOLETE_VALUE)   // to trigger re-start for the case of stopped by the system
             if (appSource == AppSource.PHONE_APP) {
-                filter.add(NotifyDataSource.SETTINGS)   // only send setting changes from phone to wear!
+                filter.add(NotifySource.SETTINGS)   // only send setting changes from phone to wear!
             }
             InternalNotifier.addNotifier(this, filter)
 
@@ -191,7 +191,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         return true
     }
 
-    fun sendToConnectedDevices(dataSource: NotifyDataSource, extras: Bundle) {
+    fun sendToConnectedDevices(dataSource: NotifySource, extras: Bundle) {
         Thread {
             try {
                 connection.sendMessage(dataSource, extras, null)
@@ -201,13 +201,13 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         }.start()
     }
 
-    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString() + " and extras " + extras.toString())
-            if (dataSource != NotifyDataSource.MESSAGECLIENT && dataSource != NotifyDataSource.NODE_BATTERY_LEVEL && (dataSource != NotifyDataSource.SETTINGS || extras != null) && (dataSource != NotifyDataSource.CAR_CONNECTION) ) {
+            if (dataSource != NotifySource.MESSAGECLIENT && dataSource != NotifySource.NODE_BATTERY_LEVEL && (dataSource != NotifySource.SETTINGS || extras != null) && (dataSource != NotifySource.CAR_CONNECTION) ) {
                 sendToConnectedDevices(dataSource, extras!!)
             }
-            if (dataSource == NotifyDataSource.MESSAGECLIENT || dataSource == NotifyDataSource.BROADCAST) {
+            if (dataSource == NotifySource.MESSAGECLIENT || dataSource == NotifySource.BROADCAST) {
                 if (sharedPref!!.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)) {
                     val curAlarmType = ReceiveData.getAlarmType()
                     val forceAlarm = (ReceiveData.alarm and 8) != 0 // alarm triggered by Juggluco

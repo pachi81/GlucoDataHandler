@@ -132,18 +132,18 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                 car_connected = true
                 GlucoDataService.context?.setAndroidAutoConnectionState(true)
                 InternalNotifier.addNotifier(this, mutableSetOf(
-                    NotifyDataSource.BROADCAST,
-                    NotifyDataSource.MESSAGECLIENT))
+                    NotifySource.BROADCAST,
+                    NotifySource.MESSAGECLIENT))
                 if(!ReceiveData.isObsolete())
                     showNotification()
             }
-            InternalNotifier.notify(GlucoDataService.context!!, NotifyDataSource.CAR_CONNECTION, null)
+            InternalNotifier.notify(GlucoDataService.context!!, NotifySource.CAR_CONNECTION, null)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() )
         }
     }
 
-    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.d(LOG_ID, "OnNotifyData called")
         try {
             showNotification()

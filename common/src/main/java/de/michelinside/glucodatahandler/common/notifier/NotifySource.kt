@@ -2,7 +2,7 @@ package de.michelinside.glucodatahandler.common.notifier
 
 import de.michelinside.glucodatahandler.common.R
 
-enum class NotifyDataSource(private val resId: Int) {
+enum class NotifySource(private val resId: Int) {
     BROADCAST(R.string.source_broadcast),
     MESSAGECLIENT(R.string.source_message_client),
     CAPILITY_INFO(R.string.source_capility_info),

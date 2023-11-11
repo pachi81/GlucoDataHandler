@@ -26,7 +26,7 @@
     <string name="rate_double_down">falling very quickly</string>
 
     <string name="source_broadcast">Broadcast</string>
-    <string name="source_message_client">Internal</string>
+    <string name="source_message_client">Message client</string>
     <string name="source_capility_info">Internal</string>
     <string name="source_battery_level">Battery level</string>
     <string name="source_node_battery_level">Node battery level</string>
@@ -67,6 +67,14 @@
     <string name="tasker_target_range_state">Glucose range change</string>
 
     <!-- sources -->
+
+    <string name="source_juggluco" translatable="false">Juggluco</string>
+    <string name="source_xdrip" translatable="false">xDrip+</string>
+    <string name="source_libreview" translatable="false">LibreView</string>
+    <string name="source_phone">Phone</string>
+    <string name="source_wear">Wear</string>
+
+
     <string name="src_cat_libreview">LibreView Follower</string>
 
     <string name="src_libre_enabled">Enable</string>

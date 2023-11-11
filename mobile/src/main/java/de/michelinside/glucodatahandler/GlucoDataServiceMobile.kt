@@ -17,7 +17,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
     private lateinit var floatingWidget: FloatingWidget
     init {
         Log.d(LOG_ID, "init called")
-        InternalNotifier.addNotifier(TaskerDataReceiver, mutableSetOf(NotifyDataSource.BROADCAST,NotifyDataSource.MESSAGECLIENT,NotifyDataSource.OBSOLETE_VALUE))
+        InternalNotifier.addNotifier(TaskerDataReceiver, mutableSetOf(NotifySource.BROADCAST,NotifySource.MESSAGECLIENT,NotifySource.OBSOLETE_VALUE))
     }
 
     companion object {
@@ -59,16 +59,16 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         }
     }
 
-    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnNotifyData called for source " + dataSource.toString())
             start(context)
             super.OnNotifyData(context, dataSource, extras)
-            if (dataSource == NotifyDataSource.CAPILITY_INFO) {
+            if (dataSource == NotifySource.CAPILITY_INFO) {
                 context.setWearConnectionState(WearPhoneConnection.nodesConnected)
             }
             if (extras != null) {
-                if (dataSource == NotifyDataSource.MESSAGECLIENT || dataSource == NotifyDataSource.BROADCAST) {
+                if (dataSource == NotifySource.MESSAGECLIENT || dataSource == NotifySource.BROADCAST) {
                     val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_XDRIP, false)) {
                         Log.d(LOG_ID, "Send bg value to xDrip")

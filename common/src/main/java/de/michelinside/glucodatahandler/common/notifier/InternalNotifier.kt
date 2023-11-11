@@ -6,8 +6,8 @@ import android.util.Log
 
 object InternalNotifier {
     private const val LOG_ID = "GlucoDataHandler.InternalNotifier"
-    private var notifiers = mutableMapOf<NotifierInterface, MutableSet<NotifyDataSource>?>()
-    fun addNotifier(notifier: NotifierInterface, sourceFilter: MutableSet<NotifyDataSource>)
+    private var notifiers = mutableMapOf<NotifierInterface, MutableSet<NotifySource>?>()
+    fun addNotifier(notifier: NotifierInterface, sourceFilter: MutableSet<NotifySource>)
     {
         Log.i(LOG_ID, "add notifier " + notifier.toString() + " - filter: " + sourceFilter.toString() )
         notifiers[notifier] = sourceFilter
@@ -20,7 +20,7 @@ object InternalNotifier {
         Log.d(LOG_ID, "notifier size: " + notifiers.size.toString() )
     }
 
-    fun notify(context: Context, dataSource: NotifyDataSource, extras: Bundle?)
+    fun notify(context: Context, dataSource: NotifySource, extras: Bundle?)
     {
         Log.d(LOG_ID, "Sending new data to " + notifiers.size.toString() + " notifier(s).")
         notifiers.forEach{
