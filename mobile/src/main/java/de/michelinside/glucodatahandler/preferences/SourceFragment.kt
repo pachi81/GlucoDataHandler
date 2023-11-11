@@ -97,6 +97,7 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
         try {
             setEnableState<EditTextPreference>(sharedPreferences, Constants.SHARED_PREF_LIBRE_USER, Constants.SHARED_PREF_LIBRE_ENABLED)
             setEnableState<EditTextPreference>(sharedPreferences, Constants.SHARED_PREF_LIBRE_PASSWORD, Constants.SHARED_PREF_LIBRE_ENABLED)
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_LIBRE_RECONNECT, Constants.SHARED_PREF_LIBRE_ENABLED)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
         }
