@@ -6,6 +6,8 @@ import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
 import okhttp3.OkHttpClient
 import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
 abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
@@ -13,42 +15,36 @@ abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
     private var enabled = false
     private var delay = 10L
     private var interval = 1L
+    private val executor: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
+    private var future: ScheduledFuture<*>? = null
 
     companion object {
         private var httpClient: OkHttpClient? = null
-        var editSettings = false
     }
 
     abstract fun executeRequest()
 
     override fun execute(context: Context) {
-        Log.i(LOG_ID, "execute in " + delay + " seconds")
-        if (delay > 0L)
-            Executors.newSingleThreadScheduledExecutor().schedule({run()}, delay, TimeUnit.SECONDS)
-        else
-            run()
+        if( enabled && (future == null || future!!.isDone) ) {
+            Log.i(LOG_ID, "execute in " + delay + " seconds")
+            if (delay > 0L) {
+                future = executor.schedule({ run() }, delay, TimeUnit.SECONDS)
+            } else
+                triggerDirectExecution()
+        }
     }
 
     protected fun run() {
         if (enabled) {
-            if (editSettings) {
-                Log.w(LOG_ID, "Not execute data source during changing settings")
-            } else {
-                executeRequest()
-            }
+            Log.d(LOG_ID, "Execute request")
+            executeRequest()
         }
     }
 
     protected fun triggerDirectExecution() {
-        if(enabled) {
-            if(editSettings) {
-                Log.i(LOG_ID, "Trigger execution in 10 seconds")
-                Executors.newSingleThreadScheduledExecutor().schedule({run()}, 10, TimeUnit.SECONDS)
-            } else {
-                // trigger direct execution!
-                Log.i(LOG_ID, "Trigger execution")
-                Executors.newSingleThreadScheduledExecutor().execute { run() }
-            }
+        if( enabled && (future == null || future!!.isDone) ) {
+            // trigger direct execution!
+            executor.execute { run() }
         }
     }
 
@@ -77,6 +73,7 @@ abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
             enabled = sharedPreferences.getBoolean(enabledKey, false)
             delay = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, -1).toLong()
             interval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
+            triggerDirectExecution()
             return true
         } else {
             var result = false
@@ -84,7 +81,11 @@ abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
                 enabledKey -> {
                     if (enabled != sharedPreferences.getBoolean(enabledKey, false)) {
                         enabled = sharedPreferences.getBoolean(enabledKey, false)
-                        triggerDirectExecution()
+                        if (enabled) {
+                            triggerDirectExecution()
+                        } else if(future!=null && !future!!.isDone) {
+                            future!!.cancel(true)
+                        }
                         result = true
                     }
                 }

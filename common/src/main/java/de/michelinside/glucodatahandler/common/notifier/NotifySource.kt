@@ -11,7 +11,8 @@ enum class NotifySource(private val resId: Int) {
     SETTINGS(R.string.source_settings),
     CAR_CONNECTION(R.string.source_car_connection),
     OBSOLETE_VALUE(R.string.source_obsolete),
-    TIME_VALUE(R.string.time_value);
+    TIME_VALUE(R.string.time_value),
+    SOURCE_SETTINGS(R.string.menu_sources);
 
     fun getResId(): Int {
         return resId

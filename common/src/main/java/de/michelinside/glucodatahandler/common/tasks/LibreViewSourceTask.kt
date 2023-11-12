@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -103,7 +104,9 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
     }
 
     private fun executeRequest(request: Request): Response {
-        Log.d(LOG_ID, request.toString())
+        if (BuildConfig.DEBUG) {  // do not log personal data
+            Log.d(LOG_ID, request.toString())
+        }
         return getHttpClient().newCall(request).execute()
     }
 
@@ -116,7 +119,9 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
         }
         val body = response.body?.string()
         if (!body.isNullOrEmpty()) {
-            Log.i(LOG_ID, "Handle json response: " + body)
+            if (BuildConfig.DEBUG) {  // do not log personal data
+                Log.i(LOG_ID, "Handle json response: " + body)
+            }
             val jsonObj = JSONObject(body)
             if (jsonObj.has("status")) {
                 val status = jsonObj.optInt("status", -1)
@@ -273,7 +278,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
             val array = jsonObject.optJSONArray("data")
             if (array != null) {
                 if (array.length() == 0) {
-                    setLastError("Please set up LibreLinkUp first! https://librelinkup.com/articles/getting-started")
+                    setLastError(GlucoDataService.context!!.getString(R.string.src_libre_setup_librelink))
                     return
                 }
                 val data = array.optJSONObject(0)

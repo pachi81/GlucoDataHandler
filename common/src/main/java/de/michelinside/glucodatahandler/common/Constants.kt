@@ -6,6 +6,7 @@ object Constants {
     const val GLUCODATA_INTENT_MESSAGE_PATH = "/glucodata_intent"
     const val BATTERY_INTENT_MESSAGE_PATH = "/battery_intent"
     const val SETTINGS_INTENT_MESSAGE_PATH = "/settings_intent"
+    const val SOURCE_SETTINGS_INTENT_MESSAGE_PATH = "/source_settings_intent"
     const val REQUEST_DATA_MESSAGE_PATH = "/request_data_intent"
     const val GLUCODATA_BROADCAST_ACTION = "glucodata.Minute"
     const val SETTINGS_BUNDLE = "settings_bundle"

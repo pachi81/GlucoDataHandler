@@ -75,6 +75,11 @@
     <string name="source_wear">Wear</string>
 
 
+    <string name="source_interval">Interval</string>
+    <string name="source_interval_summary">Interval of requesting data from LibreView.</string>
+    <string name="source_delay">Delay</string>
+    <string name="source_delay_summary">Delay in seconds before requesting the data from cloud, because if takes some time until the data is present there.</string>
+
     <string name="src_cat_libreview">LibreView Follower</string>
 
     <string name="src_libre_enabled">Enable</string>
@@ -83,12 +88,9 @@
     <string name="src_libre_user_summary">Username for login to LibreView</string>
     <string name="src_libre_password">Password</string>
     <string name="src_libre_password_summary">Password for login to LibreView</string>
-    <string name="src_libre_interval">Interval</string>
-    <string name="src_libre_interval_summary">Interval of requesting data from LibreView.</string>
-    <string name="src_libre_delay">Delay</string>
-    <string name="src_libre_delay_summary">Delay in seconds before requesting the data from cloud, because if takes some time until the data is present there.</string>
     <string name="src_libre_reconnect">Reconnect</string>
     <string name="src_libre_reconnect_summary">On next interval a new login will be executed.</string>
+    <string name="src_libre_setup_librelink">Please set up LibreLinkUp connection first!</string>
 
     <string name="source_request_interval_1">1 min</string>
     <string name="source_request_interval_5">5 min</string>

@@ -51,7 +51,6 @@ object BackgroundTaskService: SharedPreferences.OnSharedPreferenceChangeListener
         backgroundTaskList.forEach {
             it.checkPreferenceChanged(sharedPref, null, context)
         }
-        executeTasks()
     }
 
     private fun executeTasks() {

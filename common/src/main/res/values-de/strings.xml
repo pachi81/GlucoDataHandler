@@ -68,6 +68,11 @@
     <string name="source_phone">Telefon</string>
     <string name="source_wear">Uhr</string>
 
+    <string name="source_interval">Intervall</string>
+    <string name="source_interval_summary">Intervall für das Abrufen der Daten von LibreView.</string>
+    <string name="source_delay">Wartezeit</string>
+    <string name="source_delay_summary">Wartezeit in Sekunden bis die Daten von LibreView abgerufen werden, da es eine gewisse Zeit dauert, bis die Daten verfügbar sind.</string>
+
     <string name="src_cat_libreview">LibreView Datenquelle</string>
 
     <string name="src_libre_enabled">Aktiv</string>
@@ -76,12 +81,9 @@
     <string name="src_libre_user_summary">Benutzername für das Login in LibreView</string>
     <string name="src_libre_password">Passwort</string>
     <string name="src_libre_password_summary">Passwort für das Login in LibreView</string>
-    <string name="src_libre_interval">Intervall</string>
-    <string name="src_libre_interval_summary">Intervall für das Abrufen der Daten von LibreView.</string>
-    <string name="src_libre_delay">Wartezeit</string>
-    <string name="src_libre_delay_summary">Wartezeit in Sekunden bis die Daten von LibreView abgerufen werden, da es eine gewisse Zeit dauert, bis die Daten verfügbar sind.</string>
     <string name="src_libre_reconnect">Reconnect</string>
     <string name="src_libre_reconnect_summary">Bei der nächsten Ausführung wird ein erneutes login ausgeführt.</string>
+    <string name="src_libre_setup_librelink">Bitte erst LibreLinkUp Verbindung aktivieren!</string>
 
     <string name="source_request_interval_1">1 min</string>
     <string name="source_request_interval_5">5 min</string>
