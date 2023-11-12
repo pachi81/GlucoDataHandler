@@ -1,19 +1,25 @@
 package de.michelinside.glucodatahandler.preferences
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
 import androidx.preference.*
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
 
 
-class SourceFragment : PreferenceFragmentCompat() {
+class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GlucoDataHandler.SourceFragment"
+    private var settingsChanged = false
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         Log.d(LOG_ID, "onCreatePreferences called")
         try {
+            settingsChanged = false
             preferenceManager.sharedPreferencesName = Constants.SHARED_PREF_TAG
             setPreferencesFromResource(R.xml.sources, rootKey)
 
@@ -29,7 +35,35 @@ class SourceFragment : PreferenceFragmentCompat() {
 
     override fun onDestroyView() {
         Log.d(LOG_ID, "onDestroyView called")
+        try {
+            if (settingsChanged) {
+                InternalNotifier.notify(requireContext(), NotifySource.SOURCE_SETTINGS, DataSourceTask.getSettingsBundle(preferenceManager.sharedPreferences!!))
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onDestroyView exception: " + exc.toString())
+        }
         super.onDestroyView()
+    }
+
+
+    override fun onResume() {
+        Log.d(LOG_ID, "onResume called")
+        try {
+            preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
+            super.onResume()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onResume exception: " + exc.toString())
+        }
+    }
+
+    override fun onPause() {
+        Log.d(LOG_ID, "onPause called")
+        try {
+            preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
+            super.onPause()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onPause exception: " + exc.toString())
+        }
     }
 
     override fun onDisplayPreferenceDialog(preference: Preference) {
@@ -45,6 +79,16 @@ class SourceFragment : PreferenceFragmentCompat() {
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDisplayPreferenceDialog exception: " + exc.toString())
+        }
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
+        try {
+            if(DataSourceTask.preferencesToSend.contains(key))
+                settingsChanged = true
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
         }
     }
 }

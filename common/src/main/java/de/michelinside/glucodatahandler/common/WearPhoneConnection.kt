@@ -8,7 +8,8 @@ import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.*
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
-import de.michelinside.glucodatahandler.common.tasks.DataSource
+import de.michelinside.glucodatahandler.common.notifier.DataSource
+import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
 import kotlinx.coroutines.*
 import java.util.*
 import kotlin.coroutines.cancellation.CancellationException
@@ -25,7 +26,8 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         return Constants.CAPABILITY_PHONE
     }
 
-    private val dataSource: DataSource get() {
+    private val dataSource: DataSource
+        get() {
         if(GlucoDataService.appSource == AppSource.PHONE_APP)  // received from wear
         {
             return DataSource.WEAR
@@ -153,6 +155,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             NotifySource.BATTERY_LEVEL -> Constants.BATTERY_INTENT_MESSAGE_PATH
             NotifySource.CAPILITY_INFO -> Constants.REQUEST_DATA_MESSAGE_PATH
             NotifySource.SETTINGS -> Constants.SETTINGS_INTENT_MESSAGE_PATH
+            NotifySource.SOURCE_SETTINGS -> Constants.SOURCE_SETTINGS_INTENT_MESSAGE_PATH
             else -> Constants.GLUCODATA_INTENT_MESSAGE_PATH
         }
 
@@ -163,6 +166,11 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 Log.d(LOG_ID, connectedNodes.size.toString() + " nodes found for sending message to")
                 if (extras != null && dataSource != NotifySource.BATTERY_LEVEL && BatteryReceiver.batteryPercentage > 0) {
                     extras.putInt(BatteryReceiver.LEVEL, BatteryReceiver.batteryPercentage)
+                }
+                if (extras != null && dataSource == NotifySource.CAPILITY_INFO && GlucoDataService.appSource == AppSource.PHONE_APP) {
+                    Log.d(LOG_ID, "Adding settings for sending")
+                    extras.putBundle(Constants.SETTINGS_BUNDLE, ReceiveData.getSettingsBundle())
+                    extras.putBundle(Constants.SOURCE_SETTINGS_BUNDLE, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)))
                 }
                 // Send a message to all nodes in parallel
                 connectedNodes.forEach { node ->
@@ -225,6 +233,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     val level = extras.getInt(BatteryReceiver.LEVEL, -1)
                     Log.d(LOG_ID, "Battery level received for node " + p0.sourceNodeId + ": " + level + "%")
                     setNodeBatteryLevel(p0.sourceNodeId, level)
+                    extras.remove(BatteryReceiver.LEVEL)
                 }
 
                 var forceSend = false
@@ -251,15 +260,34 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 }
 
                 if (extras.containsKey(Constants.SETTINGS_BUNDLE)) {
-                    Log.d(LOG_ID, "Glucose settings receceived from " + p0.sourceNodeId + ": " + extras.toString())
                     val bundle = extras.getBundle(Constants.SETTINGS_BUNDLE)
+                    Log.d(LOG_ID, "Glucose settings receceived from " + p0.sourceNodeId + ": " + bundle.toString())
                     ReceiveData.setSettings(context, bundle!!)
                     InternalNotifier.notify(context, NotifySource.SETTINGS, bundle)
+                    extras.remove(Constants.SETTINGS_BUNDLE)
+                }
+
+                if (extras.containsKey(Constants.SOURCE_SETTINGS_BUNDLE)) {
+                    val bundle = extras.getBundle(Constants.SOURCE_SETTINGS_BUNDLE)
+                    if (bundle != null) {
+                        Log.d(LOG_ID, "Glucose source settings receceived from " + p0.sourceNodeId + ": " + bundle.toString())
+                        DataSourceTask.updateSettings(context, bundle)
+                    }
+                    extras.remove(Constants.SOURCE_SETTINGS_BUNDLE)
+                }
+
+                if (p0.path == Constants.SOURCE_SETTINGS_INTENT_MESSAGE_PATH) {
+                    // check for other settings send...
+                    if (!extras.isEmpty) {
+                        Log.d(LOG_ID, "Glucose source settings receceived from " + p0.sourceNodeId + ": " + extras.toString())
+                        DataSourceTask.updateSettings(context, extras)
+                    }
                 }
 
                 if (p0.path == Constants.SETTINGS_INTENT_MESSAGE_PATH) {
                     // check for other settings send...
                     extras.remove(Constants.SETTINGS_BUNDLE)
+                    extras.remove(Constants.SOURCE_SETTINGS_BUNDLE)
                     extras.remove(BatteryReceiver.LEVEL)
                     if (!extras.isEmpty) {
                         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -293,6 +321,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                         if (GlucoDataService.appSource == AppSource.PHONE_APP) {
                             Log.d(LOG_ID, "Adding settings for sending")
                             bundle.putBundle(Constants.SETTINGS_BUNDLE, ReceiveData.getSettingsBundle())
+                            bundle.putBundle(Constants.SOURCE_SETTINGS_BUNDLE, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)))
                         }
                         sendMessage(source, bundle)
                     }

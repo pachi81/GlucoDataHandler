@@ -29,6 +29,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var switchNotifcation: SwitchCompat
     private lateinit var switchForground: SwitchCompat
     private lateinit var switchRelativeTime: SwitchCompat
+    private lateinit var switchLibreSource: SwitchCompat
     private lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -131,6 +132,20 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 }
             }
 
+            switchLibreSource = findViewById(R.id.switchLibreView)
+            switchLibreSource.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_LIBRE_ENABLED, true)
+            switchLibreSource.setOnCheckedChangeListener { _, isChecked ->
+                Log.d(LOG_ID, "Libre view changed: " + isChecked.toString())
+                try {
+                    with (sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_LIBRE_ENABLED, isChecked)
+                        apply()
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Changing large arrow icon exception: " + exc.message.toString() )
+                }
+            }
+
             GlucoDataServiceWear.start(this)
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
@@ -158,7 +173,8 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.CAPILITY_INFO,
                 NotifySource.NODE_BATTERY_LEVEL,
                 NotifySource.SETTINGS,
-                NotifySource.OBSOLETE_VALUE))
+                NotifySource.OBSOLETE_VALUE,
+                NotifySource.SOURCE_SETTINGS))
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
@@ -180,8 +196,12 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                     txtConnInfo.text = String.format(resources.getText(CR.string.activity_connected_label).toString(), WearPhoneConnection.getBatterLevelsAsString())
                 } else
                     txtConnInfo.text = resources.getText(CR.string.activity_disconnected_label)
-
             }
+            val user = sharedPref.getString(Constants.SHARED_PREF_LIBRE_USER, "")!!.trim()
+            val password = sharedPref.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, "")!!.trim()
+            switchLibreSource.isEnabled = user.isNotEmpty() && password.isNotEmpty()
+            if(!switchLibreSource.isEnabled)
+                switchLibreSource.isChecked = false
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }

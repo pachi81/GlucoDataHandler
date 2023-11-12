@@ -8,8 +8,7 @@ import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.Utils
-import de.michelinside.glucodatahandler.common.notifier.*
-import de.michelinside.glucodatahandler.common.tasks.DataSource
+import de.michelinside.glucodatahandler.common.notifier.DataSource
 
 open class XDripBroadcastReceiver: BroadcastReceiver() {
     companion object {

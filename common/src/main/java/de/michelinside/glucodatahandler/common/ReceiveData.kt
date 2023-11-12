@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.os.PowerManager
 import android.util.Log
 import de.michelinside.glucodatahandler.common.notifier.*
-import de.michelinside.glucodatahandler.common.tasks.DataSource
+import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
 import java.math.RoundingMode
 import java.text.DateFormat
@@ -472,7 +472,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     extras.putFloat(RATE, sharedGlucosePref.getFloat(RATE, rate))
                     extras.putInt(ALARM, sharedGlucosePref.getInt(ALARM, alarm))
                     extras.putFloat(DELTA, sharedGlucosePref.getFloat(DELTA, deltaValue))
-                    handleIntent(context, DataSource.fromResId(sharedGlucosePref.getInt(SOURCE_RES_ID,DataSource.JUGGLUCO.resId)), extras)
+                    handleIntent(context, DataSource.fromResId(sharedGlucosePref.getInt(SOURCE_RES_ID,
+                        DataSource.JUGGLUCO.resId)), extras)
                 }
             }
         } catch (exc: Exception) {

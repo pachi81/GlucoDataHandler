@@ -65,9 +65,24 @@
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
+            android:layout_marginBottom="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/test" />
+            app:layout_constraintTop_toBottomOf="@+id/test"
+            app:layout_constraintBottom_toTopOf="@+id/switchLibreView" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchLibreView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/src_cat_libreview"
+            android:textAlignment="viewStart"
+            app:layout_constraintTop_toBottomOf="@+id/txtValueInfo"
+            app:layout_constraintBottom_toTopOf="@+id/switchNotifcation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchNotifcation"
@@ -75,10 +90,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginTop="20dp"
             android:text="@string/activity_switch_notification"
             android:textAlignment="viewStart"
-            app:layout_constraintTop_toBottomOf="@+id/txtValueInfo"
+            app:layout_constraintTop_toBottomOf="@+id/switchLibreView"
             app:layout_constraintBottom_toTopOf="@+id/switchColoredAod"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -119,7 +133,7 @@
             android:layout_marginEnd="10dp"
             android:text="@string/activity_switch_foreground"
             android:textAlignment="viewStart"
-            app:layout_constraintTop_toBottomOf="@+id/switchNotifcation"
+            app:layout_constraintTop_toBottomOf="@+id/switchLargeTrendArrow"
             app:layout_constraintBottom_toTopOf="@+id/switchRelativeTime"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

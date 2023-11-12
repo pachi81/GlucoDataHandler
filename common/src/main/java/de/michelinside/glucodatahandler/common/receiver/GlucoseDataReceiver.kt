@@ -6,8 +6,7 @@ import android.content.Intent
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.notifier.NotifySource
-import de.michelinside.glucodatahandler.common.tasks.DataSource
+import de.michelinside.glucodatahandler.common.notifier.DataSource
 
 
 open class GlucoseDataReceiver: BroadcastReceiver() {

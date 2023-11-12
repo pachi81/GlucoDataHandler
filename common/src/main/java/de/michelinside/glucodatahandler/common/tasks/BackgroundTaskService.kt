@@ -67,7 +67,7 @@ object BackgroundTaskService: SharedPreferences.OnSharedPreferenceChangeListener
                         backgroundTaskList.forEach {
                             if (elapsedTimeMinute.mod(it.getIntervalMinute()) == 0L && it.active(elapsedTimeMinute)) {
                                 try {
-                                    Log.w(LOG_ID, "execute after " + elapsedTimeMinute + " min: " + it)
+                                    Log.i(LOG_ID, "execute after " + elapsedTimeMinute + " min: " + it)
                                     it.execute(context)
                                 } catch (ex: Exception) {
                                     Log.e(LOG_ID, "exception while execute task " + it + ": " + ex)
@@ -129,6 +129,7 @@ object BackgroundTaskService: SharedPreferences.OnSharedPreferenceChangeListener
                 return nextAlarmCal
             }
         }
+        Log.d(LOG_ID, "No next alarm set for current interval " + interval)
         return null
     }
 
@@ -148,6 +149,7 @@ object BackgroundTaskService: SharedPreferences.OnSharedPreferenceChangeListener
             alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         }
     }
+
     private fun startTimer() {
         Log.d(LOG_ID, "startTimer called")
         val nextAlarm = getNextAlarm()
