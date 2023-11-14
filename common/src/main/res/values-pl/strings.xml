@@ -56,7 +56,7 @@
 
     <!-- tasker -->
 
-    <string name="activity_main_source_label">LibreView: %1$s</string>
+    <string name="activity_main_source_label">LibreLink: %1$s</string>
     <string name="tasker_event_glucodata">Nowa wartość glukozy</string>
     <string name="tasker_event_glucodata_obsolete">Wartość przestarzała</string>
     <string name="tasker_event_glucodata_alarm">Alarm dotyczący stężenia glukozy</string>
@@ -69,18 +69,18 @@
     <string name="source_wear">Zegarek</string>
 
     <string name="source_interval">Interval</string>
-    <string name="source_interval_summary">Interval of requesting data from LibreView.</string>
+    <string name="source_interval_summary">Interval of requesting data from source.</string>
     <string name="source_delay">Delay</string>
     <string name="source_delay_summary">Delay in seconds before requesting the data from cloud, because if takes some time until the data is present there.</string>
 
-    <string name="src_cat_libreview">LibreView Follower</string>
+    <string name="src_cat_libreview">LibreLink Follower</string>
 
     <string name="src_libre_enabled">Enable</string>
-    <string name="src_libre_enabled_summary">Enable LibreView follower</string>
+    <string name="src_libre_enabled_summary">Enable LibreLink follower\nPlease set-up LibreLinkUp App first. You can remove the LibreLineUp App afterwards.</string>
     <string name="src_libre_user">User</string>
-    <string name="src_libre_user_summary">Username for login to LibreView</string>
+    <string name="src_libre_user_summary">Username for LibreLink</string>
     <string name="src_libre_password">Password</string>
-    <string name="src_libre_password_summary">Password for login to LibreView</string>
+    <string name="src_libre_password_summary">Password for LibreLink</string>
     <string name="src_libre_reconnect">Reconnect</string>
     <string name="src_libre_reconnect_summary">On next interval a new login will be executed.</string>
     <string name="src_libre_setup_librelink">Please set up LibreLinkUp connection first!</string>
@@ -90,7 +90,7 @@
     <string name="source_request_interval_10">10 min</string>
     <string name="source_request_interval_15">15 min</string>
 
-    <!-- LibreView source -->
+    <!-- LibreLink source -->
     <string name="state_disabled">disabled</string>
     <string name="state_not_connected">not connected</string>
     <string name="state_connected">connected</string>

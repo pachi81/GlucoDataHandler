@@ -50,6 +50,7 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
         Log.d(LOG_ID, "onResume called")
         try {
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
+            updateEnableStates(preferenceManager.sharedPreferences!!)
             super.onResume()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.toString())
@@ -87,8 +88,30 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
         try {
             if(DataSourceTask.preferencesToSend.contains(key))
                 settingsChanged = true
+
+            when(key) {
+                Constants.SHARED_PREF_LIBRE_PASSWORD,
+                Constants.SHARED_PREF_LIBRE_USER -> {
+                    updateEnableStates(sharedPreferences!!)
+                }
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
+        }
+    }
+
+    fun updateEnableStates(sharedPreferences: SharedPreferences) {
+        try {
+            val switchLibreSource = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_LIBRE_ENABLED)
+            if (switchLibreSource != null) {
+                val libreUser = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_USER, "")!!.trim()
+                val librePassword = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, "")!!.trim()
+                switchLibreSource.isEnabled = libreUser.isNotEmpty() && librePassword.isNotEmpty()
+                if(!switchLibreSource.isEnabled)
+                    switchLibreSource.isChecked = false
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
         }
     }
 }

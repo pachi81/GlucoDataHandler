@@ -26,7 +26,14 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/src_cat_libreview"
-        app:iconSpaceReserved="false">
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="1">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="source_libre_enabled"
+            android:title="@string/src_libre_enabled"
+            android:summary="@string/src_libre_enabled_summary"
+            app:iconSpaceReserved="false" />
         <androidx.preference.EditTextPreference
             android:defaultValue=""
             android:key="source_libre_user"
@@ -39,12 +46,6 @@
             android:title="@string/src_libre_password"
             android:summary="@string/src_libre_password_summary"
             android:inputType="textPassword"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="source_libre_enabled"
-            android:title="@string/src_libre_enabled"
-            android:summary="@string/src_libre_enabled_summary"
             app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
