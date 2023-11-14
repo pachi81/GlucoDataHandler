@@ -82,6 +82,16 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     apply()
                 }
             }
+
+            if(!sharedPref.contains(Constants.SHARED_PREF_XDRIP_RECEIVERS)) {
+                val receivers = HashSet<String>()
+                receivers.add("com.eveningoutpost.dexdrip")
+                Log.i(LOG_ID, "Upgrade receivers to " + receivers.toString())
+                with(sharedPref.edit()) {
+                    putStringSet(Constants.SHARED_PREF_XDRIP_RECEIVERS, receivers)
+                    apply()
+                }
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }

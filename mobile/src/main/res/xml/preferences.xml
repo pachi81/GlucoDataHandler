@@ -18,6 +18,12 @@
             android:summary="@string/pref_relative_time_summary"
             android:title="@string/pref_relative_time"
             app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="five_minute_delta"
+            android:summary="@string/pref_switch_use_5_min_delta_summary"
+            android:title="@string/pref_switch_use_5_min_delta"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_target_range"
@@ -197,8 +203,9 @@
             android:title="@string/pref_switch_car_notification"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
+
     <PreferenceCategory
-        android:title="@string/pref_cat_xdrip"
+        android:title="@string/pref_cat_forward_broadcast"
         app:iconSpaceReserved="false"
         app:initialExpandedChildrenCount="0">
         <androidx.preference.SwitchPreferenceCompat
@@ -207,19 +214,11 @@
             android:summary="@string/pref_switch_send_to_xdrip_summary"
             android:title="@string/pref_switch_send_to_xdrip"
             app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="five_minute_delta"
-            android:summary="@string/pref_switch_use_5_min_delta_summary"
-            android:title="@string/pref_switch_use_5_min_delta"
+        <androidx.preference.MultiSelectListPreference
+            android:key="xdrip_receivers"
+            android:summary="@string/pref_button_select_xdrip_target_summary"
+            android:title="@string/pref_button_select_xdrip_target"
             app:iconSpaceReserved="false" />
-    </PreferenceCategory>
-
-
-    <PreferenceCategory
-        android:title="@string/pref_cat_forward_broadcast"
-        app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="0">
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="send_to_glucodata_aod"

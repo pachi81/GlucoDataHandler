@@ -76,7 +76,7 @@
     <string name="src_cat_libreview">LibreLink Follower</string>
 
     <string name="src_libre_enabled">Enable</string>
-    <string name="src_libre_enabled_summary">Enable LibreLink follower\nPlease set-up LibreLinkUp App first. You can remove the LibreLineUp App afterwards.</string>
+    <string name="src_libre_enabled_summary">Enable LibreLink follower, if LibreLink user and password is set\nPlease set-up LibreLinkUp App first. You can remove the LibreLineUp App afterwards.</string>
     <string name="src_libre_user">User</string>
     <string name="src_libre_user_summary">Username for LibreLink</string>
     <string name="src_libre_password">Password</string>
@@ -102,8 +102,7 @@
     <string name="pref_cat_notification">Powiadomienie</string>
     <string name="pref_cat_widgets">Widgety</string>
     <string name="pref_cat_android_auto">Android Auto</string>
-    <string name="pref_cat_xdrip">XDrip+</string>
-    <string name="pref_cat_forward_broadcast">Glucodata broadcast (Transmisja danych dot. glukozy)</string>
+    <string name="pref_cat_forward_broadcast">Forward glucose values</string>
     <string name="pref_target_range">Zakres docelowy</string>
     <string name="pref_cat_colors">Kolory</string>
 
@@ -122,6 +121,8 @@
     <string name="pref_switch_car_media_summary">Wyświetl wartość glukozy jako bieżący utwór dla Android Auto.</string>
     <string name="pref_switch_send_to_aod">Wyślij transmisję „glucodata broadcast”</string>
     <string name="pref_switch_send_to_aod_summary">Wyślij transmisję „glucodata broadcast” dla nowych wartości otrzymanych z dowolnego źródła.</string>
+    <string name="pref_button_select_xdrip_target">Identify xDrip+ receiver</string>
+    <string name="pref_button_select_xdrip_target_summary">Choose receivers sending the xDrip+ broadcast to. A global broadcast will send to every app registering dynamically on the broadcast.</string>
     <string name="pref_button_select_target">Identyfikacja odbiornika</string>
     <string name="pref_button_select_target_summary">Wybierz odbiorniki, do których wysyłana jest transmisja „glucodata broadcast”. Transmisja globalna będzie wysyłana do każdej aplikacji dynamicznie odbierającej tę transmisję.</string>
     <string name="pref_switch_send_to_xdrip">Wyślij do xDrip</string>

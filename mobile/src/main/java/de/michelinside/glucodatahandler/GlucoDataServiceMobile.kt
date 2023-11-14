@@ -3,6 +3,7 @@ package de.michelinside.glucodatahandler
 import android.app.Notification
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
@@ -59,6 +60,28 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         }
     }
 
+    fun sendBroadcast(intent: Intent, receiverPrefKey: String, context: Context, sharedPref: SharedPreferences) {
+        try {
+            var receivers = sharedPref.getStringSet(receiverPrefKey, HashSet<String>())
+            Log.d(LOG_ID, "Resend " + receiverPrefKey + " Broadcast to " + receivers?.size.toString() + " receivers")
+            if (receivers == null || receivers.size == 0) {
+                receivers = setOf("")
+            }
+            for( receiver in receivers ) {
+                val sendIntent = intent.clone() as Intent
+                if (!receiver.isEmpty()) {
+                    sendIntent.setPackage(receiver)
+                    Log.d(LOG_ID, "Send broadcast " + receiverPrefKey + " to " + receiver.toString())
+                } else {
+                    Log.d(LOG_ID, "Send global broadcast " + receiverPrefKey)
+                }
+                context.sendBroadcast(sendIntent)
+            }
+        } catch (ex: Exception) {
+            Log.e(LOG_ID, "Exception while sending broadcast for " + receiverPrefKey + ": " + ex)
+        }
+    }
+
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnNotifyData called for source " + dataSource.toString())
@@ -71,7 +94,6 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 if (dataSource == NotifySource.MESSAGECLIENT || dataSource == NotifySource.BROADCAST) {
                     val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_XDRIP, false)) {
-                        Log.d(LOG_ID, "Send bg value to xDrip")
                         val intent = Intent()
                         intent.action = Constants.XDRIP_ACTION_GLUCOSE_READING
                         // always sends time as start time, because it is only set, if the sensorId have changed!
@@ -85,30 +107,16 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                         intent.putExtra("bleManager", bleManager)
                         intent.putExtra("glucose", ReceiveData.rawValue.toDouble())
                         intent.putExtra("timestamp", ReceiveData.time)
-                        intent.setPackage("com.eveningoutpost.dexdrip")
-                        context.sendBroadcast(intent)
+                        sendBroadcast(intent, Constants.SHARED_PREF_XDRIP_RECEIVERS, context, sharedPref)
                     }
 
                     // forward every broadcast, because the receiver can be defined in Juggluco, too
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, false)) {
-                        var receivers = sharedPref.getStringSet(Constants.SHARED_PREF_GLUCODATA_RECEIVERS, HashSet<String>())
-                        Log.d(LOG_ID, "Resend Glucodata Broadcast to " + receivers?.size.toString() + " receivers")
-                        if (receivers == null || receivers.size == 0) {
-                            receivers = setOf("")
-                        }
-                        for( receiver in receivers ) {
-                            val intent = Intent()
-                            intent.action = Constants.GLUCODATA_BROADCAST_ACTION
-                            intent.putExtras(extras)
-                            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-                            if (!receiver.isEmpty()) {
-                                intent.setPackage(receiver)
-                                Log.d(LOG_ID, "Send glucodata broadcast to " + receiver.toString())
-                            } else {
-                                Log.d(LOG_ID, "Send global glucodata broadcast")
-                            }
-                            context.sendBroadcast(intent)
-                        }
+                        val intent = Intent()
+                        intent.action = Constants.GLUCODATA_BROADCAST_ACTION
+                        intent.putExtras(extras)
+                        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                        sendBroadcast(intent, Constants.SHARED_PREF_GLUCODATA_RECEIVERS, context, sharedPref)
                     }
                 }
             }
