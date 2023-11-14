@@ -119,7 +119,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.NODE_BATTERY_LEVEL,
                 NotifySource.SETTINGS,
                 NotifySource.CAR_CONNECTION,
-                NotifySource.OBSOLETE_VALUE))
+                NotifySource.OBSOLETE_VALUE,
+                NotifySource.SOURCE_STATE_CHANGE))
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
         }

@@ -71,7 +71,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
         lastError = error
         Handler(GlucoDataService.context!!.mainLooper).post {
             // dummy broadcast to update main
-            InternalNotifier.notify(GlucoDataService.context!!, NotifySource.CAPILITY_INFO, null)
+            InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
         }
     }
 
@@ -328,21 +328,21 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
             token = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_TOKEN, "")!!
             tokenExpire = sharedPreferences.getLong(Constants.SHARED_PREF_LIBRE_TOKEN_EXPIRE, 0L)
             region = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_REGION, "")!!
-            /*if (active(0)) {
-                run()
-            }*/
+            InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
         } else {
             when(key) {
                 Constants.SHARED_PREF_LIBRE_USER -> {
                     if (user != sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_USER, "")) {
                         user = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_USER, "")!!.trim()
                         token = ""
+                        InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
                     }
                 }
                 Constants.SHARED_PREF_LIBRE_PASSWORD -> {
                     if (password != sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, "")) {
                         password = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, "")!!.trim()
                         token = ""
+                        InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
                     }
                 }
                 Constants.SHARED_PREF_LIBRE_RECONNECT -> {

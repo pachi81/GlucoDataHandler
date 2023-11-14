@@ -25,16 +25,6 @@
     <string name="rate_single_down">spada szybko</string>
     <string name="rate_double_down">spada bardzo szybko</string>
 
-    <string name="source_broadcast">Broadcast - Transmisja</string>
-    <string name="source_message_client">Message client</string>
-    <string name="source_capility_info">Wewnętrzne</string>
-    <string name="source_battery_level">Poziom baterii</string>
-    <string name="source_node_battery_level">Poziom baterii węzła</string>
-    <string name="source_settings">Ustawienia zostały zmienione</string>
-    <string name="source_car_connection">Połączenie z Android Auto</string>
-    <string name="source_obsolete">Wartość przestarzała</string>
-    <string name="time_value">Time changed</string>
-
     <string name="button_ok">OK</string>
     <string name="button_cancel">Anuluj</string>
 

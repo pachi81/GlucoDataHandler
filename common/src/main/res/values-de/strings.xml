@@ -25,16 +25,6 @@
     <string name="rate_single_up">steigend</string>
     <string name="rate_double_up">schnell steigend</string>
 
-    <string name="source_broadcast">Broadcast</string>
-    <string name="source_message_client">Message client</string>
-    <string name="source_capility_info">Intern</string>
-    <string name="source_battery_level">Akku</string>
-    <string name="source_node_battery_level">Knoten Akku</string>
-    <string name="source_settings">Einstellungen geändert</string>
-    <string name="source_car_connection">Android Auto Verbindung</string>
-    <string name="source_obsolete">Veralteter Wert</string>
-    <string name="time_value">Zeitänderung</string>
-
     <string name="button_ok">OK</string>
     <string name="button_cancel">Abbrechen</string>
 

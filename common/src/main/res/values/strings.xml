@@ -25,16 +25,6 @@
     <string name="rate_single_down">falling quickly</string>
     <string name="rate_double_down">falling very quickly</string>
 
-    <string name="source_broadcast">Broadcast</string>
-    <string name="source_message_client">Message client</string>
-    <string name="source_capility_info">Internal</string>
-    <string name="source_battery_level">Battery level</string>
-    <string name="source_node_battery_level">Node battery level</string>
-    <string name="source_settings">Settings changed</string>
-    <string name="source_car_connection">Android Auto connection</string>
-    <string name="source_obsolete">Obsolete value</string>
-    <string name="time_value">Time changed</string>
-
     <string name="button_ok">OK</string>
     <string name="button_cancel">Cancel</string>
 

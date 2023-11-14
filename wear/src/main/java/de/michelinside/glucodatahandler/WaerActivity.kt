@@ -13,6 +13,7 @@ import androidx.appcompat.widget.SwitchCompat
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
+import de.michelinside.glucodatahandler.common.tasks.LibreViewSourceTask
 import de.michelinside.glucodatahandler.databinding.ActivityWaerBinding
 
 class WaerActivity : AppCompatActivity(), NotifierInterface {
@@ -24,6 +25,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtVersion: TextView
     private lateinit var txtValueInfo: TextView
     private lateinit var txtConnInfo: TextView
+    private lateinit var txtSourceInfo: TextView
     private lateinit var switchColoredAod: SwitchCompat
     private lateinit var switchLargeTrendArrow: SwitchCompat
     private lateinit var switchNotifcation: SwitchCompat
@@ -44,6 +46,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
             viewIcon = findViewById(R.id.viewIcon)
             txtValueInfo = findViewById(R.id.txtValueInfo)
             txtConnInfo = findViewById(R.id.txtConnInfo)
+            txtSourceInfo = findViewById(R.id.txtSourceInfo)
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
@@ -174,7 +177,8 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.NODE_BATTERY_LEVEL,
                 NotifySource.SETTINGS,
                 NotifySource.OBSOLETE_VALUE,
-                NotifySource.SOURCE_SETTINGS))
+                NotifySource.SOURCE_SETTINGS,
+                NotifySource.SOURCE_STATE_CHANGE))
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
@@ -197,6 +201,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 } else
                     txtConnInfo.text = resources.getText(CR.string.activity_disconnected_label)
             }
+            txtSourceInfo.text =  String.format(resources.getText(CR.string.activity_main_source_label).toString(), LibreViewSourceTask.getState(this))
             val user = sharedPref.getString(Constants.SHARED_PREF_LIBRE_USER, "")!!.trim()
             val password = sharedPref.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, "")!!.trim()
             switchLibreSource.isEnabled = user.isNotEmpty() && password.isNotEmpty()
