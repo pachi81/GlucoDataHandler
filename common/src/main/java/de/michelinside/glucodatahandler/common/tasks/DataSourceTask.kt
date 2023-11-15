@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import okhttp3.OkHttpClient
@@ -119,6 +120,7 @@ abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
                             future!!.cancel(true)
                         }
                         result = true
+                        InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
                     }
                 }
                 Constants.SHARED_PREF_SOURCE_DELAY -> {
