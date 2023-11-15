@@ -17,13 +17,18 @@ object Constants {
     const val ACTION_STOP_FOREGROUND = "stop_foreground"
 
     const val XDRIP_ACTION_GLUCOSE_READING = "com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING"
+    const val XDRIP_BROADCAST_ACTION = "com.eveningoutpost.dexdrip.BgEstimate"
 
     const val VALUE_OBSOLETE_SHORT_SEC = 300
     const val VALUE_OBSOLETE_LONG_SEC  = 600
 
     const val SHARED_PREF_TAG = "GlucoDataHandlerPrefs"
     const val SHARED_PREF_SEND_TO_GLUCODATA_AOD = "send_to_glucodata_aod"
+    const val SHARED_PREF_GLUCODATA_RECEIVERS = "glucodata_receivers"
     const val SHARED_PREF_SEND_TO_XDRIP = "send_to_xdrip"
+    const val SHARED_PREF_XDRIP_RECEIVERS = "xdrip_receivers"
+    const val SHARED_PREF_SEND_XDRIP_BROADCAST = "send_xdrip_broadcast"
+    const val SHARED_PREF_XDRIP_BROADCAST_RECEIVERS = "xdrip_broadcast_receivers"
     const val SHARED_PREF_TARGET_MIN = "target_min_value"
     const val SHARED_PREF_TARGET_MAX = "target_max_value"
     const val SHARED_PREF_CAR_NOTIFICATION = "car_notification"
@@ -32,8 +37,6 @@ object Constants {
     const val SHARED_PREF_NOTIFY_DURATION_HIGH = "notify_duration_high"
     const val SHARED_PREF_USE_MMOL = "use_mmol"
     const val SHARED_PREF_GLUCODATA_RECEIVER_SHOW_ALL = "show_all_glucodata_receivers"
-    const val SHARED_PREF_GLUCODATA_RECEIVERS = "glucodata_receivers"
-    const val SHARED_PREF_XDRIP_RECEIVERS = "xdrip_receivers"
     const val SHARED_PREF_LOW_GLUCOSE = "low_glucose"
     const val SHARED_PREF_HIGH_GLUCOSE = "high_glucose"
     const val SHARED_PREF_FIVE_MINUTE_DELTA = "five_minute_delta"

@@ -35,6 +35,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
             setupReceivers(Constants.GLUCODATA_BROADCAST_ACTION, Constants.SHARED_PREF_GLUCODATA_RECEIVERS)
             setupReceivers(Constants.XDRIP_ACTION_GLUCOSE_READING, Constants.SHARED_PREF_XDRIP_RECEIVERS)
+            setupReceivers(Constants.XDRIP_BROADCAST_ACTION, Constants.SHARED_PREF_XDRIP_BROADCAST_RECEIVERS)
 
             activityResultOverlayLauncher = registerForActivityResult(
                 ActivityResultContracts.StartActivityForResult()
@@ -87,7 +88,8 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION,
                 Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION,
                 Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD,
-                Constants.SHARED_PREF_SEND_TO_XDRIP -> {
+                Constants.SHARED_PREF_SEND_TO_XDRIP,
+                Constants.SHARED_PREF_SEND_XDRIP_BROADCAST -> {
                     updateEnableStates(sharedPreferences!!)
                 }
                 Constants.SHARED_PREF_FLOATING_WIDGET -> {
@@ -149,6 +151,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         try {
             setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_GLUCODATA_RECEIVERS, Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD)
             setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_XDRIP_RECEIVERS, Constants.SHARED_PREF_SEND_TO_XDRIP)
+            setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_XDRIP_BROADCAST_RECEIVERS, Constants.SHARED_PREF_SEND_XDRIP_BROADCAST)
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION)
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, Constants.SHARED_PREF_PERMANENT_NOTIFICATION)
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION)

@@ -46,7 +46,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var dateformat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT)
     var timeformat = DateFormat.getTimeInstance(DateFormat.DEFAULT)
     var shorttimeformat = DateFormat.getTimeInstance(DateFormat.SHORT)
-    private var source: DataSource = DataSource.JUGGLUCO
+    var source: DataSource = DataSource.JUGGLUCO
     private var lowValue: Float = 0F
     private val low: Float get() {
         if(isMmol && lowValue > 0F)  // mmol/l

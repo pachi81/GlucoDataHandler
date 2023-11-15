@@ -221,6 +221,17 @@
             app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
+            android:key="send_xdrip_broadcast"
+            android:summary="@string/pref_switch_send_xdrip_broadcast_summary"
+            android:title="@string/pref_switch_send_xdrip_broadcast"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.MultiSelectListPreference
+            android:key="xdrip_broadcast_receivers"
+            android:summary="@string/pref_button_select_xdrip_broadcast_target_summary"
+            android:title="@string/pref_button_select_xdrip_broadcast_target"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
             android:key="send_to_glucodata_aod"
             android:summary="@string/pref_switch_send_to_aod_summary"
             android:title="@string/pref_switch_send_to_aod"

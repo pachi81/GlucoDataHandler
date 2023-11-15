@@ -9,6 +9,7 @@ import android.util.Log
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
+import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.widget.FloatingWidget
 import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
@@ -62,6 +63,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
 
     fun sendBroadcast(intent: Intent, receiverPrefKey: String, context: Context, sharedPref: SharedPreferences) {
         try {
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
             var receivers = sharedPref.getStringSet(receiverPrefKey, HashSet<String>())
             Log.d(LOG_ID, "Resend " + receiverPrefKey + " Broadcast to " + receivers?.size.toString() + " receivers")
             if (receivers == null || receivers.size == 0) {
@@ -94,8 +96,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 if (dataSource == NotifySource.MESSAGECLIENT || dataSource == NotifySource.BROADCAST) {
                     val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_XDRIP, false)) {
-                        val intent = Intent()
-                        intent.action = Constants.XDRIP_ACTION_GLUCOSE_READING
+                        val intent = Intent(Constants.XDRIP_ACTION_GLUCOSE_READING)
                         // always sends time as start time, because it is only set, if the sensorId have changed!
                         val sensor = Bundle()
                         sensor.putLong("sensorStartTime", ReceiveData.time)  // use last received time as start time
@@ -110,12 +111,18 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                         sendBroadcast(intent, Constants.SHARED_PREF_XDRIP_RECEIVERS, context, sharedPref)
                     }
 
-                    // forward every broadcast, because the receiver can be defined in Juggluco, too
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_XDRIP_BROADCAST, false)) {
+                        val xDripExtras = XDripBroadcastReceiver.createExtras(context)
+                        if (xDripExtras != null) {
+                            val intent = Intent(Constants.XDRIP_BROADCAST_ACTION)
+                            intent.putExtras(xDripExtras)
+                            sendBroadcast(intent, Constants.SHARED_PREF_XDRIP_BROADCAST_RECEIVERS, context, sharedPref)
+                        }
+                    }
+
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, false)) {
-                        val intent = Intent()
-                        intent.action = Constants.GLUCODATA_BROADCAST_ACTION
+                        val intent = Intent(Constants.GLUCODATA_BROADCAST_ACTION)
                         intent.putExtras(extras)
-                        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
                         sendBroadcast(intent, Constants.SHARED_PREF_GLUCODATA_RECEIVERS, context, sharedPref)
                     }
                 }
