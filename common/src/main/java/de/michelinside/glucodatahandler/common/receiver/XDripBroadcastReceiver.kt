@@ -19,6 +19,20 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
         const val RAW = "com.eveningoutpost.dexdrip.Extras.Raw"
         const val SOURCE_DESC = "com.eveningoutpost.dexdrip.Extras.SourceDesc"
         const val SOURCE_INFO = "com.eveningoutpost.dexdrip.Extras.SourceInfo"
+        fun createExtras(context: Context?): Bundle? {
+             if(ReceiveData.time == 0L)
+                return null
+            val extras = Bundle()
+            extras.putDouble(BG_ESTIMATE,ReceiveData.rawValue)
+            extras.putString(BG_SLOPE_NAME,ReceiveData.getDexcomLabel())
+	        extras.putDouble(BG_SLOPE,ReceiveData.rate.toDouble()/60000.0)
+            extras.putLong(TIME,ReceiveData.time)
+            xtras.putString(SOURCE_INFO,ReceiveData.sensorID)
+            if (context != null) {
+                extras.putString(SOURCE_DESC,context.getString(source.resId))
+            }
+            return extras
+        }
     }
     private val LOG_ID = "GlucoDataHandler.XDripBroadcastReceiver"
 
