@@ -32,7 +32,6 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     private lateinit var sharedPref: SharedPreferences
     private var pendingIntent: PendingIntent? = null
     private var alarmManager: AlarmManager? = null
-    private val timeformat = DateFormat.getTimeInstance(DateFormat.DEFAULT)
     private var lastElapsedMinute = -1L
     private val elapsedTimeMinute: Long
         get() {
@@ -136,8 +135,8 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                 if (nextAlarmCal.get(Calendar.SECOND) < TimeUnit.MILLISECONDS.toSeconds(DEFAULT_DELAY_MS)) {
                     nextAlarmCal.add(Calendar.SECOND, -1*(nextAlarmCal.get(Calendar.SECOND)+1))
                 }
-                Log.i(LOG_ID, "Set next alarm after " + nextTriggerMin + " minute(s) at " + timeformat.format(nextAlarmCal.time)
-                      + " (received at " + timeformat.format(Date(ReceiveData.time)) + ") with a delay of " + getDelayResult()/1000 + "s")
+                Log.i(LOG_ID, "Set next alarm after " + nextTriggerMin + " minute(s) at " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(nextAlarmCal.time)
+                      + " (received at " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(ReceiveData.time)) + ") with a delay of " + getDelayResult()/1000 + "s")
                 return nextAlarmCal
             }
         }

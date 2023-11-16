@@ -43,9 +43,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var time: Long = 0
     var timeDiff: Long = 0
     var rateLabel: String? = null
-    var dateformat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT)
-    var timeformat = DateFormat.getTimeInstance(DateFormat.DEFAULT)
-    var shorttimeformat = DateFormat.getTimeInstance(DateFormat.SHORT)
     var source: DataSource = DataSource.JUGGLUCO
     private var lowValue: Float = 0F
     private val low: Float get() {
@@ -120,7 +117,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             return context.getString(R.string.no_data)
         return (context.getString(R.string.info_label_delta) + ": " + getDeltaAsString() + " " + getUnit() + "\r\n" +
                 context.getString(R.string.info_label_rate) + ": " + rate + "\r\n" +
-                context.getString(R.string.info_label_timestamp) + ": " + timeformat.format(Date(time)) + "\r\n" +
+                context.getString(R.string.info_label_timestamp) + ": " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(time)) + "\r\n" +
                 context.getString(R.string.info_label_alarm) + ": " + alarm + "\r\n" +
                 if (isMmol) context.getString(R.string.info_label_raw) + ": " + rawValue + " mg/dl\r\n" else "" ) +
                 context.getString(R.string.info_label_sensor_id) + ": " + sensorID + "\r\n" +
@@ -241,9 +238,9 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 return context.getString(R.string.elapsed_time_hour)
             return String.format(context.getString(R.string.elapsed_time), elapsed_time)
         } else if (short)
-            return shorttimeformat.format(Date(time))
+            return DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(time))
         else
-            return timeformat.format(Date(time))
+            return DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(time))
     }
 
     fun handleIntent(context: Context, dataSource: DataSource, extras: Bundle?, interApp: Boolean = false) : Boolean
@@ -259,19 +256,20 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 }
             }
         try {
+            val curTimeDiff = extras.getLong(TIME) - time
             Log.d(
                 LOG_ID, "Glucodata received from " + dataSource.toString() + ": " +
                         extras.toString() +
-                        " - timestamp: " + dateformat.format(Date(extras.getLong(TIME)))
+                        " - timestamp: " + DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(Date(extras.getLong(TIME))) +
+                        " - difference: " + curTimeDiff
             )
 
-            val curTimeDiff = extras.getLong(TIME) - time
             if(curTimeDiff >= 1000) // check for new value received
             {
                 Log.i(
                     LOG_ID, "Glucodata received from " + dataSource.toString() + ": " +
                             extras.toString() +
-                            " - timestamp: " + dateformat.format(Date(extras.getLong(TIME)))
+                            " - timestamp: " + DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(Date(extras.getLong(TIME)))
                 )
                 source = dataSource
                 sensorID = extras.getString(SERIAL) //Name of sensor

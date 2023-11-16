@@ -8,6 +8,7 @@ import android.util.Log
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.Utils
 import de.michelinside.glucodatahandler.common.notifier.DataSource
+import java.text.DateFormat
 
 open class XDripBroadcastReceiver: BroadcastReceiver() {
     companion object {
@@ -50,7 +51,7 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
                 if (source == null)
                     source = "xDrip+"
                 Log.i(LOG_ID, "Glucose: " + extras.getDouble(BG_ESTIMATE).toString() +
-                        " - Time: " + ReceiveData.timeformat.format((extras.getLong(TIME))) +
+                        " - Time: " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format((extras.getLong(TIME))) +
                         " - Slope: " + slope.toString() +
                         " - SlopeName: " + extras.getString(BG_SLOPE_NAME) +
                         " - Raw: " + extras.getDouble(RAW).toString() +

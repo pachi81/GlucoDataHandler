@@ -29,7 +29,6 @@ import java.util.TimeZone
 
 class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) {
     private val LOG_ID = "GlucoDataHandler.Task.LibreViewSourceTask"
-    private val dateformat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT)
     companion object {
         private var lastError = ""
         private var user = ""
@@ -189,7 +188,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
                             token = authTicket.optString("token", "")
                             tokenExpire = authTicket.optLong("expires", 0L) * 1000
                             if (token.isNotEmpty()) {
-                                Log.i(LOG_ID, "Login succeeded! Token expires at " + dateformat.format(
+                                Log.i(LOG_ID, "Login succeeded! Token expires at " + DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(
                                     Date(tokenExpire)
                                 ))
                             }

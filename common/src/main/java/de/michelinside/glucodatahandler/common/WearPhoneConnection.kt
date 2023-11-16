@@ -11,6 +11,7 @@ import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
 import kotlinx.coroutines.*
+import java.text.DateFormat
 import java.util.*
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -241,9 +242,9 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     Log.d(LOG_ID, "Glucodata values receceived from " + p0.sourceNodeId + ": " + extras.toString())
                     if (extras.containsKey(ReceiveData.TIME)) {
                         Log.d(LOG_ID, "Received data from: " +
-                                ReceiveData.timeformat.format((extras.getLong(ReceiveData.TIME))) +
+                                DateFormat.getTimeInstance(DateFormat.DEFAULT).format((extras.getLong(ReceiveData.TIME))) +
                                 " - current value time: " +
-                                ReceiveData.timeformat.format((ReceiveData.time)))
+                                DateFormat.getTimeInstance(DateFormat.DEFAULT).format((ReceiveData.time)))
                         if (extras.getLong(ReceiveData.TIME) >= ReceiveData.time)
                             ReceiveData.handleIntent(context, dataSource, extras, true)
                         else
