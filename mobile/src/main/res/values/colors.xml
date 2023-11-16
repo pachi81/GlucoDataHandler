@@ -9,6 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FFFF0000</color>
     <color name="yellow">#FFFFFF00</color>
+    <color name="orange">#FFFF7700</color>
     <color name="green">#FF00FF00</color>
     <color name="text_color">@color/black</color>
     <color name="transparent_widget_background">#55000000</color>

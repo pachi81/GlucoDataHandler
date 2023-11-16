@@ -146,7 +146,7 @@
         app:iconSpaceReserved="false"
         app:initialExpandedChildrenCount="0">
         <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="permanent_notification"
             android:summary="@string/pref_notification_summary"
             android:title="@string/pref_notification"

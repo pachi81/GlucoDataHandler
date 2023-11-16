@@ -12,7 +12,7 @@
     <string name="info_label_alarm">Alarm</string>
     <string name="info_label_source">Source</string>
     <string name="info_label_per_minute">per minute</string>
-    <string name="no_data">No broadcast received yet!\nINFO: Activate LibreLink source or to receiving data from Juggluco, please open Juggluco, go to settings and activate \"Glucodata Broadcast\" for "de.michelinside.glucodatahandler"\nTo receive from xDrip+ activate local broadcast and select no receiver.</string>
+    <string name="no_data">No broadcast received yet!\nINFO: Activate LibreLink source or to receive data from Juggluco, please open Juggluco, go to settings and activate \"Glucodata Broadcast\" for "de.michelinside.glucodatahandler"\nTo receive from xDrip+ activate local broadcast and select no receiver.</string>
 
     <string name="elapsed_time">%1$d min</string>
     <string name="elapsed_time_hour">\> 1h</string>
@@ -30,6 +30,7 @@
 
     <!-- mobile -->
 
+    <string name="activity_main_battery_optimization_disabled">Battery optimization is enabled.\nPress here to disable it, if there are any problems.</string>
     <string name="activity_main_source_label">LibreLink: %1$s</string>
     <string name="activity_main_connected_label">Wear: connected (%1$s)</string>
     <string name="activity_main_disconnected_label">Wear: disconnected</string>
@@ -193,6 +194,8 @@
     <string name="activity_large_arrow_icon">Big trend-arrow</string>
     <string name="activity_switch_notification">Vibration</string>
     <string name="activity_switch_colored_aod">Colored AOD</string>
+
+    <string name="activity_wear_battery_optimization_disabled">Battery optimization is enabled.</string>
 
     <!-- complications -->
 

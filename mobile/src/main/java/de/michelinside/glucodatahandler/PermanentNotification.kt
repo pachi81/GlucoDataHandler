@@ -180,7 +180,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
     private fun showNotifications() {
         showPrimaryNotification(true)
-        if (sharedPref.getBoolean(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, false)) {
+        if (sharedPref.getBoolean(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, true)) {
             showNotification(SECOND_NOTIFICATION_ID, false, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, false)
         } else {
             notificationMgr.cancel(SECOND_NOTIFICATION_ID)
@@ -209,7 +209,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
     private fun updatePreferences() {
         try {
-            if (sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION, false)) {
+            if (sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION, true)) {
                 Log.i(LOG_ID, "activate permanent notification")
                 val filter = mutableSetOf(
                     NotifySource.BROADCAST,

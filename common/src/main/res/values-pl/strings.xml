@@ -12,7 +12,7 @@
     <string name="info_label_alarm">Alarm</string>
     <string name="info_label_source">Źródło</string>
     <string name="info_label_per_minute">na min.</string>
-    <string name="no_data">No broadcast received yet!\nINFO: Activate LibreLink source or to receiving data from Juggluco, please open Juggluco, go to settings and activate \"Glucodata Broadcast\" for "de.michelinside.glucodatahandler"\nTo receive from xDrip+ activate local broadcast and select no receiver.</string>
+    <string name="no_data">No broadcast received yet!\nINFO: Activate LibreLink source or to receive data from Juggluco, please open Juggluco, go to settings and activate \"Glucodata Broadcast\" for "de.michelinside.glucodatahandler"\nTo receive from xDrip+ activate local broadcast and select no receiver.</string>
 
     <string name="elapsed_time">%1$d min</string>
     <string name="elapsed_time_hour">\> 1h</string>
@@ -30,6 +30,7 @@
 
     <!-- mobile -->
 
+    <string name="activity_main_battery_optimization_disabled">Battery optimization is enabled.\nPress here to disable it, if there are any problems.</string>
     <string name="activity_main_connected_label">Zegarek: połączony (%1$s)</string>
     <string name="activity_main_disconnected_label">Zegarek: niepołączony</string>
     <string name="activity_main_car_connected_label">Android Auto: połączony</string>
@@ -171,6 +172,7 @@
     <string name="widget_glucose_trend">Glukoza i trend</string>
     <string name="widget_glucose_trend_delta">Glukoza, trend i delta</string>
     <string name="widget_glucose_trend_delta_timestamp">Glukoza, trend, delta i znacznik czasu</string>
+    <string name="activity_wear_battery_optimization_disabled">Battery optimization is enabled.</string>
 
     <!-- wear -->
 

@@ -63,7 +63,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     serviceIntent.putExtra(
                         Constants.SHARED_PREF_FOREGROUND_SERVICE,
                         // on wear foreground is true as default: on phone it is set by notification
-                        sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, appSource == AppSource.WEAR_APP)
+                        sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
                     )
                     context.startService(serviceIntent)
                 } catch (exc: Exception) {

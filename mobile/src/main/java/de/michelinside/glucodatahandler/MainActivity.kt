@@ -11,6 +11,7 @@ import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtWearInfo: TextView
     private lateinit var txtCarInfo: TextView
     private lateinit var txtSourceInfo: TextView
+    private lateinit var txtBatteryOptimization: TextView
     private lateinit var sharedPref: SharedPreferences
     private val LOG_ID = "GlucoDataHandler.Main"
 
@@ -43,14 +45,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_main)
             Log.d(LOG_ID, "onCreate called")
-            val intent = Intent()
-            val packageName = packageName
-            val pm = getSystemService(POWER_SERVICE) as PowerManager
-            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-                intent.data = Uri.parse("package:$packageName")
-                startActivity(intent)
-            }
 
             GlucoDataServiceMobile.start(this)
 
@@ -61,6 +55,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             txtWearInfo = findViewById(R.id.txtWearInfo)
             txtCarInfo = findViewById(R.id.txtCarInfo)
             txtSourceInfo = findViewById(R.id.txtSourceInfo)
+            txtBatteryOptimization = findViewById(R.id.txtBatteryOptimization)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -121,8 +116,28 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.CAR_CONNECTION,
                 NotifySource.OBSOLETE_VALUE,
                 NotifySource.SOURCE_STATE_CHANGE))
+            checkBatteryOptimization()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
+        }
+    }
+
+    private fun checkBatteryOptimization() {
+        try {
+            val pm = getSystemService(POWER_SERVICE) as PowerManager
+            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+                Log.w(LOG_ID, "Battery optimization is inactive")
+                txtBatteryOptimization.visibility = View.VISIBLE
+                txtBatteryOptimization.setOnClickListener {
+                    val intent = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+                    startActivity(intent)
+                }
+            } else {
+                txtBatteryOptimization.visibility = View.GONE
+                Log.i(LOG_ID, "Battery optimization is active")
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
         }
     }
 
