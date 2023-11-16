@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:fillViewport="true"
+    android:padding="10dp">
+<LinearLayout
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    tools:context=".MainActivity"
+    android:orientation="vertical"
+    android:gravity="center|top">
 
 
     <LinearLayout
@@ -15,7 +23,7 @@
         android:layout_marginStart="60dp"
         android:layout_marginTop="100dp"
         android:layout_marginEnd="60dp"
-        android:gravity="center"
+        android:gravity="center|top"
         android:orientation="horizontal"
         app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,6 +69,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout_glucose_trend"
         tools:ignore="SpUsage" />
+
+    <LinearLayout
+        android:id="@+id/layout_info_elements"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:gravity="center|bottom"
+        android:orientation="vertical"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UselessParent">
 
     <TextView
         android:id="@+id/txtSourceInfo"
@@ -112,5 +132,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:textSize="14dp"
         tools:ignore="HardcodedText,SpUsage" />
+    </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
+</ScrollView>
