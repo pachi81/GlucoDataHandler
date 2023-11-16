@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import android.graphics.Paint
 import android.os.*
 import android.util.Log
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -27,7 +26,6 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtValueInfo: TextView
     private lateinit var txtConnInfo: TextView
     private lateinit var txtSourceInfo: TextView
-    private lateinit var txtBatteryOptimization: TextView
     private lateinit var switchColoredAod: SwitchCompat
     private lateinit var switchLargeTrendArrow: SwitchCompat
     private lateinit var switchNotifcation: SwitchCompat
@@ -49,7 +47,6 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
             txtValueInfo = findViewById(R.id.txtValueInfo)
             txtConnInfo = findViewById(R.id.txtConnInfo)
             txtSourceInfo = findViewById(R.id.txtSourceInfo)
-            txtBatteryOptimization = findViewById(R.id.txtBatteryOptimization)
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
@@ -182,25 +179,8 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.OBSOLETE_VALUE,
                 NotifySource.SOURCE_SETTINGS,
                 NotifySource.SOURCE_STATE_CHANGE))
-            checkBatteryOptimization()
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
-        }
-    }
-
-
-    private fun checkBatteryOptimization() {
-        try {
-            val pm = getSystemService(POWER_SERVICE) as PowerManager
-            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                Log.w(LOG_ID, "Battery optimization is inactive")
-                txtBatteryOptimization.visibility = View.VISIBLE
-            } else {
-                Log.i(LOG_ID, "Battery optimization is active")
-                txtBatteryOptimization.visibility = View.GONE
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
         }
     }
 
