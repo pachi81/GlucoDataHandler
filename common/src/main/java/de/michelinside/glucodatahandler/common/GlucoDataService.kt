@@ -19,7 +19,7 @@ enum class AppSource {
     WEAR_APP;
 }
 
-abstract class GlucoDataService() : WearableListenerService(), NotifierInterface {
+abstract class GlucoDataService(source: AppSource) : WearableListenerService(), NotifierInterface {
     private lateinit var receiver: GlucoseDataReceiver
     private lateinit var batteryReceiver: BatteryReceiver
     private lateinit var xDripReceiver: XDripBroadcastReceiver
@@ -74,6 +74,10 @@ abstract class GlucoDataService() : WearableListenerService(), NotifierInterface
                 }
             }
         }
+    }
+
+    init {
+        appSource = source
     }
 
     abstract fun getNotification() : Notification

@@ -13,7 +13,7 @@ import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.notifier.*
 
 
-class GlucoDataServiceWear: GlucoDataService() {
+class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
     private val LOG_ID = "GlucoDataHandler.GlucoDataServiceWear"
     init {
         Log.d(LOG_ID, "init called")

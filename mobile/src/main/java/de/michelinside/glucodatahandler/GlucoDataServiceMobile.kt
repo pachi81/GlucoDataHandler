@@ -14,7 +14,7 @@ import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.widget.FloatingWidget
 import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
 
-class GlucoDataServiceMobile: GlucoDataService(), NotifierInterface {
+class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInterface {
     private val LOG_ID = "GlucoDataHandler.GlucoDataServiceMobile"
     private lateinit var floatingWidget: FloatingWidget
     init {
