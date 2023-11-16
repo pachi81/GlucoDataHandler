@@ -10,17 +10,12 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import okhttp3.OkHttpClient
 import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
 abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
     private val LOG_ID = "GlucoDataHandler.Task.DataSourceTask"
     private var enabled = false
-    private var delay = 10L
     private var interval = 1L
-    private val executor: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
-    private var future: ScheduledFuture<*>? = null
 
     companion object {
         private var httpClient: OkHttpClient? = null
@@ -58,26 +53,9 @@ abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
     abstract fun executeRequest()
 
     override fun execute(context: Context) {
-        if( enabled && (future == null || future!!.isDone) ) {
-            Log.i(LOG_ID, "execute in " + delay + " seconds")
-            if (delay > 0L) {
-                future = executor.schedule({ run() }, delay, TimeUnit.SECONDS)
-            } else
-                triggerDirectExecution()
-        }
-    }
-
-    protected fun run() {
         if (enabled) {
             Log.d(LOG_ID, "Execute request")
             executeRequest()
-        }
-    }
-
-    protected fun triggerDirectExecution() {
-        if( enabled && (future == null || future!!.isDone) ) {
-            // trigger direct execution!
-            executor.execute { run() }
         }
     }
 
@@ -104,9 +82,8 @@ abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
     override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {
         if(key == null) {
             enabled = sharedPreferences.getBoolean(enabledKey, false)
-            delay = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, -1).toLong()
             interval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
-            triggerDirectExecution()
+            Executors.newSingleThreadScheduledExecutor().execute { execute(context) }
             return true
         } else {
             var result = false
@@ -115,18 +92,10 @@ abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
                     if (enabled != sharedPreferences.getBoolean(enabledKey, false)) {
                         enabled = sharedPreferences.getBoolean(enabledKey, false)
                         if (enabled) {
-                            triggerDirectExecution()
-                        } else if(future!=null && !future!!.isDone) {
-                            future!!.cancel(true)
+                            Executors.newSingleThreadScheduledExecutor().execute { execute(context) }
                         }
                         result = true
                         InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
-                    }
-                }
-                Constants.SHARED_PREF_SOURCE_DELAY -> {
-                    if (delay != sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, -1).toLong()) {
-                        delay = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, -1).toLong()
-                        // does not change the result as it has no influence on interval handling
                     }
                 }
                 Constants.SHARED_PREF_SOURCE_INTERVAL -> {
@@ -134,6 +103,9 @@ abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
                         interval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
                         result = true
                     }
+                }
+                Constants.SHARED_PREF_SOURCE_DELAY -> {
+                    result = true  // retrigger alarm after delay has changed
                 }
             }
             return result

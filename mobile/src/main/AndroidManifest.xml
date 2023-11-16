@@ -191,7 +191,8 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".common.tasks.BackgroundAlarmReceiver" />
+        <receiver android:name=".common.tasks.TimeAlarmReceiver" />
+        <receiver android:name=".common.tasks.SourceAlarmReceiver" />
 
         <service
             android:name=".GlucoDataServiceMobile"

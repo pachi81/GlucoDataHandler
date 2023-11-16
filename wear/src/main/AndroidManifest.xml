@@ -48,8 +48,8 @@
                 <action android:name="com.eveningoutpost.dexdrip.BgEstimate"/>
             </intent-filter>
         </receiver>
-        <receiver
-            android:name=".common.tasks.BackgroundAlarmReceiver" />
+        <receiver android:name=".common.tasks.TimeAlarmReceiver" />
+        <receiver android:name=".common.tasks.SourceAlarmReceiver" />
 <!--        <receiver
             android:name=".StartServiceAtBootReceiver"
             android:enabled="true"

@@ -17,7 +17,7 @@
             android:defaultValue="10"
             app:showSeekBarValue="true"
             app:seekBarIncrement="10"
-            app:min="0"
+            app:min="5"
             android:max="50"
             android:key="source_delay"
             android:title="@string/source_delay"

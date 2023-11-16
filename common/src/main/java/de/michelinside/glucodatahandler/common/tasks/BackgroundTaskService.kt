@@ -1,9 +1,7 @@
 package de.michelinside.glucodatahandler.common.tasks
 
-import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -22,15 +20,14 @@ import java.util.Calendar
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
-@SuppressLint("StaticFieldLeak")
-object BackgroundTaskService: SharedPreferences.OnSharedPreferenceChangeListener,
+abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: String): SharedPreferences.OnSharedPreferenceChangeListener,
     NotifierInterface {
-    private val LOG_ID = "GlucoDataHandler.Task.BackgroundTaskService"
-    private const val EXTRA_DELAY_MS = 3000L
-    private const val WAKE_LOCK_TIMEOUT = 10000L // 10 seconds
+    private val DEFAULT_DELAY_MS = 3000L
+    private val WAKE_LOCK_TIMEOUT = 10000L // 10 seconds
 
     private var backgroundTaskList = mutableListOf<BackgroundTask>()
     private var interval = -1L
+    private var curDelay = -1L
     private lateinit var context: Context
     private lateinit var sharedPref: SharedPreferences
     private var pendingIntent: PendingIntent? = null
@@ -42,11 +39,10 @@ object BackgroundTaskService: SharedPreferences.OnSharedPreferenceChangeListener
             return ReceiveData.getElapsedTimeMinute()
         }
 
+    abstract fun getBackgroundTasks(): MutableList<BackgroundTask>
+
     private fun initBackgroundTasks() {
-        backgroundTaskList.clear()
-        backgroundTaskList.add(LibreViewSourceTask())
-        backgroundTaskList.add(ElapsedTimeTask())
-        backgroundTaskList.add(ObsoleteTask())
+        backgroundTaskList = getBackgroundTasks()
 
         backgroundTaskList.forEach {
             it.checkPreferenceChanged(sharedPref, null, context)
@@ -79,7 +75,12 @@ object BackgroundTaskService: SharedPreferences.OnSharedPreferenceChangeListener
                     } finally {
                         wakeLock.release()
                     }
+                    // restart timer at the end, for the case a new value has been received
+                    startTimer()
                 }.start()
+            } else {
+                // restart timer
+                startTimer()
             }
         } catch (ex: Exception) {
             Log.e(LOG_ID, "executeTasks: " + ex)
@@ -93,9 +94,10 @@ object BackgroundTaskService: SharedPreferences.OnSharedPreferenceChangeListener
                 if (it.active(elapsedTimeMinute) && newInterval <= 0L || it.getIntervalMinute() < newInterval)
                     newInterval = it.getIntervalMinute()
             }
-            if (interval != newInterval) {
-                Log.i(LOG_ID, "Interval has changed from " + interval + " to " + newInterval)
+            if (interval != newInterval || curDelay != getDelay()) {
+                Log.i(LOG_ID, "Interval has changed from " + interval + "m+" + curDelay + "s to " + newInterval + "m+" + getDelay() + "s")
                 interval = newInterval
+                curDelay = getDelay()
                 lastElapsedMinute = 0L
                 startTimer()
             }
@@ -113,6 +115,16 @@ object BackgroundTaskService: SharedPreferences.OnSharedPreferenceChangeListener
         return false
     }
 
+    open fun getDelay(): Long = 0L
+
+    private val useDefaultDelay: Boolean get() = (getDelay()*1000 <= DEFAULT_DELAY_MS)
+
+    private fun getDelayResult(): Long {
+        if(useDefaultDelay)
+            return DEFAULT_DELAY_MS
+        return getDelay()*1000
+    }
+
     private fun getNextAlarm(): Calendar? {
         if (interval > 0L) {
             val elapsedTimeMin = Utils.round((System.currentTimeMillis() - ReceiveData.time).toFloat()/60000, 0, RoundingMode.DOWN).toLong()
@@ -120,12 +132,12 @@ object BackgroundTaskService: SharedPreferences.OnSharedPreferenceChangeListener
             Log.d(LOG_ID, "elapsed: " + elapsedTimeMin + " nextTrigger: " + nextTriggerMin + " - interval: "+ interval)
             if (active(nextTriggerMin)) {
                 val nextAlarmCal = Calendar.getInstance()
-                nextAlarmCal.timeInMillis = ReceiveData.time + TimeUnit.MINUTES.toMillis(nextTriggerMin) + EXTRA_DELAY_MS
-                if (nextAlarmCal.get(Calendar.SECOND) < TimeUnit.MILLISECONDS.toSeconds(EXTRA_DELAY_MS)) {
-                    nextAlarmCal.add(Calendar.SECOND, nextAlarmCal.get(Calendar.SECOND)+1)
+                nextAlarmCal.timeInMillis = ReceiveData.time + TimeUnit.MINUTES.toMillis(nextTriggerMin) + getDelayResult()
+                if (nextAlarmCal.get(Calendar.SECOND) < TimeUnit.MILLISECONDS.toSeconds(DEFAULT_DELAY_MS)) {
+                    nextAlarmCal.add(Calendar.SECOND, -1*(nextAlarmCal.get(Calendar.SECOND)+1))
                 }
                 Log.i(LOG_ID, "Set next alarm after " + nextTriggerMin + " minute(s) at " + timeformat.format(nextAlarmCal.time)
-                      + " (received at " + timeformat.format(Date(ReceiveData.time)) + ")")
+                      + " (received at " + timeformat.format(Date(ReceiveData.time)) + ") with a delay of " + getDelayResult()/1000 + "s")
                 return nextAlarmCal
             }
         }
@@ -133,13 +145,14 @@ object BackgroundTaskService: SharedPreferences.OnSharedPreferenceChangeListener
         return null
     }
 
+    abstract fun getAlarmReceiver() : Class<*>
     private fun init() {
         if (pendingIntent == null) {
             Log.d(LOG_ID, "init pendingIntent")
-            val i = Intent(context, BackgroundAlarmReceiver::class.java)
+            val i = Intent(context, getAlarmReceiver())
             pendingIntent = PendingIntent.getBroadcast(
                 context,
-                42,
+                alarmReqId,
                 i,
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
             )
@@ -238,18 +251,10 @@ object BackgroundTaskService: SharedPreferences.OnSharedPreferenceChangeListener
             Log.d(LOG_ID, "onReceive: " + intent.toString())
             if (active(elapsedTimeMinute)) {
                 executeTasks()
-                // restart time
-                startTimer()
             }
         } catch (ex: Exception) {
             Log.e(LOG_ID, "onReceive: " + ex)
         }
-    }
-}
-
-open class BackgroundAlarmReceiver(): BroadcastReceiver() {
-    override fun onReceive(context: Context?, intent: Intent?) {
-        BackgroundTaskService.alarmTrigger(intent)
     }
 }
 
