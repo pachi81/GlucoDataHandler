@@ -82,10 +82,10 @@
     <string name="src_libre_reconnect_summary">On next interval a new login will be executed.</string>
     <string name="src_libre_setup_librelink">Please set up LibreLinkUp connection first!</string>
 
-    <string name="source_request_interval_1">1 min</string>
-    <string name="source_request_interval_5">5 min</string>
-    <string name="source_request_interval_10">10 min</string>
-    <string name="source_request_interval_15">15 min</string>
+    <string name="source_request_interval_1">1 minute</string>
+    <string name="source_request_interval_5">5 minutes</string>
+    <string name="source_request_interval_10">10 minutes</string>
+    <string name="source_request_interval_15">15 minutes</string>
 
 
     <!-- LibreLink source -->
