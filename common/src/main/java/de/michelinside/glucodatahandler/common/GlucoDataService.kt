@@ -19,7 +19,7 @@ enum class AppSource {
     WEAR_APP;
 }
 
-abstract class GlucoDataService(source: AppSource) : WearableListenerService(), NotifierInterface {
+abstract class GlucoDataService() : WearableListenerService(), NotifierInterface {
     private lateinit var receiver: GlucoseDataReceiver
     private lateinit var batteryReceiver: BatteryReceiver
     private lateinit var xDripReceiver: XDripBroadcastReceiver
@@ -48,9 +48,10 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             return null
         }
 
-        fun start(context: Context, cls: Class<*>) {
+        fun start(source: AppSource, context: Context, cls: Class<*>) {
             if (!running) {
                 try {
+                    appSource = source
                     val serviceIntent = Intent(
                         context,
                         cls
@@ -73,10 +74,6 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 }
             }
         }
-    }
-
-    init {
-        appSource = source
     }
 
     abstract fun getNotification() : Notification

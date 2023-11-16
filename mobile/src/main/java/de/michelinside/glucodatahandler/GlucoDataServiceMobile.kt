@@ -14,7 +14,7 @@ import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.widget.FloatingWidget
 import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
 
-class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInterface {
+class GlucoDataServiceMobile: GlucoDataService(), NotifierInterface {
     private val LOG_ID = "GlucoDataHandler.GlucoDataServiceMobile"
     private lateinit var floatingWidget: FloatingWidget
     init {
@@ -24,7 +24,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
 
     companion object {
         fun start(context: Context) {
-            start(context, GlucoDataServiceMobile::class.java)
+            start(AppSource.PHONE_APP, context, GlucoDataServiceMobile::class.java)
         }
     }
 
