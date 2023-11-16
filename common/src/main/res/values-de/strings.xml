@@ -12,7 +12,7 @@
     <string name="info_label_raw">Rohwert</string>
     <string name="info_label_sensor_id">Sensor</string>
     <string name="info_label_source">Quelle</string>
-    <string name="no_data">Noch keine Daten empfangen!\nINFO: Aktiviere in Juggluco unter Einstellungen \"Glucodata Broadcast\" und wähle \"de.michelinside.glucodatahandler\" aus.\nFür Daten von xDrip+ aktiviere Lokaler Broadcast und lass Empfänger leer.</string>
+    <string name="no_data">Noch keine Daten empfangen!\nINFO: Aktiviere die LibreLink Quelle oder in Juggluco unter Einstellungen \"Glucodata Broadcast\" und wähle \"de.michelinside.glucodatahandler\" aus.\nFür Daten von xDrip+ aktiviere Lokaler Broadcast und lass Empfänger leer.</string>
 
     <string name="elapsed_time">%1$d min</string>
     <string name="elapsed_time_hour">\> 1h</string>
