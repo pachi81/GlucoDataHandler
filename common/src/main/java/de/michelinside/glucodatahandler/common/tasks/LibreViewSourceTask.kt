@@ -8,11 +8,11 @@ import android.util.Log
 import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
-import de.michelinside.glucodatahandler.common.R
-import de.michelinside.glucodatahandler.common.notifier.DataSource
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -22,6 +22,7 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 
 // API docu: https://libreview-unofficial.stoplight.io/
@@ -241,7 +242,16 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
         }
     }
 
-    private fun getTimestamp(time: String): Long {
+    private fun parseUtcTimestamp(time: String): Long {
+        val format = SimpleDateFormat("M/d/y h:m:s a", Locale.ENGLISH)
+        format.setTimeZone(TimeZone.getTimeZone("UTC"))
+        val date = format.parse(time)
+        format.setTimeZone(TimeZone.getDefault())
+        Log.d(LOG_ID, "UTC: " + time + " - local: " +  date?.toString())
+        return date?.time?:0
+    }
+
+    private fun parseLocalTimestamp(time: String): Long {
         val format = SimpleDateFormat("M/d/y h:m:s a", Locale.ENGLISH)
         return format.parse(time)!!.time
     }
@@ -287,7 +297,13 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
                     val glucoseData = data.optJSONObject("glucoseMeasurement")
                     if (glucoseData != null) {
                         val glucoExtras = Bundle()
-                        glucoExtras.putLong(ReceiveData.TIME, getTimestamp(glucoseData.optString("Timestamp")))
+                        val parsedUtc = parseUtcTimestamp(glucoseData.optString("FactoryTimestamp"))
+                        val parsedLocal = parseLocalTimestamp(glucoseData.optString("Timestamp"))
+                        Log.d(LOG_ID, "UTC->local: " + parsedUtc + " - local: " + parsedLocal)
+                        if (parsedUtc > 0)
+                            glucoExtras.putLong(ReceiveData.TIME, parsedUtc)
+                        else
+                            glucoExtras.putLong(ReceiveData.TIME, parsedLocal)
                         glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, glucoseData.optDouble("Value").toFloat())
                         glucoExtras.putInt(ReceiveData.MGDL, glucoseData.optInt("ValueInMgPerDl"))
                         glucoExtras.putFloat(ReceiveData.RATE, getRateFromTrend(glucoseData.optInt("TrendArrow")))
