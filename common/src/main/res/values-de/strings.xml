@@ -30,7 +30,7 @@
 
     <!-- mobile -->
 
-    <string name="activity_main_battery_optimization_disabled">Akkutoptimierungen sind aktiv.\nHier klicken, um sie zu deaktivieren, falls es Probleme gibt.</string>
+    <string name="activity_main_battery_optimization_disabled">Akkuoptimierungen sind aktiv.</string>
     <string name="activity_main_source_label">LibreLink: %1$s</string>
     <string name="activity_main_connected_label">Uhr: verbunden (%1$s)</string>
     <string name="activity_main_disconnected_label">Uhr: getrennt</string>
@@ -184,7 +184,6 @@
     <string name="activity_switch_notification">Vibrieren</string>
     <string name="activity_switch_colored_aod">Farbiges AOD</string>
     <string name="activity_large_arrow_icon">Großer Trendpfeil</string>
-    <string name="activity_wear_battery_optimization_disabled">Akkuoptimierungen sind aktiv.</string>
 
     <!-- complications -->
 

@@ -30,7 +30,7 @@
 
     <!-- mobile -->
 
-    <string name="activity_main_battery_optimization_disabled">Battery optimization is enabled.\nPress here to disable it, if there are any problems.</string>
+    <string name="activity_main_battery_optimization_disabled">Battery optimization is enabled.</string>
     <string name="activity_main_source_label">LibreLink: %1$s</string>
     <string name="activity_main_connected_label">Wear: connected (%1$s)</string>
     <string name="activity_main_disconnected_label">Wear: disconnected</string>
@@ -194,8 +194,6 @@
     <string name="activity_large_arrow_icon">Big trend-arrow</string>
     <string name="activity_switch_notification">Vibration</string>
     <string name="activity_switch_colored_aod">Colored AOD</string>
-
-    <string name="activity_wear_battery_optimization_disabled">Battery optimization is enabled.</string>
 
     <!-- complications -->
 

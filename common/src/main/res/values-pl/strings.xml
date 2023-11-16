@@ -30,7 +30,7 @@
 
     <!-- mobile -->
 
-    <string name="activity_main_battery_optimization_disabled">Battery optimization is enabled.\nPress here to disable it, if there are any problems.</string>
+    <string name="activity_main_battery_optimization_disabled">Battery optimization is enabled.</string>
     <string name="activity_main_connected_label">Zegarek: połączony (%1$s)</string>
     <string name="activity_main_disconnected_label">Zegarek: niepołączony</string>
     <string name="activity_main_car_connected_label">Android Auto: połączony</string>
@@ -172,7 +172,6 @@
     <string name="widget_glucose_trend">Glukoza i trend</string>
     <string name="widget_glucose_trend_delta">Glukoza, trend i delta</string>
     <string name="widget_glucose_trend_delta_timestamp">Glukoza, trend, delta i znacznik czasu</string>
-    <string name="activity_wear_battery_optimization_disabled">Battery optimization is enabled.</string>
 
     <!-- wear -->
 

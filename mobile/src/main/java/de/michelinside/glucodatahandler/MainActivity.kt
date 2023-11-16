@@ -129,7 +129,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 Log.w(LOG_ID, "Battery optimization is inactive")
                 txtBatteryOptimization.visibility = View.VISIBLE
                 txtBatteryOptimization.setOnClickListener {
-                    val intent = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    intent.data = Uri.parse("package:$packageName")
                     startActivity(intent)
                 }
             } else {
