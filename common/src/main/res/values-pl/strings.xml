@@ -47,7 +47,7 @@
 
     <!-- tasker -->
 
-    <string name="activity_main_source_label">LibreLink: %1$s</string>
+    <string name="activity_main_no_source_label">Source: not active</string>
     <string name="tasker_event_glucodata">Nowa wartość glukozy</string>
     <string name="tasker_event_glucodata_obsolete">Wartość przestarzała</string>
     <string name="tasker_event_glucodata_alarm">Alarm dotyczący stężenia glukozy</string>

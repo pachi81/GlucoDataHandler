@@ -31,7 +31,8 @@
     <!-- mobile -->
 
     <string name="activity_main_battery_optimization_disabled">Battery optimization is enabled.</string>
-    <string name="activity_main_source_label">LibreLink: %1$s</string>
+    <string name="activity_main_source_label" translatable="false">%1$s: %2$s</string>
+    <string name="activity_main_no_source_label">Source: not active</string>
     <string name="activity_main_connected_label">Wear: connected (%1$s)</string>
     <string name="activity_main_disconnected_label">Wear: disconnected</string>
     <string name="activity_main_car_connected_label">Android Auto: connected</string>

@@ -14,6 +14,7 @@ import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.tasks.LibreViewSourceTask
+import de.michelinside.glucodatahandler.common.tasks.NightscoutSourceTask
 import de.michelinside.glucodatahandler.databinding.ActivityWaerBinding
 
 class WaerActivity : AppCompatActivity(), NotifierInterface {
@@ -32,6 +33,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var switchForground: SwitchCompat
     private lateinit var switchRelativeTime: SwitchCompat
     private lateinit var switchLibreSource: SwitchCompat
+    private lateinit var switchNightscoutSource: SwitchCompat
     private lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -145,7 +147,21 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                         apply()
                     }
                 } catch (exc: Exception) {
-                    Log.e(LOG_ID, "Changing large arrow icon exception: " + exc.message.toString() )
+                    Log.e(LOG_ID, "Changing Libre view exception: " + exc.message.toString() )
+                }
+            }
+
+            switchNightscoutSource = findViewById(R.id.switchNightscoutSource)
+            switchNightscoutSource.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, true)
+            switchNightscoutSource.setOnCheckedChangeListener { _, isChecked ->
+                Log.d(LOG_ID, "Nightscout changed: " + isChecked.toString())
+                try {
+                    with (sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, isChecked)
+                        apply()
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Changing Nightscout exception: " + exc.message.toString() )
                 }
             }
 
@@ -201,12 +217,27 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 } else
                     txtConnInfo.text = resources.getText(CR.string.activity_disconnected_label)
             }
-            txtSourceInfo.text =  String.format(resources.getText(CR.string.activity_main_source_label).toString(), LibreViewSourceTask.getState(this))
+
             val user = sharedPref.getString(Constants.SHARED_PREF_LIBRE_USER, "")!!.trim()
             val password = sharedPref.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, "")!!.trim()
             switchLibreSource.isEnabled = user.isNotEmpty() && password.isNotEmpty()
-            if(!switchLibreSource.isEnabled)
+            if(!switchLibreSource.isEnabled) {
                 switchLibreSource.isChecked = false
+            }
+
+            val url = sharedPref.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, "")!!.trim()
+            switchNightscoutSource.isEnabled = url.isNotEmpty()
+            if(!switchNightscoutSource.isEnabled) {
+                switchNightscoutSource.isChecked = false
+            }
+
+            if (switchLibreSource.isChecked)
+                txtSourceInfo.text =  resources.getString(CR.string.activity_main_source_label, resources.getText(DataSource.LIBREVIEW.resId), LibreViewSourceTask.getState(this))
+            else if (switchNightscoutSource.isChecked)
+                txtSourceInfo.text =  resources.getString(CR.string.activity_main_source_label, resources.getText(DataSource.NIGHTSCOUT.resId), NightscoutSourceTask.getState(this))
+            else
+                txtSourceInfo.text = resources.getText(CR.string.activity_main_no_source_label)
+
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }

@@ -80,6 +80,19 @@
             android:text="@string/src_cat_libreview"
             android:textAlignment="viewStart"
             app:layout_constraintTop_toBottomOf="@+id/txtValueInfo"
+            app:layout_constraintBottom_toTopOf="@+id/switchNightscoutSource"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchNightscoutSource"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/src_cat_nightscout"
+            android:textAlignment="viewStart"
+            app:layout_constraintTop_toBottomOf="@+id/switchLibreView"
             app:layout_constraintBottom_toTopOf="@+id/switchNotifcation"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

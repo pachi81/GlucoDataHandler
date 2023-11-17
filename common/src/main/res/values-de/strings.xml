@@ -31,7 +31,7 @@
     <!-- mobile -->
 
     <string name="activity_main_battery_optimization_disabled">Akkuoptimierungen sind aktiv.</string>
-    <string name="activity_main_source_label">LibreLink: %1$s</string>
+    <string name="activity_main_no_source_label">Quelle: nicht aktiv</string>
     <string name="activity_main_connected_label">Uhr: verbunden (%1$s)</string>
     <string name="activity_main_disconnected_label">Uhr: getrennt</string>
     <string name="activity_main_car_connected_label">Android Auto: verbunden</string>

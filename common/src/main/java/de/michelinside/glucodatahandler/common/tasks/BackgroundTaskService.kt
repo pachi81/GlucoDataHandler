@@ -50,7 +50,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
 
     private fun executeTasks() {
         try {
-            if (lastElapsedMinute != elapsedTimeMinute) {
+            if (lastElapsedMinute != elapsedTimeMinute && elapsedTimeMinute != 0L) {
                 Thread {
                     val wakeLock: PowerManager.WakeLock =
                         (context.getSystemService(Context.POWER_SERVICE) as PowerManager).run {
@@ -60,7 +60,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                         }
                     try {
                         backgroundTaskList.forEach {
-                            if ((lastElapsedMinute < 0 && initialExecution) || (elapsedTimeMinute.mod(it.getIntervalMinute()) == 0L && it.active(elapsedTimeMinute))) {
+                            if (elapsedTimeMinute != 0L && ((lastElapsedMinute < 0 && initialExecution) || (elapsedTimeMinute.mod(it.getIntervalMinute()) == 0L && it.active(elapsedTimeMinute)))) {
                                 try {
                                     Log.i(LOG_ID, "execute after " + elapsedTimeMinute + " min: " + it)
                                     it.execute(context)
