@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler.common.tasks
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
@@ -11,7 +12,14 @@ import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import okhttp3.OkHttpClient
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
+import javax.net.ssl.SSLContext
+import javax.net.ssl.SSLSession
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
+
 
 abstract class DataSourceTask(private val enabledKey: String) : BackgroundTask() {
     private var enabled = false
@@ -85,10 +93,30 @@ abstract class DataSourceTask(private val enabledKey: String) : BackgroundTask()
         if (httpClient != null) {
             return httpClient!!
         }
+
+        // trust all certificates (see https://www.baeldung.com/okhttp-client-trust-all-certificates)
+        val trustAllCerts = arrayOf<TrustManager>(
+            @SuppressLint("CustomX509TrustManager")
+            object : X509TrustManager {
+                @SuppressLint("TrustAllX509TrustManager")
+                override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {}
+                @SuppressLint("TrustAllX509TrustManager")
+                override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {}
+                override fun getAcceptedIssuers(): Array<X509Certificate> {
+                    return arrayOf()
+                }
+            }
+        )
+        val sslContext = SSLContext.getInstance("SSL")
+        sslContext.init(null, trustAllCerts, SecureRandom())
+
         val builder = OkHttpClient().newBuilder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(20, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
+        builder.sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
+        builder.hostnameVerifier { _: String?, _: SSLSession? -> true }
+
         httpClient = builder.build()
         return httpClient!!
     }
