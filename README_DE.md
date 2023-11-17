@@ -4,6 +4,7 @@
 # Glucose Data Handler
 ## Features
 
+* empfängt Glukose Werte als **[LibreLink Follower](#librelink)**
 * empfängt Glukose Werte von Juggluco
 * empfängt Glukose Werte von xDrip+
 * stellt mehrere **[Widgets](#widgets)** für Android zur Verfügung
@@ -35,6 +36,21 @@ Die neuste Version kann [hier](https://github.com/pachi81/GlucoDataHandler/relea
 ### Smartphone
 
 Die einzelnen Einstellungen sind in der App entsprechend beschrieben. Sobald die Smartwatch verbunden ist, werden die Einstellungen übermittelt.
+
+## Quellen
+
+### LibreLink
+
+Um LibreLink zu verwenden wird ein LibreLinkUp Konto benötigt.
+Wenn noch keines erstellt wurde, folgen Sie bitte dieser [Anleitung](https://librelinkup.com/articles/getting-started).
+
+Eine kleiner Zusammenfassung der Schritte, welche zu erledigen sind:
+* FreeStyle Libre App öffnen und unter `Verbinden` auf `Teilen` oder `Verbundene Anwendungen` klicken
+* hier muss der LibreLinkUp eingerichtet werden
+* danach die LibreLinkUp App aus dem [PlayStore](https://play.google.com/store/apps/details?id=org.nativescript.LibreLinkUp) installieren
+* in der LibreLinkUp App einloggen und die Einladung annehmen
+* danach wird die LibreLinkUp App nicht mehr zwingend benötigt und kann wieder deinstalliert werden
+* jetzt können die LibreLinkUp Kontodaten in GlucoDataHandler hinterlegt und die Quelle aktiviert werden
 
 ## Widgets
 Es gibt verschiedene Arten von Widgets und ein schwebendes Widget:
