@@ -84,5 +84,10 @@ object Constants {
     const val SHARED_PREF_LIBRE_TOKEN_EXPIRE="source_libre_token_expire"
     const val SHARED_PREF_LIBRE_REGION="source_libre_region"
 
+    const val SHARED_PREF_NIGHTSCOUT_ENABLED="src_ns_enabled"
+    const val SHARED_PREF_NIGHTSCOUT_URL="src_ns_url"
+    const val SHARED_PREF_NIGHTSCOUT_SECRET="src_ns_secret"
+    const val SHARED_PREF_NIGHTSCOUT_TOKEN="src_ns_token"
+
     const val SHARED_PREF_DUMMY_VALUES = "dummy_values"
 }

@@ -7,11 +7,14 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
@@ -120,6 +123,14 @@ abstract class DataSourceTask(private val enabledKey: String) : BackgroundTask()
         httpClient = builder.build()
         return httpClient!!
     }
+
+    protected fun httpCall(request: Request): Response {
+        if (BuildConfig.DEBUG) {  // do not log personal data
+            Log.d(LOG_ID, request.toString())
+        }
+        return getHttpClient().newCall(request).execute()
+    }
+
     abstract fun isConnectionError(): Boolean
 
     override fun getIntervalMinute(): Long {

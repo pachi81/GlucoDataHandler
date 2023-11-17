@@ -211,6 +211,19 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return if (java.lang.Float.isNaN(rate)) "" else "DoubleDown"
     }
 
+    fun getRateFromLabel(trendLabel: String): Float {
+        return when(trendLabel) {
+            "DoubleDown" -> -4F
+            "SingleDown" -> -2F
+            "FortyFiveDown" -> -1F
+            "Flat" -> 0F
+            "FortyFiveUp" -> 1F
+            "SingleUp" -> 2F
+            "DoubleUp" -> 4f
+            else -> Float.NaN
+        }
+    }
+
     fun getRateLabel(context: Context): String {
         if (rate >= 3.0f) return context.getString(R.string.rate_double_up)
         if (rate >= 2.0f) return context.getString(R.string.rate_single_up)

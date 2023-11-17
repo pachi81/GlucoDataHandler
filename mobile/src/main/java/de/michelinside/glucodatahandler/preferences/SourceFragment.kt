@@ -28,6 +28,11 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
                 editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             }
 
+            val nightscoutSecret = findPreference<EditTextPreference>(Constants.SHARED_PREF_NIGHTSCOUT_SECRET)
+            nightscoutSecret?.setOnBindEditTextListener {editText ->
+                editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            }
+
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
         }
@@ -91,7 +96,8 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
 
             when(key) {
                 Constants.SHARED_PREF_LIBRE_PASSWORD,
-                Constants.SHARED_PREF_LIBRE_USER -> {
+                Constants.SHARED_PREF_LIBRE_USER,
+                Constants.SHARED_PREF_NIGHTSCOUT_URL -> {
                     updateEnableStates(sharedPreferences!!)
                 }
             }
@@ -109,6 +115,14 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
                 switchLibreSource.isEnabled = libreUser.isNotEmpty() && librePassword.isNotEmpty()
                 if(!switchLibreSource.isEnabled)
                     switchLibreSource.isChecked = false
+            }
+
+            val switchNightscoutSource = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED)
+            if (switchNightscoutSource != null) {
+                val url = sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, "")!!.trim()
+                switchNightscoutSource.isEnabled = url.isNotEmpty() && url.isNotEmpty()
+                if(!switchNightscoutSource.isEnabled)
+                    switchNightscoutSource.isChecked = false
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())

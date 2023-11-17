@@ -65,7 +65,6 @@
     <string name="source_delay_summary">Wartezeit in Sekunden bis die Daten abgerufen werden, da es eine gewisse Zeit dauert, bis die Daten verfügbar sind.</string>
 
     <string name="src_cat_libreview">LibreLink Datenquelle</string>
-
     <string name="src_libre_enabled">Aktiv</string>
     <string name="src_libre_enabled_summary">Aktiviere LibreLink Datenquelle, falls der Benutzer und das Passwort für LibreLink gesetzt sind.\nBitte zuerst die LibreLinkUp App einrichten, welche danach wieder entfernt werden kann.</string>
     <string name="src_libre_user">Benutzer</string>
@@ -75,6 +74,16 @@
     <string name="src_libre_reconnect">Reconnect</string>
     <string name="src_libre_reconnect_summary">Bei der nächsten Ausführung wird ein erneutes Login ausgeführt.</string>
     <string name="src_libre_setup_librelink">Bitte erst LibreLinkUp Verbindung aktivieren!</string>
+
+    <string name="src_cat_nightscout">Nightscout Datenquelle</string>
+    <string name="src_ns_enabled">Aktiv</string>
+    <string name="src_ns_enabled_summary">Aktiviere Nightscout Datenquelle.</string>
+    <string name="src_ns_url">Nightscout URL</string>
+    <string name="src_ns_url_summary">URL des Nightscout Servers.</string>
+    <string name="src_ns_secret">API Secret</string>
+    <string name="src_ns_secret_summary">API Secret für den Zugriff (optional).</string>
+    <string name="src_ns_token">Access Token</string>
+    <string name="src_ns_token_summary">Zusätzlicher Access Token, falls dieser benötigt wird (optional).</string>
 
     <string name="source_request_interval_1">1 Minute</string>
     <string name="source_request_interval_5">5 Minuten</string>

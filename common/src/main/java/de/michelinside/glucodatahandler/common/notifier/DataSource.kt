@@ -7,7 +7,9 @@ enum class DataSource(val resId: Int) {
     XDRIP(R.string.source_xdrip),
     PHONE(R.string.source_phone),
     WEAR(R.string.source_wear),
-    LIBREVIEW(R.string.source_libreview);
+    LIBREVIEW(R.string.source_libreview),
+    NIGHTSCOUT(R.string.source_nightscout);
+    
     companion object {
         fun fromResId(id: Int): DataSource {
             DataSource.values().forEach {

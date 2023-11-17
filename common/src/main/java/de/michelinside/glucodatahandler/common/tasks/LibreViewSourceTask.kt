@@ -120,13 +120,6 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
         return builder.build()
     }
 
-    private fun httpCall(request: Request): Response {
-        if (BuildConfig.DEBUG) {  // do not log personal data
-            Log.d(LOG_ID, request.toString())
-        }
-        return getHttpClient().newCall(request).execute()
-    }
-
     private fun checkResponse(response: Response): JSONObject? {
         if (!response.isSuccessful) {
             if(token.isNotEmpty() && response.code >= 400 && response.code < 500)
@@ -239,6 +232,9 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
                 return handleLoginResponse(httpCall(createRequest(LOGIN_ENDPOINT)))
             }
             return true
+        } catch (ex: UnknownHostException) {
+            Log.w(LOG_ID, "Internet connection issue: " + ex)
+            setLastError("Connection issue", true)
         } catch (ex: Exception) {
             Log.e(LOG_ID, "Exception during login: " + ex)
             setLastError(ex.message.toString())

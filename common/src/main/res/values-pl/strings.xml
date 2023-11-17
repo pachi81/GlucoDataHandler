@@ -65,7 +65,6 @@
     <string name="source_delay_summary">Delay in seconds before requesting the data from cloud, because if takes some time until the data is present there.</string>
 
     <string name="src_cat_libreview">LibreLink Follower</string>
-
     <string name="src_libre_enabled">Enable</string>
     <string name="src_libre_enabled_summary">Enable LibreLink follower, if LibreLink user and password is set\nPlease set-up LibreLinkUp App first. You can remove the LibreLineUp App afterwards.</string>
     <string name="src_libre_user">User</string>
@@ -75,6 +74,16 @@
     <string name="src_libre_reconnect">Reconnect</string>
     <string name="src_libre_reconnect_summary">On next interval a new login will be executed.</string>
     <string name="src_libre_setup_librelink">Please set up LibreLinkUp connection first!</string>
+
+    <string name="src_cat_nightscout">Nightscout Follower</string>
+    <string name="src_ns_enabled">Enable</string>
+    <string name="src_ns_enabled_summary">Enable Nightscout follower.</string>
+    <string name="src_ns_url">Nightscout URL</string>
+    <string name="src_ns_url_summary">URL of the Nightscout server.</string>
+    <string name="src_ns_secret">API Secret</string>
+    <string name="src_ns_secret_summary">API Secret to access the data (optional).</string>
+    <string name="src_ns_token">Access Token</string>
+    <string name="src_ns_token_summary">Add your access token, if you need one (optional).</string>
 
     <string name="source_request_interval_1">1 minute</string>
     <string name="source_request_interval_5">5 minutes</string>

@@ -14,7 +14,7 @@ object SourceTaskService: BackgroundTaskService(43, "GlucoDataHandler.Task.Sourc
     override fun getAlarmReceiver() : Class<*> = SourceAlarmReceiver::class.java
 
     override fun getBackgroundTasks(): MutableList<BackgroundTask> =
-        mutableListOf(LibreViewSourceTask())
+        mutableListOf(LibreViewSourceTask(),NightscoutSourceTask())
 
     override fun getDelay(): Long = delay
 
