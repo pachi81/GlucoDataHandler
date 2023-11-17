@@ -2,6 +2,8 @@ package de.michelinside.glucodatahandler.common.tasks
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
@@ -9,15 +11,14 @@ import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import okhttp3.OkHttpClient
-import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
-    private val LOG_ID = "GlucoDataHandler.Task.DataSourceTask"
+abstract class DataSourceTask(private val enabledKey: String) : BackgroundTask() {
     private var enabled = false
     private var interval = 1L
 
     companion object {
+        private val LOG_ID = "GlucoDataHandler.Task.DataSourceTask"
         private var httpClient: OkHttpClient? = null
 
         val preferencesToSend = mutableSetOf(
@@ -48,14 +49,35 @@ abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
             bundle.putBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, sharedPref.getBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false))
             return bundle
         }
+
+        fun isConnected(context: Context): Boolean {
+            try {
+                val connectivityManager = context.getSystemService(
+                    Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+                    ?: return false
+
+                val activeNetwork = connectivityManager.activeNetwork ?: return false
+                val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+
+                // If we check only for "NET_CAPABILITY_INTERNET", we get "true" if we are connected to a wifi
+                // which has no access to the internet. "NET_CAPABILITY_VALIDATED" also verifies that we
+                // are online
+                return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                        && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "isConnected exception: " + exc.message.toString() )
+            }
+            return false
+        }
     }
 
-    abstract fun executeRequest()
+    abstract fun executeRequest(context: Context)
 
     override fun execute(context: Context) {
         if (enabled) {
             Log.d(LOG_ID, "Execute request")
-            executeRequest()
+            executeRequest(context)
         }
     }
 
@@ -70,8 +92,13 @@ abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
         httpClient = builder.build()
         return httpClient!!
     }
+    abstract fun isConnectionError(): Boolean
 
     override fun getIntervalMinute(): Long {
+        if (interval > 1 && isConnectionError()) {
+            Log.d(LOG_ID, "Use interval of 1 minute as there is a connection issue")
+            return 1   // retry after a minute
+        }
         return interval
     }
 
@@ -83,7 +110,6 @@ abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
         if(key == null) {
             enabled = sharedPreferences.getBoolean(enabledKey, false)
             interval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
-            Executors.newSingleThreadScheduledExecutor().execute { execute(context) }
             return true
         } else {
             var result = false
@@ -91,9 +117,6 @@ abstract class DataSourceTask(val enabledKey: String) : BackgroundTask() {
                 enabledKey -> {
                     if (enabled != sharedPreferences.getBoolean(enabledKey, false)) {
                         enabled = sharedPreferences.getBoolean(enabledKey, false)
-                        if (enabled) {
-                            Executors.newSingleThreadScheduledExecutor().execute { execute(context) }
-                        }
                         result = true
                         InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
                     }

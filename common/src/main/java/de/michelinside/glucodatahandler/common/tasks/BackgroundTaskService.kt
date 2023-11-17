@@ -20,19 +20,19 @@ import java.util.Calendar
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
-abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: String): SharedPreferences.OnSharedPreferenceChangeListener,
+abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: String, protected val initialExecution: Boolean = false): SharedPreferences.OnSharedPreferenceChangeListener,
     NotifierInterface {
     private val DEFAULT_DELAY_MS = 3000L
     private val WAKE_LOCK_TIMEOUT = 10000L // 10 seconds
 
     private var backgroundTaskList = mutableListOf<BackgroundTask>()
-    private var interval = -1L
+    private var curInterval = -1L
     private var curDelay = -1L
     private lateinit var context: Context
     private lateinit var sharedPref: SharedPreferences
     private var pendingIntent: PendingIntent? = null
     private var alarmManager: AlarmManager? = null
-    private var lastElapsedMinute = -1L
+    private var lastElapsedMinute = 0L
     private val elapsedTimeMinute: Long
         get() {
             return ReceiveData.getElapsedTimeMinute()
@@ -60,7 +60,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                         }
                     try {
                         backgroundTaskList.forEach {
-                            if (elapsedTimeMinute.mod(it.getIntervalMinute()) == 0L && it.active(elapsedTimeMinute)) {
+                            if ((lastElapsedMinute < 0 && initialExecution) || (elapsedTimeMinute.mod(it.getIntervalMinute()) == 0L && it.active(elapsedTimeMinute))) {
                                 try {
                                     Log.i(LOG_ID, "execute after " + elapsedTimeMinute + " min: " + it)
                                     it.execute(context)
@@ -86,19 +86,32 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         }
     }
 
-    private fun calculateInterval() {
+    private fun getInterval(): Long {
+        var newInterval = -1L
+        backgroundTaskList.forEach {
+            if (it.active(elapsedTimeMinute) && newInterval <= 0L || it.getIntervalMinute() < newInterval)
+                newInterval = it.getIntervalMinute()
+        }
+        return newInterval
+    }
+
+    private fun checkTimer() {
         try {
-            var newInterval = -1L
-            backgroundTaskList.forEach {
-                if (it.active(elapsedTimeMinute) && newInterval <= 0L || it.getIntervalMinute() < newInterval)
-                    newInterval = it.getIntervalMinute()
-            }
-            if (interval != newInterval || curDelay != getDelay()) {
-                Log.i(LOG_ID, "Interval has changed from " + interval + "m+" + curDelay + "s to " + newInterval + "m+" + getDelay() + "s")
-                interval = newInterval
-                curDelay = getDelay()
-                lastElapsedMinute = 0L
-                startTimer()
+            val newInterval = getInterval()
+            val newDelay = getDelay()
+            if (curInterval != newInterval || curDelay != newDelay) {
+                Log.i(LOG_ID, "Interval has changed from " + curInterval + "m+" + curDelay + "s to " + newInterval + "m+" + newDelay + "s")
+                val triggerExecute = curInterval <= 0 && newInterval > 0  // changed from inactive to active so trigger an initial execution
+                curInterval = newInterval
+                curDelay = newDelay
+                if(triggerExecute && initialExecution) {
+                    Log.i(LOG_ID, "Trigger initial execution")
+                    lastElapsedMinute = -1L
+                    executeTasks()
+                } else if (curInterval > 0) {
+                    lastElapsedMinute = 0L
+                    startTimer()
+                }
             }
         } catch (ex: Exception) {
             Log.e(LOG_ID, "calculateInterval: " + ex)
@@ -125,10 +138,11 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     }
 
     private fun getNextAlarm(): Calendar? {
-        if (interval > 0L) {
+        curInterval = getInterval() // always update the interval while executing
+        if (curInterval > 0L) {
             val elapsedTimeMin = Utils.round((System.currentTimeMillis() - ReceiveData.time).toFloat()/60000, 0, RoundingMode.DOWN).toLong()
-            val nextTriggerMin = (elapsedTimeMin/interval)*interval + interval
-            Log.d(LOG_ID, "elapsed: " + elapsedTimeMin + " nextTrigger: " + nextTriggerMin + " - interval: "+ interval)
+            val nextTriggerMin = (elapsedTimeMin/curInterval)*curInterval + curInterval
+            Log.d(LOG_ID, "elapsed: " + elapsedTimeMin + " nextTrigger: " + nextTriggerMin + " - interval: "+ curInterval)
             if (active(nextTriggerMin)) {
                 val nextAlarmCal = Calendar.getInstance()
                 nextAlarmCal.timeInMillis = ReceiveData.time + TimeUnit.MINUTES.toMillis(nextTriggerMin) + getDelayResult()
@@ -140,7 +154,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                 return nextAlarmCal
             }
         }
-        Log.d(LOG_ID, "No next alarm set for current interval " + interval)
+        Log.d(LOG_ID, "No next alarm set for current interval " + curInterval)
         return null
     }
 
@@ -201,7 +215,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                             changed = true
                     }
                     if (changed) {
-                        calculateInterval()
+                        checkTimer()
                     }
                 }
         } catch (ex: Exception) {
@@ -229,7 +243,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                 mutableSetOf(NotifySource.BROADCAST, NotifySource.MESSAGECLIENT)
             )
             initBackgroundTasks()
-            calculateInterval()  // this will start the time
+            checkTimer()  // this will start the time
         } catch (ex: Exception) {
             Log.e(LOG_ID, "run: " + ex)
         }

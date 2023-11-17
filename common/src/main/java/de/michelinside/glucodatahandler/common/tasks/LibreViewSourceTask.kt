@@ -18,6 +18,7 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
 import org.json.JSONObject
+import java.net.UnknownHostException
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -37,6 +38,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
         private var token = ""
         private var tokenExpire = 0L
         private var region = ""
+        private var retryOnError = false  // retry after a minute if there was a connection or server error
         const val server = "https://api.libreview.io"
         const val region_server = "https://api-%s.libreview.io"
         const val LOGIN_ENDPOINT = "/llu/auth/login"
@@ -55,24 +57,38 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
         }
     }
 
-    override fun executeRequest() {
+    override fun executeRequest(context: Context) {
         Log.i(LOG_ID, "getting data from libre view")
         try {
-            lastError = ""
-            getConnection()
+            if (isConnected(context)) {
+                setLastError("", false)
+                getConnection()
+            } else {
+                setLastError("No internet connection!", true)
+                InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
+            }
+        } catch (ex: UnknownHostException) {
+            Log.w(LOG_ID, "Internet connection issue: " + ex)
+            setLastError("Connection issue", true)
         } catch (ex: Exception) {
             Log.e(LOG_ID, "Exception executeRequest: " + ex)
-            lastError = ex.message.toString()
+            setLastError(ex.message.toString())
         }
     }
 
-    private fun setLastError(error: String) {
-        Log.w(LOG_ID, error)
+    private fun setLastError(error: String, retry: Boolean = false) {
         lastError = error
-        Handler(GlucoDataService.context!!.mainLooper).post {
-            // dummy broadcast to update main
-            InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
+        retryOnError = retry
+        if (error.isNotEmpty()) {
+            Log.w(LOG_ID, error + " (retry: " + retry + ")")
+            Handler(GlucoDataService.context!!.mainLooper).post {
+                InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
+            }
         }
+    }
+
+    override fun isConnectionError(): Boolean {
+        return retryOnError
     }
 
     private fun getUrl(endpoint: String): String {
@@ -104,7 +120,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
         return builder.build()
     }
 
-    private fun executeRequest(request: Request): Response {
+    private fun httpCall(request: Request): Response {
         if (BuildConfig.DEBUG) {  // do not log personal data
             Log.d(LOG_ID, request.toString())
         }
@@ -115,7 +131,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
         if (!response.isSuccessful) {
             if(token.isNotEmpty() && response.code >= 400 && response.code < 500)
                 token = ""  // trigger reconnect
-            setLastError(response.code.toString() + ": " + response.message)
+            setLastError(response.code.toString() + ": " + response.message, response.code >= 500 )
             return null
         }
         val body = response.body?.string()
@@ -178,7 +194,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
                         Log.i(LOG_ID, "Handle redirect to region: " + region)
                         return login()
                     } else {
-                        lastError = "redirect without region!!!"
+                        setLastError("redirect without region!!!")
                     }
                 }
                 if (data.has("authTicket")) {
@@ -220,12 +236,12 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
                 }
             }
             if (token.isEmpty()) {
-                return handleLoginResponse(executeRequest(createRequest(LOGIN_ENDPOINT)))
+                return handleLoginResponse(httpCall(createRequest(LOGIN_ENDPOINT)))
             }
             return true
         } catch (ex: Exception) {
             Log.e(LOG_ID, "Exception during login: " + ex)
-            lastError = ex.message.toString()
+            setLastError(ex.message.toString())
         }
         return false
     }
@@ -330,9 +346,9 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
 
     private fun getConnection(firstCall: Boolean = true) {
         if (login()) {
-            handleGlucoseResponse(executeRequest(createRequest(CONNECTION_ENDPOINT)))
+            handleGlucoseResponse(httpCall(createRequest(CONNECTION_ENDPOINT)))
             if (firstCall && token.isEmpty() && lastError.isNotEmpty())
-                getConnection(false) // retry
+                getConnection(false) // retry if internal client error (not for server error)
         }
     }
 
