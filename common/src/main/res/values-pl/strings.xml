@@ -59,6 +59,13 @@
     <string name="source_phone">Telefon</string>
     <string name="source_wear">Zegarek</string>
 
+    <string name="source_state_not_active">Not active</string>
+    <string name="source_state_in_progress">In progress</string>
+    <string name="source_state_ok">OK</string>
+    <string name="source_state_no_new_value">No new value</string>
+    <string name="source_state_no_connection">No internet connection</string>
+    <string name="source_state_error">Error</string>
+
     <string name="source_interval">Interval</string>
     <string name="source_interval_summary">Interval of requesting data from source.</string>
     <string name="source_delay">Delay</string>
