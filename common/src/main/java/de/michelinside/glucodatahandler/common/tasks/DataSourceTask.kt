@@ -4,17 +4,23 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
+import android.net.Network
 import android.net.NetworkCapabilities
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.R
+import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import java.net.UnknownHostException
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
@@ -23,14 +29,22 @@ import javax.net.ssl.SSLSession
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
+enum class SourceState(val resId: Int) {
+    INACTIVE(R.string.source_state_not_active),
+    IN_PROGRESS(R.string.source_state_in_progress),
+    OK(R.string.source_state_ok),
+    NO_NEW_VALUE(R.string.source_state_no_new_value),
+    NO_CONNECTION(R.string.source_state_no_connection),
+    ERROR(R.string.source_state_error);
+}
 
-abstract class DataSourceTask(private val enabledKey: String) : BackgroundTask() {
+abstract class DataSourceTask(private val enabledKey: String, protected val source: DataSource) : BackgroundTask() {
     private var enabled = false
     private var interval = 1L
+    private var httpClient: OkHttpClient? = null
 
     companion object {
         private val LOG_ID = "GlucoDataHandler.Task.DataSourceTask"
-        private var httpClient: OkHttpClient? = null
 
         val preferencesToSend = mutableSetOf(
             Constants.SHARED_PREF_SOURCE_DELAY,
@@ -72,6 +86,13 @@ abstract class DataSourceTask(private val enabledKey: String) : BackgroundTask()
             return bundle
         }
 
+        private fun getNetwork(context: Context): Network? {
+            val connectivityManager = context.getSystemService(
+                Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+                ?: return null
+            return connectivityManager.activeNetwork
+        }
+
         fun isConnected(context: Context): Boolean {
             try {
                 val connectivityManager = context.getSystemService(
@@ -92,61 +113,140 @@ abstract class DataSourceTask(private val enabledKey: String) : BackgroundTask()
             }
             return false
         }
+
+        var lastSource: DataSource = DataSource.JUGGLUCO
+        var lastState: SourceState = SourceState.INACTIVE
+        var lastError: String = ""
+        var lastErrorCode: Int = -1
+
+        fun setLastError(source: DataSource, error: String, code: Int = -1) {
+            setState( source, SourceState.ERROR, error, code)
+        }
+
+        fun setState(source: DataSource, state: SourceState, error: String = "", code: Int = -1) {
+            lastError = error
+            lastErrorCode = code
+            lastSource = source
+            lastState = state
+
+            Handler(GlucoDataService.context!!.mainLooper).post {
+                InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
+            }
+        }
+
+        private fun getStateMessage(context: Context): String {
+            if (lastState == SourceState.ERROR && lastError.isNotEmpty()) {
+                var result = ""
+                if (lastErrorCode > 0) {
+                    result = lastErrorCode.toString() + ": "
+                }
+                result += lastError
+                return result
+            }
+            return context.getString(lastState.resId)
+        }
+
+        fun getState(context: Context): String {
+            return "%s: %s".format(context.getString(lastSource.resId), getStateMessage(context))
+        }
+
+        private fun isShortInterval(): Boolean {
+            return when(lastState) {
+                SourceState.NO_CONNECTION,
+                SourceState.NO_NEW_VALUE,
+                SourceState.INACTIVE -> true
+                SourceState.ERROR -> lastErrorCode >= 500
+                else -> false
+            }
+        }
     }
 
     abstract fun executeRequest(context: Context)
 
     override fun execute(context: Context) {
         if (enabled) {
+            if (!isConnected(context)) {
+                setState(source, SourceState.NO_CONNECTION)
+                return
+            }
             Log.d(LOG_ID, "Execute request")
-            executeRequest(context)
+            setState(source, SourceState.IN_PROGRESS)
+            try {
+                executeRequest(context)
+            } catch (ex: UnknownHostException) {
+                Log.w(LOG_ID, "Internet connection issue: " + ex)
+                setState(source, SourceState.NO_CONNECTION)
+            } catch (ex: Exception) {
+                Log.e(LOG_ID, "Exception during login: " + ex)
+                setLastError(source, ex.message.toString())
+            }
         }
     }
 
-    protected fun getHttpClient(): OkHttpClient {
+    protected fun handleResult(extras: Bundle) {
+        Handler(GlucoDataService.context!!.mainLooper).post {
+            val lastTime = ReceiveData.time
+            ReceiveData.handleIntent(GlucoDataService.context!!, DataSource.LIBREVIEW, extras)
+            if (ReceiveData.time == lastTime)
+                setState(source, SourceState.NO_NEW_VALUE)
+            else
+                setState(source, SourceState.OK)
+        }
+    }
+
+    protected fun getHttpClient(trustAll: Boolean = false): OkHttpClient {
         if (httpClient != null) {
             return httpClient!!
         }
-
-        // trust all certificates (see https://www.baeldung.com/okhttp-client-trust-all-certificates)
-        val trustAllCerts = arrayOf<TrustManager>(
-            @SuppressLint("CustomX509TrustManager")
-            object : X509TrustManager {
-                @SuppressLint("TrustAllX509TrustManager")
-                override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {}
-                @SuppressLint("TrustAllX509TrustManager")
-                override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {}
-                override fun getAcceptedIssuers(): Array<X509Certificate> {
-                    return arrayOf()
-                }
-            }
-        )
-        val sslContext = SSLContext.getInstance("SSL")
-        sslContext.init(null, trustAllCerts, SecureRandom())
 
         val builder = OkHttpClient().newBuilder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(20, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
-        builder.sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
-        builder.hostnameVerifier { _: String?, _: SSLSession? -> true }
+        builder.socketFactory(getNetwork(GlucoDataService.context!!)!!.socketFactory)
+        if (trustAll) {
+            // trust all certificates (see https://www.baeldung.com/okhttp-client-trust-all-certificates)
+            val trustAllCerts = arrayOf<TrustManager>(
+                @SuppressLint("CustomX509TrustManager")
+                object : X509TrustManager {
+                    @SuppressLint("TrustAllX509TrustManager")
+                    override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {}
+                    @SuppressLint("TrustAllX509TrustManager")
+                    override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {}
+                    override fun getAcceptedIssuers(): Array<X509Certificate> {
+                        return arrayOf()
+                    }
+                }
+            )
+            val sslContext = SSLContext.getInstance("SSL")
+            sslContext.init(null, trustAllCerts, SecureRandom())
+            builder.sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
+            builder.hostnameVerifier { _: String?, _: SSLSession? -> true }
+        }
 
         httpClient = builder.build()
         return httpClient!!
     }
 
-    protected fun httpCall(request: Request): Response {
+
+    private fun checkResponse(response: Response): String? {
+        if (!response.isSuccessful) {
+            setLastError(source, response.message, response.code)
+            return null
+        }
+        return response.body?.string()
+    }
+
+    protected fun httpCall(request: Request): String? {
         if (BuildConfig.DEBUG) {  // do not log personal data
             Log.d(LOG_ID, request.toString())
         }
-        return getHttpClient().newCall(request).execute()
+        return checkResponse(getHttpClient().newCall(request).execute())
     }
 
-    abstract fun isConnectionError(): Boolean
-
     override fun getIntervalMinute(): Long {
-        if (interval > 1 && isConnectionError()) {
-            Log.d(LOG_ID, "Use interval of 1 minute as there is a connection issue")
+        if (interval > 1 && isShortInterval()) {
+            Log.d(LOG_ID, "Use short interval of 1 minute.")
             return 1   // retry after a minute
         }
         return interval
@@ -160,6 +260,7 @@ abstract class DataSourceTask(private val enabledKey: String) : BackgroundTask()
         if(key == null) {
             enabled = sharedPreferences.getBoolean(enabledKey, false)
             interval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
+            setState(source, SourceState.INACTIVE)
             return true
         } else {
             var result = false
@@ -168,7 +269,8 @@ abstract class DataSourceTask(private val enabledKey: String) : BackgroundTask()
                     if (enabled != sharedPreferences.getBoolean(enabledKey, false)) {
                         enabled = sharedPreferences.getBoolean(enabledKey, false)
                         result = true
-                        InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
+                        if (source == lastSource || lastSource == DataSource.JUGGLUCO)
+                            setState(source, SourceState.INACTIVE)
                     }
                 }
                 Constants.SHARED_PREF_SOURCE_INTERVAL -> {

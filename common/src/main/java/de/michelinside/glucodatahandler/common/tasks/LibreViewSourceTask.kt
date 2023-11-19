@@ -3,7 +3,6 @@ package de.michelinside.glucodatahandler.common.tasks
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
@@ -16,9 +15,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.Request
 import okhttp3.RequestBody
-import okhttp3.Response
 import org.json.JSONObject
-import java.net.UnknownHostException
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -28,67 +25,24 @@ import java.util.TimeZone
 
 // API docu: https://libreview-unofficial.stoplight.io/
 
-class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) {
+class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, DataSource.LIBREVIEW) {
     private val LOG_ID = "GlucoDataHandler.Task.LibreViewSourceTask"
     companion object {
-        private var lastError = ""
         private var user = ""
         private var password = ""
         private var reconnect = false
         private var token = ""
         private var tokenExpire = 0L
         private var region = ""
-        private var retryOnError = false  // retry after a minute if there was a connection or server error
         const val server = "https://api.libreview.io"
         const val region_server = "https://api-%s.libreview.io"
         const val LOGIN_ENDPOINT = "/llu/auth/login"
         const val CONNECTION_ENDPOINT = "/llu/connections"
-        fun getState(context: Context): String {
-            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-            if (!sharedPref.getBoolean(Constants.SHARED_PREF_LIBRE_ENABLED, false)) {
-                return context.resources.getString(R.string.state_disabled)
-            }
-            if (lastError.isNotEmpty()) {
-                return context.resources.getString(R.string.state_error).format(lastError)
-            }
-            if (token.isNotEmpty())
-                return context.resources.getString(R.string.state_connected)
-            return context.resources.getString(R.string.state_not_connected)
-        }
     }
 
     override fun executeRequest(context: Context) {
         Log.i(LOG_ID, "getting data from libre view")
-        try {
-            if (isConnected(context)) {
-                setLastError("", false)
-                getConnection()
-            } else {
-                setLastError("No internet connection!", true)
-                InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
-            }
-        } catch (ex: UnknownHostException) {
-            Log.w(LOG_ID, "Internet connection issue: " + ex)
-            setLastError("Connection issue", true)
-        } catch (ex: Exception) {
-            Log.e(LOG_ID, "Exception executeRequest: " + ex)
-            setLastError(ex.message.toString())
-        }
-    }
-
-    private fun setLastError(error: String, retry: Boolean = false) {
-        lastError = error
-        retryOnError = retry
-        if (error.isNotEmpty()) {
-            Log.w(LOG_ID, error + " (retry: " + retry + ")")
-            Handler(GlucoDataService.context!!.mainLooper).post {
-                InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
-            }
-        }
-    }
-
-    override fun isConnectionError(): Boolean {
-        return retryOnError
+        getConnection()
     }
 
     private fun getUrl(endpoint: String): String {
@@ -120,40 +74,36 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
         return builder.build()
     }
 
-    private fun checkResponse(response: Response): JSONObject? {
-        if (!response.isSuccessful) {
-            if(token.isNotEmpty() && response.code >= 400 && response.code < 500)
-                token = ""  // trigger reconnect
-            setLastError(response.code.toString() + ": " + response.message, response.code >= 500 )
+    private fun checkResponse(body: String?): JSONObject? {
+        if (body.isNullOrEmpty()) {
+            if (lastErrorCode >= 400 && lastErrorCode < 500)
+                token = "" // reset token for client error -> trigger reconnect
             return null
         }
-        val body = response.body?.string()
-        if (!body.isNullOrEmpty()) {
-            if (BuildConfig.DEBUG) {  // do not log personal data
-                Log.i(LOG_ID, "Handle json response: " + body)
-            }
-            val jsonObj = JSONObject(body)
-            if (jsonObj.has("status")) {
-                val status = jsonObj.optInt("status", -1)
-                if(status != 0) {
-                    if(jsonObj.has("error")) {
-                        val error = jsonObj.optJSONObject("error")?.optString("message", "")
-                        setLastError("Error status " + status + ": " + error)
-                        return null
-                    }
-                    setLastError("Error status " + status)
+        if (BuildConfig.DEBUG) {  // do not log personal data
+            Log.i(LOG_ID, "Handle json response: " + body)
+        }
+        val jsonObj = JSONObject(body)
+        if (jsonObj.has("status")) {
+            val status = jsonObj.optInt("status", -1)
+            if(status != 0) {
+                if(jsonObj.has("error")) {
+                    val error = jsonObj.optJSONObject("error")?.optString("message", "")
+                    setLastError(source, error?: "Error", status)
                     return null
                 }
-            }
-            if (jsonObj.has("data")) {
-                return jsonObj
+                setLastError(source, "Error", status)
+                return null
             }
         }
-        setLastError("Missing data in response!")
+        if (jsonObj.has("data")) {
+            return jsonObj
+        }
+        setLastError(source, "Missing data in response!", 500)
         return null
     }
 
-    private fun handleLoginResponse(response: Response): Boolean {
+    private fun handleLoginResponse(body: String?): Boolean {
         /* for redirect:
         {
           "status": 0,
@@ -177,7 +127,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
           }
         }
         */
-        val jsonObject = checkResponse(response)
+        val jsonObject = checkResponse(body)
         if (jsonObject != null) {
             val data = jsonObject.optJSONObject("data")
             if (data != null) {
@@ -187,7 +137,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
                         Log.i(LOG_ID, "Handle redirect to region: " + region)
                         return login()
                     } else {
-                        setLastError("redirect without region!!!")
+                        setLastError(source, "redirect without region!!!", 500)
                     }
                 }
                 if (data.has("authTicket")) {
@@ -216,30 +166,21 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
     }
 
     private fun login(): Boolean {
-        try {
-            if (token.isNotEmpty() && (reconnect || tokenExpire <= System.currentTimeMillis())) {
-                Log.i(LOG_ID, "Token expired!")
-                token = ""
-                if (reconnect) {
-                    reconnect = false
-                    with(GlucoDataService.sharedPref!!.edit()) {
-                        putBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false)
-                        apply()
-                    }
+        if (token.isNotEmpty() && (reconnect || tokenExpire <= System.currentTimeMillis())) {
+            Log.i(LOG_ID, "Token expired!")
+            token = ""
+            if (reconnect) {
+                reconnect = false
+                with(GlucoDataService.sharedPref!!.edit()) {
+                    putBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false)
+                    apply()
                 }
             }
-            if (token.isEmpty()) {
-                return handleLoginResponse(httpCall(createRequest(LOGIN_ENDPOINT)))
-            }
-            return true
-        } catch (ex: UnknownHostException) {
-            Log.w(LOG_ID, "Internet connection issue: " + ex)
-            setLastError("Connection issue", true)
-        } catch (ex: Exception) {
-            Log.e(LOG_ID, "Exception during login: " + ex)
-            setLastError(ex.message.toString())
         }
-        return false
+        if (token.isEmpty()) {
+            return handleLoginResponse(httpCall(createRequest(LOGIN_ENDPOINT)))
+        }
+        return true
     }
 
     private fun getRateFromTrend(trend: Int): Float {
@@ -267,7 +208,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
         return format.parse(time)!!.time
     }
 
-    private fun handleGlucoseResponse(response: Response) {
+    private fun handleGlucoseResponse(body: String?) {
         /*
             {
               "status": 0,
@@ -295,12 +236,12 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
               ]
             }
         */
-        val jsonObject = checkResponse(response)
+        val jsonObject = checkResponse(body)
         if (jsonObject != null) {
             val array = jsonObject.optJSONArray("data")
             if (array != null) {
                 if (array.length() == 0) {
-                    setLastError(GlucoDataService.context!!.getString(R.string.src_libre_setup_librelink))
+                    setLastError(source, GlucoDataService.context!!.getString(R.string.src_libre_setup_librelink))
                     return
                 }
                 val data = array.optJSONObject(0)
@@ -331,9 +272,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED) 
                             if (sensor != null && sensor.has("sn"))
                                 glucoExtras.putString(ReceiveData.SERIAL, sensor.optString("sn"))
                         }
-                        Handler(GlucoDataService.context!!.mainLooper).post {
-                            ReceiveData.handleIntent(GlucoDataService.context!!, DataSource.LIBREVIEW, glucoExtras)
-                        }
+                        handleResult(glucoExtras)
                     }
                 }
             }

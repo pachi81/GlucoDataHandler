@@ -22,12 +22,10 @@ import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.Utils
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
-import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
-import de.michelinside.glucodatahandler.common.tasks.LibreViewSourceTask
-import de.michelinside.glucodatahandler.common.tasks.NightscoutSourceTask
+import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
 import de.michelinside.glucodatahandler.common.R as CR
 
 class MainActivity : AppCompatActivity(), NotifierInterface {
@@ -224,12 +222,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 txtWearInfo.text = resources.getText(CR.string.activity_main_disconnected_label)
             txtCarInfo.text = if (CarModeReceiver.connected) resources.getText(CR.string.activity_main_car_connected_label) else resources.getText(CR.string.activity_main_car_disconnected_label)
 
-            if (sharedPref.getBoolean(Constants.SHARED_PREF_LIBRE_ENABLED, false))
-                txtSourceInfo.text =  resources.getString(CR.string.activity_main_source_label, resources.getText(DataSource.LIBREVIEW.resId), LibreViewSourceTask.getState(this))
-            else if (sharedPref.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, false))
-                txtSourceInfo.text =  resources.getString(CR.string.activity_main_source_label, resources.getText(DataSource.NIGHTSCOUT.resId), NightscoutSourceTask.getState(this))
-            else
-                txtSourceInfo.text = resources.getText(CR.string.activity_main_no_source_label)
+            if (sharedPref.getBoolean(Constants.SHARED_PREF_LIBRE_ENABLED, false) || sharedPref.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, false)) {
+                txtSourceInfo.text = DataSourceTask.getState(this)
+                txtSourceInfo.visibility = View.VISIBLE
+            } else {
+                txtSourceInfo.visibility = View.GONE
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
         }

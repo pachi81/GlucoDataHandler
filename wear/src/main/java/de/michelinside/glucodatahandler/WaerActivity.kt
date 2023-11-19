@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.graphics.Paint
 import android.os.*
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -13,8 +14,7 @@ import androidx.appcompat.widget.SwitchCompat
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
-import de.michelinside.glucodatahandler.common.tasks.LibreViewSourceTask
-import de.michelinside.glucodatahandler.common.tasks.NightscoutSourceTask
+import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
 import de.michelinside.glucodatahandler.databinding.ActivityWaerBinding
 
 class WaerActivity : AppCompatActivity(), NotifierInterface {
@@ -231,12 +231,12 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 switchNightscoutSource.isChecked = false
             }
 
-            if (switchLibreSource.isChecked)
-                txtSourceInfo.text =  resources.getString(CR.string.activity_main_source_label, resources.getText(DataSource.LIBREVIEW.resId), LibreViewSourceTask.getState(this))
-            else if (switchNightscoutSource.isChecked)
-                txtSourceInfo.text =  resources.getString(CR.string.activity_main_source_label, resources.getText(DataSource.NIGHTSCOUT.resId), NightscoutSourceTask.getState(this))
-            else
-                txtSourceInfo.text = resources.getText(CR.string.activity_main_no_source_label)
+            if (switchLibreSource.isChecked || switchNightscoutSource.isChecked) {
+                txtSourceInfo.text = DataSourceTask.getState(this)
+                txtSourceInfo.visibility = View.VISIBLE
+            } else {
+                txtSourceInfo.visibility = View.GONE
+            }
 
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
