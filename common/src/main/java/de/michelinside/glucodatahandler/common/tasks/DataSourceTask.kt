@@ -4,12 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
-import android.net.Network
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
@@ -17,16 +15,14 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
-import okhttp3.Response
+import java.io.DataOutputStream
+import java.net.HttpURLConnection
+import java.net.URL
 import java.net.UnknownHostException
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
+import javax.net.ssl.HttpsURLConnection
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSession
 import javax.net.ssl.TrustManager
@@ -45,7 +41,6 @@ enum class SourceState(val resId: Int) {
 abstract class DataSourceTask(private val enabledKey: String, protected val source: DataSource) : BackgroundTask() {
     private var enabled = false
     private var interval = 1L
-    private var httpClient: OkHttpClient? = null
 
     companion object {
         private val LOG_ID = "GlucoDataHandler.Task.DataSourceTask"
@@ -88,13 +83,6 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             bundle.putString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, sharedPref.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, ""))
             bundle.putString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, sharedPref.getString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, ""))
             return bundle
-        }
-
-        private fun getNetwork(context: Context): Network? {
-            val connectivityManager = context.getSystemService(
-                Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
-                ?: return null
-            return connectivityManager.activeNetwork
         }
 
         fun isConnected(context: Context): Boolean {
@@ -199,86 +187,69 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             done.set(true)
         }
         Handler(GlucoDataService.context!!.mainLooper).post(task)
-        synchronized(task) {
-            while (!done.get()) {
-                Thread.sleep(5)
-            }
-            Log.w(LOG_ID, "handleResult done!")
+        while (!done.get()) {
+            Thread.sleep(5)
         }
+        Log.d(LOG_ID, "handleResult done!")
     }
 
-    protected fun getHttpClient(trustAll: Boolean = false): OkHttpClient {
-        if (httpClient != null) {
-            return httpClient!!
-        }
-
-        val builder = OkHttpClient().newBuilder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(20, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-        builder.socketFactory(getNetwork(GlucoDataService.context!!)!!.socketFactory)
-        if (trustAll) {
-            // trust all certificates (see https://www.baeldung.com/okhttp-client-trust-all-certificates)
-            val trustAllCerts = arrayOf<TrustManager>(
-                @SuppressLint("CustomX509TrustManager")
-                object : X509TrustManager {
-                    @SuppressLint("TrustAllX509TrustManager")
-                    override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {}
-                    @SuppressLint("TrustAllX509TrustManager")
-                    override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {}
-                    override fun getAcceptedIssuers(): Array<X509Certificate> {
-                        return arrayOf()
-                    }
+    protected fun trustAllCertificates() {
+        // trust all certificates (see https://www.baeldung.com/okhttp-client-trust-all-certificates)
+        val trustAllCerts = arrayOf<TrustManager>(
+            @SuppressLint("CustomX509TrustManager")
+            object : X509TrustManager {
+                @SuppressLint("TrustAllX509TrustManager")
+                override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {}
+                @SuppressLint("TrustAllX509TrustManager")
+                override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {}
+                override fun getAcceptedIssuers(): Array<X509Certificate> {
+                    return arrayOf()
                 }
-            )
-            val sslContext = SSLContext.getInstance("SSL")
-            sslContext.init(null, trustAllCerts, SecureRandom())
-            builder.sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
-            builder.hostnameVerifier { _: String?, _: SSLSession? -> true }
-        }
+            }
+        )
+        val sslContext = SSLContext.getInstance("SSL")
+        sslContext.init(null, trustAllCerts, SecureRandom())
+        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.socketFactory)
+        HttpsURLConnection.setDefaultHostnameVerifier { _: String?, _: SSLSession? -> true }
 
-        httpClient = builder.build()
-        return httpClient!!
     }
 
-
-    private fun checkResponse(response: Response): String? {
-        if (!response.isSuccessful) {
-            setLastError(source, response.message, response.code)
+    private fun checkResponse(httpURLConnection: HttpURLConnection): String? {
+        val responseCode = httpURLConnection.responseCode
+        if (responseCode != HttpURLConnection.HTTP_OK) {
+            setLastError(source, httpURLConnection.responseMessage, responseCode)
             return null
         }
-        return response.body?.string()
+        val response = httpURLConnection.inputStream.bufferedReader()
+        return response.readText()
     }
-    
-    private fun createRequest(url: String, header: MutableMap<String, String>, postJSON: String? = null): Request {
-        Log.d(LOG_ID, "Create request for url " + url)
-        val builder = Request.Builder()
-            .url(url)
+
+    private fun httpRequest(url: String, header: MutableMap<String, String>, postData: String? = null): String? {
+        val httpURLConnection = URL(url).openConnection() as HttpURLConnection
         header.forEach {
-            builder.addHeader(it.key, it.value)
+            httpURLConnection.setRequestProperty(it.key, it.value)
         }
-        if (postJSON != null) {
-            val body: RequestBody = RequestBody.create(
-                "application/json".toMediaTypeOrNull(), postJSON
-            )
-            builder.post(body)
+        httpURLConnection.doInput = true
+        if (postData == null) {
+            httpURLConnection.requestMethod = "GET"
+            httpURLConnection.doOutput = false
+        } else {
+            httpURLConnection.requestMethod = "POST"
+            httpURLConnection.doOutput = true
+            val dataOutputStream = DataOutputStream(httpURLConnection.outputStream)
+            val bytes: ByteArray = postData.toByteArray()
+            dataOutputStream.write(bytes, 0, bytes.size)
         }
-        return builder.build()
+
+        return checkResponse(httpURLConnection)
     }
 
     protected fun httpGet(url: String, header: MutableMap<String, String>): String? {
-        return httpCall(createRequest(url, header))
+        return httpRequest(url, header)
     }
 
-    protected fun httpPost(url: String, header: MutableMap<String, String>, postJSON: String): String? {
-        return httpCall(createRequest(url, header, postJSON))
-    }
-
-    protected fun httpCall(request: Request): String? {
-        if (BuildConfig.DEBUG) {  // do not log personal data
-            Log.d(LOG_ID, request.toString())
-        }
-        return checkResponse(getHttpClient().newCall(request).execute())
+    protected fun httpPost(url: String, header: MutableMap<String, String>, postData: String): String? {
+        return httpRequest(url, header, postData)
     }
 
     override fun getIntervalMinute(): Long {
