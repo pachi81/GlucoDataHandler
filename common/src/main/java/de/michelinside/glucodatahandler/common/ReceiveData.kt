@@ -274,10 +274,10 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 LOG_ID, "Glucodata received from " + dataSource.toString() + ": " +
                         extras.toString() +
                         " - timestamp: " + DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(Date(new_time)) +
-                        " - difference: " + new_time-time
+                        " - difference: " + (new_time-time)
             )
 
-            if(getTimeDiffMinute() >= 1) // check for new value received (diff must around one minute at least to prevent receiving same data from different sources with similar timestamps 
+            if(getTimeDiffMinute(new_time) >= 1) // check for new value received (diff must around one minute at least to prevent receiving same data from different sources with similar timestamps
             {
                 Log.i(
                     LOG_ID, "Glucodata received from " + dataSource.toString() + ": " +

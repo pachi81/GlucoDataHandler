@@ -26,10 +26,12 @@ import java.net.UnknownHostException
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSession
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
+
 
 enum class SourceState(val resId: Int) {
     INACTIVE(R.string.source_state_not_active),
@@ -186,13 +188,22 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     }
 
     protected fun handleResult(extras: Bundle) {
-        Handler(GlucoDataService.context!!.mainLooper).post {
+        val done = AtomicBoolean(false)
+        val task = Runnable {
             val lastTime = ReceiveData.time
             ReceiveData.handleIntent(GlucoDataService.context!!, source, extras)
             if (ReceiveData.time == lastTime)
                 setState(source, SourceState.NO_NEW_VALUE)
             else
                 setState(source, SourceState.OK)
+            done.set(true)
+        }
+        Handler(GlucoDataService.context!!.mainLooper).post(task)
+        synchronized(task) {
+            while (!done.get()) {
+                Thread.sleep(5)
+            }
+            Log.w(LOG_ID, "handleResult done!")
         }
     }
 
@@ -255,11 +266,11 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         return builder.build()
     }
 
-    protected fun httpGet(url: String, header MutableMap<String, String>) {
+    protected fun httpGet(url: String, header: MutableMap<String, String>): String? {
         return httpCall(createRequest(url, header))
     }
 
-    protected fun httpPost(url: String, header MutableMap<String, String>, postJSON: String) {
+    protected fun httpPost(url: String, header: MutableMap<String, String>, postJSON: String): String? {
         return httpCall(createRequest(url, header, postJSON))
     }
 

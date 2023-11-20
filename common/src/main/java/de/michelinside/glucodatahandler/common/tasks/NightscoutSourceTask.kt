@@ -55,7 +55,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
     }
     
     private fun getHeader(): MutableMap<String, String> {
-        var result = mutableMapOf<String, String>()
+        val result = mutableMapOf<String, String>()
         if (secret.isNotEmpty()) {
             result["api-secret"] = secret
         }
