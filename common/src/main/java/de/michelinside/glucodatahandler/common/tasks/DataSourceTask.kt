@@ -186,7 +186,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     protected fun handleResult(extras: Bundle) {
         Handler(GlucoDataService.context!!.mainLooper).post {
             val lastTime = ReceiveData.time
-            ReceiveData.handleIntent(GlucoDataService.context!!, DataSource.LIBREVIEW, extras)
+            ReceiveData.handleIntent(GlucoDataService.context!!, source, extras)
             if (ReceiveData.time == lastTime)
                 setState(source, SourceState.NO_NEW_VALUE)
             else
@@ -260,7 +260,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         if(key == null) {
             enabled = sharedPreferences.getBoolean(enabledKey, false)
             interval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
-            setState(source, SourceState.INACTIVE)
+            if (enabled)
+                setState(source, SourceState.INACTIVE)
             return true
         } else {
             var result = false
@@ -269,7 +270,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                     if (enabled != sharedPreferences.getBoolean(enabledKey, false)) {
                         enabled = sharedPreferences.getBoolean(enabledKey, false)
                         result = true
-                        if (source == lastSource || lastSource == DataSource.JUGGLUCO)
+                        if (source != lastSource)
                             setState(source, SourceState.INACTIVE)
                     }
                 }
