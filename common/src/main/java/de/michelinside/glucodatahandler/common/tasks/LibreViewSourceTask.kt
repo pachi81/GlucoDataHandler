@@ -12,9 +12,6 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.Request
-import okhttp3.RequestBody
 import org.json.JSONObject
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -50,28 +47,18 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         return url + endpoint
     }
 
-    private fun createRequest(endpoint: String): Request {
-        val url = getUrl(endpoint)
-        Log.d(LOG_ID, "Create request for url " + url)
-        val builder = Request.Builder()
-            .addHeader("product", "llu.android")
-            .addHeader("version", "4.7.0")
-            .addHeader("Accept", "application/json")
-            .addHeader("Content-Type", "application/json")
-            .addHeader("cache-control", "no-cache")
-            .url(url)
-        if (token.isEmpty()) {
-            val json = JSONObject()
-            json.put("email", user)
-            json.put("password", password)
-            val body: RequestBody = RequestBody.create(
-                "application/json".toMediaTypeOrNull(), json.toString()
-            )
-            builder.post(body)
-        } else {
-            builder.addHeader("Authorization", "Bearer " + token)
+    private fun getHeader(): MutableMap<String, String> {
+        var result = mutableMapOf<String, String>() {
+            "product" to "llu.android",
+            "version" to "4.7.0",
+            "Accept" to "application/json",
+            "Content-Type" to "application/json",
+            "cache-control" to "no-cache"
         }
-        return builder.build()
+        if (token.isNotEmpty()) {
+            result["Authorization"] = "Bearer " + token
+        }
+        return result
     }
 
     private fun checkResponse(body: String?): JSONObject? {
@@ -178,7 +165,10 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             }
         }
         if (token.isEmpty()) {
-            return handleLoginResponse(httpCall(createRequest(LOGIN_ENDPOINT)))
+            val json = JSONObject()
+            json.put("email", user)
+            json.put("password", password)
+            return handleLoginResponse(httpPost(getUrl(LOGIN_ENDPOINT), getHeader(), json.toString()))
         }
         return true
     }
@@ -281,7 +271,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
 
     private fun getConnection(firstCall: Boolean = true) {
         if (login()) {
-            handleGlucoseResponse(httpCall(createRequest(CONNECTION_ENDPOINT)))
+            handleGlucoseResponse(httpGet(getUrl(CONNECTION_ENDPOINT), getHeader()))
             if (firstCall && token.isEmpty() && lastError.isNotEmpty())
                 getConnection(false) // retry if internal client error (not for server error)
         }
