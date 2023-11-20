@@ -268,8 +268,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         if(key == null) {
             enabled = sharedPreferences.getBoolean(enabledKey, false)
             interval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
-            if (enabled)
-                setState(source, SourceState.INACTIVE)
+            setState(source, SourceState.INACTIVE)
             return true
         } else {
             var result = false
