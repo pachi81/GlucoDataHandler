@@ -236,6 +236,30 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         }
         return response.body?.string()
     }
+    
+    private fun createRequest(url: String, header: MutableMap<String, String>, postJSON: String? = null): Request {
+        Log.d(LOG_ID, "Create request for url " + url)
+        val builder = Request.Builder()
+            .url(url)
+        header.forEach {
+            builder.addHeader(it.key, it.value)
+        }
+        if (postJSON != null) {
+            val body: RequestBody = RequestBody.create(
+                "application/json".toMediaTypeOrNull(), postJSON
+            )
+            builder.post(body)
+        }
+        return builder.build()
+    }
+
+    protected fun httpGet(url: String, header MutableMap<String, String>) {
+        return httpCall(createRequest(url, header))
+    }
+
+    protected fun httpPost(url: String, header MutableMap<String, String>, postJSON: String) {
+        return httpCall(createRequest(url, header, postJSON))
+    }
 
     protected fun httpCall(request: Request): String? {
         if (BuildConfig.DEBUG) {  // do not log personal data
