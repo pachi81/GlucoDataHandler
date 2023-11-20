@@ -278,7 +278,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                     if (enabled != sharedPreferences.getBoolean(enabledKey, false)) {
                         enabled = sharedPreferences.getBoolean(enabledKey, false)
                         result = true
-                        if (source != lastSource)
+                        if (!enabled && source == lastSource)
                             setState(source, SourceState.INACTIVE)
                     }
                 }
