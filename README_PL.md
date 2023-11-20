@@ -5,7 +5,7 @@
 
 ## Funkcje
 
-* receives glucose values as **[LibreLink follower](#librelink)**
+* odbiera wartości glukozy jako **[LibreLink follower](#librelink)**.
 * odbiera wartości glukozy z Juggluco
 * odbiera wartości glukozy z xDrip+
 * udostępnia kilka **[widgetów](#widgety)** i pływający widget dla telefonu
@@ -38,20 +38,20 @@ Aktualną wersję można pobrać [tutaj](https://github.com/pachi81/GlucoDataHan
 
 Ustawienia dla aplikacji na telefon opisane są w samej aplikacji. Ustawienia z telefonu zostaną przesłane do zegarka, jeśli jest on podłączony.
 
-## Sources
+## Źródła
 
 ### LibreLink
 
-To set up LibreLink as follower, you need the account data from LibreLinkUp.
-If you have not set up your LibreLinkUp account yet, follow this [instruction](https://librelinkup.com/articles/getting-started).
+Aby skonfigurować LibreLink jako „follower”, potrzebne są dane konta z LibreLinkUp.
+Jeśli nie skonfigurowałeś jeszcze swojego konta LibreLinkUp, postępuj zgodnie z tą [instrukcją](https://librelinkup.com/articles/getting-started).
 
-Here is a quick summary of the steps to do:
-* open your FreeStyle Libre App and select in the menu `Share` or `Connected Apps`
-* activate LibreLinkUp connection
-* install LibreLinkUp from [PlayStore](https://play.google.com/store/apps/details?id=org.nativescript.LibreLinkUp)
-* setup your accout and wait for the invitation
-* after accept the invitation you do not need the LibreLinkUp App "anymore"
-* now you can add your LibreLinkUp account to GlucoDataHandler and activate this source
+Oto krótkie podsumowanie kroków, które należy wykonać:
+* otwórz aplikację FreeStyle Libre i wybierz w menu `Udostępnianie` lub `Podłączone aplikacje`.
+* aktywuj połączenie LibreLinkUp
+* zainstaluj LibreLinkUp ze [Sklepu Play](https://play.google.com/store/apps/details?id=org.nativescript.LibreLinkUp)
+* skonfiguruj swoje konto i czekaj na zaproszenie
+* po zaakceptowaniu zaproszenia nie potrzebujesz już aplikacji LibreLinkUp.
+* teraz możesz dodać swoje konto LibreLinkUp do GlucoDataHandler i aktywować to źródło.
 
 ## Widgety
 Dostępnych jest kilka rodzajów widgetów na telefon.
