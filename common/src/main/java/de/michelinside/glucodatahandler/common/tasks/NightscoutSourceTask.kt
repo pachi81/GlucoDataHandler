@@ -8,7 +8,6 @@ import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.Utils
 import de.michelinside.glucodatahandler.common.notifier.DataSource
-import okhttp3.Request
 
 class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, DataSource.NIGHTSCOUT) {
     private val LOG_ID = "GlucoDataHandler.Task.NightscoutSourceTask"
@@ -19,7 +18,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
         const val ENDPOINT = "/api/v1/entries/current"
     }
     override fun executeRequest(context: Context) {
-        handleResponse(httpCall(createRequest()))
+        handleResponse(httpGet(getUrl(), getHeader()))
     }
 
     override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {
@@ -54,16 +53,13 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
             resultUrl += "?token=" + token
         return resultUrl
     }
-
-    private fun createRequest(): Request {
-        val url = getUrl()
-        Log.d(LOG_ID, "Create request for url " + url)
-        val builder = Request.Builder()
-            .url(url)
+    
+    private fun getHeader(): MutableMap<String, String> {
+        var result = mutableMapOf<String, String>()
         if (secret.isNotEmpty()) {
-            builder.addHeader("api-secret", secret)
+            result["api-secret"] = secret
         }
-        return builder.build()
+        return result
     }
 
     private fun handleResponse(body: String?) {
