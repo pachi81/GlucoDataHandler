@@ -234,8 +234,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return if (rate.isNaN()) "" else context.getString(R.string.rate_double_down)
     }
 
-    fun getTimeDiffMinute(): Long {
-        return Utils.round(timeDiff.toFloat()/60000, 0).toLong()
+    fun getTimeDiffMinute(new_time: Long): Long {
+        return Utils.round((new_time-time).toFloat()/60000, 0).toLong()
     }
 
     fun getElapsedTimeMinute(roundingMode: RoundingMode = RoundingMode.DOWN): Long {
@@ -269,15 +269,15 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 }
             }
         try {
-            val curTimeDiff = extras.getLong(TIME) - time
+            val new_time = extras.getLong(TIME)
             Log.d(
                 LOG_ID, "Glucodata received from " + dataSource.toString() + ": " +
                         extras.toString() +
-                        " - timestamp: " + DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(Date(extras.getLong(TIME))) +
-                        " - difference: " + curTimeDiff
+                        " - timestamp: " + DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(Date(new_time)) +
+                        " - difference: " + new_time-time
             )
 
-            if(curTimeDiff >= 1000) // check for new value received
+            if(getTimeDiffMinute() >= 1) // check for new value received (diff must around one minute at least to prevent receiving same data from different sources with similar timestamps 
             {
                 Log.i(
                     LOG_ID, "Glucodata received from " + dataSource.toString() + ": " +
@@ -295,8 +295,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     deltaValue = extras.getFloat(DELTA, Float.NaN)
                 } else if (time > 0) {
                     // calculate delta value
-                    timeDiff = curTimeDiff
-                    val timeDiffMinute = getTimeDiffMinute()
+                    timeDiff = new_time-time
+                    val timeDiffMinute = getTimeDiffMinute(new_time)
                     if (timeDiffMinute == 0L) {
                         Log.w(LOG_ID, "Time diff is less than a minute! Can not calculate delta value!")
                         deltaValue = Float.NaN
