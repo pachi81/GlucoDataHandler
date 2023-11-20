@@ -11,11 +11,11 @@
     <string name="info_label_timediff">Różnica czasu</string>
     <string name="info_label_alarm">Alarm</string>
     <string name="info_label_source">Źródło</string>
-    <string name="info_label_per_minute">na min.</string>
-    <string name="no_data">No broadcast received yet!\nINFO: Activate LibreLink source or to receive data from Juggluco, please open Juggluco, go to settings and activate \"Glucodata Broadcast\" for "de.michelinside.glucodatahandler"\nTo receive from xDrip+ activate local broadcast and select no receiver.</string>
+    <string name="info_label_per_minute">min.</string>
+    <string name="no_data">Nie otrzymano jeszcze transmisji!\nINFORMACJA: Aktywuj źródło LibreLink albo, aby zacząć otrzymywać dane z Juggluco, otwórz aplikację Juggluco, przejdź do ustawień i aktywuj \&quot;Glucodata Broadcast\&quot; dla &quot;de.michelinside.glucodatahandler&quot;\nAby odbierać dane z xDrip+, aktywuj lokalną transmisję i wybierz brak odbiorcy.</string>
 
     <string name="elapsed_time">%1$d min</string>
-    <string name="elapsed_time_hour">\> 1h</string>
+    <string name="elapsed_time_hour">\&gt; 1h</string>
 
     <string name="rate_double_up">rośnie bardzo szybko</string>
     <string name="rate_single_up">rośnie szybko</string>
@@ -26,90 +26,72 @@
     <string name="rate_double_down">spada bardzo szybko</string>
 
     <string name="button_ok">OK</string>
-    <string name="button_cancel">Anuluj</string>
-
-    <!-- mobile -->
-
-    <string name="activity_main_battery_optimization_disabled">Battery optimization is enabled.</string>
+    <string name="button_cancel">Anuluj</string><!-- mobile --><string name="activity_main_battery_optimization_disabled">Optymalizacja baterii jest włączona.</string>
     <string name="activity_main_connected_label">Zegarek: połączony (%1$s)</string>
     <string name="activity_main_disconnected_label">Zegarek: niepołączony</string>
     <string name="activity_main_car_connected_label">Android Auto: połączony</string>
     <string name="activity_main_car_disconnected_label">Android Auto: niepołączony</string>
 
     <string name="menu_settings">Ustawienia</string>
-    <string name="menu_sources">Sources</string>
+    <string name="menu_sources">Źródła</string>
     <string name="menu_group_github">GitHub</string>
     <string name="menu_update">Aktualizacje</string>
     <string name="menu_support">Wsparcie</string>
     <string name="menu_help">Pomoc</string>
 
-    <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README_PL.md</string>
-
-    <!-- tasker -->
-
-    <string name="activity_main_no_source_label">Source: not active</string>
+    <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README_PL.md</string><!-- tasker --><string name="activity_main_no_source_label">Źródło: nieaktywne</string>
     <string name="tasker_event_glucodata">Nowa wartość glukozy</string>
     <string name="tasker_event_glucodata_obsolete">Wartość przestarzała</string>
     <string name="tasker_event_glucodata_alarm">Alarm dotyczący stężenia glukozy</string>
     <string name="tasker_wear_connection_state">Połączenie z zegarkiem</string>
     <string name="tasker_android_auto_connection_state">Połączenie z Android Auto</string>
-    <string name="tasker_target_range_state">Zmiana zakresu stężenia glukozy</string>
-
-    <!-- sources -->
-    <string name="source_phone">Telefon</string>
+    <string name="tasker_target_range_state">Zmiana zakresu stężenia glukozy</string><!-- sources --><string name="source_phone">Telefon</string>
     <string name="source_wear">Zegarek</string>
 
-    <string name="source_state_not_active">Not active</string>
-    <string name="source_state_in_progress">In progress</string>
+    <string name="source_state_not_active">Nieaktywne</string>
+    <string name="source_state_in_progress">W toku</string>
     <string name="source_state_ok">OK</string>
-    <string name="source_state_no_new_value">No new value</string>
-    <string name="source_state_no_connection">No internet connection</string>
-    <string name="source_state_error">Error</string>
+    <string name="source_state_no_new_value">Brak nowej wartości</string>
+    <string name="source_state_no_connection">Brak połączenia z Internetem</string>
+    <string name="source_state_error">Błąd</string>
 
-    <string name="source_interval">Interval</string>
-    <string name="source_interval_summary">Interval of requesting data from source.</string>
-    <string name="source_delay">Delay</string>
-    <string name="source_delay_summary">Delay in seconds before requesting the data from cloud, because if takes some time until the data is present there.</string>
+    <string name="source_interval">Odstęp czasu</string>
+    <string name="source_interval_summary">Odstęp czasu między żądaniem danych ze źródła.</string>
+    <string name="source_delay">Opóźnienie</string>
+    <string name="source_delay_summary">Opóźnienie w sekundach przed zażądaniem danych z chmury, ponieważ zajmuje to trochę czasu, zanim dane się tam znajdą.</string>
 
     <string name="src_cat_libreview">LibreLink Follower</string>
-    <string name="src_libre_enabled">Enable</string>
-    <string name="src_libre_enabled_summary">Enable LibreLink follower, if LibreLink user and password is set\nPlease set-up LibreLinkUp App first. You can remove the LibreLineUp App afterwards.</string>
-    <string name="src_libre_user">User</string>
-    <string name="src_libre_user_summary">Username for LibreLink</string>
-    <string name="src_libre_password">Password</string>
-    <string name="src_libre_password_summary">Password for LibreLink</string>
-    <string name="src_libre_reconnect">Reconnect</string>
-    <string name="src_libre_reconnect_summary">On next interval a new login will be executed.</string>
-    <string name="src_libre_setup_librelink">Please set up LibreLinkUp connection first!</string>
+    <string name="src_libre_enabled">Włącz</string>
+    <string name="src_libre_enabled_summary">Włącz funkcję LibreLink follower, jeśli ustawiono użytkownika i hasło LibreLink\nNależy najpierw skonfigurować aplikację LibreLinkUp. Następnie aplikację LibreLinkUp można usunąć.</string>
+    <string name="src_libre_user">Użytkownik</string>
+    <string name="src_libre_user_summary">Nazwa użytkownika LibreLink</string>
+    <string name="src_libre_password">Hasło</string>
+    <string name="src_libre_password_summary">Hasło do LibreLink</string>
+    <string name="src_libre_reconnect">Połącz ponownie</string>
+    <string name="src_libre_reconnect_summary">W kolejnym odstępie czasowym przewadzone zostanie nowe logowanie.</string>
+    <string name="src_libre_setup_librelink">Najpierw skonfiguruj połączenie LibreLinkUp!</string>
 
     <string name="src_cat_nightscout">Nightscout Follower</string>
-    <string name="src_ns_enabled">Enable</string>
-    <string name="src_ns_enabled_summary">Enable Nightscout follower.</string>
-    <string name="src_ns_url">Nightscout URL</string>
-    <string name="src_ns_url_summary">URL of the Nightscout server.</string>
+    <string name="src_ns_enabled">Włącz</string>
+    <string name="src_ns_enabled_summary">Włącz Nightscout Follower.</string>
+    <string name="src_ns_url">Adres URL Nightscout</string>
+    <string name="src_ns_url_summary">Adres URL serwera Nightscout.</string>
     <string name="src_ns_secret">API Secret</string>
-    <string name="src_ns_secret_summary">API Secret to access the data (optional).</string>
-    <string name="src_ns_token">Access Token</string>
-    <string name="src_ns_token_summary">Add your access token, if you need one (optional).</string>
+    <string name="src_ns_secret_summary">API Secret, aby uzyskać dostęp do danych (opcjonalnie).</string>
+    <string name="src_ns_token">Token dostępu</string>
+    <string name="src_ns_token_summary">Dodaj swój token dostępu, jeśli go potrzebujesz (opcjonalnie).</string>
 
-    <string name="source_request_interval_1">1 minute</string>
-    <string name="source_request_interval_5">5 minutes</string>
-    <string name="source_request_interval_10">10 minutes</string>
-    <string name="source_request_interval_15">15 minutes</string>
-
-    <!-- LibreLink source -->
-    <string name="state_disabled">disabled</string>
-    <string name="state_not_connected">not connected</string>
-    <string name="state_connected">connected</string>
-    <string name="state_error">error: %s</string>
-
-    <!-- settings -->
-
-    <string name="pref_cat_general">Ogólne</string>
+    <string name="source_request_interval_1">1 minuta</string>
+    <string name="source_request_interval_5">5 minut</string>
+    <string name="source_request_interval_10">10 minut</string>
+    <string name="source_request_interval_15">15 minut</string><!-- LibreLink source --><string name="state_disabled">wyłączony</string>
+    <string name="state_not_connected">niepołączony</string>
+    <string name="state_connected">połączony</string>
+    <string name="state_error">błąd: %s</string><!-- settings --><string name="pref_cat_general">Ogólne</string>
     <string name="pref_cat_notification">Powiadomienie</string>
     <string name="pref_cat_widgets">Widgety</string>
     <string name="pref_cat_android_auto">Android Auto</string>
-    <string name="pref_cat_forward_broadcast">Forward glucose values</string>
+    <string name="pref_cat_forward_broadcast">Prześlij dalej wartości glukozy</string>
     <string name="pref_target_range">Zakres docelowy</string>
     <string name="pref_cat_colors">Kolory</string>
 
@@ -123,21 +105,21 @@
     <string name="pref_low_value">Niskie stęż. glukozy</string>
     <string name="pref_low_value_summary">Granica dla niskich wartości glukozy.\nJeśli aktywowałeś alarm niskiego stęż. glukozy w Juggluco, nie musisz ustawiać tej wartości.</string>
     <string name="pref_switch_car_notification">Powiadomienia w Android Auto</string>
-    <string name="pref_switch_car_notification_summary">Powiadomienie dla Android Auto.\nAby korzystać z tej aplikacji w Android Auto, musisz aktywować ustawienia programisty w Android Auto, klikając kilka razy na oznaczenie wersji. Następnie należy włączyć opcję „Nieznane źródła” w menu ustawień dewelopera.</string>
+    <string name="pref_switch_car_notification_summary">Powiadomienie dla Android Auto.\nAby korzystać z tej aplikacji w Android Auto, musisz aktywować ustawienia programisty w Android Auto, klikając kilka razy na oznaczenie wersji. Następnie należy włączyć opcję &quot;Nieznane źródła&quot; w menu ustawień dewelopera.</string>
     <string name="pref_switch_car_media">Odtwarzacz fikcyjnych multimediów</string>
     <string name="pref_switch_car_media_summary">Wyświetl wartość glukozy jako bieżący utwór dla Android Auto.</string>
-    <string name="pref_switch_send_to_aod">Wyślij transmisję „glucodata broadcast”</string>
-    <string name="pref_switch_send_to_aod_summary">Wyślij transmisję „glucodata broadcast” dla nowych wartości otrzymanych z dowolnego źródła.</string>
-    <string name="pref_button_select_target">Identyfikacja odbiornika</string>
-    <string name="pref_button_select_target_summary">Wybierz odbiorniki, do których wysyłana jest transmisja „glucodata broadcast”. Transmisja globalna będzie wysyłana do każdej aplikacji dynamicznie odbierającej tę transmisję.</string>
-    <string name="pref_switch_send_to_xdrip">Send patched libre broadcast</string>
-    <string name="pref_switch_send_to_xdrip_summary">Forward glucose values to xDrip+. Select \'Libre (patched app)\' as source in xDrip+.</string>
-    <string name="pref_button_select_xdrip_target">Identify patched libre receivers</string>
-    <string name="pref_button_select_xdrip_target_summary">Choose receivers sending the patched libre broadcast to. A global broadcast will send to every app registering dynamically on the broadcast.</string>
-    <string name="pref_switch_send_xdrip_broadcast">Send xDrip broadcast</string>
-    <string name="pref_switch_send_xdrip_broadcast_summary">Send broadcast like xDrip+ is sending. For example to AAPS.</string>
-    <string name="pref_button_select_xdrip_broadcast_target">Identify xDrip broadcast receivers</string>
-    <string name="pref_button_select_xdrip_broadcast_target_summary">Choose receivers sending the xDrip broadcast to. A global broadcast will send to every app registering dynamically on the broadcast.</string>
+    <string name="pref_switch_send_to_aod">Wyślij transmisję &quot;glucodata broadcast&quot;</string>
+    <string name="pref_switch_send_to_aod_summary">Wyślij transmisję &quot;glucodata broadcast&quot; dla nowych wartości otrzymanych z dowolnego źródła.</string>
+    <string name="pref_button_select_target">Identyfikacja odbiorcy</string>
+    <string name="pref_button_select_target_summary">Wybierz odbiorców, do których wysyłana jest transmisja &quot;glucodata broadcast&quot;. Transmisja globalna będzie wysyłana do każdej aplikacji dynamicznie odbierającej tę transmisję.</string>
+    <string name="pref_switch_send_to_xdrip">Wysyłaj transmisję „Patched Libre broadcast”</string>
+    <string name="pref_switch_send_to_xdrip_summary">Prześlij dalej wartości glukozy do xDrip+. Wybierz \&quot;Libre (patched app)\&quot; jako źródło w xDrip+.</string>
+    <string name="pref_button_select_xdrip_target">Identyfikacja odbiorców „patched libre”</string>
+    <string name="pref_button_select_xdrip_target_summary">Wybierz odbiorców, do których wysyłana jest transmisja „patched libre broadcast”. Transmisja globalna będzie wysyłana do każdej aplikacji dynamicznie odbierającej tę transmisję.</string>
+    <string name="pref_switch_send_xdrip_broadcast">Wyślij transmisję „xDrip broadcast”</string>
+    <string name="pref_switch_send_xdrip_broadcast_summary">Wysyłaj transmisję tak, jak wysyła xDrip+. Na przykład do AAPS.</string>
+    <string name="pref_button_select_xdrip_broadcast_target">Identyfikacja odbiorców transmisji xDrip</string>
+    <string name="pref_button_select_xdrip_broadcast_target_summary">Wybierz odbiorców, do których wysyłana jest transmisja „xDrip broadcast”. Transmisja globalna będzie wysyłana do każdej aplikacji dynamicznie odbierającej tę transmisję.</string>
     <string name="pref_switch_use_mmol">Użyj mmol/l</string>
     <string name="pref_switch_use_mmol_summary">Konwersja wartości z xDrip+ na mmol/l.</string>
     <string name="pref_switch_use_5_min_delta">5-minutowa delta</string>
@@ -182,16 +164,12 @@
     <string name="pref_global_broadcast">Transmisja globalna</string>
 
     <string name="select_receiver_show_all">Pokaż wszystko</string>
-    <string name="select_receiver_no_glucodata_receiver">Nie znaleziono odbiornika!</string>
+    <string name="select_receiver_no_glucodata_receiver">Nie znaleziono odbiorcy!</string>
 
     <string name="widget_glucose">Glukoza</string>
     <string name="widget_glucose_trend">Glukoza i trend</string>
     <string name="widget_glucose_trend_delta">Glukoza, trend i delta</string>
-    <string name="widget_glucose_trend_delta_timestamp">Glukoza, trend, delta i znacznik czasu</string>
-
-    <!-- wear -->
-
-    <string name="forground_notification_descr">Otrzymywanie danych do komplikacji</string>
+    <string name="widget_glucose_trend_delta_timestamp">Glukoza, trend, delta i znacznik czasu</string><!-- wear --><string name="forground_notification_descr">Otrzymywanie danych do komplikacji</string>
 
     <string name="activity_connected_label">Telefon: połączony (%1$s)</string>
     <string name="activity_disconnected_label">Telefon: rozłączony</string>
@@ -199,11 +177,7 @@
     <string name="activity_switch_foreground">Pierwszy plan</string>
     <string name="activity_switch_notification">Wibracje</string>
     <string name="activity_switch_colored_aod">Kolorowy AOD</string>
-    <string name="activity_large_arrow_icon">Duża strzałka trendu</string>
-
-    <!-- complications -->
-
-    <string name="short_value">Glukoza</string>
+    <string name="activity_large_arrow_icon">Duża strzałka trendu</string><!-- complications --><string name="short_value">Glukoza</string>
     <string name="image_value">Glukoza (bardzo duża i kolorowa)</string>
     <string name="icon_value">Glukoza (duża)</string>
     <string name="short_value_icon">Glukoza z ikoną</string>
@@ -218,7 +192,7 @@
     <string name="short_value_rate">Glukoza i wartość trendu</string>
     <string name="icon_delta">Delta (duża)</string>
     <string name="short_delta">Delta</string>
-    <string name="short_delta_arrow">Delta i trend</string>
+    <string name="short_delta_arrow">Trend delta i</string>
     <string name="short_delta_icon">Delta z ikoną</string>
     <string name="short_delta_time">Delta i znacznik czasu</string>
     <string name="image_arrow">Trend (duży, kolorowy)</string>
@@ -228,6 +202,6 @@
     <string name="short_rate_arrow">Wartość trendu i strzałka</string>
     <string name="short_rate_icon">Wartość trendu z ikoną</string>
     <string name="timestamp">Znacznik czasu glukozy</string>
-    <string name="battery_level">Poziom baterii (zegarek  i telefon)</string>
+    <string name="battery_level">Poziom baterii (zegarek i telefon)</string>
 
 </resources>
