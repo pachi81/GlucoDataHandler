@@ -168,7 +168,7 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
 
     private fun canShowNotification(): Boolean {
         if (enable_notification && car_connected) {
-            if(ReceiveData.forceAlarm)
+            if(ReceiveData.forceAlarm || ReceiveData.getAlarmType() == ReceiveData.AlarmType.LOW_ALARM)
                 return true
             if (notification_interval > 1L) {
                 return getTimeDiffMinute() >= notification_interval
