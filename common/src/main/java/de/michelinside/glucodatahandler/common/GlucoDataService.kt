@@ -24,8 +24,6 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
     private lateinit var batteryReceiver: BatteryReceiver
     private lateinit var xDripReceiver: XDripBroadcastReceiver
     private val connection = WearPhoneConnection()
-    private var lastAlarmTime = 0L
-    private var lastAlarmType = ReceiveData.AlarmType.OK
 
     companion object {
         private val LOG_ID = "GlucoDataHandler.GlucoDataService"
@@ -213,50 +211,9 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 sendToConnectedDevices(dataSource, extras!!)
             }
             if (dataSource == NotifySource.MESSAGECLIENT || dataSource == NotifySource.BROADCAST) {
-                if (sharedPref!!.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)) {
-                    val curAlarmType = ReceiveData.getAlarmType()
-                    val forceAlarm = (ReceiveData.alarm and 8) != 0 // alarm triggered by Juggluco
-                    Log.d(LOG_ID, "Check vibration: force=" + forceAlarm.toString() +
-                            " - curAlarmType=" + curAlarmType.toString() +
-                            " - lastAlarmType=" + lastAlarmType.toString() +
-                            " - lastAlarmTime=" + lastAlarmTime.toString() +
-                            " - time=" + ReceiveData.time.toString() +
-                            " - delta=" + ReceiveData.delta.toString() +
-                            " - rate=" + ReceiveData.rate.toString() +
-                            " - diff=" + (ReceiveData.time - lastAlarmTime).toString()
-                    )
-                    if (curAlarmType == ReceiveData.AlarmType.LOW_ALARM || curAlarmType == ReceiveData.AlarmType.LOW)
-                    {
-                        // Low alarm only, if the values are still falling!
-                        val durLow: Long
-                        if (BuildConfig.DEBUG)
-                            durLow = 1000
-                        else
-                            durLow = sharedPref!!.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_LOW, 15) * 60 * 1000
-                        if( forceAlarm || (curAlarmType < lastAlarmType && (ReceiveData.delta < 0F || ReceiveData.rate < 0F) && (ReceiveData.time - lastAlarmTime >= durLow)) )
-                        {
-                            if( vibrate(curAlarmType) ) {
-                                lastAlarmTime = ReceiveData.time
-                                lastAlarmType = curAlarmType
-                            }
-                        }
-                    }
-                    else if (curAlarmType == ReceiveData.AlarmType.HIGH_ALARM || curAlarmType == ReceiveData.AlarmType.HIGH)
-                    {
-                        // High alarm only, if the values are still rising!
-                        val durHigh: Long
-                        if (BuildConfig.DEBUG)
-                            durHigh = 1000
-                        else
-                            durHigh = sharedPref!!.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_HIGH, 20) * 60 * 1000
-                        if( forceAlarm || (curAlarmType > lastAlarmType && (ReceiveData.delta > 0F || ReceiveData.rate > 0F) && (ReceiveData.time - lastAlarmTime >= durHigh)) )
-                        {
-                            if( vibrate(curAlarmType) ) {
-                                lastAlarmTime = ReceiveData.time
-                                lastAlarmType = curAlarmType
-                            }
-                        }
-                    }
+                if (sharedPref!!.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false) && ReceiveData.forceAlarm) {
+                    Log.d(LOG_ID, "Alarm vibration for alarm=" + ReceiveData.alarm.toString())
+                    vibrate(ReceiveData.getAlarmType())
                 }
             }
         } catch (exc: Exception) {
