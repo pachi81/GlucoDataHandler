@@ -32,6 +32,7 @@ object Constants {
     const val SHARED_PREF_TARGET_MIN = "target_min_value"
     const val SHARED_PREF_TARGET_MAX = "target_max_value"
     const val SHARED_PREF_CAR_NOTIFICATION = "car_notification"
+    const val SHARED_PREF_CAR_NOTIFICATION_INTERVAL = "car_notification_interval"
     const val SHARED_PREF_CAR_MEDIA = "car_media"
     const val SHARED_PREF_NOTIFY_DURATION_LOW = "notify_duration_low"
     const val SHARED_PREF_NOTIFY_DURATION_HIGH = "notify_duration_high"
