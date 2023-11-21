@@ -100,10 +100,14 @@
     <string name="src_ns_token">Access Token</string>
     <string name="src_ns_token_summary">Add your access token, if you need one (optional).</string>
 
+    <string name="source_request_interval_always">Always</string>
     <string name="source_request_interval_1">1 minute</string>
     <string name="source_request_interval_5">5 minutes</string>
     <string name="source_request_interval_10">10 minutes</string>
     <string name="source_request_interval_15">15 minutes</string>
+    <string name="source_request_interval_20">20 minutes</string>
+    <string name="source_request_interval_30">30 minutes</string>
+    <string name="source_request_interval_alarm">Alarm only</string>
 
 
     <!-- LibreLink source -->
@@ -134,6 +138,8 @@
     <string name="pref_low_value_summary">Border for low glucose values.\nIf you have activated low alarm in Juggluco, you do not have to set this value.</string>
     <string name="pref_switch_car_notification">Android Auto notifications</string>
     <string name="pref_switch_car_notification_summary">Notification for Android Auto.\nFor using this app in Android Auto, you have to activate developer settings in Android Auto by clicking several times on the version. Then you have to enable "Unknown sources" in the developer settings menu.</string>
+    <string name="pref_car_notification_interval">Notification interval</string>
+    <string name="pref_car_notification_interval_summary">Interval for showing notifications. "Alarm only" will only trigger notifications if the values are outside of the target range.</string>
     <string name="pref_switch_car_media">Dummy Media Player</string>
     <string name="pref_switch_car_media_summary">Show the glucose value as current song for Android Auto.</string>
     <string name="pref_switch_send_to_aod">Send glucodata broadcast</string>
