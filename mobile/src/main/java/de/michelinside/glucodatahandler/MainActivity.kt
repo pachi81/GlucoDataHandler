@@ -222,12 +222,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 txtWearInfo.text = resources.getText(CR.string.activity_main_disconnected_label)
             txtCarInfo.text = if (CarModeReceiver.connected) resources.getText(CR.string.activity_main_car_connected_label) else resources.getText(CR.string.activity_main_car_disconnected_label)
 
-            if (sharedPref.getBoolean(Constants.SHARED_PREF_LIBRE_ENABLED, false) || sharedPref.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, false)) {
-                txtSourceInfo.text = DataSourceTask.getState(this)
-                txtSourceInfo.visibility = View.VISIBLE
-            } else {
-                txtSourceInfo.visibility = View.GONE
-            }
+            txtSourceInfo.text = DataSourceTask.getState(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
         }

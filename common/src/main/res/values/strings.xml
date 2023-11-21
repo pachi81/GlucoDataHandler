@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">GlucoDataHandler</string>
 
     <string name="info_label_sensor_id">Sensor</string>
@@ -27,11 +27,11 @@
 
     <string name="button_ok">OK</string>
     <string name="button_cancel">Cancel</string>
+    <string name="empty_string" translatable="false" />
 
     <!-- mobile -->
 
     <string name="activity_main_battery_optimization_disabled">Battery optimization is enabled.</string>
-    <string name="activity_main_source_label" translatable="false">%1$s: %2$s</string>
     <string name="activity_main_no_source_label">Source: not active</string>
     <string name="activity_main_connected_label">Wear: connected (%1$s)</string>
     <string name="activity_main_disconnected_label">Wear: disconnected</string>

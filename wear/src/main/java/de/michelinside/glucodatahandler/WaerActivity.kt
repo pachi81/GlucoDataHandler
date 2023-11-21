@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import android.graphics.Paint
 import android.os.*
 import android.util.Log
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -231,12 +230,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 switchNightscoutSource.isChecked = false
             }
 
-            if (switchLibreSource.isChecked || switchNightscoutSource.isChecked) {
-                txtSourceInfo.text = DataSourceTask.getState(this)
-                txtSourceInfo.visibility = View.VISIBLE
-            } else {
-                txtSourceInfo.visibility = View.GONE
-            }
+           txtSourceInfo.text = DataSourceTask.getState(this)
 
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())

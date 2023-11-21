@@ -18,11 +18,9 @@
 
     <LinearLayout
         android:id="@+id/layout_glucose_trend"
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_height="80dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="60dp"
+        android:layout_marginTop="50dp"
         android:gravity="center|top"
         android:orientation="horizontal"
         app:layout_constraintStart_toEndOf="parent"

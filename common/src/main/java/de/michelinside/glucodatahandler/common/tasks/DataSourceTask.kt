@@ -30,9 +30,7 @@ import javax.net.ssl.X509TrustManager
 
 
 enum class SourceState(val resId: Int) {
-    INACTIVE(R.string.source_state_not_active),
-    IN_PROGRESS(R.string.source_state_in_progress),
-    OK(R.string.source_state_ok),
+    NONE(R.string.empty_string),
     NO_NEW_VALUE(R.string.source_state_no_new_value),
     NO_CONNECTION(R.string.source_state_no_connection),
     ERROR(R.string.source_state_error);
@@ -106,8 +104,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             return false
         }
 
-        var lastSource: DataSource = DataSource.JUGGLUCO
-        var lastState: SourceState = SourceState.INACTIVE
+        var lastSource: DataSource = DataSource.LIBREVIEW
+        var lastState: SourceState = SourceState.NONE
         var lastError: String = ""
         var lastErrorCode: Int = -1
 
@@ -139,14 +137,15 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         }
 
         fun getState(context: Context): String {
+            if (lastState == SourceState.NONE)
+                return ""
             return "%s: %s".format(context.getString(lastSource.resId), getStateMessage(context))
         }
 
         private fun isShortInterval(): Boolean {
             return when(lastState) {
                 SourceState.NO_CONNECTION,
-                SourceState.NO_NEW_VALUE,
-                SourceState.INACTIVE -> true
+                SourceState.NO_NEW_VALUE -> true
                 SourceState.ERROR -> lastErrorCode >= 500
                 else -> false
             }
@@ -162,7 +161,6 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                 return
             }
             Log.d(LOG_ID, "Execute request")
-            setState(source, SourceState.IN_PROGRESS)
             try {
                 executeRequest(context)
             } catch (ex: UnknownHostException) {
@@ -183,7 +181,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             if (ReceiveData.time == lastTime)
                 setState(source, SourceState.NO_NEW_VALUE)
             else
-                setState(source, SourceState.OK)
+                setState(source, SourceState.NONE)
             done.set(true)
         }
         Handler(GlucoDataService.context!!.mainLooper).post(task)
@@ -268,7 +266,6 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         if(key == null) {
             enabled = sharedPreferences.getBoolean(enabledKey, false)
             interval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
-            setState(source, SourceState.INACTIVE)
             return true
         } else {
             var result = false
@@ -278,7 +275,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                         enabled = sharedPreferences.getBoolean(enabledKey, false)
                         result = true
                         if (!enabled && source == lastSource)
-                            setState(source, SourceState.INACTIVE)
+                            setState(source, SourceState.NONE)
                     }
                 }
                 Constants.SHARED_PREF_SOURCE_INTERVAL -> {
