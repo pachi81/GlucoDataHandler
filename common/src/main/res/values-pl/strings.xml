@@ -93,14 +93,14 @@
     <string name="src_ns_token">Token dostępu</string>
     <string name="src_ns_token_summary">Dodaj swój token dostępu, jeśli go potrzebujesz (opcjonalnie).</string>
 
-    <string name="source_request_interval_always">Always</string>
+    <string name="source_request_interval_always">Zawsze</string>
     <string name="source_request_interval_1">1 minuta</string>
     <string name="source_request_interval_5">5 minut</string>
     <string name="source_request_interval_10">10 minut</string>
     <string name="source_request_interval_15">15 minut</string>
     <string name="source_request_interval_20">20 minut</string>
     <string name="source_request_interval_30">30 minut</string>
-    <string name="source_request_interval_alarm">Alarm only</string>
+    <string name="source_request_interval_alarm">Tylko alarm</string>
 
     <!-- LibreLink source -->
 
@@ -130,8 +130,8 @@
     <string name="pref_low_value_summary">Granica dla niskich wartości glukozy.\nJeśli aktywowałeś alarm niskiego stęż. glukozy w Juggluco, nie musisz ustawiać tej wartości.</string>
     <string name="pref_switch_car_notification">Powiadomienia w Android Auto</string>
     <string name="pref_switch_car_notification_summary">Powiadomienie dla Android Auto.\nAby korzystać z tej aplikacji w Android Auto, musisz aktywować ustawienia programisty w Android Auto, klikając kilka razy na oznaczenie wersji. Następnie należy włączyć opcję &quot;Nieznane źródła&quot; w menu ustawień dewelopera.</string>
-    <string name="pref_car_notification_interval">Notification interval</string>
-    <string name="pref_car_notification_interval_summary">Interval for showing notifications. "Alarm only" will only trigger notifications if the values are outside of the target range.</string>
+    <string name="pref_car_notification_interval">Odstęp czasu między powiadomieniami</string>
+    <string name="pref_car_notification_interval_summary">Odstęp czasu między wyświetlaniem powiadomień. Opcja "Tylko alarm" wyświetli powiadomienia wyłącznie wtedy, gdy wartości będą poza zakresem docelowym.</string>
     <string name="pref_switch_car_media">Odtwarzacz fikcyjnych multimediów</string>
     <string name="pref_switch_car_media_summary">Wyświetl wartość glukozy jako bieżący utwór dla Android Auto.</string>
     <string name="pref_switch_send_to_aod">Wyślij transmisję &quot;glucodata broadcast&quot;</string>
