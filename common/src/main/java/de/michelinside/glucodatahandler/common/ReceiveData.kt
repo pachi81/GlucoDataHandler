@@ -94,10 +94,10 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private var colorAlarm: Int = Color.RED
     private var colorOutOfRange: Int = Color.YELLOW
     private var colorOK: Int = Color.GREEN
-    private var lowAlarmDuration = 15*60*1000 // ms -> 15 minutes
-    private var highAlarmDuration = 25*60*1000 // ms -> 25 minutes
+    private var lowAlarmDuration = 15L*60*1000 // ms -> 15 minutes
+    private var highAlarmDuration = 25L*60*1000 // ms -> 25 minutes
     private var lastAlarmTime = 0L
-    private var lastAlarmType = ReceiveData.AlarmType.OK
+    private var lastAlarmType = AlarmType.OK
     private var initialized = false
 
     init {
@@ -188,7 +188,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private fun calculateAlarm(): Int {
         alarm = 0 // reset to calculate again
         val curAlarmType = getAlarmType()
-        val curAlarm = when(curAlarmType)) {
+        val curAlarm = when(curAlarmType) {
             AlarmType.HIGH_ALARM -> 6
             AlarmType.HIGH -> 2
             AlarmType.LOW -> 3
@@ -224,10 +224,10 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     Log.i(LOG_ID, "Force high alarm for type " + curAlarmType)
                     return true
                 }
+                return false
             }
-            return false
+            else -> return false
         }
-        return false
     }
 
     fun getClucoseColor(monoChrome: Boolean = false): Int {

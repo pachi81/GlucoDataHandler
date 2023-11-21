@@ -164,7 +164,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 }
             }
 
-            GlucoDataServiceWear.start(this)
+            GlucoDataServiceWear.start(this, true)
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }

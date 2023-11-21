@@ -46,8 +46,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             setContentView(R.layout.activity_main)
             Log.d(LOG_ID, "onCreate called")
 
-            GlucoDataServiceMobile.start(this)
-
+            GlucoDataServiceMobile.start(this, true)
 
             txtBgValue = findViewById(R.id.txtBgValue)
             viewIcon = findViewById(R.id.viewIcon)

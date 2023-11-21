@@ -20,6 +20,7 @@ import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.tasker.setAndroidAutoConnectionState
+import java.text.DateFormat
 import java.util.*
 
 
@@ -77,7 +78,7 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     private fun updateSettings(sharedPref: SharedPreferences) {
         val cur_enabled = enable_notification
         enable_notification = sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, enable_notification)
-        notification_interval = sharedPref.getString(Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL, "1").toLong()        
+        notification_interval = sharedPref.getString(Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL, "1")!!.toLong()
         if(init && car_connected && cur_enabled != enable_notification) {
             if(enable_notification)
                 showNotification()
@@ -137,7 +138,8 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                 GlucoDataService.context?.setAndroidAutoConnectionState(true)
                 InternalNotifier.addNotifier(this, mutableSetOf(
                     NotifySource.BROADCAST,
-                    NotifySource.MESSAGECLIENT))
+                    NotifySource.MESSAGECLIENT,
+                    NotifySource.OBSOLETE_VALUE))
                 if(!ReceiveData.isObsolete())
                     showNotification()
             }
@@ -166,12 +168,12 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
 
     private fun canShowNotification(): Boolean {
         if (enable_notification && car_connected) {
+            if(ReceiveData.forceAlarm)
+                return true
             if (notification_interval > 1L) {
                 return getTimeDiffMinute() >= notification_interval
-            } else if (notification_interval < 0L) {
-                return ReceiveData.forceAlarm
             }
-            return true
+            return true  // always
         }
         return false
     }
@@ -199,9 +201,9 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
             .setImportant(true)
             .build()
         val messagingStyle = NotificationCompat.MessagingStyle(person)
-        messagingStyle.conversationTitle = ReceiveData.getClucoseAsString()
+        messagingStyle.conversationTitle = ReceiveData.getClucoseAsString()  + " (" + ReceiveData.getDeltaAsString() + ")"
         messagingStyle.isGroupConversation = false
-        messagingStyle.addMessage("Delta: " + ReceiveData.getDeltaAsString(), System.currentTimeMillis(), person)
+        messagingStyle.addMessage(DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(ReceiveData.time)), System.currentTimeMillis(), person)
         return messagingStyle
     }
 

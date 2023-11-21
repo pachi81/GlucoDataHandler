@@ -22,6 +22,7 @@ import java.net.UnknownHostException
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import java.util.concurrent.atomic.AtomicBoolean
+import javax.net.ssl.HttpsURLConnection
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSession
 import javax.net.ssl.TrustManager
@@ -190,7 +191,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         Log.d(LOG_ID, "handleResult done!")
     }
 
-    protected fun trustAllCertificates() {
+    protected fun trustAllCertificates(httpURLConnection: HttpsURLConnection) {
         // trust all certificates (see https://www.baeldung.com/okhttp-client-trust-all-certificates)
         val trustAllCerts = arrayOf<TrustManager>(
             @SuppressLint("CustomX509TrustManager")
@@ -206,9 +207,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         )
         val sslContext = SSLContext.getInstance("SSL")
         sslContext.init(null, trustAllCerts, SecureRandom())
-        HttpURLConnection.setDefaultSSLSocketFactory(sslContext.socketFactory)
-        HttpURLConnection.setDefaultHostnameVerifier { _: String?, _: SSLSession? -> true }
-
+        httpURLConnection.sslSocketFactory = sslContext.socketFactory
+        httpURLConnection.setHostnameVerifier { _: String?, _: SSLSession? -> true }
     }
 
     private fun checkResponse(httpURLConnection: HttpURLConnection): String? {
@@ -221,8 +221,15 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         return response.readText()
     }
 
+    open fun getTrustAllCertificates(): Boolean = false
+
     private fun httpRequest(url: String, header: MutableMap<String, String>, postData: String? = null): String? {
-        val httpURLConnection = URL(url).openConnection() as HttpURLConnection
+        val urlConnection = URL(url).openConnection()
+        if(getTrustAllCertificates() && urlConnection is HttpsURLConnection) {
+            trustAllCertificates(urlConnection)
+        }
+
+        val httpURLConnection = urlConnection as HttpURLConnection
         header.forEach {
             httpURLConnection.setRequestProperty(it.key, it.value)
         }
@@ -263,7 +270,6 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
 
     override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {
         if(key == null) {
-            trustAllCertificates()  // call during init
             enabled = sharedPreferences.getBoolean(enabledKey, false)
             interval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
             return true

@@ -52,14 +52,14 @@
         </receiver>
         <receiver android:name=".common.tasks.TimeAlarmReceiver" />
         <receiver android:name=".common.tasks.SourceAlarmReceiver" />
-<!--        <receiver
+        <receiver
             android:name=".StartServiceAtBootReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
-        </receiver>-->
+        </receiver>
         <service android:name=".GlucoDataServiceWear" android:enabled="true" android:exported="true">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />

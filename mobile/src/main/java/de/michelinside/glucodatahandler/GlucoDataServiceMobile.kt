@@ -23,8 +23,8 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
     }
 
     companion object {
-        fun start(context: Context) {
-            start(AppSource.PHONE_APP, context, GlucoDataServiceMobile::class.java)
+        fun start(context: Context, force: Boolean = false) {
+            start(AppSource.PHONE_APP, context, GlucoDataServiceMobile::class.java, force)
         }
     }
 

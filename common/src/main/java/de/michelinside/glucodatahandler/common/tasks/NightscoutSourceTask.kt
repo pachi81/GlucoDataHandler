@@ -21,6 +21,8 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
         handleResponse(httpGet(getUrl(), getHeader()))
     }
 
+    override fun getTrustAllCertificates(): Boolean = true
+
     override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {
         var result = false
         if (key == null) {

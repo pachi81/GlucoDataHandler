@@ -46,8 +46,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             return null
         }
 
-        fun start(source: AppSource, context: Context, cls: Class<*>) {
-            if (!running) {
+        fun start(source: AppSource, context: Context, cls: Class<*>, force: Boolean = false) {
+            if (!running || force) {
                 try {
                     appSource = source
                     val serviceIntent = Intent(
@@ -86,9 +86,9 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             super.onStartCommand(intent, flags, startId)
             val isForeground = intent?.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
             if (isForeground == true && !isForegroundService) {
-                isForegroundService = true
                 Log.i(LOG_ID, "Starting service in foreground!")
                 startForeground(NOTIFICATION_ID, getNotification())
+                isForegroundService = true
             } else if ( isForegroundService && intent?.getBooleanExtra(Constants.ACTION_STOP_FOREGROUND, false) == true ) {
                 isForegroundService = false
                 Log.i(LOG_ID, "Stopping service in foreground!")

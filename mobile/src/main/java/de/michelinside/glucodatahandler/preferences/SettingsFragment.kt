@@ -39,7 +39,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
             activityResultOverlayLauncher = registerForActivityResult(
                 ActivityResultContracts.StartActivityForResult()
-            ) { result ->
+            ) {
                 if (!Settings.canDrawOverlays(requireContext())) {
                     Log.w(LOG_ID, "Overlay permission denied!")
                 } else {
@@ -89,7 +89,8 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION,
                 Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD,
                 Constants.SHARED_PREF_SEND_TO_XDRIP,
-                Constants.SHARED_PREF_SEND_XDRIP_BROADCAST -> {
+                Constants.SHARED_PREF_SEND_XDRIP_BROADCAST,
+                Constants.SHARED_PREF_CAR_NOTIFICATION -> {
                     updateEnableStates(sharedPreferences!!)
                 }
                 Constants.SHARED_PREF_FLOATING_WIDGET -> {

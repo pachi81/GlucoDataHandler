@@ -7,11 +7,11 @@ import android.util.Log
 
 class StartServiceAtBootReceiver: BroadcastReceiver() {
 
-    private val LOG_ID = "GlucoDataHandler.StartMyServiceAtBootReceiver"
+    private val LOG_ID = "GlucoDataHandler.StartServiceAtBootReceiver"
     override fun onReceive(context: Context, intent: Intent) {
         if (Intent.ACTION_BOOT_COMPLETED == intent.action) {
             Log.d(LOG_ID, "Start Service after booting")
-            GlucoDataServiceWear.start(context)
+            GlucoDataServiceWear.start(context, true)
         }
     }
 }
