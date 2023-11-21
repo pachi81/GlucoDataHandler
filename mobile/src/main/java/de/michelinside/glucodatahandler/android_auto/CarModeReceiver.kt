@@ -31,8 +31,10 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     private var init = false
     @SuppressLint("StaticFieldLeak")
     private lateinit var notificationMgr: CarNotificationManager
-    private var show_notification = true
+    private var show_notification = false
     private var car_connected = false
+    private var last_notification_time = 0L
+    private var notification_interval = 1L   // every minute -> always, -1L: only for alarms
     val connected: Boolean get() = car_connected
     @SuppressLint("StaticFieldLeak")
     private lateinit var notificationCompat: NotificationCompat.Builder
@@ -73,8 +75,10 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     }
 
     private fun updateSettings(sharedPref: SharedPreferences) {
+        val cur_enabled = enable_notification
         enable_notification = sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, enable_notification)
-        if(init && car_connected) {
+        notification_interval = sharedPref.getString(Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL, "1").toLong()        
+        if(init && car_connected && cur_enabled != enable_notification) {
             if(enable_notification)
                 showNotification()
             else
@@ -156,15 +160,32 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         notificationMgr.cancel(NOTIFICATION_ID)  // remove notification
     }
 
+    private fun getTimeDiffMinute(): Long {
+        return Utils.round((ReceiveData.time-last_notification_time).toFloat()/60000, 0).toLong()
+    }
+
+    private fun canShowNotification(): Boolean {
+        if (enable_notification && car_connected) {
+            if (notification_interval > 1L) {
+                return getTimeDiffMinute() >= notification_interval
+            } else if (notification_interval < 0L) {
+                return ReceiveData.forceAlarm
+            }
+            return true
+        }
+        return false
+    }
+
     fun showNotification() {
         try {
-            if (enable_notification && car_connected) {
+            if (canShowNotification()) {
                 Log.d(LOG_ID, "showNotification called")
                 notificationCompat
                     .setLargeIcon(Utils.getRateAsBitmap(resizeFactor = 0.75F))
                     .setWhen(ReceiveData.time)
                     .setStyle(createMessageStyle())
                 notificationMgr.notify(NOTIFICATION_ID, notificationCompat)
+                last_notification_time = ReceiveData.time
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "showNotification exception: " + exc.toString() )
@@ -225,7 +246,8 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called for key " + key)
             when(key) {
-                Constants.SHARED_PREF_CAR_NOTIFICATION -> {
+                Constants.SHARED_PREF_CAR_NOTIFICATION,
+                Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL -> {
                     updateSettings(sharedPreferences!!)
                 }
             }
