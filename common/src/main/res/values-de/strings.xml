@@ -92,10 +92,14 @@
     <string name="src_ns_token">Access Token</string>
     <string name="src_ns_token_summary">Zusätzlicher Access Token, falls dieser benötigt wird (optional).</string>
 
+    <string name="source_request_interval_always">Immer</string>
     <string name="source_request_interval_1">1 Minute</string>
     <string name="source_request_interval_5">5 Minuten</string>
     <string name="source_request_interval_10">10 Minuten</string>
     <string name="source_request_interval_15">15 Minuten</string>
+    <string name="source_request_interval_20">20 Minuten</string>
+    <string name="source_request_interval_30">30 Minuten</string>
+    <string name="source_request_interval_alarm">Nur für Alarme</string>
 
     <!-- LibreLink source -->
     <string name="state_disabled">deaktiviert</string>
@@ -118,6 +122,8 @@
     <string name="pref_switch_car_notification_summary">Benachrichtigung für Android Auto.\nUm diese App in Android Auto zu verwenden, müssen die Entwicklereinstellungen aktiviert werden. Dafür mehrfach in Android Auto auf Version klicken. Danach in den Entwicklereinstellungen "Unbekannte Quellen" aktivieren.</string>
     <string name="pref_switch_car_media">Dummy Media Player</string>
     <string name="pref_switch_car_media_summary">Stellt den Glucose Wert als aktuellen Song dar.</string>
+    <string name="pref_car_notification_interval">Benachrichtigungs Intervall</string>
+    <string name="pref_car_notification_interval_summary">Intervall, um die Benachrichtigungspopups in Android Auto anzuzeigen. "Nur für Alarme" zeigt nur die Popups für Werte außerhalb des Zielbereiches an.</string>
     <string name="pref_switch_send_to_aod">Glucodata Broadcast senden</string>
     <string name="pref_switch_send_to_aod_summary">Glucodata Broadcast für neue Werte von allen Quellen senden.</string>
     <string name="pref_button_select_target">GlucoData Empfänger definieren</string>
