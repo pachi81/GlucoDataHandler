@@ -22,7 +22,6 @@ import java.net.UnknownHostException
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import java.util.concurrent.atomic.AtomicBoolean
-import javax.net.ssl.HttpsURLConnection
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSession
 import javax.net.ssl.TrustManager
@@ -207,8 +206,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         )
         val sslContext = SSLContext.getInstance("SSL")
         sslContext.init(null, trustAllCerts, SecureRandom())
-        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.socketFactory)
-        HttpsURLConnection.setDefaultHostnameVerifier { _: String?, _: SSLSession? -> true }
+        HttpURLConnection.setDefaultSSLSocketFactory(sslContext.socketFactory)
+        HttpURLConnection.setDefaultHostnameVerifier { _: String?, _: SSLSession? -> true }
 
     }
 
@@ -264,6 +263,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
 
     override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {
         if(key == null) {
+            trustAllCertificates()  // call during init
             enabled = sharedPreferences.getBoolean(enabledKey, false)
             interval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
             return true
