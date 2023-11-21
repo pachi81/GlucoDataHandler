@@ -20,7 +20,7 @@
         android:id="@+id/layout_glucose_trend"
         android:layout_width="250dp"
         android:layout_height="80dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:gravity="center|top"
         android:orientation="horizontal"
         app:layout_constraintStart_toEndOf="parent"
@@ -55,7 +55,7 @@
 
     <TextView
         android:id="@+id/txtLastValue"
-        android:layout_width="351dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
