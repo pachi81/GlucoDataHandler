@@ -5,7 +5,8 @@
 
 ## Funkcje
 
-* odbiera wartości glukozy jako **[LibreLink follower](#librelink)**.
+* odbiera wartości glukozy jako **[LibreLink follower](#librelink)**
+* odbiera wartości glukozy z Nightscout
 * odbiera wartości glukozy z Juggluco
 * odbiera wartości glukozy z xDrip+
 * udostępnia kilka **[widgetów](#widgety)** i pływający widget dla telefonu
