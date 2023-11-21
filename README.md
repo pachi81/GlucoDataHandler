@@ -5,6 +5,7 @@
 ## Features
 
 * receives glucose values as **[LibreLink follower](#librelink)**
+* receives glucose values from Nightscout
 * receives glucose values from Juggluco
 * receives glucose values from xDrip+
 * provides several **[widgets](#widgets)** and a floating widget for the phone
