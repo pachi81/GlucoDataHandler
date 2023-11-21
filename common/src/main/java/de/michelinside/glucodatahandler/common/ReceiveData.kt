@@ -186,6 +186,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     private fun calculateAlarm(): Int {
+        alarm = 0 // reset to calculate again
         val curAlarmType = getAlarmType()
         val curAlarm = when(curAlarmType)) {
             AlarmType.HIGH_ALARM -> 6
