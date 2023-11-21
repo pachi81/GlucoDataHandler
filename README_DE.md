@@ -5,6 +5,7 @@
 ## Features
 
 * empfängt Glukose Werte als **[LibreLink Follower](#librelink)**
+* empfängt Glukose Werte von Nightscout
 * empfängt Glukose Werte von Juggluco
 * empfängt Glukose Werte von xDrip+
 * stellt mehrere **[Widgets](#widgets)** für Android zur Verfügung
