@@ -49,4 +49,22 @@
         <item>"10"</item>
         <item>"15"</item>
     </array>
+    <array name="car_notification_interval_labels">
+        <item>@string/source_request_interval_always</item>
+        <item>@string/source_request_interval_5</item>
+        <item>@string/source_request_interval_10</item>
+        <item>@string/source_request_interval_15</item>
+        <item>@string/source_request_interval_20</item>
+        <item>@string/source_request_interval_30</item>
+        <item>@string/source_request_interval_alarm</item>
+    </array>
+    <array name="car_notification_interval_values">
+        <item>"1"</item>
+        <item>"5"</item>
+        <item>"10"</item>
+        <item>"15"</item>
+        <item>"20"</item>
+        <item>"30"</item>
+        <item>"-1"</item>
+    </array>
 </resources>
