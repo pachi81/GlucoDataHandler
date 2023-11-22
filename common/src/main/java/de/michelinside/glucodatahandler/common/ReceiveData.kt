@@ -203,7 +203,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     private fun checkForceAlarm(curAlarmType: AlarmType): Boolean {
-        Log.w(LOG_ID, "Check force alarm:" +
+        Log.d(LOG_ID, "Check force alarm:" +
             " - curAlarmType=" + curAlarmType.toString() +
             " - lastAlarmType=" + lastAlarmType.toString() +
             " - lastAlarmTime=" +  DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime)) +
@@ -221,7 +221,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 {
                     lastAlarmTime = time
                     lastAlarmType = curAlarmType
-                    Log.w(LOG_ID, "Force low alarm for type " + curAlarmType)
+                    Log.i(LOG_ID, "Force low alarm for type " + curAlarmType)
                     return true
                 }
                 return false
@@ -232,7 +232,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 {
                     lastAlarmTime = time
                     lastAlarmType = curAlarmType
-                    Log.w(LOG_ID, "Force high alarm for type " + curAlarmType)
+                    Log.i(LOG_ID, "Force high alarm for type " + curAlarmType)
                     return true
                 }
                 return false

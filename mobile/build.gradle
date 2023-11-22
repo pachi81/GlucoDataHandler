@@ -21,6 +21,7 @@ android {
         release {
             debuggable false
             jniDebuggable false
+            zipAlignEnabled true
             // Enable ProGuard
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
