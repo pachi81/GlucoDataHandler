@@ -28,7 +28,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
     private val connection = WearPhoneConnection()
 
     companion object {
-        private val LOG_ID = "GlucoDataHandler.GlucoDataService"
+        private val LOG_ID = "GDH.GlucoDataService"
         private var isForegroundService = false
         val foreground get() = isForegroundService
         const val NOTIFICATION_ID = 123

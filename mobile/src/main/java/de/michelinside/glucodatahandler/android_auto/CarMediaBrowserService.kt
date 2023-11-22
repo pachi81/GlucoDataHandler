@@ -21,7 +21,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 
 class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
-    private val LOG_ID = "GlucoDataHandler.CarMediaBrowserService"
+    private val LOG_ID = "GDH.CarMediaBrowserService"
     private val MEDIA_ROOT_ID = "root"
     private val MEDIA_GLUCOSE_ID = "glucose_value"
     private lateinit var  sharedPref: SharedPreferences

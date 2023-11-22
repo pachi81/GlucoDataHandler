@@ -35,7 +35,7 @@ class WearConnectionStateRunner : TaskerPluginRunnerConditionNoOutputOrInputOrUp
     }
 }
 
-private val LOG_ID = "GlucoDataHandler.Tasker.WearConnectionState"
+private val LOG_ID = "GDH.Tasker.WearConnectionState"
 private var isActive: Boolean? = null
 fun Context.setWearConnectionState(state: Boolean) {
     Log.d(LOG_ID, "set ConnectionState: " + state.toString() + " current: " + isActive)

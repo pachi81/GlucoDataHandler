@@ -10,7 +10,7 @@ import de.michelinside.glucodatahandler.common.notifier.DataSource
 
 
 open class GlucoseDataReceiver: BroadcastReceiver() {
-    private val LOG_ID = "GlucoDataHandler.GlucoseDataReceiver"
+    private val LOG_ID = "GDH.GlucoseDataReceiver"
     override fun onReceive(context: Context, intent: Intent) {
         try {
             val action = intent.action

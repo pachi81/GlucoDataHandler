@@ -9,7 +9,7 @@ import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
 
 @SuppressLint("StaticFieldLeak")
-object SourceTaskService: BackgroundTaskService(43, "GlucoDataHandler.Task.SourceTaskService", true) {
+object SourceTaskService: BackgroundTaskService(43, "GDH.Task.SourceTaskService", true) {
     private var delay = 10L
     override fun getAlarmReceiver() : Class<*> = SourceAlarmReceiver::class.java
 

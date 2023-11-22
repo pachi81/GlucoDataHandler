@@ -11,7 +11,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 
 object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
-    private const val LOG_ID = "GlucoDataHandler.widget.ActiveWidgetHandler"
+    private const val LOG_ID = "GDH.widget.ActiveWidgetHandler"
     private var activeWidgets = mutableSetOf<WidgetType>()
 
     init {

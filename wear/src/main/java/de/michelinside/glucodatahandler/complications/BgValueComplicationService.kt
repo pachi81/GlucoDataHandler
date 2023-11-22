@@ -15,7 +15,7 @@ import de.michelinside.glucodatahandler.common.R as CR
 
 
 abstract class BgValueComplicationService : SuspendingComplicationDataSourceService() {
-    protected val LOG_ID = "GlucoDataHandler.BgValueComplicationService"
+    protected val LOG_ID = "GDH.BgValueComplicationService"
     var descriptionResId: Int = CR.string.app_name
     protected lateinit var sharedPref: SharedPreferences
 

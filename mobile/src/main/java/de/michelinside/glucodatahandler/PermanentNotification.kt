@@ -22,7 +22,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 
 
 object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
-    private const val LOG_ID = "GlucoDataHandler.PermanentNotification"
+    private const val LOG_ID = "GDH.PermanentNotification"
     private const val CHANNEL_ID = "GlucoDataNotify_permanent"
     private const val CHANNEL_NAME = "Permanent notification"
     private const val FOREGROUND_CHANNEL_ID = "GlucoDataNotify_foreground"

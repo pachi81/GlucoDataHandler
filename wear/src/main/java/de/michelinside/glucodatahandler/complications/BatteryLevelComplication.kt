@@ -16,7 +16,7 @@ import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 
 class BatteryLevelComplication: SuspendingComplicationDataSourceService() {
-    protected val LOG_ID = "GlucoDataHandler.BatteryLevelComplication"
+    protected val LOG_ID = "GDH.BatteryLevelComplication"
 
     override suspend fun onComplicationRequest(request: ComplicationRequest): ComplicationData? {
         try {
@@ -66,7 +66,7 @@ class BatteryLevelComplication: SuspendingComplicationDataSourceService() {
 }
 
 object BatteryLevelComplicationUpdater: NotifierInterface {
-    val LOG_ID = "GlucoDataHandler.BatteryLevelComplicationUpdater"
+    val LOG_ID = "GDH.BatteryLevelComplicationUpdater"
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.d(LOG_ID, "OnNotifyData called for source " + dataSource.toString() )
         ComplicationDataSourceUpdateRequester

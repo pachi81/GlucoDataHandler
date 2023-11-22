@@ -13,7 +13,7 @@ import de.michelinside.glucodatahandler.common.notifier.*
 
 
 object ActiveComplicationHandler: NotifierInterface {
-    private const val LOG_ID = "GlucoDataHandler.ActiveComplicationHandler"
+    private const val LOG_ID = "GDH.ActiveComplicationHandler"
     private var packageInfo: PackageInfo? = null
     private var complicationClasses = mutableMapOf<Int, ComponentName>()
     private var noComplication = false   // check complications at least one time

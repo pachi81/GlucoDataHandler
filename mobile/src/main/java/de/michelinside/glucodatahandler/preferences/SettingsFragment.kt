@@ -18,7 +18,7 @@ import de.michelinside.glucodatahandler.common.R as CR
 
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
-    private val LOG_ID = "GlucoDataHandler.SettingsFragment"
+    private val LOG_ID = "GDH.SettingsFragment"
     private lateinit var activityResultOverlayLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

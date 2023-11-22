@@ -13,7 +13,7 @@ import de.michelinside.glucodatahandler.common.Utils
 
 class GlucoseEditPreference : EditTextPreference, OnBindEditTextListener {
     companion object {
-        private val LOG_ID = "GlucoDataHandler.GlucoseEditPreference"
+        private val LOG_ID = "GDH.GlucoseEditPreference"
     }
     private var defaultValue = 0F
     constructor(context: Context?) : super(context!!)  {

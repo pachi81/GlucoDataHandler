@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtSourceInfo: TextView
     private lateinit var txtBatteryOptimization: TextView
     private lateinit var sharedPref: SharedPreferences
-    private val LOG_ID = "GlucoDataHandler.Main"
+    private val LOG_ID = "GDH.Main"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {

@@ -7,7 +7,7 @@ import android.util.Log
 
 class StartServiceAtBootReceiver: BroadcastReceiver() {
 
-    private val LOG_ID = "GlucoDataHandler.StartServiceAtBootReceiver"
+    private val LOG_ID = "GDH.StartServiceAtBootReceiver"
     override fun onReceive(context: Context, intent: Intent) {
         try {
             Log.i(LOG_ID, "Start Service after intent action received: " + intent.action)

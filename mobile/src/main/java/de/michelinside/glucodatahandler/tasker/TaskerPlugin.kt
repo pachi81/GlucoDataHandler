@@ -129,7 +129,7 @@ class GlucodataObsoleteEvent : Activity(), TaskerPluginConfig<GlucodataObsoleteV
 }
 
 object TaskerDataReceiver: NotifierInterface {
-    private val LOG_ID = "GlucoDataHandler.Tasker.DataAction"
+    private val LOG_ID = "GDH.Tasker.DataAction"
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "sending new intent to tasker for source " + dataSource.toString())

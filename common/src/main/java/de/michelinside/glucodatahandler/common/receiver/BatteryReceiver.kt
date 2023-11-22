@@ -8,7 +8,7 @@ import android.util.Log
 import de.michelinside.glucodatahandler.common.notifier.*
 
 class BatteryReceiver: BroadcastReceiver() {
-    private val LOG_ID = "GlucoDataHandler.BatteryReceiver"
+    private val LOG_ID = "GDH.BatteryReceiver"
     override fun onReceive(context: Context, intent: Intent) {
         try {
             if (intent.extras == null || intent.extras!!.isEmpty) {

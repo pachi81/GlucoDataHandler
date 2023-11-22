@@ -35,7 +35,7 @@ class AndroidAutoConnectionStateRunner : TaskerPluginRunnerConditionNoOutputOrIn
     }
 }
 
-private val LOG_ID = "GlucoDataHandler.Tasker.AndroidAutoConnectionState"
+private val LOG_ID = "GDH.Tasker.AndroidAutoConnectionState"
 private var isActive: Boolean? = null
 fun Context.setAndroidAutoConnectionState(state: Boolean) {
     Log.d(LOG_ID, "set ConnectionState: " + state.toString() + " current: " + isActive)

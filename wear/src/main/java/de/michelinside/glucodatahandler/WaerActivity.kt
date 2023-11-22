@@ -18,7 +18,7 @@ import de.michelinside.glucodatahandler.databinding.ActivityWaerBinding
 
 class WaerActivity : AppCompatActivity(), NotifierInterface {
 
-    private val LOG_ID = "GlucoDataHandler.Main"
+    private val LOG_ID = "GDH.Main"
     private lateinit var binding: ActivityWaerBinding
     private lateinit var txtBgValue: TextView
     private lateinit var viewIcon: ImageView

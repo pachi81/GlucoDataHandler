@@ -15,7 +15,7 @@ import kotlin.random.Random
 
 
 object Utils {
-    private val LOG_ID = "GlucoDataHandler.Utils"
+    private val LOG_ID = "GDH.Utils"
     fun round(value: Float, scale: Int, roundingMode: RoundingMode = RoundingMode.HALF_UP): Float {
         return value.toBigDecimal().setScale( scale, roundingMode).toFloat()
     }

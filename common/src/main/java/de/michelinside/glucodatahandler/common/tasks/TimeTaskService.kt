@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 
 @SuppressLint("StaticFieldLeak")
-object TimeTaskService: BackgroundTaskService(42, "GlucoDataHandler.Task.TimeTaskService") {
+object TimeTaskService: BackgroundTaskService(42, "GDH.Task.TimeTaskService") {
     override fun getAlarmReceiver() : Class<*> = TimeAlarmReceiver::class.java
 
     override fun getBackgroundTasks(): MutableList<BackgroundTask> =

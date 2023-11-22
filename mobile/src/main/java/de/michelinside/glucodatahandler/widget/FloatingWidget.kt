@@ -36,7 +36,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
     private lateinit var txtTime: TextView
     private lateinit var sharedPref: SharedPreferences
     private lateinit var sharedInternalPref: SharedPreferences
-    private val LOG_ID = "GlucoDataHandler.FloatingWidget"
+    private val LOG_ID = "GDH.FloatingWidget"
 
     @SuppressLint("InflateParams")
     fun create() {

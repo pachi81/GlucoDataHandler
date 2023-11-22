@@ -14,7 +14,7 @@ import de.michelinside.glucodatahandler.common.notifier.*
 
 
 class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
-    private val LOG_ID = "GlucoDataHandler.GlucoDataServiceWear"
+    private val LOG_ID = "GDH.GlucoDataServiceWear"
     init {
         Log.d(LOG_ID, "init called")
         InternalNotifier.addNotifier(

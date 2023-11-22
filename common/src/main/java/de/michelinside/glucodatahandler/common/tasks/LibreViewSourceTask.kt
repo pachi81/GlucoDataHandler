@@ -23,7 +23,7 @@ import java.util.TimeZone
 // API docu: https://libreview-unofficial.stoplight.io/
 
 class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, DataSource.LIBREVIEW) {
-    private val LOG_ID = "GlucoDataHandler.Task.LibreViewSourceTask"
+    private val LOG_ID = "GDH.Task.LibreViewSourceTask"
     companion object {
         private var user = ""
         private var password = ""

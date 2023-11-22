@@ -15,7 +15,7 @@ import de.michelinside.glucodatahandler.widget.FloatingWidget
 import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
 
 class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInterface {
-    private val LOG_ID = "GlucoDataHandler.GlucoDataServiceMobile"
+    private val LOG_ID = "GDH.GlucoDataServiceMobile"
     private lateinit var floatingWidget: FloatingWidget
     init {
         Log.d(LOG_ID, "init called")

@@ -16,7 +16,7 @@ import java.util.*
 import kotlin.coroutines.cancellation.CancellationException
 
 class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener {
-    private val LOG_ID = "GlucoDataHandler.WearPhoneConnection"
+    private val LOG_ID = "GDH.WearPhoneConnection"
     private lateinit var context: Context
 
     private val capabilityName: String get() {

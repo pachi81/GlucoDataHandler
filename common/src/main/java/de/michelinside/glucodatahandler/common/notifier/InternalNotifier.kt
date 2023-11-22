@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.util.Log
 
 object InternalNotifier {
-    private const val LOG_ID = "GlucoDataHandler.InternalNotifier"
+    private const val LOG_ID = "GDH.InternalNotifier"
     private var notifiers = mutableMapOf<NotifierInterface, MutableSet<NotifySource>?>()
     fun addNotifier(notifier: NotifierInterface, sourceFilter: MutableSet<NotifySource>)
     {

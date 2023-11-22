@@ -9,7 +9,7 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 
 class ElapsedTimeTask : BackgroundTask() {
-    private val LOG_ID = "GlucoDataHandler.Task.ElapsedTimeTask"
+    private val LOG_ID = "GDH.Task.ElapsedTimeTask"
 
     companion object {
         private var relativeTimeValue = false

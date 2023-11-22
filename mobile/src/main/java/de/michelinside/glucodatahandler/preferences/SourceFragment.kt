@@ -13,7 +13,7 @@ import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
 
 
 class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
-    private val LOG_ID = "GlucoDataHandler.SourceFragment"
+    private val LOG_ID = "GDH.SourceFragment"
     private var settingsChanged = false
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

@@ -23,7 +23,7 @@ import de.michelinside.glucodatahandler.common.R as CR
 
 class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat() {
     companion object {
-        private val LOG_ID = "GlucoDataHandler.SelectReceiverPreferenceDialog"
+        private val LOG_ID = "GDH.SelectReceiverPreferenceDialog"
         fun initial(key: String) : SelectReceiverPreferenceDialogFragmentCompat {
             Log.d(LOG_ID, "initial called for key: " +  key )
             val dialog = SelectReceiverPreferenceDialogFragmentCompat()

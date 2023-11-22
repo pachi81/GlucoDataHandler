@@ -34,7 +34,7 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
             return extras
         }
     }
-    private val LOG_ID = "GlucoDataHandler.XDripBroadcastReceiver"
+    private val LOG_ID = "GDH.XDripBroadcastReceiver"
 
     init {
         Log.d(LOG_ID, "init called")

@@ -25,7 +25,7 @@ import java.util.*
 
 
 object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
-    private const val LOG_ID = "GlucoDataHandler.CarModeReceiver"
+    private const val LOG_ID = "GDH.CarModeReceiver"
     private const val CHANNEL_ID = "GlucoDataNotify_Car"
     private const val CHANNEL_NAME = "Notification for Android Auto"
     private const val NOTIFICATION_ID = 789

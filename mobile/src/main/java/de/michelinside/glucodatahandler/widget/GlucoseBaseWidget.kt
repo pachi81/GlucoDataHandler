@@ -37,7 +37,7 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
     }
 
     companion object {
-        private const val LOG_ID = "GlucoDataHandler.widget.GlucoseBaseWidget"
+        private const val LOG_ID = "GDH.widget.GlucoseBaseWidget"
 
         protected fun getCurrentWidgetIds(context: Context, type: WidgetType): IntArray {
             val component = ComponentName(

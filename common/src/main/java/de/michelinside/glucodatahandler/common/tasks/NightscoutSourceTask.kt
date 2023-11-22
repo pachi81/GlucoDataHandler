@@ -10,7 +10,7 @@ import de.michelinside.glucodatahandler.common.Utils
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 
 class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, DataSource.NIGHTSCOUT) {
-    private val LOG_ID = "GlucoDataHandler.Task.NightscoutSourceTask"
+    private val LOG_ID = "GDH.Task.NightscoutSourceTask"
     companion object {
         private var url = ""
         private var secret = ""

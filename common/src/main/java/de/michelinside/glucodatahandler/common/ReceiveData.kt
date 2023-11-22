@@ -15,7 +15,7 @@ import java.util.*
 import kotlin.math.abs
 
 object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
-    private const val LOG_ID = "GlucoDataHandler.ReceiveData"
+    private const val LOG_ID = "GDH.ReceiveData"
     const val SERIAL = "glucodata.Minute.SerialNumber"
     const val MGDL = "glucodata.Minute.mgdl"
     const val GLUCOSECUSTOM = "glucodata.Minute.glucose"

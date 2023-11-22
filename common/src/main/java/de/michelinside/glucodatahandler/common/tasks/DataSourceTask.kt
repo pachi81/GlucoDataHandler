@@ -41,7 +41,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     private var interval = 1L
 
     companion object {
-        private val LOG_ID = "GlucoDataHandler.Task.DataSourceTask"
+        private val LOG_ID = "GDH.Task.DataSourceTask"
 
         val preferencesToSend = mutableSetOf(
             Constants.SHARED_PREF_SOURCE_DELAY,
