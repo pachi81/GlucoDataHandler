@@ -13,7 +13,7 @@
     <string name="dexcom_label">DexcomLabel</string>
     <string name="dexcom_html_label">Etykieta tempa dla Dexcom</string>
     <string name="alarm_label">Alarm</string>
-    <string name="alarm_html_label">Wartość alarmu (0: brak alarmu, 6/14: wysoki, 7/15: niski)</string>
+    <string name="alarm_html_label">Wartość alarmu (0: brak alarmu, 6/14: bardzo wysoki, 2/10: wysoki, 3/11: niski, 7/15: bardzo niski)</string>
     <string name="time_label">Czas</string>
     <string name="time_html_label">Czas w msec</string>
     <string name="time_diff_label">Różnica czasu</string>
