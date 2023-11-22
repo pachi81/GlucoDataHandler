@@ -206,7 +206,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         when(curAlarmType) {
             AlarmType.LOW,
             AlarmType.LOW_ALARM -> {
-                if(curAlarmType < lastAlarmType && (delta < 0F || rate < 0F) && (time - lastAlarmTime >= lowAlarmDuration))
+                if(curAlarmType < lastAlarmType || ((delta < 0F || rate < 0F) && (time - lastAlarmTime >= lowAlarmDuration)))
                 {
                     lastAlarmTime = time
                     lastAlarmType = curAlarmType
@@ -217,7 +217,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             }
             AlarmType.HIGH,
             AlarmType.HIGH_ALARM -> {
-                if(curAlarmType > lastAlarmType && (delta > 0F || rate > 0F) && (time - lastAlarmTime >= highAlarmDuration))
+                if(curAlarmType > lastAlarmType || ((delta > 0F || rate > 0F) && (time - lastAlarmTime >= highAlarmDuration)))
                 {
                     lastAlarmTime = time
                     lastAlarmType = curAlarmType
