@@ -5,8 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
+import android.content.pm.ServiceInfo
 import android.os.*
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.google.android.gms.wearable.*
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.*
@@ -80,6 +82,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
 
     abstract fun getNotification() : Notification
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         try {
             Log.d(LOG_ID, "onStartCommand called")
@@ -87,7 +90,12 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             val isForeground = intent?.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
             if (isForeground == true && !isForegroundService) {
                 Log.i(LOG_ID, "Starting service in foreground!")
-                startForeground(NOTIFICATION_ID, getNotification())
+                startForeground(NOTIFICATION_ID, getNotification(),
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+                    } else {
+                        0
+                    })
                 isForegroundService = true
             } else if ( isForegroundService && intent?.getBooleanExtra(Constants.ACTION_STOP_FOREGROUND, false) == true ) {
                 isForegroundService = false
