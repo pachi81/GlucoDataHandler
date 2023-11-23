@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         try {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_main)
-            Log.d(LOG_ID, "onCreate called")
+            Log.v(LOG_ID, "onCreate called")
 
             GlucoDataServiceMobile.start(this, true)
 
@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         try {
             super.onPause()
             InternalNotifier.remNotifier(this)
-            Log.d(LOG_ID, "onPause called")
+            Log.v(LOG_ID, "onPause called")
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.message.toString() )
         }
@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     override fun onResume() {
         try {
             super.onResume()
-            Log.d(LOG_ID, "onResume called")
+            Log.v(LOG_ID, "onResume called")
             update()
             InternalNotifier.addNotifier(this, mutableSetOf(
                 NotifySource.BROADCAST,
@@ -143,7 +143,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         try {
-            Log.d(LOG_ID, "onCreateOptionsMenu called")
+            Log.v(LOG_ID, "onCreateOptionsMenu called")
             val inflater = menuInflater
             inflater.inflate(R.menu.menu_items, menu)
             MenuCompat.setGroupDividerEnabled(menu!!, true)
@@ -156,7 +156,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         try {
-            Log.d(LOG_ID, "onOptionsItemSelected for " + item.itemId.toString())
+            Log.v(LOG_ID, "onOptionsItemSelected for " + item.itemId.toString())
             when(item.itemId) {
                 R.id.action_settings -> {
                     val intent = Intent(this, SettingsActivity::class.java)
@@ -204,7 +204,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun update() {
         try {
-            Log.d(LOG_ID, "update values")
+            Log.v(LOG_ID, "update values")
             txtBgValue.text = ReceiveData.getClucoseAsString()
             txtBgValue.setTextColor(ReceiveData.getClucoseColor())
             if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete()) {
@@ -215,7 +215,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             viewIcon.setImageIcon(Utils.getRateAsIcon())
             txtLastValue.text = ReceiveData.getAsString(this)
             if (WearPhoneConnection.nodesConnected) {
-                txtWearInfo.text = String.format(resources.getText(CR.string.activity_main_connected_label).toString(), WearPhoneConnection.getBatterLevelsAsString())
+                txtWearInfo.text = resources.getString(CR.string.activity_main_connected_label, WearPhoneConnection.getBatterLevelsAsString())
             }
             else
                 txtWearInfo.text = resources.getText(CR.string.activity_main_disconnected_label)
@@ -228,7 +228,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
-        Log.d(LOG_ID, "new intent received")
+        Log.v(LOG_ID, "new intent received")
         update()
     }
 }

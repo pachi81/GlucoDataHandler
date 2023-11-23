@@ -212,7 +212,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 viewIcon.setImageIcon(Utils.getRateAsIcon())
                 txtValueInfo.text = ReceiveData.getAsString(this)
                 if (WearPhoneConnection.nodesConnected) {
-                    txtConnInfo.text = String.format(resources.getText(CR.string.activity_connected_label).toString(), WearPhoneConnection.getBatterLevelsAsString())
+                    txtConnInfo.text = resources.getString(CR.string.activity_connected_label, WearPhoneConnection.getBatterLevelsAsString())
                 } else
                     txtConnInfo.text = resources.getText(CR.string.activity_disconnected_label)
             }

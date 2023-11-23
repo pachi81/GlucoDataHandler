@@ -37,6 +37,7 @@
     <string name="activity_main_disconnected_label">Wear: disconnected</string>
     <string name="activity_main_car_connected_label">Android Auto: connected</string>
     <string name="activity_main_car_disconnected_label">Android Auto: disconnected</string>
+    <string name="no_new_value">No new value since %1$d minutes!</string>
 
     <string name="menu_settings">Settings</string>
     <string name="menu_sources">Sources</string>
@@ -139,7 +140,7 @@
     <string name="pref_switch_car_notification">Android Auto notifications</string>
     <string name="pref_switch_car_notification_summary">Notification for Android Auto.\nFor using this app in Android Auto, you have to activate developer settings in Android Auto by clicking several times on the version. Then you have to enable "Unknown sources" in the developer settings menu.</string>
     <string name="pref_car_notification_interval">Notification interval</string>
-    <string name="pref_car_notification_interval_summary">Interval for showing notifications. "Alarm only" will only trigger notifications if the values are outside of the target range.</string>
+    <string name="pref_car_notification_interval_summary">Interval for showing notifications. \"Alarm only\" will only trigger notifications if the values are outside of the target range.</string>
     <string name="pref_switch_car_media">Dummy Media Player</string>
     <string name="pref_switch_car_media_summary">Show the glucose value as current song for Android Auto.</string>
     <string name="pref_switch_send_to_aod">Send glucodata broadcast</string>

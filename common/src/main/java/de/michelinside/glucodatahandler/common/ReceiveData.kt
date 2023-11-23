@@ -317,7 +317,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             val elapsed_time = getElapsedTimeMinute()
             if (elapsed_time > 60)
                 return context.getString(R.string.elapsed_time_hour)
-            return String.format(context.getString(R.string.elapsed_time), elapsed_time)
+            return context.getString(R.string.elapsed_time, elapsed_time)
         } else if (short)
             return DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(time))
         else
@@ -400,14 +400,23 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return result
     }
 
-    fun changeIsMmol(newValue: Boolean, context: Context) {
+    fun changeIsMmol(newValue: Boolean, context: Context? = null) {
         if (isMmol != newValue) {
-            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             isMmolValue = newValue
-            Log.i(LOG_ID, "Unit changed to " + if(isMmolValue) "mmol/l" else "mg/dl")
-            with(sharedPref.edit()) {
-                putBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
-                apply()
+            if (isMmolValue != Utils.isMmolValue(glucose)) {
+                if (isMmolValue)
+                    glucose = Utils.mgToMmol(glucose)
+                else
+                    glucose = Utils.mmolToMg(glucose)
+            }
+            Log.i(LOG_ID, "Unit changed to " + glucose + if(isMmolValue) "mmol/l" else "mg/dl")
+            if (context != null) {
+                val sharedPref =
+                    context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                with(sharedPref.edit()) {
+                    putBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
+                    apply()
+                }
             }
         }
     }
@@ -452,13 +461,13 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         targetMaxValue = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, targetMaxValue)
         lowValue = sharedPref.getFloat(Constants.SHARED_PREF_LOW_GLUCOSE, lowValue)
         highValue = sharedPref.getFloat(Constants.SHARED_PREF_HIGH_GLUCOSE, highValue)
-        isMmolValue = sharedPref.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
         use5minDelta = sharedPref.getBoolean(Constants.SHARED_PREF_FIVE_MINUTE_DELTA, use5minDelta)
         colorOK = sharedPref.getInt(Constants.SHARED_PREF_COLOR_OK, colorOK)
         colorOutOfRange = sharedPref.getInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, colorOutOfRange)
         colorAlarm = sharedPref.getInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm)        
         lowAlarmDuration = sharedPref.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_LOW, lowAlarmDuration/60000)*60000
         highAlarmDuration = sharedPref.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_HIGH, highAlarmDuration/60000)*60000
+        changeIsMmol(sharedPref.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol))
         Log.i(LOG_ID, "Raw low/min/max/high set: " + lowValue.toString() + "/" + targetMinValue.toString() + "/" + targetMaxValue.toString() + "/" + highValue.toString()
                 + " mg/dl - unit: " + getUnit()
                 + " - 5 min delta: " + use5minDelta

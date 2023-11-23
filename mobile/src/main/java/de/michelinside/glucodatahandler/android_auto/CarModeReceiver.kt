@@ -36,6 +36,7 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     private var car_connected = false
     private var last_notification_time = 0L
     private var notification_interval = 1L   // every minute -> always, -1L: only for alarms
+    private var forceNextNotify = false
     val connected: Boolean get() = car_connected
     @SuppressLint("StaticFieldLeak")
     private lateinit var notificationCompat: NotificationCompat.Builder
@@ -159,20 +160,29 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
 
     fun removeNotification() {
         notificationMgr.cancel(NOTIFICATION_ID)  // remove notification
+        forceNextNotify = false
     }
 
     private fun getTimeDiffMinute(): Long {
         return Utils.round((ReceiveData.time-last_notification_time).toFloat()/60000, 0).toLong()
     }
 
-    private fun canShowNotification(dataSource: NotifySource, isObsolete: Boolean): Boolean {
+    private fun canShowNotification(isObsolete: Boolean): Boolean {
         if (enable_notification && car_connected) {
-            if(ReceiveData.forceAlarm || ReceiveData.getAlarmType() == ReceiveData.AlarmType.LOW_ALARM || isObsolete)
+            if(notification_interval == 1L || ReceiveData.forceAlarm)
                 return true
+            if (ReceiveData.getAlarmType() == ReceiveData.AlarmType.LOW_ALARM || isObsolete) {
+                forceNextNotify = true  // if obsolete or LOW_ALARM, the next value is important!
+                return true
+            }
+            if (forceNextNotify) {
+                forceNextNotify = false
+                return true
+            }
             if (notification_interval > 1L) {
                 return getTimeDiffMinute() >= notification_interval
             }
-            return true  // always
+            return false
         }
         return false
     }
@@ -201,7 +211,7 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
             .build()
         val messagingStyle = NotificationCompat.MessagingStyle(person)
         if (isObsolete)
-            messagingStyle.conversationTitle = context.getString(CR.string.tasker_event_glucodata_obsolete)
+            messagingStyle.conversationTitle = context.getString(CR.string.no_new_value, ReceiveData.getElapsedTimeMinute())
         else
             messagingStyle.conversationTitle = ReceiveData.getClucoseAsString()  + " (" + ReceiveData.getDeltaAsString() + ")"
         messagingStyle.isGroupConversation = false

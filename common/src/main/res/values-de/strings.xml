@@ -36,6 +36,7 @@
     <string name="activity_main_disconnected_label">Uhr: getrennt</string>
     <string name="activity_main_car_connected_label">Android Auto: verbunden</string>
     <string name="activity_main_car_disconnected_label">Android Auto: getrennt</string>
+    <string name="no_new_value">Kein neuer Wert seit %1$d Minuten!</string>
 
     <string name="menu_settings">Einstellungen</string>
     <string name="menu_sources">Quellen</string>
@@ -123,7 +124,7 @@
     <string name="pref_switch_car_media">Dummy Media Player</string>
     <string name="pref_switch_car_media_summary">Stellt den Glucose Wert als aktuellen Song dar.</string>
     <string name="pref_car_notification_interval">Benachrichtigungsintervall</string>
-    <string name="pref_car_notification_interval_summary">Intervall, um die Benachrichtigungspopups in Android Auto anzuzeigen. "Nur für Alarme" zeigt nur die Popups für Werte außerhalb des Zielbereiches an.</string>
+    <string name="pref_car_notification_interval_summary">Intervall, um die Benachrichtigungspopups in Android Auto anzuzeigen. \"Nur für Alarme\" zeigt nur die Popups für Werte außerhalb des Zielbereiches an.</string>
     <string name="pref_switch_send_to_aod">Glucodata Broadcast senden</string>
     <string name="pref_switch_send_to_aod_summary">Glucodata Broadcast für neue Werte von allen Quellen senden.</string>
     <string name="pref_button_select_target">Glucodata Empfänger definieren</string>
