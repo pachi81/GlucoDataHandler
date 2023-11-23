@@ -81,7 +81,7 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         notification_interval = sharedPref.getString(Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL, "1")!!.toLong()
         if(init && car_connected && cur_enabled != enable_notification) {
             if(enable_notification)
-                showNotification()
+                showNotification(GlucoDataService.context!!, ReceiveData.isObsolete())
             else
                 removeNotification()
         }
@@ -140,8 +140,7 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                     NotifySource.BROADCAST,
                     NotifySource.MESSAGECLIENT,
                     NotifySource.OBSOLETE_VALUE))
-                if(!ReceiveData.isObsolete())
-                    showNotification()
+                showNotification(GlucoDataService.context!!, ReceiveData.isObsolete())
             }
             InternalNotifier.notify(GlucoDataService.context!!, NotifySource.CAR_CONNECTION, null)
         } catch (exc: Exception) {
@@ -152,7 +151,7 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.d(LOG_ID, "OnNotifyData called")
         try {
-            showNotification()
+            showNotification(context, dataSource == NotifySource.OBSOLETE_VALUE)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() )
         }
@@ -166,9 +165,9 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         return Utils.round((ReceiveData.time-last_notification_time).toFloat()/60000, 0).toLong()
     }
 
-    private fun canShowNotification(): Boolean {
+    private fun canShowNotification(dataSource: NotifySource, isObsolete: Boolean): Boolean {
         if (enable_notification && car_connected) {
-            if(ReceiveData.forceAlarm || ReceiveData.getAlarmType() == ReceiveData.AlarmType.LOW_ALARM)
+            if(ReceiveData.forceAlarm || ReceiveData.getAlarmType() == ReceiveData.AlarmType.LOW_ALARM || isObsolete)
                 return true
             if (notification_interval > 1L) {
                 return getTimeDiffMinute() >= notification_interval
@@ -178,14 +177,14 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         return false
     }
 
-    fun showNotification() {
+    fun showNotification(context: Context, isObsolete: Boolean) {
         try {
-            if (canShowNotification()) {
+            if (canShowNotification(isObsolete)) {
                 Log.d(LOG_ID, "showNotification called")
                 notificationCompat
                     .setLargeIcon(Utils.getRateAsBitmap(resizeFactor = 0.75F))
                     .setWhen(ReceiveData.time)
-                    .setStyle(createMessageStyle())
+                    .setStyle(createMessageStyle(context, isObsolete))
                 notificationMgr.notify(NOTIFICATION_ID, notificationCompat)
                 last_notification_time = ReceiveData.time
             }
@@ -194,14 +193,17 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         }
     }
 
-    private fun createMessageStyle(): NotificationCompat.MessagingStyle {
+    private fun createMessageStyle(context: Context, isObsolete: Boolean): NotificationCompat.MessagingStyle {
         val person = Person.Builder()
             .setIcon(IconCompat.createWithBitmap(Utils.getRateAsBitmap(resizeFactor = 0.75F)!!))
             .setName(ReceiveData.getClucoseAsString())
             .setImportant(true)
             .build()
         val messagingStyle = NotificationCompat.MessagingStyle(person)
-        messagingStyle.conversationTitle = ReceiveData.getClucoseAsString()  + " (" + ReceiveData.getDeltaAsString() + ")"
+        if (isObsolete)
+            messagingStyle.conversationTitle = context.getString(CR.string.tasker_event_glucodata_obsolete)
+        else
+            messagingStyle.conversationTitle = ReceiveData.getClucoseAsString()  + " (" + ReceiveData.getDeltaAsString() + ")"
         messagingStyle.isGroupConversation = false
         messagingStyle.addMessage(DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(ReceiveData.time)), System.currentTimeMillis(), person)
         return messagingStyle
