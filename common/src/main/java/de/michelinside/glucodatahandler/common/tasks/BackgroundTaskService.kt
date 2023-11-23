@@ -95,12 +95,30 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         return newInterval
     }
 
+    private fun active(elapsedTime: Long) : Boolean {
+        backgroundTaskList.forEach {
+            if (it.active(elapsedTime))
+                return true
+        }
+        Log.i(LOG_ID, "Not active for elapsed time " + elapsedTime)
+        return false
+    }
+
+    private fun getDelayResult(): Long {
+        var delayResult = DEFAULT_DELAY_MS
+        backgroundTaskList.forEach {
+            if (it.active(elapsedTimeMinute) && it.getDelayMs() > delayResult)
+                delayResult = it.getDelayMs()
+        }
+        return delayResult
+    }
+
     private fun checkTimer() {
         try {
             val newInterval = getInterval()
-            val newDelay = getDelay()
+            val newDelay = getDelayResult()
             if (curInterval != newInterval || curDelay != newDelay) {
-                Log.i(LOG_ID, "Interval has changed from " + curInterval + "m+" + curDelay + "s to " + newInterval + "m+" + newDelay + "s")
+                Log.i(LOG_ID, "Interval has changed from " + curInterval + "m+" + curDelay + "ms to " + newInterval + "m+" + newDelay + "ms")
                 val triggerExecute = curInterval <= 0 && newInterval > 0  // changed from inactive to active so trigger an initial execution
                 curInterval = newInterval
                 curDelay = newDelay
@@ -116,25 +134,6 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         } catch (ex: Exception) {
             Log.e(LOG_ID, "calculateInterval: " + ex)
         }
-    }
-
-    private fun active(elapsedTime: Long) : Boolean {
-        backgroundTaskList.forEach {
-            if (it.active(elapsedTime))
-                return true
-        }
-        Log.i(LOG_ID, "Not active for elapsed time " + elapsedTime)
-        return false
-    }
-
-    open fun getDelay(): Long = 0L
-
-    private val useDefaultDelay: Boolean get() = (getDelay()*1000 <= DEFAULT_DELAY_MS)
-
-    private fun getDelayResult(): Long {
-        if(useDefaultDelay)
-            return DEFAULT_DELAY_MS
-        return getDelay()*1000
     }
 
     private fun getNextAlarm(): Calendar? {
