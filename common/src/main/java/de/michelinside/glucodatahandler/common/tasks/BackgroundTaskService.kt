@@ -104,7 +104,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         return false
     }
 
-    private fun getDelayResult(): Long {
+    private fun getDelay(): Long {
         var delayResult = DEFAULT_DELAY_MS
         backgroundTaskList.forEach {
             if (it.active(elapsedTimeMinute) && it.getDelayMs() > delayResult)
@@ -116,7 +116,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     private fun checkTimer() {
         try {
             val newInterval = getInterval()
-            val newDelay = getDelayResult()
+            val newDelay = getDelay()
             if (curInterval != newInterval || curDelay != newDelay) {
                 Log.i(LOG_ID, "Interval has changed from " + curInterval + "m+" + curDelay + "ms to " + newInterval + "m+" + newDelay + "ms")
                 val triggerExecute = curInterval <= 0 && newInterval > 0  // changed from inactive to active so trigger an initial execution
@@ -144,12 +144,12 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
             Log.d(LOG_ID, "elapsed: " + elapsedTimeMin + " nextTrigger: " + nextTriggerMin + " - interval: "+ curInterval)
             if (active(nextTriggerMin)) {
                 val nextAlarmCal = Calendar.getInstance()
-                nextAlarmCal.timeInMillis = ReceiveData.time + TimeUnit.MINUTES.toMillis(nextTriggerMin) + getDelayResult()
+                nextAlarmCal.timeInMillis = ReceiveData.time + TimeUnit.MINUTES.toMillis(nextTriggerMin) + getDelay()
                 if (nextAlarmCal.get(Calendar.SECOND) < TimeUnit.MILLISECONDS.toSeconds(DEFAULT_DELAY_MS)) {
                     nextAlarmCal.add(Calendar.SECOND, -1*(nextAlarmCal.get(Calendar.SECOND)+1))
                 }
                 Log.i(LOG_ID, "Set next alarm after " + nextTriggerMin + " minute(s) at " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(nextAlarmCal.time)
-                      + " (received at " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(ReceiveData.time)) + ") with a delay of " + getDelayResult()/1000 + "s")
+                      + " (received at " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(ReceiveData.time)) + ") with a delay of " + getDelay()/1000 + "s")
                 return nextAlarmCal
             }
         }
@@ -160,7 +160,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     abstract fun getAlarmReceiver() : Class<*>
     private fun init() {
         if (pendingIntent == null) {
-            Log.d(LOG_ID, "init pendingIntent")
+            Log.v(LOG_ID, "init pendingIntent")
             val i = Intent(context, getAlarmReceiver())
             pendingIntent = PendingIntent.getBroadcast(
                 context,
@@ -170,13 +170,13 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
             )
         }
         if (alarmManager == null) {
-            Log.d(LOG_ID, "init alarmManager")
+            Log.v(LOG_ID, "init alarmManager")
             alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         }
     }
 
     private fun startTimer() {
-        Log.d(LOG_ID, "startTimer called")
+        Log.v(LOG_ID, "startTimer called")
         val nextAlarm = getNextAlarm()
         if (nextAlarm != null) {
             init()
@@ -198,7 +198,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
 
     private fun stopTimer() {
         if (alarmManager != null && pendingIntent != null) {
-            Log.d(LOG_ID, "stopTimer called")
+            Log.v(LOG_ID, "stopTimer called")
             alarmManager!!.cancel(pendingIntent!!)
             alarmManager = null
         }
@@ -207,7 +207,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         try {
             if (sharedPreferences != null) {
-                    Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
+                    Log.v(LOG_ID, "onSharedPreferenceChanged called for " + key)
                     var changed = false
                     backgroundTaskList.forEach {
                         if (it.checkPreferenceChanged(sharedPreferences, key, context))
@@ -224,7 +224,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString())
+            Log.v(LOG_ID, "OnNotifyData for source " + dataSource.toString())
             // restart time
             startTimer()
         } catch (ex: Exception) {
@@ -260,7 +260,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
 
     fun alarmTrigger(intent: Intent?) {
         try {
-            Log.d(LOG_ID, "onReceive: " + intent.toString())
+            Log.v(LOG_ID, "onReceive: " + intent.toString())
             if (active(elapsedTimeMinute)) {
                 executeTasks()
             }
