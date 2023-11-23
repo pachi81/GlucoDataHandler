@@ -10,9 +10,8 @@ object TimeTaskService: BackgroundTaskService(42, "GDH.Task.TimeTaskService") {
     override fun getAlarmReceiver() : Class<*> = TimeAlarmReceiver::class.java
 
     override fun getBackgroundTasks(): MutableList<BackgroundTask> =
-        mutableListOf(ElapsedTimeTask(), ObsoleteTask())
+        mutableListOf(ElapsedTimeTask())
 }
-
 
 
 class TimeAlarmReceiver(): BroadcastReceiver() {
