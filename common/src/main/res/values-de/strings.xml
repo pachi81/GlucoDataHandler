@@ -122,11 +122,11 @@
     <string name="pref_switch_car_notification_summary">Benachrichtigung für Android Auto.\nUm diese App in Android Auto zu verwenden, müssen die Entwicklereinstellungen aktiviert werden. Dafür mehrfach in Android Auto auf Version klicken. Danach in den Entwicklereinstellungen "Unbekannte Quellen" aktivieren.</string>
     <string name="pref_switch_car_media">Dummy Media Player</string>
     <string name="pref_switch_car_media_summary">Stellt den Glucose Wert als aktuellen Song dar.</string>
-    <string name="pref_car_notification_interval">Benachrichtigungs Intervall</string>
+    <string name="pref_car_notification_interval">Benachrichtigungsintervall</string>
     <string name="pref_car_notification_interval_summary">Intervall, um die Benachrichtigungspopups in Android Auto anzuzeigen. "Nur für Alarme" zeigt nur die Popups für Werte außerhalb des Zielbereiches an.</string>
     <string name="pref_switch_send_to_aod">Glucodata Broadcast senden</string>
     <string name="pref_switch_send_to_aod_summary">Glucodata Broadcast für neue Werte von allen Quellen senden.</string>
-    <string name="pref_button_select_target">GlucoData Empfänger definieren</string>
+    <string name="pref_button_select_target">Glucodata Empfänger definieren</string>
     <string name="pref_button_select_target_summary">Empfänger auswählen, an die der Glucodata Broadcast gesendet wird. Ein globaler Broadcast kann von allen Apps empfangen werden, welche sich für diesen Broadcast intern registriert haben.</string>
     <string name="pref_switch_send_to_xdrip">Patched libre Broadcast senden</string>
     <string name="pref_switch_send_to_xdrip_summary">Weiterleiten von Glucose Werten zu xDrip+.\nIn xDrip+ als Quelle \'Libre (patched app)\' einstellen.</string>
