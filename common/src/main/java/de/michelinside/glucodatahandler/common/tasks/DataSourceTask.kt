@@ -39,6 +39,7 @@ enum class SourceState(val resId: Int) {
 abstract class DataSourceTask(private val enabledKey: String, protected val source: DataSource) : BackgroundTask() {
     private var enabled = false
     private var interval = 1L
+    private var delaySec = 10L
 
     companion object {
         private val LOG_ID = "GDH.Task.DataSourceTask"
@@ -264,6 +265,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         return interval
     }
 
+    override fun getDelayMs(): Long = delaySec * 1000L
+
     override fun active(elapsetTimeMinute: Long): Boolean {
         return enabled
     }
@@ -272,6 +275,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         if(key == null) {
             enabled = sharedPreferences.getBoolean(enabledKey, false)
             interval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
+            delaySec = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, 10).toLong()
             return true
         } else {
             var result = false
@@ -291,7 +295,10 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                     }
                 }
                 Constants.SHARED_PREF_SOURCE_DELAY -> {
-                    result = true  // retrigger alarm after delay has changed
+                    if (delaySec != sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, 10).toLong()) {
+                        delaySec = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, 10).toLong()
+                        result = true  // retrigger alarm after delay has changed
+                    }
                 }
             }
             return result
