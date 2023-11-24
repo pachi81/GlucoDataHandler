@@ -28,11 +28,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
 
     enum class AlarmType {
         NONE,
-        LOW_ALARM,
+        VERY_LOW,
         LOW,
         OK,
         HIGH,
-        HIGH_ALARM
+        VERY_HIGH
     }
 
     var sensorID: String? = null
@@ -123,7 +123,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return (context.getString(R.string.info_label_delta) + ": " + getDeltaAsString() + " " + getUnit() + "\r\n" +
                 context.getString(R.string.info_label_rate) + ": " + rate + "\r\n" +
                 context.getString(R.string.info_label_timestamp) + ": " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(time)) + "\r\n" +
-                context.getString(R.string.info_label_alarm) + ": " + alarm + "\r\n" +
+                context.getString(R.string.info_label_alarm) + ": " + getAlarmType() + " (" + alarm + ")\r\n" +
                 if (isMmol) context.getString(R.string.info_label_raw) + ": " + rawValue + " mg/dl\r\n" else "" ) +
                 context.getString(R.string.info_label_sensor_id) + ": " + sensorID + "\r\n" +
                 context.getString(R.string.info_label_source) + ": " + context.getString(source.resId)
@@ -175,9 +175,9 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         if(isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
             return AlarmType.NONE
         if(((alarm and 7) == 6) || (high > 0F && glucose >= high))
-            return AlarmType.HIGH_ALARM
+            return AlarmType.VERY_HIGH
         if(((alarm and 7) == 7) || (low > 0F && glucose <= low))
-            return AlarmType.LOW_ALARM
+            return AlarmType.VERY_LOW
         if(((alarm and 3) == 3) || (targetMin > 0 && glucose < targetMin ))
             return AlarmType.LOW
         if(((alarm and 3) == 2) || (targetMax > 0 && glucose > targetMax ))
@@ -189,10 +189,10 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         alarm = 0 // reset to calculate again
         val curAlarmType = getAlarmType()
         val curAlarm = when(curAlarmType) {
-            AlarmType.HIGH_ALARM -> 6
+            AlarmType.VERY_HIGH -> 6
             AlarmType.HIGH -> 2
             AlarmType.LOW -> 3
-            AlarmType.LOW_ALARM -> 7
+            AlarmType.VERY_LOW -> 7
             else -> 0
         }
         forceAlarm = checkForceAlarm(curAlarmType)
@@ -216,7 +216,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     )
         when(curAlarmType) {
             AlarmType.LOW,
-            AlarmType.LOW_ALARM -> {
+            AlarmType.VERY_LOW -> {
                 if(curAlarmType < lastAlarmType || ((delta < 0F || rate < 0F) && (time - lastAlarmTime >= lowAlarmDuration)))
                 {
                     lastAlarmTime = time
@@ -227,7 +227,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 return false
             }
             AlarmType.HIGH,
-            AlarmType.HIGH_ALARM -> {
+            AlarmType.VERY_HIGH -> {
                 if(curAlarmType > lastAlarmType || ((delta > 0F || rate > 0F) && (time - lastAlarmTime >= highAlarmDuration)))
                 {
                     lastAlarmTime = time
@@ -249,11 +249,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
 
         return when(getAlarmType()) {
             AlarmType.NONE -> Color.GRAY
-            AlarmType.LOW_ALARM -> colorAlarm
+            AlarmType.VERY_LOW -> colorAlarm
             AlarmType.LOW -> colorOutOfRange
             AlarmType.OK -> colorOK
             AlarmType.HIGH -> colorOutOfRange
-            AlarmType.HIGH_ALARM -> colorAlarm
+            AlarmType.VERY_HIGH -> colorAlarm
         }
     }
 

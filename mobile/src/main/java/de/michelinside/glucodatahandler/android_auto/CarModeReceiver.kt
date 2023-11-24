@@ -172,8 +172,8 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         if (enable_notification && car_connected) {
             if(notification_interval == 1L || ReceiveData.forceAlarm)
                 return true
-            if (ReceiveData.getAlarmType() == ReceiveData.AlarmType.LOW_ALARM || isObsolete) {
-                forceNextNotify = true  // if obsolete or LOW_ALARM, the next value is important!
+            if (ReceiveData.getAlarmType() == ReceiveData.AlarmType.VERY_LOW || isObsolete) {
+                forceNextNotify = true  // if obsolete or VERY_LOW, the next value is important!
                 return true
             }
             if (forceNextNotify) {
