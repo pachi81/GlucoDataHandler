@@ -26,13 +26,13 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     const val SOURCE_RES_ID = "source_resid"
     private const val WAKE_LOCK_TIMEOUT = 10000L // 10 seconds
 
-    enum class AlarmType {
-        NONE,
-        VERY_LOW,
-        LOW,
-        OK,
-        HIGH,
-        VERY_HIGH
+    enum class AlarmType(val resId: Int) {
+        NONE(R.string.alarm_none),
+        VERY_LOW(R.string.alarm_very_low),
+        LOW(R.string.alarm_low),
+        OK(R.string.alarm_none),
+        HIGH(R.string.alarm_high),
+        VERY_HIGH(R.string.alarm_very_high)
     }
 
     var sensorID: String? = null
@@ -123,7 +123,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return (context.getString(R.string.info_label_delta) + ": " + getDeltaAsString() + " " + getUnit() + "\r\n" +
                 context.getString(R.string.info_label_rate) + ": " + rate + "\r\n" +
                 context.getString(R.string.info_label_timestamp) + ": " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(time)) + "\r\n" +
-                context.getString(R.string.info_label_alarm) + ": " + getAlarmType() + " (" + alarm + ")\r\n" +
+                context.getString(R.string.info_label_alarm) + ": " + context.getString(getAlarmType().resId) + (if (forceAlarm) " ⚠ " else "" ) + " (" + alarm + ")\r\n" +
                 if (isMmol) context.getString(R.string.info_label_raw) + ": " + rawValue + " mg/dl\r\n" else "" ) +
                 context.getString(R.string.info_label_sensor_id) + ": " + sensorID + "\r\n" +
                 context.getString(R.string.info_label_source) + ": " + context.getString(source.resId)

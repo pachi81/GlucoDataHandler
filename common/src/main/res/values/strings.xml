@@ -29,6 +29,12 @@
     <string name="button_cancel">Cancel</string>
     <string name="empty_string" translatable="false" />
 
+    <string name="alarm_none">-</string>
+    <string name="alarm_very_low">very low</string>
+    <string name="alarm_low">low</string>
+    <string name="alarm_high">high</string>
+    <string name="alarm_very_high">very high</string>
+
     <!-- mobile -->
 
     <string name="activity_main_battery_optimization_disabled">Battery optimization is enabled.</string>

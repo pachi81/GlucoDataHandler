@@ -27,6 +27,12 @@
     <string name="button_ok">OK</string>
     <string name="button_cancel">Anuluj</string>
 
+    <string name="alarm_none">-</string>
+    <string name="alarm_very_low">bardzo niski</string>
+    <string name="alarm_low">niski</string>
+    <string name="alarm_high">wysoki</string>
+    <string name="alarm_very_high">bardzo wysoki</string>
+
     <!-- mobile -->
 
     <string name="activity_main_battery_optimization_disabled">Optymalizacja baterii jest włączona.</string>

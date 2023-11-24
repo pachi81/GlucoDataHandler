@@ -27,6 +27,12 @@
     <string name="button_ok">OK</string>
     <string name="button_cancel">Abbrechen</string>
 
+    <string name="alarm_none">-</string>
+    <string name="alarm_very_low">sehr tief</string>
+    <string name="alarm_low">tief</string>
+    <string name="alarm_high">hoch</string>
+    <string name="alarm_very_high">sehr hoch</string>
+
     <!-- mobile -->
 
     <string name="activity_main_battery_optimization_disabled">Akkuoptimierungen sind aktiv.</string>
