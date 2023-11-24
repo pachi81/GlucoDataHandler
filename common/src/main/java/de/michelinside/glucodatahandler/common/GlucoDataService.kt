@@ -90,12 +90,10 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             val isForeground = intent?.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
             if (isForeground == true && !isForegroundService) {
                 Log.i(LOG_ID, "Starting service in foreground!")
-                startForeground(NOTIFICATION_ID, getNotification(),
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
-                    } else {
-                        0
-                    })
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                    startForeground(NOTIFICATION_ID, getNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+                else
+                    startForeground(NOTIFICATION_ID, getNotification())
                 isForegroundService = true
             } else if ( isForegroundService && intent?.getBooleanExtra(Constants.ACTION_STOP_FOREGROUND, false) == true ) {
                 isForegroundService = false

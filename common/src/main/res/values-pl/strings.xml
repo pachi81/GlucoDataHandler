@@ -143,10 +143,10 @@
     <string name="pref_switch_send_to_xdrip_summary">Prześlij dalej wartości glukozy do xDrip+. Wybierz \&quot;Libre (patched app)\&quot; jako źródło w xDrip+.</string>
     <string name="pref_button_select_xdrip_target">Identyfikacja odbiorców „patched libre”</string>
     <string name="pref_button_select_xdrip_target_summary">Wybierz odbiorców, do których wysyłana jest transmisja „patched libre broadcast”. Transmisja globalna będzie wysyłana do każdej aplikacji dynamicznie odbierającej tę transmisję.</string>
-    <string name="pref_switch_send_xdrip_broadcast">Wyślij transmisję „xDrip broadcast”</string>
+    <string name="pref_switch_send_xdrip_broadcast">Wyślij transmisję xDrip+ broadcast</string>
     <string name="pref_switch_send_xdrip_broadcast_summary">Wysyłaj transmisję tak, jak wysyła xDrip+. Na przykład do AAPS.</string>
-    <string name="pref_button_select_xdrip_broadcast_target">Identyfikacja odbiorców transmisji xDrip</string>
-    <string name="pref_button_select_xdrip_broadcast_target_summary">Wybierz odbiorców, do których wysyłana jest transmisja „xDrip broadcast”. Transmisja globalna będzie wysyłana do każdej aplikacji dynamicznie odbierającej tę transmisję.</string>
+    <string name="pref_button_select_xdrip_broadcast_target">Identyfikacja odbiorców transmisji xDrip+</string>
+    <string name="pref_button_select_xdrip_broadcast_target_summary">Wybierz odbiorców, do których wysyłana jest transmisja xDrip+ broadcast. Transmisja globalna będzie wysyłana do każdej aplikacji dynamicznie odbierającej tę transmisję.</string>
     <string name="pref_switch_use_mmol">Użyj mmol/l</string>
     <string name="pref_switch_use_mmol_summary">Konwersja wartości z xDrip+ na mmol/l.</string>
     <string name="pref_switch_use_5_min_delta">5-minutowa delta</string>

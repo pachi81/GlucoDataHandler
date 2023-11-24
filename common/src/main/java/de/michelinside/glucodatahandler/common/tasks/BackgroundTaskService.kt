@@ -119,7 +119,11 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
             val newDelay = getDelay()
             if (curInterval != newInterval || curDelay != newDelay) {
                 Log.i(LOG_ID, "Interval has changed from " + curInterval + "m+" + curDelay + "ms to " + newInterval + "m+" + newDelay + "ms")
-                val triggerExecute = curInterval <= 0 && newInterval > 0  // changed from inactive to active so trigger an initial execution
+                var triggerExecute = curInterval <= 0 && newInterval > 0  // changed from inactive to active so trigger an initial execution
+                if (!triggerExecute && curInterval > newInterval && elapsedTimeMinute >= newInterval) {
+                    // interval get decreased, so check for execution is needed
+                    triggerExecute = true
+                }
                 curInterval = newInterval
                 curDelay = newDelay
                 if(triggerExecute && initialExecution) {

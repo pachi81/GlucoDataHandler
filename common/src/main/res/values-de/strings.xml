@@ -133,10 +133,10 @@
     <string name="pref_switch_send_to_xdrip_summary">Weiterleiten von Glucose Werten zu xDrip+.\nIn xDrip+ als Quelle \'Libre (patched app)\' einstellen.</string>
     <string name="pref_button_select_xdrip_target">Patched Libre Empfänger definieren</string>
     <string name="pref_button_select_xdrip_target_summary">Empfänger auswählen, an die der Patched Libre Broadcast gesendet wird. Ein globaler Broadcast kann von allen Apps empfangen werden, welche sich für diesen Broadcast intern registriert haben.</string>
-    <string name="pref_switch_send_xdrip_broadcast">xDrip Broadcast senden</string>
+    <string name="pref_switch_send_xdrip_broadcast">xDrip+ Broadcast senden</string>
     <string name="pref_switch_send_xdrip_broadcast_summary">Broadcast analog zum xDrip+ Broadcast senden. Zum Beispiel zu AAPS.</string>
-    <string name="pref_button_select_xdrip_broadcast_target">xDrip Broadcast Empfänger definieren</string>
-    <string name="pref_button_select_xdrip_broadcast_target_summary">Empfänger auswählen, an die der xDrip Broadcast gesendet wird. Ein globaler Broadcast kann von allen Apps empfangen werden, welche sich für diesen Broadcast intern registriert haben.</string>
+    <string name="pref_button_select_xdrip_broadcast_target">xDrip+ Broadcast Empfänger definieren</string>
+    <string name="pref_button_select_xdrip_broadcast_target_summary">Empfänger auswählen, an die der xDrip+ Broadcast gesendet wird. Ein globaler Broadcast kann von allen Apps empfangen werden, welche sich für diesen Broadcast intern registriert haben.</string>
     <string name="pref_switch_use_mmol">mmol/l</string>
     <string name="pref_switch_use_mmol_summary">Konvertiere Werte von xDrip+ in mmol/l.</string>
     <string name="pref_high_value">Hoher Glukosewert</string>

@@ -151,10 +151,10 @@
     <string name="pref_switch_send_to_xdrip_summary">Forward glucose values to xDrip+. Select \'Libre (patched app)\' as source in xDrip+.</string>
     <string name="pref_button_select_xdrip_target">Identify patched libre receivers</string>
     <string name="pref_button_select_xdrip_target_summary">Choose receivers sending the patched libre broadcast to. A global broadcast will send to every app registering dynamically on the broadcast.</string>
-    <string name="pref_switch_send_xdrip_broadcast">Send xDrip broadcast</string>
+    <string name="pref_switch_send_xdrip_broadcast">Send xDrip+ broadcast</string>
     <string name="pref_switch_send_xdrip_broadcast_summary">Send broadcast like xDrip+ is sending. For example to AAPS.</string>
-    <string name="pref_button_select_xdrip_broadcast_target">Identify xDrip broadcast receivers</string>
-    <string name="pref_button_select_xdrip_broadcast_target_summary">Choose receivers sending the xDrip broadcast to. A global broadcast will send to every app registering dynamically on the broadcast.</string>
+    <string name="pref_button_select_xdrip_broadcast_target">Identify xDrip+ broadcast receivers</string>
+    <string name="pref_button_select_xdrip_broadcast_target_summary">Choose receivers sending the xDrip+ broadcast to. A global broadcast will send to every app registering dynamically on the broadcast.</string>
     <string name="pref_switch_use_mmol">Use mmol/l</string>
     <string name="pref_switch_use_mmol_summary">Convert values from xDrip+ to mmol/l.</string>
     <string name="pref_switch_use_5_min_delta">5 minute delta</string>
