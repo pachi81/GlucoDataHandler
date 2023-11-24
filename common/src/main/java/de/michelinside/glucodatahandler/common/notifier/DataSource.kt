@@ -3,6 +3,7 @@ package de.michelinside.glucodatahandler.common.notifier
 import de.michelinside.glucodatahandler.common.R
 
 enum class DataSource(val resId: Int) {
+    NONE(R.string.empty_string),
     JUGGLUCO(R.string.source_juggluco),
     XDRIP(R.string.source_xdrip),
     PHONE(R.string.source_phone),
@@ -17,7 +18,7 @@ enum class DataSource(val resId: Int) {
                     return it
                 }
             }
-            return JUGGLUCO
+            return NONE
         }
     }
 }

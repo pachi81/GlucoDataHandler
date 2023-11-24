@@ -105,7 +105,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             return false
         }
 
-        var lastSource: DataSource = DataSource.LIBREVIEW
+        var lastSource: DataSource = DataSource.NONE
         var lastState: SourceState = SourceState.NONE
         var lastError: String = ""
         var lastErrorCode: Int = -1

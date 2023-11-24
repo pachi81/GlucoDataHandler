@@ -43,7 +43,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var time: Long = 0
     var timeDiff: Long = 0
     var rateLabel: String? = null
-    var source: DataSource = DataSource.JUGGLUCO
+    var source: DataSource = DataSource.NONE
     var forceAlarm: Boolean = false
     private var lowValue: Float = 0F
     private val low: Float get() {
@@ -561,7 +561,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     extras.putInt(ALARM, sharedGlucosePref.getInt(ALARM, alarm))
                     extras.putFloat(DELTA, sharedGlucosePref.getFloat(DELTA, deltaValue))
                     handleIntent(context, DataSource.fromResId(sharedGlucosePref.getInt(SOURCE_RES_ID,
-                        DataSource.JUGGLUCO.resId)), extras)
+                        DataSource.NONE.resId)), extras)
                 }
             }
         } catch (exc: Exception) {
