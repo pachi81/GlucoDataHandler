@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">GlucoDataHandler</string>
 
     <string name="info_label_sensor_id">Sensor</string>
     <string name="info_label_value">Wartość</string>

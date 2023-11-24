@@ -19,11 +19,23 @@ android {
 
     buildTypes {
         release {
-            debuggable false
-            jniDebuggable false
             // Enable ProGuard
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            resValue "string", "app_name", "GlucoDataHandler"
+        }
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-DEBUG'
+            minifyEnabled false
+            resValue "string", "app_name", "GDH Debug"
+        }
+        second {
+            applicationIdSuffix '.second'
+            versionNameSuffix '-SECOND'
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            resValue "string", "app_name", "GDH Second"
         }
         applicationVariants.all {
                 // this method is use to rename your all apk weather
@@ -81,6 +93,15 @@ afterEvaluate {
         include '**/*.apk'
         into rootProject.releasePath
     }
-
     assembleRelease.finalizedBy(copyAndroidApksPostBuild)
+
+    //noinspection ConfigurationAvoidance
+    def assembleSecond = tasks.getByPath(':mobile:assembleSecond')
+    def copyAndroidSecondApksPostBuild = tasks.register('copyAndroidSecondApksPostBuild', Copy) {
+        dependsOn assembleSecond
+        from "${projectDir}/second"
+        include '**/*.apk'
+        into rootProject.releasePath
+    }
+    assembleSecond.finalizedBy(copyAndroidSecondApksPostBuild)
 }

@@ -63,7 +63,7 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         createNotificationChannel(context)
         notificationCompat = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle(context.getString(CR.string.app_name))
+            .setContentTitle(context.getString(CR.string.name))
             .setContentText("Android Auto")
             .addInvisibleAction(createReplyAction(context))
             .addInvisibleAction(createDismissAction(context))

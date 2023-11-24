@@ -17,5 +17,6 @@ local.properties
 .apk
 release/
 debug/
+second/
 /.idea/shelf/Uncommitted_changes_before_rebase_[Changes]3/shelved.patch
 /.idea/shelf/Uncommitted_changes_before_rebase__Changes_3.xml
