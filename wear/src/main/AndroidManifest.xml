@@ -180,40 +180,40 @@
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
-        <service
-            android:name=".ShortGlucoseWithTrendRangeComplication"
-            android:exported="true"
-            android:icon="@drawable/glucose"
-            android:label="@string/short_value_trend_range"
-            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
-            <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
-            </intent-filter>
+        <!-- <service
+             android:name=".ShortGlucoseWithTrendRangeComplication"
+             android:exported="true"
+             android:icon="@drawable/glucose"
+             android:label="@string/short_value_trend_range"
+             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+             <intent-filter>
+                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+             </intent-filter>
 
-            <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
-                android:value="RANGED_VALUE" />
-            <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="60" />
-        </service>
-        <!--<service
-            android:name=".ShortGlucoseWithDeltaAndTrendRangeComplication"
-            android:exported="true"
-            android:icon="@drawable/glucose"
-            android:label="@string/short_value_delta_trend_range"
-            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
-            <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
-            </intent-filter>
+             <meta-data
+                 android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                 android:value="RANGED_VALUE" />
+             <meta-data
+                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                 android:value="60" />
+         </service>
+         <service
+             android:name=".ShortGlucoseWithDeltaAndTrendRangeComplication"
+             android:exported="true"
+             android:icon="@drawable/glucose"
+             android:label="@string/short_value_delta_trend_range"
+             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+             <intent-filter>
+                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+             </intent-filter>
 
-            <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
-                android:value="RANGED_VALUE" />
-            <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="60" />
-        </service>-->
+             <meta-data
+                 android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                 android:value="RANGED_VALUE" />
+             <meta-data
+                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                 android:value="60" />
+         </service>-->
         <service
             android:name=".ShortGlucoseWithDeltaComplication"
             android:exported="true"
@@ -265,7 +265,7 @@
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
-        <service
+        <!--<service
             android:name=".ShortGlucoseWithTrendTextComplication"
             android:exported="true"
             android:icon="@drawable/glucose"
@@ -281,7 +281,7 @@
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
-        </service>
+        </service>-->
         <service
             android:name=".DeltaIconComplication"
             android:exported="true"
@@ -384,7 +384,7 @@
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
-        <service
+        <!--<service
             android:name=".ShortTrendComplication"
             android:exported="true"
             android:icon="@drawable/icon_rate"
@@ -434,7 +434,7 @@
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
-        </service>
+        </service>-->
         <service
             android:name=".SmallTrendImageComplication"
             android:exported="true"

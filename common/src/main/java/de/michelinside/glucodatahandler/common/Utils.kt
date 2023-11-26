@@ -305,7 +305,7 @@ object Utils {
         if (random) {
             raw = Random.nextInt(40, 400)
             glucose = if(useMmol) mgToMmol(raw.toFloat()) else raw.toFloat()
-            rate = round(Random.nextFloat() + Random.nextInt(-4, 4).toFloat(), 2)
+            rate = Random.nextFloat() + Random.nextInt(-4, 4).toFloat()
         } else {
             if ((ReceiveData.rawValue >= 200 && rawDelta > 0) || (ReceiveData.rawValue <= 40 && rawDelta < 0)) {
                 rawDelta *= -1
@@ -335,7 +335,7 @@ object Utils {
         intent.putExtra(ReceiveData.SERIAL, "WUSEL_DUSEL")
         intent.putExtra(ReceiveData.MGDL, raw)
         intent.putExtra(ReceiveData.GLUCOSECUSTOM, glucose)
-        intent.putExtra(ReceiveData.RATE, rate)
+        intent.putExtra(ReceiveData.RATE, round(rate,2))
         intent.putExtra(ReceiveData.TIME, time)
         intent.putExtra(ReceiveData.ALARM, if (raw <= 70) 7 else if (raw >= 250) 6 else 0)
         return intent
