@@ -13,22 +13,26 @@ import androidx.appcompat.widget.SwitchCompat
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
+import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
 import de.michelinside.glucodatahandler.databinding.ActivityWaerBinding
 
 class WaerActivity : AppCompatActivity(), NotifierInterface {
 
-    private val LOG_ID = "GlucoDataHandler.Main"
+    private val LOG_ID = "GDH.Main"
     private lateinit var binding: ActivityWaerBinding
     private lateinit var txtBgValue: TextView
     private lateinit var viewIcon: ImageView
     private lateinit var txtVersion: TextView
     private lateinit var txtValueInfo: TextView
     private lateinit var txtConnInfo: TextView
+    private lateinit var txtSourceInfo: TextView
     private lateinit var switchColoredAod: SwitchCompat
     private lateinit var switchLargeTrendArrow: SwitchCompat
     private lateinit var switchNotifcation: SwitchCompat
     private lateinit var switchForground: SwitchCompat
     private lateinit var switchRelativeTime: SwitchCompat
+    private lateinit var switchLibreSource: SwitchCompat
+    private lateinit var switchNightscoutSource: SwitchCompat
     private lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +47,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
             viewIcon = findViewById(R.id.viewIcon)
             txtValueInfo = findViewById(R.id.txtValueInfo)
             txtConnInfo = findViewById(R.id.txtConnInfo)
+            txtSourceInfo = findViewById(R.id.txtSourceInfo)
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
@@ -108,7 +113,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                         apply()
                     }
                     // trigger update of each complication on change
-                    ActiveComplicationHandler.OnNotifyData(this, NotifyDataSource.SETTINGS, null)
+                    ActiveComplicationHandler.OnNotifyData(this, NotifySource.SETTINGS, null)
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Changing colored AOD exception: " + exc.message.toString() )
                 }
@@ -124,14 +129,42 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                         apply()
                     }
                     // trigger update of each complication on change
-                    ActiveComplicationHandler.OnNotifyData(this, NotifyDataSource.SETTINGS, null)
+                    ActiveComplicationHandler.OnNotifyData(this, NotifySource.SETTINGS, null)
                     update()
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Changing large arrow icon exception: " + exc.message.toString() )
                 }
             }
 
-            GlucoDataServiceWear.start(this)
+            switchLibreSource = findViewById(R.id.switchLibreView)
+            switchLibreSource.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_LIBRE_ENABLED, true)
+            switchLibreSource.setOnCheckedChangeListener { _, isChecked ->
+                Log.d(LOG_ID, "Libre view changed: " + isChecked.toString())
+                try {
+                    with (sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_LIBRE_ENABLED, isChecked)
+                        apply()
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Changing Libre view exception: " + exc.message.toString() )
+                }
+            }
+
+            switchNightscoutSource = findViewById(R.id.switchNightscoutSource)
+            switchNightscoutSource.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, true)
+            switchNightscoutSource.setOnCheckedChangeListener { _, isChecked ->
+                Log.d(LOG_ID, "Nightscout changed: " + isChecked.toString())
+                try {
+                    with (sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, isChecked)
+                        apply()
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Changing Nightscout exception: " + exc.message.toString() )
+                }
+            }
+
+            GlucoDataServiceWear.start(this, true)
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
@@ -153,12 +186,14 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
             Log.d(LOG_ID, "onResume called")
             update()
             InternalNotifier.addNotifier(this, mutableSetOf(
-                NotifyDataSource.BROADCAST,
-                NotifyDataSource.MESSAGECLIENT,
-                NotifyDataSource.CAPILITY_INFO,
-                NotifyDataSource.NODE_BATTERY_LEVEL,
-                NotifyDataSource.SETTINGS,
-                NotifyDataSource.OBSOLETE_VALUE))
+                NotifySource.BROADCAST,
+                NotifySource.MESSAGECLIENT,
+                NotifySource.CAPILITY_INFO,
+                NotifySource.NODE_BATTERY_LEVEL,
+                NotifySource.SETTINGS,
+                NotifySource.OBSOLETE_VALUE,
+                NotifySource.SOURCE_SETTINGS,
+                NotifySource.SOURCE_STATE_CHANGE))
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
@@ -177,20 +212,35 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 viewIcon.setImageIcon(Utils.getRateAsIcon())
                 txtValueInfo.text = ReceiveData.getAsString(this)
                 if (WearPhoneConnection.nodesConnected) {
-                    txtConnInfo.text = String.format(resources.getText(CR.string.activity_connected_label).toString(), WearPhoneConnection.getBatterLevelsAsString())
+                    txtConnInfo.text = resources.getString(CR.string.activity_connected_label, WearPhoneConnection.getBatterLevelsAsString())
                 } else
                     txtConnInfo.text = resources.getText(CR.string.activity_disconnected_label)
-
             }
+
+            val user = sharedPref.getString(Constants.SHARED_PREF_LIBRE_USER, "")!!.trim()
+            val password = sharedPref.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, "")!!.trim()
+            switchLibreSource.isEnabled = user.isNotEmpty() && password.isNotEmpty()
+            if(!switchLibreSource.isEnabled) {
+                switchLibreSource.isChecked = false
+            }
+
+            val url = sharedPref.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, "")!!.trim()
+            switchNightscoutSource.isEnabled = url.isNotEmpty()
+            if(!switchNightscoutSource.isEnabled) {
+                switchNightscoutSource.isChecked = false
+            }
+
+           txtSourceInfo.text = DataSourceTask.getState(this)
+
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
     }
 
-    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.d(LOG_ID, "new intent received from: " + dataSource.toString())
         update()
-        if (dataSource == NotifyDataSource.SETTINGS) {
+        if (dataSource == NotifySource.SETTINGS) {
             if (extras != null && extras.containsKey(Constants.SHARED_PREF_NOTIFICATION))
                 switchNotifcation.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)
         }

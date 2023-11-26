@@ -6,31 +6,38 @@ object Constants {
     const val GLUCODATA_INTENT_MESSAGE_PATH = "/glucodata_intent"
     const val BATTERY_INTENT_MESSAGE_PATH = "/battery_intent"
     const val SETTINGS_INTENT_MESSAGE_PATH = "/settings_intent"
+    const val SOURCE_SETTINGS_INTENT_MESSAGE_PATH = "/source_settings_intent"
     const val REQUEST_DATA_MESSAGE_PATH = "/request_data_intent"
     const val GLUCODATA_BROADCAST_ACTION = "glucodata.Minute"
     const val SETTINGS_BUNDLE = "settings_bundle"
+    const val SOURCE_SETTINGS_BUNDLE = "source_settings_bundle"
     const val GLUCOSE_CONVERSION_FACTOR = 18.0182F
     const val GLUCOSE_MIN_VALUE = 40
     //const val GLUCOSE_MAX_VALUE = 400
     const val ACTION_STOP_FOREGROUND = "stop_foreground"
 
     const val XDRIP_ACTION_GLUCOSE_READING = "com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING"
+    const val XDRIP_BROADCAST_ACTION = "com.eveningoutpost.dexdrip.BgEstimate"
 
     const val VALUE_OBSOLETE_SHORT_SEC = 300
     const val VALUE_OBSOLETE_LONG_SEC  = 600
 
     const val SHARED_PREF_TAG = "GlucoDataHandlerPrefs"
     const val SHARED_PREF_SEND_TO_GLUCODATA_AOD = "send_to_glucodata_aod"
+    const val SHARED_PREF_GLUCODATA_RECEIVERS = "glucodata_receivers"
     const val SHARED_PREF_SEND_TO_XDRIP = "send_to_xdrip"
+    const val SHARED_PREF_XDRIP_RECEIVERS = "xdrip_receivers"
+    const val SHARED_PREF_SEND_XDRIP_BROADCAST = "send_xdrip_broadcast"
+    const val SHARED_PREF_XDRIP_BROADCAST_RECEIVERS = "xdrip_broadcast_receivers"
     const val SHARED_PREF_TARGET_MIN = "target_min_value"
     const val SHARED_PREF_TARGET_MAX = "target_max_value"
     const val SHARED_PREF_CAR_NOTIFICATION = "car_notification"
+    const val SHARED_PREF_CAR_NOTIFICATION_INTERVAL = "car_notification_interval"
     const val SHARED_PREF_CAR_MEDIA = "car_media"
     const val SHARED_PREF_NOTIFY_DURATION_LOW = "notify_duration_low"
     const val SHARED_PREF_NOTIFY_DURATION_HIGH = "notify_duration_high"
     const val SHARED_PREF_USE_MMOL = "use_mmol"
     const val SHARED_PREF_GLUCODATA_RECEIVER_SHOW_ALL = "show_all_glucodata_receivers"
-    const val SHARED_PREF_GLUCODATA_RECEIVERS = "glucodata_receivers"
     const val SHARED_PREF_LOW_GLUCOSE = "low_glucose"
     const val SHARED_PREF_HIGH_GLUCOSE = "high_glucose"
     const val SHARED_PREF_FIVE_MINUTE_DELTA = "five_minute_delta"
@@ -66,7 +73,22 @@ object Constants {
     const val SHARED_PREF_FOREGROUND_SERVICE = "foreground_service"
     const val SHARED_PREF_WEAR_COLORED_AOD = "colored_aod"
 
+    // Data source preferences
+    const val SHARED_PREF_SOURCE_INTERVAL="source_interval"
+    const val SHARED_PREF_SOURCE_DELAY="source_delay"
 
+    const val SHARED_PREF_LIBRE_ENABLED="source_libre_enabled"
+    const val SHARED_PREF_LIBRE_USER="source_libre_user"
+    const val SHARED_PREF_LIBRE_PASSWORD="source_libre_password"
+    const val SHARED_PREF_LIBRE_RECONNECT="source_libre_reconnect"
+    const val SHARED_PREF_LIBRE_TOKEN="source_libre_token"
+    const val SHARED_PREF_LIBRE_TOKEN_EXPIRE="source_libre_token_expire"
+    const val SHARED_PREF_LIBRE_REGION="source_libre_region"
+
+    const val SHARED_PREF_NIGHTSCOUT_ENABLED="src_ns_enabled"
+    const val SHARED_PREF_NIGHTSCOUT_URL="src_ns_url"
+    const val SHARED_PREF_NIGHTSCOUT_SECRET="src_ns_secret"
+    const val SHARED_PREF_NIGHTSCOUT_TOKEN="src_ns_token"
 
     const val SHARED_PREF_DUMMY_VALUES = "dummy_values"
 }

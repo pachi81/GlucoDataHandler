@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:fillViewport="true"
+    android:padding="10dp">
+<LinearLayout
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    tools:context=".MainActivity"
+    android:orientation="vertical"
+    android:gravity="center|top">
 
 
     <LinearLayout
         android:id="@+id/layout_glucose_trend"
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_height="80dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="60dp"
-        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:gravity="center|top"
         android:orientation="horizontal"
         app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +55,7 @@
 
     <TextView
         android:id="@+id/txtLastValue"
-        android:layout_width="351dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
@@ -60,42 +66,85 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout_glucose_trend"
+        app:layout_constraintTop_toTopOf="@+id/layout_info_elements"
         tools:ignore="SpUsage" />
 
-    <TextView
-        android:id="@+id/txtWearInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:text="@string/activity_main_disconnected_label"
-        android:textSize="14dp"
-        tools:ignore="SpUsage"
-        app:layout_constraintBottom_toTopOf="@+id/txtCarInfo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/txtCarInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="@string/activity_main_car_disconnected_label"
-        app:layout_constraintBottom_toTopOf="@+id/txtVersion"
-        app:layout_constraintEnd_toEndOf="parent"
+    <LinearLayout
+        android:id="@+id/layout_info_elements"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:gravity="center|bottom"
+        android:orientation="vertical"
+        app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:textSize="14dp"
-        tools:ignore="SpUsage" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UselessParent">
+        <TextView
+            android:id="@+id/txtBatteryOptimization"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/activity_main_battery_optimization_disabled"
+            android:textSize="14dp"
+            android:visibility="gone"
+            tools:ignore="HardcodedText,SpUsage"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/txtSourceInfo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/txtVersion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
-        android:text="1.0"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:textSize="14dp"
-        tools:ignore="HardcodedText,SpUsage" />
+        <TextView
+            android:id="@+id/txtSourceInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="Source: -"
+            android:textSize="14dp"
+            tools:ignore="HardcodedText,SpUsage"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/txtWearInfo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/txtWearInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/activity_main_disconnected_label"
+            android:textSize="14dp"
+            tools:ignore="SpUsage"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/txtCarInfo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/txtCarInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="@string/activity_main_car_disconnected_label"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/txtVersion"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="14dp"
+            tools:ignore="SpUsage" />
+
+        <TextView
+            android:id="@+id/txtVersion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:text="1.0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="14dp"
+            tools:ignore="HardcodedText,SpUsage" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

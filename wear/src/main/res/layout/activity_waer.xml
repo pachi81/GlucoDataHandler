@@ -13,10 +13,14 @@
         android:layout_height="wrap_content"
         android:fillViewport="true"
         android:padding="10dp">
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:gravity="center|top"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         app:layout_boxedEdges="all">
 
         <LinearLayout
@@ -27,118 +31,108 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
             android:layout_marginTop="12dp"
             android:gravity="center"
             tools:ignore="UselessParent">
-        <TextView
-            android:id="@+id/txtBgValue"
-            android:layout_weight="4"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:text="---"
-            android:maxLines="1"
-            android:textAlignment="viewEnd"
-            android:textColor="#FFFFFF"
-            android:autoSizeStepGranularity="1sp"
-            android:autoSizeTextType="uniform"
-            android:textStyle="bold"
-            tools:ignore="HardcodedText" />
+            <TextView
+                android:id="@+id/txtBgValue"
+                android:layout_weight="4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="---"
+                android:maxLines="1"
+                android:textAlignment="viewEnd"
+                android:textColor="#FFFFFF"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
 
-        <ImageView
-            android:id="@+id/viewIcon"
-            android:layout_weight="3"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/icon_question"
-            android:paddingVertical="2dp"
-            tools:ignore="ContentDescription" />
+            <ImageView
+                android:id="@+id/viewIcon"
+                android:layout_weight="3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/icon_question"
+                android:paddingVertical="2dp"
+                tools:ignore="ContentDescription" />
 
-    </LinearLayout>
+        </LinearLayout>
+
         <TextView
             android:id="@+id/txtValueInfo"
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
+            android:layout_marginBottom="20dp"
             android:text="@string/no_data"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/test" />
+            android:textSize="14sp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchLibreView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/src_cat_libreview"
+            android:textAlignment="viewStart" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchNightscoutSource"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/src_cat_nightscout"
+            android:textAlignment="viewStart" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchNotifcation"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="20dp"
             android:text="@string/activity_switch_notification"
-            android:textAlignment="viewStart"
-            app:layout_constraintTop_toBottomOf="@+id/txtValueInfo"
-            app:layout_constraintBottom_toTopOf="@+id/switchColoredAod"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:textAlignment="viewStart" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchColoredAod"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
             android:text="@string/activity_switch_colored_aod"
             android:textAlignment="viewStart"
-            app:layout_constraintTop_toBottomOf="@+id/switchNotifcation"
-            app:layout_constraintBottom_toTopOf="@+id/switchLargeTrendArrow"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             tools:ignore="TouchTargetSizeCheck" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchLargeTrendArrow"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
             android:text="@string/activity_large_arrow_icon"
             android:textAlignment="viewStart"
-            app:layout_constraintTop_toBottomOf="@+id/switchColoredAod"
-            app:layout_constraintBottom_toTopOf="@+id/switchForground"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             tools:ignore="TouchTargetSizeCheck" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchForground"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
             android:text="@string/activity_switch_foreground"
             android:textAlignment="viewStart"
-            app:layout_constraintTop_toBottomOf="@+id/switchNotifcation"
-            app:layout_constraintBottom_toTopOf="@+id/switchRelativeTime"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             tools:ignore="TouchTargetSizeCheck" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchRelativeTime"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             android:text="@string/pref_relative_time"
             android:textAlignment="viewStart"
-            app:layout_constraintTop_toBottomOf="@+id/switchForground"
-            app:layout_constraintBottom_toTopOf="@+id/txtConnInfo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             tools:ignore="TouchTargetSizeCheck" />
+
+        <TextView
+            android:id="@+id/txtSourceInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="LibreLink: -"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/txtConnInfo"
@@ -146,27 +140,21 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="@string/activity_disconnected_label"
-            android:textSize="14sp"
-            app:layout_constraintTop_toBottomOf="@+id/switchRelativeTime"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:textAlignment="center"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/txtVersion"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:text="1.0"
             android:textAlignment="center"
             android:textSize="12sp"
-            app:layout_constraintTop_toBottomOf="@+id/txtConnInfo"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
             tools:ignore="HardcodedText" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
     </ScrollView>
 </androidx.wear.widget.BoxInsetLayout>

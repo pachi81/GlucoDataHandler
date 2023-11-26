@@ -18,10 +18,10 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.Utils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
-import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
 
 class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
-    private val LOG_ID = "GlucoDataHandler.CarMediaBrowserService"
+    private val LOG_ID = "GDH.CarMediaBrowserService"
     private val MEDIA_ROOT_ID = "root"
     private val MEDIA_GLUCOSE_ID = "glucose_value"
     private lateinit var  sharedPref: SharedPreferences
@@ -52,10 +52,10 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             sessionToken = session.sessionToken
 
             InternalNotifier.addNotifier(this, mutableSetOf(
-                NotifyDataSource.BROADCAST,
-                NotifyDataSource.MESSAGECLIENT,
-                NotifyDataSource.SETTINGS,
-                NotifyDataSource.TIME_VALUE))
+                NotifySource.BROADCAST,
+                NotifySource.MESSAGECLIENT,
+                NotifySource.SETTINGS,
+                NotifySource.TIME_VALUE))
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -103,7 +103,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         }
     }
 
-    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.d(LOG_ID, "OnNotifyData called")
         try {
             notifyChildrenChanged(MEDIA_ROOT_ID)

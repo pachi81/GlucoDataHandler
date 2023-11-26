@@ -20,19 +20,23 @@ import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.tasker.setAndroidAutoConnectionState
+import java.text.DateFormat
 import java.util.*
 
 
 object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
-    private const val LOG_ID = "GlucoDataHandler.CarModeReceiver"
+    private const val LOG_ID = "GDH.CarModeReceiver"
     private const val CHANNEL_ID = "GlucoDataNotify_Car"
     private const val CHANNEL_NAME = "Notification for Android Auto"
     private const val NOTIFICATION_ID = 789
     private var init = false
     @SuppressLint("StaticFieldLeak")
     private lateinit var notificationMgr: CarNotificationManager
-    private var show_notification = true
+    private var show_notification = false
     private var car_connected = false
+    private var last_notification_time = 0L
+    private var notification_interval = 1L   // every minute -> always, -1L: only for alarms
+    private var forceNextNotify = false
     val connected: Boolean get() = car_connected
     @SuppressLint("StaticFieldLeak")
     private lateinit var notificationCompat: NotificationCompat.Builder
@@ -59,7 +63,7 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         createNotificationChannel(context)
         notificationCompat = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle(context.getString(CR.string.app_name))
+            .setContentTitle(context.getString(CR.string.name))
             .setContentText("Android Auto")
             .addInvisibleAction(createReplyAction(context))
             .addInvisibleAction(createDismissAction(context))
@@ -73,10 +77,12 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     }
 
     private fun updateSettings(sharedPref: SharedPreferences) {
+        val cur_enabled = enable_notification
         enable_notification = sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, enable_notification)
-        if(init && car_connected) {
+        notification_interval = sharedPref.getString(Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL, "1")!!.toLong()
+        if(init && car_connected && cur_enabled != enable_notification) {
             if(enable_notification)
-                showNotification()
+                showNotification(GlucoDataService.context!!, ReceiveData.isObsolete())
             else
                 removeNotification()
         }
@@ -129,24 +135,25 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                 InternalNotifier.remNotifier(this)
             } else {
                 Log.d(LOG_ID, "Entered Car Mode")
+                forceNextNotify = false
                 car_connected = true
                 GlucoDataService.context?.setAndroidAutoConnectionState(true)
                 InternalNotifier.addNotifier(this, mutableSetOf(
-                    NotifyDataSource.BROADCAST,
-                    NotifyDataSource.MESSAGECLIENT))
-                if(!ReceiveData.isObsolete())
-                    showNotification()
+                    NotifySource.BROADCAST,
+                    NotifySource.MESSAGECLIENT,
+                    NotifySource.OBSOLETE_VALUE))
+                showNotification(GlucoDataService.context!!, ReceiveData.isObsolete())
             }
-            InternalNotifier.notify(GlucoDataService.context!!, NotifyDataSource.CAR_CONNECTION, null)
+            InternalNotifier.notify(GlucoDataService.context!!, NotifySource.CAR_CONNECTION, null)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() )
         }
     }
 
-    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.d(LOG_ID, "OnNotifyData called")
         try {
-            showNotification()
+            showNotification(context, dataSource == NotifySource.OBSOLETE_VALUE)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() )
         }
@@ -154,33 +161,62 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
 
     fun removeNotification() {
         notificationMgr.cancel(NOTIFICATION_ID)  // remove notification
+        forceNextNotify = false
     }
 
-    fun showNotification() {
+    private fun getTimeDiffMinute(): Long {
+        return Utils.round((ReceiveData.time-last_notification_time).toFloat()/60000, 0).toLong()
+    }
+
+    private fun canShowNotification(isObsolete: Boolean): Boolean {
+        if (enable_notification && car_connected) {
+            if(notification_interval == 1L || ReceiveData.forceAlarm)
+                return true
+            if (ReceiveData.getAlarmType() == ReceiveData.AlarmType.VERY_LOW || isObsolete) {
+                forceNextNotify = true  // if obsolete or VERY_LOW, the next value is important!
+                return true
+            }
+            if (forceNextNotify) {
+                forceNextNotify = false
+                return true
+            }
+            if (notification_interval > 1L) {
+                return getTimeDiffMinute() >= notification_interval
+            }
+            return false
+        }
+        return false
+    }
+
+    fun showNotification(context: Context, isObsolete: Boolean) {
         try {
-            if (enable_notification && car_connected) {
+            if (canShowNotification(isObsolete)) {
                 Log.d(LOG_ID, "showNotification called")
                 notificationCompat
                     .setLargeIcon(Utils.getRateAsBitmap(resizeFactor = 0.75F))
                     .setWhen(ReceiveData.time)
-                    .setStyle(createMessageStyle())
+                    .setStyle(createMessageStyle(context, isObsolete))
                 notificationMgr.notify(NOTIFICATION_ID, notificationCompat)
+                last_notification_time = ReceiveData.time
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "showNotification exception: " + exc.toString() )
         }
     }
 
-    private fun createMessageStyle(): NotificationCompat.MessagingStyle {
+    private fun createMessageStyle(context: Context, isObsolete: Boolean): NotificationCompat.MessagingStyle {
         val person = Person.Builder()
             .setIcon(IconCompat.createWithBitmap(Utils.getRateAsBitmap(resizeFactor = 0.75F)!!))
             .setName(ReceiveData.getClucoseAsString())
             .setImportant(true)
             .build()
         val messagingStyle = NotificationCompat.MessagingStyle(person)
-        messagingStyle.conversationTitle = ReceiveData.getClucoseAsString()
+        if (isObsolete)
+            messagingStyle.conversationTitle = context.getString(CR.string.no_new_value, ReceiveData.getElapsedTimeMinute())
+        else
+            messagingStyle.conversationTitle = ReceiveData.getClucoseAsString()  + " (" + ReceiveData.getDeltaAsString() + ")"
         messagingStyle.isGroupConversation = false
-        messagingStyle.addMessage("Delta: " + ReceiveData.getDeltaAsString(), System.currentTimeMillis(), person)
+        messagingStyle.addMessage(DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(ReceiveData.time)), System.currentTimeMillis(), person)
         return messagingStyle
     }
 
@@ -225,7 +261,8 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called for key " + key)
             when(key) {
-                Constants.SHARED_PREF_CAR_NOTIFICATION -> {
+                Constants.SHARED_PREF_CAR_NOTIFICATION,
+                Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL -> {
                     updateSettings(sharedPreferences!!)
                 }
             }

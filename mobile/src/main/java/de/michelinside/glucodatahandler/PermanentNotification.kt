@@ -18,11 +18,11 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.Utils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
-import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
 
 
 object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
-    private const val LOG_ID = "GlucoDataHandler.PermanentNotification"
+    private const val LOG_ID = "GDH.PermanentNotification"
     private const val CHANNEL_ID = "GlucoDataNotify_permanent"
     private const val CHANNEL_NAME = "Permanent notification"
     private const val FOREGROUND_CHANNEL_ID = "GlucoDataNotify_foreground"
@@ -42,7 +42,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
     fun create(context: Context) {
         try {
-            Log.d(LOG_ID, "create called")
+            Log.v(LOG_ID, "create called")
             createNofitication(context)
             sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
@@ -54,7 +54,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
     fun destroy() {
         try {
-            Log.d(LOG_ID, "destroy called")
+            Log.v(LOG_ID, "destroy called")
             InternalNotifier.remNotifier(this)
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
             removeNotifications()
@@ -63,9 +63,9 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         }
     }
 
-    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            Log.d(LOG_ID, "OnNotifyData called")
+            Log.v(LOG_ID, "OnNotifyData called")
             showNotifications()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString() )
@@ -135,7 +135,6 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     }
 
     fun getNotification(withContent: Boolean, iconKey: String, foreground: Boolean) : Notification {
-        Log.d(LOG_ID, "showNotification called")
         var remoteViews: RemoteViews? = null
         if (withContent) {
             remoteViews = RemoteViews(GlucoDataService.context!!.packageName, R.layout.notification)
@@ -169,6 +168,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
     private fun showNotification(id: Int, withContent: Boolean, iconKey: String, foreground: Boolean) {
         try {
+            Log.v(LOG_ID, "showNotification called for id " + id)
             notificationMgr.notify(
                 id,
                 getNotification(withContent, iconKey, foreground)
@@ -181,6 +181,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     private fun showNotifications() {
         showPrimaryNotification(true)
         if (sharedPref.getBoolean(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, false)) {
+            Log.d(LOG_ID, "show second notification")
             showNotification(SECOND_NOTIFICATION_ID, false, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, false)
         } else {
             notificationMgr.cancel(SECOND_NOTIFICATION_ID)
@@ -209,13 +210,13 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
     private fun updatePreferences() {
         try {
-            if (sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION, false)) {
+            if (sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION, true)) {
                 Log.i(LOG_ID, "activate permanent notification")
                 val filter = mutableSetOf(
-                    NotifyDataSource.BROADCAST,
-                    NotifyDataSource.MESSAGECLIENT,
-                    NotifyDataSource.SETTINGS,
-                    NotifyDataSource.OBSOLETE_VALUE)   // to trigger re-start for the case of stopped by the system
+                    NotifySource.BROADCAST,
+                    NotifySource.MESSAGECLIENT,
+                    NotifySource.SETTINGS,
+                    NotifySource.OBSOLETE_VALUE)   // to trigger re-start for the case of stopped by the system
                 InternalNotifier.addNotifier(this, filter)
                 showNotifications()
             }

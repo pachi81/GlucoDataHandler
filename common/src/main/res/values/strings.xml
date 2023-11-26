@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">GlucoDataHandler</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="name" translatable="false">GlucoDataHandler</string>
 
     <string name="info_label_sensor_id">Sensor</string>
     <string name="info_label_value">Value</string>
@@ -12,7 +12,7 @@
     <string name="info_label_alarm">Alarm</string>
     <string name="info_label_source">Source</string>
     <string name="info_label_per_minute">per minute</string>
-    <string name="no_data">No broadcast received yet!\nINFO: To receiving data from Juggluco, please open Juggluco, go to settings and activate \"Glucodata Broadcast\" for "de.michelinside.glucodatahandler"\nTo receive from xDrip+ activate local broadcast and select no receiver.</string>
+    <string name="no_data">No broadcast received yet!\nINFO: Activate LibreLink source or to receive data from Juggluco, please open Juggluco, go to settings and activate \"Glucodata Broadcast\" for "de.michelinside.glucodatahandler"\nTo receive from xDrip+ activate local broadcast and select no receiver.</string>
 
     <string name="elapsed_time">%1$d min</string>
     <string name="elapsed_time_hour">\> 1h</string>
@@ -25,30 +25,31 @@
     <string name="rate_single_down">falling quickly</string>
     <string name="rate_double_down">falling very quickly</string>
 
-    <string name="source_broadcast">Broadcast</string>
-    <string name="source_message_client">Internal</string>
-    <string name="source_capility_info">Internal</string>
-    <string name="source_battery_level">Battery level</string>
-    <string name="source_node_battery_level">Node battery level</string>
-    <string name="source_settings">Settings changed</string>
-    <string name="source_car_connection">Android Auto connection</string>
-    <string name="source_obsolete">Obsolete value</string>
-    <string name="time_value">Time changed</string>
-
     <string name="button_ok">OK</string>
     <string name="button_cancel">Cancel</string>
+    <string name="empty_string" translatable="false" />
+
+    <string name="alarm_none">-</string>
+    <string name="alarm_very_low">very low</string>
+    <string name="alarm_low">low</string>
+    <string name="alarm_high">high</string>
+    <string name="alarm_very_high">very high</string>
 
     <!-- mobile -->
 
+    <string name="activity_main_battery_optimization_disabled">Battery optimization is enabled.</string>
+    <string name="activity_main_no_source_label">Source: not active</string>
     <string name="activity_main_connected_label">Wear: connected (%1$s)</string>
     <string name="activity_main_disconnected_label">Wear: disconnected</string>
     <string name="activity_main_car_connected_label">Android Auto: connected</string>
     <string name="activity_main_car_disconnected_label">Android Auto: disconnected</string>
+    <string name="no_new_value">No new value since %1$d minutes!</string>
 
     <string name="menu_settings">Settings</string>
-    <string name="menu_group_github"  translatable="false">GitHub</string>
+    <string name="menu_sources">Sources</string>
+    <string name="menu_group_github">GitHub</string>
     <string name="menu_update">Updates</string>
-    <string name="menu_support"  translatable="false">Support</string>
+    <string name="menu_support">Support</string>
     <string name="menu_help">Help</string>
 
     <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
@@ -64,14 +65,72 @@
     <string name="tasker_android_auto_connection_state">Android Auto connection</string>
     <string name="tasker_target_range_state">Glucose range change</string>
 
+    <!-- sources -->
+
+    <string name="source_juggluco" translatable="false">Juggluco</string>
+    <string name="source_xdrip" translatable="false">xDrip+</string>
+    <string name="source_libreview" translatable="false">LibreLink</string>
+    <string name="source_nightscout" translatable="false">Nightscout</string>
+    <string name="source_phone">Phone</string>
+    <string name="source_wear">Wear</string>
+
+    <string name="source_state_not_active">Not active</string>
+    <string name="source_state_in_progress">In progress</string>
+    <string name="source_state_ok">OK</string>
+    <string name="source_state_no_new_value">No new value</string>
+    <string name="source_state_no_connection">No internet connection</string>
+    <string name="source_state_error">Error</string>
+
+    <string name="source_interval">Interval</string>
+    <string name="source_interval_summary">Interval of requesting data from source.</string>
+    <string name="source_delay">Delay</string>
+    <string name="source_delay_summary">Delay in seconds before requesting the data from cloud, because if takes some time until the data is present there.</string>
+
+    <string name="src_cat_libreview">LibreLink Follower</string>
+    <string name="src_libre_enabled">Enable</string>
+    <string name="src_libre_enabled_summary">Enable LibreLink follower, if LibreLink user and password is set.\nPlease set-up LibreLinkUp App first. You can remove the LibreLineUp App afterwards.</string>
+    <string name="src_libre_user">User</string>
+    <string name="src_libre_user_summary">Username for LibreLink</string>
+    <string name="src_libre_password">Password</string>
+    <string name="src_libre_password_summary">Password for LibreLink</string>
+    <string name="src_libre_reconnect">Reconnect</string>
+    <string name="src_libre_reconnect_summary">On next interval a new login will be executed.</string>
+    <string name="src_libre_setup_librelink">Please set up LibreLinkUp connection first!</string>
+
+    <string name="src_cat_nightscout">Nightscout Follower</string>
+    <string name="src_ns_enabled">Enable</string>
+    <string name="src_ns_enabled_summary">Enable Nightscout follower.</string>
+    <string name="src_ns_url">Nightscout URL</string>
+    <string name="src_ns_url_summary">URL of the Nightscout server.</string>
+    <string name="src_ns_secret">API Secret</string>
+    <string name="src_ns_secret_summary">API Secret to access the data (optional).</string>
+    <string name="src_ns_token">Access Token</string>
+    <string name="src_ns_token_summary">Add your access token, if you need one (optional).</string>
+
+    <string name="source_request_interval_always">Always</string>
+    <string name="source_request_interval_1">1 minute</string>
+    <string name="source_request_interval_5">5 minutes</string>
+    <string name="source_request_interval_10">10 minutes</string>
+    <string name="source_request_interval_15">15 minutes</string>
+    <string name="source_request_interval_20">20 minutes</string>
+    <string name="source_request_interval_30">30 minutes</string>
+    <string name="source_request_interval_alarm">Alarm only</string>
+
+
+    <!-- LibreLink source -->
+    <string name="state_disabled">disabled</string>
+    <string name="state_not_connected">not connected</string>
+    <string name="state_connected">connected</string>
+    <string name="state_error">error: %s</string>
+
+
     <!-- settings -->
 
     <string name="pref_cat_general">General</string>
     <string name="pref_cat_notification">Notification</string>
     <string name="pref_cat_widgets">Widgets</string>
     <string name="pref_cat_android_auto">Android Auto</string>
-    <string name="pref_cat_xdrip">xDrip+</string>
-    <string name="pref_cat_forward_broadcast">Glucodata broadcast</string>
+    <string name="pref_cat_forward_broadcast">Forward glucose values</string>
     <string name="pref_target_range">Target range</string>
     <string name="pref_cat_colors">Colors</string>
 
@@ -86,14 +145,22 @@
     <string name="pref_low_value_summary">Border for low glucose values.\nIf you have activated low alarm in Juggluco, you do not have to set this value.</string>
     <string name="pref_switch_car_notification">Android Auto notifications</string>
     <string name="pref_switch_car_notification_summary">Notification for Android Auto.\nFor using this app in Android Auto, you have to activate developer settings in Android Auto by clicking several times on the version. Then you have to enable "Unknown sources" in the developer settings menu.</string>
+    <string name="pref_car_notification_interval">Notification interval</string>
+    <string name="pref_car_notification_interval_summary">Interval for showing notifications. \"Alarm only\" will only trigger notifications if the values are outside of the target range.</string>
     <string name="pref_switch_car_media">Dummy Media Player</string>
     <string name="pref_switch_car_media_summary">Show the glucose value as current song for Android Auto.</string>
     <string name="pref_switch_send_to_aod">Send glucodata broadcast</string>
     <string name="pref_switch_send_to_aod_summary">Send glucodata broadcast for new values received from any source.</string>
-    <string name="pref_button_select_target">Identify receiver</string>
+    <string name="pref_button_select_target">Identify glucodata receivers</string>
     <string name="pref_button_select_target_summary">Choose receivers sending the glucodata broadcast to. A global broadcast will send to every app registering dynamically on the broadcast.</string>
-    <string name="pref_switch_send_to_xdrip">Send to xDrip</string>
-    <string name="pref_switch_send_to_xdrip_summary">Forward glucose values to xDrip+.\nIMPORTANT: this must be off to receive values from xDrip+!</string>
+    <string name="pref_switch_send_to_xdrip">Send patched libre broadcast</string>
+    <string name="pref_switch_send_to_xdrip_summary">Forward glucose values to xDrip+. Select \'Libre (patched app)\' as source in xDrip+.</string>
+    <string name="pref_button_select_xdrip_target">Identify patched libre receivers</string>
+    <string name="pref_button_select_xdrip_target_summary">Choose receivers sending the patched libre broadcast to. A global broadcast will send to every app registering dynamically on the broadcast.</string>
+    <string name="pref_switch_send_xdrip_broadcast">Send xDrip+ broadcast</string>
+    <string name="pref_switch_send_xdrip_broadcast_summary">Send broadcast like xDrip+ is sending. For example to AAPS.</string>
+    <string name="pref_button_select_xdrip_broadcast_target">Identify xDrip+ broadcast receivers</string>
+    <string name="pref_button_select_xdrip_broadcast_target_summary">Choose receivers sending the xDrip+ broadcast to. A global broadcast will send to every app registering dynamically on the broadcast.</string>
     <string name="pref_switch_use_mmol">Use mmol/l</string>
     <string name="pref_switch_use_mmol_summary">Convert values from xDrip+ to mmol/l.</string>
     <string name="pref_switch_use_5_min_delta">5 minute delta</string>

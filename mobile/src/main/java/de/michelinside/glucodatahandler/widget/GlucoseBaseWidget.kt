@@ -18,7 +18,7 @@ import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.Utils
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
-import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
 
 
 enum class WidgetType(val cls: Class<*>) {
@@ -37,7 +37,7 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
     }
 
     companion object {
-        private const val LOG_ID = "GlucoDataHandler.widget.GlucoseBaseWidget"
+        private const val LOG_ID = "GDH.widget.GlucoseBaseWidget"
 
         protected fun getCurrentWidgetIds(context: Context, type: WidgetType): IntArray {
             val component = ComponentName(
@@ -145,7 +145,7 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
         }
     }
 
-    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString())
             val component = ComponentName(context, type.cls)

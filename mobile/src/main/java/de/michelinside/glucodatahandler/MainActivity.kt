@@ -11,6 +11,7 @@ import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -23,7 +24,8 @@ import de.michelinside.glucodatahandler.common.Utils
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
-import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
 import de.michelinside.glucodatahandler.common.R as CR
 
 class MainActivity : AppCompatActivity(), NotifierInterface {
@@ -33,31 +35,26 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtVersion: TextView
     private lateinit var txtWearInfo: TextView
     private lateinit var txtCarInfo: TextView
+    private lateinit var txtSourceInfo: TextView
+    private lateinit var txtBatteryOptimization: TextView
     private lateinit var sharedPref: SharedPreferences
-    private val LOG_ID = "GlucoDataHandler.Main"
+    private val LOG_ID = "GDH.Main"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_main)
-            Log.d(LOG_ID, "onCreate called")
-            val intent = Intent()
-            val packageName = packageName
-            val pm = getSystemService(POWER_SERVICE) as PowerManager
-            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-                intent.data = Uri.parse("package:$packageName")
-                startActivity(intent)
-            }
+            Log.v(LOG_ID, "onCreate called")
 
-            GlucoDataServiceMobile.start(this)
-
+            GlucoDataServiceMobile.start(this, true)
 
             txtBgValue = findViewById(R.id.txtBgValue)
             viewIcon = findViewById(R.id.viewIcon)
             txtLastValue = findViewById(R.id.txtLastValue)
             txtWearInfo = findViewById(R.id.txtWearInfo)
             txtCarInfo = findViewById(R.id.txtCarInfo)
+            txtSourceInfo = findViewById(R.id.txtSourceInfo)
+            txtBatteryOptimization = findViewById(R.id.txtBatteryOptimization)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -79,6 +76,16 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     apply()
                 }
             }
+
+            if(!sharedPref.contains(Constants.SHARED_PREF_XDRIP_RECEIVERS)) {
+                val receivers = HashSet<String>()
+                receivers.add("com.eveningoutpost.dexdrip")
+                Log.i(LOG_ID, "Upgrade receivers to " + receivers.toString())
+                with(sharedPref.edit()) {
+                    putStringSet(Constants.SHARED_PREF_XDRIP_RECEIVERS, receivers)
+                    apply()
+                }
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -88,7 +95,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         try {
             super.onPause()
             InternalNotifier.remNotifier(this)
-            Log.d(LOG_ID, "onPause called")
+            Log.v(LOG_ID, "onPause called")
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.message.toString() )
         }
@@ -97,24 +104,46 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     override fun onResume() {
         try {
             super.onResume()
-            Log.d(LOG_ID, "onResume called")
+            Log.v(LOG_ID, "onResume called")
             update()
             InternalNotifier.addNotifier(this, mutableSetOf(
-                NotifyDataSource.BROADCAST,
-                NotifyDataSource.MESSAGECLIENT,
-                NotifyDataSource.CAPILITY_INFO,
-                NotifyDataSource.NODE_BATTERY_LEVEL,
-                NotifyDataSource.SETTINGS,
-                NotifyDataSource.CAR_CONNECTION,
-                NotifyDataSource.OBSOLETE_VALUE))
+                NotifySource.BROADCAST,
+                NotifySource.MESSAGECLIENT,
+                NotifySource.CAPILITY_INFO,
+                NotifySource.NODE_BATTERY_LEVEL,
+                NotifySource.SETTINGS,
+                NotifySource.CAR_CONNECTION,
+                NotifySource.OBSOLETE_VALUE,
+                NotifySource.SOURCE_STATE_CHANGE))
+            checkBatteryOptimization()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
         }
     }
 
+    private fun checkBatteryOptimization() {
+        try {
+            val pm = getSystemService(POWER_SERVICE) as PowerManager
+            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+                Log.w(LOG_ID, "Battery optimization is inactive")
+                txtBatteryOptimization.visibility = View.VISIBLE
+                txtBatteryOptimization.setOnClickListener {
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    intent.data = Uri.parse("package:$packageName")
+                    startActivity(intent)
+                }
+            } else {
+                txtBatteryOptimization.visibility = View.GONE
+                Log.i(LOG_ID, "Battery optimization is active")
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         try {
-            Log.d(LOG_ID, "onCreateOptionsMenu called")
+            Log.v(LOG_ID, "onCreateOptionsMenu called")
             val inflater = menuInflater
             inflater.inflate(R.menu.menu_items, menu)
             MenuCompat.setGroupDividerEnabled(menu!!, true)
@@ -127,10 +156,17 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         try {
-            Log.d(LOG_ID, "onOptionsItemSelected for " + item.itemId.toString())
+            Log.v(LOG_ID, "onOptionsItemSelected for " + item.itemId.toString())
             when(item.itemId) {
                 R.id.action_settings -> {
                     val intent = Intent(this, SettingsActivity::class.java)
+                    intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.SETTINGS_FRAGMENT.value)
+                    startActivity(intent)
+                    return true
+                }
+                R.id.action_sources -> {
+                    val intent = Intent(this, SettingsActivity::class.java)
+                    intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.SORUCE_FRAGMENT.value)
                     startActivity(intent)
                     return true
                 }
@@ -168,7 +204,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun update() {
         try {
-            Log.d(LOG_ID, "update values")
+            Log.v(LOG_ID, "update values")
             txtBgValue.text = ReceiveData.getClucoseAsString()
             txtBgValue.setTextColor(ReceiveData.getClucoseColor())
             if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete()) {
@@ -179,18 +215,20 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             viewIcon.setImageIcon(Utils.getRateAsIcon())
             txtLastValue.text = ReceiveData.getAsString(this)
             if (WearPhoneConnection.nodesConnected) {
-                txtWearInfo.text = String.format(resources.getText(CR.string.activity_main_connected_label).toString(), WearPhoneConnection.getBatterLevelsAsString())
+                txtWearInfo.text = resources.getString(CR.string.activity_main_connected_label, WearPhoneConnection.getBatterLevelsAsString())
             }
             else
                 txtWearInfo.text = resources.getText(CR.string.activity_main_disconnected_label)
             txtCarInfo.text = if (CarModeReceiver.connected) resources.getText(CR.string.activity_main_car_connected_label) else resources.getText(CR.string.activity_main_car_disconnected_label)
+
+            txtSourceInfo.text = DataSourceTask.getState(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
         }
     }
 
-    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
-        Log.d(LOG_ID, "new intent received")
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
+        Log.v(LOG_ID, "new intent received")
         update()
     }
 }

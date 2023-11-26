@@ -8,7 +8,7 @@ import android.util.Log
 import de.michelinside.glucodatahandler.common.notifier.*
 
 class BatteryReceiver: BroadcastReceiver() {
-    private val LOG_ID = "GlucoDataHandler.BatteryReceiver"
+    private val LOG_ID = "GDH.BatteryReceiver"
     override fun onReceive(context: Context, intent: Intent) {
         try {
             if (intent.extras == null || intent.extras!!.isEmpty) {
@@ -18,7 +18,7 @@ class BatteryReceiver: BroadcastReceiver() {
             Log.i(LOG_ID, "Received batter level: " + curValue.toString() + "%")
             if (curValue >= 0 && curValue != batteryPercentage) {
                 batteryPercentage = curValue
-                InternalNotifier.notify(context, NotifyDataSource.BATTERY_LEVEL, batteryBundle)
+                InternalNotifier.notify(context, NotifySource.BATTERY_LEVEL, batteryBundle)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "BatteryReceiver exception: " + exc.message.toString() )

@@ -9,7 +9,7 @@ import de.michelinside.glucodatahandler.R
 
 
 class SelectReceiverPreference : DialogPreference {
-    private val LOG_ID = "GlucoDataHandler.SelectReceiverPreference"
+    private val LOG_ID = "GDH.SelectReceiverPreference"
     private var receiverSet = HashSet<String>()
     constructor(context: Context?) : super(context!!)  {
         initPreference()

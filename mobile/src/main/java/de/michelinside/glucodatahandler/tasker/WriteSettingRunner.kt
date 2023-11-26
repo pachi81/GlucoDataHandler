@@ -10,7 +10,7 @@ import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultSucess
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
-import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import kotlinx.coroutines.runBlocking
 
 class WriteSettingRunner : TaskerPluginRunnerActionNoOutput<TaskerWriteSettingData>() {
@@ -29,7 +29,7 @@ class WriteSettingRunner : TaskerPluginRunnerActionNoOutput<TaskerWriteSettingDa
                     val wear_setting = key.substringAfter("wear_", "dummy")
                     val extras = Bundle()
                     extras.putBoolean(wear_setting, value == "true")
-                    GlucoDataService.service?.sendToConnectedDevices(NotifyDataSource.SETTINGS, extras)
+                    GlucoDataService.service?.sendToConnectedDevices(NotifySource.SETTINGS, extras)
                 } else {
                     with(sharedPref.edit()) {
                         putBoolean(key, value == "true")

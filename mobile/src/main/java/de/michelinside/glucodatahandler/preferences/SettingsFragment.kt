@@ -18,7 +18,7 @@ import de.michelinside.glucodatahandler.common.R as CR
 
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
-    private val LOG_ID = "GlucoDataHandler.SettingsFragment"
+    private val LOG_ID = "GDH.SettingsFragment"
     private lateinit var activityResultOverlayLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -33,15 +33,13 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 notifySwitch!!.isVisible = true
             }
 
-            val selectTargets = findPreference<MultiSelectListPreference>(Constants.SHARED_PREF_GLUCODATA_RECEIVERS)
-            val receivers = getReceivers()
-            // force "global broadcast" to be the first entry
-            selectTargets!!.entries = arrayOf<CharSequence>(resources.getString(CR.string.pref_global_broadcast)) + receivers.keys.toTypedArray()
-            selectTargets.entryValues = arrayOf<CharSequence>("") + receivers.values.toTypedArray()
+            setupReceivers(Constants.GLUCODATA_BROADCAST_ACTION, Constants.SHARED_PREF_GLUCODATA_RECEIVERS)
+            setupReceivers(Constants.XDRIP_ACTION_GLUCOSE_READING, Constants.SHARED_PREF_XDRIP_RECEIVERS)
+            setupReceivers(Constants.XDRIP_BROADCAST_ACTION, Constants.SHARED_PREF_XDRIP_BROADCAST_RECEIVERS)
 
             activityResultOverlayLauncher = registerForActivityResult(
                 ActivityResultContracts.StartActivityForResult()
-            ) { result ->
+            ) {
                 if (!Settings.canDrawOverlays(requireContext())) {
                     Log.w(LOG_ID, "Overlay permission denied!")
                 } else {
@@ -89,7 +87,10 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             when(key) {
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION,
                 Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION,
-                Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD -> {
+                Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD,
+                Constants.SHARED_PREF_SEND_TO_XDRIP,
+                Constants.SHARED_PREF_SEND_XDRIP_BROADCAST,
+                Constants.SHARED_PREF_CAR_NOTIFICATION -> {
                     updateEnableStates(sharedPreferences!!)
                 }
                 Constants.SHARED_PREF_FLOATING_WIDGET -> {
@@ -150,24 +151,27 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     fun updateEnableStates(sharedPreferences: SharedPreferences) {
         try {
             setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_GLUCODATA_RECEIVERS, Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD)
-            setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION)
-            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, Constants.SHARED_PREF_PERMANENT_NOTIFICATION)
-            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION)
-            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, Constants.SHARED_PREF_PERMANENT_NOTIFICATION)
-            setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION)
+            setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_XDRIP_RECEIVERS, Constants.SHARED_PREF_SEND_TO_XDRIP)
+            setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_XDRIP_BROADCAST_RECEIVERS, Constants.SHARED_PREF_SEND_XDRIP_BROADCAST)
+            setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION, defValue = true)
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, Constants.SHARED_PREF_PERMANENT_NOTIFICATION, defValue = true)
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION, defValue = true)
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, Constants.SHARED_PREF_PERMANENT_NOTIFICATION, defValue = true)
+            setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, defValue = true)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_STYLE, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY, Constants.SHARED_PREF_FLOATING_WIDGET)
+            setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL, Constants.SHARED_PREF_CAR_NOTIFICATION)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
         }
     }
 
-    private fun getReceivers(): HashMap<String, String> {
+    private fun getReceivers(broadcastAction: String): HashMap<String, String> {
         val names = HashMap<String, String>()
         try {
             val receivers: List<ResolveInfo>
-            val intent = Intent(Constants.GLUCODATA_BROADCAST_ACTION)
+            val intent = Intent(broadcastAction)
             receivers = requireContext().packageManager.queryBroadcastReceivers(
                 intent,
                 PackageManager.GET_META_DATA
@@ -184,5 +188,14 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             Log.e(LOG_ID, "getReceivers exception: " + exc.toString())
         }
         return names
+    }
+
+
+    private fun setupReceivers(broadcastAction: String, multiSelectPrefKey: String) {
+        val selectTargets = findPreference<MultiSelectListPreference>(multiSelectPrefKey)
+        val receivers = getReceivers(broadcastAction)
+        // force "global broadcast" to be the first entry
+        selectTargets!!.entries = arrayOf<CharSequence>(resources.getString(CR.string.pref_global_broadcast)) + receivers.keys.toTypedArray()
+        selectTargets.entryValues = arrayOf<CharSequence>("") + receivers.values.toTypedArray()
     }
 }

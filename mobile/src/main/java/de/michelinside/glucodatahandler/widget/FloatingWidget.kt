@@ -22,7 +22,7 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.Utils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
-import de.michelinside.glucodatahandler.common.notifier.NotifyDataSource
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import java.util.*
 
 
@@ -36,7 +36,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
     private lateinit var txtTime: TextView
     private lateinit var sharedPref: SharedPreferences
     private lateinit var sharedInternalPref: SharedPreferences
-    private val LOG_ID = "GlucoDataHandler.FloatingWidget"
+    private val LOG_ID = "GDH.FloatingWidget"
 
     @SuppressLint("InflateParams")
     fun create() {
@@ -127,13 +127,13 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
                     //getting windows services and adding the floating view to it
                     if (windowManager == null) {
                         val filter = mutableSetOf(
-                            NotifyDataSource.BROADCAST,
-                            NotifyDataSource.MESSAGECLIENT,
-                            NotifyDataSource.SETTINGS)
+                            NotifySource.BROADCAST,
+                            NotifySource.MESSAGECLIENT,
+                            NotifySource.SETTINGS)
                         if(txtTime.visibility == VISIBLE) {
-                            filter.add(NotifyDataSource.TIME_VALUE)
+                            filter.add(NotifySource.TIME_VALUE)
                         } else {
-                            filter.add(NotifyDataSource.OBSOLETE_VALUE)
+                            filter.add(NotifySource.OBSOLETE_VALUE)
                         }
                         InternalNotifier.addNotifier(this, filter)
                         createWindow()
@@ -255,7 +255,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
         }
     }
 
-    override fun OnNotifyData(context: Context, dataSource: NotifyDataSource, extras: Bundle?) {
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnNotifyData called for source " + dataSource.toString())
             update()

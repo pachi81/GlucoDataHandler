@@ -5,6 +5,8 @@
 
 ## Funkcje
 
+* odbiera wartości glukozy jako **[LibreLink follower](#librelink)**
+* odbiera wartości glukozy z Nightscout
 * odbiera wartości glukozy z Juggluco
 * odbiera wartości glukozy z xDrip+
 * udostępnia kilka **[widgetów](#widgety)** i pływający widget dla telefonu
@@ -36,6 +38,21 @@ Aktualną wersję można pobrać [tutaj](https://github.com/pachi81/GlucoDataHan
 ### Telefon
 
 Ustawienia dla aplikacji na telefon opisane są w samej aplikacji. Ustawienia z telefonu zostaną przesłane do zegarka, jeśli jest on podłączony.
+
+## Źródła
+
+### LibreLink
+
+Aby skonfigurować LibreLink jako „follower”, potrzebne są dane konta z LibreLinkUp.
+Jeśli nie skonfigurowałeś jeszcze swojego konta LibreLinkUp, postępuj zgodnie z tą [instrukcją](https://librelinkup.com/articles/getting-started).
+
+Oto krótkie podsumowanie kroków, które należy wykonać:
+* otwórz aplikację FreeStyle Libre i wybierz w menu `Udostępnianie` lub `Podłączone aplikacje`.
+* aktywuj połączenie LibreLinkUp
+* zainstaluj LibreLinkUp ze [Sklepu Play](https://play.google.com/store/apps/details?id=org.nativescript.LibreLinkUp)
+* skonfiguruj swoje konto i czekaj na zaproszenie
+* po zaakceptowaniu zaproszenia nie potrzebujesz już aplikacji LibreLinkUp.
+* teraz możesz dodać swoje konto LibreLinkUp do GlucoDataHandler i aktywować to źródło.
 
 ## Widgety
 Dostępnych jest kilka rodzajów widgetów na telefon.
