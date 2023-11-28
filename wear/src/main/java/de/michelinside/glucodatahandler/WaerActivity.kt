@@ -34,6 +34,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var switchLibreSource: SwitchCompat
     private lateinit var switchNightscoutSource: SwitchCompat
     private lateinit var sharedPref: SharedPreferences
+    private var requestNotificationPermission = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -164,7 +165,8 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 }
             }
 
-            GlucoDataServiceWear.start(this, true)
+            if(requestPermission())
+                GlucoDataServiceWear.start(this, true)
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
@@ -194,9 +196,28 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.OBSOLETE_VALUE,
                 NotifySource.SOURCE_SETTINGS,
                 NotifySource.SOURCE_STATE_CHANGE))
+
+            if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
+                Log.i(LOG_ID, "Notification permission granted")
+                requestNotificationPermission = false
+                GlucoDataServiceWear.start(this, true)
+            }
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
+    }
+
+    fun requestPermission() : Boolean {
+        requestNotificationPermission = false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (!Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
+                Log.i(LOG_ID, "Request notification permission...")
+                requestNotificationPermission = true
+                this.requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 3)
+                return false
+            }
+        }
+        return true
     }
 
     private fun update() {

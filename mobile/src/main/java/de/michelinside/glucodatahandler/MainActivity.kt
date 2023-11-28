@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Paint
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
@@ -39,6 +40,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtBatteryOptimization: TextView
     private lateinit var sharedPref: SharedPreferences
     private val LOG_ID = "GDH.Main"
+    private var requestNotificationPermission = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -86,6 +88,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     apply()
                 }
             }
+
+            if (requestPermission())
+                GlucoDataServiceMobile.start(this, true)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -116,9 +121,28 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.OBSOLETE_VALUE,
                 NotifySource.SOURCE_STATE_CHANGE))
             checkBatteryOptimization()
+
+            if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
+                Log.i(LOG_ID, "Notification permission granted")
+                requestNotificationPermission = false
+                GlucoDataServiceMobile.start(this, true)
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
         }
+    }
+
+    fun requestPermission() : Boolean {
+        requestNotificationPermission = false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (!Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
+                Log.i(LOG_ID, "Request notification permission...")
+                requestNotificationPermission = true
+                this.requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 3)
+                return false
+            }
+        }
+        return true
     }
 
     private fun checkBatteryOptimization() {
