@@ -5,9 +5,9 @@ plugins {
     id 'org.jetbrains.kotlin.android' version '1.8.20' apply false
 }
 
-project.ext.set("versionCode", 2)
-project.ext.set("versionName", "0.9.7")
+project.ext.set("versionCode", 3)
+project.ext.set("versionName", "0.9.7.1")
 project.ext.set("compileSdk", 34)
-project.ext.set("targetSdk", 31)
+project.ext.set("targetSdk", 33)
 project.ext.set("minSdk", 26)
 project.ext.set("releasePath", "D:/Daten/Michel/OneDrive/Projekte/Release")

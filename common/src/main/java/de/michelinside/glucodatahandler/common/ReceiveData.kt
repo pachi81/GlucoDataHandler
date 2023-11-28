@@ -45,7 +45,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var rateLabel: String? = null
     var source: DataSource = DataSource.NONE
     var forceAlarm: Boolean = false
-    private var lowValue: Float = 0F
+    private var lowValue: Float = 70F
     private val low: Float get() {
         if(isMmol && lowValue > 0F)  // mmol/l
         {
@@ -53,7 +53,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         }
         return lowValue
     }
-    private var highValue: Float = 0F
+    private var highValue: Float = 240F
     private val high: Float get() {
         if(isMmol && highValue > 0F)  // mmol/l
         {

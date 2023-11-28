@@ -30,7 +30,7 @@
         app:iconSpaceReserved="false"
         app:initialExpandedChildrenCount="0">
         <de.michelinside.glucodatahandler.preferences.GlucoseEditPreference
-            android:defaultValue="0"
+            android:defaultValue="240"
             android:inputType="numberDecimal"
             android:key="high_glucose"
             android:selectAllOnFocus="true"
@@ -57,7 +57,7 @@
             android:summary="@string/pref_target_min_value_summary"
             app:iconSpaceReserved="false" />
         <de.michelinside.glucodatahandler.preferences.GlucoseEditPreference
-            android:defaultValue="0"
+            android:defaultValue="70"
             android:inputType="numberDecimal"
             android:key="low_glucose"
             android:selectAllOnFocus="true"

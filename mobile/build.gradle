@@ -11,7 +11,7 @@ android {
         applicationId "de.michelinside.glucodatahandler"
         minSdk rootProject.minSdk
         targetSdk rootProject.targetSdk
-        versionCode rootProject.versionCode
+        versionCode 1000 + rootProject.versionCode
         versionName rootProject.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -85,6 +85,16 @@ dependencies {
 }
 
 afterEvaluate {
+    //noinspection ConfigurationAvoidance
+    def bundleRelease = tasks.getByPath(':mobile:bundleRelease')
+    def copyAndroidBundlePostBuild = tasks.register('copyAndroidBundlePostBuild', Copy) {
+        dependsOn bundleRelease
+        from "${projectDir}/release"
+        include '**/*.aab'
+        into rootProject.releasePath + "/Playstore" + "/" + versionName
+    }
+
+    bundleRelease.finalizedBy(copyAndroidBundlePostBuild)
     //noinspection ConfigurationAvoidance
     def assembleRelease = tasks.getByPath(':mobile:assembleRelease')
     def copyAndroidApksPostBuild = tasks.register('copyAndroidApksPostBuild', Copy) {
