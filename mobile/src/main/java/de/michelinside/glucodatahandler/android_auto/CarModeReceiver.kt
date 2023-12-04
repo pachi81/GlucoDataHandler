@@ -32,7 +32,7 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     private var init = false
     @SuppressLint("StaticFieldLeak")
     private lateinit var notificationMgr: CarNotificationManager
-    private var show_notification = false
+    private var show_notification = true  // default true and show only alarms
     private var car_connected = false
     private var last_notification_time = 0L
     private var notification_interval = 1L   // every minute -> always, -1L: only for alarms
@@ -79,7 +79,7 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     private fun updateSettings(sharedPref: SharedPreferences) {
         val cur_enabled = enable_notification
         enable_notification = sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, enable_notification)
-        notification_interval = sharedPref.getString(Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL, "1")!!.toLong()
+        notification_interval = sharedPref.getString(Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL, "-1")!!.toLong()
         if(init && car_connected && cur_enabled != enable_notification) {
             if(enable_notification)
                 showNotification(GlucoDataService.context!!, ReceiveData.isObsolete())

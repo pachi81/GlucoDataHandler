@@ -211,14 +211,14 @@
                     android:scheme="glucodata_intent_wear" />
             </intent-filter>
         </service>
-        <service
+        <!--<service
             android:name=".android_auto.CarMediaBrowserService"
             android:exported="true"
             tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>
-        </service>
+        </service>-->
 
         <meta-data
             android:name="com.google.android.gms.car.application"
