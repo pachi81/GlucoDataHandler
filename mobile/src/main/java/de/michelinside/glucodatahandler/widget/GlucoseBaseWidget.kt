@@ -1,6 +1,5 @@
 package de.michelinside.glucodatahandler.widget
 
-import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
@@ -10,7 +9,6 @@ import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.widget.RemoteViews
-import de.michelinside.glucodatahandler.BuildConfig
 import de.michelinside.glucodatahandler.GlucoDataServiceMobile
 import de.michelinside.glucodatahandler.MainActivity
 import de.michelinside.glucodatahandler.R
@@ -231,13 +229,12 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
             val height = if (isPortrait) maxHeight else minHeight
 
             val remoteViews = getRemoteViews(context, width, height)
-            if (BuildConfig.DEBUG) {
+            /*if (BuildConfig.DEBUG) {
                 // for debug create dummy broadcast (to check in emulator)
                 val pendingIntent = PendingIntent.getBroadcast(context, 5, Utils.getDummyGlucodataIntent(false), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
                 remoteViews.setOnClickPendingIntent(R.id.widget, pendingIntent)
-            } else {
-                remoteViews.setOnClickPendingIntent(R.id.widget, Utils.getAppIntent(context, MainActivity::class.java, 5, true))
-            }
+            } else*/
+            remoteViews.setOnClickPendingIntent(R.id.widget, Utils.getAppIntent(context, MainActivity::class.java, 5, true))
 
             // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
