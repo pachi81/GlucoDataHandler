@@ -1,10 +1,12 @@
 package de.michelinside.glucodatahandler
 
+import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Paint
 import android.os.*
+import android.provider.Settings
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
@@ -215,6 +217,13 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 requestNotificationPermission = true
                 this.requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 3)
                 return false
+            }
+        }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            if (!alarmManager.canScheduleExactAlarms()) {
+                Log.i(LOG_ID, "Request exact alarm permission...")
+                startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
             }
         }
         return true
