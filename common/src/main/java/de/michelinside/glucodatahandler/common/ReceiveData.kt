@@ -195,7 +195,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             AlarmType.VERY_LOW -> 7
             else -> 0
         }
-        forceAlarm = checkForceAlarm(curAlarmType)
+        setForceAlarm(checkForceAlarm(curAlarmType), curAlarmType)
         if (curAlarm != 0 && forceAlarm) {
             return curAlarm or 8
         }
@@ -219,9 +219,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             AlarmType.VERY_LOW -> {
                 if(curAlarmType < lastAlarmType || ((delta < 0F || rate < 0F) && (time - lastAlarmTime >= lowAlarmDuration)))
                 {
-                    lastAlarmTime = time
-                    lastAlarmType = curAlarmType
-                    Log.i(LOG_ID, "Force low alarm for type " + curAlarmType)
                     return true
                 }
                 return false
@@ -230,14 +227,20 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             AlarmType.VERY_HIGH -> {
                 if(curAlarmType > lastAlarmType || ((delta > 0F || rate > 0F) && (time - lastAlarmTime >= highAlarmDuration)))
                 {
-                    lastAlarmTime = time
-                    lastAlarmType = curAlarmType
-                    Log.i(LOG_ID, "Force high alarm for type " + curAlarmType)
                     return true
                 }
                 return false
             }
             else -> return false
+        }
+    }
+
+    private fun setForceAlarm(force: Boolean, curAlarmType: AlarmType) {
+        forceAlarm = force
+        if (forceAlarm) {
+            lastAlarmTime = time
+            lastAlarmType = curAlarmType
+            Log.i(LOG_ID, "Force alarm for type " + curAlarmType)
         }
     }
 
@@ -357,7 +360,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
                 rate = extras.getFloat(RATE) //Rate of change of glucose. See libre and dexcom label functions
                 rateLabel = getRateLabel(context)
-                alarm = extras.getInt(ALARM) // if bit 8 is set, then an alarm is triggered
                 deltaValue = Float.NaN
                 if (extras.containsKey(DELTA)) {
                     deltaValue = extras.getFloat(DELTA, Float.NaN)
@@ -385,7 +387,12 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 changeIsMmol(rawValue!=glucose.toInt(), context)
 
                 // check for alarm
-                alarm = calculateAlarm()
+                if (interApp) {
+                    alarm = extras.getInt(ALARM) // if bit 8 is set, then an alarm is triggered
+                    setForceAlarm((alarm and 8) == 8, getAlarmType())
+                } else {
+                    alarm = calculateAlarm()
+                }
                 val notifySource = if(interApp) NotifySource.MESSAGECLIENT else NotifySource.BROADCAST
 
                 InternalNotifier.notify(context, notifySource, createExtras())  // re-create extras to have all changed value inside...
