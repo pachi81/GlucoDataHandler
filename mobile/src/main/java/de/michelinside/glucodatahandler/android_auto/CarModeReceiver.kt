@@ -135,13 +135,13 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                 removeNotification()
                 car_connected = false
                 GlucoDataService.context?.setAndroidAutoConnectionState(false)
-                InternalNotifier.remNotifier(this)
+                InternalNotifier.remNotifier(GlucoDataService.context!!,this)
             } else {
                 Log.d(LOG_ID, "Entered Car Mode")
                 forceNextNotify = false
                 car_connected = true
                 GlucoDataService.context?.setAndroidAutoConnectionState(true)
-                InternalNotifier.addNotifier(this, mutableSetOf(
+                InternalNotifier.addNotifier(GlucoDataService.context!!,this, mutableSetOf(
                     NotifySource.BROADCAST,
                     NotifySource.MESSAGECLIENT,
                     NotifySource.OBSOLETE_VALUE))

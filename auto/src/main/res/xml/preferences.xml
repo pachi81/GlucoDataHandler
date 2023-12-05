@@ -97,12 +97,6 @@
         app:iconSpaceReserved="false"
         app:initialExpandedChildrenCount="0">
         <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="car_media"
-            android:summary="@string/pref_switch_car_media_summary"
-            android:title="@string/pref_switch_car_media"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="car_notification"
             android:summary="@string/pref_switch_car_notification_summary"

@@ -15,7 +15,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
     private val LOG_ID = "GDH.GlucoDataServiceWear"
     init {
         Log.d(LOG_ID, "init called")
-        InternalNotifier.addNotifier(
+        InternalNotifier.addNotifier( this,
             ActiveComplicationHandler, mutableSetOf(
                 NotifySource.MESSAGECLIENT,
                 NotifySource.BROADCAST,
@@ -23,7 +23,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
                 NotifySource.TIME_VALUE
             )
         )
-        InternalNotifier.addNotifier(
+        InternalNotifier.addNotifier( this,
             BatteryLevelComplicationUpdater,
             mutableSetOf(
                 NotifySource.CAPILITY_INFO,

@@ -177,7 +177,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
     override fun onPause() {
         try {
             super.onPause()
-            InternalNotifier.remNotifier(this)
+            InternalNotifier.remNotifier(this, this)
             Log.d(LOG_ID, "onPause called")
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
@@ -189,7 +189,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
             super.onResume()
             Log.d(LOG_ID, "onResume called")
             update()
-            InternalNotifier.addNotifier(this, mutableSetOf(
+            InternalNotifier.addNotifier(this, this, mutableSetOf(
                 NotifySource.BROADCAST,
                 NotifySource.MESSAGECLIENT,
                 NotifySource.CAPILITY_INFO,

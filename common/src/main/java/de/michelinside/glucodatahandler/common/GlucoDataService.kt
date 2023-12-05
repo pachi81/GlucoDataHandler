@@ -128,7 +128,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 filter.add(NotifySource.SETTINGS)   // only send setting changes from phone to wear!
                 filter.add(NotifySource.SOURCE_SETTINGS)
             }
-            InternalNotifier.addNotifier(this, filter)
+            InternalNotifier.addNotifier(this, this, filter)
 
             Log.d(LOG_ID, "Register Receiver")
             receiver = GlucoseDataReceiver()

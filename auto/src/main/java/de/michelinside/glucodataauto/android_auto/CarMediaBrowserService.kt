@@ -53,7 +53,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
 
             sessionToken = session.sessionToken
 
-            InternalNotifier.addNotifier(this, mutableSetOf(
+            InternalNotifier.addNotifier(this, this, mutableSetOf(
                 NotifySource.BROADCAST,
                 NotifySource.MESSAGECLIENT,
                 NotifySource.SETTINGS,
@@ -66,7 +66,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     override fun onDestroy() {
         Log.v(LOG_ID, "onDestroy")
         try {
-            InternalNotifier.remNotifier(this)
+            InternalNotifier.remNotifier(this, this)
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
             session.release()
             CarModeReceiver.cleanupNotification(this)

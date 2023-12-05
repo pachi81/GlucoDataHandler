@@ -137,12 +137,12 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                 Log.i(LOG_ID, "Exited Car Mode")
                 removeNotification()
                 car_connected = false
-                InternalNotifier.remNotifier(this)
+                InternalNotifier.remNotifier(context!!, this)
             } else {
                 Log.i(LOG_ID, "Entered Car Mode")
                 forceNextNotify = false
                 car_connected = true
-                InternalNotifier.addNotifier(this, mutableSetOf(
+                InternalNotifier.addNotifier(context!!, this, mutableSetOf(
                     NotifySource.BROADCAST,
                     NotifySource.MESSAGECLIENT,
                     NotifySource.OBSOLETE_VALUE))

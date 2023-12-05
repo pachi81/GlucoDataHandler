@@ -7,31 +7,43 @@ import android.util.Log
 object InternalNotifier {
     private const val LOG_ID = "GDH.InternalNotifier"
     private var notifiers = mutableMapOf<NotifierInterface, MutableSet<NotifySource>?>()
-    fun addNotifier(notifier: NotifierInterface, sourceFilter: MutableSet<NotifySource>)
+    fun addNotifier(context: Context, notifier: NotifierInterface, sourceFilter: MutableSet<NotifySource>)
     {
         Log.i(LOG_ID, "add notifier " + notifier.toString() + " - filter: " + sourceFilter.toString() )
         notifiers[notifier] = sourceFilter
         Log.d(LOG_ID, "notifier size: " + notifiers.size.toString() )
+        notify(context, NotifySource.NOTIFIER_CHANGE, null)
     }
-    fun remNotifier(notifier: NotifierInterface)
+    fun remNotifier(context: Context, notifier: NotifierInterface)
     {
         Log.i(LOG_ID, "rem notifier " + notifier.toString() )
         notifiers.remove(notifier)
         Log.d(LOG_ID, "notifier size: " + notifiers.size.toString() )
+        notify(context, NotifySource.NOTIFIER_CHANGE, null)
     }
 
-    fun notify(context: Context, dataSource: NotifySource, extras: Bundle?)
+    fun notify(context: Context, notifySource: NotifySource, extras: Bundle?)
     {
         Log.d(LOG_ID, "Sending new data to " + notifiers.size.toString() + " notifier(s).")
         notifiers.forEach{
             try {
-                if (it.value == null || it.value!!.contains(dataSource)) {
-                    Log.d(LOG_ID, "Sending new data from " + dataSource.toString() + " to " + it.toString())
-                    it.key.OnNotifyData(context, dataSource, extras)
+                if (it.value == null || it.value!!.contains(notifySource)) {
+                    Log.d(LOG_ID, "Sending new data from " + notifySource.toString() + " to " + it.toString())
+                    it.key.OnNotifyData(context, notifySource, extras)
                 }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() )
             }
         }
+    }
+
+    fun getNotifierCount(notifySource: NotifySource): Int {
+        var count = 0
+        notifiers.forEach {
+            if (it.value == null || it.value!!.contains(notifySource)) {
+                count++
+            }
+        }
+        return count
     }
 }

@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     override fun onPause() {
         try {
             super.onPause()
-            InternalNotifier.remNotifier(this)
+            InternalNotifier.remNotifier(this, this)
             Log.v(LOG_ID, "onPause called")
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.message.toString() )
@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             super.onResume()
             Log.v(LOG_ID, "onResume called")
             update()
-            InternalNotifier.addNotifier(this, mutableSetOf(
+            InternalNotifier.addNotifier(this, this, mutableSetOf(
                 NotifySource.BROADCAST,
                 NotifySource.MESSAGECLIENT,
                 NotifySource.CAPILITY_INFO,
