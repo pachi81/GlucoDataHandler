@@ -9,6 +9,7 @@ import android.util.Log
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
+import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import java.math.RoundingMode
 import java.text.DateFormat
 import java.util.*
@@ -24,6 +25,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     const val TIME = "glucodata.Minute.Time"
     const val DELTA = "glucodata.Minute.Delta"
     const val SOURCE_RES_ID = "source_resid"
+    private const val LAST_ALARM_TYPE = "last_alarm_type"
+    private const val LAST_ALARM_TIME = "last_alarm_time"
     private const val WAKE_LOCK_TIMEOUT = 10000L // 10 seconds
 
     enum class AlarmType(val resId: Int) {
@@ -32,7 +35,18 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         LOW(R.string.alarm_low),
         OK(R.string.alarm_none),
         HIGH(R.string.alarm_high),
-        VERY_HIGH(R.string.alarm_very_high)
+        VERY_HIGH(R.string.alarm_very_high);
+
+        companion object {
+            fun fromResId(id: Int): AlarmType {
+                AlarmType.values().forEach {
+                    if(it.resId == id) {
+                        return it
+                    }
+                }
+                return NONE
+            }
+        }
     }
 
     var sensorID: String? = null
@@ -101,16 +115,17 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private var initialized = false
 
     init {
-        Log.d(LOG_ID, "init called")
+        Log.v(LOG_ID, "init called")
     }
 
     fun initData(context: Context) {
-        Log.d(LOG_ID, "initData called")
         try {
             if (!initialized) {
+                Log.v(LOG_ID, "initData called")
+                initialized = true
                 readTargets(context)
                 loadExtras(context)
-                initialized = true
+                TimeTaskService.run(context)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "initData exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
@@ -332,6 +347,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         if (extras == null || extras.isEmpty) {
             return false
         }
+        initData(context)
         var result = false
         val wakeLock: PowerManager.WakeLock =
             (context.getSystemService(Context.POWER_SERVICE) as PowerManager).run {
@@ -546,6 +562,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 putInt(ALARM, alarm)
                 putFloat(DELTA, deltaValue)
                 putInt(SOURCE_RES_ID, source.resId)
+                putLong(LAST_ALARM_TIME, lastAlarmTime)
+                putInt(LAST_ALARM_TYPE, lastAlarmType.resId)
                 apply()
             }
         } catch (exc: Exception) {
@@ -567,6 +585,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     extras.putFloat(RATE, sharedGlucosePref.getFloat(RATE, rate))
                     extras.putInt(ALARM, sharedGlucosePref.getInt(ALARM, alarm))
                     extras.putFloat(DELTA, sharedGlucosePref.getFloat(DELTA, deltaValue))
+                    lastAlarmType = AlarmType.fromResId(sharedGlucosePref.getInt(LAST_ALARM_TYPE, AlarmType.NONE.resId))
+                    lastAlarmTime = sharedGlucosePref.getLong(LAST_ALARM_TIME, 0L)
                     handleIntent(context, DataSource.fromResId(sharedGlucosePref.getInt(SOURCE_RES_ID,
                         DataSource.NONE.resId)), extras)
                 }

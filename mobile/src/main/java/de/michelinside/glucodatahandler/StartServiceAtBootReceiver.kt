@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 
 
 class StartServiceAtBootReceiver: BroadcastReceiver() {
@@ -13,6 +14,7 @@ class StartServiceAtBootReceiver: BroadcastReceiver() {
         try {
             Log.i(LOG_ID, "Start Service after intent action received: " + intent.action)
             GlucoDataServiceMobile.start(context, true)
+            CarModeReceiver.initNotification(context)
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }

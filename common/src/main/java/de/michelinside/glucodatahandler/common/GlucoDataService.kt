@@ -114,7 +114,6 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             isRunning = true
 
             ReceiveData.initData(this)
-            TimeTaskService.run(this)
             SourceTaskService.run(this)
 
             connection.open(this)
