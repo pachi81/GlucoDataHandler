@@ -125,7 +125,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 context.getString(R.string.info_label_timestamp) + ": " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(time)) + "\r\n" +
                 context.getString(R.string.info_label_alarm) + ": " + context.getString(getAlarmType().resId) + (if (forceAlarm) " ⚠" else "" ) + " (" + alarm + ")\r\n" +
                 if (isMmol) context.getString(R.string.info_label_raw) + ": " + rawValue + " mg/dl\r\n" else "" ) +
-                context.getString(R.string.info_label_sensor_id) + ": " + sensorID + "\r\n" +
+                context.getString(R.string.info_label_sensor_id) + ": " + (if(BuildConfig.DEBUG) "ABCDE12345" else sensorID) + "\r\n" +
                 context.getString(R.string.info_label_source) + ": " + context.getString(source.resId)
     }
 
