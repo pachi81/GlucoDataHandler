@@ -211,6 +211,8 @@
                     android:scheme="glucodata_intent_wear" />
             </intent-filter>
         </service>
+        <service android:name=".android_auto.CarMessagingService" />
+
         <!--<service
             android:name=".android_auto.CarMediaBrowserService"
             android:exported="true"

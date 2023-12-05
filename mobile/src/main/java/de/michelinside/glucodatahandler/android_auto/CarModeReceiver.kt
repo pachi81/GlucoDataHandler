@@ -2,6 +2,7 @@ package de.michelinside.glucodatahandler.android_auto
 
 import android.annotation.SuppressLint
 import android.app.*
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -28,6 +29,8 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     private const val LOG_ID = "GDH.CarModeReceiver"
     private const val CHANNEL_ID = "GlucoDataNotify_Car"
     private const val CHANNEL_NAME = "Notification for Android Auto"
+    const val ACTION_REPLY = "de.michelinside.glucodatahandler.REPLY"
+    const val ACTION_MARK_AS_READ = "de.michelinside.glucodatahandler.MARK_AS_READ"
     private const val NOTIFICATION_ID = 789
     private var init = false
     @SuppressLint("StaticFieldLeak")
@@ -224,7 +227,8 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         val remoteInputWear =
             RemoteInput.Builder("extra_voice_reply").setLabel("Reply")
                 .build()
-        val intent = Intent("DoNothing") //new Intent(this, PopupReplyReceiver.class);
+        val intent = Intent(context, CarMessagingService::class.java)
+        intent.action = ACTION_REPLY
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             1,
@@ -240,7 +244,8 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     }
 
     private fun createDismissAction(context: Context): NotificationCompat.Action {
-        val intent = Intent("DoNothing") //new Intent(this, DismissReceiver.class);
+        val intent = Intent(context, CarMessagingService::class.java)
+        intent.action = ACTION_MARK_AS_READ
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             2,
@@ -268,6 +273,26 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
+        }
+    }
+}
+
+class CarMessagingService : BroadcastReceiver() {
+    private val LOG_ID = "GDH.CarMessagingService"
+
+    override fun onReceive(context: Context?, intent: Intent?) {
+        // Fetches internal data.
+        //val conversationId = intent!!.getIntExtra(EXTRA_CONVERSATION_ID_KEY, -1)
+
+        // Handles the action that was requested in the intent. The TODOs
+        // are addressed in a later section.
+        when (intent?.action) {
+            CarModeReceiver.ACTION_REPLY -> {
+                Log.i(LOG_ID, "reply received")
+            }
+            CarModeReceiver.ACTION_MARK_AS_READ -> {
+                Log.i(LOG_ID, "mark as read received")
+            }
         }
     }
 }
