@@ -249,13 +249,15 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
 
             val user = sharedPref.getString(Constants.SHARED_PREF_LIBRE_USER, "")!!.trim()
             val password = sharedPref.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, "")!!.trim()
-            switchLibreSource.isEnabled = user.isNotEmpty() && password.isNotEmpty()
+            if (!BuildConfig.DEBUG)
+                switchLibreSource.isEnabled = user.isNotEmpty() && password.isNotEmpty()
             if(!switchLibreSource.isEnabled) {
                 switchLibreSource.isChecked = false
             }
 
             val url = sharedPref.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, "")!!.trim()
-            switchNightscoutSource.isEnabled = url.isNotEmpty()
+            if (!BuildConfig.DEBUG)
+                switchNightscoutSource.isEnabled = url.isNotEmpty()
             if(!switchNightscoutSource.isEnabled) {
                 switchNightscoutSource.isChecked = false
             }

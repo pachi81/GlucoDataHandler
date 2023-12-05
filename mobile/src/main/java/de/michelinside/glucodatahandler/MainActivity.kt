@@ -203,14 +203,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     startActivity(intent)
                     return true
                 }
-                R.id.action_update -> {
-                    val browserIntent = Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(resources.getText(CR.string.update_link).toString())
-                    )
-                    startActivity(browserIntent)
-                    return true
-                }
                 R.id.action_help -> {
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
