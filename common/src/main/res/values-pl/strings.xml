@@ -247,12 +247,12 @@
     <!-- GlucoDataAuto -->
 
     <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataHandler/blob/master/GlucoDataAuto_PL.md</string>
-    <string name="gda_no_data">No values received yet.\nIf you are using GlucoDataHandler as source, the values will be send if the phone is connected to Android Auto.</string>
-    <string name="pref_gda_info">Information</string>
-    <string name="pref_gda_info_summary">If you are using GlucoDataHandler as source, these settings will be overwritten from GlucoDataHandler, so you do not have to change them here.</string>
-    <string name="pref_no_gda_info">GlucoDataAuto missing</string>
-    <string name="pref_no_gda_info_summary">To use GlucoDataHandler for Android Auto, you have to install GlucoDataAuto from GitHub.\nPlease click here for more information and to download GlucoDataAuto.</string>
-    <string name="pref_send_to_glucodataauto">Forward to GlucoDataAuto</string>
-    <string name="pref_send_to_glucodataauto_summary">Send glucose values and settings to GlucoDataAuto, if the phone is connected to Android Auto.</string>
+    <string name="gda_no_data">Nie otrzymano jeszcze wartości.\nJeśli używasz aplikacji GlucoDataHandler jako źródła, wartości zostaną wysłane, jeśli telefon jest podłączony do Android Auto.</string>
+    <string name="pref_gda_info">Informacje</string>
+    <string name="pref_gda_info_summary">Jeśli używasz aplikacji GlucoDataHandler jako źródła, ustawienia te zostaną nadpisane z GlucoDataHandler, więc nie musisz ich tutaj zmieniać.</string>
+    <string name="pref_no_gda_info">Brak GlucoDataAuto</string>
+    <string name="pref_no_gda_info_summary">Aby korzystać z GlucoDataHandler dla Android Auto, należy zainstalować aplikację GlucoDataAuto z GitHub.\nKliknij tutaj, aby uzyskać więcej informacji i pobrać GlucoDataAuto.</string>
+    <string name="pref_send_to_glucodataauto">Przekaż do GlucoDataAuto</string>
+    <string name="pref_send_to_glucodataauto_summary">Wysyłanie wartości glukozy i ustawień do GlucoDataAuto, jeśli telefon jest połączony z Android Auto.</string>
 
 </resources>
