@@ -157,7 +157,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 R.id.action_help -> {
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse(resources.getText(CR.string.help_link).toString())
+                        Uri.parse(resources.getText(CR.string.glucodataauto_link).toString())
                     )
                     startActivity(browserIntent)
                     return true
