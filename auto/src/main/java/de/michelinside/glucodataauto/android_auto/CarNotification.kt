@@ -86,7 +86,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         notification_interval = sharedPref.getString(Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL, "-1")!!.toLong()
         if(init && car_connected && cur_enabled != enable_notification) {
             if(enable_notification)
-                showNotification(context!!, ReceiveData.isObsolete())
+                showNotification(context!!, false)
             else
                 removeNotification()
         }
@@ -147,7 +147,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                         NotifySource.BROADCAST,
                         NotifySource.MESSAGECLIENT,
                         NotifySource.OBSOLETE_VALUE))
-                    showNotification(context!!, ReceiveData.isObsolete())
+                    showNotification(context!!, false)
                 }
                 InternalNotifier.notify(context!!, NotifySource.CAR_CONNECTION, null)
             }
