@@ -1,4 +1,4 @@
-package de.michelinside.glucodataauto
+package de.michelinside.glucodataauto.de.michelinside.glucodataauto
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -26,7 +26,7 @@ open class GlucoDataActionReceiver: BroadcastReceiver() {
                     ReceiveData.setSettings(context, bundle!!)
                     extras.remove(Constants.SETTINGS_BUNDLE)
                 }
-                ReceiveData.handleIntent(context, DataSource.JUGGLUCO, extras, true)
+                ReceiveData.handleIntent(context, DataSource.PHONE, extras, true)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Receive exception: " + exc.message.toString() )
