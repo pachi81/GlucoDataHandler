@@ -55,6 +55,15 @@
                 android:value=".MainActivity" />
         </activity>
         <receiver
+            android:name=".GlucoDataActionReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="de.michelinside.glucodatahandler.GLUCODATA" />
+            </intent-filter>
+        </receiver>
+        <receiver
             android:name="de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver"
             android:enabled="true"
             android:exported="true"

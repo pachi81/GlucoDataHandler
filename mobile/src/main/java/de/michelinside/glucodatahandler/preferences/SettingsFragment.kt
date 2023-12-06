@@ -14,6 +14,7 @@ import androidx.preference.*
 import de.michelinside.glucodatahandler.BuildConfig
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.Utils
 import de.michelinside.glucodatahandler.common.R as CR
 
 
@@ -36,6 +37,24 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             setupReceivers(Constants.GLUCODATA_BROADCAST_ACTION, Constants.SHARED_PREF_GLUCODATA_RECEIVERS)
             setupReceivers(Constants.XDRIP_ACTION_GLUCOSE_READING, Constants.SHARED_PREF_XDRIP_RECEIVERS)
             setupReceivers(Constants.XDRIP_BROADCAST_ACTION, Constants.SHARED_PREF_XDRIP_BROADCAST_RECEIVERS)
+
+            if (Utils.isPackageAvailable(requireContext(), Constants.PACKAGE_GLUCODATAAUTO)) {
+                val sendToGDA = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO)
+                sendToGDA!!.isVisible = true
+            } else {
+                val no_gda_info = findPreference<Preference>(Constants.SHARED_PREF_NO_GLUCODATAAUTO)
+                if (no_gda_info != null) {
+                    no_gda_info.isVisible = true
+                    no_gda_info.setOnPreferenceClickListener {
+                        val browserIntent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(resources.getText(CR.string.glucodataauto_link).toString())
+                        )
+                        startActivity(browserIntent)
+                        true
+                    }
+                }
+            }
 
             activityResultOverlayLauncher = registerForActivityResult(
                 ActivityResultContracts.StartActivityForResult()

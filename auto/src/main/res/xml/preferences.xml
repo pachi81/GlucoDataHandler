@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:key="gda_info"
+        android:summary="@string/pref_gda_info_summary"
+        android:title="@string/pref_gda_info"
+        app:iconSpaceReserved="false" />
 
     <PreferenceCategory
         android:title="@string/pref_cat_general"

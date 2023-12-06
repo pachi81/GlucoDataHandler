@@ -242,4 +242,15 @@
     <string name="timestamp">Zeitpunkt des Zuckerwertes</string>
     <string name="battery_level">Akku (Uhr und Telefon)</string>
 
+    <!-- GlucoDataAuto -->
+
+    <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataHandler/blob/master/GlucoDataAuto_DE.md</string>
+    <string name="gda_no_data">Noch keine Daten empfangen!\nWenn GlucoDataHandler als Quelle verwendet wird, werden die Daten erst übermittelt, wenn das Telefon mit Android Auto verbunden ist.</string>
+    <string name="pref_gda_info">Information</string>
+    <string name="pref_gda_info_summary">Wenn GlucoDataHandler als Quelle verwendet wird, dann werden die Daten von GlucoDataHandler überschrieben und müssen hier nicht konfigiert werden.</string>
+    <string name="pref_no_gda_info">GlucoDataAuto installieren</string>
+    <string name="pref_no_gda_info_summary">Um GlucoDataHandler für Android Auto zu verwenden, muss GlucoDataAuto von GitHub installiert werden.\nKlicken sie hier, für mehr Informationen und um zum Download zu gelangen.</string>
+    <string name="pref_send_to_glucodataauto">An GlucoDataAuto senden</string>
+    <string name="pref_send_to_glucodataauto_summary">Sendet den aktuellen Glucose Wert und die Einstellungen an GlucoDataAuto.</string>
+
 </resources>

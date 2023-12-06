@@ -244,7 +244,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }
             else
                 txtWearInfo.text = resources.getText(CR.string.activity_main_disconnected_label)
-            txtCarInfo.text = if (CarModeReceiver.connected) resources.getText(CR.string.activity_main_car_connected_label) else resources.getText(CR.string.activity_main_car_disconnected_label)
+            if (Utils.isPackageAvailable(this, Constants.PACKAGE_GLUCODATAAUTO)) {
+                txtCarInfo.text = if (CarModeReceiver.connected) resources.getText(CR.string.activity_main_car_connected_label) else resources.getText(CR.string.activity_main_car_disconnected_label)
+                txtCarInfo.visibility = View.VISIBLE
+            } else {
+                txtCarInfo.visibility = View.GONE
+            }
 
             txtSourceInfo.text = DataSourceTask.getState(this)
         } catch (exc: Exception) {
