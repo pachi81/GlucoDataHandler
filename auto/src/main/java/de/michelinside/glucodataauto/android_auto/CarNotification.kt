@@ -24,8 +24,8 @@ import java.util.*
 
 
 @SuppressLint("StaticFieldLeak")
-object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
-    private const val LOG_ID = "GDH.AA.CarModeReceiver"
+object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
+    private const val LOG_ID = "GDH.AA.CarNotification"
     private const val CHANNEL_ID = "GlucoDataNotify_Car"
     private const val CHANNEL_NAME = "Notification for Android Auto"
     const val ACTION_REPLY = "de.michelinside.glucodataauto.REPLY"
@@ -96,12 +96,12 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         try {
             if(!init) {
                 Log.v(LOG_ID, "initNotification called")
-                CarModeReceiver.context = context
+                CarNotification.context = context
                 val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 sharedPref.registerOnSharedPreferenceChangeListener(this)
                 updateSettings(sharedPref)
                 createNofitication(context)
-                CarConnection(context).type.observeForever(CarModeReceiver::onConnectionStateUpdated)
+                CarConnection(context).type.observeForever(CarNotification::onConnectionStateUpdated)
                 init = true
             }
         } catch (exc: Exception) {
@@ -113,11 +113,11 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         try {
             if (init) {
                 Log.v(LOG_ID, "remNotification called")
-                CarConnection(context).type.removeObserver(CarModeReceiver::onConnectionStateUpdated)
+                CarConnection(context).type.removeObserver(CarNotification::onConnectionStateUpdated)
                 val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 sharedPref.unregisterOnSharedPreferenceChangeListener(this)
                 init = false
-                CarModeReceiver.context = null
+                CarNotification.context = null
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "init exception: " + exc.message.toString())
@@ -133,22 +133,24 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                 else -> "Unknown car connection type"
             }
             Log.v(LOG_ID, "onConnectionStateUpdated: " + message + " (" + connectionState.toString() + ")")
-            if (connectionState == CarConnection.CONNECTION_TYPE_NOT_CONNECTED)  {
-                Log.i(LOG_ID, "Exited Car Mode")
-                removeNotification()
-                car_connected = false
-                InternalNotifier.remNotifier(context!!, this)
-            } else {
-                Log.i(LOG_ID, "Entered Car Mode")
-                forceNextNotify = false
-                car_connected = true
-                InternalNotifier.addNotifier(context!!, this, mutableSetOf(
-                    NotifySource.BROADCAST,
-                    NotifySource.MESSAGECLIENT,
-                    NotifySource.OBSOLETE_VALUE))
-                showNotification(context!!, ReceiveData.isObsolete())
+            if (init) {
+                if (connectionState == CarConnection.CONNECTION_TYPE_NOT_CONNECTED)  {
+                    Log.i(LOG_ID, "Exited Car Mode")
+                    removeNotification()
+                    car_connected = false
+                    InternalNotifier.remNotifier(context!!, this)
+                } else {
+                    Log.i(LOG_ID, "Entered Car Mode")
+                    forceNextNotify = false
+                    car_connected = true
+                    InternalNotifier.addNotifier(context!!, this, mutableSetOf(
+                        NotifySource.BROADCAST,
+                        NotifySource.MESSAGECLIENT,
+                        NotifySource.OBSOLETE_VALUE))
+                    showNotification(context!!, ReceiveData.isObsolete())
+                }
+                InternalNotifier.notify(context!!, NotifySource.CAR_CONNECTION, null)
             }
-            InternalNotifier.notify(context!!, NotifySource.CAR_CONNECTION, null)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onConnectionStateUpdated exception: " + exc.message.toString() + "\n" + exc.stackTraceToString() )
         }
@@ -173,7 +175,7 @@ object CarModeReceiver: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     }
 
     private fun canShowNotification(isObsolete: Boolean): Boolean {
-        if (enable_notification && car_connected) {
+        if (init && enable_notification && car_connected) {
             if(notification_interval == 1L || ReceiveData.forceAlarm)
                 return true
             if (ReceiveData.getAlarmType() == ReceiveData.AlarmType.VERY_LOW || isObsolete) {

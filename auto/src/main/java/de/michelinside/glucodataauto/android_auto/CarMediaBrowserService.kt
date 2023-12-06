@@ -31,7 +31,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         Log.v(LOG_ID, "onCreate")
         try {
             super.onCreate()
-            CarModeReceiver.initNotification(this)
+            CarNotification.initNotification(this)
             ReceiveData.initData(this)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
@@ -69,7 +69,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             InternalNotifier.remNotifier(this, this)
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
             session.release()
-            CarModeReceiver.cleanupNotification(this)
+            CarNotification.cleanupNotification(this)
             super.onDestroy()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )
