@@ -15,7 +15,6 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
 
-
     <queries>
         <package android:name="tk.glucodata" />
     </queries>
@@ -211,20 +210,6 @@
                     android:scheme="glucodata_intent_wear" />
             </intent-filter>
         </service>
-        <service android:name=".android_auto.CarMessagingService" />
-
-        <!--<service
-            android:name=".android_auto.CarMediaBrowserService"
-            android:exported="true"
-            tools:ignore="ExportedService">
-            <intent-filter>
-                <action android:name="android.media.browse.MediaBrowserService" />
-            </intent-filter>
-        </service>-->
-
-        <meta-data
-            android:name="com.google.android.gms.car.application"
-            android:resource="@xml/automotive_app_desc" />
     </application>
 
 </manifest>

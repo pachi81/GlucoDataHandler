@@ -127,6 +127,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             if (appSource == AppSource.PHONE_APP) {
                 filter.add(NotifySource.SETTINGS)   // only send setting changes from phone to wear!
                 filter.add(NotifySource.SOURCE_SETTINGS)
+                filter.add(NotifySource.CAR_CONNECTION)
             }
             InternalNotifier.addNotifier(this, this, filter)
 
