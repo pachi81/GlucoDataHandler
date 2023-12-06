@@ -17,7 +17,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuCompat
 import androidx.preference.PreferenceManager
-import de.michelinside.glucodataauto.android_auto.CarModeReceiver
+import de.michelinside.glucodataauto.android_auto.CarNotification
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.Utils
@@ -190,7 +190,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }
             viewIcon.setImageIcon(Utils.getRateAsIcon())
             txtLastValue.text = ReceiveData.getAsString(this)
-            txtCarInfo.text = if (CarModeReceiver.connected) resources.getText(CR.string.activity_main_car_connected_label) else resources.getText(CR.string.activity_main_car_disconnected_label)
+            txtCarInfo.text = if (CarNotification.connected) resources.getText(CR.string.activity_main_car_connected_label) else resources.getText(CR.string.activity_main_car_disconnected_label)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
         }
