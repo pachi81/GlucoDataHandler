@@ -125,7 +125,7 @@
     <string name="pref_target_range">Zielbereich</string>
     <string name="pref_switch_notification">Dummy Werte</string>
     <string name="pref_switch_car_notification">Android Auto Benachrichtigung</string>
-    <string name="pref_switch_car_notification_summary">Benachrichtigung für Android Auto.\nUm diese App in Android Auto zu verwenden, müssen die Entwicklereinstellungen aktiviert werden. Dafür mehrfach in Android Auto auf Version klicken. Danach in den Entwicklereinstellungen "Unbekannte Quellen" aktivieren.</string>
+    <string name="pref_switch_car_notification_summary">Benachrichtigung für Android Auto.</string>
     <string name="pref_switch_car_media">Dummy Media Player</string>
     <string name="pref_switch_car_media_summary">Stellt den Glucose Wert als aktuellen Song dar.</string>
     <string name="pref_car_notification_interval">Benachrichtigungsintervall</string>
@@ -245,7 +245,7 @@
     <!-- GlucoDataAuto -->
 
     <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataHandler/blob/master/GlucoDataAuto_DE.md</string>
-    <string name="gda_no_data">Noch keine Daten empfangen!\nWenn GlucoDataHandler als Quelle verwendet wird, werden die Daten erst übermittelt, wenn das Telefon mit Android Auto verbunden ist.</string>
+    <string name="gda_no_data">Um diese App in Android Auto zu verwenden, müssen die Entwicklereinstellungen aktiviert werden. Dafür mehrfach in Android Auto auf Version klicken. Danach in den Entwicklereinstellungen \"Unbekannte Quellen\" aktivieren.\n\nWenn GlucoDataHandler als Quelle verwendet wird, werden die Daten erst übermittelt, wenn das Telefon mit Android Auto verbunden ist.</string>
     <string name="pref_gda_info">Information</string>
     <string name="pref_gda_info_summary">Wenn GlucoDataHandler als Quelle verwendet wird, dann werden die Daten von GlucoDataHandler überschrieben und müssen hier nicht konfigiert werden.</string>
     <string name="pref_no_gda_info">GlucoDataAuto installieren</string>

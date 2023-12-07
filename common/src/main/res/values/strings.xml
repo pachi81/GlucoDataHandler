@@ -12,7 +12,7 @@
     <string name="info_label_alarm">Alarm</string>
     <string name="info_label_source">Source</string>
     <string name="info_label_per_minute">per minute</string>
-    <string name="no_data">No broadcast received yet!\nINFO: Activate LibreLink source or to receive data from Juggluco, please open Juggluco, go to settings and activate \"Glucodata Broadcast\" for "de.michelinside.glucodatahandler"\nTo receive from xDrip+ activate local broadcast and select no receiver.</string>
+    <string name="no_data">No broadcast received yet!\nINFO: Activate LibreLink source or to receive data from Juggluco, please open Juggluco, go to settings and activate \"Glucodata Broadcast\" for \"de.michelinside.glucodatahandler\"\nTo receive from xDrip+ activate local broadcast and select no receiver.</string>
 
     <string name="elapsed_time">%1$d min</string>
     <string name="elapsed_time_hour">\> 1h</string>
@@ -144,7 +144,7 @@
     <string name="pref_low_value">Low glucose</string>
     <string name="pref_low_value_summary">Border for low glucose values.\nIf you have activated low alarm in Juggluco, you do not have to set this value.</string>
     <string name="pref_switch_car_notification">Android Auto notifications</string>
-    <string name="pref_switch_car_notification_summary">Notification for Android Auto.\nFor using this app in Android Auto, you have to activate developer settings in Android Auto by clicking several times on the version. Then you have to enable "Unknown sources" in the developer settings menu.</string>
+    <string name="pref_switch_car_notification_summary">Notification for Android Auto.</string>
     <string name="pref_car_notification_interval">Notification interval</string>
     <string name="pref_car_notification_interval_summary">Interval for showing notifications. \"Alarm only\" will only trigger notifications if the values are outside of the target range.</string>
     <string name="pref_switch_car_media">Dummy Media Player</string>
@@ -257,7 +257,7 @@
     <!-- GlucoDataAuto -->
 
     <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataHandler/blob/master/GlucoDataAuto.md</string>
-    <string name="gda_no_data">No values received yet.\nIf you are using GlucoDataHandler as source, the values will be send if the phone is connected to Android Auto.</string>
+    <string name="gda_no_data">For using this app in Android Auto, you have to activate developer settings in Android Auto by clicking several times on the version. Then you have to enable \"Unknown sources\" in the developer settings menu.\n\nIf you are using GlucoDataHandler as source, the values will be send if the phone is connected to Android Auto.</string>
     <string name="pref_gda_info">Information</string>
     <string name="pref_gda_info_summary">If you are using GlucoDataHandler as source, these settings will be overwritten from GlucoDataHandler, so you do not have to change them here.</string>
     <string name="pref_no_gda_info">GlucoDataAuto missing</string>

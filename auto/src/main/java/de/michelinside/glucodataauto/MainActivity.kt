@@ -77,9 +77,16 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     apply()
                 }
             }
+            CarNotification.initNotification(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (!CarNotification.connected)
+            CarNotification.cleanupNotification(this)
     }
 
     override fun onPause() {
@@ -189,7 +196,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 txtBgValue.paintFlags = 0
             }
             viewIcon.setImageIcon(Utils.getRateAsIcon())
-            txtLastValue.text = ReceiveData.getAsString(this)
+            txtLastValue.text = ReceiveData.getAsString(this, CR.string.gda_no_data)
             txtCarInfo.text = if (CarNotification.connected) resources.getText(CR.string.activity_main_car_connected_label) else resources.getText(CR.string.activity_main_car_disconnected_label)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )

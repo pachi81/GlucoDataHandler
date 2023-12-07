@@ -132,9 +132,9 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         }
     }
 
-    fun getAsString(context: Context): String {
+    fun getAsString(context: Context, noDataResId: Int = R.string.no_data): String {
         if (time == 0L)
-            return context.getString(R.string.no_data)
+            return context.getString(noDataResId)
         return (context.getString(R.string.info_label_delta) + ": " + getDeltaAsString() + " " + getUnit() + "\r\n" +
                 context.getString(R.string.info_label_rate) + ": " + rate + "\r\n" +
                 context.getString(R.string.info_label_timestamp) + ": " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(time)) + "\r\n" +
