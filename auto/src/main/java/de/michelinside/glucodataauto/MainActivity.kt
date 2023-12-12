@@ -20,10 +20,10 @@ import androidx.preference.PreferenceManager
 import de.michelinside.glucodataauto.android_auto.CarNotification
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.R as CR
 
 class MainActivity : AppCompatActivity(), NotifierInterface {
@@ -195,7 +195,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             } else {
                 txtBgValue.paintFlags = 0
             }
-            viewIcon.setImageIcon(Utils.getRateAsIcon())
+            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
             txtLastValue.text = ReceiveData.getAsString(this, CR.string.gda_no_data)
             txtCarInfo.text = if (CarNotification.connected) resources.getText(CR.string.activity_main_car_connected_label) else resources.getText(CR.string.activity_main_car_disconnected_label)
         } catch (exc: Exception) {

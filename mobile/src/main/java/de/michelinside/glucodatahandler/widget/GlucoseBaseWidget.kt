@@ -17,6 +17,7 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 
 
 enum class WidgetType(val cls: Class<*>) {
@@ -192,9 +193,9 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
 
         if (hasTrend) {
             if (shortWidget)
-                remoteViews.setImageViewBitmap(R.id.glucose_trend, Utils.getGlucoseTrendBitmap(width = width, height = width))
+                remoteViews.setImageViewBitmap(R.id.glucose_trend, BitmapUtils.getGlucoseTrendBitmap(width = width, height = width))
             else
-                remoteViews.setImageViewBitmap(R.id.trendImage, Utils.getRateAsBitmap(roundTarget = false, width = size, height = size))
+                remoteViews.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap(roundTarget = false, width = size, height = size))
         }
 
         if (hasTime) {

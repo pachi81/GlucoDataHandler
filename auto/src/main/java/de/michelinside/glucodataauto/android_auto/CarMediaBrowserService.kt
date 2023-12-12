@@ -15,7 +15,7 @@ import android.util.Log
 import androidx.media.MediaBrowserServiceCompat
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -129,7 +129,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     }
 
     private fun getIcon(size: Int = 100): Bitmap? {
-        return Utils.textRateToBitmap(ReceiveData.getClucoseAsString(), ReceiveData.rate, ReceiveData.getClucoseColor(), ReceiveData.isObsolete(
+        return BitmapUtils.textRateToBitmap(ReceiveData.getClucoseAsString(), ReceiveData.rate, ReceiveData.getClucoseColor(), ReceiveData.isObsolete(
             Constants.VALUE_OBSOLETE_SHORT_SEC), ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),
             size, size)
     }

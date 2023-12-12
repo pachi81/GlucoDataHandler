@@ -16,6 +16,7 @@ import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
+import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.databinding.ActivityWaerBinding
 
@@ -240,7 +241,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 } else {
                     txtBgValue.paintFlags = 0
                 }
-                viewIcon.setImageIcon(Utils.getRateAsIcon())
+                viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
                 txtValueInfo.text = ReceiveData.getAsString(this)
                 if (WearPhoneConnection.nodesConnected) {
                     txtConnInfo.text = resources.getString(CR.string.activity_connected_label, WearPhoneConnection.getBatterLevelsAsString())

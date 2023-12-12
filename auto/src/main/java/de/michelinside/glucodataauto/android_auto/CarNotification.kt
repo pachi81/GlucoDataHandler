@@ -19,6 +19,7 @@ import de.michelinside.glucodataauto.R
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
+import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import java.text.DateFormat
 import java.util.*
@@ -200,7 +201,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
             if (canShowNotification(isObsolete)) {
                 Log.v(LOG_ID, "showNotification called")
                 notificationCompat
-                    .setLargeIcon(Utils.getRateAsBitmap(resizeFactor = 0.75F))
+                    .setLargeIcon(BitmapUtils.getRateAsBitmap(resizeFactor = 0.75F))
                     .setWhen(ReceiveData.time)
                     .setStyle(createMessageStyle(context, isObsolete))
                 notificationMgr.notify(NOTIFICATION_ID, notificationCompat)
@@ -213,7 +214,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
 
     private fun createMessageStyle(context: Context, isObsolete: Boolean): NotificationCompat.MessagingStyle {
         val person = Person.Builder()
-            .setIcon(IconCompat.createWithBitmap(Utils.getRateAsBitmap(resizeFactor = 0.75F)!!))
+            .setIcon(IconCompat.createWithBitmap(BitmapUtils.getRateAsBitmap(resizeFactor = 0.75F)!!))
             .setName(ReceiveData.getClucoseAsString())
             .setImportant(true)
             .build()
