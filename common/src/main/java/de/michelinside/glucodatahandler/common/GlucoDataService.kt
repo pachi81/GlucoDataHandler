@@ -15,6 +15,7 @@ import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.*
 import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 
 enum class AppSource {
@@ -141,7 +142,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                         ReceiveData.time = 0L
                         while (true) {
                             // create Thread which send dummy intents
-                            this.sendBroadcast(Utils.getDummyGlucodataIntent(false))
+                            this.sendBroadcast(GlucoDataUtils.getDummyGlucodataIntent(false))
                             Thread.sleep(1000)
                         }
                     } catch (exc: Exception) {

@@ -11,11 +11,8 @@ import android.os.Bundle
 import android.os.Parcel
 import android.util.Log
 import android.util.TypedValue
-import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
-import de.michelinside.glucodatahandler.common.ReceiveData
 import java.math.RoundingMode
-import kotlin.random.Random
 
 
 object Utils {
@@ -30,16 +27,6 @@ object Utils {
         if (value < min)
             return min
         return value
-    }
-
-    fun isMmolValue(value: Float): Boolean = value < Constants.GLUCOSE_MIN_VALUE.toFloat()
-
-    fun mgToMmol(value: Float, scale: Int = 1): Float {
-        return round(value / Constants.GLUCOSE_CONVERSION_FACTOR, scale)
-    }
-
-    fun mmolToMg(value: Float): Float {
-        return round(value * Constants.GLUCOSE_CONVERSION_FACTOR, 0)
     }
 
     fun dpToPx(dp: Float, context: Context): Int {
@@ -128,53 +115,4 @@ object Utils {
         return transparency shl (4*6)
     }
 
-    private var rateDelta = 0.1F
-    private var rawDelta = 5
-    fun getDummyGlucodataIntent(random: Boolean = true) : Intent {
-        val useMmol = ReceiveData.isMmol
-        val first = ReceiveData.time == 0L
-        ReceiveData.time = System.currentTimeMillis()-60000
-        val time =  System.currentTimeMillis()
-        val intent = Intent(Constants.GLUCODATA_BROADCAST_ACTION)
-        var raw: Int
-        var glucose: Float
-        var rate: Float
-        if (random) {
-            raw = Random.nextInt(40, 400)
-            glucose = if(useMmol) mgToMmol(raw.toFloat()) else raw.toFloat()
-            rate = Random.nextFloat() + Random.nextInt(-4, 4).toFloat()
-        } else {
-            if ((ReceiveData.rawValue >= 200 && rawDelta > 0) || (ReceiveData.rawValue <= 40 && rawDelta < 0)) {
-                rawDelta *= -1
-            }
-            raw =
-                if (first || ReceiveData.rawValue == 400) Constants.GLUCOSE_MIN_VALUE else ReceiveData.rawValue + rawDelta
-            glucose = if (useMmol) mgToMmol(raw.toFloat()) else raw.toFloat()
-            if (useMmol && glucose == ReceiveData.glucose) {
-                raw += 1
-                glucose = mgToMmol(raw.toFloat())
-            }
-            if (ReceiveData.rate >= 3.5F) {
-                rateDelta = -0.1F
-                rate = 2F
-            } else if (ReceiveData.rate <= -3.5F) {
-                rateDelta = 0.1F
-                rate = -2F
-            } else {
-                rate = if (first) -3.5F else ReceiveData.rate + rateDelta
-            }
-            if (rate > 2F && rateDelta > 0)
-                rate = 3.5F
-            else if (rate < -2F && rateDelta < 0)
-                rate = -3.5F
-
-        }
-        intent.putExtra(ReceiveData.SERIAL, "WUSEL_DUSEL")
-        intent.putExtra(ReceiveData.MGDL, raw)
-        intent.putExtra(ReceiveData.GLUCOSECUSTOM, glucose)
-        intent.putExtra(ReceiveData.RATE, round(rate, 2))
-        intent.putExtra(ReceiveData.TIME, time)
-        intent.putExtra(ReceiveData.ALARM, if (raw <= 70) 7 else if (raw >= 250) 6 else 0)
-        return intent
-    }
 }

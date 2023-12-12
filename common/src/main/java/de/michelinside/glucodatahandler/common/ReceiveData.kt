@@ -10,6 +10,7 @@ import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import java.math.RoundingMode
 import java.text.DateFormat
@@ -64,7 +65,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private val low: Float get() {
         if(isMmol && lowValue > 0F)  // mmol/l
         {
-            return Utils.mgToMmol(lowValue, 1)
+            return GlucoDataUtils.mgToMmol(lowValue, 1)
         }
         return lowValue
     }
@@ -72,7 +73,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private val high: Float get() {
         if(isMmol && highValue > 0F)  // mmol/l
         {
-            return Utils.mgToMmol(highValue, 1)
+            return GlucoDataUtils.mgToMmol(highValue, 1)
         }
         return highValue
     }
@@ -80,7 +81,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     val targetMin: Float get() {
         if(isMmol)  // mmol/l
         {
-            return Utils.mgToMmol(targetMinValue, 1)
+            return GlucoDataUtils.mgToMmol(targetMinValue, 1)
         }
         return targetMinValue
     }
@@ -88,7 +89,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     val targetMax: Float get() {
         if(isMmol)  // mmol/l
         {
-            return Utils.mgToMmol(targetMaxValue, 1)
+            return GlucoDataUtils.mgToMmol(targetMaxValue, 1)
         }
         return targetMaxValue
     }
@@ -99,7 +100,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             return deltaValue
         if(isMmol)  // mmol/l
         {
-            return Utils.mgToMmol(deltaValue, if (abs(deltaValue) > 1.0F) 1 else 2)
+            return GlucoDataUtils.mgToMmol(deltaValue, if (abs(deltaValue) > 1.0F) 1 else 2)
         }
         return Utils.round(deltaValue, 1)
     }
@@ -276,51 +277,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         }
     }
 
-    fun getRateSymbol(): Char {
-        if(isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) || java.lang.Float.isNaN(rate))
-            return '?'
-        if (rate >= 3.0f) return '⇈'
-        if (rate >= 2.0f) return '↑'
-        if (rate >= 1.0f) return '↗'
-        if (rate > -1.0f) return '→'
-        if (rate > -2.0f) return '↘'
-        if (rate > -3.0f) return '↓'
-        return '⇊'
-    }
-
-    fun getDexcomLabel(): String {
-        if (rate >= 3.0f) return "DoubleUp"
-        if (rate >= 2.0f) return "SingleUp"
-        if (rate >= 1.0f) return "FortyFiveUp"
-        if (rate > -1.0f) return "Flat"
-        if (rate > -2.0f) return "FortyFiveDown"
-        if (rate > -3.0f) return "SingleDown"
-        return if (java.lang.Float.isNaN(rate)) "" else "DoubleDown"
-    }
-
-    fun getRateFromLabel(trendLabel: String): Float {
-        return when(trendLabel) {
-            "DoubleDown" -> -4F
-            "SingleDown" -> -2F
-            "FortyFiveDown" -> -1F
-            "Flat" -> 0F
-            "FortyFiveUp" -> 1F
-            "SingleUp" -> 2F
-            "DoubleUp" -> 4f
-            else -> Float.NaN
-        }
-    }
-
-    fun getRateLabel(context: Context): String {
-        if (rate >= 3.0f) return context.getString(R.string.rate_double_up)
-        if (rate >= 2.0f) return context.getString(R.string.rate_single_up)
-        if (rate >= 1.0f) return context.getString(R.string.rate_forty_five_up)
-        if (rate > -1.0f) return context.getString(R.string.rate_flat)
-        if (rate > -2.0f) return context.getString(R.string.rate_forty_five_down)
-        if (rate > -3.0f) return context.getString(R.string.rate_single_down)
-        return if (rate.isNaN()) "" else context.getString(R.string.rate_double_down)
-    }
-
     fun getTimeDiffMinute(new_time: Long): Long {
         return Utils.round((new_time-time).toFloat()/60000, 0).toLong()
     }
@@ -376,7 +332,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 sensorID = extras.getString(SERIAL) //Name of sensor
                 glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
                 rate = extras.getFloat(RATE) //Rate of change of glucose. See libre and dexcom label functions
-                rateLabel = getRateLabel(context)
+                rateLabel = GlucoDataUtils.getRateLabel(context, rate)
                 deltaValue = Float.NaN
                 if (extras.containsKey(DELTA)) {
                     deltaValue = extras.getFloat(DELTA, Float.NaN)
@@ -427,11 +383,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     fun changeIsMmol(newValue: Boolean, context: Context? = null) {
         if (isMmol != newValue) {
             isMmolValue = newValue
-            if (isMmolValue != Utils.isMmolValue(glucose)) {
+            if (isMmolValue != GlucoDataUtils.isMmolValue(glucose)) {
                 if (isMmolValue)
-                    glucose = Utils.mgToMmol(glucose)
+                    glucose = GlucoDataUtils.mgToMmol(glucose)
                 else
-                    glucose = Utils.mmolToMg(glucose)
+                    glucose = GlucoDataUtils.mmolToMg(glucose)
             }
             Log.i(LOG_ID, "Unit changed to " + glucose + if(isMmolValue) "mmol/l" else "mg/dl")
             if (context != null) {
@@ -506,7 +462,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         sharedPref.registerOnSharedPreferenceChangeListener(this)
         if(!sharedPref.contains(Constants.SHARED_PREF_USE_MMOL)) {
             Log.i(LOG_ID, "Upgrade to new mmol handling!")
-            isMmolValue = Utils.isMmolValue(targetMinValue)
+            isMmolValue = GlucoDataUtils.isMmolValue(targetMinValue)
             if (isMmol) {
                 writeTarget(context, true, targetMinValue)
                 writeTarget(context, false, targetMaxValue)
@@ -522,8 +478,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private fun writeTarget(context: Context, min: Boolean, value: Float) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         var mgdlValue = value
-        if (Utils.isMmolValue(mgdlValue)) {
-            mgdlValue = Utils.mmolToMg(value)
+        if (GlucoDataUtils.isMmolValue(mgdlValue)) {
+            mgdlValue = GlucoDataUtils.mmolToMg(value)
         }
         Log.i(LOG_ID, "New target" + (if (min) "Min" else "Max") + " value: " + mgdlValue.toString())
         with(sharedPref.edit()) {

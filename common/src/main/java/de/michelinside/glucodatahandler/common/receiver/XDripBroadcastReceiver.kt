@@ -8,6 +8,7 @@ import android.util.Log
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.notifier.DataSource
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import java.text.DateFormat
 
 open class XDripBroadcastReceiver: BroadcastReceiver() {
@@ -24,7 +25,7 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
                 return null
             val extras = Bundle()
             extras.putDouble(BG_ESTIMATE,ReceiveData.rawValue.toDouble())
-            extras.putString(BG_SLOPE_NAME,ReceiveData.getDexcomLabel())
+            extras.putString(BG_SLOPE_NAME, GlucoDataUtils.getDexcomLabel(ReceiveData.rate))
             extras.putDouble(BG_SLOPE,ReceiveData.rate.toDouble()/60000.0)
             extras.putLong(TIME,ReceiveData.time)
             extras.putString(SOURCE_INFO,ReceiveData.sensorID)
@@ -64,7 +65,7 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
                 glucoExtras.putLong(ReceiveData.TIME, extras.getLong(TIME))
                 val mgdl = extras.getDouble(BG_ESTIMATE).toFloat()
                 if (ReceiveData.isMmol) {
-                    glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, Utils.mgToMmol(mgdl))
+                    glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, GlucoDataUtils.mgToMmol(mgdl))
                 } else {
                     glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, mgdl)
                 }

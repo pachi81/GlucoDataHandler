@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.notifier.DataSource
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 
 class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, DataSource.NIGHTSCOUT) {
     private val LOG_ID = "GDH.Task.NightscoutSourceTask"
@@ -80,13 +80,13 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
             val glucoExtras = Bundle()
             glucoExtras.putLong(ReceiveData.TIME, timeStamp)
             if (ReceiveData.isMmol) {
-                glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, Utils.mgToMmol(glucose.toFloat()))
+                glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, GlucoDataUtils.mgToMmol(glucose.toFloat()))
             } else {
                 glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, glucose.toFloat())
             }
             glucoExtras.putInt(ReceiveData.MGDL, glucose)
             glucoExtras.putString(ReceiveData.SERIAL, sensor)
-            glucoExtras.putFloat(ReceiveData.RATE, ReceiveData.getRateFromLabel(trend))
+            glucoExtras.putFloat(ReceiveData.RATE, GlucoDataUtils.getRateFromLabel(trend))
             glucoExtras.putInt(ReceiveData.ALARM, 0)
 
             handleResult(glucoExtras)
