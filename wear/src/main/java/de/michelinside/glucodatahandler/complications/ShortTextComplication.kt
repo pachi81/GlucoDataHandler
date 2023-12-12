@@ -2,7 +2,7 @@ package de.michelinside.glucodatahandler
 
 import androidx.wear.watchface.complications.data.*
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.Utils
+import de.michelinside.glucodatahandler.common.utils.Utils
 
 open class ShortClucoseComplication:  BgValueComplicationService() {
 }

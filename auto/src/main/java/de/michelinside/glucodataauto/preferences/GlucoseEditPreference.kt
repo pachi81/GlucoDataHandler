@@ -9,7 +9,7 @@ import android.widget.EditText
 import androidx.preference.EditTextPreference
 import androidx.preference.EditTextPreference.OnBindEditTextListener
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.Utils
+import de.michelinside.glucodatahandler.common.utils.Utils
 
 class GlucoseEditPreference : EditTextPreference, OnBindEditTextListener {
     companion object {

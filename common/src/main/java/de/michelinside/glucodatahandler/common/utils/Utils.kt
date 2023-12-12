@@ -1,4 +1,4 @@
-package de.michelinside.glucodatahandler.common
+package de.michelinside.glucodatahandler.common.utils
 
 import android.annotation.SuppressLint
 import android.app.PendingIntent
@@ -12,6 +12,9 @@ import android.os.Bundle
 import android.os.Parcel
 import android.util.Log
 import android.util.TypedValue
+import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.ReceiveData
 import java.math.RoundingMode
 import kotlin.math.abs
 import kotlin.random.Random
@@ -265,7 +268,8 @@ object Utils {
                 degrees = round((maxOf(-2F, rate) + 2F) * -90F/2F, 0).toInt()
             }*/
             textSize *= resizeFactor
-            if (GlucoDataService.sharedPref != null && !GlucoDataService.sharedPref!!.getBoolean(Constants.SHARED_PREF_LARGE_ARROW_ICON, true)) {
+            if (GlucoDataService.sharedPref != null && !GlucoDataService.sharedPref!!.getBoolean(
+                    Constants.SHARED_PREF_LARGE_ARROW_ICON, true)) {
                 textSize *= shortArrowRate
             }
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888 )
@@ -361,7 +365,10 @@ object Utils {
     }
 
     fun getGlucoseAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100): Bitmap? {
-        return textToBitmap(ReceiveData.getClucoseAsString(),color ?: ReceiveData.getClucoseColor(), roundTarget, ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height)
+        return textToBitmap(
+            ReceiveData.getClucoseAsString(),color ?: ReceiveData.getClucoseColor(), roundTarget, ReceiveData.isObsolete(
+                Constants.VALUE_OBSOLETE_SHORT_SEC
+            ) && !ReceiveData.isObsolete(),width, height)
     }
 
     fun getGlucoseAsIcon(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100): Icon {
@@ -377,7 +384,11 @@ object Utils {
     }
 
     fun getRateAsBitmap(color: Int? = null, roundTarget: Boolean = false, resizeFactor: Float = 1F, width: Int = 100, height: Int = 100): Bitmap? {
-        return rateToBitmap(ReceiveData.rate, color ?: ReceiveData.getClucoseColor(), resizeFactor = resizeFactor, width = width, height = height, strikeThrough = ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
+        return rateToBitmap(
+            ReceiveData.rate, color ?: ReceiveData.getClucoseColor(), resizeFactor = resizeFactor, width = width, height = height, strikeThrough = ReceiveData.isObsolete(
+                Constants.VALUE_OBSOLETE_SHORT_SEC
+            )
+        )
     }
 
     fun getRateAsIcon(color: Int? = null, roundTarget: Boolean = false, resizeFactor: Float = 1F, width: Int = 100, height: Int = 100): Icon {
@@ -385,7 +396,10 @@ object Utils {
     }
 
     fun getGlucoseTrendBitmap(color: Int? = null, width: Int = 100, height: Int = 100): Bitmap? {
-        return textRateToBitmap(ReceiveData.getClucoseAsString(), ReceiveData.rate, color ?: ReceiveData.getClucoseColor(), ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC), ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height)
+        return textRateToBitmap(
+            ReceiveData.getClucoseAsString(), ReceiveData.rate, color ?: ReceiveData.getClucoseColor(), ReceiveData.isObsolete(
+                Constants.VALUE_OBSOLETE_SHORT_SEC
+            ), ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height)
     }
 
     fun getGlucoseTrendIcon(color: Int? = null, width: Int = 100, height: Int = 100): Icon {

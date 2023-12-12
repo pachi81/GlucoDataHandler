@@ -3,7 +3,7 @@ package de.michelinside.glucodatahandler
 import android.graphics.Color
 import androidx.wear.watchface.complications.data.*
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.Utils
+import de.michelinside.glucodatahandler.common.utils.Utils
 
 
 class SmallTrendImageComplication: BgValueComplicationService() {

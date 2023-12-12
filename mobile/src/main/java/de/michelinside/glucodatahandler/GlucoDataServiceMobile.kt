@@ -11,6 +11,7 @@ import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
 import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
+import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.widget.FloatingWidget
 import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
@@ -33,6 +34,13 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         try {
             Log.d(LOG_ID, "onCreate called")
             super.onCreate()
+            val filter = mutableSetOf(
+                NotifySource.BROADCAST,
+                NotifySource.MESSAGECLIENT,
+                NotifySource.OBSOLETE_VALUE, // to trigger re-start for the case of stopped by the system
+                NotifySource.CAR_CONNECTION,
+                NotifySource.CAPILITY_INFO)
+            InternalNotifier.addNotifier(this, this, filter)
             floatingWidget = FloatingWidget(this)
             PermanentNotification.create(applicationContext)
             CarModeReceiver.init(applicationContext)
@@ -138,7 +146,6 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         try {
             Log.v(LOG_ID, "OnNotifyData called for source " + dataSource.toString())
             start(context)
-            super.OnNotifyData(context, dataSource, extras)
             if (dataSource == NotifySource.CAPILITY_INFO) {
                 context.setWearConnectionState(WearPhoneConnection.nodesConnected)
             }
