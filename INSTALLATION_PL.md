@@ -91,28 +91,3 @@ Inne pola można dostosować za pomocą różnych informacji.
 I powinieneś być gotowy.
 
 <img src='images/complication4.png' width=300>
-
-## 4 – Konfiguracja Android Auto
-
-Aby aktywować GlucoDataHandler dla Android Auto, należy wykonać następujące kroki:
-
-### 1. Aktywacja trybu programisty
-
-- otwórz aplikację Android Auto
-- przewiń w dół do pozycji Wersja
-- dotknij kilkakrotnie pozycji Wersja, aż pojawi się wyskakujące okienko „Zezwalaj na ustawienia programistyczne"
-- naciśnij "OK"
-
-### 2. Aktywuj „Nieznane źródła"
-
-- otwórz aplikację Android Auto
-- otwórz w menu (3 kropki) „Ustawienia programisty"
-- przewiń w dół do pozycji „Nieznane źródło"
-- włącz ją
-
-### 3. Ustawienia powiadomień
-
-- otwórz aplikację Android Auto
-- przewiń w dół do pozycji „Powiadomienia"
-- włącz „Pokazuj rozmowy"
-- włącz „Pokazuj pierwszy wiersz rozmów"
