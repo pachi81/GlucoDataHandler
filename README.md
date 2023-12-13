@@ -16,6 +16,8 @@
 * sends glucodata broadcasts to other apps (which supports this broadcast)
 
 ## Download
+[<img src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' height=100>](https://play.google.com/store/apps/details?id=de.michelinside.glucodatahandler) 
+
 You can download the current version [here](https://github.com/pachi81/GlucoDataHandler/releases).
 
 ## Installation
