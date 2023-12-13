@@ -26,7 +26,7 @@ Można również korzystać z powiadomień:
 
 # Konfiguracja Android Auto
 
-Install last GlucoDataAuto_X.X.X.apk from [Releases](https://github.com/pachi81/GlucoDataHandler/releases) 
+Zainstaluj ostatnią wersję GlucoDataAuto_X.X.X.apk, którą znaleźć można w zakładce [Releases](https://github.com/pachi81/GlucoDataHandler/releases) 
 
 ## 1. Aktywacja trybu programisty
 
