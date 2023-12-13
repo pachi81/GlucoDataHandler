@@ -64,7 +64,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
 
     private fun remove() {
         Log.d(LOG_ID, "remove called")
-        InternalNotifier.remNotifier(this)
+        InternalNotifier.remNotifier(context, this)
         if (windowManager != null) windowManager?.removeView(floatingView)
         windowManager = null
     }
@@ -135,7 +135,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
                         } else {
                             filter.add(NotifySource.OBSOLETE_VALUE)
                         }
-                        InternalNotifier.addNotifier(this, filter)
+                        InternalNotifier.addNotifier(context, this, filter)
                         createWindow()
                     } else {
                         Log.d(LOG_ID, "update window")

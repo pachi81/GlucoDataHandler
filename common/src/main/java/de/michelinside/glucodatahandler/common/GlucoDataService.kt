@@ -88,7 +88,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             Log.d(LOG_ID, "onStartCommand called")
             super.onStartCommand(intent, flags, startId)
             val isForeground = intent?.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
-            if (isForeground == true && !isForegroundService) {
+            if (isForeground == true && !isForegroundService && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Starting service in foreground!")
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
                     startForeground(NOTIFICATION_ID, getNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
@@ -114,7 +114,6 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             isRunning = true
 
             ReceiveData.initData(this)
-            TimeTaskService.run(this)
             SourceTaskService.run(this)
 
             connection.open(this)
@@ -128,8 +127,9 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             if (appSource == AppSource.PHONE_APP) {
                 filter.add(NotifySource.SETTINGS)   // only send setting changes from phone to wear!
                 filter.add(NotifySource.SOURCE_SETTINGS)
+                filter.add(NotifySource.CAR_CONNECTION)
             }
-            InternalNotifier.addNotifier(this, filter)
+            InternalNotifier.addNotifier(this, this, filter)
 
             Log.d(LOG_ID, "Register Receiver")
             receiver = GlucoseDataReceiver()

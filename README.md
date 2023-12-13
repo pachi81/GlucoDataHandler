@@ -11,11 +11,13 @@
 * provides several **[widgets](#widgets)** and a floating widget for the phone
 * provides optional **[notifications](#notifications)** with different icons for the phone
 * provides several **[complications](#complications)** for Wear OS
-* provides **[Android Auto](#android-auto)** support
+* provides **[Android Auto](./GlucoDataAuto.md)** support using GlucoDataAuto.apk
 * **[Tasker](#tasker)** integration
 * sends glucodata broadcasts to other apps (which supports this broadcast)
 
 ## Download
+[<img src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' height=100>](https://play.google.com/store/apps/details?id=de.michelinside.glucodatahandler) 
+
 You can download the current version [here](https://github.com/pachi81/GlucoDataHandler/releases).
 
 ## Installation
@@ -91,27 +93,6 @@ There are several complications for the different types of wear OS complications
 
 **IMPORTANT:** Not all complications are fully supported by any watchface. For example the SHORT_TEXT type supports an icon, a text and a title, but the most watchfaces only show icon and text or text and title, but there are some, showing all 3 types in one.
 Also the RANGE_VALUE complication is handled different in each watchface.
-
-## Android Auto
-
-This app supports Android Auto.
-
-### Option #1: Using dummy media player
-If you are not using any Android Auto media player for listen music, you can use GlucoDataHandler to display its values in the media tap:
-
-<img src='images/AA_media.png' width=300>
-
-IMPORTANT: it is recommended to disable all other media apps in the Android Auto launcher, to get this to work.
-
-### Option #2: Using notifications
-
-You can also use notifications:
-
-<img src='images/AA_notification.png' width=300> <img src='images/AA_notification_view.png' width=300>
-
-### Option #3: Using the app
-
-<img src='images/AA_App.png' width=300>
 
 ## Tasker
 

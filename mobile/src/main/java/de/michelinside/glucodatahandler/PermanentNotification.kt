@@ -55,7 +55,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     fun destroy() {
         try {
             Log.v(LOG_ID, "destroy called")
-            InternalNotifier.remNotifier(this)
+            InternalNotifier.remNotifier(GlucoDataService.context!!, this)
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
             removeNotifications()
         } catch (exc: Exception) {
@@ -96,7 +96,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
         notificationCompat = Notification.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentIntent(Utils.getAppIntent(context, MainActivity::class.java, 4, false))
+            .setContentIntent(Utils.getAppIntent(context, MainActivity::class.java, 5, false))
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setAutoCancel(false)
@@ -217,12 +217,12 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
                     NotifySource.MESSAGECLIENT,
                     NotifySource.SETTINGS,
                     NotifySource.OBSOLETE_VALUE)   // to trigger re-start for the case of stopped by the system
-                InternalNotifier.addNotifier(this, filter)
+                InternalNotifier.addNotifier(GlucoDataService.context!!, this, filter)
                 showNotifications()
             }
             else {
                 Log.i(LOG_ID, "deactivate permanent notification")
-                InternalNotifier.remNotifier(this)
+                InternalNotifier.remNotifier(GlucoDataService.context!!, this)
                 removeNotifications()
             }
         } catch (exc: Exception) {

@@ -22,10 +22,6 @@
             android:title="@string/menu_group_github">
             <menu>
                 <item
-                    android:id="@+id/action_update"
-                    android:title="@string/menu_update"
-                    app:showAsAction="never" />
-                <item
                     android:id="@+id/action_support"
                     android:title="@string/menu_support"
                     app:showAsAction="never" />

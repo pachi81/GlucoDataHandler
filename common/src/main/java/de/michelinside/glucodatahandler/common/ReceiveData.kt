@@ -9,6 +9,7 @@ import android.util.Log
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
+import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import java.math.RoundingMode
 import java.text.DateFormat
 import java.util.*
@@ -24,6 +25,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     const val TIME = "glucodata.Minute.Time"
     const val DELTA = "glucodata.Minute.Delta"
     const val SOURCE_RES_ID = "source_resid"
+    private const val LAST_ALARM_TYPE = "last_alarm_type"
+    private const val LAST_ALARM_TIME = "last_alarm_time"
     private const val WAKE_LOCK_TIMEOUT = 10000L // 10 seconds
 
     enum class AlarmType(val resId: Int) {
@@ -32,7 +35,18 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         LOW(R.string.alarm_low),
         OK(R.string.alarm_none),
         HIGH(R.string.alarm_high),
-        VERY_HIGH(R.string.alarm_very_high)
+        VERY_HIGH(R.string.alarm_very_high);
+
+        companion object {
+            fun fromResId(id: Int): AlarmType {
+                AlarmType.values().forEach {
+                    if(it.resId == id) {
+                        return it
+                    }
+                }
+                return NONE
+            }
+        }
     }
 
     var sensorID: String? = null
@@ -45,7 +59,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var rateLabel: String? = null
     var source: DataSource = DataSource.NONE
     var forceAlarm: Boolean = false
-    private var lowValue: Float = 0F
+    private var lowValue: Float = 70F
     private val low: Float get() {
         if(isMmol && lowValue > 0F)  // mmol/l
         {
@@ -53,7 +67,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         }
         return lowValue
     }
-    private var highValue: Float = 0F
+    private var highValue: Float = 240F
     private val high: Float get() {
         if(isMmol && highValue > 0F)  // mmol/l
         {
@@ -101,31 +115,32 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private var initialized = false
 
     init {
-        Log.d(LOG_ID, "init called")
+        Log.v(LOG_ID, "init called")
     }
 
     fun initData(context: Context) {
-        Log.d(LOG_ID, "initData called")
         try {
             if (!initialized) {
+                Log.v(LOG_ID, "initData called")
+                initialized = true
                 readTargets(context)
                 loadExtras(context)
-                initialized = true
+                TimeTaskService.run(context)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "initData exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
         }
     }
 
-    fun getAsString(context: Context): String {
+    fun getAsString(context: Context, noDataResId: Int = R.string.no_data): String {
         if (time == 0L)
-            return context.getString(R.string.no_data)
+            return context.getString(noDataResId)
         return (context.getString(R.string.info_label_delta) + ": " + getDeltaAsString() + " " + getUnit() + "\r\n" +
                 context.getString(R.string.info_label_rate) + ": " + rate + "\r\n" +
                 context.getString(R.string.info_label_timestamp) + ": " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(time)) + "\r\n" +
                 context.getString(R.string.info_label_alarm) + ": " + context.getString(getAlarmType().resId) + (if (forceAlarm) " ⚠" else "" ) + " (" + alarm + ")\r\n" +
                 if (isMmol) context.getString(R.string.info_label_raw) + ": " + rawValue + " mg/dl\r\n" else "" ) +
-                context.getString(R.string.info_label_sensor_id) + ": " + sensorID + "\r\n" +
+                context.getString(R.string.info_label_sensor_id) + ": " + (if(BuildConfig.DEBUG) "ABCDE12345" else sensorID) + "\r\n" +
                 context.getString(R.string.info_label_source) + ": " + context.getString(source.resId)
     }
 
@@ -195,7 +210,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             AlarmType.VERY_LOW -> 7
             else -> 0
         }
-        forceAlarm = checkForceAlarm(curAlarmType)
+        setForceAlarm(checkForceAlarm(curAlarmType), curAlarmType)
         if (curAlarm != 0 && forceAlarm) {
             return curAlarm or 8
         }
@@ -219,9 +234,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             AlarmType.VERY_LOW -> {
                 if(curAlarmType < lastAlarmType || ((delta < 0F || rate < 0F) && (time - lastAlarmTime >= lowAlarmDuration)))
                 {
-                    lastAlarmTime = time
-                    lastAlarmType = curAlarmType
-                    Log.i(LOG_ID, "Force low alarm for type " + curAlarmType)
                     return true
                 }
                 return false
@@ -230,14 +242,20 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             AlarmType.VERY_HIGH -> {
                 if(curAlarmType > lastAlarmType || ((delta > 0F || rate > 0F) && (time - lastAlarmTime >= highAlarmDuration)))
                 {
-                    lastAlarmTime = time
-                    lastAlarmType = curAlarmType
-                    Log.i(LOG_ID, "Force high alarm for type " + curAlarmType)
                     return true
                 }
                 return false
             }
             else -> return false
+        }
+    }
+
+    private fun setForceAlarm(force: Boolean, curAlarmType: AlarmType) {
+        forceAlarm = force
+        if (forceAlarm) {
+            lastAlarmTime = time
+            lastAlarmType = curAlarmType
+            Log.i(LOG_ID, "Force alarm for type " + curAlarmType)
         }
     }
 
@@ -329,6 +347,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         if (extras == null || extras.isEmpty) {
             return false
         }
+        initData(context)
         var result = false
         val wakeLock: PowerManager.WakeLock =
             (context.getSystemService(Context.POWER_SERVICE) as PowerManager).run {
@@ -357,7 +376,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
                 rate = extras.getFloat(RATE) //Rate of change of glucose. See libre and dexcom label functions
                 rateLabel = getRateLabel(context)
-                alarm = extras.getInt(ALARM) // if bit 8 is set, then an alarm is triggered
                 deltaValue = Float.NaN
                 if (extras.containsKey(DELTA)) {
                     deltaValue = extras.getFloat(DELTA, Float.NaN)
@@ -385,7 +403,12 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 changeIsMmol(rawValue!=glucose.toInt(), context)
 
                 // check for alarm
-                alarm = calculateAlarm()
+                if (interApp) {
+                    alarm = extras.getInt(ALARM) // if bit 8 is set, then an alarm is triggered
+                    setForceAlarm((alarm and 8) == 8, getAlarmType())
+                } else {
+                    alarm = calculateAlarm()
+                }
                 val notifySource = if(interApp) NotifySource.MESSAGECLIENT else NotifySource.BROADCAST
 
                 InternalNotifier.notify(context, notifySource, createExtras())  // re-create extras to have all changed value inside...
@@ -435,6 +458,9 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             putInt(Constants.SHARED_PREF_COLOR_ALARM, bundle.getInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm))
             putLong(Constants.SHARED_PREF_NOTIFY_DURATION_LOW, bundle.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_LOW, lowAlarmDuration/60000))
             putLong(Constants.SHARED_PREF_NOTIFY_DURATION_HIGH, bundle.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_HIGH, highAlarmDuration/60000))
+            if (bundle.containsKey(Constants.SHARED_PREF_RELATIVE_TIME)) {
+                putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, bundle.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime))
+            }
             apply()
         }
         updateSettings(sharedPref)
@@ -539,6 +565,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 putInt(ALARM, alarm)
                 putFloat(DELTA, deltaValue)
                 putInt(SOURCE_RES_ID, source.resId)
+                putLong(LAST_ALARM_TIME, lastAlarmTime)
+                putInt(LAST_ALARM_TYPE, lastAlarmType.resId)
                 apply()
             }
         } catch (exc: Exception) {
@@ -560,6 +588,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     extras.putFloat(RATE, sharedGlucosePref.getFloat(RATE, rate))
                     extras.putInt(ALARM, sharedGlucosePref.getInt(ALARM, alarm))
                     extras.putFloat(DELTA, sharedGlucosePref.getFloat(DELTA, deltaValue))
+                    lastAlarmType = AlarmType.fromResId(sharedGlucosePref.getInt(LAST_ALARM_TYPE, AlarmType.NONE.resId))
+                    lastAlarmTime = sharedGlucosePref.getLong(LAST_ALARM_TIME, 0L)
                     handleIntent(context, DataSource.fromResId(sharedGlucosePref.getInt(SOURCE_RES_ID,
                         DataSource.NONE.resId)), extras)
                 }

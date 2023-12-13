@@ -3,9 +3,7 @@ package de.michelinside.glucodatahandler
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.*
@@ -17,7 +15,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
     private val LOG_ID = "GDH.GlucoDataServiceWear"
     init {
         Log.d(LOG_ID, "init called")
-        InternalNotifier.addNotifier(
+        InternalNotifier.addNotifier( this,
             ActiveComplicationHandler, mutableSetOf(
                 NotifySource.MESSAGECLIENT,
                 NotifySource.BROADCAST,
@@ -25,7 +23,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
                 NotifySource.TIME_VALUE
             )
         )
-        InternalNotifier.addNotifier(
+        InternalNotifier.addNotifier( this,
             BatteryLevelComplicationUpdater,
             mutableSetOf(
                 NotifySource.CAPILITY_INFO,
@@ -62,24 +60,23 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP) {
         val channel = NotificationChannel(
             channelId,
             "Foregorund GlucoDataService",
-            NotificationManager.IMPORTANCE_MIN
+            NotificationManager.IMPORTANCE_HIGH
         )
         (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(
             channel
         )
-        val notificationIntent = Intent(this, WaerActivity::class.java)
 
-        val pendingIntent = PendingIntent.getActivity(
-            this, 1,
-            notificationIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
+        val pendingIntent = Utils.getAppIntent(this, WaerActivity::class.java, 11, false)
 
         return Notification.Builder(this, channelId)
             .setContentTitle(getString(CR.string.forground_notification_descr))
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(pendingIntent)
-            .setAutoCancel(true)
+            .setOngoing(true)
             .setOnlyAlertOnce(true)
+            .setAutoCancel(false)
+            .setCategory(Notification.CATEGORY_STATUS)
+            .setVisibility(Notification.VISIBILITY_PUBLIC)
             .build()
     }
 }

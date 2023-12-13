@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Label ordering must match values -->
+    <array name="pref_status_bar_icon_labels">
+        <item>@string/pref_status_bar_icon_app</item>
+        <item>@string/pref_status_bar_icon_glucose</item>
+        <item>@string/pref_status_bar_icon_trend</item>
+        <item>@string/pref_status_bar_icon_delta</item>
+    </array>
+    <array name="pref_status_bar_icon_values">
+        <item>"app"</item>
+        <item>"glucose"</item>
+        <item>"trend"</item>
+        <item>"delta"</item>
+    </array>
+    <array name="pref_floating_widget_style_labels">
+        <item>@string/widget_glucose</item>
+        <item>@string/widget_glucose_trend</item>
+        <item>@string/widget_glucose_trend_delta</item>
+        <item>@string/widget_glucose_trend_delta_timestamp</item>
+    </array>
+    <array name="pref_floating_widget_style_values">
+        <item>"glucose"</item>
+        <item>"glucose_trend"</item>
+        <item>"glucose_trend_delta"</item>
+        <item>"glucose_trend_delta_time"</item>
+    </array>
+    <array name="tasker_supported_settings_labels">
+        <item>@string/pref_floating_widget</item>
+        <item>@string/pref_notification</item>
+        <item>@string/pref_switch_car_notification</item>
+        <item>@string/pref_wear_notification</item>
+    </array>
+    <array name="tasker_supported_settings_values">
+        <item>"floating_widget"</item>
+        <item>"permanent_notification"</item>
+        <item>"car_notification"</item>
+        <item>"wear_notification"</item>
+    </array>
+    <array name="source_request_interval_labels">
+        <item>@string/source_request_interval_1</item>
+        <item>@string/source_request_interval_5</item>
+        <item>@string/source_request_interval_10</item>
+        <item>@string/source_request_interval_15</item>
+    </array>
+    <array name="source_request_interval_values">
+        <item>"1"</item>
+        <item>"5"</item>
+        <item>"10"</item>
+        <item>"15"</item>
+    </array>
+    <array name="car_notification_interval_labels">
+        <item>@string/source_request_interval_always</item>
+        <item>@string/source_request_interval_5</item>
+        <item>@string/source_request_interval_10</item>
+        <item>@string/source_request_interval_15</item>
+        <item>@string/source_request_interval_20</item>
+        <item>@string/source_request_interval_30</item>
+        <item>@string/source_request_interval_alarm</item>
+    </array>
+    <array name="car_notification_interval_values">
+        <item>"1"</item>
+        <item>"5"</item>
+        <item>"10"</item>
+        <item>"15"</item>
+        <item>"20"</item>
+        <item>"30"</item>
+        <item>"-1"</item>
+    </array>
+</resources>

@@ -33,7 +33,7 @@ object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPrefere
                         filter.add(NotifySource.TIME_VALUE)
                     else
                         filter.add(NotifySource.OBSOLETE_VALUE)
-                    InternalNotifier.addNotifier(this, filter)
+                    InternalNotifier.addNotifier(context, this, filter)
                 }
                 if (activeWidgets.size == 1)
                     context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE).registerOnSharedPreferenceChangeListener(this)
@@ -48,7 +48,7 @@ object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPrefere
             activeWidgets.remove(type)
             Log.i(LOG_ID, "remove widget " + type.toString() + " new size " + activeWidgets.size)
             if (activeWidgets.isEmpty()) {
-                InternalNotifier.remNotifier(this)
+                InternalNotifier.remNotifier(context, this)
                 context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE).unregisterOnSharedPreferenceChangeListener(this)
             } else if (type == WidgetType.GLUCOSE_TREND_DELTA_TIME) {
                 // re-add filter to remove TIME_VALUE
@@ -58,7 +58,7 @@ object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPrefere
                     NotifySource.SETTINGS,
                     NotifySource.OBSOLETE_VALUE
                 )
-                InternalNotifier.addNotifier(this, filter)
+                InternalNotifier.addNotifier(context, this, filter)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Exception in remWidget: " + exc.toString())

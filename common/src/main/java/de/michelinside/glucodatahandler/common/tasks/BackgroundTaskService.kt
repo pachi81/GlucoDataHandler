@@ -236,14 +236,18 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         }
     }
 
+    open fun getNotifySourceFilter() : MutableSet<NotifySource> = mutableSetOf()
+
     fun run(set_context: Context) {
         try {
             context = set_context
             sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
+            val filter = mutableSetOf(NotifySource.BROADCAST, NotifySource.MESSAGECLIENT)
+            filter.addAll(getNotifySourceFilter())
             InternalNotifier.addNotifier(
-                this,
-                mutableSetOf(NotifySource.BROADCAST, NotifySource.MESSAGECLIENT)
+                context, this,
+                filter
             )
             initBackgroundTasks()
             checkTimer()  // this will start the time
@@ -254,7 +258,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
 
     fun stop() {
         try {
-            InternalNotifier.remNotifier(this)
+            InternalNotifier.remNotifier(context, this)
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
             stopTimer()
         } catch (ex: Exception) {

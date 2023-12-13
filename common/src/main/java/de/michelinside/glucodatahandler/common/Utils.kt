@@ -1,10 +1,13 @@
 package de.michelinside.glucodatahandler.common
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.*
 import android.graphics.drawable.Icon
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcel
 import android.util.Log
@@ -85,6 +88,18 @@ object Utils {
         return string
     }
 
+    @SuppressLint("ObsoleteSdkInt")
+    fun checkPermission(context: Context, permission: String, minSdk: Int = Build.VERSION_CODES.O): Boolean {
+        if (Build.VERSION.SDK_INT >= minSdk) {
+            if (context.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+                Log.w(LOG_ID, "Permission " + permission + " not granted!")
+                return false
+            }
+        }
+        Log.d(LOG_ID, "Permission " + permission + " granted!")
+        return true
+    }
+
     fun getAppIntent(context: Context, activityClass: Class<*>, requestCode: Int, useExternalApp: Boolean = false): PendingIntent {
         var launchIntent: Intent? = null
         if (useExternalApp) {
@@ -99,6 +114,10 @@ object Utils {
             launchIntent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
+    }
+
+    fun isPackageAvailable(context: Context, packageName: String): Boolean {
+        return context.packageManager.getInstalledApplications(0).find { info -> info.packageName.startsWith(packageName) } != null
     }
 
     fun getBackgroundColor(transparancyFactor: Int) : Int {

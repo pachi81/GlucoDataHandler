@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/pref_cat_android_auto"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="1">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="car_notification"
+            android:summary="@string/pref_switch_car_notification_summary"
+            android:title="@string/pref_switch_car_notification"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.ListPreference
+            android:defaultValue="-1"
+            android:entries="@array/car_notification_interval_labels"
+            android:entryValues="@array/car_notification_interval_values"
+            android:key="car_notification_interval"
+            android:title="@string/pref_car_notification_interval"
+            android:summary="@string/pref_car_notification_interval_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_gda_info"
+        app:iconSpaceReserved="false">
+    <Preference
+        android:key="gda_info"
+        android:summary="@string/pref_gda_info_summary"
+
+        app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_cat_general"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="0">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="use_mmol"
+            android:summary="@string/pref_switch_use_mmol_summary"
+            android:title="@string/pref_switch_use_mmol"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="relative_time"
+            android:summary="@string/pref_relative_time_summary"
+            android:title="@string/pref_relative_time"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="five_minute_delta"
+            android:summary="@string/pref_switch_use_5_min_delta_summary"
+            android:title="@string/pref_switch_use_5_min_delta"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_target_range"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="0">
+        <de.michelinside.glucodataauto.preferences.GlucoseEditPreference
+            android:defaultValue="240"
+            android:inputType="numberDecimal"
+            android:key="high_glucose"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_high_value"
+            android:summary="@string/pref_high_value_summary"
+            app:iconSpaceReserved="false" />
+        <de.michelinside.glucodataauto.preferences.GlucoseEditPreference
+            android:defaultValue="165"
+            android:inputType="numberDecimal"
+            android:key="target_max_value"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_target_max_value"
+            android:summary="@string/pref_target_max_value_summary"
+            app:iconSpaceReserved="false" />
+        <de.michelinside.glucodataauto.preferences.GlucoseEditPreference
+            android:defaultValue="90"
+            android:inputType="numberDecimal"
+            android:key="target_min_value"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_target_min_value"
+            android:summary="@string/pref_target_min_value_summary"
+            app:iconSpaceReserved="false" />
+        <de.michelinside.glucodataauto.preferences.GlucoseEditPreference
+            android:defaultValue="70"
+            android:inputType="numberDecimal"
+            android:key="low_glucose"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_low_value"
+            android:summary="@string/pref_low_value_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_cat_colors"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="0">
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:defaultValue="@color/red"
+            android:key="color_alarm"
+            android:title="@string/pref_color_alarm"
+            app:cpv_dialogTitle="@string/pref_color_alarm"
+            android:summary="@string/pref_color_alarm_summary"
+            app:iconSpaceReserved="false"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:defaultValue="@color/yellow"
+            android:key="color_out_of_range"
+            android:title="@string/pref_color_out_of_range"
+            app:cpv_dialogTitle="@string/pref_color_out_of_range"
+            android:summary="@string/pref_color_out_of_range_summary"
+            app:iconSpaceReserved="false"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:defaultValue="@color/green"
+            android:key="color_ok"
+            android:title="@string/pref_color_ok"
+            app:cpv_dialogTitle="@string/pref_color_ok"
+            android:summary="@string/pref_color_ok_summary"
+            app:iconSpaceReserved="false"/>
+    </PreferenceCategory>
+
+    <androidx.preference.SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="dummy_values"
+        android:title="@string/pref_switch_notification"
+        app:iconSpaceReserved="false"
+        app:isPreferenceVisible="false" />
+
+</PreferenceScreen>

@@ -11,11 +11,13 @@
 * stellt mehrere **[Widgets](#widgets)** für Android zur Verfügung
 * optionale **[Benachrichtigungen](#benachrichtigungen)** um weitere Statusbar-Icons zur Verfügung zu haben
 * stellt mehrere **[Complications](#complications)** für Wear OS zur Verfügung
-* unterstützt **[Android Auto](#android-auto)**
+* unterstützt **[Android Auto](./GlucoDataAuto_DE.md)** über die GlucoDataAuto APP
 * **[Tasker Ereignisse](#tasker)** Integration
 * sendet Glucodata Broadcasts an andere Apps (die dies unterstützen)
 
 ## Download
+[<img src='https://play.google.com/intl/en_us/badges/static/images/badges/de_badge_web_generic.png' height=100>](https://play.google.com/store/apps/details?id=de.michelinside.glucodatahandler) 
+
 Die neuste Version kann [hier](https://github.com/pachi81/GlucoDataHandler/releases) heruntergeladen werden.
 
 ## Installation
@@ -91,29 +93,6 @@ Die Wear OS version stellt mehrere Complications zur Verfügung:
 <img src='images/complications_battery.png' width=200>
 
 **WICHTIG:** Nicht alle Watchfaces zeigen die Complications gleich an, darauf habe ich keinen Einfluss, außer man verwendet die Bilder (farbigen Complications).
-
-## Android Auto
-
-Die App unterstützt Android Auto auf zweit Arten:
-
-### Option #1: Dummy Media Player
-Wenn sie nicht über Android Auto Musik hören, können sie die Media Player Unterstützung verwenden:
-
-<img src='images/AA_media.png' width=300>
-
-WICHTIG: da die App selber keine Musik abspielt, sollte man alle anderen Media Player aus dem Launcher entfernen, damit diese App entsprechend angezeigt wird.
-
-### Option #2: Benachrichtigungen verwenden
-
-Alternativ zum Media Player kann die Android Auto Benachrichtigung verwendet werden:
-
-<img src='images/AA_notification.png' width=300> <img src='images/AA_notification_view.png' width=300>
-
-INFO: das Benachrichtigungs Popup erscheint bei jedem neuen Wert.
-
-### Option #3: APP verwenden
-
-<img src='images/AA_App.png' width=300>
 
 ## Tasker
 

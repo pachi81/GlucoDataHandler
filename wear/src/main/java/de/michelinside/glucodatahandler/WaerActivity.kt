@@ -1,10 +1,12 @@
 package de.michelinside.glucodatahandler
 
+import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Paint
 import android.os.*
+import android.provider.Settings
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
@@ -34,6 +36,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var switchLibreSource: SwitchCompat
     private lateinit var switchNightscoutSource: SwitchCompat
     private lateinit var sharedPref: SharedPreferences
+    private var requestNotificationPermission = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -164,7 +167,8 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 }
             }
 
-            GlucoDataServiceWear.start(this, true)
+            if(requestPermission())
+                GlucoDataServiceWear.start(this, true)
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
@@ -173,7 +177,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
     override fun onPause() {
         try {
             super.onPause()
-            InternalNotifier.remNotifier(this)
+            InternalNotifier.remNotifier(this, this)
             Log.d(LOG_ID, "onPause called")
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
@@ -185,7 +189,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
             super.onResume()
             Log.d(LOG_ID, "onResume called")
             update()
-            InternalNotifier.addNotifier(this, mutableSetOf(
+            InternalNotifier.addNotifier(this, this, mutableSetOf(
                 NotifySource.BROADCAST,
                 NotifySource.MESSAGECLIENT,
                 NotifySource.CAPILITY_INFO,
@@ -194,9 +198,35 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.OBSOLETE_VALUE,
                 NotifySource.SOURCE_SETTINGS,
                 NotifySource.SOURCE_STATE_CHANGE))
+
+            if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
+                Log.i(LOG_ID, "Notification permission granted")
+                requestNotificationPermission = false
+                GlucoDataServiceWear.start(this, true)
+            }
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
+    }
+
+    fun requestPermission() : Boolean {
+        requestNotificationPermission = false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (!Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
+                Log.i(LOG_ID, "Request notification permission...")
+                requestNotificationPermission = true
+                this.requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 3)
+                return false
+            }
+        }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            if (!alarmManager.canScheduleExactAlarms()) {
+                Log.i(LOG_ID, "Request exact alarm permission...")
+                startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+            }
+        }
+        return true
     }
 
     private fun update() {
@@ -219,13 +249,15 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
 
             val user = sharedPref.getString(Constants.SHARED_PREF_LIBRE_USER, "")!!.trim()
             val password = sharedPref.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, "")!!.trim()
-            switchLibreSource.isEnabled = user.isNotEmpty() && password.isNotEmpty()
+            if (!BuildConfig.DEBUG)
+                switchLibreSource.isEnabled = user.isNotEmpty() && password.isNotEmpty()
             if(!switchLibreSource.isEnabled) {
                 switchLibreSource.isChecked = false
             }
 
             val url = sharedPref.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, "")!!.trim()
-            switchNightscoutSource.isEnabled = url.isNotEmpty()
+            if (!BuildConfig.DEBUG)
+                switchNightscoutSource.isEnabled = url.isNotEmpty()
             if(!switchNightscoutSource.isEnabled) {
                 switchNightscoutSource.isChecked = false
             }

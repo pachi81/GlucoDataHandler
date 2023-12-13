@@ -1,13 +1,16 @@
 package de.michelinside.glucodatahandler
 
+import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Paint
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
+import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -39,6 +42,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtBatteryOptimization: TextView
     private lateinit var sharedPref: SharedPreferences
     private val LOG_ID = "GDH.Main"
+    private var requestNotificationPermission = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -86,6 +90,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     apply()
                 }
             }
+
+            if (requestPermission())
+                GlucoDataServiceMobile.start(this, true)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -94,7 +101,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     override fun onPause() {
         try {
             super.onPause()
-            InternalNotifier.remNotifier(this)
+            InternalNotifier.remNotifier(this, this)
             Log.v(LOG_ID, "onPause called")
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.message.toString() )
@@ -106,7 +113,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             super.onResume()
             Log.v(LOG_ID, "onResume called")
             update()
-            InternalNotifier.addNotifier(this, mutableSetOf(
+            InternalNotifier.addNotifier(this, this, mutableSetOf(
                 NotifySource.BROADCAST,
                 NotifySource.MESSAGECLIENT,
                 NotifySource.CAPILITY_INFO,
@@ -116,9 +123,35 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.OBSOLETE_VALUE,
                 NotifySource.SOURCE_STATE_CHANGE))
             checkBatteryOptimization()
+
+            if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
+                Log.i(LOG_ID, "Notification permission granted")
+                requestNotificationPermission = false
+                GlucoDataServiceMobile.start(this, true)
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
         }
+    }
+
+    fun requestPermission() : Boolean {
+        requestNotificationPermission = false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (!Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
+                Log.i(LOG_ID, "Request notification permission...")
+                requestNotificationPermission = true
+                this.requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 3)
+                return false
+            }
+        }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            if (!alarmManager.canScheduleExactAlarms()) {
+                Log.i(LOG_ID, "Request exact alarm permission...")
+                startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+            }
+        }
+        return true
     }
 
     private fun checkBatteryOptimization() {
@@ -170,14 +203,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     startActivity(intent)
                     return true
                 }
-                R.id.action_update -> {
-                    val browserIntent = Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(resources.getText(CR.string.update_link).toString())
-                    )
-                    startActivity(browserIntent)
-                    return true
-                }
                 R.id.action_help -> {
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
@@ -219,7 +244,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }
             else
                 txtWearInfo.text = resources.getText(CR.string.activity_main_disconnected_label)
-            txtCarInfo.text = if (CarModeReceiver.connected) resources.getText(CR.string.activity_main_car_connected_label) else resources.getText(CR.string.activity_main_car_disconnected_label)
+            if (Utils.isPackageAvailable(this, Constants.PACKAGE_GLUCODATAAUTO)) {
+                txtCarInfo.text = if (CarModeReceiver.connected) resources.getText(CR.string.activity_main_car_connected_label) else resources.getText(CR.string.activity_main_car_disconnected_label)
+                txtCarInfo.visibility = View.VISIBLE
+            } else {
+                txtCarInfo.visibility = View.GONE
+            }
 
             txtSourceInfo.text = DataSourceTask.getState(this)
         } catch (exc: Exception) {

@@ -19,10 +19,15 @@ object Constants {
     const val XDRIP_ACTION_GLUCOSE_READING = "com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING"
     const val XDRIP_BROADCAST_ACTION = "com.eveningoutpost.dexdrip.BgEstimate"
 
+    const val GLUCODATA_ACTION = "de.michelinside.glucodatahandler.GLUCODATA"
+    const val PACKAGE_GLUCODATAAUTO = "de.michelinside.glucodataauto"
+
     const val VALUE_OBSOLETE_SHORT_SEC = 300
     const val VALUE_OBSOLETE_LONG_SEC  = 600
 
     const val SHARED_PREF_TAG = "GlucoDataHandlerPrefs"
+    const val SHARED_PREF_NO_GLUCODATAAUTO = "no_gda_info"
+    const val SHARED_PREF_SEND_TO_GLUCODATAAUTO = "send_to_glucodataauto"
     const val SHARED_PREF_SEND_TO_GLUCODATA_AOD = "send_to_glucodata_aod"
     const val SHARED_PREF_GLUCODATA_RECEIVERS = "glucodata_receivers"
     const val SHARED_PREF_SEND_TO_XDRIP = "send_to_xdrip"

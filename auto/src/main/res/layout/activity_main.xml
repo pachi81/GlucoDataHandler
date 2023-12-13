@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:padding="10dp">
+<LinearLayout
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    tools:context=".MainActivity"
+    android:orientation="vertical"
+    android:gravity="center|top">
+
+
+    <LinearLayout
+        android:id="@+id/layout_glucose_trend"
+        android:layout_width="250dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center|top"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UselessParent">
+
+        <TextView
+            android:id="@+id/txtBgValue"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:maxLines="1"
+            android:text="---"
+            android:textAlignment="viewEnd"
+            android:textColor="#757575"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
+        <ImageView
+            android:id="@+id/viewIcon"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:paddingVertical="2dp"
+            android:src="@drawable/icon_question"
+            tools:ignore="ContentDescription" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtLastValue"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/gda_no_data"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_glucose_trend"
+        app:layout_constraintTop_toTopOf="@+id/layout_info_elements" />
+
+    <LinearLayout
+        android:id="@+id/layout_info_elements"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:gravity="center|bottom"
+        android:orientation="vertical"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UselessParent">
+        <TextView
+            android:id="@+id/txtBatteryOptimization"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/activity_main_battery_optimization_disabled"
+            android:textSize="16sp"
+            android:visibility="gone"
+            tools:ignore="HardcodedText"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/txtSourceInfo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/txtCarInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="@string/activity_main_car_disconnected_label"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/txtVersion"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/txtVersion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:text="1.0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="16sp"
+            tools:ignore="HardcodedText" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

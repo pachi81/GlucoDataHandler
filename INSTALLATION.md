@@ -105,28 +105,3 @@ You can customize other fields with different information.
 And you should be set.
 
 <img src='images/complication4.png' width=300>
-
-## 4 - Setup Android Auto
-
-To activate GlucoDataHandler for Android Auto, you have to do the following steps:
-
-### 1. Activate developer mode
-
-* open Android Auto app
-* scroll down to the Version
-* tap several times on the Version until a popup appears to "Allow development settings"
-* press "OK"
-
-### 2. Activate "Unknwon sources"
-
-* open Android Auto app
-* open in the 3-dot menu the "Developer settings"
-* scroll down to "Unknown source"
-* enable it
-
-### 3. Set Notifications settings
-
-* open Android Auto app
-* scroll down to "Notifications"
-* enable "Show conversations"
-* enable "Show first line of conversations"
