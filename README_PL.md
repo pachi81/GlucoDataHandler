@@ -12,7 +12,7 @@
 * udostępnia kilka **[widgetów](#widgety)** i pływający widget dla telefonu
 * udostępnia opcjonalne **[powiadomienia](#powiadomienia)** z różnymi ikonami dla telefonu
 * udostępnia kilka **[komplikacj](#komplikacje)** dla Wear OS
-* umożliwia połączenie z **[Android Auto](#android-auto)**
+* umożliwia połączenie z **[Android Auto](./GlucoDataAuto_PL.md)**
 * Integracja z aplikacją **[Tasker](#aplikacja-tasker)**
 * wysyła transmisje danych o glukozie do innych aplikacji (które obsługują tę transmisję)
 
@@ -94,27 +94,6 @@ Istnieje kilka komplikacji dla różnych typów komplikacji w ramach Wear OS, kt
 
 **WAŻNA UWAGA:** Nie wszystkie komplikacje są w pełni obsługiwane przez każdą tarczę zegarka. Na przykład typ SHORT_TEXT obsługuje ikonę, tekst i tytuł, ale większość tarcz zegarków pokazuje tylko ikonę i tekst lub tekst i tytuł, ale są też takie, które pokazują wszystkie 3 typy w jednym.
 Również komplikacja WARTOŚĆ_ZAKRESU jest obsługiwana inaczej na każdej tarczy zegarka.
-
-## Android Auto
-
-Ta aplikacja obsługuje Android Auto.
-
-### Opcja nr 1: Korzystanie z fikcyjnego odtwarzacza multimediów
-Jeśli nie używasz żadnego odtwarzacza multimedialnego w Android Auto do słuchania muzyki, możesz użyć aplikacji GlucoDataHandler, aby wyświetlić jego wartości w wiadomościach dotyczących multimediów:
-
-<img src='images/AA_media.png' width=300>
-
-WAŻNE: aby to działało, zaleca się wyłączenie wszystkich innych aplikacji multimedialnych w programie uruchamiającym Android Auto.
-
-### Opcja nr 2: Użycie powiadomień
-
-Można również korzystać z powiadomień:
-
-<img src='images/AA_notification.png' width=300> <img src='images/AA_notification_view.png' width=300>
-
-### Opcja nr 3: Korzystanie z aplikacji
-
-<img src='images/AA_App.png' width=300>
 
 ## Aplikacja Tasker
 
