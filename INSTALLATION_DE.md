@@ -115,27 +115,3 @@ Dann GlucoDataHandler auswählen und eine Complication nach Wahl verwenden:
 Das für anderen Complications entsprechend wiederholen. Danach müssten die Werte im Watchface sichtbar sein:
 
 <img src='images/complication4.png' width=300>
-
-## 4 - Android Auto Einstellungen
-
-Um GlucoDataHandler in Android Auto zu verwenden, müssen die folgende Schritte durchgeführt werden:
-
-### 1. Entwicklereinstellungen aktivieren
-
-* Android Auto App öffnen
-* bis zu Version scrollen
-* mehrfach auf Version drücken bis ein Popup mit "Entwicklereinstellungen zulassen" kommt
-* "OK" drücken
-
-### 2. "Unbekannte Quellen" aktivieren
-
-* Android Auto App öffnen
-* in den 3-Punkt Menü "Entwicklereinstellungen auswählen"
-* bis zu "Unbekannte Quellen" scrollen und aktivieren
-
-### 3. Benachrichtigungen aktivieren
-
-* Android Auto App öffnen
-* bis zu "Benachrichtigungen" scrollen
-* "Unterhaltungen anzeigen" aktivieren
-* "Erste Zeile einer Unterhaltung anzeigen" aktivieren
