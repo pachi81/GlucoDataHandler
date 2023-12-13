@@ -3,9 +3,9 @@
 
 # Android Auto
 
-As the Android Auto part of GlucoDataHandler does not fullfills Google PlayStore policies, this part was moved to an extra app called GlucoDataAuto, which receives its settings and values from GlucoDataHandler.
+Ze względu na to, że część aplikacji GlucodataHandler dotycząca Android Auto nie spełnia wymagań polityk sklepu Google Play, została ona przeniesiona do dodatkowej aplikacji pod nazwą GlucoDataAuto, która odbiera ustawienia i wartości glukozy z GlucoDataHandler.
 
-It can also be used as standalone application for Juggluco or xDrip+.
+Może ona być też używana jako samodzielna aplikacja w połączeniu z Juggluco lub xDrip+.
 
 ## Opcja nr 1: Korzystanie z fikcyjnego odtwarzacza multimediów
 Jeśli nie używasz żadnego odtwarzacza multimedialnego w Android Auto do słuchania muzyki, możesz użyć aplikacji GlucoDataHandler, aby wyświetlić jego wartości w wiadomościach dotyczących multimediów:
