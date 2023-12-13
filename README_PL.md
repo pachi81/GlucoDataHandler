@@ -18,6 +18,8 @@
 
 ## Pobierz
 
+[<img src='https://play.google.com/intl/en_us/badges/static/images/badges/pl_badge_web_generic.png' height=100>](https://play.google.com/store/apps/details?id=de.michelinside.glucodatahandler) 
+
 Aktualną wersję można pobrać [tutaj](https://github.com/pachi81/GlucoDataHandler/releases).
 
 ## Instalacja
