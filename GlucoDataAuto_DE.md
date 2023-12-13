@@ -6,7 +6,7 @@
 Nachdem der Android Auto Teil gegen die Richtlinien von Google Play verstosen hat, wurde dieser Teil in eine extra App namens GlucoDataAuto ausgelagert.
 Diese App empfäng sowohl die Glukosewerte, als auch die Einstellungen von GlucoDataHandler.
 
-Alternativ kann sie auch als Stand-alone App für Juggluco oder xDrip+ verwendet werden.
+Alternativ kann sie auch als eigenständige App für Juggluco oder xDrip+ verwendet werden.
 
 ## Option #1: Dummy Media Player
 Wenn sie nicht über Android Auto Musik hören, können sie die Media Player Unterstützung verwenden:
