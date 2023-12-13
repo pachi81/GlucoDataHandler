@@ -4,6 +4,7 @@
 # Android Auto
 
 As the Android Auto part of GlucoDataHandler does not fullfills Google PlayStore policies, this part was moved to an extra app called GlucoDataAuto, which receives its settings and values from GlucoDataHandler.
+
 It can also be used as standalone application for Juggluco or xDrip+.
 
 ## Opcja nr 1: Korzystanie z fikcyjnego odtwarzacza multimediów
