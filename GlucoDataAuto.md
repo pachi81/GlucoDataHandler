@@ -3,7 +3,9 @@
 
 # Android Auto
 
-As the Android Auto part of GlucoDataHandler does not fullfills Google PlayStore policies, this part was moved to an extra app called GlucoDataAuto.
+As the Android Auto part of GlucoDataHandler does not fullfills Google PlayStore policies, this part was moved to an extra app called GlucoDataAuto, which receives its settings and values from GlucoDataHandler. 
+
+It can also be used as standalone application for Juggluco or xDrip+.
 
 ## Option #1: Using dummy media player
 If you are not using any Android Auto media player for listen music, you can use GlucoDataHandler to display its values in the media tap:
