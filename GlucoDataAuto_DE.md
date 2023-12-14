@@ -8,6 +8,8 @@ Diese App empfäng sowohl die Glukosewerte, als auch die Einstellungen von Gluco
 
 Alternativ kann sie auch als eigenständige App für Juggluco oder xDrip+ verwendet werden.
 
+Installiere die letzte GlucoDataAuto_X.X.X.apk von [hier](https://github.com/pachi81/GlucoDataHandler/releases)
+
 ## Option #1: Dummy Media Player
 Wenn sie nicht über Android Auto Musik hören, können sie die Media Player Unterstützung verwenden:
 
@@ -29,7 +31,7 @@ INFO: das Benachrichtigungs Popup erscheint bei jedem neuen Wert.
 
 # Android Auto Installieren
 
-Installiere die letzte GlucoDataAuto_X.X.X.apk von [hier](https://github.com/pachi81/GlucoDataHandler/releases)
+Um GlucoDataHandler in Android Auto zu verwenden, müssen die folgende Schritte durchgeführt werden:
 
 ## 1. Entwicklereinstellungen aktivieren
 
