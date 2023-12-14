@@ -31,6 +31,8 @@ INFO: das Benachrichtigungs Popup erscheint bei jedem neuen Wert.
 
 # Android Auto Installieren
 
+Um GlucoDataHandler in Android Auto zu verwenden, müssen die folgende Schritte durchgeführt werden:
+
 ## 1. Entwicklereinstellungen aktivieren
 
 * Android Auto App öffnen
