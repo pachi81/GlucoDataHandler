@@ -28,6 +28,8 @@ You can also use notifications:
 
 # Setup Android Auto
 
+To activate GlucoDataHandler for Android Auto, you have to do the following steps:
+
 ## 1. Activate developer mode
 
 * open Android Auto app
