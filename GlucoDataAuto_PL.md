@@ -7,6 +7,8 @@ Ze względu na to, że część aplikacji GlucodataHandler dotycząca Android Au
 
 Może ona być też używana jako samodzielna aplikacja w połączeniu z Juggluco lub xDrip+.
 
+Zainstaluj ostatnią wersję GlucoDataAuto_X.X.X.apk, którą znaleźć można w zakładce [Releases](https://github.com/pachi81/GlucoDataHandler/releases) 
+
 ## Opcja nr 1: Korzystanie z fikcyjnego odtwarzacza multimediów
 Jeśli nie używasz żadnego odtwarzacza multimedialnego w Android Auto do słuchania muzyki, możesz użyć aplikacji GlucoDataHandler, aby wyświetlić jego wartości w wiadomościach dotyczących multimediów:
 
@@ -25,8 +27,6 @@ Można również korzystać z powiadomień:
 <img src='images/AA_App.png' width=300>
 
 # Konfiguracja Android Auto
-
-Zainstaluj ostatnią wersję GlucoDataAuto_X.X.X.apk, którą znaleźć można w zakładce [Releases](https://github.com/pachi81/GlucoDataHandler/releases) 
 
 ## 1. Aktywacja trybu programisty
 
