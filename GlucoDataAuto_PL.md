@@ -28,6 +28,8 @@ Można również korzystać z powiadomień:
 
 # Konfiguracja Android Auto
 
+Aby aktywować GlucoDataHandler dla Android Auto, należy wykonać następujące kroki:
+
 ## 1. Aktywacja trybu programisty
 
 - otwórz aplikację Android Auto
