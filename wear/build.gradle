@@ -73,8 +73,9 @@ dependencies {
     implementation 'androidx.wear.watchface:watchface-complications-data-source-ktx:1.2.0'
     implementation 'androidx.wear.watchface:watchface-complications-rendering:1.2.0'
     implementation 'androidx.appcompat:appcompat-resources:1.6.1'
-    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.work:work-runtime:2.9.0'
 }
 
 afterEvaluate {

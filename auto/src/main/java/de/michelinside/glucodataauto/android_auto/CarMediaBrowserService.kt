@@ -19,6 +19,8 @@ import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.tasks.BackgroundWorker
+import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 
 class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GDH.AA.CarMediaBrowserService"
@@ -31,6 +33,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         Log.v(LOG_ID, "onCreate")
         try {
             super.onCreate()
+            TimeTaskService.useWorker = true
             CarNotification.initNotification(this)
             ReceiveData.initData(this)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -70,6 +73,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
             session.release()
             CarNotification.cleanupNotification(this)
+            BackgroundWorker.stopAllWork(this)
             super.onDestroy()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )

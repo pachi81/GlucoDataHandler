@@ -28,15 +28,21 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     private var backgroundTaskList = mutableListOf<BackgroundTask>()
     private var curInterval = -1L
     private var curDelay = -1L
-    private lateinit var context: Context
+    private var context: Context? = null
     private lateinit var sharedPref: SharedPreferences
     private var pendingIntent: PendingIntent? = null
     private var alarmManager: AlarmManager? = null
     private var lastElapsedMinute = 0L
+    private var isRunning: Boolean = false
+    private var currentAlarmTime = 0L
     private val elapsedTimeMinute: Long
         get() {
             return ReceiveData.getElapsedTimeMinute()
         }
+    private var useWorkerVar = false
+    var useWorker: Boolean
+        get() = useWorkerVar
+        set(value) {useWorkerVar = value}
 
     abstract fun getBackgroundTasks(): MutableList<BackgroundTask>
 
@@ -44,7 +50,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         backgroundTaskList = getBackgroundTasks()
 
         backgroundTaskList.forEach {
-            it.checkPreferenceChanged(sharedPref, null, context)
+            it.checkPreferenceChanged(sharedPref, null, context!!)
         }
     }
 
@@ -53,17 +59,18 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
             if (lastElapsedMinute != elapsedTimeMinute && elapsedTimeMinute != 0L) {
                 Thread {
                     val wakeLock: PowerManager.WakeLock =
-                        (context.getSystemService(Context.POWER_SERVICE) as PowerManager).run {
+                        (context!!.getSystemService(Context.POWER_SERVICE) as PowerManager).run {
                             newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "GlucoDataHandler::BackgroundTaskTag").apply {
                                 acquire(WAKE_LOCK_TIMEOUT)
                             }
                         }
                     try {
+                        isRunning = true
                         backgroundTaskList.forEach {
                             if (elapsedTimeMinute != 0L && ((lastElapsedMinute < 0 && initialExecution) || (elapsedTimeMinute.mod(it.getIntervalMinute()) == 0L && it.active(elapsedTimeMinute)))) {
                                 try {
                                     Log.i(LOG_ID, "execute after " + elapsedTimeMinute + " min: " + it)
-                                    it.execute(context)
+                                    it.execute(context!!)
                                 } catch (ex: Exception) {
                                     Log.e(LOG_ID, "exception while execute task " + it + ": " + ex)
                                 }
@@ -76,6 +83,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                     }
                     // restart timer at the end, for the case a new value has been received
                     startTimer()
+                    isRunning = false
                 }.start()
             } else {
                 // restart timer
@@ -152,8 +160,10 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                 if (nextAlarmCal.get(Calendar.SECOND) < TimeUnit.MILLISECONDS.toSeconds(DEFAULT_DELAY_MS)) {
                     nextAlarmCal.add(Calendar.SECOND, -1*(nextAlarmCal.get(Calendar.SECOND)+1))
                 }
-                Log.i(LOG_ID, "Set next alarm after " + nextTriggerMin + " minute(s) at " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(nextAlarmCal.time)
-                      + " (received at " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(ReceiveData.time)) + ") with a delay of " + getDelay()/1000 + "s")
+                if (currentAlarmTime != nextAlarmCal.timeInMillis) {
+                    Log.i(LOG_ID, "Set next alarm after " + nextTriggerMin + " minute(s) at " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(nextAlarmCal.time)
+                          + " (received at " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(ReceiveData.time)) + ") with a delay of " + getDelay()/1000 + "s")
+                }
                 return nextAlarmCal
             }
         }
@@ -175,7 +185,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         }
         if (alarmManager == null) {
             Log.v(LOG_ID, "init alarmManager")
-            alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            alarmManager = context!!.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         }
     }
 
@@ -185,12 +195,17 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         if (nextAlarm != null) {
             init()
             if (alarmManager != null) {
-                lastElapsedMinute = elapsedTimeMinute
-                alarmManager!!.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    nextAlarm.timeInMillis,
-                    pendingIntent!!
-                )
+                if (currentAlarmTime != nextAlarm.timeInMillis) {
+                    currentAlarmTime = nextAlarm.timeInMillis
+                    lastElapsedMinute = elapsedTimeMinute
+                    alarmManager!!.setExactAndAllowWhileIdle(
+                        AlarmManager.RTC_WAKEUP,
+                        nextAlarm.timeInMillis,
+                        pendingIntent!!
+                    )
+                } else {
+                    Log.d(LOG_ID, "Ignore next alarm as it is already active")
+                }
                 return
             }
         }
@@ -214,7 +229,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                     Log.v(LOG_ID, "onSharedPreferenceChanged called for " + key)
                     var changed = false
                     backgroundTaskList.forEach {
-                        if (it.checkPreferenceChanged(sharedPreferences, key, context))
+                        if (it.checkPreferenceChanged(sharedPreferences, key, context!!))
                             changed = true
                     }
                     if (changed) {
@@ -230,7 +245,8 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         try {
             Log.v(LOG_ID, "OnNotifyData for source " + dataSource.toString())
             // restart time
-            startTimer()
+            if (!isRunning)
+                startTimer()
         } catch (ex: Exception) {
             Log.e(LOG_ID, "OnNotifyData: " + ex)
         }
@@ -241,12 +257,12 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     fun run(set_context: Context) {
         try {
             context = set_context
-            sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            sharedPref = context!!.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
             val filter = mutableSetOf(NotifySource.BROADCAST, NotifySource.MESSAGECLIENT)
             filter.addAll(getNotifySourceFilter())
             InternalNotifier.addNotifier(
-                context, this,
+                context!!, this,
                 filter
             )
             initBackgroundTasks()
@@ -258,22 +274,24 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
 
     fun stop() {
         try {
-            InternalNotifier.remNotifier(context, this)
-            sharedPref.unregisterOnSharedPreferenceChangeListener(this)
-            stopTimer()
+            if (context != null) {
+                InternalNotifier.remNotifier(context!!, this)
+                sharedPref.unregisterOnSharedPreferenceChangeListener(this)
+                stopTimer()
+            }
         } catch (ex: Exception) {
             Log.e(LOG_ID, "run: " + ex)
         }
     }
 
-    fun alarmTrigger(intent: Intent?) {
+    fun alarmTrigger() {
         try {
-            Log.v(LOG_ID, "onReceive: " + intent.toString())
+            Log.v(LOG_ID, "alarmTrigger called")
             if (active(elapsedTimeMinute)) {
                 executeTasks()
             }
         } catch (ex: Exception) {
-            Log.e(LOG_ID, "onReceive: " + ex)
+            Log.e(LOG_ID, "alarmTrigger: " + ex)
         }
     }
 }
