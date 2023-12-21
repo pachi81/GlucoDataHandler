@@ -20,6 +20,7 @@ import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.utils.Utils
 import java.text.DateFormat
 import java.util.*
@@ -28,8 +29,6 @@ import java.util.*
 @SuppressLint("StaticFieldLeak")
 object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
     private const val LOG_ID = "GDH.AA.CarNotification"
-    private const val CHANNEL_ID = "GlucoDataNotify_Car"
-    private const val CHANNEL_NAME = "Notification for Android Auto"
     const val ACTION_REPLY = "de.michelinside.glucodataauto.REPLY"
     const val ACTION_MARK_AS_READ = "de.michelinside.glucodataauto.MARK_AS_READ"
     private const val NOTIFICATION_ID = 789
@@ -58,16 +57,18 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     private fun createNotificationChannel(context: Context) {
         notificationMgr = CarNotificationManager.from(context)
         val notificationChannel = NotificationChannelCompat.Builder(
-            CHANNEL_ID,
+            ChannelType.ANDROID_AUTO.channelId,
             NotificationManager.IMPORTANCE_HIGH
         )
         notificationChannel.setSound(null, null)   // silent
-        notificationMgr.createNotificationChannel(notificationChannel.setName(CHANNEL_NAME).build())
+        notificationChannel.setName(context.getString(ChannelType.ANDROID_AUTO.nameResId))
+        notificationChannel.setDescription(context.getString(ChannelType.ANDROID_AUTO.descrResId))
+        notificationMgr.createNotificationChannel(notificationChannel.build())
     }
 
     private fun createNofitication(context: Context) {
         createNotificationChannel(context)
-        notificationCompat = NotificationCompat.Builder(context, CHANNEL_ID)
+        notificationCompat = NotificationCompat.Builder(context, ChannelType.ANDROID_AUTO.channelId)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle("GlucoDataAuto")
             .setContentText("Android Auto")

@@ -1,8 +1,6 @@
 package de.michelinside.glucodatahandler
 
 import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
@@ -11,6 +9,8 @@ import android.os.Vibrator
 import android.os.VibratorManager
 import android.util.Log
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.notification.ChannelType
+import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.utils.Utils
@@ -71,19 +71,11 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
     }
 
     override fun getNotification(): Notification {
-        val channelId = "glucodatahandler_service_01"
-        val channel = NotificationChannel(
-            channelId,
-            "Foregorund GlucoDataService",
-            NotificationManager.IMPORTANCE_HIGH
-        )
-        (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(
-            channel
-        )
+        Channels.createNotificationChannel(this, ChannelType.WEAR_FOREGROUND)
 
         val pendingIntent = Utils.getAppIntent(this, WaerActivity::class.java, 11, false)
 
-        return Notification.Builder(this, channelId)
+        return Notification.Builder(this, ChannelType.WEAR_FOREGROUND.channelId)
             .setContentTitle(getString(CR.string.forground_notification_descr))
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(pendingIntent)

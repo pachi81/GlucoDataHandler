@@ -1,8 +1,6 @@
 package de.michelinside.glucodatahandler
 
 import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -20,16 +18,13 @@ import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.notification.ChannelType
+import de.michelinside.glucodatahandler.common.notification.Channels
 
 
 object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
     private const val LOG_ID = "GDH.PermanentNotification"
-    private const val CHANNEL_ID = "GlucoDataNotify_permanent"
-    private const val CHANNEL_NAME = "Permanent notification"
-    private const val FOREGROUND_CHANNEL_ID = "GlucoDataNotify_foreground"
-    private const val FOREGROUND_CHANNEL_NAME = "Foreground notification"
     private const val SECOND_NOTIFICATION_ID = 124
-    private lateinit var notificationMgr: NotificationManager
     private lateinit var notificationCompat: Notification.Builder
     private lateinit var foregroundNotificationCompat: Notification.Builder
     private lateinit var sharedPref: SharedPreferences
@@ -74,28 +69,14 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     }
 
     private fun createNotificationChannel(context: Context) {
-        notificationMgr = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val notificationChannel = NotificationChannel(
-            CHANNEL_ID,
-            CHANNEL_NAME,
-            NotificationManager.IMPORTANCE_DEFAULT
-        )
-        notificationChannel.setSound(null, null)   // silent
-        notificationMgr.createNotificationChannel(notificationChannel)
-        notificationMgr = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val foregroundChannel = NotificationChannel(
-            FOREGROUND_CHANNEL_ID,
-            FOREGROUND_CHANNEL_NAME,
-            NotificationManager.IMPORTANCE_HIGH
-        )
-        foregroundChannel.setSound(null, null)   // silent
-        notificationMgr.createNotificationChannel(foregroundChannel)
+        Channels.createNotificationChannel(context, ChannelType.MOBILE_FOREGROUND)
+        Channels.createNotificationChannel(context, ChannelType.MOBILE_SECOND)
     }
 
     private fun createNofitication(context: Context) {
         createNotificationChannel(context)
 
-        notificationCompat = Notification.Builder(context, CHANNEL_ID)
+        notificationCompat = Notification.Builder(context, ChannelType.MOBILE_SECOND.channelId)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(Utils.getAppIntent(context, MainActivity::class.java, 5, false))
             .setOngoing(true)
@@ -106,7 +87,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setCategory(Notification.CATEGORY_STATUS)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
 
-        foregroundNotificationCompat = Notification.Builder(context, FOREGROUND_CHANNEL_ID)
+        foregroundNotificationCompat = Notification.Builder(context, ChannelType.MOBILE_FOREGROUND.channelId)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(Utils.getAppIntent(context, MainActivity::class.java, 4, false))
             .setOngoing(true)
@@ -122,7 +103,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     private fun removeNotifications() {
         //notificationMgr.cancel(NOTIFICATION_ID)  // remove notification
         showPrimaryNotification(false)
-        notificationMgr.cancel(SECOND_NOTIFICATION_ID)
+        Channels.getNotificationManager().cancel(SECOND_NOTIFICATION_ID)
     }
 
     private fun getStatusBarIcon(iconKey: String): Icon {
@@ -170,7 +151,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     private fun showNotification(id: Int, withContent: Boolean, iconKey: String, foreground: Boolean) {
         try {
             Log.v(LOG_ID, "showNotification called for id " + id)
-            notificationMgr.notify(
+            Channels.getNotificationManager().notify(
                 id,
                 getNotification(withContent, iconKey, foreground)
             )
@@ -185,7 +166,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             Log.d(LOG_ID, "show second notification")
             showNotification(SECOND_NOTIFICATION_ID, false, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, false)
         } else {
-            notificationMgr.cancel(SECOND_NOTIFICATION_ID)
+            Channels.getNotificationManager().cancel(SECOND_NOTIFICATION_ID)
         }
     }
 

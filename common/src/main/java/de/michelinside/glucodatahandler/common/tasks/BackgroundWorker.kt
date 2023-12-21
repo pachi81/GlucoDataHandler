@@ -1,8 +1,6 @@
 package de.michelinside.glucodatahandler.common.tasks
 
 import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.ServiceInfo
 import android.os.Build
@@ -17,6 +15,8 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
+import de.michelinside.glucodatahandler.common.notification.ChannelType
+import de.michelinside.glucodatahandler.common.notification.Channels
 import java.time.Duration
 
 abstract class BackgroundWorker(val context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
@@ -75,18 +75,9 @@ abstract class BackgroundWorker(val context: Context, workerParams: WorkerParame
         }
 
         // create foreground notification runner
-        val notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val NOTIFICATION_CHANNEL_ID = "worker_notification_01"
-        val NOTIFICATION_CHANNEL_NAME = "Foreground Worker"
-        val channel = NotificationChannel(
-            NOTIFICATION_CHANNEL_ID,
-            NOTIFICATION_CHANNEL_NAME,
-            NotificationManager.IMPORTANCE_HIGH
-        )
-        notificationManager.createNotificationChannel(channel)
+        Channels.createNotificationChannel(context, ChannelType.WORKER)
 
-        val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
+        val notification = NotificationCompat.Builder(context, ChannelType.WORKER.channelId)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setOngoing(true)
             .setAutoCancel(false)

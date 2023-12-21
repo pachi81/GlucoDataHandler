@@ -16,6 +16,8 @@ import de.michelinside.glucodatahandler.common.receiver.*
 import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.notification.ChannelType
+import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.utils.Utils
 
 enum class AppSource {
@@ -150,6 +152,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                     }
                 }.start()
             }
+            // remove obsolete notification channels
+            Channels.deleteNotificationChannel(this, ChannelType.ANDROID_AUTO)  // only available in GlucoDataAuto!
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.toString())
         }

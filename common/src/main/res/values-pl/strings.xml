@@ -254,5 +254,15 @@
     <string name="pref_no_gda_info_summary">Aby korzystać z GlucoDataHandler dla Android Auto, należy zainstalować aplikację GlucoDataAuto z GitHub.\nKliknij tutaj, aby uzyskać więcej informacji i pobrać GlucoDataAuto.</string>
     <string name="pref_send_to_glucodataauto">Przekaż do GlucoDataAuto</string>
     <string name="pref_send_to_glucodataauto_summary">Wysyłanie wartości glukozy i ustawień do GlucoDataAuto, jeśli telefon jest połączony z Android Auto.</string>
+    <string name="mobile_foreground_notification_name">Foreground notification</string>
+    <string name="mobile_foreground_notification_descr">Foreground notification which prevent stopping the app while running in background.</string>
+    <string name="mobile_second_notification_name">Second notification</string>
+    <string name="mobile_second_notification_descr">Additional notification to show an extra icon in the statusbar.</string>
+    <string name="worker_notification_name">Worker notification</string>
+    <string name="worker_notification_descr">Worker notification shown while running tasks in the background.</string>
+    <string name="wear_foreground_notification_name">Foreground notification</string>
+    <string name="wear_foreground_notification_descr">Foreground notification which prevent stopping the app while running in background.</string>
+    <string name="android_auto_notification_name">Notification for Android Auto</string>
+    <string name="android_auto_notification_descr">Notification which is shown in Android Auto</string>
 
 </resources>
