@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler
 
+import android.R.attr.direction
 import android.app.Notification
 import android.content.Context
 import android.content.Intent
@@ -11,10 +12,12 @@ import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
 import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.widget.FloatingWidget
 import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
+
 
 class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInterface {
     private val LOG_ID = "GDH.GlucoDataServiceMobile"
@@ -106,6 +109,19 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         }
     }
 
+    private fun sendToBangleJS(context: Context) {
+        val send2Bangle = "require(\"Storage\").writeJSON(\"widbgjs.json\", {" +
+                "'bg': " + ReceiveData.rawValue.toString() + "," +
+                "'bgTimeStamp': " + ReceiveData.time + "," +
+                "'bgDirection': '" + GlucoDataUtils.getDexcomLabel(ReceiveData.rate) + "'" +
+                "});"
+
+        Log.i(LOG_ID, "Send to bangleJS: " + send2Bangle)
+        val sendIntent = Intent("com.banglejs.uart.tx")
+        sendIntent.putExtra("line", send2Bangle)
+        context.sendBroadcast(sendIntent)
+    }
+
     private fun forwardBroadcast(context: Context, extras: Bundle) {
         Log.v(LOG_ID, "forwardBroadcast called")
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -139,6 +155,10 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             val intent = Intent(Constants.GLUCODATA_BROADCAST_ACTION)
             intent.putExtras(extras)
             sendBroadcast(intent, Constants.SHARED_PREF_GLUCODATA_RECEIVERS, context, sharedPref)
+        }
+
+        if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_BANGLEJS, false)) {
+            sendToBangleJS(context)
         }
     }
 

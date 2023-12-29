@@ -242,6 +242,12 @@
             android:summary="@string/pref_button_select_target_summary"
             android:title="@string/pref_button_select_target"
             app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="send_to_banglejs"
+            android:summary="@string/pref_send_to_bangleJS_summary"
+            android:title="@string/pref_send_to_bangleJS"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <androidx.preference.SwitchPreferenceCompat

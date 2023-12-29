@@ -62,6 +62,7 @@ object Constants {
     const val SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY = "floating_widget_transparency"
     const val SHARED_PREF_WIDGET_TRANSPARENCY = "widget_transparency"
     const val SHARED_PREF_RELATIVE_TIME = "relative_time"
+    const val SHARED_PREF_SEND_TO_BANGLEJS = "send_to_banglejs"
 
     // internal app preferences (not changed by settings) -> use separate tag for not trigger onChanged events
     const val SHARED_PREF_INTERNAL_TAG = "GlucoDataHandlerInternalAppPrefs"

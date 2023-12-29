@@ -203,6 +203,9 @@
     <string name="widget_glucose_trend_delta">Glukoza, trend i delta</string>
     <string name="widget_glucose_trend_delta_timestamp">Glukoza, trend, delta i znacznik czasu</string>
 
+    <string name="pref_send_to_bangleJS">Forward to BangleJS</string>
+    <string name="pref_send_to_bangleJS_summary">Forward to BangleJS.</string>
+
     <!-- wear -->
 
     <string name="forground_notification_descr">Otrzymywanie danych do komplikacji</string>

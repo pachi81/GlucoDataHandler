@@ -201,6 +201,9 @@
     <string name="widget_glucose_trend_delta">Zuckerwert, Trendpfeil und Delta</string>
     <string name="widget_glucose_trend_delta_timestamp">Zuckerwert, Trendpfeil, Delta und Zeitpunkt</string>
 
+    <string name="pref_send_to_bangleJS">Forward to BangleJS</string>
+    <string name="pref_send_to_bangleJS_summary">Forward to BangleJS.</string>
+
     <!-- wear -->
 
     <string name="forground_notification_descr">Datenverarbeitung für Complications</string>
