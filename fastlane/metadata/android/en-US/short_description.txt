@@ -1,0 +1,1 @@
+receives Glucodata broadcast from Juggluco app
