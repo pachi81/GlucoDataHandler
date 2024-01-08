@@ -1,0 +1,1 @@
+receives glucose data from from LibreLinkUp, Juggluco or xDrip+.
