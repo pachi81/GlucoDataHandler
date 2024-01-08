@@ -1,1 +1,1 @@
-receives Glucodata broadcast from Juggluco app
+receives glucose data from from LibreLinkUp, Juggluco or xDrip+.
