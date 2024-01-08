@@ -68,11 +68,11 @@ object Utils {
         if (bundle == null) {
             return "NULL"
         }
-        var string = "Bundle{"
+        var string = "{"
         for (key in bundle.keySet()) {
-            string += " " + key + " => " + (if (bundle[key] != null) bundle[key].toString() else "NULL") + ";"
+            string += " " + key + " => " + (if (bundle[key] != null) bundle[key].toString() else "NULL") + "\r\n"
         }
-        string += " }Bundle"
+        string += " }"
         return string
     }
 

@@ -79,11 +79,6 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
 
             val glucoExtras = Bundle()
             glucoExtras.putLong(ReceiveData.TIME, timeStamp)
-            if (ReceiveData.isMmol) {
-                glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, GlucoDataUtils.mgToMmol(glucose.toFloat()))
-            } else {
-                glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, glucose.toFloat())
-            }
             glucoExtras.putInt(ReceiveData.MGDL, glucose)
             glucoExtras.putString(ReceiveData.SERIAL, sensor)
             glucoExtras.putFloat(ReceiveData.RATE, GlucoDataUtils.getRateFromLabel(trend))

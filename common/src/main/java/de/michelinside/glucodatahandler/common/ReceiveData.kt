@@ -330,7 +330,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 )
                 source = dataSource
                 sensorID = extras.getString(SERIAL) //Name of sensor
-                glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
                 rate = extras.getFloat(RATE) //Rate of change of glucose. See libre and dexcom label functions
                 rateLabel = GlucoDataUtils.getRateLabel(context, rate)
                 deltaValue = Float.NaN
@@ -355,9 +354,18 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                         }
                     }
                 }
+
                 rawValue = extras.getInt(MGDL)
+                if (extras.containsKey(GLUCOSECUSTOM)) {
+                    glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
+                    changeIsMmol(rawValue!=glucose.toInt() && GlucoDataUtils.isMmolValue(glucose), context)
+                } else {
+                    glucose = rawValue.toFloat()
+                    if (isMmol) {
+                        glucose = GlucoDataUtils.mgToMmol(glucose)
+                    }
+                }
                 time = extras.getLong(TIME) //time in msec
-                changeIsMmol(rawValue!=glucose.toInt(), context)
 
                 // check for alarm
                 if (interApp) {

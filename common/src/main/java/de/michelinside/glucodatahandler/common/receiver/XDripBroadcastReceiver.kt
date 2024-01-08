@@ -9,7 +9,6 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
-import java.text.DateFormat
 
 open class XDripBroadcastReceiver: BroadcastReceiver() {
     companion object {
@@ -17,7 +16,7 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
         const val BG_SLOPE = "com.eveningoutpost.dexdrip.Extras.BgSlope"
         const val BG_SLOPE_NAME = "com.eveningoutpost.dexdrip.Extras.BgSlopeName"
         const val TIME = "com.eveningoutpost.dexdrip.Extras.Time"
-        const val RAW = "com.eveningoutpost.dexdrip.Extras.Raw"
+        //const val RAW = "com.eveningoutpost.dexdrip.Extras.Raw"
         const val SOURCE_DESC = "com.eveningoutpost.dexdrip.Extras.SourceDesc"
         const val SOURCE_INFO = "com.eveningoutpost.dexdrip.Extras.SourceInfo"
         fun createExtras(context: Context?): Bundle? {
@@ -42,38 +41,27 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
     }
     override fun onReceive(context: Context, intent: Intent) {
         try {
-            Log.d(LOG_ID, "onReceive called for " + intent.action + ": " + intent.extras.toString())
+            Log.i(LOG_ID, "onReceive called for " + intent.action + ": " + Utils.dumpBundle(intent.extras))
             if (intent.extras != null) {
                 val extras = intent.extras!!
-                val slope = Utils.round((extras.getDouble(BG_SLOPE) * 60000).toFloat(), 2)
-                var source: String? = if(extras.containsKey(SOURCE_INFO)) extras.getString(
-                    SOURCE_INFO
-                ) else extras.getString(SOURCE_DESC)
-                if (source == null)
-                    source = "xDrip+"
-                Log.i(LOG_ID, "Glucose: " + extras.getDouble(BG_ESTIMATE).toString() +
-                        " - Time: " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format((extras.getLong(TIME))) +
-                        " - Slope: " + slope.toString() +
-                        " - SlopeName: " + extras.getString(BG_SLOPE_NAME) +
-                        " - Raw: " + extras.getDouble(RAW).toString() +
-                        " - Source: " + extras.getString(SOURCE_INFO) + " (" + extras.getString(
-                    SOURCE_DESC
-                ) + ")"
-                )
-
-                val glucoExtras = Bundle()
-                glucoExtras.putLong(ReceiveData.TIME, extras.getLong(TIME))
-                val mgdl = extras.getDouble(BG_ESTIMATE).toFloat()
-                if (ReceiveData.isMmol) {
-                    glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, GlucoDataUtils.mgToMmol(mgdl))
-                } else {
-                    glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, mgdl)
+                if (extras.containsKey(BG_SLOPE) && extras.containsKey(BG_ESTIMATE) && extras.containsKey(TIME)) {
+                    val slope = Utils.round((extras.getDouble(BG_SLOPE) * 60000).toFloat(), 2)
+                    var source: String? = if (extras.containsKey(SOURCE_INFO)) extras.getString(
+                        SOURCE_INFO
+                    ) else extras.getString(SOURCE_DESC)
+                    if (source == null)
+                        source = "xDrip+"
+                    val glucoExtras = Bundle()
+                    glucoExtras.putLong(ReceiveData.TIME, extras.getLong(TIME))
+                    glucoExtras.putInt(ReceiveData.MGDL, extras.getDouble(BG_ESTIMATE).toInt())
+                    glucoExtras.putString(ReceiveData.SERIAL, source)
+                    glucoExtras.putFloat(ReceiveData.RATE, slope)
+                    glucoExtras.putInt(ReceiveData.ALARM, 0)
+                    ReceiveData.handleIntent(context, DataSource.XDRIP, glucoExtras)
                 }
-                glucoExtras.putInt(ReceiveData.MGDL, extras.getDouble(BG_ESTIMATE).toInt())
-                glucoExtras.putString(ReceiveData.SERIAL, source)
-                glucoExtras.putFloat(ReceiveData.RATE, slope)
-                glucoExtras.putInt(ReceiveData.ALARM, 0)
-                ReceiveData.handleIntent(context, DataSource.XDRIP, glucoExtras)
+                else {
+                    Log.w(LOG_ID, "Missing extras for xDrip+ source: " + Utils.dumpBundle(intent.extras))
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Receive exception: " + exc.message.toString() )
