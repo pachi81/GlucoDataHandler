@@ -9,6 +9,7 @@ import android.graphics.*
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcel
+import android.provider.Settings
 import android.util.Log
 import android.util.TypedValue
 import de.michelinside.glucodatahandler.common.GlucoDataService
@@ -113,6 +114,31 @@ object Utils {
             return 0
         val transparency = 255 * minOf(10, transparancyFactor) / 10
         return transparency shl (4*6)
+    }
+
+    fun isHighContrastTextEnabled(context: Context): Boolean {
+        return Settings.Secure.getInt(context.contentResolver, "high_text_contrast_enabled", 0) == 1
+        /*if (context != null) {
+            val am = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+            var m: Method? = null
+            try {
+                m = am.javaClass.getMethod("isHighTextContrastEnabled", null)
+            } catch (e: NoSuchMethodException) {
+                Log.i(LOG_ID, "isHighTextContrastEnabled not found in AccessibilityManager")
+            }
+            val result: Any
+            if (m != null) {
+                try {
+                    result = m.invoke(am, null)!!
+                    if (result is Boolean) {
+                        return result
+                    }
+                } catch (e: Exception) {
+                    Log.i(LOG_ID, "isHighTextContrastEnabled invoked with an exception" + e.message)
+                }
+            }
+        }
+        return false*/
     }
 
 }

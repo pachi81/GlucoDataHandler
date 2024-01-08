@@ -8,6 +8,7 @@ import android.graphics.Paint
 import android.os.*
 import android.provider.Settings
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -30,6 +31,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtValueInfo: TextView
     private lateinit var txtConnInfo: TextView
     private lateinit var txtSourceInfo: TextView
+    private lateinit var txtHighContrastEnabled: TextView
     private lateinit var switchColoredAod: SwitchCompat
     private lateinit var switchLargeTrendArrow: SwitchCompat
     private lateinit var switchNotifcation: SwitchCompat
@@ -53,6 +55,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
             txtValueInfo = findViewById(R.id.txtValueInfo)
             txtConnInfo = findViewById(R.id.txtConnInfo)
             txtSourceInfo = findViewById(R.id.txtSourceInfo)
+            txtHighContrastEnabled = findViewById(R.id.txtHighContrastEnabled)
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
@@ -201,6 +204,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.SOURCE_SETTINGS,
                 NotifySource.SOURCE_STATE_CHANGE))
 
+            checkHighContrast()
             if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Notification permission granted")
                 requestNotificationPermission = false
@@ -229,6 +233,24 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
             }
         }
         return true
+    }
+
+    private fun checkHighContrast() {
+        try {
+            if (Utils.isHighContrastTextEnabled(this)) {
+                Log.w(LOG_ID, "High contrast is active")
+                txtHighContrastEnabled.visibility = View.VISIBLE
+                txtHighContrastEnabled.setOnClickListener {
+                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                    startActivity(intent)
+                }
+            } else {
+                txtHighContrastEnabled.visibility = View.GONE
+                Log.i(LOG_ID, "High contrast is inactive")
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
+        }
     }
 
     private fun update() {

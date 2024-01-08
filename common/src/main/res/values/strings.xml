@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="name" translatable="false">GlucoDataHandler</string>
 
     <string name="info_label_sensor_id">Sensor</string>
@@ -43,6 +43,7 @@
     <string name="activity_main_disconnected_label">Wear: disconnected</string>
     <string name="activity_main_car_connected_label">Android Auto: connected</string>
     <string name="activity_main_car_disconnected_label">Android Auto: disconnected</string>
+    <string name="activity_main_high_contrast_enabled">High contrast accessibility is active!\nPress here to go to settings.</string>
     <string name="no_new_value">No new value since %1$d minutes!</string>
 
     <string name="menu_settings">Settings</string>

@@ -42,6 +42,7 @@
     <string name="activity_main_car_connected_label">Android Auto: verbunden</string>
     <string name="activity_main_car_disconnected_label">Android Auto: getrennt</string>
     <string name="no_new_value">Kein neuer Wert seit %1$d Minuten!</string>
+    <string name="activity_main_high_contrast_enabled">Hoher Kontrast is aktiv!\nHier drücken, um zu den Einstellungen zu gelangen.</string>
 
     <string name="menu_settings">Einstellungen</string>
     <string name="menu_sources">Quellen</string>

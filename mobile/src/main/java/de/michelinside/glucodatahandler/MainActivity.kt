@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtCarInfo: TextView
     private lateinit var txtSourceInfo: TextView
     private lateinit var txtBatteryOptimization: TextView
+    private lateinit var txtHighContrastEnabled: TextView
     private lateinit var sharedPref: SharedPreferences
     private val LOG_ID = "GDH.Main"
     private var requestNotificationPermission = false
@@ -60,6 +61,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             txtCarInfo = findViewById(R.id.txtCarInfo)
             txtSourceInfo = findViewById(R.id.txtSourceInfo)
             txtBatteryOptimization = findViewById(R.id.txtBatteryOptimization)
+            txtHighContrastEnabled = findViewById(R.id.txtHighContrastEnabled)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -124,6 +126,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.OBSOLETE_VALUE,
                 NotifySource.SOURCE_STATE_CHANGE))
             checkBatteryOptimization()
+            checkHighContrast()
 
             if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Notification permission granted")
@@ -169,6 +172,23 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             } else {
                 txtBatteryOptimization.visibility = View.GONE
                 Log.i(LOG_ID, "Battery optimization is active")
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
+        }
+    }
+    private fun checkHighContrast() {
+        try {
+            if (Utils.isHighContrastTextEnabled(this)) {
+                Log.w(LOG_ID, "High contrast is active")
+                txtHighContrastEnabled.visibility = View.VISIBLE
+                txtHighContrastEnabled.setOnClickListener {
+                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                    startActivity(intent)
+                }
+            } else {
+                txtHighContrastEnabled.visibility = View.GONE
+                Log.i(LOG_ID, "High contrast is inactive")
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
