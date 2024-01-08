@@ -39,7 +39,9 @@ object BitmapUtils {
                 else
                     fullText = "00.0"
             } else {
-                if (text.length == 2)
+                if (text.length == 1)
+                    fullText = "0"
+                else if (text.length == 2)
                     fullText = "00"
                 else
                     fullText = "000"
