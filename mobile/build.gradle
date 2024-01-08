@@ -24,6 +24,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "GlucoDataHandler"
         }
+        dev_release {
+            versionNameSuffix '-dev'
+            resValue "string", "app_name", "GlucoDataHandler"
+        }
         debug {
             applicationIdSuffix '.debug'
             minifyEnabled false
@@ -71,7 +75,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.joaomgcd:taskerpluginlibrary:0.4.4'
     implementation project(path: ':common')
-    implementation 'com.google.android.gms:play-services-tasks:18.0.2'
+    implementation 'com.google.android.gms:play-services-tasks:18.1.0'
     implementation 'com.google.android.gms:play-services-wearable:18.1.0'
     implementation "androidx.car.app:app:1.2.0"
     implementation "androidx.preference:preference:1.2.1"
@@ -104,6 +108,16 @@ afterEvaluate {
         into rootProject.releasePath
     }
     assembleRelease.finalizedBy(copyAndroidApksPostBuild)
+
+    //noinspection ConfigurationAvoidance
+    def assembleDevRelease = tasks.getByPath(':mobile:assembleDev_release')
+    def copyAndroidDevApksPostBuild = tasks.register('copyAndroidDevApksPostBuild', Copy) {
+        dependsOn assembleDevRelease
+        from "${projectDir}/dev_release"
+        include '**/*.apk'
+        into rootProject.releasePath
+    }
+    assembleDevRelease.finalizedBy(copyAndroidDevApksPostBuild)
 
     //noinspection ConfigurationAvoidance
     def assembleSecond = tasks.getByPath(':mobile:assembleSecond')

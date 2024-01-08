@@ -24,6 +24,8 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        dev_release {
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

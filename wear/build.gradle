@@ -22,6 +22,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "GlucoDataHandler"
         }
+        dev_release {
+            versionNameSuffix '-dev'
+            resValue "string", "app_name", "GlucoDataHandler"
+        }
         debug {
             applicationIdSuffix '.debug'
             resValue "string", "app_name", "GlucoDataHandler"
@@ -98,6 +102,16 @@ afterEvaluate {
         into rootProject.releasePath
     }
     assembleRelease.finalizedBy(copyAndroidApksPostBuild)
+
+    //noinspection ConfigurationAvoidance
+    def assembleDevRelease = tasks.getByPath(':wear:assembleDev_release')
+    def copyAndroidDevApksPostBuild = tasks.register('copyAndroidDevApksPostBuild', Copy) {
+        dependsOn assembleDevRelease
+        from "${projectDir}/dev_release"
+        include '**/*.apk'
+        into rootProject.releasePath
+    }
+    assembleDevRelease.finalizedBy(copyAndroidDevApksPostBuild)
 
     //noinspection ConfigurationAvoidance
     def assembleSecond = tasks.getByPath(':wear:assembleSecond')
