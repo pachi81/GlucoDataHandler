@@ -16,7 +16,7 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
         const val BG_SLOPE = "com.eveningoutpost.dexdrip.Extras.BgSlope"
         const val BG_SLOPE_NAME = "com.eveningoutpost.dexdrip.Extras.BgSlopeName"
         const val TIME = "com.eveningoutpost.dexdrip.Extras.Time"
-        //const val RAW = "com.eveningoutpost.dexdrip.Extras.Raw"
+        const val RAW = "com.eveningoutpost.dexdrip.Extras.Raw"
         const val SOURCE_DESC = "com.eveningoutpost.dexdrip.Extras.SourceDesc"
         const val SOURCE_INFO = "com.eveningoutpost.dexdrip.Extras.SourceInfo"
         fun createExtras(context: Context?): Bundle? {
@@ -44,23 +44,31 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
             Log.i(LOG_ID, "onReceive called for " + intent.action + ": " + Utils.dumpBundle(intent.extras))
             if (intent.extras != null) {
                 val extras = intent.extras!!
-                if (extras.containsKey(BG_SLOPE) && extras.containsKey(BG_ESTIMATE) && extras.containsKey(TIME)) {
+                if (extras.containsKey(BG_SLOPE) && (extras.containsKey(BG_ESTIMATE) || extras.containsKey(RAW)) && extras.containsKey(TIME)) {
                     val slope = Utils.round((extras.getDouble(BG_SLOPE) * 60000).toFloat(), 2)
                     var source: String? = if (extras.containsKey(SOURCE_INFO)) extras.getString(
                         SOURCE_INFO
                     ) else extras.getString(SOURCE_DESC)
                     if (source == null)
                         source = "xDrip+"
-                    val glucoExtras = Bundle()
-                    glucoExtras.putLong(ReceiveData.TIME, extras.getLong(TIME))
-                    glucoExtras.putInt(ReceiveData.MGDL, extras.getDouble(BG_ESTIMATE).toInt())
-                    glucoExtras.putString(ReceiveData.SERIAL, source)
-                    glucoExtras.putFloat(ReceiveData.RATE, slope)
-                    glucoExtras.putInt(ReceiveData.ALARM, 0)
-                    ReceiveData.handleIntent(context, DataSource.XDRIP, glucoExtras)
+                    var mgdl = Utils.round(extras.getDouble(BG_ESTIMATE, 0.0).toFloat(), 0).toInt()
+                    if (!GlucoDataUtils.isGlucoseValid(mgdl)) {
+                        mgdl = Utils.round(extras.getDouble(RAW, 0.0).toFloat(), 0).toInt()
+                    }
+                    if (GlucoDataUtils.isGlucoseValid(mgdl)) {
+                        val glucoExtras = Bundle()
+                        glucoExtras.putLong(ReceiveData.TIME, extras.getLong(TIME))
+                        glucoExtras.putInt(ReceiveData.MGDL,mgdl)
+                        glucoExtras.putString(ReceiveData.SERIAL, source)
+                        glucoExtras.putFloat(ReceiveData.RATE, slope)
+                        glucoExtras.putInt(ReceiveData.ALARM, 0)
+                        ReceiveData.handleIntent(context, DataSource.XDRIP, glucoExtras)
+                    } else {
+                        Log.w(LOG_ID, "Invalid value: " + Utils.dumpBundle(intent.extras))
+                    }
                 }
                 else {
-                    Log.w(LOG_ID, "Missing extras for xDrip+ source: " + Utils.dumpBundle(intent.extras))
+                    Log.w(LOG_ID, "Missing extras: " + Utils.dumpBundle(intent.extras))
                 }
             }
         } catch (exc: Exception) {

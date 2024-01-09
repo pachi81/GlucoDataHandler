@@ -13,7 +13,7 @@ object Constants {
     const val SOURCE_SETTINGS_BUNDLE = "source_settings_bundle"
     const val GLUCOSE_CONVERSION_FACTOR = 18.0182F
     const val GLUCOSE_MIN_VALUE = 40
-    //const val GLUCOSE_MAX_VALUE = 400
+    const val GLUCOSE_MAX_VALUE = 400
     const val ACTION_STOP_FOREGROUND = "stop_foreground"
 
     const val XDRIP_ACTION_GLUCOSE_READING = "com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING"

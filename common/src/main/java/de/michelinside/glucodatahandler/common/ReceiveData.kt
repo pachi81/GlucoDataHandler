@@ -328,6 +328,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                         " - difference: " + (new_time-time)
             )
 
+            if (!GlucoDataUtils.isGlucoseValid(extras.getInt(MGDL))) {
+                Log.w(LOG_ID, "Invalid glucose values received! " + extras.toString())
+                return false
+            }
+
             var force = false
             if (getTimeDiffMinute(new_time) <= 0 && ((extras.containsKey(IOB) && iob != extras.getFloat(IOB)) || (extras.containsKey(COB) && cob != extras.getFloat(COB)))) {
                 val newIob = extras.getFloat(IOB, Float.NaN)

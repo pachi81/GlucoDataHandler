@@ -10,6 +10,16 @@ import kotlin.random.Random
 object GlucoDataUtils {
     //private val LOG_ID = "GDH.Utils.GlucoData"
 
+    fun isGlucoseValid(value: Float): Boolean {
+        var mgdl = value
+        if (isMmolValue(mgdl))
+            mgdl = mmolToMg(mgdl)
+        return isGlucoseValid(mgdl.toInt())
+    }
+    fun isGlucoseValid(mgdl: Int): Boolean {
+        return mgdl >= Constants.GLUCOSE_MIN_VALUE.toFloat() && mgdl <= Constants.GLUCOSE_MAX_VALUE.toFloat()
+    }
+
     fun isMmolValue(value: Float): Boolean = value < Constants.GLUCOSE_MIN_VALUE.toFloat()
 
     fun mgToMmol(value: Float, scale: Int = 1): Float {
