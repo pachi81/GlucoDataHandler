@@ -37,7 +37,7 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
     private val LOG_ID = "GDH.XDripBroadcastReceiver"
 
     init {
-        Log.d(LOG_ID, "init called")
+        Log.v(LOG_ID, "init called")
     }
     override fun onReceive(context: Context, intent: Intent) {
         try {
@@ -45,7 +45,11 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
             if (intent.extras != null) {
                 val extras = intent.extras!!
                 if (extras.containsKey(BG_SLOPE) && (extras.containsKey(BG_ESTIMATE) || extras.containsKey(RAW)) && extras.containsKey(TIME)) {
-                    val slope = Utils.round((extras.getDouble(BG_SLOPE) * 60000).toFloat(), 2)
+                    var slope = Utils.round((extras.getDouble(BG_SLOPE) * 60000).toFloat(), 2)
+                    if (extras.containsKey(BG_SLOPE_NAME) && extras.getString(BG_SLOPE_NAME).isNullOrEmpty()) {
+                        Log.w(LOG_ID, "No valid trend value received: " + Utils.dumpBundle(intent.extras))
+                        slope = Float.NaN
+                    }
                     var source: String? = if (extras.containsKey(SOURCE_INFO)) extras.getString(
                         SOURCE_INFO
                     ) else extras.getString(SOURCE_DESC)
