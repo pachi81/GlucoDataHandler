@@ -54,9 +54,9 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         }
     }
 
-    private fun executeTasks() {
+    private fun executeTasks(force: Boolean = false) {
         try {
-            if (lastElapsedMinute != elapsedTimeMinute && elapsedTimeMinute != 0L) {
+            if (force || (lastElapsedMinute != elapsedTimeMinute && elapsedTimeMinute != 0L)) {
                 Thread {
                     val wakeLock: PowerManager.WakeLock =
                         (context!!.getSystemService(Context.POWER_SERVICE) as PowerManager).run {
@@ -67,7 +67,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                     try {
                         isRunning = true
                         backgroundTaskList.forEach {
-                            if (elapsedTimeMinute != 0L && ((lastElapsedMinute < 0 && initialExecution) || (elapsedTimeMinute.mod(it.getIntervalMinute()) == 0L && it.active(elapsedTimeMinute)))) {
+                            if (force || (elapsedTimeMinute != 0L && ((lastElapsedMinute < 0 && initialExecution) || (elapsedTimeMinute.mod(it.getIntervalMinute()) == 0L && it.active(elapsedTimeMinute))))) {
                                 try {
                                     Log.i(LOG_ID, "execute after " + elapsedTimeMinute + " min: " + it)
                                     it.execute(context!!)
@@ -125,9 +125,9 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         try {
             val newInterval = getInterval()
             val newDelay = getDelay()
-            if (curInterval != newInterval || curDelay != newDelay) {
+            if (initialExecution || curInterval != newInterval || curDelay != newDelay) {
                 Log.i(LOG_ID, "Interval has changed from " + curInterval + "m+" + curDelay + "ms to " + newInterval + "m+" + newDelay + "ms")
-                var triggerExecute = curInterval <= 0 && newInterval > 0  // changed from inactive to active so trigger an initial execution
+                var triggerExecute = initialExecution || (curInterval <= 0 && newInterval > 0)  // changed from inactive to active so trigger an initial execution
                 if (!triggerExecute && curInterval > newInterval && elapsedTimeMinute >= newInterval) {
                     // interval get decreased, so check for execution is needed
                     triggerExecute = true
@@ -136,8 +136,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                 curDelay = newDelay
                 if(triggerExecute && initialExecution) {
                     Log.i(LOG_ID, "Trigger initial execution")
-                    lastElapsedMinute = -1L
-                    executeTasks()
+                    executeTasks(true)
                 } else if (curInterval > 0) {
                     lastElapsedMinute = 0L
                     startTimer()
