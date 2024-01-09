@@ -63,7 +63,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
 
     private fun checkResponse(body: String?): JSONObject? {
         if (body.isNullOrEmpty()) {
-            if (lastErrorCode >= 400 && lastErrorCode < 500)
+            if (lastErrorCode in 400..499)
                 token = "" // reset token for client error -> trigger reconnect
             return null
         }
