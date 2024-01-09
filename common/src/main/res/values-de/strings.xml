@@ -269,5 +269,7 @@
     <string name="wear_foreground_notification_descr">Die Vordergrund-Benachrichtigung verhindert, dass die App von Android geschlossen wird.</string>
     <string name="android_auto_notification_name">Benachrichtigung für Android Auto</string>
     <string name="android_auto_notification_descr">Benachrichtigung, die in Android Auto angezeigt wird.</string>
+    <string name="info_label_iob">IOB</string>
+    <string name="info_label_cob">COB</string>
 
 </resources>

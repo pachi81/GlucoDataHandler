@@ -27,6 +27,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     const val TIME = "glucodata.Minute.Time"
     const val DELTA = "glucodata.Minute.Delta"
     const val SOURCE_RES_ID = "source_resid"
+    const val IOB = "gdh.IOB"
+    const val COB = "gdh.COB"
     private const val LAST_ALARM_TYPE = "last_alarm_type"
     private const val LAST_ALARM_TIME = "last_alarm_time"
     private const val WAKE_LOCK_TIMEOUT = 10000L // 10 seconds
@@ -61,6 +63,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var rateLabel: String? = null
     var source: DataSource = DataSource.NONE
     var forceAlarm: Boolean = false
+    var iob: Float = Float.NaN
+    var cob: Float = Float.NaN
     private var lowValue: Float = 70F
     private val low: Float get() {
         if(isMmol && lowValue > 0F)  // mmol/l
@@ -141,9 +145,12 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 context.getString(R.string.info_label_rate) + ": " + rate + "\r\n" +
                 context.getString(R.string.info_label_timestamp) + ": " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(time)) + "\r\n" +
                 context.getString(R.string.info_label_alarm) + ": " + context.getString(getAlarmType().resId) + (if (forceAlarm) " ⚠" else "" ) + " (" + alarm + ")\r\n" +
-                if (isMmol) context.getString(R.string.info_label_raw) + ": " + rawValue + " mg/dl\r\n" else "" ) +
-                context.getString(R.string.info_label_sensor_id) + ": " + (if(BuildConfig.DEBUG) "ABCDE12345" else sensorID) + "\r\n" +
+                (if (isMmol) context.getString(R.string.info_label_raw) + ": " + rawValue + " mg/dl\r\n" else "") +
+                (if (!iob.isNaN()) context.getString(R.string.info_label_iob) + ": " + iob + "\r\n" else "") +
+                (if (!cob.isNaN()) context.getString(R.string.info_label_cob) + ": " + cob + "\r\n" else "") +
+                (if (sensorID.isNullOrEmpty()) "" else context.getString(R.string.info_label_sensor_id) + ": " + (if(BuildConfig.DEBUG) "ABCDE12345" else sensorID) + "\r\n") +
                 context.getString(R.string.info_label_source) + ": " + context.getString(source.resId)
+                )
     }
 
     fun isObsolete(timeoutSec: Int = Constants.VALUE_OBSOLETE_LONG_SEC): Boolean = (System.currentTimeMillis()- time) >= (timeoutSec * 1000)
@@ -321,7 +328,17 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                         " - difference: " + (new_time-time)
             )
 
-            if(getTimeDiffMinute(new_time) >= 1) // check for new value received (diff must around one minute at least to prevent receiving same data from different sources with similar timestamps
+            var force = false
+            if (getTimeDiffMinute(new_time) <= 0 && ((extras.containsKey(IOB) && iob != extras.getFloat(IOB)) || (extras.containsKey(COB) && cob != extras.getFloat(COB)))) {
+                val newIob = extras.getFloat(IOB, Float.NaN)
+                val newCob = extras.getFloat(COB, Float.NaN)
+                if (!newIob.isNaN() || !newCob.isNaN()) {
+                    Log.i(LOG_ID, "Force parse values, as IOB " + newIob + " or COB " + newCob + " has changed!")
+                    force = true
+                }
+            }
+
+            if(force || getTimeDiffMinute(new_time) >= 1) // check for new value received (diff must around one minute at least to prevent receiving same data from different sources with similar timestamps
             {
                 Log.i(
                     LOG_ID, "Glucodata received from " + dataSource.toString() + ": " +
@@ -332,7 +349,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 sensorID = extras.getString(SERIAL) //Name of sensor
                 rate = extras.getFloat(RATE) //Rate of change of glucose. See libre and dexcom label functions
                 rateLabel = GlucoDataUtils.getRateLabel(context, rate)
-                deltaValue = Float.NaN
+
                 if (extras.containsKey(DELTA)) {
                     deltaValue = extras.getFloat(DELTA, Float.NaN)
                 } else if (time > 0) {
@@ -340,8 +357,10 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     timeDiff = new_time-time
                     val timeDiffMinute = getTimeDiffMinute(new_time)
                     if (timeDiffMinute == 0L) {
-                        Log.w(LOG_ID, "Time diff is less than a minute! Can not calculate delta value!")
-                        deltaValue = Float.NaN
+                        if (!force) {
+                            Log.w(LOG_ID, "Time diff is less than a minute! Can not calculate delta value!")
+                            deltaValue = Float.NaN
+                        }
                     } else if (timeDiffMinute > 10L) {
                         deltaValue = Float.NaN   // no delta calculation for too high time diffs
                     } else {
@@ -353,6 +372,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                             deltaValue /= factor
                         }
                     }
+                } else {
+                    deltaValue = Float.NaN
                 }
 
                 rawValue = extras.getInt(MGDL)
@@ -366,6 +387,9 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     }
                 }
                 time = extras.getLong(TIME) //time in msec
+
+                iob = extras.getFloat(IOB, Float.NaN)
+                cob = extras.getFloat(COB, Float.NaN)
 
                 // check for alarm
                 if (interApp) {
@@ -513,6 +537,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         extras.putFloat(RATE, rate)
         extras.putInt(ALARM, alarm)
         extras.putFloat(DELTA, deltaValue)
+        extras.putFloat(IOB, iob)
+        extras.putFloat(COB, cob)
         return extras
     }
 
@@ -529,6 +555,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 putFloat(RATE, rate)
                 putInt(ALARM, alarm)
                 putFloat(DELTA, deltaValue)
+                putFloat(IOB, iob)
+                putFloat(COB, cob)
                 putInt(SOURCE_RES_ID, source.resId)
                 putLong(LAST_ALARM_TIME, lastAlarmTime)
                 putInt(LAST_ALARM_TYPE, lastAlarmType.resId)
@@ -553,6 +581,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     extras.putFloat(RATE, sharedGlucosePref.getFloat(RATE, rate))
                     extras.putInt(ALARM, sharedGlucosePref.getInt(ALARM, alarm))
                     extras.putFloat(DELTA, sharedGlucosePref.getFloat(DELTA, deltaValue))
+                    extras.putFloat(IOB, sharedGlucosePref.getFloat(IOB, iob))
+                    extras.putFloat(COB, sharedGlucosePref.getFloat(COB, cob))
                     lastAlarmType = AlarmType.fromResId(sharedGlucosePref.getInt(LAST_ALARM_TYPE, AlarmType.NONE.resId))
                     lastAlarmTime = sharedGlucosePref.getLong(LAST_ALARM_TIME, 0L)
                     handleIntent(context, DataSource.fromResId(sharedGlucosePref.getInt(SOURCE_RES_ID,

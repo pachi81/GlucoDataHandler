@@ -9,6 +9,7 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import org.json.JSONArray
+import org.json.JSONObject
 
 class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, DataSource.NIGHTSCOUT) {
     private val LOG_ID = "GDH.Task.NightscoutSourceTask"
@@ -20,9 +21,11 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
         const val ENTRIES_ENDPOINT = "/api/v1/entries/current.json"
     }
     override fun executeRequest(context: Context) {
-        val (result, errorText) = handleEntriesResponse(httpGet(getUrl(ENTRIES_ENDPOINT), getHeader()))
-        if (!result) {
-            setLastError(source, errorText)
+        if (!handlePebbleResponse(httpGet(getUrl(PEBBLE_ENDPOINT), getHeader()))) {
+            val (result, errorText) = handleEntriesResponse(httpGet(getUrl(ENTRIES_ENDPOINT), getHeader()))
+            if (!result) {
+                setLastError(source, errorText)
+            }
         }
     }
 
@@ -87,9 +90,9 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
                 return Pair(false, "Missing values in response: " + body)
 
             val glucoExtras = Bundle()
+            setSgv(glucoExtras, jsonObject)
+            setRate(glucoExtras, jsonObject)
             glucoExtras.putLong(ReceiveData.TIME, jsonObject.getLong("date"))
-            glucoExtras.putInt(ReceiveData.MGDL, jsonObject.getInt("sgv"))
-            glucoExtras.putFloat(ReceiveData.RATE, GlucoDataUtils.getRateFromLabel(jsonObject.getString("direction")))
             if(jsonObject.has("device"))
                 glucoExtras.putString(ReceiveData.SERIAL, jsonObject.getString("device"))
 
@@ -97,5 +100,77 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
             return Pair(true, "")
         }
         return Pair(false, "No data in response!")
+    }
+
+    private fun handlePebbleResponse(body: String?) : Boolean {
+        try {
+            if (!body.isNullOrEmpty()) {
+                Log.d(LOG_ID, "Handle pebble response: " + body)
+                val jsonBody = JSONObject(body)
+                val jsonEntries = jsonBody.optJSONArray("bgs")
+                if (jsonEntries == null || jsonEntries.length() <= 0) {
+                    Log.w(LOG_ID, "No entries in body: " + body)
+                    return false
+                }
+
+                val jsonObject = jsonEntries.getJSONObject(0)
+
+                if (!jsonObject.has("datetime") || !jsonObject.has("sgv") || (!jsonObject.has("trend") && !jsonObject.has(
+                        "direction"
+                    ))
+                ) {
+                    Log.w(LOG_ID, "Missing values in response: " + body)
+                    return false
+                }
+
+                val glucoExtras = Bundle()
+                glucoExtras.putLong(ReceiveData.TIME, jsonObject.getLong("datetime"))
+                setSgv(glucoExtras, jsonObject)
+                setRate(glucoExtras, jsonObject)
+                if (jsonObject.has("device"))
+                    glucoExtras.putString(ReceiveData.SERIAL, jsonObject.getString("device"))
+                if (jsonObject.has("iob"))
+                    glucoExtras.putFloat(ReceiveData.IOB, jsonObject.getDouble("iob").toFloat())
+                if (jsonObject.has("cob"))
+                    glucoExtras.putFloat(ReceiveData.COB, jsonObject.getDouble("cob").toFloat())
+
+                handleResult(glucoExtras)
+                return true
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Exception while parsing pebble response " + body + " - " + exc.message)
+        }
+        return false
+    }
+
+    private fun setSgv( bundle: Bundle, jsonObject: JSONObject) {
+        val sgv = jsonObject.getString("sgv").replace(',', '.')
+        val glucose = sgv.toFloat()
+        if (GlucoDataUtils.isMmolValue(glucose)) {
+            bundle.putInt(ReceiveData.MGDL, GlucoDataUtils.mmolToMg(glucose).toInt())
+            bundle.putFloat(ReceiveData.GLUCOSECUSTOM, glucose)
+        } else {
+            bundle.putInt(ReceiveData.MGDL, glucose.toInt())
+        }
+    }
+
+    private fun setRate( bundle: Bundle, jsonObject: JSONObject) {
+        if (jsonObject.has("trend"))
+            bundle.putFloat(ReceiveData.RATE, getRateFromTrend(jsonObject.getInt("trend")))
+        else
+            bundle.putFloat(ReceiveData.RATE, GlucoDataUtils.getRateFromLabel(jsonObject.getString("direction")))
+    }
+
+    private fun getRateFromTrend(trend: Int): Float {
+        return when(trend) {
+            1 -> -4F
+            2 -> -2F
+            3 -> -1F
+            4 -> 0F
+            5 -> 1F
+            6 -> 2F
+            7 -> 4f
+            else -> Float.NaN
+        }
     }
 }

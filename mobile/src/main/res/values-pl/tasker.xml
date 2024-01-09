@@ -26,4 +26,8 @@
     <string name="unit_html_label">Jednostka wartości glukozy (mg/dl lub mmol/l)</string>
     <string name="obsolete_time_label">Czas od ostatniej wartości</string>
     <string name="obsolete_time_html_label">Czas w minutach (5 lub 10) od otrzymania ostatniej wartości.</string>
+    <string name="iob_label">IOB</string>
+    <string name="iob_html_label">Insulin On Board</string>
+    <string name="cob_label">COB</string>
+    <string name="cob_html_label">Carbs On Board</string>
 </resources>

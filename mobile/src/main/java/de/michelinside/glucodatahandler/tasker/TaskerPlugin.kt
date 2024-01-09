@@ -60,6 +60,12 @@ open class GlucodataValues {
     @field:TaskerInputField("dexcomLabel")
     @get:TaskerOutputVariable("dexcomLabel", R.string.dexcom_label, R.string.dexcom_html_label)
     val dexcomLabel: String = GlucoDataUtils.getDexcomLabel(ReceiveData.rate)
+    @field:TaskerInputField("iob")
+    @get:TaskerOutputVariable("iob", R.string.iob_label, R.string.iob_html_label)
+    val iob: Float = ReceiveData.iob
+    @field:TaskerInputField("cob")
+    @get:TaskerOutputVariable("cob", R.string.cob_label, R.string.cob_html_label)
+    val cob: Float = ReceiveData.cob
 }
 
 @TaskerInputRoot

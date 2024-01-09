@@ -282,4 +282,6 @@
     <string name="wear_foreground_notification_descr">Foreground notification which prevent stopping the app while running in background.</string>
     <string name="android_auto_notification_name">Notification for Android Auto</string>
     <string name="android_auto_notification_descr">Notification which is shown in Android Auto</string>
+    <string name="info_label_iob">IOB</string>
+    <string name="info_label_cob">COB</string>
 </resources>
