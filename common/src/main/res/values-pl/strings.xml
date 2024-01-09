@@ -204,8 +204,8 @@
     <string name="widget_glucose_trend_delta">Glukoza, trend i delta</string>
     <string name="widget_glucose_trend_delta_timestamp">Glukoza, trend, delta i znacznik czasu</string>
 
-    <string name="pref_send_to_bangleJS">Forward to BangleJS</string>
-    <string name="pref_send_to_bangleJS_summary">Forward to BangleJS.</string>
+    <string name="pref_send_to_bangleJS">BangleJS support</string>
+    <string name="pref_send_to_bangleJS_summary">Forward values to widbgjs widget for BangleJS.</string>
 
     <!-- wear -->
 
@@ -258,6 +258,9 @@
     <string name="pref_no_gda_info_summary">Aby korzystać z GlucoDataHandler dla Android Auto, należy zainstalować aplikację GlucoDataAuto z GitHub.\nKliknij tutaj, aby uzyskać więcej informacji i pobrać GlucoDataAuto.</string>
     <string name="pref_send_to_glucodataauto">Przekaż do GlucoDataAuto</string>
     <string name="pref_send_to_glucodataauto_summary">Wysyłanie wartości glukozy i ustawień do GlucoDataAuto, jeśli telefon jest połączony z Android Auto.</string>
+
+    <!-- Notifications -->
+
     <string name="mobile_foreground_notification_name">Foreground notification</string>
     <string name="mobile_foreground_notification_descr">Foreground notification which prevent stopping the app while running in background.</string>
     <string name="mobile_second_notification_name">Second notification</string>
