@@ -185,6 +185,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         if (alarmManager == null) {
             Log.v(LOG_ID, "init alarmManager")
             alarmManager = context!!.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            currentAlarmTime = 0L
         }
     }
 
@@ -219,6 +220,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
             Log.v(LOG_ID, "stopTimer called")
             alarmManager!!.cancel(pendingIntent!!)
             alarmManager = null
+            currentAlarmTime = 0L
         }
     }
 
