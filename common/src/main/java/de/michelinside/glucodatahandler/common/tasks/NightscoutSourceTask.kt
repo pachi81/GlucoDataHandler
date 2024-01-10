@@ -163,13 +163,13 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
 
     private fun getRateFromTrend(trend: Int): Float {
         return when(trend) {
-            1 -> -4F
-            2 -> -2F
-            3 -> -1F
+            1 -> 4F
+            2 -> 2F
+            3 -> 1F
             4 -> 0F
-            5 -> 1F
-            6 -> 2F
-            7 -> 4f
+            5 -> -1F
+            6 -> -2F
+            7 -> -4f
             else -> Float.NaN
         }
     }
