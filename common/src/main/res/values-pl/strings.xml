@@ -273,5 +273,6 @@
     <string name="android_auto_notification_descr">Notification which is shown in Android Auto</string>
     <string name="info_label_iob">IOB</string>
     <string name="info_label_cob">COB</string>
+    <string name="src_xdrip_noise_blocking">Noise-Block active in xDrip+ Inter-app settings!\nPlease change it to \"Extremely noisy\"!</string>
 
 </resources>

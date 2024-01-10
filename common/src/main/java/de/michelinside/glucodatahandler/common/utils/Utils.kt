@@ -19,6 +19,8 @@ import java.math.RoundingMode
 object Utils {
     private val LOG_ID = "GDH.Utils"
     fun round(value: Float, scale: Int, roundingMode: RoundingMode = RoundingMode.HALF_UP): Float {
+        if (value.isNaN())
+            return value
         return value.toBigDecimal().setScale( scale, roundingMode).toFloat()
     }
 

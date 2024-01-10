@@ -271,5 +271,6 @@
     <string name="android_auto_notification_descr">Benachrichtigung, die in Android Auto angezeigt wird.</string>
     <string name="info_label_iob">IOB</string>
     <string name="info_label_cob">COB</string>
+    <string name="src_xdrip_noise_blocking">Verrauschungsunterdrückung aktiv in xDrip+ Inter-App Einstellungen!\nBitte die Einstellung auf \"Extremely noisy\" stellen!</string>
 
 </resources>
