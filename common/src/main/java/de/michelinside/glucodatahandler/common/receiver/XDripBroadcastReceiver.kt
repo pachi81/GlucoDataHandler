@@ -7,10 +7,10 @@ import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.SourceState
+import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.notifier.DataSource
-import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
-import de.michelinside.glucodatahandler.common.tasks.SourceState
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 
 open class XDripBroadcastReceiver: BroadcastReceiver() {
@@ -71,7 +71,7 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
                         val noise = extras.getDouble(NOISE, Double.NaN)
                         if(!noise.isNaN() && noiseBlock > 0.0 && noise > noiseBlock) {
                             Log.w(LOG_ID, "xDrip+ blocks sending data caused by noise-block: " + noiseBlock + " - noise: " + noise)
-                            DataSourceTask.setLastError(DataSource.XDRIP, context.getString(R.string.src_xdrip_noise_blocking) )
+                            SourceStateData.setError(DataSource.XDRIP, context.getString(R.string.src_xdrip_noise_blocking) )
                             errorOccurs = true
                         }
                     }
@@ -94,18 +94,21 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
                         glucoExtras.putInt(ReceiveData.ALARM, 0)
                         ReceiveData.handleIntent(context, DataSource.XDRIP, glucoExtras)
                         if (!errorOccurs) {
-                            DataSourceTask.setState(DataSource.XDRIP, SourceState.NONE)
+                            SourceStateData.setState(DataSource.XDRIP, SourceState.NONE)
                         }
                     } else {
                         Log.w(LOG_ID, "Invalid value: " + Utils.dumpBundle(intent.extras))
+                        SourceStateData.setError(DataSource.XDRIP, "Invalid glucose value: " + mgdl )
                     }
                 }
                 else {
                     Log.w(LOG_ID, "Missing extras: " + Utils.dumpBundle(intent.extras))
+                    SourceStateData.setError(DataSource.XDRIP, "Missing data in message!" )
                 }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Receive exception: " + exc.message.toString() )
+            SourceStateData.setError(DataSource.XDRIP, exc.message.toString() )
         }
     }
 }

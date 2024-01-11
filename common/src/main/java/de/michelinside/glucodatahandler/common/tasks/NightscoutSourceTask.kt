@@ -24,7 +24,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
         if (!handlePebbleResponse(httpGet(getUrl(PEBBLE_ENDPOINT), getHeader()))) {
             val (result, errorText) = handleEntriesResponse(httpGet(getUrl(ENTRIES_ENDPOINT), getHeader()))
             if (!result) {
-                setLastError(source, errorText)
+                setLastError(errorText)
             }
         }
     }

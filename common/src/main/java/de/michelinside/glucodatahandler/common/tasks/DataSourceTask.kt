@@ -10,8 +10,9 @@ import android.os.Handler
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
-import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.SourceState
+import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -27,14 +28,6 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSession
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
-
-
-enum class SourceState(val resId: Int) {
-    NONE(R.string.empty_string),
-    NO_NEW_VALUE(R.string.source_state_no_new_value),
-    NO_CONNECTION(R.string.source_state_no_connection),
-    ERROR(R.string.source_state_error);
-}
 
 abstract class DataSourceTask(private val enabledKey: String, protected val source: DataSource) : BackgroundTask() {
     private var enabled = false
@@ -104,52 +97,40 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             }
             return false
         }
+    }
 
-        var lastSource: DataSource = DataSource.NONE
-        var lastState: SourceState = SourceState.NONE
-        var lastError: String = ""
-        var lastErrorCode: Int = -1
+    var lastState = SourceState.NONE
+    var lastErrorCode: Int = -1
 
-        fun setLastError(source: DataSource, error: String, code: Int = -1) {
-            setState( source, SourceState.ERROR, error, code)
-        }
+    fun setLastError(error: String, code: Int = -1) {
+        setState( SourceState.ERROR, error, code)
+    }
 
-        fun setState(source: DataSource, state: SourceState, error: String = "", code: Int = -1) {
-            lastError = error
-            lastErrorCode = code
-            lastSource = source
-            lastState = state
+    fun setState(state: SourceState, error: String = "", code: Int = -1) {
+        lastErrorCode = code
+        lastState = state
 
-            Handler(GlucoDataService.context!!.mainLooper).post {
-                InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
+        SourceStateData.setState(source, state, getErrorMessage(state, error, code))
+    }
+
+    private fun getErrorMessage(state: SourceState, error: String, code: Int): String {
+        if (state == SourceState.ERROR && error.isNotEmpty()) {
+            var result = ""
+            if (code > 0) {
+                result = code.toString() + ": "
             }
+            result += error
+            return result
         }
+        return ""
+    }
 
-        private fun getStateMessage(context: Context): String {
-            if (lastState == SourceState.ERROR && lastError.isNotEmpty()) {
-                var result = ""
-                if (lastErrorCode > 0) {
-                    result = lastErrorCode.toString() + ": "
-                }
-                result += lastError
-                return result
-            }
-            return context.getString(lastState.resId)
-        }
-
-        fun getState(context: Context): String {
-            if (lastState == SourceState.NONE)
-                return ""
-            return "%s: %s".format(context.getString(lastSource.resId), getStateMessage(context))
-        }
-
-        private fun isShortInterval(): Boolean {
-            return when(lastState) {
-                SourceState.NO_CONNECTION,
-                SourceState.NO_NEW_VALUE -> true
-                SourceState.ERROR -> lastErrorCode >= 500
-                else -> false
-            }
+    private fun isShortInterval(): Boolean {
+        return when(lastState) {
+            SourceState.NO_CONNECTION,
+            SourceState.NO_NEW_VALUE -> true
+            SourceState.ERROR -> lastErrorCode >= 500
+            else -> false
         }
     }
 
@@ -158,7 +139,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     override fun execute(context: Context) {
         if (enabled) {
             if (!isConnected(context)) {
-                setState(source, SourceState.NO_CONNECTION)
+                setState(SourceState.NO_CONNECTION)
                 return
             }
             Log.d(LOG_ID, "Execute request")
@@ -166,10 +147,10 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                 executeRequest(context)
             } catch (ex: UnknownHostException) {
                 Log.w(LOG_ID, "Internet connection issue: " + ex)
-                setState(source, SourceState.NO_CONNECTION)
+                setState(SourceState.NO_CONNECTION)
             } catch (ex: Exception) {
                 Log.e(LOG_ID, "Exception during login: " + ex)
-                setLastError(source, ex.message.toString())
+                setLastError(ex.message.toString())
             }
         }
     }
@@ -180,9 +161,9 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             val lastTime = ReceiveData.time
             ReceiveData.handleIntent(GlucoDataService.context!!, source, extras)
             if (ReceiveData.time == lastTime)
-                setState(source, SourceState.NO_NEW_VALUE)
+                setState(SourceState.NO_NEW_VALUE)
             else
-                setState(source, SourceState.NONE)
+                setState(SourceState.NONE)
             done.set(true)
         }
         Handler(GlucoDataService.context!!.mainLooper).post(task)
@@ -215,7 +196,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     private fun checkResponse(httpURLConnection: HttpURLConnection): String? {
         val responseCode = httpURLConnection.responseCode
         if (responseCode != HttpURLConnection.HTTP_OK) {
-            setLastError(source, httpURLConnection.responseMessage, responseCode)
+            setLastError(httpURLConnection.responseMessage, responseCode)
             return null
         }
         val response = httpURLConnection.inputStream.bufferedReader()
@@ -284,8 +265,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                     if (enabled != sharedPreferences.getBoolean(enabledKey, false)) {
                         enabled = sharedPreferences.getBoolean(enabledKey, false)
                         result = true
-                        if (!enabled && source == lastSource)
-                            setState(source, SourceState.NONE)
+                        if (!enabled && source == SourceStateData.lastSource)
+                            setState(SourceState.NONE)
                     }
                 }
                 Constants.SHARED_PREF_SOURCE_INTERVAL -> {
