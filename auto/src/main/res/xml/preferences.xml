@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
         android:title="@string/pref_cat_android_auto"
-        app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="1">
+        app:iconSpaceReserved="false">
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="car_notification"

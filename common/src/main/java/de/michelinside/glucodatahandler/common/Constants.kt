@@ -26,6 +26,7 @@ object Constants {
     const val VALUE_OBSOLETE_LONG_SEC  = 600
 
     const val SHARED_PREF_TAG = "GlucoDataHandlerPrefs"
+    const val SHARED_PREF_AUTO_TAG = "GlucoDataAutoPrefs"
     const val SHARED_PREF_NO_GLUCODATAAUTO = "no_gda_info"
     const val SHARED_PREF_SEND_TO_GLUCODATAAUTO = "send_to_glucodataauto"
     const val SHARED_PREF_SEND_TO_GLUCODATA_AOD = "send_to_glucodata_aod"

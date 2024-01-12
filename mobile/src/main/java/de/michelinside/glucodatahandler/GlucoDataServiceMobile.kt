@@ -1,6 +1,5 @@
 package de.michelinside.glucodatahandler
 
-import android.R.attr.direction
 import android.app.Notification
 import android.content.Context
 import android.content.Intent
@@ -99,7 +98,9 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
     private fun sendToGlucoDataAuto(context: Context, extras: Bundle) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         if (CarModeReceiver.connected && sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO, true) && Utils.isPackageAvailable(context, Constants.PACKAGE_GLUCODATAAUTO)) {
+            Log.d(LOG_ID, "sendToGlucoDataAuto")
             val intent = Intent(Constants.GLUCODATA_ACTION)
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
             val settings = ReceiveData.getSettingsBundle()
             settings.putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime)
             extras.putBundle(Constants.SETTINGS_BUNDLE, settings)

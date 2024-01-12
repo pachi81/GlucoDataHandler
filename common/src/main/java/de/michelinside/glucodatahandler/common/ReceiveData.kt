@@ -577,7 +577,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             if (time == 0L) {
                 val sharedGlucosePref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, Context.MODE_PRIVATE)
                 if (sharedGlucosePref.contains(TIME)) {
-                    Log.i(LOG_ID, "Read saved values...")
+                    Log.i(LOG_ID, "Reading saved values...")
                     val extras = Bundle()
                     extras.putLong(TIME, sharedGlucosePref.getLong(TIME, time))
                     extras.putFloat(GLUCOSECUSTOM, sharedGlucosePref.getFloat(GLUCOSECUSTOM, glucose))

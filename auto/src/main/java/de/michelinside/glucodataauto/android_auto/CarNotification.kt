@@ -25,7 +25,6 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 import java.text.DateFormat
 import java.util.*
 
-
 @SuppressLint("StaticFieldLeak")
 object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
     private const val LOG_ID = "GDH.AA.CarNotification"
@@ -37,8 +36,10 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     private lateinit var notificationMgr: CarNotificationManager
     private var show_notification = false  // default: no notification
     private var car_connected = false
-    private var last_notification_time = 0L
     private var notification_interval = 1L   // every minute -> always, -1L: only for alarms
+    const val LAST_NOTIFCATION_TIME = "last_notification_time"
+    private var last_notification_time = 0L
+    const val FORCE_NEXT_NOTIFY = "force_next_notify"
     private var forceNextNotify = false
     val connected: Boolean get() = car_connected
     @SuppressLint("StaticFieldLeak")
@@ -103,8 +104,9 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                 val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 sharedPref.registerOnSharedPreferenceChangeListener(this)
                 updateSettings(sharedPref)
+                loadExtras(context)
                 createNofitication(context)
-                CarConnection(context).type.observeForever(CarNotification::onConnectionStateUpdated)
+                CarConnection(context.applicationContext).type.observeForever(CarNotification::onConnectionStateUpdated)
                 init = true
             }
         } catch (exc: Exception) {
@@ -116,7 +118,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         try {
             if (init) {
                 Log.v(LOG_ID, "remNotification called")
-                CarConnection(context).type.removeObserver(CarNotification::onConnectionStateUpdated)
+                CarConnection(context.applicationContext).type.removeObserver(CarNotification::onConnectionStateUpdated)
                 val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 sharedPref.unregisterOnSharedPreferenceChangeListener(this)
                 init = false
@@ -127,7 +129,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         }
     }
 
-    private fun onConnectionStateUpdated(connectionState: Int) {
+    fun onConnectionStateUpdated(connectionState: Int) {
         try {
             val message = when(connectionState) {
                 CarConnection.CONNECTION_TYPE_NOT_CONNECTED -> "Not connected to a head unit"
@@ -160,7 +162,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
-        Log.v(LOG_ID, "OnNotifyData called")
+        Log.v(LOG_ID, "OnNotifyData called for source " + dataSource)
         try {
             showNotification(context, dataSource == NotifySource.OBSOLETE_VALUE)
         } catch (exc: Exception) {
@@ -207,6 +209,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                     .setStyle(createMessageStyle(context, isObsolete))
                 notificationMgr.notify(NOTIFICATION_ID, notificationCompat)
                 last_notification_time = ReceiveData.time
+                saveExtras(context)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "showNotification exception: " + exc.toString() )
@@ -279,5 +282,34 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
         }
     }
-}
 
+    private fun saveExtras(context: Context) {
+        try {
+            Log.d(LOG_ID, "Saving extras")
+            // use own tag to prevent trigger onChange event at every time!
+            val sharedAutoPref =
+                context.getSharedPreferences(Constants.SHARED_PREF_AUTO_TAG, Context.MODE_PRIVATE)
+            with(sharedAutoPref.edit()) {
+                putLong(LAST_NOTIFCATION_TIME, last_notification_time)
+                putBoolean(FORCE_NEXT_NOTIFY, forceNextNotify)
+                apply()
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Saving extras exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
+        }
+    }
+
+    private fun loadExtras(context: Context) {
+        try {
+            val sharedAutoPref = context.getSharedPreferences(Constants.SHARED_PREF_AUTO_TAG, Context.MODE_PRIVATE)
+            if (sharedAutoPref.contains(LAST_NOTIFCATION_TIME)) {
+                Log.i(LOG_ID, "Reading saved values...")
+                last_notification_time = sharedAutoPref.getLong(LAST_NOTIFCATION_TIME, last_notification_time)
+                forceNextNotify = sharedAutoPref.getBoolean(FORCE_NEXT_NOTIFY, forceNextNotify)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Saving extras exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
+        }
+    }
+
+}

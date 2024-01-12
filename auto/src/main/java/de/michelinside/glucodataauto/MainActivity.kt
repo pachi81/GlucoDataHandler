@@ -1,10 +1,12 @@
 package de.michelinside.glucodataauto
 
+import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Paint
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
@@ -24,6 +26,7 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.R as CR
 
 class MainActivity : AppCompatActivity(), NotifierInterface {
@@ -35,6 +38,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtBatteryOptimization: TextView
     private lateinit var sharedPref: SharedPreferences
     private val LOG_ID = "GDH.AA.Main"
+    private var requestNotificationPermission = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -78,6 +82,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 }
             }
             CarNotification.initNotification(this)
+            requestPermission()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -114,9 +119,33 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.OBSOLETE_VALUE,
                 NotifySource.SOURCE_STATE_CHANGE))
             checkBatteryOptimization()
+
+            if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
+                Log.i(LOG_ID, "Notification permission granted")
+                requestNotificationPermission = false
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
         }
+    }
+    fun requestPermission() : Boolean {
+        requestNotificationPermission = false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (!Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
+                Log.i(LOG_ID, "Request notification permission...")
+                requestNotificationPermission = true
+                this.requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 3)
+                return false
+            }
+        }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            if (!alarmManager.canScheduleExactAlarms()) {
+                Log.i(LOG_ID, "Request exact alarm permission...")
+                startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+            }
+        }
+        return true
     }
 
     private fun checkBatteryOptimization() {

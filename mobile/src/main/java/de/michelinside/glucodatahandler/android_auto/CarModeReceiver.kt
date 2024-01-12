@@ -47,11 +47,11 @@ object CarModeReceiver {
             }
             Log.d(LOG_ID, "onConnectionStateUpdated: " + message + " (" + connectionState.toString() + ")")
             if (connectionState == CarConnection.CONNECTION_TYPE_NOT_CONNECTED)  {
-                Log.d(LOG_ID, "Exited Car Mode")
+                Log.i(LOG_ID, "Exited Car Mode")
                 car_connected = false
                 GlucoDataService.context?.setAndroidAutoConnectionState(false)
             } else {
-                Log.d(LOG_ID, "Entered Car Mode")
+                Log.i(LOG_ID, "Entered Car Mode")
                 car_connected = true
                 GlucoDataService.context?.setAndroidAutoConnectionState(true)
             }

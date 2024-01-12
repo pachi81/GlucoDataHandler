@@ -1,4 +1,4 @@
-package de.michelinside.glucodataauto
+package de.michelinside.glucodataauto.receiver
 
 import android.content.BroadcastReceiver
 import android.content.Context
