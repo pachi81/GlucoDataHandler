@@ -11,7 +11,7 @@
     <string name="info_label_alarm">Alarm</string>
     <string name="info_label_source">Źródło</string>
     <string name="info_label_per_minute">min.</string>
-    <string name="no_data">No data received yet!\nPlease configure a source first.</string>
+    <string name="no_data">Nie odebrano jeszcze żadnych danych!\nNależy najpierw skonfigurować źródło.</string>
 
     <string name="elapsed_time">%1$d min</string>
     <string name="elapsed_time_hour">\&gt; 1h</string>
@@ -41,7 +41,7 @@
     <string name="activity_main_car_connected_label">Android Auto: połączony</string>
     <string name="activity_main_car_disconnected_label">Android Auto: niepołączony</string>
     <string name="no_new_value">Brak nowej wartości od %1$d minut!</string>
-    <string name="activity_main_high_contrast_enabled">High contrast accessibility is active!\nPress here to go to settings.</string>
+    <string name="activity_main_high_contrast_enabled">Włączono opcję ułatwienia dostępu wysoki kontrast!\nNaciśnij tutaj, by przejść do ustawień.</string>
 
     <string name="menu_settings">Ustawienia</string>
     <string name="menu_sources">Źródła</string>
@@ -81,7 +81,7 @@
 
     <string name="src_cat_libreview">LibreLink Follower</string>
     <string name="src_libre_enabled">Włącz</string>
-    <string name="src_libre_enabled_summary">Włącz funkcję LibreLink follower, jeśli ustawiono użytkownika i hasło LibreLink.</string>
+    <string name="src_libre_enabled_summary">Włącz funkcję LibreLink follower, jeśli wprowadzono dane logowania użytkownika i hasło LibreLink.</string>
     <string name="src_libre_user">Użytkownik</string>
     <string name="src_libre_user_summary">Nazwa użytkownika LibreLink</string>
     <string name="src_libre_password">Hasło</string>
@@ -153,8 +153,8 @@
     <string name="pref_switch_send_xdrip_broadcast_summary">Wysyłaj transmisję tak, jak wysyła xDrip+. Na przykład do AAPS.</string>
     <string name="pref_button_select_xdrip_broadcast_target">Identyfikacja odbiorców transmisji xDrip+</string>
     <string name="pref_button_select_xdrip_broadcast_target_summary">Wybierz odbiorców, do których wysyłana jest transmisja xDrip+ broadcast. Transmisja globalna będzie wysyłana do każdej aplikacji dynamicznie odbierającej tę transmisję.</string>
-    <string name="pref_switch_use_mmol">Użyj mmol/l</string>
-    <string name="pref_switch_use_mmol_summary">Use mmol/l instead of mg/dl.</string>
+    <string name="pref_switch_use_mmol">Używaj mmol/l</string>
+    <string name="pref_switch_use_mmol_summary">Używaj mmol/l zamiast mg/dl.</string>
     <string name="pref_switch_use_5_min_delta">5-minutowa delta</string>
     <string name="pref_switch_use_5_min_delta_summary">Włącz tę opcję, aby używać wartości delta dla odstępu czasu wynoszącego 5 minut, w przeciwnym razie używany jest odstęp 1-minutowy.</string>
     <string name="pref_color_alarm">Kolor dla wysokiego/niskiego stęż. glukozy</string>
@@ -204,8 +204,8 @@
     <string name="widget_glucose_trend_delta">Glukoza, trend i delta</string>
     <string name="widget_glucose_trend_delta_timestamp">Glukoza, trend, delta i znacznik czasu</string>
 
-    <string name="pref_send_to_bangleJS">BangleJS support</string>
-    <string name="pref_send_to_bangleJS_summary">Forward values to widbgjs widget for BangleJS.</string>
+    <string name="pref_send_to_bangleJS">Obsługa BangleJS</string>
+    <string name="pref_send_to_bangleJS_summary">Przesyłaj wartości do widgetu widbgjs dla BangleJS.</string>
 
     <!-- wear -->
 
@@ -261,25 +261,25 @@
 
     <!-- Notifications -->
 
-    <string name="mobile_foreground_notification_name">Foreground notification</string>
-    <string name="mobile_foreground_notification_descr">Foreground notification which prevent stopping the app while running in background.</string>
-    <string name="mobile_second_notification_name">Second notification</string>
-    <string name="mobile_second_notification_descr">Additional notification to show an extra icon in the statusbar.</string>
-    <string name="worker_notification_name">Worker notification</string>
-    <string name="worker_notification_descr">Worker notification shown while running tasks in the background.</string>
-    <string name="wear_foreground_notification_name">Foreground notification</string>
-    <string name="wear_foreground_notification_descr">Foreground notification which prevent stopping the app while running in background.</string>
-    <string name="android_auto_notification_name">Notification for Android Auto</string>
-    <string name="android_auto_notification_descr">Notification which is shown in Android Auto</string>
+    <string name="mobile_foreground_notification_name">Powiadomienie na pierwszym planie</string>
+    <string name="mobile_foreground_notification_descr">Powiadomienie na pierwszym planie, które zapobiega zatrzymaniu aplikacji działającej w tle.</string>
+    <string name="mobile_second_notification_name">Drugie powiadomienie</string>
+    <string name="mobile_second_notification_descr">Dodatkowe powiadomienie wyświetlające dodatkową ikonę na pasku stanu.</string>
+    <string name="worker_notification_name">Powiadomienie robocze</string>
+    <string name="worker_notification_descr">Powiadomienie robocze wyświetlane podczas wykonywania zadań w tle.</string>
+    <string name="wear_foreground_notification_name">Powiadomienie na pierwszym planie</string>
+    <string name="wear_foreground_notification_descr">Powiadomienie na pierwszym planie, które zapobiega zatrzymaniu aplikacji działającej w tle.</string>
+    <string name="android_auto_notification_name">Powiadomienie dla Android Auto</string>
+    <string name="android_auto_notification_descr">Powiadomienie wyświetlane w Android Auto</string>
     <string name="info_label_iob">IOB</string>
     <string name="info_label_cob">COB</string>
-    <string name="src_xdrip_noise_blocking">Noise-Block active in xDrip+ Inter-app settings!\nPlease change it to \"Extremely noisy\"!</string>
-    <string name="pref_cat_follower">Follower</string>
+    <string name="src_xdrip_noise_blocking">Włączono blokowanie szumu w ustawieniach aplikacji xDrip+! \nZmień na &quot;Ekstremalnie głośny&quot;!</string>
+    <string name="pref_cat_follower">Follower (Obserwator)</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
-    <string name="pref_source_juggluco_info_summary">To receive values from Juggluco:\n- open Juggluco\n- go to settings\n- enable Glucodata broadcast\n- enable \"de.michelinside.glucodatahandler\"</string>
-    <string name="pref_source_xdrip_info">xDrip+</string>
-    <string name="pref_source_xdrip_info_summary">To receive values from xDrip+:\n- open xDrip+\n- go to settings\n- go to Inter-app settings\n- enable \"Broadcast locally\"\n- set \"Noise Blocking\" to \"Send even Extremely noisy signals\"\n- enable \"Compatible Broadcast\"\n- check \"Identify receivers\" to be empty or add a new line with \"de.michelinside.glucodatahandler\"</string>
-    <string name="pref_source_librelinkup_info">Setup LibreLinkUp</string>
-    <string name="pref_source_librelinkup_info_summary">IMPORTANT: this is not the LibreView account!\nTo activate LibreLinkUp:\n- otwórz aplikację FreeStyle Libre i wybierz w menu Udostępnianie lub Podłączone aplikacje\n- aktywuj połączenie LibreLinkUp\n- zainstaluj LibreLinkUp ze Sklepu Play\n- skonfiguruj swoje konto i czekaj na zaproszenie</string>
+    <string name="pref_source_juggluco_info_summary">Aby odbierać wartości z Juggluco: \n- otwórz Juggluco \n- przejdź do ustawień \n- włącz Glucodata broadcast \n- włącz \&quot;de.michelinside.glucodatahandler \&quot;</string>
+    <string name="pref_source_xdrip_info">XDrip+</string>
+    <string name="pref_source_xdrip_info_summary">Aby odbierać wartości z xDrip+:\n- otwórz xDrip+\n- przejdź do ustawień\n- przejdź do ustawień innych aplikacji\n- włącz &quot;Nadawaj lokalnie&quot;\n- ustaw &quot;Blokowanie szumów&quot; na &quot;Send even Extremely noisy signals&quot;\n- włącz &quot;Kompatybilny Broadcast&quot;\n- sprawdź, czy pole &quot;Identyfikuj odbiornik&quot; jest puste lub dodaj nową linię z &quot;de.michelinside.glucodatahandler&quot;.</string>
+    <string name="pref_source_librelinkup_info">Konfiguracja LibreLinkUp</string>
+    <string name="pref_source_librelinkup_info_summary">WAŻNE: to nie jest konto LibreView! Aby aktywować LibreLinkUp:\n- otwórz aplikację FreeStyle Libre i wybierz w menu Udostępnianie lub Podłączone aplikacje\n- aktywuj połączenie LibreLinkUp\n- zainstaluj LibreLinkUp ze Sklepu Play\n- skonfiguruj swoje konto i czekaj na zaproszenie</string>
 
 </resources>
