@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -42,6 +43,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtSourceInfo: TextView
     private lateinit var txtBatteryOptimization: TextView
     private lateinit var txtHighContrastEnabled: TextView
+    private lateinit var btnSources: Button
     private lateinit var sharedPref: SharedPreferences
     private val LOG_ID = "GDH.Main"
     private var requestNotificationPermission = false
@@ -62,6 +64,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             txtSourceInfo = findViewById(R.id.txtSourceInfo)
             txtBatteryOptimization = findViewById(R.id.txtBatteryOptimization)
             txtHighContrastEnabled = findViewById(R.id.txtHighContrastEnabled)
+            btnSources = findViewById(R.id.btnSources)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -70,6 +73,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
+
+            btnSources.setOnClickListener{
+                val intent = Intent(this, SettingsActivity::class.java)
+                intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.SORUCE_FRAGMENT.value)
+                startActivity(intent)
+            }
 
             val sendToAod = sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, false)
 
@@ -270,6 +279,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 txtCarInfo.visibility = View.VISIBLE
             } else {
                 txtCarInfo.visibility = View.GONE
+            }
+
+            if (ReceiveData.time == 0L) {
+                btnSources.visibility = View.VISIBLE
+            } else {
+                btnSources.visibility = View.GONE
             }
 
             txtSourceInfo.text = SourceStateData.getState(this)

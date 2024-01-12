@@ -11,7 +11,7 @@
     <string name="info_label_alarm">Alarm</string>
     <string name="info_label_source">Źródło</string>
     <string name="info_label_per_minute">min.</string>
-    <string name="no_data">Nie otrzymano jeszcze transmisji!\nINFORMACJA: Aktywuj źródło LibreLink albo, aby zacząć otrzymywać dane z Juggluco, otwórz aplikację Juggluco, przejdź do ustawień i aktywuj \"Glucodata Broadcast\" dla \"de.michelinside.glucodatahandler\"\nAby odbierać dane z xDrip+, aktywuj lokalną transmisję i wybierz brak odbiorcy.</string>
+    <string name="no_data">No data received yet!\nPlease configure a source first.</string>
 
     <string name="elapsed_time">%1$d min</string>
     <string name="elapsed_time_hour">\&gt; 1h</string>
@@ -81,7 +81,7 @@
 
     <string name="src_cat_libreview">LibreLink Follower</string>
     <string name="src_libre_enabled">Włącz</string>
-    <string name="src_libre_enabled_summary">Włącz funkcję LibreLink follower, jeśli ustawiono użytkownika i hasło LibreLink\nNależy najpierw skonfigurować aplikację LibreLinkUp. Następnie aplikację LibreLinkUp można usunąć.</string>
+    <string name="src_libre_enabled_summary">Włącz funkcję LibreLink follower, jeśli ustawiono użytkownika i hasło LibreLink.</string>
     <string name="src_libre_user">Użytkownik</string>
     <string name="src_libre_user_summary">Nazwa użytkownika LibreLink</string>
     <string name="src_libre_password">Hasło</string>
@@ -154,7 +154,7 @@
     <string name="pref_button_select_xdrip_broadcast_target">Identyfikacja odbiorców transmisji xDrip+</string>
     <string name="pref_button_select_xdrip_broadcast_target_summary">Wybierz odbiorców, do których wysyłana jest transmisja xDrip+ broadcast. Transmisja globalna będzie wysyłana do każdej aplikacji dynamicznie odbierającej tę transmisję.</string>
     <string name="pref_switch_use_mmol">Użyj mmol/l</string>
-    <string name="pref_switch_use_mmol_summary">Konwersja wartości z xDrip+ na mmol/l.</string>
+    <string name="pref_switch_use_mmol_summary">Use mmol/l instead of mg/dl.</string>
     <string name="pref_switch_use_5_min_delta">5-minutowa delta</string>
     <string name="pref_switch_use_5_min_delta_summary">Włącz tę opcję, aby używać wartości delta dla odstępu czasu wynoszącego 5 minut, w przeciwnym razie używany jest odstęp 1-minutowy.</string>
     <string name="pref_color_alarm">Kolor dla wysokiego/niskiego stęż. glukozy</string>
@@ -274,5 +274,12 @@
     <string name="info_label_iob">IOB</string>
     <string name="info_label_cob">COB</string>
     <string name="src_xdrip_noise_blocking">Noise-Block active in xDrip+ Inter-app settings!\nPlease change it to \"Extremely noisy\"!</string>
+    <string name="pref_cat_follower">Follower</string>
+    <string name="pref_source_juggluco_info">Juggluco</string>
+    <string name="pref_source_juggluco_info_summary">To receive values from Juggluco:\n- open Juggluco\n- go to settings\n- enable Glucodata broadcast\n- enable \"de.michelinside.glucodatahandler\"</string>
+    <string name="pref_source_xdrip_info">xDrip+</string>
+    <string name="pref_source_xdrip_info_summary">To receive values from xDrip+:\n- open xDrip+\n- go to settings\n- go to Inter-app settings\n- enable \"Broadcast locally\"\n- set \"Noise Blocking\" to \"Send even Extremely noisy signals\"\n- enable \"Compatible Broadcast\"\n- check \"Identify receivers\" to be empty or add a new line with \"de.michelinside.glucodatahandler\"</string>
+    <string name="pref_source_librelinkup_info">Setup LibreLinkUp</string>
+    <string name="pref_source_librelinkup_info_summary">IMPORTANT: this is not the LibreView account!\nTo activate LibreLinkUp:\n- otwórz aplikację FreeStyle Libre i wybierz w menu Udostępnianie lub Podłączone aplikacje\n- aktywuj połączenie LibreLinkUp\n- zainstaluj LibreLinkUp ze Sklepu Play\n- skonfiguruj swoje konto i czekaj na zaproszenie</string>
 
 </resources>
