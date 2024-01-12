@@ -26,10 +26,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     const val ALARM = "glucodata.Minute.Alarm"
     const val TIME = "glucodata.Minute.Time"
     const val DELTA = "glucodata.Minute.Delta"
-    const val SOURCE_RES_ID = "source_resid"
+    const val SOURCE_INDEX = "source_idx"
     const val IOB = "gdh.IOB"
     const val COB = "gdh.COB"
-    private const val LAST_ALARM_TYPE = "last_alarm_type"
+
+    private const val LAST_ALARM_INDEX = "last_alarm_index"
     private const val LAST_ALARM_TIME = "last_alarm_time"
     private const val WAKE_LOCK_TIMEOUT = 10000L // 10 seconds
 
@@ -42,9 +43,9 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         VERY_HIGH(R.string.alarm_very_high);
 
         companion object {
-            fun fromResId(id: Int): AlarmType {
+            fun fromIndex(idx: Int): AlarmType {
                 AlarmType.values().forEach {
-                    if(it.resId == id) {
+                    if(it.ordinal == idx) {
                         return it
                     }
                 }
@@ -562,9 +563,9 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 putFloat(DELTA, deltaValue)
                 putFloat(IOB, iob)
                 putFloat(COB, cob)
-                putInt(SOURCE_RES_ID, source.resId)
+                putInt(SOURCE_INDEX, source.ordinal)
                 putLong(LAST_ALARM_TIME, lastAlarmTime)
-                putInt(LAST_ALARM_TYPE, lastAlarmType.resId)
+                putInt(LAST_ALARM_INDEX, lastAlarmType.ordinal)
                 apply()
             }
         } catch (exc: Exception) {
@@ -588,10 +589,10 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     extras.putFloat(DELTA, sharedGlucosePref.getFloat(DELTA, deltaValue))
                     extras.putFloat(IOB, sharedGlucosePref.getFloat(IOB, iob))
                     extras.putFloat(COB, sharedGlucosePref.getFloat(COB, cob))
-                    lastAlarmType = AlarmType.fromResId(sharedGlucosePref.getInt(LAST_ALARM_TYPE, AlarmType.NONE.resId))
+                    lastAlarmType = AlarmType.fromIndex(sharedGlucosePref.getInt(LAST_ALARM_INDEX, AlarmType.NONE.ordinal))
                     lastAlarmTime = sharedGlucosePref.getLong(LAST_ALARM_TIME, 0L)
-                    handleIntent(context, DataSource.fromResId(sharedGlucosePref.getInt(SOURCE_RES_ID,
-                        DataSource.NONE.resId)), extras)
+                    handleIntent(context, DataSource.fromIndex(sharedGlucosePref.getInt(SOURCE_INDEX,
+                        DataSource.NONE.ordinal)), extras)
                 }
             }
         } catch (exc: Exception) {
