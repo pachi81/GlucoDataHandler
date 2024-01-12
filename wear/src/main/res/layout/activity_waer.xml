@@ -116,6 +116,7 @@
             android:layout_height="wrap_content"
             android:text="@string/activity_switch_foreground"
             android:textAlignment="viewStart"
+            android:visibility="gone"
             tools:ignore="TouchTargetSizeCheck" />
 
         <androidx.appcompat.widget.SwitchCompat

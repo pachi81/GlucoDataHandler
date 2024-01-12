@@ -2,7 +2,6 @@ package de.michelinside.glucodatahandler
 
 import android.app.Notification
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Paint
@@ -172,9 +171,9 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
     private fun showPrimaryNotification(show: Boolean) {
         Log.d(LOG_ID, "showPrimaryNotification " + show)
-        if (show)
+        //if (show)
             showNotification(GlucoDataService.NOTIFICATION_ID, !sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false), Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, true)
-        if (show != GlucoDataService.foreground) {
+        /*if (show != GlucoDataService.foreground) {
             Log.d(LOG_ID, "change foreground notification mode")
             with(sharedPref.edit()) {
                 putBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, show)
@@ -187,12 +186,12 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             else
                 serviceIntent.putExtra(Constants.ACTION_STOP_FOREGROUND, true)
             GlucoDataService.context!!.startService(serviceIntent)
-        }
+        }*/
     }
 
     private fun updatePreferences() {
         try {
-            if (sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION, true)) {
+            //if (sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION, true)) {
                 Log.i(LOG_ID, "activate permanent notification")
                 val filter = mutableSetOf(
                     NotifySource.BROADCAST,
@@ -201,12 +200,12 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
                     NotifySource.OBSOLETE_VALUE)   // to trigger re-start for the case of stopped by the system
                 InternalNotifier.addNotifier(GlucoDataService.context!!, this, filter)
                 showNotifications()
-            }
+            /*}
             else {
                 Log.i(LOG_ID, "deactivate permanent notification")
                 InternalNotifier.remNotifier(GlucoDataService.context!!, this)
                 removeNotifications()
-            }
+            }*/
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updatePreferences exception: " + exc.toString() )
         }
@@ -216,7 +215,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called for key " + key)
             when(key) {
-                Constants.SHARED_PREF_PERMANENT_NOTIFICATION,
+                //Constants.SHARED_PREF_PERMANENT_NOTIFICATION,
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON,
                 Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION,
                 Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON,

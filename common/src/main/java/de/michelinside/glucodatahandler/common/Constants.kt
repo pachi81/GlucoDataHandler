@@ -50,7 +50,7 @@ object Constants {
     const val SHARED_PREF_COLOR_ALARM = "color_alarm"
     const val SHARED_PREF_COLOR_OUT_OF_RANGE = "color_out_of_range"
     const val SHARED_PREF_COLOR_OK = "color_ok"
-    const val SHARED_PREF_PERMANENT_NOTIFICATION = "permanent_notification"
+    //const val SHARED_PREF_PERMANENT_NOTIFICATION = "permanent_notification"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_ICON = "status_bar_notification_icon"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY = "permanent_notification_empty"
     const val SHARED_PREF_SECOND_PERMANENT_NOTIFICATION = "second_permanent_notification"
