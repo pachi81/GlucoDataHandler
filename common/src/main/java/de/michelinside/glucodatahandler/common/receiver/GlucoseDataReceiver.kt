@@ -6,6 +6,8 @@ import android.content.Intent
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.SourceState
+import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 
 
@@ -20,8 +22,10 @@ open class GlucoseDataReceiver: BroadcastReceiver() {
             }
 
             ReceiveData.handleIntent(context, DataSource.JUGGLUCO, intent.extras)
+            SourceStateData.setState(DataSource.JUGGLUCO, SourceState.NONE)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Receive exception: " + exc.message.toString() )
+            SourceStateData.setError(DataSource.JUGGLUCO, exc.message.toString())
         }
     }
 }

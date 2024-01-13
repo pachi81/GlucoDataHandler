@@ -11,7 +11,7 @@
     <string name="info_label_raw">Rohwert</string>
     <string name="info_label_sensor_id">Sensor</string>
     <string name="info_label_source">Quelle</string>
-    <string name="no_data">Noch keine Daten empfangen!\nINFO: Aktiviere die LibreLink Quelle oder in Juggluco unter Einstellungen \"Glucodata Broadcast\" und wähle \"de.michelinside.glucodatahandler\" aus.\nFür Daten von xDrip+ aktiviere Lokaler Broadcast und lass Empfänger leer.</string>
+    <string name="no_data">Noch keine Daten empfangen!\nBitte zuerst eine Quelle konfigurieren.</string>
 
     <string name="elapsed_time">%1$d min</string>
     <string name="elapsed_time_hour">\> 1h</string>
@@ -42,6 +42,7 @@
     <string name="activity_main_car_connected_label">Android Auto: verbunden</string>
     <string name="activity_main_car_disconnected_label">Android Auto: getrennt</string>
     <string name="no_new_value">Kein neuer Wert seit %1$d Minuten!</string>
+    <string name="activity_main_high_contrast_enabled">Hoher Kontrast is aktiv!\nHier drücken, um zu den Einstellungen zu gelangen.</string>
 
     <string name="menu_settings">Einstellungen</string>
     <string name="menu_sources">Quellen</string>
@@ -79,7 +80,7 @@
 
     <string name="src_cat_libreview">LibreLink Datenquelle</string>
     <string name="src_libre_enabled">Aktiv</string>
-    <string name="src_libre_enabled_summary">Aktiviere LibreLink Datenquelle, falls der Benutzer und das Passwort für LibreLink gesetzt sind.\nBitte zuerst die LibreLinkUp App einrichten, welche danach wieder entfernt werden kann.</string>
+    <string name="src_libre_enabled_summary">Aktiviere LibreLink Datenquelle, falls der Benutzer und das Passwort für LibreLink gesetzt sind.</string>
     <string name="src_libre_user">Benutzer</string>
     <string name="src_libre_user_summary">Benutzername für LibreLink</string>
     <string name="src_libre_password">Passwort</string>
@@ -143,7 +144,7 @@
     <string name="pref_button_select_xdrip_broadcast_target">xDrip+ Broadcast Empfänger definieren</string>
     <string name="pref_button_select_xdrip_broadcast_target_summary">Empfänger auswählen, an die der xDrip+ Broadcast gesendet wird. Ein globaler Broadcast kann von allen Apps empfangen werden, welche sich für diesen Broadcast intern registriert haben.</string>
     <string name="pref_switch_use_mmol">mmol/l</string>
-    <string name="pref_switch_use_mmol_summary">Konvertiere Werte von xDrip+ in mmol/l.</string>
+    <string name="pref_switch_use_mmol_summary">Benutze mmol/l anstatt mg/dl.</string>
     <string name="pref_high_value">Hoher Glukosewert</string>
     <string name="pref_high_value_summary">Grenze für hohe Glukosewerte.\nWenn in Juggluco der Alarm für hohen Glukosewert aktiviert ist, muss der Wert nicht gesetzt werden.</string>
     <string name="pref_target_max_value">Obere Grenze</string>
@@ -201,6 +202,9 @@
     <string name="widget_glucose_trend_delta">Zuckerwert, Trendpfeil und Delta</string>
     <string name="widget_glucose_trend_delta_timestamp">Zuckerwert, Trendpfeil, Delta und Zeitpunkt</string>
 
+    <string name="pref_send_to_bangleJS">BangleJS Unterstützung</string>
+    <string name="pref_send_to_bangleJS_summary">Werte an das widbgjs Widget auf BangleJS Uhren senden.</string>
+
     <!-- wear -->
 
     <string name="forground_notification_descr">Datenverarbeitung für Complications</string>
@@ -252,5 +256,28 @@
     <string name="pref_no_gda_info_summary">Um GlucoDataHandler für Android Auto zu verwenden, muss GlucoDataAuto von GitHub installiert werden.\nKlicken sie hier, für mehr Informationen und um zum Download zu gelangen.</string>
     <string name="pref_send_to_glucodataauto">An GlucoDataAuto senden</string>
     <string name="pref_send_to_glucodataauto_summary">Sendet den aktuellen Glucose Wert und die Einstellungen an GlucoDataAuto.</string>
+
+    <!-- Notifications -->
+
+    <string name="mobile_foreground_notification_name">Vordergrund Benachrichtigung</string>
+    <string name="mobile_foreground_notification_descr">Die Vordergrund-Benachrichtigung verhindert, dass die App von Android geschlossen wird.</string>
+    <string name="mobile_second_notification_name">Zweite Benachrichtigung</string>
+    <string name="mobile_second_notification_descr">Zusätzliche Benachrichtigung um ein weiteres Icon in der Statusbar anzuzeigen.</string>
+    <string name="worker_notification_name">Worker Benachrichtigung</string>
+    <string name="worker_notification_descr">Worker Benachrichtigung welche angezeigt wird, solange im Hintergrund eine Aktivität ausgeführt wird.</string>
+    <string name="wear_foreground_notification_name">Vordergrund Benachrichtigung</string>
+    <string name="wear_foreground_notification_descr">Die Vordergrund-Benachrichtigung verhindert, dass die App von Android geschlossen wird.</string>
+    <string name="android_auto_notification_name">Benachrichtigung für Android Auto</string>
+    <string name="android_auto_notification_descr">Benachrichtigung, die in Android Auto angezeigt wird.</string>
+    <string name="info_label_iob">IOB</string>
+    <string name="info_label_cob">COB</string>
+    <string name="src_xdrip_noise_blocking">Verrauschungsunterdrückung aktiv in xDrip+ Inter-App Einstellungen!\nBitte die Einstellung auf \"Extremely noisy\" stellen!</string>
+    <string name="pref_cat_follower">Online Datenquellen</string>
+    <string name="pref_source_juggluco_info">Juggluco</string>
+    <string name="pref_source_juggluco_info_summary">To receive values from Juggluco:\n- open Juggluco\n- go to settings\n- enable Glucodata broadcast\n- enable \'de.michelinside.glucodatahandler\'</string>
+    <string name="pref_source_xdrip_info">xDrip+</string>
+    <string name="pref_source_xdrip_info_summary">To receive values from xDrip+:\n- open xDrip+\n- go to settings\n- go to Inter-app settings\n- enable \"Broadcast locally\"\n- set \"Noise Blocking\" to \"Send even Extremely noisy signals\"\n- enable \"Compatible Broadcast\"\n- check \"Identify receivers\" to be empty or add a new line with \"de.michelinside.glucodatahandler\"</string>
+    <string name="pref_source_librelinkup_info">Setup LibreLinkUp</string>
+    <string name="pref_source_librelinkup_info_summary">To use LibreLinkUp you have to setup LibreLinkUp account first.\nImportant, this is not the LibreView account!\nSteps to be done:\n- open your FreeStyle Libre App and select in the menu Share or Connected Apps\n- activate LibreLinkUp connection\n- install LibreLinkUp from PlayStore\n- setup your accout and wait for the invitation\n- after accept the invitation you do not need the LibreLinkUp App \"anymore\"\n</string>
 
 </resources>

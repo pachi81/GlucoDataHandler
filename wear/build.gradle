@@ -22,6 +22,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "GlucoDataHandler"
         }
+        dev_release {
+            versionNameSuffix '-dev'
+            resValue "string", "app_name", "GlucoDataHandler"
+        }
         debug {
             applicationIdSuffix '.debug'
             resValue "string", "app_name", "GlucoDataHandler"
@@ -73,8 +77,9 @@ dependencies {
     implementation 'androidx.wear.watchface:watchface-complications-data-source-ktx:1.2.0'
     implementation 'androidx.wear.watchface:watchface-complications-rendering:1.2.0'
     implementation 'androidx.appcompat:appcompat-resources:1.6.1'
-    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.work:work-runtime:2.9.0'
 }
 
 afterEvaluate {
@@ -97,6 +102,16 @@ afterEvaluate {
         into rootProject.releasePath
     }
     assembleRelease.finalizedBy(copyAndroidApksPostBuild)
+
+    //noinspection ConfigurationAvoidance
+    def assembleDevRelease = tasks.getByPath(':wear:assembleDev_release')
+    def copyAndroidDevApksPostBuild = tasks.register('copyAndroidDevApksPostBuild', Copy) {
+        dependsOn assembleDevRelease
+        from "${projectDir}/dev_release"
+        include '**/*.apk'
+        into rootProject.releasePath
+    }
+    assembleDevRelease.finalizedBy(copyAndroidDevApksPostBuild)
 
     //noinspection ConfigurationAvoidance
     def assembleSecond = tasks.getByPath(':wear:assembleSecond')

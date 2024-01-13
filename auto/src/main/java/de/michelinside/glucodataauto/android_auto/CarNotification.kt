@@ -19,15 +19,15 @@ import de.michelinside.glucodataauto.R
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
+import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import de.michelinside.glucodatahandler.common.notification.ChannelType
+import de.michelinside.glucodatahandler.common.utils.Utils
 import java.text.DateFormat
 import java.util.*
-
 
 @SuppressLint("StaticFieldLeak")
 object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
     private const val LOG_ID = "GDH.AA.CarNotification"
-    private const val CHANNEL_ID = "GlucoDataNotify_Car"
-    private const val CHANNEL_NAME = "Notification for Android Auto"
     const val ACTION_REPLY = "de.michelinside.glucodataauto.REPLY"
     const val ACTION_MARK_AS_READ = "de.michelinside.glucodataauto.MARK_AS_READ"
     private const val NOTIFICATION_ID = 789
@@ -36,8 +36,10 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     private lateinit var notificationMgr: CarNotificationManager
     private var show_notification = false  // default: no notification
     private var car_connected = false
-    private var last_notification_time = 0L
     private var notification_interval = 1L   // every minute -> always, -1L: only for alarms
+    const val LAST_NOTIFCATION_TIME = "last_notification_time"
+    private var last_notification_time = 0L
+    const val FORCE_NEXT_NOTIFY = "force_next_notify"
     private var forceNextNotify = false
     val connected: Boolean get() = car_connected
     @SuppressLint("StaticFieldLeak")
@@ -56,16 +58,18 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     private fun createNotificationChannel(context: Context) {
         notificationMgr = CarNotificationManager.from(context)
         val notificationChannel = NotificationChannelCompat.Builder(
-            CHANNEL_ID,
+            ChannelType.ANDROID_AUTO.channelId,
             NotificationManager.IMPORTANCE_HIGH
         )
         notificationChannel.setSound(null, null)   // silent
-        notificationMgr.createNotificationChannel(notificationChannel.setName(CHANNEL_NAME).build())
+        notificationChannel.setName(context.getString(ChannelType.ANDROID_AUTO.nameResId))
+        notificationChannel.setDescription(context.getString(ChannelType.ANDROID_AUTO.descrResId))
+        notificationMgr.createNotificationChannel(notificationChannel.build())
     }
 
     private fun createNofitication(context: Context) {
         createNotificationChannel(context)
-        notificationCompat = NotificationCompat.Builder(context, CHANNEL_ID)
+        notificationCompat = NotificationCompat.Builder(context, ChannelType.ANDROID_AUTO.channelId)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle("GlucoDataAuto")
             .setContentText("Android Auto")
@@ -100,8 +104,9 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                 val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 sharedPref.registerOnSharedPreferenceChangeListener(this)
                 updateSettings(sharedPref)
+                loadExtras(context)
                 createNofitication(context)
-                CarConnection(context).type.observeForever(CarNotification::onConnectionStateUpdated)
+                CarConnection(context.applicationContext).type.observeForever(CarNotification::onConnectionStateUpdated)
                 init = true
             }
         } catch (exc: Exception) {
@@ -113,7 +118,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         try {
             if (init) {
                 Log.v(LOG_ID, "remNotification called")
-                CarConnection(context).type.removeObserver(CarNotification::onConnectionStateUpdated)
+                CarConnection(context.applicationContext).type.removeObserver(CarNotification::onConnectionStateUpdated)
                 val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 sharedPref.unregisterOnSharedPreferenceChangeListener(this)
                 init = false
@@ -124,7 +129,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         }
     }
 
-    private fun onConnectionStateUpdated(connectionState: Int) {
+    fun onConnectionStateUpdated(connectionState: Int) {
         try {
             val message = when(connectionState) {
                 CarConnection.CONNECTION_TYPE_NOT_CONNECTED -> "Not connected to a head unit"
@@ -157,7 +162,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
-        Log.v(LOG_ID, "OnNotifyData called")
+        Log.v(LOG_ID, "OnNotifyData called for source " + dataSource)
         try {
             showNotification(context, dataSource == NotifySource.OBSOLETE_VALUE)
         } catch (exc: Exception) {
@@ -199,11 +204,12 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
             if (canShowNotification(isObsolete)) {
                 Log.v(LOG_ID, "showNotification called")
                 notificationCompat
-                    .setLargeIcon(Utils.getRateAsBitmap(resizeFactor = 0.75F))
+                    .setLargeIcon(BitmapUtils.getRateAsBitmap(resizeFactor = 0.75F))
                     .setWhen(ReceiveData.time)
                     .setStyle(createMessageStyle(context, isObsolete))
                 notificationMgr.notify(NOTIFICATION_ID, notificationCompat)
                 last_notification_time = ReceiveData.time
+                saveExtras(context)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "showNotification exception: " + exc.toString() )
@@ -212,7 +218,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
 
     private fun createMessageStyle(context: Context, isObsolete: Boolean): NotificationCompat.MessagingStyle {
         val person = Person.Builder()
-            .setIcon(IconCompat.createWithBitmap(Utils.getRateAsBitmap(resizeFactor = 0.75F)!!))
+            .setIcon(IconCompat.createWithBitmap(BitmapUtils.getRateAsBitmap(resizeFactor = 0.75F)!!))
             .setName(ReceiveData.getClucoseAsString())
             .setImportant(true)
             .build()
@@ -276,5 +282,34 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
         }
     }
-}
 
+    private fun saveExtras(context: Context) {
+        try {
+            Log.d(LOG_ID, "Saving extras")
+            // use own tag to prevent trigger onChange event at every time!
+            val sharedAutoPref =
+                context.getSharedPreferences(Constants.SHARED_PREF_AUTO_TAG, Context.MODE_PRIVATE)
+            with(sharedAutoPref.edit()) {
+                putLong(LAST_NOTIFCATION_TIME, last_notification_time)
+                putBoolean(FORCE_NEXT_NOTIFY, forceNextNotify)
+                apply()
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Saving extras exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
+        }
+    }
+
+    private fun loadExtras(context: Context) {
+        try {
+            val sharedAutoPref = context.getSharedPreferences(Constants.SHARED_PREF_AUTO_TAG, Context.MODE_PRIVATE)
+            if (sharedAutoPref.contains(LAST_NOTIFCATION_TIME)) {
+                Log.i(LOG_ID, "Reading saved values...")
+                last_notification_time = sharedAutoPref.getLong(LAST_NOTIFCATION_TIME, last_notification_time)
+                forceNextNotify = sharedAutoPref.getBoolean(FORCE_NEXT_NOTIFY, forceNextNotify)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Saving extras exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
+        }
+    }
+
+}

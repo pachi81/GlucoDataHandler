@@ -26,4 +26,8 @@
     <string name="glucose_html_label">Blutzuckerwert in der Einheit, welche in Juggluco konfiguriert ist</string>
     <string name="obsolete_time_label">Zeit seit letztem Wert</string>
     <string name="obsolete_time_html_label">Zeit in Minuten (5 or 10) seit der letzte Wert empfangen wurde.</string>
+    <string name="iob_label">IOB</string>
+    <string name="iob_html_label">Insulin On Board</string>
+    <string name="cob_label">COB</string>
+    <string name="cob_html_label">Carbs On Board</string>
 </resources>

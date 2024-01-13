@@ -145,14 +145,14 @@
         android:title="@string/pref_cat_notification"
         app:iconSpaceReserved="false"
         app:initialExpandedChildrenCount="0">
-        <androidx.preference.SwitchPreferenceCompat
+        <!--<androidx.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="permanent_notification"
             android:summary="@string/pref_notification_summary"
             android:title="@string/pref_notification"
-            app:iconSpaceReserved="false" />
+            app:iconSpaceReserved="false" />-->
         <androidx.preference.ListPreference
-            android:defaultValue="0"
+            android:defaultValue="app"
             android:entries="@array/pref_status_bar_icon_labels"
             android:entryValues="@array/pref_status_bar_icon_values"
             android:key="status_bar_notification_icon"
@@ -172,7 +172,7 @@
             android:title="@string/pref_second_notification"
             app:iconSpaceReserved="false" />
         <androidx.preference.ListPreference
-            android:defaultValue="0"
+            android:defaultValue="app"
             android:entries="@array/pref_status_bar_icon_labels"
             android:entryValues="@array/pref_status_bar_icon_values"
             android:key="second_status_bar_notification_icon"
@@ -241,6 +241,12 @@
             android:key="glucodata_receivers"
             android:summary="@string/pref_button_select_target_summary"
             android:title="@string/pref_button_select_target"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="send_to_banglejs"
+            android:summary="@string/pref_send_to_bangleJS_summary"
+            android:title="@string/pref_send_to_bangleJS"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 

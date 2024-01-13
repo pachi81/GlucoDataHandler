@@ -67,7 +67,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout_glucose_trend"
         app:layout_constraintTop_toTopOf="@+id/layout_info_elements" />
-
+    <Button
+        android:id="@+id/btnSources"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#005CCC"
+        android:layout_marginTop="20dp"
+        android:text="@string/menu_sources"
+        />
     <LinearLayout
         android:id="@+id/layout_info_elements"
         android:layout_width="match_parent"
@@ -80,6 +87,18 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="UselessParent">
         <TextView
+            android:id="@+id/txtHighContrastEnabled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/activity_main_high_contrast_enabled"
+            android:textSize="16sp"
+            android:visibility="gone"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/txtSourceInfo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+        <TextView
             android:id="@+id/txtBatteryOptimization"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -87,7 +106,6 @@
             android:text="@string/activity_main_battery_optimization_disabled"
             android:textSize="16sp"
             android:visibility="gone"
-            tools:ignore="HardcodedText"
             android:textAlignment="center"
             app:layout_constraintBottom_toTopOf="@+id/txtSourceInfo"
             app:layout_constraintEnd_toEndOf="parent"

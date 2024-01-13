@@ -10,12 +10,13 @@ import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
+import de.michelinside.glucodatahandler.common.utils.Utils
 import kotlinx.coroutines.*
 import java.text.DateFormat
 import java.util.*
 import kotlin.coroutines.cancellation.CancellationException
 
-class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener {
+class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener, NotifierInterface {
     private val LOG_ID = "GDH.WearPhoneConnection"
     private lateinit var context: Context
 
@@ -60,7 +61,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         }
     }
 
-    fun open(context: Context) {
+    fun open(context: Context, sendSettings: Boolean) {
         Log.d(LOG_ID, "open connection")
         this.context = context
         Wearable.getMessageClient(context).addListener(this)
@@ -69,10 +70,19 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             Uri.parse("wear://"),
             CapabilityClient.FILTER_REACHABLE)
         Log.d(LOG_ID, "CapabilityClient added")
+        val filter = mutableSetOf(
+            NotifySource.BROADCAST,
+            NotifySource.BATTERY_LEVEL)   // to trigger re-start for the case of stopped by the system
+        if (sendSettings) {
+            filter.add(NotifySource.SETTINGS)   // only send setting changes from phone to wear!
+            filter.add(NotifySource.SOURCE_SETTINGS)
+        }
+        InternalNotifier.addNotifier(this.context, this, filter)
         checkForConnectedNodes()
     }
 
     fun close() {
+        InternalNotifier.remNotifier(context, this)
         Wearable.getMessageClient(context).removeListener(this)
         Wearable.getCapabilityClient(context).removeListener(this)
         Log.d(LOG_ID, "connection closed")
@@ -130,7 +140,9 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     }
                 }
             }
+            val extras = ReceiveData.createExtras()
             InternalNotifier.notify(context, NotifySource.CAPILITY_INFO, ReceiveData.createExtras())
+            sendMessage(NotifySource.CAPILITY_INFO, extras)  // send data request for new node
         }
     }
 
@@ -339,6 +351,15 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             setConnectedNodes(capabilityInfo.nodes)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCapabilityChanged exception: " + exc.toString())
+        }
+    }
+
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
+        try {
+            Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString() + " and extras " + extras.toString())
+            sendMessage(dataSource, extras)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString())
         }
     }
 }

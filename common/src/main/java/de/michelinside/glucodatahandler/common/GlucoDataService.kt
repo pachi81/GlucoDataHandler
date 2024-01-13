@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler.common
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.content.Context
 import android.content.Intent
@@ -14,6 +15,10 @@ import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.*
 import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.notification.ChannelType
+import de.michelinside.glucodatahandler.common.notification.Channels
+import de.michelinside.glucodatahandler.common.utils.Utils
 
 enum class AppSource {
     NOT_SET,
@@ -21,7 +26,7 @@ enum class AppSource {
     WEAR_APP;
 }
 
-abstract class GlucoDataService(source: AppSource) : WearableListenerService(), NotifierInterface {
+abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
     private lateinit var receiver: GlucoseDataReceiver
     private lateinit var batteryReceiver: BatteryReceiver
     private lateinit var xDripReceiver: XDripBroadcastReceiver
@@ -87,8 +92,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         try {
             Log.d(LOG_ID, "onStartCommand called")
             super.onStartCommand(intent, flags, startId)
-            val isForeground = intent?.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
-            if (isForeground == true && !isForegroundService && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
+            val isForeground = true // intent?.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)    --> always use foreground!!!
+            if (isForeground && !isForegroundService && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Starting service in foreground!")
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
                     startForeground(NOTIFICATION_ID, getNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
@@ -106,6 +111,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         return START_STICKY  // keep alive
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate() {
         try {
             super.onCreate()
@@ -116,28 +122,21 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             ReceiveData.initData(this)
             SourceTaskService.run(this)
 
-            connection.open(this)
-
-            val filter = mutableSetOf(
-                NotifySource.BROADCAST,
-                NotifySource.MESSAGECLIENT,
-                NotifySource.CAPILITY_INFO,
-                NotifySource.BATTERY_LEVEL,
-                NotifySource.OBSOLETE_VALUE)   // to trigger re-start for the case of stopped by the system
-            if (appSource == AppSource.PHONE_APP) {
-                filter.add(NotifySource.SETTINGS)   // only send setting changes from phone to wear!
-                filter.add(NotifySource.SOURCE_SETTINGS)
-                filter.add(NotifySource.CAR_CONNECTION)
-            }
-            InternalNotifier.addNotifier(this, this, filter)
+            connection.open(this, appSource == AppSource.PHONE_APP)
 
             Log.d(LOG_ID, "Register Receiver")
             receiver = GlucoseDataReceiver()
-            registerReceiver(receiver, IntentFilter("glucodata.Minute"))
+            xDripReceiver = XDripBroadcastReceiver()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(receiver, IntentFilter("glucodata.Minute"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
+                registerReceiver(xDripReceiver,IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
+            } else {
+                registerReceiver(receiver, IntentFilter("glucodata.Minute"))
+                registerReceiver(xDripReceiver,IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"))
+
+            }
             batteryReceiver = BatteryReceiver()
             registerReceiver(batteryReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-            xDripReceiver = XDripBroadcastReceiver()
-            registerReceiver(xDripReceiver,IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"))
 
             if (BuildConfig.DEBUG && sharedPref!!.getBoolean(Constants.SHARED_PREF_DUMMY_VALUES, false)) {
                 Thread {
@@ -145,7 +144,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                         ReceiveData.time = 0L
                         while (true) {
                             // create Thread which send dummy intents
-                            this.sendBroadcast(Utils.getDummyGlucodataIntent(false))
+                            this.sendBroadcast(GlucoDataUtils.getDummyGlucodataIntent(false))
                             Thread.sleep(1000)
                         }
                     } catch (exc: Exception) {
@@ -153,6 +152,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     }
                 }.start()
             }
+            // remove obsolete notification channels
+            Channels.deleteNotificationChannel(this, ChannelType.ANDROID_AUTO)  // only available in GlucoDataAuto!
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.toString())
         }
@@ -175,31 +176,6 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         }
     }
 
-    fun getVibrationPattern(alarmType: ReceiveData.AlarmType): LongArray? {
-        return when(alarmType) {
-            ReceiveData.AlarmType.VERY_LOW -> longArrayOf(0, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000)
-            ReceiveData.AlarmType.LOW -> longArrayOf(0, 700, 500, 700, 5000, 700, 500, 700)
-            ReceiveData.AlarmType.HIGH -> longArrayOf(0, 500, 500, 500, 500, 500, 500, 500)
-            ReceiveData.AlarmType.VERY_HIGH -> longArrayOf(0, 800, 500, 800, 800, 600, 800, 800, 500, 800, 800, 600, 800)
-            else -> null
-        }
-    }
-
-    fun vibrate(alarmType: ReceiveData.AlarmType): Boolean {
-        val vibratePattern = getVibrationPattern(alarmType) ?: return false
-        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager =
-                getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-            vibratorManager.defaultVibrator
-        } else {
-            @Suppress("DEPRECATION")
-            getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        }
-        Log.i(LOG_ID, "vibration for " + alarmType.toString())
-        vibrator.vibrate(VibrationEffect.createWaveform(vibratePattern, -1))
-        return true
-    }
-
     fun sendToConnectedDevices(dataSource: NotifySource, extras: Bundle) {
         Thread {
             try {
@@ -208,22 +184,5 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 Log.e(LOG_ID, "SendMessage exception: " + exc.toString())
             }
         }.start()
-    }
-
-    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
-        try {
-            Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString() + " and extras " + extras.toString())
-            if (dataSource != NotifySource.MESSAGECLIENT && dataSource != NotifySource.NODE_BATTERY_LEVEL && (dataSource != NotifySource.SETTINGS || extras != null) && (dataSource != NotifySource.CAR_CONNECTION) ) {
-                sendToConnectedDevices(dataSource, extras!!)
-            }
-            if (dataSource == NotifySource.MESSAGECLIENT || dataSource == NotifySource.BROADCAST) {
-                if (sharedPref!!.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false) && ReceiveData.forceAlarm) {
-                    Log.d(LOG_ID, "Alarm vibration for alarm=" + ReceiveData.alarm.toString())
-                    vibrate(ReceiveData.getAlarmType())
-                }
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString())
-        }
     }
 }

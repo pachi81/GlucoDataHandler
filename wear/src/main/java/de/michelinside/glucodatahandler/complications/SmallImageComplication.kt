@@ -3,7 +3,7 @@ package de.michelinside.glucodatahandler
 import android.graphics.Color
 import androidx.wear.watchface.complications.data.*
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.Utils
+import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 
 
 class SmallTrendImageComplication: BgValueComplicationService() {
@@ -24,7 +24,7 @@ class SmallImageGlucoseWithTrendComplication: BgValueComplicationService() {
 
     override fun getLargeImageComplicationData(): ComplicationData {
         return PhotoImageComplicationData.Builder (
-            photoImage = Utils.getGlucoseTrendIcon(ReceiveData.getClucoseColor(), 500, 500),
+            photoImage = BitmapUtils.getGlucoseTrendIcon(ReceiveData.getClucoseColor(), 500, 500),
             contentDescription = descriptionText()
         )
             .setTapAction(getTapAction())
@@ -35,16 +35,16 @@ class SmallImageGlucoseWithTrendComplication: BgValueComplicationService() {
 class ValueIconComplication: BgValueComplicationService() {
     override fun getImage(): SmallImage {
         return  SmallImage.Builder(
-            image = Utils.getGlucoseAsIcon(color = Color.WHITE, roundTarget = true),
+            image = BitmapUtils.getGlucoseAsIcon(color = Color.WHITE, roundTarget = true),
             type = SmallImageType.PHOTO
-        ).setAmbientImage(Utils.getGlucoseAsIcon(color = Color.WHITE))
+        ).setAmbientImage(BitmapUtils.getGlucoseAsIcon(color = Color.WHITE))
             .build()
     }
 
     override fun getIconComplicationData(): ComplicationData {
         val imageIcon = MonochromaticImage.Builder(
-            image = Utils.getGlucoseAsIcon(color = Color.WHITE)
-        ).setAmbientImage(Utils.getGlucoseAsIcon(color = Color.WHITE)).build()
+            image = BitmapUtils.getGlucoseAsIcon(color = Color.WHITE)
+        ).setAmbientImage(BitmapUtils.getGlucoseAsIcon(color = Color.WHITE)).build()
 
         return MonochromaticImageComplicationData.Builder(
             imageIcon,
@@ -58,16 +58,16 @@ class ValueIconComplication: BgValueComplicationService() {
 class DeltaIconComplication: BgValueComplicationService() {
     override fun getImage(): SmallImage {
         return  SmallImage.Builder(
-            image = Utils.getDeltaAsIcon(color = Color.WHITE, roundTarget = true),
+            image = BitmapUtils.getDeltaAsIcon(color = Color.WHITE, roundTarget = true),
             type = SmallImageType.PHOTO
-        ).setAmbientImage(Utils.getDeltaAsIcon(color = Color.WHITE))
+        ).setAmbientImage(BitmapUtils.getDeltaAsIcon(color = Color.WHITE))
             .build()
     }
 
     override fun getIconComplicationData(): ComplicationData {
         val imageIcon = MonochromaticImage.Builder(
-            image = Utils.getDeltaAsIcon(color = Color.WHITE)
-        ).setAmbientImage(Utils.getDeltaAsIcon(color = Color.WHITE)).build()
+            image = BitmapUtils.getDeltaAsIcon(color = Color.WHITE)
+        ).setAmbientImage(BitmapUtils.getDeltaAsIcon(color = Color.WHITE)).build()
 
         return MonochromaticImageComplicationData.Builder(
             imageIcon,

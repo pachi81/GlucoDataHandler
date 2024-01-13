@@ -10,6 +10,8 @@ import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
 import java.math.RoundingMode
 import java.text.DateFormat
 import java.util.*
@@ -24,8 +26,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     const val ALARM = "glucodata.Minute.Alarm"
     const val TIME = "glucodata.Minute.Time"
     const val DELTA = "glucodata.Minute.Delta"
-    const val SOURCE_RES_ID = "source_resid"
-    private const val LAST_ALARM_TYPE = "last_alarm_type"
+    const val SOURCE_INDEX = "source_idx"
+    const val IOB = "gdh.IOB"
+    const val COB = "gdh.COB"
+
+    private const val LAST_ALARM_INDEX = "last_alarm_index"
     private const val LAST_ALARM_TIME = "last_alarm_time"
     private const val WAKE_LOCK_TIMEOUT = 10000L // 10 seconds
 
@@ -38,9 +43,9 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         VERY_HIGH(R.string.alarm_very_high);
 
         companion object {
-            fun fromResId(id: Int): AlarmType {
+            fun fromIndex(idx: Int): AlarmType {
                 AlarmType.values().forEach {
-                    if(it.resId == id) {
+                    if(it.ordinal == idx) {
                         return it
                     }
                 }
@@ -59,11 +64,13 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var rateLabel: String? = null
     var source: DataSource = DataSource.NONE
     var forceAlarm: Boolean = false
+    var iob: Float = Float.NaN
+    var cob: Float = Float.NaN
     private var lowValue: Float = 70F
     private val low: Float get() {
         if(isMmol && lowValue > 0F)  // mmol/l
         {
-            return Utils.mgToMmol(lowValue, 1)
+            return GlucoDataUtils.mgToMmol(lowValue, 1)
         }
         return lowValue
     }
@@ -71,7 +78,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private val high: Float get() {
         if(isMmol && highValue > 0F)  // mmol/l
         {
-            return Utils.mgToMmol(highValue, 1)
+            return GlucoDataUtils.mgToMmol(highValue, 1)
         }
         return highValue
     }
@@ -79,7 +86,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     val targetMin: Float get() {
         if(isMmol)  // mmol/l
         {
-            return Utils.mgToMmol(targetMinValue, 1)
+            return GlucoDataUtils.mgToMmol(targetMinValue, 1)
         }
         return targetMinValue
     }
@@ -87,7 +94,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     val targetMax: Float get() {
         if(isMmol)  // mmol/l
         {
-            return Utils.mgToMmol(targetMaxValue, 1)
+            return GlucoDataUtils.mgToMmol(targetMaxValue, 1)
         }
         return targetMaxValue
     }
@@ -98,7 +105,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             return deltaValue
         if(isMmol)  // mmol/l
         {
-            return Utils.mgToMmol(deltaValue, if (abs(deltaValue) > 1.0F) 1 else 2)
+            return GlucoDataUtils.mgToMmol(deltaValue, if (abs(deltaValue) > 1.0F) 1 else 2)
         }
         return Utils.round(deltaValue, 1)
     }
@@ -139,9 +146,12 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 context.getString(R.string.info_label_rate) + ": " + rate + "\r\n" +
                 context.getString(R.string.info_label_timestamp) + ": " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(time)) + "\r\n" +
                 context.getString(R.string.info_label_alarm) + ": " + context.getString(getAlarmType().resId) + (if (forceAlarm) " ⚠" else "" ) + " (" + alarm + ")\r\n" +
-                if (isMmol) context.getString(R.string.info_label_raw) + ": " + rawValue + " mg/dl\r\n" else "" ) +
-                context.getString(R.string.info_label_sensor_id) + ": " + (if(BuildConfig.DEBUG) "ABCDE12345" else sensorID) + "\r\n" +
+                (if (isMmol) context.getString(R.string.info_label_raw) + ": " + rawValue + " mg/dl\r\n" else "") +
+                (if (!iob.isNaN()) context.getString(R.string.info_label_iob) + ": " + iob + "\r\n" else "") +
+                (if (!cob.isNaN()) context.getString(R.string.info_label_cob) + ": " + cob + "\r\n" else "") +
+                (if (sensorID.isNullOrEmpty()) "" else context.getString(R.string.info_label_sensor_id) + ": " + (if(BuildConfig.DEBUG) "ABCDE12345" else sensorID) + "\r\n") +
                 context.getString(R.string.info_label_source) + ": " + context.getString(source.resId)
+                )
     }
 
     fun isObsolete(timeoutSec: Int = Constants.VALUE_OBSOLETE_LONG_SEC): Boolean = (System.currentTimeMillis()- time) >= (timeoutSec * 1000)
@@ -275,51 +285,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         }
     }
 
-    fun getRateSymbol(): Char {
-        if(isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) || java.lang.Float.isNaN(rate))
-            return '?'
-        if (rate >= 3.0f) return '⇈'
-        if (rate >= 2.0f) return '↑'
-        if (rate >= 1.0f) return '↗'
-        if (rate > -1.0f) return '→'
-        if (rate > -2.0f) return '↘'
-        if (rate > -3.0f) return '↓'
-        return '⇊'
-    }
-
-    fun getDexcomLabel(): String {
-        if (rate >= 3.0f) return "DoubleUp"
-        if (rate >= 2.0f) return "SingleUp"
-        if (rate >= 1.0f) return "FortyFiveUp"
-        if (rate > -1.0f) return "Flat"
-        if (rate > -2.0f) return "FortyFiveDown"
-        if (rate > -3.0f) return "SingleDown"
-        return if (java.lang.Float.isNaN(rate)) "" else "DoubleDown"
-    }
-
-    fun getRateFromLabel(trendLabel: String): Float {
-        return when(trendLabel) {
-            "DoubleDown" -> -4F
-            "SingleDown" -> -2F
-            "FortyFiveDown" -> -1F
-            "Flat" -> 0F
-            "FortyFiveUp" -> 1F
-            "SingleUp" -> 2F
-            "DoubleUp" -> 4f
-            else -> Float.NaN
-        }
-    }
-
-    fun getRateLabel(context: Context): String {
-        if (rate >= 3.0f) return context.getString(R.string.rate_double_up)
-        if (rate >= 2.0f) return context.getString(R.string.rate_single_up)
-        if (rate >= 1.0f) return context.getString(R.string.rate_forty_five_up)
-        if (rate > -1.0f) return context.getString(R.string.rate_flat)
-        if (rate > -2.0f) return context.getString(R.string.rate_forty_five_down)
-        if (rate > -3.0f) return context.getString(R.string.rate_single_down)
-        return if (rate.isNaN()) "" else context.getString(R.string.rate_double_down)
-    }
-
     fun getTimeDiffMinute(new_time: Long): Long {
         return Utils.round((new_time-time).toFloat()/60000, 0).toLong()
     }
@@ -364,7 +329,22 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                         " - difference: " + (new_time-time)
             )
 
-            if(getTimeDiffMinute(new_time) >= 1) // check for new value received (diff must around one minute at least to prevent receiving same data from different sources with similar timestamps
+            if (!GlucoDataUtils.isGlucoseValid(extras.getInt(MGDL))) {
+                Log.w(LOG_ID, "Invalid glucose values received! " + extras.toString())
+                return false
+            }
+
+            var force = false
+            if (getTimeDiffMinute(new_time) <= 0 && ((extras.containsKey(IOB) && iob != extras.getFloat(IOB)) || (extras.containsKey(COB) && cob != extras.getFloat(COB)))) {
+                val newIob = extras.getFloat(IOB, Float.NaN)
+                val newCob = extras.getFloat(COB, Float.NaN)
+                if (!newIob.isNaN() || !newCob.isNaN()) {
+                    Log.i(LOG_ID, "Force parse values, as IOB " + newIob + " or COB " + newCob + " has changed!")
+                    force = true
+                }
+            }
+
+            if(force || getTimeDiffMinute(new_time) >= 1) // check for new value received (diff must around one minute at least to prevent receiving same data from different sources with similar timestamps
             {
                 Log.i(
                     LOG_ID, "Glucodata received from " + dataSource.toString() + ": " +
@@ -373,10 +353,9 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 )
                 source = dataSource
                 sensorID = extras.getString(SERIAL) //Name of sensor
-                glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
                 rate = extras.getFloat(RATE) //Rate of change of glucose. See libre and dexcom label functions
-                rateLabel = getRateLabel(context)
-                deltaValue = Float.NaN
+                rateLabel = GlucoDataUtils.getRateLabel(context, rate)
+
                 if (extras.containsKey(DELTA)) {
                     deltaValue = extras.getFloat(DELTA, Float.NaN)
                 } else if (time > 0) {
@@ -384,8 +363,10 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     timeDiff = new_time-time
                     val timeDiffMinute = getTimeDiffMinute(new_time)
                     if (timeDiffMinute == 0L) {
-                        Log.w(LOG_ID, "Time diff is less than a minute! Can not calculate delta value!")
-                        deltaValue = Float.NaN
+                        if (!force) {
+                            Log.w(LOG_ID, "Time diff is less than a minute! Can not calculate delta value!")
+                            deltaValue = Float.NaN
+                        }
                     } else if (timeDiffMinute > 10L) {
                         deltaValue = Float.NaN   // no delta calculation for too high time diffs
                     } else {
@@ -397,10 +378,24 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                             deltaValue /= factor
                         }
                     }
+                } else {
+                    deltaValue = Float.NaN
                 }
+
                 rawValue = extras.getInt(MGDL)
+                if (extras.containsKey(GLUCOSECUSTOM)) {
+                    glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
+                    changeIsMmol(rawValue!=glucose.toInt() && GlucoDataUtils.isMmolValue(glucose), context)
+                } else {
+                    glucose = rawValue.toFloat()
+                    if (isMmol) {
+                        glucose = GlucoDataUtils.mgToMmol(glucose)
+                    }
+                }
                 time = extras.getLong(TIME) //time in msec
-                changeIsMmol(rawValue!=glucose.toInt(), context)
+
+                iob = extras.getFloat(IOB, Float.NaN)
+                cob = extras.getFloat(COB, Float.NaN)
 
                 // check for alarm
                 if (interApp) {
@@ -426,11 +421,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     fun changeIsMmol(newValue: Boolean, context: Context? = null) {
         if (isMmol != newValue) {
             isMmolValue = newValue
-            if (isMmolValue != Utils.isMmolValue(glucose)) {
+            if (isMmolValue != GlucoDataUtils.isMmolValue(glucose)) {
                 if (isMmolValue)
-                    glucose = Utils.mgToMmol(glucose)
+                    glucose = GlucoDataUtils.mgToMmol(glucose)
                 else
-                    glucose = Utils.mmolToMg(glucose)
+                    glucose = GlucoDataUtils.mmolToMg(glucose)
             }
             Log.i(LOG_ID, "Unit changed to " + glucose + if(isMmolValue) "mmol/l" else "mg/dl")
             if (context != null) {
@@ -505,7 +500,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         sharedPref.registerOnSharedPreferenceChangeListener(this)
         if(!sharedPref.contains(Constants.SHARED_PREF_USE_MMOL)) {
             Log.i(LOG_ID, "Upgrade to new mmol handling!")
-            isMmolValue = Utils.isMmolValue(targetMinValue)
+            isMmolValue = GlucoDataUtils.isMmolValue(targetMinValue)
             if (isMmol) {
                 writeTarget(context, true, targetMinValue)
                 writeTarget(context, false, targetMaxValue)
@@ -521,8 +516,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private fun writeTarget(context: Context, min: Boolean, value: Float) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         var mgdlValue = value
-        if (Utils.isMmolValue(mgdlValue)) {
-            mgdlValue = Utils.mmolToMg(value)
+        if (GlucoDataUtils.isMmolValue(mgdlValue)) {
+            mgdlValue = GlucoDataUtils.mmolToMg(value)
         }
         Log.i(LOG_ID, "New target" + (if (min) "Min" else "Max") + " value: " + mgdlValue.toString())
         with(sharedPref.edit()) {
@@ -548,6 +543,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         extras.putFloat(RATE, rate)
         extras.putInt(ALARM, alarm)
         extras.putFloat(DELTA, deltaValue)
+        extras.putFloat(IOB, iob)
+        extras.putFloat(COB, cob)
         return extras
     }
 
@@ -564,9 +561,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 putFloat(RATE, rate)
                 putInt(ALARM, alarm)
                 putFloat(DELTA, deltaValue)
-                putInt(SOURCE_RES_ID, source.resId)
+                putFloat(IOB, iob)
+                putFloat(COB, cob)
+                putInt(SOURCE_INDEX, source.ordinal)
                 putLong(LAST_ALARM_TIME, lastAlarmTime)
-                putInt(LAST_ALARM_TYPE, lastAlarmType.resId)
+                putInt(LAST_ALARM_INDEX, lastAlarmType.ordinal)
                 apply()
             }
         } catch (exc: Exception) {
@@ -579,7 +578,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             if (time == 0L) {
                 val sharedGlucosePref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, Context.MODE_PRIVATE)
                 if (sharedGlucosePref.contains(TIME)) {
-                    Log.i(LOG_ID, "Read saved values...")
+                    Log.i(LOG_ID, "Reading saved values...")
                     val extras = Bundle()
                     extras.putLong(TIME, sharedGlucosePref.getLong(TIME, time))
                     extras.putFloat(GLUCOSECUSTOM, sharedGlucosePref.getFloat(GLUCOSECUSTOM, glucose))
@@ -588,10 +587,12 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     extras.putFloat(RATE, sharedGlucosePref.getFloat(RATE, rate))
                     extras.putInt(ALARM, sharedGlucosePref.getInt(ALARM, alarm))
                     extras.putFloat(DELTA, sharedGlucosePref.getFloat(DELTA, deltaValue))
-                    lastAlarmType = AlarmType.fromResId(sharedGlucosePref.getInt(LAST_ALARM_TYPE, AlarmType.NONE.resId))
+                    extras.putFloat(IOB, sharedGlucosePref.getFloat(IOB, iob))
+                    extras.putFloat(COB, sharedGlucosePref.getFloat(COB, cob))
+                    lastAlarmType = AlarmType.fromIndex(sharedGlucosePref.getInt(LAST_ALARM_INDEX, AlarmType.NONE.ordinal))
                     lastAlarmTime = sharedGlucosePref.getLong(LAST_ALARM_TIME, 0L)
-                    handleIntent(context, DataSource.fromResId(sharedGlucosePref.getInt(SOURCE_RES_ID,
-                        DataSource.NONE.resId)), extras)
+                    handleIntent(context, DataSource.fromIndex(sharedGlucosePref.getInt(SOURCE_INDEX,
+                        DataSource.NONE.ordinal)), extras)
                 }
             }
         } catch (exc: Exception) {

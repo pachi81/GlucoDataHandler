@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import androidx.work.WorkerParameters
 
 @SuppressLint("StaticFieldLeak")
 object SourceTaskService: BackgroundTaskService(43, "GDH.Task.SourceTaskService", true) {
@@ -13,8 +14,17 @@ object SourceTaskService: BackgroundTaskService(43, "GDH.Task.SourceTaskService"
         mutableListOf(LibreViewSourceTask(), NightscoutSourceTask())  // Obsolete should always the last one!
 }
 
+class SourceTaskWorker(context: Context, workerParams: WorkerParameters): BackgroundWorker(context, workerParams) {
+    override fun execute(context: Context) {
+        SourceTaskService.alarmTrigger()
+    }
+}
+
 class SourceAlarmReceiver(): BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        SourceTaskService.alarmTrigger(intent)
+        if(SourceTaskService.useWorker)
+            BackgroundWorker.triggerWork(context!!, SourceTaskWorker::class.java)
+        else
+            SourceTaskService.alarmTrigger()
     }
 }

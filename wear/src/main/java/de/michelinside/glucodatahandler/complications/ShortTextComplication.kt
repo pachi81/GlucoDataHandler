@@ -2,7 +2,8 @@ package de.michelinside.glucodatahandler
 
 import androidx.wear.watchface.complications.data.*
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.Utils
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
 
 open class ShortClucoseComplication:  BgValueComplicationService() {
 }
@@ -28,7 +29,7 @@ class ShortGlucoseWithDeltaAndTrendComplication: ShortClucoseComplication() {
     override fun getIcon(): MonochromaticImage = arrowIcon()
     override fun getLongTextComplicationData(): ComplicationData {
         return LongTextComplicationData.Builder(
-            plainText(" Δ: " + ReceiveData.getDeltaAsString() + "   " + ReceiveData.getRateSymbol().toString() + " (" + ReceiveData.getRateAsString() + ")"),
+            plainText(" Δ: " + ReceiveData.getDeltaAsString() + "   " + GlucoDataUtils.getRateSymbol(ReceiveData.rate).toString() + " (" + ReceiveData.getRateAsString() + ")"),
             descriptionText()
         )
             .setSmallImage(glucoseImage())

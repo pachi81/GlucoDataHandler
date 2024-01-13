@@ -14,6 +14,7 @@ import androidx.wear.watchface.complications.datasource.SuspendingComplicationDa
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
+import de.michelinside.glucodatahandler.common.utils.Utils
 
 class BatteryLevelComplication: SuspendingComplicationDataSourceService() {
     protected val LOG_ID = "GDH.BatteryLevelComplication"

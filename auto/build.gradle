@@ -24,10 +24,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "GlucoDataAuto"
         }
+        dev_release {
+            versionNameSuffix '-dev'
+            resValue "string", "app_name", "GlucoDataAuto"
+        }
         debug {
             applicationIdSuffix '.debug'
             minifyEnabled false
-            resValue "string", "app_name", "GlucoDataAuto"
+            resValue "string", "app_name", "GlucoDataAuto Debug"
         }
         applicationVariants.all {
                 // this method is use to rename your all apk weather
@@ -60,7 +64,7 @@ android {
 dependencies {
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.joaomgcd:taskerpluginlibrary:0.4.4'
     implementation project(path: ':common')
@@ -80,4 +84,14 @@ afterEvaluate {
         into rootProject.releasePath
     }
     assembleRelease.finalizedBy(copyAndroidApksPostBuild)
+
+    //noinspection ConfigurationAvoidance
+    def assembleDevRelease = tasks.getByPath(':auto:assembleDev_release')
+    def copyAndroidDevApksPostBuild = tasks.register('copyAndroidDevApksPostBuild', Copy) {
+        dependsOn assembleDevRelease
+        from "${projectDir}/dev_release"
+        include '**/*.apk'
+        into rootProject.releasePath
+    }
+    assembleDevRelease.finalizedBy(copyAndroidDevApksPostBuild)
 }

@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -23,12 +24,13 @@ import androidx.preference.PreferenceManager
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.Utils
+import de.michelinside.glucodatahandler.common.SourceStateData
+import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
-import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
+import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.R as CR
 
 class MainActivity : AppCompatActivity(), NotifierInterface {
@@ -40,6 +42,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtCarInfo: TextView
     private lateinit var txtSourceInfo: TextView
     private lateinit var txtBatteryOptimization: TextView
+    private lateinit var txtHighContrastEnabled: TextView
+    private lateinit var btnSources: Button
     private lateinit var sharedPref: SharedPreferences
     private val LOG_ID = "GDH.Main"
     private var requestNotificationPermission = false
@@ -59,6 +63,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             txtCarInfo = findViewById(R.id.txtCarInfo)
             txtSourceInfo = findViewById(R.id.txtSourceInfo)
             txtBatteryOptimization = findViewById(R.id.txtBatteryOptimization)
+            txtHighContrastEnabled = findViewById(R.id.txtHighContrastEnabled)
+            btnSources = findViewById(R.id.btnSources)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -67,6 +73,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
+
+            btnSources.setOnClickListener{
+                val intent = Intent(this, SettingsActivity::class.java)
+                intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.SORUCE_FRAGMENT.value)
+                startActivity(intent)
+            }
 
             val sendToAod = sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, false)
 
@@ -123,6 +135,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.OBSOLETE_VALUE,
                 NotifySource.SOURCE_STATE_CHANGE))
             checkBatteryOptimization()
+            checkHighContrast()
 
             if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Notification permission granted")
@@ -168,6 +181,23 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             } else {
                 txtBatteryOptimization.visibility = View.GONE
                 Log.i(LOG_ID, "Battery optimization is active")
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
+        }
+    }
+    private fun checkHighContrast() {
+        try {
+            if (Utils.isHighContrastTextEnabled(this)) {
+                Log.w(LOG_ID, "High contrast is active")
+                txtHighContrastEnabled.visibility = View.VISIBLE
+                txtHighContrastEnabled.setOnClickListener {
+                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                    startActivity(intent)
+                }
+            } else {
+                txtHighContrastEnabled.visibility = View.GONE
+                Log.i(LOG_ID, "High contrast is inactive")
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
@@ -237,7 +267,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             } else {
                 txtBgValue.paintFlags = 0
             }
-            viewIcon.setImageIcon(Utils.getRateAsIcon())
+            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
             txtLastValue.text = ReceiveData.getAsString(this)
             if (WearPhoneConnection.nodesConnected) {
                 txtWearInfo.text = resources.getString(CR.string.activity_main_connected_label, WearPhoneConnection.getBatterLevelsAsString())
@@ -251,7 +281,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 txtCarInfo.visibility = View.GONE
             }
 
-            txtSourceInfo.text = DataSourceTask.getState(this)
+            if (ReceiveData.time == 0L) {
+                btnSources.visibility = View.VISIBLE
+            } else {
+                btnSources.visibility = View.GONE
+            }
+
+            txtSourceInfo.text = SourceStateData.getState(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
         }

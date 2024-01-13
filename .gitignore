@@ -16,6 +16,7 @@ local.properties
 /.idea/deploymentTargetDropDown.xml
 .apk
 release/
+dev_release/
 debug/
 second/
 /.idea/shelf/Uncommitted_changes_before_rebase_[Changes]3/shelved.patch

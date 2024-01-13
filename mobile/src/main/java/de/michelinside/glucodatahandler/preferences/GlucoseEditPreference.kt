@@ -9,7 +9,7 @@ import android.widget.EditText
 import androidx.preference.EditTextPreference
 import androidx.preference.EditTextPreference.OnBindEditTextListener
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.Utils
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 
 class GlucoseEditPreference : EditTextPreference, OnBindEditTextListener {
     companion object {
@@ -63,8 +63,8 @@ class GlucoseEditPreference : EditTextPreference, OnBindEditTextListener {
     override fun persistString(value: String?): Boolean {
         Log.i(LOG_ID, "persistString called with value " + value)
         try {
-            if (Utils.isMmolValue(value!!.toFloat()))
-                return persistFloat(Utils.mmolToMg(value.toFloat()))
+            if (GlucoDataUtils.isMmolValue(value!!.toFloat()))
+                return persistFloat(GlucoDataUtils.mmolToMg(value.toFloat()))
             return persistFloat(value.toFloat())
         } catch (exc: Exception) {
             Log.e(LOG_ID, "persistString exception: " + exc.toString())
@@ -78,11 +78,11 @@ class GlucoseEditPreference : EditTextPreference, OnBindEditTextListener {
             editText.inputType = if (ReceiveData.isMmol) InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL else InputType.TYPE_CLASS_NUMBER
             var value = editText.getText().toString().toFloat()
             if (!ReceiveData.isMmol) {
-                if(Utils.isMmolValue(value))
-                    value = Utils.mmolToMg(value)
+                if(GlucoDataUtils.isMmolValue(value))
+                    value = GlucoDataUtils.mmolToMg(value)
                 editText.setText(value.toInt().toString())
-            } else if (ReceiveData.isMmol && !Utils.isMmolValue(value)) {
-                editText.setText(Utils.mgToMmol(value).toString())
+            } else if (ReceiveData.isMmol && !GlucoDataUtils.isMmolValue(value)) {
+                editText.setText(GlucoDataUtils.mgToMmol(value).toString())
             }
             Log.i(LOG_ID, "onBindEditText new text: " + editText.text)
         } catch (exc: Exception) {

@@ -8,6 +8,7 @@ import android.graphics.Paint
 import android.os.*
 import android.provider.Settings
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -15,7 +16,8 @@ import androidx.appcompat.widget.SwitchCompat
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
-import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
+import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.databinding.ActivityWaerBinding
 
 class WaerActivity : AppCompatActivity(), NotifierInterface {
@@ -28,6 +30,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtValueInfo: TextView
     private lateinit var txtConnInfo: TextView
     private lateinit var txtSourceInfo: TextView
+    private lateinit var txtHighContrastEnabled: TextView
     private lateinit var switchColoredAod: SwitchCompat
     private lateinit var switchLargeTrendArrow: SwitchCompat
     private lateinit var switchNotifcation: SwitchCompat
@@ -51,6 +54,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
             txtValueInfo = findViewById(R.id.txtValueInfo)
             txtConnInfo = findViewById(R.id.txtConnInfo)
             txtSourceInfo = findViewById(R.id.txtSourceInfo)
+            txtHighContrastEnabled = findViewById(R.id.txtHighContrastEnabled)
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
@@ -199,6 +203,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.SOURCE_SETTINGS,
                 NotifySource.SOURCE_STATE_CHANGE))
 
+            checkHighContrast()
             if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Notification permission granted")
                 requestNotificationPermission = false
@@ -229,6 +234,24 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
         return true
     }
 
+    private fun checkHighContrast() {
+        try {
+            if (Utils.isHighContrastTextEnabled(this)) {
+                Log.w(LOG_ID, "High contrast is active")
+                txtHighContrastEnabled.visibility = View.VISIBLE
+                txtHighContrastEnabled.setOnClickListener {
+                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                    startActivity(intent)
+                }
+            } else {
+                txtHighContrastEnabled.visibility = View.GONE
+                Log.i(LOG_ID, "High contrast is inactive")
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
+        }
+    }
+
     private fun update() {
         try {
             if(ReceiveData.time > 0) {
@@ -239,7 +262,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 } else {
                     txtBgValue.paintFlags = 0
                 }
-                viewIcon.setImageIcon(Utils.getRateAsIcon())
+                viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
                 txtValueInfo.text = ReceiveData.getAsString(this)
                 if (WearPhoneConnection.nodesConnected) {
                     txtConnInfo.text = resources.getString(CR.string.activity_connected_label, WearPhoneConnection.getBatterLevelsAsString())
@@ -262,7 +285,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 switchNightscoutSource.isChecked = false
             }
 
-           txtSourceInfo.text = DataSourceTask.getState(this)
+           txtSourceInfo.text = SourceStateData.getState(this)
 
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())

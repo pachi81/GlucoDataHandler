@@ -24,6 +24,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "GlucoDataHandler"
         }
+        dev_release {
+            versionNameSuffix '-dev'
+            resValue "string", "app_name", "GlucoDataHandler"
+        }
         debug {
             applicationIdSuffix '.debug'
             minifyEnabled false
@@ -67,16 +71,17 @@ android {
 dependencies {
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.joaomgcd:taskerpluginlibrary:0.4.4'
     implementation project(path: ':common')
-    implementation 'com.google.android.gms:play-services-tasks:18.0.2'
+    implementation 'com.google.android.gms:play-services-tasks:18.1.0'
     implementation 'com.google.android.gms:play-services-wearable:18.1.0'
     implementation "androidx.car.app:app:1.2.0"
     implementation "androidx.preference:preference:1.2.1"
     implementation "com.jaredrummler:colorpicker:1.1.0"
     implementation "androidx.media:media:1.7.0"
+    implementation 'androidx.work:work-runtime:2.9.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -103,6 +108,16 @@ afterEvaluate {
         into rootProject.releasePath
     }
     assembleRelease.finalizedBy(copyAndroidApksPostBuild)
+
+    //noinspection ConfigurationAvoidance
+    def assembleDevRelease = tasks.getByPath(':mobile:assembleDev_release')
+    def copyAndroidDevApksPostBuild = tasks.register('copyAndroidDevApksPostBuild', Copy) {
+        dependsOn assembleDevRelease
+        from "${projectDir}/dev_release"
+        include '**/*.apk'
+        into rootProject.releasePath
+    }
+    assembleDevRelease.finalizedBy(copyAndroidDevApksPostBuild)
 
     //noinspection ConfigurationAvoidance
     def assembleSecond = tasks.getByPath(':mobile:assembleSecond')

@@ -13,7 +13,7 @@ object Constants {
     const val SOURCE_SETTINGS_BUNDLE = "source_settings_bundle"
     const val GLUCOSE_CONVERSION_FACTOR = 18.0182F
     const val GLUCOSE_MIN_VALUE = 40
-    //const val GLUCOSE_MAX_VALUE = 400
+    const val GLUCOSE_MAX_VALUE = 400
     const val ACTION_STOP_FOREGROUND = "stop_foreground"
 
     const val XDRIP_ACTION_GLUCOSE_READING = "com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING"
@@ -26,6 +26,7 @@ object Constants {
     const val VALUE_OBSOLETE_LONG_SEC  = 600
 
     const val SHARED_PREF_TAG = "GlucoDataHandlerPrefs"
+    const val SHARED_PREF_AUTO_TAG = "GlucoDataAutoPrefs"
     const val SHARED_PREF_NO_GLUCODATAAUTO = "no_gda_info"
     const val SHARED_PREF_SEND_TO_GLUCODATAAUTO = "send_to_glucodataauto"
     const val SHARED_PREF_SEND_TO_GLUCODATA_AOD = "send_to_glucodata_aod"
@@ -49,7 +50,7 @@ object Constants {
     const val SHARED_PREF_COLOR_ALARM = "color_alarm"
     const val SHARED_PREF_COLOR_OUT_OF_RANGE = "color_out_of_range"
     const val SHARED_PREF_COLOR_OK = "color_ok"
-    const val SHARED_PREF_PERMANENT_NOTIFICATION = "permanent_notification"
+    //const val SHARED_PREF_PERMANENT_NOTIFICATION = "permanent_notification"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_ICON = "status_bar_notification_icon"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY = "permanent_notification_empty"
     const val SHARED_PREF_SECOND_PERMANENT_NOTIFICATION = "second_permanent_notification"
@@ -62,6 +63,7 @@ object Constants {
     const val SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY = "floating_widget_transparency"
     const val SHARED_PREF_WIDGET_TRANSPARENCY = "widget_transparency"
     const val SHARED_PREF_RELATIVE_TIME = "relative_time"
+    const val SHARED_PREF_SEND_TO_BANGLEJS = "send_to_banglejs"
 
     // internal app preferences (not changed by settings) -> use separate tag for not trigger onChanged events
     const val SHARED_PREF_INTERNAL_TAG = "GlucoDataHandlerInternalAppPrefs"

@@ -11,9 +11,12 @@ import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
 import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.widget.FloatingWidget
 import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
+
 
 class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInterface {
     private val LOG_ID = "GDH.GlucoDataServiceMobile"
@@ -33,6 +36,13 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         try {
             Log.d(LOG_ID, "onCreate called")
             super.onCreate()
+            val filter = mutableSetOf(
+                NotifySource.BROADCAST,
+                NotifySource.MESSAGECLIENT,
+                NotifySource.OBSOLETE_VALUE, // to trigger re-start for the case of stopped by the system
+                NotifySource.CAR_CONNECTION,
+                NotifySource.CAPILITY_INFO)
+            InternalNotifier.addNotifier(this, this, filter)
             floatingWidget = FloatingWidget(this)
             PermanentNotification.create(applicationContext)
             CarModeReceiver.init(applicationContext)
@@ -88,7 +98,9 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
     private fun sendToGlucoDataAuto(context: Context, extras: Bundle) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         if (CarModeReceiver.connected && sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO, true) && Utils.isPackageAvailable(context, Constants.PACKAGE_GLUCODATAAUTO)) {
+            Log.d(LOG_ID, "sendToGlucoDataAuto")
             val intent = Intent(Constants.GLUCODATA_ACTION)
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
             val settings = ReceiveData.getSettingsBundle()
             settings.putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime)
             extras.putBundle(Constants.SETTINGS_BUNDLE, settings)
@@ -96,6 +108,19 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             intent.setPackage(Constants.PACKAGE_GLUCODATAAUTO)
             context.sendBroadcast(intent)
         }
+    }
+
+    private fun sendToBangleJS(context: Context) {
+        val send2Bangle = "require(\"Storage\").writeJSON(\"widbgjs.json\", {" +
+                "'bg': " + ReceiveData.rawValue.toString() + "," +
+                "'bgTimeStamp': " + ReceiveData.time + "," +
+                "'bgDirection': '" + GlucoDataUtils.getDexcomLabel(ReceiveData.rate) + "'" +
+                "});"
+
+        Log.i(LOG_ID, "Send to bangleJS: " + send2Bangle)
+        val sendIntent = Intent("com.banglejs.uart.tx")
+        sendIntent.putExtra("line", send2Bangle)
+        context.sendBroadcast(sendIntent)
     }
 
     private fun forwardBroadcast(context: Context, extras: Bundle) {
@@ -132,13 +157,16 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             intent.putExtras(extras)
             sendBroadcast(intent, Constants.SHARED_PREF_GLUCODATA_RECEIVERS, context, sharedPref)
         }
+
+        if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_BANGLEJS, false)) {
+            sendToBangleJS(context)
+        }
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
             Log.v(LOG_ID, "OnNotifyData called for source " + dataSource.toString())
             start(context)
-            super.OnNotifyData(context, dataSource, extras)
             if (dataSource == NotifySource.CAPILITY_INFO) {
                 context.setWearConnectionState(WearPhoneConnection.nodesConnected)
             }

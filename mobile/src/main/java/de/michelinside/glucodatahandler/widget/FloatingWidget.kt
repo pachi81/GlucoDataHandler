@@ -19,10 +19,11 @@ import de.michelinside.glucodatahandler.MainActivity
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.Utils
+import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import java.util.*
 
 
@@ -106,7 +107,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
         } else {
             txtBgValue.paintFlags = 0
         }
-        viewIcon.setImageIcon(Utils.getRateAsIcon())
+        viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
         txtDelta.text =ReceiveData.getDeltaAsString()
         txtTime.text = ReceiveData.getElapsedTimeMinuteAsString(context)
 

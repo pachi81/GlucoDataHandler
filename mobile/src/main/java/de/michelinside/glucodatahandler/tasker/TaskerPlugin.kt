@@ -17,6 +17,7 @@ import com.joaomgcd.taskerpluginlibrary.output.TaskerOutputVariable
 import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultCondition
 import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultConditionSatisfied
 import de.michelinside.glucodatahandler.common.notifier.*
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import java.util.*
 
 @TaskerInputRoot
@@ -40,7 +41,7 @@ open class GlucodataValues {
     val rateLabel: String? = ReceiveData.rateLabel
     @field:TaskerInputField("arrow")
     @get:TaskerOutputVariable("arrow", R.string.arrow_label, R.string.arrow_html_label)
-    val arrow: String = ReceiveData.getRateSymbol().toString()
+    val arrow: String = GlucoDataUtils.getRateSymbol(ReceiveData.rate).toString()
     @field:TaskerInputField("alarm")
     @get:TaskerOutputVariable("alarm", R.string.alarm_label, R.string.alarm_html_label)
     val alarm: Int = ReceiveData.alarm
@@ -58,7 +59,13 @@ open class GlucodataValues {
     val unit: String = ReceiveData.getUnit()
     @field:TaskerInputField("dexcomLabel")
     @get:TaskerOutputVariable("dexcomLabel", R.string.dexcom_label, R.string.dexcom_html_label)
-    val dexcomLabel: String = ReceiveData.getDexcomLabel()
+    val dexcomLabel: String = GlucoDataUtils.getDexcomLabel(ReceiveData.rate)
+    @field:TaskerInputField("iob")
+    @get:TaskerOutputVariable("iob", R.string.iob_label, R.string.iob_html_label)
+    val iob: Float = ReceiveData.iob
+    @field:TaskerInputField("cob")
+    @get:TaskerOutputVariable("cob", R.string.cob_label, R.string.cob_html_label)
+    val cob: Float = ReceiveData.cob
 }
 
 @TaskerInputRoot

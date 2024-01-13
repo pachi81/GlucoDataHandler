@@ -11,6 +11,9 @@ import androidx.wear.watchface.complications.data.*
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.R as CR
 
 
@@ -133,7 +136,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     open fun getLargeImageComplicationData(): ComplicationData {
         return PhotoImageComplicationData.Builder (
-            photoImage = Utils.getGlucoseAsIcon(ReceiveData.getClucoseColor(), true, 500,500),
+            photoImage = BitmapUtils.getGlucoseAsIcon(ReceiveData.getClucoseColor(), true, 500,500),
             contentDescription = descriptionText()
         )
             .setTapAction(getTapAction())
@@ -157,7 +160,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     open fun getTapAction(useExternalApp: Boolean = true): PendingIntent? {
         if (BuildConfig.DEBUG) {
             // for debug create dummy broadcast (to check in emulator)
-            return PendingIntent.getBroadcast(this, 3, Utils.getDummyGlucodataIntent(false), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+            return PendingIntent.getBroadcast(this, 3, GlucoDataUtils.getDummyGlucodataIntent(false), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         } else {
             /*
             var launchIntent: Intent? = packageManager.getLaunchIntentForPackage("tk.glucodata")
@@ -204,8 +207,8 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     fun arrowIcon(): MonochromaticImage =
         MonochromaticImage.Builder(
-            image = Utils.getRateAsIcon(color = Color.WHITE)
-        ).setAmbientImage(Utils.getRateAsIcon(color = Color.WHITE)).build()
+            image = BitmapUtils.getRateAsIcon(color = Color.WHITE)
+        ).setAmbientImage(BitmapUtils.getRateAsIcon(color = Color.WHITE)).build()
 
     fun glucoseIcon(): MonochromaticImage =
         MonochromaticImage.Builder(
@@ -226,7 +229,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     fun glucoseImage(): SmallImage {
         return SmallImage.Builder(
-            image = Utils.getGlucoseAsIcon(ReceiveData.getClucoseColor(), true),
+            image = BitmapUtils.getGlucoseAsIcon(ReceiveData.getClucoseColor(), true),
             type = SmallImageType.PHOTO
         ).setAmbientImage(ambientGlucoseAsIcon(forImage = true))
             .build()
@@ -235,12 +238,12 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     fun ambientGlucoseAsIcon(forImage: Boolean = false): Icon? {
         if (sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false))
             return null
-        return Utils.getGlucoseAsIcon(color = Color.WHITE, roundTarget = forImage)
+        return BitmapUtils.getGlucoseAsIcon(color = Color.WHITE, roundTarget = forImage)
     }
 
     fun arrowImage(): SmallImage {
         return  SmallImage.Builder(
-            image = Utils.getRateAsIcon(ReceiveData.getClucoseColor(), true),
+            image = BitmapUtils.getRateAsIcon(ReceiveData.getClucoseColor(), true),
             type = SmallImageType.PHOTO
         )
             .setAmbientImage(ambientArrowIcon())
@@ -250,12 +253,12 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     fun ambientArrowIcon(): Icon? {
         if (sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false))
             return null
-        return Utils.getRateAsIcon(color = Color.WHITE, roundTarget = true)
+        return BitmapUtils.getRateAsIcon(color = Color.WHITE, roundTarget = true)
     }
 
     fun getGlucoseTrendImage(): SmallImage {
         return  SmallImage.Builder(
-            image = Utils.getGlucoseTrendIcon(ReceiveData.getClucoseColor()),
+            image = BitmapUtils.getGlucoseTrendIcon(ReceiveData.getClucoseColor()),
             type = SmallImageType.PHOTO
         ).setAmbientImage(ambientGlucoseTrendImage())
             .build()
@@ -264,7 +267,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     fun ambientGlucoseTrendImage(): Icon? {
         if (sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false))
             return null
-        return Utils.getGlucoseTrendIcon(Color.WHITE)
+        return BitmapUtils.getGlucoseTrendIcon(Color.WHITE)
     }
 
 }

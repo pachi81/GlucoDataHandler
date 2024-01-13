@@ -12,9 +12,9 @@ enum class DataSource(val resId: Int) {
     NIGHTSCOUT(R.string.source_nightscout);
     
     companion object {
-        fun fromResId(id: Int): DataSource {
+        fun fromIndex(idx: Int): DataSource {
             DataSource.values().forEach {
-                if(it.resId == id) {
+                if(it.ordinal == idx) {
                     return it
                 }
             }

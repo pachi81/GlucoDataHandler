@@ -55,7 +55,7 @@
                 android:value=".MainActivity" />
         </activity>
         <receiver
-            android:name=".de.michelinside.glucodataauto.GlucoDataActionReceiver"
+            android:name=".receiver.GlucoDataActionReceiver"
             android:enabled="true"
             android:exported="true"
             tools:ignore="ExportedReceiver">
@@ -64,7 +64,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name="de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver"
+            android:name=".receiver.GlucoDataReceiver"
             android:enabled="true"
             android:exported="true"
             tools:ignore="ExportedReceiver">
@@ -73,7 +73,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name="de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver"
+            android:name=".receiver.XDripReceiver"
             android:enabled="true"
             android:exported="true"
             tools:ignore="ExportedReceiver">

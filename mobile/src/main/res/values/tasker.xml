@@ -26,4 +26,8 @@
     <string name="unit_html_label">Unit of the glucose value (mg/dl or mmol/l)</string>
     <string name="obsolete_time_label">Time since last value</string>
     <string name="obsolete_time_html_label">Time in minutes (5 or 10) since last value was received.</string>
+    <string name="iob_label">IOB</string>
+    <string name="iob_html_label">Insulin On Board</string>
+    <string name="cob_label">COB</string>
+    <string name="cob_html_label">Carbs On Board</string>
 </resources>

@@ -9,6 +9,7 @@ import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -63,7 +64,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
 
     private fun checkResponse(body: String?): JSONObject? {
         if (body.isNullOrEmpty()) {
-            if (lastErrorCode >= 400 && lastErrorCode < 500)
+            if (lastErrorCode in 400..499)
                 token = "" // reset token for client error -> trigger reconnect
             return null
         }
@@ -76,17 +77,17 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             if(status != 0) {
                 if(jsonObj.has("error")) {
                     val error = jsonObj.optJSONObject("error")?.optString("message", "")
-                    setLastError(source, error?: "Error", status)
+                    setLastError(error?: "Error", status)
                     return null
                 }
-                setLastError(source, "Error", status)
+                setLastError("Error", status)
                 return null
             }
         }
         if (jsonObj.has("data")) {
             return jsonObj
         }
-        setLastError(source, "Missing data in response!", 500)
+        setLastError("Missing data in response!", 500)
         return null
     }
 
@@ -124,7 +125,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                         Log.i(LOG_ID, "Handle redirect to region: " + region)
                         return login()
                     } else {
-                        setLastError(source, "redirect without region!!!", 500)
+                        setLastError("redirect without region!!!", 500)
                     }
                 }
                 if (data.has("authTicket")) {
@@ -231,7 +232,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             val array = jsonObject.optJSONArray("data")
             if (array != null) {
                 if (array.length() == 0) {
-                    setLastError(source, GlucoDataService.context!!.getString(R.string.src_libre_setup_librelink))
+                    setLastError(GlucoDataService.context!!.getString(R.string.src_libre_setup_librelink))
                     return
                 }
                 val data = array.optJSONObject(0)
@@ -272,12 +273,13 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     private fun getConnection(firstCall: Boolean = true) {
         if (login()) {
             handleGlucoseResponse(httpGet(getUrl(CONNECTION_ENDPOINT), getHeader()))
-            if (firstCall && token.isEmpty() && lastError.isNotEmpty())
+            if (firstCall && token.isEmpty() && lastState == SourceState.ERROR)
                 getConnection(false) // retry if internal client error (not for server error)
         }
     }
 
     override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {
+        var trigger = false
         if (key == null) {
             user = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_USER, "")!!.trim()
             password = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, "")!!.trim()
@@ -285,6 +287,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             tokenExpire = sharedPreferences.getLong(Constants.SHARED_PREF_LIBRE_TOKEN_EXPIRE, 0L)
             region = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_REGION, "")!!
             InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
+            trigger = true
         } else {
             when(key) {
                 Constants.SHARED_PREF_LIBRE_USER -> {
@@ -292,6 +295,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                         user = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_USER, "")!!.trim()
                         token = ""
                         InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
+                        trigger = true
                     }
                 }
                 Constants.SHARED_PREF_LIBRE_PASSWORD -> {
@@ -299,15 +303,17 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                         password = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, "")!!.trim()
                         token = ""
                         InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
+                        trigger = true
                     }
                 }
                 Constants.SHARED_PREF_LIBRE_RECONNECT -> {
                     if (reconnect != sharedPreferences.getBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false)) {
                         reconnect = sharedPreferences.getBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false)
+                        trigger = true
                     }
                 }
             }
         }
-        return super.checkPreferenceChanged(sharedPreferences, key, context)
+        return super.checkPreferenceChanged(sharedPreferences, key, context) || trigger
     }
 }
