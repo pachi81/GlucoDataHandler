@@ -9,6 +9,9 @@ import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 class SmallTrendImageComplication: BgValueComplicationService() {
     override fun getImage(): SmallImage = arrowImage()
 }
+class SmallTrendSmallImageComplication: BgValueComplicationService() {
+    override fun getImage(): SmallImage = arrowImage(true)
+}
 
 class TrendIconComplication: BgValueComplicationService() {
     override fun getIcon(): MonochromaticImage = arrowIcon()
@@ -16,6 +19,9 @@ class TrendIconComplication: BgValueComplicationService() {
 
 class SmallValueImageComplication: BgValueComplicationService() {
     override fun getImage(): SmallImage = glucoseImage()
+}
+class SmallValueSmallImageComplication: BgValueComplicationService() {
+    override fun getImage(): SmallImage = glucoseImage(true)
 }
 
 class SmallImageGlucoseWithTrendComplication: BgValueComplicationService() {
@@ -25,6 +31,19 @@ class SmallImageGlucoseWithTrendComplication: BgValueComplicationService() {
     override fun getLargeImageComplicationData(): ComplicationData {
         return PhotoImageComplicationData.Builder (
             photoImage = BitmapUtils.getGlucoseTrendIcon(ReceiveData.getClucoseColor(), 500, 500),
+            contentDescription = descriptionText()
+        )
+            .setTapAction(getTapAction())
+            .build()
+    }
+}
+class SmallImageGlucoseWithTrendSmallComplication: BgValueComplicationService() {
+
+    override fun getImage(): SmallImage = getGlucoseTrendImage(true)
+
+    override fun getLargeImageComplicationData(): ComplicationData {
+        return PhotoImageComplicationData.Builder (
+            photoImage = BitmapUtils.getGlucoseTrendIcon(ReceiveData.getClucoseColor(), 500, 500, true),
             contentDescription = descriptionText()
         )
             .setTapAction(getTapAction())

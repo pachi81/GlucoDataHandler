@@ -58,10 +58,10 @@ object BitmapUtils {
         return result
     }
 
-    private fun textToBitmap(text: String, color: Int, roundTarget: Boolean = false, strikeThrough: Boolean = false, width: Int = 100, height: Int = 100, top: Boolean = false, bold: Boolean = false): Bitmap? {
+    private fun textToBitmap(text: String, color: Int, roundTarget: Boolean = false, strikeThrough: Boolean = false, width: Int = 100, height: Int = 100, top: Boolean = false, bold: Boolean = false, resizeFactor: Float = 1F): Bitmap? {
         try {
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888 )
-            val maxTextSize = calcMaxTextSizeForBitmap(bitmap, text, roundTarget, minOf(width,height).toFloat(), top, bold)
+            val maxTextSize = calcMaxTextSizeForBitmap(bitmap, text, roundTarget, minOf(width,height).toFloat(), top, bold) * resizeFactor
             val canvas = Canvas(bitmap)
             bitmap.eraseColor(Color.TRANSPARENT)
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
@@ -184,17 +184,19 @@ object BitmapUtils {
         }
     }
 
-    fun textRateToBitmap(text: String, rate: Float, color: Int, obsolete: Boolean = false, strikeThrough: Boolean, width: Int = 100, height: Int = 100): Bitmap? {
+    fun textRateToBitmap(text: String, rate: Float, color: Int, obsolete: Boolean = false, strikeThrough: Boolean, width: Int = 100, height: Int = 100, small: Boolean = false): Bitmap? {
         try {
             val padding = if (isShortText(text)) 0F else height.toFloat()*0.05F
             val rateFactor = if (isShortText(text)) 0.5F else 0.45F
+            val resizeFactor = if (small) 0.6F else 1.0F
             val rateSize = Utils.round(height * rateFactor, 0).toInt()
             val textHeight = height - rateSize - Utils.round(padding, 0).toInt()
-            val textBitmap = textToBitmap(text, color, true, strikeThrough, width, textHeight, true, false)
-            val rateBitmap = rateToBitmap(rate, color, rateSize, rateSize, strikeThrough =  obsolete)
+            val textBitmap = textToBitmap(text, color, true, strikeThrough, width, textHeight, true, false, resizeFactor)
+            val rateBitmap = rateToBitmap(rate, color, rateSize, rateSize, resizeFactor, obsolete)
             val comboBitmap = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888)
             val comboImage = Canvas(comboBitmap)
-            comboImage.drawBitmap(rateBitmap!!, ((height-rateSize)/2).toFloat(), padding, null)
+            val rateTopFactor = if (small) 5F else 1F
+            comboImage.drawBitmap(rateBitmap!!, ((height-rateSize)/2).toFloat(), padding*rateTopFactor, null)
             comboImage.drawBitmap(textBitmap!!, 0F, rateBitmap.height.toFloat()+padding, null)
             return comboBitmap
         } catch (exc: Exception) {
@@ -203,15 +205,15 @@ object BitmapUtils {
         }
     }
 
-    private fun getGlucoseAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100): Bitmap? {
+    private fun getGlucoseAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F): Bitmap? {
         return textToBitmap(
             ReceiveData.getClucoseAsString(),color ?: ReceiveData.getClucoseColor(), roundTarget, ReceiveData.isObsolete(
                 Constants.VALUE_OBSOLETE_SHORT_SEC
-            ) && !ReceiveData.isObsolete(),width, height)
+            ) && !ReceiveData.isObsolete(),width, height, resizeFactor = resizeFactor)
     }
 
-    fun getGlucoseAsIcon(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100): Icon {
-        return Icon.createWithBitmap(getGlucoseAsBitmap(color, roundTarget, width, height))
+    fun getGlucoseAsIcon(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F): Icon {
+        return Icon.createWithBitmap(getGlucoseAsBitmap(color, roundTarget, width, height, resizeFactor))
     }
 
     fun getDeltaAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100): Bitmap? {
@@ -234,14 +236,14 @@ object BitmapUtils {
         return Icon.createWithBitmap(getRateAsBitmap(color, roundTarget, resizeFactor, width, height))
     }
 
-    fun getGlucoseTrendBitmap(color: Int? = null, width: Int = 100, height: Int = 100): Bitmap? {
+    fun getGlucoseTrendBitmap(color: Int? = null, width: Int = 100, height: Int = 100, small: Boolean = false): Bitmap? {
         return textRateToBitmap(
             ReceiveData.getClucoseAsString(), ReceiveData.rate, color ?: ReceiveData.getClucoseColor(), ReceiveData.isObsolete(
                 Constants.VALUE_OBSOLETE_SHORT_SEC
-            ), ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height)
+            ), ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height, small)
     }
 
-    fun getGlucoseTrendIcon(color: Int? = null, width: Int = 100, height: Int = 100): Icon {
-        return Icon.createWithBitmap(getGlucoseTrendBitmap(color, width, height))
+    fun getGlucoseTrendIcon(color: Int? = null, width: Int = 100, height: Int = 100, small: Boolean = false): Icon {
+        return Icon.createWithBitmap(getGlucoseTrendBitmap(color, width, height, small))
     }
 }
