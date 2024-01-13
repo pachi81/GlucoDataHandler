@@ -81,8 +81,8 @@
     <string name="src_cat_libreview">LibreLink Datenquelle</string>
     <string name="src_libre_enabled">Aktiv</string>
     <string name="src_libre_enabled_summary">Aktiviere LibreLink Datenquelle, falls der Benutzer und das Passwort für LibreLink gesetzt sind.</string>
-    <string name="src_libre_user">Benutzer</string>
-    <string name="src_libre_user_summary">Benutzername für LibreLink</string>
+    <string name="src_libre_user">E-Mail</string>
+    <string name="src_libre_user_summary">E-Mail für das Login zu LibreLink</string>
     <string name="src_libre_password">Passwort</string>
     <string name="src_libre_password_summary">Passwort für LibreLink</string>
     <string name="src_libre_reconnect">Reconnect</string>

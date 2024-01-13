@@ -26,12 +26,50 @@
 
     <TextView
         android:id="@+id/deltaText"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"
         android:gravity="center_vertical"
-        android:text="TextView"
+        android:text="Delta: +0.06"
         android:textSize="18dp"
         android:textColor="@color/text_color"
         tools:ignore="HardcodedText,SpUsage" />
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/iobText"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:gravity="center_vertical"
+            android:visibility="gone"
+            android:text="IOB: 1.10U"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMaxTextSize="14sp"
+            android:maxLines="1"
+            android:textColor="@color/text_color"
+            tools:ignore="HardcodedText,SpUsage" />
+        <TextView
+            android:id="@+id/cobText"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:layout_marginStart="10dp"
+            android:gravity="center_vertical"
+            android:text="COB: 21.12g"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeMaxTextSize="14sp"
+            android:autoSizeTextType="uniform"
+            android:maxLines="1"
+            android:textColor="@color/text_color"
+            tools:ignore="HardcodedText,SpUsage" />
+
+    </LinearLayout>
 </LinearLayout>

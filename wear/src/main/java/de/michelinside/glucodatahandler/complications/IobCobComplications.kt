@@ -8,8 +8,8 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 abstract class IobCobComplicationsBase : BgValueComplicationService() {
     fun IobText(withMarker: Boolean): PlainComplicationText {
         if (withMarker)
-            return plainText("I:"+ReceiveData.iob.toString())
-        return plainText(ReceiveData.iob.toString())
+            return plainText("I:"+ReceiveData.iobString)
+        return plainText(ReceiveData.iobString)
     }
     fun CobText(withMarker: Boolean): PlainComplicationText {
         if (withMarker)

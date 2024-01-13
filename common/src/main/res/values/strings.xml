@@ -90,8 +90,8 @@
     <string name="src_cat_libreview">LibreLink Follower</string>
     <string name="src_libre_enabled">Enable</string>
     <string name="src_libre_enabled_summary">Enable LibreLink follower, if LibreLink user and password is set.</string>
-    <string name="src_libre_user">User</string>
-    <string name="src_libre_user_summary">Username for LibreLink</string>
+    <string name="src_libre_user">E-mail</string>
+    <string name="src_libre_user_summary">E-mail for LibreLink login</string>
     <string name="src_libre_password">Password</string>
     <string name="src_libre_password_summary">Password for LibreLink</string>
     <string name="src_libre_reconnect">Reconnect</string>

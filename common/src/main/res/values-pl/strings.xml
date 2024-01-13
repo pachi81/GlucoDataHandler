@@ -82,8 +82,8 @@
     <string name="src_cat_libreview">LibreLink Follower</string>
     <string name="src_libre_enabled">Włącz</string>
     <string name="src_libre_enabled_summary">Włącz funkcję LibreLink follower, jeśli wprowadzono dane logowania użytkownika i hasło LibreLink.</string>
-    <string name="src_libre_user">Użytkownik</string>
-    <string name="src_libre_user_summary">Nazwa użytkownika LibreLink</string>
+    <string name="src_libre_user">E-mail</string>
+    <string name="src_libre_user_summary">E-mail for LibreLink login</string>
     <string name="src_libre_password">Hasło</string>
     <string name="src_libre_password_summary">Hasło do LibreLink</string>
     <string name="src_libre_reconnect">Połącz ponownie</string>
