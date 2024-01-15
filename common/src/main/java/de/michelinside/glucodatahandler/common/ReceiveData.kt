@@ -67,14 +67,14 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var iob: Float = Float.NaN
     val iobString: String get() {
         if(iob.isNaN()) {
-            return "-"
+            return " - "
         }
         return "%.2f".format(iob)
     }
     var cob: Float = Float.NaN
     val cobString: String get() {
         if(cob.isNaN()) {
-            return "-"
+            return " - "
         }
         return cob.toString()
     }
@@ -160,7 +160,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 context.getString(R.string.info_label_alarm) + ": " + context.getString(getAlarmType().resId) + (if (forceAlarm) " ⚠" else "" ) + " (" + alarm + ")\r\n" +
                 (if (isMmol) context.getString(R.string.info_label_raw) + ": " + rawValue + " mg/dl\r\n" else "") +
                 (if (!iob.isNaN()) context.getString(R.string.info_label_iob) + ": " + iobString + "U\r\n" else "") +
-                (if (!cob.isNaN()) context.getString(R.string.info_label_cob) + ": " + cob + "g\r\n" else "") +
+                (if (!cob.isNaN()) context.getString(R.string.info_label_cob) + ": " + cobString + "g\r\n" else "") +
                 (if (sensorID.isNullOrEmpty()) "" else context.getString(R.string.info_label_sensor_id) + ": " + (if(BuildConfig.DEBUG) "ABCDE12345" else sensorID) + "\r\n") +
                 context.getString(R.string.info_label_source) + ": " + context.getString(source.resId)
                 )

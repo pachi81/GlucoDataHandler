@@ -24,13 +24,15 @@ enum class WidgetType(val cls: Class<*>) {
     GLUCOSE(GlucoseWidget::class.java),
     GLUCOSE_TREND(GlucoseTrendWidget::class.java),
     GLUCOSE_TREND_DELTA(GlucoseTrendDeltaWidget::class.java),
-    GLUCOSE_TREND_DELTA_TIME(GlucoseTrendDeltaTimeWidget::class.java);
+    GLUCOSE_TREND_DELTA_TIME(GlucoseTrendDeltaTimeWidget::class.java),
+    GLUCOSE_TREND_DELTA_TIME_IOB_COB(GlucoseTrendDeltaTimeIobCobWidget::class.java);
 }
 
 abstract class GlucoseBaseWidget(private val type: WidgetType,
                                  private val hasTrend: Boolean = false,
                                  private val hasDelta: Boolean = false,
-                                 private val hasTime: Boolean = false): AppWidgetProvider(), NotifierInterface {
+                                 private val hasTime: Boolean = false,
+                                 private val hasIobCob: Boolean = false): AppWidgetProvider(), NotifierInterface {
     init {
         Log.d(LOG_ID, "init called for "+ this.toString())
     }
@@ -199,10 +201,15 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
         }
 
         if (hasTime) {
-            remoteViews.setTextViewText(R.id.timeText, ReceiveData.getElapsedTimeMinuteAsString(context))
+            remoteViews.setTextViewText(R.id.timeText, "🕒 " + ReceiveData.getElapsedTimeMinuteAsString(context))
         }
         if (hasDelta)
-            remoteViews.setTextViewText(R.id.deltaText, ReceiveData.getDeltaAsString())
+            remoteViews.setTextViewText(R.id.deltaText, "𝚫 " + ReceiveData.getDeltaAsString())
+
+        if (hasIobCob) {
+            remoteViews.setTextViewText(R.id.iobText, "💉 " + ReceiveData.iobString + "U")
+            remoteViews.setTextViewText(R.id.cobText, "🍔 " + ReceiveData.cobString + "g")
+        }
         return remoteViews
     }
 

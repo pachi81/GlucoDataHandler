@@ -23,13 +23,13 @@ object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPrefere
             if(!activeWidgets.contains(type)) {
                 activeWidgets.add(type)
                 Log.i(LOG_ID, "add widget " + type.toString() + " new size " + activeWidgets.size)
-                if (activeWidgets.size == 1 || type == WidgetType.GLUCOSE_TREND_DELTA_TIME) {
+                if (activeWidgets.size == 1 || type == WidgetType.GLUCOSE_TREND_DELTA_TIME || type == WidgetType.GLUCOSE_TREND_DELTA_TIME_IOB_COB) {
                     val filter = mutableSetOf(
                         NotifySource.BROADCAST,
                         NotifySource.MESSAGECLIENT,
                         NotifySource.SETTINGS,
                     )   // to trigger re-start for the case of stopped by the system
-                    if(activeWidgets.contains(WidgetType.GLUCOSE_TREND_DELTA_TIME))
+                    if(activeWidgets.contains(WidgetType.GLUCOSE_TREND_DELTA_TIME) || activeWidgets.contains(WidgetType.GLUCOSE_TREND_DELTA_TIME_IOB_COB))
                         filter.add(NotifySource.TIME_VALUE)
                     else
                         filter.add(NotifySource.OBSOLETE_VALUE)
@@ -50,7 +50,7 @@ object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPrefere
             if (activeWidgets.isEmpty()) {
                 InternalNotifier.remNotifier(context, this)
                 context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE).unregisterOnSharedPreferenceChangeListener(this)
-            } else if (type == WidgetType.GLUCOSE_TREND_DELTA_TIME) {
+            } else if (type == WidgetType.GLUCOSE_TREND_DELTA_TIME || type == WidgetType.GLUCOSE_TREND_DELTA_TIME_IOB_COB) {
                 // re-add filter to remove TIME_VALUE
                 val filter = mutableSetOf(
                     NotifySource.BROADCAST,
@@ -68,7 +68,7 @@ object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPrefere
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString())
         activeWidgets.forEach {
-            if (dataSource != NotifySource.TIME_VALUE || it == WidgetType.GLUCOSE_TREND_DELTA_TIME)
+            if (dataSource != NotifySource.TIME_VALUE || it == WidgetType.GLUCOSE_TREND_DELTA_TIME || it == WidgetType.GLUCOSE_TREND_DELTA_TIME_IOB_COB)
                 GlucoseBaseWidget.updateWidgets(context, it)
         }
     }

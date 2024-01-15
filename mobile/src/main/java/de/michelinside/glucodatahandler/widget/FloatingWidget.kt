@@ -131,8 +131,8 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
         viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
         txtDelta.text =ReceiveData.getDeltaAsString()
         txtTime.text = ReceiveData.getElapsedTimeMinuteAsString(context)
-        txtIob.text = ReceiveData.iobString + " U"
-        txtCob.text = ReceiveData.cobString + " g"
+        txtIob.text = ReceiveData.iobString + "U"
+        txtCob.text = ReceiveData.cobString + "g"
 
         val resizeFactor = sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, 3).toFloat()
         txtBgValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+resizeFactor*4f)
