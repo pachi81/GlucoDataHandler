@@ -18,12 +18,14 @@
         <item>@string/widget_glucose_trend</item>
         <item>@string/widget_glucose_trend_delta</item>
         <item>@string/widget_glucose_trend_delta_timestamp</item>
+        <item>@string/widget_glucose_trend_delta_timestamp_iob_cob</item>
     </array>
     <array name="pref_floating_widget_style_values">
         <item>"glucose"</item>
         <item>"glucose_trend"</item>
         <item>"glucose_trend_delta"</item>
         <item>"glucose_trend_delta_time"</item>
+        <item>"glucose_trend_delta_time_iob_cob"</item>
     </array>
     <array name="tasker_supported_settings_labels">
         <item>@string/pref_floating_widget</item>

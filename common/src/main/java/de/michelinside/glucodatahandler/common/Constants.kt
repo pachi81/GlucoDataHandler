@@ -74,6 +74,7 @@ object Constants {
     const val WIDGET_STYLE_GLUCOSE_TREND = "glucose_trend"
     const val WIDGET_STYLE_GLUCOSE_TREND_DELTA = "glucose_trend_delta"
     const val WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA = "glucose_trend_delta_time"
+    const val WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA_IOB_COB = "glucose_trend_delta_time_iob_cob"
 
     // Wear only preferences
     const val SHARED_PREF_NOTIFICATION = "notification"

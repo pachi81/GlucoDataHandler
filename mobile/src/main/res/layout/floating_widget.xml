@@ -33,6 +33,18 @@
                 android:textColor="@color/transparent_widget_textcolor"
                 tools:ignore="HardcodedText,NestedWeights,SmallSp"/>
         </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/iobText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="--"
+                android:textColor="@color/transparent_widget_textcolor"
+                tools:ignore="HardcodedText,NestedWeights,SmallSp"/>
+        </TableRow>
     </TableLayout>
 
     <TableLayout
@@ -54,6 +66,18 @@
         <TableRow>
             <TextView
                 android:id="@+id/deltaText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:text="--"
+                android:maxLines="1"
+                android:textColor="@color/transparent_widget_textcolor"
+                tools:ignore="HardcodedText,SmallSp" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/cobText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textSize="18sp"

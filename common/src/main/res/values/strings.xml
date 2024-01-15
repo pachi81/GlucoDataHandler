@@ -213,6 +213,7 @@
     <string name="widget_glucose_trend">Glucose and trend</string>
     <string name="widget_glucose_trend_delta">Glucose, trend and delta</string>
     <string name="widget_glucose_trend_delta_timestamp">Glucose, trend, delta and timestamp</string>
+    <string name="widget_glucose_trend_delta_timestamp_iob_cob">Glucose, trend, delta, time and IOB/COB</string>
 
     <string name="pref_send_to_bangleJS">BangleJS support</string>
     <string name="pref_send_to_bangleJS_summary">Forward values to widbgjs widget for BangleJS.</string>
