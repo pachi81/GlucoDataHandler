@@ -39,13 +39,14 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     }
 
     override fun executeRequest(context: Context) {
-        Log.i(LOG_ID, "getting data from libre view")
+        Log.d(LOG_ID, "getting data from libre view")
         getConnection()
     }
 
     private fun getUrl(endpoint: String): String {
-        val url = if(region.isEmpty()) server else region_server.format(region)
-        return url + endpoint
+        val url = (if(region.isEmpty()) server else region_server.format(region)) + endpoint
+        Log.i(LOG_ID, "Send request to " + url)
+        return url
     }
 
     private fun getHeader(): MutableMap<String, String> {
@@ -63,6 +64,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     }
 
     private fun reset() {
+        Log.i(LOG_ID, "reset called")
         token = ""
         region = ""
     }
@@ -160,7 +162,8 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
 
     private fun login(): Boolean {
         if (token.isNotEmpty() && (reconnect || tokenExpire <= System.currentTimeMillis())) {
-            Log.i(LOG_ID, "Token expired!")
+            if (!reconnect)
+                Log.i(LOG_ID, "Token expired!")
             reset()
             if (reconnect) {
                 reconnect = false
