@@ -61,6 +61,10 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
 
             ReceiveData.initData(this)
 
+            txtConnInfo.setOnClickListener{
+                GlucoDataService.checkForConnectedNodes()
+            }
+
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             switchForground = findViewById(R.id.switchForground)
             switchForground.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)

@@ -23,6 +23,7 @@ import androidx.core.view.MenuCompat
 import androidx.preference.PreferenceManager
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.utils.Utils
@@ -73,6 +74,10 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
+
+            txtWearInfo.setOnClickListener{
+                GlucoDataService.checkForConnectedNodes()
+            }
 
             btnSources.setOnClickListener{
                 val intent = Intent(this, SettingsActivity::class.java)
