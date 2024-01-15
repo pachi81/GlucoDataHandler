@@ -79,13 +79,13 @@
     <string name="source_delay">Opóźnienie</string>
     <string name="source_delay_summary">Opóźnienie w sekundach przed zażądaniem danych z chmury, ponieważ zajmuje to trochę czasu, zanim dane się tam znajdą.</string>
 
-    <string name="src_cat_libreview">LibreLink Follower</string>
+    <string name="src_cat_libreview">LibreLinkUp Follower</string>
     <string name="src_libre_enabled">Włącz</string>
-    <string name="src_libre_enabled_summary">Włącz funkcję LibreLink follower, jeśli wprowadzono dane logowania użytkownika i hasło LibreLink.</string>
+    <string name="src_libre_enabled_summary">Włącz funkcję LibreLinkUp follower, jeśli wprowadzono adres e-mail i hasło do LibreView.</string>
     <string name="src_libre_user">E-mail</string>
-    <string name="src_libre_user_summary">E-mail for LibreLink login</string>
+    <string name="src_libre_user_summary">Adres e-mail do logowania do LibreView</string>
     <string name="src_libre_password">Hasło</string>
-    <string name="src_libre_password_summary">Hasło do LibreLink</string>
+    <string name="src_libre_password_summary">Hasło do LibreView</string>
     <string name="src_libre_reconnect">Połącz ponownie</string>
     <string name="src_libre_reconnect_summary">W kolejnym odstępie czasowym nastąpi nowe logowanie.</string>
     <string name="src_libre_setup_librelink">Najpierw skonfiguruj połączenie LibreLinkUp!</string>
