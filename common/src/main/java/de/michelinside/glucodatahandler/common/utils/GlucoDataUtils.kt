@@ -124,6 +124,8 @@ object GlucoDataUtils {
         intent.putExtra(ReceiveData.RATE, Utils.round(rate, 2))
         intent.putExtra(ReceiveData.TIME, time)
         intent.putExtra(ReceiveData.ALARM, if (raw <= 70) 7 else if (raw >= 250) 6 else 0)
+        intent.putExtra(ReceiveData.IOB, Utils.round(rate, 2))
+        intent.putExtra(ReceiveData.COB, Utils.round(rate, 2)*10F+Utils.round(rate, 2))
         return intent
     }
 }

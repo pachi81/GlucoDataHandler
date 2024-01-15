@@ -67,11 +67,17 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var iob: Float = Float.NaN
     val iobString: String get() {
         if(iob.isNaN()) {
-            return iob.toString()
+            return "-"
         }
         return "%.2f".format(iob)
     }
     var cob: Float = Float.NaN
+    val cobString: String get() {
+        if(cob.isNaN()) {
+            return "-"
+        }
+        return cob.toString()
+    }
     private var lowValue: Float = 70F
     private val low: Float get() {
         if(isMmol && lowValue > 0F)  // mmol/l
@@ -340,17 +346,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 return false
             }
 
-            var force = false
-            if (getTimeDiffMinute(new_time) <= 0 && ((extras.containsKey(IOB) && iob != extras.getFloat(IOB)) || (extras.containsKey(COB) && cob != extras.getFloat(COB)))) {
-                val newIob = extras.getFloat(IOB, Float.NaN)
-                val newCob = extras.getFloat(COB, Float.NaN)
-                if (!newIob.isNaN() || !newCob.isNaN()) {
-                    Log.i(LOG_ID, "Force parse values, as IOB " + newIob + " or COB " + newCob + " has changed!")
-                    force = true
-                }
-            }
-
-            if(force || getTimeDiffMinute(new_time) >= 1) // check for new value received (diff must around one minute at least to prevent receiving same data from different sources with similar timestamps
+            if(getTimeDiffMinute(new_time) >= 1) // check for new value received (diff must around one minute at least to prevent receiving same data from different sources with similar timestamps
             {
                 Log.i(
                     LOG_ID, "Glucodata received from " + dataSource.toString() + ": " +
@@ -369,10 +365,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     timeDiff = new_time-time
                     val timeDiffMinute = getTimeDiffMinute(new_time)
                     if (timeDiffMinute == 0L) {
-                        if (!force) {
-                            Log.w(LOG_ID, "Time diff is less than a minute! Can not calculate delta value!")
-                            deltaValue = Float.NaN
-                        }
+                        Log.w(LOG_ID, "Time diff is less than a minute! Can not calculate delta value!")
+                        deltaValue = Float.NaN
                     } else if (timeDiffMinute > 10L) {
                         deltaValue = Float.NaN   // no delta calculation for too high time diffs
                     } else {
@@ -415,6 +409,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 InternalNotifier.notify(context, notifySource, createExtras())  // re-create extras to have all changed value inside...
                 saveExtras(context)
                 result = true
+            } else if( extras.containsKey(IOB) || extras.containsKey(COB)) {
+                handleIobCob(context, dataSource, extras, interApp)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Receive exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
@@ -422,6 +418,21 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             wakeLock.release()
         }
         return result
+    }
+
+    fun handleIobCob(context: Context, dataSource: DataSource, extras: Bundle, interApp: Boolean = false) {
+        Log.v(LOG_ID, "handleIobCob for source " + dataSource + ": " + extras.toString())
+        if ((extras.containsKey(IOB) && iob != extras.getFloat(IOB)) || (extras.containsKey(COB) && cob != extras.getFloat(COB))) {
+            Log.i(LOG_ID, "Only IOB/COB changed: " + extras.getFloat(IOB) + "/" +  extras.getFloat(COB))
+            iob = extras.getFloat(IOB, Float.NaN)
+            cob = extras.getFloat(COB, Float.NaN)
+
+            val notifySource = if(interApp) NotifySource.MESSAGECLIENT else NotifySource.BROADCAST
+
+            InternalNotifier.notify(context, notifySource, createExtras())  // re-create extras to have all changed value inside...
+            saveExtras(context)
+        }
+
     }
 
     fun changeIsMmol(newValue: Boolean, context: Context? = null) {

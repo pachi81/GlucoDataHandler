@@ -563,6 +563,7 @@
         <service
             android:name=".complications.IobCobComplication"
             android:exported="true"
+            android:icon="@drawable/burger_injection"
             android:label="@string/iob_cob"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -578,6 +579,7 @@
         <service
             android:name=".complications.CobComplication"
             android:exported="true"
+            android:icon="@drawable/icon_burger"
             android:label="@string/info_label_cob"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -593,6 +595,7 @@
         <service
             android:name=".complications.IobComplication"
             android:exported="true"
+            android:icon="@drawable/icon_injection"
             android:label="@string/info_label_iob"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
