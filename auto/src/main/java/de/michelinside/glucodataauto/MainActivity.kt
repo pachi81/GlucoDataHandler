@@ -201,9 +201,16 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 R.id.action_support -> {
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse(resources.getText(CR.string.support_link).toString())
+                        Uri.parse(resources.getText(CR.string.gda_support_link).toString())
                     )
                     startActivity(browserIntent)
+                    return true
+                }
+                R.id.action_contact -> {
+                    val mailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto","GlucoDataHandler@michel-inside.de", null))
+                    mailIntent.putExtra(Intent.EXTRA_SUBJECT, "GlucoDataAuto v" + BuildConfig.VERSION_NAME)
+                    startActivity(mailIntent)
                     return true
                 }
                 else -> return super.onOptionsItemSelected(item)

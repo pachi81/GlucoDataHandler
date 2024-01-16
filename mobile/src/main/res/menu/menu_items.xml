@@ -6,14 +6,16 @@
         <item
             android:id="@+id/action_settings"
             android:title="@string/menu_settings"
-            app:showAsAction="never" />
+            android:icon="@drawable/icon_settings"
+            app:showAsAction="ifRoom" />
     </group>
     <group
         android:id="@+id/group_sources">
         <item
             android:id="@+id/action_sources"
+            android:icon="@drawable/icon_source"
             android:title="@string/menu_sources"
-            app:showAsAction="never" />
+            app:showAsAction="ifRoom" />
     </group>
     <group
         android:id="@+id/group_github">
@@ -37,6 +39,7 @@
         <item
             android:id="@+id/action_contact"
             android:title="@string/menu_contact"
+            android:icon="@drawable/icon_letter"
             app:showAsAction="never" />
     </group>
 </menu>

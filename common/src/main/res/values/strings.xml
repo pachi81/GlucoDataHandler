@@ -57,6 +57,7 @@
     <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
     <string name="update_link"  translatable="false">https://github.com/pachi81/GlucoDataHandler/releases</string>
     <string name="support_link"  translatable="false">https://github.com/pachi81/GlucoDataHandler/issues</string>
+    <string name="gda_support_link"  translatable="false">https://github.com/pachi81/GlucoDataAuto/issues</string>
 
     <!-- tasker -->
 
@@ -266,7 +267,7 @@
 
     <!-- GlucoDataAuto -->
 
-    <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataHandler/blob/master/GlucoDataAuto.md</string>
+    <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataAuto/blob/main/README.md</string>
     <string name="gda_no_data">For using this app in Android Auto, you have to activate developer settings in Android Auto by clicking several times on the version. Then you have to enable \"Unknown sources\" in the developer settings menu.\n\nIf you are using GlucoDataHandler as source, the values will be send if the phone is connected to Android Auto.</string>
     <string name="pref_gda_info">Information</string>
     <string name="pref_gda_info_summary">If you are using GlucoDataHandler as source, these settings will be overwritten from GlucoDataHandler, so you do not have to change them here.</string>
