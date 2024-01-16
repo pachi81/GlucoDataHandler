@@ -29,6 +29,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     const val SOURCE_INDEX = "source_idx"
     const val IOB = "gdh.IOB"
     const val COB = "gdh.COB"
+    const val IOBCOB_TIME = "gdh.IOB_COB_time"
 
     private const val LAST_ALARM_INDEX = "last_alarm_index"
     private const val LAST_ALARM_TIME = "last_alarm_time"
@@ -65,19 +66,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var source: DataSource = DataSource.NONE
     var forceAlarm: Boolean = false
     var iob: Float = Float.NaN
-    val iobString: String get() {
-        if(iob.isNaN()) {
-            return " - "
-        }
-        return "%.2f".format(iob)
-    }
     var cob: Float = Float.NaN
-    val cobString: String get() {
-        if(cob.isNaN()) {
-            return " - "
-        }
-        return cob.toString()
-    }
+    var iobCobTime: Long = 0
     private var lowValue: Float = 70F
     private val low: Float get() {
         if(isMmol && lowValue > 0F)  // mmol/l
@@ -159,14 +149,18 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 context.getString(R.string.info_label_timestamp) + ": " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(time)) + "\r\n" +
                 context.getString(R.string.info_label_alarm) + ": " + context.getString(getAlarmType().resId) + (if (forceAlarm) " ⚠" else "" ) + " (" + alarm + ")\r\n" +
                 (if (isMmol) context.getString(R.string.info_label_raw) + ": " + rawValue + " mg/dl\r\n" else "") +
-                (if (!iob.isNaN()) context.getString(R.string.info_label_iob) + ": " + iobString + "U\r\n" else "") +
-                (if (!cob.isNaN()) context.getString(R.string.info_label_cob) + ": " + cobString + "g\r\n" else "") +
+                (       if (isIobCob()) {
+                            context.getString(R.string.info_label_iob) + ": " + getIobAsString() + " / " + context.getString(R.string.info_label_cob) + ": " + getCobAsString() + "\r\n" +
+                                    context.getString(R.string.info_label_iob_cob_timestamp) + ": " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(iobCobTime)) + "\r\n"
+                        }
+                        else "" ) +
                 (if (sensorID.isNullOrEmpty()) "" else context.getString(R.string.info_label_sensor_id) + ": " + (if(BuildConfig.DEBUG) "ABCDE12345" else sensorID) + "\r\n") +
                 context.getString(R.string.info_label_source) + ": " + context.getString(source.resId)
                 )
     }
 
     fun isObsolete(timeoutSec: Int = Constants.VALUE_OBSOLETE_LONG_SEC): Boolean = (System.currentTimeMillis()- time) >= (timeoutSec * 1000)
+    fun isIobCobObsolete(timeoutSec: Int = Constants.VALUE_OBSOLETE_LONG_SEC): Boolean = (System.currentTimeMillis()- iobCobTime) >= (timeoutSec * 1000)
 
     fun getClucoseAsString(): String {
         if(isObsolete())
@@ -199,6 +193,42 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         if (isMmol)
             return "mmol/l"
         return "mg/dl"
+    }
+
+    fun isIobCob() : Boolean {
+        if (isIobCobObsolete(Constants.VALUE_OBSOLETE_LONG_SEC)) {
+            iob = Float.NaN
+            cob = Float.NaN
+        }
+        return !iob.isNaN() || !cob.isNaN()
+    }
+
+    val iobString: String get() {
+        if (isIobCobObsolete(Constants.VALUE_OBSOLETE_LONG_SEC))
+            iob = Float.NaN
+        if(iob.isNaN() || isIobCobObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) {
+            return " - "
+        }
+        return "%.2f".format(iob)
+    }
+    val cobString: String get() {
+        if (isIobCobObsolete(Constants.VALUE_OBSOLETE_LONG_SEC))
+            cob = Float.NaN
+        if(cob.isNaN() || isIobCobObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) {
+            return " - "
+        }
+        return cob.toString()
+    }
+
+    fun getIobAsString(withUnit: Boolean = true): String {
+        if (withUnit)
+            return iobString + "U"
+        return iobString
+    }
+    fun getCobAsString(withUnit: Boolean = true): String {
+        if (withUnit)
+            return cobString + "g"
+        return cobString
     }
 
     // alarm bits: 1111 -> first: force alarm (8), second: high or low alarm (4), last: low (1) 
@@ -394,8 +424,14 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 }
                 time = extras.getLong(TIME) //time in msec
 
-                iob = extras.getFloat(IOB, Float.NaN)
-                cob = extras.getFloat(COB, Float.NaN)
+                if(extras.containsKey(IOB) || extras.containsKey(COB)) {
+                    iob = extras.getFloat(IOB, Float.NaN)
+                    cob = extras.getFloat(COB, Float.NaN)
+                    if(extras.containsKey(IOBCOB_TIME))
+                        iobCobTime = extras.getLong(IOBCOB_TIME)
+                    else
+                        iobCobTime = time
+                }
 
                 // check for alarm
                 if (interApp) {
@@ -426,6 +462,13 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             Log.i(LOG_ID, "Only IOB/COB changed: " + extras.getFloat(IOB) + "/" +  extras.getFloat(COB))
             iob = extras.getFloat(IOB, Float.NaN)
             cob = extras.getFloat(COB, Float.NaN)
+
+            if(extras.containsKey(IOBCOB_TIME))
+                iobCobTime = extras.getLong(IOBCOB_TIME)
+            else if(extras.containsKey(TIME))
+                iobCobTime = extras.getLong(TIME)
+            else
+                iobCobTime = System.currentTimeMillis()
 
             val notifySource = if(interApp) NotifySource.MESSAGECLIENT else NotifySource.BROADCAST
 
@@ -562,6 +605,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         extras.putFloat(DELTA, deltaValue)
         extras.putFloat(IOB, iob)
         extras.putFloat(COB, cob)
+        extras.putLong(IOBCOB_TIME, iobCobTime)
         return extras
     }
 
@@ -580,6 +624,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 putFloat(DELTA, deltaValue)
                 putFloat(IOB, iob)
                 putFloat(COB, cob)
+                putLong(IOBCOB_TIME, iobCobTime)
                 putInt(SOURCE_INDEX, source.ordinal)
                 putLong(LAST_ALARM_TIME, lastAlarmTime)
                 putInt(LAST_ALARM_INDEX, lastAlarmType.ordinal)
@@ -606,6 +651,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     extras.putFloat(DELTA, sharedGlucosePref.getFloat(DELTA, deltaValue))
                     extras.putFloat(IOB, sharedGlucosePref.getFloat(IOB, iob))
                     extras.putFloat(COB, sharedGlucosePref.getFloat(COB, cob))
+                    extras.putLong(IOBCOB_TIME, sharedGlucosePref.getLong(IOBCOB_TIME, iobCobTime))
                     lastAlarmType = AlarmType.fromIndex(sharedGlucosePref.getInt(LAST_ALARM_INDEX, AlarmType.NONE.ordinal))
                     lastAlarmTime = sharedGlucosePref.getLong(LAST_ALARM_TIME, 0L)
                     handleIntent(context, DataSource.fromIndex(sharedGlucosePref.getInt(SOURCE_INDEX,

@@ -97,6 +97,7 @@ object Constants {
     const val SHARED_PREF_NIGHTSCOUT_URL="src_ns_url"
     const val SHARED_PREF_NIGHTSCOUT_SECRET="src_ns_secret"
     const val SHARED_PREF_NIGHTSCOUT_TOKEN="src_ns_token"
+    const val SHARED_PREF_NIGHTSCOUT_IOB_COB="src_ns_iob_cob"
 
     const val SHARED_PREF_DUMMY_VALUES = "dummy_values"
 }

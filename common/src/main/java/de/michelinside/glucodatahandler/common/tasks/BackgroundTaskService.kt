@@ -54,9 +54,18 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         }
     }
 
+    private fun hasForceExecuteTask() : Boolean {
+        backgroundTaskList.forEach {
+            if (it.forceExecute())
+                return true
+        }
+        return false
+    }
+
     private fun executeTasks(force: Boolean = false) {
+        Log.v(LOG_ID, "executeTasks called with force: " + force)
         try {
-            if (force || (lastElapsedMinute != elapsedTimeMinute && elapsedTimeMinute != 0L)) {
+            if (force || (lastElapsedMinute != elapsedTimeMinute && elapsedTimeMinute != 0L) || hasForceExecuteTask()) {
                 Thread {
                     val wakeLock: PowerManager.WakeLock =
                         (context!!.getSystemService(Context.POWER_SERVICE) as PowerManager).run {
@@ -67,7 +76,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                     try {
                         isRunning = true
                         backgroundTaskList.forEach {
-                            if (force || (elapsedTimeMinute != 0L && ((lastElapsedMinute < 0 && initialExecution) || (elapsedTimeMinute.mod(it.getIntervalMinute()) == 0L && it.active(elapsedTimeMinute))))) {
+                            if (force || it.forceExecute() || (elapsedTimeMinute != 0L && ((lastElapsedMinute < 0 && initialExecution) || (elapsedTimeMinute.mod(it.getIntervalMinute()) == 0L && it.active(elapsedTimeMinute))))) {
                                 try {
                                     Log.i(LOG_ID, "execute after " + elapsedTimeMinute + " min: " + it)
                                     it.execute(context!!)
@@ -104,6 +113,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     }
 
     private fun active(elapsedTime: Long) : Boolean {
+        Log.v(LOG_ID, "check active after elapsed time " + elapsedTime)
         backgroundTaskList.forEach {
             if (it.active(elapsedTime))
                 return true
@@ -246,7 +256,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         try {
             Log.v(LOG_ID, "OnNotifyData for source " + dataSource.toString())
             // restart time
-            if (!isRunning)
+            if (!isRunning && !hasForceExecuteTask())
                 startTimer()
         } catch (ex: Exception) {
             Log.e(LOG_ID, "OnNotifyData: " + ex)

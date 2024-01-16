@@ -204,11 +204,11 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
             remoteViews.setTextViewText(R.id.timeText, "🕒 " + ReceiveData.getElapsedTimeMinuteAsString(context))
         }
         if (hasDelta)
-            remoteViews.setTextViewText(R.id.deltaText, "𝚫 " + ReceiveData.getDeltaAsString())
+            remoteViews.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
 
         if (hasIobCob) {
-            remoteViews.setTextViewText(R.id.iobText, "💉 " + ReceiveData.iobString + "U")
-            remoteViews.setTextViewText(R.id.cobText, "🍔 " + ReceiveData.cobString + "g")
+            remoteViews.setTextViewText(R.id.iobText, "💉 " + ReceiveData.getIobAsString())
+            remoteViews.setTextViewText(R.id.cobText, "🍔 " + ReceiveData.getCobAsString())
         }
         return remoteViews
     }

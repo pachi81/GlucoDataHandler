@@ -32,4 +32,11 @@
             </menu>
         </item>
     </group>
+    <group
+        android:id="@+id/group_contact">
+        <item
+            android:id="@+id/action_contact"
+            android:title="@string/menu_contact"
+            app:showAsAction="never" />
+    </group>
 </menu>

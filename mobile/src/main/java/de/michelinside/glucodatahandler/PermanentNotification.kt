@@ -123,18 +123,18 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             remoteViews.setTextViewText(R.id.glucose, ReceiveData.getClucoseAsString())
             remoteViews.setTextColor(R.id.glucose, ReceiveData.getClucoseColor())
             remoteViews.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap())
-            remoteViews.setTextViewText(R.id.deltaText, "Delta: " + ReceiveData.getDeltaAsString())
+            remoteViews.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
             if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) {
                 if (!ReceiveData.isObsolete())
                     remoteViews.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
                 remoteViews.setTextColor(R.id.deltaText, Color.GRAY )
             }
-            if(ReceiveData.iob.isNaN() || ReceiveData.cob.isNaN()) {
+            if(!ReceiveData.isIobCob()) {
                 remoteViews.setViewVisibility(R.id.iobText, View.GONE)
                 remoteViews.setViewVisibility(R.id.cobText, View.GONE)
             } else {
-                remoteViews.setTextViewText(R.id.iobText, GlucoDataService.context!!.getString(R.string.iob_label) + ": " + ReceiveData.iobString + "U")
-                remoteViews.setTextViewText(R.id.cobText, GlucoDataService.context!!.getString(R.string.cob_label) + ": " + ReceiveData.cobString + "g")
+                remoteViews.setTextViewText(R.id.iobText, GlucoDataService.context!!.getString(R.string.iob_label) + ": " + ReceiveData.getIobAsString() )
+                remoteViews.setTextViewText(R.id.cobText, GlucoDataService.context!!.getString(R.string.cob_label) + ": " + ReceiveData.getCobAsString())
                 remoteViews.setViewVisibility(R.id.iobText, View.VISIBLE)
                 remoteViews.setViewVisibility(R.id.cobText, View.VISIBLE)
             }

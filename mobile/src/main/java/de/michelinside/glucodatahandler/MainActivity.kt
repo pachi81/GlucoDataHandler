@@ -254,6 +254,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     startActivity(browserIntent)
                     return true
                 }
+                R.id.action_contact -> {
+                    val mailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto","GlucoDataHandler@michel-inside.de", null))
+                    mailIntent.putExtra(Intent.EXTRA_SUBJECT, "GlucoDataHander v" + BuildConfig.VERSION_NAME)
+                    startActivity(mailIntent)
+                    return true
+                }
                 else -> return super.onOptionsItemSelected(item)
             }
         } catch (exc: Exception) {

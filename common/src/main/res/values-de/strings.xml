@@ -5,6 +5,7 @@
     <string name="info_label_alarm">Alarm</string>
     <string name="info_label_timediff">Zeitdiff</string>
     <string name="info_label_timestamp">Zeitpunkt</string>
+    <string name="info_label_iob_cob_timestamp">IOB/COB Zeit</string>
     <string name="info_label_rate">Trend</string>
     <string name="info_label_delta">Delta</string>
     <string name="info_label_value">Wert</string>
@@ -284,5 +285,8 @@
     <string name="pref_source_xdrip_info_summary">Konfiguration von xDrip+:\n- xDrip+ App öffnen\n- Einstellungen öffnen\n- Inter-App Einstellungen auswählen\n- Lokaler Broadcast aktivieren\n- in Verrauschungsunterdrückung \"Send even Extremely noisy signals\" auswählen\n- Kompatible Broadcasts aktivieren\n- Identifiziere Empfänger leer lassen oder eine neue Zeile mit \"de.michelinside.glucodatahandler\" hinzufügen</string>
     <string name="pref_source_librelinkup_info">LibreLinkUp einrichten</string>
     <string name="pref_source_librelinkup_info_summary">WICHTIG: nicht den LibreView Zugang verwenden!\nEinrichtung:\n- FreeStyle Libre App öffnen und unter Verbinden auf Teilen oder Verbundene Anwendungen klicken\n- LibreLinkUp aktivieren\n- LibreLinkUp aus dem PlayStore installieren\n- in der LibreLinkUp App einloggen und die Einladung annehmen</string>
+    <string name="menu_contact">Kontakt</string>
+    <string name="src_ns_iob_cob">IOB/COB Unterstützung</string>
+    <string name="src_ns_iob_cob_summary">Zusätzlich auch IOB und COB Werte vom Nightscout Pebble Endpunkt empfangen.</string>
 
 </resources>

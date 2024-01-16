@@ -7,6 +7,7 @@
     <string name="info_label_delta">Delta</string>
     <string name="info_label_rate">Tempo</string>
     <string name="info_label_timestamp">Znacznik czasu</string>
+    <string name="info_label_iob_cob_timestamp">IOB/COB time</string>
     <string name="info_label_timediff">Różnica czasu</string>
     <string name="info_label_alarm">Alarm</string>
     <string name="info_label_source">Źródło</string>
@@ -286,5 +287,8 @@
     <string name="pref_source_xdrip_info_summary">Aby odbierać wartości z xDrip+:\n- otwórz xDrip+\n- przejdź do ustawień\n- przejdź do ustawień innych aplikacji\n- włącz &quot;Nadawaj lokalnie&quot;\n- ustaw &quot;Blokowanie szumów&quot; na &quot;Send even Extremely noisy signals&quot;\n- włącz &quot;Kompatybilny Broadcast&quot;\n- sprawdź, czy pole &quot;Identyfikuj odbiornik&quot; jest puste lub dodaj nową linię z &quot;de.michelinside.glucodatahandler&quot;.</string>
     <string name="pref_source_librelinkup_info">Konfiguracja LibreLinkUp</string>
     <string name="pref_source_librelinkup_info_summary">WAŻNE: to nie jest konto LibreView! Aby aktywować LibreLinkUp:\n- otwórz aplikację FreeStyle Libre i wybierz w menu Udostępnianie lub Podłączone aplikacje\n- aktywuj połączenie LibreLinkUp\n- zainstaluj LibreLinkUp ze Sklepu Play\n- skonfiguruj swoje konto i czekaj na zaproszenie</string>
+    <string name="menu_contact">Contact</string>
+    <string name="src_ns_iob_cob">IOB/COB support</string>
+    <string name="src_ns_iob_cob_summary">Receive also IOB and COB values from nightscout pebble endpoint.</string>
 
 </resources>

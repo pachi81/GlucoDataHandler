@@ -107,5 +107,11 @@
             android:title="@string/src_ns_token"
             android:summary="@string/src_ns_token_summary"
             app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="src_ns_iob_cob"
+            android:title="@string/src_ns_iob_cob"
+            android:summary="@string/src_ns_iob_cob_summary"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 </PreferenceScreen>

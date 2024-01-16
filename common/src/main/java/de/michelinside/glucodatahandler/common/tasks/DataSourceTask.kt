@@ -46,6 +46,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             Constants.SHARED_PREF_NIGHTSCOUT_URL,
             Constants.SHARED_PREF_NIGHTSCOUT_SECRET,
             Constants.SHARED_PREF_NIGHTSCOUT_TOKEN,
+            Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB
         )
         fun updateSettings(context: Context, bundle: Bundle) {
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -59,6 +60,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                 putString(Constants.SHARED_PREF_NIGHTSCOUT_URL, bundle.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, ""))
                 putString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, bundle.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, ""))
                 putString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, bundle.getString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, ""))
+                putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, bundle.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, true))
                 apply()
             }
             InternalNotifier.notify(context, NotifySource.SOURCE_SETTINGS, null)
@@ -74,6 +76,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             bundle.putString(Constants.SHARED_PREF_NIGHTSCOUT_URL, sharedPref.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, ""))
             bundle.putString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, sharedPref.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, ""))
             bundle.putString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, sharedPref.getString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, ""))
+            bundle.putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, sharedPref.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, true))
             return bundle
         }
 
@@ -107,6 +110,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     }
 
     fun setState(state: SourceState, error: String = "", code: Int = -1) {
+        Log.v(LOG_ID,"Set state for source " + source + ": " + state + " - " + error + " (" + code + ")")
         lastErrorCode = code
         lastState = state
 
@@ -159,8 +163,9 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         val done = AtomicBoolean(false)
         val task = Runnable {
             val lastTime = ReceiveData.time
+            val lastIobCobTime = ReceiveData.iobCobTime
             ReceiveData.handleIntent(GlucoDataService.context!!, source, extras)
-            if (ReceiveData.time == lastTime)
+            if (ReceiveData.time == lastTime && lastIobCobTime != ReceiveData.iobCobTime && !forceExecute())
                 setState(SourceState.NO_NEW_VALUE)
             else
                 setState(SourceState.NONE)
@@ -170,7 +175,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         while (!done.get()) {
             Thread.sleep(5)
         }
-        Log.d(LOG_ID, "handleResult done!")
+        Log.d(LOG_ID, "handleResult for " + source + " done!")
     }
 
     protected fun trustAllCertificates(httpURLConnection: HttpsURLConnection) {
