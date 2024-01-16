@@ -458,7 +458,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
 
     fun handleIobCob(context: Context, dataSource: DataSource, extras: Bundle, interApp: Boolean = false) {
         Log.v(LOG_ID, "handleIobCob for source " + dataSource + ": " + extras.toString())
-        if ((extras.containsKey(IOB) && iob != extras.getFloat(IOB)) || (extras.containsKey(COB) && cob != extras.getFloat(COB))) {
+        if (extras.containsKey(IOB) || extras.containsKey(COB)) {
             Log.i(LOG_ID, "Only IOB/COB changed: " + extras.getFloat(IOB) + "/" +  extras.getFloat(COB))
             iob = extras.getFloat(IOB, Float.NaN)
             cob = extras.getFloat(COB, Float.NaN)
