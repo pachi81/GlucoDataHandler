@@ -5,7 +5,7 @@
     <PreferenceCategory
         android:title="@string/pref_cat_general"
         app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="0">
+        app:initialExpandedChildrenCount="1">
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="use_mmol"
@@ -95,17 +95,7 @@
     <PreferenceCategory
         android:title="@string/pref_cat_widgets"
         app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="0">
-        <androidx.preference.SeekBarPreference
-            android:defaultValue="3"
-            app:showSeekBarValue="true"
-            app:seekBarIncrement="1"
-            app:min="0"
-            android:max="10"
-            android:key="widget_transparency"
-            android:summary="@string/pref_widget_transparency_summary"
-            android:title="@string/pref_widget_transparency"
-            app:iconSpaceReserved="false" />
+        app:initialExpandedChildrenCount="1">
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="floating_widget"
@@ -139,6 +129,16 @@
             android:key="floating_widget_transparency"
             android:summary="@string/pref_floating_widget_transparency_summary"
             android:title="@string/pref_floating_widget_transparency"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SeekBarPreference
+            android:defaultValue="3"
+            app:showSeekBarValue="true"
+            app:seekBarIncrement="1"
+            app:min="0"
+            android:max="10"
+            android:key="widget_transparency"
+            android:summary="@string/pref_widget_transparency_summary"
+            android:title="@string/pref_widget_transparency"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory
@@ -189,7 +189,7 @@
     <PreferenceCategory
         android:title="@string/pref_cat_android_auto"
         app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="0">
+        app:initialExpandedChildrenCount="1">
         <Preference
             android:key="no_gda_info"
             android:summary="@string/pref_no_gda_info_summary"
