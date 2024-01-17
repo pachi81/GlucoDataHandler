@@ -216,7 +216,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         if(cob.isNaN() || isIobCobObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) {
             return " - "
         }
-        return cob.toString()
+        return Utils.round(cob, 0).toInt().toString()
     }
 
     fun getIobAsString(withUnit: Boolean = true): String {
