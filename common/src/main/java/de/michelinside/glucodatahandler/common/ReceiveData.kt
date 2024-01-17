@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
-import android.os.PowerManager
 import android.util.Log
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.notifier.DataSource
@@ -12,6 +11,7 @@ import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.common.utils.WakeLockHelper
 import java.math.RoundingMode
 import java.text.DateFormat
 import java.util.*
@@ -33,7 +33,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
 
     private const val LAST_ALARM_INDEX = "last_alarm_index"
     private const val LAST_ALARM_TIME = "last_alarm_time"
-    private const val WAKE_LOCK_TIMEOUT = 10000L // 10 seconds
 
     enum class AlarmType(val resId: Int) {
         NONE(R.string.alarm_none),
@@ -354,104 +353,100 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         if (extras == null || extras.isEmpty) {
             return false
         }
-        initData(context)
         var result = false
-        val wakeLock: PowerManager.WakeLock =
-            (context.getSystemService(Context.POWER_SERVICE) as PowerManager).run {
-                newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "GlucoDataHandler::BackgroundTaskTag").apply {
-                    acquire(WAKE_LOCK_TIMEOUT)
-                }
-            }
-        try {
-            val new_time = extras.getLong(TIME)
-            Log.d(
-                LOG_ID, "Glucodata received from " + dataSource.toString() + ": " +
-                        extras.toString() +
-                        " - timestamp: " + DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(Date(new_time)) +
-                        " - difference: " + (new_time-time)
-            )
-
-            if (!GlucoDataUtils.isGlucoseValid(extras.getInt(MGDL))) {
-                Log.w(LOG_ID, "Invalid glucose values received! " + extras.toString())
-                return false
-            }
-
-            if(getTimeDiffMinute(new_time) >= 1) // check for new value received (diff must around one minute at least to prevent receiving same data from different sources with similar timestamps
-            {
-                Log.i(
+        WakeLockHelper(context).use {
+            initData(context)
+            try {
+                val new_time = extras.getLong(TIME)
+                Log.d(
                     LOG_ID, "Glucodata received from " + dataSource.toString() + ": " +
                             extras.toString() +
-                            " - timestamp: " + DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(Date(extras.getLong(TIME)))
+                            " - timestamp: " + DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(Date(new_time)) +
+                            " - difference: " + (new_time-time)
                 )
-                source = dataSource
-                sensorID = extras.getString(SERIAL) //Name of sensor
-                rate = extras.getFloat(RATE) //Rate of change of glucose. See libre and dexcom label functions
-                rateLabel = GlucoDataUtils.getRateLabel(context, rate)
 
-                if (extras.containsKey(DELTA)) {
-                    deltaValue = extras.getFloat(DELTA, Float.NaN)
-                } else if (time > 0) {
-                    // calculate delta value
-                    timeDiff = new_time-time
-                    val timeDiffMinute = getTimeDiffMinute(new_time)
-                    if (timeDiffMinute == 0L) {
-                        Log.w(LOG_ID, "Time diff is less than a minute! Can not calculate delta value!")
-                        deltaValue = Float.NaN
-                    } else if (timeDiffMinute > 10L) {
-                        deltaValue = Float.NaN   // no delta calculation for too high time diffs
+                if (!GlucoDataUtils.isGlucoseValid(extras.getInt(MGDL))) {
+                    Log.w(LOG_ID, "Invalid glucose values received! " + extras.toString())
+                    return false
+                }
+
+                if(getTimeDiffMinute(new_time) >= 1) // check for new value received (diff must around one minute at least to prevent receiving same data from different sources with similar timestamps
+                {
+                    Log.i(
+                        LOG_ID, "Glucodata received from " + dataSource.toString() + ": " +
+                                extras.toString() +
+                                " - timestamp: " + DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(Date(extras.getLong(TIME)))
+                    )
+                    source = dataSource
+                    sensorID = extras.getString(SERIAL) //Name of sensor
+                    rate = extras.getFloat(RATE) //Rate of change of glucose. See libre and dexcom label functions
+                    rateLabel = GlucoDataUtils.getRateLabel(context, rate)
+
+                    if (extras.containsKey(DELTA)) {
+                        deltaValue = extras.getFloat(DELTA, Float.NaN)
+                    } else if (time > 0) {
+                        // calculate delta value
+                        timeDiff = new_time-time
+                        val timeDiffMinute = getTimeDiffMinute(new_time)
+                        if (timeDiffMinute == 0L) {
+                            Log.w(LOG_ID, "Time diff is less than a minute! Can not calculate delta value!")
+                            deltaValue = Float.NaN
+                        } else if (timeDiffMinute > 10L) {
+                            deltaValue = Float.NaN   // no delta calculation for too high time diffs
+                        } else {
+                            deltaValue = (extras.getInt(MGDL) - rawValue).toFloat()
+                            val deltaTime = if(use5minDelta) 5L else 1L
+                            if(timeDiffMinute != deltaTime) {
+                                val factor: Float = timeDiffMinute.toFloat() / deltaTime.toFloat()
+                                Log.d(LOG_ID, "Divide delta " + deltaValue.toString() + " with factor " + factor.toString() + " for time diff: " + timeDiffMinute.toString() + " minute(s)")
+                                deltaValue /= factor
+                            }
+                        }
                     } else {
-                        deltaValue = (extras.getInt(MGDL) - rawValue).toFloat()
-                        val deltaTime = if(use5minDelta) 5L else 1L
-                        if(timeDiffMinute != deltaTime) {
-                            val factor: Float = timeDiffMinute.toFloat() / deltaTime.toFloat()
-                            Log.d(LOG_ID, "Divide delta " + deltaValue.toString() + " with factor " + factor.toString() + " for time diff: " + timeDiffMinute.toString() + " minute(s)")
-                            deltaValue /= factor
+                        deltaValue = Float.NaN
+                    }
+
+                    rawValue = extras.getInt(MGDL)
+                    if (extras.containsKey(GLUCOSECUSTOM)) {
+                        glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
+                        changeIsMmol(rawValue!=glucose.toInt() && GlucoDataUtils.isMmolValue(glucose), context)
+                    } else {
+                        glucose = rawValue.toFloat()
+                        if (isMmol) {
+                            glucose = GlucoDataUtils.mgToMmol(glucose)
                         }
                     }
-                } else {
-                    deltaValue = Float.NaN
-                }
+                    time = extras.getLong(TIME) //time in msec
 
-                rawValue = extras.getInt(MGDL)
-                if (extras.containsKey(GLUCOSECUSTOM)) {
-                    glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
-                    changeIsMmol(rawValue!=glucose.toInt() && GlucoDataUtils.isMmolValue(glucose), context)
-                } else {
-                    glucose = rawValue.toFloat()
-                    if (isMmol) {
-                        glucose = GlucoDataUtils.mgToMmol(glucose)
+                    if(extras.containsKey(IOB) || extras.containsKey(COB)) {
+                        iob = extras.getFloat(IOB, Float.NaN)
+                        cob = extras.getFloat(COB, Float.NaN)
+                        if(extras.containsKey(IOBCOB_TIME))
+                            iobCobTime = extras.getLong(IOBCOB_TIME)
+                        else
+                            iobCobTime = time
                     }
-                }
-                time = extras.getLong(TIME) //time in msec
 
-                if(extras.containsKey(IOB) || extras.containsKey(COB)) {
-                    iob = extras.getFloat(IOB, Float.NaN)
-                    cob = extras.getFloat(COB, Float.NaN)
-                    if(extras.containsKey(IOBCOB_TIME))
-                        iobCobTime = extras.getLong(IOBCOB_TIME)
-                    else
-                        iobCobTime = time
-                }
+                    // check for alarm
+                    if (interApp) {
+                        alarm = extras.getInt(ALARM) // if bit 8 is set, then an alarm is triggered
+                        setForceAlarm((alarm and 8) == 8, getAlarmType())
+                    } else {
+                        alarm = calculateAlarm()
+                    }
+                    val notifySource = if(interApp) NotifySource.MESSAGECLIENT else NotifySource.BROADCAST
 
-                // check for alarm
-                if (interApp) {
-                    alarm = extras.getInt(ALARM) // if bit 8 is set, then an alarm is triggered
-                    setForceAlarm((alarm and 8) == 8, getAlarmType())
+                    InternalNotifier.notify(context, notifySource, createExtras())  // re-create extras to have all changed value inside...
+                    saveExtras(context)
+                    result = true
+                } else if( extras.containsKey(IOB) || extras.containsKey(COB)) {
+                    handleIobCob(context, dataSource, extras, interApp)
                 } else {
-                    alarm = calculateAlarm()
+                    // dummy
                 }
-                val notifySource = if(interApp) NotifySource.MESSAGECLIENT else NotifySource.BROADCAST
-
-                InternalNotifier.notify(context, notifySource, createExtras())  // re-create extras to have all changed value inside...
-                saveExtras(context)
-                result = true
-            } else if( extras.containsKey(IOB) || extras.containsKey(COB)) {
-                handleIobCob(context, dataSource, extras, interApp)
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "Receive exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
             }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "Receive exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
-        } finally {
-            wakeLock.release()
         }
         return result
     }
