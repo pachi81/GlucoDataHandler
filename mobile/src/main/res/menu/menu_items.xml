@@ -15,7 +15,7 @@
             android:id="@+id/action_sources"
             android:icon="@drawable/icon_source"
             android:title="@string/menu_sources"
-            app:showAsAction="ifRoom" />
+            app:showAsAction="never" />
     </group>
     <group
         android:id="@+id/group_github">
