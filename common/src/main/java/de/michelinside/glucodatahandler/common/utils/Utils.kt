@@ -14,6 +14,7 @@ import android.util.Log
 import android.util.TypedValue
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import java.math.RoundingMode
+import java.security.MessageDigest
 
 
 object Utils {
@@ -141,6 +142,34 @@ object Utils {
             }
         }
         return false*/
+    }
+
+    fun byteToHex(num: Byte): String {
+        val hexDigits = CharArray(2)
+        hexDigits[0] = Character.forDigit(num.toInt() shr 4 and 0xF, 16)
+        hexDigits[1] = Character.forDigit(num.toInt() and 0xF, 16)
+        return String(hexDigits)
+    }
+    fun toHexString(bytes: ByteArray): String {
+        val hexStringBuffer = StringBuffer()
+        for (element in bytes) {
+            hexStringBuffer.append(byteToHex(element))
+        }
+        return hexStringBuffer.toString()
+    }
+
+    fun encryptSHA1(value: String): String {
+        if (value.trim().isEmpty())
+            return ""
+        try {
+            val message: ByteArray = value.trim().toByteArray(Charsets.UTF_8)
+            val md = MessageDigest.getInstance("SHA-1")
+            val digest: ByteArray = md.digest(message)
+            return toHexString(digest)
+        } catch (ex: Exception) {
+            Log.e(LOG_ID, "Exception while encrypt SHA-1: " + ex)
+        }
+        return ""
     }
 
 }
