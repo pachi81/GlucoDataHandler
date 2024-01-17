@@ -209,7 +209,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         if(iob.isNaN() || isIobCobObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) {
             return " - "
         }
-        return "%.2f".format(iob)
+        return "%.2f".format(Locale.ROOT, iob)
     }
     val cobString: String get() {
         if (isIobCobObsolete(Constants.VALUE_OBSOLETE_LONG_SEC))
