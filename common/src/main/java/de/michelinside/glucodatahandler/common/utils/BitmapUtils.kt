@@ -186,18 +186,29 @@ object BitmapUtils {
 
     fun textRateToBitmap(text: String, rate: Float, color: Int, obsolete: Boolean = false, strikeThrough: Boolean, width: Int = 100, height: Int = 100, small: Boolean = false): Bitmap? {
         try {
-            val padding = if (isShortText(text)) 0F else height.toFloat()*0.05F
+            val padding = if (isShortText(text) || small) 0F else height.toFloat()*0.05F
             val rateFactor = if (isShortText(text)) 0.5F else 0.45F
             val resizeFactor = if (small) 0.6F else 1.0F
             val rateSize = Utils.round(height * rateFactor, 0).toInt()
-            val textHeight = height - rateSize - Utils.round(padding, 0).toInt()
-            val textBitmap = textToBitmap(text, color, true, strikeThrough, width, textHeight, true, false, resizeFactor)
-            val rateBitmap = rateToBitmap(rate, color, rateSize, rateSize, resizeFactor, obsolete)
+            var textHeight = Utils.round(height - rateSize - Utils.round(padding, 0).toInt().toFloat()*resizeFactor, 0).toInt()
+            val topRateSmall = padding + (height.toFloat()*(1F-resizeFactor)/2)
+            if (small) {
+                textHeight -= topRateSmall.toInt()
+            }
+            val resizeWidth = Utils.round(width.toFloat()*resizeFactor, 0).toInt()
+            val textBitmap = textToBitmap(text, color, true, strikeThrough, resizeWidth, textHeight, true, false, 1F)
+            val rateDimension = Utils.round(rateSize.toFloat() * resizeFactor, 0).toInt()
+            val rateBitmap = rateToBitmap(rate, color, rateDimension, rateDimension, 1F, obsolete)
             val comboBitmap = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888)
             val comboImage = Canvas(comboBitmap)
-            val rateTopFactor = if (small) 5F else 1F
-            comboImage.drawBitmap(rateBitmap!!, ((height-rateSize)/2).toFloat(), padding*rateTopFactor, null)
-            comboImage.drawBitmap(textBitmap!!, 0F, rateBitmap.height.toFloat()+padding, null)
+            if (small) {
+                comboImage.drawBitmap(rateBitmap!!, ((height-rateDimension)/2).toFloat(), topRateSmall, null)
+                Log.w(LOG_ID,topRateSmall.toString() + " - " + ((height/2)).toString() )
+                comboImage.drawBitmap(textBitmap!!, ((width-resizeWidth)/2).toFloat(), (height.toFloat()/2), null)
+            } else {
+                comboImage.drawBitmap(rateBitmap!!, ((height-rateDimension)/2).toFloat(), padding, null)
+                comboImage.drawBitmap(textBitmap!!, 0F, rateBitmap.height.toFloat()+padding, null)
+            }
             return comboBitmap
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Cannot create rate icon: " + exc.message.toString())
