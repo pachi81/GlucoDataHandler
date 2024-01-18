@@ -101,10 +101,10 @@ Również komplikacja WARTOŚĆ_ZAKRESU jest obsługiwana inaczej na każdej tar
 
 -> [Obsługa aplikacji Tasker](./TASKER.md)
 
-# Special thanks
-@[lostboy86](https://github.com/lostboy86) for testing, motivation and feedback
+# Szczególne podziękowania
+@[lostboy86](https://github.com/lostboy86) za testy, motywację i informacje zwrotne
 
-@[froter82](https://github.com/froster82) for polish translation, testing and feedback
+@[froter82](https://github.com/froster82) za tłumaczenie na język polski, testy i informacje zwrotne
 
 # Wesprzyj moją pracę
 [🍺 Buy me a beer](https://www.buymeacoffee.com/pachi81)
