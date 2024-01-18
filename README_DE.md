@@ -5,7 +5,7 @@
 ## Features
 
 * empfängt Glukose Werte als **[LibreLink Follower](#librelink)**
-* empfängt Glukose Werte von Nightscout
+* empfängt Glukose, IOB und COB Werte von Nightscout
 * empfängt Glukose Werte von [Juggluco](./INSTALLATION_DE.md#juggluco-konfigurieren)
 * empfängt Glukose Werte von [xDrip+](./INSTALLATION_DE.md#xdrip-konfigurieren)
 * stellt mehrere **[Widgets](#widgets)** für Android zur Verfügung
