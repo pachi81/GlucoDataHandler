@@ -101,7 +101,7 @@ Also the RANGE_VALUE complication is handled different in each watchface.
 # Special thanks
 @[lostboy86](https://github.com/lostboy86) for testing, motivation and feedback
 
-@[froter82](https://github.com/froster82) for polish translation, testing and feedback
+@[froter82](https://github.com/froster82) for Polish translation, testing and feedback
 
 # Support my work
 [🍺 Buy me a beer](https://www.buymeacoffee.com/pachi81)
