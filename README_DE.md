@@ -6,12 +6,12 @@
 
 * empfängt Glukose Werte als **[LibreLink Follower](#librelink)**
 * empfängt Glukose Werte von Nightscout
-* empfängt Glukose Werte von Juggluco
-* empfängt Glukose Werte von xDrip+
+* empfängt Glukose Werte von [Juggluco](./INSTALLATION_DE.md#juggluco-konfigurieren)
+* empfängt Glukose Werte von [xDrip+](./INSTALLATION_DE.md#xdrip-konfigurieren)
 * stellt mehrere **[Widgets](#widgets)** für Android zur Verfügung
 * optionale **[Benachrichtigungen](#benachrichtigungen)** um weitere Statusbar-Icons zur Verfügung zu haben
 * stellt mehrere **[Complications](#complications)** für Wear OS zur Verfügung
-* unterstützt **[Android Auto](./GlucoDataAuto_DE.md)** über die GlucoDataAuto APP
+* unterstützt **[Android Auto](https://github.com/pachi81/GlucoDataAuto/blob/main/README_DE.md)** über die GlucoDataAuto APP
 * **[Tasker Ereignisse](#tasker)** Integration
 * sendet Glucodata Broadcasts an andere Apps (die dies unterstützen)
 
@@ -98,6 +98,10 @@ Die Wear OS version stellt mehrere Complications zur Verfügung:
 
 -> [Tasker Integration](./TASKER.md)
 
+# Danksagung
+@[lostboy86](https://github.com/lostboy86) fürs Testen, Motivieren und dein Feeback
+
+@[froter82](https://github.com/froster82) für die polnische Übersetzung, fürs Testen und dein Feeback
 
 # Unterstützt meine Arbeit
 [🍺 Buy me a beer](https://www.buymeacoffee.com/pachi81)
