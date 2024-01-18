@@ -7,6 +7,7 @@
     <string name="info_label_delta">Delta</string>
     <string name="info_label_rate">Tempo</string>
     <string name="info_label_timestamp">Znacznik czasu</string>
+    <string name="info_label_iob_cob_timestamp">Czas IOB/COB</string>
     <string name="info_label_timediff">Różnica czasu</string>
     <string name="info_label_alarm">Alarm</string>
     <string name="info_label_source">Źródło</string>
@@ -79,13 +80,13 @@
     <string name="source_delay">Opóźnienie</string>
     <string name="source_delay_summary">Opóźnienie w sekundach przed zażądaniem danych z chmury, ponieważ zajmuje to trochę czasu, zanim dane się tam znajdą.</string>
 
-    <string name="src_cat_libreview">LibreLink Follower</string>
+    <string name="src_cat_libreview">LibreLinkUp Follower</string>
     <string name="src_libre_enabled">Włącz</string>
-    <string name="src_libre_enabled_summary">Włącz funkcję LibreLink follower, jeśli wprowadzono dane logowania użytkownika i hasło LibreLink.</string>
-    <string name="src_libre_user">Użytkownik</string>
-    <string name="src_libre_user_summary">Nazwa użytkownika LibreLink</string>
+    <string name="src_libre_enabled_summary">Włącz funkcję LibreLinkUp follower, jeśli wprowadzono adres e-mail i hasło do LibreLinkUp.</string>
+    <string name="src_libre_user">E-mail</string>
+    <string name="src_libre_user_summary">Adres e-mail do logowania do LibreLinkUp</string>
     <string name="src_libre_password">Hasło</string>
-    <string name="src_libre_password_summary">Hasło do LibreLink</string>
+    <string name="src_libre_password_summary">Hasło do LibreLinkUp</string>
     <string name="src_libre_reconnect">Połącz ponownie</string>
     <string name="src_libre_reconnect_summary">W kolejnym odstępie czasowym nastąpi nowe logowanie.</string>
     <string name="src_libre_setup_librelink">Najpierw skonfiguruj połączenie LibreLinkUp!</string>
@@ -203,6 +204,7 @@
     <string name="widget_glucose_trend">Glukoza i trend</string>
     <string name="widget_glucose_trend_delta">Glukoza, trend i delta</string>
     <string name="widget_glucose_trend_delta_timestamp">Glukoza, trend, delta i znacznik czasu</string>
+    <string name="widget_glucose_trend_delta_timestamp_iob_cob">Glukoza, trend, delta, znacznik czasu i IOB/COB</string>
 
     <string name="pref_send_to_bangleJS">Obsługa BangleJS</string>
     <string name="pref_send_to_bangleJS_summary">Przesyłaj wartości do widgetu widbgjs dla BangleJS.</string>
@@ -222,11 +224,13 @@
     <!-- complications -->
 
     <string name="short_value">Glukoza</string>
-    <string name="image_value">Glukoza (bardzo duża i kolorowa)</string>
+    <string name="image_value">Glukoza (bardzo duża i w kolorze)</string>
+    <string name="small_image_value">Glukoza (kolor)</string>
     <string name="icon_value">Glukoza (duża)</string>
     <string name="short_value_icon">Glukoza z ikoną</string>
     <string name="short_value_arrow">Glukoza i trend</string>
-    <string name="short_value_arrow_image">Glukoza i trend (duży i kolorowy)</string>
+    <string name="short_value_arrow_image">Glukoza i trend (duże i w kolorze)</string>
+    <string name="short_value_arrow_small_image">Glukoza i trend (kolor)</string>
     <string name="short_value_trend_range">Glukoza i zakres trendu (jeśli obsługiwane)</string>
     <string name="short_value_delta_trend_range">Glukoza, delta i zakres trendu (jeśli obsługiwane)</string>
     <string name="short_delta_trend_arrow_range">Delta, strzałka trendu i zakres trendu (jeśli obsługiwane)</string>
@@ -239,7 +243,8 @@
     <string name="short_delta_arrow">Trend delta i</string>
     <string name="short_delta_icon">Delta z ikoną</string>
     <string name="short_delta_time">Delta i znacznik czasu</string>
-    <string name="image_arrow">Trend (duży, kolorowy)</string>
+    <string name="image_arrow">Trend (duży, kolor)</string>
+    <string name="small_image_arrow">Trend (kolor)</string>
     <string name="icon_arrow">Ikona trendu</string>
     <string name="test_neg_range">Testowa komplikacja zakresu z wartościami ujemnymi (dla wsparcia zakresu trendu)</string>
     <string name="short_rate">Wartość trendu</string>
@@ -247,10 +252,11 @@
     <string name="short_rate_icon">Wartość trendu z ikoną</string>
     <string name="timestamp">Znacznik czasu glukozy</string>
     <string name="battery_level">Poziom baterii (zegarek i telefon)</string>
+    <string name="iob_cob">IOB/COB</string>
 
     <!-- GlucoDataAuto -->
 
-    <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataHandler/blob/master/GlucoDataAuto_PL.md</string>
+    <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataAuto/blob/main/README_PL.md</string>
     <string name="gda_no_data">Aby korzystać z tej aplikacji w Android Auto, musisz aktywować ustawienia programisty w Android Auto, klikając kilka razy na oznaczenie wersji. Następnie należy włączyć opcję \"Nieznane źródła\" w menu ustawień dewelopera.\n\nJeśli używasz aplikacji GlucoDataHandler jako źródła, wartości zostaną wysłane, jeśli telefon jest podłączony do Android Auto.</string>
     <string name="pref_gda_info">Informacje</string>
     <string name="pref_gda_info_summary">Jeśli używasz aplikacji GlucoDataHandler jako źródła, ustawienia te zostaną nadpisane z GlucoDataHandler, więc nie musisz ich tutaj zmieniać.</string>
@@ -281,5 +287,8 @@
     <string name="pref_source_xdrip_info_summary">Aby odbierać wartości z xDrip+:\n- otwórz xDrip+\n- przejdź do ustawień\n- przejdź do ustawień innych aplikacji\n- włącz &quot;Nadawaj lokalnie&quot;\n- ustaw &quot;Blokowanie szumów&quot; na &quot;Send even Extremely noisy signals&quot;\n- włącz &quot;Kompatybilny Broadcast&quot;\n- sprawdź, czy pole &quot;Identyfikuj odbiornik&quot; jest puste lub dodaj nową linię z &quot;de.michelinside.glucodatahandler&quot;.</string>
     <string name="pref_source_librelinkup_info">Konfiguracja LibreLinkUp</string>
     <string name="pref_source_librelinkup_info_summary">WAŻNE: to nie jest konto LibreView! Aby aktywować LibreLinkUp:\n- otwórz aplikację FreeStyle Libre i wybierz w menu Udostępnianie lub Podłączone aplikacje\n- aktywuj połączenie LibreLinkUp\n- zainstaluj LibreLinkUp ze Sklepu Play\n- skonfiguruj swoje konto i czekaj na zaproszenie</string>
+    <string name="menu_contact">Kontakt</string>
+    <string name="src_ns_iob_cob">Obsługa IOB/COB</string>
+    <string name="src_ns_iob_cob_summary">Odbieraj również wartości IOB (aktywnej insuliny) i COB (aktywnych węglowodanów) z pozycji "nightscout pebble endpoint".</string>
 
 </resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialKeyguardLayout="@layout/glucose_trend_delta_time_iob_cob_widget"
+    android:initialLayout="@layout/glucose_trend_delta_time_iob_cob_widget_short"
+    android:previewImage="@drawable/glucose_trend_delta_time_iob_cob_widget_preview"
+    android:minWidth="20dp"
+    android:minHeight="10dp"
+    android:resizeMode="vertical|horizontal"
+    android:updatePeriodMillis="86400000"
+    android:widgetCategory="home_screen" />

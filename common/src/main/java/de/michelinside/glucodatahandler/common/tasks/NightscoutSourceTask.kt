@@ -8,6 +8,7 @@ import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -17,12 +18,19 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
         private var url = ""
         private var secret = ""
         private var token = ""
+        private var iob_cob_support = true
         const val PEBBLE_ENDPOINT = "/pebble"
         const val ENTRIES_ENDPOINT = "/api/v1/entries/current.json"
     }
+
+    override fun forceExecute(): Boolean = active(1L) && iob_cob_support
+
     override fun executeRequest(context: Context) {
         if (!handlePebbleResponse(httpGet(getUrl(PEBBLE_ENDPOINT), getHeader()))) {
-            val (result, errorText) = handleEntriesResponse(httpGet(getUrl(ENTRIES_ENDPOINT), getHeader()))
+            val body = httpGet(getUrl(ENTRIES_ENDPOINT), getHeader())
+            if (body == null && lastErrorCode >= 300)
+                return
+            val (result, errorText) = handleEntriesResponse(body)
             if (!result) {
                 setLastError(errorText)
             }
@@ -35,8 +43,9 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
         var result = false
         if (key == null) {
             url = sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, "")!!.trim().trimEnd('/')
-            secret = sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, "")!!.trim()
+            secret = Utils.encryptSHA1(sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, "")!!)
             token = sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, "")!!
+            iob_cob_support = sharedPreferences.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, true)
             result = true
         } else {
             when(key) {
@@ -45,11 +54,15 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
                     result = true
                 }
                 Constants.SHARED_PREF_NIGHTSCOUT_SECRET -> {
-                    secret = sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, "")!!.trim()
+                    secret = Utils.encryptSHA1(sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, "")!!)
                     result = true
                 }
                 Constants.SHARED_PREF_NIGHTSCOUT_TOKEN -> {
                     token = sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, "")!!
+                    result = true
+                }
+                Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB -> {
+                    iob_cob_support = sharedPreferences.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, true)
                     result = true
                 }
             }
@@ -129,10 +142,15 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
                 setRate(glucoExtras, jsonObject)
                 if (jsonObject.has("device"))
                     glucoExtras.putString(ReceiveData.SERIAL, jsonObject.getString("device"))
-                if (jsonObject.has("iob"))
-                    glucoExtras.putFloat(ReceiveData.IOB, jsonObject.getDouble("iob").toFloat())
-                if (jsonObject.has("cob"))
-                    glucoExtras.putFloat(ReceiveData.COB, jsonObject.getDouble("cob").toFloat())
+                if (iob_cob_support) {
+                    if (jsonObject.has("iob"))
+                        glucoExtras.putFloat(ReceiveData.IOB, jsonObject.getDouble("iob").toFloat())
+                    if (jsonObject.has("cob"))
+                        glucoExtras.putFloat(ReceiveData.COB, jsonObject.getDouble("cob").toFloat())
+                } else {
+                    glucoExtras.putFloat(ReceiveData.IOB, Float.NaN)
+                    glucoExtras.putFloat(ReceiveData.COB, Float.NaN)
+                }
 
                 handleResult(glucoExtras)
                 return true

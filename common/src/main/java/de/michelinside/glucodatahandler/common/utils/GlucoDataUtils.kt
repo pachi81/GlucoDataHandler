@@ -98,6 +98,8 @@ object GlucoDataUtils {
             }
             raw =
                 if (first || ReceiveData.rawValue == 400) Constants.GLUCOSE_MIN_VALUE else ReceiveData.rawValue + rawDelta
+            if (raw < Constants.GLUCOSE_MIN_VALUE)
+                raw = Constants.GLUCOSE_MIN_VALUE
             glucose = if (useMmol) mgToMmol(raw.toFloat()) else raw.toFloat()
             if (useMmol && glucose == ReceiveData.glucose) {
                 raw += 1
@@ -124,6 +126,8 @@ object GlucoDataUtils {
         intent.putExtra(ReceiveData.RATE, Utils.round(rate, 2))
         intent.putExtra(ReceiveData.TIME, time)
         intent.putExtra(ReceiveData.ALARM, if (raw <= 70) 7 else if (raw >= 250) 6 else 0)
+        intent.putExtra(ReceiveData.IOB, Utils.round(rate, 2))
+        intent.putExtra(ReceiveData.COB, Utils.round(rate, 2)*10F+Utils.round(rate, 2))
         return intent
     }
 }

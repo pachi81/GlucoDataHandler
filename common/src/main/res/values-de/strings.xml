@@ -5,6 +5,7 @@
     <string name="info_label_alarm">Alarm</string>
     <string name="info_label_timediff">Zeitdiff</string>
     <string name="info_label_timestamp">Zeitpunkt</string>
+    <string name="info_label_iob_cob_timestamp">IOB/COB Zeit</string>
     <string name="info_label_rate">Trend</string>
     <string name="info_label_delta">Delta</string>
     <string name="info_label_value">Wert</string>
@@ -81,8 +82,8 @@
     <string name="src_cat_libreview">LibreLink Datenquelle</string>
     <string name="src_libre_enabled">Aktiv</string>
     <string name="src_libre_enabled_summary">Aktiviere LibreLink Datenquelle, falls der Benutzer und das Passwort für LibreLink gesetzt sind.</string>
-    <string name="src_libre_user">Benutzer</string>
-    <string name="src_libre_user_summary">Benutzername für LibreLink</string>
+    <string name="src_libre_user">E-Mail</string>
+    <string name="src_libre_user_summary">E-Mail für das Login zu LibreLink</string>
     <string name="src_libre_password">Passwort</string>
     <string name="src_libre_password_summary">Passwort für LibreLink</string>
     <string name="src_libre_reconnect">Reconnect</string>
@@ -201,6 +202,7 @@
     <string name="widget_glucose_trend">Zuckerwert und Trendpfeil</string>
     <string name="widget_glucose_trend_delta">Zuckerwert, Trendpfeil und Delta</string>
     <string name="widget_glucose_trend_delta_timestamp">Zuckerwert, Trendpfeil, Delta und Zeitpunkt</string>
+    <string name="widget_glucose_trend_delta_timestamp_iob_cob">Zuckerwert, Trendpfeil, Delta, Zeit und IOB/COB</string>
 
     <string name="pref_send_to_bangleJS">BangleJS Unterstützung</string>
     <string name="pref_send_to_bangleJS_summary">Werte an das widbgjs Widget auf BangleJS Uhren senden.</string>
@@ -221,10 +223,12 @@
 
     <string name="short_value">Zuckerwert</string>
     <string name="image_value">Zuckerwert (sehr groß und farbig)</string>
+    <string name="small_image_value">Zuckerwert (farbig)</string>
     <string name="icon_value">Zuckerwert (groß)</string>
     <string name="short_value_icon">Zuckerwert mit Icon</string>
     <string name="short_value_arrow">Zuckerwert und Trendpfeil</string>
     <string name="short_value_arrow_image">Zuckerwert und Trendpfeil (groß und farbig)</string>
+    <string name="short_value_arrow_small_image">Zuckerwert und Trendpfeil (farbig)</string>
     <string name="short_value_trend_range">Zuckerwert und Trendkreis (wenn unterstützt)</string>
     <string name="short_value_delta_trend_range">Zuckerwert, Delta und Trendkreis (wenn unterstützt)</string>
     <string name="short_delta_trend_arrow_range">Delta, Trendpfeil und -kreis (wenn unterstützt)</string>
@@ -238,6 +242,7 @@
     <string name="short_delta_icon">Delta mit Icon</string>
     <string name="short_delta_time">Delta und Zeitpunkt</string>
     <string name="image_arrow">Trendpfeil (groß, farbig)</string>
+    <string name="small_image_arrow">Trendpfeil (farbig)</string>
     <string name="icon_arrow">Trendpfeil</string>
     <string name="test_neg_range">Test Range complication mit negativen Werten (für Trendkreis Unterstützung)</string>
     <string name="short_rate">Trendwert</string>
@@ -245,10 +250,11 @@
     <string name="short_rate_icon">Trendwert mit Icon</string>
     <string name="timestamp">Zeitpunkt des Zuckerwertes</string>
     <string name="battery_level">Akku (Uhr und Telefon)</string>
+    <string name="iob_cob">IOB/COB</string>
 
     <!-- GlucoDataAuto -->
 
-    <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataHandler/blob/master/GlucoDataAuto_DE.md</string>
+    <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataAuto/blob/main/README_DE.md</string>
     <string name="gda_no_data">Um diese App in Android Auto zu verwenden, müssen die Entwicklereinstellungen aktiviert werden. Dafür mehrfach in Android Auto auf Version klicken. Danach in den Entwicklereinstellungen \"Unbekannte Quellen\" aktivieren.\n\nWenn GlucoDataHandler als Quelle verwendet wird, werden die Daten erst übermittelt, wenn das Telefon mit Android Auto verbunden ist.</string>
     <string name="pref_gda_info">Information</string>
     <string name="pref_gda_info_summary">Wenn GlucoDataHandler als Quelle verwendet wird, dann werden die Daten von GlucoDataHandler überschrieben und müssen hier nicht konfigiert werden.</string>
@@ -274,10 +280,13 @@
     <string name="src_xdrip_noise_blocking">Verrauschungsunterdrückung aktiv in xDrip+ Inter-App Einstellungen!\nBitte die Einstellung auf \"Extremely noisy\" stellen!</string>
     <string name="pref_cat_follower">Online Datenquellen</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
-    <string name="pref_source_juggluco_info_summary">To receive values from Juggluco:\n- open Juggluco\n- go to settings\n- enable Glucodata broadcast\n- enable \'de.michelinside.glucodatahandler\'</string>
+    <string name="pref_source_juggluco_info_summary">Konfiguration von Juggluco:\n- Juggluco App öffnen\n- Einstellungen öffnen\n- Glucodata broadcast aktivieren\n- \"de.michelinside.glucodatahandler\" auswählen</string>
     <string name="pref_source_xdrip_info">xDrip+</string>
-    <string name="pref_source_xdrip_info_summary">To receive values from xDrip+:\n- open xDrip+\n- go to settings\n- go to Inter-app settings\n- enable \"Broadcast locally\"\n- set \"Noise Blocking\" to \"Send even Extremely noisy signals\"\n- enable \"Compatible Broadcast\"\n- check \"Identify receivers\" to be empty or add a new line with \"de.michelinside.glucodatahandler\"</string>
-    <string name="pref_source_librelinkup_info">Setup LibreLinkUp</string>
-    <string name="pref_source_librelinkup_info_summary">To use LibreLinkUp you have to setup LibreLinkUp account first.\nImportant, this is not the LibreView account!\nSteps to be done:\n- open your FreeStyle Libre App and select in the menu Share or Connected Apps\n- activate LibreLinkUp connection\n- install LibreLinkUp from PlayStore\n- setup your accout and wait for the invitation\n- after accept the invitation you do not need the LibreLinkUp App \"anymore\"\n</string>
+    <string name="pref_source_xdrip_info_summary">Konfiguration von xDrip+:\n- xDrip+ App öffnen\n- Einstellungen öffnen\n- Inter-App Einstellungen auswählen\n- Lokaler Broadcast aktivieren\n- in Verrauschungsunterdrückung \"Send even Extremely noisy signals\" auswählen\n- Kompatible Broadcasts aktivieren\n- Identifiziere Empfänger leer lassen oder eine neue Zeile mit \"de.michelinside.glucodatahandler\" hinzufügen</string>
+    <string name="pref_source_librelinkup_info">LibreLinkUp einrichten</string>
+    <string name="pref_source_librelinkup_info_summary">WICHTIG: nicht den LibreView Zugang verwenden!\nEinrichtung:\n- FreeStyle Libre App öffnen und unter Verbinden auf Teilen oder Verbundene Anwendungen klicken\n- LibreLinkUp aktivieren\n- LibreLinkUp aus dem PlayStore installieren\n- in der LibreLinkUp App einloggen und die Einladung annehmen</string>
+    <string name="menu_contact">Kontakt</string>
+    <string name="src_ns_iob_cob">IOB/COB Unterstützung</string>
+    <string name="src_ns_iob_cob_summary">Zusätzlich auch IOB und COB Werte vom Nightscout Pebble Endpunkt empfangen.</string>
 
 </resources>

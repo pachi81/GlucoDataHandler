@@ -90,7 +90,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
     fun getVibrationPattern(alarmType: ReceiveData.AlarmType): LongArray? {
         return when(alarmType) {
             ReceiveData.AlarmType.VERY_LOW -> longArrayOf(0, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000)
-            ReceiveData.AlarmType.LOW -> longArrayOf(0, 700, 500, 700, 5000, 700, 500, 700)
+            ReceiveData.AlarmType.LOW -> longArrayOf(0, 700, 500, 700, 500, 700, 500, 700)
             ReceiveData.AlarmType.HIGH -> longArrayOf(0, 500, 500, 500, 500, 500, 500, 500)
             ReceiveData.AlarmType.VERY_HIGH -> longArrayOf(0, 800, 500, 800, 800, 600, 800, 800, 500, 800, 800, 600, 800)
             else -> null

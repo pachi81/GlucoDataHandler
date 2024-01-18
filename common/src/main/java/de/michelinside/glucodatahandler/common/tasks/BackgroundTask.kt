@@ -8,7 +8,6 @@ abstract class BackgroundTask {
     abstract fun execute(context: Context)
     abstract fun active(elapsetTimeMinute: Long): Boolean
     open fun getDelayMs(): Long = 0L
-    open fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context) : Boolean {
-        return false
-    }
+    open fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context) : Boolean = false
+    open fun forceExecute() : Boolean = false
 }

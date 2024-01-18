@@ -8,6 +8,7 @@
     <string name="info_label_delta">Delta</string>
     <string name="info_label_rate">Rate</string>
     <string name="info_label_timestamp">Timestamp</string>
+    <string name="info_label_iob_cob_timestamp">IOB/COB time</string>
     <string name="info_label_timediff">Timediff</string>
     <string name="info_label_alarm">Alarm</string>
     <string name="info_label_source">Source</string>
@@ -56,6 +57,7 @@
     <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
     <string name="update_link"  translatable="false">https://github.com/pachi81/GlucoDataHandler/releases</string>
     <string name="support_link"  translatable="false">https://github.com/pachi81/GlucoDataHandler/issues</string>
+    <string name="gda_support_link"  translatable="false">https://github.com/pachi81/GlucoDataAuto/issues</string>
 
     <!-- tasker -->
 
@@ -90,8 +92,8 @@
     <string name="src_cat_libreview">LibreLink Follower</string>
     <string name="src_libre_enabled">Enable</string>
     <string name="src_libre_enabled_summary">Enable LibreLink follower, if LibreLink user and password is set.</string>
-    <string name="src_libre_user">User</string>
-    <string name="src_libre_user_summary">Username for LibreLink</string>
+    <string name="src_libre_user">E-mail</string>
+    <string name="src_libre_user_summary">E-mail for LibreLink login</string>
     <string name="src_libre_password">Password</string>
     <string name="src_libre_password_summary">Password for LibreLink</string>
     <string name="src_libre_reconnect">Reconnect</string>
@@ -213,6 +215,7 @@
     <string name="widget_glucose_trend">Glucose and trend</string>
     <string name="widget_glucose_trend_delta">Glucose, trend and delta</string>
     <string name="widget_glucose_trend_delta_timestamp">Glucose, trend, delta and timestamp</string>
+    <string name="widget_glucose_trend_delta_timestamp_iob_cob">Glucose, trend, delta, time and IOB/COB</string>
 
     <string name="pref_send_to_bangleJS">BangleJS support</string>
     <string name="pref_send_to_bangleJS_summary">Forward values to widbgjs widget for BangleJS.</string>
@@ -233,10 +236,12 @@
 
     <string name="short_value">Glucose</string>
     <string name="image_value">Glucose (very big and colored)</string>
+    <string name="small_image_value">Glucose (colored)</string>
     <string name="icon_value">Glucose (big)</string>
     <string name="short_value_icon">Glucose with icon</string>
     <string name="short_value_arrow">Glucose and trend</string>
     <string name="short_value_arrow_image">Glucose and trend (big and colored)</string>
+    <string name="short_value_arrow_small_image">Glucose and trend (colored)</string>
     <string name="short_value_trend_range">Glucose and trend-range (if supported)</string>
     <string name="short_value_delta_trend_range">Glucose, delta and trend-range (if supported)</string>
     <string name="short_delta_trend_arrow_range">Delta, trend-arrow and trend-range (if supported)</string>
@@ -250,6 +255,7 @@
     <string name="short_delta_icon">Delta with Icon</string>
     <string name="short_delta_time">Delta and timestamp</string>
     <string name="image_arrow">Trend (big, colored)</string>
+    <string name="small_image_arrow">Trend (colored)</string>
     <string name="icon_arrow">Trend icon</string>
     <string name="test_neg_range">Test Range complication with negative values (for trend-range support)</string>
     <string name="short_rate">Trend value</string>
@@ -257,10 +263,11 @@
     <string name="short_rate_icon">Trend value with icon</string>
     <string name="timestamp">Glucose timestamp</string>
     <string name="battery_level">Battery level (wear and phone)</string>
+    <string name="iob_cob">IOB/COB</string>
 
     <!-- GlucoDataAuto -->
 
-    <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataHandler/blob/master/GlucoDataAuto.md</string>
+    <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataAuto/blob/main/README.md</string>
     <string name="gda_no_data">For using this app in Android Auto, you have to activate developer settings in Android Auto by clicking several times on the version. Then you have to enable \"Unknown sources\" in the developer settings menu.\n\nIf you are using GlucoDataHandler as source, the values will be send if the phone is connected to Android Auto.</string>
     <string name="pref_gda_info">Information</string>
     <string name="pref_gda_info_summary">If you are using GlucoDataHandler as source, these settings will be overwritten from GlucoDataHandler, so you do not have to change them here.</string>
@@ -292,4 +299,7 @@
     <string name="pref_source_xdrip_info_summary">To receive values from xDrip+:\n- open xDrip+\n- go to settings\n- go to Inter-app settings\n- enable \"Broadcast locally\"\n- set \"Noise Blocking\" to \"Send even Extremely noisy signals\"\n- enable \"Compatible Broadcast\"\n- check \"Identify receivers\" to be empty or add a new line with \"de.michelinside.glucodatahandler\"</string>
     <string name="pref_source_librelinkup_info">Setup LibreLinkUp</string>
     <string name="pref_source_librelinkup_info_summary">IMPORTANT: this is not the LibreView account!\nTo activate LibreLinkUp:\n- open your FreeStyle Libre App and select in the menu Share or Connected Apps\n- activate LibreLinkUp connection\n- install LibreLinkUp from PlayStore\n- setup your account and wait for the invitation</string>
+    <string name="menu_contact">Contact</string>
+    <string name="src_ns_iob_cob">IOB/COB support</string>
+    <string name="src_ns_iob_cob_summary">Receive also IOB and COB values from nightscout pebble endpoint.</string>
 </resources>

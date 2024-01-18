@@ -35,6 +35,8 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
     private lateinit var viewIcon: ImageView
     private lateinit var txtDelta: TextView
     private lateinit var txtTime: TextView
+    private lateinit var txtIob: TextView
+    private lateinit var txtCob: TextView
     private lateinit var sharedPref: SharedPreferences
     private lateinit var sharedInternalPref: SharedPreferences
     private val LOG_ID = "GDH.FloatingWidget"
@@ -53,6 +55,8 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
         viewIcon = floatingView.findViewById(R.id.trendImage)
         txtDelta = floatingView.findViewById(R.id.deltaText)
         txtTime = floatingView.findViewById(R.id.timeText)
+        txtIob = floatingView.findViewById(R.id.iobText)
+        txtCob = floatingView.findViewById(R.id.cobText)
         //setting the layout parameters
         update()
     }
@@ -77,27 +81,44 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
                 txtTime.visibility = GONE
                 txtDelta.visibility = VISIBLE
                 viewIcon.visibility = VISIBLE
+                txtIob.visibility = GONE
+                txtCob.visibility = GONE
             }
             Constants.WIDGET_STYLE_GLUCOSE_TREND -> {
                 txtTime.visibility = GONE
                 txtDelta.visibility = GONE
                 viewIcon.visibility = VISIBLE
+                txtIob.visibility = GONE
+                txtCob.visibility = GONE
             }
             Constants.WIDGET_STYLE_GLUCOSE -> {
                 txtTime.visibility = GONE
                 txtDelta.visibility = GONE
                 viewIcon.visibility = GONE
+                txtIob.visibility = GONE
+                txtCob.visibility = GONE
+            }
+            Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA_IOB_COB -> {
+                bgTextSize = 20f
+                txtTime.visibility = VISIBLE
+                txtDelta.visibility = VISIBLE
+                viewIcon.visibility = VISIBLE
+                txtIob.visibility = VISIBLE
+                txtCob.visibility = VISIBLE
             }
             else -> {
                 bgTextSize = 20f
                 txtTime.visibility = VISIBLE
                 txtDelta.visibility = VISIBLE
                 viewIcon.visibility = VISIBLE
+                txtIob.visibility = GONE
+                txtCob.visibility = GONE
             }
         }
         return bgTextSize
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setContent() {
         val textSize = applyStyle()
         txtBgValue.text = ReceiveData.getClucoseAsString()
@@ -110,12 +131,16 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
         viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
         txtDelta.text =ReceiveData.getDeltaAsString()
         txtTime.text = ReceiveData.getElapsedTimeMinuteAsString(context)
+        txtIob.text = ReceiveData.getIobAsString()
+        txtCob.text = ReceiveData.getCobAsString()
 
         val resizeFactor = sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, 3).toFloat()
         txtBgValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+resizeFactor*4f)
         viewIcon.minimumWidth = Utils.dpToPx(32f+resizeFactor*4f, context)
         txtDelta.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8f+resizeFactor*2f)
         txtTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8f+resizeFactor*2f)
+        txtIob.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8f+resizeFactor*2f)
+        txtCob.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8f+resizeFactor*2f)
     }
 
     private fun update() {

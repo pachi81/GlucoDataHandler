@@ -23,6 +23,7 @@ import androidx.core.view.MenuCompat
 import androidx.preference.PreferenceManager
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.utils.Utils
@@ -73,6 +74,10 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
+
+            txtWearInfo.setOnClickListener{
+                GlucoDataService.checkForConnectedNodes()
+            }
 
             btnSources.setOnClickListener{
                 val intent = Intent(this, SettingsActivity::class.java)
@@ -247,6 +252,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                         Uri.parse(resources.getText(CR.string.support_link).toString())
                     )
                     startActivity(browserIntent)
+                    return true
+                }
+                R.id.action_contact -> {
+                    val mailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto","GlucoDataHandler@michel-inside.de", null))
+                    mailIntent.putExtra(Intent.EXTRA_SUBJECT, "GlucoDataHander v" + BuildConfig.VERSION_NAME)
+                    startActivity(mailIntent)
                     return true
                 }
                 else -> return super.onOptionsItemSelected(item)

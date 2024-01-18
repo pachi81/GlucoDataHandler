@@ -30,11 +30,13 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
     private lateinit var receiver: GlucoseDataReceiver
     private lateinit var batteryReceiver: BatteryReceiver
     private lateinit var xDripReceiver: XDripBroadcastReceiver
-    private val connection = WearPhoneConnection()
 
+    @SuppressLint("StaticFieldLeak")
     companion object {
         private val LOG_ID = "GDH.GlucoDataService"
         private var isForegroundService = false
+        @SuppressLint("StaticFieldLeak")
+        private var connection: WearPhoneConnection? = null
         val foreground get() = isForegroundService
         const val NOTIFICATION_ID = 123
         var appSource = AppSource.NOT_SET
@@ -77,6 +79,18 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                         "start exception: " + exc.message.toString()
                     )
                 }
+            }
+        }
+
+        fun checkForConnectedNodes() {
+            try {
+                if (connection!=null)
+                    connection!!.checkForConnectedNodes()
+            } catch (exc: Exception) {
+                Log.e(
+                    LOG_ID,
+                    "checkForConnectedNodes exception: " + exc.message.toString()
+                )
             }
         }
     }
@@ -122,7 +136,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
             ReceiveData.initData(this)
             SourceTaskService.run(this)
 
-            connection.open(this, appSource == AppSource.PHONE_APP)
+            connection = WearPhoneConnection()
+            connection!!.open(this, appSource == AppSource.PHONE_APP)
 
             Log.d(LOG_ID, "Register Receiver")
             receiver = GlucoseDataReceiver()
@@ -167,7 +182,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
             unregisterReceiver(xDripReceiver)
             TimeTaskService.stop()
             SourceTaskService.stop()
-            connection.close()
+            connection!!.close()
+            connection = null
             super.onDestroy()
             service = null
             isRunning = false
@@ -179,7 +195,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
     fun sendToConnectedDevices(dataSource: NotifySource, extras: Bundle) {
         Thread {
             try {
-                connection.sendMessage(dataSource, extras, null)
+                if(connection != null)
+                    connection!!.sendMessage(dataSource, extras, null)
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "SendMessage exception: " + exc.toString())
             }

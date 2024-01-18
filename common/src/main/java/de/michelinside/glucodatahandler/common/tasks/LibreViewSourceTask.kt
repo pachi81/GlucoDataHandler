@@ -39,13 +39,14 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     }
 
     override fun executeRequest(context: Context) {
-        Log.i(LOG_ID, "getting data from libre view")
+        Log.d(LOG_ID, "getting data from libre view")
         getConnection()
     }
 
     private fun getUrl(endpoint: String): String {
-        val url = if(region.isEmpty()) server else region_server.format(region)
-        return url + endpoint
+        val url = (if(region.isEmpty()) server else region_server.format(region)) + endpoint
+        Log.i(LOG_ID, "Send request to " + url)
+        return url
     }
 
     private fun getHeader(): MutableMap<String, String> {
@@ -62,10 +63,16 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         return result
     }
 
+    private fun reset() {
+        Log.i(LOG_ID, "reset called")
+        token = ""
+        region = ""
+    }
+
     private fun checkResponse(body: String?): JSONObject? {
         if (body.isNullOrEmpty()) {
             if (lastErrorCode in 400..499)
-                token = "" // reset token for client error -> trigger reconnect
+                reset() // reset token for client error -> trigger reconnect
             return null
         }
         if (BuildConfig.DEBUG) {  // do not log personal data
@@ -155,8 +162,9 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
 
     private fun login(): Boolean {
         if (token.isNotEmpty() && (reconnect || tokenExpire <= System.currentTimeMillis())) {
-            Log.i(LOG_ID, "Token expired!")
-            token = ""
+            if (!reconnect)
+                Log.i(LOG_ID, "Token expired!")
+            reset()
             if (reconnect) {
                 reconnect = false
                 with(GlucoDataService.sharedPref!!.edit()) {
@@ -293,7 +301,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                 Constants.SHARED_PREF_LIBRE_USER -> {
                     if (user != sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_USER, "")) {
                         user = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_USER, "")!!.trim()
-                        token = ""
+                        reset()
                         InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
                         trigger = true
                     }
@@ -301,7 +309,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                 Constants.SHARED_PREF_LIBRE_PASSWORD -> {
                     if (password != sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, "")) {
                         password = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, "")!!.trim()
-                        token = ""
+                        reset()
                         InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
                         trigger = true
                     }

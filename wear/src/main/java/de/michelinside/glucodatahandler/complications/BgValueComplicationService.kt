@@ -227,47 +227,47 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         ).build()
 
 
-    fun glucoseImage(): SmallImage {
+    fun glucoseImage(small: Boolean = false): SmallImage {
         return SmallImage.Builder(
-            image = BitmapUtils.getGlucoseAsIcon(ReceiveData.getClucoseColor(), true),
+            image = BitmapUtils.getGlucoseAsIcon(ReceiveData.getClucoseColor(), true, resizeFactor = if(small) 0.5F else 1.0F ),
             type = SmallImageType.PHOTO
-        ).setAmbientImage(ambientGlucoseAsIcon(forImage = true))
+        ).setAmbientImage(ambientGlucoseAsIcon(forImage = true, small = small))
             .build()
     }
 
-    fun ambientGlucoseAsIcon(forImage: Boolean = false): Icon? {
+    fun ambientGlucoseAsIcon(forImage: Boolean = false, small: Boolean = false): Icon? {
         if (sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false))
             return null
-        return BitmapUtils.getGlucoseAsIcon(color = Color.WHITE, roundTarget = forImage)
+        return BitmapUtils.getGlucoseAsIcon(color = Color.WHITE, roundTarget = forImage, resizeFactor = if(small) 0.5F else 1.0F)
     }
 
-    fun arrowImage(): SmallImage {
+    fun arrowImage(small: Boolean = false): SmallImage {
         return  SmallImage.Builder(
-            image = BitmapUtils.getRateAsIcon(ReceiveData.getClucoseColor(), true),
+            image = BitmapUtils.getRateAsIcon(ReceiveData.getClucoseColor(), true, resizeFactor = if(small) 0.6F else 1.0F),
             type = SmallImageType.PHOTO
         )
-            .setAmbientImage(ambientArrowIcon())
+            .setAmbientImage(ambientArrowIcon(small))
             .build()
     }
 
-    fun ambientArrowIcon(): Icon? {
+    fun ambientArrowIcon(small: Boolean = false): Icon? {
         if (sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false))
             return null
-        return BitmapUtils.getRateAsIcon(color = Color.WHITE, roundTarget = true)
+        return BitmapUtils.getRateAsIcon(color = Color.WHITE, roundTarget = true, resizeFactor = if(small) 0.6F else 1.0F)
     }
 
-    fun getGlucoseTrendImage(): SmallImage {
+    fun getGlucoseTrendImage(small: Boolean = false): SmallImage {
         return  SmallImage.Builder(
-            image = BitmapUtils.getGlucoseTrendIcon(ReceiveData.getClucoseColor()),
+            image = BitmapUtils.getGlucoseTrendIcon(ReceiveData.getClucoseColor(), small = small),
             type = SmallImageType.PHOTO
         ).setAmbientImage(ambientGlucoseTrendImage())
             .build()
     }
 
-    fun ambientGlucoseTrendImage(): Icon? {
+    fun ambientGlucoseTrendImage(small: Boolean = false): Icon? {
         if (sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false))
             return null
-        return BitmapUtils.getGlucoseTrendIcon(Color.WHITE)
+        return BitmapUtils.getGlucoseTrendIcon(Color.WHITE, small = small)
     }
 
 }

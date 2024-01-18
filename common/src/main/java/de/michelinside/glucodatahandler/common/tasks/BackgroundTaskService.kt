@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.PowerManager
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -14,6 +13,7 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.utils.WakeLockHelper
 import java.math.RoundingMode
 import java.text.DateFormat
 import java.util.Calendar
@@ -23,7 +23,6 @@ import java.util.concurrent.TimeUnit
 abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: String, protected val initialExecution: Boolean = false): SharedPreferences.OnSharedPreferenceChangeListener,
     NotifierInterface {
     private val DEFAULT_DELAY_MS = 3000L
-    private val WAKE_LOCK_TIMEOUT = 10000L // 10 seconds
 
     private var backgroundTaskList = mutableListOf<BackgroundTask>()
     private var curInterval = -1L
@@ -54,36 +53,48 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         }
     }
 
+    private fun hasForceExecuteTask() : Boolean {
+        backgroundTaskList.forEach {
+            if (it.forceExecute())
+                return true
+        }
+        return false
+    }
+
     private fun executeTasks(force: Boolean = false) {
+        Log.v(LOG_ID, "executeTasks called with force: " + force)
         try {
-            if (force || (lastElapsedMinute != elapsedTimeMinute && elapsedTimeMinute != 0L)) {
+            if (force || (lastElapsedMinute != elapsedTimeMinute && elapsedTimeMinute != 0L) || hasForceExecuteTask()) {
                 Thread {
-                    val wakeLock: PowerManager.WakeLock =
-                        (context!!.getSystemService(Context.POWER_SERVICE) as PowerManager).run {
-                            newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "GlucoDataHandler::BackgroundTaskTag").apply {
-                                acquire(WAKE_LOCK_TIMEOUT)
-                            }
-                        }
-                    try {
-                        isRunning = true
-                        backgroundTaskList.forEach {
-                            if (force || (elapsedTimeMinute != 0L && ((lastElapsedMinute < 0 && initialExecution) || (elapsedTimeMinute.mod(it.getIntervalMinute()) == 0L && it.active(elapsedTimeMinute))))) {
-                                try {
-                                    Log.i(LOG_ID, "execute after " + elapsedTimeMinute + " min: " + it)
-                                    it.execute(context!!)
-                                } catch (ex: Exception) {
-                                    Log.e(LOG_ID, "exception while execute task " + it + ": " + ex)
+                    WakeLockHelper(context!!).use {
+                        try {
+                            isRunning = true
+                            backgroundTaskList.forEach {
+                                if (force || it.forceExecute() || (elapsedTimeMinute != 0L && ((lastElapsedMinute < 0 && initialExecution) || (elapsedTimeMinute.mod(
+                                        it.getIntervalMinute()
+                                    ) == 0L && it.active(elapsedTimeMinute))))
+                                ) {
+                                    try {
+                                        Log.i(
+                                            LOG_ID,
+                                            "execute after " + elapsedTimeMinute + " min: " + it
+                                        )
+                                        it.execute(context!!)
+                                    } catch (ex: Exception) {
+                                        Log.e(
+                                            LOG_ID,
+                                            "exception while execute task " + it + ": " + ex
+                                        )
+                                    }
                                 }
                             }
+                        } catch (ex: Exception) {
+                            Log.e(LOG_ID, "exception while executing tasks: " + ex)
                         }
-                    } catch (ex: Exception) {
-                        Log.e(LOG_ID, "exception while executing tasks: " + ex)
-                    } finally {
-                        wakeLock.release()
+                        // restart timer at the end, for the case a new value has been received
+                        startTimer()
+                        isRunning = false
                     }
-                    // restart timer at the end, for the case a new value has been received
-                    startTimer()
-                    isRunning = false
                 }.start()
             } else {
                 // restart timer
@@ -104,6 +115,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     }
 
     private fun active(elapsedTime: Long) : Boolean {
+        Log.v(LOG_ID, "check active after elapsed time " + elapsedTime)
         backgroundTaskList.forEach {
             if (it.active(elapsedTime))
                 return true
@@ -246,7 +258,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         try {
             Log.v(LOG_ID, "OnNotifyData for source " + dataSource.toString())
             // restart time
-            if (!isRunning)
+            if (!isRunning && !hasForceExecuteTask())
                 startTimer()
         } catch (ex: Exception) {
             Log.e(LOG_ID, "OnNotifyData: " + ex)
