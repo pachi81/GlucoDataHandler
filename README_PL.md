@@ -6,7 +6,7 @@
 ## Funkcje
 
 * odbiera wartości glukozy jako **[LibreLink follower](#librelink)**
-* odbiera wartości glukozy z Nightscout
+* odbiera wartości glukozy, IOB i COB z Nightscout
 * odbiera wartości glukozy z [Juggluco](./INSTALLATION_PL.md#konfiguracja-juggluco)
 * odbiera wartości glukozy z [xDrip+](./INSTALLATION_PL.md#konfiguracja-xdrip)
 * udostępnia kilka **[widgetów](#widgety)** i pływający widget dla telefonu
