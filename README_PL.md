@@ -7,12 +7,12 @@
 
 * odbiera wartości glukozy jako **[LibreLink follower](#librelink)**
 * odbiera wartości glukozy z Nightscout
-* odbiera wartości glukozy z Juggluco
-* odbiera wartości glukozy z xDrip+
+* odbiera wartości glukozy z [Juggluco](./INSTALLATION_PL.md#konfiguracja-juggluco)
+* odbiera wartości glukozy z [xDrip+](./INSTALLATION_PL.md#konfiguracja-xdrip)
 * udostępnia kilka **[widgetów](#widgety)** i pływający widget dla telefonu
 * udostępnia opcjonalne **[powiadomienia](#powiadomienia)** z różnymi ikonami dla telefonu
 * udostępnia kilka **[komplikacj](#komplikacje)** dla Wear OS
-* umożliwia połączenie z **[Android Auto](./GlucoDataAuto_PL.md)**
+* umożliwia połączenie z **[Android Auto](https://github.com/pachi81/GlucoDataAuto/blob/main/README_PL.md)**
 * Integracja z aplikacją **[Tasker](#aplikacja-tasker)**
 * wysyła transmisje danych o glukozie do innych aplikacji (które obsługują tę transmisję)
 
@@ -101,6 +101,10 @@ Również komplikacja WARTOŚĆ_ZAKRESU jest obsługiwana inaczej na każdej tar
 
 -> [Obsługa aplikacji Tasker](./TASKER.md)
 
+# Special thanks
+@[lostboy86](https://github.com/lostboy86) for testing, motivation and feedback
+
+@[froter82](https://github.com/froster82) for polish translation, testing and feedback
 
 # Wesprzyj moją pracę
 [🍺 Buy me a beer](https://www.buymeacoffee.com/pachi81)
