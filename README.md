@@ -6,12 +6,12 @@
 
 * receives glucose values as **[LibreLink follower](#librelink)**
 * receives glucose values from Nightscout
-* receives glucose values from Juggluco
-* receives glucose values from xDrip+
+* receives glucose values from [Juggluco](./INSTALLATION.md#configure-juggluco)
+* receives glucose values from [xDrip+](./INSTALLATION.md#configure-xdrip)
 * provides several **[widgets](#widgets)** and a floating widget for the phone
 * provides optional **[notifications](#notifications)** with different icons for the phone
 * provides several **[complications](#complications)** for Wear OS
-* provides **[Android Auto](./GlucoDataAuto.md)** support using GlucoDataAuto.apk
+* provides **[Android Auto](https://github.com/pachi81/GlucoDataAuto/blob/main/README.md)** support using GlucoDataAuto.apk
 * **[Tasker](#tasker)** integration
 * sends glucodata broadcasts to other apps (which supports this broadcast)
 
@@ -97,6 +97,11 @@ Also the RANGE_VALUE complication is handled different in each watchface.
 ## Tasker
 
 -> [Tasker support](./TASKER.md)
+
+# Special thanks
+@[lostboy86](https://github.com/lostboy86) for testing, motivation and feedback
+
+@[froter82](https://github.com/froster82) for polish translation, testing and feedback
 
 # Support my work
 [🍺 Buy me a beer](https://www.buymeacoffee.com/pachi81)
