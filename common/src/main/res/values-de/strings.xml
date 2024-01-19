@@ -175,7 +175,7 @@
     <string name="pref_second_notification_icon">2. Statusbar Icon</string>
     <string name="pref_second_notification_icon_summary">Art des Statusbar Icons für die zweite Benachrichtigung.</string>
     <string name="pref_floating_widget">Schwebendes Widget</string>
-    <string name="pref_floating_widget_summary">Zeigt Trendpfeil, den Glucose-, Deltawert und Zeipunkt als schwebendes Widget.</string>
+    <string name="pref_floating_widget_summary">Zeigt Trendpfeil, den Glucose-, Deltawert, Zeipunkt und IOB/COB als schwebendes Widget.\nUm es zu deaktivieren, drücken und halten sie das Widget für mindestens 5 Sekunden.</string>
     <string name="pref_floating_widget_size">Größe</string>
     <string name="pref_floating_widget_size_summary">Größe des schwebenden Widgets ändern</string>
     <string name="pref_floating_widget_style">Stil</string>

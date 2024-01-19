@@ -125,6 +125,10 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                             apply()
                         }
                         requestOverlayPermission()
+                    } else if (!sharedPreferences.getBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false)) {
+                        val floatingWidget = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_FLOATING_WIDGET)
+                        if (floatingWidget != null)
+                            floatingWidget.isChecked = false
                     }
                 }
             }
