@@ -68,6 +68,7 @@ open class GlucodataValues {
     val cob: Float = ReceiveData.cob
 }
 
+private val LOG_ID = "GDH.Tasker.TaskerPlugin"
 @TaskerInputRoot
 @TaskerOutputObject()
 @SuppressLint("NonConstantResourceId")
@@ -95,8 +96,12 @@ class GlucodataEvent : Activity(), TaskerPluginConfig<GlucodataValues> {
     override val inputForTasker = TaskerInput(GlucodataValues())
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        GlucodataEventHelper(this).finishForTasker()
+        try {
+            super.onCreate(savedInstanceState)
+            GlucodataEventHelper(this).finishForTasker()
+        } catch (ex: Exception) {
+            Log.e(LOG_ID, "onCreate exception: " + ex)
+        }
     }
 }
 
@@ -106,8 +111,12 @@ class GlucodataAlarmEvent : Activity(), TaskerPluginConfig<GlucodataValues> {
     override val inputForTasker = TaskerInput(GlucodataValues())
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        GlucodataEventHelper(this).finishForTasker()
+        try {
+            super.onCreate(savedInstanceState)
+            GlucodataEventHelper(this).finishForTasker()
+        } catch (ex: Exception) {
+            Log.e(LOG_ID, "onCreate exception: " + ex)
+        }
     }
 }
 
@@ -130,8 +139,12 @@ class GlucodataObsoleteEvent : Activity(), TaskerPluginConfig<GlucodataObsoleteV
     override val inputForTasker = TaskerInput(GlucodataObsoleteValues())
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        GlucodataObsoleteEventHelper(this).finishForTasker()
+        try {
+            super.onCreate(savedInstanceState)
+            GlucodataObsoleteEventHelper(this).finishForTasker()
+        } catch (ex: Exception) {
+            Log.e(LOG_ID, "onCreate exception: " + ex)
+        }
     }
 }
 

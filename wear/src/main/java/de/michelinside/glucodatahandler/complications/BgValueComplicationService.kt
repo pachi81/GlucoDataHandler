@@ -67,9 +67,14 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         return null
     }
 
-    override fun getPreviewData(type: ComplicationType): ComplicationData {
-        Log.d(LOG_ID, "onComplicationRequest called for " + type.toString())
-        return getComplicationData(ComplicationRequest(0, type,false))!!
+    override fun getPreviewData(type: ComplicationType): ComplicationData? {
+        try {
+            Log.d(LOG_ID, "getPreviewData called for " + type.toString())
+            return getComplicationData(ComplicationRequest(0, type, false))
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "getPreviewData exception: " + exc.message.toString() )
+        }
+        return null
     }
 
     private fun getComplicationData(request: ComplicationRequest): ComplicationData? {

@@ -21,9 +21,13 @@ class WearConnectionStateHelper(config: TaskerPluginConfig<Unit>) : TaskerPlugin
 class WearConnectionState : Activity(), TaskerPluginConfigNoInput {
     override val context: Context get() = applicationContext
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d(LOG_ID, "onCreate called")
-        super.onCreate(savedInstanceState)
-        WearConnectionStateHelper(this).finishForTasker()
+        try {
+            Log.d(LOG_ID, "onCreate called")
+            super.onCreate(savedInstanceState)
+            WearConnectionStateHelper(this).finishForTasker()
+        } catch (ex: Exception) {
+            Log.e(LOG_ID, "onCreate exception: " + ex)
+        }
     }
 }
 
@@ -38,10 +42,14 @@ class WearConnectionStateRunner : TaskerPluginRunnerConditionNoOutputOrInputOrUp
 private val LOG_ID = "GDH.Tasker.WearConnectionState"
 private var isActive: Boolean? = null
 fun Context.setWearConnectionState(state: Boolean) {
-    Log.d(LOG_ID, "set ConnectionState: " + state.toString() + " current: " + isActive)
-    if (isActive == null || isActive != state) {
-        isActive = state
-        Log.d(LOG_ID, "trigger state change")
-        WearConnectionState::class.java.requestQuery(this)
+    try {
+        Log.d(LOG_ID, "set ConnectionState: " + state.toString() + " current: " + isActive)
+        if (isActive == null || isActive != state) {
+            isActive = state
+            Log.d(LOG_ID, "trigger state change")
+            WearConnectionState::class.java.requestQuery(this)
+        }
+    } catch (ex: Exception) {
+        Log.e(LOG_ID, "onCreate exception: " + ex)
     }
 }
