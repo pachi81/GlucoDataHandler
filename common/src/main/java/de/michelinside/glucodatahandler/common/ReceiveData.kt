@@ -460,8 +460,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
 
             if(extras.containsKey(IOBCOB_TIME))
                 iobCobTime = extras.getLong(IOBCOB_TIME)
-            else if(extras.containsKey(TIME))
-                iobCobTime = extras.getLong(TIME)
             else
                 iobCobTime = System.currentTimeMillis()
 
