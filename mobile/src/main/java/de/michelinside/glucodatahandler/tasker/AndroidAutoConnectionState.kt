@@ -21,9 +21,13 @@ class AndroidAutoConnectionStateHelper(config: TaskerPluginConfig<Unit>) : Taske
 class AndroidAutoConnectionState : Activity(), TaskerPluginConfigNoInput {
     override val context: Context get() = applicationContext
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d(LOG_ID, "onCreate called")
-        super.onCreate(savedInstanceState)
-        AndroidAutoConnectionStateHelper(this).finishForTasker()
+        try {
+            Log.d(LOG_ID, "onCreate called")
+            super.onCreate(savedInstanceState)
+            AndroidAutoConnectionStateHelper(this).finishForTasker()
+        } catch (ex: Exception) {
+            Log.e(LOG_ID, "onCreate exception: " + ex)
+        }
     }
 }
 
@@ -38,10 +42,14 @@ class AndroidAutoConnectionStateRunner : TaskerPluginRunnerConditionNoOutputOrIn
 private val LOG_ID = "GDH.Tasker.AndroidAutoConnectionState"
 private var isActive: Boolean? = null
 fun Context.setAndroidAutoConnectionState(state: Boolean) {
-    Log.d(LOG_ID, "set ConnectionState: " + state.toString() + " current: " + isActive)
-    if (isActive == null || isActive != state) {
-        isActive = state
-        Log.d(LOG_ID, "trigger state change")
-        AndroidAutoConnectionState::class.java.requestQuery(this)
+    try {
+        Log.d(LOG_ID, "set ConnectionState: " + state.toString() + " current: " + isActive)
+        if (isActive == null || isActive != state) {
+            isActive = state
+            Log.d(LOG_ID, "trigger state change")
+            AndroidAutoConnectionState::class.java.requestQuery(this)
+        }
+    } catch (ex: Exception) {
+        Log.e(LOG_ID, "setAndroidAutoConnectionState exception: " + ex)
     }
 }

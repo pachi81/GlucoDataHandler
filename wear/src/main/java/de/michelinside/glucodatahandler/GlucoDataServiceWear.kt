@@ -45,14 +45,18 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
     }
 
     override fun onCreate() {
-        Log.d(LOG_ID, "onCreate called")
-        super.onCreate()
-        val filter = mutableSetOf(
-            NotifySource.BROADCAST,
-            NotifySource.MESSAGECLIENT,
-            NotifySource.OBSOLETE_VALUE) // to trigger re-start for the case of stopped by the system
-        InternalNotifier.addNotifier(this, this, filter)
-        ActiveComplicationHandler.OnNotifyData(this, NotifySource.CAPILITY_INFO, null)
+        try {
+            Log.d(LOG_ID, "onCreate called")
+            super.onCreate()
+            val filter = mutableSetOf(
+                NotifySource.BROADCAST,
+                NotifySource.MESSAGECLIENT,
+                NotifySource.OBSOLETE_VALUE) // to trigger re-start for the case of stopped by the system
+            InternalNotifier.addNotifier(this, this, filter)
+            ActiveComplicationHandler.OnNotifyData(this, NotifySource.CAPILITY_INFO, null)
+        } catch (ex: Exception) {
+            Log.e(LOG_ID, "onCreate exception: " + ex)
+        }
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
@@ -98,17 +102,22 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
     }
 
     fun vibrate(alarmType: ReceiveData.AlarmType): Boolean {
-        val vibratePattern = getVibrationPattern(alarmType) ?: return false
-        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager =
-                getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-            vibratorManager.defaultVibrator
-        } else {
-            @Suppress("DEPRECATION")
-            getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        try {
+            val vibratePattern = getVibrationPattern(alarmType) ?: return false
+            val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val vibratorManager =
+                    getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                vibratorManager.defaultVibrator
+            } else {
+                @Suppress("DEPRECATION")
+                getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            }
+            Log.i(LOG_ID, "vibration for " + alarmType.toString())
+            vibrator.vibrate(VibrationEffect.createWaveform(vibratePattern, -1))
+            return true
+        } catch (ex: Exception) {
+            Log.e(LOG_ID, "vibrate exception: " + ex)
         }
-        Log.i(LOG_ID, "vibration for " + alarmType.toString())
-        vibrator.vibrate(VibrationEffect.createWaveform(vibratePattern, -1))
-        return true
+        return false
     }
 }
