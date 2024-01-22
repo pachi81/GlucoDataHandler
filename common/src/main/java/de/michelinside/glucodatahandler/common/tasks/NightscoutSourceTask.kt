@@ -8,9 +8,11 @@ import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.JsonUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import org.json.JSONArray
 import org.json.JSONObject
+import java.lang.NumberFormatException
 
 class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, DataSource.NIGHTSCOUT) {
     private val LOG_ID = "GDH.Task.NightscoutSourceTask"
@@ -144,9 +146,9 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
                     glucoExtras.putString(ReceiveData.SERIAL, jsonObject.getString("device"))
                 if (iob_cob_support) {
                     if (jsonObject.has("iob"))
-                        glucoExtras.putFloat(ReceiveData.IOB, jsonObject.getDouble("iob").toFloat())
+                        glucoExtras.putFloat(ReceiveData.IOB, JsonUtils.getFloat("iob", jsonObject))
                     if (jsonObject.has("cob"))
-                        glucoExtras.putFloat(ReceiveData.COB, jsonObject.getDouble("cob").toFloat())
+                        glucoExtras.putFloat(ReceiveData.COB, JsonUtils.getFloat("cob", jsonObject))
                 } else {
                     glucoExtras.putFloat(ReceiveData.IOB, Float.NaN)
                     glucoExtras.putFloat(ReceiveData.COB, Float.NaN)
@@ -162,8 +164,9 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
     }
 
     private fun setSgv( bundle: Bundle, jsonObject: JSONObject) {
-        val sgv = jsonObject.getString("sgv").replace(',', '.')
-        val glucose = sgv.toFloat()
+        val glucose = JsonUtils.getFloat("sgv", jsonObject)
+        if (glucose.isNaN())
+            throw NumberFormatException("Invalid sgv format '" + jsonObject.optString("sgv") + "'")
         if (GlucoDataUtils.isMmolValue(glucose)) {
             bundle.putInt(ReceiveData.MGDL, GlucoDataUtils.mmolToMg(glucose).toInt())
             bundle.putFloat(ReceiveData.GLUCOSECUSTOM, glucose)

@@ -290,5 +290,6 @@
     <string name="menu_contact">Kontakt</string>
     <string name="src_ns_iob_cob">Obsługa IOB/COB</string>
     <string name="src_ns_iob_cob_summary">Odbieraj również wartości IOB (aktywnej insuliny) i COB (aktywnych węglowodanów) z pozycji "nightscout pebble endpoint".</string>
+    <string name="pref_permanent_notification_info_summary">Powiadomienie jest wymagane do poprawnego działania aplikacji.\nPocząwszy od systemu Android 13 powiadomienie to można usunąć, odsuwając je palcem w bok.\nJeżeli powiadomienie nie ma być odtwarzane z każdą nową wartością glikemii, należy w części "Ikona w pasku stanu" wybrać opcję "Ikona aplikacji" i włączyć opcję "Ukryj treść".</string>
 
 </resources>

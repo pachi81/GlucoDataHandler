@@ -145,7 +145,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 MediaMetadataCompat.Builder()
                     .putString(
                         MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE,
-                        ReceiveData.getClucoseAsString() + " (" + ReceiveData.getDeltaAsString() + ")"
+                        ReceiveData.getClucoseAsString() + " (Δ " + ReceiveData.getDeltaAsString() + ")"
                     )
                     .putString(
                         MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE,

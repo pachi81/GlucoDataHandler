@@ -72,6 +72,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         Log.d(LOG_ID, "CapabilityClient added")
         val filter = mutableSetOf(
             NotifySource.BROADCAST,
+            NotifySource.IOB_COB_CHANGE,
             NotifySource.BATTERY_LEVEL)   // to trigger re-start for the case of stopped by the system
         if (sendSettings) {
             filter.add(NotifySource.SETTINGS)   // only send setting changes from phone to wear!

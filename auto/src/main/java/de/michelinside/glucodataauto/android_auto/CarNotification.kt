@@ -226,7 +226,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         if (isObsolete)
             messagingStyle.conversationTitle = context.getString(CR.string.no_new_value, ReceiveData.getElapsedTimeMinute())
         else
-            messagingStyle.conversationTitle = ReceiveData.getClucoseAsString()  + " (" + ReceiveData.getDeltaAsString() + ")"
+            messagingStyle.conversationTitle = ReceiveData.getClucoseAsString()  + " (Δ " + ReceiveData.getDeltaAsString() + ")"
         messagingStyle.isGroupConversation = false
         messagingStyle.addMessage(DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(ReceiveData.time)), System.currentTimeMillis(), person)
         return messagingStyle

@@ -165,7 +165,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             val lastTime = ReceiveData.time
             val lastIobCobTime = ReceiveData.iobCobTime
             ReceiveData.handleIntent(GlucoDataService.context!!, source, extras)
-            if (ReceiveData.time == lastTime && lastIobCobTime != ReceiveData.iobCobTime && !forceExecute())
+            if (ReceiveData.time == lastTime && lastIobCobTime == ReceiveData.iobCobTime)
                 setState(SourceState.NO_NEW_VALUE)
             else
                 setState(SourceState.NONE)

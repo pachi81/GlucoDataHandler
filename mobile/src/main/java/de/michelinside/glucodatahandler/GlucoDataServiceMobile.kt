@@ -23,7 +23,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
     private lateinit var floatingWidget: FloatingWidget
     init {
         Log.d(LOG_ID, "init called")
-        InternalNotifier.addNotifier(this, TaskerDataReceiver, mutableSetOf(NotifySource.BROADCAST,NotifySource.MESSAGECLIENT,NotifySource.OBSOLETE_VALUE))
+        InternalNotifier.addNotifier(this, TaskerDataReceiver, mutableSetOf(NotifySource.BROADCAST,NotifySource.IOB_COB_CHANGE,NotifySource.MESSAGECLIENT,NotifySource.OBSOLETE_VALUE))
     }
 
     companion object {
@@ -77,7 +77,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
             var receivers = sharedPref.getStringSet(receiverPrefKey, HashSet<String>())
             Log.d(LOG_ID, "Resend " + receiverPrefKey + " Broadcast to " + receivers?.size.toString() + " receivers")
-            if (receivers == null || receivers.size == 0) {
+            if (receivers.isNullOrEmpty()) {
                 receivers = setOf("")
             }
             for( receiver in receivers ) {

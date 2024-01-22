@@ -199,16 +199,40 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         }*/
     }
 
+    private fun hasContent(): Boolean {
+        if (!sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false))
+            return true
+
+        if (sharedPref.getString(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, StatusBarIcon.APP.pref) != StatusBarIcon.APP.pref) {
+            return true
+        }
+
+        if (sharedPref.getBoolean(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, false)) {
+            if (sharedPref.getString(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, StatusBarIcon.APP.pref) != StatusBarIcon.APP.pref) {
+                return true
+            }
+        }
+        return false
+    }
+
     private fun updatePreferences() {
         try {
             //if (sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION, true)) {
-                Log.i(LOG_ID, "activate permanent notification")
-                val filter = mutableSetOf(
-                    NotifySource.BROADCAST,
-                    NotifySource.MESSAGECLIENT,
-                    NotifySource.SETTINGS,
-                    NotifySource.OBSOLETE_VALUE)   // to trigger re-start for the case of stopped by the system
-                InternalNotifier.addNotifier(GlucoDataService.context!!, this, filter)
+                val content = hasContent()
+                Log.i(LOG_ID, "update permanent notifications having content: " + content)
+                if (content) {
+                    val filter = mutableSetOf(
+                        NotifySource.BROADCAST,
+                        NotifySource.MESSAGECLIENT,
+                        NotifySource.SETTINGS,
+                        NotifySource.OBSOLETE_VALUE
+                    )   // to trigger re-start for the case of stopped by the system
+                    if (!sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false))
+                        filter.add(NotifySource.IOB_COB_CHANGE)
+                    InternalNotifier.addNotifier(GlucoDataService.context!!, this, filter)
+                } else {
+                    InternalNotifier.remNotifier(GlucoDataService.context!!, this)
+                }
                 showNotifications()
             /*}
             else {

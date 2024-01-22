@@ -12,5 +12,6 @@ enum class NotifySource {
     TIME_VALUE,
     SOURCE_SETTINGS,
     SOURCE_STATE_CHANGE,
-    NOTIFIER_CHANGE;
+    NOTIFIER_CHANGE,
+    IOB_COB_CHANGE;
 }
