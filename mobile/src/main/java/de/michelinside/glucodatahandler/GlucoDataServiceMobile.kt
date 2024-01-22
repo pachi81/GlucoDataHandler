@@ -77,7 +77,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
             var receivers = sharedPref.getStringSet(receiverPrefKey, HashSet<String>())
             Log.d(LOG_ID, "Resend " + receiverPrefKey + " Broadcast to " + receivers?.size.toString() + " receivers")
-            if (receivers == null || receivers.size == 0) {
+            if (receivers.isNullOrEmpty()) {
                 receivers = setOf("")
             }
             for( receiver in receivers ) {

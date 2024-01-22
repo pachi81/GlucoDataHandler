@@ -26,10 +26,10 @@ enum class AppSource {
     WEAR_APP;
 }
 
-abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
-    private lateinit var receiver: GlucoseDataReceiver
+abstract class GlucoDataService(source: AppSource) : WearableListenerService(), SharedPreferences.OnSharedPreferenceChangeListener {
+    private var glucoDataReceiver: GlucoseDataReceiver? = null
+    private var xDripReceiver: XDripBroadcastReceiver? = null
     private lateinit var batteryReceiver: BatteryReceiver
-    private lateinit var xDripReceiver: XDripBroadcastReceiver
 
     @SuppressLint("StaticFieldLeak")
     companion object {
@@ -140,18 +140,13 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
             connection!!.open(this, appSource == AppSource.PHONE_APP)
 
             Log.d(LOG_ID, "Register Receiver")
-            receiver = GlucoseDataReceiver()
-            xDripReceiver = XDripBroadcastReceiver()
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                registerReceiver(receiver, IntentFilter("glucodata.Minute"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
-                registerReceiver(xDripReceiver,IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
-            } else {
-                registerReceiver(receiver, IntentFilter("glucodata.Minute"))
-                registerReceiver(xDripReceiver,IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"))
+            checkRegisterGlucoDataBroadcast()
+            checkRegisterXDripBroadcast()
 
-            }
             batteryReceiver = BatteryReceiver()
             registerReceiver(batteryReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+
+            sharedPref?.registerOnSharedPreferenceChangeListener(this)
 
             if (BuildConfig.DEBUG && sharedPref!!.getBoolean(Constants.SHARED_PREF_DUMMY_VALUES, false)) {
                 Thread {
@@ -177,9 +172,16 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
     override fun onDestroy() {
         try {
             Log.w(LOG_ID, "onDestroy called")
-            unregisterReceiver(receiver)
+            sharedPref?.unregisterOnSharedPreferenceChangeListener(this)
+            if (glucoDataReceiver != null) {
+                unregisterReceiver(glucoDataReceiver)
+                glucoDataReceiver = null
+            }
+            if (xDripReceiver != null) {
+                unregisterReceiver(xDripReceiver)
+                xDripReceiver = null
+            }
             unregisterReceiver(batteryReceiver)
-            unregisterReceiver(xDripReceiver)
             TimeTaskService.stop()
             SourceTaskService.stop()
             connection!!.close()
@@ -201,5 +203,73 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                 Log.e(LOG_ID, "SendMessage exception: " + exc.toString())
             }
         }.start()
+    }
+
+    private fun isGlobalBroadcast(switchPref: String, listPref: String): Boolean {
+        if (sharedPref != null) {
+            if (!sharedPref!!.getBoolean(switchPref, false))
+                return false
+            val receivers = sharedPref!!.getStringSet(listPref, HashSet<String>())
+            if (receivers.isNullOrEmpty() || receivers.contains(""))
+                return true
+        }
+        return false
+    }
+
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    private fun checkRegisterGlucoDataBroadcast() {
+        if(!isGlobalBroadcast(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, Constants.SHARED_PREF_GLUCODATA_RECEIVERS)) {
+            if (glucoDataReceiver == null) {
+                glucoDataReceiver = GlucoseDataReceiver()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    registerReceiver(glucoDataReceiver, IntentFilter("glucodata.Minute"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
+                } else {
+                    registerReceiver(glucoDataReceiver, IntentFilter("glucodata.Minute"))
+                }
+                Log.i(LOG_ID, "globale glucodata broadcast receiver enabled")
+            }
+        } else if(glucoDataReceiver!=null) {
+            Log.i(LOG_ID, "globale glucodata broadcast receiver disabled")
+            unregisterReceiver(glucoDataReceiver)
+            glucoDataReceiver = null
+        }
+    }
+
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    private fun checkRegisterXDripBroadcast() {
+        if(!isGlobalBroadcast(Constants.SHARED_PREF_SEND_XDRIP_BROADCAST, Constants.SHARED_PREF_XDRIP_BROADCAST_RECEIVERS)) {
+            if (xDripReceiver == null) {
+                xDripReceiver = XDripBroadcastReceiver()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    registerReceiver(xDripReceiver,IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
+                } else {
+                    registerReceiver(xDripReceiver,IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"))
+                }
+                Log.i(LOG_ID, "xDrip broadcast receiver enabled")
+            }
+        } else if(xDripReceiver!=null) {
+            Log.i(LOG_ID, "xDrip broadcast receiver disabled")
+            unregisterReceiver(xDripReceiver)
+            xDripReceiver = null
+        }
+    }
+
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        try {
+            Log.d(LOG_ID, "onSharedPreferenceChanged called for key " + key)
+            when (key) {
+                Constants.SHARED_PREF_SEND_XDRIP_BROADCAST,
+                Constants.SHARED_PREF_XDRIP_BROADCAST_RECEIVERS -> {
+                    checkRegisterXDripBroadcast()
+                }
+                Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD,
+                Constants.SHARED_PREF_GLUCODATA_RECEIVERS -> {
+                    checkRegisterGlucoDataBroadcast()
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
+        }
     }
 }
