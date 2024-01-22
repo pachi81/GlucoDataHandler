@@ -464,13 +464,13 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             else
                 System.currentTimeMillis()
 
-            if(newTime > iobCobTime && (newTime-iobCobTime) > 30000) {
-                Log.i(LOG_ID, "Only IOB/COB changed: " + extras.getFloat(IOB) + "/" +  extras.getFloat(COB))
+            if(!isIobCob() || (newTime > iobCobTime && (newTime-iobCobTime) > 30000)) {
+                Log.i(LOG_ID, "Only IOB/COB changed: " + extras.getFloat(IOB, Float.NaN) + "/" +  extras.getFloat(COB, Float.NaN))
                 iob = extras.getFloat(IOB, Float.NaN)
                 cob = extras.getFloat(COB, Float.NaN)
+                iobCobTime = newTime
 
                 val notifySource = if(interApp) NotifySource.MESSAGECLIENT else NotifySource.IOB_COB_CHANGE
-
                 InternalNotifier.notify(context, notifySource, createExtras())  // re-create extras to have all changed value inside...
                 saveExtras(context)
             }
