@@ -454,21 +454,27 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     fun handleIobCob(context: Context, dataSource: DataSource, extras: Bundle, interApp: Boolean = false) {
         Log.v(LOG_ID, "handleIobCob for source " + dataSource + ": " + extras.toString())
         if (extras.containsKey(IOB) || extras.containsKey(COB)) {
-            Log.i(LOG_ID, "Only IOB/COB changed: " + extras.getFloat(IOB) + "/" +  extras.getFloat(COB))
-            iob = extras.getFloat(IOB, Float.NaN)
-            cob = extras.getFloat(COB, Float.NaN)
+            if (!isIobCob() && extras.getFloat(IOB, Float.NaN).isNaN() && extras.getFloat(COB, Float.NaN).isNaN()) {
+                Log.d(LOG_ID, "Ignore NaN IOB and COB")
+                return
+            }
 
-            if(extras.containsKey(IOBCOB_TIME))
-                iobCobTime = extras.getLong(IOBCOB_TIME)
+            val newTime = if(extras.containsKey(IOBCOB_TIME))
+                extras.getLong(IOBCOB_TIME)
             else
-                iobCobTime = System.currentTimeMillis()
+                System.currentTimeMillis()
 
-            val notifySource = if(interApp) NotifySource.MESSAGECLIENT else NotifySource.BROADCAST
+            if(newTime > iobCobTime && (newTime-iobCobTime) > 30000) {
+                Log.i(LOG_ID, "Only IOB/COB changed: " + extras.getFloat(IOB) + "/" +  extras.getFloat(COB))
+                iob = extras.getFloat(IOB, Float.NaN)
+                cob = extras.getFloat(COB, Float.NaN)
 
-            InternalNotifier.notify(context, notifySource, createExtras())  // re-create extras to have all changed value inside...
-            saveExtras(context)
+                val notifySource = if(interApp) NotifySource.MESSAGECLIENT else NotifySource.BROADCAST
+
+                InternalNotifier.notify(context, notifySource, createExtras())  // re-create extras to have all changed value inside...
+                saveExtras(context)
+            }
         }
-
     }
 
     fun changeIsMmol(newValue: Boolean, context: Context? = null) {
