@@ -207,6 +207,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
                     NotifySource.BROADCAST,
                     NotifySource.MESSAGECLIENT,
                     NotifySource.SETTINGS,
+                    NotifySource.IOB_COB_CHANGE,
                     NotifySource.OBSOLETE_VALUE)   // to trigger re-start for the case of stopped by the system
                 InternalNotifier.addNotifier(GlucoDataService.context!!, this, filter)
                 showNotifications()

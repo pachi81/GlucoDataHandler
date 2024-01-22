@@ -161,6 +161,9 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
                         } else {
                             filter.add(NotifySource.OBSOLETE_VALUE)
                         }
+                        if(txtIob.visibility == VISIBLE) {
+                            filter.add(NotifySource.IOB_COB_CHANGE)
+                        }
                         InternalNotifier.addNotifier(context, this, filter)
                         createWindow()
                     } else {

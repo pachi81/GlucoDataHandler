@@ -199,6 +199,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
             update()
             InternalNotifier.addNotifier(this, this, mutableSetOf(
                 NotifySource.BROADCAST,
+                NotifySource.IOB_COB_CHANGE,
                 NotifySource.MESSAGECLIENT,
                 NotifySource.CAPILITY_INFO,
                 NotifySource.NODE_BATTERY_LEVEL,

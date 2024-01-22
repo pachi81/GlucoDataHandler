@@ -469,7 +469,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 iob = extras.getFloat(IOB, Float.NaN)
                 cob = extras.getFloat(COB, Float.NaN)
 
-                val notifySource = if(interApp) NotifySource.MESSAGECLIENT else NotifySource.BROADCAST
+                val notifySource = if(interApp) NotifySource.MESSAGECLIENT else NotifySource.IOB_COB_CHANGE
 
                 InternalNotifier.notify(context, notifySource, createExtras())  // re-create extras to have all changed value inside...
                 saveExtras(context)
