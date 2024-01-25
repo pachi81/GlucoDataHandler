@@ -16,6 +16,8 @@ object Constants {
     const val GLUCOSE_MAX_VALUE = 400
     const val ACTION_STOP_FOREGROUND = "stop_foreground"
 
+    const val EXTRA_SOURCE_PACKAGE = "gdh.source_package"
+
     const val XDRIP_ACTION_GLUCOSE_READING = "com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING"
     const val XDRIP_BROADCAST_ACTION = "com.eveningoutpost.dexdrip.BgEstimate"
 

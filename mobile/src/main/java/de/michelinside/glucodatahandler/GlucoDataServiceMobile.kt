@@ -87,6 +87,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                     Log.d(LOG_ID, "Send broadcast " + receiverPrefKey + " to " + receiver.toString())
                 } else {
                     Log.d(LOG_ID, "Send global broadcast " + receiverPrefKey)
+                    sendIntent.putExtra(Constants.EXTRA_SOURCE_PACKAGE, context.packageName)
                 }
                 context.sendBroadcast(sendIntent)
             }

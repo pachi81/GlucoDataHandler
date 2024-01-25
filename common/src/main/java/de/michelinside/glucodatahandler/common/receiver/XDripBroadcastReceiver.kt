@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
@@ -49,6 +50,14 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
             Log.i(LOG_ID, "onReceive called for " + intent.action + ": " + Utils.dumpBundle(intent.extras))
             if (intent.extras != null) {
                 val extras = intent.extras!!
+                if (extras.containsKey(Constants.EXTRA_SOURCE_PACKAGE)) {
+                    val packageSource = extras.getString(Constants.EXTRA_SOURCE_PACKAGE, "")
+                    Log.d(LOG_ID, "Intent received from " + packageSource)
+                    if (packageSource == context.packageName) {
+                        Log.d(LOG_ID, "Ignore received intent from itself!")
+                        return
+                    }
+                }
                 if ((extras.containsKey(BG_ESTIMATE) || extras.containsKey(RAW)) && extras.containsKey(TIME)) {
                     var errorOccurs = false
                     var slope = Float.NaN
