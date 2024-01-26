@@ -7,7 +7,7 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 
 class ObsoleteTask : BackgroundTask() {
-    private val LOG_ID = "GDH.Task.ObsoleteTask"
+    private val LOG_ID = "GDH.Task.Time.ObsoleteTask"
     override fun getIntervalMinute(): Long {
         // obsolete will occur after 5 and 10 minutes
         return 5

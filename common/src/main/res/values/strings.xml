@@ -302,5 +302,5 @@
     <string name="menu_contact">Contact</string>
     <string name="src_ns_iob_cob">IOB/COB support</string>
     <string name="src_ns_iob_cob_summary">Receive also IOB and COB values from nightscout pebble endpoint.</string>
-    <string name="pref_permanent_notification_info_summary">The notification is mandatory for correct working application.\nStarting with Android 13 you can swipe this notification away.\nIf you do not want to re-create the notification with each new value, set the status bar icon to app icon and enable hide content.</string>
+    <string name="pref_permanent_notification_info_summary">The notification is mandatory for correct working application.\nStarting with Android 13 you can swipe this notification away. If you do not want the notification back, set the \"Status bar icon\" to \"App icon\" and enable \"Hide content\".</string>
 </resources>
