@@ -74,8 +74,8 @@ dependencies {
     implementation 'androidx.wear:wear:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation project(path: ':common')
-    implementation 'androidx.wear.watchface:watchface-complications-data-source-ktx:1.2.0'
-    implementation 'androidx.wear.watchface:watchface-complications-rendering:1.2.0'
+    implementation 'androidx.wear.watchface:watchface-complications-data-source-ktx:1.2.1'
+    implementation 'androidx.wear.watchface:watchface-complications-rendering:1.2.1'
     implementation 'androidx.appcompat:appcompat-resources:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
@@ -89,7 +89,7 @@ afterEvaluate {
         dependsOn bundleRelease
         from "${projectDir}/release"
         include '**/*.aab'
-        into rootProject.releasePath + "/Playstore" + "/" + versionName
+        into rootProject.releasePath + "/Playstore" + "/" + versionCode.toString()
     }
     bundleRelease.finalizedBy(copyAndroidBundlePostBuild)
 

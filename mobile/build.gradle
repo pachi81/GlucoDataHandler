@@ -95,7 +95,7 @@ afterEvaluate {
         dependsOn bundleRelease
         from "${projectDir}/release"
         include '**/*.aab'
-        into rootProject.releasePath + "/Playstore" + "/" + versionName
+        into rootProject.releasePath + "/Playstore" + "/" + versionCode.toString()
     }
 
     bundleRelease.finalizedBy(copyAndroidBundlePostBuild)
