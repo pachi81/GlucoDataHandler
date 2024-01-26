@@ -15,26 +15,30 @@ import org.json.JSONObject
 import java.lang.NumberFormatException
 
 class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, DataSource.NIGHTSCOUT) {
-    private val LOG_ID = "GDH.Task.NightscoutSourceTask"
+    private val LOG_ID = "GDH.Task.Source.NightscoutTask"
     companion object {
         private var url = ""
         private var secret = ""
         private var token = ""
         private var iob_cob_support = true
+        val iobCobSupport: Boolean get() = iob_cob_support
         const val PEBBLE_ENDPOINT = "/pebble"
         const val ENTRIES_ENDPOINT = "/api/v1/entries/current.json"
     }
 
-    override fun forceExecute(): Boolean = active(1L) && iob_cob_support
+    override fun hasIobCobSupport(): Boolean = active(1L) && iob_cob_support
 
     override fun executeRequest(context: Context) {
         if (!handlePebbleResponse(httpGet(getUrl(PEBBLE_ENDPOINT), getHeader()))) {
-            val body = httpGet(getUrl(ENTRIES_ENDPOINT), getHeader())
-            if (body == null && lastErrorCode >= 300)
-                return
-            val (result, errorText) = handleEntriesResponse(body)
-            if (!result) {
-                setLastError(errorText)
+            if (!hasIobCobSupport() || ReceiveData.getElapsedIobCobTimeMinute() > 0) {
+                // only check for new value, if there is no (otherwise it was only called for IOB/COB)
+                val body = httpGet(getUrl(ENTRIES_ENDPOINT), getHeader())
+                if (body == null && lastErrorCode >= 300)
+                    return
+                val (result, errorText) = handleEntriesResponse(body)
+                if (!result) {
+                    setLastError(errorText)
+                }
             }
         }
     }
