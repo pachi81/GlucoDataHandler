@@ -15,7 +15,7 @@ abstract class IobCobComplicationsBase : BgValueComplicationService() {
     }
     fun cobText(withMarker: Boolean): PlainComplicationText {
         if (withMarker)
-            return plainText("🍔"+ReceiveData.cobString)
+            return plainText("🍔 "+ReceiveData.cobString)
         return plainText(ReceiveData.cobString)
     }
 

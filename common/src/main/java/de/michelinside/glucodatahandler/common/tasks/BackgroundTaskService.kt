@@ -62,7 +62,12 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
 
     fun checkExecution(task: BackgroundTask? = null): Boolean {
         if(task != null) {
-            if(task.active(elapsedIobCobTimeMinute)) {
+            Log.v(LOG_ID, "checkExecution for " + task.javaClass.simpleName + ": elapsedTimeMinute=" + elapsedTimeMinute
+                    + " - lastElapsedMinute=" + lastElapsedMinute
+                    + " - elapsedIobCobTimeMinute=" + elapsedIobCobTimeMinute
+                    + " - interval=" + task.getIntervalMinute()
+                    + " - active=" + task.active(elapsedTimeMinute))
+            if(task.active(elapsedTimeMinute)) {
                 if (elapsedTimeMinute != 0L) {
                     if (lastElapsedMinute < 0 && initialExecution) {
                         Log.v(LOG_ID, "Trigger initial task execution")
@@ -74,13 +79,16 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                     }
                 }
                 if (task.hasIobCobSupport()) {
-                    if (elapsedIobCobTimeMinute.mod(task.getIntervalMinute()) == 0L) {
+                    if (elapsedIobCobTimeMinute >= task.getIntervalMinute()) {
                         Log.v(LOG_ID, "Trigger " + task.javaClass.simpleName + " IOB/COB execution after " + elapsedIobCobTimeMinute + " min")
                         return true   // IOB/COB interval expired for active task
                     }
                 }
             }
         } else {
+            Log.v(LOG_ID,"checkExecution: " + "elapsedTimeMinute=" + elapsedTimeMinute
+                    + " - lastElapsedMinute=" + lastElapsedMinute
+                    + " - elapsedIobCobTimeMinute=" + elapsedIobCobTimeMinute)
             if ((lastElapsedMinute != elapsedTimeMinute && elapsedTimeMinute != 0L)) {
                 Log.v(LOG_ID, "Check task execution after " + elapsedTimeMinute + " min")
                 return true   // time expired and no new value
@@ -175,7 +183,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                 }
                 curInterval = newInterval
                 curDelay = newDelay
-                if(triggerExecute && initialExecution) {
+                if(triggerExecute && initialExecution && elapsedTimeMinute >= newInterval) {
                     Log.i(LOG_ID, "Trigger initial execution")
                     executeTasks(true)
                 } else if (curInterval > 0) {
@@ -287,7 +295,10 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         try {
             Log.v(LOG_ID, "OnNotifyData for source " + dataSource.toString())
             if (!isRunning) {  // check only if for not already in execution
-                executeTasks()    // check for additional IOB - COB content or restart time
+                if(mutableSetOf(NotifySource.BROADCAST, NotifySource.MESSAGECLIENT).contains(dataSource))
+                    executeTasks()    // check for additional IOB - COB content or restart time
+                else
+                    startTimer()  // check for restart
             }
         } catch (ex: Exception) {
             Log.e(LOG_ID, "OnNotifyData: " + ex)
