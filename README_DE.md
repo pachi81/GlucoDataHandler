@@ -11,7 +11,7 @@
 * stellt mehrere **[Widgets](#widgets)** für Android zur Verfügung
 * optionale **[Benachrichtigungen](#benachrichtigungen)** um weitere Statusbar-Icons zur Verfügung zu haben
 * stellt mehrere **[Complications](#complications)** für Wear OS zur Verfügung
-* unterstützt **[Android Auto](https://github.com/pachi81/GlucoDataAuto/blob/main/README_DE.md)** über die GlucoDataAuto APP
+* unterstützt **[Android Auto](https://github.com/pachi81/GlucoDataAuto/blob/main/README_DE.md)** über die [GlucoDataAuto App](https://github.com/pachi81/GlucoDataAuto/releases)
 * **[Tasker Ereignisse](#tasker)** Integration
 * sendet Glucodata Broadcasts an andere Apps (die dies unterstützen)
 
