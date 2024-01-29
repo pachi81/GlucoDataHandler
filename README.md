@@ -11,7 +11,7 @@
 * provides several **[widgets](#widgets)** and a floating widget for the phone
 * provides optional **[notifications](#notifications)** with different icons for the phone
 * provides several **[complications](#complications)** for Wear OS
-* provides **[Android Auto](https://github.com/pachi81/GlucoDataAuto/blob/main/README.md)** support using GlucoDataAuto.apk
+* provides **[Android Auto](https://github.com/pachi81/GlucoDataAuto/blob/main/README.md)** support using [GlucoDataAuto app](https://github.com/pachi81/GlucoDataAuto/releases)
 * **[Tasker](#tasker)** integration
 * sends glucodata broadcasts to other apps (which supports this broadcast)
 
