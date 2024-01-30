@@ -357,8 +357,10 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString() + " and extras " + extras.toString())
-            sendMessage(dataSource, extras)
+            if (dataSource != NotifySource.IOB_COB_CHANGE || extras != null) {  // do not send IOB change without extras
+                Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString() + " and extras " + extras.toString())
+                sendMessage(dataSource, extras)
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString())
         }
