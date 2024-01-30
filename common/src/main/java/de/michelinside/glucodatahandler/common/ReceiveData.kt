@@ -552,6 +552,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         lowAlarmDuration = sharedPref.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_LOW, lowAlarmDuration/60000)*60000
         highAlarmDuration = sharedPref.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_HIGH, highAlarmDuration/60000)*60000
         changeIsMmol(sharedPref.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol))
+        calculateAlarm()  // re-calculate alarm with new settings
         Log.i(LOG_ID, "Raw low/min/max/high set: " + lowValue.toString() + "/" + targetMinValue.toString() + "/" + targetMaxValue.toString() + "/" + highValue.toString()
                 + " mg/dl - unit: " + getUnit()
                 + " - 5 min delta: " + use5minDelta
