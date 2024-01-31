@@ -21,6 +21,20 @@ open class GlucoseDataReceiver: BroadcastReceiver() {
                 return
             }
 
+            if (intent.extras == null) {
+                Log.e(LOG_ID, "No extras in intent!")
+                return
+            }
+
+            if (intent.extras!!.containsKey(Constants.EXTRA_SOURCE_PACKAGE)) {
+                val packageSource = intent.extras!!.getString(Constants.EXTRA_SOURCE_PACKAGE, "")
+                Log.d(LOG_ID, "Intent received from " + packageSource)
+                if (packageSource == context.packageName) {
+                    Log.d(LOG_ID, "Ignore received intent from itself!")
+                    return
+                }
+            }
+
             ReceiveData.handleIntent(context, DataSource.JUGGLUCO, intent.extras)
             SourceStateData.setState(DataSource.JUGGLUCO, SourceState.NONE)
         } catch (exc: Exception) {

@@ -8,7 +8,7 @@ import androidx.work.WorkerParameters
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 
 @SuppressLint("StaticFieldLeak")
-object TimeTaskService: BackgroundTaskService(42, "GDH.Task.TimeTaskService") {
+object TimeTaskService: BackgroundTaskService(42, "GDH.Task.Time.TaskService") {
     override fun getAlarmReceiver() : Class<*> = TimeAlarmReceiver::class.java
 
     // also notify for NOTIFIER_CHANGE as if there is no receiver, the alarm manager is not needed

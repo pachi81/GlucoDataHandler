@@ -38,11 +38,18 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         get() {
             return ReceiveData.getElapsedTimeMinute()
         }
+
+    private val elapsedIobCobTimeMinute: Long
+        get() {
+            return ReceiveData.getElapsedIobCobTimeMinute()
+        }
+
     private var useWorkerVar = false
     var useWorker: Boolean
         get() = useWorkerVar
         set(value) {useWorkerVar = value}
 
+    open fun hasIobCobSupport() = false
     abstract fun getBackgroundTasks(): MutableList<BackgroundTask>
 
     private fun initBackgroundTasks() {
@@ -53,10 +60,49 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         }
     }
 
-    private fun hasForceExecuteTask() : Boolean {
-        backgroundTaskList.forEach {
-            if (it.forceExecute())
-                return true
+    fun checkExecution(task: BackgroundTask? = null): Boolean {
+        if(task != null) {
+            Log.v(LOG_ID, "checkExecution for " + task.javaClass.simpleName + ": elapsedTimeMinute=" + elapsedTimeMinute
+                    + " - lastElapsedMinute=" + lastElapsedMinute
+                    + " - elapsedIobCobTimeMinute=" + elapsedIobCobTimeMinute
+                    + " - interval=" + task.getIntervalMinute()
+                    + " - active=" + task.active(elapsedTimeMinute))
+            if(task.active(elapsedTimeMinute)) {
+                if (elapsedTimeMinute != 0L) {
+                    if (lastElapsedMinute < 0 && initialExecution) {
+                        Log.v(LOG_ID, "Trigger initial task execution")
+                        return true   // trigger initial execution
+                    }
+                    if (elapsedTimeMinute.mod(task.getIntervalMinute()) == 0L) {
+                        Log.v(LOG_ID, "Trigger "+ task.javaClass.simpleName + " execution after " + elapsedTimeMinute + " min")
+                        return true   // interval expired for active task
+                    }
+                }
+                if (task.hasIobCobSupport()) {
+                    if (elapsedIobCobTimeMinute >= task.getIntervalMinute()) {
+                        Log.v(LOG_ID, "Trigger " + task.javaClass.simpleName + " IOB/COB execution after " + elapsedIobCobTimeMinute + " min")
+                        return true   // IOB/COB interval expired for active task
+                    }
+                }
+            }
+        } else {
+            Log.v(LOG_ID,"checkExecution: " + "elapsedTimeMinute=" + elapsedTimeMinute
+                    + " - lastElapsedMinute=" + lastElapsedMinute
+                    + " - elapsedIobCobTimeMinute=" + elapsedIobCobTimeMinute)
+            if ((lastElapsedMinute != elapsedTimeMinute && elapsedTimeMinute != 0L)) {
+                Log.v(LOG_ID, "Check task execution after " + elapsedTimeMinute + " min")
+                return true   // time expired and no new value
+            }
+            if (hasIobCobSupport() && elapsedIobCobTimeMinute > 0) {
+                Log.v(LOG_ID, "Check IOB/COB task execution after " + elapsedIobCobTimeMinute + " min")
+                return true // check each task for additional IOB COB data
+            }
+        }
+        // nothing to execute
+        if (task != null) {
+            Log.v(LOG_ID, "nothing to execute for " + task.javaClass.simpleName)
+        } else {
+            Log.v(LOG_ID, "nothing to execute")
         }
         return false
     }
@@ -64,27 +110,18 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     private fun executeTasks(force: Boolean = false) {
         Log.v(LOG_ID, "executeTasks called with force: " + force)
         try {
-            if (force || (lastElapsedMinute != elapsedTimeMinute && elapsedTimeMinute != 0L) || hasForceExecuteTask()) {
+            if (force || checkExecution()) {
                 Thread {
                     WakeLockHelper(context!!).use {
                         try {
                             isRunning = true
                             backgroundTaskList.forEach {
-                                if (force || it.forceExecute() || (elapsedTimeMinute != 0L && ((lastElapsedMinute < 0 && initialExecution) || (elapsedTimeMinute.mod(
-                                        it.getIntervalMinute()
-                                    ) == 0L && it.active(elapsedTimeMinute))))
-                                ) {
+                                if ((force && it.active(elapsedTimeMinute)) || checkExecution(it)) {
                                     try {
-                                        Log.i(
-                                            LOG_ID,
-                                            "execute after " + elapsedTimeMinute + " min: " + it
-                                        )
+                                        Log.i(LOG_ID,"execute after " + elapsedTimeMinute + " min: " + it.javaClass.simpleName)
                                         it.execute(context!!)
                                     } catch (ex: Exception) {
-                                        Log.e(
-                                            LOG_ID,
-                                            "exception while execute task " + it + ": " + ex
-                                        )
+                                        Log.e(LOG_ID,"exception while execute task " + it.javaClass.simpleName + ": " + ex)
                                     }
                                 }
                             }
@@ -146,7 +183,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                 }
                 curInterval = newInterval
                 curDelay = newDelay
-                if(triggerExecute && initialExecution) {
+                if(triggerExecute && initialExecution && elapsedTimeMinute >= newInterval) {
                     Log.i(LOG_ID, "Trigger initial execution")
                     executeTasks(true)
                 } else if (curInterval > 0) {
@@ -257,9 +294,12 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
             Log.v(LOG_ID, "OnNotifyData for source " + dataSource.toString())
-            // restart time
-            if (!isRunning && !hasForceExecuteTask())
-                startTimer()
+            if (!isRunning) {  // check only if for not already in execution
+                if(mutableSetOf(NotifySource.BROADCAST, NotifySource.MESSAGECLIENT).contains(dataSource))
+                    executeTasks()    // check for additional IOB - COB content or restart time
+                else
+                    startTimer()  // check for restart
+            }
         } catch (ex: Exception) {
             Log.e(LOG_ID, "OnNotifyData: " + ex)
         }

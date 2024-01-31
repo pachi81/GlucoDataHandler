@@ -77,7 +77,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
             var receivers = sharedPref.getStringSet(receiverPrefKey, HashSet<String>())
             Log.d(LOG_ID, "Resend " + receiverPrefKey + " Broadcast to " + receivers?.size.toString() + " receivers")
-            if (receivers.isNullOrEmpty()) {
+            if (receivers == null || receivers.size == 0) {
                 receivers = setOf("")
             }
             for( receiver in receivers ) {
@@ -87,6 +87,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                     Log.d(LOG_ID, "Send broadcast " + receiverPrefKey + " to " + receiver.toString())
                 } else {
                     Log.d(LOG_ID, "Send global broadcast " + receiverPrefKey)
+                    sendIntent.putExtra(Constants.EXTRA_SOURCE_PACKAGE, context.packageName)
                 }
                 context.sendBroadcast(sendIntent)
             }

@@ -53,7 +53,8 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
         try {
             when(key) {
-                Constants.SHARED_PREF_CAR_NOTIFICATION -> {
+                Constants.SHARED_PREF_CAR_NOTIFICATION,
+                Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY -> {
                     updateEnableStates(sharedPreferences!!)
                 }
             }
@@ -65,12 +66,13 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     fun <T : Preference?> setEnableState(sharedPreferences: SharedPreferences, key: String, enableKey: String, secondEnableKey: String? = null, defValue: Boolean = false) {
         val pref = findPreference<T>(key)
         if (pref != null)
-            pref.isEnabled = sharedPreferences.getBoolean(enableKey, defValue) && (if (secondEnableKey != null) sharedPreferences.getBoolean(secondEnableKey, defValue) else true)
+            pref.isEnabled = sharedPreferences.getBoolean(enableKey, defValue) && (if (secondEnableKey != null) !sharedPreferences.getBoolean(secondEnableKey, defValue) else true)
     }
 
     fun updateEnableStates(sharedPreferences: SharedPreferences) {
         try {
-            setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL, Constants.SHARED_PREF_CAR_NOTIFICATION)
+            setEnableState<SwitchPreference>(sharedPreferences, Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY, Constants.SHARED_PREF_CAR_NOTIFICATION)
+            setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM, Constants.SHARED_PREF_CAR_NOTIFICATION, Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
         }

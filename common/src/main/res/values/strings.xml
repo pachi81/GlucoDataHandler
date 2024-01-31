@@ -149,7 +149,9 @@
     <string name="pref_switch_car_notification">Android Auto notifications</string>
     <string name="pref_switch_car_notification_summary">Notification for Android Auto.</string>
     <string name="pref_car_notification_interval">Notification interval</string>
-    <string name="pref_car_notification_interval_summary">Interval for showing notifications. \"Alarm only\" will only trigger notifications if the values are outside of the target range.</string>
+    <string name="pref_car_notification_interval_summary">Minimum interval for showing notifications for a new value.\nAlarms will always show a notification.</string>
+    <string name="pref_switch_car_notification_alarm_only">Alarm only</string>
+    <string name="pref_switch_car_notification_alarm_only_summary">Will only trigger notifications for alarms in their specific interval.\nVery low values will always show a notification.</string>
     <string name="pref_switch_car_media">Dummy Media Player</string>
     <string name="pref_switch_car_media_summary">Show the glucose value as current song for Android Auto.</string>
     <string name="pref_switch_send_to_aod">Send glucodata broadcast</string>
@@ -302,5 +304,5 @@
     <string name="menu_contact">Contact</string>
     <string name="src_ns_iob_cob">IOB/COB support</string>
     <string name="src_ns_iob_cob_summary">Receive also IOB and COB values from nightscout pebble endpoint.</string>
-    <string name="pref_permanent_notification_info_summary">The notification is mandatory for correct working application.\nStarting with Android 13 you can swipe this notification away.\nIf you do not want to re-create the notification with each new value, set the status bar icon to app icon and enable hide content.</string>
+    <string name="pref_permanent_notification_info_summary">The notification is mandatory for correct working application.\nStarting with Android 13 you can swipe this notification away. If you do not want the notification back, set the \"Status bar icon\" to \"App icon\" and enable \"Hide content\".</string>
 </resources>

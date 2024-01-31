@@ -138,8 +138,10 @@
     <string name="pref_low_value_summary">Granica dla niskich wartości glukozy.\nJeśli aktywowałeś alarm niskiego stęż. glukozy w Juggluco, nie musisz ustawiać tej wartości.</string>
     <string name="pref_switch_car_notification">Powiadomienia w Android Auto</string>
     <string name="pref_switch_car_notification_summary">Powiadomienie dla Android Auto.</string>
-    <string name="pref_car_notification_interval">Odstęp czasu między powiadomieniami</string>
-    <string name="pref_car_notification_interval_summary">Odstęp czasu między wyświetlaniem powiadomień. Opcja \"Tylko alarm\" wyświetli powiadomienia wyłącznie wtedy, gdy wartości będą poza zakresem docelowym.</string>
+    <string name="pref_car_notification_interval">Odstęp między powiadomieniami</string>
+    <string name="pref_car_notification_interval_summary">Minimalny odstęp czasu między wyświetlaniem powiadomień o nowej wartości. Alarmy zawsze będą wyświetlać powiadomienia.</string>
+    <string name="pref_switch_car_notification_alarm_only">Tylko alarm</string>
+    <string name="pref_switch_car_notification_alarm_only_summary">Powiadomienia będą pojawiać się tylko w przypadku alarmów w ustawionych odstępach.\nBardzo niskie wartości zawsze będą uruchamiać powiadomienie.</string>
     <string name="pref_switch_car_media">Odtwarzacz fikcyjnych multimediów</string>
     <string name="pref_switch_car_media_summary">Wyświetl wartość glukozy jako bieżący utwór dla Android Auto.</string>
     <string name="pref_switch_send_to_aod">Wyślij transmisję \"glucodata broadcast\"</string>

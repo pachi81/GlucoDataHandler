@@ -87,7 +87,9 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     private fun updateSettings(sharedPref: SharedPreferences) {
         val cur_enabled = enable_notification
         enable_notification = sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, enable_notification)
-        notification_interval = sharedPref.getString(Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL, "-1")!!.toLong()
+        val alarmOnly = sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY, true)
+        notification_interval = if (alarmOnly) -1 else sharedPref.getInt(Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM, 1).toLong()
+        Log.i(LOG_ID, "notification settings changed: active: " + enable_notification + " - interval: " + notification_interval)
         if(init && car_connected && cur_enabled != enable_notification) {
             if(enable_notification)
                 showNotification(context!!, false)
@@ -102,6 +104,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                 Log.v(LOG_ID, "initNotification called")
                 CarNotification.context = context
                 val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                migrateSettings(sharedPref)
                 sharedPref.registerOnSharedPreferenceChangeListener(this)
                 updateSettings(sharedPref)
                 loadExtras(context)
@@ -111,6 +114,21 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "init exception: " + exc.message.toString() )
+        }
+    }
+
+    private fun migrateSettings(sharedPref: SharedPreferences) {
+        if (sharedPref.contains(Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL)) {
+            val old_interval = sharedPref.getString(Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL, "-1")!!.toInt()
+            Log.i(LOG_ID, "Migrate old interval " + old_interval + " to new settings")
+            with(sharedPref.edit()) {
+                putBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY, old_interval==-1)
+                if (old_interval > 0) {
+                    putInt(Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM, old_interval)
+                }
+                remove(Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL)
+                apply()
+            }
         }
     }
 
@@ -274,7 +292,8 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
             Log.v(LOG_ID, "onSharedPreferenceChanged called for key " + key)
             when(key) {
                 Constants.SHARED_PREF_CAR_NOTIFICATION,
-                Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL -> {
+                Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY,
+                Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM -> {
                     updateSettings(sharedPreferences!!)
                 }
             }

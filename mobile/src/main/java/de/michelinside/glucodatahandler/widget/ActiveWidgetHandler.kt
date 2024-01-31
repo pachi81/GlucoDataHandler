@@ -23,11 +23,10 @@ object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPrefere
             NotifySource.BROADCAST,
             NotifySource.MESSAGECLIENT,
             NotifySource.SETTINGS,
+            NotifySource.OBSOLETE_VALUE,
         )   // to trigger re-start for the case of stopped by the system
         if(activeWidgets.contains(WidgetType.GLUCOSE_TREND_DELTA_TIME) || activeWidgets.contains(WidgetType.GLUCOSE_TREND_DELTA_TIME_IOB_COB))
             filter.add(NotifySource.TIME_VALUE)
-        else
-            filter.add(NotifySource.OBSOLETE_VALUE)
         if(activeWidgets.contains(WidgetType.GLUCOSE_TREND_DELTA_TIME_IOB_COB))
             filter.add(NotifySource.IOB_COB_CHANGE)
         return filter
@@ -68,8 +67,12 @@ object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPrefere
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString())
         activeWidgets.forEach {
-            if (dataSource != NotifySource.TIME_VALUE || it == WidgetType.GLUCOSE_TREND_DELTA_TIME || it == WidgetType.GLUCOSE_TREND_DELTA_TIME_IOB_COB)
+            if (it == WidgetType.GLUCOSE_TREND_DELTA_TIME || it == WidgetType.GLUCOSE_TREND_DELTA_TIME_IOB_COB) {
+                if(dataSource != NotifySource.OBSOLETE_VALUE)  // do not update again, as there are already updated by TIME_VALUE
+                    GlucoseBaseWidget.updateWidgets(context, it)
+            } else if (dataSource != NotifySource.TIME_VALUE) {
                 GlucoseBaseWidget.updateWidgets(context, it)
+            }
         }
     }
 

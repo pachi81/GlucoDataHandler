@@ -131,7 +131,9 @@
     <string name="pref_switch_car_media">Dummy Media Player</string>
     <string name="pref_switch_car_media_summary">Stellt den Glucose Wert als aktuellen Song dar.</string>
     <string name="pref_car_notification_interval">Benachrichtigungsintervall</string>
-    <string name="pref_car_notification_interval_summary">Intervall, um die Benachrichtigungspopups in Android Auto anzuzeigen. \"Nur für Alarme\" zeigt nur die Popups für Werte außerhalb des Zielbereiches an.</string>
+    <string name="pref_car_notification_interval_summary">Intervall, um die Benachrichtigungspopups in Android Auto für neue Werte anzuzeigen.\nAlarme werden unabhängig davon immer angezeigt.</string>
+    <string name="pref_switch_car_notification_alarm_only">Nur für Alarme</string>
+    <string name="pref_switch_car_notification_alarm_only_summary">Zeigt nur die Popups für Alarme an.\nSehr tiefe Werte werden immer benachrichtigt.</string>
     <string name="pref_switch_send_to_aod">Glucodata Broadcast senden</string>
     <string name="pref_switch_send_to_aod_summary">Glucodata Broadcast für neue Werte von allen Quellen senden.</string>
     <string name="pref_button_select_target">Glucodata Empfänger definieren</string>
@@ -170,7 +172,7 @@
     <string name="pref_notification_big_icon_summary" translatable="false">Größeres Icon in der Statusbar. Auf einigen Smartphones kann es abgeschnitten werden.</string>
     <string name="pref_notification_no_content">Leerer Inhalt</string>
     <string name="pref_notification_no_content_summary">Wenn nur das Statusbar Icon von Interesse ist, kann der Inhalt der Benachrichtigung entfernt werden.</string>
-    <string name="pref_second_notification">2. Benachrichtiung</string>
+    <string name="pref_second_notification">2. Benachrichtigung</string>
     <string name="pref_second_notification_summary">Zeigt eine weitere Benachrichtigung ohne Inhalt an, um ein zusätzliches Statusbar Icon hinzuzufügen.</string>
     <string name="pref_second_notification_icon">2. Statusbar Icon</string>
     <string name="pref_second_notification_icon_summary">Art des Statusbar Icons für die zweite Benachrichtigung.</string>
@@ -288,6 +290,6 @@
     <string name="menu_contact">Kontakt</string>
     <string name="src_ns_iob_cob">IOB/COB Unterstützung</string>
     <string name="src_ns_iob_cob_summary">Zusätzlich auch IOB und COB Werte vom Nightscout Pebble Endpunkt empfangen.</string>
-    <string name="pref_permanent_notification_info_summary">Die Benachrichtigung wird für eine korrekt funktionierende App benötigt.\nAb Android Version 13, kann diese Benachrichtigung über ein wischen entfernt werden.\nWenn man sie nicht bei einem neuen Wert wieder haben will, muss man das Statusbar Icon auf App Icon stellen und den leeren Inhalt aktivieren.</string>
+    <string name="pref_permanent_notification_info_summary">Die Benachrichtigung wird für eine funktionsfähige App benötigt.\nAb Android Version 13, kann diese Benachrichtigung über ein Wischen entfernt werden. Damit die Benachrichtigung danach nicht erneut erscheint, muss man im Bereich \"Statusbar Icon\" die Auswahl \"App Icon\" treffen und zusätzlich den Punkt \"Leerer Inhalt\" aktivieren.</string>
 
 </resources>
