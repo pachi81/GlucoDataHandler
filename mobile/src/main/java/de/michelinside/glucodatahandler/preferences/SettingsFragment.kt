@@ -108,8 +108,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION,
                 Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD,
                 Constants.SHARED_PREF_SEND_TO_XDRIP,
-                Constants.SHARED_PREF_SEND_XDRIP_BROADCAST,
-                Constants.SHARED_PREF_CAR_NOTIFICATION -> {
+                Constants.SHARED_PREF_SEND_XDRIP_BROADCAST -> {
                     updateEnableStates(sharedPreferences!!)
                 }
                 Constants.SHARED_PREF_FLOATING_WIDGET -> {
@@ -184,7 +183,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_STYLE, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY, Constants.SHARED_PREF_FLOATING_WIDGET)
-            setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL, Constants.SHARED_PREF_CAR_NOTIFICATION)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
         }

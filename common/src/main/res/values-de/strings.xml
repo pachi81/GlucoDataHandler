@@ -131,7 +131,9 @@
     <string name="pref_switch_car_media">Dummy Media Player</string>
     <string name="pref_switch_car_media_summary">Stellt den Glucose Wert als aktuellen Song dar.</string>
     <string name="pref_car_notification_interval">Benachrichtigungsintervall</string>
-    <string name="pref_car_notification_interval_summary">Intervall, um die Benachrichtigungspopups in Android Auto anzuzeigen. \"Nur für Alarme\" zeigt nur die Popups für Werte außerhalb des Zielbereiches an.</string>
+    <string name="pref_car_notification_interval_summary">Intervall, um die Benachrichtigungspopups in Android Auto für neue Werte anzuzeigen.\nAlarme werden unabhängig davon immer angezeigt.</string>
+    <string name="pref_switch_car_notification_alarm_only">Nur für Alarme</string>
+    <string name="pref_switch_car_notification_alarm_only_summary">Zeigt nur die Popups für Alarme an.\nSehr tiefe Werte werden immer benachrichtigt.</string>
     <string name="pref_switch_send_to_aod">Glucodata Broadcast senden</string>
     <string name="pref_switch_send_to_aod_summary">Glucodata Broadcast für neue Werte von allen Quellen senden.</string>
     <string name="pref_button_select_target">Glucodata Empfänger definieren</string>

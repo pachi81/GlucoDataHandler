@@ -57,7 +57,7 @@ object CarModeReceiver {
             }
             InternalNotifier.notify(GlucoDataService.context!!, NotifySource.CAR_CONNECTION, null)
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() )
+            Log.e(LOG_ID, "onConnectionStateUpdated exception: " + exc.message.toString() )
         }
     }
 }
