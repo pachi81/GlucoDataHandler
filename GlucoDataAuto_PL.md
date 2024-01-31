@@ -1,1 +1,1 @@
-Content has moved to [GlucoDataAuto-repository](https://github.com/pachi81/GlucoDataAuto/blob/main/README_PL.md)
+Treść przeniesiono do [GlucoDataAuto-repository](https://github.com/pachi81/GlucoDataAuto/blob/main/README_PL.md)
