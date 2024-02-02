@@ -30,6 +30,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
     private lateinit var receiver: GlucoseDataReceiver
     private lateinit var batteryReceiver: BatteryReceiver
     private lateinit var xDripReceiver: XDripBroadcastReceiver
+    private lateinit var aapsReceiver: AAPSReceiver
 
     @SuppressLint("StaticFieldLeak")
     companion object {
@@ -142,12 +143,15 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
             Log.d(LOG_ID, "Register Receiver")
             receiver = GlucoseDataReceiver()
             xDripReceiver = XDripBroadcastReceiver()
+            aapsReceiver = AAPSReceiver()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 registerReceiver(receiver, IntentFilter("glucodata.Minute"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
                 registerReceiver(xDripReceiver,IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
+                //registerReceiver(aapsReceiver,IntentFilter("info.nightscout.androidaps.status"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
             } else {
                 registerReceiver(receiver, IntentFilter("glucodata.Minute"))
                 registerReceiver(xDripReceiver,IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"))
+                //registerReceiver(aapsReceiver,IntentFilter("info.nightscout.androidaps.status"))
 
             }
             batteryReceiver = BatteryReceiver()
@@ -180,6 +184,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
             unregisterReceiver(receiver)
             unregisterReceiver(batteryReceiver)
             unregisterReceiver(xDripReceiver)
+            //unregisterReceiver(aapsReceiver)
             TimeTaskService.stop()
             SourceTaskService.stop()
             connection!!.close()

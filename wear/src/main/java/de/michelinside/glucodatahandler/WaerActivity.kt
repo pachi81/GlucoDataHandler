@@ -19,6 +19,7 @@ import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.databinding.ActivityWaerBinding
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 
 class WaerActivity : AppCompatActivity(), NotifierInterface {
 
@@ -43,8 +44,10 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
-
+            installSplashScreen()
             super.onCreate(savedInstanceState)
+
+            //setTheme(android.R.style.Theme_DeviceDefault)
 
             binding = ActivityWaerBinding.inflate(layoutInflater)
             setContentView(binding.root)

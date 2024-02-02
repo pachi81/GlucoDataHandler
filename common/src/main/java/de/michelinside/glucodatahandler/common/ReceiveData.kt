@@ -8,7 +8,6 @@ import android.util.Log
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
-import de.michelinside.glucodatahandler.common.tasks.NightscoutSourceTask
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
@@ -28,8 +27,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     const val TIME = "glucodata.Minute.Time"
     const val DELTA = "glucodata.Minute.Delta"
     const val SOURCE_INDEX = "source_idx"
-    const val IOB = "gdh.IOB"
-    const val COB = "gdh.COB"
+    const val IOB = "glucodata.Minute.IOB"
+    const val COB = "glucodata.Minute.COB"
     const val IOBCOB_TIME = "gdh.IOB_COB_time"
 
     private const val LAST_ALARM_INDEX = "last_alarm_index"
@@ -149,7 +148,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 context.getString(R.string.info_label_timestamp) + ": " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(time)) + "\r\n" +
                 context.getString(R.string.info_label_alarm) + ": " + context.getString(getAlarmType().resId) + (if (forceAlarm) " ⚠" else "" ) + " (" + alarm + ")\r\n" +
                 (if (isMmol) context.getString(R.string.info_label_raw) + ": " + rawValue + " mg/dl\r\n" else "") +
-                (       if (NightscoutSourceTask.iobCobSupport && iobCobTime > 0) {
+                (       if (iobCobTime > 0) {
                             context.getString(R.string.info_label_iob) + ": " + getIobAsString() + " / " + context.getString(R.string.info_label_cob) + ": " + getCobAsString() + "\r\n" +
                                     context.getString(R.string.info_label_iob_cob_timestamp) + ": " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(iobCobTime)) + "\r\n"
                         }
@@ -475,8 +474,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 iobCobTime = newTime
 
                 // do not forward extras as interApp to prevent sending back to source...
-                val extras: Bundle? = if(interApp) null else createExtras()  // re-create extras to have all changed value inside for sending to receiver
-                InternalNotifier.notify(context, NotifySource.IOB_COB_CHANGE, extras)
+                val bundle: Bundle? = if(interApp) null else createExtras()  // re-create extras to have all changed value inside for sending to receiver
+                InternalNotifier.notify(context, NotifySource.IOB_COB_CHANGE, bundle)
                 saveExtras(context)
             }
         }

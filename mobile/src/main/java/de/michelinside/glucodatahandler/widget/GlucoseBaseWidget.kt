@@ -8,6 +8,7 @@ import android.content.Intent
 import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.RemoteViews
 import de.michelinside.glucodatahandler.GlucoDataServiceMobile
 import de.michelinside.glucodatahandler.MainActivity
@@ -209,6 +210,10 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
         if (hasIobCob) {
             remoteViews.setTextViewText(R.id.iobText, "💉 " + ReceiveData.getIobAsString())
             remoteViews.setTextViewText(R.id.cobText, "🍔 " + ReceiveData.getCobAsString())
+            if(ReceiveData.cob.isNaN())
+                remoteViews.setViewVisibility(R.id.cobText, View.GONE)
+            else
+                remoteViews.setViewVisibility(R.id.cobText, View.VISIBLE)
         }
         return remoteViews
     }

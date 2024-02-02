@@ -21,7 +21,6 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
         private var secret = ""
         private var token = ""
         private var iob_cob_support = true
-        val iobCobSupport: Boolean get() = iob_cob_support
         const val PEBBLE_ENDPOINT = "/pebble"
         const val ENTRIES_ENDPOINT = "/api/v1/entries/current.json"
     }

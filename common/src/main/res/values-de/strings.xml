@@ -291,5 +291,8 @@
     <string name="src_ns_iob_cob">IOB/COB Unterstützung</string>
     <string name="src_ns_iob_cob_summary">Zusätzlich auch IOB und COB Werte vom Nightscout Pebble Endpunkt empfangen.</string>
     <string name="pref_permanent_notification_info_summary">Die Benachrichtigung wird für eine funktionsfähige App benötigt.\nAb Android Version 13, kann diese Benachrichtigung über ein Wischen entfernt werden. Damit die Benachrichtigung danach nicht erneut erscheint, muss man im Bereich \"Statusbar Icon\" die Auswahl \"App Icon\" treffen und zusätzlich den Punkt \"Leerer Inhalt\" aktivieren.</string>
+    <string name="source_aaps">AAPS</string>
+    <string name="pref_source_aaps_info">AndroidAPS</string>
+    <string name="pref_source_aaps_info_summary">Konfiguration von AAPS:\n- AAPS App öffnen\n- \"Konfiguration\" öffnen\n- \"Samsung Tizen\" aktivieren</string>
 
 </resources>

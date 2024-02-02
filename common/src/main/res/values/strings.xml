@@ -305,4 +305,7 @@
     <string name="src_ns_iob_cob">IOB/COB support</string>
     <string name="src_ns_iob_cob_summary">Receive also IOB and COB values from nightscout pebble endpoint.</string>
     <string name="pref_permanent_notification_info_summary">The notification is mandatory for correct working application.\nStarting with Android 13 you can swipe this notification away. If you do not want the notification back, set the \"Status bar icon\" to \"App icon\" and enable \"Hide content\".</string>
+    <string name="source_aaps">AAPS</string>
+    <string name="pref_source_aaps_info">AndroidAPS</string>
+    <string name="pref_source_aaps_info_summary">To receive values from AAPS:\n- open AAPS app\n- go to \"Config Builder\"\n- enable \"Samsung Tizen\"</string>
 </resources>

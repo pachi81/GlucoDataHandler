@@ -21,6 +21,15 @@
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory
+        android:title="@string/pref_source_aaps_info"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="0">
+        <Preference
+            android:key="source_aaps_info"
+            android:summary="@string/pref_source_aaps_info_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
         android:title="@string/pref_cat_follower"
         app:iconSpaceReserved="false">
         <androidx.preference.ListPreference
