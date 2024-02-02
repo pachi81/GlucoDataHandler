@@ -35,7 +35,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     private var delaySec = 10L
 
     companion object {
-        private val LOG_ID = "GDH.Task.DataSourceTask"
+        private val LOG_ID = "GDH.Task.Source.DataSourceTask"
 
         val preferencesToSend = mutableSetOf(
             Constants.SHARED_PREF_SOURCE_DELAY,
@@ -140,9 +140,12 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
 
     abstract fun executeRequest(context: Context)
 
+    open fun needsInternet(): Boolean = true
+
     override fun execute(context: Context) {
         if (enabled) {
-            if (!isConnected(context)) {
+            if (needsInternet() && !isConnected(context)) {
+                Log.w(LOG_ID, "No internet connection")
                 setState(SourceState.NO_CONNECTION)
                 return
             }
