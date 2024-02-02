@@ -28,6 +28,8 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
 
     override fun hasIobCobSupport(): Boolean = active(1L) && iob_cob_support
 
+    override fun needsInternet(): Boolean = false
+
     override fun executeRequest(context: Context) {
         if (!handlePebbleResponse(httpGet(getUrl(PEBBLE_ENDPOINT), getHeader()))) {
             if (!hasIobCobSupport() || ReceiveData.getElapsedIobCobTimeMinute() > 0) {
