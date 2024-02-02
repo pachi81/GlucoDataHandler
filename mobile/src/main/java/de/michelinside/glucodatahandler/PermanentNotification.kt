@@ -136,7 +136,10 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
                 remoteViews.setTextViewText(R.id.iobText, GlucoDataService.context!!.getString(R.string.iob_label) + ": " + ReceiveData.getIobAsString() )
                 remoteViews.setTextViewText(R.id.cobText, GlucoDataService.context!!.getString(R.string.cob_label) + ": " + ReceiveData.getCobAsString())
                 remoteViews.setViewVisibility(R.id.iobText, View.VISIBLE)
-                remoteViews.setViewVisibility(R.id.cobText, View.VISIBLE)
+                if (ReceiveData.cob.isNaN())
+                    remoteViews.setViewVisibility(R.id.cobText, View.GONE)
+                else
+                    remoteViews.setViewVisibility(R.id.cobText, View.VISIBLE)
             }
         }
 
