@@ -27,8 +27,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     const val TIME = "glucodata.Minute.Time"
     const val DELTA = "glucodata.Minute.Delta"
     const val SOURCE_INDEX = "source_idx"
-    const val IOB = "gdh.IOB"
-    const val COB = "gdh.COB"
+    const val IOB = "glucodata.Minute.IOB"
+    const val COB = "glucodata.Minute.COB"
     const val IOBCOB_TIME = "gdh.IOB_COB_time"
 
     private const val LAST_ALARM_INDEX = "last_alarm_index"
