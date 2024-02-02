@@ -56,6 +56,15 @@
                 <action android:name="com.eveningoutpost.dexdrip.BgEstimate"/>
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".common.receiver.AAPSReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="info.nightscout.androidaps.status" />
+            </intent-filter>
+        </receiver>
         <receiver android:name=".common.tasks.TimeAlarmReceiver" />
         <receiver android:name=".common.tasks.SourceAlarmReceiver" />
         <receiver

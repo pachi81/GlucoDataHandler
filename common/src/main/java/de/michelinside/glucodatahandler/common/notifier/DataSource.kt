@@ -9,7 +9,8 @@ enum class DataSource(val resId: Int) {
     PHONE(R.string.source_phone),
     WEAR(R.string.source_wear),
     LIBREVIEW(R.string.source_libreview),
-    NIGHTSCOUT(R.string.source_nightscout);
+    NIGHTSCOUT(R.string.source_nightscout),
+    AAPS(R.string.source_aaps);
     
     companion object {
         fun fromIndex(idx: Int): DataSource {
