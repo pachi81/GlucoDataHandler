@@ -13,24 +13,6 @@ Download and install `GlucoDataHandler.apk` (allow install from unknown source i
 
 <img src='images/download.png' width=350>
 
-### Configure Juggluco
-If you are using Juggluco to receive glucose values, open Juggluco and enable `Glucodata broadcast` and select `de.michelinside.glucodatahandler` in Settings. Save and Ok.
-
-<img src='images/broadcast.png' width=700>
-
-### Configure xDrip+
-If you are using xDrip+ to receive glucose values, open xDrip+, go to setting and select Inter-app settings
-* Enable "Broadcast locally"
-* Enable "Compatible Broadcast"
-* Check "Identify receiver" to be empty or if there is already an entry, add a new line with `de.michelinside.glucodatahandler`
-  
-<img src='images/xDrip_InterAppSettings.png' width=340>
-
-### Check mobile app
-Open the app and wait for a glucose value to be displayed in the GlucoDataHandler app.
-
-<img src='images/installed.png' width=400>
-
 ## 2 - Install GlucoDataHandler on your watch
 
 Now download `GlucoDataHandler-Wear.apk` on your phone but **do not install it**.
