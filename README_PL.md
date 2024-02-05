@@ -6,7 +6,7 @@
 ## Funkcje
 
 * odbiera wartości glukozy jako **[LibreLink follower](./SOURCES_PL.md#librelink)**
-* odbiera wartości glukozy, IOB i COB z Nightscout (pebble interface)
+* odbiera wartości glukozy, IOB i COB z Nightscout (interfejs pebble)
 * odbiera wartości glukozy, IOB i COB z **[AndroidAPS](./SOURCES_PL.md#androidaps)**
 * odbiera wartości glukozy z **[Juggluco](./SOURCES_PL.md#juggluco)**
 * odbiera wartości glukozy z **[xDrip+](./SOURCES_PL.md#xdrip)**
