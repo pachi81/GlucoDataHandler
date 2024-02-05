@@ -29,7 +29,7 @@ Aktualną wersję można pobrać [tutaj](https://github.com/pachi81/GlucoDataHan
 
 ## Źródła
 
--> [Source configuration instruction](./SOURCES_PL.md)
+-> [Instrukcja konfiguracji źródła](./SOURCES_PL.md)
 
 ## Ustawienia
 
