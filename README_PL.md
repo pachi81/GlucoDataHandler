@@ -12,10 +12,10 @@
 * odbiera wartości glukozy z **[xDrip+](./SOURCES_PL.md#xdrip)**
 * udostępnia kilka **[widgetów](#widgety)** i pływający widget dla telefonu
 * udostępnia opcjonalne **[powiadomienia](#powiadomienia)** z różnymi ikonami dla telefonu
-* udostępnia kilka **[komplikacj](#komplikacje)** dla Wear OS
+* udostępnia kilka **[komplikacji](#komplikacje)** dla Wear OS
 * umożliwia połączenie z **[Android Auto](https://github.com/pachi81/GlucoDataAuto/blob/main/README_PL.md)**
-* Integracja z aplikacją **[Tasker](#aplikacja-tasker)**
-* wysyła transmisje danych o glukozie do innych aplikacji (które obsługują tę transmisję)
+* integracja z aplikacją **[Tasker](#aplikacja-tasker)**
+* wysyła transmisję danych o glukozie do innych aplikacji (które obsługują tę transmisję)
 
 ## Pobierz
 
