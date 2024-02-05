@@ -1,3 +1,6 @@
+[<img src='images/en.png' height=10> English version](SOURCES.md)  
+[<img src='images/pl.png' height=10> Wersja polska](SOURCES_PL.md)
+
 # LibreLink
 
 Um LibreLink zu verwenden wird ein LibreLinkUp Konto benötigt.
