@@ -5,7 +5,7 @@
 ## Features
 
 * empfängt Glukose Werte als **[LibreLink Follower](./SOURCES_DE.md#librelink)**
-* empfängt Glukose, IOB und COB Werte von Nightscout (pebble interface)
+* empfängt Glukose, IOB und COB Werte von Nightscout (Pebble Schnittstelle)
 * empfängt Glukose, IOB und COB Werte von **[AndroidAPS](./SOURCES_DE.md#androidaps)**
 * empfängt Glukose Werte und IOB von **[Juggluco](./SOURCES_DE.md#juggluco)**
 * empfängt Glukose Werte von **[xDrip+](./SOURCES_DE.md#xdrip)**
