@@ -5,8 +5,9 @@
 ## Features
 
 * receives glucose values as **[LibreLink follower](#librelink)**
-* receives glucose, IOB and COB values from Nightscout
-* receives glucose values from [Juggluco](./INSTALLATION.md#configure-juggluco)
+* receives glucose, IOB and COB values from Nightscout (pebble interface)
+* receives glucose, IOB and COB values from [AndroidAPS](./INSTALLATION.md#configure-androidaps)
+* receives glucose values and IOB from [Juggluco](./INSTALLATION.md#configure-juggluco)
 * receives glucose values from [xDrip+](./INSTALLATION.md#configure-xdrip)
 * provides several **[widgets](#widgets)** and a floating widget for the phone
 * provides optional **[notifications](#notifications)** with different icons for the phone
@@ -102,6 +103,8 @@ Also the RANGE_VALUE complication is handled different in each watchface.
 @[lostboy86](https://github.com/lostboy86) for testing, motivation and feedback
 
 @[froter82](https://github.com/froster82) for Polish translation, testing and feedback
+
+@nevergiveup for testing and feedback
 
 # Support my work
 [🍺 Buy me a beer](https://www.buymeacoffee.com/pachi81)
