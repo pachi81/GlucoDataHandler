@@ -1,3 +1,6 @@
+[<img src='images/de.png' height=10> Deutsche Version](SOURCES_DE.md)  
+[<img src='images/pl.png' height=10> Wersja polska](SOURCES_PL.md)
+
 # LibreLink
 
 To set up LibreLink as follower, you need the account data from LibreLinkUp.
