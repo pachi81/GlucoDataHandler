@@ -20,22 +20,25 @@ class SettingsActivity : AppCompatActivity() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
+            Log.v(LOG_ID, "onCreate called for fragment " + intent.getIntExtra(FRAGMENT_EXTRA, 0) + " with instance: " + (savedInstanceState!=null) )
             super.onCreate(savedInstanceState)
-            when (intent.getIntExtra(FRAGMENT_EXTRA, 0)) {
-                SettingsFragmentClass.SETTINGS_FRAGMENT.value -> {
-                    this.supportActionBar!!.title =
-                        this.applicationContext.resources.getText(SettingsFragmentClass.SETTINGS_FRAGMENT.titleRes)
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.content, SettingsFragment())
-                        .commit()
-                }
+            if(savedInstanceState==null) {
+                when (intent.getIntExtra(FRAGMENT_EXTRA, 0)) {
+                    SettingsFragmentClass.SETTINGS_FRAGMENT.value -> {
+                        this.supportActionBar!!.title =
+                            this.applicationContext.resources.getText(SettingsFragmentClass.SETTINGS_FRAGMENT.titleRes)
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.content, SettingsFragment())
+                            .commit()
+                    }
 
-                SettingsFragmentClass.SORUCE_FRAGMENT.value -> {
-                    this.supportActionBar!!.title =
-                        this.applicationContext.resources.getText(SettingsFragmentClass.SORUCE_FRAGMENT.titleRes)
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.content, SourceFragment())
-                        .commit()
+                    SettingsFragmentClass.SORUCE_FRAGMENT.value -> {
+                        this.supportActionBar!!.title =
+                            this.applicationContext.resources.getText(SettingsFragmentClass.SORUCE_FRAGMENT.titleRes)
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.content, SourceFragment())
+                            .commit()
+                    }
                 }
             }
         } catch (ex: Exception) {

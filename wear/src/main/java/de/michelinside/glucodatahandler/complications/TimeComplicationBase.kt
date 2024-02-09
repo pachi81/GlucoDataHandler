@@ -2,6 +2,7 @@ package de.michelinside.glucodatahandler
 
 import androidx.wear.watchface.complications.data.*
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.utils.Utils
 import java.util.*
 
 open class TimeComplicationBase : BgValueComplicationService() {
@@ -30,11 +31,11 @@ class TimeStampComplication: TimeComplicationBase() {
     override fun getRangeValueComplicationData(): ComplicationData {
         val time = Date(ReceiveData.time)
 
-        val value = if (ReceiveData.isObsolete(3600)) -1F else (time.minutes * 60 + time.seconds).toFloat()
+        val value = if (ReceiveData.isObsolete(3600)) 0F else (time.minutes * 60 + time.seconds).toFloat()
         return RangedValueComplicationData.Builder(
-            value = value,
+            value = Utils.rangeValue(value, 0F, 3599F),
             min = 0F,
-            max = 3600F,
+            max = 3599F,
             contentDescription = descriptionText()
         )
             .setText(getText())
