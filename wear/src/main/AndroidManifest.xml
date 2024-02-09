@@ -617,23 +617,6 @@
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
         </service>
-        <!--<service
-            android:name=".TestNegativeRangeComplication"
-            android:exported="true"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/test_neg_range"
-            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
-            <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
-                android:value="RANGED_VALUE" />
-            <meta-data
-                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="60" />
-        </service>-->
     </application>
     <queries>
         <package android:name="tk.glucodata"/>
