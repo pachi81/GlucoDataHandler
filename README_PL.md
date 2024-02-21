@@ -5,16 +5,17 @@
 
 ## Funkcje
 
-* odbiera wartości glukozy jako **[LibreLink follower](#librelink)**
-* odbiera wartości glukozy z Nightscout
-* odbiera wartości glukozy z Juggluco
-* odbiera wartości glukozy z xDrip+
+* odbiera wartości glukozy jako **[LibreLink follower](./SOURCES_PL.md#librelink)**
+* odbiera wartości glukozy, IOB i COB z Nightscout (interfejs pebble)
+* odbiera wartości glukozy, IOB i COB z **[AndroidAPS](./SOURCES_PL.md#androidaps)**
+* odbiera wartości glukozy z **[Juggluco](./SOURCES_PL.md#juggluco)**
+* odbiera wartości glukozy z **[xDrip+](./SOURCES_PL.md#xdrip)**
 * udostępnia kilka **[widgetów](#widgety)** i pływający widget dla telefonu
 * udostępnia opcjonalne **[powiadomienia](#powiadomienia)** z różnymi ikonami dla telefonu
-* udostępnia kilka **[komplikacj](#komplikacje)** dla Wear OS
-* umożliwia połączenie z **[Android Auto](./GlucoDataAuto_PL.md)**
-* Integracja z aplikacją **[Tasker](#aplikacja-tasker)**
-* wysyła transmisje danych o glukozie do innych aplikacji (które obsługują tę transmisję)
+* udostępnia kilka **[komplikacji](#komplikacje)** dla Wear OS
+* umożliwia połączenie z **[Android Auto](https://github.com/pachi81/GlucoDataAuto/blob/main/README_PL.md)**
+* integracja z aplikacją **[Tasker](#aplikacja-tasker)**
+* wysyła transmisję danych o glukozie do innych aplikacji (które obsługują tę transmisję)
 
 ## Pobierz
 
@@ -25,6 +26,10 @@ Aktualną wersję można pobrać [tutaj](https://github.com/pachi81/GlucoDataHan
 ## Instalacja
 
 -> [Instrukcja instalacji](./INSTALLATION_PL.md)
+
+## Źródła
+
+-> [Instrukcja konfiguracji źródła](./SOURCES_PL.md)
 
 ## Ustawienia
 
@@ -40,21 +45,6 @@ Aktualną wersję można pobrać [tutaj](https://github.com/pachi81/GlucoDataHan
 ### Telefon
 
 Ustawienia dla aplikacji na telefon opisane są w samej aplikacji. Ustawienia z telefonu zostaną przesłane do zegarka, jeśli jest on podłączony.
-
-## Źródła
-
-### LibreLink
-
-Aby skonfigurować LibreLink jako „follower”, potrzebne są dane konta z LibreLinkUp.
-Jeśli nie skonfigurowałeś jeszcze swojego konta LibreLinkUp, postępuj zgodnie z tą [instrukcją](https://librelinkup.com/articles/getting-started).
-
-Oto krótkie podsumowanie kroków, które należy wykonać:
-* otwórz aplikację FreeStyle Libre i wybierz w menu `Udostępnianie` lub `Podłączone aplikacje`.
-* aktywuj połączenie LibreLinkUp
-* zainstaluj LibreLinkUp ze [Sklepu Play](https://play.google.com/store/apps/details?id=org.nativescript.LibreLinkUp)
-* skonfiguruj swoje konto i czekaj na zaproszenie
-* po zaakceptowaniu zaproszenia nie potrzebujesz już aplikacji LibreLinkUp.
-* teraz możesz dodać swoje konto LibreLinkUp do GlucoDataHandler i aktywować to źródło.
 
 ## Widgety
 Dostępnych jest kilka rodzajów widgetów na telefon.
@@ -101,6 +91,10 @@ Również komplikacja WARTOŚĆ_ZAKRESU jest obsługiwana inaczej na każdej tar
 
 -> [Obsługa aplikacji Tasker](./TASKER.md)
 
+# Szczególne podziękowania
+@[lostboy86](https://github.com/lostboy86) za testy, motywację i informacje zwrotne
+
+@[froter82](https://github.com/froster82) za tłumaczenie na język polski, testy i informacje zwrotne
 
 # Wesprzyj moją pracę
 [🍺 Buy me a beer](https://www.buymeacoffee.com/pachi81)

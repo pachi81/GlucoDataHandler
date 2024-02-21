@@ -14,28 +14,6 @@ Pobierz i zainstaluj `GlucoDataHandler.apk` (w razie potrzeby zezwól na instala
 
 <img src='images/download.png' width=350>
 
-### Konfiguracja Juggluco
-
-Jeśli używasz Juggluco do odbierania wartości glukozy, otwórz Juggluco i włącz w Ustawieniach opcję `Glucodata broadcast` i wybierz `de.michelinside.glucodatahandler`. Zapisz i OK.
-
-<img src='images/broadcast.png' width=700>
-
-### Konfiguracja xDrip+
-
-Jeśli używasz xDrip+ do odbierania wartości glukozy, otwórz xDrip+, przejdź do ustawień i wybierz Ustawienia innych aplikacji
-
-- Włącz opcję „Nadawaj lokalnie"
-- Włącz opcję „Kompatybilny Broadcast"
-- Sprawdź czy opcja „Identyfikuj odbiornik" jest pusta
-
-<img src='images/xDrip_InterAppSettings.png' width=340>
-
-### Sprawdź aplikację na telefonie
-
-Otwórz aplikację i poczekaj na wyświetlenie wartości glukozy w aplikacji GlucoDataHandler.
-
-<img src='images/installed.png' width=400>
-
 ## 2 – Zainstaluj GlucoDataHandler na swoim zegarku
 
 Pobierz teraz aplikację `GlucoDataHandler-Wear.apk` na swój telefon, ale nie instaluj jej.

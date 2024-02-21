@@ -4,14 +4,15 @@
 # Glucose Data Handler
 ## Features
 
-* receives glucose values as **[LibreLink follower](#librelink)**
-* receives glucose values from Nightscout
-* receives glucose values from Juggluco
-* receives glucose values from xDrip+
+* receives glucose values as **[LibreLink follower](./SOURCES.md#librelink)**
+* receives glucose, IOB and COB values from Nightscout (pebble interface)
+* receives glucose, IOB and COB values from [AndroidAPS](./SOURCES.md#androidaps)
+* receives glucose values and IOB from [Juggluco](./SOURCES.md#juggluco)
+* receives glucose values from [xDrip+](./SOURCES.md#xdrip)
 * provides several **[widgets](#widgets)** and a floating widget for the phone
 * provides optional **[notifications](#notifications)** with different icons for the phone
 * provides several **[complications](#complications)** for Wear OS
-* provides **[Android Auto](./GlucoDataAuto.md)** support using GlucoDataAuto.apk
+* provides **[Android Auto](https://github.com/pachi81/GlucoDataAuto/blob/main/README.md)** support using [GlucoDataAuto app](https://github.com/pachi81/GlucoDataAuto/releases)
 * **[Tasker](#tasker)** integration
 * sends glucodata broadcasts to other apps (which supports this broadcast)
 
@@ -22,7 +23,11 @@ You can download the current version [here](https://github.com/pachi81/GlucoData
 
 ## Installation
 
--> [Installation instruction](./INSTALLATION.md)
+-> [Manual installation instruction](./INSTALLATION.md)
+
+## Sources
+
+-> [Source configuration instruction](./SOURCES.md)
 
 ## Settings
 
@@ -38,21 +43,6 @@ You can download the current version [here](https://github.com/pachi81/GlucoData
 ### Phone
 
 The settings for the phone are described in the app itself. The settings from the phone will be send to the wear, if it is connected.
-
-## Sources
-
-### LibreLink
-
-To set up LibreLink as follower, you need the account data from LibreLinkUp.
-If you have not set up your LibreLinkUp account yet, follow this [instruction](https://librelinkup.com/articles/getting-started).
-
-Here is a quick summary of the steps to do:
-* open your FreeStyle Libre App and select in the menu `Share` or `Connected Apps`
-* activate LibreLinkUp connection
-* install LibreLinkUp from [PlayStore](https://play.google.com/store/apps/details?id=org.nativescript.LibreLinkUp)
-* setup your accout and wait for the invitation
-* after accept the invitation you do not need the LibreLinkUp App "anymore"
-* now you can add your LibreLinkUp account to GlucoDataHandler and activate this source
 
 ## Widgets
 There are several types of widgets and a floating widget for the phone:
@@ -97,6 +87,13 @@ Also the RANGE_VALUE complication is handled different in each watchface.
 ## Tasker
 
 -> [Tasker support](./TASKER.md)
+
+# Special thanks
+@[lostboy86](https://github.com/lostboy86) for testing, motivation and feedback
+
+@[froter82](https://github.com/froster82) for Polish translation, testing and feedback
+
+@nevergiveup for testing and feedback
 
 # Support my work
 [🍺 Buy me a beer](https://www.buymeacoffee.com/pachi81)

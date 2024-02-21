@@ -14,25 +14,6 @@ Lade die letzte Version von `GlucoDataHandler.apk` von [hier](https://github.com
 
 <img src='images/download.png' width=350>
 
-### Juggluco konfigurieren
-Für die Benuzer von Juggluco, nach der Installation des GlucoDataHandler in den Juggluco Einstellungen den Punkt `Glucodata broadcast` aktivieren und `de.michelinside.glucodatahandler` auswählen.
-Anschließend speichern und mit OK beenden.
-
-<img src='images/broadcast.png' width=700>
-
-### xDrip+ konfigurieren
-Für die Benutzer von xDrip+, in den Einstellung den Eintrag Inter-App Einstellungen öffnen und wie folgt konfigurieren:
-* "Lokaler Broadcast" aktivieren
-* "Kompatible Broadcast" aktivieren
-* prüfen, ob "Identifiziere Empfänger" leer ist; ist bereits ein Eintrag vorhanden, dann eine neue Zeile mit `de.michelinside.glucodatahandler` hinzufügen
-  
-<img src='images/de/xDrip_InterAppSettings.png' width=340>
-
-### Installation prüfen
-Nun die GlucoDataHandler App öffnen und warten, bis ein neue Werte empfangen wurde.
-
-<img src='images/de/installed.png' width=400>
-
 ## 2 - Installation GlucoDataHandler auf dem Smartwatch
 
 Die Datei `GlucoDataHandler-Wear.apk` auf das Telefon laden, aber **nicht installieren.**.
