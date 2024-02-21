@@ -93,6 +93,8 @@ Also the RANGE_VALUE complication is handled different in each watchface.
 
 @[froter82](https://github.com/froster82) for Polish translation, testing and feedback
 
+@[nevergiveup](https://github.com/nevergiveup) for testing, motivation and feedback
+
 @nevergiveup for testing and feedback
 
 # Support my work

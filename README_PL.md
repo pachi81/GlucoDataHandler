@@ -96,6 +96,8 @@ Również komplikacja WARTOŚĆ_ZAKRESU jest obsługiwana inaczej na każdej tar
 
 @[froter82](https://github.com/froster82) za tłumaczenie na język polski, testy i informacje zwrotne
 
+@[nevergiveup](https://github.com/nevergiveup) za testy, motywację i informacje zwrotne
+
 # Wesprzyj moją pracę
 [🍺 Buy me a beer](https://www.buymeacoffee.com/pachi81)
 

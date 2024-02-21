@@ -93,6 +93,8 @@ Die Wear OS version stellt mehrere Complications zur Verfügung:
 
 @[froter82](https://github.com/froster82) für die polnische Übersetzung, fürs Testen und dein Feeback
 
+@[nevergiveup](https://github.com/nevergiveup) fürs Testen, Motivieren und dein Feeback
+
 # Unterstützt meine Arbeit
 [🍺 Buy me a beer](https://www.buymeacoffee.com/pachi81)
 
