@@ -7,7 +7,7 @@
 * receives glucose values as **[LibreLink follower](./SOURCES.md#librelink)**
 * receives glucose, IOB and COB values from Nightscout (pebble interface)
 * receives glucose, IOB and COB values from [AndroidAPS](./SOURCES.md#androidaps)
-* receives glucose values and IOB from [Juggluco](./SOURCES.md#juggluco)
+* receives glucose values from [Juggluco](./SOURCES.md#juggluco)
 * receives glucose values from [xDrip+](./SOURCES.md#xdrip)
 * provides several **[widgets](#widgets)** and a floating widget for the phone
 * provides optional **[notifications](#notifications)** with different icons for the phone
