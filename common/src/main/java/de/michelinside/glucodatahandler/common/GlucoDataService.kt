@@ -43,12 +43,17 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
         var appSource = AppSource.NOT_SET
         private var isRunning = false
         val running get() = isRunning
+        @SuppressLint("StaticFieldLeak")
         var service: GlucoDataService? = null
-        val context: Context? get() {
+        var context: Context? get() {
             if(service != null)
                 return service!!.applicationContext
-            return null
+            return extContext
+        } set(value) {
+            extContext = value
         }
+        @SuppressLint("StaticFieldLeak")
+        private var extContext: Context? = null
         val sharedPref: SharedPreferences? get() {
             if (context != null) {
                 return context!!.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)

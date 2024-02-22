@@ -44,8 +44,6 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     val connected: Boolean get() = car_connected
     @SuppressLint("StaticFieldLeak")
     private lateinit var notificationCompat: NotificationCompat.Builder
-    @SuppressLint("StaticFieldLeak")
-    private var context: Context? = null
 
     var enable_notification : Boolean get() {
         return show_notification
@@ -92,7 +90,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         Log.i(LOG_ID, "notification settings changed: active: " + enable_notification + " - interval: " + notification_interval)
         if(init && car_connected && cur_enabled != enable_notification) {
             if(enable_notification)
-                showNotification(context!!, false)
+                showNotification(GlucoDataService.context!!, false)
             else
                 removeNotification()
         }
@@ -100,9 +98,10 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
 
     fun initNotification(context: Context) {
         try {
+            ReceiveData.initData(context)
             if(!init) {
                 Log.v(LOG_ID, "initNotification called")
-                CarNotification.context = context
+                GlucoDataService.context = context
                 val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 migrateSettings(sharedPref)
                 sharedPref.registerOnSharedPreferenceChangeListener(this)
@@ -140,7 +139,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                 val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 sharedPref.unregisterOnSharedPreferenceChangeListener(this)
                 init = false
-                CarNotification.context = null
+                GlucoDataService.context = null
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "init exception: " + exc.message.toString())
@@ -161,18 +160,18 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                     Log.i(LOG_ID, "Exited Car Mode")
                     removeNotification()
                     car_connected = false
-                    InternalNotifier.remNotifier(context!!, this)
+                    InternalNotifier.remNotifier(GlucoDataService.context!!, this)
                 } else {
                     Log.i(LOG_ID, "Entered Car Mode")
                     forceNextNotify = false
                     car_connected = true
-                    InternalNotifier.addNotifier(context!!, this, mutableSetOf(
+                    InternalNotifier.addNotifier(GlucoDataService.context!!, this, mutableSetOf(
                         NotifySource.BROADCAST,
                         NotifySource.MESSAGECLIENT,
                         NotifySource.OBSOLETE_VALUE))
-                    showNotification(context!!, false)
+                    showNotification(GlucoDataService.context!!, false)
                 }
-                InternalNotifier.notify(context!!, NotifySource.CAR_CONNECTION, null)
+                InternalNotifier.notify(GlucoDataService.context!!, NotifySource.CAR_CONNECTION, null)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onConnectionStateUpdated exception: " + exc.message.toString() + "\n" + exc.stackTraceToString() )
