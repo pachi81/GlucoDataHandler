@@ -21,7 +21,7 @@ open class AAPSReceiver: BroadcastReceiver() {
         private const val BG_SLOPE = "slopeArrow" // string: direction arrow as string
         private const val IOB_VALUE = "iob" // double
         private const val COB_VALUE = "cob" // double: COB [g] or -1 if N/A
-        private const val PUMP_STATUS = "pumpStatus"         // string
+        //private const val PUMP_STATUS = "pumpStatus"         // string
         private const val PROFILE_NAME = "profile"         // string
     }
 
@@ -67,9 +67,7 @@ open class AAPSReceiver: BroadcastReceiver() {
                         } else {
                             glucoExtras.putFloat(ReceiveData.COB, Float.NaN)
                         }
-                        if(extras.containsKey(PUMP_STATUS)) {
-                            glucoExtras.putString(ReceiveData.SERIAL, extras.getString(PUMP_STATUS))
-                        } else if(extras.containsKey(PROFILE_NAME)) {
+                        if(extras.containsKey(PROFILE_NAME)) {
                             glucoExtras.putString(ReceiveData.SERIAL, extras.getString(PROFILE_NAME))
                         }
                         ReceiveData.handleIntent(context, DataSource.AAPS, glucoExtras)
