@@ -37,8 +37,14 @@ open class AAPSReceiver: BroadcastReceiver() {
                         val glucoExtras = Bundle()
                         glucoExtras.putLong(ReceiveData.TIME, extras.getLong(BG_TIMESTAMP))
                         glucoExtras.putInt(ReceiveData.MGDL,mgdl.toInt())
-                        if(extras.containsKey(BG_UNITS) && extras.getString(BG_UNITS) == "mmol") {
-                            glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, GlucoDataUtils.mgToMmol(mgdl))
+                        if(extras.containsKey(BG_UNITS)) {
+                            val unit = extras.getString(BG_UNITS)
+                            if(unit == "mmol")
+                                glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, GlucoDataUtils.mgToMmol(mgdl))
+                            else if(unit == "mg/dl")
+                                glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, mgdl)
+                            else
+                                Log.w(LOG_ID, "No valid unit received: " + unit)
                         }
                         val slopeName = extras.getString(BG_SLOPE)
                         var slope = Float.NaN
