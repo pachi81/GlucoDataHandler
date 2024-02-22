@@ -16,6 +16,7 @@ import java.math.RoundingMode
 import java.text.DateFormat
 import java.util.*
 import kotlin.math.abs
+import kotlin.time.Duration.Companion.days
 
 object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private const val LOG_ID = "GDH.ReceiveData"
@@ -148,7 +149,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 context.getString(R.string.info_label_timestamp) + ": " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(time)) + "\r\n" +
                 context.getString(R.string.info_label_alarm) + ": " + context.getString(getAlarmType().resId) + (if (forceAlarm) " ⚠" else "" ) + " (" + alarm + ")\r\n" +
                 (if (isMmol) context.getString(R.string.info_label_raw) + ": " + rawValue + " mg/dl\r\n" else "") +
-                (       if (iobCobTime > 0) {
+                (       if (!isIobCobObsolete(1.days.inWholeSeconds.toInt())) {
                             context.getString(R.string.info_label_iob) + ": " + getIobAsString() + " / " + context.getString(R.string.info_label_cob) + ": " + getCobAsString() + "\r\n" +
                                     context.getString(R.string.info_label_iob_cob_timestamp) + ": " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(iobCobTime)) + "\r\n"
                         }
