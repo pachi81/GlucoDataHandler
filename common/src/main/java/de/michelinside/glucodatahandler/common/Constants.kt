@@ -29,6 +29,7 @@ object Constants {
 
     const val SHARED_PREF_TAG = "GlucoDataHandlerPrefs"
     const val SHARED_PREF_AUTO_TAG = "GlucoDataAutoPrefs"
+    const val SHARED_PREF_EXTRAS_TAG = "GlucoDataExtrasPrefs"
     const val SHARED_PREF_NO_GLUCODATAAUTO = "no_gda_info"
     const val SHARED_PREF_SEND_TO_GLUCODATAAUTO = "send_to_glucodataauto"
     const val SHARED_PREF_SEND_TO_GLUCODATA_AOD = "send_to_glucodata_aod"
@@ -68,6 +69,8 @@ object Constants {
     const val SHARED_PREF_WIDGET_TRANSPARENCY = "widget_transparency"
     const val SHARED_PREF_RELATIVE_TIME = "relative_time"
     const val SHARED_PREF_SEND_TO_BANGLEJS = "send_to_banglejs"
+    const val SHARED_PREF_WATCHDRIP = "watchdrip_enabled"
+    const val SHARED_PREF_WATCHDRIP_RECEIVERS = "watchdrip_receivers"
 
     // internal app preferences (not changed by settings) -> use separate tag for not trigger onChanged events
     const val SHARED_PREF_INTERNAL_TAG = "GlucoDataHandlerInternalAppPrefs"

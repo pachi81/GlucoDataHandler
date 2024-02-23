@@ -14,6 +14,7 @@ import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
+import de.michelinside.glucodatahandler.watch.WatchDrip
 import de.michelinside.glucodatahandler.widget.FloatingWidget
 import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
 
@@ -47,6 +48,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             PermanentNotification.create(applicationContext)
             CarModeReceiver.init(applicationContext)
             GlucoseBaseWidget.updateWidgets(applicationContext)
+            WatchDrip.init(applicationContext)
             floatingWidget.create()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
@@ -65,6 +67,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             Log.d(LOG_ID, "onDestroy called")
             PermanentNotification.destroy()
             CarModeReceiver.cleanup(applicationContext)
+            WatchDrip.close(applicationContext)
             floatingWidget.destroy()
             super.onDestroy()
         } catch (exc: Exception) {

@@ -296,5 +296,7 @@
     <string name="source_aaps">AAPS</string>
     <string name="pref_source_aaps_info">AndroidAPS</string>
     <string name="pref_source_aaps_info_summary">Aby odbierać wartości z AAPS:\n- otwórz AAPS\n- przejdź do \"Konfiguracja\"\n- włącz \"Samsung Tizen\"</string>
+    <string name="pref_switch_watchdrip_enabled">WatchDrip+</string>
+    <string name="pref_switch_watchdrip_enabled_summary">"Enable WatchDrip+ communication.\nIMPORTANT: enable \"Enable service\" in WatchDrip+ after enabling this setting here!"</string>
 
 </resources>

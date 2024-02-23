@@ -326,7 +326,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                 forceNextNotify = sharedAutoPref.getBoolean(FORCE_NEXT_NOTIFY, forceNextNotify)
             }
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "Saving extras exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
+            Log.e(LOG_ID, "Loading extras exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
         }
     }
 

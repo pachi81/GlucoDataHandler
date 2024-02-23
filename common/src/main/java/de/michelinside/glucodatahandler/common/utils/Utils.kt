@@ -69,15 +69,20 @@ object Utils {
     }
 
     fun dumpBundle(bundle: Bundle?): String {
-        if (bundle == null) {
-            return "NULL"
+        try {
+            if (bundle == null) {
+                return "NULL"
+            }
+            var string = "{"
+            for (key in bundle.keySet()) {
+                string += " " + key + " => " + (if (bundle[key] != null) bundle[key].toString() else "NULL") + "\r\n"
+            }
+            string += " }"
+            return string
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "dumpBundle exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
         }
-        var string = "{"
-        for (key in bundle.keySet()) {
-            string += " " + key + " => " + (if (bundle[key] != null) bundle[key].toString() else "NULL") + "\r\n"
-        }
-        string += " }"
-        return string
+        return bundle.toString()
     }
 
     @SuppressLint("ObsoleteSdkInt")
