@@ -111,6 +111,12 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         }
         return Utils.round(deltaValue, 1)
     }
+    val deltaValueMgDl: Float get() {
+        if( deltaValue.isNaN() )
+            return deltaValue
+        return Utils.round(deltaValue, 1)
+    }
+
     private var isMmolValue = false
     val isMmol get() = isMmolValue
     private var use5minDelta = false

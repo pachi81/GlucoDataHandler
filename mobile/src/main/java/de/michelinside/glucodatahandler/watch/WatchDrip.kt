@@ -9,6 +9,7 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -116,7 +117,7 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
         val bundle = Bundle()
         bundle.putString(EXTRA_FUNCTION, cmd)
         bundle.putDouble("bg.valueMgdl", ReceiveData.rawValue.toDouble())
-        bundle.putDouble("bg.deltaValueMgdl", ReceiveData.rate.toDouble() / 60000.0)
+        bundle.putDouble("bg.deltaValueMgdl", ReceiveData.deltaValueMgDl.toDouble())
         bundle.putString("bg.deltaName", GlucoDataUtils.getDexcomLabel(ReceiveData.rate))
         bundle.putLong("bg.timeStamp", ReceiveData.time)
         bundle.putBoolean("bg.isStale", ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
@@ -236,6 +237,9 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
                     Log.i(LOG_ID, "Loading receivers: " + savedReceivers)
                     receivers.addAll(savedReceivers)
                 }
+            }
+            if(BuildConfig.DEBUG && receivers.isEmpty()) {
+                receivers.add("dummy")
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Loading receivers exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
