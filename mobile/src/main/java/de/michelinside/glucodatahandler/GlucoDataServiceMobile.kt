@@ -10,9 +10,7 @@ import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
-import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
-import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import de.michelinside.glucodatahandler.widget.FloatingWidget
@@ -99,21 +97,6 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         }
     }
 
-    private fun sendToGlucoDataAuto(context: Context, extras: Bundle) {
-        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-        if (CarModeReceiver.connected && sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO, true) && Utils.isPackageAvailable(context, Constants.PACKAGE_GLUCODATAAUTO)) {
-            Log.d(LOG_ID, "sendToGlucoDataAuto")
-            val intent = Intent(Constants.GLUCODATA_ACTION)
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-            val settings = ReceiveData.getSettingsBundle()
-            settings.putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime)
-            extras.putBundle(Constants.SETTINGS_BUNDLE, settings)
-            intent.putExtras(extras)
-            intent.setPackage(Constants.PACKAGE_GLUCODATAAUTO)
-            context.sendBroadcast(intent)
-        }
-    }
-
     private fun sendToBangleJS(context: Context) {
         val send2Bangle = "require(\"Storage\").writeJSON(\"widbgjs.json\", {" +
                 "'bg': " + ReceiveData.rawValue.toString() + "," +
@@ -130,7 +113,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
     private fun forwardBroadcast(context: Context, extras: Bundle) {
         Log.v(LOG_ID, "forwardBroadcast called")
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-        sendToGlucoDataAuto(context, extras.clone() as Bundle)
+        CarModeReceiver.sendToGlucoDataAuto(context, extras.clone() as Bundle)
         if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_XDRIP, false)) {
             val intent = Intent(Constants.XDRIP_ACTION_GLUCOSE_READING)
             // always sends time as start time, because it is only set, if the sensorId have changed!
@@ -177,7 +160,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             if (dataSource == NotifySource.CAR_CONNECTION && CarModeReceiver.connected) {
                 val autoExtras = ReceiveData.createExtras()
                 if (autoExtras != null)
-                    sendToGlucoDataAuto(context, autoExtras)
+                    CarModeReceiver.sendToGlucoDataAuto(context, autoExtras)
             }
             if (extras != null) {
                 if (dataSource == NotifySource.MESSAGECLIENT || dataSource == NotifySource.BROADCAST) {

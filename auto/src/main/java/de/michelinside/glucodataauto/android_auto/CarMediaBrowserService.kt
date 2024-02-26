@@ -1,6 +1,7 @@
 package de.michelinside.glucodataauto.android_auto
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.media.session.PlaybackState
@@ -61,6 +62,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 NotifySource.MESSAGECLIENT,
                 NotifySource.SETTINGS,
                 NotifySource.TIME_VALUE))
+            sendStateBroadcast(true)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -69,6 +71,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     override fun onDestroy() {
         Log.v(LOG_ID, "onDestroy")
         try {
+            sendStateBroadcast(false)
             InternalNotifier.remNotifier(this, this)
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
             session.release()
@@ -139,6 +142,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     }
 
     private fun createMediaItem(): MediaBrowserCompat.MediaItem {
+        Log.v(LOG_ID, "createMediaItem called")
         if (sharedPref.getBoolean(Constants.SHARED_PREF_CAR_MEDIA,true)) {
             session.setPlaybackState(buildState(PlaybackState.STATE_PAUSED))
             session.setMetadata(
@@ -167,6 +171,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     }
 
     private fun buildState(state: Int): PlaybackStateCompat? {
+        Log.v(LOG_ID, "buildState called for state " + state)
         return PlaybackStateCompat.Builder()
             .setState(
                 state,
@@ -175,6 +180,14 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 SystemClock.elapsedRealtime()
             )
             .build()
+    }
+
+    private fun sendStateBroadcast(enabled: Boolean) {
+        Log.d(LOG_ID, "Sending state broadcast for state: " + enabled)
+        val intent = Intent(Constants.GLUCODATAAUTO_STATE_ACTION)
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+        intent.putExtra(Constants.GLUCODATAAUTO_STATE_EXTRA, enabled)
+        this.sendBroadcast(intent)
     }
 
 }

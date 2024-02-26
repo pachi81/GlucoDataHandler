@@ -22,7 +22,9 @@ object Constants {
     const val XDRIP_BROADCAST_ACTION = "com.eveningoutpost.dexdrip.BgEstimate"
 
     const val GLUCODATA_ACTION = "de.michelinside.glucodatahandler.GLUCODATA"
+    const val GLUCODATAAUTO_STATE_ACTION = "de.michelinside.glucodataauto.state"
     const val PACKAGE_GLUCODATAAUTO = "de.michelinside.glucodataauto"
+    const val GLUCODATAAUTO_STATE_EXTRA = "state"
 
     const val VALUE_OBSOLETE_SHORT_SEC = 300
     const val VALUE_OBSOLETE_LONG_SEC  = 600
