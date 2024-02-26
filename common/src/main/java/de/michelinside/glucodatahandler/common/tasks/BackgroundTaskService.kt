@@ -223,11 +223,12 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     private fun init() {
         if (pendingIntent == null) {
             Log.v(LOG_ID, "init pendingIntent")
-            val i = Intent(context, getAlarmReceiver())
+            val intent = Intent(context, getAlarmReceiver())
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
             pendingIntent = PendingIntent.getBroadcast(
                 context,
                 alarmReqId,
-                i,
+                intent,
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
             )
         }

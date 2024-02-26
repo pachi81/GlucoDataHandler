@@ -37,6 +37,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             TimeTaskService.useWorker = true
             CarNotification.initNotification(this)
             ReceiveData.initData(this)
+            TimeTaskService.run(this)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
 
