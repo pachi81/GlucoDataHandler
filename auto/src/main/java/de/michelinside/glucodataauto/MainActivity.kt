@@ -19,7 +19,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuCompat
 import androidx.preference.PreferenceManager
-import de.michelinside.glucodataauto.android_auto.CarNotification
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
@@ -81,17 +80,11 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     apply()
                 }
             }
-            CarNotification.initNotification(this)
+            GlucoDataServiceAuto.init(this)
             requestPermission()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (!CarNotification.connected)
-            CarNotification.cleanupNotification(this)
     }
 
     override fun onPause() {
@@ -234,7 +227,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
             txtLastValue.text = ReceiveData.getAsString(this, CR.string.gda_no_data)
-            txtCarInfo.text = if (CarNotification.connected) resources.getText(CR.string.activity_main_car_connected_label) else resources.getText(CR.string.activity_main_car_disconnected_label)
+            txtCarInfo.text = if (GlucoDataServiceAuto.connected) resources.getText(CR.string.activity_main_car_connected_label) else resources.getText(CR.string.activity_main_car_disconnected_label)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
         }

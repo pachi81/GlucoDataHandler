@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import de.michelinside.glucodataauto.android_auto.CarNotification
+import de.michelinside.glucodataauto.GlucoDataServiceAuto
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.DataSource
@@ -13,7 +13,7 @@ open class GlucoDataActionReceiver: BroadcastReceiver() {
     private val LOG_ID = "GDH.AA.GlucoDataActionReceiver"
     override fun onReceive(context: Context, intent: Intent) {
         try {
-            CarNotification.initNotification(context)
+            GlucoDataServiceAuto.init(context)
             val action = intent.action
             Log.v(LOG_ID, intent.action + " receveived: " + intent.extras.toString())
             if (action != Constants.GLUCODATA_ACTION) {

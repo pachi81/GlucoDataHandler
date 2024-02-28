@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import androidx.car.app.connection.CarConnection
 import androidx.car.app.notification.CarAppExtender
 import androidx.car.app.notification.CarNotificationManager
 import androidx.core.app.NotificationChannelCompat
@@ -15,6 +14,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.Person
 import androidx.core.app.RemoteInput
 import androidx.core.graphics.drawable.IconCompat
+import de.michelinside.glucodataauto.GlucoDataServiceAuto
 import de.michelinside.glucodataauto.R
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.*
@@ -35,13 +35,11 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     @SuppressLint("StaticFieldLeak")
     private lateinit var notificationMgr: CarNotificationManager
     private var show_notification = false  // default: no notification
-    private var car_connected = false
     private var notification_interval = 1L   // every minute -> always, -1L: only for alarms
     const val LAST_NOTIFCATION_TIME = "last_notification_time"
     private var last_notification_time = 0L
     const val FORCE_NEXT_NOTIFY = "force_next_notify"
     private var forceNextNotify = false
-    val connected: Boolean get() = car_connected
     @SuppressLint("StaticFieldLeak")
     private lateinit var notificationCompat: NotificationCompat.Builder
 
@@ -88,7 +86,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         val alarmOnly = sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY, true)
         notification_interval = if (alarmOnly) -1 else sharedPref.getInt(Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM, 1).toLong()
         Log.i(LOG_ID, "notification settings changed: active: " + enable_notification + " - interval: " + notification_interval)
-        if(init && car_connected && cur_enabled != enable_notification) {
+        if(init && GlucoDataServiceAuto.connected && cur_enabled != enable_notification) {
             if(enable_notification)
                 showNotification(GlucoDataService.context!!, false)
             else
@@ -98,17 +96,14 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
 
     fun initNotification(context: Context) {
         try {
-            ReceiveData.initData(context)
             if(!init) {
                 Log.v(LOG_ID, "initNotification called")
-                GlucoDataService.context = context
                 val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 migrateSettings(sharedPref)
                 sharedPref.registerOnSharedPreferenceChangeListener(this)
                 updateSettings(sharedPref)
                 loadExtras(context)
                 createNofitication(context)
-                CarConnection(context.applicationContext).type.observeForever(CarNotification::onConnectionStateUpdated)
                 init = true
             }
         } catch (exc: Exception) {
@@ -130,52 +125,34 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
             }
         }
     }
-
+/*
     fun cleanupNotification(context: Context) {
         try {
             if (init) {
                 Log.v(LOG_ID, "remNotification called")
-                CarConnection(context.applicationContext).type.removeObserver(CarNotification::onConnectionStateUpdated)
                 val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 sharedPref.unregisterOnSharedPreferenceChangeListener(this)
                 init = false
-                GlucoDataService.context = null
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "init exception: " + exc.message.toString())
         }
     }
+*/
+    fun enable(context: Context) {
+        Log.d(LOG_ID, "enable called")
+        forceNextNotify = false
+        InternalNotifier.addNotifier(GlucoDataService.context!!, this, mutableSetOf(
+            NotifySource.BROADCAST,
+            NotifySource.MESSAGECLIENT,
+            NotifySource.OBSOLETE_VALUE))
+        showNotification(context, false)
+    }
 
-    fun onConnectionStateUpdated(connectionState: Int) {
-        try {
-            val message = when(connectionState) {
-                CarConnection.CONNECTION_TYPE_NOT_CONNECTED -> "Not connected to a head unit"
-                CarConnection.CONNECTION_TYPE_NATIVE -> "Connected to Android Automotive OS"
-                CarConnection.CONNECTION_TYPE_PROJECTION -> "Connected to Android Auto"
-                else -> "Unknown car connection type"
-            }
-            Log.v(LOG_ID, "onConnectionStateUpdated: " + message + " (" + connectionState.toString() + ")")
-            if (init) {
-                if (connectionState == CarConnection.CONNECTION_TYPE_NOT_CONNECTED)  {
-                    Log.i(LOG_ID, "Exited Car Mode")
-                    removeNotification()
-                    car_connected = false
-                    InternalNotifier.remNotifier(GlucoDataService.context!!, this)
-                } else {
-                    Log.i(LOG_ID, "Entered Car Mode")
-                    forceNextNotify = false
-                    car_connected = true
-                    InternalNotifier.addNotifier(GlucoDataService.context!!, this, mutableSetOf(
-                        NotifySource.BROADCAST,
-                        NotifySource.MESSAGECLIENT,
-                        NotifySource.OBSOLETE_VALUE))
-                    showNotification(GlucoDataService.context!!, false)
-                }
-                InternalNotifier.notify(GlucoDataService.context!!, NotifySource.CAR_CONNECTION, null)
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "onConnectionStateUpdated exception: " + exc.message.toString() + "\n" + exc.stackTraceToString() )
-        }
+    fun disable(context: Context) {
+        Log.d(LOG_ID, "disable called")
+        removeNotification()
+        InternalNotifier.remNotifier(context, this)
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
@@ -197,7 +174,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     }
 
     private fun canShowNotification(isObsolete: Boolean): Boolean {
-        if (init && enable_notification && car_connected) {
+        if (init && enable_notification && GlucoDataServiceAuto.connected) {
             if(notification_interval == 1L || ReceiveData.forceAlarm)
                 return true
             if (ReceiveData.getAlarmType() == ReceiveData.AlarmType.VERY_LOW || isObsolete) {
