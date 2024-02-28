@@ -94,7 +94,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         }
     }
 
-    fun initNotification(context: Context) {
+    private fun initNotification(context: Context) {
         try {
             if(!init) {
                 Log.v(LOG_ID, "initNotification called")
@@ -125,22 +125,23 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
             }
         }
     }
-/*
-    fun cleanupNotification(context: Context) {
+
+    private fun cleanupNotification(context: Context) {
         try {
             if (init) {
-                Log.v(LOG_ID, "remNotification called")
+                Log.v(LOG_ID, "cleanupNotification called")
                 val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 sharedPref.unregisterOnSharedPreferenceChangeListener(this)
                 init = false
             }
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "init exception: " + exc.message.toString())
+            Log.e(LOG_ID, "cleanupNotification exception: " + exc.message.toString())
         }
     }
-*/
+
     fun enable(context: Context) {
         Log.d(LOG_ID, "enable called")
+        initNotification(context)
         forceNextNotify = false
         InternalNotifier.addNotifier(GlucoDataService.context!!, this, mutableSetOf(
             NotifySource.BROADCAST,
@@ -153,6 +154,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         Log.d(LOG_ID, "disable called")
         removeNotification()
         InternalNotifier.remNotifier(context, this)
+        cleanupNotification(context)
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {

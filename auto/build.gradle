@@ -72,6 +72,7 @@ dependencies {
     implementation "androidx.preference:preference:1.2.1"
     implementation "com.jaredrummler:colorpicker:1.1.0"
     implementation "androidx.media:media:1.7.0"
+    implementation 'androidx.work:work-runtime:2.9.0'
 }
 
 afterEvaluate {
