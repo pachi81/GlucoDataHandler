@@ -69,16 +69,17 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                         context,
                         cls
                     )
+                    /*
                     val sharedPref = context.getSharedPreferences(
                         Constants.SHARED_PREF_TAG,
                         Context.MODE_PRIVATE
-                    )
+                    )*/
                     serviceIntent.putExtra(
                         Constants.SHARED_PREF_FOREGROUND_SERVICE,
-                        // on wear foreground is true as default: on phone it is set by notification
-                        sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
+                        // default on wear and phone
+                        true//sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
                     )
-                    context.startService(serviceIntent)
+                    context.startForegroundService(serviceIntent)
                 } catch (exc: Exception) {
                     Log.e(
                         LOG_ID,

@@ -79,11 +79,13 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                         apply()
                     }
                     val serviceIntent = Intent(this, GlucoDataServiceWear::class.java)
-                    if (isChecked)
+                    if (isChecked) {
                         serviceIntent.putExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
-                    else
+                        this.startForegroundService(serviceIntent)
+                    } else {
                         serviceIntent.putExtra(Constants.ACTION_STOP_FOREGROUND, true)
-                    this.startService(serviceIntent)
+                        this.startService(serviceIntent)
+                    }
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Changing foreground service exception: " + exc.message.toString() )
                 }
