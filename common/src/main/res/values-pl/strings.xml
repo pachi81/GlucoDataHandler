@@ -281,12 +281,12 @@
     <string name="android_auto_notification_descr">Powiadomienie wyświetlane w Android Auto</string>
     <string name="info_label_iob">IOB</string>
     <string name="info_label_cob">COB</string>
-    <string name="src_xdrip_noise_blocking">Włączono blokowanie szumu w ustawieniach aplikacji xDrip+! \nZmień na &quot;Ekstremalnie głośny&quot;!</string>
+    <string name="src_xdrip_noise_blocking">Włączono blokowanie szumu w ustawieniach aplikacji xDrip+! \nZmień na \"Ekstremalnie głośny\"!</string>
     <string name="pref_cat_follower">Follower (Obserwator)</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
-    <string name="pref_source_juggluco_info_summary">Aby odbierać wartości z Juggluco: \n- otwórz Juggluco \n- przejdź do ustawień \n- włącz Glucodata broadcast \n- włącz \&quot;de.michelinside.glucodatahandler \&quot;</string>
+    <string name="pref_source_juggluco_info_summary">Aby odbierać wartości z Juggluco: \n- otwórz Juggluco \n- przejdź do ustawień \n- włącz Glucodata broadcast \n- włącz \"de.michelinside.glucodatahandler \"</string>
     <string name="pref_source_xdrip_info">XDrip+</string>
-    <string name="pref_source_xdrip_info_summary">Aby odbierać wartości z xDrip+:\n- otwórz xDrip+\n- przejdź do ustawień\n- przejdź do ustawień innych aplikacji\n- włącz &quot;Nadawaj lokalnie&quot;\n- ustaw &quot;Blokowanie szumów&quot; na &quot;Send even Extremely noisy signals&quot;\n- włącz &quot;Kompatybilny Broadcast&quot;\n- sprawdź, czy pole &quot;Identyfikuj odbiornik&quot; jest puste lub dodaj nową linię z &quot;de.michelinside.glucodatahandler&quot;.</string>
+    <string name="pref_source_xdrip_info_summary">Aby odbierać wartości z xDrip+:\n- otwórz xDrip+\n- przejdź do ustawień\n- przejdź do ustawień innych aplikacji\n- włącz \"Nadawaj lokalnie\"\n- ustaw \"Blokowanie szumów\" na \"Send even Extremely noisy signals\"\n- włącz \"Kompatybilny Broadcast\"\n- sprawdź, czy pole \"Identyfikuj odbiornik\" jest puste lub dodaj nową linię z \"de.michelinside.glucodatahandler\"</string>
     <string name="pref_source_librelinkup_info">Konfiguracja LibreLinkUp</string>
     <string name="pref_source_librelinkup_info_summary">WAŻNE: to nie jest konto LibreView! Aby aktywować LibreLinkUp:\n- otwórz aplikację FreeStyle Libre i wybierz w menu Udostępnianie lub Podłączone aplikacje\n- aktywuj połączenie LibreLinkUp\n- zainstaluj LibreLinkUp ze Sklepu Play\n- skonfiguruj swoje konto i czekaj na zaproszenie</string>
     <string name="menu_contact">Kontakt</string>
