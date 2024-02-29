@@ -24,11 +24,12 @@ Jeśli używasz Juggluco do odbierania wartości glukozy, otwórz Juggluco i wł
 
 Jeśli używasz xDrip+ do odbierania wartości glukozy, otwórz xDrip+, przejdź do ustawień i wybierz Ustawienia innych aplikacji
 
-- Włącz opcję „Nadawaj lokalnie"
-- Włącz opcję „Kompatybilny Broadcast"
-- Sprawdź czy opcja „Identyfikuj odbiornik" jest pusta
+* włącz "Nadawaj lokalnie"
+* ustaw "Blokowanie szumów" na "Send even Extremely noisy signals"
+* włącz "Kompatybilny Broadcast"
+* sprawdź, czy pole "Identyfikuj odbiornik" jest puste lub dodaj nową linię z "de.michelinside.glucodatahandler"
 
-<img src='images/xDrip_InterAppSettings.png' width=340>
+<img src='images/xDrip_InterAppSettings.png' height=340> <img src='images/xDrip+_noise_blocking.jpg' height=340>
 
 # AndroidAPS
 
