@@ -25,8 +25,9 @@ Für die Benutzer von xDrip+, in den Einstellung den Eintrag Inter-App Einstellu
 * "Lokaler Broadcast" aktivieren
 * "Kompatible Broadcast" aktivieren
 * prüfen, ob "Identifiziere Empfänger" leer ist; ist bereits ein Eintrag vorhanden, dann eine neue Zeile mit `de.michelinside.glucodatahandler` hinzufügen
+* in Verrauschungsunterdrückung \"Send even Extremely noisy signals\" auswählen
   
-<img src='images/de/xDrip_InterAppSettings.png' width=340>
+<img src='images/de/xDrip_InterAppSettings.png' height=340> <img src='images/de/xDrip+_Verrauschungsunterdrückung.jpg' height=340>
 
 # AndroidAPS
 Konfiguration von AAPS:

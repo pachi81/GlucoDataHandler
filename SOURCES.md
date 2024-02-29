@@ -24,8 +24,9 @@ If you are using xDrip+ to receive glucose values, open xDrip+, go to setting an
 * Enable "Broadcast locally"
 * Enable "Compatible Broadcast"
 * Check "Identify receiver" to be empty or if there is already an entry, add a new line with `de.michelinside.glucodatahandler`
+* set \"Noise Blocking\" to \"Send even Extremely noisy signals\"
   
-<img src='images/xDrip_InterAppSettings.png' width=340>
+<img src='images/xDrip_InterAppSettings.png' height=340> <img src='images/xDrip+_noise_blocking.jpg' height=340>
 
 # AndroidAPS
 To receive values from AAPS:
