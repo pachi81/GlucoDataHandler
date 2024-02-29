@@ -64,8 +64,7 @@ class GlucoDataServiceAuto: Service() {
                 if(!running) {
                     Log.i(LOG_ID, "starting")
                     CarNotification.enable(context)
-                    TimeTaskService.run(context)
-                    sendStateBroadcast(context, true)
+                    startDataSync(context)
                     setForeground(context, true)
                     running = true
                 }
@@ -79,8 +78,7 @@ class GlucoDataServiceAuto: Service() {
                 if(!connected && running) {
                     Log.i(LOG_ID, "stopping")
                     CarNotification.disable(context)
-                    sendStateBroadcast(context, false)
-                    BackgroundWorker.stopAllWork(context)
+                    stopDataSync(context)
                     setForeground(context, false)
                     running = false
                 }
@@ -89,7 +87,27 @@ class GlucoDataServiceAuto: Service() {
             }
         }
 
-        fun onConnectionStateUpdated(connectionState: Int) {
+        fun startDataSync(context: Context) {
+            try {
+                Log.d(LOG_ID, "startDataSync")
+                TimeTaskService.run(context)
+                sendStateBroadcast(context, true)
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "startDataSync exception: " + exc.toString())
+            }
+        }
+
+        fun stopDataSync(context: Context) {
+            try {
+                Log.d(LOG_ID, "stopDataSync")
+                sendStateBroadcast(context, false)
+                BackgroundWorker.stopAllWork(context)
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "stopDataSync exception: " + exc.toString())
+            }
+        }
+
+        private fun onConnectionStateUpdated(connectionState: Int) {
             try {
                 val message = when(connectionState) {
                     CarConnection.CONNECTION_TYPE_NOT_CONNECTED -> "Not connected to a head unit"

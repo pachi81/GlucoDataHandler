@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="name" translatable="false">GlucoDataHandler</string>
+    <string name="source_gdh" translatable="false">GlucoDataHandler</string>
 
     <string name="info_label_sensor_id">Sensor</string>
     <string name="info_label_value">Value</string>

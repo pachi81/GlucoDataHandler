@@ -91,6 +91,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         try {
             super.onPause()
             InternalNotifier.remNotifier(this, this)
+            GlucoDataServiceAuto.stopDataSync(this)
             Log.v(LOG_ID, "onPause called")
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.message.toString() )
@@ -118,6 +119,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 Log.i(LOG_ID, "Notification permission granted")
                 requestNotificationPermission = false
             }
+            GlucoDataServiceAuto.startDataSync(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
         }

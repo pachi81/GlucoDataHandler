@@ -20,9 +20,13 @@ object CarModeReceiver {
     private var init = false
     private var car_connected = false
     private var gda_enabled = false
-    val connected: Boolean get() {
+    val connected: Boolean get() {  // connected to GlucoDataAuto
         if (!car_connected)
             return gda_enabled
+        return car_connected
+    }
+
+    val AA_connected: Boolean get() {   // connected to Android Auto
         return car_connected
     }
 
@@ -31,8 +35,8 @@ object CarModeReceiver {
         override fun onReceive(context: Context, intent: Intent) {
             Log.d(LOG_ID, "onReceive called for intent " + intent + ": " + Utils.dumpBundle(intent.extras))
             gda_enabled = intent.getBooleanExtra(Constants.GLUCODATAAUTO_STATE_EXTRA, false)
-            if(!car_connected) {
-                onConnectionStateUpdated(if(gda_enabled) CarConnection.CONNECTION_TYPE_PROJECTION else CarConnection.CONNECTION_TYPE_NOT_CONNECTED)
+            if(!car_connected && gda_enabled) {
+                InternalNotifier.notify(context, NotifySource.CAR_CONNECTION, null)
             }
         }
 
@@ -80,21 +84,19 @@ object CarModeReceiver {
                 else -> "Unknown car connection type"
             }
             Log.d(LOG_ID, "onConnectionStateUpdated: " + message + " (" + connectionState.toString() + ")")
-            var stateChanged = false
+            val curState = connected
             if (connectionState == CarConnection.CONNECTION_TYPE_NOT_CONNECTED)  {
                 if (car_connected) {
                     Log.i(LOG_ID, "Exited Car Mode")
                     car_connected = false
                     GlucoDataService.context?.setAndroidAutoConnectionState(false)
-                    stateChanged = true
                 }
             } else if(!car_connected){
                 Log.i(LOG_ID, "Entered Car Mode")
                 car_connected = true
                 GlucoDataService.context?.setAndroidAutoConnectionState(true)
-                stateChanged = true
             }
-            if (stateChanged)
+            if (curState != connected)
                 InternalNotifier.notify(GlucoDataService.context!!, NotifySource.CAR_CONNECTION, null)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onConnectionStateUpdated exception: " + exc.message.toString() )

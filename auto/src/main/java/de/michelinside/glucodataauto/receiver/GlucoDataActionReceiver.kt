@@ -28,7 +28,7 @@ open class GlucoDataActionReceiver: BroadcastReceiver() {
                     ReceiveData.setSettings(context, bundle!!)
                     extras.remove(Constants.SETTINGS_BUNDLE)
                 }
-                ReceiveData.handleIntent(context, DataSource.PHONE, extras, true)
+                ReceiveData.handleIntent(context, DataSource.GDH, extras, true)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Receive exception: " + exc.message.toString() )
