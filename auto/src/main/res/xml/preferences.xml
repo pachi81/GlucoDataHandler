@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-        android:title="@string/pref_cat_android_auto"
+        android:title="@string/pref_switch_car_notification"
         app:iconSpaceReserved="false">
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
@@ -35,6 +35,18 @@
             android:key="car_notification_reappear_interval"
             android:title="@string/pref_car_notification_reappear_interval"
             android:summary="@string/pref_car_notification_reappear_interval_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_switch_car_media"
+        app:iconSpaceReserved="false">
+        <androidx.preference.ListPreference
+            android:defaultValue="glucose_trend"
+            android:entries="@array/pref_aa_media_player_icon_labels"
+            android:entryValues="@array/pref_aa_media_player_icon_values"
+            android:key="aa_media_player_icon_style"
+            android:summary="@string/pref_aa_media_player_icon_style_summary"
+            android:title="@string/pref_aa_media_player_icon_style"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 

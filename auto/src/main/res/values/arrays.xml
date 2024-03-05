@@ -67,4 +67,12 @@
         <item>"30"</item>
         <item>"-1"</item>
     </array>
+    <array name="pref_aa_media_player_icon_labels">
+        <item>@string/short_value_arrow</item>
+        <item>@string/pref_status_bar_icon_trend</item>
+    </array>
+    <array name="pref_aa_media_player_icon_values">
+        <item>"glucose_trend"</item>
+        <item>"trend"</item>
+    </array>
 </resources>

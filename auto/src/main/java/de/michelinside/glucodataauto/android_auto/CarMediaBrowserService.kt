@@ -126,7 +126,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         Log.v(LOG_ID, "onSharedPreferenceChanged called for key " + key)
         try {
             when(key) {
-                Constants.SHARED_PREF_CAR_MEDIA -> {
+                Constants.SHARED_PREF_CAR_MEDIA,
+                Constants.SHARED_PREF_CAR_MEDIA_ICON_STYLE -> {
                     notifyChildrenChanged(MEDIA_ROOT_ID)
                 }
             }
@@ -136,9 +137,14 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     }
 
     private fun getIcon(size: Int = 100): Bitmap? {
-        return BitmapUtils.textRateToBitmap(ReceiveData.getClucoseAsString(), ReceiveData.rate, ReceiveData.getClucoseColor(), ReceiveData.isObsolete(
-            Constants.VALUE_OBSOLETE_SHORT_SEC), ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),
-            size, size)
+        return when(sharedPref.getString(Constants.SHARED_PREF_CAR_MEDIA_ICON_STYLE, Constants.AA_MEDIA_ICON_STYLE_GLUCOSE_TREND)) {
+            Constants.AA_MEDIA_ICON_STYLE_TREND -> {
+                BitmapUtils.getRateAsBitmap(width = size, height = size)
+            }
+            else -> {
+                BitmapUtils.getGlucoseTrendBitmap(width = size, height = size)
+            }
+        }
     }
 
     private fun createMediaItem(): MediaBrowserCompat.MediaItem {
@@ -163,7 +169,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         }
         val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
             .setMediaId(MEDIA_GLUCOSE_ID)
-            .setTitle("Delta: " + ReceiveData.getDeltaAsString() + "\n" + ReceiveData.getElapsedTimeMinuteAsString(this))
+            .setTitle(ReceiveData.getClucoseAsString() + " (Δ " + ReceiveData.getDeltaAsString() + ")\n" + ReceiveData.getElapsedTimeMinuteAsString(this))
             //.setSubtitle(ReceiveData.timeformat.format(Date(ReceiveData.time)))
             .setIconBitmap(getIcon()!!)
         return MediaBrowserCompat.MediaItem(

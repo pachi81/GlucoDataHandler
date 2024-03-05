@@ -48,6 +48,7 @@ object Constants {
     const val SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM = "car_notification_interval_num"
     const val SHARED_PREF_CAR_NOTIFICATION_REAPPEAR_INTERVAL = "car_notification_reappear_interval"
     const val SHARED_PREF_CAR_MEDIA = "car_media"
+    const val SHARED_PREF_CAR_MEDIA_ICON_STYLE = "aa_media_player_icon_style"
     const val SHARED_PREF_NOTIFY_DURATION_LOW = "notify_duration_low"
     const val SHARED_PREF_NOTIFY_DURATION_HIGH = "notify_duration_high"
     const val SHARED_PREF_USE_MMOL = "use_mmol"
@@ -110,4 +111,8 @@ object Constants {
     const val SHARED_PREF_NIGHTSCOUT_IOB_COB="src_ns_iob_cob"
 
     const val SHARED_PREF_DUMMY_VALUES = "dummy_values"
+
+    // Android Auto
+    const val AA_MEDIA_ICON_STYLE_TREND = "trend"
+    const val AA_MEDIA_ICON_STYLE_GLUCOSE_TREND = "glucose_trend"
 }

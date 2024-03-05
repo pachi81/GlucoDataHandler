@@ -300,5 +300,7 @@
     <string name="pref_switch_watchdrip_enabled_summary">"Włącz komunikację z WatchDrip+ (bez wykresu).\nWAŻNA UWAGA: opcję \"Enable service\" w WatchDrip+ należy włączyć dopiero po włączeniu tej opcji tutaj!"</string>
     <string name="pref_car_notification_reappear_interval">Reappear</string>
     <string name="pref_car_notification_reappear_interval_summary">Interval when the notification shall reappear if there is no new value. (0 for never).</string>
+    <string name="pref_aa_media_player_icon_style_summary">Style of the dummy media player icon/image.</string>
+    <string name="pref_aa_media_player_icon_style">Icon/image style</string>
 
 </resources>
