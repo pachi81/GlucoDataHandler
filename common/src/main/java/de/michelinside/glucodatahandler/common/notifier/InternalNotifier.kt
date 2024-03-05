@@ -22,6 +22,10 @@ object InternalNotifier {
         notify(context, NotifySource.NOTIFIER_CHANGE, null)
     }
 
+    fun hasNotifier(notifier: NotifierInterface): Boolean {
+        return notifiers.contains(notifier)
+    }
+
     fun notify(context: Context, notifySource: NotifySource, extras: Bundle?)
     {
         Log.d(LOG_ID, "Sending new data to " + notifiers.size.toString() + " notifier(s).")

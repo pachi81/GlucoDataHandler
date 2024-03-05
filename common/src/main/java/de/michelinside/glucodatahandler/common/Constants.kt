@@ -46,6 +46,7 @@ object Constants {
     const val SHARED_PREF_CAR_NOTIFICATION_INTERVAL = "car_notification_interval"   // deprecated as changed to seekbar
     const val SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY = "car_notification_alarm_only"
     const val SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM = "car_notification_interval_num"
+    const val SHARED_PREF_CAR_NOTIFICATION_REAPPEAR_INTERVAL = "car_notification_reappear_interval"
     const val SHARED_PREF_CAR_MEDIA = "car_media"
     const val SHARED_PREF_NOTIFY_DURATION_LOW = "notify_duration_low"
     const val SHARED_PREF_NOTIFY_DURATION_HIGH = "notify_duration_high"

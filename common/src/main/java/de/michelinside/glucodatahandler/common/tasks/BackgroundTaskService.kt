@@ -170,8 +170,10 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         return delayResult
     }
 
-    private fun checkTimer() {
+    fun checkTimer() {
         try {
+            if (context == null)
+                return // not yet initialized
             val newInterval = getInterval()
             val newDelay = getDelay()
             if (initialExecution || curInterval != newInterval || curDelay != newDelay) {

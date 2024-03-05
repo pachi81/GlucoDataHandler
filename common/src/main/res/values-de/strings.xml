@@ -296,5 +296,7 @@
     <string name="pref_source_aaps_info_summary">Konfiguration von AAPS:\n- AAPS App öffnen\n- \"Konfiguration\" öffnen\n- \"Samsung Tizen\" aktivieren</string>
     <string name="pref_switch_watchdrip_enabled">WatchDrip+</string>
     <string name="pref_switch_watchdrip_enabled_summary">"Aktiviere WatchDrip+ Verbindung (ohne Graph).\nWICHTIG: Aktiviere \"Enable service\" in WatchDrip+ erst nachdem es hier aktiviert wurde!"</string>
+    <string name="pref_car_notification_reappear_interval">Wieder erscheinen</string>
+    <string name="pref_car_notification_reappear_interval_summary">Intervall, wann die Benachrichtigung wieder erscheinen soll, wenn es keinen neuen Wert gibt (0 für nie).</string>
 
 </resources>

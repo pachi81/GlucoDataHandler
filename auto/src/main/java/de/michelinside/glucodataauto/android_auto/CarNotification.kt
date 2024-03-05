@@ -21,6 +21,7 @@ import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.notification.ChannelType
+import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
 import de.michelinside.glucodatahandler.common.utils.Utils
 import java.text.DateFormat
 import java.util.*
@@ -36,6 +37,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     private lateinit var notificationMgr: CarNotificationManager
     private var show_notification = false  // default: no notification
     private var notification_interval = 1L   // every minute -> always, -1L: only for alarms
+    private var notification_reappear_interval = 5L
     const val LAST_NOTIFCATION_TIME = "last_notification_time"
     private var last_notification_time = 0L
     const val FORCE_NEXT_NOTIFY = "force_next_notify"
@@ -85,12 +87,21 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         enable_notification = sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, enable_notification)
         val alarmOnly = sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY, true)
         notification_interval = if (alarmOnly) -1 else sharedPref.getInt(Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM, 1).toLong()
-        Log.i(LOG_ID, "notification settings changed: active: " + enable_notification + " - interval: " + notification_interval)
-        if(init && GlucoDataServiceAuto.connected && cur_enabled != enable_notification) {
-            if(enable_notification)
-                showNotification(GlucoDataService.context!!, false)
-            else
-                removeNotification()
+        val reappear_active = notification_reappear_interval > 0
+        notification_reappear_interval = if (alarmOnly) 0L else sharedPref.getInt(Constants.SHARED_PREF_CAR_NOTIFICATION_REAPPEAR_INTERVAL, 5).toLong()
+        Log.i(LOG_ID, "notification settings changed: active: " + enable_notification + " - interval: " + notification_interval + " - reappear:" + notification_reappear_interval)
+        if(init && GlucoDataServiceAuto.connected) {
+            if (enable_notification)
+                ElapsedTimeTask.setInterval(notification_reappear_interval)
+            if (cur_enabled != enable_notification) {
+                if (enable_notification) {
+                    showNotification(GlucoDataService.context!!, NotifySource.BROADCAST)
+                } else
+                    removeNotification()
+            } else if (reappear_active != (notification_reappear_interval > 0) && InternalNotifier.hasNotifier(this) ) {
+                Log.d(LOG_ID, "Update internal notification filter for reappear interval: " + notification_reappear_interval)
+                InternalNotifier.addNotifier(GlucoDataService.context!!, this, getFilter())
+            }
         }
     }
 
@@ -139,15 +150,23 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         }
     }
 
+    private fun getFilter(): MutableSet<NotifySource> {
+        val filter = mutableSetOf(
+            NotifySource.BROADCAST,
+            NotifySource.MESSAGECLIENT)
+        if (notification_reappear_interval > 0)
+            filter.add(NotifySource.TIME_VALUE)
+        return filter
+    }
+
     fun enable(context: Context) {
         Log.d(LOG_ID, "enable called")
         initNotification(context)
         forceNextNotify = false
-        InternalNotifier.addNotifier(GlucoDataService.context!!, this, mutableSetOf(
-            NotifySource.BROADCAST,
-            NotifySource.MESSAGECLIENT,
-            NotifySource.OBSOLETE_VALUE))
-        showNotification(context, false)
+        InternalNotifier.addNotifier(GlucoDataService.context!!, this, getFilter())
+        showNotification(context, NotifySource.BROADCAST)
+        if (enable_notification)
+            ElapsedTimeTask.setInterval(notification_reappear_interval)
     }
 
     fun disable(context: Context) {
@@ -160,7 +179,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.v(LOG_ID, "OnNotifyData called for source " + dataSource)
         try {
-            showNotification(context, dataSource == NotifySource.OBSOLETE_VALUE)
+            showNotification(context, dataSource)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() + "\n" + exc.stackTraceToString() )
         }
@@ -169,43 +188,68 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     fun removeNotification() {
         notificationMgr.cancel(NOTIFICATION_ID)  // remove notification
         forceNextNotify = false
+        ElapsedTimeTask.setInterval(0L)
     }
 
     private fun getTimeDiffMinute(): Long {
         return Utils.round((ReceiveData.time-last_notification_time).toFloat()/60000, 0).toLong()
     }
 
-    private fun canShowNotification(isObsolete: Boolean): Boolean {
+    private fun canShowNotification(dataSource: NotifySource): Boolean {
         if (init && enable_notification && GlucoDataServiceAuto.connected) {
-            if(notification_interval == 1L || ReceiveData.forceAlarm)
-                return true
-            if (ReceiveData.getAlarmType() == ReceiveData.AlarmType.VERY_LOW || isObsolete) {
-                forceNextNotify = true  // if obsolete or VERY_LOW, the next value is important!
-                return true
+            Log.d(LOG_ID, "Check showing notificiation:"
+                    + "\ndataSource: " + dataSource
+                    + "\nalarm-type: " + ReceiveData.getAlarmType()
+                    + "\nforceNextNotify: " + forceNextNotify
+                    + "\nnotify-elapsed: " + getTimeDiffMinute()
+                    + "\ndata-elapsed: " + ReceiveData.getElapsedTimeMinute()
+                    + "\nnotification_interval: " + notification_interval
+                    + "\nnotification_reappear_interval: " + notification_reappear_interval
+            )
+            if (dataSource == NotifySource.BROADCAST || dataSource == NotifySource.MESSAGECLIENT) {
+                if(notification_interval == 1L || ReceiveData.forceAlarm) {
+                    Log.v(LOG_ID, "Notification has forced by interval or alarm")
+                    return true
+                }
+                if (ReceiveData.getAlarmType() == ReceiveData.AlarmType.VERY_LOW) {
+                    Log.v(LOG_ID, "Notification for very low-alarm")
+                    forceNextNotify = true  // if obsolete or VERY_LOW, the next value is important!
+                    return true
+                }
+                if (forceNextNotify) {
+                    Log.v(LOG_ID, "Force notification")
+                    forceNextNotify = false
+                    return true
+                }
+                if (notification_interval > 1L && getTimeDiffMinute() >= notification_interval && ReceiveData.getElapsedTimeMinute() == 0L) {
+                    Log.v(LOG_ID, "Interval for new value elapsed")
+                    return true
+                }
+            } else if(dataSource == NotifySource.TIME_VALUE) {
+                if (notification_reappear_interval > 0 && ReceiveData.getElapsedTimeMinute().mod(notification_reappear_interval) == 0L) {
+                    Log.v(LOG_ID, "reappear after: " + ReceiveData.getElapsedTimeMinute() + " - interval: " + notification_reappear_interval)
+                    return true
+                }
             }
-            if (forceNextNotify) {
-                forceNextNotify = false
-                return true
-            }
-            if (notification_interval > 1L) {
-                return getTimeDiffMinute() >= notification_interval
-            }
+            Log.v(LOG_ID, "No notification to show")
             return false
         }
         return false
     }
 
-    fun showNotification(context: Context, isObsolete: Boolean) {
+    fun showNotification(context: Context, dataSource: NotifySource) {
         try {
-            if (canShowNotification(isObsolete)) {
+            if (canShowNotification(dataSource)) {
                 Log.v(LOG_ID, "showNotification called")
                 notificationCompat
                     .setLargeIcon(BitmapUtils.getRateAsBitmap(resizeFactor = 0.75F))
                     .setWhen(ReceiveData.time)
-                    .setStyle(createMessageStyle(context, isObsolete))
+                    .setStyle(createMessageStyle(context, ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)))
                 notificationMgr.notify(NOTIFICATION_ID, notificationCompat)
-                last_notification_time = ReceiveData.time
-                saveExtras(context)
+                if(dataSource != NotifySource.TIME_VALUE) {
+                    last_notification_time = ReceiveData.time
+                    saveExtras(context)
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "showNotification exception: " + exc.toString() )
@@ -271,7 +315,8 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
             when(key) {
                 Constants.SHARED_PREF_CAR_NOTIFICATION,
                 Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY,
-                Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM -> {
+                Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM,
+                Constants.SHARED_PREF_CAR_NOTIFICATION_REAPPEAR_INTERVAL -> {
                     updateSettings(sharedPreferences!!)
                 }
             }

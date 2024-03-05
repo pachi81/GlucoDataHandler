@@ -31,6 +31,7 @@ class GlucoDataServiceAuto: Service() {
         private var car_connected = false
         private var running = false
         private var init = false
+        private var dataSyncCount = 0
         val connected: Boolean get() = car_connected || CarMediaBrowserService.active
         fun init(context: Context) {
             if(!init) {
@@ -89,9 +90,12 @@ class GlucoDataServiceAuto: Service() {
 
         fun startDataSync(context: Context) {
             try {
-                Log.d(LOG_ID, "startDataSync")
-                TimeTaskService.run(context)
-                sendStateBroadcast(context, true)
+                if (dataSyncCount == 0) {
+                    Log.d(LOG_ID, "startDataSync")
+                    TimeTaskService.run(context)
+                    sendStateBroadcast(context, true)
+                }
+                dataSyncCount++
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "startDataSync exception: " + exc.toString())
             }
@@ -99,9 +103,12 @@ class GlucoDataServiceAuto: Service() {
 
         fun stopDataSync(context: Context) {
             try {
-                Log.d(LOG_ID, "stopDataSync")
-                sendStateBroadcast(context, false)
-                BackgroundWorker.stopAllWork(context)
+                dataSyncCount--
+                if (dataSyncCount == 0) {
+                    Log.d(LOG_ID, "stopDataSync")
+                    sendStateBroadcast(context, false)
+                    BackgroundWorker.stopAllWork(context)
+                }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "stopDataSync exception: " + exc.toString())
             }

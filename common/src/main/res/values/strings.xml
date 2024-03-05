@@ -311,4 +311,6 @@
     <string name="pref_source_aaps_info_summary">To receive values from AAPS:\n- open AAPS app\n- go to \"Config Builder\"\n- enable \"Samsung Tizen\"</string>
     <string name="pref_switch_watchdrip_enabled">WatchDrip+</string>
     <string name="pref_switch_watchdrip_enabled_summary">"Enable WatchDrip+ communication (without graph).\nIMPORTANT: enable \"Enable service\" in WatchDrip+ after enabling this setting here!"</string>
+    <string name="pref_car_notification_reappear_interval">Reappear</string>
+    <string name="pref_car_notification_reappear_interval_summary">Interval when the notification shall reappear if there is no new value. (0 for never).</string>
 </resources>

@@ -9,15 +9,20 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 
 class ElapsedTimeTask : BackgroundTask() {
-    private val LOG_ID = "GDH.Task.Time.ElapsedTask"
-
     companion object {
+        private val LOG_ID = "GDH.Task.Time.ElapsedTask"
         private var relativeTimeValue = false
+        private var interval = 0L
         val relativeTime: Boolean get() {return relativeTimeValue}
+        fun setInterval(new_interval: Long) {
+            Log.d(LOG_ID, "setInterval called for new interval: " + new_interval + " - current: " + interval)
+            interval = new_interval
+            TimeTaskService.checkTimer()
+        }
     }
 
     override fun getIntervalMinute(): Long {
-        return 1
+        return if (relativeTimeValue) 1L else interval
     }
 
     override fun execute(context: Context) {
@@ -28,7 +33,7 @@ class ElapsedTimeTask : BackgroundTask() {
     }
 
     override fun active(elapsetTimeMinute: Long): Boolean {
-        return relativeTimeValue && elapsetTimeMinute <= 60 && InternalNotifier.getNotifierCount(NotifySource.TIME_VALUE) > 0
+        return (relativeTimeValue || interval > 0) && elapsetTimeMinute <= 60 && InternalNotifier.getNotifierCount(NotifySource.TIME_VALUE) > 0
     }
 
     override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {
