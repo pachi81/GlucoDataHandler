@@ -35,6 +35,25 @@
         </item>
     </group>
     <group
+        android:id="@+id/group_logs">
+        <item
+            android:id="@+id/group_log_title"
+            android:title="@string/menu_group_log">
+            <menu>
+                <item
+                    android:id="@+id/action_save_mobile_logs"
+                    android:title="@string/menu_save_mobile_logs"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_save_wear_logs"
+                    android:title="@string/menu_save_wear_logs"
+                    android:enabled="false"
+                    android:visible="false"
+                    app:showAsAction="never" />
+            </menu>
+        </item>
+    </group>
+    <group
         android:id="@+id/group_contact">
         <item
             android:id="@+id/action_contact"

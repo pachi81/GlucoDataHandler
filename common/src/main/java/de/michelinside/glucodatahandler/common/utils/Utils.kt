@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.*
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcel
@@ -13,8 +14,10 @@ import android.provider.Settings
 import android.util.Log
 import android.util.TypedValue
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import java.io.FileOutputStream
 import java.math.RoundingMode
 import java.security.MessageDigest
+import java.util.concurrent.TimeUnit
 
 
 object Utils {
@@ -175,6 +178,52 @@ object Utils {
             Log.e(LOG_ID, "Exception while encrypt SHA-1: " + ex)
         }
         return ""
+    }
+
+    fun saveLogs(context: Context, uri: Uri) {
+        try {
+            val cmd = "logcat -t 1000"
+            Log.i(LOG_ID, "Getting logcat with command: $cmd")
+            val process = Runtime.getRuntime().exec(cmd)
+            Thread {
+                try {
+                    Log.v(LOG_ID, "read")
+                    context.contentResolver.openFileDescriptor(uri, "w")?.use {
+                        FileOutputStream(it.fileDescriptor).use { os ->
+                            val buffer = ByteArray(4 * 1024) // or other buffer size
+                            var read: Int
+                            while (process.inputStream.read(buffer).also { rb -> read = rb } != -1) {
+                                Log.v(LOG_ID, "write")
+                                os.write(buffer, 0, read)
+                            }
+                            Log.v(LOG_ID, "flush")
+                            os.flush()
+                        }
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Writing logs exception: " + exc.message.toString() )
+                }
+            }.start()
+            Thread {
+                try {
+                    Log.v(LOG_ID, "Waiting for saving logs")
+                    process.waitFor(10, TimeUnit.SECONDS)
+                    Log.v(LOG_ID, "Process alive: ${process.isAlive}")
+                    var count = 0
+                    while (process.isAlive && count < 10) {
+                        Log.w(LOG_ID, "Killing process")
+                        process.destroy()
+                        Thread.sleep(1000)
+                        count++
+                    }
+                    Log.v(LOG_ID, "Process exit: ${process.exitValue()}")
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Process exception: " + exc.message.toString() )
+                }
+            }.start()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Saving logs exception: " + exc.message.toString() )
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler
 
+import android.app.Activity
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
@@ -26,13 +27,17 @@ import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceStateData
-import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import de.michelinside.glucodatahandler.common.R as CR
+
 
 class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtBgValue: TextView
@@ -262,6 +267,10 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     startActivity(mailIntent)
                     return true
                 }
+                R.id.action_save_mobile_logs -> {
+                    SaveMobileLogs()
+                    return true
+                }
                 else -> return super.onOptionsItemSelected(item)
             }
         } catch (exc: Exception) {
@@ -309,5 +318,42 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.v(LOG_ID, "new intent received")
         update()
+    }
+
+    private fun SaveMobileLogs() {
+        try {
+            Log.v(LOG_ID, "Save mobile logs called")
+            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                type = "text/plain"
+                val currentDateandTime = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+                val fileName = "GDH_mobile_" + currentDateandTime + ".txt"
+                putExtra(Intent.EXTRA_TITLE, fileName)
+            }
+            startActivityForResult(intent, CREATE_FILE)
+
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Saving mobile logs exception: " + exc.message.toString() )
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        try {
+            Log.v(LOG_ID, "onActivityResult called for requestCode: " + requestCode + " - resultCode: " + resultCode + " - data: " + Utils.dumpBundle(data?.extras))
+            super.onActivityResult(requestCode, resultCode, data)
+            if (resultCode == Activity.RESULT_OK) {
+                if (requestCode == CREATE_FILE) {
+                    data?.data?.also { uri ->
+                        Utils.saveLogs(this, uri)
+                    }
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Saving logs exception: " + exc.message.toString() )
+        }
+    }
+
+    companion object {
+        const val CREATE_FILE = 1
     }
 }
