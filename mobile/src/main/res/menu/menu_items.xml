@@ -38,7 +38,7 @@
         android:id="@+id/group_logs">
         <item
             android:id="@+id/group_log_title"
-            android:title="@string/menu_group_log">
+            android:title="@string/menu_save_logs">
             <menu>
                 <item
                     android:id="@+id/action_save_mobile_logs"
@@ -48,7 +48,6 @@
                     android:id="@+id/action_save_wear_logs"
                     android:title="@string/menu_save_wear_logs"
                     android:enabled="false"
-                    android:visible="false"
                     app:showAsAction="never" />
             </menu>
         </item>

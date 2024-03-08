@@ -36,8 +36,9 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
     companion object {
         private val LOG_ID = "GDH.GlucoDataService"
         private var isForegroundService = false
+        @JvmStatic
         @SuppressLint("StaticFieldLeak")
-        private var connection: WearPhoneConnection? = null
+        protected var connection: WearPhoneConnection? = null
         val foreground get() = isForegroundService
         const val NOTIFICATION_ID = 123
         var appSource = AppSource.NOT_SET

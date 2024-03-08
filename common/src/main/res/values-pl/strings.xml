@@ -302,9 +302,12 @@
     <string name="pref_car_notification_reappear_interval_summary"> Czas, po którym powiadomienie pojawi się ponownie, jeśli nie ma nowej wartości. (0 = nigdy).</string>
     <string name="pref_aa_media_player_icon_style_summary">Styl ikony/obrazu odtwarzacza fikcyjnych multimediów.</string>
     <string name="pref_aa_media_player_icon_style"> Styl ikony/obrazu </string>
-    <string name="menu_group_log">Logs</string>
-    <string name="menu_save_mobile_logs">Save mobile</string>
-    <string name="menu_save_wear_logs">Save wear</string>
+    <string name="menu_save_mobile_logs">Mobile</string>
+    <string name="menu_save_wear_logs">Wear</string>
     <string name="menu_save_logs">Save logs</string>
+    <string name="logcat_save_succeeded">Logs saved successfully</string>
+    <string name="logcat_save_failed">Failed saving logs!</string>
+    <string name="logcat_wear_save_succeeded">Logs from wear saved successfully</string>
+    <string name="logcat_wear_save_failed">Failed saving logs from wear!</string>
 
 </resources>

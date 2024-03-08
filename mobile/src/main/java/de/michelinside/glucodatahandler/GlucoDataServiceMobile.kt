@@ -18,16 +18,25 @@ import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
 
 
 class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInterface {
-    private val LOG_ID = "GDH.GlucoDataServiceMobile"
     private lateinit var floatingWidget: FloatingWidget
+
     init {
         Log.d(LOG_ID, "init called")
         InternalNotifier.addNotifier(this, TaskerDataReceiver, mutableSetOf(NotifySource.BROADCAST,NotifySource.IOB_COB_CHANGE,NotifySource.MESSAGECLIENT,NotifySource.OBSOLETE_VALUE))
     }
 
     companion object {
+        private val LOG_ID = "GDH.GlucoDataServiceMobile"
         fun start(context: Context, force: Boolean = false) {
+            Log.v(LOG_ID, "start called")
             start(AppSource.PHONE_APP, context, GlucoDataServiceMobile::class.java, force)
+        }
+
+        fun sendLogcatRequest() {
+            if(connection != null) {
+                Log.d(LOG_ID, "sendLogcatRequest called")
+                connection!!.sendMessage(NotifySource.LOGCAT_REQUEST, null, filterReiverId = connection!!.pickBestNodeId())
+            }
         }
     }
 

@@ -154,6 +154,12 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         }
     }
 
+    fun pickBestNodeId(): String? {
+        // Find a nearby node or pick one arbitrarily.
+        return connectedNodes.values.firstOrNull { it.isNearby }?.id ?: connectedNodes.values.firstOrNull()?.id
+    }
+
+
     private fun setNodeBatteryLevel(nodeId: String, level: Int) {
         if (level >= 0 && (!nodeBatteryLevel.containsKey(nodeId) || nodeBatteryLevel.getValue(nodeId) != level )) {
             Log.d(LOG_ID, "Setting new battery level for node " + nodeId + ": " + level + "%")
@@ -170,14 +176,16 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             NotifySource.CAPILITY_INFO -> Constants.REQUEST_DATA_MESSAGE_PATH
             NotifySource.SETTINGS -> Constants.SETTINGS_INTENT_MESSAGE_PATH
             NotifySource.SOURCE_SETTINGS -> Constants.SOURCE_SETTINGS_INTENT_MESSAGE_PATH
+            NotifySource.LOGCAT_REQUEST -> Constants.REQUEST_LOGCAT_MESSAGE_PATH
             else -> Constants.GLUCODATA_INTENT_MESSAGE_PATH
         }
 
-    fun sendMessage(dataSource: NotifySource, extras: Bundle?, receiverId: String? = null)
+    fun sendMessage(dataSource: NotifySource, extras: Bundle?, ignoreReceiverId: String? = null, filterReiverId: String? = null)
     {
         try {
+            Log.v(LOG_ID, "sendMessage called for $dataSource filter receiver $filterReiverId ignoring receiver $ignoreReceiverId with extras $extras")
             if( nodesConnected && dataSource != NotifySource.NODE_BATTERY_LEVEL ) {
-                Log.d(LOG_ID, connectedNodes.size.toString() + " nodes found for sending message to")
+                Log.d(LOG_ID, connectedNodes.size.toString() + " nodes found for sending message for " + dataSource.toString())
                 if (extras != null && dataSource != NotifySource.BATTERY_LEVEL && BatteryReceiver.batteryPercentage > 0) {
                     extras.putInt(BatteryReceiver.LEVEL, BatteryReceiver.batteryPercentage)
                 }
@@ -190,7 +198,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 connectedNodes.forEach { node ->
                     Thread {
                         try {
-                            if (receiverId == null || receiverId != node.key) {
+                            if ((ignoreReceiverId == null && filterReiverId == null) || ignoreReceiverId != node.value.id || filterReiverId == node.value.id) {
                                 if (dataSource == NotifySource.CAPILITY_INFO)
                                     Thread.sleep(1000)  // wait a bit after the connection has changed
                                 sendMessage(node.value, getPath(dataSource), Utils.bundleToBytes(extras), dataSource)
@@ -341,8 +349,34 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     }
                 }
             }
+            if(p0.path == Constants.REQUEST_LOGCAT_MESSAGE_PATH) {
+                sendLogcat(p0.sourceNodeId)
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onMessageReceived exception: " + exc.message.toString() )
+        }
+    }
+
+    private fun sendLogcat(phoneNodeId: String) {
+        try {
+                val channelClient = Wearable.getChannelClient(context)
+                val channelTask =
+                    channelClient.openChannel(phoneNodeId, Constants.LOGCAT_CHANNEL_PATH)
+                channelTask.addOnSuccessListener { channel ->
+                    Thread {
+                        try {
+                            val outputStream = Tasks.await(channelClient.getOutputStream(channel))
+                            Log.d(LOG_ID, "sending Logcat")
+                            Utils.saveLogs(outputStream)
+                            channelClient.close(channel)
+                            Log.d(LOG_ID, "Logcat sent")
+                        } catch (exc: Exception) {
+                            Log.e(LOG_ID, "sendLogcat exception: " + exc.toString())
+                        }
+                    }.start()
+                }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "sendLogcat exception: " + exc.toString())
         }
     }
 

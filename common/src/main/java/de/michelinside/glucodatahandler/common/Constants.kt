@@ -8,6 +8,8 @@ object Constants {
     const val SETTINGS_INTENT_MESSAGE_PATH = "/settings_intent"
     const val SOURCE_SETTINGS_INTENT_MESSAGE_PATH = "/source_settings_intent"
     const val REQUEST_DATA_MESSAGE_PATH = "/request_data_intent"
+    const val REQUEST_LOGCAT_MESSAGE_PATH = "/request_logcat_intent"
+    const val LOGCAT_CHANNEL_PATH = "/logcat_intent"
     const val GLUCODATA_BROADCAST_ACTION = "glucodata.Minute"
     const val SETTINGS_BUNDLE = "settings_bundle"
     const val SOURCE_SETTINGS_BUNDLE = "source_settings_bundle"

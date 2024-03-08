@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuCompat
 import androidx.preference.PreferenceManager
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
+import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -33,6 +34,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.watch.LogcatReceiver
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -51,6 +53,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtHighContrastEnabled: TextView
     private lateinit var btnSources: Button
     private lateinit var sharedPref: SharedPreferences
+    private lateinit var optionsMenu: Menu
     private val LOG_ID = "GDH.Main"
     private var requestNotificationPermission = false
 
@@ -221,6 +224,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             val inflater = menuInflater
             inflater.inflate(R.menu.menu_items, menu)
             MenuCompat.setGroupDividerEnabled(menu!!, true)
+            optionsMenu = menu
             return true
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreateOptionsMenu exception: " + exc.message.toString() )
@@ -268,8 +272,17 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     return true
                 }
                 R.id.action_save_mobile_logs -> {
-                    SaveMobileLogs()
+                    SaveLogs(AppSource.PHONE_APP)
                     return true
+                }
+                R.id.action_save_wear_logs -> {
+                    SaveLogs(AppSource.WEAR_APP)
+                    return true
+                }
+                R.id.group_log_title -> {
+                    Log.v(LOG_ID, "log group selected")
+                    val item: MenuItem = optionsMenu.findItem(R.id.action_save_wear_logs)
+                    item.isEnabled = WearPhoneConnection.nodesConnected && !LogcatReceiver.isActive
                 }
                 else -> return super.onOptionsItemSelected(item)
             }
@@ -320,17 +333,17 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         update()
     }
 
-    private fun SaveMobileLogs() {
+    private fun SaveLogs(source: AppSource) {
         try {
-            Log.v(LOG_ID, "Save mobile logs called")
+            Log.v(LOG_ID, "Save logs called for " + source)
             val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
                 addCategory(Intent.CATEGORY_OPENABLE)
                 type = "text/plain"
                 val currentDateandTime = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-                val fileName = "GDH_mobile_" + currentDateandTime + ".txt"
+                val fileName = "GDH_" + source + "_" + currentDateandTime + ".txt"
                 putExtra(Intent.EXTRA_TITLE, fileName)
             }
-            startActivityForResult(intent, CREATE_FILE)
+            startActivityForResult(intent, if (source == AppSource.WEAR_APP) CREATE_WEAR_FILE else CREATE_PHONE_FILE)
 
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Saving mobile logs exception: " + exc.message.toString() )
@@ -342,9 +355,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Log.v(LOG_ID, "onActivityResult called for requestCode: " + requestCode + " - resultCode: " + resultCode + " - data: " + Utils.dumpBundle(data?.extras))
             super.onActivityResult(requestCode, resultCode, data)
             if (resultCode == Activity.RESULT_OK) {
-                if (requestCode == CREATE_FILE) {
-                    data?.data?.also { uri ->
+                data?.data?.also { uri ->
+                    Log.v(LOG_ID, "Save logs to " + uri)
+                    if (requestCode == CREATE_PHONE_FILE) {
                         Utils.saveLogs(this, uri)
+                    } else if(requestCode == CREATE_WEAR_FILE) {
+                        LogcatReceiver.requestLogs(this, uri)
                     }
                 }
             }
@@ -354,6 +370,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     }
 
     companion object {
-        const val CREATE_FILE = 1
+        const val CREATE_PHONE_FILE = 1
+        const val CREATE_WEAR_FILE = 2
     }
 }
