@@ -73,6 +73,16 @@
             android:textColor="#FFFFFF"
             android:textSize="14sp" />
 
+        <TextView
+            android:id="@+id/txtScheduleExactAlarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/activity_main_schedule_exact_alarm"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textAlignment="center" />
+
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchLibreView"
             android:layout_width="match_parent"
@@ -134,7 +144,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="@string/activity_main_high_contrast_enabled"
-            android:visibility="gone"
             android:textSize="14sp"
             android:textAlignment="center"
             tools:ignore="HardcodedText" />

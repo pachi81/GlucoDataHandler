@@ -309,5 +309,8 @@
     <string name="logcat_save_failed">Failed saving logs!</string>
     <string name="logcat_wear_save_succeeded">Logs from wear saved successfully</string>
     <string name="logcat_wear_save_failed">Failed saving logs from wear!</string>
+    <string name="request_exact_alarm_summary">This app needs for all its intervals an exact alarm.\nAs Google forbid to set it automatically, please activate this permission in the next screen.</string>
+    <string name="request_exact_alarm_title">Exact alarms permission</string>
+    <string name="activity_main_schedule_exact_alarm">Schedule exact alarm is disabled!!!\nGlucoDataHandler may not work correct!!!\nPress here to go direct to the permission.</string>
 
 </resources>

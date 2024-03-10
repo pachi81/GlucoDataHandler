@@ -19,6 +19,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuCompat
 import androidx.preference.PreferenceManager
@@ -51,6 +52,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtSourceInfo: TextView
     private lateinit var txtBatteryOptimization: TextView
     private lateinit var txtHighContrastEnabled: TextView
+    private lateinit var txtScheduleExactAlarm: TextView
     private lateinit var btnSources: Button
     private lateinit var sharedPref: SharedPreferences
     private lateinit var optionsMenu: Menu
@@ -73,6 +75,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             txtSourceInfo = findViewById(R.id.txtSourceInfo)
             txtBatteryOptimization = findViewById(R.id.txtBatteryOptimization)
             txtHighContrastEnabled = findViewById(R.id.txtHighContrastEnabled)
+            txtScheduleExactAlarm = findViewById(R.id.txtScheduleExactAlarm)
             btnSources = findViewById(R.id.btnSources)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
@@ -148,6 +151,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.CAR_CONNECTION,
                 NotifySource.OBSOLETE_VALUE,
                 NotifySource.SOURCE_STATE_CHANGE))
+            checkExactAlarmPermission()
             checkBatteryOptimization()
             checkHighContrast()
 
@@ -171,14 +175,50 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 return false
             }
         }
+        requestExactAlarmPermission()
+        return true
+    }
+
+    private fun canScheduleExactAlarms(): Boolean {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            if (!alarmManager.canScheduleExactAlarms()) {
-                Log.i(LOG_ID, "Request exact alarm permission...")
-                startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
-            }
+            return alarmManager.canScheduleExactAlarms()
         }
         return true
+    }
+
+    private fun requestExactAlarmPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !canScheduleExactAlarms()) {
+            Log.i(LOG_ID, "Request exact alarm permission...")
+            val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+            builder
+                .setTitle(CR.string.request_exact_alarm_title)
+                .setMessage(CR.string.request_exact_alarm_summary)
+                .setPositiveButton(CR.string.button_ok) { dialog, which ->
+                    startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+                }
+                .setNegativeButton(CR.string.button_cancel) { dialog, which ->
+                    // Do something else.
+                }
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
+    }
+    private fun checkExactAlarmPermission() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !canScheduleExactAlarms()) {
+                Log.w(LOG_ID, "Schedule exact alarm is not active!!!")
+                txtScheduleExactAlarm.visibility = View.VISIBLE
+                txtScheduleExactAlarm.setOnClickListener {
+                    startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+                }
+            } else {
+                txtScheduleExactAlarm.visibility = View.GONE
+                Log.i(LOG_ID, "Schedule exact alarm is active")
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
+        }
     }
 
     private fun checkBatteryOptimization() {
@@ -281,8 +321,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 }
                 R.id.group_log_title -> {
                     Log.v(LOG_ID, "log group selected")
-                    val item: MenuItem = optionsMenu.findItem(R.id.action_save_wear_logs)
-                    item.isEnabled = WearPhoneConnection.nodesConnected && !LogcatReceiver.isActive
+                    val menuIt: MenuItem = optionsMenu.findItem(R.id.action_save_wear_logs)
+                    menuIt.isEnabled = WearPhoneConnection.nodesConnected && !LogcatReceiver.isActive
                 }
                 else -> return super.onOptionsItemSelected(item)
             }

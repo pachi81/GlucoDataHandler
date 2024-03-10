@@ -87,15 +87,26 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="UselessParent">
         <TextView
+            android:id="@+id/txtScheduleExactAlarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/activity_main_schedule_exact_alarm"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/txtSourceInfo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+        <TextView
             android:id="@+id/txtHighContrastEnabled"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:text="@string/activity_main_high_contrast_enabled"
             android:textSize="16sp"
-            android:visibility="gone"
             android:textAlignment="center"
-            app:layout_constraintBottom_toTopOf="@+id/txtSourceInfo"
+            app:layout_constraintBottom_toTopOf="@+id/txtScheduleExactAlarm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
         <TextView
@@ -105,7 +116,6 @@
             android:layout_marginBottom="10dp"
             android:text="@string/activity_main_battery_optimization_disabled"
             android:textSize="16sp"
-            android:visibility="gone"
             android:textAlignment="center"
             app:layout_constraintBottom_toTopOf="@+id/txtSourceInfo"
             app:layout_constraintEnd_toEndOf="parent"
