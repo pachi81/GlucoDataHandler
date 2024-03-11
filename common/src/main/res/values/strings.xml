@@ -322,7 +322,7 @@
     <string name="logcat_save_failed">Failed saving logs!</string>
     <string name="logcat_wear_save_succeeded">Logs from wear saved successfully</string>
     <string name="logcat_wear_save_failed">Failed saving logs from wear!</string>
-    <string name="request_exact_alarm_summary">For all time/interval related work, this app requires the permission for alarms & reminders.\nIt will not add or change any user reminders, it is only for internal scheduling.\nIf you press ok, you will forward to the permission setting to enable it for GlucoDataHandler.</string>
-    <string name="request_exact_alarm_title">Alarms & reminders permission</string>
+    <string name="request_exact_alarm_summary">For all time/interval related work, this app requires the permission for alarms &amp; reminders.\nIt will not add or change any user reminders, it is only for internal scheduling.\nIf you press OK, you will forward to the permission setting to enable it for GlucoDataHandler.</string>
+    <string name="request_exact_alarm_title">Alarms &amp; reminders permission</string>
     <string name="activity_main_schedule_exact_alarm">Schedule exact alarm is disabled!!!\nGlucoDataHandler may not work correct!!!\nPress here to go direct to the permission setting.</string>
 </resources>
