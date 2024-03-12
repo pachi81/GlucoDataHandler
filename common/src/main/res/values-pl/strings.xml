@@ -309,8 +309,8 @@
     <string name="logcat_save_failed">Zapisanie logów nie powiodło się!</string>
     <string name="logcat_wear_save_succeeded">Logi z zegarka zapisane pomyślnie</string>
     <string name="logcat_wear_save_failed">Zapisanie logów z zegarka nie powiodło się!</string>
-    <string name="request_exact_alarm_summary">W przypadku wszystkich zadań związanych z czasem i odstępami czasu aplikacja wymaga udzielenia uprawnień do obsługi alarmów i przypomnień.\nAplikacja nie dodaje ani nie zmienia żadnych alarmów ani przypomnień skonfigurowanych przez użytkownika. Wymaga jedynie pozwolenia dla uruchamiania wewnętrznych wyzwalaczy.\nJeśli naciśniesz OK, zostaniesz przekierowany do ustawień uprawnień, aby włączyć je dla GlucoDataHandler.</string>
+    <string name="request_exact_alarm_summary">W przypadku wszystkich zadań związanych z czasem i odstępami czasu aplikacja wymaga udzielenia uprawnień do ich obsługi.\nAplikacja nie dodaje ani nie zmienia żadnych alarmów i przypomnień, które ustawił użytkownik. Wymaga jedynie pozwolenia na uruchamianie wewnętrznych wyzwalaczy.\nJeśli naciśniesz OK, otwarte zostaną ustawienia uprawnień, gdzie można je nadać dla GlucoDataHandler.</string>
     <string name="request_exact_alarm_title">Zezwalaj na ustawianie alarmów i przypomnień</string>
-    <string name="activity_main_schedule_exact_alarm">Uprawnienie na ustawianie i planowanie alarmów i przypomnień jest wyłączone!!!\nGlucoDataHandler może nie działać poprawnie!!!\nNaciśnij tutaj, aby przejść bezpośrednio do uprawnienia.</string>
+    <string name="activity_main_schedule_exact_alarm">Uprawnienie do ustawiania alarmów i przypomnień jest wyłączone!!!\nGlucoDataHandler może nie działać poprawnie!!!\nNaciśnij tutaj, aby przejść bezpośrednio do ustawień.</string>
 
 </resources>
