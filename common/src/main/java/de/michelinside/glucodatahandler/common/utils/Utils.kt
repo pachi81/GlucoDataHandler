@@ -200,7 +200,7 @@ object Utils {
 
     fun saveLogs(outputStream: OutputStream) {
         try {
-            val cmd = "logcat -t 1000"
+            val cmd = "logcat -t 3000"
             Log.i(LOG_ID, "Getting logcat with command: $cmd")
             val process = Runtime.getRuntime().exec(cmd)
             val thread = Thread {
