@@ -10,7 +10,8 @@ enum class DataSource(val resId: Int) {
     WEAR(R.string.source_wear),
     LIBREVIEW(R.string.source_libreview),
     NIGHTSCOUT(R.string.source_nightscout),
-    AAPS(R.string.source_aaps);
+    AAPS(R.string.source_aaps),
+    GDH(R.string.source_gdh);
     
     companion object {
         fun fromIndex(idx: Int): DataSource {

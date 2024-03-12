@@ -4,10 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import de.michelinside.glucodataauto.GlucoDataServiceAuto
-import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
+import de.michelinside.glucodatahandler.common.receiver.AAPSReceiver as BaseAAPSReceiver
 
-class XDripReceiver : XDripBroadcastReceiver() {
-    private val LOG_ID = "GDH.AA.XDripReceiver"
+class AAPSReceiver : BaseAAPSReceiver() {
+    private val LOG_ID = "GDH.AA.AAPSReceiver"
     override fun onReceive(context: Context, intent: Intent) {
         try {
             Log.v(LOG_ID, intent.action + " receveived: " + intent.extras.toString())

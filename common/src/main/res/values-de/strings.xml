@@ -294,5 +294,21 @@
     <string name="source_aaps">AAPS</string>
     <string name="pref_source_aaps_info">AndroidAPS</string>
     <string name="pref_source_aaps_info_summary">Konfiguration von AAPS:\n- AAPS App öffnen\n- \"Konfiguration\" öffnen\n- \"Samsung Tizen\" aktivieren</string>
+    <string name="pref_switch_watchdrip_enabled">WatchDrip+</string>
+    <string name="pref_switch_watchdrip_enabled_summary">"Aktiviere WatchDrip+ Verbindung (ohne Graph).\nWICHTIG: Aktiviere \"Enable service\" in WatchDrip+ erst nachdem es hier aktiviert wurde!"</string>
+    <string name="pref_car_notification_reappear_interval">Wieder erscheinen</string>
+    <string name="pref_car_notification_reappear_interval_summary">Intervall, wann die Benachrichtigung wieder erscheinen soll, wenn es keinen neuen Wert gibt (0 für nie).</string>
+    <string name="pref_aa_media_player_icon_style_summary">Stil des Icons/Hintergrundbildes für den Dummy Media Player.</string>
+    <string name="pref_aa_media_player_icon_style">Icon/image style</string>
+    <string name="menu_save_mobile_logs">Telefon</string>
+    <string name="menu_save_wear_logs">Uhr</string>
+    <string name="menu_save_logs">Logs speichern</string>
+    <string name="logcat_save_succeeded">Logs erfolgreich gespeichert</string>
+    <string name="logcat_save_failed">Fehler beim Speichern der Logs!</string>
+    <string name="logcat_wear_save_succeeded">Logs von der Uhr erfolgreich gespeichert</string>
+    <string name="logcat_wear_save_failed">Fehler beim Speichern der Logs von der Uhr!</string>
+    <string name="request_exact_alarm_summary">Für alle Zeit und Intervall spezifischen Aufgaben, benötigt die App die Berechtigung für Wecker und Erinnerungen.\nDie App verändert keine vom Benutzer eingerichteten Wecker oder Erinnerung. Sie benötigt die Berechtigung nur für interne Trigger.\nNach dem Drücken von OK leitet die App Sie zur entsprechenden Berechtigungseinstellung weiter. Bitte aktivieren Sie diese Berechtigung für GlucoDataHandler.</string>
+    <string name="request_exact_alarm_title">Berechtigung für Wecker und Erinnerungen</string>
+    <string name="activity_main_schedule_exact_alarm">Genaue Bearbeitung von Intervallen deaktiviert!!!\nKorrekte Funktionalität von GlucoDataHandler ist nicht gewährleistet!!!\nBitte hier drücken, um zu der entsprechenden Berechtigungseinstellung zu gelangen.</string>
 
 </resources>

@@ -21,7 +21,7 @@ open class AAPSReceiver: BroadcastReceiver() {
         private const val BG_SLOPE = "slopeArrow" // string: direction arrow as string
         private const val IOB_VALUE = "iob" // double
         private const val COB_VALUE = "cob" // double: COB [g] or -1 if N/A
-        private const val PUMP_STATUS = "pumpStatus"         // string
+        //private const val PUMP_STATUS = "pumpStatus"         // string
         private const val PROFILE_NAME = "profile"         // string
     }
 
@@ -37,8 +37,14 @@ open class AAPSReceiver: BroadcastReceiver() {
                         val glucoExtras = Bundle()
                         glucoExtras.putLong(ReceiveData.TIME, extras.getLong(BG_TIMESTAMP))
                         glucoExtras.putInt(ReceiveData.MGDL,mgdl.toInt())
-                        if(extras.containsKey(BG_UNITS) && extras.getString(BG_UNITS) == "mmol") {
-                            glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, GlucoDataUtils.mgToMmol(mgdl))
+                        if(extras.containsKey(BG_UNITS)) {
+                            val unit = extras.getString(BG_UNITS)
+                            if(unit == "mmol")
+                                glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, GlucoDataUtils.mgToMmol(mgdl))
+                            else if(unit == "mg/dl")
+                                glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, mgdl)
+                            else
+                                Log.w(LOG_ID, "No valid unit received: " + unit)
                         }
                         val slopeName = extras.getString(BG_SLOPE)
                         var slope = Float.NaN
@@ -61,9 +67,7 @@ open class AAPSReceiver: BroadcastReceiver() {
                         } else {
                             glucoExtras.putFloat(ReceiveData.COB, Float.NaN)
                         }
-                        if(extras.containsKey(PUMP_STATUS)) {
-                            glucoExtras.putString(ReceiveData.SERIAL, extras.getString(PUMP_STATUS))
-                        } else if(extras.containsKey(PROFILE_NAME)) {
+                        if(extras.containsKey(PROFILE_NAME)) {
                             glucoExtras.putString(ReceiveData.SERIAL, extras.getString(PROFILE_NAME))
                         }
                         ReceiveData.handleIntent(context, DataSource.AAPS, glucoExtras)

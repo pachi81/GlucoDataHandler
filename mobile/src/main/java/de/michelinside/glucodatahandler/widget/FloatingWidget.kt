@@ -43,34 +43,57 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
 
     @SuppressLint("InflateParams")
     fun create() {
-        Log.d(LOG_ID, "create called")
-        sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-        sharedPref.registerOnSharedPreferenceChangeListener(this)
+        try {
+            Log.d(LOG_ID, "create called")
+            sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            sharedPref.registerOnSharedPreferenceChangeListener(this)
 
-        sharedInternalPref = context.getSharedPreferences(Constants.SHARED_PREF_INTERNAL_TAG, Context.MODE_PRIVATE)
+            sharedInternalPref = context.getSharedPreferences(Constants.SHARED_PREF_INTERNAL_TAG, Context.MODE_PRIVATE)
 
-        //getting the widget layout from xml using layout inflater
-        floatingView = LayoutInflater.from(context).inflate(R.layout.floating_widget, null)
-        txtBgValue = floatingView.findViewById(R.id.glucose)
-        viewIcon = floatingView.findViewById(R.id.trendImage)
-        txtDelta = floatingView.findViewById(R.id.deltaText)
-        txtTime = floatingView.findViewById(R.id.timeText)
-        txtIob = floatingView.findViewById(R.id.iobText)
-        txtCob = floatingView.findViewById(R.id.cobText)
-        //setting the layout parameters
-        update()
+            //getting the widget layout from xml using layout inflater
+            floatingView = LayoutInflater.from(context).inflate(R.layout.floating_widget, null)
+            txtBgValue = floatingView.findViewById(R.id.glucose)
+            viewIcon = floatingView.findViewById(R.id.trendImage)
+            txtDelta = floatingView.findViewById(R.id.deltaText)
+            txtTime = floatingView.findViewById(R.id.timeText)
+            txtIob = floatingView.findViewById(R.id.iobText)
+            txtCob = floatingView.findViewById(R.id.cobText)
+            //setting the layout parameters
+            update()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "create exception: " + exc.message.toString() )
+        }
     }
 
     fun destroy() {
-        Log.d(LOG_ID, "destroy called")
-        sharedPref.unregisterOnSharedPreferenceChangeListener(this)
-        remove()
+        try {
+            Log.d(LOG_ID, "destroy called")
+            sharedPref.unregisterOnSharedPreferenceChangeListener(this)
+            remove()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "destroy exception: " + exc.message.toString() )
+        }
     }
 
     private fun remove() {
         Log.d(LOG_ID, "remove called")
-        InternalNotifier.remNotifier(context, this)
-        if (windowManager != null) windowManager?.removeView(floatingView)
+        try {
+            InternalNotifier.remNotifier(context, this)
+            if (windowManager != null) {
+                try {
+                    with(sharedInternalPref.edit()) {
+                        putInt(Constants.SHARED_PREF_FLOATING_WIDGET_X,params.x)
+                        putInt(Constants.SHARED_PREF_FLOATING_WIDGET_Y,params.y)
+                        apply()
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "saving pos exception: " + exc.message.toString() )
+                }
+                windowManager?.removeView(floatingView)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "remove exception: " + exc.message.toString() )
+        }
         windowManager = null
     }
 
@@ -182,89 +205,97 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
     }
 
     private fun createWindow() {
-        Log.d(LOG_ID, "create window")
-        params = WindowManager.LayoutParams(
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-            PixelFormat.TRANSLUCENT
-        )
-        params.gravity = Gravity.TOP or Gravity.START
-        params.x = maxOf(sharedInternalPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_X, 100), 0)
-        params.y = maxOf(sharedInternalPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_Y, 100), 0)
+        try {
+            Log.d(LOG_ID, "create window")
+            params = WindowManager.LayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT
+            )
+            params.gravity = Gravity.TOP or Gravity.START
+            params.x = maxOf(sharedInternalPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_X, 100), 0)
+            params.y = maxOf(sharedInternalPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_Y, 100), 0)
 
-        windowManager = context.getSystemService(WINDOW_SERVICE) as WindowManager?
-        windowManager!!.addView(floatingView, params)
+            windowManager = context.getSystemService(WINDOW_SERVICE) as WindowManager?
+            windowManager!!.addView(floatingView, params)
 
-        val widget = floatingView.findViewById<View>(R.id.widget)
-        widget.setBackgroundColor(Utils.getBackgroundColor(sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY, 3)))
-        widget.setOnClickListener {
-            Log.d(LOG_ID, "onClick called")
-            var launchIntent: Intent? =
-                context.packageManager.getLaunchIntentForPackage("tk.glucodata")
-            if (launchIntent == null) {
-                launchIntent = Intent(context, MainActivity::class.java)
+            val widget = floatingView.findViewById<View>(R.id.widget)
+            widget.setBackgroundColor(Utils.getBackgroundColor(sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY, 3)))
+            widget.setOnClickListener {
+                Log.d(LOG_ID, "onClick called")
+                var launchIntent: Intent? =
+                    context.packageManager.getLaunchIntentForPackage("tk.glucodata")
+                if (launchIntent == null) {
+                    launchIntent = Intent(context, MainActivity::class.java)
+                }
+                launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(launchIntent)
             }
-            launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            context.startActivity(launchIntent)
-        }
-        widget.setOnLongClickListener {
-            Log.d(LOG_ID, "onLongClick called")
-            with(sharedPref.edit()) {
-                putBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false)
-                apply()
+            widget.setOnLongClickListener {
+                Log.d(LOG_ID, "onLongClick called")
+                with(sharedPref.edit()) {
+                    putBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false)
+                    apply()
+                }
+                remove()
+                true
             }
-            remove()
-            true
-        }
-        widget.setOnTouchListener(object : OnTouchListener {
-            private var initialX = 0
-            private var initialY = 0
-            private var initialTouchX = 0f
-            private var initialTouchY = 0f
-            private var startClickTime : Long = 0
-            override fun onTouch(v: View, event: MotionEvent): Boolean {
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        initialX = params.x
-                        initialY = params.y
-                        initialTouchX = event.rawX
-                        initialTouchY = event.rawY
-                        startClickTime = Calendar.getInstance().timeInMillis
-                        return true
-                    }
-                    MotionEvent.ACTION_UP -> {
-                        // only check duration, if there was no movement...
-                        with(sharedInternalPref.edit()) {
-                            putInt(Constants.SHARED_PREF_FLOATING_WIDGET_X,params.x)
-                            putInt(Constants.SHARED_PREF_FLOATING_WIDGET_Y,params.y)
-                            apply()
-                        }
-                        if  (Math.abs(params.x - initialX) < 50 && Math.abs(params.y - initialY) < 50 ) {
-                            val duration = Calendar.getInstance().timeInMillis - startClickTime
-                            Log.d(LOG_ID, "Duration: " + duration.toString() + " - x=" + Math.abs(params.x - initialX) + " y=" + Math.abs(params.y - initialY) )
-                            if (duration < 200) {
-                                Log.d(LOG_ID, "Call onClick after " + duration.toString() + "ms")
-                                widget.performClick()
-                            } else if (duration > 4000) {
-                                Log.d(LOG_ID, "Call onLongClick after " + duration.toString() + "ms")
-                                widget.performLongClick()
+            widget.setOnTouchListener(object : OnTouchListener {
+                private var initialX = 0
+                private var initialY = 0
+                private var initialTouchX = 0f
+                private var initialTouchY = 0f
+                private var startClickTime : Long = 0
+                override fun onTouch(v: View, event: MotionEvent): Boolean {
+                    try {
+                        when (event.action) {
+                            MotionEvent.ACTION_DOWN -> {
+                                initialX = params.x
+                                initialY = params.y
+                                initialTouchX = event.rawX
+                                initialTouchY = event.rawY
+                                startClickTime = Calendar.getInstance().timeInMillis
+                                return true
+                            }
+                            MotionEvent.ACTION_UP -> {
+                                // only check duration, if there was no movement...
+                                with(sharedInternalPref.edit()) {
+                                    putInt(Constants.SHARED_PREF_FLOATING_WIDGET_X,params.x)
+                                    putInt(Constants.SHARED_PREF_FLOATING_WIDGET_Y,params.y)
+                                    apply()
+                                }
+                                if  (Math.abs(params.x - initialX) < 50 && Math.abs(params.y - initialY) < 50 ) {
+                                    val duration = Calendar.getInstance().timeInMillis - startClickTime
+                                    Log.d(LOG_ID, "Duration: " + duration.toString() + " - x=" + Math.abs(params.x - initialX) + " y=" + Math.abs(params.y - initialY) )
+                                    if (duration < 200) {
+                                        Log.d(LOG_ID, "Call onClick after " + duration.toString() + "ms")
+                                        widget.performClick()
+                                    } else if (duration > 4000) {
+                                        Log.d(LOG_ID, "Call onLongClick after " + duration.toString() + "ms")
+                                        widget.performLongClick()
+                                    }
+                                }
+                                return true
+                            }
+                            MotionEvent.ACTION_MOVE -> {
+                                //this code is helping the widget to move around the screen with fingers
+                                params.x = initialX + (event.rawX - initialTouchX).toInt()
+                                params.y = initialY + (event.rawY - initialTouchY).toInt()
+                                windowManager!!.updateViewLayout(floatingView, params)
+                                return true
                             }
                         }
-                        return true
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "onTouch exception: " + exc.toString() )
                     }
-                    MotionEvent.ACTION_MOVE -> {
-                        //this code is helping the widget to move around the screen with fingers
-                        params.x = initialX + (event.rawX - initialTouchX).toInt()
-                        params.y = initialY + (event.rawY - initialTouchY).toInt()
-                        windowManager!!.updateViewLayout(floatingView, params)
-                        return true
-                    }
+                    return false
                 }
-                return false
-            }
-        })
+            })
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "createWindow exception: " + exc.message.toString() )
+        }
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {

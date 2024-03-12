@@ -32,6 +32,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtConnInfo: TextView
     private lateinit var txtSourceInfo: TextView
     private lateinit var txtHighContrastEnabled: TextView
+    private lateinit var txtScheduleExactAlarm: TextView
     private lateinit var switchColoredAod: SwitchCompat
     private lateinit var switchLargeTrendArrow: SwitchCompat
     private lateinit var switchNotifcation: SwitchCompat
@@ -58,6 +59,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
             txtConnInfo = findViewById(R.id.txtConnInfo)
             txtSourceInfo = findViewById(R.id.txtSourceInfo)
             txtHighContrastEnabled = findViewById(R.id.txtHighContrastEnabled)
+            txtScheduleExactAlarm = findViewById(R.id.txtScheduleExactAlarm)
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
@@ -79,11 +81,13 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                         apply()
                     }
                     val serviceIntent = Intent(this, GlucoDataServiceWear::class.java)
-                    if (isChecked)
+                    if (isChecked) {
                         serviceIntent.putExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
-                    else
+                        this.startForegroundService(serviceIntent)
+                    } else {
                         serviceIntent.putExtra(Constants.ACTION_STOP_FOREGROUND, true)
-                    this.startService(serviceIntent)
+                        this.startService(serviceIntent)
+                    }
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Changing foreground service exception: " + exc.message.toString() )
                 }
@@ -210,7 +214,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.OBSOLETE_VALUE,
                 NotifySource.SOURCE_SETTINGS,
                 NotifySource.SOURCE_STATE_CHANGE))
-
+            checkExactAlarmPermission()
             checkHighContrast()
             if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Notification permission granted")
@@ -232,14 +236,39 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 return false
             }
         }
+        requestExactAlarmPermission()
+        return true
+    }
+
+    private fun canScheduleExactAlarms(): Boolean {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            if (!alarmManager.canScheduleExactAlarms()) {
-                Log.i(LOG_ID, "Request exact alarm permission...")
-                startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
-            }
+            return alarmManager.canScheduleExactAlarms()
         }
         return true
+    }
+
+    private fun requestExactAlarmPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !canScheduleExactAlarms()) {
+            Log.i(LOG_ID, "Request exact alarm permission...")
+            startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+        }
+    }
+    private fun checkExactAlarmPermission() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !canScheduleExactAlarms()) {
+                Log.w(LOG_ID, "Schedule exact alarm is not active!!!")
+                txtScheduleExactAlarm.visibility = View.VISIBLE
+                txtScheduleExactAlarm.setOnClickListener {
+                    startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+                }
+            } else {
+                txtScheduleExactAlarm.visibility = View.GONE
+                Log.i(LOG_ID, "Schedule exact alarm is active")
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
+        }
     }
 
     private fun checkHighContrast() {

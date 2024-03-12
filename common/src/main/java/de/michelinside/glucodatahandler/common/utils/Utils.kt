@@ -6,15 +6,22 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.*
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.os.Parcel
 import android.provider.Settings
 import android.util.Log
 import android.util.TypedValue
+import android.widget.Toast
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.R
+import java.io.FileOutputStream
+import java.io.OutputStream
 import java.math.RoundingMode
 import java.security.MessageDigest
+import java.util.concurrent.TimeUnit
 
 
 object Utils {
@@ -69,15 +76,20 @@ object Utils {
     }
 
     fun dumpBundle(bundle: Bundle?): String {
-        if (bundle == null) {
-            return "NULL"
+        try {
+            if (bundle == null) {
+                return "NULL"
+            }
+            var string = "{"
+            for (key in bundle.keySet()) {
+                string += " " + key + " => " + (if (bundle[key] != null) bundle[key].toString() else "NULL") + "\r\n"
+            }
+            string += " }"
+            return string
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "dumpBundle exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
         }
-        var string = "{"
-        for (key in bundle.keySet()) {
-            string += " " + key + " => " + (if (bundle[key] != null) bundle[key].toString() else "NULL") + "\r\n"
-        }
-        string += " }"
-        return string
+        return bundle.toString()
     }
 
     @SuppressLint("ObsoleteSdkInt")
@@ -170,6 +182,66 @@ object Utils {
             Log.e(LOG_ID, "Exception while encrypt SHA-1: " + ex)
         }
         return ""
+    }
+
+    fun saveLogs(context: Context, uri: Uri) {
+        try {
+            Thread {
+                context.contentResolver.openFileDescriptor(uri, "w")?.use {
+                    FileOutputStream(it.fileDescriptor).use { os ->
+                        saveLogs(os)
+                    }
+                }
+            }.start()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Saving logs to file exception: " + exc.message.toString() )
+        }
+    }
+
+    fun saveLogs(outputStream: OutputStream) {
+        try {
+            val cmd = "logcat -t 3000"
+            Log.i(LOG_ID, "Getting logcat with command: $cmd")
+            val process = Runtime.getRuntime().exec(cmd)
+            val thread = Thread {
+                try {
+                    Log.v(LOG_ID, "read")
+                    val buffer = ByteArray(4 * 1024) // or other buffer size
+                    var read: Int
+                    while (process.inputStream.read(buffer).also { rb -> read = rb } != -1) {
+                        Log.v(LOG_ID, "write")
+                        outputStream.write(buffer, 0, read)
+                    }
+                    Log.v(LOG_ID, "flush")
+                    outputStream.flush()
+                    outputStream.close()
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Writing logs exception: " + exc.message.toString() )
+                }
+            }
+            thread.start()
+            Log.v(LOG_ID, "Waiting for saving logs")
+            process.waitFor(10, TimeUnit.SECONDS)
+            Log.v(LOG_ID, "Process alive: ${process.isAlive}")
+            var count = 0
+            while (process.isAlive && count < 10) {
+                Log.w(LOG_ID, "Killing process")
+                process.destroy()
+                Thread.sleep(1000)
+                count++
+            }
+            Log.v(LOG_ID, "Process exit: ${process.exitValue()}")
+            val text = if (process.exitValue() == 0) {
+                GlucoDataService.context!!.resources.getText(R.string.logcat_save_succeeded)
+            } else {
+                GlucoDataService.context!!.resources.getText(R.string.logcat_save_failed)
+            }
+            Handler(GlucoDataService.context!!.mainLooper).post {
+                Toast.makeText(GlucoDataService.context!!, text, Toast.LENGTH_SHORT).show()
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Saving logs exception: " + exc.message.toString() )
+        }
     }
 
 }

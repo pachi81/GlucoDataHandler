@@ -13,14 +13,13 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.media.MediaBrowserServiceCompat
+import de.michelinside.glucodataauto.GlucoDataServiceAuto
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
-import de.michelinside.glucodatahandler.common.tasks.BackgroundWorker
-import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 
 class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GDH.AA.CarMediaBrowserService"
@@ -29,13 +28,17 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     private lateinit var  sharedPref: SharedPreferences
     private lateinit var session: MediaSessionCompat
 
+    companion object {
+        var active = false
+    }
+
     override fun onCreate() {
         Log.v(LOG_ID, "onCreate")
         try {
             super.onCreate()
-            TimeTaskService.useWorker = true
-            CarNotification.initNotification(this)
-            ReceiveData.initData(this)
+            active = true
+            GlucoDataServiceAuto.init(this)
+            GlucoDataServiceAuto.start(this)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
 
@@ -69,11 +72,11 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     override fun onDestroy() {
         Log.v(LOG_ID, "onDestroy")
         try {
+            active = false
             InternalNotifier.remNotifier(this, this)
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
             session.release()
-            CarNotification.cleanupNotification(this)
-            BackgroundWorker.stopAllWork(this)
+            GlucoDataServiceAuto.stop(this)
             super.onDestroy()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )
@@ -123,7 +126,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         Log.v(LOG_ID, "onSharedPreferenceChanged called for key " + key)
         try {
             when(key) {
-                Constants.SHARED_PREF_CAR_MEDIA -> {
+                Constants.SHARED_PREF_CAR_MEDIA,
+                Constants.SHARED_PREF_CAR_MEDIA_ICON_STYLE -> {
                     notifyChildrenChanged(MEDIA_ROOT_ID)
                 }
             }
@@ -133,12 +137,18 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     }
 
     private fun getIcon(size: Int = 100): Bitmap? {
-        return BitmapUtils.textRateToBitmap(ReceiveData.getClucoseAsString(), ReceiveData.rate, ReceiveData.getClucoseColor(), ReceiveData.isObsolete(
-            Constants.VALUE_OBSOLETE_SHORT_SEC), ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),
-            size, size)
+        return when(sharedPref.getString(Constants.SHARED_PREF_CAR_MEDIA_ICON_STYLE, Constants.AA_MEDIA_ICON_STYLE_GLUCOSE_TREND)) {
+            Constants.AA_MEDIA_ICON_STYLE_TREND -> {
+                BitmapUtils.getRateAsBitmap(width = size, height = size)
+            }
+            else -> {
+                BitmapUtils.getGlucoseTrendBitmap(width = size, height = size)
+            }
+        }
     }
 
     private fun createMediaItem(): MediaBrowserCompat.MediaItem {
+        Log.v(LOG_ID, "createMediaItem called")
         if (sharedPref.getBoolean(Constants.SHARED_PREF_CAR_MEDIA,true)) {
             session.setPlaybackState(buildState(PlaybackState.STATE_PAUSED))
             session.setMetadata(
@@ -159,7 +169,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         }
         val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
             .setMediaId(MEDIA_GLUCOSE_ID)
-            .setTitle("Delta: " + ReceiveData.getDeltaAsString() + "\n" + ReceiveData.getElapsedTimeMinuteAsString(this))
+            .setTitle(ReceiveData.getClucoseAsString() + " (Δ " + ReceiveData.getDeltaAsString() + ")\n" + ReceiveData.getElapsedTimeMinuteAsString(this))
             //.setSubtitle(ReceiveData.timeformat.format(Date(ReceiveData.time)))
             .setIconBitmap(getIcon()!!)
         return MediaBrowserCompat.MediaItem(
@@ -167,6 +177,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     }
 
     private fun buildState(state: Int): PlaybackStateCompat? {
+        Log.v(LOG_ID, "buildState called for state " + state)
         return PlaybackStateCompat.Builder()
             .setState(
                 state,

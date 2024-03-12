@@ -1,5 +1,6 @@
 package de.michelinside.glucodataauto
 
+import android.app.Activity
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
@@ -19,7 +20,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuCompat
 import androidx.preference.PreferenceManager
-import de.michelinside.glucodataauto.android_auto.CarNotification
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
@@ -27,6 +27,9 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import de.michelinside.glucodatahandler.common.R as CR
 
 class MainActivity : AppCompatActivity(), NotifierInterface {
@@ -81,23 +84,18 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     apply()
                 }
             }
-            CarNotification.initNotification(this)
+            GlucoDataServiceAuto.init(this)
             requestPermission()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (!CarNotification.connected)
-            CarNotification.cleanupNotification(this)
-    }
-
     override fun onPause() {
         try {
             super.onPause()
             InternalNotifier.remNotifier(this, this)
+            GlucoDataServiceAuto.stopDataSync(this)
             Log.v(LOG_ID, "onPause called")
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.message.toString() )
@@ -125,6 +123,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 Log.i(LOG_ID, "Notification permission granted")
                 requestNotificationPermission = false
             }
+            GlucoDataServiceAuto.startDataSync(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
         }
@@ -214,6 +213,10 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     startActivity(mailIntent)
                     return true
                 }
+                R.id.action_save_mobile_logs -> {
+                    SaveMobileLogs()
+                    return true
+                }
                 else -> return super.onOptionsItemSelected(item)
             }
         } catch (exc: Exception) {
@@ -234,7 +237,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
             txtLastValue.text = ReceiveData.getAsString(this, CR.string.gda_no_data)
-            txtCarInfo.text = if (CarNotification.connected) resources.getText(CR.string.activity_main_car_connected_label) else resources.getText(CR.string.activity_main_car_disconnected_label)
+            txtCarInfo.text = if (GlucoDataServiceAuto.connected) resources.getText(CR.string.activity_main_car_connected_label) else resources.getText(CR.string.activity_main_car_disconnected_label)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
         }
@@ -243,5 +246,44 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.v(LOG_ID, "new intent received")
         update()
+    }
+
+    private fun SaveMobileLogs() {
+        try {
+            Log.v(LOG_ID, "Save mobile logs called")
+            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                type = "text/plain"
+                val currentDateandTime = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(
+                    Date()
+                )
+                val fileName = "GDA_" + currentDateandTime + ".txt"
+                putExtra(Intent.EXTRA_TITLE, fileName)
+            }
+            startActivityForResult(intent, CREATE_FILE)
+
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Saving mobile logs exception: " + exc.message.toString() )
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        try {
+            Log.v(LOG_ID, "onActivityResult called for requestCode: " + requestCode + " - resultCode: " + resultCode + " - data: " + Utils.dumpBundle(data?.extras))
+            super.onActivityResult(requestCode, resultCode, data)
+            if (resultCode == Activity.RESULT_OK) {
+                if (requestCode == CREATE_FILE) {
+                    data?.data?.also { uri ->
+                        Utils.saveLogs(this, uri)
+                    }
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Saving logs exception: " + exc.message.toString() )
+        }
+    }
+
+    companion object {
+        const val CREATE_FILE = 1
     }
 }

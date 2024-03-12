@@ -1,23 +1,60 @@
 package de.michelinside.glucodatahandler.android_auto
 
+import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.Build
+import android.os.Bundle
 import android.util.Log
 import androidx.car.app.connection.CarConnection
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notifier.*
+import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
+import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.tasker.setAndroidAutoConnectionState
 
 object CarModeReceiver {
     private const val LOG_ID = "GDH.CarModeReceiver"
     private var init = false
     private var car_connected = false
-    val connected: Boolean get() = car_connected
+    private var gda_enabled = false
+    val connected: Boolean get() {  // connected to GlucoDataAuto
+        if (!car_connected)
+            return gda_enabled
+        return car_connected
+    }
 
+    val AA_connected: Boolean get() {   // connected to Android Auto
+        return car_connected
+    }
+
+
+    class GDAReceiver: BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            Log.d(LOG_ID, "onReceive called for intent " + intent + ": " + Utils.dumpBundle(intent.extras))
+            gda_enabled = intent.getBooleanExtra(Constants.GLUCODATAAUTO_STATE_EXTRA, false)
+            if(!car_connected && gda_enabled) {
+                InternalNotifier.notify(context, NotifySource.CAR_CONNECTION, null)
+            }
+        }
+
+    }
+    private val gdaReceiver = GDAReceiver()
+
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     fun init(context: Context) {
         try {
             if(!init) {
                 Log.v(LOG_ID, "init called")
                 CarConnection(context).type.observeForever(CarModeReceiver::onConnectionStateUpdated)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    GlucoDataService.context!!.registerReceiver(gdaReceiver, IntentFilter(Constants.GLUCODATAAUTO_STATE_ACTION),
+                        Context.RECEIVER_EXPORTED or Context.RECEIVER_VISIBLE_TO_INSTANT_APPS)
+                } else {
+                    GlucoDataService.context!!.registerReceiver(gdaReceiver, IntentFilter(Constants.GLUCODATAAUTO_STATE_ACTION))
+                }
                 init = true
             }
         } catch (exc: Exception) {
@@ -30,6 +67,7 @@ object CarModeReceiver {
             if (init) {
                 Log.v(LOG_ID, "cleanup called")
                 CarConnection(context).type.removeObserver(CarModeReceiver::onConnectionStateUpdated)
+                GlucoDataService.context!!.unregisterReceiver(gdaReceiver)
                 init = false
             }
         } catch (exc: Exception) {
@@ -46,18 +84,37 @@ object CarModeReceiver {
                 else -> "Unknown car connection type"
             }
             Log.d(LOG_ID, "onConnectionStateUpdated: " + message + " (" + connectionState.toString() + ")")
+            val curState = connected
             if (connectionState == CarConnection.CONNECTION_TYPE_NOT_CONNECTED)  {
-                Log.i(LOG_ID, "Exited Car Mode")
-                car_connected = false
-                GlucoDataService.context?.setAndroidAutoConnectionState(false)
-            } else {
+                if (car_connected) {
+                    Log.i(LOG_ID, "Exited Car Mode")
+                    car_connected = false
+                    GlucoDataService.context?.setAndroidAutoConnectionState(false)
+                }
+            } else if(!car_connected){
                 Log.i(LOG_ID, "Entered Car Mode")
                 car_connected = true
                 GlucoDataService.context?.setAndroidAutoConnectionState(true)
             }
-            InternalNotifier.notify(GlucoDataService.context!!, NotifySource.CAR_CONNECTION, null)
+            if (curState != connected)
+                InternalNotifier.notify(GlucoDataService.context!!, NotifySource.CAR_CONNECTION, null)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onConnectionStateUpdated exception: " + exc.message.toString() )
+        }
+    }
+
+    fun sendToGlucoDataAuto(context: Context, extras: Bundle) {
+        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        if (connected && sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO, true) && Utils.isPackageAvailable(context, Constants.PACKAGE_GLUCODATAAUTO)) {
+            Log.d(LOG_ID, "sendToGlucoDataAuto")
+            val intent = Intent(Constants.GLUCODATA_ACTION)
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+            val settings = ReceiveData.getSettingsBundle()
+            settings.putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime)
+            extras.putBundle(Constants.SETTINGS_BUNDLE, settings)
+            intent.putExtras(extras)
+            intent.setPackage(Constants.PACKAGE_GLUCODATAAUTO)
+            context.sendBroadcast(intent)
         }
     }
 }

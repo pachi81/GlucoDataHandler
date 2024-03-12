@@ -2,9 +2,11 @@ package de.michelinside.glucodatahandler.common.tasks
 
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
@@ -34,6 +36,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     private var lastElapsedMinute = 0L
     private var isRunning: Boolean = false
     private var currentAlarmTime = 0L
+    protected var hasExactAlarmPermission = false
     private val elapsedTimeMinute: Long
         get() {
             return ReceiveData.getElapsedTimeMinute()
@@ -170,8 +173,10 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         return delayResult
     }
 
-    private fun checkTimer() {
+    fun checkTimer() {
         try {
+            if (context == null)
+                return // not yet initialized
             val newInterval = getInterval()
             val newDelay = getDelay()
             if (initialExecution || curInterval != newInterval || curDelay != newDelay) {
@@ -223,11 +228,12 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     private fun init() {
         if (pendingIntent == null) {
             Log.v(LOG_ID, "init pendingIntent")
-            val i = Intent(context, getAlarmReceiver())
+            val intent = Intent(context, getAlarmReceiver())
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
             pendingIntent = PendingIntent.getBroadcast(
                 context,
                 alarmReqId,
-                i,
+                intent,
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
             )
         }
@@ -238,20 +244,40 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         }
     }
 
-    private fun startTimer() {
+    fun active(): Boolean {
+        return (alarmManager != null && pendingIntent != null)
+    }
+
+    fun startTimer() {
         Log.v(LOG_ID, "startTimer called")
         val nextAlarm = getNextAlarm()
         if (nextAlarm != null) {
             init()
             if (alarmManager != null) {
+                hasExactAlarmPermission = true
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    if(!alarmManager!!.canScheduleExactAlarms()) {
+                        Log.d(LOG_ID, "Need permission to set exact alarm!")
+                        hasExactAlarmPermission = false
+                    }
+                }
+
                 if (currentAlarmTime != nextAlarm.timeInMillis) {
+                    if (hasExactAlarmPermission) {
+                        alarmManager!!.setExactAndAllowWhileIdle(
+                            AlarmManager.RTC_WAKEUP,
+                            nextAlarm.timeInMillis,
+                            pendingIntent!!
+                        )
+                    } else {
+                        alarmManager!!.setAndAllowWhileIdle(
+                            AlarmManager.RTC_WAKEUP,
+                            nextAlarm.timeInMillis,
+                            pendingIntent!!
+                        )
+                    }
                     currentAlarmTime = nextAlarm.timeInMillis
                     lastElapsedMinute = elapsedTimeMinute
-                    alarmManager!!.setExactAndAllowWhileIdle(
-                        AlarmManager.RTC_WAKEUP,
-                        nextAlarm.timeInMillis,
-                        pendingIntent!!
-                    )
                 } else {
                     Log.d(LOG_ID, "Ignore next alarm as it is already active")
                 }
@@ -264,7 +290,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         }
     }
 
-    private fun stopTimer() {
+    fun stopTimer() {
         if (alarmManager != null && pendingIntent != null) {
             Log.v(LOG_ID, "stopTimer called")
             alarmManager!!.cancel(pendingIntent!!)
@@ -349,3 +375,17 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     }
 }
 
+class AlarmPermissionReceiver: BroadcastReceiver() {
+    val LOG_ID = "GDH.Task.AlarmPermissionReceiver"
+    override fun onReceive(context: Context, intent: Intent) {
+        Log.i(LOG_ID, "Received broadcast " + intent.action + ": " + Utils.dumpBundle(intent.extras))
+        if (TimeTaskService.active()) {
+            TimeTaskService.stopTimer()
+            TimeTaskService.startTimer()
+        }
+        if (SourceTaskService.active()) {
+            SourceTaskService.stopTimer()
+            SourceTaskService.startTimer()
+        }
+    }
+}

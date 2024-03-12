@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler
 
+import android.app.Activity
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
@@ -18,21 +19,28 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuCompat
 import androidx.preference.PreferenceManager
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
+import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceStateData
-import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.watch.LogcatReceiver
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import de.michelinside.glucodatahandler.common.R as CR
+
 
 class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtBgValue: TextView
@@ -44,8 +52,10 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtSourceInfo: TextView
     private lateinit var txtBatteryOptimization: TextView
     private lateinit var txtHighContrastEnabled: TextView
+    private lateinit var txtScheduleExactAlarm: TextView
     private lateinit var btnSources: Button
     private lateinit var sharedPref: SharedPreferences
+    private lateinit var optionsMenu: Menu
     private val LOG_ID = "GDH.Main"
     private var requestNotificationPermission = false
 
@@ -65,6 +75,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             txtSourceInfo = findViewById(R.id.txtSourceInfo)
             txtBatteryOptimization = findViewById(R.id.txtBatteryOptimization)
             txtHighContrastEnabled = findViewById(R.id.txtHighContrastEnabled)
+            txtScheduleExactAlarm = findViewById(R.id.txtScheduleExactAlarm)
             btnSources = findViewById(R.id.btnSources)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
@@ -140,6 +151,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.CAR_CONNECTION,
                 NotifySource.OBSOLETE_VALUE,
                 NotifySource.SOURCE_STATE_CHANGE))
+            checkExactAlarmPermission()
             checkBatteryOptimization()
             checkHighContrast()
 
@@ -163,14 +175,50 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 return false
             }
         }
+        requestExactAlarmPermission()
+        return true
+    }
+
+    private fun canScheduleExactAlarms(): Boolean {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            if (!alarmManager.canScheduleExactAlarms()) {
-                Log.i(LOG_ID, "Request exact alarm permission...")
-                startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
-            }
+            return alarmManager.canScheduleExactAlarms()
         }
         return true
+    }
+
+    private fun requestExactAlarmPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !canScheduleExactAlarms()) {
+            Log.i(LOG_ID, "Request exact alarm permission...")
+            val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+            builder
+                .setTitle(CR.string.request_exact_alarm_title)
+                .setMessage(CR.string.request_exact_alarm_summary)
+                .setPositiveButton(CR.string.button_ok) { dialog, which ->
+                    startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+                }
+                .setNegativeButton(CR.string.button_cancel) { dialog, which ->
+                    // Do something else.
+                }
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
+    }
+    private fun checkExactAlarmPermission() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !canScheduleExactAlarms()) {
+                Log.w(LOG_ID, "Schedule exact alarm is not active!!!")
+                txtScheduleExactAlarm.visibility = View.VISIBLE
+                txtScheduleExactAlarm.setOnClickListener {
+                    startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+                }
+            } else {
+                txtScheduleExactAlarm.visibility = View.GONE
+                Log.i(LOG_ID, "Schedule exact alarm is active")
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
+        }
     }
 
     private fun checkBatteryOptimization() {
@@ -216,6 +264,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             val inflater = menuInflater
             inflater.inflate(R.menu.menu_items, menu)
             MenuCompat.setGroupDividerEnabled(menu!!, true)
+            optionsMenu = menu
             return true
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreateOptionsMenu exception: " + exc.message.toString() )
@@ -262,6 +311,19 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     startActivity(mailIntent)
                     return true
                 }
+                R.id.action_save_mobile_logs -> {
+                    SaveLogs(AppSource.PHONE_APP)
+                    return true
+                }
+                R.id.action_save_wear_logs -> {
+                    SaveLogs(AppSource.WEAR_APP)
+                    return true
+                }
+                R.id.group_log_title -> {
+                    Log.v(LOG_ID, "log group selected")
+                    val menuIt: MenuItem = optionsMenu.findItem(R.id.action_save_wear_logs)
+                    menuIt.isEnabled = WearPhoneConnection.nodesConnected && !LogcatReceiver.isActive
+                }
                 else -> return super.onOptionsItemSelected(item)
             }
         } catch (exc: Exception) {
@@ -288,7 +350,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             else
                 txtWearInfo.text = resources.getText(CR.string.activity_main_disconnected_label)
             if (Utils.isPackageAvailable(this, Constants.PACKAGE_GLUCODATAAUTO)) {
-                txtCarInfo.text = if (CarModeReceiver.connected) resources.getText(CR.string.activity_main_car_connected_label) else resources.getText(CR.string.activity_main_car_disconnected_label)
+                txtCarInfo.text = if (CarModeReceiver.AA_connected) resources.getText(CR.string.activity_main_car_connected_label) else resources.getText(CR.string.activity_main_car_disconnected_label)
                 txtCarInfo.visibility = View.VISIBLE
             } else {
                 txtCarInfo.visibility = View.GONE
@@ -309,5 +371,46 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.v(LOG_ID, "new intent received")
         update()
+    }
+
+    private fun SaveLogs(source: AppSource) {
+        try {
+            Log.v(LOG_ID, "Save logs called for " + source)
+            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                type = "text/plain"
+                val currentDateandTime = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+                val fileName = "GDH_" + source + "_" + currentDateandTime + ".txt"
+                putExtra(Intent.EXTRA_TITLE, fileName)
+            }
+            startActivityForResult(intent, if (source == AppSource.WEAR_APP) CREATE_WEAR_FILE else CREATE_PHONE_FILE)
+
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Saving mobile logs exception: " + exc.message.toString() )
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        try {
+            Log.v(LOG_ID, "onActivityResult called for requestCode: " + requestCode + " - resultCode: " + resultCode + " - data: " + Utils.dumpBundle(data?.extras))
+            super.onActivityResult(requestCode, resultCode, data)
+            if (resultCode == Activity.RESULT_OK) {
+                data?.data?.also { uri ->
+                    Log.v(LOG_ID, "Save logs to " + uri)
+                    if (requestCode == CREATE_PHONE_FILE) {
+                        Utils.saveLogs(this, uri)
+                    } else if(requestCode == CREATE_WEAR_FILE) {
+                        LogcatReceiver.requestLogs(this, uri)
+                    }
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Saving logs exception: " + exc.message.toString() )
+        }
+    }
+
+    companion object {
+        const val CREATE_PHONE_FILE = 1
+        const val CREATE_WEAR_FILE = 2
     }
 }

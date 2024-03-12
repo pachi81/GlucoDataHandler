@@ -36,19 +36,25 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
     companion object {
         private val LOG_ID = "GDH.GlucoDataService"
         private var isForegroundService = false
+        @JvmStatic
         @SuppressLint("StaticFieldLeak")
-        private var connection: WearPhoneConnection? = null
+        protected var connection: WearPhoneConnection? = null
         val foreground get() = isForegroundService
         const val NOTIFICATION_ID = 123
         var appSource = AppSource.NOT_SET
         private var isRunning = false
         val running get() = isRunning
+        @SuppressLint("StaticFieldLeak")
         var service: GlucoDataService? = null
-        val context: Context? get() {
+        var context: Context? get() {
             if(service != null)
                 return service!!.applicationContext
-            return null
+            return extContext
+        } set(value) {
+            extContext = value
         }
+        @SuppressLint("StaticFieldLeak")
+        private var extContext: Context? = null
         val sharedPref: SharedPreferences? get() {
             if (context != null) {
                 return context!!.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -64,16 +70,17 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                         context,
                         cls
                     )
+                    /*
                     val sharedPref = context.getSharedPreferences(
                         Constants.SHARED_PREF_TAG,
                         Context.MODE_PRIVATE
-                    )
+                    )*/
                     serviceIntent.putExtra(
                         Constants.SHARED_PREF_FOREGROUND_SERVICE,
-                        // on wear foreground is true as default: on phone it is set by notification
-                        sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
+                        // default on wear and phone
+                        true//sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
                     )
-                    context.startService(serviceIntent)
+                    context.startForegroundService(serviceIntent)
                 } catch (exc: Exception) {
                     Log.e(
                         LOG_ID,

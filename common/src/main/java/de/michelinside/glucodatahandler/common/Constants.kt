@@ -8,6 +8,8 @@ object Constants {
     const val SETTINGS_INTENT_MESSAGE_PATH = "/settings_intent"
     const val SOURCE_SETTINGS_INTENT_MESSAGE_PATH = "/source_settings_intent"
     const val REQUEST_DATA_MESSAGE_PATH = "/request_data_intent"
+    const val REQUEST_LOGCAT_MESSAGE_PATH = "/request_logcat_intent"
+    const val LOGCAT_CHANNEL_PATH = "/logcat_intent"
     const val GLUCODATA_BROADCAST_ACTION = "glucodata.Minute"
     const val SETTINGS_BUNDLE = "settings_bundle"
     const val SOURCE_SETTINGS_BUNDLE = "source_settings_bundle"
@@ -22,13 +24,16 @@ object Constants {
     const val XDRIP_BROADCAST_ACTION = "com.eveningoutpost.dexdrip.BgEstimate"
 
     const val GLUCODATA_ACTION = "de.michelinside.glucodatahandler.GLUCODATA"
+    const val GLUCODATAAUTO_STATE_ACTION = "de.michelinside.glucodataauto.state"
     const val PACKAGE_GLUCODATAAUTO = "de.michelinside.glucodataauto"
+    const val GLUCODATAAUTO_STATE_EXTRA = "state"
 
     const val VALUE_OBSOLETE_SHORT_SEC = 300
     const val VALUE_OBSOLETE_LONG_SEC  = 600
 
     const val SHARED_PREF_TAG = "GlucoDataHandlerPrefs"
     const val SHARED_PREF_AUTO_TAG = "GlucoDataAutoPrefs"
+    const val SHARED_PREF_EXTRAS_TAG = "GlucoDataExtrasPrefs"
     const val SHARED_PREF_NO_GLUCODATAAUTO = "no_gda_info"
     const val SHARED_PREF_SEND_TO_GLUCODATAAUTO = "send_to_glucodataauto"
     const val SHARED_PREF_SEND_TO_GLUCODATA_AOD = "send_to_glucodata_aod"
@@ -43,7 +48,9 @@ object Constants {
     const val SHARED_PREF_CAR_NOTIFICATION_INTERVAL = "car_notification_interval"   // deprecated as changed to seekbar
     const val SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY = "car_notification_alarm_only"
     const val SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM = "car_notification_interval_num"
+    const val SHARED_PREF_CAR_NOTIFICATION_REAPPEAR_INTERVAL = "car_notification_reappear_interval"
     const val SHARED_PREF_CAR_MEDIA = "car_media"
+    const val SHARED_PREF_CAR_MEDIA_ICON_STYLE = "aa_media_player_icon_style"
     const val SHARED_PREF_NOTIFY_DURATION_LOW = "notify_duration_low"
     const val SHARED_PREF_NOTIFY_DURATION_HIGH = "notify_duration_high"
     const val SHARED_PREF_USE_MMOL = "use_mmol"
@@ -68,6 +75,8 @@ object Constants {
     const val SHARED_PREF_WIDGET_TRANSPARENCY = "widget_transparency"
     const val SHARED_PREF_RELATIVE_TIME = "relative_time"
     const val SHARED_PREF_SEND_TO_BANGLEJS = "send_to_banglejs"
+    const val SHARED_PREF_WATCHDRIP = "watchdrip_enabled"
+    const val SHARED_PREF_WATCHDRIP_RECEIVERS = "watchdrip_receivers"
 
     // internal app preferences (not changed by settings) -> use separate tag for not trigger onChanged events
     const val SHARED_PREF_INTERNAL_TAG = "GlucoDataHandlerInternalAppPrefs"
@@ -104,4 +113,8 @@ object Constants {
     const val SHARED_PREF_NIGHTSCOUT_IOB_COB="src_ns_iob_cob"
 
     const val SHARED_PREF_DUMMY_VALUES = "dummy_values"
+
+    // Android Auto
+    const val AA_MEDIA_ICON_STYLE_TREND = "trend"
+    const val AA_MEDIA_ICON_STYLE_GLUCOSE_TREND = "glucose_trend"
 }

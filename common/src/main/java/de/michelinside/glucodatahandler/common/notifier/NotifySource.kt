@@ -13,5 +13,6 @@ enum class NotifySource {
     SOURCE_SETTINGS,
     SOURCE_STATE_CHANGE,
     NOTIFIER_CHANGE,
-    IOB_COB_CHANGE;
+    IOB_COB_CHANGE,
+    LOGCAT_REQUEST;
 }

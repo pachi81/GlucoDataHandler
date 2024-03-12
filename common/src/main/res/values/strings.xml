@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="name" translatable="false">GlucoDataHandler</string>
+    <string name="source_gdh" translatable="false">GlucoDataHandler</string>
 
     <string name="info_label_sensor_id">Sensor</string>
     <string name="info_label_value">Value</string>
@@ -308,4 +309,20 @@
     <string name="source_aaps">AAPS</string>
     <string name="pref_source_aaps_info">AndroidAPS</string>
     <string name="pref_source_aaps_info_summary">To receive values from AAPS:\n- open AAPS app\n- go to \"Config Builder\"\n- enable \"Samsung Tizen\"</string>
+    <string name="pref_switch_watchdrip_enabled">WatchDrip+</string>
+    <string name="pref_switch_watchdrip_enabled_summary">"Enable WatchDrip+ communication (without graph).\nIMPORTANT: enable \"Enable service\" in WatchDrip+ after enabling this setting here!"</string>
+    <string name="pref_car_notification_reappear_interval">Reappear</string>
+    <string name="pref_car_notification_reappear_interval_summary">Interval when the notification shall reappear if there is no new value. (0 for never).</string>
+    <string name="pref_aa_media_player_icon_style_summary">Style of the dummy media player icon/image.</string>
+    <string name="pref_aa_media_player_icon_style">Icon/image style</string>
+    <string name="menu_save_mobile_logs">Mobile</string>
+    <string name="menu_save_wear_logs">Wear</string>
+    <string name="menu_save_logs">Save logs</string>
+    <string name="logcat_save_succeeded">Logs saved successfully</string>
+    <string name="logcat_save_failed">Failed saving logs!</string>
+    <string name="logcat_wear_save_succeeded">Logs from wear saved successfully</string>
+    <string name="logcat_wear_save_failed">Failed saving logs from wear!</string>
+    <string name="request_exact_alarm_summary">For all time/interval related work, this app requires the permission for alarms &amp; reminders.\nIt will not add or change any user reminders, it is only for internal scheduling.\nIf you press OK, you will forward to the permission setting to enable it for GlucoDataHandler.</string>
+    <string name="request_exact_alarm_title">Alarms &amp; reminders permission</string>
+    <string name="activity_main_schedule_exact_alarm">Schedule exact alarm is disabled!!!\nGlucoDataHandler may not work correct!!!\nPress here to go direct to the permission setting.</string>
 </resources>
