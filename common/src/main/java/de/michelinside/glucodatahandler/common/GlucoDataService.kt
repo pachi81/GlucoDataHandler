@@ -80,7 +80,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                         // default on wear and phone
                         true//sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
                     )
-                    context.startForegroundService(serviceIntent)
+                    context.startService(serviceIntent)
                 } catch (exc: Exception) {
                     Log.e(
                         LOG_ID,
