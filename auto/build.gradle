@@ -11,8 +11,8 @@ android {
         applicationId "de.michelinside.glucodataauto"
         minSdk rootProject.minSdk
         targetSdk rootProject.targetSdk
-        versionCode 1022
-        versionName "0.9.9.7"
+        versionCode 1025
+        versionName "0.9.10"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
