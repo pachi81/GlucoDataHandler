@@ -3,6 +3,7 @@ package de.michelinside.glucodatahandler.common.tasks
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
@@ -13,6 +14,7 @@ import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import org.json.JSONArray
 import org.json.JSONObject
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -32,6 +34,8 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         private var token = ""
         private var tokenExpire = 0L
         private var region = ""
+        private var patientId = ""
+        val patientData = mutableMapOf<String, String>()
         const val server = "https://api.libreview.io"
         const val region_server = "https://api-%s.libreview.io"
         const val LOGIN_ENDPOINT = "/llu/auth/login"
@@ -243,7 +247,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                     setLastError(GlucoDataService.context!!.getString(R.string.src_libre_setup_librelink))
                     return
                 }
-                val data = array.optJSONObject(0)
+                val data = getPatientData(array)
                 if(data.has("glucoseMeasurement")) {
                     val glucoseData = data.optJSONObject("glucoseMeasurement")
                     if (glucoseData != null) {
@@ -278,6 +282,35 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         }
     }
 
+    private fun getPatientData(dataArray: JSONArray): JSONObject {
+        if(dataArray.length() != patientData.size) {
+            // create patientData map
+            patientData.clear()
+            for (i in 0 until dataArray.length()) {
+                val data = dataArray.getJSONObject(i)
+                if(data.has("patientId") && data.has("firstName") && data.has("lastName")) {
+                    val id = data.getString("patientId")
+                    val name = data.getString("firstName") + " " +  data.getString("lastName")
+                    Log.d(LOG_ID, "New patient found: $name with ID: $id")
+                    patientData[id] = name
+                }
+            }
+            Handler(GlucoDataService.context!!.mainLooper).post {
+                InternalNotifier.notify(GlucoDataService.context!!, NotifySource.PATIENT_DATA_CHANGED, null)
+            }
+        }
+        if(dataArray.length() > 1 && patientId.isNotEmpty()) {
+            for (i in 0 until dataArray.length()) {
+                val data = dataArray.getJSONObject(i)
+                if (data.has("patientId") && data.getString("patientId") == patientId) {
+                    return data
+                }
+            }
+        }
+        // default: use first one
+        return dataArray.optJSONObject(0)
+    }
+
     private fun getConnection(firstCall: Boolean = true) {
         if (login()) {
             handleGlucoseResponse(httpGet(getUrl(CONNECTION_ENDPOINT), getHeader()))
@@ -287,6 +320,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     }
 
     override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {
+        Log.v(LOG_ID, "checkPreferenceChanged called for $key")
         var trigger = false
         if (key == null) {
             user = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_USER, "")!!.trim()
@@ -294,6 +328,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             token = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_TOKEN, "")!!
             tokenExpire = sharedPreferences.getLong(Constants.SHARED_PREF_LIBRE_TOKEN_EXPIRE, 0L)
             region = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_REGION, "")!!
+            patientId = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")!!
             InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
             trigger = true
         } else {
@@ -317,6 +352,14 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                 Constants.SHARED_PREF_LIBRE_RECONNECT -> {
                     if (reconnect != sharedPreferences.getBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false)) {
                         reconnect = sharedPreferences.getBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false)
+                        Log.d(LOG_ID, "Reconnect triggered")
+                        trigger = true
+                    }
+                }
+                Constants.SHARED_PREF_LIBRE_PATIENT_ID -> {
+                    if (patientId != sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")) {
+                        patientId = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")!!
+                        Log.d(LOG_ID, "PatientID changed to $patientId")
                         trigger = true
                     }
                 }
