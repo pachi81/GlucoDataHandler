@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler.preferences
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.InputType
@@ -8,11 +9,13 @@ import androidx.preference.*
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
+import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
+import de.michelinside.glucodatahandler.common.tasks.LibreViewSourceTask
 
 
-class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
+class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
     private val LOG_ID = "GDH.SourceFragment"
     private var settingsChanged = false
 
@@ -33,6 +36,7 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
                 editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             }
 
+            setupLibrePatientData()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
         }
@@ -56,6 +60,7 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
         try {
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
             updateEnableStates(preferenceManager.sharedPreferences!!)
+            InternalNotifier.addNotifier(requireContext(), this, mutableSetOf(NotifySource.PATIENT_DATA_CHANGED))
             super.onResume()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.toString())
@@ -66,6 +71,7 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
         Log.d(LOG_ID, "onPause called")
         try {
             preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
+            InternalNotifier.remNotifier(requireContext(), this)
             super.onPause()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.toString())
@@ -128,4 +134,27 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
         }
     }
+
+    private fun setupLibrePatientData() {
+        try {
+            val listPreference = findPreference<ListPreference>(Constants.SHARED_PREF_LIBRE_PATIENT_ID)
+            // force "global broadcast" to be the first entry
+            listPreference!!.entries = LibreViewSourceTask.patientData.values.toTypedArray()
+            listPreference.entryValues = LibreViewSourceTask.patientData.keys.toTypedArray()
+            listPreference.isVisible = LibreViewSourceTask.patientData.size > 1
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "setupLibrePatientData exception: $exc")
+        }
+    }
+
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
+        try {
+            Log.v(LOG_ID, "OnNotifyData called for source $dataSource")
+            if (dataSource == NotifySource.PATIENT_DATA_CHANGED)
+                setupLibrePatientData()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "OnNotifyData exception for source $dataSource: $exc")
+        }
+    }
+
 }

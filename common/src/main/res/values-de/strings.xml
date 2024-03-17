@@ -310,5 +310,7 @@
     <string name="request_exact_alarm_summary">Für alle Zeit und Intervall spezifischen Aufgaben, benötigt die App die Berechtigung für Wecker und Erinnerungen.\nDie App verändert keine vom Benutzer eingerichteten Wecker oder Erinnerung. Sie benötigt die Berechtigung nur für interne Trigger.\nNach dem Drücken von OK leitet die App Sie zur entsprechenden Berechtigungseinstellung weiter. Bitte aktivieren Sie diese Berechtigung für GlucoDataHandler.</string>
     <string name="request_exact_alarm_title">Berechtigung für Wecker und Erinnerungen</string>
     <string name="activity_main_schedule_exact_alarm">Genaue Bearbeitung von Intervallen deaktiviert!!!\nKorrekte Funktionalität von GlucoDataHandler ist nicht gewährleistet!!!\nBitte hier drücken, um zu der entsprechenden Berechtigungseinstellung zu gelangen.</string>
+    <string name="src_libre_patient">Patient</string>
+    <string name="src_libre_patient_summary">Wenn der Libre Accout für mehr als einen Patienten verwendet wird, bitte wählen sie den entsprechenden Patienten aus, für den die Daten empfangen werden sollen.</string>
 
 </resources>
