@@ -64,6 +64,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
 
         fun start(source: AppSource, context: Context, cls: Class<*>, force: Boolean = false) {
             if (!running || force) {
+                Log.v(LOG_ID, "start called")
                 try {
                     appSource = source
                     val serviceIntent = Intent(
@@ -80,7 +81,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                         // default on wear and phone
                         true//sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
                     )
-                    context.startService(serviceIntent)
+                    context.startForegroundService(serviceIntent)
                 } catch (exc: Exception) {
                     Log.e(
                         LOG_ID,
@@ -112,7 +113,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         try {
-            Log.d(LOG_ID, "onStartCommand called")
+            Log.v(LOG_ID, "onStartCommand called")
             super.onStartCommand(intent, flags, startId)
             val isForeground = true // intent?.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)    --> always use foreground!!!
             if (isForeground && !isForegroundService && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
