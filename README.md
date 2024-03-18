@@ -95,8 +95,6 @@ Also the RANGE_VALUE complication is handled different in each watchface.
 
 @[nevergiveup](https://github.com/nevergiveup) for testing, motivation and feedback
 
-@nevergiveup for testing and feedback
-
 # Support my work
 [🍺 Buy me a beer](https://www.buymeacoffee.com/pachi81)
 
