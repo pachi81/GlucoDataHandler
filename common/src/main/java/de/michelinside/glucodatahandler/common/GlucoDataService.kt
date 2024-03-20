@@ -63,9 +63,10 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
         }
 
         fun start(source: AppSource, context: Context, cls: Class<*>, force: Boolean = false) {
-            if (!running || force) {
-                Log.v(LOG_ID, "start called")
+            if (!running) {
+                Log.v(LOG_ID, "start called (running: $running - foreground: $foreground)")
                 try {
+                    isRunning = true
                     appSource = source
                     val serviceIntent = Intent(
                         context,
@@ -81,12 +82,16 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                         // default on wear and phone
                         true//sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
                     )
-                    context.startService(serviceIntent)
+                    if (foreground)
+                        context.startService(serviceIntent)
+                    else
+                        context.startForegroundService(serviceIntent)
                 } catch (exc: Exception) {
                     Log.e(
                         LOG_ID,
                         "start exception: " + exc.message.toString()
                     )
+                    isRunning = false
                 }
             }
         }
@@ -200,6 +205,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
             super.onDestroy()
             service = null
             isRunning = false
+            isForegroundService = false
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.toString())
         }
