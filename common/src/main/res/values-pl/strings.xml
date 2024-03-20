@@ -314,5 +314,10 @@
     <string name="activity_main_schedule_exact_alarm">Uprawnienie do ustawiania alarmów i przypomnień jest wyłączone!!!\nGlucoDataHandler może nie działać poprawnie!!!\nNaciśnij tutaj, aby przejść bezpośrednio do ustawień.</string>
     <string name="src_libre_patient">Patient</string>
     <string name="src_libre_patient_summary">If there is more then one patient connected to the libre account, please select the patient receiving the data for.</string>
+    <string name="pref_cat_locksreen_wallpaper">Lockscreen Wallpaper</string>
+    <string name="pref_lockscreen_enabled">Enable</string>
+    <string name="pref_lockscreen_enabled_summary">If you enable lockscreen wallpaper, the app replaces the wallpaper on lockscreen with an Image containing the value and trend.</string>
+    <string name="pref_lockscreen_y_pos">Vertical position</string>
+    <string name="pref_lockscreen_y_pos_summary">Vertical position of the glucose-trend image on lockscreen:\n0 is the top of the display\n100 is the botton of the display</string>
 
 </resources>
