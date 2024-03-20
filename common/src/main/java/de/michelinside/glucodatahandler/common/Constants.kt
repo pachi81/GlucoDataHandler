@@ -115,6 +115,9 @@ object Constants {
 
     const val SHARED_PREF_DUMMY_VALUES = "dummy_values"
 
+    const val SHARED_PREF_LOCKSCREEN_WP_ENABLED = "lockscreen_enabled"
+    const val SHARED_PREF_LOCKSCREEN_WP_Y_POS = "lockscreen_y_pos"
+
     // Android Auto
     const val AA_MEDIA_ICON_STYLE_TREND = "trend"
     const val AA_MEDIA_ICON_STYLE_GLUCOSE_TREND = "glucose_trend"
