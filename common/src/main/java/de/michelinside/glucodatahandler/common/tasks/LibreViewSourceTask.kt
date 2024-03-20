@@ -71,6 +71,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         Log.i(LOG_ID, "reset called")
         token = ""
         region = ""
+        patientData.clear()
     }
 
     private fun checkResponse(body: String?): JSONObject? {
@@ -248,6 +249,10 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                     return
                 }
                 val data = getPatientData(array)
+                if (data == null) {
+                    setState(SourceState.NO_NEW_VALUE)
+                    return
+                }
                 if(data.has("glucoseMeasurement")) {
                     val glucoseData = data.optJSONObject("glucoseMeasurement")
                     if (glucoseData != null) {
@@ -282,9 +287,10 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         }
     }
 
-    private fun getPatientData(dataArray: JSONArray): JSONObject {
-        if(dataArray.length() != patientData.size) {
+    private fun getPatientData(dataArray: JSONArray): JSONObject? {
+        if(dataArray.length() > patientData.size) {
             // create patientData map
+            val checkPatienId = patientData.isEmpty() && patientId.isEmpty()
             patientData.clear()
             for (i in 0 until dataArray.length()) {
                 val data = dataArray.getJSONObject(i)
@@ -295,17 +301,25 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                     patientData[id] = name
                 }
             }
+            if (checkPatienId && !patientData.keys.contains(patientId)) {
+                patientId = ""
+                with (GlucoDataService.sharedPref!!.edit()) {
+                    putString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")
+                    apply()
+                }
+            }
             Handler(GlucoDataService.context!!.mainLooper).post {
                 InternalNotifier.notify(GlucoDataService.context!!, NotifySource.PATIENT_DATA_CHANGED, null)
             }
         }
-        if(dataArray.length() > 1 && patientId.isNotEmpty()) {
+        if(patientId.isNotEmpty()) {
             for (i in 0 until dataArray.length()) {
                 val data = dataArray.getJSONObject(i)
                 if (data.has("patientId") && data.getString("patientId") == patientId) {
                     return data
                 }
             }
+            return null
         }
         // default: use first one
         return dataArray.optJSONObject(0)
