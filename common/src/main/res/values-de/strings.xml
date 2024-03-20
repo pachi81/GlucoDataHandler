@@ -317,5 +317,6 @@
     <string name="pref_lockscreen_enabled_summary">Wenn sie den Hintergrund für den Lockscreen aktivieren, erstellt die App einen Hintergrund auf dem Lockscreen, welche den Glucosewert und den Trendpfeil enthält.</string>
     <string name="pref_lockscreen_y_pos">Vertikale Position</string>
     <string name="pref_lockscreen_y_pos_summary">Vertikale position auf dem Lockscreen:\n0: am oberen Rand des Bildschirms\n100: am unteren Rand des Bildschirms</string>
+    <string name="menu_alarms">Alarms</string>
 
 </resources>

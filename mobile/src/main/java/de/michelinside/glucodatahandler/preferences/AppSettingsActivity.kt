@@ -7,11 +7,13 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import de.michelinside.glucodatahandler.preferences.SettingsFragment
 import de.michelinside.glucodatahandler.preferences.SourceFragment
+import de.michelinside.glucodatahandler.preferences.AlarmFragment
 import de.michelinside.glucodatahandler.common.R as RC
 
 enum class SettingsFragmentClass(val value: Int, val titleRes: Int) {
     SETTINGS_FRAGMENT(0, RC.string.menu_settings),
-    SORUCE_FRAGMENT(1, RC.string.menu_sources)
+    SORUCE_FRAGMENT(1, RC.string.menu_sources),
+    ALARM_FRAGMENT(2, RC.string.menu_alarms)
 }
 class SettingsActivity : AppCompatActivity() {
     private val LOG_ID = "GDH.SettingsActivity"
@@ -37,6 +39,14 @@ class SettingsActivity : AppCompatActivity() {
                             this.applicationContext.resources.getText(SettingsFragmentClass.SORUCE_FRAGMENT.titleRes)
                         supportFragmentManager.beginTransaction()
                             .replace(R.id.content, SourceFragment())
+                            .commit()
+                    }
+
+                    SettingsFragmentClass.ALARM_FRAGMENT.value -> {
+                        this.supportActionBar!!.title =
+                            this.applicationContext.resources.getText(SettingsFragmentClass.ALARM_FRAGMENT.titleRes)
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.content, AlarmFragment())
                             .commit()
                     }
                 }

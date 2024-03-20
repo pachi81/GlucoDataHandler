@@ -5,6 +5,8 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.notification.AlarmHandler
+import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
@@ -31,29 +33,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     const val IOB = "glucodata.Minute.IOB"
     const val COB = "glucodata.Minute.COB"
     const val IOBCOB_TIME = "gdh.IOB_COB_time"
-
-    private const val LAST_ALARM_INDEX = "last_alarm_index"
-    private const val LAST_ALARM_TIME = "last_alarm_time"
-
-    enum class AlarmType(val resId: Int) {
-        NONE(R.string.alarm_none),
-        VERY_LOW(R.string.alarm_very_low),
-        LOW(R.string.alarm_low),
-        OK(R.string.alarm_none),
-        HIGH(R.string.alarm_high),
-        VERY_HIGH(R.string.alarm_very_high);
-
-        companion object {
-            fun fromIndex(idx: Int): AlarmType {
-                AlarmType.values().forEach {
-                    if(it.ordinal == idx) {
-                        return it
-                    }
-                }
-                return NONE
-            }
-        }
-    }
 
     var sensorID: String? = null
     var rawValue: Int = 0
@@ -123,10 +102,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private var colorAlarm: Int = Color.RED
     private var colorOutOfRange: Int = Color.YELLOW
     private var colorOK: Int = Color.GREEN
-    private var lowAlarmDuration = 15L*60*1000 // ms -> 15 minutes
-    private var highAlarmDuration = 25L*60*1000 // ms -> 25 minutes
-    private var lastAlarmTime = 0L
-    private var lastAlarmType = AlarmType.OK
     private var initialized = false
 
     init {
@@ -140,6 +115,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 initialized = true
                 readTargets(context)
                 loadExtras(context)
+                AlarmHandler.initData(context)
                 TimeTaskService.run(context)
             }
         } catch (exc: Exception) {
@@ -268,53 +244,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             AlarmType.VERY_LOW -> 7
             else -> 0
         }
-        setForceAlarm(checkForceAlarm(curAlarmType), curAlarmType)
-        if (curAlarm != 0 && forceAlarm) {
+
+        if (curAlarm != 0 && AlarmHandler.checkForAlarmTrigger(curAlarmType)) {
             return curAlarm or 8
         }
         return curAlarm
-    }
-
-    private fun checkForceAlarm(curAlarmType: AlarmType): Boolean {
-        Log.d(LOG_ID, "Check force alarm:" +
-            " - curAlarmType=" + curAlarmType.toString() +
-            " - lastAlarmType=" + lastAlarmType.toString() +
-            " - lastAlarmTime=" +  DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime)) +
-            " - time=" + DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(time)) +
-            " - delta=" + delta.toString() +
-            " - rate=" + rate.toString() +
-            " - diff=" + (time - lastAlarmTime).toString() +
-            " - lowDur=" + lowAlarmDuration.toString() +
-            " - highDur=" + highAlarmDuration.toString()
-                    )
-        when(curAlarmType) {
-            AlarmType.LOW,
-            AlarmType.VERY_LOW -> {
-                if(curAlarmType < lastAlarmType || ((delta < 0F || rate < 0F) && (time - lastAlarmTime >= lowAlarmDuration)))
-                {
-                    return true
-                }
-                return false
-            }
-            AlarmType.HIGH,
-            AlarmType.VERY_HIGH -> {
-                if(curAlarmType > lastAlarmType || ((delta > 0F || rate > 0F) && (time - lastAlarmTime >= highAlarmDuration)))
-                {
-                    return true
-                }
-                return false
-            }
-            else -> return false
-        }
-    }
-
-    private fun setForceAlarm(force: Boolean, curAlarmType: AlarmType) {
-        forceAlarm = force
-        if (forceAlarm) {
-            lastAlarmTime = time
-            lastAlarmType = curAlarmType
-            Log.i(LOG_ID, "Force alarm for type " + curAlarmType)
-        }
     }
 
     fun getClucoseColor(monoChrome: Boolean = false): Int {
@@ -440,7 +374,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     // check for alarm
                     if (interApp) {
                         alarm = extras.getInt(ALARM) // if bit 8 is set, then an alarm is triggered
-                        setForceAlarm((alarm and 8) == 8, getAlarmType())
+                        forceAlarm = ((alarm and 8) == 8)
                     } else {
                         alarm = calculateAlarm()
                     }
@@ -521,8 +455,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             putInt(Constants.SHARED_PREF_COLOR_OK, bundle.getInt(Constants.SHARED_PREF_COLOR_OK, colorOK))
             putInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, bundle.getInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, colorOutOfRange))
             putInt(Constants.SHARED_PREF_COLOR_ALARM, bundle.getInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm))
-            putLong(Constants.SHARED_PREF_NOTIFY_DURATION_LOW, bundle.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_LOW, lowAlarmDuration/60000))
-            putLong(Constants.SHARED_PREF_NOTIFY_DURATION_HIGH, bundle.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_HIGH, highAlarmDuration/60000))
             if (bundle.containsKey(Constants.SHARED_PREF_RELATIVE_TIME)) {
                 putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, bundle.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime))
             }
@@ -542,8 +474,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         bundle.putInt(Constants.SHARED_PREF_COLOR_OK, colorOK)
         bundle.putInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, colorOutOfRange)
         bundle.putInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm)
-        bundle.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_LOW, lowAlarmDuration/60000)
-        bundle.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_HIGH, highAlarmDuration/60000)
         return bundle
     }
 
@@ -555,9 +485,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         use5minDelta = sharedPref.getBoolean(Constants.SHARED_PREF_FIVE_MINUTE_DELTA, use5minDelta)
         colorOK = sharedPref.getInt(Constants.SHARED_PREF_COLOR_OK, colorOK)
         colorOutOfRange = sharedPref.getInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, colorOutOfRange)
-        colorAlarm = sharedPref.getInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm)        
-        lowAlarmDuration = sharedPref.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_LOW, lowAlarmDuration/60000)*60000
-        highAlarmDuration = sharedPref.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_HIGH, highAlarmDuration/60000)*60000
+        colorAlarm = sharedPref.getInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm)
         changeIsMmol(sharedPref.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol))
         calculateAlarm()  // re-calculate alarm with new settings
         Log.i(LOG_ID, "Raw low/min/max/high set: " + lowValue.toString() + "/" + targetMinValue.toString() + "/" + targetMaxValue.toString() + "/" + highValue.toString()
@@ -637,8 +565,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 putFloat(COB, cob)
                 putLong(IOBCOB_TIME, iobCobTime)
                 putInt(SOURCE_INDEX, source.ordinal)
-                putLong(LAST_ALARM_TIME, lastAlarmTime)
-                putInt(LAST_ALARM_INDEX, lastAlarmType.ordinal)
                 apply()
             }
         } catch (exc: Exception) {
@@ -663,8 +589,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     extras.putFloat(IOB, sharedGlucosePref.getFloat(IOB, iob))
                     extras.putFloat(COB, sharedGlucosePref.getFloat(COB, cob))
                     extras.putLong(IOBCOB_TIME, sharedGlucosePref.getLong(IOBCOB_TIME, iobCobTime))
-                    lastAlarmType = AlarmType.fromIndex(sharedGlucosePref.getInt(LAST_ALARM_INDEX, AlarmType.NONE.ordinal))
-                    lastAlarmTime = sharedGlucosePref.getLong(LAST_ALARM_TIME, 0L)
                     handleIntent(context, DataSource.fromIndex(sharedGlucosePref.getInt(SOURCE_INDEX,
                         DataSource.NONE.ordinal)), extras)
                 }

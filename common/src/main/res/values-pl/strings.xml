@@ -319,5 +319,6 @@
     <string name="pref_lockscreen_enabled_summary">If you enable lockscreen wallpaper, the app replaces the wallpaper on lockscreen with an Image containing the value and trend.</string>
     <string name="pref_lockscreen_y_pos">Vertical position</string>
     <string name="pref_lockscreen_y_pos_summary">Vertical position of the glucose-trend image on lockscreen:\n0 is the top of the display\n100 is the botton of the display</string>
+    <string name="menu_alarms">Alarms</string>
 
 </resources>
