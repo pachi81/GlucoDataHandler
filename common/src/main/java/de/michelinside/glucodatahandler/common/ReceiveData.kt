@@ -113,9 +113,9 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             if (!initialized) {
                 Log.v(LOG_ID, "initData called")
                 initialized = true
+                AlarmHandler.initData(context)
                 readTargets(context)
                 loadExtras(context)
-                AlarmHandler.initData(context)
                 TimeTaskService.run(context)
             }
         } catch (exc: Exception) {

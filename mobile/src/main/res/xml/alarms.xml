@@ -2,5 +2,55 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <PreferenceCategory
+        android:title="@string/alarm_cat_very_low"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="1">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="alarm_very_low_enabled"
+            android:title="@string/alarm_enabled"
+            android:summary="@string/alarm_enabled_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SeekBarPreference
+            android:defaultValue="15"
+            app:showSeekBarValue="true"
+            app:seekBarIncrement="1"
+            app:min="5"
+            android:max="120"
+            android:key="alarm_very_low_interval"
+            android:title="@string/alarm_interval"
+            android:summary="@string/alarm_interval_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="alarm_very_low_ignore_dnd"
+            android:title="@string/alarm_ignore_dnd"
+            android:summary="@string/alarm_ignore_dnd_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="alarm_very_low_vibrate"
+            android:title="@string/alarm_vibrate"
+            android:summary="@string/alarm_vibrate_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="alarm_very_low_enable_sound"
+            android:title="@string/alarm_enable_sound"
+            android:summary="@string/alarm_enable_sound_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="alarm_very_low_default_sound"
+            android:title="@string/alarm_default_sound"
+            android:summary="@string/alarm_default_sound_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="alarm_very_low_sound"
+            android:title="@string/alarm_sound"
+            android:summary="@string/alarm_sound_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

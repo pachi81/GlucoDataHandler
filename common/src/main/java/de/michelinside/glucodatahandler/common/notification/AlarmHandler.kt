@@ -16,11 +16,14 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener {
     private const val LAST_ALARM_INDEX = "last_alarm_index"
     private const val LAST_ALARM_TIME = "last_alarm_time"
 
-    private var lowAlarmDuration = 15L*60*1000 // ms -> 15 minutes
-    private var highAlarmDuration = 25L*60*1000 // ms -> 25 minutes
+    private var veryLowInterval = 15*60000 // ms -> 15 minutes
+    private var lowInterval = 25*60000 // ms -> 25 minutes
+    private var highInterval = 30*60000 // ms -> 35 minutes
+    private var veryHighInterval = 30*60000 // ms -> 30 minutes
     private var lastAlarmTime = 0L
     private var lastAlarmType = AlarmType.OK
     private var initialized = false
+    private lateinit var sharedExtraPref: SharedPreferences
 
     fun initData(context: Context) {
         try {
@@ -29,7 +32,8 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener {
                 val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 sharedPref.registerOnSharedPreferenceChangeListener(this)
                 updateSettings(sharedPref)
-                loadExtras()
+                sharedExtraPref = context.getSharedPreferences(Constants.SHARED_PREF_EXTRAS_TAG, Context.MODE_PRIVATE)
+                loadExtras(context)
                 initialized = true
             }
         } catch (exc: Exception) {
@@ -47,14 +51,16 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener {
                 " - delta=" + ReceiveData.delta.toString() +
                 " - rate=" + ReceiveData.rate.toString() +
                 " - diff=" + (ReceiveData.time - lastAlarmTime).toString() +
-                " - lowDur=" + lowAlarmDuration.toString() +
-                " - highDur=" + highAlarmDuration.toString()
+                " - veryLowInt=" + veryLowInterval.toString() +
+                " - lowInt=" + lowInterval.toString() +
+                " - highInt=" + highInterval.toString() +
+                " - veryHighInt=" + veryHighInterval.toString()
         )
         val triggerAlarm = when(newAlarmType) {
-            AlarmType.LOW,
-            AlarmType.VERY_LOW -> checkLowAlarm(newAlarmType, lowAlarmDuration)
-            AlarmType.HIGH,
-            AlarmType.VERY_HIGH -> checkHighAlarm(newAlarmType, highAlarmDuration)
+            AlarmType.VERY_LOW -> checkLowAlarm(newAlarmType, veryLowInterval)
+            AlarmType.LOW -> checkLowAlarm(newAlarmType, lowInterval)
+            AlarmType.HIGH -> checkHighAlarm(newAlarmType, highInterval)
+            AlarmType.VERY_HIGH -> checkHighAlarm(newAlarmType, veryHighInterval)
             else -> false
         }
         if (triggerAlarm) {
@@ -66,16 +72,16 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener {
         return triggerAlarm
     }
 
-    private fun checkHighAlarm(newAlarmType: AlarmType, alarmDuration: Long): Boolean {
-        if(newAlarmType > lastAlarmType || ((ReceiveData.delta > 0F || ReceiveData.rate > 0F) && (ReceiveData.time - lastAlarmTime >= alarmDuration)))
+    private fun checkHighAlarm(newAlarmType: AlarmType, alarmInterval: Int): Boolean {
+        if(newAlarmType > lastAlarmType || ((ReceiveData.delta > 0F || ReceiveData.rate > 0F) && (ReceiveData.time - lastAlarmTime >= alarmInterval)))
         {
             return true
         }
         return false
     }
 
-    private fun checkLowAlarm(newAlarmType: AlarmType, alarmDuration: Long): Boolean {
-        if(newAlarmType < lastAlarmType || ((ReceiveData.delta < 0F || ReceiveData.rate < 0F) && (ReceiveData.time - lastAlarmTime >= alarmDuration)))
+    private fun checkLowAlarm(newAlarmType: AlarmType, alarmInterval: Int): Boolean {
+        if(newAlarmType < lastAlarmType || ((ReceiveData.delta < 0F || ReceiveData.rate < 0F) && (ReceiveData.time - lastAlarmTime >= alarmInterval)))
         {
             return true
         }
@@ -84,7 +90,6 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener {
 
     private fun saveExtras() {
         Log.d(LOG_ID, "Saving extras")
-        val sharedExtraPref = GlucoDataService.context!!.getSharedPreferences(Constants.SHARED_PREF_EXTRAS_TAG, Context.MODE_PRIVATE)
         with(sharedExtraPref.edit()) {
             putLong(LAST_ALARM_TIME, lastAlarmTime)
             putInt(LAST_ALARM_INDEX, lastAlarmType.ordinal)
@@ -92,10 +97,9 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener {
         }
     }
 
-    private fun loadExtras() {
+    private fun loadExtras(context: Context) {
         try {
             Log.i(LOG_ID, "Reading saved values...")
-            val sharedExtraPref = GlucoDataService.context!!.getSharedPreferences(Constants.SHARED_PREF_EXTRAS_TAG, Context.MODE_PRIVATE)
             lastAlarmType = AlarmType.fromIndex(sharedExtraPref.getInt(LAST_ALARM_INDEX, AlarmType.NONE.ordinal))
             lastAlarmTime = sharedExtraPref.getLong(LAST_ALARM_TIME, 0L)
 
@@ -104,38 +108,45 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener {
         }
     }
 
-
-    val alarmPreferences = mutableSetOf(
-        Constants.SHARED_PREF_NOTIFY_DURATION_LOW,
-        Constants.SHARED_PREF_NOTIFY_DURATION_HIGH,
+    val alarmPreferencesToSend = mutableSetOf(
+        Constants.SHARED_PREF_ALARM_VERY_LOW_INTERVAL,
+        Constants.SHARED_PREF_ALARM_LOW_INTERVAL,
+        Constants.SHARED_PREF_ALARM_HIGH_INTERVAL,
+        Constants.SHARED_PREF_ALARM_VERY_HIGH_INTERVAL,
     )
 
     fun getSettings(): Bundle {
         val bundle = Bundle()
-        bundle.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_LOW, lowAlarmDuration/60000)
-        bundle.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_HIGH, highAlarmDuration/60000)
+        bundle.getInt(Constants.SHARED_PREF_ALARM_VERY_LOW_INTERVAL, veryLowInterval/60000)
+        bundle.getInt(Constants.SHARED_PREF_ALARM_LOW_INTERVAL, lowInterval/60000)
+        bundle.getInt(Constants.SHARED_PREF_ALARM_HIGH_INTERVAL, highInterval/60000)
+        bundle.getInt(Constants.SHARED_PREF_ALARM_VERY_HIGH_INTERVAL, veryHighInterval/60000)
         return bundle
     }
 
     fun setSettings(context: Context, bundle: Bundle) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         with(sharedPref.edit()) {
-            putLong(Constants.SHARED_PREF_NOTIFY_DURATION_LOW, bundle.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_LOW, lowAlarmDuration/60000))
-            putLong(Constants.SHARED_PREF_NOTIFY_DURATION_HIGH, bundle.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_HIGH, highAlarmDuration/60000))
+            putInt(Constants.SHARED_PREF_ALARM_VERY_LOW_INTERVAL, bundle.getInt(Constants.SHARED_PREF_ALARM_VERY_LOW_INTERVAL, veryLowInterval/60000))
+            putInt(Constants.SHARED_PREF_ALARM_LOW_INTERVAL, bundle.getInt(Constants.SHARED_PREF_ALARM_LOW_INTERVAL, lowInterval/60000))
+            putInt(Constants.SHARED_PREF_ALARM_HIGH_INTERVAL, bundle.getInt(Constants.SHARED_PREF_ALARM_HIGH_INTERVAL, highInterval/60000))
+            putInt(Constants.SHARED_PREF_ALARM_VERY_HIGH_INTERVAL, bundle.getInt(Constants.SHARED_PREF_ALARM_VERY_HIGH_INTERVAL, veryHighInterval/60000))
             apply()
         }
         updateSettings(sharedPref)
     }
 
     fun updateSettings(sharedPref: SharedPreferences) {
-        lowAlarmDuration = sharedPref.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_LOW, lowAlarmDuration/60000)*60000
-        highAlarmDuration = sharedPref.getLong(Constants.SHARED_PREF_NOTIFY_DURATION_HIGH, highAlarmDuration/60000)*60000
+        veryLowInterval = sharedPref.getInt(Constants.SHARED_PREF_ALARM_VERY_LOW_INTERVAL, veryLowInterval/60000)*60000
+        lowInterval = sharedPref.getInt(Constants.SHARED_PREF_ALARM_LOW_INTERVAL, lowInterval/60000)*60000
+        highInterval = sharedPref.getInt(Constants.SHARED_PREF_ALARM_HIGH_INTERVAL, highInterval/60000)*60000
+        veryHighInterval = sharedPref.getInt(Constants.SHARED_PREF_ALARM_VERY_HIGH_INTERVAL, veryHighInterval/60000)*60000
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called for key " + key)
-            if (GlucoDataService.context != null && alarmPreferences.contains(key)) {
+            if (GlucoDataService.context != null && alarmPreferencesToSend.contains(key)) {
                 updateSettings(sharedPreferences)
             }
         } catch (exc: Exception) {

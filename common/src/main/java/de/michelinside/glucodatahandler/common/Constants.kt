@@ -53,8 +53,6 @@ object Constants {
     const val SHARED_PREF_CAR_NOTIFICATION_REAPPEAR_INTERVAL = "car_notification_reappear_interval"
     const val SHARED_PREF_CAR_MEDIA = "car_media"
     const val SHARED_PREF_CAR_MEDIA_ICON_STYLE = "aa_media_player_icon_style"
-    const val SHARED_PREF_NOTIFY_DURATION_LOW = "notify_duration_low"
-    const val SHARED_PREF_NOTIFY_DURATION_HIGH = "notify_duration_high"
     const val SHARED_PREF_USE_MMOL = "use_mmol"
     const val SHARED_PREF_GLUCODATA_RECEIVER_SHOW_ALL = "show_all_glucodata_receivers"
     const val SHARED_PREF_LOW_GLUCOSE = "low_glucose"
@@ -119,6 +117,19 @@ object Constants {
 
     const val SHARED_PREF_LOCKSCREEN_WP_ENABLED = "lockscreen_enabled"
     const val SHARED_PREF_LOCKSCREEN_WP_Y_POS = "lockscreen_y_pos"
+
+    // Alarm
+    const val SHARED_PREF_ALARM_VERY_LOW_ENABLED = "alarm_very_low_enabled"
+    const val SHARED_PREF_ALARM_VERY_LOW_INTERVAL = "alarm_very_low_interval"
+    const val SHARED_PREF_ALARM_VERY_LOW_IGNORE_DND = "alarm_very_low_ignore_dnd"
+    const val SHARED_PREF_ALARM_VERY_LOW_VIBRATE = "alarm_very_low_vibrate"
+    const val SHARED_PREF_ALARM_VERY_LOW_ENABLE_SOUND = "alarm_very_low_enable_sound"
+    const val SHARED_PREF_ALARM_VERY_LOW_DEF_SOUND = "alarm_very_low_default_sound"
+    const val SHARED_PREF_ALARM_VERY_LOW_SOUND = "alarm_very_low_sound"
+
+    const val SHARED_PREF_ALARM_LOW_INTERVAL = "alarm_low_interval"
+    const val SHARED_PREF_ALARM_HIGH_INTERVAL = "alarm_high_interval"
+    const val SHARED_PREF_ALARM_VERY_HIGH_INTERVAL = "alarm_very_high_interval"
 
     // Android Auto
     const val AA_MEDIA_ICON_STYLE_TREND = "trend"
