@@ -7,7 +7,7 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.os.Environment.DIRECTORY_ALARMS
+import android.os.Environment.DIRECTORY_NOTIFICATIONS
 import android.provider.DocumentsContract
 import android.provider.Settings
 import android.util.Log
@@ -19,7 +19,7 @@ import androidx.preference.PreferenceFragmentCompat
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
-import de.michelinside.glucodatahandler.common.notification.AlarmNotification
+import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -137,7 +137,8 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
         if (pref != null && resId != null) {
             pref.setOnPreferenceClickListener {
                 var alarmUri: Uri? = null
-                MediaScannerConnection.scanFile(requireContext(), arrayOf(Environment.getExternalStoragePublicDirectory(DIRECTORY_ALARMS).absolutePath), null
+                MediaScannerConnection.scanFile(requireContext(), arrayOf(Environment.getExternalStoragePublicDirectory(
+                    DIRECTORY_NOTIFICATIONS).absolutePath), null
                 ) { s: String, uri: Uri ->
                     Log.v(LOG_ID, "Set URI $uri for path $s")
                     alarmUri = uri

@@ -34,7 +34,6 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener {
                 updateSettings(sharedPref)
                 sharedExtraPref = context.getSharedPreferences(Constants.SHARED_PREF_EXTRAS_TAG, Context.MODE_PRIVATE)
                 loadExtras(context)
-                AlarmNotification.initNotifications(context)
                 initialized = true
             }
         } catch (exc: Exception) {

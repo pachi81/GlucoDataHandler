@@ -1,16 +1,29 @@
-package de.michelinside.glucodatahandler.common.notification
+package de.michelinside.glucodatahandler.notification
 
 import android.app.Notification
 import android.app.NotificationChannelGroup
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
+import android.graphics.Color
+import android.graphics.Paint
 import android.media.AudioAttributes
 import android.net.Uri
 import android.os.Handler
 import android.util.Log
+import android.widget.RemoteViews
 import android.widget.Toast
+import de.michelinside.glucodatahandler.MainActivity
+import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
-import de.michelinside.glucodatahandler.common.R
+import de.michelinside.glucodatahandler.common.R as CR
+import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.notification.AlarmType
+import de.michelinside.glucodatahandler.common.notification.ChannelType
+import de.michelinside.glucodatahandler.common.notification.Channels
+import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
 import java.io.FileOutputStream
 
 object AlarmNotification {
@@ -21,10 +34,16 @@ object AlarmNotification {
         createNotificationChannels(context)
     }
 
+    fun destroy(context: Context) {
+        stopNotifications(AlarmType.VERY_LOW, context)
+    }
+
     fun stopNotifications(alarmType: AlarmType, context: Context? = null) {
-        val notify_id = getNotificationId(alarmType)
-        if (notify_id > 0)
-            Channels.getNotificationManager(context).cancel(notify_id)
+        stopNotifications(getNotificationId(alarmType))
+    }
+    fun stopNotifications(noticationId: Int, context: Context? = null) {
+        if (noticationId > 0)
+            Channels.getNotificationManager(context).cancel(noticationId)
     }
 
     fun triggerNotification(alarmType: AlarmType, context: Context) {
@@ -40,7 +59,7 @@ object AlarmNotification {
     }
 
     private fun createNotificationChannels(context: Context) {
-        val groupName = context.resources.getString(R.string.alarm_notification_group_name)
+        val groupName = context.resources.getString(CR.string.alarm_notification_group_name)
         Channels.getNotificationManager(context).createNotificationChannelGroup(
             NotificationChannelGroup(ALARM_GROUP_ID, groupName))
         createNotificationChannel(context, AlarmType.VERY_LOW, true)
@@ -63,21 +82,51 @@ object AlarmNotification {
         }
     }
 
+    private fun createSnoozeIntent(context: Context, snoozeTime: Int, noticationId: Int): PendingIntent {
+        val intent = Intent(Constants.ALARM_SNOOZE_ACTION)
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+        intent.putExtra(Constants.ALARM_SNOOZE_EXTRA_TIME, snoozeTime)
+        intent.putExtra(Constants.ALARM_SNOOZE_EXTRA_NOTIFY_ID, noticationId)
+        intent.setPackage(context.packageName)
+        return PendingIntent.getBroadcast(context, snoozeTime, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+    }
+
     private fun createNotification(context: Context, alarmType: AlarmType): Notification? {
         val channelId = getChannelId(alarmType)
-        if (channelId.isNullOrEmpty())
+        val resId = getAlarmTextRes(alarmType)
+        if (channelId.isNullOrEmpty() || resId == null)
             return null
+
+        val remoteViews = RemoteViews(GlucoDataService.context!!.packageName, R.layout.alarm_notification)
+        remoteViews.setTextViewText(R.id.alarm, context.getString(resId))
+        remoteViews.setTextViewText(R.id.snooze, context.getString(CR.string.snooze))
+        remoteViews.setTextViewText(R.id.glucose, ReceiveData.getClucoseAsString())
+        remoteViews.setTextColor(R.id.glucose, ReceiveData.getClucoseColor())
+        remoteViews.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap())
+        remoteViews.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
+        remoteViews.setOnClickPendingIntent(R.id.snooze_60, createSnoozeIntent(context, 60, getNotificationId(alarmType)))
+        remoteViews.setOnClickPendingIntent(R.id.snooze_90, createSnoozeIntent(context, 90, getNotificationId(alarmType)))
+        remoteViews.setOnClickPendingIntent(R.id.snooze_120, createSnoozeIntent(context, 120, getNotificationId(alarmType)))
+        if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) {
+            if (!ReceiveData.isObsolete())
+                remoteViews.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
+            remoteViews.setTextColor(R.id.deltaText, Color.GRAY )
+        }
+
         val notification = Notification.Builder(context, channelId)
             .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentIntent(Utils.getAppIntent(context, MainActivity::class.java, 8, false))
             .setOnlyAlertOnce(false)
             .setAutoCancel(true)
             .setShowWhen(true)
+            .setCustomContentView(remoteViews)
+            .setCustomBigContentView(null)
+            .setStyle(Notification.DecoratedCustomViewStyle())
             .setCategory(Notification.CATEGORY_ALARM)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
             .setWhen(ReceiveData.time)
-            .setContentTitle(context.getString(R.string.info_label_alarm) + ": " + context.getString(
-                alarmType.resId))
-            .setContentText(ReceiveData.getClucoseAsString() + " (Δ " + ReceiveData.getDeltaAsString() + ")")
+            .setContentTitle("")
+            .setContentText("")
             .build()
 
         return notification
@@ -106,7 +155,14 @@ object AlarmNotification {
 
     fun getAlarmSoundRes(alarmType: AlarmType): Int? {
         return when(alarmType) {
-            AlarmType.VERY_LOW -> R.raw.gdh_alarm_very_low
+            AlarmType.VERY_LOW -> CR.raw.gdh_alarm_very_low
+            else -> null
+        }
+    }
+
+    fun getAlarmTextRes(alarmType: AlarmType): Int? {
+        return when(alarmType) {
+            AlarmType.VERY_LOW -> CR.string.very_low_alarm_text
             else -> null
         }
     }
@@ -152,7 +208,7 @@ object AlarmNotification {
                             outputStream.close()
                         }
                     }
-                    val text = context.resources.getText(R.string.alarm_saved)
+                    val text = context.resources.getText(CR.string.alarm_saved)
                     Handler(GlucoDataService.context!!.mainLooper).post {
                         Toast.makeText(GlucoDataService.context!!, text, Toast.LENGTH_SHORT).show()
                     }

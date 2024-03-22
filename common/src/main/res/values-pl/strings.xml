@@ -335,5 +335,7 @@
     <string name="alarm_save_sound">Save sound</string>
     <string name="alarm_save_sound_summary">Press here, if you want to save the default alarm sound to file system.</string>
     <string name="alarm_saved">Alarm saved...</string>
+    <string name="very_low_alarm_text">Very low!</string>
+    <string name="snooze">Snooze</string>
 
 </resources>

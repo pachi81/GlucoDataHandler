@@ -222,6 +222,14 @@
                 <action android:name= "android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED"  />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".notification.SnoozeAlarmReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name= "de.michelinside.glucodatahandler.SNOOZE" />
+            </intent-filter>
+        </receiver>
         <receiver android:name=".common.tasks.TimeAlarmReceiver" />
         <receiver android:name=".common.tasks.SourceAlarmReceiver" />
 

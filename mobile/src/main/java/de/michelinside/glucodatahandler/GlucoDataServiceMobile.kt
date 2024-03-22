@@ -8,9 +8,11 @@ import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.notification.PermanentNotification
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import de.michelinside.glucodatahandler.widget.FloatingWidget
@@ -59,6 +61,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             WatchDrip.init(applicationContext)
             floatingWidget.create()
             LockScreenWallpaper.create(this)
+            AlarmNotification.initNotifications(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -75,6 +78,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         try {
             Log.d(LOG_ID, "onDestroy called")
             PermanentNotification.destroy()
+            AlarmNotification.destroy(this)
             CarModeReceiver.cleanup(applicationContext)
             WatchDrip.close(applicationContext)
             floatingWidget.destroy()

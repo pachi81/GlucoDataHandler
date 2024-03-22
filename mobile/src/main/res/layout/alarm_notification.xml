@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:orientation="vertical">
+    <LinearLayout  android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+    <TextView
+        android:id="@+id/alarm"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:text="ALARM!"
+        android:textSize="25dp"
+        android:textColor="@color/text_color"
+        tools:ignore="HardcodedText,SpUsage" />
+
+    <TextView
+        android:id="@+id/glucose"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:layout_marginStart="10dp"
+        android:text="TextView"
+        android:textSize="20dp"
+        android:textColor="@color/text_color"
+        tools:ignore="HardcodedText,SpUsage" />
+
+    <ImageView
+        android:id="@+id/trendImage"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="6dp"
+        app:srcCompat="@drawable/icon_question"
+        android:contentDescription="@string/info_label_rate" />
+
+    <TextView
+        android:id="@+id/deltaText"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:gravity="center_vertical"
+        android:text="Delta: +0.06"
+        android:textSize="18dp"
+        android:textColor="@color/text_color"
+        tools:ignore="HardcodedText,SpUsage" />
+    </LinearLayout>
+    <LinearLayout  android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/snooze"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Snooze"
+            android:textSize="18dp"
+            android:textColor="@color/text_color"
+            tools:ignore="HardcodedText,SpUsage" />
+        <Button
+            android:id="@+id/snooze_60"
+            android:layout_marginStart="6dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="60"
+            tools:ignore="HardcodedText,SpUsage" />
+        <Button
+            android:id="@+id/snooze_90"
+            android:layout_marginStart="6dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="90"
+            tools:ignore="HardcodedText,SpUsage" />
+        <Button
+            android:id="@+id/snooze_120"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="120"
+            tools:ignore="HardcodedText,SpUsage" />
+    </LinearLayout>
+</LinearLayout>
