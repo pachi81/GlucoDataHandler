@@ -82,13 +82,13 @@ object AlarmNotification {
         }
     }
 
-    private fun createSnoozeIntent(context: Context, snoozeTime: Int, noticationId: Int): PendingIntent {
+    private fun createSnoozeIntent(context: Context, snoozeTime: Long, noticationId: Int): PendingIntent {
         val intent = Intent(Constants.ALARM_SNOOZE_ACTION)
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
         intent.putExtra(Constants.ALARM_SNOOZE_EXTRA_TIME, snoozeTime)
         intent.putExtra(Constants.ALARM_SNOOZE_EXTRA_NOTIFY_ID, noticationId)
         intent.setPackage(context.packageName)
-        return PendingIntent.getBroadcast(context, snoozeTime, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        return PendingIntent.getBroadcast(context, snoozeTime.toInt(), intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     private fun createNotification(context: Context, alarmType: AlarmType): Notification? {
@@ -104,9 +104,9 @@ object AlarmNotification {
         remoteViews.setTextColor(R.id.glucose, ReceiveData.getClucoseColor())
         remoteViews.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap())
         remoteViews.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
-        remoteViews.setOnClickPendingIntent(R.id.snooze_60, createSnoozeIntent(context, 60, getNotificationId(alarmType)))
-        remoteViews.setOnClickPendingIntent(R.id.snooze_90, createSnoozeIntent(context, 90, getNotificationId(alarmType)))
-        remoteViews.setOnClickPendingIntent(R.id.snooze_120, createSnoozeIntent(context, 120, getNotificationId(alarmType)))
+        remoteViews.setOnClickPendingIntent(R.id.snooze_60, createSnoozeIntent(context, 60L, getNotificationId(alarmType)))
+        remoteViews.setOnClickPendingIntent(R.id.snooze_90, createSnoozeIntent(context, 90L, getNotificationId(alarmType)))
+        remoteViews.setOnClickPendingIntent(R.id.snooze_120, createSnoozeIntent(context, 120L, getNotificationId(alarmType)))
         if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) {
             if (!ReceiveData.isObsolete())
                 remoteViews.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
