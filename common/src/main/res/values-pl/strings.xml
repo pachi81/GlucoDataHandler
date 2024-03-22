@@ -319,21 +319,21 @@
     <string name="pref_lockscreen_enabled_summary">If you enable lockscreen wallpaper, the app replaces the wallpaper on lockscreen with an Image containing the value and trend.</string>
     <string name="pref_lockscreen_y_pos">Vertical position</string>
     <string name="pref_lockscreen_y_pos_summary">Vertical position of the glucose-trend image on lockscreen:\n0 is the top of the display\n100 is the botton of the display</string>
+    <string name="very_low_alarm_notification_name">Alarm very low</string>
+    <string name="very_low_alarm_notification_descr">Notification for very low alarms.</string>
     <string name="menu_alarms">Alarms</string>
     <string name="alarm_cat_very_low">Very low</string>
     <string name="alarm_interval">Interval</string>
     <string name="alarm_interval_summary">Minimum interval between notifications for the this alarm type.</string>
-    <string name="alarm_ignore_dnd">Ignore DnD</string>
-    <string name="alarm_ignore_dnd_summary">Ignore Do not Disturb mode for notification.</string>
     <string name="alarm_enabled">Enabled</string>
     <string name="alarm_enabled_summary">Notification are enabled for this alarm type.</string>
-    <string name="alarm_vibrate">Vibration</string>
-    <string name="alarm_vibrate_summary">Vibrate while notification is triggered.</string>
-    <string name="alarm_default_sound">Default ringtone</string>
-    <string name="alarm_default_sound_summary">Use internal ringtone for this alarm type.</string>
-    <string name="alarm_sound">Select ringtone</string>
-    <string name="alarm_sound_summary">Press here to select a custom ringtone from the system.</string>
-    <string name="alarm_enable_sound">Use sound</string>
-    <string name="alarm_enable_sound_summary">If you want a sound for the notification, this should be activated.</string>
+    <string name="alarm_test">Test it</string>
+    <string name="alarm_test_summary">Press here to test the alarm.</string>
+    <string name="alarm_settings">Settings</string>
+    <string name="alarm_settings_summary">Press here to go to settings for notification channel for this alarm.\nThere you can change all related settings.</string>
+    <string name="alarm_notification_group_name">Alarms</string>
+    <string name="alarm_save_sound">Save sound</string>
+    <string name="alarm_save_sound_summary">Press here, if you want to save the default alarm sound to file system.</string>
+    <string name="alarm_saved">Alarm saved...</string>
 
 </resources>

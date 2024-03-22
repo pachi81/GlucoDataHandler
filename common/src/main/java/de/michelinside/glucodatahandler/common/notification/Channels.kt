@@ -11,7 +11,8 @@ enum class ChannelType(val channelId: String, val nameResId: Int, val descrResId
     WORKER("worker_notification_01", R.string.worker_notification_name, R.string.worker_notification_descr, NotificationManager.IMPORTANCE_LOW ),
     WEAR_FOREGROUND("glucodatahandler_service_01", R.string.wear_foreground_notification_name, R.string.wear_foreground_notification_descr, NotificationManager.IMPORTANCE_LOW),
     ANDROID_AUTO("GlucoDataNotify_Car", R.string.android_auto_notification_name, R.string.android_auto_notification_descr ),
-    ANDROID_AUTO_FOREGROUND("GlucoDataAuto_foreground", R.string.mobile_foreground_notification_name, R.string.mobile_foreground_notification_descr, NotificationManager.IMPORTANCE_LOW );
+    ANDROID_AUTO_FOREGROUND("GlucoDataAuto_foreground", R.string.mobile_foreground_notification_name, R.string.mobile_foreground_notification_descr, NotificationManager.IMPORTANCE_LOW ),
+    VERY_LOW_ALARM("very_low_alarm", R.string.very_low_alarm_notification_name, R.string.very_low_alarm_notification_descr, NotificationManager.IMPORTANCE_MAX );
 }
 object Channels {
     private var notificationMgr: NotificationManager? = null
@@ -42,6 +43,4 @@ object Channels {
     fun deleteNotificationChannel(context: Context, type: ChannelType) {
         getNotificationManager(context).deleteNotificationChannel(type.channelId)
     }
-
-
 }

@@ -5,7 +5,7 @@
     <PreferenceCategory
         android:title="@string/alarm_cat_very_low"
         app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="1">
+        app:initialExpandedChildrenCount="2">
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="alarm_very_low_enabled"
@@ -22,34 +22,20 @@
             android:title="@string/alarm_interval"
             android:summary="@string/alarm_interval_summary"
             app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="alarm_very_low_ignore_dnd"
-            android:title="@string/alarm_ignore_dnd"
-            android:summary="@string/alarm_ignore_dnd_summary"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="alarm_very_low_vibrate"
-            android:title="@string/alarm_vibrate"
-            android:summary="@string/alarm_vibrate_summary"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="alarm_very_low_enable_sound"
-            android:title="@string/alarm_enable_sound"
-            android:summary="@string/alarm_enable_sound_summary"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="alarm_very_low_default_sound"
-            android:title="@string/alarm_default_sound"
-            android:summary="@string/alarm_default_sound_summary"
+        <Preference
+            android:key="alarm_very_low_settings"
+            android:title="@string/alarm_settings"
+            android:summary="@string/alarm_settings_summary"
             app:iconSpaceReserved="false" />
         <Preference
-            android:key="alarm_very_low_sound"
-            android:title="@string/alarm_sound"
-            android:summary="@string/alarm_sound_summary"
+            android:key="alarm_very_low_test"
+            android:title="@string/alarm_test"
+            android:summary="@string/alarm_test_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="alarm_very_low_save_sound"
+            android:title="@string/alarm_save_sound"
+            android:summary="@string/alarm_save_sound_summary"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 

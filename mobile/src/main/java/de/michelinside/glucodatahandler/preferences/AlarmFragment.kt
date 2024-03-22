@@ -3,19 +3,24 @@ package de.michelinside.glucodatahandler.preferences
 import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
-import android.media.RingtoneManager
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.os.Environment.DIRECTORY_ALARMS
+import android.provider.DocumentsContract
+import android.provider.Settings
 import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
+import de.michelinside.glucodatahandler.common.notification.AlarmNotification
+import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
@@ -24,7 +29,7 @@ import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
 class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GDH.AlarmFragment"
     private var settingsChanged = false
-    private lateinit var veryLowSoundPicker: ActivityResultLauncher<Intent>
+    private lateinit var veryLowSoundSaver: ActivityResultLauncher<Intent>
 
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -34,16 +39,19 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
             preferenceManager.sharedPreferencesName = Constants.SHARED_PREF_TAG
             setPreferencesFromResource(R.xml.alarms, rootKey)
 
-            veryLowSoundPicker = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            veryLowSoundSaver = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
                 Log.v(LOG_ID, "Very low result ${result.resultCode}: ${result.data}")
                 if (result.resultCode == Activity.RESULT_OK) {
                     val intent = result.data
-                    // Handle the Intent
-                    setRingtoneResult(Constants.SHARED_PREF_ALARM_VERY_LOW_SOUND, veryLowSoundPicker, intent?.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI))
+                    intent?.data?.also { uri ->
+                        Log.v(LOG_ID, "Save media to " + uri)
+                        AlarmNotification.saveAlarm(requireContext(), AlarmType.VERY_LOW, uri)
+                    }
                 }
             }
-
-            setRingtoneSelect(Constants.SHARED_PREF_ALARM_VERY_LOW_SOUND, veryLowSoundPicker, Uri.parse(preferenceManager.sharedPreferences?.getString(Constants.SHARED_PREF_ALARM_VERY_LOW_SOUND, "")))
+            setAlarmTest(Constants.SHARED_PREF_ALARM_VERY_LOW_TEST, AlarmType.VERY_LOW)
+            setAlarmSettings(Constants.SHARED_PREF_ALARM_VERY_LOW_SETTINGS, AlarmType.VERY_LOW)
+            setAlarmSave(Constants.SHARED_PREF_ALARM_VERY_LOW_SAVE_SOUND, AlarmType.VERY_LOW, veryLowSoundSaver)
 
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
@@ -67,7 +75,6 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
         Log.d(LOG_ID, "onResume called")
         try {
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
-            updateEnableStates(preferenceManager.sharedPreferences!!)
             super.onResume()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.toString())
@@ -89,43 +96,69 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
         try {
             if(AlarmHandler.alarmPreferencesToSend.contains(key))
                 settingsChanged = true
-
-
-            when(key) {
-                Constants.SHARED_PREF_ALARM_VERY_LOW_ENABLE_SOUND,
-                Constants.SHARED_PREF_ALARM_VERY_LOW_DEF_SOUND -> {
-                    updateEnableStates(sharedPreferences!!)
-                }
-            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
         }
     }
 
 
-    fun <T : Preference?> setEnableState(sharedPreferences: SharedPreferences, key: String, enableKey: String, secondEnableKey: String? = null, defValue: Boolean = false, secondInvert: Boolean = false) {
-        val pref = findPreference<T>(key)
-        if (pref != null)
-            pref.isEnabled = sharedPreferences.getBoolean(enableKey, defValue) && (if (secondEnableKey != null) secondInvert != sharedPreferences.getBoolean(secondEnableKey, defValue) else true)
-    }
-    fun <T : Preference?> setEnableState(sharedPreferences: SharedPreferences, key: String, enableKey: String, defValue: Boolean = false, invert: Boolean = false) {
-        val pref = findPreference<T>(key)
+    private fun setAlarmTest(preference: String, alarmType: AlarmType) {
+        val pref = findPreference<Preference>(preference)
         if (pref != null) {
-            pref.isEnabled = invert != sharedPreferences.getBoolean(enableKey, defValue)
+            pref.setOnPreferenceClickListener {
+                Log.d(LOG_ID, "Trigger test for $alarmType")
+                AlarmNotification.triggerNotification(alarmType, requireContext())
+                true
+            }
         }
     }
 
-    fun updateEnableStates(sharedPreferences: SharedPreferences) {
-        try {
-            // very low
-            setEnableState<Preference>(sharedPreferences, Constants.SHARED_PREF_ALARM_VERY_LOW_SOUND, Constants.SHARED_PREF_ALARM_VERY_LOW_ENABLE_SOUND, Constants.SHARED_PREF_ALARM_VERY_LOW_DEF_SOUND, secondInvert = true)
-            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_ALARM_VERY_LOW_DEF_SOUND, Constants.SHARED_PREF_ALARM_VERY_LOW_ENABLE_SOUND)
-
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
+    private fun setAlarmSettings(preference: String, alarmType: AlarmType) {
+        val pref = findPreference<Preference>(preference)
+        if (pref != null) {
+            pref.setOnPreferenceClickListener {
+                Log.d(LOG_ID, "Open settings for $alarmType")
+                val intent: Intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+                    .putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
+                    .putExtra(Settings.EXTRA_CHANNEL_ID, AlarmNotification.getChannelId(alarmType))
+                startActivity(intent)
+                true
+            }
         }
     }
 
+    private fun setAlarmSave(
+        preference: String,
+        alarmType: AlarmType,
+        veryLowSoundSaver: ActivityResultLauncher<Intent>
+    ) {
+        val pref = findPreference<Preference>(preference)
+        val resId = AlarmNotification.getAlarmSoundRes(alarmType)
+        if (pref != null && resId != null) {
+            pref.setOnPreferenceClickListener {
+                var alarmUri: Uri? = null
+                MediaScannerConnection.scanFile(requireContext(), arrayOf(Environment.getExternalStoragePublicDirectory(DIRECTORY_ALARMS).absolutePath), null
+                ) { s: String, uri: Uri ->
+                    Log.v(LOG_ID, "Set URI $uri for path $s")
+                    alarmUri = uri
+                }
+                Log.d(LOG_ID, "Save sound for $alarmType to ${alarmUri}")
+                val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "audio/mpeg"
+                    val fileName =
+                        requireContext().resources.getResourceEntryName(resId) + ".mp3"
+                    putExtra(Intent.EXTRA_TITLE, fileName)
+                    putExtra(DocumentsContract.EXTRA_INITIAL_URI, alarmUri)
+                }
+                veryLowSoundSaver.launch(intent)
+                true
+            }
+        }
+    }
+
+
+    /*
     private fun setRingtoneSelect(
         preference: String,
         picker: ActivityResultLauncher<Intent>,
@@ -167,4 +200,5 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
         }
         setRingtoneSelect(preference, picker, newUri)
     }
+    */
 }

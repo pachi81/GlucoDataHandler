@@ -317,21 +317,21 @@
     <string name="pref_lockscreen_enabled_summary">Wenn sie den Hintergrund für den Lockscreen aktivieren, erstellt die App einen Hintergrund auf dem Lockscreen, welche den Glucosewert und den Trendpfeil enthält.</string>
     <string name="pref_lockscreen_y_pos">Vertikale Position</string>
     <string name="pref_lockscreen_y_pos_summary">Vertikale position auf dem Lockscreen:\n0: am oberen Rand des Bildschirms\n100: am unteren Rand des Bildschirms</string>
-    <string name="menu_alarms">Alarms</string>
-    <string name="alarm_cat_very_low">Very low</string>
-    <string name="alarm_interval">Interval</string>
-    <string name="alarm_interval_summary">Minimum interval between notifications for the this alarm type.</string>
-    <string name="alarm_ignore_dnd">Ignore DnD</string>
-    <string name="alarm_ignore_dnd_summary">Ignore Do not Disturb mode for notification.</string>
-    <string name="alarm_enabled">Enabled</string>
-    <string name="alarm_enabled_summary">Notification are enabled for this alarm type.</string>
-    <string name="alarm_vibrate">Vibration</string>
-    <string name="alarm_vibrate_summary">Vibrate while notification is triggered.</string>
-    <string name="alarm_default_sound">Default Ringtone</string>
-    <string name="alarm_default_sound_summary">Use internal ringtone for this alarm type.</string>
-    <string name="alarm_sound">Select ringtone</string>
-    <string name="alarm_sound_summary">Press here to select a custom ringtone from the system.</string>
-    <string name="alarm_enable_sound">Use sound</string>
-    <string name="alarm_enable_sound_summary">If you want a sound for the notification, this should be activated.</string>
+    <string name="alarm_notification_group_name">Alarme</string>
+    <string name="very_low_alarm_notification_name">Sehr tiefer Alarm</string>
+    <string name="very_low_alarm_notification_descr">Benachrichtigung für sehr tiefe Alarme.</string>
+    <string name="menu_alarms">Alarme</string>
+    <string name="alarm_cat_very_low">Sehr tiefer Alarm</string>
+    <string name="alarm_interval">Intervall</string>
+    <string name="alarm_interval_summary">Minimale Zeit zwischen den Benachrichtigungen für diesen Alarm.</string>
+    <string name="alarm_enabled">Aktiv</string>
+    <string name="alarm_enabled_summary">Benachrichtigungen sind aktiv für diesen Alarm.</string>
+    <string name="alarm_test">Test</string>
+    <string name="alarm_test_summary">Hier drücken, um die Benachrichtigung zu testen.</string>
+    <string name="alarm_settings">Einstellungen</string>
+    <string name="alarm_settings_summary">Hier drücken, um zum den Benachrichtigungseinstellungen für diesen Alarm zu gelangen.</string>
+    <string name="alarm_save_sound">Ton speichern</string>
+    <string name="alarm_save_sound_summary">Hier drücken, um den Standard Alarm Ton auf das Telefon zu speichern.</string>
+    <string name="alarm_saved">Alarm gespeichert...</string>
 
 </resources>
