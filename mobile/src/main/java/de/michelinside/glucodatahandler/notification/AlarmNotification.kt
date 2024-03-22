@@ -30,29 +30,60 @@ object AlarmNotification {
     private const val LOG_ID = "GDH.AlarmNotification"
     private const val ALARM_GROUP_ID = "alarm_group"
     private const val VERY_LOW_NOTIFICATION_ID = 801
+    private var enabled: Boolean = true
     fun initNotifications(context: Context) {
-        createNotificationChannels(context)
+        try {
+            createNotificationChannels(context)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "initNotifications exception: " + exc.toString() )
+        }
+    }
+
+    fun setEnabled(newEnabled: Boolean) {
+        try {
+            if (enabled != newEnabled) {
+                enabled = newEnabled
+                if(!enabled)
+                    stopNotifications(ReceiveData.getAlarmType())
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "setEnabled exception: " + exc.toString() )
+        }
     }
 
     fun destroy(context: Context) {
-        stopNotifications(AlarmType.VERY_LOW, context)
+        try {
+            stopNotifications(AlarmType.VERY_LOW, context)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "destroy exception: " + exc.toString() )
+        }
     }
 
     fun stopNotifications(alarmType: AlarmType, context: Context? = null) {
-        stopNotifications(getNotificationId(alarmType))
+        try {
+            stopNotifications(getNotificationId(alarmType))
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "stopNotifications exception: " + exc.toString() )
+        }
     }
     fun stopNotifications(noticationId: Int, context: Context? = null) {
+        try {
         if (noticationId > 0)
             Channels.getNotificationManager(context).cancel(noticationId)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "stopNotifications exception: " + exc.toString() )
+        }
     }
 
     fun triggerNotification(alarmType: AlarmType, context: Context) {
         try {
-            Log.v(LOG_ID, "showNotification called for $alarmType")
-            Channels.getNotificationManager(context).notify(
-                getNotificationId(alarmType),
-                createNotification(context, alarmType)
-            )
+            if (enabled) {
+                Log.v(LOG_ID, "showNotification called for $alarmType")
+                Channels.getNotificationManager(context).notify(
+                    getNotificationId(alarmType),
+                    createNotification(context, alarmType)
+                )
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "showNotification exception: " + exc.toString() )
         }

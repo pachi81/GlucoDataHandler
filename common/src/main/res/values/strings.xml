@@ -350,4 +350,7 @@
     <string name="alarm_saved">Alarm saved...</string>
     <string name="very_low_alarm_text">Very low!</string>
     <string name="snooze">Snooze</string>
+    <string name="alarm_cat_all">All alarms</string>
+    <string name="alarm_notifications_enabled">Notifications</string>
+    <string name="alarm_notifications_enabled_summary">De-/activate alarm notifications on phone.</string>
 </resources>

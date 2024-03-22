@@ -181,6 +181,9 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             if (extras != null) {
                 if (dataSource == NotifySource.MESSAGECLIENT || dataSource == NotifySource.BROADCAST) {
                     forwardBroadcast(context, extras)
+                    if(ReceiveData.forceAlarm) {
+                        AlarmNotification.triggerNotification(ReceiveData.getAlarmType(), context)
+                    }
                 }
             }
         } catch (exc: Exception) {

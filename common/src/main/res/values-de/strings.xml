@@ -334,6 +334,9 @@
     <string name="alarm_save_sound_summary">Hier drücken, um den Standard Alarm Ton auf das Telefon zu speichern.</string>
     <string name="alarm_saved">Alarm gespeichert...</string>
     <string name="very_low_alarm_text">Very low!</string>
-    <string name="snooze">Snooze</string>
+    <string name="snooze">Schlummern</string>
+    <string name="alarm_cat_all">Alle Alarme</string>
+    <string name="alarm_notifications_enabled">Benachrichtigungen</string>
+    <string name="alarm_notifications_enabled_summary">De-/aktiviert Alarm Benachrichtigungen auf dem Telefon.</string>
 
 </resources>

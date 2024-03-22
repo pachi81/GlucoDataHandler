@@ -91,11 +91,14 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
         }
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
         try {
             if(AlarmHandler.alarmPreferencesToSend.contains(key))
                 settingsChanged = true
+            when(key) {
+                Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED -> AlarmNotification.setEnabled(sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, true))
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
         }

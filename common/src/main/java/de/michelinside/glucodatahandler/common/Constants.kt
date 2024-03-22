@@ -122,6 +122,9 @@ object Constants {
     const val ALARM_SNOOZE_ACTION = "de.michelinside.glucodatahandler.SNOOZE"
     const val ALARM_SNOOZE_EXTRA_TIME = "snooze_time"
     const val ALARM_SNOOZE_EXTRA_NOTIFY_ID = "notification_id"
+
+    const val SHARED_PREF_ALARM_NOTIFICATION_ENABLED = "alarm_notifications_enabled"
+
     const val SHARED_PREF_ALARM_VERY_LOW_ENABLED = "alarm_very_low_enabled"
     const val SHARED_PREF_ALARM_VERY_LOW_INTERVAL = "alarm_very_low_interval"
     const val SHARED_PREF_ALARM_VERY_LOW_TEST = "alarm_very_low_test"
