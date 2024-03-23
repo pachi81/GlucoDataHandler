@@ -16,5 +16,6 @@ enum class NotifySource {
     IOB_COB_CHANGE,
     LOGCAT_REQUEST,
     PATIENT_DATA_CHANGED,
+    ALARM_TRIGGER,
     ALARM_SETTINGS;
 }

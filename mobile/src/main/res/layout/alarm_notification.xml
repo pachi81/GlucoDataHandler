@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:text="ALARM!"
-        android:textSize="25dp"
+        android:textSize="20dp"
         android:textColor="@color/text_color"
         tools:ignore="HardcodedText,SpUsage" />
 

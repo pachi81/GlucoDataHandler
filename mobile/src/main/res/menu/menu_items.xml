@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <group
         android:id="@+id/group_settings">
@@ -23,6 +24,35 @@
             android:id="@+id/action_alarms"
             android:title="@string/menu_alarms"
             app:showAsAction="never" />
+    </group>
+    <group
+        android:id="@+id/group_snoooze">
+        <item
+            android:id="@+id/group_snooze_title"
+            android:title="@string/snooze">
+            <menu>
+                <item
+                    android:id="@+id/action_snooze_60"
+                    android:title="60"
+                    app:showAsAction="never"
+                    tools:ignore="HardcodedText" />
+                <item
+                    android:id="@+id/action_snooze_90"
+                    android:title="90"
+                    app:showAsAction="never"
+                    tools:ignore="HardcodedText" />
+                <item
+                    android:id="@+id/action_snooze_120"
+                    android:title="120"
+                    app:showAsAction="never"
+                    tools:ignore="HardcodedText" />
+                <item
+                    android:id="@+id/action_stop_snooze"
+                    android:title="@string/stop_snooze"
+                    android:visible="false"
+                    app:showAsAction="never" />
+            </menu>
+        </item>
     </group>
     <group
         android:id="@+id/group_github">

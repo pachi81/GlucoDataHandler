@@ -5,10 +5,12 @@ import android.app.NotificationChannelGroup
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Paint
 import android.media.AudioAttributes
 import android.net.Uri
+import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.widget.RemoteViews
@@ -22,18 +24,25 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
+import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
+import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import java.io.FileOutputStream
 
-object AlarmNotification {
+object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
     private const val LOG_ID = "GDH.AlarmNotification"
     private const val ALARM_GROUP_ID = "alarm_group"
     private const val VERY_LOW_NOTIFICATION_ID = 801
-    private var enabled: Boolean = true
+    private var enabled: Boolean = false
     fun initNotifications(context: Context) {
         try {
+            Log.v(LOG_ID, "initNotifications called")
             createNotificationChannels(context)
+            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            sharedPref.registerOnSharedPreferenceChangeListener(this)
+            onSharedPreferenceChanged(sharedPref, null)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "initNotifications exception: " + exc.toString() )
         }
@@ -41,10 +50,15 @@ object AlarmNotification {
 
     fun setEnabled(newEnabled: Boolean) {
         try {
+            Log.v(LOG_ID, "setEnabled called: current=$enabled - new=$newEnabled")
             if (enabled != newEnabled) {
                 enabled = newEnabled
-                if(!enabled)
-                    stopNotifications(ReceiveData.getAlarmType())
+                if(enabled) {
+                    InternalNotifier.addNotifier(GlucoDataService.context!!, this, mutableSetOf(NotifySource.ALARM_TRIGGER) )
+                } else {
+                    stopNotifications()
+                    InternalNotifier.remNotifier(GlucoDataService.context!!, this)
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "setEnabled exception: " + exc.toString() )
@@ -53,23 +67,33 @@ object AlarmNotification {
 
     fun destroy(context: Context) {
         try {
-            stopNotifications(AlarmType.VERY_LOW, context)
+            Log.v(LOG_ID, "destroy called")
+            stopNotifications(context)
+            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            sharedPref.unregisterOnSharedPreferenceChangeListener(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "destroy exception: " + exc.toString() )
         }
     }
 
-    fun stopNotifications(alarmType: AlarmType, context: Context? = null) {
+    private fun stopNotifications(context: Context? = null) {
+        Log.v(LOG_ID, "stopNotifications called")
+        stopNotification(AlarmType.VERY_LOW, context)
+    }
+
+    private fun stopNotification(alarmType: AlarmType, context: Context? = null) {
         try {
-            stopNotifications(getNotificationId(alarmType))
+            Log.v(LOG_ID, "stopNotification called for $alarmType")
+            stopNotification(getNotificationId(alarmType))
         } catch (exc: Exception) {
             Log.e(LOG_ID, "stopNotifications exception: " + exc.toString() )
         }
     }
-    fun stopNotifications(noticationId: Int, context: Context? = null) {
+    fun stopNotification(noticationId: Int, context: Context? = null) {
         try {
-        if (noticationId > 0)
-            Channels.getNotificationManager(context).cancel(noticationId)
+            Log.v(LOG_ID, "stopNotification called for $noticationId")
+            if (noticationId > 0)
+                Channels.getNotificationManager(context).cancel(noticationId)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "stopNotifications exception: " + exc.toString() )
         }
@@ -77,8 +101,8 @@ object AlarmNotification {
 
     fun triggerNotification(alarmType: AlarmType, context: Context) {
         try {
+            Log.v(LOG_ID, "triggerNotification called for $alarmType - enabled=$enabled")
             if (enabled) {
-                Log.v(LOG_ID, "showNotification called for $alarmType")
                 Channels.getNotificationManager(context).notify(
                     getNotificationId(alarmType),
                     createNotification(context, alarmType)
@@ -90,6 +114,7 @@ object AlarmNotification {
     }
 
     private fun createNotificationChannels(context: Context) {
+        Log.v(LOG_ID, "createNotificationChannels called")
         val groupName = context.resources.getString(CR.string.alarm_notification_group_name)
         Channels.getNotificationManager(context).createNotificationChannelGroup(
             NotificationChannelGroup(ALARM_GROUP_ID, groupName))
@@ -97,6 +122,7 @@ object AlarmNotification {
     }
 
     private fun createNotificationChannel(context: Context, alarmType: AlarmType, byPassDnd: Boolean) {
+        Log.v(LOG_ID, "createNotificationChannel called for $alarmType")
         val channelType = getChannelType(alarmType)
         if (channelType != null) {
             val audioAttributes = AudioAttributes.Builder()
@@ -122,7 +148,13 @@ object AlarmNotification {
         return PendingIntent.getBroadcast(context, snoozeTime.toInt(), intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
+    private fun createAction(context: Context, title: String, snoozeTime: Long, noticationId: Int): Notification.Action {
+        return Notification.Action.Builder(null, title, createSnoozeIntent(context, snoozeTime, noticationId)).build()
+
+    }
+
     private fun createNotification(context: Context, alarmType: AlarmType): Notification? {
+        Log.v(LOG_ID, "createNotification called for $alarmType")
         val channelId = getChannelId(alarmType)
         val resId = getAlarmTextRes(alarmType)
         if (channelId.isNullOrEmpty() || resId == null)
@@ -149,15 +181,21 @@ object AlarmNotification {
             .setContentIntent(Utils.getAppIntent(context, MainActivity::class.java, 8, false))
             .setOnlyAlertOnce(false)
             .setAutoCancel(true)
-            .setShowWhen(true)
-            .setCustomContentView(remoteViews)
-            .setCustomBigContentView(null)
-            .setStyle(Notification.DecoratedCustomViewStyle())
+            .setShowWhen(false)
             .setCategory(Notification.CATEGORY_ALARM)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
             .setWhen(ReceiveData.time)
-            .setContentTitle("")
-            .setContentText("")
+            .setCustomContentView(remoteViews)
+            .setCustomBigContentView(null)
+            .setColorized(false)
+            .setStyle(Notification.DecoratedCustomViewStyle())
+
+            /*.setLargeIcon(BitmapUtils.getRateAsIcon())
+            .setContentTitle(context.getString(resId))
+            .setContentText(ReceiveData.getClucoseAsString()  + " (Δ " + ReceiveData.getDeltaAsString() + ")")
+            .addAction(createAction(context, context.getString(CR.string.snooze) + ": 60", 60L, getNotificationId(alarmType)))
+            .addAction(createAction(context, "90", 90L, getNotificationId(alarmType)))
+            .addAction(createAction(context, "120", 120L, getNotificationId(alarmType)))*/
             .build()
 
         return notification
@@ -191,7 +229,7 @@ object AlarmNotification {
         }
     }
 
-    fun getAlarmTextRes(alarmType: AlarmType): Int? {
+    private fun getAlarmTextRes(alarmType: AlarmType): Int? {
         return when(alarmType) {
             AlarmType.VERY_LOW -> CR.string.very_low_alarm_text
             else -> null
@@ -211,7 +249,7 @@ object AlarmNotification {
         return Uri.parse(uri)
     }
 
-    fun getVibrationPattern(alarmType: AlarmType): LongArray? {
+    private fun getVibrationPattern(alarmType: AlarmType): LongArray? {
         return when(alarmType) {
             AlarmType.VERY_LOW -> longArrayOf(0, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000)
             AlarmType.LOW -> longArrayOf(0, 700, 500, 700, 500, 700, 500, 700)
@@ -223,6 +261,7 @@ object AlarmNotification {
 
     fun saveAlarm(context: Context, alarmType: AlarmType, uri: Uri) {
         try {
+            Log.v(LOG_ID, "saveAlarm called for $alarmType to $uri")
             val resId = getAlarmSoundRes(alarmType)
             if (resId != null) {
                 Thread {
@@ -247,6 +286,29 @@ object AlarmNotification {
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Saving alarm to file exception: " + exc.message.toString() )
+        }
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
+        try {
+            Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
+            when(key) {
+                null,
+                Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED -> setEnabled(sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, enabled))
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
+        }
+    }
+
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
+        try {
+            Log.d(LOG_ID, "OnNotifyData called for $dataSource")
+            if (dataSource == NotifySource.ALARM_TRIGGER && ReceiveData.forceAlarm) {
+                triggerNotification(ReceiveData.getAlarmType(), context)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString())
         }
     }
 }

@@ -340,5 +340,6 @@
     <string name="alarm_cat_all">All alarms</string>
     <string name="alarm_notifications_enabled">Notifications</string>
     <string name="alarm_notifications_enabled_summary">De-/activate alarm notifications on phone.</string>
+    <string name="stop_snooze">Stop</string>
 
 </resources>

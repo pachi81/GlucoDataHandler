@@ -30,6 +30,7 @@ import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
+import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -150,6 +151,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.SETTINGS,
                 NotifySource.CAR_CONNECTION,
                 NotifySource.OBSOLETE_VALUE,
+                NotifySource.ALARM_SETTINGS,
                 NotifySource.SOURCE_STATE_CHANGE))
             checkExactAlarmPermission()
             checkBatteryOptimization()
@@ -329,6 +331,33 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     Log.v(LOG_ID, "log group selected")
                     val menuIt: MenuItem = optionsMenu.findItem(R.id.action_save_wear_logs)
                     menuIt.isEnabled = WearPhoneConnection.nodesConnected && !LogcatReceiver.isActive
+                }
+                R.id.group_snooze_title -> {
+                    Log.v(LOG_ID, "snooze group selected - snoozeActive=${AlarmHandler.isSnoozeActive}")
+                    val snoozeStop: MenuItem = optionsMenu.findItem(R.id.action_stop_snooze)
+                    val snooze60: MenuItem = optionsMenu.findItem(R.id.action_snooze_60)
+                    val snooze90: MenuItem = optionsMenu.findItem(R.id.action_snooze_90)
+                    val snooze120: MenuItem = optionsMenu.findItem(R.id.action_snooze_120)
+                    snoozeStop.isVisible = AlarmHandler.isSnoozeActive
+                    snooze60.isVisible = !AlarmHandler.isSnoozeActive
+                    snooze90.isVisible = !AlarmHandler.isSnoozeActive
+                    snooze120.isVisible = !AlarmHandler.isSnoozeActive
+                }
+                R.id.action_stop_snooze -> {
+                    AlarmHandler.setSnooze(0L)
+                    return true
+                }
+                R.id.action_snooze_60 -> {
+                    AlarmHandler.setSnooze(60L)
+                    return true
+                }
+                R.id.action_snooze_90 -> {
+                    AlarmHandler.setSnooze(90L)
+                    return true
+                }
+                R.id.action_snooze_120 -> {
+                    AlarmHandler.setSnooze(120L)
+                    return true
                 }
                 else -> return super.onOptionsItemSelected(item)
             }

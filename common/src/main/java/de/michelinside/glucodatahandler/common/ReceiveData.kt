@@ -247,6 +247,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         }
 
         if (curAlarm != 0 && AlarmHandler.checkForAlarmTrigger(curAlarmType)) {
+            forceAlarm = true
             return curAlarm or 8
         }
         return curAlarm
@@ -382,6 +383,9 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     val notifySource = if(interApp) NotifySource.MESSAGECLIENT else NotifySource.BROADCAST
 
                     InternalNotifier.notify(context, notifySource, createExtras())  // re-create extras to have all changed value inside...
+                    if(forceAlarm) {
+                        InternalNotifier.notify(context, NotifySource.ALARM_TRIGGER, null)
+                    }
                     saveExtras(context)
                     result = true
                 } else if( extras.containsKey(IOB) || extras.containsKey(COB)) {
