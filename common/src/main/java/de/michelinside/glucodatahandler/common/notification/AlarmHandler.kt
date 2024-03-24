@@ -71,10 +71,10 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener {
                 " - delta=" + ReceiveData.delta.toString() +
                 " - rate=" + ReceiveData.rate.toString() +
                 " - diff=" + (ReceiveData.time - lastAlarmTime).toString() +
-                " - veryLowInt=" + veryLowInterval.toString() +
-                " - lowInt=" + lowInterval.toString() +
-                " - highInt=" + highInterval.toString() +
-                " - veryHighInt=" + veryHighInterval.toString()
+                " - veryLowInt=>" + DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+veryLowInterval)) +
+                " - lowInt=>" + DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+lowInterval)) +
+                " - highInt=>" + DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+highInterval)) +
+                " - veryHighInt=>" + DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+veryHighInterval))
         )
         if (isSnoozeActive)
             return false
@@ -86,12 +86,16 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener {
             else -> false
         }
         if (triggerAlarm) {
-            lastAlarmTime = ReceiveData.time
-            lastAlarmType = newAlarmType
-            saveExtras()
+            setLastAlarm(newAlarmType)
             Log.i(LOG_ID, "Trigger alarm for type $newAlarmType")
         }
         return triggerAlarm
+    }
+
+    fun setLastAlarm(alarmType: AlarmType) {
+        lastAlarmTime = ReceiveData.time
+        lastAlarmType = alarmType
+        saveExtras()
     }
 
     fun setSnooze(minutes: Long) {
@@ -100,17 +104,23 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     private fun checkHighAlarm(newAlarmType: AlarmType, alarmInterval: Int): Boolean {
-        if(newAlarmType > lastAlarmType || ((ReceiveData.delta > 0F || ReceiveData.rate > 0F) && (ReceiveData.time - lastAlarmTime >= alarmInterval)))
-        {
+        if(newAlarmType > lastAlarmType)
             return true
+        if (ReceiveData.time - lastAlarmTime >= alarmInterval) {
+            if(ReceiveData.delta.isNaN())
+                return ReceiveData.rate > 0F
+            return ReceiveData.delta > 0F
         }
         return false
     }
 
     private fun checkLowAlarm(newAlarmType: AlarmType, alarmInterval: Int): Boolean {
-        if(newAlarmType < lastAlarmType || ((ReceiveData.delta < 0F || ReceiveData.rate < 0F) && (ReceiveData.time - lastAlarmTime >= alarmInterval)))
-        {
+        if(newAlarmType < lastAlarmType)
             return true
+        if (ReceiveData.time - lastAlarmTime >= alarmInterval) {
+            if(ReceiveData.delta.isNaN())
+                return ReceiveData.rate < 0F
+            return ReceiveData.delta < 0F
         }
         return false
     }

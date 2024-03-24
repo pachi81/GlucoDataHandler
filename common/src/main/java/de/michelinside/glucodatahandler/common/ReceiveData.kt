@@ -162,10 +162,10 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         var deltaVal = ""
         if (delta > 0)
             deltaVal += "+"
-        if( !isMmol && delta.toDouble() == Math.floor(delta.toDouble()) )
-            deltaVal += delta.toInt().toString()
+        deltaVal += if( !isMmol && delta.toDouble() == Math.floor(delta.toDouble()) )
+            delta.toInt().toString()
         else
-            deltaVal += delta.toString()
+            delta.toString()
         return deltaVal
     }
 
@@ -373,15 +373,16 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     if(extras.containsKey(IOB) || extras.containsKey(COB)) {
                         iob = extras.getFloat(IOB, Float.NaN)
                         cob = extras.getFloat(COB, Float.NaN)
-                        if(extras.containsKey(IOBCOB_TIME))
-                            iobCobTime = extras.getLong(IOBCOB_TIME)
+                        iobCobTime = if(extras.containsKey(IOBCOB_TIME))
+                            extras.getLong(IOBCOB_TIME)
                         else
-                            iobCobTime = time
+                            time
                     }
 
                     // check for alarm
                     if (interApp) {
                         alarm = extras.getInt(ALARM) // if bit 8 is set, then an alarm is triggered
+                        AlarmHandler.setLastAlarm(getAlarmType())
                     } else {
                         alarm = calculateAlarm()
                     }
@@ -437,10 +438,10 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         if (isMmol != newValue) {
             isMmolValue = newValue
             if (isMmolValue != GlucoDataUtils.isMmolValue(glucose)) {
-                if (isMmolValue)
-                    glucose = GlucoDataUtils.mgToMmol(glucose)
+                glucose = if (isMmolValue)
+                    GlucoDataUtils.mgToMmol(glucose)
                 else
-                    glucose = GlucoDataUtils.mmolToMg(glucose)
+                    GlucoDataUtils.mmolToMg(glucose)
             }
             Log.i(LOG_ID, "Unit changed to " + glucose + if(isMmolValue) "mmol/l" else "mg/dl")
             if (context != null) {
