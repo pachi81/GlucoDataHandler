@@ -318,10 +318,7 @@
     <string name="pref_lockscreen_y_pos">Vertikale Position</string>
     <string name="pref_lockscreen_y_pos_summary">Vertikale position auf dem Lockscreen:\n0: am oberen Rand des Bildschirms\n100: am unteren Rand des Bildschirms</string>
     <string name="alarm_notification_group_name">Alarme</string>
-    <string name="very_low_alarm_notification_name">Sehr tiefer Alarm</string>
-    <string name="very_low_alarm_notification_descr">Benachrichtigung für sehr tiefe Alarme.</string>
     <string name="menu_alarms">Alarme</string>
-    <string name="alarm_cat_very_low">Sehr tiefer Alarm</string>
     <string name="alarm_interval">Intervall</string>
     <string name="alarm_interval_summary">Minimale Zeit zwischen den Benachrichtigungen für diesen Alarm.</string>
     <string name="alarm_enabled">Aktiv</string>
@@ -329,15 +326,26 @@
     <string name="alarm_test">Test</string>
     <string name="alarm_test_summary">Hier drücken, um die Benachrichtigung zu testen.</string>
     <string name="alarm_settings">Einstellungen</string>
-    <string name="alarm_settings_summary">Hier drücken, um zum den Benachrichtigungseinstellungen für diesen Alarm zu gelangen.</string>
+    <string name="alarm_settings_summary">Hier drücken, um zu den Benachrichtigungseinstellungen für diesen Alarm zu gelangen.</string>
     <string name="alarm_save_sound">Ton speichern</string>
     <string name="alarm_save_sound_summary">Hier drücken, um den Standard Alarm Ton auf das Telefon zu speichern.</string>
     <string name="alarm_saved">Alarm gespeichert...</string>
-    <string name="very_low_alarm_text">Sehr tief!</string>
     <string name="snooze">Schlummern</string>
     <string name="alarm_cat_all">Alle Alarme</string>
     <string name="alarm_notifications_enabled">Benachrichtigungen</string>
     <string name="alarm_notifications_enabled_summary">De-/aktiviert Alarm Benachrichtigungen auf dem Telefon.</string>
     <string name="stop_snooze">Stop</string>
+    <string name="very_low_alarm_text">Sehr tief!</string>
+    <string name="very_low_text">Tief!</string>
+    <string name="very_high_text">Hoch!</string>
+    <string name="very_high_alarm_text">Sehr hoch!</string>
+    <string name="very_low_alarm_notification_name">Sehr tiefer Alarm</string>
+    <string name="very_low_alarm_notification_descr">Benachrichtigung für sehr tiefe Alarme.</string>
+    <string name="low_alarm_notification_name">Tiefer Alarm</string>
+    <string name="low_alarm_notification_descr">Benachrichtigung für tiefe Alarme.</string>
+    <string name="high_alarm_notification_name">Hoher Alarm</string>
+    <string name="high_alarm_notification_descr">Benachrichtigung für hohe Alarme.</string>
+    <string name="very_high_alarm_notification_name">Sehr hoher Alarm</string>
+    <string name="very_high_alarm_notification_descr">Benachrichtigung für sehr hohe Alarme.</string>
 
 </resources>

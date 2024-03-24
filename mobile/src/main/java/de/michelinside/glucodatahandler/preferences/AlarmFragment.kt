@@ -29,7 +29,7 @@ import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
 class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GDH.AlarmFragment"
     private var settingsChanged = false
-    private lateinit var veryLowSoundSaver: ActivityResultLauncher<Intent>
+    private var soundSaverMap: MutableMap<AlarmType, ActivityResultLauncher<Intent>> = mutableMapOf()
 
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -39,23 +39,31 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
             preferenceManager.sharedPreferencesName = Constants.SHARED_PREF_TAG
             setPreferencesFromResource(R.xml.alarms, rootKey)
 
-            veryLowSoundSaver = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-                Log.v(LOG_ID, "Very low result ${result.resultCode}: ${result.data}")
-                if (result.resultCode == Activity.RESULT_OK) {
-                    val intent = result.data
-                    intent?.data?.also { uri ->
-                        Log.v(LOG_ID, "Save media to " + uri)
-                        AlarmNotification.saveAlarm(requireContext(), AlarmType.VERY_LOW, uri)
-                    }
-                }
-            }
-            setAlarmTest(Constants.SHARED_PREF_ALARM_VERY_LOW_TEST, AlarmType.VERY_LOW)
-            setAlarmSettings(Constants.SHARED_PREF_ALARM_VERY_LOW_SETTINGS, AlarmType.VERY_LOW)
-            setAlarmSave(Constants.SHARED_PREF_ALARM_VERY_LOW_SAVE_SOUND, AlarmType.VERY_LOW, veryLowSoundSaver)
+            createAlarmPrefSettings("alarm_very_low_", AlarmType.VERY_LOW)
+            createAlarmPrefSettings("alarm_low_", AlarmType.LOW)
+            createAlarmPrefSettings("alarm_high_", AlarmType.HIGH)
+            createAlarmPrefSettings("alarm_very_high_", AlarmType.VERY_HIGH)
 
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
         }
+    }
+
+    private fun createAlarmPrefSettings(pref_prefix: String,
+                                        alarmType: AlarmType) {
+        soundSaverMap.put(alarmType, registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            Log.v(LOG_ID, "$alarmType result ${result.resultCode}: ${result.data}")
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = result.data
+                intent?.data?.also { uri ->
+                    Log.v(LOG_ID, "Save media to " + uri)
+                    AlarmNotification.saveAlarm(requireContext(), alarmType, uri)
+                }
+            }
+        })
+        setAlarmTest(pref_prefix + "test", alarmType)
+        setAlarmSettings(pref_prefix + "settings", alarmType)
+        setAlarmSave(pref_prefix + "save_sound", alarmType, soundSaverMap.get(alarmType)!!)
     }
 
     override fun onDestroyView() {
@@ -110,7 +118,7 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
         if (pref != null) {
             pref.setOnPreferenceClickListener {
                 Log.d(LOG_ID, "Trigger test for $alarmType")
-                AlarmNotification.triggerNotification(alarmType, requireContext())
+                AlarmNotification.triggerNotification(alarmType, requireContext(), true)
                 true
             }
         }
@@ -130,10 +138,15 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
         }
     }
 
+    private fun getAlarmFileName(resId: Int): String {
+        val name = requireContext().resources.getResourceEntryName(resId).replace("gdh", "GDH").replace("_", " ")
+        return "$name.mp3"
+    }
+
     private fun setAlarmSave(
         preference: String,
         alarmType: AlarmType,
-        veryLowSoundSaver: ActivityResultLauncher<Intent>
+        soundSaver: ActivityResultLauncher<Intent>
     ) {
         val pref = findPreference<Preference>(preference)
         val resId = AlarmNotification.getAlarmSoundRes(alarmType)
@@ -150,12 +163,11 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
                 val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
                     addCategory(Intent.CATEGORY_OPENABLE)
                     type = "audio/mpeg"
-                    val fileName =
-                        requireContext().resources.getResourceEntryName(resId) + ".mp3"
+                    val fileName = getAlarmFileName(resId)
                     putExtra(Intent.EXTRA_TITLE, fileName)
                     putExtra(DocumentsContract.EXTRA_INITIAL_URI, alarmUri)
                 }
-                veryLowSoundSaver.launch(intent)
+                soundSaver.launch(intent)
                 true
             }
         }

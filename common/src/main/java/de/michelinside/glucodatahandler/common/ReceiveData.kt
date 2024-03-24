@@ -43,7 +43,10 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var timeDiff: Long = 0
     var rateLabel: String? = null
     var source: DataSource = DataSource.NONE
-    var forceAlarm: Boolean = false
+    val forceAlarm: Boolean get() {
+        return ((alarm and 8) == 8)
+    }
+
     var iob: Float = Float.NaN
     var cob: Float = Float.NaN
     var iobCobTime: Long = 0
@@ -247,7 +250,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         }
 
         if (curAlarm != 0 && AlarmHandler.checkForAlarmTrigger(curAlarmType)) {
-            forceAlarm = true
             return curAlarm or 8
         }
         return curAlarm
@@ -259,7 +261,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         if (monoChrome)
             return Color.WHITE
 
-        return when(getAlarmType()) {
+        return getAlarmTypeColor(getAlarmType())
+    }
+
+    fun getAlarmTypeColor(alarmType: AlarmType): Int {
+        return when(alarmType) {
             AlarmType.NONE -> Color.GRAY
             AlarmType.VERY_LOW -> colorAlarm
             AlarmType.LOW -> colorOutOfRange
@@ -376,10 +382,10 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     // check for alarm
                     if (interApp) {
                         alarm = extras.getInt(ALARM) // if bit 8 is set, then an alarm is triggered
-                        forceAlarm = ((alarm and 8) == 8)
                     } else {
                         alarm = calculateAlarm()
                     }
+
                     val notifySource = if(interApp) NotifySource.MESSAGECLIENT else NotifySource.BROADCAST
 
                     InternalNotifier.notify(context, notifySource, createExtras())  // re-create extras to have all changed value inside...

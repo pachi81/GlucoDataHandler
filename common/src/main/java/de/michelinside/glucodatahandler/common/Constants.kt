@@ -133,12 +133,21 @@ object Constants {
 
     const val SHARED_PREF_ALARM_LOW_ENABLED = "alarm_low_enabled"
     const val SHARED_PREF_ALARM_LOW_INTERVAL = "alarm_low_interval"
+    const val SHARED_PREF_ALARM_LOW_TEST = "alarm_low_test"
+    const val SHARED_PREF_ALARM_LOW_SETTINGS = "alarm_low_settings"
+    const val SHARED_PREF_ALARM_LOW_SAVE_SOUND = "alarm_low_save_sound"
 
     const val SHARED_PREF_ALARM_HIGH_ENABLED = "alarm_high_enabled"
     const val SHARED_PREF_ALARM_HIGH_INTERVAL = "alarm_high_interval"
+    const val SHARED_PREF_ALARM_HIGH_TEST = "alarm_high_test"
+    const val SHARED_PREF_ALARM_HIGH_SETTINGS = "alarm_high_settings"
+    const val SHARED_PREF_ALARM_HIGH_SAVE_SOUND = "alarm_high_save_sound"
 
     const val SHARED_PREF_ALARM_VERY_HIGH_ENABLED = "alarm_very_high_enabled"
     const val SHARED_PREF_ALARM_VERY_HIGH_INTERVAL = "alarm_very_high_interval"
+    const val SHARED_PREF_ALARM_VERY_HIGH_TEST = "alarm_very_high_test"
+    const val SHARED_PREF_ALARM_VERY_HIGH_SETTINGS = "alarm_very_high_settings"
+    const val SHARED_PREF_ALARM_VERY_HIGH_SAVE_SOUND = "alarm_very_high_save_sound"
 
     // Android Auto
     const val AA_MEDIA_ICON_STYLE_TREND = "trend"

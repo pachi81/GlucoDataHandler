@@ -25,9 +25,9 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener {
     private var lowEnabled = true
     private var lowInterval = 25*60000 // ms -> 25 minutes
     private var highEnabled = true
-    private var highInterval = 30*60000 // ms -> 35 minutes
+    private var highInterval = 30*60000 // ms -> 30 minutes
     private var veryHighEnabled = true
-    private var veryHighInterval = 30*60000 // ms -> 30 minutes
+    private var veryHighInterval = 25*60000 // ms -> 25 minutes
 
 
     private var lastAlarmTime = 0L
@@ -52,7 +52,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener {
                 sharedPref.registerOnSharedPreferenceChangeListener(this)
                 updateSettings(sharedPref)
                 sharedExtraPref = context.getSharedPreferences(Constants.SHARED_PREF_EXTRAS_TAG, Context.MODE_PRIVATE)
-                loadExtras(context)
+                loadExtras()
                 initialized = true
             }
         } catch (exc: Exception) {
@@ -126,7 +126,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener {
         InternalNotifier.notify(GlucoDataService.context!!, NotifySource.ALARM_SETTINGS, null)
     }
 
-    private fun loadExtras(context: Context) {
+    private fun loadExtras() {
         try {
             Log.i(LOG_ID, "Reading saved values...")
             lastAlarmType = AlarmType.fromIndex(sharedExtraPref.getInt(LAST_ALARM_INDEX, AlarmType.NONE.ordinal))

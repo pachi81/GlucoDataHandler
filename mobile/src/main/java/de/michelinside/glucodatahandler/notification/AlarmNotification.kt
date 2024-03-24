@@ -10,9 +10,11 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.media.AudioAttributes
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast
 import de.michelinside.glucodatahandler.MainActivity
@@ -35,6 +37,9 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
     private const val LOG_ID = "GDH.AlarmNotification"
     private const val ALARM_GROUP_ID = "alarm_group"
     private const val VERY_LOW_NOTIFICATION_ID = 801
+    private const val LOW_NOTIFICATION_ID = 802
+    private const val HIGH_NOTIFICATION_ID = 803
+    private const val VERY_HIGH_NOTIFICATION_ID = 804
     private var enabled: Boolean = false
     fun initNotifications(context: Context) {
         try {
@@ -79,6 +84,9 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
     private fun stopNotifications(context: Context? = null) {
         Log.v(LOG_ID, "stopNotifications called")
         stopNotification(AlarmType.VERY_LOW, context)
+        stopNotification(AlarmType.LOW, context)
+        stopNotification(AlarmType.HIGH, context)
+        stopNotification(AlarmType.VERY_HIGH, context)
     }
 
     private fun stopNotification(alarmType: AlarmType, context: Context? = null) {
@@ -99,10 +107,10 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
         }
     }
 
-    fun triggerNotification(alarmType: AlarmType, context: Context) {
+    fun triggerNotification(alarmType: AlarmType, context: Context, forTest: Boolean = false) {
         try {
-            Log.v(LOG_ID, "triggerNotification called for $alarmType - enabled=$enabled")
-            if (enabled) {
+            Log.v(LOG_ID, "triggerNotification called for $alarmType - enabled=$enabled - forTest=$forTest")
+            if (enabled || forTest) {
                 Channels.getNotificationManager(context).notify(
                     getNotificationId(alarmType),
                     createNotification(context, alarmType)
@@ -119,6 +127,9 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
         Channels.getNotificationManager(context).createNotificationChannelGroup(
             NotificationChannelGroup(ALARM_GROUP_ID, groupName))
         createNotificationChannel(context, AlarmType.VERY_LOW, true)
+        createNotificationChannel(context, AlarmType.LOW, false)
+        createNotificationChannel(context, AlarmType.HIGH, false)
+        createNotificationChannel(context, AlarmType.VERY_HIGH, true)
     }
 
     private fun createNotificationChannel(context: Context, alarmType: AlarmType, byPassDnd: Boolean) {
@@ -133,8 +144,12 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
             val channel = Channels.getNotificationChannel(context, channelType, false)
             channel.group = ALARM_GROUP_ID
             channel.setSound(getDefaultAlarm(alarmType, context), audioAttributes)
+            channel.enableVibration(true)
             channel.vibrationPattern = getVibrationPattern(alarmType)
+            channel.enableLights(true)
+            channel.lightColor = ReceiveData.getAlarmTypeColor(alarmType)
             channel.setBypassDnd(byPassDnd)
+            channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
             Channels.getNotificationManager(context).createNotificationChannel(channel)
         }
     }
@@ -160,33 +175,41 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
         if (channelId.isNullOrEmpty() || resId == null)
             return null
 
-        val remoteViews = RemoteViews(GlucoDataService.context!!.packageName, R.layout.alarm_notification)
-        remoteViews.setTextViewText(R.id.alarm, context.getString(resId))
-        remoteViews.setTextViewText(R.id.snooze, context.getString(CR.string.snooze))
-        remoteViews.setTextViewText(R.id.glucose, ReceiveData.getClucoseAsString())
-        remoteViews.setTextColor(R.id.glucose, ReceiveData.getClucoseColor())
-        remoteViews.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap())
-        remoteViews.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
-        remoteViews.setOnClickPendingIntent(R.id.snooze_60, createSnoozeIntent(context, 60L, getNotificationId(alarmType)))
-        remoteViews.setOnClickPendingIntent(R.id.snooze_90, createSnoozeIntent(context, 90L, getNotificationId(alarmType)))
-        remoteViews.setOnClickPendingIntent(R.id.snooze_120, createSnoozeIntent(context, 120L, getNotificationId(alarmType)))
+        val bigContentView = RemoteViews(GlucoDataService.context!!.packageName, R.layout.alarm_notification)
+        bigContentView.setTextViewText(R.id.alarm, context.getString(resId))
+        bigContentView.setTextViewText(R.id.snooze, context.getString(CR.string.snooze))
+        bigContentView.setTextViewText(R.id.glucose, ReceiveData.getClucoseAsString())
+        bigContentView.setTextColor(R.id.glucose, ReceiveData.getClucoseColor())
+        bigContentView.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap())
+        bigContentView.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
+        bigContentView.setOnClickPendingIntent(R.id.snooze_60, createSnoozeIntent(context, 60L, getNotificationId(alarmType)))
+        bigContentView.setOnClickPendingIntent(R.id.snooze_90, createSnoozeIntent(context, 90L, getNotificationId(alarmType)))
+        bigContentView.setOnClickPendingIntent(R.id.snooze_120, createSnoozeIntent(context, 120L, getNotificationId(alarmType)))
         if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) {
             if (!ReceiveData.isObsolete())
-                remoteViews.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
-            remoteViews.setTextColor(R.id.deltaText, Color.GRAY )
+                bigContentView.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
+            bigContentView.setTextColor(R.id.deltaText, Color.GRAY )
         }
+
+        val contentView = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            RemoteViews(bigContentView)
+        } else {
+            bigContentView.clone()
+        }
+        contentView.setViewVisibility(R.id.snoozeLayout, View.GONE)
+
 
         val notification = Notification.Builder(context, channelId)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(Utils.getAppIntent(context, MainActivity::class.java, 8, false))
             .setOnlyAlertOnce(false)
             .setAutoCancel(true)
-            .setShowWhen(false)
+            .setShowWhen(true)
             .setCategory(Notification.CATEGORY_ALARM)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
             .setWhen(ReceiveData.time)
-            .setCustomContentView(remoteViews)
-            .setCustomBigContentView(null)
+            .setCustomContentView(contentView)
+            .setCustomBigContentView(bigContentView)
             .setColorized(false)
             .setStyle(Notification.DecoratedCustomViewStyle())
 
@@ -204,6 +227,9 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
     private fun getNotificationId(alarmType: AlarmType): Int {
         return when(alarmType) {
             AlarmType.VERY_LOW -> VERY_LOW_NOTIFICATION_ID
+            AlarmType.LOW -> LOW_NOTIFICATION_ID
+            AlarmType.HIGH -> HIGH_NOTIFICATION_ID
+            AlarmType.VERY_HIGH -> VERY_HIGH_NOTIFICATION_ID
             else -> -1
         }
     }
@@ -211,20 +237,26 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
     private fun getChannelType(alarmType: AlarmType): ChannelType? {
         return when(alarmType) {
             AlarmType.VERY_LOW -> ChannelType.VERY_LOW_ALARM
+            AlarmType.LOW -> ChannelType.LOW_ALARM
+            AlarmType.HIGH -> ChannelType.HIGH_ALARM
+            AlarmType.VERY_HIGH -> ChannelType.VERY_HIGH_ALARM
             else -> null
         }
     }
 
     fun getChannelId(alarmType: AlarmType): String? {
-        return when(alarmType) {
-            AlarmType.VERY_LOW -> ChannelType.VERY_LOW_ALARM.channelId
-            else -> null
-        }
+        val channel = getChannelType(alarmType)
+        if (channel != null)
+            return channel.channelId
+        return null
     }
 
     fun getAlarmSoundRes(alarmType: AlarmType): Int? {
         return when(alarmType) {
-            AlarmType.VERY_LOW -> CR.raw.gdh_alarm_very_low
+            AlarmType.VERY_LOW -> CR.raw.gdh_very_low_alarm
+            AlarmType.LOW -> CR.raw.gdh_low_alarm
+            AlarmType.HIGH -> CR.raw.gdh_high_alarm
+            AlarmType.VERY_HIGH -> CR.raw.gdh_very_high_alarm
             else -> null
         }
     }
@@ -232,6 +264,9 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
     private fun getAlarmTextRes(alarmType: AlarmType): Int? {
         return when(alarmType) {
             AlarmType.VERY_LOW -> CR.string.very_low_alarm_text
+            AlarmType.LOW -> CR.string.very_low_text
+            AlarmType.HIGH -> CR.string.very_high_text
+            AlarmType.VERY_HIGH -> CR.string.very_high_alarm_text
             else -> null
         }
     }

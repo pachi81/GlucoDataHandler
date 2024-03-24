@@ -319,10 +319,7 @@
     <string name="pref_lockscreen_enabled_summary">If you enable lockscreen wallpaper, the app replaces the wallpaper on lockscreen with an Image containing the value and trend.</string>
     <string name="pref_lockscreen_y_pos">Vertical position</string>
     <string name="pref_lockscreen_y_pos_summary">Vertical position of the glucose-trend image on lockscreen:\n0 is the top of the display\n100 is the botton of the display</string>
-    <string name="very_low_alarm_notification_name">Alarm very low</string>
-    <string name="very_low_alarm_notification_descr">Notification for very low alarms.</string>
     <string name="menu_alarms">Alarms</string>
-    <string name="alarm_cat_very_low">Very low</string>
     <string name="alarm_interval">Interval</string>
     <string name="alarm_interval_summary">Minimum interval between notifications for the this alarm type.</string>
     <string name="alarm_enabled">Enabled</string>
@@ -335,11 +332,22 @@
     <string name="alarm_save_sound">Save sound</string>
     <string name="alarm_save_sound_summary">Press here, if you want to save the default alarm sound to file system.</string>
     <string name="alarm_saved">Alarm saved...</string>
-    <string name="very_low_alarm_text">Very low!</string>
     <string name="snooze">Snooze</string>
     <string name="alarm_cat_all">All alarms</string>
     <string name="alarm_notifications_enabled">Notifications</string>
     <string name="alarm_notifications_enabled_summary">De-/activate alarm notifications on phone.</string>
+    <string name="very_low_alarm_text">Very low!</string>
     <string name="stop_snooze">Stop</string>
+    <string name="very_low_text">Low!</string>
+    <string name="very_high_text">High!</string>
+    <string name="very_high_alarm_text">Very high!</string>
+    <string name="very_low_alarm_notification_name">Very low alarm</string>
+    <string name="very_low_alarm_notification_descr">Notification for very low alarms.</string>
+    <string name="low_alarm_notification_name">Low alarm</string>
+    <string name="low_alarm_notification_descr">Notification for low alarms.</string>
+    <string name="high_alarm_notification_name">High alarm</string>
+    <string name="high_alarm_notification_descr">Notification for high alarms.</string>
+    <string name="very_high_alarm_notification_name">Very high alarm</string>
+    <string name="very_high_alarm_notification_descr">Notification for very high alarms.</string>
 
 </resources>

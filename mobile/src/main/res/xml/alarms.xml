@@ -13,7 +13,7 @@
 
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="@string/alarm_cat_very_low"
+        android:title="@string/very_low_alarm_notification_name"
         app:iconSpaceReserved="false"
         app:initialExpandedChildrenCount="2">
         <androidx.preference.SwitchPreferenceCompat
@@ -46,6 +46,114 @@
             android:key="alarm_very_low_save_sound"
             android:title="@string/alarm_save_sound"
             android:summary="@string/alarm_save_sound_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/low_alarm_notification_name"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="2">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="alarm_low_enabled"
+            android:title="@string/alarm_enabled"
+            android:summary="@string/alarm_enabled_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SeekBarPreference
+            android:defaultValue="25"
+            app:showSeekBarValue="true"
+            app:seekBarIncrement="1"
+            app:min="5"
+            android:max="120"
+            android:key="alarm_low_interval"
+            android:title="@string/alarm_interval"
+            android:summary="@string/alarm_interval_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="alarm_low_settings"
+            android:title="@string/alarm_settings"
+            android:summary="@string/alarm_settings_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="alarm_low_test"
+            android:title="@string/alarm_test"
+            android:summary="@string/alarm_test_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="alarm_low_save_sound"
+            android:title="@string/alarm_save_sound"
+            android:summary="@string/alarm_save_sound_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/high_alarm_notification_name"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="2">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="alarm_high_enabled"
+            android:title="@string/alarm_enabled"
+            android:summary="@string/alarm_enabled_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SeekBarPreference
+            android:defaultValue="30"
+            app:showSeekBarValue="true"
+            app:seekBarIncrement="1"
+            app:min="5"
+            android:max="120"
+            android:key="alarm_high_interval"
+            android:title="@string/alarm_interval"
+            android:summary="@string/alarm_interval_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="alarm_high_settings"
+            android:title="@string/alarm_settings"
+            android:summary="@string/alarm_settings_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="alarm_high_test"
+            android:title="@string/alarm_test"
+            android:summary="@string/alarm_test_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="alarm_high_save_sound"
+            android:title="@string/alarm_save_sound"
+            android:summary="@string/alarm_save_sound_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/very_high_alarm_notification_name"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="2">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="alarm_very_high_enabled"
+            android:summary="@string/alarm_enabled_summary"
+            android:title="@string/alarm_enabled"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SeekBarPreference
+            android:defaultValue="25"
+            android:key="alarm_very_high_interval"
+            android:max="120"
+            android:summary="@string/alarm_interval_summary"
+            android:title="@string/alarm_interval"
+            app:iconSpaceReserved="false"
+            app:min="5"
+            app:seekBarIncrement="1"
+            app:showSeekBarValue="true" />
+        <Preference
+            android:key="alarm_very_high_settings"
+            android:summary="@string/alarm_settings_summary"
+            android:title="@string/alarm_settings"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="alarm_very_high_test"
+            android:summary="@string/alarm_test_summary"
+            android:title="@string/alarm_test"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="alarm_very_high_save_sound"
+            android:summary="@string/alarm_save_sound_summary"
+            android:title="@string/alarm_save_sound"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
