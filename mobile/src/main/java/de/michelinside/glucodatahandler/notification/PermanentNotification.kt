@@ -86,6 +86,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setAutoCancel(false)
             .setShowWhen(true)
             .setColorized(true)
+            .setGroup(ChannelType.MOBILE_SECOND.channelId)
             .setCategory(Notification.CATEGORY_STATUS)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
 
@@ -97,6 +98,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setAutoCancel(false)
             .setShowWhen(true)
             .setColorized(true)
+            .setGroup(ChannelType.MOBILE_FOREGROUND.channelId)
             .setCategory(Notification.CATEGORY_STATUS)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
     }

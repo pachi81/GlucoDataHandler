@@ -325,7 +325,7 @@
     <string name="alarm_enabled">Enabled</string>
     <string name="alarm_enabled_summary">Notification are enabled for this alarm type.</string>
     <string name="alarm_test">Test it</string>
-    <string name="alarm_test_summary">Press here to test the alarm.</string>
+    <string name="alarm_test_summary">Press here to trigger a notification after 5 seconds for this alarm type.</string>
     <string name="alarm_settings">Settings</string>
     <string name="alarm_settings_summary">Press here to go to settings for notification channel for this alarm.\nThere you can change all related settings.</string>
     <string name="alarm_notification_group_name">Alarms</string>
@@ -349,5 +349,6 @@
     <string name="high_alarm_notification_descr">Notification for high alarms.</string>
     <string name="very_high_alarm_notification_name">Very high alarm</string>
     <string name="very_high_alarm_notification_descr">Notification for very high alarms.</string>
+    <string name="btn_dismiss">Dismiss</string>
 
 </resources>

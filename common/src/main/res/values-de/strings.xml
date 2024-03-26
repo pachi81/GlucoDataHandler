@@ -324,7 +324,7 @@
     <string name="alarm_enabled">Aktiv</string>
     <string name="alarm_enabled_summary">Benachrichtigungen sind aktiv für diesen Alarm.</string>
     <string name="alarm_test">Test</string>
-    <string name="alarm_test_summary">Hier drücken, um die Benachrichtigung zu testen.</string>
+    <string name="alarm_test_summary">Hier drücken, um die Benachrichtigung nach 5 Sekunden zu erzeugen.</string>
     <string name="alarm_settings">Einstellungen</string>
     <string name="alarm_settings_summary">Hier drücken, um zu den Benachrichtigungseinstellungen für diesen Alarm zu gelangen.</string>
     <string name="alarm_save_sound">Ton speichern</string>
@@ -347,5 +347,6 @@
     <string name="high_alarm_notification_descr">Benachrichtigung für hohe Alarme.</string>
     <string name="very_high_alarm_notification_name">Sehr hoher Alarm</string>
     <string name="very_high_alarm_notification_descr">Benachrichtigung für sehr hohe Alarme.</string>
+    <string name="btn_dismiss">Dismiss</string>
 
 </resources>

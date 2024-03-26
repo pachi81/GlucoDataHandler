@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.os.Environment.DIRECTORY_NOTIFICATIONS
+import android.os.Handler
 import android.provider.DocumentsContract
 import android.provider.Settings
 import android.util.Log
@@ -18,6 +19,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.common.notification.AlarmType
@@ -118,7 +120,14 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
         if (pref != null) {
             pref.setOnPreferenceClickListener {
                 Log.d(LOG_ID, "Trigger test for $alarmType")
-                AlarmNotification.triggerNotification(alarmType, requireContext(), true)
+                pref.isEnabled = false
+                Thread {
+                    Thread.sleep(5*1000)
+                    Handler(requireContext().mainLooper).post {
+                        AlarmNotification.triggerNotification(alarmType, requireContext(), true)
+                        pref.isEnabled = true
+                    }
+                }.start()
                 true
             }
         }

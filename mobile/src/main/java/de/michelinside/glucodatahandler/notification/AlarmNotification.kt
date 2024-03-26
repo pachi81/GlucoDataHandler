@@ -41,6 +41,7 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
     private const val HIGH_NOTIFICATION_ID = 803
     private const val VERY_HIGH_NOTIFICATION_ID = 804
     private var enabled: Boolean = false
+    private var curNotification = 0
     fun initNotifications(context: Context) {
         try {
             Log.v(LOG_ID, "initNotifications called")
@@ -81,12 +82,20 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
         }
     }
 
-    private fun stopNotifications(context: Context? = null) {
+    fun stopNotifications(context: Context? = null) {
         Log.v(LOG_ID, "stopNotifications called")
         stopNotification(AlarmType.VERY_LOW, context)
         stopNotification(AlarmType.LOW, context)
         stopNotification(AlarmType.HIGH, context)
         stopNotification(AlarmType.VERY_HIGH, context)
+        curNotification = 0
+    }
+
+    fun stopCurrentNotification(context: Context? = null) {
+        if (curNotification > 0) {
+            stopNotification(curNotification, context)
+            curNotification = 0
+        }
     }
 
     private fun stopNotification(alarmType: AlarmType, context: Context? = null) {
@@ -111,8 +120,9 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
         try {
             Log.v(LOG_ID, "triggerNotification called for $alarmType - enabled=$enabled - forTest=$forTest")
             if (enabled || forTest) {
+                curNotification = getNotificationId(alarmType)
                 Channels.getNotificationManager(context).notify(
-                    getNotificationId(alarmType),
+                    curNotification,
                     createNotification(context, alarmType)
                 )
             }
@@ -198,6 +208,12 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
         }
         contentView.setViewVisibility(R.id.snoozeLayout, View.GONE)
 
+        val fullScreenIntent = Intent(context, LockscreenActivity::class.java)
+        fullScreenIntent.flags =
+            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                    Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS or Intent.FLAG_ACTIVITY_NO_USER_ACTION
+
+        val fullScreenPendingIntent = PendingIntent.getActivity(context, 800, fullScreenIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
         val notification = Notification.Builder(context, channelId)
             .setSmallIcon(R.mipmap.ic_launcher)
@@ -211,11 +227,13 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
             .setCustomContentView(contentView)
             .setCustomBigContentView(bigContentView)
             .setColorized(false)
+            .setGroup("alarm")
             .setStyle(Notification.DecoratedCustomViewStyle())
-
-            /*.setLargeIcon(BitmapUtils.getRateAsIcon())
+            .setFullScreenIntent(fullScreenPendingIntent, true)
             .setContentTitle(context.getString(resId))
             .setContentText(ReceiveData.getClucoseAsString()  + " (Δ " + ReceiveData.getDeltaAsString() + ")")
+
+            /*.setLargeIcon(BitmapUtils.getRateAsIcon())
             .addAction(createAction(context, context.getString(CR.string.snooze) + ": 60", 60L, getNotificationId(alarmType)))
             .addAction(createAction(context, "90", 90L, getNotificationId(alarmType)))
             .addAction(createAction(context, "120", 120L, getNotificationId(alarmType)))*/
@@ -261,7 +279,7 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
         }
     }
 
-    private fun getAlarmTextRes(alarmType: AlarmType): Int? {
+    fun getAlarmTextRes(alarmType: AlarmType): Int? {
         return when(alarmType) {
             AlarmType.VERY_LOW -> CR.string.very_low_alarm_text
             AlarmType.LOW -> CR.string.very_low_text

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/main_layout"
+    tools:context=".notification.LockscreenActivity"
+    android:orientation="vertical"
+    android:gravity="center|top"
+    android:theme="@style/ThemeOverlay.MaterialComponents.Dark">
+
+
+    <LinearLayout
+        android:id="@+id/layout_glucose_trend"
+        android:layout_width="250dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="100dp"
+        android:gravity="center|top"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UselessParent">
+
+        <TextView
+            android:id="@+id/txtBgValue"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:maxLines="1"
+            android:text="---"
+            android:textAlignment="viewEnd"
+            android:textColor="#757575"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
+        <ImageView
+            android:id="@+id/viewIcon"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:paddingVertical="2dp"
+            android:src="@drawable/icon_question"
+            tools:ignore="ContentDescription" />
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/txtDelta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:maxLines="1"
+        android:text="Δ +0.06"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/txtAlarm"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="100dp"
+        android:maxLines="1"
+        android:text="ALARM!"
+        android:autoSizeStepGranularity="1sp"
+        android:autoSizeTextType="uniform"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        tools:ignore="HardcodedText" />
+    <Button
+        android:id="@+id/btnDismiss"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#005CCC"
+        android:layout_marginTop="100dp"
+        android:text="@string/btn_dismiss"
+        />
+
+</LinearLayout>
