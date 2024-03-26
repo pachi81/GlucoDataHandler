@@ -198,6 +198,13 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
         return PendingIntent.getBroadcast(context, snoozeTime.toInt(), intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
+    private fun createStopIntent(context: Context, noticationId: Int): PendingIntent {
+        val intent = Intent(Constants.ALARM_STOP_NOTIFICATION_ACTION)
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+        intent.putExtra(Constants.ALARM_SNOOZE_EXTRA_NOTIFY_ID, noticationId)
+        intent.setPackage(context.packageName)
+        return PendingIntent.getBroadcast(context, 888, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+    }
     private fun createAction(context: Context, title: String, snoozeTime: Long, noticationId: Int): Notification.Action {
         return Notification.Action.Builder(null, title, createSnoozeIntent(context, snoozeTime, noticationId)).build()
 
@@ -239,6 +246,7 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
         val notificationBuilder = Notification.Builder(context, channelId)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(Utils.getAppIntent(context, MainActivity::class.java, 8, false))
+            .setDeleteIntent(createStopIntent(context, getNotificationId(alarmType)))
             .setOnlyAlertOnce(false)
             .setAutoCancel(true)
             .setShowWhen(true)

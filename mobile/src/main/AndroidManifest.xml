@@ -117,8 +117,10 @@
         <activity
             android:name=".notification.LockscreenActivity"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:showOnLockScreen="true"
-            android:forceDarkAllowed="true"/>
+            android:forceDarkAllowed="true"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/menu_settings"
@@ -234,6 +236,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name= "de.michelinside.glucodatahandler.SNOOZE" />
+                <action android:name= "de.michelinside.glucodatahandler.STOP_NOTIFICATION" />
             </intent-filter>
         </receiver>
         <receiver android:name=".common.tasks.TimeAlarmReceiver" />

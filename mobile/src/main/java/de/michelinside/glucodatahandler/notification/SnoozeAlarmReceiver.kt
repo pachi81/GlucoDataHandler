@@ -13,8 +13,10 @@ class SnoozeAlarmReceiver: BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         try {
             Log.i(LOG_ID, "Intent ${intent.action} received: ${Utils.dumpBundle(intent.extras)}" )
-            AlarmNotification.stopNotification(intent.getIntExtra(Constants.ALARM_SNOOZE_EXTRA_NOTIFY_ID, 0), context)
-            AlarmHandler.setSnooze(intent.getLongExtra(Constants.ALARM_SNOOZE_EXTRA_TIME, 0L))
+            if (intent.hasExtra(Constants.ALARM_SNOOZE_EXTRA_NOTIFY_ID))
+                AlarmNotification.stopNotification(intent.getIntExtra(Constants.ALARM_SNOOZE_EXTRA_NOTIFY_ID, 0), context)
+            if (intent.hasExtra(Constants.ALARM_SNOOZE_EXTRA_TIME))
+                AlarmHandler.setSnooze(intent.getLongExtra(Constants.ALARM_SNOOZE_EXTRA_TIME, 0L))
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onReceive exception: " + exc.toString() )
         }

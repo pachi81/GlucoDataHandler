@@ -6,9 +6,11 @@ import android.graphics.Paint
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -16,6 +18,7 @@ import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -30,6 +33,10 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtDelta: TextView
     private lateinit var txtAlarm: TextView
     private lateinit var btnDismiss: Button
+    private lateinit var btnSnooze60: Button
+    private lateinit var btnSnooze90: Button
+    private lateinit var btnSnooze120: Button
+    private lateinit var layoutSnooze: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -43,11 +50,29 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             txtDelta = findViewById(R.id.txtDelta)
             txtAlarm = findViewById(R.id.txtAlarm)
             btnDismiss = findViewById(R.id.btnDismiss)
+            btnSnooze60 = findViewById(R.id.btnSnooze60)
+            btnSnooze90 = findViewById(R.id.btnSnooze90)
+            btnSnooze120 = findViewById(R.id.btnSnooze120)
+            layoutSnooze = findViewById(R.id.layoutSnooze)
 
+            val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            if (sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, false))
+                layoutSnooze.visibility = View.VISIBLE
+            else
+                layoutSnooze.visibility = View.GONE
 
             btnDismiss.setOnClickListener{
                 AlarmNotification.stopCurrentNotification(this)
                 finish()
+            }
+            btnSnooze60.setOnClickListener{
+                AlarmHandler.setSnooze(60)
+            }
+            btnSnooze90.setOnClickListener{
+                AlarmHandler.setSnooze(90)
+            }
+            btnSnooze120.setOnClickListener{
+                AlarmHandler.setSnooze(120)
             }
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
         } catch (exc: Exception) {

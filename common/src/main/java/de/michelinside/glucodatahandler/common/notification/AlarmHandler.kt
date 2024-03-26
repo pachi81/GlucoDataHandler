@@ -93,12 +93,14 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     fun setLastAlarm(alarmType: AlarmType) {
+        Log.v(LOG_ID, "Set last alarm type to $alarmType")
         lastAlarmTime = ReceiveData.time
         lastAlarmType = alarmType
         saveExtras()
     }
 
     fun setSnooze(minutes: Long) {
+        Log.v(LOG_ID, "Set snooze to $minutes minutes")
         snoozeTime = System.currentTimeMillis() + Duration.ofMinutes(minutes).toMillis()
         saveExtras()
     }
