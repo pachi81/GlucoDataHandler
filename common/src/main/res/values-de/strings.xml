@@ -329,7 +329,7 @@
     <string name="alarm_settings_summary">Hier drücken, um zu den Benachrichtigungseinstellungen für diesen Alarm zu gelangen.</string>
     <string name="alarm_save_sound">Ton speichern</string>
     <string name="alarm_save_sound_summary">Hier drücken, um den Standard Alarm Ton auf das Telefon zu speichern.</string>
-    <string name="alarm_saved">Alarm gespeichert...</string>
+    <string name="alarm_saved">Alarm gespeichert!</string>
     <string name="snooze">Schlummern</string>
     <string name="alarm_cat_all">Alle Alarme</string>
     <string name="alarm_notifications_enabled">Benachrichtigungen</string>
@@ -347,6 +347,8 @@
     <string name="high_alarm_notification_descr">Benachrichtigung für hohe Alarme.</string>
     <string name="very_high_alarm_notification_name">Sehr hoher Alarm</string>
     <string name="very_high_alarm_notification_descr">Benachrichtigung für sehr hohe Alarme.</string>
-    <string name="btn_dismiss">Dismiss</string>
+    <string name="btn_dismiss">Schließen</string>
+    <string name="test_alarm">Test Alarm!</string>
+    <string name="alarm_cat_categories">Alarm Kategorien</string>
 
 </resources>

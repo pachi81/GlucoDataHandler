@@ -204,6 +204,16 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener {
         veryHighEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_ENABLED, veryHighEnabled)
     }
 
+    fun getDefaultIntervalMin(alarmType: AlarmType): Int {
+        return when(alarmType) {
+            AlarmType.VERY_LOW -> veryLowInterval/60000
+            AlarmType.LOW -> lowInterval/60000
+            AlarmType.HIGH -> highInterval/60000
+            AlarmType.VERY_HIGH -> veryHighInterval/60000
+            else -> 0
+        }
+    }
+
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called for key " + key)

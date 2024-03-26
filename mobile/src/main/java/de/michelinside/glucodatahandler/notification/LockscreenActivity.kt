@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import de.michelinside.glucodatahandler.R
+import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
@@ -104,12 +105,12 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
                 txtBgValue.paintFlags = 0
             }
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
-            txtDelta.text = "Δ " + ReceiveData.getDeltaAsString()
+            txtDelta.text = "Δ ${ReceiveData.getDeltaAsString()}"
             val resId = AlarmNotification.getAlarmTextRes(ReceiveData.getAlarmType())
             if (resId != null) {
                 txtAlarm.text = resources.getString(resId)
             } else {
-                txtAlarm.text = "Test Alarm!"
+                txtAlarm.text = resources.getString(CR.string.test_alarm)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString())

@@ -331,7 +331,7 @@
     <string name="alarm_notification_group_name">Alarms</string>
     <string name="alarm_save_sound">Save sound</string>
     <string name="alarm_save_sound_summary">Press here, if you want to save the default alarm sound to file system.</string>
-    <string name="alarm_saved">Alarm saved...</string>
+    <string name="alarm_saved">Alarm saved!</string>
     <string name="snooze">Snooze</string>
     <string name="alarm_cat_all">All alarms</string>
     <string name="alarm_notifications_enabled">Notifications</string>
@@ -350,5 +350,7 @@
     <string name="very_high_alarm_notification_name">Very high alarm</string>
     <string name="very_high_alarm_notification_descr">Notification for very high alarms.</string>
     <string name="btn_dismiss">Dismiss</string>
+    <string name="test_alarm">Test Alarm!</string>
+    <string name="alarm_cat_categories">Alarm categories</string>
 
 </resources>
