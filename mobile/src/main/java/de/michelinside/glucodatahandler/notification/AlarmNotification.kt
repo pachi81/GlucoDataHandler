@@ -233,15 +233,6 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
             contentView.setTextColor(R.id.deltaText, Color.GRAY )
         }
 
-        var bigContentView :RemoteViews? = null
-        if (addSnooze) {
-            bigContentView = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                RemoteViews(contentView)
-            } else {
-                contentView.clone()
-            }
-        }
-        contentView.setViewVisibility(R.id.snoozeLayout, View.GONE)
 
         val notificationBuilder = Notification.Builder(context, channelId)
             .setSmallIcon(R.mipmap.ic_launcher)
@@ -253,8 +244,6 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
             .setCategory(Notification.CATEGORY_ALARM)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
             .setWhen(ReceiveData.time)
-            .setCustomContentView(contentView)
-            .setCustomBigContentView(bigContentView)
             .setColorized(false)
             .setGroup("alarm")
             .setStyle(Notification.DecoratedCustomViewStyle())
@@ -265,6 +254,19 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
             .addAction(createAction(context, context.getString(CR.string.snooze) + ": 60", 60L, getNotificationId(alarmType)))
             .addAction(createAction(context, "90", 90L, getNotificationId(alarmType)))
             .addAction(createAction(context, "120", 120L, getNotificationId(alarmType)))*/
+
+        if (addSnooze) {
+            val bigContentView = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                RemoteViews(contentView)
+            } else {
+                contentView.clone()
+            }
+            notificationBuilder.setCustomBigContentView(bigContentView)
+        } else {
+            notificationBuilder.setCustomBigContentView(null)
+        }
+        contentView.setViewVisibility(R.id.snoozeLayout, View.GONE)
+        notificationBuilder.setCustomContentView(contentView)
 
         if (fullscreenEnabled && hasFullscreenPermission()) {
             val fullScreenIntent = Intent(context, LockscreenActivity::class.java)
