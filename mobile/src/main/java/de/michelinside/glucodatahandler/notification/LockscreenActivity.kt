@@ -67,12 +67,18 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             }
             btnSnooze60.setOnClickListener{
                 AlarmHandler.setSnooze(60)
+                AlarmNotification.stopCurrentNotification(this)
+                finish()
             }
             btnSnooze90.setOnClickListener{
                 AlarmHandler.setSnooze(90)
+                AlarmNotification.stopCurrentNotification(this)
+                finish()
             }
             btnSnooze120.setOnClickListener{
                 AlarmHandler.setSnooze(120)
+                AlarmNotification.stopCurrentNotification(this)
+                finish()
             }
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
         } catch (exc: Exception) {
