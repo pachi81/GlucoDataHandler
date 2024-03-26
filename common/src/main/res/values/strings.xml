@@ -365,4 +365,8 @@
     <string name="btn_dismiss">Dismiss</string>
     <string name="test_alarm">Test Alarm!</string>
     <string name="alarm_cat_categories">Alarm categories</string>
+    <string name="alarm_fullscreen_notification_enabled">Full screen notification</string>
+    <string name="alarm_fullscreen_notification_enabled_summary">Enables full screen notification on lockscreen.\nThis may requests an additional permission.</string>
+    <string name="alarm_snooze_on_notification_enabled">Snooze on notification</string>
+    <string name="alarm_snooze_on_notification_summary">If enabled, the notifications will also include buttons to activate snooze.</string>
 </resources>

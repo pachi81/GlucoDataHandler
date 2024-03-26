@@ -1,9 +1,15 @@
 package de.michelinside.glucodatahandler.preferences
 
+import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
+import androidx.activity.result.ActivityResultLauncher
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
@@ -25,6 +31,10 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
             settingsChanged = false
             preferenceManager.sharedPreferencesName = Constants.SHARED_PREF_TAG
             setPreferencesFromResource(R.xml.alarms, rootKey)
+
+
+
+
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
         }
@@ -49,6 +59,7 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
         Log.d(LOG_ID, "onResume called")
         try {
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
+            update()
             super.onResume()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.toString())
@@ -65,16 +76,52 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
         }
     }
 
+    private fun update() {
+        if (!AlarmNotification.hasFullscreenPermission()) {
+            val pref =
+                findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED)
+            if (pref != null && pref.isChecked) {
+                Log.i(LOG_ID, "Disable fullscreen setting as there is no permission!")
+                pref.isChecked = false
+                with(preferenceManager.sharedPreferences!!.edit()) {
+                    putBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, false)
+                    apply()
+                }
+            }
+        }
+    }
+
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
         try {
             if(AlarmHandler.alarmPreferencesToSend.contains(key))
                 settingsChanged = true
             when(key) {
-                Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED -> AlarmNotification.setEnabled(sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, true))
+                Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED -> {
+                    if (sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, false) && !AlarmNotification.hasFullscreenPermission()) {
+                        requestFullScreenPermission()
+                    }
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
+        }
+    }
+
+    private fun requestFullScreenPermission() {
+        try {
+            Log.v(LOG_ID, "requestFullScreenPermission called")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                val intent = Intent(
+                    Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT,
+                    Uri.parse("package:" + requireContext().packageName)
+                )
+                intent.putExtra(Settings.EXTRA_APP_PACKAGE,requireContext().packageName)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "requestOverlayPermission exception: " + exc.toString())
         }
     }
 

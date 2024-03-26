@@ -41,6 +41,8 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
     private const val HIGH_NOTIFICATION_ID = 803
     private const val VERY_HIGH_NOTIFICATION_ID = 804
     private var enabled: Boolean = false
+    private var fullscreenEnabled: Boolean = false
+    private var addSnooze: Boolean = false
     private var curNotification = 0
     fun initNotifications(context: Context) {
         try {
@@ -68,6 +70,29 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "setEnabled exception: " + exc.toString() )
+        }
+    }
+
+    fun hasFullscreenPermission(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+            return Channels.getNotificationManager().canUseFullScreenIntent()
+        return true
+    }
+
+    fun setFullscreenEnabled(fsEnable: Boolean) {
+        try {
+            Log.v(LOG_ID, "setFullscreenEnabled called: current=$fullscreenEnabled - new=$fsEnable")
+            fullscreenEnabled = enabled
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "setFullscreenEnabled exception: " + exc.toString() )
+        }
+    }
+    fun setAddSnooze(snooze: Boolean) {
+        try {
+            Log.v(LOG_ID, "setAddSnooze called: current=$addSnooze - new=$snooze")
+            addSnooze = snooze
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "setAddSnooze exception: " + exc.toString() )
         }
     }
 
@@ -185,37 +210,33 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
         if (channelId.isNullOrEmpty() || resId == null)
             return null
 
-        val bigContentView = RemoteViews(GlucoDataService.context!!.packageName, R.layout.alarm_notification)
-        bigContentView.setTextViewText(R.id.alarm, context.getString(resId))
-        bigContentView.setTextViewText(R.id.snooze, context.getString(CR.string.snooze))
-        bigContentView.setTextViewText(R.id.glucose, ReceiveData.getClucoseAsString())
-        bigContentView.setTextColor(R.id.glucose, ReceiveData.getClucoseColor())
-        bigContentView.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap())
-        bigContentView.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
-        bigContentView.setOnClickPendingIntent(R.id.snooze_60, createSnoozeIntent(context, 60L, getNotificationId(alarmType)))
-        bigContentView.setOnClickPendingIntent(R.id.snooze_90, createSnoozeIntent(context, 90L, getNotificationId(alarmType)))
-        bigContentView.setOnClickPendingIntent(R.id.snooze_120, createSnoozeIntent(context, 120L, getNotificationId(alarmType)))
+        val contentView = RemoteViews(GlucoDataService.context!!.packageName, R.layout.alarm_notification)
+        contentView.setTextViewText(R.id.alarm, context.getString(resId))
+        contentView.setTextViewText(R.id.snooze, context.getString(CR.string.snooze))
+        contentView.setTextViewText(R.id.glucose, ReceiveData.getClucoseAsString())
+        contentView.setTextColor(R.id.glucose, ReceiveData.getClucoseColor())
+        contentView.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap())
+        contentView.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
+        contentView.setOnClickPendingIntent(R.id.snooze_60, createSnoozeIntent(context, 60L, getNotificationId(alarmType)))
+        contentView.setOnClickPendingIntent(R.id.snooze_90, createSnoozeIntent(context, 90L, getNotificationId(alarmType)))
+        contentView.setOnClickPendingIntent(R.id.snooze_120, createSnoozeIntent(context, 120L, getNotificationId(alarmType)))
         if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) {
             if (!ReceiveData.isObsolete())
-                bigContentView.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
-            bigContentView.setTextColor(R.id.deltaText, Color.GRAY )
+                contentView.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
+            contentView.setTextColor(R.id.deltaText, Color.GRAY )
         }
 
-        val contentView = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            RemoteViews(bigContentView)
-        } else {
-            bigContentView.clone()
+        var bigContentView :RemoteViews? = null
+        if (addSnooze) {
+            bigContentView = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                RemoteViews(contentView)
+            } else {
+                contentView.clone()
+            }
         }
         contentView.setViewVisibility(R.id.snoozeLayout, View.GONE)
 
-        val fullScreenIntent = Intent(context, LockscreenActivity::class.java)
-        fullScreenIntent.flags =
-            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or
-                    Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS or Intent.FLAG_ACTIVITY_NO_USER_ACTION
-
-        val fullScreenPendingIntent = PendingIntent.getActivity(context, 800, fullScreenIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-
-        val notification = Notification.Builder(context, channelId)
+        val notificationBuilder = Notification.Builder(context, channelId)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(Utils.getAppIntent(context, MainActivity::class.java, 8, false))
             .setOnlyAlertOnce(false)
@@ -229,7 +250,6 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
             .setColorized(false)
             .setGroup("alarm")
             .setStyle(Notification.DecoratedCustomViewStyle())
-            .setFullScreenIntent(fullScreenPendingIntent, true)
             .setContentTitle(context.getString(resId))
             .setContentText(ReceiveData.getClucoseAsString()  + " (Δ " + ReceiveData.getDeltaAsString() + ")")
 
@@ -237,9 +257,17 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
             .addAction(createAction(context, context.getString(CR.string.snooze) + ": 60", 60L, getNotificationId(alarmType)))
             .addAction(createAction(context, "90", 90L, getNotificationId(alarmType)))
             .addAction(createAction(context, "120", 120L, getNotificationId(alarmType)))*/
-            .build()
 
-        return notification
+        if (fullscreenEnabled && hasFullscreenPermission()) {
+            val fullScreenIntent = Intent(context, LockscreenActivity::class.java)
+            fullScreenIntent.flags =
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                        Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS or Intent.FLAG_ACTIVITY_NO_USER_ACTION
+
+            val fullScreenPendingIntent = PendingIntent.getActivity(context, 800, fullScreenIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+            notificationBuilder.setFullScreenIntent(fullScreenPendingIntent, true)
+        }
+        return notificationBuilder.build()
     }
 
     private fun getNotificationId(alarmType: AlarmType): Int {
@@ -345,9 +373,16 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
-            when(key) {
-                null,
-                Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED -> setEnabled(sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, enabled))
+            if (key == null) {
+                onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED)
+                onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION)
+                onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED)
+            } else {
+                when(key) {
+                    Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED -> setEnabled(sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, enabled))
+                    Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION -> setAddSnooze(sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, addSnooze))
+                    Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED -> setFullscreenEnabled(sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, fullscreenEnabled))
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())

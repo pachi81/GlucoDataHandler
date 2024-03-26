@@ -3,6 +3,7 @@ package de.michelinside.glucodatahandler.common.notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
 
 enum class ChannelType(val channelId: String, val nameResId: Int, val descrResId: Int, val importance: Int = NotificationManager.IMPORTANCE_DEFAULT) {
@@ -22,7 +23,10 @@ object Channels {
 
     fun getNotificationManager(context: Context? = null): NotificationManager {
         if (notificationMgr == null) {
-            notificationMgr = context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationMgr = if (context != null)
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            else
+                GlucoDataService.context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         }
         return notificationMgr!!
     }

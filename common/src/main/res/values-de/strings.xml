@@ -350,5 +350,9 @@
     <string name="btn_dismiss">Schließen</string>
     <string name="test_alarm">Test Alarm!</string>
     <string name="alarm_cat_categories">Alarm Kategorien</string>
+    <string name="alarm_fullscreen_notification_enabled">Vollbildbenachrichtigung</string>
+    <string name="alarm_fullscreen_notification_enabled_summary">Aktiviert die Vollbildbenachrichtigung auf dem Sperrbildschirm.\nBeim Aktivieren wird gegebenenfalls nach der entsprechenden Berechtigung gefragt.</string>
+    <string name="alarm_snooze_on_notification_enabled">Schlummern</string>
+    <string name="alarm_snooze_on_notification_summary">Wenn aktiviert, enthalten die Benachrichtigungen Buttons um Schlummern zu aktivieren.</string>
 
 </resources>
