@@ -22,6 +22,11 @@
             android:title="@string/alarm_fullscreen_notification_enabled"
             android:summary="@string/alarm_fullscreen_notification_enabled_summary"
             app:iconSpaceReserved="false" />
+        <Preference
+            android:title="@string/advanced_settings"
+            app:fragment="de.michelinside.glucodatahandler.preferences.AlarmAdvancedFragment"
+            app:iconSpaceReserved="false">
+        </Preference>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/alarm_cat_categories"

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="alarm_fullscreen_dismiss_keyguard"
+            android:defaultValue="false"
+            android:title="@string/alarm_fullscreen_dismiss_keyguard"
+            android:summary="@string/alarm_fullscreen_dismiss_keyguard_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="alarm_force_sound"
+            android:defaultValue="false"
+            android:title="@string/alarm_force_sound"
+            android:summary="@string/alarm_force_sound_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="alarm_force_vibration"
+            android:defaultValue="false"
+            android:title="@string/alarm_force_vibration"
+            android:summary="@string/alarm_force_vibration_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SeekBarPreference
+            app:showSeekBarValue="true"
+            app:seekBarIncrement="1"
+            app:min="-1"
+            android:defaultValue="-1"
+            android:key="alarm_sound_level"
+            android:title="@string/alarm_sound_level"
+            android:summary="@string/alarm_sound_level_summary"
+            app:iconSpaceReserved="false" />
+
+</PreferenceScreen>
