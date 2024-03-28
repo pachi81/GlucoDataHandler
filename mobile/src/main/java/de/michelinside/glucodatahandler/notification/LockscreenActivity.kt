@@ -20,10 +20,12 @@ import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
+import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.R as CR
 
 
@@ -39,14 +41,19 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var btnSnooze90: Button
     private lateinit var btnSnooze120: Button
     private lateinit var layoutSnooze: LinearLayout
+    private var alarmType: AlarmType? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
-            Log.d(LOG_ID, "onCreate called")
+            Log.d(LOG_ID, "onCreate called with params ${Utils.dumpBundle(this.intent.extras)}")
             showWhenLockedAndTurnScreenOn()
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_lockscreen)
             hideSystemUI()
+
+            if(this.intent.extras?.containsKey(Constants.ALARM_NOTIFICATION_EXTRA_ALARM_TYPE) == true) {
+                alarmType = AlarmType.fromIndex(this.intent.extras!!.getInt(Constants.ALARM_NOTIFICATION_EXTRA_ALARM_TYPE, ReceiveData.getAlarmType().ordinal))
+            }
 
             txtBgValue = findViewById(R.id.txtBgValue)
             viewIcon = findViewById(R.id.viewIcon)
@@ -164,7 +171,11 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             }
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
             txtDelta.text = "Δ ${ReceiveData.getDeltaAsString()}"
-            val resId = AlarmNotification.getAlarmTextRes(ReceiveData.getAlarmType())
+            val resId = (if(alarmType != null) alarmType else ReceiveData.getAlarmType())?.let {
+                AlarmNotification.getAlarmTextRes(
+                    it
+                )
+            }
             if (resId != null) {
                 txtAlarm.text = resources.getString(resId)
             } else {

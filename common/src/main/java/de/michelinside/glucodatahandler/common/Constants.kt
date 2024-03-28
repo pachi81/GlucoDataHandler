@@ -123,6 +123,7 @@ object Constants {
     const val ALARM_STOP_NOTIFICATION_ACTION = "de.michelinside.glucodatahandler.STOP_NOTIFICATION"
     const val ALARM_SNOOZE_EXTRA_TIME = "snooze_time"
     const val ALARM_SNOOZE_EXTRA_NOTIFY_ID = "notification_id"
+    const val ALARM_NOTIFICATION_EXTRA_ALARM_TYPE = "alarm_type"
 
     const val SHARED_PREF_ALARM_NOTIFICATION_ENABLED = "alarm_notifications_enabled"
     const val SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED = "alarm_fullscreen_notification_enabled"
