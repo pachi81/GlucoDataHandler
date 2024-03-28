@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="enabled"
+            android:title="@string/alarm_enabled"
+            android:summary="@string/alarm_enabled_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SeekBarPreference
+            app:showSeekBarValue="true"
+            app:seekBarIncrement="1"
+            app:min="5"
+            android:max="120"
+            android:key="interval"
+            android:title="@string/alarm_interval"
+            android:summary="@string/alarm_interval_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="settings"
+            android:title="@string/alarm_settings"
+            android:summary="@string/alarm_settings_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="test"
+            android:title="@string/alarm_test"
+            android:summary="@string/alarm_test_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="save_sound"
+            android:title="@string/alarm_save_sound"
+            android:summary="@string/alarm_save_sound_summary"
+            app:iconSpaceReserved="false" />
+
+</PreferenceScreen>

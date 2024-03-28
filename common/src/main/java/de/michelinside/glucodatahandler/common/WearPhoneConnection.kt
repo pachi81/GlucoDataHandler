@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.*
+import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.notifier.DataSource
@@ -77,6 +78,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         if (sendSettings) {
             filter.add(NotifySource.SETTINGS)   // only send setting changes from phone to wear!
             filter.add(NotifySource.SOURCE_SETTINGS)
+            filter.add(NotifySource.ALARM_SETTINGS)
         }
         InternalNotifier.addNotifier(this.context, this, filter)
         checkForConnectedNodes()
@@ -176,6 +178,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             NotifySource.CAPILITY_INFO -> Constants.REQUEST_DATA_MESSAGE_PATH
             NotifySource.SETTINGS -> Constants.SETTINGS_INTENT_MESSAGE_PATH
             NotifySource.SOURCE_SETTINGS -> Constants.SOURCE_SETTINGS_INTENT_MESSAGE_PATH
+            NotifySource.ALARM_SETTINGS -> Constants.ALARM_SETTINGS_INTENT_MESSAGE_PATH
             NotifySource.LOGCAT_REQUEST -> Constants.REQUEST_LOGCAT_MESSAGE_PATH
             else -> Constants.GLUCODATA_INTENT_MESSAGE_PATH
         }
@@ -193,6 +196,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     Log.d(LOG_ID, "Adding settings for sending")
                     extras.putBundle(Constants.SETTINGS_BUNDLE, ReceiveData.getSettingsBundle())
                     extras.putBundle(Constants.SOURCE_SETTINGS_BUNDLE, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)))
+                    extras.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings())
                 }
                 // Send a message to all nodes in parallel
                 connectedNodes.forEach { node ->
@@ -299,10 +303,25 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 }
 
                 if (p0.path == Constants.SOURCE_SETTINGS_INTENT_MESSAGE_PATH) {
-                    // check for other settings send...
                     if (!extras.isEmpty) {
                         Log.d(LOG_ID, "Glucose source settings receceived from " + p0.sourceNodeId + ": " + extras.toString())
                         DataSourceTask.updateSettings(context, extras)
+                    }
+                }
+
+                if (extras.containsKey(Constants.ALARM_SETTINGS_BUNDLE)) {
+                    val bundle = extras.getBundle(Constants.ALARM_SETTINGS_BUNDLE)
+                    if (bundle != null) {
+                        Log.d(LOG_ID, "Glucose alarm settings receceived from " + p0.sourceNodeId + ": " + bundle.toString())
+                        AlarmHandler.setSettings(context, bundle)
+                    }
+                    extras.remove(Constants.ALARM_SETTINGS_BUNDLE)
+                }
+
+                if (p0.path == Constants.ALARM_SETTINGS_INTENT_MESSAGE_PATH) {
+                    if (!extras.isEmpty) {
+                        Log.d(LOG_ID, "Glucose alarm settings receceived from " + p0.sourceNodeId + ": " + extras.toString())
+                        AlarmHandler.setSettings(context, extras)
                     }
                 }
 
@@ -310,6 +329,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     // check for other settings send...
                     extras.remove(Constants.SETTINGS_BUNDLE)
                     extras.remove(Constants.SOURCE_SETTINGS_BUNDLE)
+                    extras.remove(Constants.ALARM_SETTINGS_BUNDLE)
                     extras.remove(BatteryReceiver.LEVEL)
                     if (!extras.isEmpty) {
                         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -344,6 +364,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                             Log.d(LOG_ID, "Adding settings for sending")
                             bundle.putBundle(Constants.SETTINGS_BUNDLE, ReceiveData.getSettingsBundle())
                             bundle.putBundle(Constants.SOURCE_SETTINGS_BUNDLE, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)))
+                            bundle.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings())
                         }
                         sendMessage(source, bundle)
                     }

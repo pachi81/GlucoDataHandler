@@ -9,6 +9,7 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
@@ -122,8 +123,8 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
         bundle.putLong("bg.timeStamp", ReceiveData.time)
         bundle.putBoolean("bg.isStale", ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
         bundle.putBoolean("doMgdl", !ReceiveData.isMmol)
-        bundle.putBoolean("bg.isHigh", ReceiveData.getAlarmType() == ReceiveData.AlarmType.VERY_HIGH)
-        bundle.putBoolean("bg.isLow", ReceiveData.getAlarmType() == ReceiveData.AlarmType.VERY_LOW)
+        bundle.putBoolean("bg.isHigh", ReceiveData.getAlarmType() == AlarmType.VERY_HIGH)
+        bundle.putBoolean("bg.isLow", ReceiveData.getAlarmType() == AlarmType.VERY_LOW)
         bundle.putString("pumpJSON", "{}")
         if (!ReceiveData.isIobCobObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.iob.isNaN()) {
             bundle.putString("predict.IOB", ReceiveData.iobString)
@@ -142,20 +143,20 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
 
     private fun getAlertType(): String {
         return when(ReceiveData.getAlarmType()) {
-            ReceiveData.AlarmType.VERY_LOW,
-            ReceiveData.AlarmType.VERY_HIGH -> TYPE_ALERT
-            ReceiveData.AlarmType.LOW,
-            ReceiveData.AlarmType.HIGH -> TYPE_OTHER_ALERT
+            AlarmType.VERY_LOW,
+            AlarmType.VERY_HIGH -> TYPE_ALERT
+            AlarmType.LOW,
+            AlarmType.HIGH -> TYPE_OTHER_ALERT
             else -> TYPE_NO_ALERT
         }
     }
 
     private fun getAlarmMessage(): String {
         return when(ReceiveData.getAlarmType()) {
-            ReceiveData.AlarmType.VERY_LOW -> "VERY LOW " + ReceiveData.getClucoseAsString()
-            ReceiveData.AlarmType.LOW -> "LOW " + ReceiveData.getClucoseAsString()
-            ReceiveData.AlarmType.HIGH -> "HIGH " + ReceiveData.getClucoseAsString()
-            ReceiveData.AlarmType.VERY_HIGH -> "VERY HIGH " + ReceiveData.getClucoseAsString()
+            AlarmType.VERY_LOW -> "VERY LOW " + ReceiveData.getClucoseAsString()
+            AlarmType.LOW -> "LOW " + ReceiveData.getClucoseAsString()
+            AlarmType.HIGH -> "HIGH " + ReceiveData.getClucoseAsString()
+            AlarmType.VERY_HIGH -> "VERY HIGH " + ReceiveData.getClucoseAsString()
             else -> "No alarm!"
         }
     }

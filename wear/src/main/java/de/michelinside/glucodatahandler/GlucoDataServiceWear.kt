@@ -9,6 +9,7 @@ import android.os.Vibrator
 import android.os.VibratorManager
 import android.util.Log
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.R as CR
@@ -91,17 +92,17 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
             .build()
     }
 
-    fun getVibrationPattern(alarmType: ReceiveData.AlarmType): LongArray? {
+    fun getVibrationPattern(alarmType: AlarmType): LongArray? {
         return when(alarmType) {
-            ReceiveData.AlarmType.VERY_LOW -> longArrayOf(0, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000)
-            ReceiveData.AlarmType.LOW -> longArrayOf(0, 700, 500, 700, 500, 700, 500, 700)
-            ReceiveData.AlarmType.HIGH -> longArrayOf(0, 500, 500, 500, 500, 500, 500, 500)
-            ReceiveData.AlarmType.VERY_HIGH -> longArrayOf(0, 800, 500, 800, 800, 600, 800, 800, 500, 800, 800, 600, 800)
+            AlarmType.VERY_LOW -> longArrayOf(0, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000)
+            AlarmType.LOW -> longArrayOf(0, 700, 500, 700, 500, 700, 500, 700)
+            AlarmType.HIGH -> longArrayOf(0, 500, 500, 500, 500, 500, 500, 500)
+            AlarmType.VERY_HIGH -> longArrayOf(0, 800, 500, 800, 800, 600, 800, 800, 500, 800, 800, 600, 800)
             else -> null
         }
     }
 
-    fun vibrate(alarmType: ReceiveData.AlarmType): Boolean {
+    fun vibrate(alarmType: AlarmType): Boolean {
         try {
             val vibratePattern = getVibrationPattern(alarmType) ?: return false
             val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

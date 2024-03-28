@@ -142,6 +142,8 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                 Uri.parse("package:" + requireContext().packageName)
             )
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE,requireContext().packageName)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             activityResultOverlayLauncher.launch(intent)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "requestOverlayPermission exception: " + exc.toString())

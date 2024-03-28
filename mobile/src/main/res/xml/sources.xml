@@ -74,6 +74,11 @@
             android:summary="@string/src_libre_password_summary"
             android:inputType="textPassword"
             app:iconSpaceReserved="false" />
+        <androidx.preference.ListPreference
+            android:key="source_libre_patient_id"
+            android:title="@string/src_libre_patient"
+            android:summary="@string/src_libre_patient_summary"
+            app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="source_libre_reconnect"

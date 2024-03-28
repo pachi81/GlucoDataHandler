@@ -1,4 +1,4 @@
-package de.michelinside.glucodatahandler
+package de.michelinside.glucodatahandler.notification
 
 import android.app.Notification
 import android.content.Context
@@ -10,6 +10,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
+import de.michelinside.glucodatahandler.MainActivity
+import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -84,6 +86,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setAutoCancel(false)
             .setShowWhen(true)
             .setColorized(true)
+            .setGroup(ChannelType.MOBILE_SECOND.channelId)
             .setCategory(Notification.CATEGORY_STATUS)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
 
@@ -95,6 +98,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setAutoCancel(false)
             .setShowWhen(true)
             .setColorized(true)
+            .setGroup(ChannelType.MOBILE_FOREGROUND.channelId)
             .setCategory(Notification.CATEGORY_STATUS)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
     }
