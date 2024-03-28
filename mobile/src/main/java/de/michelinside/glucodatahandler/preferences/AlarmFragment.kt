@@ -7,16 +7,15 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
-import androidx.activity.result.ActivityResultLauncher
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
-import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
+import de.michelinside.glucodatahandler.notification.AlarmNotification
 
 
 class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -39,7 +38,6 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
         }
     }
-
 
     override fun onDestroyView() {
         Log.d(LOG_ID, "onDestroyView called")

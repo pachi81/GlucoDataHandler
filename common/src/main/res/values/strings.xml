@@ -140,13 +140,13 @@
 
     <string name="pref_switch_notification">Dummy values</string>
     <string name="pref_high_value">High glucose</string>
-    <string name="pref_high_value_summary">Border for high glucose values.\nIf you have activated high alarm in Juggluco, you do not have to set this value.</string>
+    <string name="pref_high_value_summary">Border for high glucose values.</string>
     <string name="pref_target_max_value">Target top glucose</string>
     <string name="pref_target_max_value_summary">Top value for the target range.</string>
     <string name="pref_target_min_value">Target bottom glucose</string>
     <string name="pref_target_min_value_summary">Bottom value for the target range.</string>
     <string name="pref_low_value">Low glucose</string>
-    <string name="pref_low_value_summary">Border for low glucose values.\nIf you have activated low alarm in Juggluco, you do not have to set this value.</string>
+    <string name="pref_low_value_summary">Border for low glucose values.</string>
     <string name="pref_switch_car_notification">Android Auto notifications</string>
     <string name="pref_switch_car_notification_summary">Notification for Android Auto.</string>
     <string name="pref_car_notification_interval">Notification interval</string>
@@ -378,4 +378,5 @@
     <string name="alarm_sound_level">Sound level</string>
     <string name="alarm_sound_level_summary">Force setting sound level for alarm sound.\n-1 for using default settings of phone.</string>
     <string name="advanced_settings">Advanced</string>
+    <string name="advanced_settings_alarm_summary">Advanced alarm settings for fullscreen notification and sounds.</string>
 </resources>

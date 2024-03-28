@@ -129,13 +129,13 @@
 
     <string name="pref_switch_notification">Wartości fikcyjne</string>
     <string name="pref_high_value">Wysokie stęż. glukozy</string>
-    <string name="pref_high_value_summary">Granica dla wysokich wartości stężenia glukozy.\nJeśli aktywowałeś alarm wysokiego stęż. glukozy w Juggluco, nie musisz ustawiać tej wartości.</string>
+    <string name="pref_high_value_summary">Granica dla wysokich wartości stężenia glukozy.</string>
     <string name="pref_target_max_value">Górna granica zakresu docelowego</string>
     <string name="pref_target_max_value_summary">Najwyższa wartość dla zakresu docelowego.</string>
     <string name="pref_target_min_value">Dolna granica zakresu docelowego</string>
     <string name="pref_target_min_value_summary">Najniższa wartość dla zakresu docelowego.</string>
     <string name="pref_low_value">Niskie stęż. glukozy</string>
-    <string name="pref_low_value_summary">Granica dla niskich wartości glukozy.\nJeśli aktywowałeś alarm niskiego stęż. glukozy w Juggluco, nie musisz ustawiać tej wartości.</string>
+    <string name="pref_low_value_summary">Granica dla niskich wartości glukozy.\nJeśli aktywowałeś alarm niskiego stęż.</string>
     <string name="pref_switch_car_notification">Powiadomienia w Android Auto</string>
     <string name="pref_switch_car_notification_summary">Powiadomienie dla Android Auto.</string>
     <string name="pref_car_notification_interval">Odstęp między powiadomieniami</string>
@@ -365,5 +365,6 @@
     <string name="alarm_sound_level">Sound level</string>
     <string name="alarm_sound_level_summary">Force setting sound level for alarm sound.\n-1 for using default settings of phone.</string>
     <string name="advanced_settings">Advanced</string>
+    <string name="advanced_settings_alarm_summary">Advanced alarm settings for fullscreen notification and sounds.</string>
 
 </resources>

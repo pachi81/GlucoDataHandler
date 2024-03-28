@@ -1,7 +1,6 @@
 package de.michelinside.glucodatahandler.notification
 
 import android.app.Notification
-import android.app.NotificationChannel
 import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -46,7 +45,7 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
     private const val VERY_HIGH_NOTIFICATION_ID = 804
     private lateinit var audioManager:AudioManager
     private var enabled: Boolean = false
-    private var fullscreenEnabled: Boolean = false
+    private var fullscreenEnabled: Boolean = true
     private var addSnooze: Boolean = false
     private var curNotification = 0
     private var forceSound = false

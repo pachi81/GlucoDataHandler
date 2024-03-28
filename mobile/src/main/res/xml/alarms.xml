@@ -10,20 +10,9 @@
             android:title="@string/alarm_notifications_enabled"
             android:summary="@string/alarm_notifications_enabled_summary"
             app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="alarm_snooze_on_notification"
-            android:title="@string/alarm_snooze_on_notification_enabled"
-            android:summary="@string/alarm_snooze_on_notification_summary"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="alarm_fullscreen_notification_enabled"
-            android:title="@string/alarm_fullscreen_notification_enabled"
-            android:summary="@string/alarm_fullscreen_notification_enabled_summary"
-            app:iconSpaceReserved="false" />
         <Preference
             android:title="@string/advanced_settings"
+            android:summary="@string/advanced_settings_alarm_summary"
             app:fragment="de.michelinside.glucodatahandler.preferences.AlarmAdvancedFragment"
             app:iconSpaceReserved="false">
         </Preference>

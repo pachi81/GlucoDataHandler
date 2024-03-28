@@ -2,10 +2,10 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
         <androidx.preference.SwitchPreferenceCompat
-            android:key="alarm_fullscreen_dismiss_keyguard"
             android:defaultValue="false"
-            android:title="@string/alarm_fullscreen_dismiss_keyguard"
-            android:summary="@string/alarm_fullscreen_dismiss_keyguard_summary"
+            android:key="alarm_snooze_on_notification"
+            android:title="@string/alarm_snooze_on_notification_enabled"
+            android:summary="@string/alarm_snooze_on_notification_summary"
             app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
             android:key="alarm_force_sound"
@@ -18,5 +18,17 @@
             android:defaultValue="false"
             android:title="@string/alarm_force_vibration"
             android:summary="@string/alarm_force_vibration_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="alarm_fullscreen_notification_enabled"
+            android:title="@string/alarm_fullscreen_notification_enabled"
+            android:summary="@string/alarm_fullscreen_notification_enabled_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="alarm_fullscreen_dismiss_keyguard"
+            android:defaultValue="false"
+            android:title="@string/alarm_fullscreen_dismiss_keyguard"
+            android:summary="@string/alarm_fullscreen_dismiss_keyguard_summary"
             app:iconSpaceReserved="false" />
 </PreferenceScreen>
