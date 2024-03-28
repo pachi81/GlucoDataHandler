@@ -24,9 +24,6 @@ class AlarmAdvancedFragment : PreferenceFragmentCompat(), SharedPreferences.OnSh
             Log.v(LOG_ID, "onCreatePreferences called for key: ${Utils.dumpBundle(this.arguments)}" )
             preferenceManager.sharedPreferencesName = Constants.SHARED_PREF_TAG
             setPreferencesFromResource(R.xml.alarm_advanced, rootKey)
-            val levelPref = findPreference<SeekBarPreference>(Constants.SHARED_PREF_ALARM_SOUND_LEVEL)
-            if (levelPref != null)
-                levelPref.max = AlarmNotification.getMaxSoundLevel()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
         }

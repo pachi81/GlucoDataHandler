@@ -1,7 +1,9 @@
 package de.michelinside.glucodatahandler.notification
 
 import android.app.Notification
+import android.app.NotificationChannel
 import android.app.NotificationChannelGroup
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -49,9 +51,9 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
     private var curNotification = 0
     private var forceSound = false
     private var forceVibration = false
-    private var soundLevel = -1
     private var lastRingerMode = -1
-    private var lastSoundLevel = -1
+    //private var soundLevel = -1
+    //private var lastSoundLevel = -1
 
     fun initNotifications(context: Context) {
         try {
@@ -158,7 +160,7 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
             Log.v(LOG_ID, "triggerNotification called for $alarmType - enabled=$enabled - forTest=$forTest")
             if (enabled || forTest) {
                 curNotification = getNotificationId(alarmType)
-                checkCreateSound()
+                checkCreateSound(alarmType)
                 Channels.getNotificationManager(context).notify(
                     curNotification,
                     createNotification(context, alarmType)
@@ -296,24 +298,37 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
     fun getMaxSoundLevel(): Int {
         return audioManager.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION)
     }
-    private fun checkCreateSound() {
+    private fun checkCreateSound(alarmType: AlarmType) {
         try {
-            Log.v(LOG_ID, "checkCreateSound called for force sound=$forceSound - vibration=$forceVibration - level=$soundLevel")
+            Log.v(LOG_ID, "checkCreateSound called for force sound=$forceSound - vibration=$forceVibration")
             lastRingerMode = -1
-            lastSoundLevel = -1
+            //lastSoundLevel = -1
             if (forceSound || forceVibration) {
-                if (Channels.getNotificationManager().isNotificationPolicyAccessGranted) {
-                    if(forceSound && audioManager.ringerMode < AudioManager.RINGER_MODE_NORMAL) {
-                        lastRingerMode = audioManager.ringerMode
-                        Log.d(LOG_ID, "Set cur ringer mode $lastRingerMode to normal")
-                        audioManager.ringerMode = AudioManager.RINGER_MODE_NORMAL
-                    } else if(forceVibration && audioManager.ringerMode == AudioManager.RINGER_MODE_SILENT) {
-                        lastRingerMode = audioManager.ringerMode
-                        Log.d(LOG_ID, "Set cur ringer mode $lastRingerMode to vibration")
-                        audioManager.ringerMode = AudioManager.RINGER_MODE_VIBRATE
+                if (Channels.getNotificationManager().isNotificationPolicyAccessGranted && audioManager.ringerMode < AudioManager.RINGER_MODE_NORMAL) {
+                    val channelId = getChannelId(alarmType)
+                    val channel = Channels.getNotificationManager().getNotificationChannel(channelId)
+                    Log.d(LOG_ID, "Channel: sound=${channel.sound} - vibration=${channel.shouldVibrate()} - prio=${channel.importance}")
+                    if(channel.importance >= NotificationManager.IMPORTANCE_DEFAULT) { // notification supports sound
+                        var targetRingerMode = AudioManager.RINGER_MODE_SILENT
+                        if(!forceSound && forceVibration && audioManager.ringerMode == AudioManager.RINGER_MODE_SILENT) {
+                            targetRingerMode = AudioManager.RINGER_MODE_VIBRATE
+                        } else if(forceSound) {
+                            if (channel.sound != null) {
+                                targetRingerMode = AudioManager.RINGER_MODE_NORMAL
+                            } else if(channel.shouldVibrate()) {
+                                targetRingerMode = AudioManager.RINGER_MODE_VIBRATE
+                            }
+                        }
+
+                        if (targetRingerMode > audioManager.ringerMode ) {
+                            lastRingerMode = audioManager.ringerMode
+                            Log.d(LOG_ID, "Set cur ringer mode $lastRingerMode to $targetRingerMode")
+                            audioManager.ringerMode = targetRingerMode
+                        }
                     }
                 }
             }
+            /*
             if (soundLevel >= 0) {
                 lastSoundLevel = audioManager.getStreamVolume(AudioManager.STREAM_ALARM)
                 val level = minOf(soundLevel, getMaxSoundLevel())
@@ -323,7 +338,7 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
                     level,
                     0
                 )
-            }
+            }*/
         } catch (exc: Exception) {
             Log.e(LOG_ID, "checkCreateSound exception: " + exc.message.toString() )
         }
@@ -336,6 +351,7 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
                 audioManager.ringerMode = lastRingerMode
                 lastRingerMode = -1
             }
+            /*
             if(lastSoundLevel >= 0) {
                 Log.d(LOG_ID, "Reset sound level to $lastSoundLevel")
                 audioManager.setStreamVolume(
@@ -344,7 +360,7 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
                     0
                 )
                 lastSoundLevel = -1
-            }
+            }*/
         } catch (exc: Exception) {
             Log.e(LOG_ID, "checkCreateSound exception: " + exc.message.toString() )
         }
@@ -459,7 +475,7 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED)
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_FORCE_SOUND)
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_FORCE_VIBRATION)
-                onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_SOUND_LEVEL)
+                //onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_SOUND_LEVEL)
             } else {
                 when(key) {
                     Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED -> setEnabled(sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, enabled))
@@ -467,7 +483,7 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
                     Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED -> setFullscreenEnabled(sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, fullscreenEnabled))
                     Constants.SHARED_PREF_ALARM_FORCE_SOUND -> forceSound = sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_FORCE_SOUND, forceSound)
                     Constants.SHARED_PREF_ALARM_FORCE_VIBRATION -> forceVibration = sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_FORCE_VIBRATION, forceVibration)
-                    Constants.SHARED_PREF_ALARM_SOUND_LEVEL -> soundLevel = sharedPreferences.getInt(Constants.SHARED_PREF_ALARM_SOUND_LEVEL, soundLevel)
+                    //Constants.SHARED_PREF_ALARM_SOUND_LEVEL -> soundLevel = sharedPreferences.getInt(Constants.SHARED_PREF_ALARM_SOUND_LEVEL, soundLevel)
                 }
             }
         } catch (exc: Exception) {
