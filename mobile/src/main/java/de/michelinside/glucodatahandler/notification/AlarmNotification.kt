@@ -27,6 +27,7 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
+import de.michelinside.glucodatahandler.common.notification.SoundMode
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -317,21 +318,19 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
             Log.v(LOG_ID, "checkCreateSound called for force sound=$forceSound - vibration=$forceVibration - DnD=${Channels.getNotificationManager().currentInterruptionFilter} - ringmode=${audioManager.ringerMode}")
             lastRingerMode = -1
             lastDndMode = NotificationManager.INTERRUPTION_FILTER_UNKNOWN
-            //lastSoundLevel = -1
             if (forceSound || forceVibration) {
                 if (Channels.getNotificationManager().isNotificationPolicyAccessGranted && getRingerMode() < AudioManager.RINGER_MODE_NORMAL) {
                     val channelId = getChannelId(alarmType)
                     val channel = Channels.getNotificationManager().getNotificationChannel(channelId)
-                    Log.d(LOG_ID, "Channel: sound=${channel.sound} - vibration=${channel.shouldVibrate()} - prio=${channel.importance}")
+                    Log.d(LOG_ID, "Channel prio=${channel.importance}")
                     if(channel.importance >= NotificationManager.IMPORTANCE_DEFAULT) { // notification supports sound
+                        val soundMode = getSoundMode(alarmType)
                         var targetRingerMode = AudioManager.RINGER_MODE_SILENT
-                        if(!forceSound && forceVibration && audioManager.ringerMode == AudioManager.RINGER_MODE_SILENT) {
-                            targetRingerMode = AudioManager.RINGER_MODE_VIBRATE
-                        } else if(forceSound) {
-                            if (channel.sound != null) {
-                                targetRingerMode = AudioManager.RINGER_MODE_NORMAL
-                            } else if(channel.shouldVibrate()) {
+                        if(soundMode>SoundMode.SILENT) {
+                            if (!forceSound && forceVibration) {
                                 targetRingerMode = AudioManager.RINGER_MODE_VIBRATE
+                            } else if (forceSound) {
+                                targetRingerMode = soundMode.ringerMode
                             }
                         }
 
@@ -357,6 +356,18 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
         } catch (exc: Exception) {
             Log.e(LOG_ID, "checkCreateSound exception: " + exc.message.toString() )
         }
+    }
+
+    fun getSoundMode(alarmType: AlarmType): SoundMode {
+        val channelId = getChannelId(alarmType)
+        val channel = Channels.getNotificationManager().getNotificationChannel(channelId)
+        Log.d(LOG_ID, "Channel: sound=${channel.sound} - vibration=${channel.shouldVibrate()}")
+        if (channel.sound != null) {
+            return SoundMode.NORMAL
+        } else if(channel.shouldVibrate()) {
+            return SoundMode.VIBRATE
+        }
+        return SoundMode.SILENT
     }
 
     private fun checkRecreateSound() {

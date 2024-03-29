@@ -5,10 +5,8 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
-import androidx.activity.result.ActivityResultLauncher
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SeekBarPreference
 import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
@@ -70,6 +68,9 @@ class AlarmAdvancedFragment : PreferenceFragmentCompat(), SharedPreferences.OnSh
         if (!Channels.getNotificationManager(requireContext()).isNotificationPolicyAccessGranted) {
             disableSwitch(Constants.SHARED_PREF_ALARM_FORCE_SOUND)
             disableSwitch(Constants.SHARED_PREF_ALARM_FORCE_VIBRATION)
+        }
+        if (!AlarmNotification.hasFullscreenPermission()) {
+            disableSwitch(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED)
         }
     }
 

@@ -364,5 +364,9 @@
     <string name="alarm_sound_level_summary">Feste Lautstärke für die Alarmbenachrichtigung erzwingen.\nBei -1 wird die Standardeinstellung des Telefons verwendet.</string>
     <string name="advanced_settings">Erweitert</string>
     <string name="advanced_settings_alarm_summary">Erweiterte Alarmeinstellungen für den Ton und die Benachrichtigungen.</string>
+    <string name="alarm_advanced_cat_notifcation">Benachrichtigung</string>
+    <string name="alarm_advanced_cat_sound">Ton</string>
+    <string name="alarm_type_low_summary">Alarmeinstellungen für Glukosewerte kleiner als %1$s.</string>
+    <string name="alarm_type_high_summary">Alarmeinstellungen für Glukosewerte größer als %1$s.</string>
 
 </resources>

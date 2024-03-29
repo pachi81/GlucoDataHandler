@@ -21,6 +21,7 @@
         android:title="@string/alarm_cat_categories"
         app:iconSpaceReserved="false">
         <Preference
+            android:key="alarm_very_low"
             android:title="@string/very_low_alarm_notification_name"
             app:fragment="de.michelinside.glucodatahandler.preferences.AlarmTypeFragment"
             app:iconSpaceReserved="false">
@@ -32,6 +33,7 @@
                 android:value="1" />
         </Preference>
         <Preference
+            android:key="alarm_low"
             android:title="@string/low_alarm_notification_name"
             app:fragment="de.michelinside.glucodatahandler.preferences.AlarmTypeFragment"
             app:iconSpaceReserved="false">
@@ -43,6 +45,7 @@
                 android:value="2" />
         </Preference>
         <Preference
+            android:key="alarm_high"
             android:title="@string/high_alarm_notification_name"
             app:fragment="de.michelinside.glucodatahandler.preferences.AlarmTypeFragment"
             app:iconSpaceReserved="false">
@@ -54,6 +57,7 @@
                 android:value="4" />
         </Preference>
         <Preference
+            android:key="alarm_very_high"
             android:title="@string/very_high_alarm_notification_name"
             app:fragment="de.michelinside.glucodatahandler.preferences.AlarmTypeFragment"
             app:iconSpaceReserved="false">

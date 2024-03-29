@@ -133,15 +133,19 @@ object Constants {
     const val SHARED_PREF_ALARM_FORCE_VIBRATION = "alarm_force_vibration"
     const val SHARED_PREF_ALARM_SOUND_LEVEL = "alarm_sound_level"
 
+    const val SHARED_PREF_ALARM_VERY_LOW = "alarm_very_low"
     const val SHARED_PREF_ALARM_VERY_LOW_ENABLED = "alarm_very_low_enabled"
     const val SHARED_PREF_ALARM_VERY_LOW_INTERVAL = "alarm_very_low_interval"
 
+    const val SHARED_PREF_ALARM_LOW = "alarm_low"
     const val SHARED_PREF_ALARM_LOW_ENABLED = "alarm_low_enabled"
     const val SHARED_PREF_ALARM_LOW_INTERVAL = "alarm_low_interval"
 
+    const val SHARED_PREF_ALARM_HIGH = "alarm_high"
     const val SHARED_PREF_ALARM_HIGH_ENABLED = "alarm_high_enabled"
     const val SHARED_PREF_ALARM_HIGH_INTERVAL = "alarm_high_interval"
 
+    const val SHARED_PREF_ALARM_VERY_HIGH = "alarm_very_high"
     const val SHARED_PREF_ALARM_VERY_HIGH_ENABLED = "alarm_very_high_enabled"
     const val SHARED_PREF_ALARM_VERY_HIGH_INTERVAL = "alarm_very_high_interval"
 

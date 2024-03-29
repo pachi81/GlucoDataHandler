@@ -7,11 +7,16 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import androidx.core.content.ContextCompat
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodatahandler.R
+import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
+import de.michelinside.glucodatahandler.common.notification.AlarmType
+import de.michelinside.glucodatahandler.common.notification.SoundMode
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
@@ -30,10 +35,6 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
             settingsChanged = false
             preferenceManager.sharedPreferencesName = Constants.SHARED_PREF_TAG
             setPreferencesFromResource(R.xml.alarms, rootKey)
-
-
-
-
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
         }
@@ -75,18 +76,57 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
     }
 
     private fun update() {
-        if (!AlarmNotification.hasFullscreenPermission()) {
-            val pref =
-                findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED)
-            if (pref != null && pref.isChecked) {
-                Log.i(LOG_ID, "Disable fullscreen setting as there is no permission!")
-                pref.isChecked = false
-                with(preferenceManager.sharedPreferences!!.edit()) {
-                    putBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, false)
-                    apply()
-                }
-            }
+        Log.d(LOG_ID, "update called")
+        try {
+            updateAlarmCat(Constants.SHARED_PREF_ALARM_VERY_LOW)
+            updateAlarmCat(Constants.SHARED_PREF_ALARM_LOW)
+            updateAlarmCat(Constants.SHARED_PREF_ALARM_HIGH)
+            updateAlarmCat(Constants.SHARED_PREF_ALARM_VERY_HIGH)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onPause exception: " + exc.toString())
         }
+    }
+
+    private fun updateAlarmCat(key: String) {
+        val pref = findPreference<Preference>(key) ?: return
+        val alarmType = AlarmType.fromIndex(pref.extras.getInt("type"))
+        pref.icon = ContextCompat.getDrawable(requireContext(), getAlarmCatIcon(alarmType, key + "_enabled"))
+        pref.summary = getAlarmCatSummary(alarmType)
+    }
+
+    private fun getAlarmCatIcon(alarmType: AlarmType, enableKey: String): Int {
+        if(!preferenceManager.sharedPreferences!!.getBoolean(enableKey, false)) {
+            return SoundMode.OFF.icon
+        }
+        return AlarmNotification.getSoundMode(alarmType).icon
+    }
+
+    private fun getAlarmCatSummary(alarmType: AlarmType): String {
+        return when(alarmType) {
+            AlarmType.VERY_LOW,
+            AlarmType.LOW -> resources.getString(CR.string.alarm_type_low_summary, getBorderText(alarmType))
+            AlarmType.HIGH,
+            AlarmType.VERY_HIGH -> resources.getString(CR.string.alarm_type_high_summary, getBorderText(alarmType))
+            else -> ""
+        }
+    }
+
+    private fun getBorderText(alarmType: AlarmType): String {
+        var value = when(alarmType) {
+            AlarmType.VERY_LOW -> ReceiveData.low
+            AlarmType.LOW -> ReceiveData.targetMin
+            AlarmType.HIGH -> ReceiveData.targetMax
+            AlarmType.VERY_HIGH -> ReceiveData.high
+            else -> 0F
+        }
+
+        if (alarmType == AlarmType.VERY_LOW)
+            value += if(ReceiveData.isMmol) 0.1F else 1F
+
+        if (alarmType == AlarmType.VERY_HIGH)
+            value -= if(ReceiveData.isMmol) 0.1F else 1F
+
+        return "$value ${ReceiveData.getUnit()}"
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {

@@ -379,4 +379,8 @@
     <string name="alarm_sound_level_summary">Force setting sound level for alarm sound.\n-1 for using default settings of phone.</string>
     <string name="advanced_settings">Advanced</string>
     <string name="advanced_settings_alarm_summary">Advanced alarm settings for fullscreen notification and sounds.</string>
+    <string name="alarm_advanced_cat_notifcation">Notification</string>
+    <string name="alarm_advanced_cat_sound">Sound</string>
+    <string name="alarm_type_low_summary">Alarm settings for glucose values lower then %1$s.</string>
+    <string name="alarm_type_high_summary">Alarm settings for glucose values higher then %1$s.</string>
 </resources>

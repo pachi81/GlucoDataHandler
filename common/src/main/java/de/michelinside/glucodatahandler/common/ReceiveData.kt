@@ -51,7 +51,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var cob: Float = Float.NaN
     var iobCobTime: Long = 0
     private var lowValue: Float = 70F
-    private val low: Float get() {
+    val low: Float get() {
         if(isMmol && lowValue > 0F)  // mmol/l
         {
             return GlucoDataUtils.mgToMmol(lowValue, 1)
@@ -59,7 +59,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return lowValue
     }
     private var highValue: Float = 240F
-    private val high: Float get() {
+    val high: Float get() {
         if(isMmol && highValue > 0F)  // mmol/l
         {
             return GlucoDataUtils.mgToMmol(highValue, 1)
