@@ -357,12 +357,12 @@
     <string name="alarm_fullscreen_dismiss_keyguard">Dismiss keyguard</string>
     <string name="alarm_fullscreen_dismiss_keyguard_summary">Bitte diese Einstellung nur aktivieren, wenn es Probleme mit der Anzeige der Vollbildbenachrichtigung auf dem Speerbildschirm gibt.\nBei einigen Geräte verursacht diese Einstellung dass immer die PIN-Abfrage vor der Benachrichtigung erscheint.</string>
     <string name="alarm_force_sound">Alarm Ton erzwingen</string>
-    <string name="alarm_force_sound_summary">Um den Ton und die Vibration während einer Alarmbenachrichtigung zu erzwingen, auch wenn das Telefon stumm oder auf Vibration geschaltet ist.\nDiese Einstellung benötigt die Berechtigung um den Bitte nicht stören Modus zu ändern.</string>
+    <string name="alarm_force_sound_summary">Um den Ton und die Vibration während einer Alarmbenachrichtigung zu erzwingen, auch wenn das Telefon stumm oder auf Vibration geschaltet ist. Bitte nicht stören wird solange deaktiviert.\nDiese Einstellung benötigt die Berechtigung um den Bitte nicht stören Modus zu ändern.</string>
     <string name="alarm_force_vibration">Vibration erzwingen</string>
-    <string name="alarm_force_vibration_summary">Um Vibration während einer Alarmbenachrichtigung zu erzwingen, auch wenn das Telefon stumm geschaltet ist.\nDiese Einstellung benötigt die Berechtigung um den Bitte nicht stören Modus zu ändern.</string>
+    <string name="alarm_force_vibration_summary">Um Vibration während einer Alarmbenachrichtigung zu erzwingen, auch wenn das Telefon stumm geschaltet ist. Bitte nicht stören wird solange deaktiviert.\nDiese Einstellung benötigt die Berechtigung um den Bitte nicht stören Modus zu ändern.</string>
     <string name="alarm_sound_level">Lautstärke</string>
     <string name="alarm_sound_level_summary">Feste Lautstärke für die Alarmbenachrichtigung erzwingen.\nBei -1 wird die Standardeinstellung des Telefons verwendet.</string>
     <string name="advanced_settings">Erweitert</string>
-    <string name="advanced_settings_alarm_summary">Advanced alarm settings for fullscreen notification and sounds.</string>
+    <string name="advanced_settings_alarm_summary">Erweiterte Alarmeinstellungen für den Ton und die Benachrichtigungen.</string>
 
 </resources>

@@ -372,9 +372,9 @@
     <string name="alarm_fullscreen_dismiss_keyguard">Dismiss keyguard</string>
     <string name="alarm_fullscreen_dismiss_keyguard_summary">Please enable this setting, if you have problems with the fullscreen notification.\nOn some devices, this will cause the unlock screen, while the fullscreen notification is triggered.\nSo please do not enable it, if you do not have any problems.</string>
     <string name="alarm_force_sound">Force alarm sound</string>
-    <string name="alarm_force_sound_summary">This will force an alarm sound and vibration even if the phone is in silent or vibration mode.\nTo enable this setting, you may be asked for allowing this app to change the do not disturb mode.</string>
+    <string name="alarm_force_sound_summary">This will force an alarm sound and vibration even if the phone is in silent or vibration mode. It always will stop the do not disturb mode!\nTo enable this setting, you may be asked for allowing this app to change the do not disturb mode.</string>
     <string name="alarm_force_vibration">Force vibration</string>
-    <string name="alarm_force_vibration_summary">Force vibration, even if the phone is in silent mode.\nTo enable this setting, you may be asked for allowing this app to change the do not disturb mode.</string>
+    <string name="alarm_force_vibration_summary">Force vibration, even if the phone is in silent mode. It always will stop the do not disturb mode!\nTo enable this setting, you may be asked for allowing this app to change the do not disturb mode.</string>
     <string name="alarm_sound_level">Sound level</string>
     <string name="alarm_sound_level_summary">Force setting sound level for alarm sound.\n-1 for using default settings of phone.</string>
     <string name="advanced_settings">Advanced</string>

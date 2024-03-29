@@ -51,6 +51,7 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
     private var forceSound = false
     private var forceVibration = false
     private var lastRingerMode = -1
+    private var lastDndMode = NotificationManager.INTERRUPTION_FILTER_UNKNOWN
     //private var soundLevel = -1
     //private var lastSoundLevel = -1
 
@@ -299,13 +300,26 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
     fun getMaxSoundLevel(): Int {
         return audioManager.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION)
     }
+
+    private fun getRingerMode(): Int {
+        if(Channels.getNotificationManager().currentInterruptionFilter > NotificationManager.INTERRUPTION_FILTER_ALL) {
+            lastDndMode = Channels.getNotificationManager().currentInterruptionFilter
+            Log.d(LOG_ID, "Disable DnD in level $lastDndMode")
+            Channels.getNotificationManager().setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL)
+            Thread.sleep(100)
+        }
+        Log.d(LOG_ID, "Current ringer mode ${audioManager.ringerMode}")
+        return audioManager.ringerMode
+    }
+
     private fun checkCreateSound(alarmType: AlarmType) {
         try {
-            Log.v(LOG_ID, "checkCreateSound called for force sound=$forceSound - vibration=$forceVibration")
+            Log.v(LOG_ID, "checkCreateSound called for force sound=$forceSound - vibration=$forceVibration - DnD=${Channels.getNotificationManager().currentInterruptionFilter} - ringmode=${audioManager.ringerMode}")
             lastRingerMode = -1
+            lastDndMode = NotificationManager.INTERRUPTION_FILTER_UNKNOWN
             //lastSoundLevel = -1
             if (forceSound || forceVibration) {
-                if (Channels.getNotificationManager().isNotificationPolicyAccessGranted && audioManager.ringerMode < AudioManager.RINGER_MODE_NORMAL) {
+                if (Channels.getNotificationManager().isNotificationPolicyAccessGranted && getRingerMode() < AudioManager.RINGER_MODE_NORMAL) {
                     val channelId = getChannelId(alarmType)
                     val channel = Channels.getNotificationManager().getNotificationChannel(channelId)
                     Log.d(LOG_ID, "Channel: sound=${channel.sound} - vibration=${channel.shouldVibrate()} - prio=${channel.importance}")
@@ -351,6 +365,11 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
                 Log.d(LOG_ID, "Reset ringer mode to $lastRingerMode")
                 audioManager.ringerMode = lastRingerMode
                 lastRingerMode = -1
+            }
+            if(lastDndMode != NotificationManager.INTERRUPTION_FILTER_UNKNOWN) {
+                Log.d(LOG_ID, "Reset DnD mode to $lastDndMode")
+                Channels.getNotificationManager().setInterruptionFilter(lastDndMode)
+                lastDndMode = NotificationManager.INTERRUPTION_FILTER_UNKNOWN
             }
             /*
             if(lastSoundLevel >= 0) {
