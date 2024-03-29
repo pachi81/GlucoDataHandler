@@ -30,7 +30,6 @@ import de.michelinside.glucodatahandler.common.R as CR
 
 
 class LockscreenActivity : AppCompatActivity(), NotifierInterface {
-    private val LOG_ID = "GDH.AlarmLockscreenActivity"
 
     private lateinit var txtBgValue: TextView
     private lateinit var viewIcon: ImageView
@@ -42,10 +41,25 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var btnSnooze120: Button
     private lateinit var layoutSnooze: LinearLayout
     private var alarmType: AlarmType? = null
+    private var notificationId: Int = -1
+
+    companion object {
+        private val LOG_ID = "GDH.AlarmLockscreenActivity"
+        private var activity: AppCompatActivity? = null
+        fun close() {
+            try {
+                Log.d(LOG_ID, "close called for activity ${activity}")
+                activity?.finish()
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "close exception: " + exc.message.toString() )
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
             Log.d(LOG_ID, "onCreate called with params ${Utils.dumpBundle(this.intent.extras)}")
+            activity = this
             showWhenLockedAndTurnScreenOn()
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_lockscreen)
@@ -55,6 +69,9 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
                 alarmType = AlarmType.fromIndex(this.intent.extras!!.getInt(Constants.ALARM_NOTIFICATION_EXTRA_ALARM_TYPE, ReceiveData.getAlarmType().ordinal))
             }
 
+            if(this.intent.extras?.containsKey(Constants.ALARM_SNOOZE_EXTRA_NOTIFY_ID) == true) {
+                notificationId = this.intent.extras!!.getInt(Constants.ALARM_SNOOZE_EXTRA_NOTIFY_ID, -1)
+            }
             txtBgValue = findViewById(R.id.txtBgValue)
             viewIcon = findViewById(R.id.viewIcon)
             txtDelta = findViewById(R.id.txtDelta)
@@ -72,23 +89,19 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
                 layoutSnooze.visibility = View.GONE
 
             btnDismiss.setOnClickListener{
-                AlarmNotification.stopCurrentNotification(this)
-                finish()
+                stop()
             }
             btnSnooze60.setOnClickListener{
                 AlarmHandler.setSnooze(60)
-                AlarmNotification.stopCurrentNotification(this)
-                finish()
+                stop()
             }
             btnSnooze90.setOnClickListener{
                 AlarmHandler.setSnooze(90)
-                AlarmNotification.stopCurrentNotification(this)
-                finish()
+                stop()
             }
             btnSnooze120.setOnClickListener{
                 AlarmHandler.setSnooze(120)
-                AlarmNotification.stopCurrentNotification(this)
-                finish()
+                stop()
             }
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
 
@@ -101,9 +114,20 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
         }
     }
 
+    override fun onDestroy() {
+        try {
+            Log.v(LOG_ID, "onDestroy called")
+            super.onDestroy()
+            activity = null
+            stop()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )
+        }
+    }
+
     override fun onResume() {
         try {
-            Log.d(LOG_ID, "onResume called")
+            Log.v(LOG_ID, "onResume called")
             super.onResume()
             update()
             InternalNotifier.addNotifier(this, this, mutableSetOf(
@@ -116,9 +140,21 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
 
     override fun onPause() {
         try {
-            Log.d(LOG_ID, "onPause called")
+            Log.v(LOG_ID, "onPause called")
             super.onPause()
             InternalNotifier.remNotifier(this, this)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
+        }
+    }
+
+    private fun stop() {
+        try {
+            Log.v(LOG_ID, "stop called for id $notificationId")
+            if (notificationId > 0)
+                AlarmNotification.stopNotification(notificationId, this)
+            else
+                AlarmNotification.stopCurrentNotification(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }

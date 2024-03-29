@@ -148,6 +148,7 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
             checkRecreateSound()
             if (noticationId > 0) {
                 Channels.getNotificationManager(context).cancel(noticationId)
+                LockscreenActivity.close()
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "stopNotifications exception: " + exc.toString() )
