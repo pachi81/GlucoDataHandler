@@ -80,18 +80,20 @@
         android:textStyle="bold"
         tools:ignore="HardcodedText" />
 
-    <Button
+    <com.ncorti.slidetoact.SlideToActView
         android:id="@+id/btnDismiss"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:backgroundTint="#005CCC"
-        android:text="@string/btn_dismiss" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        app:slider_icon="@drawable/icon_close"
+        app:text_size="25sp"
+        app:text="@string/btn_dismiss"/>
 
     <LinearLayout
         android:id="@+id/layoutSnooze"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btnDismiss"
         android:layout_alignParentBottom="true"
@@ -99,9 +101,17 @@
         android:layout_marginBottom="50dp"
         android:gravity="center|bottom"
         android:orientation="vertical"
+        android:layout_marginHorizontal="30dp"
         app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <com.ncorti.slidetoact.SlideToActView
+            android:id="@+id/btnSnooze"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:text_size="25sp"
+            app:text="@string/snooze"/>
 
         <TextView
             android:id="@+id/txtSnooze"
@@ -113,15 +123,17 @@
             android:text="@string/snooze"
             android:textAlignment="center"
             android:textSize="25sp"
+            android:visibility="gone"
             tools:ignore="HardcodedText" />
 
 
         <LinearLayout
-            android:id="@+id/layout_snooze_buttons"
+            android:id="@+id/layoutSnoozeButtons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center|top"
             android:orientation="horizontal"
+            android:visibility="gone"
             app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">

@@ -16,6 +16,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import com.ncorti.slidetoact.SlideToActView
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -35,11 +36,14 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var viewIcon: ImageView
     private lateinit var txtDelta: TextView
     private lateinit var txtAlarm: TextView
-    private lateinit var btnDismiss: Button
+    private lateinit var txtSnooze: TextView
+    private lateinit var btnDismiss: SlideToActView
+    private lateinit var btnSnooze: SlideToActView
     private lateinit var btnSnooze60: Button
     private lateinit var btnSnooze90: Button
     private lateinit var btnSnooze120: Button
     private lateinit var layoutSnooze: LinearLayout
+    private lateinit var layoutSnoozeButtons: LinearLayout
     private var alarmType: AlarmType? = null
     private var notificationId: Int = -1
 
@@ -77,10 +81,13 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             txtDelta = findViewById(R.id.txtDelta)
             txtAlarm = findViewById(R.id.txtAlarm)
             btnDismiss = findViewById(R.id.btnDismiss)
+            btnSnooze = findViewById(R.id.btnSnooze)
+            txtSnooze = findViewById(R.id.txtSnooze)
             btnSnooze60 = findViewById(R.id.btnSnooze60)
             btnSnooze90 = findViewById(R.id.btnSnooze90)
             btnSnooze120 = findViewById(R.id.btnSnooze120)
             layoutSnooze = findViewById(R.id.layoutSnooze)
+            layoutSnoozeButtons = findViewById(R.id.layoutSnoozeButtons)
 
             val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             if (sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, false))
@@ -88,9 +95,22 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             else
                 layoutSnooze.visibility = View.GONE
 
-            btnDismiss.setOnClickListener{
-                stop()
-            }
+            btnDismiss.onSlideCompleteListener =
+                object : SlideToActView.OnSlideCompleteListener {
+                    override fun onSlideComplete(view: SlideToActView) {
+                        Log.v(LOG_ID, "Slide completed!")
+                        stop()
+                    }
+                }
+            btnSnooze.onSlideCompleteListener =
+                object : SlideToActView.OnSlideCompleteListener {
+                    override fun onSlideComplete(view: SlideToActView) {
+                        Log.v(LOG_ID, "Snooze completed!")
+                        btnSnooze.visibility = View.GONE
+                        txtSnooze.visibility = View.VISIBLE
+                        layoutSnoozeButtons.visibility = View.VISIBLE
+                    }
+                }
             btnSnooze60.setOnClickListener{
                 AlarmHandler.setSnooze(60)
                 stop()
