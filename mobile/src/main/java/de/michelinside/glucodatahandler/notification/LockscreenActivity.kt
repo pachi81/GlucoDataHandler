@@ -46,6 +46,8 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var layoutSnoozeButtons: LinearLayout
     private var alarmType: AlarmType? = null
     private var notificationId: Int = -1
+    private var doStopOnClose = true
+    private var createTime = 0L
 
     companion object {
         private val LOG_ID = "GDH.AlarmLockscreenActivity"
@@ -76,6 +78,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             if(this.intent.extras?.containsKey(Constants.ALARM_SNOOZE_EXTRA_NOTIFY_ID) == true) {
                 notificationId = this.intent.extras!!.getInt(Constants.ALARM_SNOOZE_EXTRA_NOTIFY_ID, -1)
             }
+            createTime = System.currentTimeMillis()
             txtBgValue = findViewById(R.id.txtBgValue)
             viewIcon = findViewById(R.id.viewIcon)
             txtDelta = findViewById(R.id.txtDelta)
@@ -139,7 +142,8 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             Log.v(LOG_ID, "onDestroy called")
             super.onDestroy()
             activity = null
-            stop()
+            if(doStopOnClose)
+                stop()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )
         }
@@ -152,7 +156,8 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             update()
             InternalNotifier.addNotifier(this, this, mutableSetOf(
                 NotifySource.BROADCAST,
-                NotifySource.MESSAGECLIENT))
+                NotifySource.MESSAGECLIENT,
+                NotifySource.TIME_VALUE))
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -245,7 +250,12 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
             Log.v(LOG_ID, "OnNotifyData called for $dataSource")
-            update()
+            if((System.currentTimeMillis()-createTime) >= (5*60*1000)) {
+                doStopOnClose = false
+                finish()
+            } else {
+                update()
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString())
         }

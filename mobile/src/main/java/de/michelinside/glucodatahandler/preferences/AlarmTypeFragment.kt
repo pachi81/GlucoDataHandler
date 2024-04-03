@@ -14,6 +14,7 @@ import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SeekBarPreference
@@ -28,14 +29,17 @@ import de.michelinside.glucodatahandler.notification.AlarmNotification
 class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GDH.AlarmTypeFragment"
     private lateinit var soundSaver: ActivityResultLauncher<Intent>
+    private var alarmType = AlarmType.NONE
+    private var pref_prefix = ""
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         try {
             Log.v(LOG_ID, "onCreatePreferences called for key: ${Utils.dumpBundle(this.arguments)}" )
             preferenceManager.sharedPreferencesName = Constants.SHARED_PREF_TAG
             setPreferencesFromResource(R.xml.alarm_type, rootKey)
             if (requireArguments().containsKey("prefix") && requireArguments().containsKey("type")) {
-                createAlarmPrefSettings(requireArguments().getString("prefix")!!,
-                    AlarmType.fromIndex(requireArguments().getInt("type")))
+                alarmType = AlarmType.fromIndex(requireArguments().getInt("type"))
+                pref_prefix = requireArguments().getString("prefix")!!
+                createAlarmPrefSettings()
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
@@ -46,6 +50,7 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
         Log.d(LOG_ID, "onResume called")
         try {
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
+            update()
             super.onResume()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.toString())
@@ -72,9 +77,22 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
         }
     }
 
-    private fun createAlarmPrefSettings(pref_prefix: String,
-                                        alarmType: AlarmType
-    ) {
+    private fun update() {
+        Log.d(LOG_ID, "update called")
+        try {
+            val pref = findPreference<Preference>(pref_prefix + "settings")
+            if (pref != null) {
+                pref.icon = ContextCompat.getDrawable(
+                    requireContext(),
+                    AlarmNotification.getSoundMode(alarmType).icon
+                )
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onPause exception: " + exc.toString())
+        }
+    }
+
+    private fun createAlarmPrefSettings() {
         Log.v(LOG_ID, "createAlarmPrefSettings for alarm $alarmType with prefix $pref_prefix")
         updatePreferenceKeys(pref_prefix)
         updateData(pref_prefix, alarmType)
@@ -130,6 +148,7 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
     private fun setAlarmSettings(preference: String, alarmType: AlarmType) {
         val pref = findPreference<Preference>(preference)
         if (pref != null) {
+            pref.icon = ContextCompat.getDrawable(requireContext(), AlarmNotification.getSoundMode(alarmType).icon)
             pref.setOnPreferenceClickListener {
                 Log.d(LOG_ID, "Open settings for $alarmType")
                 val intent: Intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)

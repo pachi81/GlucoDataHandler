@@ -2,6 +2,8 @@ package de.michelinside.glucodatahandler.preferences
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -96,9 +98,31 @@ class AlarmAdvancedFragment : PreferenceFragmentCompat(), SharedPreferences.OnSh
             when(key) {
                 Constants.SHARED_PREF_ALARM_FORCE_SOUND -> checkDisablePref(Constants.SHARED_PREF_ALARM_FORCE_SOUND, Constants.SHARED_PREF_ALARM_FORCE_VIBRATION)
                 Constants.SHARED_PREF_ALARM_FORCE_VIBRATION -> checkDisablePref(Constants.SHARED_PREF_ALARM_FORCE_VIBRATION, Constants.SHARED_PREF_ALARM_FORCE_SOUND)
+                Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED -> {
+                    if (sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, false) && !AlarmNotification.hasFullscreenPermission()) {
+                        requestFullScreenPermission()
+                    }
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
+        }
+    }
+
+    private fun requestFullScreenPermission() {
+        try {
+            Log.v(LOG_ID, "requestFullScreenPermission called")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                val intent = Intent(
+                    Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT,
+                    Uri.parse("package:" + requireContext().packageName)
+                )
+                intent.putExtra(Settings.EXTRA_APP_PACKAGE,requireContext().packageName)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "requestOverlayPermission exception: " + exc.toString())
         }
     }
 

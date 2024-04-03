@@ -161,6 +161,7 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
         try {
             Log.v(LOG_ID, "triggerNotification called for $alarmType - enabled=$enabled - forTest=$forTest")
             if (enabled || forTest) {
+                stopNotifications(context)
                 curNotification = getNotificationId(alarmType)
                 checkCreateSound(alarmType)
                 Channels.getNotificationManager(context).notify(
