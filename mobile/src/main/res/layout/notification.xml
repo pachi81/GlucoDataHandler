@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
-        android:text="TextView"
+        android:text="No data!"
         android:textSize="30dp"
         android:textColor="@color/text_color"
         tools:ignore="HardcodedText,SpUsage" />
@@ -30,7 +30,6 @@
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"
         android:gravity="center_vertical"
-        android:text="Delta: +0.06"
         android:textSize="18dp"
         android:textColor="@color/text_color"
         tools:ignore="HardcodedText,SpUsage" />

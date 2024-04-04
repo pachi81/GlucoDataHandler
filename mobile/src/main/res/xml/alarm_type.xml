@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
         <androidx.preference.SwitchPreferenceCompat
             android:key="enabled"
+            android:defaultValue="true"
             android:title="@string/alarm_enabled"
             android:summaryOn="@string/alarm_enabled_summary_on"
             android:summaryOff="@string/alarm_enabled_summary_off"

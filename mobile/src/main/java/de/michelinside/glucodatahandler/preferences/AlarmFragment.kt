@@ -91,7 +91,7 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
     }
 
     private fun getAlarmCatIcon(alarmType: AlarmType, enableKey: String): Int {
-        if(!preferenceManager.sharedPreferences!!.getBoolean(enableKey, false)) {
+        if(!preferenceManager.sharedPreferences!!.getBoolean(enableKey, true)) {
             return SoundMode.OFF.icon
         }
         return AlarmNotification.getSoundMode(alarmType).icon
