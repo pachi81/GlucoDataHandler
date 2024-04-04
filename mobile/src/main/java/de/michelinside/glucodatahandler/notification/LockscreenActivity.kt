@@ -46,8 +46,8 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var layoutSnoozeButtons: LinearLayout
     private var alarmType: AlarmType? = null
     private var notificationId: Int = -1
-    private var doStopOnClose = true
     private var createTime = 0L
+    private var retriggerOnDestroy = true
 
     companion object {
         private val LOG_ID = "GDH.AlarmLockscreenActivity"
@@ -55,10 +55,16 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
         fun close() {
             try {
                 Log.d(LOG_ID, "close called for activity ${activity}")
-                activity?.finish()
+                if(isActive()) {
+                    activity?.finish()
+                }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "close exception: " + exc.message.toString() )
             }
+        }
+
+        fun isActive(): Boolean {
+            return activity != null
         }
     }
 
@@ -142,8 +148,8 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             Log.v(LOG_ID, "onDestroy called")
             super.onDestroy()
             activity = null
-            if(doStopOnClose)
-                stop()
+            if(retriggerOnDestroy)
+                AlarmNotification.checkRetrigger(alarmType!!, this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )
         }
@@ -154,7 +160,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             Log.v(LOG_ID, "onResume called")
             super.onResume()
             update()
-            InternalNotifier.addNotifier(this, this, mutableSetOf(
+            InternalNotifier.addNotifier(this,this, mutableSetOf(
                 NotifySource.BROADCAST,
                 NotifySource.MESSAGECLIENT,
                 NotifySource.TIME_VALUE))
@@ -176,6 +182,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
     private fun stop() {
         try {
             Log.v(LOG_ID, "stop called for id $notificationId")
+            retriggerOnDestroy = false
             if (notificationId > 0)
                 AlarmNotification.stopNotification(notificationId, this)
             else
@@ -251,7 +258,6 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
         try {
             Log.v(LOG_ID, "OnNotifyData called for $dataSource")
             if((System.currentTimeMillis()-createTime) >= (5*60*1000)) {
-                doStopOnClose = false
                 finish()
             } else {
                 update()

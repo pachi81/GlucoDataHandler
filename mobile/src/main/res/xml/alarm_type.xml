@@ -16,6 +16,16 @@
             android:title="@string/alarm_interval"
             android:summary="@string/alarm_interval_summary"
             app:iconSpaceReserved="false" />
+        <androidx.preference.SeekBarPreference
+            app:showSeekBarValue="true"
+            app:seekBarIncrement="1"
+            app:defaultValue="0"
+            app:min="0"
+            android:max="15"
+            android:key="retrigger"
+            android:title="@string/alarm_retrigger"
+            android:summary="@string/alarm_retrigger_summary"
+            app:iconSpaceReserved="false" />
         <Preference
             android:key="settings"
             android:title="@string/alarm_settings"

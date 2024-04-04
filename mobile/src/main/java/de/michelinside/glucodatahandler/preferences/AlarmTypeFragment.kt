@@ -1,13 +1,16 @@
 package de.michelinside.glucodatahandler.preferences
 
 import android.app.Activity
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.os.Handler
 import android.provider.DocumentsContract
 import android.provider.Settings
 import android.util.Log
@@ -25,6 +28,7 @@ import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
+import de.michelinside.glucodatahandler.notification.TestAlarmReceiver
 
 class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GDH.AlarmTypeFragment"
@@ -87,6 +91,10 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
                     AlarmNotification.getSoundMode(alarmType).icon
                 )
             }
+            val prefTest = findPreference<Preference>(pref_prefix + "test")
+            if (prefTest != null) {
+                prefTest.isEnabled = true
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.toString())
         }
@@ -125,6 +133,9 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
 
         val intervalPref = findPreference<SeekBarPreference>(pref_prefix+"interval")
         intervalPref!!.value = preferenceManager.sharedPreferences!!.getInt(intervalPref.key, AlarmHandler.getDefaultIntervalMin(alarmType))
+
+        val retriggerPref = findPreference<SeekBarPreference>(pref_prefix+"retrigger")
+        retriggerPref!!.value = preferenceManager.sharedPreferences!!.getInt(retriggerPref.key, 0)
     }
 
     private fun setAlarmTest(preference: String, alarmType: AlarmType) {
@@ -133,13 +144,37 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
             pref.setOnPreferenceClickListener {
                 Log.d(LOG_ID, "Trigger test for $alarmType")
                 pref.isEnabled = false
-                Thread {
-                    Thread.sleep(3*1000)
-                    Handler(requireContext().mainLooper).post {
-                        AlarmNotification.triggerNotification(alarmType, requireContext(), true)
-                        pref.isEnabled = true
+                val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                var hasExactAlarmPermission = true
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    if(!alarmManager.canScheduleExactAlarms()) {
+                        Log.d(LOG_ID, "Need permission to set exact alarm!")
+                        hasExactAlarmPermission = false
                     }
-                }.start()
+                }
+                val intent = Intent(context, TestAlarmReceiver::class.java)
+                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                intent.putExtra(Constants.ALARM_NOTIFICATION_EXTRA_ALARM_TYPE, alarmType.ordinal)
+                val pendingIntent = PendingIntent.getBroadcast(
+                    context,
+                    800,
+                    intent,
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
+                )
+                val alarmTime = System.currentTimeMillis() + 3000
+                if (hasExactAlarmPermission) {
+                    alarmManager.setExactAndAllowWhileIdle(
+                        AlarmManager.RTC_WAKEUP,
+                        alarmTime,
+                        pendingIntent!!
+                    )
+                } else {
+                    alarmManager.setAndAllowWhileIdle(
+                        AlarmManager.RTC_WAKEUP,
+                        alarmTime,
+                        pendingIntent!!
+                    )
+                }
                 true
             }
         }

@@ -376,5 +376,7 @@
     <string name="alarm_no_notification_auto_connected">Kein Alarm, wenn Android Auto verbunden</string>
     <string name="alarm_no_notification_auto_connected_summary_on">Es gibt keine Alarm Benachrichtigung auf dem Telefon, solange Android Auto verbunden ist.</string>
     <string name="alarm_no_notification_auto_connected_summary_off">Es gibt auch eine Alarm Benachrichtigung auf dem Telefon, wenn Android Auto verbunden ist.</string>
+    <string name="alarm_retrigger">Erneut auslösen</string>
+    <string name="alarm_retrigger_summary">Solange die Alarmbenachrichtigung nicht geschlossen wird, wird nach diesem Intervall in Minuten der Alarm erneut ausgelöst.\n0 - um keinen erneuten Alarm auszulösen</string>
 
 </resources>
