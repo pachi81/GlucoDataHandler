@@ -29,7 +29,6 @@ android {
             resValue "string", "app_name", "GlucoDataHandler"
         }
         debug {
-            applicationIdSuffix '.debug'
             resValue "string", "app_name", "GlucoDataHandler"
         }
         second {

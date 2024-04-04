@@ -120,7 +120,7 @@ object Utils {
     }
 
     fun isPackageAvailable(context: Context, packageName: String): Boolean {
-        return context.packageManager.getInstalledApplications(0).find { info -> info.packageName.startsWith(packageName) } != null
+        return context.packageManager.getLaunchIntentForPackage(packageName) != null
     }
 
     fun getBackgroundColor(transparancyFactor: Int) : Int {
