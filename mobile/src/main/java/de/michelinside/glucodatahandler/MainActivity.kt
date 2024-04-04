@@ -21,6 +21,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuCompat
 import androidx.preference.PreferenceManager
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
@@ -31,6 +32,7 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
+import de.michelinside.glucodatahandler.common.notification.AlarmState
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -57,6 +59,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var btnSources: Button
     private lateinit var sharedPref: SharedPreferences
     private lateinit var optionsMenu: Menu
+    private var alarmIcon: MenuItem? = null
+    private var snoozeMenu: MenuItem? = null
     private val LOG_ID = "GDH.Main"
     private var requestNotificationPermission = false
 
@@ -268,6 +272,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             inflater.inflate(R.menu.menu_items, menu)
             MenuCompat.setGroupDividerEnabled(menu!!, true)
             optionsMenu = menu
+            alarmIcon = optionsMenu.findItem(R.id.action_alarm_toggle)
+            snoozeMenu = optionsMenu.findItem(R.id.group_snooze_title)
+            updateAlarmIcon()
             return true
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreateOptionsMenu exception: " + exc.message.toString() )
@@ -354,12 +361,57 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     AlarmHandler.setSnooze(120L)
                     return true
                 }
+                R.id.action_alarm_toggle -> {
+                    toggleAlarm()
+                    return true
+                }
                 else -> return super.onOptionsItemSelected(item)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onOptionsItemSelected exception: " + exc.message.toString() )
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun toggleAlarm() {
+        try {
+            val state = AlarmState.currentState(this)
+            Log.v(LOG_ID, "toggleAlarm called for state $state")
+            when(state) {
+                AlarmState.SNOOZE -> AlarmHandler.setSnooze(0)  // disable snooze
+                AlarmState.DISABLED -> {
+                    with(sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, true)
+                        apply()
+                    }
+                }
+                AlarmState.ACTIVE -> {
+                    with(sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
+                        apply()
+                    }
+                }
+                AlarmState.INACTIVE -> {}  // do nothing
+            }
+            updateAlarmIcon()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "updateAlarmIcon exception: " + exc.message.toString() )
+        }
+    }
+
+    private fun updateAlarmIcon() {
+        try {
+            val state = AlarmState.currentState(this)
+            Log.v(LOG_ID, "updateAlarmIcon called for state $state")
+            if(alarmIcon != null) {
+                alarmIcon!!.icon = ContextCompat.getDrawable(this, state.icon)
+            }
+            if(snoozeMenu != null) {
+                snoozeMenu!!.isVisible = (state == AlarmState.ACTIVE || state == AlarmState.SNOOZE)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "updateAlarmIcon exception: " + exc.message.toString() )
+        }
     }
 
     private fun update() {
@@ -393,13 +445,14 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }
 
             txtSourceInfo.text = SourceStateData.getState(this)
+            updateAlarmIcon()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
         }
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
-        Log.v(LOG_ID, "new intent received")
+        Log.v(LOG_ID, "OnNotifyData called for $dataSource")
         update()
     }
 

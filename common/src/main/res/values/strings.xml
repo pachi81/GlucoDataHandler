@@ -3,6 +3,7 @@
     <string name="name" translatable="false">GlucoDataHandler</string>
     <string name="source_gdh" translatable="false">GlucoDataHandler</string>
 
+    <string name="alarm_toggle" translatable="false">Alarm toggle</string>
     <string name="info_label_sensor_id">Sensor</string>
     <string name="info_label_value">Value</string>
     <string name="info_label_raw">Raw</string>
