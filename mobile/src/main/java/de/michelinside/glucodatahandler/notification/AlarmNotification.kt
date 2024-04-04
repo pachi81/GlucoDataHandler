@@ -278,10 +278,18 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
         val contentView = RemoteViews(GlucoDataService.context!!.packageName, R.layout.alarm_notification)
         contentView.setTextViewText(R.id.alarm, context.getString(resId))
         contentView.setTextViewText(R.id.snooze, context.getString(CR.string.snooze))
-        contentView.setTextViewText(R.id.glucose, ReceiveData.getClucoseAsString())
-        contentView.setTextColor(R.id.glucose, ReceiveData.getClucoseColor())
-        contentView.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap())
-        contentView.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
+        if(alarmType == AlarmType.OBSOLETE) {
+            contentView.setTextViewText(R.id.deltaText, "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(context)}")
+            contentView.setViewVisibility(R.id.glucose, View.GONE)
+            contentView.setViewVisibility(R.id.trendImage, View.GONE)
+        } else {
+            contentView.setViewVisibility(R.id.glucose, View.VISIBLE)
+            contentView.setViewVisibility(R.id.trendImage, View.VISIBLE)
+            contentView.setTextViewText(R.id.glucose, ReceiveData.getClucoseAsString())
+            contentView.setTextColor(R.id.glucose, ReceiveData.getClucoseColor())
+            contentView.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap())
+            contentView.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
+        }
         contentView.setOnClickPendingIntent(R.id.snooze_60, createSnoozeIntent(context, 60L, getNotificationId(alarmType)))
         contentView.setOnClickPendingIntent(R.id.snooze_90, createSnoozeIntent(context, 90L, getNotificationId(alarmType)))
         contentView.setOnClickPendingIntent(R.id.snooze_120, createSnoozeIntent(context, 120L, getNotificationId(alarmType)))

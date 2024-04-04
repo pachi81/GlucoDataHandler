@@ -54,25 +54,44 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/txtDelta"
+        <LinearLayout
+            android:id="@+id/layout_delta_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/layout_glucose_trend"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            android:maxLines="1"
+            android:gravity="center|top"
             android:orientation="horizontal"
-            android:text="Δ +0.06"
-            android:textAlignment="center"
-            android:textSize="25sp"
-            tools:ignore="HardcodedText" />
+            tools:ignore="UselessParent">
+            <TextView
+                android:id="@+id/txtTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:orientation="horizontal"
+                android:text="12:23 PM"
+                android:textAlignment="center"
+                android:textSize="25sp"
+                android:layout_marginEnd="20dp"
+                tools:ignore="HardcodedText" />
+            <TextView
+                android:id="@+id/txtDelta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:orientation="horizontal"
+                android:text="Δ +0.06"
+                android:textAlignment="center"
+                android:textSize="25sp"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/txtAlarm"
             android:layout_width="200dp"
             android:layout_height="60dp"
-            android:layout_below="@+id/txtDelta"
+            android:layout_below="@+id/layout_delta_time"
             android:layout_marginTop="40dp"
             android:layout_centerHorizontal="true"
             android:autoSizeStepGranularity="1sp"

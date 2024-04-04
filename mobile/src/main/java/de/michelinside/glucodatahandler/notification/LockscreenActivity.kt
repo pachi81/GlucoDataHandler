@@ -35,6 +35,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtBgValue: TextView
     private lateinit var viewIcon: ImageView
     private lateinit var txtDelta: TextView
+    private lateinit var txtTime: TextView
     private lateinit var txtAlarm: TextView
     private lateinit var txtSnooze: TextView
     private lateinit var btnDismiss: SlideToActView
@@ -88,6 +89,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             txtBgValue = findViewById(R.id.txtBgValue)
             viewIcon = findViewById(R.id.viewIcon)
             txtDelta = findViewById(R.id.txtDelta)
+            txtTime = findViewById(R.id.txtTime)
             txtAlarm = findViewById(R.id.txtAlarm)
             btnDismiss = findViewById(R.id.btnDismiss)
             btnSnooze = findViewById(R.id.btnSnooze)
@@ -239,6 +241,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             }
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
             txtDelta.text = "Δ ${ReceiveData.getDeltaAsString()}"
+            txtTime.text = "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(this)}"
             val resId = (if(alarmType != null) alarmType else ReceiveData.getAlarmType())?.let {
                 AlarmNotification.getAlarmTextRes(
                     it
