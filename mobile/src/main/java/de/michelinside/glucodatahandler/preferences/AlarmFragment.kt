@@ -78,6 +78,7 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
             updateAlarmCat(Constants.SHARED_PREF_ALARM_LOW)
             updateAlarmCat(Constants.SHARED_PREF_ALARM_HIGH)
             updateAlarmCat(Constants.SHARED_PREF_ALARM_VERY_HIGH)
+            updateAlarmCat(Constants.SHARED_PREF_ALARM_OBSOLETE)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.toString())
         }
@@ -103,6 +104,7 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
             AlarmType.LOW -> resources.getString(CR.string.alarm_type_low_summary, getBorderText(alarmType))
             AlarmType.HIGH,
             AlarmType.VERY_HIGH -> resources.getString(CR.string.alarm_type_high_summary, getBorderText(alarmType))
+            AlarmType.OBSOLETE -> resources.getString(CR.string.alarm_obsolete_summary)
             else -> ""
         }
     }

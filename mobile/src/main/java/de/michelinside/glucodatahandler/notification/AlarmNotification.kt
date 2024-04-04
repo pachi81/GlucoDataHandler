@@ -49,6 +49,7 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
     private const val LOW_NOTIFICATION_ID = 802
     private const val HIGH_NOTIFICATION_ID = 803
     private const val VERY_HIGH_NOTIFICATION_ID = 804
+    private const val OBSOLETE_NOTIFICATION_ID = 805
     private lateinit var audioManager:AudioManager
     private var enabled: Boolean = false
     private var fullscreenEnabled: Boolean = true
@@ -220,6 +221,7 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
         createNotificationChannel(context, AlarmType.LOW, false)
         createNotificationChannel(context, AlarmType.HIGH, false)
         createNotificationChannel(context, AlarmType.VERY_HIGH, true)
+        createNotificationChannel(context, AlarmType.OBSOLETE, false)
     }
 
     private fun createNotificationChannel(context: Context, alarmType: AlarmType, byPassDnd: Boolean) {
@@ -438,6 +440,7 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
             AlarmType.LOW -> LOW_NOTIFICATION_ID
             AlarmType.HIGH -> HIGH_NOTIFICATION_ID
             AlarmType.VERY_HIGH -> VERY_HIGH_NOTIFICATION_ID
+            AlarmType.OBSOLETE -> OBSOLETE_NOTIFICATION_ID
             else -> -1
         }
     }
@@ -448,6 +451,7 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
             AlarmType.LOW -> ChannelType.LOW_ALARM
             AlarmType.HIGH -> ChannelType.HIGH_ALARM
             AlarmType.VERY_HIGH -> ChannelType.VERY_HIGH_ALARM
+            AlarmType.OBSOLETE -> ChannelType.OBSOLETE_ALARM
             else -> null
         }
     }
@@ -465,6 +469,7 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
             AlarmType.LOW -> CR.raw.gdh_low_alarm
             AlarmType.HIGH -> CR.raw.gdh_high_alarm
             AlarmType.VERY_HIGH -> CR.raw.gdh_very_high_alarm
+            AlarmType.OBSOLETE -> CR.raw.gdh_obsolete_alarm
             else -> null
         }
     }
@@ -475,6 +480,7 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
             AlarmType.LOW -> CR.string.very_low_text
             AlarmType.HIGH -> CR.string.very_high_text
             AlarmType.VERY_HIGH -> CR.string.very_high_alarm_text
+            AlarmType.OBSOLETE -> CR.string.obsolete_alarm_text
             else -> null
         }
     }
@@ -498,6 +504,7 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
             AlarmType.LOW -> longArrayOf(0, 700, 500, 700, 500, 700, 500, 700)
             AlarmType.HIGH -> longArrayOf(0, 500, 500, 500, 500, 500, 500, 500)
             AlarmType.VERY_HIGH -> longArrayOf(0, 800, 500, 800, 800, 600, 800, 800, 500, 800, 800, 600, 800)
+            AlarmType.OBSOLETE -> longArrayOf(0, 600, 500, 500, 500, 600, 500, 500)
             else -> null
         }
     }
@@ -510,6 +517,7 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
             AlarmType.LOW -> sharedPref.getInt(Constants.SHARED_PREF_ALARM_LOW_RETRIGGER, 0)
             AlarmType.HIGH -> sharedPref.getInt(Constants.SHARED_PREF_ALARM_HIGH_RETRIGGER, 0)
             AlarmType.VERY_HIGH -> sharedPref.getInt(Constants.SHARED_PREF_ALARM_VERY_HIGH_RETRIGGER, 0)
+            AlarmType.OBSOLETE -> sharedPref.getInt(Constants.SHARED_PREF_ALARM_OBSOLETE_RETRIGGER, 0)
             else -> 0
         }
     }
@@ -587,8 +595,9 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
             Log.d(LOG_ID, "OnNotifyData called for $dataSource")
             if (dataSource == NotifySource.ALARM_TRIGGER && ReceiveData.forceAlarm) {
                 triggerNotification(ReceiveData.getAlarmType(), context)
-            }
-            if(dataSource==NotifySource.TIME_VALUE || dataSource==NotifySource.BROADCAST || dataSource==NotifySource.MESSAGECLIENT) {
+            } else if(dataSource == NotifySource.OBSOLETE_ALARM_TRIGGER) {
+                triggerNotification(AlarmType.OBSOLETE, context)
+            } else if(dataSource==NotifySource.TIME_VALUE || dataSource==NotifySource.BROADCAST || dataSource==NotifySource.MESSAGECLIENT) {
                 // check for retrigger notification
                 if(canRetrigger()) {
                     Log.d(LOG_ID, "Retrigger notification")
@@ -635,7 +644,7 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
     }
 
     private fun getNotifierFilter() : MutableSet<NotifySource> {
-        val filter = mutableSetOf(NotifySource.ALARM_TRIGGER)
+        val filter = mutableSetOf(NotifySource.ALARM_TRIGGER, NotifySource.OBSOLETE_ALARM_TRIGGER)
         if(isTriggerActive()) {
             // add triggers for time changing
             filter.add(NotifySource.TIME_VALUE)

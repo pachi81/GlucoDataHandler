@@ -272,6 +272,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             AlarmType.OK -> colorOK
             AlarmType.HIGH -> colorOutOfRange
             AlarmType.VERY_HIGH -> colorAlarm
+            AlarmType.OBSOLETE -> Color.GRAY
         }
     }
 

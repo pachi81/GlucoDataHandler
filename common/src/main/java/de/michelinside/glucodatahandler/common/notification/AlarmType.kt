@@ -8,7 +8,8 @@ enum class AlarmType(val resId: Int) {
     LOW(R.string.alarm_low),
     OK(R.string.alarm_none),
     HIGH(R.string.alarm_high),
-    VERY_HIGH(R.string.alarm_very_high);
+    VERY_HIGH(R.string.alarm_very_high),
+    OBSOLETE(R.string.alarm_obsolete);
 
     companion object {
         fun fromIndex(idx: Int): AlarmType {

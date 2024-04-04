@@ -156,6 +156,11 @@ object Constants {
     const val SHARED_PREF_ALARM_VERY_HIGH_INTERVAL = "alarm_very_high_interval"
     const val SHARED_PREF_ALARM_VERY_HIGH_RETRIGGER = "alarm_very_high_retrigger"
 
+    const val SHARED_PREF_ALARM_OBSOLETE = "alarm_obsolete"
+    const val SHARED_PREF_ALARM_OBSOLETE_ENABLED = "alarm_obsolete_enabled"
+    const val SHARED_PREF_ALARM_OBSOLETE_INTERVAL = "alarm_obsolete_interval"
+    const val SHARED_PREF_ALARM_OBSOLETE_RETRIGGER = "alarm_obsolete_retrigger"
+
     // Android Auto
     const val AA_MEDIA_ICON_STYLE_TREND = "trend"
     const val AA_MEDIA_ICON_STYLE_GLUCOSE_TREND = "glucose_trend"

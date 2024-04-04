@@ -69,5 +69,17 @@
                 android:name="type"
                 android:value="5" />
         </Preference>
+        <Preference
+            android:key="alarm_obsolete"
+            android:title="@string/obsolete_alarm_notification_name"
+            app:fragment="de.michelinside.glucodatahandler.preferences.AlarmTypeFragment"
+            app:iconSpaceReserved="false">
+            <extra
+                android:name="prefix"
+                android:value="alarm_obsolete_" />
+            <extra
+                android:name="type"
+                android:value="6" />
+        </Preference>
     </PreferenceCategory>
 </PreferenceScreen>
