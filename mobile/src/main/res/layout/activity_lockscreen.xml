@@ -74,8 +74,9 @@
         android:layout_centerHorizontal="true"
         android:autoSizeStepGranularity="1sp"
         android:autoSizeTextType="uniform"
+        android:autoSizeMaxTextSize="60dp"
         android:maxLines="1"
-        android:text="ALARM!"
+        android:text="ALARM"
         android:gravity="center"
         android:textStyle="bold"
         tools:ignore="HardcodedText" />
@@ -88,6 +89,9 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
         app:slider_icon="@drawable/icon_close"
+        app:outer_color="#005CCC"
+        app:inner_color="@color/white"
+        app:text_color="@color/white"
         app:text_size="25sp"
         app:text="@string/btn_dismiss"/>
 
@@ -111,6 +115,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:text_size="25sp"
+            app:outer_color="#005CCC"
+            app:inner_color="@color/white"
+            app:text_color="@color/white"
             app:text="@string/snooze"/>
 
         <TextView

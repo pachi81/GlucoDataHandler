@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/main_layout"
+    tools:context=".notification.LockscreenActivity"
+    android:theme="@style/ThemeOverlay.MaterialComponents.Dark">
+
+    <RelativeLayout
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/layout_glucose_trend"
+            android:layout_width="250dp"
+            android:layout_height="80dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="50dp"
+            android:gravity="center|top"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_centerHorizontal="true"
+            tools:ignore="UselessParent">
+
+            <TextView
+                android:id="@+id/txtBgValue"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:maxLines="1"
+                android:text="---"
+                android:textAlignment="viewEnd"
+                android:textColor="#757575"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <ImageView
+                android:id="@+id/viewIcon"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:paddingVertical="2dp"
+                android:src="@drawable/icon_question"
+                tools:ignore="ContentDescription" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtDelta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout_glucose_trend"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:maxLines="1"
+            android:orientation="horizontal"
+            android:text="Δ +0.06"
+            android:textAlignment="center"
+            android:textSize="25sp"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/txtAlarm"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_below="@+id/txtDelta"
+            android:layout_marginTop="40dp"
+            android:layout_centerHorizontal="true"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMaxTextSize="60dp"
+            android:maxLines="1"
+            android:text="ALARM"
+            android:gravity="center"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+
+        <com.ncorti.slidetoact.SlideToActView
+            android:id="@+id/btnDismiss"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="50dp"
+            app:slider_icon="@drawable/icon_close"
+            app:outer_color="#005CCC"
+            app:inner_color="@color/white"
+            app:text_color="@color/white"
+            app:text_size="25sp"
+            app:text="@string/btn_dismiss"/>
+
+        <LinearLayout
+            android:id="@+id/layoutSnooze"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btnDismiss"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="50dp"
+            android:gravity="center|bottom"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="50dp"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.ncorti.slidetoact.SlideToActView
+                android:id="@+id/btnSnooze"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:text_size="25sp"
+                app:outer_color="#005CCC"
+                app:inner_color="@color/white"
+                app:text_color="@color/white"
+                app:text="@string/snooze"/>
+
+            <TextView
+                android:id="@+id/txtSnooze"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:maxLines="1"
+                android:orientation="horizontal"
+                android:text="@string/snooze"
+                android:textAlignment="center"
+                android:textSize="25sp"
+                android:visibility="gone"
+                tools:ignore="HardcodedText" />
+
+
+            <LinearLayout
+                android:id="@+id/layoutSnoozeButtons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center|top"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintStart_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <Button
+                    android:id="@+id/btnSnooze60"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#005CCC"
+                    android:text="60"
+                    tools:ignore="HardcodedText,SpUsage" />
+
+                <Button
+                    android:id="@+id/btnSnooze90"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:backgroundTint="#005CCC"
+                    android:text="90"
+                    tools:ignore="HardcodedText,SpUsage" />
+
+                <Button
+                    android:id="@+id/btnSnooze120"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:backgroundTint="#005CCC"
+                    android:text="120"
+                    tools:ignore="HardcodedText,SpUsage" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>
