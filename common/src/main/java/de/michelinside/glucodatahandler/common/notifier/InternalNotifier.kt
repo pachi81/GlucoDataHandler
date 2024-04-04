@@ -28,11 +28,11 @@ object InternalNotifier {
 
     fun notify(context: Context, notifySource: NotifySource, extras: Bundle?)
     {
-        Log.d(LOG_ID, "Sending new data to " + notifiers.size.toString() + " notifier(s).")
+        Log.d(LOG_ID, "Sending new data from " + notifySource.toString() + " to " + getNotifierCount(notifySource) + " notifier(s).")
         notifiers.forEach{
             try {
                 if (it.value == null || it.value!!.contains(notifySource)) {
-                    Log.d(LOG_ID, "Sending new data from " + notifySource.toString() + " to " + it.toString())
+                    Log.v(LOG_ID, "Sending new data from " + notifySource.toString() + " to " + it.toString())
                     it.key.OnNotifyData(context, notifySource, extras)
                 }
             } catch (exc: Exception) {

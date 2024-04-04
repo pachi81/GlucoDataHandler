@@ -145,6 +145,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             InternalNotifier.addNotifier(this, this, mutableSetOf(
                 NotifySource.BROADCAST,
                 NotifySource.IOB_COB_CHANGE,
+                NotifySource.IOB_COB_TIME,
                 NotifySource.MESSAGECLIENT,
                 NotifySource.CAPILITY_INFO,
                 NotifySource.NODE_BATTERY_LEVEL,
@@ -335,13 +336,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 R.id.group_snooze_title -> {
                     Log.v(LOG_ID, "snooze group selected - snoozeActive=${AlarmHandler.isSnoozeActive}")
                     val snoozeStop: MenuItem = optionsMenu.findItem(R.id.action_stop_snooze)
-                    val snooze60: MenuItem = optionsMenu.findItem(R.id.action_snooze_60)
-                    val snooze90: MenuItem = optionsMenu.findItem(R.id.action_snooze_90)
-                    val snooze120: MenuItem = optionsMenu.findItem(R.id.action_snooze_120)
                     snoozeStop.isVisible = AlarmHandler.isSnoozeActive
-                    snooze60.isVisible = !AlarmHandler.isSnoozeActive
-                    snooze90.isVisible = !AlarmHandler.isSnoozeActive
-                    snooze120.isVisible = !AlarmHandler.isSnoozeActive
                 }
                 R.id.action_stop_snooze -> {
                     AlarmHandler.setSnooze(0L)
