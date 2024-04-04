@@ -131,7 +131,10 @@ object Constants {
     const val SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION = "alarm_snooze_on_notification"
     const val SHARED_PREF_ALARM_FORCE_SOUND = "alarm_force_sound"
     const val SHARED_PREF_ALARM_FORCE_VIBRATION = "alarm_force_vibration"
-    const val SHARED_PREF_ALARM_SOUND_LEVEL = "alarm_sound_level"
+
+    const val SHARED_PREF_NO_ALARM_NOTIFICATION_WEAR_CONNECTED = "alarm_no_notification_wear_connected"
+    const val SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED = "alarm_no_notification_auto_connected"
+
 
     const val SHARED_PREF_ALARM_VERY_LOW = "alarm_very_low"
     const val SHARED_PREF_ALARM_VERY_LOW_ENABLED = "alarm_very_low_enabled"

@@ -370,5 +370,11 @@
     <string name="alarm_advanced_cat_sound">Ton</string>
     <string name="alarm_type_low_summary">Alarmeinstellungen für Glukosewerte kleiner als %1$s.</string>
     <string name="alarm_type_high_summary">Alarmeinstellungen für Glukosewerte größer als %1$s.</string>
+    <string name="alarm_no_notification_wear_connected">Kein Alarm, wenn Uhr verbunden</string>
+    <string name="alarm_no_notification_wear_connected_summary_on">Es gibt keine Alarm Benachrichtigung auf dem Telefon, solange GlucoDataHandler auf der Uhr verbunden ist.</string>
+    <string name="alarm_no_notification_wear_connected_summary_off">Es gibt auch eine Alarm Benachrichtigung auf dem Telefon, wenn GlucoDataHandler auf der Uhr verbunden ist.</string>
+    <string name="alarm_no_notification_auto_connected">Kein Alarm, wenn Android Auto verbunden</string>
+    <string name="alarm_no_notification_auto_connected_summary_on">Es gibt keine Alarm Benachrichtigung auf dem Telefon, solange Android Auto verbunden ist.</string>
+    <string name="alarm_no_notification_auto_connected_summary_off">Es gibt auch eine Alarm Benachrichtigung auf dem Telefon, wenn Android Auto verbunden ist.</string>
 
 </resources>

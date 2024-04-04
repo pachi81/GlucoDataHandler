@@ -21,9 +21,12 @@ import android.widget.RemoteViews
 import android.widget.Toast
 import de.michelinside.glucodatahandler.MainActivity
 import de.michelinside.glucodatahandler.R
+import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.WearPhoneConnection
+import de.michelinside.glucodatahandler.common.notification.AlarmState
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
@@ -53,8 +56,31 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
     private var forceVibration = false
     private var lastRingerMode = -1
     private var lastDndMode = NotificationManager.INTERRUPTION_FILTER_UNKNOWN
+    private var noAlarmOnWearConnected = false
+    private var noAlarmOnAAConnected = false
     //private var soundLevel = -1
     //private var lastSoundLevel = -1
+
+    val active: Boolean get() {
+        if(enabled) {
+            if(noAlarmOnWearConnected && WearPhoneConnection.nodesConnected) {
+                return false
+            }
+            if(noAlarmOnAAConnected && CarModeReceiver.AA_connected) {
+                return false
+            }
+            return true
+        }
+        return false
+    }
+
+    fun getAlarmState(context: Context): AlarmState {
+        val state = AlarmState.currentState(context)
+        if(state != AlarmState.DISABLED && !active) {
+            return AlarmState.INACTIVE
+        }
+        return state
+    }
 
     fun initNotifications(context: Context) {
         try {
@@ -95,7 +121,7 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
     fun setFullscreenEnabled(fsEnable: Boolean) {
         try {
             Log.v(LOG_ID, "setFullscreenEnabled called: current=$fullscreenEnabled - new=$fsEnable")
-            fullscreenEnabled = enabled
+            fullscreenEnabled = fsEnable
         } catch (exc: Exception) {
             Log.e(LOG_ID, "setFullscreenEnabled exception: " + exc.toString() )
         }
@@ -159,8 +185,8 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
 
     fun triggerNotification(alarmType: AlarmType, context: Context, forTest: Boolean = false) {
         try {
-            Log.v(LOG_ID, "triggerNotification called for $alarmType - enabled=$enabled - forTest=$forTest")
-            if (enabled || forTest) {
+            Log.v(LOG_ID, "triggerNotification called for $alarmType - active=$active - forTest=$forTest")
+            if (active || forTest) {
                 stopNotifications(context)
                 curNotification = getNotificationId(alarmType)
                 checkCreateSound(alarmType)
@@ -507,6 +533,8 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED)
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_FORCE_SOUND)
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_FORCE_VIBRATION)
+                onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_WEAR_CONNECTED)
+                onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED)
                 //onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_SOUND_LEVEL)
             } else {
                 when(key) {
@@ -515,6 +543,8 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
                     Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED -> setFullscreenEnabled(sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, fullscreenEnabled))
                     Constants.SHARED_PREF_ALARM_FORCE_SOUND -> forceSound = sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_FORCE_SOUND, forceSound)
                     Constants.SHARED_PREF_ALARM_FORCE_VIBRATION -> forceVibration = sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_FORCE_VIBRATION, forceVibration)
+                    Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_WEAR_CONNECTED -> noAlarmOnWearConnected = sharedPreferences.getBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_WEAR_CONNECTED, noAlarmOnWearConnected)
+                    Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED -> noAlarmOnAAConnected = sharedPreferences.getBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED, noAlarmOnAAConnected)
                     //Constants.SHARED_PREF_ALARM_SOUND_LEVEL -> soundLevel = sharedPreferences.getInt(Constants.SHARED_PREF_ALARM_SOUND_LEVEL, soundLevel)
                 }
             }

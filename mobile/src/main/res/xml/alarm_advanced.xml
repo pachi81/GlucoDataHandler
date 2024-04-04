@@ -2,24 +2,23 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
         <PreferenceCategory
-            android:title="@string/alarm_advanced_cat_sound"
-            app:iconSpaceReserved="false">
-                <androidx.preference.SwitchPreferenceCompat
-                    android:key="alarm_force_sound"
-                    android:defaultValue="false"
-                    android:title="@string/alarm_force_sound"
-                    android:summary="@string/alarm_force_sound_summary"
-                    app:iconSpaceReserved="false" />
-                <androidx.preference.SwitchPreferenceCompat
-                    android:key="alarm_force_vibration"
-                    android:defaultValue="false"
-                    android:title="@string/alarm_force_vibration"
-                    android:summary="@string/alarm_force_vibration_summary"
-                    app:iconSpaceReserved="false" />
-        </PreferenceCategory>
-        <PreferenceCategory
             android:title="@string/alarm_advanced_cat_notifcation"
             app:iconSpaceReserved="false">
+                <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="false"
+                    android:key="alarm_no_notification_wear_connected"
+                    android:title="@string/alarm_no_notification_wear_connected"
+                    android:summaryOn="@string/alarm_no_notification_wear_connected_summary_on"
+                    android:summaryOff="@string/alarm_no_notification_wear_connected_summary_off"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="false"
+                    android:key="alarm_no_notification_auto_connected"
+                    android:title="@string/alarm_no_notification_auto_connected"
+                    android:summaryOn="@string/alarm_no_notification_auto_connected_summary_on"
+                    android:summaryOff="@string/alarm_no_notification_auto_connected_summary_off"
+                    app:isPreferenceVisible="false"
+                    app:iconSpaceReserved="false" />
                 <androidx.preference.SwitchPreferenceCompat
                     android:defaultValue="false"
                     android:key="alarm_snooze_on_notification"
@@ -37,6 +36,22 @@
                     android:defaultValue="false"
                     android:title="@string/alarm_fullscreen_dismiss_keyguard"
                     android:summary="@string/alarm_fullscreen_dismiss_keyguard_summary"
+                    app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+        <PreferenceCategory
+            android:title="@string/alarm_advanced_cat_sound"
+            app:iconSpaceReserved="false">
+                <androidx.preference.SwitchPreferenceCompat
+                    android:key="alarm_force_sound"
+                    android:defaultValue="false"
+                    android:title="@string/alarm_force_sound"
+                    android:summary="@string/alarm_force_sound_summary"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:key="alarm_force_vibration"
+                    android:defaultValue="false"
+                    android:title="@string/alarm_force_vibration"
+                    android:summary="@string/alarm_force_vibration_summary"
                     app:iconSpaceReserved="false" />
         </PreferenceCategory>
 </PreferenceScreen>

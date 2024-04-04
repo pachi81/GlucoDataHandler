@@ -74,6 +74,13 @@ class AlarmAdvancedFragment : PreferenceFragmentCompat(), SharedPreferences.OnSh
         if (!AlarmNotification.hasFullscreenPermission()) {
             disableSwitch(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED)
         }
+        val aaPref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED)
+        if(aaPref != null) {
+            aaPref.isVisible = Utils.isPackageAvailable(requireContext(), Constants.PACKAGE_GLUCODATAAUTO)
+            if(!aaPref.isVisible && aaPref.isChecked) {
+                disableSwitch(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED)
+            }
+        }
     }
 
     private fun disableSwitch(prefname: String) {

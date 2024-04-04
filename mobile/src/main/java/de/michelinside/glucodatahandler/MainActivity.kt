@@ -38,6 +38,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.watch.LogcatReceiver
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -375,7 +376,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun toggleAlarm() {
         try {
-            val state = AlarmState.currentState(this)
+            val state = AlarmNotification.getAlarmState(this)
             Log.v(LOG_ID, "toggleAlarm called for state $state")
             when(state) {
                 AlarmState.SNOOZE -> AlarmHandler.setSnooze(0)  // disable snooze
@@ -401,13 +402,14 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateAlarmIcon() {
         try {
-            val state = AlarmState.currentState(this)
+            val state = AlarmNotification.getAlarmState(this)
             Log.v(LOG_ID, "updateAlarmIcon called for state $state")
             if(alarmIcon != null) {
                 alarmIcon!!.icon = ContextCompat.getDrawable(this, state.icon)
+                alarmIcon!!.isEnabled = (state!=AlarmState.INACTIVE)
             }
             if(snoozeMenu != null) {
-                snoozeMenu!!.isVisible = (state == AlarmState.ACTIVE || state == AlarmState.SNOOZE)
+                snoozeMenu!!.isVisible = (state != AlarmState.DISABLED)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateAlarmIcon exception: " + exc.message.toString() )
