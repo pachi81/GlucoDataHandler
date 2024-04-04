@@ -11,8 +11,8 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 object TimeTaskService: BackgroundTaskService(42, "GDH.Task.Time.TaskService") {
     override fun getAlarmReceiver() : Class<*> = TimeAlarmReceiver::class.java
 
-    // also notify for NOTIFIER_CHANGE as if there is no receiver, the alarm manager is not needed
-    override fun getNotifySourceFilter() : MutableSet<NotifySource> = mutableSetOf(NotifySource.NOTIFIER_CHANGE)
+    // also notify for TIME_NOTIFIER_CHANGE as if there is no receiver, the alarm manager is not needed
+    override fun getNotifySourceFilter() : MutableSet<NotifySource> = mutableSetOf(NotifySource.TIME_NOTIFIER_CHANGE)
 
     override fun getBackgroundTasks(): MutableList<BackgroundTask> =
         mutableListOf(ElapsedTimeTask(), ObsoleteTask())
