@@ -24,7 +24,7 @@ class ElapsedTimeTask : BackgroundTask() {
     override fun getIntervalMinute(): Long {
         return if (relativeTimeValue) 1L
         else if(interval > 0) interval
-        else if(InternalNotifier.getNotifierCount(NotifySource.TIME_VALUE) > 0) 1L
+        else if(InternalNotifier.hasTimeNotifier) 1L
         else 0
     }
 
@@ -36,7 +36,7 @@ class ElapsedTimeTask : BackgroundTask() {
     }
 
     override fun active(elapsetTimeMinute: Long): Boolean {
-        return (relativeTimeValue || interval > 0 || InternalNotifier.getNotifierCount(NotifySource.TIME_VALUE) > 0) && elapsetTimeMinute <= 60
+        return (relativeTimeValue || interval > 0 || InternalNotifier.hasTimeNotifier) && elapsetTimeMinute <= 60
     }
 
     override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {
