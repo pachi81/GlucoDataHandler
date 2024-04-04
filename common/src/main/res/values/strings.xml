@@ -349,7 +349,7 @@
     <string name="alarm_saved">Alarm saved!</string>
     <string name="snooze">Snooze</string>
     <string name="alarm_cat_all">All alarms</string>
-    <string name="alarm_notifications_enabled">Notifications</string>
+    <string name="alarm_notifications_enabled">Alarm Notifications</string>
     <string name="alarm_notifications_enabled_summary_on">Alarm notifications are active on phone.</string>
     <string name="alarm_notifications_enabled_summary_off">Alarm notifications are inactive on phone.</string>
     <string name="stop_snooze">Stop</string>
