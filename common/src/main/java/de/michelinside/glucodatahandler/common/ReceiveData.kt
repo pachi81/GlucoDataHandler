@@ -475,14 +475,23 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 System.currentTimeMillis()
 
             if(!isIobCob() || (newTime > iobCobTime && (newTime-iobCobTime) > 30000)) {
-                Log.i(LOG_ID, "Only IOB/COB changed: " + extras.getFloat(IOB, Float.NaN) + "/" +  extras.getFloat(COB, Float.NaN))
-                iob = extras.getFloat(IOB, Float.NaN)
-                cob = extras.getFloat(COB, Float.NaN)
+                var iobCobChange = false
+                if(iob != extras.getFloat(IOB, Float.NaN) || cob != extras.getFloat(COB, Float.NaN)) {
+                    Log.i(LOG_ID, "Only IOB/COB changed: " + extras.getFloat(IOB, Float.NaN) + "/" +  extras.getFloat(COB, Float.NaN))
+                    iob = extras.getFloat(IOB, Float.NaN)
+                    cob = extras.getFloat(COB, Float.NaN)
+                    iobCobChange = true
+                } else {
+                    Log.d(LOG_ID, "Only IOB/COB time changed")
+                }
                 iobCobTime = newTime
 
                 // do not forward extras as interApp to prevent sending back to source...
                 val bundle: Bundle? = if(interApp) null else createExtras()  // re-create extras to have all changed value inside for sending to receiver
-                InternalNotifier.notify(context, NotifySource.IOB_COB_CHANGE, bundle)
+                if(iobCobChange)
+                    InternalNotifier.notify(context, NotifySource.IOB_COB_CHANGE, bundle)
+                else
+                    InternalNotifier.notify(context, NotifySource.IOB_COB_TIME, bundle)
                 saveExtras(context)
             }
         }
@@ -622,7 +631,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
 
     private fun saveExtras(context: Context) {
         try {
-            Log.d(LOG_ID, "Saving extras")
+            Log.v(LOG_ID, "Saving extras")
             // use own tag to prevent trigger onChange event at every time!
             val sharedGlucosePref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, Context.MODE_PRIVATE)
             with(sharedGlucosePref.edit()) {

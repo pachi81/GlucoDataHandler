@@ -73,6 +73,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         val filter = mutableSetOf(
             NotifySource.BROADCAST,
             NotifySource.IOB_COB_CHANGE,
+            NotifySource.IOB_COB_TIME,
             NotifySource.BATTERY_LEVEL)   // to trigger re-start for the case of stopped by the system
         if (sendSettings) {
             filter.add(NotifySource.SETTINGS)   // only send setting changes from phone to wear!
@@ -391,7 +392,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            if (dataSource != NotifySource.IOB_COB_CHANGE || extras != null) {  // do not send IOB change without extras
+            if ((dataSource != NotifySource.IOB_COB_CHANGE && dataSource != NotifySource.IOB_COB_TIME) || extras != null) {  // do not send IOB change without extras
                 Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString() + " and extras " + extras.toString())
                 sendMessage(dataSource, extras)
             }
