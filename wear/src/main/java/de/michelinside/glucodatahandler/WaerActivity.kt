@@ -214,6 +214,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.SETTINGS,
                 NotifySource.OBSOLETE_VALUE,
                 NotifySource.SOURCE_SETTINGS,
+                NotifySource.ALARM_SETTINGS,
                 NotifySource.SOURCE_STATE_CHANGE))
             checkExactAlarmPermission()
             checkHighContrast()

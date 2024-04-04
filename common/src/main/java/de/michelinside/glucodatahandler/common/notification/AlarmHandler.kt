@@ -135,7 +135,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener {
             putLong(SNOOZE_TIME, snoozeTime)
             apply()
         }
-        InternalNotifier.notify(GlucoDataService.context!!, NotifySource.ALARM_SETTINGS, null)
+        InternalNotifier.notify(GlucoDataService.context!!, NotifySource.ALARM_SETTINGS, getSettings())
     }
 
     private fun loadExtras() {
@@ -193,6 +193,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener {
         lastAlarmTime = bundle.getLong(LAST_ALARM_TIME, lastAlarmTime)
         snoozeTime = bundle.getLong(SNOOZE_TIME, snoozeTime)
         updateSettings(sharedPref)
+        InternalNotifier.notify(context, NotifySource.ALARM_SETTINGS, null)
     }
 
     fun updateSettings(sharedPref: SharedPreferences) {

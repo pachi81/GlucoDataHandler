@@ -411,9 +411,18 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         }
     }
 
+    private fun ignoreSourceWithoutExtras(dataSource: NotifySource): Boolean {
+        return when(dataSource) {
+            NotifySource.IOB_COB_CHANGE,
+            NotifySource.IOB_COB_TIME,
+            NotifySource.ALARM_SETTINGS -> true // do not send these sources without extras
+            else -> false
+        }
+    }
+
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            if ((dataSource != NotifySource.IOB_COB_CHANGE && dataSource != NotifySource.IOB_COB_TIME) || extras != null) {  // do not send IOB change without extras
+            if (extras != null || !ignoreSourceWithoutExtras(dataSource)) {
                 Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString() + " and extras " + extras.toString())
                 sendMessage(dataSource, extras)
             }
