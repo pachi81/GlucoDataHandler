@@ -8,7 +8,8 @@
             android:defaultValue="false"
             android:key="alarm_notifications_enabled"
             android:title="@string/alarm_notifications_enabled"
-            android:summary="@string/alarm_notifications_enabled_summary"
+            android:summaryOn="@string/alarm_notifications_enabled_summary_on"
+            android:summaryOff="@string/alarm_notifications_enabled_summary_off"
             app:iconSpaceReserved="false" />
         <Preference
             android:title="@string/advanced_settings"

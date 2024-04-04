@@ -134,7 +134,7 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
                 Log.d(LOG_ID, "Trigger test for $alarmType")
                 pref.isEnabled = false
                 Thread {
-                    Thread.sleep(5*1000)
+                    Thread.sleep(3*1000)
                     Handler(requireContext().mainLooper).post {
                         AlarmNotification.triggerNotification(alarmType, requireContext(), true)
                         pref.isEnabled = true

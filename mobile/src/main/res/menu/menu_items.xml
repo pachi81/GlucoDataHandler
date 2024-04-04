@@ -31,6 +31,14 @@
             android:id="@+id/group_snooze_title"
             android:title="@string/snooze">
             <menu>
+                <group
+                    android:id="@+id/group_stop_snoooze">
+                    <item
+                        android:id="@+id/action_stop_snooze"
+                        android:title="@string/stop_snooze"
+                        android:visible="false"
+                        app:showAsAction="never" />
+                </group>
                 <item
                     android:id="@+id/action_snooze_60"
                     android:title="60"
@@ -46,11 +54,6 @@
                     android:title="120"
                     app:showAsAction="never"
                     tools:ignore="HardcodedText" />
-                <item
-                    android:id="@+id/action_stop_snooze"
-                    android:title="@string/stop_snooze"
-                    android:visible="false"
-                    app:showAsAction="never" />
             </menu>
         </item>
     </group>

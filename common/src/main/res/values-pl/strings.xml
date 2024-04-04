@@ -323,9 +323,10 @@
     <string name="alarm_interval">Interval</string>
     <string name="alarm_interval_summary">Minimum interval between notifications for the this alarm type.</string>
     <string name="alarm_enabled">Enabled</string>
-    <string name="alarm_enabled_summary">Notification are enabled for this alarm type.</string>
+    <string name="alarm_enabled_summary_on">Notification are enabled for this alarm type.</string>
+    <string name="alarm_enabled_summary_off">Notification are disabled for this alarm type.</string>
     <string name="alarm_test">Test it</string>
-    <string name="alarm_test_summary">Press here to trigger a notification after 5 seconds for this alarm type.</string>
+    <string name="alarm_test_summary">Press here to trigger a notification after 3 seconds for this alarm type.</string>
     <string name="alarm_settings">Settings</string>
     <string name="alarm_settings_summary">Press here to go to settings for notification channel for this alarm.\nThere you can change all related settings.</string>
     <string name="alarm_notification_group_name">Alarms</string>
@@ -335,7 +336,8 @@
     <string name="snooze">Snooze</string>
     <string name="alarm_cat_all">All alarms</string>
     <string name="alarm_notifications_enabled">Notifications</string>
-    <string name="alarm_notifications_enabled_summary">De-/activate alarm notifications on phone.</string>
+    <string name="alarm_notifications_enabled_summary_on">Alarm notifications are active on phone.</string>
+    <string name="alarm_notifications_enabled_summary_off">Alarm notifications are inactive on phone.</string>
     <string name="very_low_alarm_text">Very low!</string>
     <string name="stop_snooze">Stop</string>
     <string name="very_low_text">Low!</string>
