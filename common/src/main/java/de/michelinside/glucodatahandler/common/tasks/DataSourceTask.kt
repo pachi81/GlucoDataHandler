@@ -110,7 +110,11 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     }
 
     fun setState(state: SourceState, error: String = "", code: Int = -1) {
-        Log.v(LOG_ID,"Set state for source " + source + ": " + state + " - " + error + " (" + code + ")")
+        if(state == SourceState.NONE) {
+            Log.v(LOG_ID,"Set state for source " + source + ": " + state + " - " + error + " (" + code + ")")
+        } else {
+            Log.w(LOG_ID,"Set state for source " + source + ": " + state + " - " + error + " (" + code + ")")
+        }
         lastErrorCode = code
         lastState = state
 

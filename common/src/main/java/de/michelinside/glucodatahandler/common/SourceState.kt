@@ -2,6 +2,7 @@ package de.michelinside.glucodatahandler.common
 
 import android.content.Context
 import android.os.Handler
+import android.util.Log
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -13,6 +14,7 @@ enum class SourceState(val resId: Int) {
     ERROR(R.string.source_state_error);
 }
 object SourceStateData {
+    private val LOG_ID = "GDH.SourceStateData"
 
     var lastSource: DataSource = DataSource.NONE
     var lastState: SourceState = SourceState.NONE
@@ -26,6 +28,10 @@ object SourceStateData {
         lastError = error
         lastSource = source
         lastState = state
+
+        if(state == SourceState.ERROR) {
+            Log.e(LOG_ID, "Error state for source $source: $error" )
+        }
 
         if (GlucoDataService.context != null) {
             Handler(GlucoDataService.context!!.mainLooper).post {

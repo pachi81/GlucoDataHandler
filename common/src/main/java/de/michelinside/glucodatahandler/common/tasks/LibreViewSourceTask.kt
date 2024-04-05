@@ -100,6 +100,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             return jsonObj
         }
         setLastError("Missing data in response!", 500)
+        reset()
         return null
     }
 
@@ -245,7 +246,9 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             val array = jsonObject.optJSONArray("data")
             if (array != null) {
                 if (array.length() == 0) {
+                    Log.w(LOG_ID, "Empty data array in response: $jsonObject")
                     setLastError(GlucoDataService.context!!.getString(R.string.src_libre_setup_librelink))
+                    reset()
                     return
                 }
                 val data = getPatientData(array)
@@ -283,6 +286,11 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                         handleResult(glucoExtras)
                     }
                 }
+            } else {
+                Log.e(LOG_ID, "No data array found in response: $jsonObject")
+                setLastError("Invalid response! Please send logs to developer.")
+                reset()
+                return
             }
         }
     }
