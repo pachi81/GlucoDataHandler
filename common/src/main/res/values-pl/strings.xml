@@ -312,6 +312,9 @@
     <string name="request_exact_alarm_summary">W przypadku wszystkich zadań związanych z czasem i odstępami czasu aplikacja wymaga udzielenia uprawnień do ich obsługi.\nAplikacja nie dodaje ani nie zmienia żadnych alarmów i przypomnień, które ustawił użytkownik. Wymaga jedynie pozwolenia na uruchamianie wewnętrznych wyzwalaczy.\nJeśli naciśniesz OK, otwarte zostaną ustawienia uprawnień, gdzie można je nadać dla GlucoDataHandler.</string>
     <string name="request_exact_alarm_title">Zezwalaj na ustawianie alarmów i przypomnień</string>
     <string name="activity_main_schedule_exact_alarm">Uprawnienie do ustawiania alarmów i przypomnień jest wyłączone!!!\nGlucoDataHandler może nie działać poprawnie!!!\nNaciśnij tutaj, aby przejść bezpośrednio do ustawień.</string>
+
+    <!-- New  -->
+
     <string name="src_libre_patient">Patient</string>
     <string name="src_libre_patient_summary">If there is more then one patient connected to the libre account, please select the patient receiving the data for.</string>
     <string name="pref_cat_locksreen_wallpaper">Lockscreen Wallpaper</string>
