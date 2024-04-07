@@ -383,5 +383,6 @@
     <string name="alarm_obsolete_summary">Alarmeinstellungen für einen veralteten Wert.</string>
     <string name="obsolete_alarm_notification_descr">Diese Benachrichtigung erscheint, wenn es keinen neuen Wert gibt.</string>
     <string name="obsolete_alarm_text">Kein neuer Wert!</string>
+    <string name="activity_main_notification_permission">!!!Die Anzeige von Benachrichtigungen ist deaktiviert!!!\nKorrekte Funktionalität von GlucoDataHandler ist nicht gewährleistet und es können keine Alarme angezeigt werden!!!\nBitte hier drücken, um zu der entsprechenden Berechtigungseinstellung zu gelangen.</string>
 
 </resources>

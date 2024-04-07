@@ -388,5 +388,6 @@
     <string name="alarm_obsolete_summary">Alarm settings for no new glucose value.</string>
     <string name="obsolete_alarm_notification_descr">This notification will appear, if there is no new value for in an interval.</string>
     <string name="obsolete_alarm_text">No new value!</string>
+    <string name="activity_main_notification_permission">Showing notifications is disabled!!!\nGlucoDataHandler may not work correct and can not show alarms!!!\nPress here to go direct to the permission setting.</string>
 
 </resources>

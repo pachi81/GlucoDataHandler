@@ -18,7 +18,6 @@ import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
-import de.michelinside.glucodatahandler.common.utils.Utils
 
 enum class AppSource {
     NOT_SET,
@@ -63,7 +62,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
         }
 
         fun start(source: AppSource, context: Context, cls: Class<*>, force: Boolean = false) {
-            if (!running) {
+            if (!running || !foreground) {
                 Log.v(LOG_ID, "start called (running: $running - foreground: $foreground)")
                 try {
                     isRunning = true
@@ -82,10 +81,12 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                         // default on wear and phone
                         true//sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
                     )
-                    if (foreground)
+                    if (foreground) {
                         context.startService(serviceIntent)
-                    else
+                    } else {
+                        Log.v(LOG_ID, "start foreground service")
                         context.startForegroundService(serviceIntent)
+                    }
                 } catch (exc: Exception) {
                     Log.e(
                         LOG_ID,
@@ -121,7 +122,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
             Log.v(LOG_ID, "onStartCommand called")
             super.onStartCommand(intent, flags, startId)
             val isForeground = true // intent?.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)    --> always use foreground!!!
-            if (isForeground && !isForegroundService && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
+            if (isForeground && !isForegroundService) {
                 Log.i(LOG_ID, "Starting service in foreground!")
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
                     startForeground(NOTIFICATION_ID, getNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
