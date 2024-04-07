@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.SETTINGS,
                 NotifySource.CAR_CONNECTION,
                 NotifySource.OBSOLETE_VALUE,
-                NotifySource.ALARM_SETTINGS,
+                NotifySource.ALARM_STATE_CHANGED,
                 NotifySource.SOURCE_STATE_CHANGE))
             checkExactAlarmPermission()
             checkBatteryOptimization()

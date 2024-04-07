@@ -103,8 +103,12 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
 
     fun setSnooze(minutes: Long) {
         Log.v(LOG_ID, "Set snooze to $minutes minutes")
+        val snoozeActive = isSnoozeActive
         snoozeTime = System.currentTimeMillis() + Duration.ofMinutes(minutes).toMillis()
         saveExtras()
+        if(snoozeActive != isSnoozeActive && GlucoDataService.context != null) {
+            InternalNotifier.notify(GlucoDataService.context!!, NotifySource.ALARM_STATE_CHANGED, null)
+        }
     }
 
     private fun checkHighAlarm(newAlarmType: AlarmType, alarmInterval: Int): Boolean {
@@ -162,6 +166,11 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         Constants.SHARED_PREF_ALARM_VERY_HIGH_INTERVAL,
         Constants.SHARED_PREF_ALARM_OBSOLETE_ENABLED,
         Constants.SHARED_PREF_ALARM_OBSOLETE_INTERVAL,
+    )
+
+    val alarmStatePreferences = mutableSetOf(
+        Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED,
+
     )
 
     fun getSettings(): Bundle {
@@ -242,8 +251,11 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called for key " + key)
-            if (GlucoDataService.context != null && alarmPreferencesToSend.contains(key)) {
-                updateSettings(sharedPreferences, GlucoDataService.context!!)
+            if (GlucoDataService.context != null) {
+                if(alarmPreferencesToSend.contains(key))
+                    updateSettings(sharedPreferences, GlucoDataService.context!!)
+                if(alarmStatePreferences.contains(key))
+                    InternalNotifier.notify(GlucoDataService.context!!, NotifySource.ALARM_STATE_CHANGED, null)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
