@@ -149,13 +149,13 @@
     <string name="pref_switch_use_mmol">mmol/l</string>
     <string name="pref_switch_use_mmol_summary">Benutze mmol/l anstatt mg/dl.</string>
     <string name="pref_high_value">Hoher Glukosewert</string>
-    <string name="pref_high_value_summary">Grenze für hohe Glukosewerte.\nWenn in Juggluco der Alarm für hohen Glukosewert aktiviert ist, muss der Wert nicht gesetzt werden.</string>
+    <string name="pref_high_value_summary">Grenze für hohe Glukosewerte.</string>
     <string name="pref_target_max_value">Obere Grenze</string>
     <string name="pref_target_max_value_summary">Obere Grenze für den Zielbereich.</string>
     <string name="pref_target_min_value">Untere Grenze</string>
     <string name="pref_target_min_value_summary">Untere Grenze für den Zielbereich.</string>
     <string name="pref_low_value">Niedriger Glukosewert</string>
-    <string name="pref_low_value_summary">Grenze für niedrige Glukosewerte.\nWenn in Juggluco der Alarm für niedrigen Glukosewert aktiviert ist, muss der Wert nicht gesetzt werden.</string>
+    <string name="pref_low_value_summary">Grenze für niedrige Glukosewerte.</string>
     <string name="pref_switch_use_5_min_delta">5 Minuten Delta</string>
     <string name="pref_switch_use_5_min_delta_summary">Für Delta Werte im 5 Minuten Intervall, ansonsten wird der Delta Wert pro Minute angezeigt.</string>
     <string name="pref_color_alarm">Hohe/Niedrige Werte</string>
@@ -317,5 +317,5 @@
     <string name="pref_lockscreen_enabled_summary">Wenn sie den Hintergrund für den Lockscreen aktivieren, erstellt die App einen Hintergrund auf dem Lockscreen, welche den Glucosewert und den Trendpfeil enthält.</string>
     <string name="pref_lockscreen_y_pos">Vertikale Position</string>
     <string name="pref_lockscreen_y_pos_summary">Vertikale position auf dem Lockscreen:\n0: am oberen Rand des Bildschirms\n100: am unteren Rand des Bildschirms</string>
-
+    <string name="activity_main_notification_permission">!!!Die Anzeige von Benachrichtigungen ist deaktiviert!!!\nKorrekte Funktionalität von GlucoDataHandler ist nicht gewährleistet und es können keine Alarme angezeigt werden!!!\nBitte hier drücken, um zu der entsprechenden Berechtigungseinstellung zu gelangen.</string>
 </resources>

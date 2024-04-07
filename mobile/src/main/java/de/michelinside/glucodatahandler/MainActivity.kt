@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtBatteryOptimization: TextView
     private lateinit var txtHighContrastEnabled: TextView
     private lateinit var txtScheduleExactAlarm: TextView
+    private lateinit var txtNotificationPermission: TextView
     private lateinit var btnSources: Button
     private lateinit var sharedPref: SharedPreferences
     private lateinit var optionsMenu: Menu
@@ -76,6 +77,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             txtBatteryOptimization = findViewById(R.id.txtBatteryOptimization)
             txtHighContrastEnabled = findViewById(R.id.txtHighContrastEnabled)
             txtScheduleExactAlarm = findViewById(R.id.txtScheduleExactAlarm)
+            txtNotificationPermission = findViewById(R.id.txtNotificationPermission)
             btnSources = findViewById(R.id.btnSources)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
@@ -158,6 +160,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Notification permission granted")
                 requestNotificationPermission = false
+                txtNotificationPermission.visibility = View.GONE
                 GlucoDataServiceMobile.start(this, true)
             }
         } catch (exc: Exception) {
@@ -171,8 +174,16 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             if (!Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Request notification permission...")
                 requestNotificationPermission = true
-                this.requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 3)
+                txtNotificationPermission.visibility = View.VISIBLE
+                txtNotificationPermission.setOnClickListener {
+                    val intent: Intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                        .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
+                    startActivity(intent)
+                }
+                this.requestPermissions(arrayOf(android.Manifest.permission.FOREGROUND_SERVICE, android.Manifest.permission.POST_NOTIFICATIONS), 3)
                 return false
+            } else {
+                txtNotificationPermission.visibility = View.GONE
             }
         }
         requestExactAlarmPermission()
@@ -225,7 +236,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         try {
             val pm = getSystemService(POWER_SERVICE) as PowerManager
             if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                Log.w(LOG_ID, "Battery optimization is inactive")
+                Log.w(LOG_ID, "Battery optimization is active")
                 txtBatteryOptimization.visibility = View.VISIBLE
                 txtBatteryOptimization.setOnClickListener {
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -234,7 +245,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 }
             } else {
                 txtBatteryOptimization.visibility = View.GONE
-                Log.i(LOG_ID, "Battery optimization is active")
+                Log.i(LOG_ID, "Battery optimization is inactive")
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )

@@ -140,13 +140,13 @@
 
     <string name="pref_switch_notification">Dummy values</string>
     <string name="pref_high_value">High glucose</string>
-    <string name="pref_high_value_summary">Border for high glucose values.\nIf you have activated high alarm in Juggluco, you do not have to set this value.</string>
+    <string name="pref_high_value_summary">Border for high glucose values.</string>
     <string name="pref_target_max_value">Target top glucose</string>
     <string name="pref_target_max_value_summary">Top value for the target range.</string>
     <string name="pref_target_min_value">Target bottom glucose</string>
     <string name="pref_target_min_value_summary">Bottom value for the target range.</string>
     <string name="pref_low_value">Low glucose</string>
-    <string name="pref_low_value_summary">Border for low glucose values.\nIf you have activated low alarm in Juggluco, you do not have to set this value.</string>
+    <string name="pref_low_value_summary">Border for low glucose values.</string>
     <string name="pref_switch_car_notification">Android Auto notifications</string>
     <string name="pref_switch_car_notification_summary">Notification for Android Auto.</string>
     <string name="pref_car_notification_interval">Notification interval</string>
@@ -335,4 +335,5 @@
     <string name="pref_lockscreen_enabled_summary">If you enable lockscreen wallpaper, the app replaces the wallpaper on lockscreen with an Image containing the value and trend.</string>
     <string name="pref_lockscreen_y_pos">Vertical position</string>
     <string name="pref_lockscreen_y_pos_summary">Vertical position of the glucose-trend image on lockscreen:\n0 is the top of the display\n100 is the botton of the display</string>
+    <string name="activity_main_notification_permission">Showing notifications is disabled!!!\nGlucoDataHandler may not work correct and can not show alarms!!!\nPress here to go direct to the permission setting.</string>
 </resources>
