@@ -1,11 +1,14 @@
 package de.michelinside.glucodatahandler.preferences
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
@@ -16,6 +19,7 @@ import de.michelinside.glucodatahandler.common.notification.SoundMode
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
+import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 
 
@@ -71,9 +75,22 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
         }
     }
 
+    @SuppressLint("InlinedApi")
     private fun update() {
         Log.d(LOG_ID, "update called")
         try {
+            val prefAlarmEnabled = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED)
+            if(prefAlarmEnabled != null) {
+                prefAlarmEnabled.isEnabled = Utils.checkPermission(requireContext(), android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)
+                if(!prefAlarmEnabled.isEnabled && prefAlarmEnabled.isChecked) {
+                    prefAlarmEnabled.isChecked = false
+                    with(preferenceManager.sharedPreferences!!.edit()) {
+                        putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
+                        apply()
+                    }
+                }
+
+            }
             updateAlarmCat(Constants.SHARED_PREF_ALARM_VERY_LOW)
             updateAlarmCat(Constants.SHARED_PREF_ALARM_LOW)
             updateAlarmCat(Constants.SHARED_PREF_ALARM_HIGH)

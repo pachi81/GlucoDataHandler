@@ -388,22 +388,31 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun toggleAlarm() {
         try {
             val state = AlarmNotification.getAlarmState(this)
-            Log.v(LOG_ID, "toggleAlarm called for state $state")
-            when(state) {
-                AlarmState.SNOOZE -> AlarmHandler.setSnooze(0)  // disable snooze
-                AlarmState.DISABLED -> {
-                    with(sharedPref.edit()) {
-                        putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, true)
-                        apply()
+            if(Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
+                Log.v(LOG_ID, "toggleAlarm called for state $state")
+                when (state) {
+                    AlarmState.SNOOZE -> AlarmHandler.setSnooze(0)  // disable snooze
+                    AlarmState.DISABLED -> {
+                        with(sharedPref.edit()) {
+                            putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, true)
+                            apply()
+                        }
                     }
-                }
-                AlarmState.ACTIVE -> {
-                    with(sharedPref.edit()) {
-                        putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
-                        apply()
+
+                    AlarmState.ACTIVE -> {
+                        with(sharedPref.edit()) {
+                            putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
+                            apply()
+                        }
                     }
+
+                    AlarmState.INACTIVE -> {}  // do nothing
                 }
-                AlarmState.INACTIVE -> {}  // do nothing
+            } else if(state != AlarmState.DISABLED) {
+                with(sharedPref.edit()) {
+                    putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
+                    apply()
+                }
             }
             updateAlarmIcon()
         } catch (exc: Exception) {
