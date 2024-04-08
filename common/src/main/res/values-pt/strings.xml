@@ -329,7 +329,9 @@ Mostre uma segunda notificação sem conteúdo para ter um ícone adicional na b
     <string name="pref_lockscreen_y_pos_summary">Vertical position of the glucose-trend image on lockscreen:\n0 is the top of the display\n100 is the botton of the display</string>
     <string name="menu_alarms">Alarms</string>
     <string name="alarm_interval">Interval</string>
-    <string name="alarm_interval_summary">Minimum interval between notifications for the this alarm type.</string>
+    <string name="alarm_interval_summary_low">Minimum interval in minutes between notifications for the this alarm type.\nInformation: there will only a new notification after the time has elapsed, if the delta is negative.</string>
+    <string name="alarm_interval_summary_high">Minimum interval in minutes between notifications for the this alarm type.\nInformation: there will only a new notification after the time has elapsed, if the delta is positive.</string>
+    <string name="alarm_interval_summary_obsolete">Time in minutes since the last glucose value has received to trigger this notification. It will also re-appear in this interval.</string>
     <string name="alarm_enabled">Enabled</string>
     <string name="alarm_enabled_summary_on">Notification are enabled for this alarm type.</string>
     <string name="alarm_enabled_summary_off">Notification are disabled for this alarm type.</string>
@@ -378,8 +380,7 @@ Mostre uma segunda notificação sem conteúdo para ter um ícone adicional na b
     <string name="advanced_settings_alarm_summary">Advanced alarm settings for fullscreen notification and sounds.</string>
     <string name="alarm_advanced_cat_notifcation">Notification</string>
     <string name="alarm_advanced_cat_sound">Sound</string>
-    <string name="alarm_type_low_summary">Alarm settings for glucose values lower then %1$s.</string>
-    <string name="alarm_type_high_summary">Alarm settings for glucose values higher then %1$s.</string>
+    <string name="alarm_type_summary">Alarm settings for glucose values starting from %1$s.</string>
     <string name="alarm_no_notification_wear_connected">No alarm while wear is connected</string>
     <string name="alarm_no_notification_wear_connected_summary_on">There will be no alarm notification on phone, if the phone is connected to GlucoDataHandler on watch.</string>
     <string name="alarm_no_notification_wear_connected_summary_off">There will be an alarm notification on phone, even if the phone is connected to GlucoDataHandler on watch.</string>

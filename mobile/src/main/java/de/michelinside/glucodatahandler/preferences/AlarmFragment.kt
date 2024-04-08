@@ -118,9 +118,9 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
     private fun getAlarmCatSummary(alarmType: AlarmType): String {
         return when(alarmType) {
             AlarmType.VERY_LOW,
-            AlarmType.LOW -> resources.getString(CR.string.alarm_type_low_summary, getBorderText(alarmType))
+            AlarmType.LOW,
             AlarmType.HIGH,
-            AlarmType.VERY_HIGH -> resources.getString(CR.string.alarm_type_high_summary, getBorderText(alarmType))
+            AlarmType.VERY_HIGH -> resources.getString(CR.string.alarm_type_summary, getBorderText(alarmType))
             AlarmType.OBSOLETE -> resources.getString(CR.string.alarm_obsolete_summary)
             else -> ""
         }
@@ -135,11 +135,11 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
             else -> 0F
         }
 
-        if (alarmType == AlarmType.VERY_LOW)
-            value += if(ReceiveData.isMmol) 0.1F else 1F
-
-        if (alarmType == AlarmType.VERY_HIGH)
+        if (alarmType == AlarmType.LOW)
             value -= if(ReceiveData.isMmol) 0.1F else 1F
+
+        if (alarmType == AlarmType.HIGH)
+            value += if(ReceiveData.isMmol) 0.1F else 1F
 
         return "$value ${ReceiveData.getUnit()}"
     }

@@ -133,9 +133,21 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
 
         val intervalPref = findPreference<SeekBarPreference>(pref_prefix+"interval")
         intervalPref!!.value = preferenceManager.sharedPreferences!!.getInt(intervalPref.key, AlarmHandler.getDefaultIntervalMin(alarmType))
+        intervalPref.summary = getIntervalSummary(alarmType)
 
         val retriggerPref = findPreference<SeekBarPreference>(pref_prefix+"retrigger")
         retriggerPref!!.value = preferenceManager.sharedPreferences!!.getInt(retriggerPref.key, 0)
+    }
+
+    private fun getIntervalSummary(alarmType: AlarmType): String {
+        return when(alarmType) {
+            AlarmType.VERY_LOW,
+            AlarmType.LOW -> resources.getString(de.michelinside.glucodatahandler.common.R.string.alarm_interval_summary_low)
+            AlarmType.HIGH,
+            AlarmType.VERY_HIGH -> resources.getString(de.michelinside.glucodatahandler.common.R.string.alarm_interval_summary_high)
+            AlarmType.OBSOLETE -> resources.getString(de.michelinside.glucodatahandler.common.R.string.alarm_interval_summary_obsolete)
+            else -> ""
+        }
     }
 
     private fun setAlarmTest(preference: String, alarmType: AlarmType) {

@@ -320,7 +320,9 @@
     <string name="alarm_notification_group_name">Alarme</string>
     <string name="menu_alarms">Alarme</string>
     <string name="alarm_interval">Intervall</string>
-    <string name="alarm_interval_summary">Minimale Zeit zwischen den Benachrichtigungen für diesen Alarm.</string>
+    <string name="alarm_interval_summary_low">Minimale Zeit in Minuten zwischen den Benachrichtigungen für diesen Alarm.\nInformation: es gibt erst eine neue Benachrichtigung nach diesem Interval, wenn das Delta negativ ist.</string>
+    <string name="alarm_interval_summary_high">Minimale Zeit in Minuten zwischen den Benachrichtigungen für diesen Alarm.\nInformation: es gibt erst eine neue Benachrichtigung nach diesem Interval, wenn das Delta positiv ist.</string>
+    <string name="alarm_interval_summary_obsolete">Zeit in Minuten nachdem der letzte Glukosewert empfangen wurde, um diese Benachrichtigung zu erzeugen. Im gleichen Intervall wird die Benachrichtigung erneut angezeigt, wenn kein neuer Wert verfügbar ist.</string>
     <string name="alarm_enabled">Aktiv</string>
     <string name="alarm_enabled_summary_on">Benachrichtigungen sind aktiv für diesen Alarm.</string>
     <string name="alarm_enabled_summary_off">Benachrichtigungen sind deaktiviert für diesen Alarm.</string>
@@ -368,8 +370,7 @@
     <string name="advanced_settings_alarm_summary">Erweiterte Alarmeinstellungen für den Ton und die Benachrichtigungen.</string>
     <string name="alarm_advanced_cat_notifcation">Benachrichtigung</string>
     <string name="alarm_advanced_cat_sound">Ton</string>
-    <string name="alarm_type_low_summary">Alarmeinstellungen für Glukosewerte kleiner als %1$s.</string>
-    <string name="alarm_type_high_summary">Alarmeinstellungen für Glukosewerte größer als %1$s.</string>
+    <string name="alarm_type_summary">Alarmeinstellungen für Glukosewerte ab %1$s.</string>
     <string name="alarm_no_notification_wear_connected">Kein Alarm, wenn Uhr verbunden</string>
     <string name="alarm_no_notification_wear_connected_summary_on">Es gibt keine Alarm Benachrichtigung auf dem Telefon, solange GlucoDataHandler auf der Uhr verbunden ist.</string>
     <string name="alarm_no_notification_wear_connected_summary_off">Es gibt auch eine Alarm Benachrichtigung auf dem Telefon, wenn GlucoDataHandler auf der Uhr verbunden ist.</string>

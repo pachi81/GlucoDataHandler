@@ -15,7 +15,6 @@
             android:max="120"
             android:key="interval"
             android:title="@string/alarm_interval"
-            android:summary="@string/alarm_interval_summary"
             app:iconSpaceReserved="false" />
         <androidx.preference.SeekBarPreference
             app:showSeekBarValue="true"
