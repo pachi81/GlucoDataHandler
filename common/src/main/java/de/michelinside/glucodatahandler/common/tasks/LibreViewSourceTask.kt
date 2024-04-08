@@ -35,6 +35,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         private var tokenExpire = 0L
         private var region = ""
         private var patientId = ""
+        private var dataReceived = false   // mark this endpoint as already received data
         val patientData = mutableMapOf<String, String>()
         const val server = "https://api.libreview.io"
         const val region_server = "https://api-%s.libreview.io"
@@ -71,7 +72,23 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         Log.i(LOG_ID, "reset called")
         token = ""
         region = ""
+        dataReceived = false
         patientData.clear()
+        saveRegion()
+    }
+
+    val sensitivData = mutableSetOf("id", "patienId", "firstName", "lastName", "did", "sn", "token", "deviceId", "email", "primaryValue", "secondaryValue" )
+
+    private fun replaceSensitiveData(body: String): String {
+        var result = body
+        sensitivData.forEach {
+            val groups = Regex("\"$it\":\"(.*?)\"").find(result)?.groupValues
+            if(!groups.isNullOrEmpty() && groups.size > 1 && groups[1].isNotEmpty()) {
+                val replaceValue = groups[0].replace(groups[1], "---")
+                result = result.replace(groups[0], replaceValue)
+            }
+        }
+        return result
     }
 
     private fun checkResponse(body: String?): JSONObject? {
@@ -81,7 +98,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             return null
         }
         if (BuildConfig.DEBUG) {  // do not log personal data
-            Log.i(LOG_ID, "Handle json response: " + body)
+            Log.i(LOG_ID, "Handle json response: " + replaceSensitiveData(body))
         }
         val jsonObj = JSONObject(body)
         if (jsonObj.has("status")) {
@@ -136,6 +153,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                     if (data.has("region")) {
                         region = data.optString("region", "")
                         Log.i(LOG_ID, "Handle redirect to region: " + region)
+                        saveRegion()
                         return login()
                     } else {
                         setLastError("redirect without region!!!", 500)
@@ -164,6 +182,18 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             }
         }
         return token.isNotEmpty()
+    }
+
+    private fun saveRegion() {
+        try {
+            Log.d(LOG_ID, "Save region $region")
+            with (GlucoDataService.sharedPref!!.edit()) {
+                putString(Constants.SHARED_PREF_LIBRE_REGION, region)
+                apply()
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "saveRegion exception: " + exc.toString() )
+        }
     }
 
     private fun login(): Boolean {
@@ -246,9 +276,13 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             val array = jsonObject.optJSONArray("data")
             if (array != null) {
                 if (array.length() == 0) {
-                    Log.w(LOG_ID, "Empty data array in response: $jsonObject")
-                    setLastError(GlucoDataService.context!!.getString(R.string.src_libre_setup_librelink))
-                    reset()
+                    Log.w(LOG_ID, "Empty data array in response: ${replaceSensitiveData(body!!)}")
+                    if(dataReceived) {
+                        setLastError("Missing data! Please send logs to developer.")
+                        reset()
+                    } else {
+                        setLastError(GlucoDataService.context!!.getString(R.string.src_libre_setup_librelink))
+                    }
                     return
                 }
                 val data = getPatientData(array)
@@ -283,11 +317,12 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                             if (sensor != null && sensor.has("sn"))
                                 glucoExtras.putString(ReceiveData.SERIAL, sensor.optString("sn"))
                         }
+                        dataReceived = true
                         handleResult(glucoExtras)
                     }
                 }
             } else {
-                Log.e(LOG_ID, "No data array found in response: $jsonObject")
+                Log.e(LOG_ID, "No data array found in response: ${replaceSensitiveData(body!!)}")
                 setLastError("Invalid response! Please send logs to developer.")
                 reset()
                 return
@@ -305,7 +340,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                 if(data.has("patientId") && data.has("firstName") && data.has("lastName")) {
                     val id = data.getString("patientId")
                     val name = data.getString("firstName") + " " +  data.getString("lastName")
-                    Log.d(LOG_ID, "New patient found: $name with ID: $id")
+                    Log.v(LOG_ID, "New patient found: $name")
                     patientData[id] = name
                 }
             }
@@ -348,6 +383,8 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             user = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_USER, "")!!.trim()
             password = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, "")!!.trim()
             token = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_TOKEN, "")!!
+            if(token.isNotEmpty())
+                dataReceived = true
             tokenExpire = sharedPreferences.getLong(Constants.SHARED_PREF_LIBRE_TOKEN_EXPIRE, 0L)
             region = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_REGION, "")!!
             patientId = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")!!
