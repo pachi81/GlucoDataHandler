@@ -88,7 +88,7 @@
     <string name="src_libre_password_summary">Passwort für LibreLink</string>
     <string name="src_libre_reconnect">Reconnect</string>
     <string name="src_libre_reconnect_summary">Bei der nächsten Ausführung wird ein erneutes Login ausgeführt.</string>
-    <string name="src_libre_setup_librelink">Bitte erst LibreLinkUp Verbindung aktivieren!</string>
+    <string name="src_libre_setup_librelink">Keine Daten! Bitte akzeptieren Sie zuerst die Einladung in der LibreLinkUp App!</string>
 
     <string name="src_cat_nightscout">Nightscout Datenquelle</string>
     <string name="src_ns_enabled">Aktiv</string>

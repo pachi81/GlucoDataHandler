@@ -87,7 +87,6 @@
     <string name="src_libre_password_summary">Senha para acesso LibreLink</string>
     <string name="src_libre_reconnect">Reconectar</string>
     <string name="src_libre_reconnect_summary">No próximo intervalo um novo login será requerido.</string>
-    <string name="src_libre_setup_librelink">Configure a conexão LibreLinkUp primeiro!</string>
 
     <string name="src_cat_nightscout">Seguidor Nightscout</string>
     <string name="src_ns_enabled">Habilita</string>
@@ -395,4 +394,6 @@ Mostre uma segunda notificação sem conteúdo para ter um ícone adicional na b
     <string name="obsolete_alarm_notification_descr">This notification will appear, if there is no new value for in an interval.</string>
     <string name="obsolete_alarm_text">No new value!</string>
     <string name="activity_main_notification_permission">Showing notifications is disabled!!!\nGlucoDataHandler may not work correct and can not show alarms!!!\nPress here to go direct to the permission setting.</string>
+
+    <string name="src_libre_setup_librelink">Missing data! Please accept invitation in LibreLinkUp app first!</string>
 </resources>
