@@ -396,4 +396,6 @@ Mostre uma segunda notificação sem conteúdo para ter um ícone adicional na b
     <string name="activity_main_notification_permission">Showing notifications is disabled!!!\nGlucoDataHandler may not work correct and can not show alarms!!!\nPress here to go direct to the permission setting.</string>
 
     <string name="src_libre_setup_librelink">Missing data! Please accept invitation in LibreLinkUp app first!</string>
+    <string name="permission_notification_title">Showing notifications is disabled!!!</string>
+    <string name="permission_notification_message">GlucoDataHandler needs notifications to execute tasks in the background and to show alarms.</string>
 </resources>

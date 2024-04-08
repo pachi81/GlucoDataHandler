@@ -176,7 +176,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         }
     }
 
-    private fun showNotifications() {
+    fun showNotifications() {
         showPrimaryNotification(true)
         if (sharedPref.getBoolean(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, false)) {
             Log.d(LOG_ID, "show second notification")

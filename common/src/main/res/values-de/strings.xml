@@ -385,5 +385,7 @@
     <string name="obsolete_alarm_notification_descr">Diese Benachrichtigung erscheint, wenn es keinen neuen Wert gibt.</string>
     <string name="obsolete_alarm_text">Kein neuer Wert!</string>
     <string name="activity_main_notification_permission">!!!Die Anzeige von Benachrichtigungen ist deaktiviert!!!\nKorrekte Funktionalität von GlucoDataHandler ist nicht gewährleistet und es können keine Alarme angezeigt werden!!!\nBitte hier drücken, um zu der entsprechenden Berechtigungseinstellung zu gelangen.</string>
+    <string name="permission_notification_title">Die Anzeige von Benachrichtigungen ist deaktiviert!!!</string>
+    <string name="permission_notification_message">GlucoDataHandler benötigt die Benachrichtigungen, um im Hintergrund Aufgaben durchzuführen und um Alarme anzuzeigen.</string>
 
 </resources>

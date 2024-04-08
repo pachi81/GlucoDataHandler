@@ -3,6 +3,7 @@ package de.michelinside.glucodatahandler
 import android.app.Activity
 import android.app.AlarmManager
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Paint
@@ -19,11 +20,13 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuCompat
 import androidx.preference.PreferenceManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
@@ -39,6 +42,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
+import de.michelinside.glucodatahandler.notification.PermanentNotification
 import de.michelinside.glucodatahandler.watch.LogcatReceiver
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -169,30 +173,47 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 Log.i(LOG_ID, "Notification permission granted")
                 requestNotificationPermission = false
                 txtNotificationPermission.visibility = View.GONE
-                GlucoDataServiceMobile.start(this, true)
+                PermanentNotification.showNotifications()
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
         }
     }
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            Log.d(LOG_ID, "Notification permission allowed: $isGranted")
+        }
 
+
+    private fun showPermissionRationaleDialog(title: String, message: String, okListener: DialogInterface.OnClickListener) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(resources.getText(CR.string.button_ok), okListener)
+            .show()
+    }
     fun requestPermission() : Boolean {
         requestNotificationPermission = false
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (!Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
-                Log.i(LOG_ID, "Request notification permission...")
-                requestNotificationPermission = true
-                txtNotificationPermission.visibility = View.VISIBLE
-                txtNotificationPermission.setOnClickListener {
-                    val intent: Intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
-                        .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
-                    startActivity(intent)
-                }
-                this.requestPermissions(arrayOf(android.Manifest.permission.FOREGROUND_SERVICE, android.Manifest.permission.POST_NOTIFICATIONS), 3)
-                return false
-            } else {
-                txtNotificationPermission.visibility = View.GONE
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
+            Log.i(LOG_ID, "Request notification permission...")
+            requestNotificationPermission = true
+            txtNotificationPermission.visibility = View.VISIBLE
+            txtNotificationPermission.setOnClickListener {
+                val intent: Intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                    .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
+                startActivity(intent)
             }
+            if (this.shouldShowRequestPermissionRationale(
+                    android.Manifest.permission.POST_NOTIFICATIONS)) {
+                showPermissionRationaleDialog(resources.getString(CR.string.permission_notification_title), resources.getString(CR.string.permission_notification_message)) { _, _ -> requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS) }
+            } else {
+                this.requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 3)
+            }
+            return false
+        } else {
+            txtNotificationPermission.visibility = View.GONE
         }
         requestExactAlarmPermission()
         return true
