@@ -99,7 +99,6 @@
     <string name="src_libre_password_summary">Password for LibreLink</string>
     <string name="src_libre_reconnect">Reconnect</string>
     <string name="src_libre_reconnect_summary">On next interval a new login will be executed.</string>
-    <string name="src_libre_setup_librelink">Please set up LibreLinkUp connection first!</string>
 
     <string name="src_cat_nightscout">Nightscout Follower</string>
     <string name="src_ns_enabled">Enable</string>
@@ -336,4 +335,6 @@
     <string name="pref_lockscreen_y_pos">Vertical position</string>
     <string name="pref_lockscreen_y_pos_summary">Vertical position of the glucose-trend image on lockscreen:\n0 is the top of the display\n100 is the botton of the display</string>
     <string name="activity_main_notification_permission">Showing notifications is disabled!!!\nGlucoDataHandler may not work correct and can not show alarms!!!\nPress here to go direct to the permission setting.</string>
+
+    <string name="src_libre_setup_librelink">Missing data! Please accept invitation in LibreLinkUp app first!</string>
 </resources>
