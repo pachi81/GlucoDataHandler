@@ -406,12 +406,15 @@ object AlarmNotification: NotifierInterface, SharedPreferences.OnSharedPreferenc
     fun getSoundMode(alarmType: AlarmType): SoundMode {
         val channelId = getChannelId(alarmType)
         val channel = Channels.getNotificationManager().getNotificationChannel(channelId)
-        Log.d(LOG_ID, "Channel: sound=${channel.sound} - vibration=${channel.shouldVibrate()}")
-        if (channel.sound != null) {
-            return SoundMode.NORMAL
-        } else if(channel.shouldVibrate()) {
-            return SoundMode.VIBRATE
-        }
+        Log.d(LOG_ID, "Channel: prio=${channel.importance} - sound=${channel.sound} - vibration=${channel.shouldVibrate()}")
+        if(channel.importance >= NotificationManager.IMPORTANCE_DEFAULT) {
+            if (channel.sound != null) {
+                return SoundMode.NORMAL
+            } else if (channel.shouldVibrate()) {
+                return SoundMode.VIBRATE
+            }
+        } else if(channel.importance == NotificationManager.IMPORTANCE_NONE)
+            return SoundMode.OFF
         return SoundMode.SILENT
     }
 
