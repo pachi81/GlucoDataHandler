@@ -98,10 +98,25 @@
             android:textAlignment="viewStart" />
 
         <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switchNotifcation"
+            android:id="@+id/switchVibration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/activity_switch_notification"
+            android:textAlignment="viewStart" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchNotification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/alarm_notifications_enabled"
+            android:textAlignment="viewStart" />
+
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchForceSound"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/alarm_force_sound"
             android:textAlignment="viewStart" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -137,6 +152,12 @@
             android:text="@string/pref_relative_time"
             android:textAlignment="viewStart"
             tools:ignore="TouchTargetSizeCheck" />
+
+            <Button
+                android:id="@+id/btnTestAlarm"
+                android:layout_width="wrap_content"
+                android:text="Test"
+                android:layout_height="40sp" />
 
         <TextView
             android:id="@+id/txtHighContrastEnabled"

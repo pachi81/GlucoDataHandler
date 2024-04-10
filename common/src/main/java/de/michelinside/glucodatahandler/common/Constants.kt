@@ -11,10 +11,13 @@ object Constants {
     const val REQUEST_DATA_MESSAGE_PATH = "/request_data_intent"
     const val REQUEST_LOGCAT_MESSAGE_PATH = "/request_logcat_intent"
     const val LOGCAT_CHANNEL_PATH = "/logcat_intent"
+    const val COMMAND_PATH = "/command_intent"
     const val GLUCODATA_BROADCAST_ACTION = "glucodata.Minute"
     const val SETTINGS_BUNDLE = "settings_bundle"
     const val SOURCE_SETTINGS_BUNDLE = "source_settings_bundle"
     const val ALARM_SETTINGS_BUNDLE = "alarm_settings_bundle"
+    const val COMMAND_EXTRA = "command"
+    const val COMMAND_BUNDLE = "command_bundle"
     const val GLUCOSE_CONVERSION_FACTOR = 18.0182F
     const val GLUCOSE_MIN_VALUE = 40
     const val GLUCOSE_MAX_VALUE = 400
@@ -90,7 +93,7 @@ object Constants {
     const val WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA_IOB_COB = "glucose_trend_delta_time_iob_cob"
 
     // Wear only preferences
-    const val SHARED_PREF_NOTIFICATION = "notification"
+    const val SHARED_PREF_NOTIFICATION_VIBRATE = "notification"
     const val SHARED_PREF_FOREGROUND_SERVICE = "foreground_service"
     const val SHARED_PREF_WEAR_COLORED_AOD = "colored_aod"
 

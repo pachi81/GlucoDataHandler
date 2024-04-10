@@ -108,6 +108,19 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                 )
             }
         }
+
+        fun sendCommand(command: Command, extras: Bundle? = null) {
+            try {
+                if (connection!=null)
+                    connection!!.sendCommand(command, extras)
+            } catch (exc: Exception) {
+                Log.e(
+                    LOG_ID,
+                    "sendCommand exception: " + exc.message.toString()
+                )
+            }
+        }
+
     }
 
     init {

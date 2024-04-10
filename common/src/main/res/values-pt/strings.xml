@@ -398,4 +398,6 @@ Mostre uma segunda notificação sem conteúdo para ter um ícone adicional na b
     <string name="src_libre_setup_librelink">Missing data! Please accept invitation in LibreLinkUp app first!</string>
     <string name="permission_notification_title">Showing notifications is disabled!!!</string>
     <string name="permission_notification_message">GlucoDataHandler needs notifications to execute tasks in the background and to show alarms.</string>
+    <string name="alarm_notification_name">Alarm notification</string>
+    <string name="alarm_notification_descr">Alarm notifications. Please do not change the settings, as the app provides sound and vibration for notifications intern.</string>
 </resources>

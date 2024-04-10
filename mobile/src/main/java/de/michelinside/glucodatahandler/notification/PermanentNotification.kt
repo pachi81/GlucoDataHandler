@@ -159,7 +159,6 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setContentText(if (withContent) "Delta: " + ReceiveData.getDeltaAsString() else "")
             .build()
 
-        notification.visibility
         notification.flags = notification.flags or Notification.FLAG_NO_CLEAR
         return notification
     }

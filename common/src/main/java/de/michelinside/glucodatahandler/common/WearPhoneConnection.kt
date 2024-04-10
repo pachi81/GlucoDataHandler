@@ -7,6 +7,8 @@ import android.util.Log
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.*
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
+import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
+import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.notifier.DataSource
@@ -16,6 +18,13 @@ import kotlinx.coroutines.*
 import java.text.DateFormat
 import java.util.*
 import kotlin.coroutines.cancellation.CancellationException
+
+
+enum class Command {
+    STOP_ALARM,
+    SNOOZE_ALARM,
+    TEST_ALARM
+}
 
 class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener, NotifierInterface {
     private val LOG_ID = "GDH.WearPhoneConnection"
@@ -250,12 +259,35 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         }
     }
 
+    fun sendCommand(command: Command, extras: Bundle?) {
+        // Send command to all nodes in parallel
+        Log.d(LOG_ID, "sendCommand called for $command with extras: ${Utils.dumpBundle(extras)}")
+        connectedNodes.forEach { node ->
+            Thread {
+                try {
+                    val commandBundle = Bundle()
+                    commandBundle.putString(Constants.COMMAND_EXTRA, command.toString())
+                    if(extras != null) {
+                        commandBundle.putBundle(Constants.COMMAND_BUNDLE, extras)
+                    }
+                    sendMessage(node.value, Constants.COMMAND_PATH, Utils.bundleToBytes(commandBundle), NotifySource.COMMAND)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "sendCommand to " + node.value.toString() + " exception: " + exc.toString())
+                }
+            }.start()
+        }
+    }
+
     override fun onMessageReceived(p0: MessageEvent) {
         try {
             Log.i(LOG_ID, "onMessageReceived from " + p0.sourceNodeId + " with path " + p0.path)
             checkConnectedNode(p0.sourceNodeId)
             val extras = Utils.bytesToBundle(p0.data)
             if(extras!= null) {
+                if(p0.path == Constants.COMMAND_PATH) {
+                    handleCommand(extras)
+                    return
+                }
                 if (extras.containsKey(BatteryReceiver.LEVEL)) {
                     val level = extras.getInt(BatteryReceiver.LEVEL, -1)
                     Log.d(LOG_ID, "Battery level received for node " + p0.sourceNodeId + ": " + level + "%")
@@ -376,6 +408,22 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onMessageReceived exception: " + exc.message.toString() )
+        }
+    }
+
+    private fun handleCommand(extras: Bundle) {
+        try {
+            Log.d(LOG_ID, "Command received: ${Utils.dumpBundle(extras)}")
+            val command = Command.valueOf(extras.getString(Constants.COMMAND_EXTRA, ""))
+            val bundle = extras.getBundle(Constants.COMMAND_BUNDLE)
+            when(command) {
+                Command.STOP_ALARM -> AlarmNotificationBase.instance!!.stopCurrentNotification(context, fromClient = true)
+                Command.SNOOZE_ALARM -> AlarmHandler.setSnoozeTime(bundle!!.getLong(AlarmHandler.SNOOZE_TIME, 0L), fromClient = true)
+                Command.TEST_ALARM -> AlarmNotificationBase.instance!!.executeTest(AlarmType.fromIndex(bundle!!.getInt(Constants.ALARM_NOTIFICATION_EXTRA_ALARM_TYPE, ReceiveData.getAlarmType().ordinal)), context)
+            }
+
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "handleCommand exception: " + exc.toString())
         }
     }
 

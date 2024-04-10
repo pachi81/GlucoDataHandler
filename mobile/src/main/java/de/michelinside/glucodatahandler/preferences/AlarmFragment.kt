@@ -18,7 +18,6 @@ import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notification.SoundMode
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
-import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 
@@ -45,7 +44,7 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
         try {
             if (settingsChanged) {
                 Log.v(LOG_ID, "Notify alarm_settings change")
-                InternalNotifier.notify(requireContext(), NotifySource.ALARM_SETTINGS, DataSourceTask.getSettingsBundle(preferenceManager.sharedPreferences!!))
+                InternalNotifier.notify(requireContext(), NotifySource.ALARM_SETTINGS, AlarmHandler.getSettings())
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroyView exception: " + exc.toString())
@@ -134,13 +133,19 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
             AlarmType.VERY_HIGH -> ReceiveData.high
             else -> 0F
         }
+        if (alarmType == AlarmType.LOW) {
+            if(ReceiveData.isMmol)
+                value = Utils.round(value-0.1F, 1)
+            else
+                value -= 1F
+        }
 
-        if (alarmType == AlarmType.LOW)
-            value -= if(ReceiveData.isMmol) 0.1F else 1F
-
-        if (alarmType == AlarmType.HIGH)
-            value += if(ReceiveData.isMmol) 0.1F else 1F
-
+        if (alarmType == AlarmType.HIGH) {
+            if(ReceiveData.isMmol)
+                value = Utils.round(value+0.1F, 1)
+            else
+                value += 1F
+        }
         return "$value ${ReceiveData.getUnit()}"
     }
 

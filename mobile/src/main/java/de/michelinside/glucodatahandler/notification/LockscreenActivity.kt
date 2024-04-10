@@ -117,6 +117,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
                 object : SlideToActView.OnSlideCompleteListener {
                     override fun onSlideComplete(view: SlideToActView) {
                         Log.v(LOG_ID, "Snooze completed!")
+                        stop(true)
                         btnSnooze.visibility = View.GONE
                         txtSnooze.visibility = View.VISIBLE
                         layoutSnoozeButtons.visibility = View.VISIBLE
@@ -181,14 +182,14 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
         }
     }
 
-    private fun stop() {
+    private fun stop(cancelOnlySound: Boolean = false) {
         try {
             Log.v(LOG_ID, "stop called for id $notificationId")
             retriggerOnDestroy = false
             if (notificationId > 0)
-                AlarmNotification.stopNotification(notificationId, this)
+                AlarmNotification.stopNotification(notificationId, this, cancelOnlySound = cancelOnlySound)
             else
-                AlarmNotification.stopCurrentNotification(this)
+                AlarmNotification.stopCurrentNotification(this, cancelOnlySound = cancelOnlySound)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -19,7 +20,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
 
     private const val LAST_ALARM_INDEX = "last_alarm_index"
     private const val LAST_ALARM_TIME = "last_alarm_time"
-    private const val SNOOZE_TIME = "snooze_time"
+    const val SNOOZE_TIME = "snooze_time"
 
     private var veryLowEnabled = true
     private var veryLowInterval = 15*60000 // ms -> 15 minutes
@@ -103,10 +104,23 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
 
     fun setSnooze(minutes: Long) {
         Log.v(LOG_ID, "Set snooze to $minutes minutes")
-        snoozeTime = System.currentTimeMillis() + Duration.ofMinutes(minutes).toMillis()
+        if(minutes > 0)
+            setSnoozeTime(System.currentTimeMillis() + Duration.ofMinutes(minutes).toMillis())
+        else
+            setSnoozeTime(0L)
+    }
+
+    fun setSnoozeTime(time: Long, fromClient: Boolean = false) {
+        snoozeTime = time
+        Log.d(LOG_ID, "New snooze-time: $snoozeTimestamp")
         saveExtras()
         if(GlucoDataService.context != null) {
             InternalNotifier.notify(GlucoDataService.context!!, NotifySource.ALARM_STATE_CHANGED, null)
+        }
+        if(!fromClient) {
+            val bundle = Bundle()
+            bundle.putLong(SNOOZE_TIME, snoozeTime)
+            GlucoDataService.sendCommand(Command.SNOOZE_ALARM, bundle)
         }
     }
 
@@ -165,11 +179,14 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         Constants.SHARED_PREF_ALARM_VERY_HIGH_INTERVAL,
         Constants.SHARED_PREF_ALARM_OBSOLETE_ENABLED,
         Constants.SHARED_PREF_ALARM_OBSOLETE_INTERVAL,
+        Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION,
     )
 
-    val alarmStatePreferences = mutableSetOf(
+    private val alarmStatePreferences = mutableSetOf(
         Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED,
-
+        Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_WEAR_CONNECTED,
+        Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED,
+        Constants.SHARED_PREF_NOTIFICATION_VIBRATE
     )
 
     fun getSettings(): Bundle {
@@ -184,6 +201,9 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         bundle.putBoolean(Constants.SHARED_PREF_ALARM_HIGH_ENABLED, highEnabled)
         bundle.putBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_ENABLED, veryHighEnabled)
         bundle.putBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_ENABLED, obsoleteEnabled)
+        if(AlarmNotificationBase.instance != null) {
+            bundle.putBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, AlarmNotificationBase.instance!!.getAddSnooze())
+        }
         bundle.putLong(SNOOZE_TIME, snoozeTime)
         bundle.putLong(LAST_ALARM_TIME, lastAlarmTime)
         bundle.putInt(LAST_ALARM_INDEX, lastAlarmType.ordinal)
@@ -203,11 +223,14 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
             putBoolean(Constants.SHARED_PREF_ALARM_HIGH_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_HIGH_ENABLED, highEnabled))
             putBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_ENABLED, veryHighEnabled))
             putBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_ENABLED, obsoleteEnabled))
+            if(AlarmNotificationBase.instance != null) {
+                putBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, bundle.getBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, AlarmNotificationBase.instance!!.getAddSnooze()))
+            }
             apply()
         }
         lastAlarmType = AlarmType.fromIndex(bundle.getInt(LAST_ALARM_INDEX, lastAlarmType.ordinal))
         lastAlarmTime = bundle.getLong(LAST_ALARM_TIME, lastAlarmTime)
-        snoozeTime = bundle.getLong(SNOOZE_TIME, snoozeTime)
+        setSnoozeTime(bundle.getLong(SNOOZE_TIME, snoozeTime), true)
         updateSettings(sharedPref, context)
         InternalNotifier.notify(context, NotifySource.ALARM_SETTINGS, null)
     }

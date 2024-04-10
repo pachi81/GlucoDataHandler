@@ -121,7 +121,6 @@
         <activity
             android:name=".notification.LockscreenActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
             android:showOnLockScreen="true"
             android:forceDarkAllowed="true"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />
@@ -237,7 +236,8 @@
         <receiver
             android:name=".notification.SnoozeAlarmReceiver"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
             <intent-filter>
                 <action android:name= "de.michelinside.glucodatahandler.SNOOZE" />
                 <action android:name= "de.michelinside.glucodatahandler.STOP_NOTIFICATION" />
@@ -245,7 +245,7 @@
         </receiver>
         <receiver android:name=".common.tasks.TimeAlarmReceiver" />
         <receiver android:name=".common.tasks.SourceAlarmReceiver" />
-        <receiver android:name=".notification.TestAlarmReceiver" />
+        <receiver android:name=".common.notification.TestAlarmReceiver" />
 
         <service android:name="androidx.work.impl.foreground.SystemForegroundService"
             android:foregroundServiceType="dataSync"

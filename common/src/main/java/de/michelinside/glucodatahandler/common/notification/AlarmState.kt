@@ -13,7 +13,7 @@ enum class AlarmState(val icon: Int) {
     companion object {
         fun currentState(context: Context): AlarmState {
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-            val enabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
+            val enabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false) || sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, false)
             if(enabled) {
                 if(AlarmHandler.isSnoozeActive)
                     return SNOOZE

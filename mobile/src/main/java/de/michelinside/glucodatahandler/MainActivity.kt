@@ -419,15 +419,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                             apply()
                         }
                     }
-
+                    AlarmState.INACTIVE,
                     AlarmState.ACTIVE -> {
                         with(sharedPref.edit()) {
                             putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
                             apply()
                         }
                     }
-
-                    AlarmState.INACTIVE -> {}  // do nothing
                 }
             } else if(state != AlarmState.DISABLED) {
                 with(sharedPref.edit()) {
@@ -447,7 +445,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Log.v(LOG_ID, "updateAlarmIcon called for state $state")
             if(alarmIcon != null) {
                 alarmIcon!!.icon = ContextCompat.getDrawable(this, state.icon)
-                alarmIcon!!.isEnabled = (state!=AlarmState.INACTIVE)
             }
             if(snoozeMenu != null) {
                 snoozeMenu!!.isVisible = (state != AlarmState.DISABLED)

@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler.common.notification
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -17,7 +18,8 @@ enum class ChannelType(val channelId: String, val nameResId: Int, val descrResId
     LOW_ALARM("low_alarm", R.string.low_alarm_notification_name, R.string.low_alarm_notification_descr, NotificationManager.IMPORTANCE_HIGH ),
     HIGH_ALARM("high_alarm", R.string.high_alarm_notification_name, R.string.high_alarm_notification_descr, NotificationManager.IMPORTANCE_HIGH ),
     VERY_HIGH_ALARM("very_high_alarm", R.string.very_high_alarm_notification_name, R.string.very_high_alarm_notification_descr, NotificationManager.IMPORTANCE_MAX ),
-    OBSOLETE_ALARM("obsolete_alarm", R.string.obsolete_alarm_notification_name, R.string.obsolete_alarm_notification_descr, NotificationManager.IMPORTANCE_HIGH );
+    OBSOLETE_ALARM("obsolete_alarm", R.string.obsolete_alarm_notification_name, R.string.obsolete_alarm_notification_descr, NotificationManager.IMPORTANCE_HIGH ),
+    ALARM("test_alarm_4", R.string.alarm_notification_name, R.string.alarm_notification_descr, NotificationManager.IMPORTANCE_MAX );
 }
 object Channels {
     private var notificationMgr: NotificationManager? = null
@@ -39,6 +41,7 @@ object Channels {
             type.importance
         )
         notificationChannel.description = context.getString(type.descrResId)
+        notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
         if (silent)
             notificationChannel.setSound(null, null)
         return notificationChannel

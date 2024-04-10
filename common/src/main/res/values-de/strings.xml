@@ -387,5 +387,7 @@
     <string name="activity_main_notification_permission">!!!Die Anzeige von Benachrichtigungen ist deaktiviert!!!\nKorrekte Funktionalität von GlucoDataHandler ist nicht gewährleistet und es können keine Alarme angezeigt werden!!!\nBitte hier drücken, um zu der entsprechenden Berechtigungseinstellung zu gelangen.</string>
     <string name="permission_notification_title">Die Anzeige von Benachrichtigungen ist deaktiviert!!!</string>
     <string name="permission_notification_message">GlucoDataHandler benötigt die Benachrichtigungen, um im Hintergrund Aufgaben durchzuführen und um Alarme anzuzeigen.</string>
+    <string name="alarm_notification_name">Alarm notification</string>
+    <string name="alarm_notification_descr">Alarm notifications. Please do not change the settings, as the app provides sound and vibration for notifications intern.</string>
 
 </resources>

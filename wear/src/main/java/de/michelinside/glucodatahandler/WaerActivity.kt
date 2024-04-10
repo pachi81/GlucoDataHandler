@@ -9,6 +9,7 @@ import android.os.*
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +21,7 @@ import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.databinding.ActivityWaerBinding
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import de.michelinside.glucodatahandler.common.notification.AlarmType
 
 class WaerActivity : AppCompatActivity(), NotifierInterface {
 
@@ -35,11 +37,14 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtScheduleExactAlarm: TextView
     private lateinit var switchColoredAod: SwitchCompat
     private lateinit var switchLargeTrendArrow: SwitchCompat
-    private lateinit var switchNotifcation: SwitchCompat
+    private lateinit var switchVibration: SwitchCompat
+    private lateinit var switchNotification: SwitchCompat
+    private lateinit var switchForceSound: SwitchCompat
     private lateinit var switchForground: SwitchCompat
     private lateinit var switchRelativeTime: SwitchCompat
     private lateinit var switchLibreSource: SwitchCompat
     private lateinit var switchNightscoutSource: SwitchCompat
+    private lateinit var btnTestAlarm: Button
     private lateinit var sharedPref: SharedPreferences
     private var requestNotificationPermission = false
 
@@ -93,18 +98,57 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 }
             }
 
-            switchNotifcation = findViewById(R.id.switchNotifcation)
-            switchNotifcation.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)
-            switchNotifcation.setOnCheckedChangeListener { _, isChecked ->
-                Log.d(LOG_ID, "Notification changed: " + isChecked.toString())
+            switchForceSound = findViewById(R.id.switchForceSound)
+            switchVibration = findViewById(R.id.switchVibration)
+            switchNotification = findViewById(R.id.switchNotification)
+
+
+            switchForceSound.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_FORCE_SOUND, false)
+            switchForceSound.setOnCheckedChangeListener { _, isChecked ->
+                Log.d(LOG_ID, "Force sound changed: " + isChecked.toString())
                 try {
                     with (sharedPref.edit()) {
-                        putBoolean(Constants.SHARED_PREF_NOTIFICATION, isChecked)
+                        putBoolean(Constants.SHARED_PREF_ALARM_FORCE_SOUND, isChecked)
                         apply()
                     }
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Changing notification exception: " + exc.message.toString() )
                 }
+            }
+
+            switchVibration.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, false)
+            switchVibration.setOnCheckedChangeListener { _, isChecked ->
+                Log.d(LOG_ID, "Vibration changed: " + isChecked.toString())
+                try {
+                    with (sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, isChecked)
+                        apply()
+                    }
+                    if(isChecked)
+                        switchNotification.isChecked = false
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Changing notification exception: " + exc.message.toString() )
+                }
+            }
+
+            switchNotification.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
+            switchNotification.setOnCheckedChangeListener { _, isChecked ->
+                Log.d(LOG_ID, "Notification changed: " + isChecked.toString())
+                try {
+                    with (sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, isChecked)
+                        apply()
+                    }
+                    if(isChecked)
+                        switchVibration.isChecked = false
+                    switchForceSound.isEnabled = isChecked
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Changing notification exception: " + exc.message.toString() )
+                }
+            }
+
+            if(switchNotification.isChecked && switchVibration.isChecked) {
+                switchVibration.isChecked = false
             }
 
             switchRelativeTime = findViewById(R.id.switchRelativeTime)
@@ -182,6 +226,12 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 }
             }
 
+            btnTestAlarm = findViewById(R.id.btnTestAlarm)
+            btnTestAlarm.setOnClickListener {
+                Log.d(LOG_ID, "Test alarm button clicked!")
+                AlarmNotificationWear.triggerTest(AlarmType.VERY_LOW, this)
+            }
+
             if(requestPermission())
                 GlucoDataServiceWear.start(this, true)
         } catch( exc: Exception ) {
@@ -215,7 +265,8 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.OBSOLETE_VALUE,
                 NotifySource.SOURCE_SETTINGS,
                 NotifySource.ALARM_SETTINGS,
-                NotifySource.SOURCE_STATE_CHANGE))
+                NotifySource.SOURCE_STATE_CHANGE,
+                NotifySource.ALARM_STATE_CHANGED))
             checkExactAlarmPermission()
             checkHighContrast()
             if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
@@ -251,9 +302,13 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
     }
 
     private fun requestExactAlarmPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !canScheduleExactAlarms()) {
-            Log.i(LOG_ID, "Request exact alarm permission...")
-            startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !canScheduleExactAlarms()) {
+                Log.i(LOG_ID, "Request exact alarm permission...")
+                startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "requestExactAlarmPermission exception: " + exc.message.toString() )
         }
     }
     private fun checkExactAlarmPermission() {
@@ -335,8 +390,8 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
         Log.d(LOG_ID, "new intent received from: " + dataSource.toString())
         update()
         if (dataSource == NotifySource.SETTINGS) {
-            if (extras != null && extras.containsKey(Constants.SHARED_PREF_NOTIFICATION))
-                switchNotifcation.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false)
+            if (extras != null && extras.containsKey(Constants.SHARED_PREF_NOTIFICATION_VIBRATE))
+                switchVibration.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, false)
         }
     }
 }
