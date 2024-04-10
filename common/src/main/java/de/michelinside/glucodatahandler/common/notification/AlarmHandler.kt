@@ -103,10 +103,9 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
 
     fun setSnooze(minutes: Long) {
         Log.v(LOG_ID, "Set snooze to $minutes minutes")
-        val snoozeActive = isSnoozeActive
         snoozeTime = System.currentTimeMillis() + Duration.ofMinutes(minutes).toMillis()
         saveExtras()
-        if(snoozeActive != isSnoozeActive && GlucoDataService.context != null) {
+        if(GlucoDataService.context != null) {
             InternalNotifier.notify(GlucoDataService.context!!, NotifySource.ALARM_STATE_CHANGED, null)
         }
     }
