@@ -13,6 +13,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.preference.Preference
+import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SeekBarPreference
 import androidx.preference.SwitchPreferenceCompat
@@ -25,7 +26,7 @@ import de.michelinside.glucodatahandler.notification.AlarmNotification
 
 class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GDH.AlarmTypeFragment"
-    private lateinit var soundSaver: ActivityResultLauncher<Intent>
+    //private lateinit var soundSaver: ActivityResultLauncher<Intent>
     private var ringtoneSelecter: ActivityResultLauncher<Intent>? = null
     private var alarmType = AlarmType.NONE
     private var pref_prefix = ""
@@ -102,6 +103,7 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
         Log.v(LOG_ID, "createAlarmPrefSettings for alarm $alarmType with prefix $pref_prefix")
         updatePreferenceKeys(pref_prefix)
         updateData(pref_prefix, alarmType)
+        /*
         soundSaver = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             Log.v(LOG_ID, "$alarmType result ${result.resultCode}: ${result.data}")
             if (result.resultCode == Activity.RESULT_OK) {
@@ -111,7 +113,7 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
                     AlarmNotification.saveAlarm(requireContext(), alarmType, uri)
                 }
             }
-        }
+        }*/
         setAlarmTest(pref_prefix + "test", alarmType)
         //setAlarmSettings(pref_prefix + "settings", alarmType)
         //setAlarmSave(pref_prefix + "save_sound", alarmType, soundSaver)
@@ -119,11 +121,31 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
     }
 
     private fun updatePreferenceKeys(pref_prefix: String) {
-        for (i in 0 until preferenceScreen.getPreferenceCount()) {
+        for (i in 0 until preferenceScreen.preferenceCount) {
             val pref: Preference = preferenceScreen.getPreference(i)
-            val newKey = pref_prefix + pref.key
-            Log.v(LOG_ID, "Replace key ${pref.key} with $newKey")
-            pref.key = newKey
+            if(!pref.key.isNullOrEmpty()) {
+                val newKey = pref_prefix + pref.key
+                Log.v(LOG_ID, "Replace key ${pref.key} with $newKey")
+                pref.key = newKey
+            } else {
+                val cat = pref as PreferenceCategory
+                updatePreferenceKeys(pref_prefix, cat)
+            }
+        }
+    }
+
+
+    private fun updatePreferenceKeys(pref_prefix: String, preferenceCategory: PreferenceCategory) {
+        for (i in 0 until preferenceCategory.preferenceCount) {
+            val pref: Preference = preferenceCategory.getPreference(i)
+            if(!pref.key.isNullOrEmpty()) {
+                val newKey = pref_prefix + pref.key
+                Log.v(LOG_ID, "Replace key ${pref.key} with $newKey")
+                pref.key = newKey
+            } else {
+                val cat = pref as PreferenceCategory
+                updatePreferenceKeys(pref_prefix, cat)
+            }
         }
     }
     private fun updateData(pref_prefix: String, alarmType: AlarmType) {
