@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Paint
-import android.media.AudioAttributes
 import android.os.Build
 import android.util.Log
 import android.view.View
@@ -22,8 +21,6 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notification.AlarmType
-import de.michelinside.glucodatahandler.common.notification.ChannelType
-import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 
@@ -140,38 +137,4 @@ object AlarmNotification : AlarmNotificationBase() {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
         }
     }
-
-    override fun createNotificationChannel(context: Context, alarmType: AlarmType, byPassDnd: Boolean) {
-        Log.v(LOG_ID, "createNotificationChannel called for $alarmType")
-        val channelType = getChannelType(alarmType)
-        if (channelType != null) {
-            val audioAttributes = AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .setUsage(AudioAttributes.USAGE_ALARM)
-                .build()
-
-            val channel = Channels.getNotificationChannel(context, channelType, false)
-            channel.group = ALARM_GROUP_ID
-            channel.setSound(getDefaultAlarm(alarmType, context), audioAttributes)
-            channel.enableVibration(true)
-            channel.vibrationPattern = getVibrationPattern(alarmType)
-            channel.enableLights(true)
-            channel.lightColor = ReceiveData.getAlarmTypeColor(alarmType)
-            channel.setBypassDnd(byPassDnd)
-            channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-            Channels.getNotificationManager(context).createNotificationChannel(channel)
-        }
-    }
-
-    override fun getChannelType(alarmType: AlarmType): ChannelType? {
-        return when(alarmType) {
-            AlarmType.VERY_LOW -> ChannelType.VERY_LOW_ALARM
-            AlarmType.LOW -> ChannelType.LOW_ALARM
-            AlarmType.HIGH -> ChannelType.HIGH_ALARM
-            AlarmType.VERY_HIGH -> ChannelType.VERY_HIGH_ALARM
-            AlarmType.OBSOLETE -> ChannelType.OBSOLETE_ALARM
-            else -> null
-        }
-    }
-
 }

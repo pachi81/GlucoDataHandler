@@ -1,6 +1,7 @@
 package de.michelinside.glucodatahandler.preferences
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
@@ -20,7 +21,6 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
-
 
 class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GDH.AlarmFragment"
@@ -103,15 +103,15 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
     private fun updateAlarmCat(key: String) {
         val pref = findPreference<Preference>(key) ?: return
         val alarmType = AlarmType.fromIndex(pref.extras.getInt("type"))
-        pref.icon = ContextCompat.getDrawable(requireContext(), getAlarmCatIcon(alarmType, key + "_enabled"))
+        pref.icon = ContextCompat.getDrawable(requireContext(), getAlarmCatIcon(alarmType, key + "_enabled", requireContext()))
         pref.summary = getAlarmCatSummary(alarmType)
     }
 
-    private fun getAlarmCatIcon(alarmType: AlarmType, enableKey: String): Int {
+    private fun getAlarmCatIcon(alarmType: AlarmType, enableKey: String, context: Context): Int {
         if(!preferenceManager.sharedPreferences!!.getBoolean(enableKey, true)) {
             return SoundMode.OFF.icon
         }
-        return AlarmNotification.getSoundMode(alarmType).icon
+        return AlarmNotification.getSoundMode(alarmType, context).icon
     }
 
     private fun getAlarmCatSummary(alarmType: AlarmType): String {
@@ -158,51 +158,5 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
         }
     }
-
-
-    /*
-    private fun setRingtoneSelect(
-        preference: String,
-        picker: ActivityResultLauncher<Intent>,
-        curUir: Uri?
-    ) {
-        Log.v(LOG_ID, "setRingtoneSelect called for preference $preference with uri $curUir" )
-        val pref = findPreference<Preference>(preference)
-        if (pref != null) {
-            if (curUir != null && curUir.toString().isNotEmpty()) {
-                val ringtone = RingtoneManager.getRingtone(requireContext(), curUir)
-                val title = ringtone.getTitle(requireContext())
-                if (title.isNullOrEmpty()) {
-                    pref.summary = resources.getString(de.michelinside.glucodatahandler.common.R.string.alarm_sound_summary)
-                } else {
-                    Log.d(LOG_ID, "Ringtone '$title' for uri $curUir")
-                    pref.summary = title
-                }
-            } else {
-                pref.summary = resources.getString(de.michelinside.glucodatahandler.common.R.string.alarm_sound_summary)
-            }
-            pref.setOnPreferenceClickListener {
-                val ringtoneIntent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
-                ringtoneIntent.putExtra(
-                    RingtoneManager.EXTRA_RINGTONE_TYPE,
-                    RingtoneManager.TYPE_ALL
-                )
-                ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, curUir)
-                picker.launch(ringtoneIntent)
-                true
-            }
-        }
-    }
-
-    private fun setRingtoneResult(preference: String, picker: ActivityResultLauncher<Intent>, newUri: Uri?) {
-        Log.i(LOG_ID, "Set custom ringtone for $preference: $newUri")
-        with (preferenceManager.sharedPreferences!!.edit()) {
-            putString(preference, newUri?.toString())
-            apply()
-        }
-        setRingtoneSelect(preference, picker, newUri)
-    }
-    */
-
 }
 

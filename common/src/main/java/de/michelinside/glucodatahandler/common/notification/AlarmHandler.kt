@@ -171,14 +171,19 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
     val alarmPreferencesToSend = mutableSetOf(
         Constants.SHARED_PREF_ALARM_VERY_LOW_ENABLED,
         Constants.SHARED_PREF_ALARM_VERY_LOW_INTERVAL,
+        Constants.SHARED_PREF_ALARM_VERY_LOW_SOUND_DELAY,
         Constants.SHARED_PREF_ALARM_LOW_ENABLED,
         Constants.SHARED_PREF_ALARM_LOW_INTERVAL,
+        Constants.SHARED_PREF_ALARM_LOW_SOUND_DELAY,
         Constants.SHARED_PREF_ALARM_HIGH_ENABLED,
         Constants.SHARED_PREF_ALARM_HIGH_INTERVAL,
+        Constants.SHARED_PREF_ALARM_HIGH_SOUND_DELAY,
         Constants.SHARED_PREF_ALARM_VERY_HIGH_ENABLED,
         Constants.SHARED_PREF_ALARM_VERY_HIGH_INTERVAL,
+        Constants.SHARED_PREF_ALARM_VERY_HIGH_SOUND_DELAY,
         Constants.SHARED_PREF_ALARM_OBSOLETE_ENABLED,
         Constants.SHARED_PREF_ALARM_OBSOLETE_INTERVAL,
+        Constants.SHARED_PREF_ALARM_OBSOLETE_SOUND_DELAY,
         Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION,
     )
 
@@ -203,6 +208,11 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         bundle.putBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_ENABLED, obsoleteEnabled)
         if(AlarmNotificationBase.instance != null) {
             bundle.putBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, AlarmNotificationBase.instance!!.getAddSnooze())
+            bundle.putInt(Constants.SHARED_PREF_ALARM_VERY_LOW_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.VERY_LOW, GlucoDataService.context!!))
+            bundle.putInt(Constants.SHARED_PREF_ALARM_LOW_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.LOW, GlucoDataService.context!!))
+            bundle.putInt(Constants.SHARED_PREF_ALARM_HIGH_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.HIGH, GlucoDataService.context!!))
+            bundle.putInt(Constants.SHARED_PREF_ALARM_VERY_HIGH_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.VERY_HIGH, GlucoDataService.context!!))
+            bundle.putInt(Constants.SHARED_PREF_ALARM_OBSOLETE_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.OBSOLETE, GlucoDataService.context!!))
         }
         bundle.putLong(SNOOZE_TIME, snoozeTime)
         bundle.putLong(LAST_ALARM_TIME, lastAlarmTime)
@@ -225,6 +235,11 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
             putBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_ENABLED, obsoleteEnabled))
             if(AlarmNotificationBase.instance != null) {
                 putBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, bundle.getBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, AlarmNotificationBase.instance!!.getAddSnooze()))
+                putInt(Constants.SHARED_PREF_ALARM_VERY_LOW_SOUND_DELAY, bundle.getInt(Constants.SHARED_PREF_ALARM_VERY_LOW_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.VERY_LOW, GlucoDataService.context!!)))
+                putInt(Constants.SHARED_PREF_ALARM_LOW_SOUND_DELAY, bundle.getInt(Constants.SHARED_PREF_ALARM_LOW_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.LOW, GlucoDataService.context!!)))
+                putInt(Constants.SHARED_PREF_ALARM_HIGH_SOUND_DELAY, bundle.getInt(Constants.SHARED_PREF_ALARM_HIGH_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.HIGH, GlucoDataService.context!!)))
+                putInt(Constants.SHARED_PREF_ALARM_VERY_HIGH_SOUND_DELAY, bundle.getInt(Constants.SHARED_PREF_ALARM_VERY_HIGH_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.VERY_HIGH, GlucoDataService.context!!)))
+                putInt(Constants.SHARED_PREF_ALARM_OBSOLETE_SOUND_DELAY, bundle.getInt(Constants.SHARED_PREF_ALARM_OBSOLETE_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.OBSOLETE, GlucoDataService.context!!)))
             }
             apply()
         }

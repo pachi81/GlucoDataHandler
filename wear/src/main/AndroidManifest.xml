@@ -77,7 +77,7 @@
         </receiver>
         <receiver android:name=".common.tasks.TimeAlarmReceiver" />
         <receiver android:name=".common.tasks.SourceAlarmReceiver" />
-        <receiver android:name=".common.notification.TestAlarmReceiver" />
+        <receiver android:name=".common.notification.AlarmIntentReceiver" />
         <receiver
             android:name=".StartServiceAtBootReceiver"
             android:enabled="true"

@@ -387,7 +387,15 @@
     <string name="activity_main_notification_permission">!!!Die Anzeige von Benachrichtigungen ist deaktiviert!!!\nKorrekte Funktionalität von GlucoDataHandler ist nicht gewährleistet und es können keine Alarme angezeigt werden!!!\nBitte hier drücken, um zu der entsprechenden Berechtigungseinstellung zu gelangen.</string>
     <string name="permission_notification_title">Die Anzeige von Benachrichtigungen ist deaktiviert!!!</string>
     <string name="permission_notification_message">GlucoDataHandler benötigt die Benachrichtigungen, um im Hintergrund Aufgaben durchzuführen und um Alarme anzuzeigen.</string>
-    <string name="alarm_notification_name">Alarm notification</string>
-    <string name="alarm_notification_descr">Alarm notifications. Please do not change the settings, as the app provides sound and vibration for notifications intern.</string>
+    <string name="alarm_notification_name">Alarm Benachrichtigung</string>
+    <string name="alarm_notification_descr">Alarm Benachrichtigungen. Bitte nicht ändern, da Töne und Vibration intern erzeugt wird.</string>
+    <string name="alarm_sound_summary">Stumm</string>
+    <string name="alarm_sound">Benachrichtigungston auswählen</string>
+    <string name="alarm_use_custom_sound">Externen Benachrichtigungston.</string>
+    <string name="alarm_use_custom_sound_summary_on">Es wird der ausgewählte Benachrichtigungston verwendet.</string>
+    <string name="alarm_use_custom_sound_summary_off">Es wird der interne Benachrichtigungston verwendet.</string>
+    <string name="alarm_sound_delay">Verzögerung des Tons</string>
+    <string name="alarm_sound_delay_summary">Zeit in Sekunden, bevor der Benachrichtigungston gestartet wird.\nWenn kein Ton ausgewählt wurde, wird die Vibration solange erzeugt.</string>
+    <string name="pref_cat_alarm_vibration_sound">Töne und Vibration</string>
 
 </resources>

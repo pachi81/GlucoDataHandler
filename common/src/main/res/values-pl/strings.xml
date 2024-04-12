@@ -395,4 +395,12 @@
     <string name="permission_notification_message">GlucoDataHandler needs notifications to execute tasks in the background and to show alarms.</string>
     <string name="alarm_notification_name">Alarm notification</string>
     <string name="alarm_notification_descr">Alarm notifications. Please do not change the settings, as the app provides sound and vibration for notifications intern.</string>
+    <string name="alarm_sound">Select custom sound</string>
+    <string name="alarm_sound_summary">Silent - no sound</string>
+    <string name="alarm_use_custom_sound">Use custom sound</string>
+    <string name="alarm_use_custom_sound_summary_on">Use custom selected sound.</string>
+    <string name="alarm_use_custom_sound_summary_off">Use app provided sound.</string>
+    <string name="alarm_sound_delay">Sound delay</string>
+    <string name="alarm_sound_delay_summary">Time in seconds before the sound is played.\nIt will vibrate the whole time, even if there is no sound selected.</string>
+    <string name="pref_cat_alarm_vibration_sound">Sound and vibration</string>
 </resources>

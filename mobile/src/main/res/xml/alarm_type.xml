@@ -16,6 +16,35 @@
             android:key="interval"
             android:title="@string/alarm_interval"
             app:iconSpaceReserved="false" />
+        <PreferenceCategory
+            android:title="@string/pref_cat_alarm_vibration_sound"
+            app:iconSpaceReserved="false">
+        <androidx.preference.SeekBarPreference
+            app:showSeekBarValue="true"
+            app:seekBarIncrement="1"
+            app:defaultValue="0"
+            app:min="0"
+            android:max="30"
+            android:key="sound_delay"
+            android:title="@string/alarm_sound_delay"
+            android:summary="@string/alarm_sound_delay_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="use_custom_sound"
+            android:defaultValue="false"
+            android:title="@string/alarm_use_custom_sound"
+            android:summaryOn="@string/alarm_use_custom_sound_summary_on"
+            android:summaryOff="@string/alarm_use_custom_sound_summary_off"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="custom_sound"
+            android:title="@string/alarm_sound"
+            android:summary="@string/alarm_sound_summary"
+            app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+        <PreferenceCategory
+            android:title="@string/advanced_settings"
+            app:iconSpaceReserved="false">
         <androidx.preference.SeekBarPreference
             app:showSeekBarValue="true"
             app:seekBarIncrement="1"
@@ -26,20 +55,10 @@
             android:title="@string/alarm_retrigger"
             android:summary="@string/alarm_retrigger_summary"
             app:iconSpaceReserved="false" />
-        <Preference
-            android:key="settings"
-            android:title="@string/alarm_settings"
-            android:summary="@string/alarm_settings_summary"
-            app:iconSpaceReserved="false" />
+        </PreferenceCategory>
         <Preference
             android:key="test"
             android:title="@string/alarm_test"
             android:summary="@string/alarm_test_summary"
             app:iconSpaceReserved="false" />
-        <Preference
-            android:key="save_sound"
-            android:title="@string/alarm_save_sound"
-            android:summary="@string/alarm_save_sound_summary"
-            app:iconSpaceReserved="false" />
-
 </PreferenceScreen>
