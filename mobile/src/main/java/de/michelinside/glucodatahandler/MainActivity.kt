@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var btnSources: Button
     private lateinit var sharedPref: SharedPreferences
     private lateinit var optionsMenu: Menu
+    private var floatingWidgetItem: MenuItem? = null
     private val LOG_ID = "GDH.Main"
     private var requestNotificationPermission = false
 
@@ -276,11 +277,18 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             inflater.inflate(R.menu.menu_items, menu)
             MenuCompat.setGroupDividerEnabled(menu!!, true)
             optionsMenu = menu
+            floatingWidgetItem = optionsMenu.findItem(R.id.action_floating_widget_toggle)
+            updateMenuItems()
             return true
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreateOptionsMenu exception: " + exc.message.toString() )
         }
         return true
+    }
+
+    private fun updateMenuItems() {
+        if(floatingWidgetItem!=null)
+            floatingWidgetItem!!.isVisible = Settings.canDrawOverlays(this)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -335,6 +343,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     val menuIt: MenuItem = optionsMenu.findItem(R.id.action_save_wear_logs)
                     menuIt.isEnabled = WearPhoneConnection.nodesConnected && !LogcatReceiver.isActive
                 }
+                R.id.action_floating_widget_toggle -> {
+                    Log.v(LOG_ID, "Floating widget toggle")
+                    with(sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, !sharedPref.getBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false))
+                        apply()
+                    }
+                }
                 else -> return super.onOptionsItemSelected(item)
             }
         } catch (exc: Exception) {
@@ -374,6 +389,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }
 
             txtSourceInfo.text = SourceStateData.getState(this)
+
+            updateMenuItems()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
         }
