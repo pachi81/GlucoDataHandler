@@ -319,14 +319,14 @@ Mostre uma segunda notificação sem conteúdo para ter um ícone adicional na b
 
     <!-- New  -->
 
-    <string name="src_libre_patient">Patient</string>
-    <string name="src_libre_patient_summary">If there is more then one patient connected to the libre account, please select the patient receiving the data for.</string>
-    <string name="pref_cat_locksreen_wallpaper">Lockscreen Wallpaper</string>
-    <string name="pref_lockscreen_enabled">Enable</string>
-    <string name="pref_lockscreen_enabled_summary">If you enable lockscreen wallpaper, the app replaces the wallpaper on lockscreen with an Image containing the value and trend.</string>
-    <string name="pref_lockscreen_y_pos">Vertical position</string>
-    <string name="pref_lockscreen_y_pos_summary">Vertical position of the glucose-trend image on lockscreen:\n0 is the top of the display\n100 is the botton of the display</string>
-    <string name="activity_main_notification_permission">Showing notifications is disabled!!!\nGlucoDataHandler may not work correct and can not show alarms!!!\nPress here to go direct to the permission setting.</string>
+    <string name="src_libre_patient">Paciente</string>
+    <string name="src_libre_patient_summary">Se houver mais de um paciente conectado à conta libre, selecione o paciente para o qual receberá os dados.</string>
+    <string name="pref_cat_locksreen_wallpaper">Papel de parede da tela de bloqueio</string>
+    <string name="pref_lockscreen_enabled">Habilitado</string>
+    <string name="pref_lockscreen_enabled_summary">Se você ativar o papel de parede da tela de bloqueio, o aplicativo substituirá o papel de parede da tela de bloqueio por uma imagem contendo o valor e a tendência.</string>
+    <string name="pref_lockscreen_y_pos">Posição vertical</string>
+    <string name="pref_lockscreen_y_pos_summary">Posição vertical da seta de tendência na tela de bloqueio:\n0 na parte superior da tela\n100 na parte inferior da tela</string>
+    <string name="activity_main_notification_permission">Notificação está desabilitada!\nGlucoDataHandler pode não funcionar corretamente e pode não gerar alarmes!!!\n Pressione aqui para ir para a tela de configuração de permissões.</string>
 
-    <string name="src_libre_setup_librelink">Missing data! Please accept invitation in LibreLinkUp app first!</string>
+    <string name="src_libre_setup_librelink">Por favor, aceite o convite no aplicativo LibreLinkUp primeiro!</string>
 </resources>
