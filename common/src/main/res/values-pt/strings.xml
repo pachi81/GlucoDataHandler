@@ -38,9 +38,9 @@
     <string name="activity_main_battery_optimization_disabled">Otimização da bateria está habilitada.</string>
     <string name="activity_main_no_source_label">Fonte: não ativa</string>
     <string name="activity_main_connected_label">Wear: conectado (%1$s)</string>
-    <string name="activity_main_disconnected_label">Wear: disconectado</string>
+    <string name="activity_main_disconnected_label">Wear: desconectado</string>
     <string name="activity_main_car_connected_label">Android Auto: conectado</string>
-    <string name="activity_main_car_disconnected_label">Android Auto: disconectado</string>
+    <string name="activity_main_car_disconnected_label">Android Auto: desconectado</string>
     <string name="activity_main_high_contrast_enabled">A acessibilidade de alto contraste está ativa!\nPressione aqui para acessar as configurações.</string>
     <string name="no_new_value">Sem novos valores há %1$d minutos!</string>
 
@@ -143,10 +143,10 @@
     <string name="pref_switch_car_media">Leitor de mídia fictício</string>
     <string name="pref_switch_car_media_summary">Mostre o valor da glicose como música atual para Android Auto.</string>
     <string name="pref_switch_send_to_aod">
-Enviar transmissão de glucodata</string>
-    <string name="pref_switch_send_to_aod_summary">SEnvie transmissão de glucodata para novos valores recebidos de qualquer fonte.</string>
-    <string name="pref_button_select_target">Identificar receptores de glucodata</string>
-    <string name="pref_button_select_target_summary">Escolha os receptores para os quais enviar a transmissão de glucodata. Uma transmissão global será enviada para todos os aplicativos registrados dinamicamente na transmissão.</string>
+Enviar transmissão do Glucodata</string>
+    <string name="pref_switch_send_to_aod_summary">Envie transmissão do Glucodata para novos valores recebidos de qualquer fonte.</string>
+    <string name="pref_button_select_target">Identificar receptores do Glucodata</string>
+    <string name="pref_button_select_target_summary">Escolha os receptores para os quais enviar a transmissão do Glucodata. Uma transmissão global será enviada para todos os aplicativos registrados dinamicamente na transmissão.</string>
     <string name="pref_switch_send_to_xdrip">Enviar transmissão Libre (pached)</string>
     <string name="pref_switch_send_to_xdrip_summary">Encaminhe os valores de glicose para xDrip+. Selecione \'Libre (patched app)\' como fonte no xDrip+.</string>
     <string name="pref_button_select_xdrip_target">Identifique receptores Libre (pached)</string>
@@ -159,7 +159,7 @@ Identifique receptores de transmissão xDrip+</string>
     <string name="pref_switch_use_mmol">Use mmol/l</string>
     <string name="pref_switch_use_mmol_summary">Use mmol/l em vez de mg/dl.</string>
     <string name="pref_switch_use_5_min_delta">5 minutos delta</string>
-    <string name="pref_switch_use_5_min_delta_summary">SAtive esta opção para usar valores delta para intervalos de 5 minutos; caso contrário, será usado intervalo de 1 minuto.</string>
+    <string name="pref_switch_use_5_min_delta_summary">Ative esta opção para usar valores delta para intervalos de 5 minutos; caso contrário, será usado intervalo de 1 minuto.</string>
     <string name="pref_color_alarm">Cores Alto/Baixo</string>
     <string name="pref_color_alarm_summary">Cor para valores altos e baixos de glicose.</string>
     <string name="pref_color_out_of_range">Cor fora do intervalo</string>
@@ -190,7 +190,7 @@ Mostre uma segunda notificação sem conteúdo para ter um ícone adicional na b
     <string name="pref_widget_transparency">Transparência do Widget</string>
     <string name="pref_widget_transparency_summary">Transparência do fundo do widget.</string>
     <string name="pref_relative_time">Tempo relativo</string>
-    <string name="pref_relative_time_summary">UUse o tempo relativo em vez do valor recebido de data/hora da glicose para widgets.\nO tempo relativo depende das configurações da bateria do seu dispositivo e pode não funcionar corretamente.</string>
+    <string name="pref_relative_time_summary">Use o tempo relativo em vez do valor recebido de data/hora da glicose para widgets.\nO tempo relativo depende das configurações da bateria do seu dispositivo e pode não funcionar corretamente.</string>
 
     <string name="pref_status_bar_icon_app">ïcone do App</string>
     <string name="pref_status_bar_icon_glucose">Valor da Glicose</string>
@@ -218,7 +218,7 @@ Mostre uma segunda notificação sem conteúdo para ter um ícone adicional na b
     <string name="forground_notification_descr">Recebendo dados para complicações</string>
 
     <string name="activity_connected_label">Telefone: conectado (%1$s)</string>
-    <string name="activity_disconnected_label">Telefone: disconectado</string>
+    <string name="activity_disconnected_label">Telefone: desconectado</string>
 
     <string name="activity_switch_foreground">Primeiro plano</string>
     <string name="activity_large_arrow_icon">Seta de tendência grande</string>
@@ -295,7 +295,7 @@ Mostre uma segunda notificação sem conteúdo para ter um ícone adicional na b
     <string name="pref_source_librelinkup_info_summary">IMPORTANTE: esta não é a conta LibreView!\nPara ativar o LibreLinkUp:\n- abra seu aplicativo FreeStyle Libre e selecione no menu Compartilhar ou Aplicativos conectados\n- ative a conexão LibreLinkUp\n- instale o LibreLinkUp da PlayStore\n- configure seu conta e aguarde o convite</string>
     <string name="menu_contact">Contato</string>
     <string name="src_ns_iob_cob">IOB/COB support</string>
-    <string name="src_ns_iob_cob_summary">RReceba também valores IOB e COB do endpoint de seixo nightscout.</string>
+    <string name="src_ns_iob_cob_summary">Receba também valores IOB e COB do endpoint de seixo Nightscout.</string>
     <string name="pref_permanent_notification_info_summary">A notificação é obrigatória para o funcionamento correto do aplicativo.\nA partir do Android 13, você pode remover esta notificação. Se você não quiser que a notificação seja de volta, defina o \"Ícone da barra de status\" como \"Ícone do aplicativo\" e ative \"Ocultar conteúdo\".</string>
     <string name="source_aaps">AAPS</string>
     <string name="pref_source_aaps_info">AndroidAPS</string>
