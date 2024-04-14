@@ -48,7 +48,6 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
     private var alarmType: AlarmType? = null
     private var notificationId: Int = -1
     private var createTime = 0L
-    private var retriggerOnDestroy = true
 
     companion object {
         private val LOG_ID = "GDH.AlarmLockscreenActivity"
@@ -117,7 +116,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
                 object : SlideToActView.OnSlideCompleteListener {
                     override fun onSlideComplete(view: SlideToActView) {
                         Log.v(LOG_ID, "Snooze completed!")
-                        stop(true)
+                        AlarmNotification.stopVibrationAndSound()
                         btnSnooze.visibility = View.GONE
                         txtSnooze.visibility = View.VISIBLE
                         layoutSnoozeButtons.visibility = View.VISIBLE
@@ -151,8 +150,6 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             Log.v(LOG_ID, "onDestroy called")
             super.onDestroy()
             activity = null
-            if(retriggerOnDestroy)
-                AlarmNotification.checkRetrigger(alarmType!!, this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )
         }
@@ -182,14 +179,13 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
         }
     }
 
-    private fun stop(cancelOnlySound: Boolean = false) {
+    private fun stop() {
         try {
             Log.v(LOG_ID, "stop called for id $notificationId")
-            retriggerOnDestroy = false
             if (notificationId > 0)
-                AlarmNotification.stopNotification(notificationId, this, cancelOnlySound = cancelOnlySound)
+                AlarmNotification.stopNotification(notificationId, this)
             else
-                AlarmNotification.stopCurrentNotification(this, cancelOnlySound = cancelOnlySound)
+                AlarmNotification.stopCurrentNotification(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }

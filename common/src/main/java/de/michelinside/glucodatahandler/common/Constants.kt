@@ -124,9 +124,6 @@ object Constants {
     // Alarm
     const val ALARM_SNOOZE_ACTION = "de.michelinside.glucodatahandler.SNOOZE"
     const val ALARM_STOP_NOTIFICATION_ACTION = "de.michelinside.glucodatahandler.STOP_NOTIFICATION"
-    const val ALARM_TEST_ACTION = "de.michelinside.glucodatahandler.TEST_ALARM"
-    const val ALARM_START_SOUND_ACTION = "de.michelinside.glucodatahandler.ALARM_START_SOUND"
-    const val ALARM_STOP_VIBRATION_ACTION = "de.michelinside.glucodatahandler.ALARM_STOP_VIBRATION_ACTION"
     const val ALARM_SNOOZE_EXTRA_TIME = "snooze_time"
     const val ALARM_SNOOZE_EXTRA_NOTIFY_ID = "notification_id"
     const val ALARM_NOTIFICATION_EXTRA_ALARM_TYPE = "alarm_type"

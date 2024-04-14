@@ -10,6 +10,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.Ringtone
 import android.media.RingtoneManager
@@ -32,6 +33,9 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.Utils
 import java.io.FileOutputStream
 import java.math.RoundingMode
+import java.text.DateFormat
+import java.util.Date
+import java.util.concurrent.TimeUnit
 import de.michelinside.glucodatahandler.common.R as CR
 
 
@@ -60,6 +64,15 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     private var vibratorInstance: Vibrator? = null
     private var alarmManager: AlarmManager? = null
     private var alarmPendingIntent: PendingIntent? = null
+    private var alarmNotificationActive: Boolean = false
+
+    enum class TriggerAction {
+        TEST_ALARM,
+        START_ALARM_SOUND,
+        STOP_VIBRATION,
+        RETRIGGER_SOUND,
+    }
+
     //private var soundLevel = -1
     //private var lastSoundLevel = -1
 
@@ -91,15 +104,15 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     fun getAlarmState(context: Context): AlarmState {
         var state = AlarmState.currentState(context)
-        if(state != AlarmState.DISABLED && !active) {
+        if(state == AlarmState.ACTIVE && (!active || !alarmNotificationActive)) {
             state = AlarmState.INACTIVE
         }
         Log.i(LOG_ID, "Current alarm state: $state")
         return state
     }
 
-    fun isAlarmActive(context: Context): Boolean {
-        return getAlarmState(context) == AlarmState.ACTIVE
+    private fun isAlarmActive(context: Context): Boolean {
+        return AlarmState.currentState(context) == AlarmState.ACTIVE
     }
 
     fun initNotifications(context: Context) {
@@ -111,7 +124,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
             onSharedPreferenceChanged(sharedPref, null)
-            updateNotifier()
+            initNotifier()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "initNotifications exception: " + exc.toString() )
         }
@@ -125,7 +138,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             if (enabled != newEnabled) {
                 enabled = newEnabled
                 Log.i(LOG_ID, "enable alarm notifications: $newEnabled")
-                updateNotifier()
+                initNotifier()
                 if(!enabled) {
                     stopCurrentNotification()
                 }
@@ -157,10 +170,10 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
     }
 
-    fun stopCurrentNotification(context: Context? = null, cancelOnlySound: Boolean = false, fromClient: Boolean = false) {
-        Log.v(LOG_ID, "stopCurrentNotification cancelOnlySound=$cancelOnlySound - fromClient=$fromClient - curNotification=$curNotification")
+    fun stopCurrentNotification(context: Context? = null, fromClient: Boolean = false) {
+        Log.v(LOG_ID, "stopCurrentNotification fromClient=$fromClient - curNotification=$curNotification")
         if (curNotification > 0) {
-            stopNotification(curNotification, context, cancelOnlySound = cancelOnlySound, fromClient = fromClient)
+            stopNotification(curNotification, context, fromClient = fromClient)
         } else {
             onNotificationStopped(0, context, true)
         }
@@ -170,7 +183,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     }
 
-    fun stopNotification(noticationId: Int, context: Context? = null, reset: Boolean = true, cancelOnlySound: Boolean = false, fromClient: Boolean = false) {
+    fun stopNotification(noticationId: Int, context: Context? = null, reset: Boolean = true, fromClient: Boolean = false) {
         try {
             Log.v(LOG_ID, "stopNotification called for $noticationId - current=$curNotification")
             stopTrigger()
@@ -179,13 +192,11 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     checkRecreateSound()
                 if (noticationId > 0) {
                     Channels.getNotificationManager(context).cancel(noticationId)
-                    if (!cancelOnlySound)  // only stop the sound -> used after snooze is unlocked
-                        onNotificationStopped(noticationId, context, reset)
+                    onNotificationStopped(noticationId, context, reset)
                     if (reset) {
                         curNotification = 0
                         curAlarmTime = 0
                         curTestAlarmType = AlarmType.NONE
-                        updateNotifier(context)
                         if(!fromClient)
                             GlucoDataService.sendCommand(Command.STOP_ALARM)
                     }
@@ -225,7 +236,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     alarmType
                 else
                     AlarmType.NONE
-                updateNotifier(context)
                 Log.d(LOG_ID, "Create notification for $alarmType with ID=$curNotification - triggerTime=$retriggerTime")
                 checkCreateSound(alarmType, context)
                 showNotification(alarmType, context)
@@ -240,7 +250,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         triggerNotification(alarmType, context, true)
     }
 
-    fun triggerDelay(action: String, alarmType: AlarmType, context: Context, delaySeconds: Float) {
+    fun triggerDelay(action: TriggerAction, alarmType: AlarmType, context: Context, delaySeconds: Float) {
         stopTrigger()
         Log.d(LOG_ID, "Trigger action $action for $alarmType in $delaySeconds seconds")
         alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -252,7 +262,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             }
         }
         val intent = Intent(context, AlarmIntentReceiver::class.java)
-        intent.action = action
+        intent.action = action.toString()
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
         intent.putExtra(Constants.ALARM_NOTIFICATION_EXTRA_ALARM_TYPE, alarmType.ordinal)
         alarmPendingIntent = PendingIntent.getBroadcast(
@@ -287,7 +297,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     }
 
     fun triggerTest(alarmType: AlarmType, context: Context) {
-        triggerDelay(Constants.ALARM_TEST_ACTION, alarmType, context, 3F)
+        triggerDelay(TriggerAction.TEST_ALARM, alarmType, context, 3F)
     }
 
     private fun showNotification(alarmType: AlarmType, context: Context) {
@@ -379,17 +389,19 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         return notificationBuilder.build()
     }
 
-    private fun startVibrationAndSound(alarmType: AlarmType, context: Context) {
-        val soundDelay = getSoundDelay(alarmType, context)
-        Log.v(LOG_ID, "Start vibration and sound with $soundDelay seconds delay")
-        if(soundDelay > 0) {
-            vibrate(alarmType, context, true)
-            if(getSound(alarmType, context) != null) {
-                triggerDelay(Constants.ALARM_START_SOUND_ACTION, alarmType, context, soundDelay.toFloat())
+    private fun startVibrationAndSound(alarmType: AlarmType, context: Context, reTrigger: Boolean = false) {
+        if(!reTrigger) {
+            val soundDelay = getSoundDelay(alarmType, context)
+            Log.v(LOG_ID, "Start vibration and sound with $soundDelay seconds delay")
+            if(soundDelay > 0) {
+                vibrate(alarmType, context, true)
+                if(getSound(alarmType, context) != null) {
+                    triggerDelay(TriggerAction.START_ALARM_SOUND, alarmType, context, soundDelay.toFloat())
+                    return
+                }
+                triggerDelay(TriggerAction.STOP_VIBRATION, alarmType, context, soundDelay.toFloat())
                 return
             }
-            triggerDelay(Constants.ALARM_STOP_VIBRATION_ACTION, alarmType, context, soundDelay.toFloat())
-            return
         }
         // else
         Thread {
@@ -397,6 +409,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             if(curNotification > 0) {
                 vibrate(alarmType, context, false)
                 startSound(alarmType, context, false)
+                checkRetrigger(context)
             }
         }.start()
     }
@@ -419,11 +432,16 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             if (soundUri != null) {
                 Log.d(LOG_ID, "Play ringtone $soundUri")
                 ringtone = RingtoneManager.getRingtone(context, soundUri)
+                val aa = AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build()
+                ringtone!!.setAudioAttributes(aa)
                 ringtone!!.play()
             }
-            if(restartVibration) {
-                vibrate(alarmType, context, false)
-            }
+        }
+        if(restartVibration) {
+            vibrate(alarmType, context, false)
         }
     }
 
@@ -714,45 +732,12 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     triggerNotification(AlarmType.OBSOLETE, context)
                 }
                 NotifySource.ALARM_STATE_CHANGED -> {
-                    updateNotifier(context)
-                }
-                NotifySource.TIME_VALUE,
-                NotifySource.BROADCAST,
-                NotifySource.MESSAGECLIENT -> {
-                    // check for retrigger notification
-                    if (canRetrigger()) {
-                        Log.d(LOG_ID, "Retrigger notification")
-                        val stop = stopNotificationForRetrigger()
-                        if (stop) {
-                            retriggerOnDestroy = true
-                            stopNotification(curNotification, context, reset = false)
-                        } else {
-                            retriggerOnDestroy = false
-                            showNotification(getAlarmType(), context)
-                        }
-                        retriggerCount++
-                    }
-                    if (!isTriggerActive()) {
-                        updateNotifier(context)
-                    }
+                    initNotifier(context)
                 }
                 else -> Log.w(LOG_ID, "Unsupported source $dataSource")
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString())
-        }
-    }
-
-    fun checkRetrigger(alarmType: AlarmType, context: Context) {
-        if(retriggerOnDestroy) {
-            Log.d(LOG_ID, "Retrigger on destroy!")
-            retriggerOnDestroy = false
-            Thread {
-                Thread.sleep(100)
-                Handler(context.mainLooper).post {
-                    showNotification(alarmType, context)
-                }
-            }.start()
         }
     }
 
@@ -766,51 +751,76 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         return ReceiveData.getAlarmType()
     }
 
-    private fun getNotifierFilter() : MutableSet<NotifySource> {
-        val filter = mutableSetOf(NotifySource.ALARM_TRIGGER, NotifySource.OBSOLETE_ALARM_TRIGGER, NotifySource.ALARM_STATE_CHANGED)
+    private fun checkRetrigger(context: Context) {
         if(isTriggerActive()) {
-            // add triggers for time changing
-            filter.add(NotifySource.TIME_VALUE)
-            filter.add(NotifySource.BROADCAST)
-            filter.add(NotifySource.MESSAGECLIENT)
+            val elapsedTimeMin = Utils.round((System.currentTimeMillis() - ReceiveData.time).toFloat()/60000, 0, RoundingMode.DOWN).toLong()
+            val nextTriggerMin = (elapsedTimeMin/retriggerTime)*retriggerTime + retriggerTime
+            Log.d(LOG_ID, "elapsed: " + elapsedTimeMin + " nextTrigger: " + nextTriggerMin + " - retrigger-time: "+ retriggerTime)
+            val timeInMillis = ReceiveData.time + TimeUnit.MINUTES.toMillis(nextTriggerMin)
+            Log.i(LOG_ID, "Retrigger sound after " + nextTriggerMin + " minute(s) at " + DateFormat.getTimeInstance(
+                DateFormat.DEFAULT).format(timeInMillis)
+                    + " (received at " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(ReceiveData.time)))
+            retriggerCount++
+            triggerDelay(TriggerAction.RETRIGGER_SOUND, getAlarmType(), context, (timeInMillis.toFloat()/1000))
         }
-        return filter
     }
 
-    fun updateNotifier(context: Context? = null) {
+    fun initNotifier(context: Context? = null) {
         val requireConext = context ?: GlucoDataService.context!!
-        Log.d(LOG_ID, "updateNotifier called - active=${isAlarmActive(requireConext)}")
-        if(isAlarmActive(requireConext)) {
-            InternalNotifier.addNotifier(requireConext, this, getNotifierFilter() )
-        } else {
-            InternalNotifier.addNotifier(requireConext, this, mutableSetOf(NotifySource.ALARM_STATE_CHANGED))
+        val newActive = isAlarmActive(requireConext)
+        if(alarmNotificationActive != newActive) {
+            Log.i(LOG_ID, "Change alarm notification active to ${newActive}")
+            alarmNotificationActive = newActive
+            val filter = mutableSetOf(NotifySource.ALARM_STATE_CHANGED)
+            if(alarmNotificationActive) {
+                filter.add(NotifySource.ALARM_TRIGGER)
+                filter.add(NotifySource.OBSOLETE_ALARM_TRIGGER)
+            }
+            InternalNotifier.addNotifier(requireConext, this, filter )
         }
     }
-
-
 
     fun hasFullscreenPermission(): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
             return Channels.getNotificationManager().canUseFullScreenIntent()
         return true
     }
+
+    fun handleTimerAction(context: Context, action: String, extras: Bundle?) {
+        Log.d(LOG_ID, "handleTimerAction called for ${action} with extras: ${Utils.dumpBundle(extras)}")
+        if(extras?.containsKey(Constants.ALARM_NOTIFICATION_EXTRA_ALARM_TYPE) == true && AlarmNotificationBase.instance != null) {
+            val alarmType = AlarmType.fromIndex(extras!!.getInt(Constants.ALARM_NOTIFICATION_EXTRA_ALARM_TYPE, ReceiveData.getAlarmType().ordinal))
+            when(TriggerAction.valueOf(action)) {
+                TriggerAction.TEST_ALARM -> {
+                    executeTest(alarmType, context)
+                    GlucoDataService.sendCommand(Command.TEST_ALARM, extras)
+                }
+                TriggerAction.START_ALARM_SOUND -> {
+                    startSound(alarmType, context, true)
+                    checkRetrigger(context)
+                }
+                TriggerAction.STOP_VIBRATION -> {
+                    stopVibrationAndSound()
+                    checkRetrigger(context)
+                }
+                TriggerAction.RETRIGGER_SOUND -> {
+                    startVibrationAndSound(alarmType, context, true)
+                }
+            }
+        }
+    }
+
 }
 
 
 class AlarmIntentReceiver: BroadcastReceiver() {
     private val LOG_ID = "GDH.AlarmIntentReceiver"
     override fun onReceive(context: Context, intent: Intent) {
-        Log.v(LOG_ID, "onReceive called for ${intent.action} with extras: ${Utils.dumpBundle(intent.extras)}")
-        if(intent.extras?.containsKey(Constants.ALARM_NOTIFICATION_EXTRA_ALARM_TYPE) == true && AlarmNotificationBase.instance != null) {
-            val alarmType = AlarmType.fromIndex(intent.extras!!.getInt(Constants.ALARM_NOTIFICATION_EXTRA_ALARM_TYPE, ReceiveData.getAlarmType().ordinal))
-            if(intent.action == Constants.ALARM_START_SOUND_ACTION) {
-                AlarmNotificationBase.instance!!.startSound(alarmType, context, true)
-            } else if(intent.action == Constants.ALARM_STOP_VIBRATION_ACTION) {
-                AlarmNotificationBase.instance!!.stopVibrationAndSound()
-            } else if(intent.action == Constants.ALARM_TEST_ACTION) {
-                AlarmNotificationBase.instance!!.executeTest(alarmType, context)
-                GlucoDataService.sendCommand(Command.TEST_ALARM, intent.extras)
-            }
+        try {
+            Log.v(LOG_ID, "onReceive called for ${intent.action} with extras: ${Utils.dumpBundle(intent.extras)}")
+            AlarmNotificationBase.instance!!.handleTimerAction(context, intent.action!!, intent.extras)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onReceive exception: " + exc.toString())
         }
     }
 }
