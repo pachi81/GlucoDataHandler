@@ -338,4 +338,6 @@
     <string name="activity_main_notification_permission">Showing notifications is disabled!!!\nGlucoDataHandler may not work correct and can not show alarms!!!\nPress here to go direct to the permission setting.</string>
 
     <string name="src_libre_setup_librelink">Missing data! Please accept invitation in LibreLinkUp app first!</string>
+    <string name="prefstatus_bar_notification_colored_icon">Colored status bar icon</string>
+    <string name="pref_status_bar_notification_colored_icon_summary">If your device supports colored status bar icons, you can also deactivate it to use a white item.</string>
 </resources>

@@ -113,10 +113,11 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
     private fun getStatusBarIcon(iconKey: String): Icon {
         val bigIcon = sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON, false)
+        val coloredIcon = sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_COLORED_ICON, true)
         return when(sharedPref.getString(iconKey, StatusBarIcon.APP.pref)) {
-            StatusBarIcon.GLUCOSE.pref -> BitmapUtils.getGlucoseAsIcon(roundTarget=!bigIcon)
-            StatusBarIcon.TREND.pref -> BitmapUtils.getRateAsIcon(roundTarget=true, resizeFactor = if (bigIcon) 1.5F else 1F)
-            StatusBarIcon.DELTA.pref -> BitmapUtils.getDeltaAsIcon(roundTarget=!bigIcon)
+            StatusBarIcon.GLUCOSE.pref -> BitmapUtils.getGlucoseAsIcon(roundTarget=!bigIcon, color = if(coloredIcon) ReceiveData.getClucoseColor() else Color.WHITE)
+            StatusBarIcon.TREND.pref -> BitmapUtils.getRateAsIcon(roundTarget=true, color = if(coloredIcon) ReceiveData.getClucoseColor() else Color.WHITE, resizeFactor = if (bigIcon) 1.5F else 1F)
+            StatusBarIcon.DELTA.pref -> BitmapUtils.getDeltaAsIcon(roundTarget=!bigIcon, color = if(coloredIcon) ReceiveData.getClucoseColor(true) else Color.WHITE)
             else -> Icon.createWithResource(GlucoDataService.context, R.mipmap.ic_launcher)
         }
     }
@@ -270,6 +271,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
                 Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION,
                 Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON,
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON,
+                Constants.SHARED_PREF_PERMANENT_NOTIFICATION_COLORED_ICON,
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY -> {
                     updatePreferences()
                 }

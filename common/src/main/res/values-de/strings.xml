@@ -319,4 +319,6 @@
     <string name="pref_lockscreen_y_pos">Vertikale Position</string>
     <string name="pref_lockscreen_y_pos_summary">Vertikale position auf dem Lockscreen:\n0: am oberen Rand des Bildschirms\n100: am unteren Rand des Bildschirms</string>
     <string name="activity_main_notification_permission">!!!Die Anzeige von Benachrichtigungen ist deaktiviert!!!\nKorrekte Funktionalität von GlucoDataHandler ist nicht gewährleistet und es können keine Alarme angezeigt werden!!!\nBitte hier drücken, um zu der entsprechenden Berechtigungseinstellung zu gelangen.</string>
+    <string name="prefstatus_bar_notification_colored_icon">Farbiges Statusbar Icon</string>
+    <string name="pref_status_bar_notification_colored_icon_summary">Falls dein Gerät ein farbiges Statusbar Icon unterstützt, kannst du es auch deaktivieren, um ein weißes Icon zu benutzen.</string>
 </resources>
