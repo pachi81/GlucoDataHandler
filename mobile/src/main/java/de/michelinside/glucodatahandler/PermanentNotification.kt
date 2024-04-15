@@ -149,7 +149,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         }
 
         val notificationBuilder = if(foreground) foregroundNotificationCompat else notificationCompat
-        val notification = notificationBuilder
+        notificationBuilder
             .setSmallIcon(getStatusBarIcon(iconKey))
             .setWhen(ReceiveData.time)
             .setCustomContentView(remoteViews)
@@ -158,7 +158,15 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setStyle(Notification.DecoratedCustomViewStyle())
             .setContentTitle(if (withContent) ReceiveData.getClucoseAsString() else "")
             .setContentText(if (withContent) "Delta: " + ReceiveData.getDeltaAsString() else "")
-            .build()
+
+        when(sharedPref.getString(iconKey, StatusBarIcon.APP.pref)) {
+            StatusBarIcon.GLUCOSE.pref,
+            StatusBarIcon.TREND.pref -> {
+                notificationBuilder.setColor(Color.TRANSPARENT)
+            }
+        }
+
+        val notification = notificationBuilder.build()
 
         notification.visibility = Notification.VISIBILITY_PUBLIC
         notification.flags = notification.flags or Notification.FLAG_NO_CLEAR
