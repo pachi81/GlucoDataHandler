@@ -5,7 +5,7 @@
     <string name="info_label_value">Wartość</string>
     <string name="info_label_raw">Surowe</string>
     <string name="info_label_delta">Delta</string>
-    <string name="info_label_rate">Tempo</string>
+    <string name="info_label_rate">Trend</string>
     <string name="info_label_timestamp">Znacznik czasu</string>
     <string name="info_label_iob_cob_timestamp">Czas IOB/COB</string>
     <string name="info_label_timediff">Różnica czasu</string>
