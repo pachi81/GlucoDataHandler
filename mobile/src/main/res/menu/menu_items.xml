@@ -7,6 +7,12 @@
         android:title="@string/alarm_toggle"
         android:icon="@drawable/notification_disabled"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/action_floating_widget_toggle"
+        android:title="@string/pref_floating_widget"
+        android:icon="@drawable/icon_overlay_white"
+        android:visible="false"
+        app:showAsAction="always" />
     <group
         android:id="@+id/group_settings">
         <item

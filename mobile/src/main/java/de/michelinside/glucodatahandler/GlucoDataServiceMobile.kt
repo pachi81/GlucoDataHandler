@@ -12,7 +12,6 @@ import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
-import de.michelinside.glucodatahandler.notification.PermanentNotification
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import de.michelinside.glucodatahandler.widget.FloatingWidget
@@ -68,6 +67,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
     }
 
     override fun getNotification(): Notification {
+        Log.v(LOG_ID, "getNotification called")
         return PermanentNotification.getNotification(
             !sharedPref!!.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false),
             Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, true

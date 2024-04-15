@@ -299,7 +299,8 @@
     <string name="pref_source_juggluco_info">Juggluco</string>
     <string name="pref_source_juggluco_info_summary">To receive values from Juggluco:\n- open Juggluco\n- go to settings\n- enable Glucodata broadcast\n- enable \"de.michelinside.glucodatahandler\"</string>
     <string name="pref_source_xdrip_info">xDrip+</string>
-    <string name="pref_source_xdrip_info_summary">To receive values from xDrip+:\n- open xDrip+\n- go to settings\n- go to Inter-app settings\n- enable \"Broadcast locally\"\n- set \"Noise Blocking\" to \"Send even Extremely noisy signals\"\n- enable \"Compatible Broadcast\"\n- check \"Identify receivers\" to be empty or add a new line with \"de.michelinside.glucodatahandler\"</string>
+    <string name="pref_source_xdrip_info_1_summary">To receive values from xDrip+:\n- open xDrip+\n- go to settings\n- go to Inter-app settings\n- enable \"Broadcast locally\"\n- set \"Noise Blocking\" to \"Send even Extremely noisy signals\"</string>
+    <string name="pref_source_xdrip_info_2_summary">- enable \"Compatible Broadcast\"\n- check \"Identify receivers\" to be empty or add a new line with \"de.michelinside.glucodatahandler\"</string>
     <string name="pref_source_librelinkup_info">Setup LibreLinkUp</string>
     <string name="pref_source_librelinkup_info_summary">IMPORTANT: this is not the LibreView account!\nTo activate LibreLinkUp:\n- open your FreeStyle Libre App and select in the menu Share or Connected Apps\n- activate LibreLinkUp connection\n- install LibreLinkUp from PlayStore\n- setup your account and wait for the invitation</string>
     <string name="menu_contact">Contact</string>
@@ -335,6 +336,14 @@
     <string name="pref_lockscreen_enabled_summary">If you enable lockscreen wallpaper, the app replaces the wallpaper on lockscreen with an Image containing the value and trend.</string>
     <string name="pref_lockscreen_y_pos">Vertical position</string>
     <string name="pref_lockscreen_y_pos_summary">Vertical position of the glucose-trend image on lockscreen:\n0 is the top of the display\n100 is the botton of the display</string>
+    <string name="activity_main_notification_permission">Showing notifications is disabled!!!\nGlucoDataHandler may not work correct and can not show alarms!!!\nPress here to go direct to the permission setting.</string>
+
+    <string name="src_libre_setup_librelink">Missing data! Please accept invitation in LibreLinkUp app first!</string>
+    <string name="prefstatus_bar_notification_colored_icon">Colored status bar icon</string>
+    <string name="pref_status_bar_notification_colored_icon_summary">If your device supports colored status bar icons, you can also deactivate it to use a white item.</string>
+
+    <!-- New  -->
+
     <string name="menu_alarms">Alarms</string>
     <string name="alarm_interval">Interval</string>
     <string name="alarm_interval_summary_low">Minimum interval in minutes between notifications for the this alarm type.\nInformation: there will only a new notification after the time has elapsed, if the delta is negative.</string>
@@ -402,9 +411,7 @@
     <string name="alarm_obsolete_summary">Alarm settings for no new glucose value.</string>
     <string name="obsolete_alarm_notification_descr">This notification will appear, if there is no new value for in an interval.</string>
     <string name="obsolete_alarm_text">No new value!</string>
-    <string name="activity_main_notification_permission">Showing notifications is disabled!!!\nGlucoDataHandler may not work correct and can not show alarms!!!\nPress here to go direct to the permission setting.</string>
 
-    <string name="src_libre_setup_librelink">Missing data! Please accept invitation in LibreLinkUp app first!</string>
     <string name="permission_notification_title">Showing notifications is disabled!!!</string>
     <string name="permission_notification_message">GlucoDataHandler needs notifications to execute tasks in the background and to show alarms.</string>
     <string name="alarm_notification_name">Alarm notification</string>

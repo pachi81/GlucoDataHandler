@@ -42,7 +42,6 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
-import de.michelinside.glucodatahandler.notification.PermanentNotification
 import de.michelinside.glucodatahandler.watch.LogcatReceiver
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -67,6 +66,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var optionsMenu: Menu
     private var alarmIcon: MenuItem? = null
     private var snoozeMenu: MenuItem? = null
+    private var floatingWidgetItem: MenuItem? = null
     private val LOG_ID = "GDH.Main"
     private var requestNotificationPermission = false
 
@@ -199,12 +199,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
             Log.i(LOG_ID, "Request notification permission...")
             requestNotificationPermission = true
+            /*
             txtNotificationPermission.visibility = View.VISIBLE
             txtNotificationPermission.setOnClickListener {
                 val intent: Intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
                     .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
                 startActivity(intent)
-            }
+            }*/
             if (this.shouldShowRequestPermissionRationale(
                     android.Manifest.permission.POST_NOTIFICATIONS)) {
                 showPermissionRationaleDialog(resources.getString(CR.string.permission_notification_title), resources.getString(CR.string.permission_notification_message)) { _, _ -> requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS) }
@@ -307,12 +308,19 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             optionsMenu = menu
             alarmIcon = optionsMenu.findItem(R.id.action_alarm_toggle)
             snoozeMenu = optionsMenu.findItem(R.id.group_snooze_title)
+            floatingWidgetItem = optionsMenu.findItem(R.id.action_floating_widget_toggle)
             updateAlarmIcon()
+            updateMenuItems()
             return true
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreateOptionsMenu exception: " + exc.message.toString() )
         }
         return true
+    }
+
+    private fun updateMenuItems() {
+        if(floatingWidgetItem!=null)
+            floatingWidgetItem!!.isVisible = Settings.canDrawOverlays(this)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -357,7 +365,10 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     val mailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                         "mailto","GlucoDataHandler@michel-inside.de", null))
                     mailIntent.putExtra(Intent.EXTRA_SUBJECT, "GlucoDataHander v" + BuildConfig.VERSION_NAME)
-                    startActivity(mailIntent)
+                    mailIntent.putExtra(Intent.EXTRA_TEXT, "")
+                    if (mailIntent.resolveActivity(packageManager) != null) {
+                        startActivity(mailIntent)
+                    }
                     return true
                 }
                 R.id.action_save_mobile_logs -> {
@@ -397,6 +408,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 R.id.action_alarm_toggle -> {
                     toggleAlarm()
                     return true
+                }
+                R.id.action_floating_widget_toggle -> {
+                    Log.v(LOG_ID, "Floating widget toggle")
+                    with(sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, !sharedPref.getBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false))
+                        apply()
+                    }
                 }
                 else -> return super.onOptionsItemSelected(item)
             }
@@ -486,6 +504,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             txtSourceInfo.text = SourceStateData.getState(this)
             updateAlarmIcon()
+            updateMenuItems()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
         }

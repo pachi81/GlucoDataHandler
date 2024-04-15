@@ -284,7 +284,8 @@
     <string name="pref_source_juggluco_info">Juggluco</string>
     <string name="pref_source_juggluco_info_summary">Konfiguration von Juggluco:\n- Juggluco App öffnen\n- Einstellungen öffnen\n- Glucodata broadcast aktivieren\n- \"de.michelinside.glucodatahandler\" auswählen</string>
     <string name="pref_source_xdrip_info">xDrip+</string>
-    <string name="pref_source_xdrip_info_summary">Konfiguration von xDrip+:\n- xDrip+ App öffnen\n- Einstellungen öffnen\n- Inter-App Einstellungen auswählen\n- Lokaler Broadcast aktivieren\n- in Verrauschungsunterdrückung \"Send even Extremely noisy signals\" auswählen\n- Kompatible Broadcasts aktivieren\n- Identifiziere Empfänger leer lassen oder eine neue Zeile mit \"de.michelinside.glucodatahandler\" hinzufügen</string>
+    <string name="pref_source_xdrip_info_1_summary">Konfiguration von xDrip+:\n- xDrip+ App öffnen\n- Einstellungen öffnen\n- Inter-App Einstellungen auswählen\n- Lokaler Broadcast aktivieren\n- in Verrauschungsunterdrückung \"Send even Extremely noisy signals\" auswählen</string>
+    <string name="pref_source_xdrip_info_2_summary">- Kompatible Broadcasts aktivieren\n- Identifiziere Empfänger leer lassen oder eine neue Zeile mit \"de.michelinside.glucodatahandler\" hinzufügen</string>
     <string name="pref_source_librelinkup_info">LibreLinkUp einrichten</string>
     <string name="pref_source_librelinkup_info_summary">WICHTIG: nicht den LibreView Zugang verwenden!\nEinrichtung:\n- FreeStyle Libre App öffnen und unter Verbinden auf Teilen oder Verbundene Anwendungen klicken\n- LibreLinkUp aktivieren\n- LibreLinkUp aus dem PlayStore installieren\n- in der LibreLinkUp App einloggen und die Einladung annehmen</string>
     <string name="menu_contact">Kontakt</string>
@@ -317,6 +318,9 @@
     <string name="pref_lockscreen_enabled_summary">Wenn sie den Hintergrund für den Lockscreen aktivieren, erstellt die App einen Hintergrund auf dem Lockscreen, welche den Glucosewert und den Trendpfeil enthält.</string>
     <string name="pref_lockscreen_y_pos">Vertikale Position</string>
     <string name="pref_lockscreen_y_pos_summary">Vertikale position auf dem Lockscreen:\n0: am oberen Rand des Bildschirms\n100: am unteren Rand des Bildschirms</string>
+    <string name="activity_main_notification_permission">!!!Die Anzeige von Benachrichtigungen ist deaktiviert!!!\nKorrekte Funktionalität von GlucoDataHandler ist nicht gewährleistet und es können keine Alarme angezeigt werden!!!\nBitte hier drücken, um zu der entsprechenden Berechtigungseinstellung zu gelangen.</string>
+    <string name="prefstatus_bar_notification_colored_icon">Farbiges Statusbar Icon</string>
+    <string name="pref_status_bar_notification_colored_icon_summary">Falls dein Gerät ein farbiges Statusbar Icon unterstützt, kannst du es auch deaktivieren, um ein weißes Icon zu benutzen.</string>
     <string name="alarm_notification_group_name">Alarme</string>
     <string name="menu_alarms">Alarme</string>
     <string name="alarm_interval">Intervall</string>
@@ -384,7 +388,6 @@
     <string name="alarm_obsolete_summary">Alarmeinstellungen für einen veralteten Wert.</string>
     <string name="obsolete_alarm_notification_descr">Diese Benachrichtigung erscheint, wenn es keinen neuen Wert gibt.</string>
     <string name="obsolete_alarm_text">Kein neuer Wert!</string>
-    <string name="activity_main_notification_permission">!!!Die Anzeige von Benachrichtigungen ist deaktiviert!!!\nKorrekte Funktionalität von GlucoDataHandler ist nicht gewährleistet und es können keine Alarme angezeigt werden!!!\nBitte hier drücken, um zu der entsprechenden Berechtigungseinstellung zu gelangen.</string>
     <string name="permission_notification_title">Die Anzeige von Benachrichtigungen ist deaktiviert!!!</string>
     <string name="permission_notification_message">GlucoDataHandler benötigt die Benachrichtigungen, um im Hintergrund Aufgaben durchzuführen und um Alarme anzuzeigen.</string>
     <string name="alarm_notification_name">Alarm Benachrichtigung</string>

@@ -11,7 +11,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 class ElapsedTimeTask : BackgroundTask() {
     companion object {
         private val LOG_ID = "GDH.Task.Time.ElapsedTask"
-        private var relativeTimeValue = false
+        private var relativeTimeValue = true
         private var interval = 0L
         val relativeTime: Boolean get() {return relativeTimeValue}
         fun setInterval(new_interval: Long) {
@@ -41,8 +41,8 @@ class ElapsedTimeTask : BackgroundTask() {
 
     override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {
         if ((key == null || key == Constants.SHARED_PREF_RELATIVE_TIME)) {
-            if( relativeTimeValue != sharedPreferences.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, false) ) {
-                relativeTimeValue = sharedPreferences.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, false)
+            if( relativeTimeValue != sharedPreferences.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, true) ) {
+                relativeTimeValue = sharedPreferences.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, true)
                 Log.d(LOG_ID, "relative time setting changed to " + relativeTimeValue)
                 InternalNotifier.notify(context, NotifySource.TIME_VALUE, null)
                 return true

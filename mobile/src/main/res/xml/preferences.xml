@@ -13,7 +13,7 @@
             android:title="@string/pref_switch_use_mmol"
             app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="relative_time"
             android:summary="@string/pref_relative_time_summary"
             android:title="@string/pref_relative_time"
@@ -101,6 +101,7 @@
             android:key="floating_widget"
             android:summary="@string/pref_floating_widget_summary"
             android:title="@string/pref_floating_widget"
+            android:icon="@drawable/icon_overlay"
             app:iconSpaceReserved="false" />
         <androidx.preference.ListPreference
             android:defaultValue="glucose_trend_delta_time"
@@ -163,6 +164,12 @@
             android:key="status_bar_notification_icon"
             android:summary="@string/pref_notification_icon_summary"
             android:title="@string/pref_notification_icon"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="status_bar_notification_colored_icon"
+            android:title="@string/prefstatus_bar_notification_colored_icon"
+            android:summary="@string/pref_status_bar_notification_colored_icon_summary"
             app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"

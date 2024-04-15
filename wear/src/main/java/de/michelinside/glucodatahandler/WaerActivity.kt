@@ -152,7 +152,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
             }
 
             switchRelativeTime = findViewById(R.id.switchRelativeTime)
-            switchRelativeTime.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, false)
+            switchRelativeTime.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, true)
             switchRelativeTime.setOnCheckedChangeListener { _, isChecked ->
                 Log.d(LOG_ID, "Relative time changed: " + isChecked.toString())
                 try {
