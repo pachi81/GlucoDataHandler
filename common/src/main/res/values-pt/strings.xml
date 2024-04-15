@@ -330,6 +330,6 @@ Mostre uma segunda notificação sem conteúdo para ter um ícone adicional na b
     <string name="activity_main_notification_permission">Notificação está desabilitada!\nGlucoDataHandler pode não funcionar corretamente e pode não gerar alarmes!!!\n Pressione aqui para ir para a tela de configuração de permissões.</string>
 
     <string name="src_libre_setup_librelink">Por favor, aceite o convite no aplicativo LibreLinkUp primeiro!</string>
-    <string name="prefstatus_bar_notification_colored_icon">Colored status bar icon</string>
-    <string name="pref_status_bar_notification_colored_icon_summary">If your device supports colored status bar icons, you can also deactivate it to use a white item.</string>
+    <string name="prefstatus_bar_notification_colored_icon">Ícone colorido da barra de status</string>
+    <string name="pref_status_bar_notification_colored_icon_summary">Se o seu dispositivo suportar ícones coloridos da barra de status, você também poderá desativá-lo para usar um item branco.</string>
 </resources>
