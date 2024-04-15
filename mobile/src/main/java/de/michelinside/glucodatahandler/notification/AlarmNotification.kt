@@ -42,8 +42,12 @@ object AlarmNotification : AlarmNotificationBase() {
         return false
     }
 
-    override fun onNotificationStopped(noticationId: Int, context: Context?, reset: Boolean) {
+    override fun onNotificationStopped(noticationId: Int, context: Context?) {
         LockscreenActivity.close()
+    }
+
+    override fun canReshowNotification(): Boolean {
+        return !LockscreenActivity.isActive()
     }
 
     override fun buildNotification(

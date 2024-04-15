@@ -21,7 +21,6 @@ object AlarmNotificationWear : AlarmNotificationBase() {
             if(forceVibrateInstance != value) {
                 forceVibrateInstance = value
                 Log.i(LOG_ID, "Set force vibration=$forceVibrateInstance")
-                updateNotifier()
             }
         }
     override val active: Boolean get() {

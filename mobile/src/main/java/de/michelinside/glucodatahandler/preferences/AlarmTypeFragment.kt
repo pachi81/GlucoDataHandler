@@ -1,6 +1,7 @@
 package de.michelinside.glucodatahandler.preferences
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.media.RingtoneManager
@@ -21,10 +22,13 @@ import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmType
+import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
+import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 
-class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
+class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
     private val LOG_ID = "GDH.AlarmTypeFragment"
     //private lateinit var soundSaver: ActivityResultLauncher<Intent>
     private var ringtoneSelecter: ActivityResultLauncher<Intent>? = null
@@ -49,6 +53,7 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
         Log.d(LOG_ID, "onResume called")
         try {
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
+            InternalNotifier.addNotifier(requireContext(), this, mutableSetOf(NotifySource.NOTIFICATION_STOPPED))
             update()
             super.onResume()
         } catch (exc: Exception) {
@@ -60,6 +65,7 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
         Log.d(LOG_ID, "onPause called")
         try {
             preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
+            InternalNotifier.remNotifier(requireContext(), this)
             super.onPause()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.toString())
@@ -292,6 +298,15 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
             apply()
         }
         setRingtoneSelect(preference, newUri)
+    }
+
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
+        try {
+            Log.v(LOG_ID, "OnNotifyData called for $dataSource")
+            update()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString())
+        }
     }
 
 
