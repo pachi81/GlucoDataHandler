@@ -171,21 +171,20 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     fun requestPermission() : Boolean {
         requestNotificationPermission = false
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (!Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
-                Log.i(LOG_ID, "Request notification permission...")
-                requestNotificationPermission = true
-                txtNotificationPermission.visibility = View.VISIBLE
-                txtNotificationPermission.setOnClickListener {
-                    val intent: Intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
-                        .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
-                    startActivity(intent)
-                }
-                this.requestPermissions(arrayOf(android.Manifest.permission.FOREGROUND_SERVICE, android.Manifest.permission.POST_NOTIFICATIONS), 3)
-                return false
-            } else {
-                txtNotificationPermission.visibility = View.GONE
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
+            Log.i(LOG_ID, "Request notification permission...")
+            requestNotificationPermission = true
+            /*
+            txtNotificationPermission.visibility = View.VISIBLE
+            txtNotificationPermission.setOnClickListener {
+                val intent: Intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                    .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
+                startActivity(intent)
+            }*/
+            this.requestPermissions(arrayOf(android.Manifest.permission.FOREGROUND_SERVICE, android.Manifest.permission.POST_NOTIFICATIONS), 3)
+            return false
+        } else {
+            txtNotificationPermission.visibility = View.GONE
         }
         requestExactAlarmPermission()
         return true
@@ -327,7 +326,10 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     val mailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                         "mailto","GlucoDataHandler@michel-inside.de", null))
                     mailIntent.putExtra(Intent.EXTRA_SUBJECT, "GlucoDataHander v" + BuildConfig.VERSION_NAME)
-                    startActivity(mailIntent)
+                    mailIntent.putExtra(Intent.EXTRA_TEXT, "")
+                    if (mailIntent.resolveActivity(packageManager) != null) {
+                        startActivity(mailIntent)
+                    }
                     return true
                 }
                 R.id.action_save_mobile_logs -> {

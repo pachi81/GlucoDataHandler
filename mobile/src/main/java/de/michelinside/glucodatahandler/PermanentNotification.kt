@@ -76,6 +76,9 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     private fun createNofitication(context: Context) {
         createNotificationChannel(context)
 
+        Channels.getNotificationManager().cancel(GlucoDataService.NOTIFICATION_ID)
+        Channels.getNotificationManager().cancel(SECOND_NOTIFICATION_ID)
+
         notificationCompat = Notification.Builder(context, ChannelType.MOBILE_SECOND.channelId)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(Utils.getAppIntent(context, MainActivity::class.java, 5, false))
@@ -84,6 +87,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setAutoCancel(false)
             .setShowWhen(true)
             .setColorized(true)
+            .setGroup(ChannelType.MOBILE_SECOND.channelId)
             .setCategory(Notification.CATEGORY_STATUS)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
 
@@ -95,6 +99,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setAutoCancel(false)
             .setShowWhen(true)
             .setColorized(true)
+            .setGroup(ChannelType.MOBILE_FOREGROUND.channelId)
             .setCategory(Notification.CATEGORY_STATUS)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
     }
@@ -155,7 +160,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setContentText(if (withContent) "Delta: " + ReceiveData.getDeltaAsString() else "")
             .build()
 
-        notification.visibility
+        notification.visibility = Notification.VISIBILITY_PUBLIC
         notification.flags = notification.flags or Notification.FLAG_NO_CLEAR
         return notification
     }

@@ -16,8 +16,12 @@
         app:iconSpaceReserved="false"
         app:initialExpandedChildrenCount="0">
         <Preference
-            android:key="source_xdrip_info"
-            android:summary="@string/pref_source_xdrip_info_summary"
+            android:key="source_xdrip_info_1"
+            android:summary="@string/pref_source_xdrip_info_1_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_xdrip_info_2"
+            android:summary="@string/pref_source_xdrip_info_2_summary"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory

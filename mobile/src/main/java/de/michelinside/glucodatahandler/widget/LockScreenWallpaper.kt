@@ -85,14 +85,9 @@ object LockScreenWallpaper : NotifierInterface, SharedPreferences.OnSharedPrefer
         try {
             Log.v(LOG_ID, "updateLockScreen called for bitmap $bitmap")
             val wallpaperManager = WallpaperManager.getInstance(context)
-            if (bitmap != null) {
-                val wallpaper = createWallpaper(bitmap, context)
-                wallpaperManager.setBitmap(wallpaper, null, false, WallpaperManager.FLAG_LOCK)
-                wallpaper?.recycle()
-            } else {
-                // remove wallpaper
-                wallpaperManager.clear()
-            }
+            val wallpaper = if(bitmap != null) createWallpaper(bitmap, context) else null
+            wallpaperManager.setBitmap(wallpaper, null, false, WallpaperManager.FLAG_LOCK)
+            wallpaper?.recycle()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateLockScreen exception: " + exc.message.toString() )
         }
