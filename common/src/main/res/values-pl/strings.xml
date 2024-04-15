@@ -325,6 +325,6 @@
     <string name="activity_main_notification_permission">Wyłączono wyśietlanie powiadomień!!!\nGlucoDataHandler może nie działać poprawnie i nie może pokazywać alarmów!!!\nNaciśnij tutaj, aby przejść bezpośrednio do ustawień uprawnień.</string>
 
     <string name="src_libre_setup_librelink">Brak danych! Najpierw zaakceptuj zaproszenie w aplikacji LibreLinkUp!</string>
-    <string name="prefstatus_bar_notification_colored_icon">Colored status bar icon</string>
-    <string name="pref_status_bar_notification_colored_icon_summary">If your device supports colored status bar icons, you can also deactivate it to use a white item.</string>
+    <string name="prefstatus_bar_notification_colored_icon">Kolorowa ikona w pasku stanu</string>
+    <string name="pref_status_bar_notification_colored_icon_summary">Jeżeli telefon obsługuje kolorowe ikony w pasku stanu, możesz wyłączyć tę opcję, by ikona była biała.</string>
 </resources>
