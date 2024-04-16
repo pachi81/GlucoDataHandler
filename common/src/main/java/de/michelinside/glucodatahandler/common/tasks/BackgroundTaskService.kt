@@ -148,9 +148,12 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     private fun getInterval(): Long {
         var newInterval = -1L
         backgroundTaskList.forEach {
-            if (it.active(elapsedTimeMinute) && newInterval <= 0L || it.getIntervalMinute() < newInterval)
+            if (it.active(elapsedTimeMinute) && newInterval <= 0L || it.getIntervalMinute() < newInterval) {
                 newInterval = it.getIntervalMinute()
+                Log.v(LOG_ID, "New interval $newInterval set from task ${it.javaClass.simpleName}")
+            }
         }
+        Log.v(LOG_ID, "using interval $newInterval")
         return newInterval
     }
 

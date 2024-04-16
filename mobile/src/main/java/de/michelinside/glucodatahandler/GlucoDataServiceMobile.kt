@@ -37,7 +37,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         fun sendLogcatRequest() {
             if(connection != null) {
                 Log.d(LOG_ID, "sendLogcatRequest called")
-                connection!!.sendMessage(NotifySource.LOGCAT_REQUEST, null, filterReiverId = connection!!.pickBestNodeId())
+                connection!!.sendMessage(NotifySource.LOGCAT_REQUEST, null, filterReceiverId = connection!!.pickBestNodeId())
             }
         }
     }

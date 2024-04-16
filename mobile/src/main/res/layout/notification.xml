@@ -22,7 +22,8 @@
         android:layout_height="match_parent"
         android:layout_marginStart="6dp"
         app:srcCompat="@drawable/icon_question"
-        android:contentDescription="@string/info_label_rate" />
+        android:contentDescription="@string/info_label_rate"
+        android:translationZ="2dp" />
 
     <TextView
         android:id="@+id/deltaText"
@@ -31,6 +32,7 @@
         android:layout_marginStart="10dp"
         android:gravity="center_vertical"
         android:textSize="18dp"
+        android:text="Please restart phone"
         android:textColor="@color/text_color"
         tools:ignore="HardcodedText,SpUsage" />
     <LinearLayout android:layout_width="match_parent"

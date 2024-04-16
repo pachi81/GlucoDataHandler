@@ -175,6 +175,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 txtNotificationPermission.visibility = View.GONE
                 PermanentNotification.showNotifications()
             }
+            GlucoDataService.checkForConnectedNodes(true)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
         }
