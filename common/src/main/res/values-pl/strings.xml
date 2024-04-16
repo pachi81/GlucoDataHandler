@@ -29,10 +29,10 @@
     <string name="button_cancel">Anuluj</string>
 
     <string name="alarm_none">-</string>
-    <string name="alarm_very_low">bardzo niski</string>
-    <string name="alarm_low">niski</string>
-    <string name="alarm_high">wysoki</string>
-    <string name="alarm_very_high">bardzo wysoki</string>
+    <string name="alarm_very_low">bardzo nisko</string>
+    <string name="alarm_low">nisko</string>
+    <string name="alarm_high">wysoko</string>
+    <string name="alarm_very_high">bardzo wysoko</string>
 
     <!-- mobile -->
 
@@ -212,7 +212,7 @@
 
     <!-- wear -->
 
-    <string name="forground_notification_descr">Otrzymywanie danych do komplikacji</string>
+    <string name="forground_notification_descr">Odbiór danych do komplikacji</string>
 
     <string name="activity_connected_label">Telefon: połączony (%1$s)</string>
     <string name="activity_disconnected_label">Telefon: rozłączony</string>
