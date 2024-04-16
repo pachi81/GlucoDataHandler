@@ -97,10 +97,14 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
             }
         }
 
-        fun checkForConnectedNodes() {
+        fun checkForConnectedNodes(refreshDataOnly: Boolean = false) {
             try {
-                if (connection!=null)
-                    connection!!.checkForConnectedNodes()
+                Log.d(LOG_ID, "checkForConnectedNodes called for dataOnly=$refreshDataOnly - connection: ${connection!=null}")
+                if (connection!=null) {
+                    if(!refreshDataOnly)
+                        connection!!.checkForConnectedNodes()
+                    connection!!.checkForNodesWithoutData()
+                }
             } catch (exc: Exception) {
                 Log.e(
                     LOG_ID,

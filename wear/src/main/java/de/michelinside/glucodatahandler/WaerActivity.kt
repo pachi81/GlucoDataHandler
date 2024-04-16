@@ -222,6 +222,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 requestNotificationPermission = false
                 GlucoDataServiceWear.start(this, true)
             }
+            GlucoDataService.checkForConnectedNodes(true)
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
