@@ -16,7 +16,7 @@ object InternalNotifier {
     {
         val timeChanged = hasSource(notifier, NotifySource.TIME_VALUE) != sourceFilter.contains(NotifySource.TIME_VALUE) ||
                 hasSource(notifier, NotifySource.OBSOLETE_VALUE) != sourceFilter.contains(NotifySource.OBSOLETE_VALUE)
-        Log.i(LOG_ID, "add notifier " + notifier.toString() + " - filter: " + sourceFilter.toString() )
+        Log.i(LOG_ID, "add notifier $notifier - filter: $sourceFilter - timechanged: $timeChanged")
         notifiers[notifier] = sourceFilter
         Log.d(LOG_ID, "notifier size: " + notifiers.size.toString() )
         if(timeChanged)
@@ -64,6 +64,7 @@ object InternalNotifier {
     }
 
     private fun checkTimeNotifierChanged(context: Context) {
+        Log.v(LOG_ID, "checkTimeNotifierChanged called cur-time-count=$timeNotifierCount - cur-obsolete-count=$obsoleteNotifierCount")
         var trigger = false
         val newTimeCount = getNotifierCount(NotifySource.TIME_VALUE)
         if(timeNotifierCount != newTimeCount) {
@@ -73,7 +74,7 @@ object InternalNotifier {
             if(curCount == 0 || newTimeCount == 0)
                 trigger = true
         }
-        val newObsoleteCount = getNotifierCount(NotifySource.TIME_VALUE)
+        val newObsoleteCount = getNotifierCount(NotifySource.OBSOLETE_VALUE)
         if(obsoleteNotifierCount != newObsoleteCount) {
             Log.d(LOG_ID, "Obsolete notifier have changed from $obsoleteNotifierCount to $newObsoleteCount")
             val curCount = obsoleteNotifierCount
