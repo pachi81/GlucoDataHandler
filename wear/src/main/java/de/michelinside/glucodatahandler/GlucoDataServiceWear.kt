@@ -68,7 +68,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
     override fun getNotification(): Notification {
         Channels.createNotificationChannel(this, ChannelType.WEAR_FOREGROUND)
 
-        val pendingIntent = Utils.getAppIntent(this, WaerActivity::class.java, 11, false)
+        val pendingIntent = Utils.getAppIntent(this, WearActivity::class.java, 11, false)
 
         return Notification.Builder(this, ChannelType.WEAR_FOREGROUND.channelId)
             .setContentTitle(getString(CR.string.forground_notification_descr))

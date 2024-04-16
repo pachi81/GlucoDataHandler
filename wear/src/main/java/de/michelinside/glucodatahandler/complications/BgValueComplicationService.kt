@@ -171,7 +171,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
             var launchIntent: Intent? = packageManager.getLaunchIntentForPackage("tk.glucodata")
             if (launchIntent == null) {
                 Log.d(LOG_ID, "Juggluco not found, use own one")
-                launchIntent = Intent(this, WaerActivity::class.java)
+                launchIntent = Intent(this, WearActivity::class.java)
             }
             launchIntent.action = Intent.ACTION_MAIN
             launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
@@ -181,7 +181,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
                 launchIntent,
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )*/
-            return Utils.getAppIntent(applicationContext, WaerActivity::class.java, 2, useExternalApp)
+            return Utils.getAppIntent(applicationContext, WearActivity::class.java, 2, useExternalApp)
         }
     }
 

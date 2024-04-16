@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/box_inset_layout_padding"
+    tools:context=".settings.SourcesActivity"
+    tools:deviceIds="wear">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:padding="10dp">
+        <requestFocus/>
+        <LinearLayout
+            android:id="@+id/frameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:gravity="center|top"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            app:layout_boxedEdges="all">
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchLibreSource"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/src_cat_libreview"
+                android:textAlignment="viewStart" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchNightscoutSource"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/src_cat_nightscout"
+                android:textAlignment="viewStart" />
+    </LinearLayout>
+    </ScrollView>
+</androidx.wear.widget.BoxInsetLayout>

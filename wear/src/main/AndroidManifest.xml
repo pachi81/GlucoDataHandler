@@ -35,7 +35,7 @@
             android:value="true" />
 
         <activity
-            android:name=".WaerActivity"
+            android:name=".WearActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:taskAffinity="">
@@ -44,6 +44,39 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".settings.SourcesActivity"
+            android:label="@string/menu_sources"
+            android:launchMode="singleTop"
+            android:parentActivityName=".WearActivity"
+            android:theme="@style/Theme.GlucoDataHandler"
+            android:taskAffinity="">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".WearActivity" />
+        </activity>
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:label="@string/menu_settings"
+            android:launchMode="singleTop"
+            android:parentActivityName=".WearActivity"
+            android:theme="@style/Theme.GlucoDataHandler"
+            android:taskAffinity="">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".WearActivity" />
+        </activity>
+        <activity
+            android:name=".settings.AlarmsActivity"
+            android:label="@string/menu_alarms"
+            android:launchMode="singleTop"
+            android:parentActivityName=".WearActivity"
+            android:theme="@style/Theme.GlucoDataHandler"
+            android:taskAffinity="">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".WearActivity" />
         </activity>
         <receiver android:name=".common.receiver.GlucoseDataReceiver" android:enabled="true" android:exported="true"
             tools:ignore="ExportedReceiver">
