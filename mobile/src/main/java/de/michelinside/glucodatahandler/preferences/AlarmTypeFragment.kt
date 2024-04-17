@@ -4,10 +4,13 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.media.MediaScannerConnection
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.DocumentsContract
 import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -30,7 +33,7 @@ import de.michelinside.glucodatahandler.notification.AlarmNotification
 
 class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
     private val LOG_ID = "GDH.AlarmTypeFragment"
-    //private lateinit var soundSaver: ActivityResultLauncher<Intent>
+    private lateinit var soundSaver: ActivityResultLauncher<Intent>
     private var ringtoneSelecter: ActivityResultLauncher<Intent>? = null
     private var alarmType = AlarmType.NONE
     private var pref_prefix = ""
@@ -109,7 +112,7 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
         Log.v(LOG_ID, "createAlarmPrefSettings for alarm $alarmType with prefix $pref_prefix")
         updatePreferenceKeys(pref_prefix)
         updateData(pref_prefix, alarmType)
-        /*
+
         soundSaver = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             Log.v(LOG_ID, "$alarmType result ${result.resultCode}: ${result.data}")
             if (result.resultCode == Activity.RESULT_OK) {
@@ -119,10 +122,10 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
                     AlarmNotification.saveAlarm(requireContext(), alarmType, uri)
                 }
             }
-        }*/
+        }
         setAlarmTest(pref_prefix + "test", alarmType)
         //setAlarmSettings(pref_prefix + "settings", alarmType)
-        //setAlarmSave(pref_prefix + "save_sound", alarmType, soundSaver)
+        setAlarmSave(pref_prefix + "save_sound", alarmType, soundSaver)
         setRingtoneSelect(pref_prefix + "custom_sound", Uri.parse(preferenceManager.sharedPreferences!!.getString(pref_prefix + "custom_sound", "")))
     }
 
@@ -211,42 +214,43 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
             }
         }
 
-        private fun getAlarmFileName(resId: Int): String {
-            val name = requireContext().resources.getResourceEntryName(resId).replace("gdh", "GDH").replace("_", " ")
-            return "$name.mp3"
-        }
-        private fun setAlarmSave(
-            preference: String,
-            alarmType: AlarmType,
-            soundSaver: ActivityResultLauncher<Intent>
-        ) {
-            val pref = findPreference<Preference>(preference)
-            val resId = AlarmNotification.getAlarmSoundRes(alarmType)
-            if (pref != null && resId != null) {
-                pref.setOnPreferenceClickListener {
-                    var alarmUri: Uri? = null
-                    MediaScannerConnection.scanFile(requireContext(), arrayOf(
-                        Environment.getExternalStoragePublicDirectory(
-                            Environment.DIRECTORY_NOTIFICATIONS
-                        ).absolutePath), null
-                    ) { s: String, uri: Uri ->
-                        Log.v(LOG_ID, "Set URI $uri for path $s")
-                        alarmUri = uri
-                    }
-                    Log.d(LOG_ID, "Save sound for $alarmType to ${alarmUri}")
-                    val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-                        addCategory(Intent.CATEGORY_OPENABLE)
-                        type = "audio/mpeg"
-                        val fileName = getAlarmFileName(resId)
-                        putExtra(Intent.EXTRA_TITLE, fileName)
-                        putExtra(DocumentsContract.EXTRA_INITIAL_URI, alarmUri)
-                    }
-                    soundSaver.launch(intent)
-                    true
+    */
+    private fun getAlarmFileName(resId: Int): String {
+        val name = requireContext().resources.getResourceEntryName(resId).replace("gdh", "GDH").replace("_", " ")
+        return "$name.mp3"
+    }
+    private fun setAlarmSave(
+        preference: String,
+        alarmType: AlarmType,
+        soundSaver: ActivityResultLauncher<Intent>
+    ) {
+        val pref = findPreference<Preference>(preference)
+        val resId = AlarmNotification.getAlarmSoundRes(alarmType)
+        if (pref != null && resId != null) {
+            pref.setOnPreferenceClickListener {
+                var alarmUri: Uri? = null
+                MediaScannerConnection.scanFile(requireContext(), arrayOf(
+                    Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_NOTIFICATIONS
+                    ).absolutePath), null
+                ) { s: String, uri: Uri ->
+                    Log.v(LOG_ID, "Set URI $uri for path $s")
+                    alarmUri = uri
                 }
+                Log.d(LOG_ID, "Save sound for $alarmType to ${alarmUri}")
+                val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "audio/mpeg"
+                    val fileName = getAlarmFileName(resId)
+                    putExtra(Intent.EXTRA_TITLE, fileName)
+                    putExtra(DocumentsContract.EXTRA_INITIAL_URI, alarmUri)
+                }
+                soundSaver.launch(intent)
+                true
             }
         }
-    */
+    }
+
     private fun setRingtoneSelect(preference: String, curUri: Uri?) {
         Log.v(LOG_ID, "setRingtoneSelect called for preference $preference with uri $curUri" )
         val pref = findPreference<Preference>(preference)

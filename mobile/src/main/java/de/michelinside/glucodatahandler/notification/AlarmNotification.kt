@@ -7,10 +7,13 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Paint
+import android.net.Uri
 import android.os.Build
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
+import android.widget.Toast
 import de.michelinside.glucodatahandler.MainActivity
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
@@ -23,6 +26,7 @@ import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBas
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
+import java.io.FileOutputStream
 
 object AlarmNotification : AlarmNotificationBase() {
     private var noAlarmOnWearConnected = false
@@ -139,6 +143,36 @@ object AlarmNotification : AlarmNotificationBase() {
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
+        }
+    }
+
+    fun saveAlarm(context: Context, alarmType: AlarmType, uri: Uri) {
+        try {
+            Log.v(LOG_ID, "saveAlarm called for $alarmType to $uri")
+            val resId = getAlarmSoundRes(alarmType)
+            if (resId != null) {
+                Thread {
+                    context.contentResolver.openFileDescriptor(uri, "w")?.use {
+                        FileOutputStream(it.fileDescriptor).use { outputStream ->
+                            val inputStream = context.resources.openRawResource(resId)
+                            val buffer = ByteArray(4 * 1024) // or other buffer size
+                            var read: Int
+                            while (inputStream.read(buffer).also { rb -> read = rb } != -1) {
+                                outputStream.write(buffer, 0, read)
+                            }
+                            Log.v(LOG_ID, "flush")
+                            outputStream.flush()
+                            outputStream.close()
+                        }
+                    }
+                    val text = context.resources.getText(CR.string.alarm_saved)
+                    Handler(GlucoDataService.context!!.mainLooper).post {
+                        Toast.makeText(GlucoDataService.context!!, text, Toast.LENGTH_SHORT).show()
+                    }
+                }.start()
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Saving alarm to file exception: " + exc.message.toString() )
         }
     }
 }

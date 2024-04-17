@@ -649,37 +649,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             else -> 0
         }
     }
-/*
-    fun saveAlarm(context: Context, alarmType: AlarmType, uri: Uri) {
-        try {
-            Log.v(LOG_ID, "saveAlarm called for $alarmType to $uri")
-            val resId = getAlarmSoundRes(alarmType)
-            if (resId != null) {
-                Thread {
-                    context.contentResolver.openFileDescriptor(uri, "w")?.use {
-                        FileOutputStream(it.fileDescriptor).use { outputStream ->
-                            val inputStream = context.resources.openRawResource(resId)
-                            val buffer = ByteArray(4 * 1024) // or other buffer size
-                            var read: Int
-                            while (inputStream.read(buffer).also { rb -> read = rb } != -1) {
-                                outputStream.write(buffer, 0, read)
-                            }
-                            Log.v(LOG_ID, "flush")
-                            outputStream.flush()
-                            outputStream.close()
-                        }
-                    }
-                    val text = context.resources.getText(CR.string.alarm_saved)
-                    Handler(GlucoDataService.context!!.mainLooper).post {
-                        Toast.makeText(GlucoDataService.context!!, text, Toast.LENGTH_SHORT).show()
-                    }
-                }.start()
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "Saving alarm to file exception: " + exc.message.toString() )
-        }
-    }
-*/
+
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)

@@ -61,4 +61,9 @@
             android:title="@string/alarm_test"
             android:summary="@string/alarm_test_summary"
             app:iconSpaceReserved="false" />
+        <Preference
+            android:key="save_sound"
+            android:title="@string/alarm_save_sound"
+            android:summary="@string/alarm_save_sound_summary"
+            app:iconSpaceReserved="false" />
 </PreferenceScreen>
