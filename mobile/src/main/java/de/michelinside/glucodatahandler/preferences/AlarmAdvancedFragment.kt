@@ -76,8 +76,8 @@ class AlarmAdvancedFragment : PreferenceFragmentCompat(), SharedPreferences.OnSh
         }
         val aaPref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED)
         if(aaPref != null) {
-            aaPref.isVisible = Utils.isPackageAvailable(requireContext(), Constants.PACKAGE_GLUCODATAAUTO)
-            if(!aaPref.isVisible && aaPref.isChecked) {
+            aaPref.isEnabled = Utils.isGlucoDataAutoAvailable(requireContext())
+            if(!aaPref.isEnabled && aaPref.isChecked) {
                 disableSwitch(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED)
             }
         }

@@ -38,7 +38,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             setupReceivers(Constants.XDRIP_ACTION_GLUCOSE_READING, Constants.SHARED_PREF_XDRIP_RECEIVERS)
             setupReceivers(Constants.XDRIP_BROADCAST_ACTION, Constants.SHARED_PREF_XDRIP_BROADCAST_RECEIVERS)
 
-            if (Utils.isPackageAvailable(requireContext(), Constants.PACKAGE_GLUCODATAAUTO)) {
+            if (Utils.isGlucoDataAutoAvailable(requireContext())) {
                 val sendToGDA = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO)
                 sendToGDA!!.isVisible = true
             } else {

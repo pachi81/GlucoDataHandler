@@ -14,6 +14,7 @@ import android.provider.Settings
 import android.util.Log
 import android.util.TypedValue
 import android.widget.Toast
+import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
 import java.io.FileOutputStream
@@ -121,6 +122,14 @@ object Utils {
 
     fun isPackageAvailable(context: Context, packageName: String): Boolean {
         return context.packageManager.getLaunchIntentForPackage(packageName) != null
+    }
+
+    private var gdaAvailable = false
+    fun isGlucoDataAutoAvailable(context: Context): Boolean {
+        if(!gdaAvailable) {
+            gdaAvailable = isPackageAvailable(context, Constants.PACKAGE_GLUCODATAAUTO)
+        }
+        return gdaAvailable
     }
 
     fun getBackgroundColor(transparancyFactor: Int) : Int {
