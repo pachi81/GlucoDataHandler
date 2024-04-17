@@ -24,7 +24,17 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
 
     init {
         Log.d(LOG_ID, "init called")
-        InternalNotifier.addNotifier(this, TaskerDataReceiver, mutableSetOf(NotifySource.BROADCAST,NotifySource.IOB_COB_CHANGE,NotifySource.MESSAGECLIENT,NotifySource.OBSOLETE_VALUE))
+        InternalNotifier.addNotifier(
+            this,
+            TaskerDataReceiver,
+            mutableSetOf(
+                NotifySource.BROADCAST,
+                NotifySource.IOB_COB_CHANGE,
+                NotifySource.MESSAGECLIENT,
+                NotifySource.OBSOLETE_VALUE,
+                NotifySource.ALARM_TRIGGER
+            )
+        )
     }
 
     companion object {
