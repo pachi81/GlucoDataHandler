@@ -32,7 +32,7 @@
                 android:id="@+id/switchVibration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/activity_switch_notification"
+                android:text="@string/alarm_vibrate_only"
                 android:textAlignment="viewStart" />
 
             <androidx.appcompat.widget.SwitchCompat

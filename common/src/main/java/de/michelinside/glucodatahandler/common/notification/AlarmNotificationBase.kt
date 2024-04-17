@@ -2,7 +2,6 @@ package de.michelinside.glucodatahandler.common.notification
 
 import android.app.AlarmManager
 import android.app.Notification
-import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -39,7 +38,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     protected val LOG_ID = "GDH.AlarmNotification"
     private var enabled: Boolean = false
     private var addSnooze: Boolean = false
-    val ALARM_GROUP_ID = "alarm_group"
     private val VERY_LOW_NOTIFICATION_ID = 801
     private val LOW_NOTIFICATION_ID = 802
     private val HIGH_NOTIFICATION_ID = 803
@@ -303,20 +301,27 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     private fun createNotificationChannel(context: Context) {
         Log.v(LOG_ID, "createNotificationChannel called")
-        val groupName = context.resources.getString(CR.string.alarm_notification_group_name)
-        Channels.getNotificationManager(context).createNotificationChannelGroup(
-            NotificationChannelGroup(ALARM_GROUP_ID, groupName))
-        val channel = Channels.getNotificationChannel(context, ChannelType.ALARM, true)
-        channel.group = ALARM_GROUP_ID
-        channel.enableVibration(true)
-        channel.vibrationPattern = longArrayOf(0, 400)
+
+        val channel = Channels.getNotificationChannel(context, ChannelType.ALARM, false)
+
+        val audioAttributes = AudioAttributes.Builder()
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .setUsage(AudioAttributes.USAGE_ALARM)
+            .build()
+
+        channel.setSound(getUri(CR.raw.silence, context), audioAttributes)
+        channel.enableVibration(false)
+
         Channels.getNotificationManager(context).createNotificationChannel(channel)
+
         //TODO: delete
         Channels.deleteNotificationChannel(context, ChannelType.LOW_ALARM)
         Channels.deleteNotificationChannel(context, ChannelType.VERY_LOW_ALARM)
         Channels.deleteNotificationChannel(context, ChannelType.HIGH_ALARM)
         Channels.deleteNotificationChannel(context, ChannelType.VERY_HIGH_ALARM)
         Channels.deleteNotificationChannel(context, ChannelType.OBSOLETE_ALARM)
+        Channels.getNotificationManager(context).deleteNotificationChannel("gdh_alarm_notification_01")
+
     }
 
     protected fun createSnoozeIntent(context: Context, snoozeTime: Long, noticationId: Int): PendingIntent {

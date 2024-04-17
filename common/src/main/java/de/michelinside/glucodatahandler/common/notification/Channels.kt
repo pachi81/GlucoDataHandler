@@ -19,7 +19,7 @@ enum class ChannelType(val channelId: String, val nameResId: Int, val descrResId
     HIGH_ALARM("high_alarm", R.string.high_alarm_notification_name, R.string.high_alarm_notification_descr, NotificationManager.IMPORTANCE_HIGH ),
     VERY_HIGH_ALARM("very_high_alarm", R.string.very_high_alarm_notification_name, R.string.very_high_alarm_notification_descr, NotificationManager.IMPORTANCE_MAX ),
     OBSOLETE_ALARM("obsolete_alarm", R.string.obsolete_alarm_notification_name, R.string.obsolete_alarm_notification_descr, NotificationManager.IMPORTANCE_HIGH ),
-    ALARM("gdh_alarm_notification_01", R.string.alarm_notification_name, R.string.alarm_notification_descr, NotificationManager.IMPORTANCE_MAX );
+    ALARM("gdh_alarm_notification_sound", R.string.alarm_notification_name, R.string.alarm_notification_descr, NotificationManager.IMPORTANCE_MAX );
 }
 object Channels {
     private var notificationMgr: NotificationManager? = null

@@ -217,7 +217,6 @@
     <string name="activity_disconnected_label">Handy: getrennt</string>
 
     <string name="activity_switch_foreground">Vordergrund</string>
-    <string name="activity_switch_notification">Vibrieren</string>
     <string name="activity_switch_colored_aod">Farbiges AOD</string>
     <string name="activity_large_arrow_icon">Großer Trendpfeil</string>
 
@@ -321,7 +320,6 @@
     <string name="activity_main_notification_permission">!!!Die Anzeige von Benachrichtigungen ist deaktiviert!!!\nKorrekte Funktionalität von GlucoDataHandler ist nicht gewährleistet und es können keine Alarme angezeigt werden!!!\nBitte hier drücken, um zu der entsprechenden Berechtigungseinstellung zu gelangen.</string>
     <string name="prefstatus_bar_notification_colored_icon">Farbiges Statusbar Icon</string>
     <string name="pref_status_bar_notification_colored_icon_summary">Falls dein Gerät ein farbiges Statusbar Icon unterstützt, kannst du es auch deaktivieren, um ein weißes Icon zu benutzen.</string>
-    <string name="alarm_notification_group_name">Alarme</string>
     <string name="menu_alarms">Alarme</string>
     <string name="alarm_interval">Intervall</string>
     <string name="alarm_interval_summary_low">Minimale Zeit in Minuten zwischen den Benachrichtigungen für diesen Alarm.\nInformation: es gibt erst eine neue Benachrichtigung nach diesem Interval, wenn das Delta negativ ist.</string>
@@ -340,7 +338,7 @@
     <string name="snooze">Schlummern</string>
     <string name="alarm_cat_all">Alle Alarme</string>
     <string name="alarm_notifications_enabled">Alarm Benachrichtigungen</string>
-    <string name="alarm_notifications_enabled_summary_on">Alarm Benachrichtigungen sind aktiv auf dem Telefon.</string>
+    <string name="alarm_notifications_enabled_summary_on">Alarm Benachrichtigungen sind aktiv auf dem Telefon.\nHinweise: die Alarme benutzen die Alarm-/Weckerlautstärke Einstellungen vom Telefon.</string>
     <string name="alarm_notifications_enabled_summary_off">Alarm Benachrichtigungen sind ausgeschaltet auf dem Telefon.</string>
     <string name="stop_snooze">Stop</string>
     <string name="very_low_alarm_text">Sehr tief!</string>
@@ -400,5 +398,6 @@
     <string name="alarm_sound_delay">Verzögerung des Tons</string>
     <string name="alarm_sound_delay_summary">Zeit in Sekunden, bevor der Benachrichtigungston gestartet wird.\nWenn kein Ton ausgewählt wurde, wird die Vibration solange erzeugt.</string>
     <string name="pref_cat_alarm_vibration_sound">Töne und Vibration</string>
+    <string name="alarm_vibrate_only">Nur vibrieren</string>
 
 </resources>

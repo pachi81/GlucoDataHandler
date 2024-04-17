@@ -219,7 +219,6 @@
 
     <string name="activity_switch_foreground">Primeiro plano</string>
     <string name="activity_large_arrow_icon">Seta de tendência grande</string>
-    <string name="activity_switch_notification">Vibração</string>
     <string name="activity_switch_colored_aod">Colorido AOD</string>
 
     <!-- complications -->
@@ -315,8 +314,6 @@
     <string name="request_exact_alarm_title">Alarmes &amp;  permissão de lembretes</string>
     <string name="activity_main_schedule_exact_alarm">O alarme de agendamento exato está desabilitado!!!\nGlucoDataHandler pode não funcionar corretamente!!!\nPressione aqui para ir direto para a configuração de permissão.</string>
 
-    <!-- New  -->
-
     <string name="src_libre_patient">Paciente</string>
     <string name="src_libre_patient_summary">Se houver mais de um paciente conectado à conta libre, selecione o paciente para o qual receberá os dados.</string>
     <string name="pref_cat_locksreen_wallpaper">Papel de parede da tela de bloqueio</string>
@@ -330,6 +327,8 @@
     <string name="prefstatus_bar_notification_colored_icon">Ícone colorido da barra de status</string>
     <string name="pref_status_bar_notification_colored_icon_summary">Se o seu dispositivo suportar ícones coloridos da barra de status, você também poderá desativá-lo para usar um item branco.</string>
 
+    <!-- New  -->
+
     <string name="menu_alarms">Alarms</string>
     <string name="alarm_interval">Interval</string>
     <string name="alarm_interval_summary_low">Minimum interval in minutes between notifications for the this alarm type.\nInformation: there will only a new notification after the time has elapsed, if the delta is negative.</string>
@@ -342,14 +341,13 @@
     <string name="alarm_test_summary">Press here to trigger a notification after 3 seconds for this alarm type.</string>
     <string name="alarm_settings">Settings</string>
     <string name="alarm_settings_summary">Press here to go to settings for notification channel for this alarm.\nThere you can change all related settings.</string>
-    <string name="alarm_notification_group_name">Alarms</string>
     <string name="alarm_save_sound">Save sound</string>
     <string name="alarm_save_sound_summary">Press here, if you want to save the default alarm sound to file system.</string>
     <string name="alarm_saved">Alarm saved!</string>
     <string name="snooze">Snooze</string>
     <string name="alarm_cat_all">All alarms</string>
     <string name="alarm_notifications_enabled">Alarm Notifications</string>
-    <string name="alarm_notifications_enabled_summary_on">Alarm notifications are active on phone.</string>
+    <string name="alarm_notifications_enabled_summary_on">Alarm notifications are active on phone.\nNote: alarms using alarm volume of the phone.</string>
     <string name="alarm_notifications_enabled_summary_off">Alarm notifications are inactive on phone.</string>
     <string name="stop_snooze">Stop</string>
     <string name="very_low_alarm_text">Very low!</string>
@@ -410,4 +408,5 @@
     <string name="alarm_sound_delay">Sound delay</string>
     <string name="alarm_sound_delay_summary">Time in seconds before the sound is played.\nIt will vibrate the whole time, even if there is no sound selected.</string>
     <string name="pref_cat_alarm_vibration_sound">Sound and vibration</string>
+    <string name="alarm_vibrate_only">Vibrate only</string>
 </resources>
