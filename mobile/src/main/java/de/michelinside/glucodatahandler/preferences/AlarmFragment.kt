@@ -2,14 +2,16 @@ package de.michelinside.glucodatahandler.preferences
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Build
+import android.provider.Settings
 import android.os.Bundle
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
+import de.michelinside.glucodatahandler.Dialogs
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
@@ -34,6 +36,9 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
             settingsChanged = false
             preferenceManager.sharedPreferencesName = Constants.SHARED_PREF_TAG
             setPreferencesFromResource(R.xml.alarms, rootKey)
+            if(!AlarmNotification.channelActive(requireContext())) {
+                Log.e(LOG_ID, "Notification disabled!!!")
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
         }
@@ -80,16 +85,15 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
         try {
             val prefAlarmEnabled = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED)
             if(prefAlarmEnabled != null) {
-                prefAlarmEnabled.isEnabled = Utils.checkPermission(requireContext(), android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)
-                if(!prefAlarmEnabled.isEnabled && prefAlarmEnabled.isChecked) {
+                if(prefAlarmEnabled.isChecked && !AlarmNotification.channelActive(requireContext())) {
                     prefAlarmEnabled.isChecked = false
                     with(preferenceManager.sharedPreferences!!.edit()) {
                         putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
                         apply()
                     }
                 }
-
             }
+
             updateAlarmCat(Constants.SHARED_PREF_ALARM_VERY_LOW)
             updateAlarmCat(Constants.SHARED_PREF_ALARM_LOW)
             updateAlarmCat(Constants.SHARED_PREF_ALARM_HIGH)
@@ -152,10 +156,24 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
         try {
+            when(key) {
+                Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED -> {
+                    if (sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false) && !AlarmNotification.channelActive(requireContext())) {
+                        requestChannelActivation()
+                    }
+                }
+            }
             if(AlarmHandler.alarmPreferencesToSend.contains(key))
                 settingsChanged = true
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
+        }
+    }
+    private fun requestChannelActivation() {
+        Dialogs.showOkDialog(requireContext(), resources.getString(CR.string.permission_alarm_notification_title), resources.getString(CR.string.permission_alarm_notification_message)) { _, _ ->
+            val intent: Intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                .putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
+            startActivity(intent)
         }
     }
 }

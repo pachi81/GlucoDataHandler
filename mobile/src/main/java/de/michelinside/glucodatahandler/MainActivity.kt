@@ -3,7 +3,6 @@ package de.michelinside.glucodatahandler
 import android.app.Activity
 import android.app.AlarmManager
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Paint
@@ -26,7 +25,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuCompat
 import androidx.preference.PreferenceManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
@@ -188,13 +186,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         }
 
 
-    private fun showPermissionRationaleDialog(title: String, message: String, okListener: DialogInterface.OnClickListener) {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(title)
-            .setMessage(message)
-            .setPositiveButton(resources.getText(CR.string.button_ok), okListener)
-            .show()
-    }
     fun requestPermission() : Boolean {
         requestNotificationPermission = false
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
@@ -209,7 +200,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }*/
             if (this.shouldShowRequestPermissionRationale(
                     android.Manifest.permission.POST_NOTIFICATIONS)) {
-                showPermissionRationaleDialog(resources.getString(CR.string.permission_notification_title), resources.getString(CR.string.permission_notification_message)) { _, _ -> requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS) }
+                Dialogs.showOkDialog(this, resources.getString(CR.string.permission_notification_title), resources.getString(CR.string.permission_notification_message)) { _, _ -> requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS) }
             } else {
                 this.requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 3)
             }
@@ -428,7 +419,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun toggleAlarm() {
         try {
             val state = AlarmNotification.getAlarmState(this)
-            if(Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
+            if(AlarmNotification.channelActive(this)) {
                 Log.v(LOG_ID, "toggleAlarm called for state $state")
                 when (state) {
                     AlarmState.SNOOZE -> AlarmHandler.setSnooze(0)  // disable snooze
@@ -446,10 +437,15 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                         }
                     }
                 }
-            } else if(state != AlarmState.DISABLED) {
+            } else {
                 with(sharedPref.edit()) {
                     putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
                     apply()
+                }
+                Dialogs.showOkDialog(this, resources.getString(CR.string.permission_alarm_notification_title), resources.getString(CR.string.permission_alarm_notification_message)) { _, _ ->
+                    val intent: Intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                        .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
+                    startActivity(intent)
                 }
             }
             updateAlarmIcon()
@@ -460,6 +456,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateAlarmIcon() {
         try {
+            if(!AlarmNotification.channelActive(this)) {
+                with(sharedPref.edit()) {
+                    putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
+                    apply()
+                }
+            }
             val state = AlarmNotification.getAlarmState(this)
             Log.v(LOG_ID, "updateAlarmIcon called for state $state")
             if(alarmIcon != null) {

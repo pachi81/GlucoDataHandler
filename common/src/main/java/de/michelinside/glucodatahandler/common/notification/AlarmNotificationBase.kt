@@ -95,6 +95,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     fun getAlarmState(context: Context): AlarmState {
         var state = AlarmState.currentState(context)
+        if(state == AlarmState.DISABLED || !channelActive(context))
+            return AlarmState.DISABLED
         if(state == AlarmState.ACTIVE && (!active || !alarmNotificationActive)) {
             state = AlarmState.INACTIVE
         }
@@ -217,7 +219,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     fun triggerNotification(alarmType: AlarmType, context: Context, forTest: Boolean = false) {
         try {
             Log.v(LOG_ID, "triggerNotification called for $alarmType - active=$active - forTest=$forTest")
-            if (active || forTest) {
+            if (getAlarmState(context) == AlarmState.ACTIVE || forTest) {
                 stopCurrentNotification(context)
                 curNotification = getNotificationId(alarmType)
                 retriggerCount = 0
@@ -510,7 +512,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
     }
 
-    open fun getSoundMode(alarmType: AlarmType, context: Context): SoundMode {val channelId = getChannelId()
+    open fun getSoundMode(alarmType: AlarmType, context: Context): SoundMode {
+        val channelId = getChannelId()
         val channel = Channels.getNotificationManager().getNotificationChannel(channelId)
         Log.d(LOG_ID, "Channel: prio=${channel.importance}")
         if(channel.importance >= NotificationManager.IMPORTANCE_DEFAULT) {
@@ -520,6 +523,15 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         } else if(channel.importance == NotificationManager.IMPORTANCE_NONE)
             return SoundMode.OFF
         return SoundMode.SILENT
+    }
+
+    fun channelActive(context: Context): Boolean {
+        if(Utils.checkPermission(context, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
+            val channel = Channels.getNotificationManager(context).getNotificationChannel(getChannelId())
+            Log.d(LOG_ID, "Channel: prio=${channel.importance}")
+            return (channel.importance > NotificationManager.IMPORTANCE_NONE)
+        }
+        return false
     }
 
     protected fun checkRecreateSound() {

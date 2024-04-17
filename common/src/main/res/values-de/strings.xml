@@ -399,5 +399,7 @@
     <string name="alarm_sound_delay_summary">Zeit in Sekunden, bevor der Benachrichtigungston gestartet wird.\nWenn kein Ton ausgewählt wurde, wird die Vibration solange erzeugt.</string>
     <string name="pref_cat_alarm_vibration_sound">Töne und Vibration</string>
     <string name="alarm_vibrate_only">Nur vibrieren</string>
+    <string name="permission_alarm_notification_title">Benachrichtigung deaktiviert!</string>
+    <string name="permission_alarm_notification_message">Um Alarme zu nutzen, muss die Benachrichtigungkategorie für Alarme aktiv sein!\nNachdem Drücken von OK werden Sie zu den Benachrichtigungseinstellung weitergeleitet.\nBitte aktivieren Sie dort die Benachrichtigungskategorie für Alarme.</string>
 
 </resources>
