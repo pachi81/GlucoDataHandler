@@ -22,9 +22,10 @@
             android:layout_height="0dp"
             android:orientation="vertical"
             android:gravity="center|top"
-            android:layout_marginTop="30dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
+            android:paddingTop="30dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="80dp"
             app:layout_boxedEdges="all">
 
             <androidx.appcompat.widget.SwitchCompat

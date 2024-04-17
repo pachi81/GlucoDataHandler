@@ -317,11 +317,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         Channels.deleteNotificationChannel(context, ChannelType.HIGH_ALARM)
         Channels.deleteNotificationChannel(context, ChannelType.VERY_HIGH_ALARM)
         Channels.deleteNotificationChannel(context, ChannelType.OBSOLETE_ALARM)
-        Channels.getNotificationManager(context).deleteNotificationChannel("test_alarm_5")
-        Channels.getNotificationManager(context).deleteNotificationChannel("test_alarm_4")
-        Channels.getNotificationManager(context).deleteNotificationChannel("test_alarm_3")
-        Channels.getNotificationManager(context).deleteNotificationChannel("gdh_alarm_notification")
-        Channels.getNotificationManager(context).deleteNotificationChannel("gdh_alarm_notification_test_01")
     }
 
     protected fun createSnoozeIntent(context: Context, snoozeTime: Long, noticationId: Int): PendingIntent {
@@ -341,9 +336,12 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         return PendingIntent.getBroadcast(context, 888, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
-    protected fun createAction(context: Context, title: String, snoozeTime: Long, noticationId: Int): Notification.Action {
-        return Notification.Action.Builder(null, title, createSnoozeIntent(context, snoozeTime, noticationId)).build()
+    protected fun createSnoozeAction(context: Context, title: String, snoozeTime: Long, notificationId: Int): Notification.Action {
+        return Notification.Action.Builder(null, title, createSnoozeIntent(context, snoozeTime, notificationId)).build()
+    }
 
+    protected fun createStopAction(context: Context, title: String, notificationId: Int): Notification.Action {
+        return Notification.Action.Builder(null, title, createStopIntent(context, notificationId)).build()
     }
 
     abstract fun buildNotification(notificationBuilder: Notification.Builder, context: Context, alarmType: AlarmType)
@@ -628,7 +626,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
     }
 
-    private fun getTriggerTime(alarmType: AlarmType, context: Context): Int {
+    fun getTriggerTime(alarmType: AlarmType, context: Context): Int {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         return when(alarmType) {
             AlarmType.VERY_LOW -> sharedPref.getInt(Constants.SHARED_PREF_ALARM_VERY_LOW_RETRIGGER, 0)

@@ -33,13 +33,15 @@ object AlarmNotificationWear : AlarmNotificationBase() {
         context: Context,
         alarmType: AlarmType
     ) {
+        val extender = Notification.WearableExtender()
+        extender.addAction(createStopAction(context, context.resources.getString(CR.string.btn_dismiss), getNotificationId(alarmType)))
         if (getAddSnooze()) {
-            notificationBuilder.extend(Notification.WearableExtender()
-                .addAction(createAction(context, context.getString(CR.string.snooze) + ": 60", 60L, getNotificationId(alarmType)))
-                .addAction(createAction(context, context.getString(CR.string.snooze) + ": 90", 90L, getNotificationId(alarmType)))
-                .addAction(createAction(context, context.getString(CR.string.snooze) + ": 120", 120L, getNotificationId(alarmType)))
-            )
+            extender
+                .addAction(createSnoozeAction(context, context.getString(CR.string.snooze) + ": 60", 60L, getNotificationId(alarmType)))
+                .addAction(createSnoozeAction(context, context.getString(CR.string.snooze) + ": 90", 90L, getNotificationId(alarmType)))
+                .addAction(createSnoozeAction(context, context.getString(CR.string.snooze) + ": 120", 120L, getNotificationId(alarmType)))
         }
+        notificationBuilder.extend(extender)
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {

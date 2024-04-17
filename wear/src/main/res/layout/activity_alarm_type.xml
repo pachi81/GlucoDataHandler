@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/box_inset_layout_padding"
-    tools:context=".settings.SettingsActivity"
+    tools:context=".settings.AlarmTypeActivity"
     tools:deviceIds="wear">
 
     <ScrollView
@@ -28,38 +28,43 @@
             android:paddingBottom="80dp"
             app:layout_boxedEdges="all">
 
+            <TextView
+                android:id="@+id/txtAlarmTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/very_low_alarm_notification_name"
+                android:textAlignment="center"
+                android:textSize="18sp" />
+
             <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/switchColoredAod"
+                android:id="@+id/switchUseCustomSound"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/activity_switch_colored_aod"
+                android:text="@string/alarm_use_custom_sound"
                 android:textAlignment="viewStart"
                 tools:ignore="TouchTargetSizeCheck" />
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/switchLargeTrendArrow"
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/btnSelectSound"
                 android:layout_height="wrap_content"
-                android:text="@string/activity_large_arrow_icon"
-                android:textAlignment="viewStart"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:layout_width="match_parent"
+                android:enabled="false"
+                android:text="@string/alarm_sound" />
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/switchForground"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/txtCustomSound"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/activity_switch_foreground"
-                android:textAlignment="viewStart"
-                android:visibility="gone"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:text="@string/alarm_sound_summary"
+                android:textAlignment="center"
+                android:textSize="16sp" />
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/switchRelativeTime"
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/btnTestAlarm"
                 android:layout_height="wrap_content"
-                android:text="@string/pref_relative_time"
-                android:textAlignment="viewStart"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:layout_width="match_parent"
+                android:text="@string/alarm_test" />
+
     </LinearLayout>
     </ScrollView>
 </androidx.wear.widget.BoxInsetLayout>
