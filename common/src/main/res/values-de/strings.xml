@@ -337,6 +337,7 @@
     <string name="alarm_saved">Alarm gespeichert!</string>
     <string name="snooze">Schlummern</string>
     <string name="alarm_cat_all">Alle Alarme</string>
+    <string name="wear_alarm_notifications_enabled">Uhr: Alarm Benachrichtigungen</string>
     <string name="alarm_notifications_enabled">Alarm Benachrichtigungen</string>
     <string name="alarm_notifications_enabled_summary_on">Alarm Benachrichtigungen sind aktiv auf dem Telefon.\nHinweise: die Alarme benutzen die Alarm-/Weckerlautstärke Einstellungen vom Telefon.</string>
     <string name="alarm_notifications_enabled_summary_off">Alarm Benachrichtigungen sind ausgeschaltet auf dem Telefon.</string>
@@ -364,6 +365,7 @@
     <string name="alarm_fullscreen_dismiss_keyguard_summary">Bitte diese Einstellung nur aktivieren, wenn es Probleme mit der Anzeige der Vollbildbenachrichtigung auf dem Speerbildschirm gibt.\nBei einigen Geräte verursacht diese Einstellung dass immer die PIN-Abfrage vor der Benachrichtigung erscheint.</string>
     <string name="alarm_force_sound">Alarm Ton erzwingen</string>
     <string name="alarm_force_sound_summary">Um den Ton und die Vibration während einer Alarmbenachrichtigung zu erzwingen, auch wenn das Telefon stumm oder auf Vibration geschaltet ist. Bitte nicht stören wird solange deaktiviert.\nDiese Einstellung benötigt die Berechtigung um den Bitte nicht stören Modus zu ändern.</string>
+    <string name="wear_alarm_force_sound">Uhr: Alarm Ton erzwingen</string>
     <string name="alarm_force_vibration">Vibration erzwingen</string>
     <string name="alarm_force_vibration_summary">Um Vibration während einer Alarmbenachrichtigung zu erzwingen, auch wenn das Telefon stumm geschaltet ist. Bitte nicht stören wird solange deaktiviert.\nDiese Einstellung benötigt die Berechtigung um den Bitte nicht stören Modus zu ändern.</string>
     <string name="alarm_sound_level">Lautstärke</string>
