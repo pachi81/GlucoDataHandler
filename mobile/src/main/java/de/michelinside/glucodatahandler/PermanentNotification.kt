@@ -76,6 +76,9 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     private fun createNofitication(context: Context) {
         createNotificationChannel(context)
 
+        Channels.getNotificationManager().cancel(GlucoDataService.NOTIFICATION_ID)
+        Channels.getNotificationManager().cancel(SECOND_NOTIFICATION_ID)
+
         notificationCompat = Notification.Builder(context, ChannelType.MOBILE_SECOND.channelId)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(Utils.getAppIntent(context, MainActivity::class.java, 5, false))
@@ -84,6 +87,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setAutoCancel(false)
             .setShowWhen(true)
             .setColorized(true)
+            .setGroup(ChannelType.MOBILE_SECOND.channelId)
             .setCategory(Notification.CATEGORY_STATUS)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
 
@@ -95,6 +99,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setAutoCancel(false)
             .setShowWhen(true)
             .setColorized(true)
+            .setGroup(ChannelType.MOBILE_FOREGROUND.channelId)
             .setCategory(Notification.CATEGORY_STATUS)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
     }
@@ -108,10 +113,11 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
     private fun getStatusBarIcon(iconKey: String): Icon {
         val bigIcon = sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON, false)
+        val coloredIcon = sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_COLORED_ICON, true)
         return when(sharedPref.getString(iconKey, StatusBarIcon.APP.pref)) {
-            StatusBarIcon.GLUCOSE.pref -> BitmapUtils.getGlucoseAsIcon(roundTarget=!bigIcon)
-            StatusBarIcon.TREND.pref -> BitmapUtils.getRateAsIcon(roundTarget=true, resizeFactor = if (bigIcon) 1.5F else 1F)
-            StatusBarIcon.DELTA.pref -> BitmapUtils.getDeltaAsIcon(roundTarget=!bigIcon)
+            StatusBarIcon.GLUCOSE.pref -> BitmapUtils.getGlucoseAsIcon(roundTarget=!bigIcon, color = if(coloredIcon) ReceiveData.getClucoseColor() else Color.WHITE)
+            StatusBarIcon.TREND.pref -> BitmapUtils.getRateAsIcon(roundTarget=true, color = if(coloredIcon) ReceiveData.getClucoseColor() else Color.WHITE, resizeFactor = if (bigIcon) 1.5F else 1F)
+            StatusBarIcon.DELTA.pref -> BitmapUtils.getDeltaAsIcon(roundTarget=!bigIcon, color = if(coloredIcon) ReceiveData.getClucoseColor(true) else Color.WHITE)
             else -> Icon.createWithResource(GlucoDataService.context, R.mipmap.ic_launcher)
         }
     }
@@ -144,7 +150,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         }
 
         val notificationBuilder = if(foreground) foregroundNotificationCompat else notificationCompat
-        val notification = notificationBuilder
+        notificationBuilder
             .setSmallIcon(getStatusBarIcon(iconKey))
             .setWhen(ReceiveData.time)
             .setCustomContentView(remoteViews)
@@ -153,9 +159,17 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setStyle(Notification.DecoratedCustomViewStyle())
             .setContentTitle(if (withContent) ReceiveData.getClucoseAsString() else "")
             .setContentText(if (withContent) "Delta: " + ReceiveData.getDeltaAsString() else "")
-            .build()
 
-        notification.visibility
+        when(sharedPref.getString(iconKey, StatusBarIcon.APP.pref)) {
+            StatusBarIcon.GLUCOSE.pref,
+            StatusBarIcon.TREND.pref -> {
+                notificationBuilder.setColor(Color.TRANSPARENT)
+            }
+        }
+
+        val notification = notificationBuilder.build()
+
+        notification.visibility = Notification.VISIBILITY_PUBLIC
         notification.flags = notification.flags or Notification.FLAG_NO_CLEAR
         return notification
     }
@@ -257,6 +271,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
                 Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION,
                 Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON,
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON,
+                Constants.SHARED_PREF_PERMANENT_NOTIFICATION_COLORED_ICON,
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY -> {
                     updatePreferences()
                 }

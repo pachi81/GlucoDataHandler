@@ -63,6 +63,7 @@ object Constants {
     const val SHARED_PREF_COLOR_OK = "color_ok"
     //const val SHARED_PREF_PERMANENT_NOTIFICATION = "permanent_notification"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_ICON = "status_bar_notification_icon"
+    const val SHARED_PREF_PERMANENT_NOTIFICATION_COLORED_ICON = "status_bar_notification_colored_icon"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY = "permanent_notification_empty"
     const val SHARED_PREF_SECOND_PERMANENT_NOTIFICATION = "second_permanent_notification"
     const val SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON = "second_status_bar_notification_icon"
@@ -105,6 +106,7 @@ object Constants {
     const val SHARED_PREF_LIBRE_TOKEN="source_libre_token"
     const val SHARED_PREF_LIBRE_TOKEN_EXPIRE="source_libre_token_expire"
     const val SHARED_PREF_LIBRE_REGION="source_libre_region"
+    const val SHARED_PREF_LIBRE_PATIENT_ID="source_libre_patient_id"
 
     const val SHARED_PREF_NIGHTSCOUT_ENABLED="src_ns_enabled"
     const val SHARED_PREF_NIGHTSCOUT_URL="src_ns_url"
@@ -113,6 +115,9 @@ object Constants {
     const val SHARED_PREF_NIGHTSCOUT_IOB_COB="src_ns_iob_cob"
 
     const val SHARED_PREF_DUMMY_VALUES = "dummy_values"
+
+    const val SHARED_PREF_LOCKSCREEN_WP_ENABLED = "lockscreen_enabled"
+    const val SHARED_PREF_LOCKSCREEN_WP_Y_POS = "lockscreen_y_pos"
 
     // Android Auto
     const val AA_MEDIA_ICON_STYLE_TREND = "trend"

@@ -53,9 +53,11 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtBatteryOptimization: TextView
     private lateinit var txtHighContrastEnabled: TextView
     private lateinit var txtScheduleExactAlarm: TextView
+    private lateinit var txtNotificationPermission: TextView
     private lateinit var btnSources: Button
     private lateinit var sharedPref: SharedPreferences
     private lateinit var optionsMenu: Menu
+    private var floatingWidgetItem: MenuItem? = null
     private val LOG_ID = "GDH.Main"
     private var requestNotificationPermission = false
 
@@ -76,6 +78,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             txtBatteryOptimization = findViewById(R.id.txtBatteryOptimization)
             txtHighContrastEnabled = findViewById(R.id.txtHighContrastEnabled)
             txtScheduleExactAlarm = findViewById(R.id.txtScheduleExactAlarm)
+            txtNotificationPermission = findViewById(R.id.txtNotificationPermission)
             btnSources = findViewById(R.id.btnSources)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
@@ -158,8 +161,10 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Notification permission granted")
                 requestNotificationPermission = false
+                txtNotificationPermission.visibility = View.GONE
                 GlucoDataServiceMobile.start(this, true)
             }
+            GlucoDataService.checkForConnectedNodes(true)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
         }
@@ -167,13 +172,20 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     fun requestPermission() : Boolean {
         requestNotificationPermission = false
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (!Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
-                Log.i(LOG_ID, "Request notification permission...")
-                requestNotificationPermission = true
-                this.requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 3)
-                return false
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
+            Log.i(LOG_ID, "Request notification permission...")
+            requestNotificationPermission = true
+            /*
+            txtNotificationPermission.visibility = View.VISIBLE
+            txtNotificationPermission.setOnClickListener {
+                val intent: Intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                    .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
+                startActivity(intent)
+            }*/
+            this.requestPermissions(arrayOf(android.Manifest.permission.FOREGROUND_SERVICE, android.Manifest.permission.POST_NOTIFICATIONS), 3)
+            return false
+        } else {
+            txtNotificationPermission.visibility = View.GONE
         }
         requestExactAlarmPermission()
         return true
@@ -225,7 +237,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         try {
             val pm = getSystemService(POWER_SERVICE) as PowerManager
             if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                Log.w(LOG_ID, "Battery optimization is inactive")
+                Log.w(LOG_ID, "Battery optimization is active")
                 txtBatteryOptimization.visibility = View.VISIBLE
                 txtBatteryOptimization.setOnClickListener {
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -234,7 +246,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 }
             } else {
                 txtBatteryOptimization.visibility = View.GONE
-                Log.i(LOG_ID, "Battery optimization is active")
+                Log.i(LOG_ID, "Battery optimization is inactive")
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
@@ -265,11 +277,18 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             inflater.inflate(R.menu.menu_items, menu)
             MenuCompat.setGroupDividerEnabled(menu!!, true)
             optionsMenu = menu
+            floatingWidgetItem = optionsMenu.findItem(R.id.action_floating_widget_toggle)
+            updateMenuItems()
             return true
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreateOptionsMenu exception: " + exc.message.toString() )
         }
         return true
+    }
+
+    private fun updateMenuItems() {
+        if(floatingWidgetItem!=null)
+            floatingWidgetItem!!.isVisible = Settings.canDrawOverlays(this)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -308,7 +327,10 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     val mailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                         "mailto","GlucoDataHandler@michel-inside.de", null))
                     mailIntent.putExtra(Intent.EXTRA_SUBJECT, "GlucoDataHander v" + BuildConfig.VERSION_NAME)
-                    startActivity(mailIntent)
+                    mailIntent.putExtra(Intent.EXTRA_TEXT, "")
+                    if (mailIntent.resolveActivity(packageManager) != null) {
+                        startActivity(mailIntent)
+                    }
                     return true
                 }
                 R.id.action_save_mobile_logs -> {
@@ -323,6 +345,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     Log.v(LOG_ID, "log group selected")
                     val menuIt: MenuItem = optionsMenu.findItem(R.id.action_save_wear_logs)
                     menuIt.isEnabled = WearPhoneConnection.nodesConnected && !LogcatReceiver.isActive
+                }
+                R.id.action_floating_widget_toggle -> {
+                    Log.v(LOG_ID, "Floating widget toggle")
+                    with(sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, !sharedPref.getBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false))
+                        apply()
+                    }
                 }
                 else -> return super.onOptionsItemSelected(item)
             }
@@ -363,6 +392,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }
 
             txtSourceInfo.text = SourceStateData.getState(this)
+
+            updateMenuItems()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
         }

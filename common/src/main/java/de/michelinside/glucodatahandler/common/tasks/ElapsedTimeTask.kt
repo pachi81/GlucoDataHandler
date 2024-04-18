@@ -11,7 +11,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 class ElapsedTimeTask : BackgroundTask() {
     companion object {
         private val LOG_ID = "GDH.Task.Time.ElapsedTask"
-        private var relativeTimeValue = false
+        private var relativeTimeValue = true
         private var interval = 0L
         val relativeTime: Boolean get() {return relativeTimeValue}
         fun setInterval(new_interval: Long) {
@@ -22,7 +22,10 @@ class ElapsedTimeTask : BackgroundTask() {
     }
 
     override fun getIntervalMinute(): Long {
-        return if (relativeTimeValue) 1L else interval
+        return if (relativeTimeValue) 1L
+        else if(interval > 0) interval
+        else if(InternalNotifier.hasTimeNotifier) 1L
+        else 0
     }
 
     override fun execute(context: Context) {
@@ -33,14 +36,15 @@ class ElapsedTimeTask : BackgroundTask() {
     }
 
     override fun active(elapsetTimeMinute: Long): Boolean {
-        return (relativeTimeValue || interval > 0) && elapsetTimeMinute <= 60 && InternalNotifier.getNotifierCount(NotifySource.TIME_VALUE) > 0
+        Log.v(LOG_ID, "Check active for elapsed time $elapsetTimeMinute min - has notifier: ${InternalNotifier.hasTimeNotifier} - relativeTime: $relativeTime - interval: $interval")
+        return (relativeTime || interval > 0 || InternalNotifier.hasTimeNotifier) && elapsetTimeMinute <= 60
     }
 
     override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {
         if ((key == null || key == Constants.SHARED_PREF_RELATIVE_TIME)) {
-            if( relativeTimeValue != sharedPreferences.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, false) ) {
-                relativeTimeValue = sharedPreferences.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, false)
-                Log.d(LOG_ID, "relative time setting changed to " + relativeTimeValue)
+            if( relativeTimeValue != sharedPreferences.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, true) ) {
+                relativeTimeValue = sharedPreferences.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, true)
+                Log.d(LOG_ID, "relative time setting changed to " + relativeTime)
                 InternalNotifier.notify(context, NotifySource.TIME_VALUE, null)
                 return true
             }

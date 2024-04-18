@@ -5,7 +5,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.*
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -121,7 +120,7 @@ object Utils {
     }
 
     fun isPackageAvailable(context: Context, packageName: String): Boolean {
-        return context.packageManager.getInstalledApplications(0).find { info -> info.packageName.startsWith(packageName) } != null
+        return context.packageManager.getLaunchIntentForPackage(packageName) != null
     }
 
     fun getBackgroundColor(transparancyFactor: Int) : Int {
@@ -200,7 +199,7 @@ object Utils {
 
     fun saveLogs(outputStream: OutputStream) {
         try {
-            val cmd = "logcat -t 3000"
+            val cmd = "logcat -t 4000"
             Log.i(LOG_ID, "Getting logcat with command: $cmd")
             val process = Runtime.getRuntime().exec(cmd)
             val thread = Thread {

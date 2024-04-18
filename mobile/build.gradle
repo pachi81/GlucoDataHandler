@@ -25,17 +25,18 @@ android {
             resValue "string", "app_name", "GlucoDataHandler"
         }
         dev_release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-dev-rules.pro'
             versionNameSuffix '-dev'
             resValue "string", "app_name", "GlucoDataHandler"
         }
         debug {
-            applicationIdSuffix '.debug'
             minifyEnabled false
             resValue "string", "app_name", "GlucoDataHandler"
         }
         second {
             applicationIdSuffix '.second'
-            versionNameSuffix '-SECOND'
+            versionNameSuffix '_SECOND'
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "GDH Second"

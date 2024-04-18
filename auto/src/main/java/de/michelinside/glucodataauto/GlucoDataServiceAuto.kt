@@ -163,7 +163,7 @@ class GlucoDataServiceAuto: Service() {
             Log.d(LOG_ID, "onStartCommand called")
             super.onStartCommand(intent, flags, startId)
             val isForeground = intent.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
-            if (isForeground && !isForegroundService && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
+            if (isForeground && !isForegroundService) {
                 Log.i(LOG_ID, "Starting service in foreground!")
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
                     startForeground(NOTIFICATION_ID, getNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)

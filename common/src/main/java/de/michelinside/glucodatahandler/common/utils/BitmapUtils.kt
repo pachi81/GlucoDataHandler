@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler.common.utils
 
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -15,8 +16,23 @@ import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import kotlin.math.abs
 
+
 object BitmapUtils {
     private val LOG_ID = "GDH.Utils.Bitmap"
+
+
+    fun getScreenWidth(): Int {
+        return Resources.getSystem().displayMetrics.widthPixels
+    }
+
+    fun getScreenHeight(): Int {
+        return Resources.getSystem().displayMetrics.heightPixels
+    }
+
+    fun getScreenDpi(): Int {
+        return Resources.getSystem().displayMetrics.densityDpi
+    }
+
 
     private fun isShortText(text: String): Boolean = text.length <= (if (text.contains(".")) 3 else 2)
 

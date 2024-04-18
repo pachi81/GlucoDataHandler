@@ -15,6 +15,7 @@ import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import de.michelinside.glucodatahandler.widget.FloatingWidget
 import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
+import de.michelinside.glucodatahandler.widget.LockScreenWallpaper
 
 
 class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInterface {
@@ -35,7 +36,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         fun sendLogcatRequest() {
             if(connection != null) {
                 Log.d(LOG_ID, "sendLogcatRequest called")
-                connection!!.sendMessage(NotifySource.LOGCAT_REQUEST, null, filterReiverId = connection!!.pickBestNodeId())
+                connection!!.sendMessage(NotifySource.LOGCAT_REQUEST, null, filterReceiverId = connection!!.pickBestNodeId())
             }
         }
     }
@@ -57,12 +58,14 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             GlucoseBaseWidget.updateWidgets(applicationContext)
             WatchDrip.init(applicationContext)
             floatingWidget.create()
+            LockScreenWallpaper.create(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
     }
 
     override fun getNotification(): Notification {
+        Log.v(LOG_ID, "getNotification called")
         return PermanentNotification.getNotification(
             !sharedPref!!.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false),
             Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, true
@@ -76,6 +79,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             CarModeReceiver.cleanup(applicationContext)
             WatchDrip.close(applicationContext)
             floatingWidget.destroy()
+            LockScreenWallpaper.destroy(this)
             super.onDestroy()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )

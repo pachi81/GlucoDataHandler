@@ -27,7 +27,13 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
 
     override fun hasIobCobSupport(): Boolean = active(1L) && iob_cob_support
 
-    override fun needsInternet(): Boolean = false
+    override fun needsInternet(): Boolean {
+        if(url.contains("127.0.0.1") || url.lowercase().contains("localhost")) {
+            Log.v(LOG_ID, "Localhost detected!")
+            return false
+        }
+        return true
+    }
 
     override fun executeRequest(context: Context) {
         if (!handlePebbleResponse(httpGet(getUrl(PEBBLE_ENDPOINT), getHeader()))) {

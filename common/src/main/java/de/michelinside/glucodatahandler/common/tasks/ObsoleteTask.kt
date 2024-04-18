@@ -25,6 +25,7 @@ class ObsoleteTask : BackgroundTask() {
     }
 
     override fun active(elapsetTimeMinute: Long): Boolean {
-        return elapsetTimeMinute <= 10 && (InternalNotifier.getNotifierCount(NotifySource.OBSOLETE_VALUE) > 0 || (!ElapsedTimeTask.relativeTime && InternalNotifier.getNotifierCount(NotifySource.TIME_VALUE) > 0) )
+        Log.v(LOG_ID, "Check active for elapsed time $elapsetTimeMinute min - has notifier: ${InternalNotifier.hasObsoleteNotifier} - time active: ${(!ElapsedTimeTask.relativeTime && InternalNotifier.hasTimeNotifier)}")
+        return elapsetTimeMinute <= 10 && (InternalNotifier.hasObsoleteNotifier || (!ElapsedTimeTask.relativeTime && InternalNotifier.hasTimeNotifier) )
     }
 }

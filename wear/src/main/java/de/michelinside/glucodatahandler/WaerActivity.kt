@@ -108,7 +108,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
             }
 
             switchRelativeTime = findViewById(R.id.switchRelativeTime)
-            switchRelativeTime.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, false)
+            switchRelativeTime.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, true)
             switchRelativeTime.setOnCheckedChangeListener { _, isChecked ->
                 Log.d(LOG_ID, "Relative time changed: " + isChecked.toString())
                 try {
@@ -207,6 +207,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
             InternalNotifier.addNotifier(this, this, mutableSetOf(
                 NotifySource.BROADCAST,
                 NotifySource.IOB_COB_CHANGE,
+                NotifySource.IOB_COB_TIME,
                 NotifySource.MESSAGECLIENT,
                 NotifySource.CAPILITY_INFO,
                 NotifySource.NODE_BATTERY_LEVEL,
@@ -221,6 +222,7 @@ class WaerActivity : AppCompatActivity(), NotifierInterface {
                 requestNotificationPermission = false
                 GlucoDataServiceWear.start(this, true)
             }
+            GlucoDataService.checkForConnectedNodes(true)
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }

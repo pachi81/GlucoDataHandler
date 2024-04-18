@@ -88,7 +88,7 @@
     <string name="src_libre_password_summary">Passwort für LibreLink</string>
     <string name="src_libre_reconnect">Reconnect</string>
     <string name="src_libre_reconnect_summary">Bei der nächsten Ausführung wird ein erneutes Login ausgeführt.</string>
-    <string name="src_libre_setup_librelink">Bitte erst LibreLinkUp Verbindung aktivieren!</string>
+    <string name="src_libre_setup_librelink">Keine Daten! Bitte akzeptieren Sie zuerst die Einladung in der LibreLinkUp App!</string>
 
     <string name="src_cat_nightscout">Nightscout Datenquelle</string>
     <string name="src_ns_enabled">Aktiv</string>
@@ -149,13 +149,13 @@
     <string name="pref_switch_use_mmol">mmol/l</string>
     <string name="pref_switch_use_mmol_summary">Benutze mmol/l anstatt mg/dl.</string>
     <string name="pref_high_value">Hoher Glukosewert</string>
-    <string name="pref_high_value_summary">Grenze für hohe Glukosewerte.\nWenn in Juggluco der Alarm für hohen Glukosewert aktiviert ist, muss der Wert nicht gesetzt werden.</string>
+    <string name="pref_high_value_summary">Grenze für hohe Glukosewerte.</string>
     <string name="pref_target_max_value">Obere Grenze</string>
     <string name="pref_target_max_value_summary">Obere Grenze für den Zielbereich.</string>
     <string name="pref_target_min_value">Untere Grenze</string>
     <string name="pref_target_min_value_summary">Untere Grenze für den Zielbereich.</string>
     <string name="pref_low_value">Niedriger Glukosewert</string>
-    <string name="pref_low_value_summary">Grenze für niedrige Glukosewerte.\nWenn in Juggluco der Alarm für niedrigen Glukosewert aktiviert ist, muss der Wert nicht gesetzt werden.</string>
+    <string name="pref_low_value_summary">Grenze für niedrige Glukosewerte.</string>
     <string name="pref_switch_use_5_min_delta">5 Minuten Delta</string>
     <string name="pref_switch_use_5_min_delta_summary">Für Delta Werte im 5 Minuten Intervall, ansonsten wird der Delta Wert pro Minute angezeigt.</string>
     <string name="pref_color_alarm">Hohe/Niedrige Werte</string>
@@ -284,7 +284,8 @@
     <string name="pref_source_juggluco_info">Juggluco</string>
     <string name="pref_source_juggluco_info_summary">Konfiguration von Juggluco:\n- Juggluco App öffnen\n- Einstellungen öffnen\n- Glucodata broadcast aktivieren\n- \"de.michelinside.glucodatahandler\" auswählen</string>
     <string name="pref_source_xdrip_info">xDrip+</string>
-    <string name="pref_source_xdrip_info_summary">Konfiguration von xDrip+:\n- xDrip+ App öffnen\n- Einstellungen öffnen\n- Inter-App Einstellungen auswählen\n- Lokaler Broadcast aktivieren\n- in Verrauschungsunterdrückung \"Send even Extremely noisy signals\" auswählen\n- Kompatible Broadcasts aktivieren\n- Identifiziere Empfänger leer lassen oder eine neue Zeile mit \"de.michelinside.glucodatahandler\" hinzufügen</string>
+    <string name="pref_source_xdrip_info_1_summary">Konfiguration von xDrip+:\n- xDrip+ App öffnen\n- Einstellungen öffnen\n- Inter-App Einstellungen auswählen\n- Lokaler Broadcast aktivieren\n- in Verrauschungsunterdrückung \"Send even Extremely noisy signals\" auswählen</string>
+    <string name="pref_source_xdrip_info_2_summary">- Kompatible Broadcasts aktivieren\n- Identifiziere Empfänger leer lassen oder eine neue Zeile mit \"de.michelinside.glucodatahandler\" hinzufügen</string>
     <string name="pref_source_librelinkup_info">LibreLinkUp einrichten</string>
     <string name="pref_source_librelinkup_info_summary">WICHTIG: nicht den LibreView Zugang verwenden!\nEinrichtung:\n- FreeStyle Libre App öffnen und unter Verbinden auf Teilen oder Verbundene Anwendungen klicken\n- LibreLinkUp aktivieren\n- LibreLinkUp aus dem PlayStore installieren\n- in der LibreLinkUp App einloggen und die Einladung annehmen</string>
     <string name="menu_contact">Kontakt</string>
@@ -310,5 +311,14 @@
     <string name="request_exact_alarm_summary">Für alle Zeit und Intervall spezifischen Aufgaben, benötigt die App die Berechtigung für Wecker und Erinnerungen.\nDie App verändert keine vom Benutzer eingerichteten Wecker oder Erinnerung. Sie benötigt die Berechtigung nur für interne Trigger.\nNach dem Drücken von OK leitet die App Sie zur entsprechenden Berechtigungseinstellung weiter. Bitte aktivieren Sie diese Berechtigung für GlucoDataHandler.</string>
     <string name="request_exact_alarm_title">Berechtigung für Wecker und Erinnerungen</string>
     <string name="activity_main_schedule_exact_alarm">Genaue Bearbeitung von Intervallen deaktiviert!!!\nKorrekte Funktionalität von GlucoDataHandler ist nicht gewährleistet!!!\nBitte hier drücken, um zu der entsprechenden Berechtigungseinstellung zu gelangen.</string>
-
+    <string name="src_libre_patient">Patient</string>
+    <string name="src_libre_patient_summary">Wenn der Libre Accout für mehr als einen Patienten verwendet wird, bitte wählen sie den entsprechenden Patienten aus, für den die Daten empfangen werden sollen.</string>
+    <string name="pref_cat_locksreen_wallpaper">Lockscreen Hintergrund</string>
+    <string name="pref_lockscreen_enabled">Aktivieren</string>
+    <string name="pref_lockscreen_enabled_summary">Wenn sie den Hintergrund für den Lockscreen aktivieren, erstellt die App einen Hintergrund auf dem Lockscreen, welche den Glucosewert und den Trendpfeil enthält.</string>
+    <string name="pref_lockscreen_y_pos">Vertikale Position</string>
+    <string name="pref_lockscreen_y_pos_summary">Vertikale position auf dem Lockscreen:\n0: am oberen Rand des Bildschirms\n100: am unteren Rand des Bildschirms</string>
+    <string name="activity_main_notification_permission">!!!Die Anzeige von Benachrichtigungen ist deaktiviert!!!\nKorrekte Funktionalität von GlucoDataHandler ist nicht gewährleistet und es können keine Alarme angezeigt werden!!!\nBitte hier drücken, um zu der entsprechenden Berechtigungseinstellung zu gelangen.</string>
+    <string name="prefstatus_bar_notification_colored_icon">Farbiges Statusbar Icon</string>
+    <string name="pref_status_bar_notification_colored_icon_summary">Falls dein Gerät ein farbiges Statusbar Icon unterstützt, kannst du es auch deaktivieren, um ein weißes Icon zu benutzen.</string>
 </resources>

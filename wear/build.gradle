@@ -23,16 +23,17 @@ android {
             resValue "string", "app_name", "GlucoDataHandler"
         }
         dev_release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-dev-rules.pro'
             versionNameSuffix '-dev'
             resValue "string", "app_name", "GlucoDataHandler"
         }
         debug {
-            applicationIdSuffix '.debug'
             resValue "string", "app_name", "GlucoDataHandler"
         }
         second {
             applicationIdSuffix '.second'
-            versionNameSuffix '-SECOND'
+            versionNameSuffix '_SECOND'
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "GDH Second"
@@ -45,7 +46,7 @@ android {
                         // on below line we are setting a
                         // name to our apk as GlucoDataHandler.apk
                     output ->
-                        def name = "GlucoDataHandler-Wear_" + versionName + ".apk"
+                        def name = "GlucoDataHandler_Wear_" + versionName + ".apk"
                         // on below line we are setting the
                         // outputFile Name to our apk file.
                         output.outputFileName = name
@@ -86,7 +87,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.work:work-runtime:2.9.0'
-    implementation "androidx.core:core-splashscreen:1.1.0-alpha02"
+    implementation "androidx.core:core-splashscreen:1.1.0-rc01"
 }
 
 afterEvaluate {

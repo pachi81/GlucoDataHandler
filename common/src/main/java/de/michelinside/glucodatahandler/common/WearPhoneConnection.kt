@@ -73,6 +73,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         val filter = mutableSetOf(
             NotifySource.BROADCAST,
             NotifySource.IOB_COB_CHANGE,
+            NotifySource.IOB_COB_TIME,
             NotifySource.BATTERY_LEVEL)   // to trigger re-start for the case of stopped by the system
         if (sendSettings) {
             filter.add(NotifySource.SETTINGS)   // only send setting changes from phone to wear!
@@ -122,6 +123,19 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         }
     }
 
+    fun checkForNodesWithoutData() {
+        try {
+            Log.d(LOG_ID, "check for connected nodes without data")
+            connectedNodes.forEach { node ->
+                if (!nodeBatteryLevel.containsKey(node.key)) {
+                    sendDataRequest(node.value.id)
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "checkForNodesWithoutData exception: " + exc.toString())
+        }
+    }
+
     private fun setConnectedNodes(nodes: MutableSet<Node>) {
         val curNodes = connectedNodes.keys.toSortedSet()
         val newNodes = nodes.map { it.id }.toSortedSet()
@@ -141,13 +155,17 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     }
                 }
             }
-            val extras = ReceiveData.createExtras()
-            InternalNotifier.notify(context, NotifySource.CAPILITY_INFO, ReceiveData.createExtras())
-            sendMessage(NotifySource.CAPILITY_INFO, extras)  // send data request for new node
+            sendDataRequest()
         }
     }
 
-    fun checkConnectedNode(nodeId: String) {
+    private fun sendDataRequest(filterReceiverId: String? = null) {
+        val extras = ReceiveData.createExtras()
+        InternalNotifier.notify(context, NotifySource.CAPILITY_INFO, ReceiveData.createExtras())
+        sendMessage(NotifySource.CAPILITY_INFO, extras, filterReceiverId = filterReceiverId)  // send data request for new node
+    }
+
+    private fun checkConnectedNode(nodeId: String) {
         if (!connectedNodes.containsKey(nodeId)) {
             Log.i(LOG_ID, "Node with id " + nodeId + " not yet connected, check connection!")
             checkForConnectedNodes()
@@ -180,10 +198,10 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             else -> Constants.GLUCODATA_INTENT_MESSAGE_PATH
         }
 
-    fun sendMessage(dataSource: NotifySource, extras: Bundle?, ignoreReceiverId: String? = null, filterReiverId: String? = null)
+    fun sendMessage(dataSource: NotifySource, extras: Bundle?, ignoreReceiverId: String? = null, filterReceiverId: String? = null)
     {
         try {
-            Log.v(LOG_ID, "sendMessage called for $dataSource filter receiver $filterReiverId ignoring receiver $ignoreReceiverId with extras $extras")
+            Log.v(LOG_ID, "sendMessage called for $dataSource filter receiver $filterReceiverId ignoring receiver $ignoreReceiverId with extras $extras")
             if( nodesConnected && dataSource != NotifySource.NODE_BATTERY_LEVEL ) {
                 Log.d(LOG_ID, connectedNodes.size.toString() + " nodes found for sending message for " + dataSource.toString())
                 if (extras != null && dataSource != NotifySource.BATTERY_LEVEL && BatteryReceiver.batteryPercentage > 0) {
@@ -198,7 +216,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 connectedNodes.forEach { node ->
                     Thread {
                         try {
-                            if ((ignoreReceiverId == null && filterReiverId == null) || ignoreReceiverId != node.value.id || filterReiverId == node.value.id) {
+                            if ((ignoreReceiverId == null && filterReceiverId == null) || ignoreReceiverId != node.value.id || filterReceiverId == node.value.id) {
                                 if (dataSource == NotifySource.CAPILITY_INFO)
                                     Thread.sleep(1000)  // wait a bit after the connection has changed
                                 sendMessage(node.value, getPath(dataSource), Utils.bundleToBytes(extras), dataSource)
@@ -391,7 +409,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            if (dataSource != NotifySource.IOB_COB_CHANGE || extras != null) {  // do not send IOB change without extras
+            if ((dataSource != NotifySource.IOB_COB_CHANGE && dataSource != NotifySource.IOB_COB_TIME) || extras != null) {  // do not send IOB change without extras
                 Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString() + " and extras " + extras.toString())
                 sendMessage(dataSource, extras)
             }
