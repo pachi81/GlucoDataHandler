@@ -284,6 +284,7 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
 
     private fun updateRingtoneSelectSummary() {
         val pref = findPreference<Preference>(customSoundPref)
+        val soundLevelPref = findPreference<SeekBarPreference>(soundLevelPref)
         if(pref != null) {
             if(pref.isEnabled) {
                 val uri = Uri.parse(preferenceManager.sharedPreferences!!.getString(customSoundPref, ""))
@@ -292,15 +293,19 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
                     val title = ringtone.getTitle(requireContext())
                     if (title.isNullOrEmpty()) {
                         pref.summary = resources.getString(de.michelinside.glucodatahandler.common.R.string.alarm_sound_summary)
+                        soundLevelPref!!.isEnabled = false
                     } else {
                         Log.d(LOG_ID, "Ringtone '$title' for uri $uri")
                         pref.summary = title
+                        soundLevelPref!!.isEnabled = true
                     }
                 } else {
                     pref.summary = resources.getString(de.michelinside.glucodatahandler.common.R.string.alarm_sound_summary)
+                    soundLevelPref!!.isEnabled = false
                 }
             } else {
                 pref.summary = resources.getString(CR.string.alarm_app_sound)
+                soundLevelPref!!.isEnabled = true
             }
         }
     }

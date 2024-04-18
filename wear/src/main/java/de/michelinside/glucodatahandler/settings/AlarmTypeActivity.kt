@@ -201,15 +201,19 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
                 val title = ringtone.getTitle(this)
                 if (title.isNullOrEmpty()) {
                     txtCustomSound.text = resources.getString(de.michelinside.glucodatahandler.common.R.string.alarm_sound_summary)
+                    seekBarSoundLevel.isEnabled = false
                 } else {
                     Log.d(LOG_ID, "Ringtone '$title' for uri $uri")
                     txtCustomSound.text = title
+                    seekBarSoundLevel.isEnabled = true
                 }
             } else {
                 txtCustomSound.text = resources.getString(de.michelinside.glucodatahandler.common.R.string.alarm_sound_summary)
+                seekBarSoundLevel.isEnabled = false
             }
         } else {
             txtCustomSound.text = resources.getString(de.michelinside.glucodatahandler.common.R.string.alarm_app_sound)
+            seekBarSoundLevel.isEnabled = true
         }
     }
 
