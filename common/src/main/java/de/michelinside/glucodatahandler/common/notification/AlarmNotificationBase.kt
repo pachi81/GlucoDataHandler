@@ -68,8 +68,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         RETRIGGER_SOUND,
     }
 
-    //private var soundLevel = -1
-    //private var lastSoundLevel = -1
+    private var lastSoundLevel = -1
 
     protected val vibrator: Vibrator get() {
         if(vibratorInstance == null) {
@@ -425,8 +424,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
     }
 
-    fun startSound(alarmType: AlarmType, context: Context, restartVibration: Boolean) {
-        if (getRingerMode() >= AudioManager.RINGER_MODE_NORMAL && curNotification > 0) {
+    fun startSound(alarmType: AlarmType, context: Context, restartVibration: Boolean, forTest: Boolean = false) {
+        if (getRingerMode() >= AudioManager.RINGER_MODE_NORMAL && (curNotification > 0 || forTest)) {
             val soundUri = getSound(alarmType, context)
             if (soundUri != null) {
                 Log.d(LOG_ID, "Play ringtone $soundUri")
@@ -442,6 +441,12 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         if(restartVibration) {
             vibrate(alarmType, context, false)
         }
+    }
+
+    fun isRingtonePlaying(): Boolean {
+        if(ringtone!=null)
+            return ringtone!!.isPlaying
+        return false
     }
 
     fun forceDnd(): Boolean {
@@ -496,20 +501,34 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     }
                 }
             }
-            /*
+            val soundLevel = getSoundLevel(alarmType, context)
             if (soundLevel >= 0) {
-                lastSoundLevel = audioManager.getStreamVolume(AudioManager.STREAM_ALARM)
-                val level = minOf(soundLevel, getMaxSoundLevel())
-                Log.d(LOG_ID, "Set cur sound level $lastSoundLevel to $level")
-                audioManager.setStreamVolume(
-                    AudioManager.STREAM_ALARM,
-                    level,
-                    0
-                )
-            }*/
+                lastSoundLevel = getCurrentSoundLevel()
+                Log.d(LOG_ID, "Set cur sound level $lastSoundLevel to $soundLevel")
+                setSoundLevel(soundLevel)
+
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "checkCreateSound exception: " + exc.message.toString() )
         }
+    }
+
+    fun setSoundLevel(level: Int) {
+        val soundLevel = minOf(level, getMaxSoundLevel())
+        Log.v(LOG_ID, "setSoundLevel: $soundLevel")
+        audioManager.setStreamVolume(
+            AudioManager.STREAM_ALARM,
+            soundLevel,
+            0
+        )
+    }
+
+    fun getMaxSoundLevel(): Int {
+        return audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM)
+    }
+
+    fun getCurrentSoundLevel(): Int {
+        return audioManager.getStreamVolume(AudioManager.STREAM_ALARM)
     }
 
     open fun getSoundMode(alarmType: AlarmType, context: Context): SoundMode {
@@ -546,16 +565,12 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 Channels.getNotificationManager().setInterruptionFilter(lastDndMode)
                 lastDndMode = NotificationManager.INTERRUPTION_FILTER_UNKNOWN
             }
-            /*
+
             if(lastSoundLevel >= 0) {
                 Log.d(LOG_ID, "Reset sound level to $lastSoundLevel")
-                audioManager.setStreamVolume(
-                    AudioManager.STREAM_ALARM,
-                    lastSoundLevel,
-                    0
-                )
+                setSoundLevel(lastSoundLevel)
                 lastSoundLevel = -1
-            }*/
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "checkCreateSound exception: " + exc.message.toString() )
         }
@@ -605,6 +620,20 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
 
         return getDefaultAlarm(alarmType, context)
+    }
+
+
+    private fun getSoundLevel(alarmType: AlarmType, context: Context): Int {
+        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        val prefix = when(alarmType) {
+            AlarmType.VERY_LOW -> Constants.SHARED_PREF_ALARM_VERY_LOW
+            AlarmType.LOW -> Constants.SHARED_PREF_ALARM_LOW
+            AlarmType.HIGH -> Constants.SHARED_PREF_ALARM_HIGH
+            AlarmType.VERY_HIGH -> Constants.SHARED_PREF_ALARM_VERY_HIGH
+            AlarmType.OBSOLETE -> Constants.SHARED_PREF_ALARM_OBSOLETE
+            else -> ""
+        }
+        return sharedPref.getInt(prefix + "_sound_level", -1)
     }
 
 

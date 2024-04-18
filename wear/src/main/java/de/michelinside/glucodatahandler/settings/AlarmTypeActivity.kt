@@ -10,11 +10,13 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.SeekBar
 import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatSeekBar
 import androidx.appcompat.widget.SwitchCompat
 import de.michelinside.glucodatahandler.AlarmNotificationWear
 import de.michelinside.glucodatahandler.R
@@ -34,6 +36,8 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var btnSelectSound: Button
     private lateinit var txtCustomSound: TextView
     private lateinit var btnTestAlarm: Button
+    private lateinit var seekBarSoundLevel: AppCompatSeekBar
+    private lateinit var txtSoundLevel: TextView
     private var alarmType = AlarmType.NONE
     private var alarmPrefix = ""
     private var alarmTitle = ""
@@ -44,6 +48,9 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
     }
     private val customSoundPref: String get() {
         return alarmPrefix + "custom_sound"
+    }
+    private val soundLevelPref: String get() {
+        return alarmPrefix + "sound_level"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,9 +76,16 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
             btnSelectSound = findViewById(R.id.btnSelectSound)
             txtCustomSound = findViewById(R.id.txtCustomSound)
             btnTestAlarm = findViewById(R.id.btnTestAlarm)
-
+            seekBarSoundLevel = findViewById(R.id.seekBarSoundLevel)
+            txtSoundLevel = findViewById(R.id.txtSoundLevel)
 
             txtAlarmTitle.text = alarmTitle
+
+
+            seekBarSoundLevel.max = AlarmNotificationWear.getMaxSoundLevel()
+            seekBarSoundLevel.progress = sharedPref.getInt(soundLevelPref, -1)
+            txtSoundLevel.text = seekBarSoundLevel.progress.toString()
+            seekBarSoundLevel.setOnSeekBarChangeListener(SeekBarChangeListener(soundLevelPref, txtSoundLevel))
 
             switchUseCustomSound.isChecked = sharedPref.getBoolean(useCustomSoundPref, false)
             switchUseCustomSound.setOnCheckedChangeListener { _, isChecked ->
@@ -207,4 +221,61 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString())
         }
     }
+
+
+
+    inner class SeekBarChangeListener(val preference: String, val txtLevel: TextView) : SeekBar.OnSeekBarChangeListener {
+        private val LOG_ID = "GDH.Main.AlarmTypeSeekBar"
+        private var curProgress = -1
+        private var lastSoundLevel = -1
+        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+            try {
+                Log.v(LOG_ID, "onProgressChanged called for $preference with progress=$progress - fromUser=$fromUser")
+                if(fromUser) {
+                    curProgress = progress
+                    txtLevel.text = curProgress.toString()
+                    setSoundLevel(curProgress)
+                }
+            } catch( exc: Exception ) {
+                Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
+            }
+        }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            try {
+                Log.v(LOG_ID, "onStartTrackingTouch called")
+                lastSoundLevel = AlarmNotificationWear.getCurrentSoundLevel()
+                if(seekBar!=null)
+                    setSoundLevel(seekBar.progress)
+                AlarmNotificationWear.startSound(alarmType, baseContext, false, forTest = true)
+            } catch( exc: Exception ) {
+                Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
+            }
+        }
+
+        override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            try {
+                Log.v(LOG_ID, "onStopTrackingTouch called with current progress: $curProgress")
+                AlarmNotificationWear.stopVibrationAndSound()
+                setSoundLevel(lastSoundLevel)
+                with (sharedPref.edit()) {
+                    putInt(preference, curProgress)
+                    apply()
+                }
+            } catch( exc: Exception ) {
+                Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
+            }
+        }
+
+        private fun setSoundLevel(level: Int) {
+            Log.v(LOG_ID, "setSoundLevel: $level")
+            if(level >= 0) {
+                AlarmNotificationWear.setSoundLevel(level)
+            } else {
+                AlarmNotificationWear.setSoundLevel(lastSoundLevel)
+            }
+        }
+
+    }
+
 }

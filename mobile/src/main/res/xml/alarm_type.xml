@@ -22,12 +22,11 @@
         <androidx.preference.SeekBarPreference
             app:showSeekBarValue="true"
             app:seekBarIncrement="1"
-            app:defaultValue="0"
-            app:min="0"
-            android:max="30"
-            android:key="sound_delay"
-            android:title="@string/alarm_sound_delay"
-            android:summary="@string/alarm_sound_delay_summary"
+            app:min="-1"
+            android:defaultValue="-1"
+            android:key="sound_level"
+            android:title="@string/alarm_sound_level"
+            android:summary="@string/alarm_sound_level_summary"
             app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
             android:key="use_custom_sound"
@@ -40,6 +39,16 @@
             android:key="custom_sound"
             android:title="@string/alarm_sound"
             android:summary="@string/alarm_sound_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SeekBarPreference
+            app:showSeekBarValue="true"
+            app:seekBarIncrement="1"
+            app:defaultValue="0"
+            app:min="0"
+            android:max="30"
+            android:key="sound_delay"
+            android:title="@string/alarm_sound_delay"
+            android:summary="@string/alarm_sound_delay_summary"
             app:iconSpaceReserved="false" />
         </PreferenceCategory>
         <PreferenceCategory
