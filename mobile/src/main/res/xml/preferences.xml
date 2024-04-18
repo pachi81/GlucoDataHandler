@@ -236,6 +236,13 @@
             android:summary="@string/pref_send_to_glucodataauto_summary"
             android:title="@string/pref_send_to_glucodataauto"
             app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="send_pref_to_glucodataauto"
+            app:isPreferenceVisible="false"
+            android:title="@string/pref_send_pref_to_glucodataauto"
+            android:summary="@string/pref_send_pref_to_glucodataauto_summary"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <PreferenceCategory

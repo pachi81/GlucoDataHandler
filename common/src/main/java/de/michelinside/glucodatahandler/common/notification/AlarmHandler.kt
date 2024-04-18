@@ -199,7 +199,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         Constants.SHARED_PREF_NOTIFICATION_VIBRATE
     )
 
-    fun getSettings(): Bundle {
+    fun getSettings(includeNotification: Boolean = true): Bundle {
         val bundle = Bundle()
         bundle.putInt(Constants.SHARED_PREF_ALARM_VERY_LOW_INTERVAL, veryLowInterval/60000)
         bundle.putInt(Constants.SHARED_PREF_ALARM_LOW_INTERVAL, lowInterval/60000)
@@ -211,7 +211,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         bundle.putBoolean(Constants.SHARED_PREF_ALARM_HIGH_ENABLED, highEnabled)
         bundle.putBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_ENABLED, veryHighEnabled)
         bundle.putBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_ENABLED, obsoleteEnabled)
-        if(AlarmNotificationBase.instance != null) {
+        if(includeNotification && AlarmNotificationBase.instance != null) {
             bundle.putBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, AlarmNotificationBase.instance!!.getAddSnooze())
             bundle.putInt(Constants.SHARED_PREF_ALARM_VERY_LOW_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.VERY_LOW, GlucoDataService.context!!))
             bundle.putInt(Constants.SHARED_PREF_ALARM_LOW_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.LOW, GlucoDataService.context!!))
@@ -244,7 +244,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
             putBoolean(Constants.SHARED_PREF_ALARM_HIGH_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_HIGH_ENABLED, highEnabled))
             putBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_ENABLED, veryHighEnabled))
             putBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_ENABLED, obsoleteEnabled))
-            if(AlarmNotificationBase.instance != null) {
+            if(AlarmNotificationBase.instance != null && bundle.containsKey(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION)) {
                 putBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, bundle.getBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, AlarmNotificationBase.instance!!.getAddSnooze()))
                 putInt(Constants.SHARED_PREF_ALARM_VERY_LOW_SOUND_DELAY, bundle.getInt(Constants.SHARED_PREF_ALARM_VERY_LOW_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.VERY_LOW, GlucoDataService.context!!)))
                 putInt(Constants.SHARED_PREF_ALARM_LOW_SOUND_DELAY, bundle.getInt(Constants.SHARED_PREF_ALARM_LOW_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.LOW, GlucoDataService.context!!)))

@@ -41,6 +41,7 @@ object Constants {
     const val SHARED_PREF_EXTRAS_TAG = "GlucoDataExtrasPrefs"
     const val SHARED_PREF_NO_GLUCODATAAUTO = "no_gda_info"
     const val SHARED_PREF_SEND_TO_GLUCODATAAUTO = "send_to_glucodataauto"
+    const val SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO = "send_pref_to_glucodataauto"
     const val SHARED_PREF_SEND_TO_GLUCODATA_AOD = "send_to_glucodata_aod"
     const val SHARED_PREF_GLUCODATA_RECEIVERS = "glucodata_receivers"
     const val SHARED_PREF_SEND_TO_XDRIP = "send_to_xdrip"

@@ -41,6 +41,8 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             if (Utils.isGlucoDataAutoAvailable(requireContext())) {
                 val sendToGDA = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO)
                 sendToGDA!!.isVisible = true
+                val sendPrefToGDA = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO)
+                sendPrefToGDA!!.isVisible = true
             } else {
                 val no_gda_info = findPreference<Preference>(Constants.SHARED_PREF_NO_GLUCODATAAUTO)
                 if (no_gda_info != null) {

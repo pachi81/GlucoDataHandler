@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.car.app.connection.CarConnection
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
 import de.michelinside.glucodatahandler.common.utils.Utils
@@ -109,9 +110,12 @@ object CarModeReceiver {
             Log.d(LOG_ID, "sendToGlucoDataAuto")
             val intent = Intent(Constants.GLUCODATA_ACTION)
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-            val settings = ReceiveData.getSettingsBundle()
-            settings.putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime)
-            extras.putBundle(Constants.SETTINGS_BUNDLE, settings)
+            if(sharedPref.getBoolean(Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO, true)) {
+                val settings = ReceiveData.getSettingsBundle()
+                settings.putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime)
+                extras.putBundle(Constants.SETTINGS_BUNDLE, settings)
+                extras.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings(false))
+            }
             intent.putExtras(extras)
             intent.setPackage(Constants.PACKAGE_GLUCODATAAUTO)
             context.sendBroadcast(intent)
