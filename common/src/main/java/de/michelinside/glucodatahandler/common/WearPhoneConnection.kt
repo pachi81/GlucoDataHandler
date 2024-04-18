@@ -279,14 +279,20 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
     fun sendCommand(command: Command, extras: Bundle?) {
         // Send command to all nodes in parallel
         Log.d(LOG_ID, "sendCommand called for $command with extras: ${Utils.dumpBundle(extras)}")
+        val commandBundle = Bundle()
+        commandBundle.putString(Constants.COMMAND_EXTRA, command.toString())
+        if(extras != null) {
+            commandBundle.putBundle(Constants.COMMAND_BUNDLE, extras)
+            if (GlucoDataService.appSource == AppSource.PHONE_APP) {
+                Log.d(LOG_ID, "Adding settings for sending command")
+                commandBundle.putBundle(Constants.SETTINGS_BUNDLE, ReceiveData.getSettingsBundle())
+                commandBundle.putBundle(Constants.SOURCE_SETTINGS_BUNDLE, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)))
+                commandBundle.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings())
+            }
+        }
         connectedNodes.forEach { node ->
             Thread {
                 try {
-                    val commandBundle = Bundle()
-                    commandBundle.putString(Constants.COMMAND_EXTRA, command.toString())
-                    if(extras != null) {
-                        commandBundle.putBundle(Constants.COMMAND_BUNDLE, extras)
-                    }
                     sendMessage(node.value, Constants.COMMAND_PATH, Utils.bundleToBytes(commandBundle), NotifySource.COMMAND)
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "sendCommand to " + node.value.toString() + " exception: " + exc.toString())
@@ -300,16 +306,43 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             Log.i(LOG_ID, "onMessageReceived from " + p0.sourceNodeId + " with path " + p0.path)
             checkConnectedNode(p0.sourceNodeId)
             val extras = Utils.bytesToBundle(p0.data)
+            //Log.v(LOG_ID, "Received extras for path ${p0.path}: ${Utils.dumpBundle(extras)}")
             if(extras!= null) {
-                if(p0.path == Constants.COMMAND_PATH) {
-                    handleCommand(extras)
-                    return
+                if (extras.containsKey(Constants.SETTINGS_BUNDLE)) {
+                    val bundle = extras.getBundle(Constants.SETTINGS_BUNDLE)
+                    Log.d(LOG_ID, "Glucose settings receceived from " + p0.sourceNodeId + ": " + bundle.toString())
+                    ReceiveData.setSettings(context, bundle!!)
+                    InternalNotifier.notify(context, NotifySource.SETTINGS, bundle)
+                    extras.remove(Constants.SETTINGS_BUNDLE)
+                }
+
+                if (extras.containsKey(Constants.SOURCE_SETTINGS_BUNDLE)) {
+                    val bundle = extras.getBundle(Constants.SOURCE_SETTINGS_BUNDLE)
+                    if (bundle != null) {
+                        Log.d(LOG_ID, "Glucose source settings receceived from " + p0.sourceNodeId + ": " + bundle.toString())
+                        DataSourceTask.updateSettings(context, bundle)
+                    }
+                    extras.remove(Constants.SOURCE_SETTINGS_BUNDLE)
+                }
+
+                if (extras.containsKey(Constants.ALARM_SETTINGS_BUNDLE)) {
+                    val bundle = extras.getBundle(Constants.ALARM_SETTINGS_BUNDLE)
+                    if (bundle != null) {
+                        Log.d(LOG_ID, "Glucose alarm settings receceived from " + p0.sourceNodeId + ": " + bundle.toString())
+                        AlarmHandler.setSettings(context, bundle)
+                    }
+                    extras.remove(Constants.ALARM_SETTINGS_BUNDLE)
                 }
                 if (extras.containsKey(BatteryReceiver.LEVEL)) {
                     val level = extras.getInt(BatteryReceiver.LEVEL, -1)
                     Log.d(LOG_ID, "Battery level received for node " + p0.sourceNodeId + ": " + level + "%")
                     setNodeBatteryLevel(p0.sourceNodeId, level)
                     extras.remove(BatteryReceiver.LEVEL)
+                }
+
+                if(p0.path == Constants.COMMAND_PATH) {
+                    handleCommand(extras)
+                    return
                 }
 
                 var forceSend = false
@@ -335,37 +368,11 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     }
                 }
 
-                if (extras.containsKey(Constants.SETTINGS_BUNDLE)) {
-                    val bundle = extras.getBundle(Constants.SETTINGS_BUNDLE)
-                    Log.d(LOG_ID, "Glucose settings receceived from " + p0.sourceNodeId + ": " + bundle.toString())
-                    ReceiveData.setSettings(context, bundle!!)
-                    InternalNotifier.notify(context, NotifySource.SETTINGS, bundle)
-                    extras.remove(Constants.SETTINGS_BUNDLE)
-                }
-
-                if (extras.containsKey(Constants.SOURCE_SETTINGS_BUNDLE)) {
-                    val bundle = extras.getBundle(Constants.SOURCE_SETTINGS_BUNDLE)
-                    if (bundle != null) {
-                        Log.d(LOG_ID, "Glucose source settings receceived from " + p0.sourceNodeId + ": " + bundle.toString())
-                        DataSourceTask.updateSettings(context, bundle)
-                    }
-                    extras.remove(Constants.SOURCE_SETTINGS_BUNDLE)
-                }
-
                 if (p0.path == Constants.SOURCE_SETTINGS_INTENT_MESSAGE_PATH) {
                     if (!extras.isEmpty) {
                         Log.d(LOG_ID, "Glucose source settings receceived from " + p0.sourceNodeId + ": " + extras.toString())
                         DataSourceTask.updateSettings(context, extras)
                     }
-                }
-
-                if (extras.containsKey(Constants.ALARM_SETTINGS_BUNDLE)) {
-                    val bundle = extras.getBundle(Constants.ALARM_SETTINGS_BUNDLE)
-                    if (bundle != null) {
-                        Log.d(LOG_ID, "Glucose alarm settings receceived from " + p0.sourceNodeId + ": " + bundle.toString())
-                        AlarmHandler.setSettings(context, bundle)
-                    }
-                    extras.remove(Constants.ALARM_SETTINGS_BUNDLE)
                 }
 
                 if (p0.path == Constants.ALARM_SETTINGS_INTENT_MESSAGE_PATH) {
