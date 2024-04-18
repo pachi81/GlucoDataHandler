@@ -425,4 +425,5 @@
     <string name="alarm_vibrate_only">Vibrate only</string>
     <string name="permission_alarm_notification_title">Notification disabled!</string>
     <string name="permission_alarm_notification_message">To show alarms, GlucoDataHandler needs at least the alarm notification channel to be enabled.\nYou will forwarded to the notification setting for this app.\nPlease enable alarm notification channel there.</string>
+    <string name="alarm_app_sound">Internal app sound</string>
 </resources>

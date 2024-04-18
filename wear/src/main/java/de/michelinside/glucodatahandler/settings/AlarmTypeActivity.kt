@@ -82,12 +82,14 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
                         apply()
                     }
                     btnSelectSound.isEnabled = isChecked
+                    updateSoundText()
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Changing notification exception: " + exc.message.toString() )
                 }
             }
 
             btnSelectSound.isEnabled = switchUseCustomSound.isChecked
+            updateSoundText()
 
             btnTestAlarm.setOnClickListener {
                 Log.d(LOG_ID, "Test alarm button clicked!")
@@ -134,18 +136,6 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
 
     private fun setRingtoneSelect(curUri: Uri?) {
         Log.v(LOG_ID, "setRingtoneSelect called with uri $curUri" )
-        if (curUri != null && curUri.toString().isNotEmpty()) {
-            val ringtone = RingtoneManager.getRingtone(this, curUri)
-            val title = ringtone.getTitle(this)
-            if (title.isNullOrEmpty()) {
-                txtCustomSound.text = resources.getString(de.michelinside.glucodatahandler.common.R.string.alarm_sound_summary)
-            } else {
-                Log.d(LOG_ID, "Ringtone '$title' for uri $curUri")
-                txtCustomSound.text = title
-            }
-        } else {
-            txtCustomSound.text = resources.getString(de.michelinside.glucodatahandler.common.R.string.alarm_sound_summary)
-        }
         if(ringtoneSelecter == null) {
             ringtoneSelecter = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
                 Log.v(LOG_ID, "$alarmType result ${result.resultCode}: ${result.data}")
@@ -182,11 +172,33 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
             apply()
         }
         setRingtoneSelect(newUri)
+        updateSoundText()
     }
 
     private fun update() {
         btnTestAlarm.isEnabled = true
     }
+
+    private fun updateSoundText() {
+        if(btnSelectSound.isEnabled) {
+            val uri = Uri.parse(sharedPref.getString(customSoundPref, ""))
+            if (uri != null && uri.toString().isNotEmpty()) {
+                val ringtone = RingtoneManager.getRingtone(this, uri)
+                val title = ringtone.getTitle(this)
+                if (title.isNullOrEmpty()) {
+                    txtCustomSound.text = resources.getString(de.michelinside.glucodatahandler.common.R.string.alarm_sound_summary)
+                } else {
+                    Log.d(LOG_ID, "Ringtone '$title' for uri $uri")
+                    txtCustomSound.text = title
+                }
+            } else {
+                txtCustomSound.text = resources.getString(de.michelinside.glucodatahandler.common.R.string.alarm_sound_summary)
+            }
+        } else {
+            txtCustomSound.text = resources.getString(de.michelinside.glucodatahandler.common.R.string.alarm_app_sound)
+        }
+    }
+
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
             Log.v(LOG_ID, "OnNotifyData called for $dataSource")
