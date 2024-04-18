@@ -36,7 +36,7 @@ android {
         }
         second {
             applicationIdSuffix '.second'
-            versionNameSuffix '-SECOND'
+            versionNameSuffix '_SECOND'
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "GDH Second"
