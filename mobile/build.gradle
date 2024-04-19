@@ -29,6 +29,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-dev-rules.pro'
             versionNameSuffix '-dev'
             resValue "string", "app_name", "GlucoDataHandler"
+            signingConfig signingConfigs.debug
         }
         debug {
             minifyEnabled false

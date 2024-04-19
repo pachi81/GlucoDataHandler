@@ -296,8 +296,8 @@
     <string name="src_xdrip_noise_blocking">Noise-Block active in xDrip+ Inter-app settings!\nPlease change it to \"Extremely noisy\"!</string>
     <string name="pref_cat_follower">Follower</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
-    <string name="pref_source_juggluco_info_summary">To receive values from Juggluco:\n- open Juggluco\n- go to settings\n- enable Glucodata broadcast\n- enable \"de.michelinside.glucodatahandler\"</string>
-    <string name="pref_gda_source_juggluco_info_summary">To receive values from Juggluco:\n- open Juggluco\n- go to settings\n- enable Glucodata broadcast\n- enable \"de.michelinside.glucodataauto\"</string>
+    <string name="pref_source_juggluco_info_summary">To receive values from Juggluco:\n- open Juggluco\n- go to \"Settings\"\n- enable \"Glucodata broadcast\"\n- enable \"de.michelinside.glucodatahandler\"</string>
+    <string name="pref_gda_source_juggluco_info_summary">To receive values from Juggluco:\n- open Juggluco\n- go to \"Settings\"\n- enable \"Glucodata broadcast\"\n- enable \"de.michelinside.glucodataauto\"</string>
     <string name="pref_source_xdrip_info">xDrip+</string>
     <string name="pref_source_xdrip_info_1_summary">To receive values from xDrip+:\n- open xDrip+\n- go to settings\n- go to Inter-app settings\n- enable \"Broadcast locally\"\n- set \"Noise Blocking\" to \"Send even Extremely noisy signals\"</string>
     <string name="pref_source_xdrip_info_2_summary">- enable \"Compatible Broadcast\"\n- check \"Identify receivers\" to be empty or add a new line with \"de.michelinside.glucodatahandler\"</string>
@@ -434,4 +434,12 @@
     <string name="pref_send_pref_to_glucodataauto_summary">Include settings in message to GlucoDataAuto.\nThis will overwrite the settings in GlucoDataAuto.</string>
     <string name="pref_source_gdh_info_summary">To receive values from GlucoDataHandler:\n- open GlucoDataHandler\n- go to settings\n- enable \"Forward to GlucoDataAuto\"\n- to use the same settings, enable \"Include settings\"</string>
     <string name="very_low_alarm_summary">If you are using Android Auto notifications, very low alarms will always trigger a notification and this can not be deactivated or changed.</string>
+    <string name="pref_source_juggluco_iob_info">IOB from Juggluco</string>
+    <string name="pref_source_juggluco_iob_info_summary">To receive IOB from Juggluco:\n- open Juggluco\n- go to \"Settings\"\n- enable \"IOB\"\n- go to \"Web server\"\n- enable \"Active\"\n- optional: enable \"Local only\"</string>
+    <string name="pref_source_xdrip_iob_info">IOB from xDrip+</string>
+    <string name="pref_source_xdrip_iob_info_summary">To receive values from xDrip+:\n- open xDrip+\n- go to settings\n- go to Inter-app settings\n- enable \"xDrip Web Service\"</string>
+    <string name="pref_source_activate_local_nightscout_iob">Activate IOB usage</string>
+    <string name="pref_source_activate_local_nightscout_iob_summary">Press here to set nightscout settings to use the local web server to receive addtional IOB values.</string>
+    <string name="activate_local_nightscout_iob_title">Overwrite nightscout</string>
+    <string name="activate_local_nightscout_iob_message">This will overwrite your current nightscout source settings to use local webservice on port 17580 to receive IOB values.\nAre you sure?</string>
 </resources>

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.InputType
 import android.util.Log
 import androidx.preference.*
+import de.michelinside.glucodatahandler.Dialogs
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
@@ -35,6 +36,10 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
             nightscoutSecret?.setOnBindEditTextListener {editText ->
                 editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             }
+
+            setupLocalIobAction(findPreference<Preference>(Constants.SHARED_PREF_SOURCE_JUGGLUCO_SET_NS_IOB_ACTION))
+            setupLocalIobAction(findPreference<Preference>(Constants.SHARED_PREF_SOURCE_XDRIP_SET_NS_IOB_ACTION))
+
 
             setupLibrePatientData()
         } catch (exc: Exception) {
@@ -144,6 +149,31 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
             listPreference.isVisible = LibreViewSourceTask.patientData.size > 1
         } catch (exc: Exception) {
             Log.e(LOG_ID, "setupLibrePatientData exception: $exc")
+        }
+    }
+
+    private fun setupLocalIobAction(preference: Preference?) {
+        if(preference != null) {
+            preference.setOnPreferenceClickListener {
+                Dialogs.showOkCancelDialog(requireContext(), resources.getString(de.michelinside.glucodatahandler.common.R.string.activate_local_nightscout_iob_title), resources.getString(
+                    de.michelinside.glucodatahandler.common.R.string.activate_local_nightscout_iob_message)) { _, _ ->
+                    with(preferenceManager!!.sharedPreferences!!.edit()) {
+                        putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, true)
+                        putString(Constants.SHARED_PREF_NIGHTSCOUT_URL, "http://127.0.0.1:17580")
+                        putString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, "")
+                        putString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, "")
+                        putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, true)
+                        apply()
+                    }
+                    findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB)!!.isChecked = true
+                    findPreference<EditTextPreference>(Constants.SHARED_PREF_NIGHTSCOUT_URL)!!.text = "http://127.0.0.1:17580"
+                    findPreference<EditTextPreference>(Constants.SHARED_PREF_NIGHTSCOUT_SECRET)!!.text = ""
+                    findPreference<EditTextPreference>(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN)!!.text = ""
+                    findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED)!!.isChecked = true
+
+                }
+                true
+            }
         }
     }
 

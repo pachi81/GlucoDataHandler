@@ -13,4 +13,12 @@ object Dialogs {
             .setPositiveButton(context.resources.getText(R.string.button_ok), okListener)
             .show()
     }
+    fun showOkCancelDialog(context: Context, title: String, message: String, okListener: DialogInterface.OnClickListener) {
+        MaterialAlertDialogBuilder(context)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(context.resources.getText(R.string.button_ok), okListener)
+            .setNegativeButton(context.resources.getText(R.string.button_cancel), null)
+            .show()
+    }
 }

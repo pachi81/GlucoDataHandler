@@ -123,6 +123,9 @@ object Constants {
     const val SHARED_PREF_LOCKSCREEN_WP_ENABLED = "lockscreen_enabled"
     const val SHARED_PREF_LOCKSCREEN_WP_Y_POS = "lockscreen_y_pos"
 
+    const val SHARED_PREF_SOURCE_JUGGLUCO_SET_NS_IOB_ACTION = "source_juggluco_activate_local_nightscout_iob_action"
+    const val SHARED_PREF_SOURCE_XDRIP_SET_NS_IOB_ACTION = "source_xdrip_activate_local_nightscout_iob_action"
+
     // Alarm
     const val ALARM_SNOOZE_ACTION = "de.michelinside.glucodatahandler.SNOOZE"
     const val ALARM_STOP_NOTIFICATION_ACTION = "de.michelinside.glucodatahandler.STOP_NOTIFICATION"
