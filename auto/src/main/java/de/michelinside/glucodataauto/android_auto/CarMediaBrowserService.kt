@@ -3,7 +3,9 @@ package de.michelinside.glucodataauto.android_auto
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
+import android.media.MediaPlayer
 import android.media.session.PlaybackState
+import android.net.Uri
 import android.os.Bundle
 import android.os.SystemClock
 import android.support.v4.media.MediaBrowserCompat
@@ -14,12 +16,13 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.media.MediaBrowserServiceCompat
 import de.michelinside.glucodataauto.GlucoDataServiceAuto
+import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 
 class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GDH.AA.CarMediaBrowserService"
@@ -27,6 +30,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     private val MEDIA_GLUCOSE_ID = "glucose_value"
     private lateinit var  sharedPref: SharedPreferences
     private lateinit var session: MediaSessionCompat
+    private val player = MediaPlayer()
 
     companion object {
         var active = false
@@ -53,6 +57,38 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                             apply()
                         }
                         createMediaItem()
+                    }
+                }
+
+                override fun onPlay() {
+                    Log.i(LOG_ID, "onPlay called")
+                    try {
+                        // Current song is ready, but paused, so start playing the music.
+                        player.reset()
+                        val uri =
+                            "android.resource://" + applicationContext.packageName + "/" + CR.raw.silence
+                        player.setDataSource(applicationContext, Uri.parse(uri))
+                        player.setOnCompletionListener {
+                            Log.d(LOG_ID, "setOnCompletionListener called")
+                            onStop()
+                        }
+                        player.start()
+                        // Update the UI to show we are playing.
+                        session.setPlaybackState(buildState(PlaybackState.STATE_PLAYING))
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "onPlay exception: " + exc.message.toString() )
+                    }
+                }
+
+                override fun onStop() {
+                    Log.i(LOG_ID, "onStop called playing: ${player.isPlaying}")
+                    try {
+                        if(player.isPlaying) {
+                            player.stop()
+                        }
+                        session.setPlaybackState(buildState(PlaybackState.STATE_STOPPED))
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "onStop exception: " + exc.message.toString() )
                     }
                 }
             })
@@ -177,11 +213,12 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     }
 
     private fun buildState(state: Int): PlaybackStateCompat? {
-        Log.v(LOG_ID, "buildState called for state " + state)
-        return PlaybackStateCompat.Builder()
+        Log.d(LOG_ID, "buildState called for state $state - pos: ${player.currentPosition}")
+        return PlaybackStateCompat.Builder().setActions(
+            PlaybackStateCompat.ACTION_PLAY or PlaybackStateCompat.ACTION_STOP)
             .setState(
                 state,
-                0,
+                player.currentPosition.toLong(),
                 1f,
                 SystemClock.elapsedRealtime()
             )
