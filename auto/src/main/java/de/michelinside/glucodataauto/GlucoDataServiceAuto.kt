@@ -20,6 +20,7 @@ import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.tasks.BackgroundWorker
+import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import de.michelinside.glucodatahandler.common.utils.Utils
 
@@ -93,6 +94,7 @@ class GlucoDataServiceAuto: Service() {
                 if (dataSyncCount == 0) {
                     Log.d(LOG_ID, "startDataSync")
                     TimeTaskService.run(context)
+                    SourceTaskService.run(context)
                     sendStateBroadcast(context, true)
                 }
                 dataSyncCount++

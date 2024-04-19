@@ -48,7 +48,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".preferences.SettingsActivity"
             android:label="@string/menu_settings"
             android:parentActivityName=".MainActivity"
             tools:ignore="LockedOrientationActivity">

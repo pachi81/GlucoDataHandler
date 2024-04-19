@@ -10,6 +10,21 @@
             app:showAsAction="ifRoom" />
     </group>
     <group
+        android:id="@+id/group_sources">
+        <item
+            android:id="@+id/action_sources"
+            android:icon="@drawable/icon_source"
+            android:title="@string/menu_sources"
+            app:showAsAction="never" />
+    </group>
+    <group
+        android:id="@+id/group_alarms">
+        <item
+            android:id="@+id/action_alarms"
+            android:title="@string/menu_alarms"
+            app:showAsAction="never" />
+    </group>
+    <group
         android:id="@+id/group_github">
         <item
             android:id="@+id/group_github_title"

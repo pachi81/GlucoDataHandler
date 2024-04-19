@@ -15,11 +15,14 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuCompat
 import androidx.preference.PreferenceManager
+import de.michelinside.glucodataauto.preferences.SettingsActivity
+import de.michelinside.glucodataauto.preferences.SettingsFragmentClass
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
@@ -36,6 +39,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtBgValue: TextView
     private lateinit var viewIcon: ImageView
     private lateinit var txtLastValue: TextView
+    private lateinit var txtNoData: TextView
+    private lateinit var btnSources: Button
     private lateinit var txtVersion: TextView
     private lateinit var txtCarInfo: TextView
     private lateinit var txtBatteryOptimization: TextView
@@ -51,6 +56,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             txtBgValue = findViewById(R.id.txtBgValue)
             viewIcon = findViewById(R.id.viewIcon)
             txtLastValue = findViewById(R.id.txtLastValue)
+            txtNoData = findViewById(R.id.txtNoData)
+            btnSources = findViewById(R.id.btnSources)
             txtCarInfo = findViewById(R.id.txtCarInfo)
             txtBatteryOptimization = findViewById(R.id.txtBatteryOptimization)
 
@@ -61,6 +68,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
+
+            btnSources.setOnClickListener{
+                val intent = Intent(this, SettingsActivity::class.java)
+                intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.SORUCE_FRAGMENT.value)
+                startActivity(intent)
+            }
 
             val sendToAod = sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, false)
 
@@ -191,6 +204,18 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     startActivity(intent)
                     return true
                 }
+                R.id.action_sources -> {
+                    val intent = Intent(this, SettingsActivity::class.java)
+                    intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.SORUCE_FRAGMENT.value)
+                    startActivity(intent)
+                    return true
+                }
+                R.id.action_alarms -> {
+                    val intent = Intent(this, SettingsActivity::class.java)
+                    intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.ALARM_FRAGMENT.value)
+                    startActivity(intent)
+                    return true
+                }
                 R.id.action_help -> {
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
@@ -239,6 +264,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
             txtLastValue.text = ReceiveData.getAsString(this, CR.string.gda_no_data)
             txtCarInfo.text = if (GlucoDataServiceAuto.connected) resources.getText(CR.string.activity_main_car_connected_label) else resources.getText(CR.string.activity_main_car_disconnected_label)
+            if(ReceiveData.time == 0L) {
+                txtNoData.visibility = View.VISIBLE
+                btnSources.visibility = View.VISIBLE
+            } else {
+                txtNoData.visibility = View.GONE
+                btnSources.visibility = View.GONE
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
         }

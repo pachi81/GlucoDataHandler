@@ -270,7 +270,7 @@
     <!-- GlucoDataAuto -->
 
     <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataAuto/blob/main/README.md</string>
-    <string name="gda_no_data">For using this app in Android Auto, you have to activate developer settings in Android Auto by clicking several times on the version. Then you have to enable \"Unknown sources\" in the developer settings menu.\n\nIf you are using GlucoDataHandler as source, the values will be send if the phone is connected to Android Auto.</string>
+    <string name="gda_no_data">For using this app in Android Auto, you have to activate developer settings in Android Auto by clicking several times on the version. Then you have to enable \"Unknown sources\" in the developer settings menu.</string>
     <string name="pref_gda_info">Information</string>
     <string name="pref_gda_info_summary">If you are using GlucoDataHandler as source, these settings will be overwritten from GlucoDataHandler, so you do not have to change them here.</string>
     <string name="pref_no_gda_info">GlucoDataAuto missing</string>
@@ -297,9 +297,11 @@
     <string name="pref_cat_follower">Follower</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
     <string name="pref_source_juggluco_info_summary">To receive values from Juggluco:\n- open Juggluco\n- go to settings\n- enable Glucodata broadcast\n- enable \"de.michelinside.glucodatahandler\"</string>
+    <string name="pref_gda_source_juggluco_info_summary">To receive values from Juggluco:\n- open Juggluco\n- go to settings\n- enable Glucodata broadcast\n- enable \"de.michelinside.glucodataauto\"</string>
     <string name="pref_source_xdrip_info">xDrip+</string>
     <string name="pref_source_xdrip_info_1_summary">To receive values from xDrip+:\n- open xDrip+\n- go to settings\n- go to Inter-app settings\n- enable \"Broadcast locally\"\n- set \"Noise Blocking\" to \"Send even Extremely noisy signals\"</string>
     <string name="pref_source_xdrip_info_2_summary">- enable \"Compatible Broadcast\"\n- check \"Identify receivers\" to be empty or add a new line with \"de.michelinside.glucodatahandler\"</string>
+    <string name="pref_gda_source_xdrip_info_2_summary">- enable \"Compatible Broadcast\"\n- check \"Identify receivers\" to be empty or add a new line with \"de.michelinside.glucodataauto\"</string>
     <string name="pref_source_librelinkup_info">Setup LibreLinkUp</string>
     <string name="pref_source_librelinkup_info_summary">IMPORTANT: this is not the LibreView account!\nTo activate LibreLinkUp:\n- open your FreeStyle Libre App and select in the menu Share or Connected Apps\n- activate LibreLinkUp connection\n- install LibreLinkUp from PlayStore\n- setup your account and wait for the invitation</string>
     <string name="menu_contact">Contact</string>
@@ -430,4 +432,6 @@
     <string name="alarm_app_sound">Internal app sound</string>
     <string name="pref_send_pref_to_glucodataauto">Include settings</string>
     <string name="pref_send_pref_to_glucodataauto_summary">Include settings in message to GlucoDataAuto.\nThis will overwrite the settings in GlucoDataAuto.</string>
+    <string name="pref_source_gdh_info_summary">To receive values from GlucoDataHandler:\n- open GlucoDataHandler\n- go to settings\n- enable \"Forward to GlucoDataAuto\"\n- to use the same settings, enable \"Include settings\"</string>
+    <string name="very_low_alarm_summary">If you are using Android Auto notifications, very low alarms will always trigger a notification and this can not be deactivated or changed.</string>
 </resources>

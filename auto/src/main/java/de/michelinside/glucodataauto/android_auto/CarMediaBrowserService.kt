@@ -33,7 +33,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     }
 
     override fun onCreate() {
-        Log.v(LOG_ID, "onCreate")
+        Log.d(LOG_ID, "onCreate")
         try {
             super.onCreate()
             active = true
@@ -70,7 +70,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     }
 
     override fun onDestroy() {
-        Log.v(LOG_ID, "onDestroy")
+        Log.d(LOG_ID, "onDestroy")
         try {
             active = false
             InternalNotifier.remNotifier(this, this)
@@ -89,7 +89,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         rootHints: Bundle?
     ): BrowserRoot? {
         try {
-            Log.v(LOG_ID, "onGetRoot - package: " + clientPackageName + " - UID: " + clientUid.toString())
+            Log.d(LOG_ID, "onGetRoot - package: " + clientPackageName + " - UID: " + clientUid.toString())
             return BrowserRoot(MEDIA_ROOT_ID, null)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onGetRoot exception: " + exc.message.toString() )
@@ -102,7 +102,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         result: Result<MutableList<MediaBrowserCompat.MediaItem>>
     ) {
         try {
-            Log.v(LOG_ID, "onLoadChildren for parent: " + parentId)
+            Log.d(LOG_ID, "onLoadChildren for parent: " + parentId)
             if (MEDIA_ROOT_ID == parentId) {
                 result.sendResult(mutableListOf(createMediaItem()))
             } else {
@@ -148,8 +148,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     }
 
     private fun createMediaItem(): MediaBrowserCompat.MediaItem {
-        Log.v(LOG_ID, "createMediaItem called")
         if (sharedPref.getBoolean(Constants.SHARED_PREF_CAR_MEDIA,true)) {
+            Log.i(LOG_ID, "createMediaItem called")
             session.setPlaybackState(buildState(PlaybackState.STATE_PAUSED))
             session.setMetadata(
                 MediaMetadataCompat.Builder()
