@@ -1,8 +1,10 @@
 package de.michelinside.glucodataauto.android_auto
 
+import de.michelinside.glucodataauto.R
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.media.MediaPlayer
 import android.media.session.PlaybackState
 import android.net.Uri
@@ -14,23 +16,28 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.media.MediaBrowserServiceCompat
 import de.michelinside.glucodataauto.GlucoDataServiceAuto
-import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import de.michelinside.glucodatahandler.common.R as CR
+
 
 class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GDH.AA.CarMediaBrowserService"
     private val MEDIA_ROOT_ID = "root"
     private val MEDIA_GLUCOSE_ID = "glucose_value"
+    private val MEDIA_NOTIFICATION_TOGGLE_ID = "toggle_notification"
     private lateinit var  sharedPref: SharedPreferences
     private lateinit var session: MediaSessionCompat
     private val player = MediaPlayer()
+    private var curMediaItem = MEDIA_GLUCOSE_ID
 
     companion object {
         var active = false
@@ -51,30 +58,33 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             session.setCallback(object : MediaSessionCompat.Callback() {
                 override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {
                     Log.i(LOG_ID, "onPlayFromMediaId: " + mediaId)
-                    if (!sharedPref.getBoolean(Constants.SHARED_PREF_CAR_MEDIA,true)) {
-                        with(sharedPref.edit()) {
-                            putBoolean(Constants.SHARED_PREF_CAR_MEDIA,true)
-                            apply()
-                        }
-                        createMediaItem()
-                    }
+                    curMediaItem = mediaId
+                    setItem()
                 }
 
                 override fun onPlay() {
-                    Log.i(LOG_ID, "onPlay called")
+                    Log.i(LOG_ID, "onPlay called for $curMediaItem")
                     try {
-                        // Current song is ready, but paused, so start playing the music.
-                        player.reset()
-                        val uri =
-                            "android.resource://" + applicationContext.packageName + "/" + CR.raw.silence
-                        player.setDataSource(applicationContext, Uri.parse(uri))
-                        player.setOnCompletionListener {
-                            Log.d(LOG_ID, "setOnCompletionListener called")
-                            onStop()
+                        if(curMediaItem == MEDIA_GLUCOSE_ID) {
+                            // Current song is ready, but paused, so start playing the music.
+                            player.reset()
+                            val uri =
+                                "android.resource://" + applicationContext.packageName + "/" + CR.raw.silence
+                            player.setDataSource(applicationContext, Uri.parse(uri))
+                            player.setOnCompletionListener {
+                                Log.d(LOG_ID, "setOnCompletionListener called")
+                                onStop()
+                            }
+                            player.start()
+                            // Update the UI to show we are playing.
+                            session.setPlaybackState(buildState(PlaybackState.STATE_PLAYING))
+                        } else if(curMediaItem == MEDIA_NOTIFICATION_TOGGLE_ID) {
+                            Log.d(LOG_ID, "Toggle notification")
+                            with(sharedPref.edit()) {
+                                putBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, !CarNotification.enable_notification)
+                                apply()
+                            }
                         }
-                        player.start()
-                        // Update the UI to show we are playing.
-                        session.setPlaybackState(buildState(PlaybackState.STATE_PLAYING))
                     } catch (exc: Exception) {
                         Log.e(LOG_ID, "onPlay exception: " + exc.message.toString() )
                     }
@@ -140,10 +150,11 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         try {
             Log.d(LOG_ID, "onLoadChildren for parent: " + parentId)
             if (MEDIA_ROOT_ID == parentId) {
-                result.sendResult(mutableListOf(createMediaItem()))
+                result.sendResult(mutableListOf(createMediaItem()/*, createToggleItem()*/))
             } else {
                 result.sendResult(null)
             }
+            setItem()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onLoadChildren exception: " + exc.message.toString() )
         }
@@ -163,6 +174,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         try {
             when(key) {
                 Constants.SHARED_PREF_CAR_MEDIA,
+                Constants.SHARED_PREF_CAR_NOTIFICATION,
                 Constants.SHARED_PREF_CAR_MEDIA_ICON_STYLE -> {
                     notifyChildrenChanged(MEDIA_ROOT_ID)
                 }
@@ -183,9 +195,21 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         }
     }
 
-    private fun createMediaItem(): MediaBrowserCompat.MediaItem {
+    fun setItem() {
+        Log.d(LOG_ID, "set current media: $curMediaItem")
+        when(curMediaItem) {
+            MEDIA_GLUCOSE_ID -> {
+                setGlucose()
+            }
+            MEDIA_NOTIFICATION_TOGGLE_ID -> {
+                setToggle()
+            }
+        }
+    }
+
+    private fun setGlucose() {
         if (sharedPref.getBoolean(Constants.SHARED_PREF_CAR_MEDIA,true)) {
-            Log.i(LOG_ID, "createMediaItem called")
+            Log.i(LOG_ID, "setGlucose called")
             session.setPlaybackState(buildState(PlaybackState.STATE_PAUSED))
             session.setMetadata(
                 MediaMetadataCompat.Builder()
@@ -203,11 +227,52 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         } else {
             session.setPlaybackState(buildState(PlaybackState.STATE_NONE))
         }
+    }
+
+    private fun createMediaItem(): MediaBrowserCompat.MediaItem {
         val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
             .setMediaId(MEDIA_GLUCOSE_ID)
             .setTitle(ReceiveData.getClucoseAsString() + " (Δ " + ReceiveData.getDeltaAsString() + ")\n" + ReceiveData.getElapsedTimeMinuteAsString(this))
             //.setSubtitle(ReceiveData.timeformat.format(Date(ReceiveData.time)))
             .setIconBitmap(getIcon()!!)
+        return MediaBrowserCompat.MediaItem(
+            mediaDescriptionBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE)
+    }
+
+    private fun getToggleIcon(): Bitmap? {
+        if(CarNotification.enable_notification) {
+            return ContextCompat.getDrawable(applicationContext, R.drawable.icon_popup)?.toBitmap()
+        }
+        return ContextCompat.getDrawable(applicationContext, R.drawable.icon_off)?.toBitmap()
+    }
+
+    private fun setToggle() {
+        if (sharedPref.getBoolean(Constants.SHARED_PREF_CAR_MEDIA,true)) {
+            Log.i(LOG_ID, "setToggle called")
+            session.setPlaybackState(buildState(PlaybackState.STATE_PAUSED))
+            session.setMetadata(
+                MediaMetadataCompat.Builder()
+                    .putString(
+                        MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, "Notification is " + if(CarNotification.enable_notification) "on" else "off"
+                    )
+                    .putString(
+                        MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE,
+                        "Press play to toggle notification"
+                    )
+                    .putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, getToggleIcon())
+                    .build()
+            )
+        } else {
+            session.setPlaybackState(buildState(PlaybackState.STATE_NONE))
+        }
+    }
+
+    private fun createToggleItem(): MediaBrowserCompat.MediaItem {
+        val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
+            .setMediaId(MEDIA_NOTIFICATION_TOGGLE_ID)
+            .setTitle("Test toggle")
+            .setSubtitle("subtitle")
+            .setIconBitmap(getToggleIcon())
         return MediaBrowserCompat.MediaItem(
             mediaDescriptionBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE)
     }
