@@ -422,5 +422,6 @@
     <string name="gda_notifications_on">Benachrichtigungen sind an</string>
     <string name="gda_notifications_off">Benachrichtigungen sind aus</string>
     <string name="gda_media_notification_toggle_action">Zum umschalten, Play drücken</string>
+    <string name="pref_gda_alarm_info_summary">Alarmeinstellungen beziehen sich nur auf die Benachrichtigungen in Android Auto und erzeugen keinen Ton oder ähnliches.</string>
 
 </resources>

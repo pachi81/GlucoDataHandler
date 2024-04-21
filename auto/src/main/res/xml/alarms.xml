@@ -2,6 +2,18 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
+        android:title="@string/pref_gda_info"
+        app:iconSpaceReserved="false">
+        <Preference
+            android:key="gda_alarn_info"
+            android:summary="@string/pref_gda_alarm_info_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="gda_info"
+            android:summary="@string/pref_gda_info_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
         android:title="@string/alarm_cat_categories"
         app:iconSpaceReserved="false">
         <Preference

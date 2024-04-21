@@ -430,4 +430,5 @@
     <string name="gda_notifications_on">Notifciations are on</string>
     <string name="gda_notifications_off">Notifications are off</string>
     <string name="gda_media_notification_toggle_action">Press play to toggle notification</string>
+    <string name="pref_gda_alarm_info_summary">Alarm settings are only related to notifications on Android Auto and does not trigger any sound.</string>
 </resources>
