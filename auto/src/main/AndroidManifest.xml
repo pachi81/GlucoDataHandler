@@ -104,6 +104,7 @@
             </intent-filter>
         </receiver>
         <receiver android:name="de.michelinside.glucodatahandler.common.tasks.TimeAlarmReceiver" />
+        <receiver android:name="de.michelinside.glucodatahandler.common.tasks.SourceAlarmReceiver" />
 
         <service
             android:name=".android_auto.CarMediaBrowserService"

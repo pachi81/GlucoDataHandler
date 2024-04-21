@@ -38,7 +38,8 @@ class GlucoDataServiceAuto: Service() {
             if(!init) {
                 Log.v(LOG_ID, "init called")
                 GlucoDataService.context = context
-                TimeTaskService.useWorker = true
+                //TimeTaskService.useWorker = true
+                //SourceTaskService.useWorker = true
                 ReceiveData.initData(context)
                 CarConnection(context.applicationContext).type.observeForever(GlucoDataServiceAuto::onConnectionStateUpdated)
                 init = true
