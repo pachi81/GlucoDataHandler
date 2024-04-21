@@ -150,7 +150,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         try {
             Log.d(LOG_ID, "onLoadChildren for parent: " + parentId)
             if (MEDIA_ROOT_ID == parentId) {
-                result.sendResult(mutableListOf(createMediaItem()/*, createToggleItem()*/))
+                result.sendResult(mutableListOf(createMediaItem(), createToggleItem()))
             } else {
                 result.sendResult(null)
             }
@@ -253,13 +253,13 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             session.setMetadata(
                 MediaMetadataCompat.Builder()
                     .putString(
-                        MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, "Notification is " + if(CarNotification.enable_notification) "on" else "off"
+                        MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, resources.getString(if(CarNotification.enable_notification) CR.string.gda_notifications_on else CR.string.gda_notifications_off)
                     )
                     .putString(
                         MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE,
-                        "Press play to toggle notification"
+                        resources.getString(CR.string.gda_media_notification_toggle_action)
                     )
-                    .putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, getToggleIcon())
+                    //.putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, getToggleIcon())
                     .build()
             )
         } else {
@@ -270,8 +270,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     private fun createToggleItem(): MediaBrowserCompat.MediaItem {
         val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
             .setMediaId(MEDIA_NOTIFICATION_TOGGLE_ID)
-            .setTitle("Test toggle")
-            .setSubtitle("subtitle")
+            .setTitle(resources.getString(CR.string.gda_media_notification_toggle_title))
+            .setSubtitle(resources.getString(if(CarNotification.enable_notification) CR.string.gda_notifications_on else CR.string.gda_notifications_off))
             .setIconBitmap(getToggleIcon())
         return MediaBrowserCompat.MediaItem(
             mediaDescriptionBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE)

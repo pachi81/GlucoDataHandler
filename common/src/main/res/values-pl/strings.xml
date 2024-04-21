@@ -426,4 +426,8 @@
     <string name="pref_source_activate_local_nightscout_iob_summary">Press here to set nightscout settings to use the local web server to receive addtional IOB values.</string>
     <string name="activate_local_nightscout_iob_title">Overwrite nightscout</string>
     <string name="activate_local_nightscout_iob_message">This will overwrite your current nightscout source settings to use local webservice on port 17580 to receive IOB values.\nAre you sure?</string>
+    <string name="gda_media_notification_toggle_title">Notification toggle</string>
+    <string name="gda_notifications_on">Notifciations are on</string>
+    <string name="gda_notifications_off">Notifications are off</string>
+    <string name="gda_media_notification_toggle_action">Press play to toggle notification</string>
 </resources>

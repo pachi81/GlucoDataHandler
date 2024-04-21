@@ -418,5 +418,9 @@
     <string name="pref_source_activate_local_nightscout_iob_summary">Hier drücken, um die Nightscout Quelle auf den lokalen Webserver umzustellen, um IOB Werte zu empfangen.</string>
     <string name="activate_local_nightscout_iob_title">Nightscout ändern</string>
     <string name="activate_local_nightscout_iob_message">Die Nightscout Quelle wird mit der Konfiguration zum Empfangen der Daten vom lokalen Webserver auf Port 17580 überschrieben!\nSind Sie sicher?</string>
+    <string name="gda_media_notification_toggle_title">Benachrichtigungen umschalten</string>
+    <string name="gda_notifications_on">Benachrichtigungen sind an</string>
+    <string name="gda_notifications_off">Benachrichtigungen sind aus</string>
+    <string name="gda_media_notification_toggle_action">Zum umschalten, Play drücken</string>
 
 </resources>
