@@ -347,18 +347,18 @@
 
     <string name="menu_alarms">Alarms</string>
     <string name="alarm_interval">Interval</string>
-    <string name="alarm_interval_summary_low">Minimum interval in minutes between notifications for the this alarm type.\nInformation: there will only a new notification after the time has elapsed, if the delta is negative.</string>
-    <string name="alarm_interval_summary_high">Minimum interval in minutes between notifications for the this alarm type.\nInformation: there will only a new notification after the time has elapsed, if the delta is positive.</string>
-    <string name="alarm_interval_summary_obsolete">Time in minutes since the last glucose value has received to trigger this notification. It will also re-appear in this interval.</string>
+    <string name="alarm_interval_summary_low">Minimum interval in minutes between notifications for this alarm type.\nInformation: there will only be a new notification after the time has elapsed, if the delta is negative.</string>
+    <string name="alarm_interval_summary_high">Minimum interval in minutes between notifications for this alarm type.\nInformation: there will only be a new notification after the time has elapsed, if the delta is positive.</string>
+    <string name="alarm_interval_summary_obsolete">Time in minutes since the last glucose value has been received to trigger this notification. It will also re-appear in this interval.</string>
     <string name="alarm_enabled">Enabled</string>
-    <string name="alarm_enabled_summary_on">Notification are enabled for this alarm type.</string>
-    <string name="alarm_enabled_summary_off">Notification are disabled for this alarm type.</string>
+    <string name="alarm_enabled_summary_on">Notifications are enabled for this alarm type.</string>
+    <string name="alarm_enabled_summary_off">Notifications are disabled for this alarm type.</string>
     <string name="alarm_test">Test it</string>
     <string name="alarm_test_summary">Press here to trigger a notification after 3 seconds for this alarm type.</string>
     <string name="alarm_settings">Settings</string>
     <string name="alarm_settings_summary">Press here to go to settings for notification channel for this alarm.\nThere you can change all related settings.</string>
     <string name="alarm_save_sound">Save sound</string>
-    <string name="alarm_save_sound_summary">Press here, if you want to save the default alarm sound to file system.</string>
+    <string name="alarm_save_sound_summary">Press here, if you want to save the default alarm sound to a file on your phone.</string>
     <string name="alarm_saved">Alarm saved!</string>
     <string name="snooze">Snooze</string>
     <string name="alarm_cat_all">All alarms</string>
@@ -383,16 +383,16 @@
     <string name="test_alarm">Test Alarm!</string>
     <string name="alarm_cat_categories">Alarm categories</string>
     <string name="alarm_fullscreen_notification_enabled">Full screen notification</string>
-    <string name="alarm_fullscreen_notification_enabled_summary">Enables full screen notification on lockscreen.\nThis may requests an additional permission.</string>
+    <string name="alarm_fullscreen_notification_enabled_summary">Enables full screen notification on lockscreen.\nThis may request an additional permission.</string>
     <string name="alarm_snooze_on_notification_enabled">Snooze on notification</string>
     <string name="alarm_snooze_on_notification_summary">If enabled, the notifications will also include buttons to activate snooze.</string>
     <string name="alarm_fullscreen_dismiss_keyguard">Dismiss keyguard</string>
     <string name="alarm_fullscreen_dismiss_keyguard_summary">Please enable this setting, if you have problems with the fullscreen notification.\nOn some devices, this will cause the unlock screen, while the fullscreen notification is triggered.\nSo please do not enable it, if you do not have any problems.</string>
     <string name="alarm_force_sound">Force alarm sound</string>
-    <string name="alarm_force_sound_summary">This will force an alarm sound and vibration even if the phone is in silent or vibration mode. It always will stop the do not disturb mode!\nTo enable this setting, you may be asked for allowing this app to change the do not disturb mode.</string>
+    <string name="alarm_force_sound_summary">This will force an alarm sound and vibration even if the phone is in silent or vibration mode. It will always stop the do not disturb mode!\nTo enable this setting, you may be asked for allowing this app to change the do not disturb mode.</string>
     <string name="wear_alarm_force_sound">Wear: Force alarm sound</string>
     <string name="alarm_force_vibration">Force vibration</string>
-    <string name="alarm_force_vibration_summary">Force vibration, even if the phone is in silent mode. It always will stop the do not disturb mode!\nTo enable this setting, you may be asked for allowing this app to change the do not disturb mode.</string>
+    <string name="alarm_force_vibration_summary">Force vibration, even if the phone is in silent mode. It will always stop the do not disturb mode!\nTo enable this setting, you may be asked for allowing this app to change the do not disturb mode.</string>
     <string name="alarm_sound_level">Sound level</string>
     <string name="alarm_sound_level_summary">Force setting sound level for alarm sound.\n-1 for using default settings of phone.</string>
     <string name="advanced_settings">Advanced</string>
@@ -408,7 +408,7 @@
     <string name="alarm_no_notification_auto_connected_summary_off">There will be an alarm notification on phone, even if Android Auto is connected.</string>
     <string name="alarm_retrigger">Retrigger</string>
     <string name="alarm_retrigger_summary">If the alarm notification is not closed, the alarm will be triggered again after this interval in minutes up to 3 times.\n0 - no retrigger</string>
-    <string name="alarm_obsolete">obsolete</string>
+    <string name="alarm_obsolete">o\Obsolete</string>
     <string name="obsolete_alarm_notification_name">Obsolete alarm</string>
     <string name="alarm_obsolete_summary">Alarm settings for no new glucose value.</string>
     <string name="obsolete_alarm_notification_descr">This notification will appear, if there is no new value for in an interval.</string>
@@ -446,5 +446,5 @@
     <string name="gda_notifications_on">Notifciations are on</string>
     <string name="gda_notifications_off">Notifications are off</string>
     <string name="gda_media_notification_toggle_action">Press play to toggle notification</string>
-    <string name="pref_gda_alarm_info_summary">Alarm settings are only related to notifications on Android Auto and does not trigger any sound.</string>
+    <string name="pref_gda_alarm_info_summary">Alarm settings are only related to notifications on Android Auto and do not trigger any sound.</string>
 </resources>
