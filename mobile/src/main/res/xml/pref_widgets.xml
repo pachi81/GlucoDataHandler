@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <PreferenceCategory
+            android:title="@string/pref_floating_widget"
+            app:iconSpaceReserved="false">
+                <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="false"
+                    android:key="floating_widget"
+                    android:summary="@string/pref_floating_widget_summary"
+                    android:title="@string/pref_floating_widget"
+                    android:icon="@drawable/icon_overlay"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.ListPreference
+                    android:defaultValue="glucose_trend_delta_time"
+                    android:entries="@array/pref_floating_widget_style_labels"
+                    android:entryValues="@array/pref_floating_widget_style_values"
+                    android:key="floating_widget_style"
+                    android:summary="@string/pref_floating_widget_style_summary"
+                    android:title="@string/pref_floating_widget_style"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SeekBarPreference
+                    android:defaultValue="3"
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="1"
+                    app:min="1"
+                    android:max="10"
+                    android:key="floating_widget_size"
+                    android:summary="@string/pref_floating_widget_size_summary"
+                    android:title="@string/pref_floating_widget_size"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SeekBarPreference
+                    android:defaultValue="3"
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="1"
+                    app:min="0"
+                    android:max="10"
+                    android:key="floating_widget_transparency"
+                    android:summary="@string/pref_floating_widget_transparency_summary"
+                    android:title="@string/pref_floating_widget_transparency"
+                    app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+        <PreferenceCategory
+            android:title="@string/pref_cat_widgets"
+            app:iconSpaceReserved="false">
+                <androidx.preference.SeekBarPreference
+                    android:defaultValue="3"
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="1"
+                    app:min="0"
+                    android:max="10"
+                    android:key="widget_transparency"
+                    android:summary="@string/pref_widget_transparency_summary"
+                    android:title="@string/pref_widget_transparency"
+                    app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+</PreferenceScreen>

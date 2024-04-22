@@ -258,7 +258,7 @@
 
     <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataAuto/blob/main/README.md</string>
     <string name="gda_no_data">Para usar este aplicativo no Android Auto, você deve ativar as configurações do desenvolvedor no Android Auto clicando várias vezes na versão. Então você deve ativar \"Fontes desconhecidas\" no menu de configurações do desenvolvedor.</string>
-    <string name="pref_gda_info">Informação</string>
+    <string name="pref_information">Informação</string>
     <string name="pref_gda_info_summary">Se você estiver usando GlucoDataHandler como fonte, essas configurações serão sobrescritas no GlucoDataHandler, portanto você não precisa alterá-las aqui.</string>
     <string name="pref_no_gda_info">GlucoDataAuto ausente</string>
     <string name="pref_no_gda_info_summary">TPara usar o GlucoDataHandler para Android Auto, você deve instalar o GlucoDataAuto do GitHub.\nClique aqui para obter mais informações e fazer o download do GlucoDataAuto.</string>
@@ -427,4 +427,28 @@
     <string name="pref_source_activate_local_nightscout_iob_summary">Pressione aqui para definir as configurações do Nightscout para usar o servidor web local para receber valores IOB adicionais.</string>
     <string name="activate_local_nightscout_iob_title">Sobrescrever Nightscout</string>
     <string name="activate_local_nightscout_iob_message">Isso substituirá as configurações atuais de recebidas do Nightscout para usar o serviço web local na porta 17580 para receber valores IOB.\n Você tem certeza?</string>
+    <string name="wear_alarm_force_sound">Wear: Force alarm sound</string>
+    <string name="gda_media_notification_toggle_title">Notification toggle</string>
+    <string name="gda_notifications_on">Notifciations are on</string>
+    <string name="gda_notifications_off">Notifications are off</string>
+    <string name="gda_media_notification_toggle_action">Press play to toggle notification</string>
+    <string name="pref_gda_alarm_info_summary">Alarm settings are only related to notifications on Android Auto and do not trigger any sound.</string>
+    <string name="pref_cat_general_summary">General settings, like the unit, time and delta settings.</string>
+    <string name="pref_target_range_summary">Settings for glucose borders and the corresponding colors.</string>
+    <string name="pref_cat_widgets_summary">Settings for phone widgets and floating widget.</string>
+    <string name="pref_cat_notification_summary">Notification settings.</string>
+    <string name="pref_cat_locksreen_wallpaper_summary">Settings to replace the lockscreen wallpaper.</string>
+    <string name="pref_cat_android_auto_summary">Setting for GlucoDataAuto to use for Android Auto.</string>
+    <string name="pref_cat_watchdrip">MiBand and Amazfit watches</string>
+    <string name="pref_cat_wear_os">Wear OS watches</string>
+    <string name="pref_cat_watch">Watch</string>
+    <string name="pref_cat_watch_summary">Settings for connected smartwatches.</string>
+    <string name="pref_cat_transfer_summary">Settings to transfer glucose values to other applications.</string>
+    <string name="pref_cat_transfer">Transfer values</string>
+    <string name="pref_cat_visualisation">Visualisation</string>
+    <string name="pref_cat_banglejs">BangleJS watches</string>
+    <string name="pref_wearos_info_summary">To use GlucoDataHandler on Wear OS watches, please install it from Google Playstore.</string>
+    <string name="pref_wear_os_check_connection">Check connection</string>
+    <string name="pref_wear_os_check_connection_summary">Press here to re-check the connection to Wear OS.\nYou can also trigger this check while pressing on the connection info on home screen (even in the Wear OS app).</string>
+    <string name="pref_watchdrip_info_summary">WatchDrip+ supports several MiBand and Amazfit devices.\nTo get a whole list of supported devices and more information about configure WatchDrip+, please press here.</string>
 </resources>

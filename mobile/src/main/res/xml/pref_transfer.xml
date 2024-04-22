@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="send_to_xdrip"
+            android:summary="@string/pref_switch_send_to_xdrip_summary"
+            android:title="@string/pref_switch_send_to_xdrip"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.MultiSelectListPreference
+            android:key="xdrip_receivers"
+            android:summary="@string/pref_button_select_xdrip_target_summary"
+            android:title="@string/pref_button_select_xdrip_target"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="send_xdrip_broadcast"
+            android:summary="@string/pref_switch_send_xdrip_broadcast_summary"
+            android:title="@string/pref_switch_send_xdrip_broadcast"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.MultiSelectListPreference
+            android:key="xdrip_broadcast_receivers"
+            android:summary="@string/pref_button_select_xdrip_broadcast_target_summary"
+            android:title="@string/pref_button_select_xdrip_broadcast_target"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="send_to_glucodata_aod"
+            android:summary="@string/pref_switch_send_to_aod_summary"
+            android:title="@string/pref_switch_send_to_aod"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.MultiSelectListPreference
+            android:key="glucodata_receivers"
+            android:summary="@string/pref_button_select_target_summary"
+            android:title="@string/pref_button_select_target"
+            app:iconSpaceReserved="false" />
+</PreferenceScreen>

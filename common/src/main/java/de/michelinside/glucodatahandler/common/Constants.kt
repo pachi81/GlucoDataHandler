@@ -82,6 +82,8 @@ object Constants {
     const val SHARED_PREF_SEND_TO_BANGLEJS = "send_to_banglejs"
     const val SHARED_PREF_WATCHDRIP = "watchdrip_enabled"
     const val SHARED_PREF_WATCHDRIP_RECEIVERS = "watchdrip_receivers"
+    const val SHARED_PREF_CHECK_WEAR_OS_CONNECTION = "wear_os_check_connection"
+    const val SHARED_PREF_OPEN_WATCH_DRIP_LINK = "open_watchdrip_link"
 
     // internal app preferences (not changed by settings) -> use separate tag for not trigger onChanged events
     const val SHARED_PREF_INTERNAL_TAG = "GlucoDataHandlerInternalAppPrefs"

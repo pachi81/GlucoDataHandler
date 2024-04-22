@@ -51,7 +51,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/pref_gda_info"
+        android:title="@string/pref_information"
         app:iconSpaceReserved="false">
     <Preference
         android:key="gda_info"

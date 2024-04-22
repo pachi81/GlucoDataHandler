@@ -57,9 +57,10 @@
     <string name="menu_help">Help</string>
 
     <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
-    <string name="update_link"  translatable="false">https://github.com/pachi81/GlucoDataHandler/releases</string>
-    <string name="support_link"  translatable="false">https://github.com/pachi81/GlucoDataHandler/issues</string>
-    <string name="gda_support_link"  translatable="false">https://github.com/pachi81/GlucoDataAuto/issues</string>
+    <string name="update_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/releases</string>
+    <string name="support_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/issues</string>
+    <string name="gda_support_link" translatable="false">https://github.com/pachi81/GlucoDataAuto/issues</string>
+    <string name="watchdrip_link" translatable="false">https://github.com/bigdigital/watchdrip/blob/main/README.md</string>
 
     <!-- tasker -->
 
@@ -271,7 +272,7 @@
 
     <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataAuto/blob/main/README.md</string>
     <string name="gda_no_data">For using this app in Android Auto, you have to activate developer settings in Android Auto by clicking several times on the version. Then you have to enable \"Unknown sources\" in the developer settings menu.</string>
-    <string name="pref_gda_info">Information</string>
+    <string name="pref_information">Information</string>
     <string name="pref_gda_info_summary">If you are using GlucoDataHandler as source, these settings will be overwritten from GlucoDataHandler, so you do not have to change them here.</string>
     <string name="pref_no_gda_info">GlucoDataAuto missing</string>
     <string name="pref_no_gda_info_summary">To use GlucoDataHandler for Android Auto, you have to install GlucoDataAuto from GitHub.\nPlease click here for more information and to download GlucoDataAuto.</string>
@@ -439,7 +440,7 @@
     <string name="pref_source_xdrip_iob_info">IOB from xDrip+</string>
     <string name="pref_source_xdrip_iob_info_summary">To receive values from xDrip+:\n- open xDrip+\n- go to settings\n- go to Inter-app settings\n- enable \"xDrip Web Service\"</string>
     <string name="pref_source_activate_local_nightscout_iob">Activate IOB usage</string>
-    <string name="pref_source_activate_local_nightscout_iob_summary">Press here to set nightscout settings to use the local web server to receive addtional IOB values.</string>
+    <string name="pref_source_activate_local_nightscout_iob_summary">Press here to set nightscout settings to use the local web server to receive additional IOB values.</string>
     <string name="activate_local_nightscout_iob_title">Overwrite nightscout</string>
     <string name="activate_local_nightscout_iob_message">This will overwrite your current nightscout source settings to use local webservice on port 17580 to receive IOB values.\nAre you sure?</string>
     <string name="gda_media_notification_toggle_title">Notification toggle</string>
@@ -447,4 +448,22 @@
     <string name="gda_notifications_off">Notifications are off</string>
     <string name="gda_media_notification_toggle_action">Press play to toggle notification</string>
     <string name="pref_gda_alarm_info_summary">Alarm settings are only related to notifications on Android Auto and do not trigger any sound.</string>
+    <string name="pref_cat_general_summary">General settings, like the unit, time and delta settings.</string>
+    <string name="pref_target_range_summary">Settings for glucose borders and the corresponding colors.</string>
+    <string name="pref_cat_widgets_summary">Settings for phone widgets and floating widget.</string>
+    <string name="pref_cat_notification_summary">Notification settings.</string>
+    <string name="pref_cat_locksreen_wallpaper_summary">Settings to replace the lockscreen wallpaper.</string>
+    <string name="pref_cat_android_auto_summary">Setting for GlucoDataAuto to use for Android Auto.</string>
+    <string name="pref_cat_watchdrip">MiBand and Amazfit watches</string>
+    <string name="pref_cat_wear_os">Wear OS watches</string>
+    <string name="pref_cat_watch">Watch</string>
+    <string name="pref_cat_watch_summary">Settings for connected smartwatches.</string>
+    <string name="pref_cat_transfer_summary">Settings to transfer glucose values to other applications.</string>
+    <string name="pref_cat_transfer">Transfer values</string>
+    <string name="pref_cat_visualisation">Visualisation</string>
+    <string name="pref_cat_banglejs">BangleJS watches</string>
+    <string name="pref_wearos_info_summary">To use GlucoDataHandler on Wear OS watches, please install it from Google Playstore.</string>
+    <string name="pref_wear_os_check_connection">Check connection</string>
+    <string name="pref_wear_os_check_connection_summary">Press here to re-check the connection to Wear OS.\nYou can also trigger this check while pressing on the connection info on home screen (even in the Wear OS app).</string>
+    <string name="pref_watchdrip_info_summary">WatchDrip+ supports several MiBand and Amazfit devices.\nTo get a whole list of supported devices and more information about configure WatchDrip+, please press here.</string>
 </resources>
