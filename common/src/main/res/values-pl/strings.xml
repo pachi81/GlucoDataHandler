@@ -75,8 +75,8 @@
     <string name="source_state_no_connection">Brak połączenia z Internetem</string>
     <string name="source_state_error">Błąd</string>
 
-    <string name="source_interval">Odstęp czasu</string>
-    <string name="source_interval_summary">Odstęp czasu między żądaniem danych ze źródła.</string>
+    <string name="source_interval">Przerwa</string>
+    <string name="source_interval_summary">Przerwa między żądaniem danych ze źródła.</string>
     <string name="source_delay">Opóźnienie</string>
     <string name="source_delay_summary">Opóźnienie w sekundach przed zażądaniem danych z chmury, ponieważ zajmuje to trochę czasu, zanim dane się tam znajdą.</string>
 
@@ -137,8 +137,8 @@
     <string name="pref_low_value_summary">Granica dla niskich wartości stężenia glukozy.</string>
     <string name="pref_switch_car_notification">Powiadomienia w Android Auto</string>
     <string name="pref_switch_car_notification_summary">Powiadomienie dla Android Auto.</string>
-    <string name="pref_car_notification_interval">Odstęp między powiadomieniami</string>
-    <string name="pref_car_notification_interval_summary">Minimalny odstęp czasu między wyświetlaniem powiadomień o nowej wartości. Alarmy zawsze będą wyświetlać powiadomienia.</string>
+    <string name="pref_car_notification_interval">Przerwa między powiadomieniami</string>
+    <string name="pref_car_notification_interval_summary">Minimalna przerwa między wyświetlaniem powiadomień o nowej wartości. Alarmy zawsze będą wyświetlać powiadomienia.</string>
     <string name="pref_switch_car_notification_alarm_only">Tylko alarm</string>
     <string name="pref_switch_car_notification_alarm_only_summary">Powiadomienia będą pojawiać się tylko w przypadku alarmów w ustawionych odstępach.\nBardzo niskie wartości zawsze będą uruchamiać powiadomienie.</string>
     <string name="pref_switch_car_media">Odtwarzacz fikcyjnych multimediów</string>
@@ -257,11 +257,11 @@
     <!-- GlucoDataAuto -->
 
     <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataAuto/blob/main/README_PL.md</string>
-    <string name="gda_no_data">Aby korzystać z tej aplikacji w Android Auto, musisz aktywować ustawienia programisty w Android Auto, klikając kilka razy na oznaczenie wersji. Następnie należy włączyć opcję \"Nieznane źródła\" w menu ustawień dewelopera.</string>
+    <string name="gda_no_data">Aby korzystać z tej aplikacji w Android Auto, musisz aktywować ustawienia programisty w Android Auto, naciskając kilka razy na oznaczenie wersji. Następnie należy włączyć opcję \"Nieznane źródła\" w menu ustawień dewelopera.</string>
     <string name="pref_gda_info">Informacje</string>
     <string name="pref_gda_info_summary">Jeśli używasz aplikacji GlucoDataHandler jako źródła, ustawienia te zostaną nadpisane z GlucoDataHandler, więc nie musisz ich tutaj zmieniać.</string>
     <string name="pref_no_gda_info">Brak GlucoDataAuto</string>
-    <string name="pref_no_gda_info_summary">Aby korzystać z GlucoDataHandler dla Android Auto, należy zainstalować aplikację GlucoDataAuto z GitHub.\nKliknij tutaj, aby uzyskać więcej informacji i pobrać GlucoDataAuto.</string>
+    <string name="pref_no_gda_info_summary">Aby korzystać z GlucoDataHandler dla Android Auto, należy zainstalować aplikację GlucoDataAuto z GitHub.\nNaciśnij tutaj, aby uzyskać więcej informacji i pobrać GlucoDataAuto.</string>
     <string name="pref_send_to_glucodataauto">Przekaż do GlucoDataAuto</string>
     <string name="pref_send_to_glucodataauto_summary">Wysyłanie wartości glukozy i ustawień do GlucoDataAuto, jeśli telefon jest połączony z Android Auto.</string>
 
