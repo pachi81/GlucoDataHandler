@@ -428,7 +428,7 @@
     <string name="pref_cat_alarm_vibration_sound">Sound and vibration</string>
     <string name="alarm_vibrate_only">Vibrate only</string>
     <string name="permission_alarm_notification_title">Notification disabled!</string>
-    <string name="permission_alarm_notification_message">To show alarms, GlucoDataHandler needs at least the alarm notification channel to be enabled.\nYou will forwarded to the notification setting for this app.\nPlease enable alarm notification channel there.</string>
+    <string name="permission_alarm_notification_message">To show alarms, GlucoDataHandler needs at least the alarm notification channel to be enabled.\nYou will be forwarded to the notification setting for this app.\nPlease enable alarm notification channel there.</string>
     <string name="alarm_app_sound">Internal app sound</string>
     <string name="pref_send_pref_to_glucodataauto">Include settings</string>
     <string name="pref_send_pref_to_glucodataauto_summary">Include settings in message to GlucoDataAuto.\nThis will overwrite the settings in GlucoDataAuto.</string>
