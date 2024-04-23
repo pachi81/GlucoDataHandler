@@ -378,10 +378,11 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
 
     private fun stopTestSound() {
         Log.d(LOG_ID, "Stop test sound")
-        AlarmNotification.stopVibrationAndSound()
-        if(curAlarmLevel > 0)
+        if(curAlarmLevel >= 0) {
+            AlarmNotification.stopVibrationAndSound()
             AlarmNotification.setSoundLevel(curAlarmLevel)
-        curAlarmLevel = -1
+            curAlarmLevel = -1
+        }
     }
 
 

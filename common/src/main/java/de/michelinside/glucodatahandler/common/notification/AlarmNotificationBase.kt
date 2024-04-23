@@ -334,10 +334,12 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         return PendingIntent.getBroadcast(context, snoozeTime.toInt(), intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
-    protected fun createStopIntent(context: Context, noticationId: Int): PendingIntent {
+    protected fun createStopIntent(context: Context, noticationId: Int, startApp: Boolean = false): PendingIntent {
         val intent = Intent(Constants.ALARM_STOP_NOTIFICATION_ACTION)
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
         intent.putExtra(Constants.ALARM_SNOOZE_EXTRA_NOTIFY_ID, noticationId)
+        if(startApp)
+            intent.putExtra(Constants.ALARM_SNOOZE_EXTRA_START_APP, true)
         intent.setPackage(context.packageName)
         return PendingIntent.getBroadcast(context, 888, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
     }
@@ -361,6 +363,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
         val notificationBuilder = Notification.Builder(context, channelId)
             .setSmallIcon(CR.mipmap.ic_launcher)
+            .setContentIntent(createStopIntent(context, getNotificationId(alarmType), true))
             .setDeleteIntent(createStopIntent(context, getNotificationId(alarmType)))
             .setOnlyAlertOnce(false)
             .setAutoCancel(true)
@@ -453,6 +456,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         if(!Channels.getNotificationManager().isNotificationPolicyAccessGranted &&
             ( Channels.getNotificationManager().currentInterruptionFilter > NotificationManager.INTERRUPTION_FILTER_ALL ||
                     audioManager.ringerMode == AudioManager.RINGER_MODE_SILENT) ) {
+            Log.d(LOG_ID, "Force DnD is active")
             return true
         }
         return false

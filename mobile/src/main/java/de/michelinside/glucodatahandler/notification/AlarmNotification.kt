@@ -14,7 +14,6 @@ import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast
-import de.michelinside.glucodatahandler.MainActivity
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
@@ -25,7 +24,6 @@ import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
-import de.michelinside.glucodatahandler.common.utils.Utils
 import java.io.FileOutputStream
 
 object AlarmNotification : AlarmNotificationBase() {
@@ -83,10 +81,6 @@ object AlarmNotification : AlarmNotificationBase() {
                 contentView.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
             contentView.setTextColor(R.id.deltaText, Color.GRAY )
         }
-
-        notificationBuilder
-            .setContentIntent(Utils.getAppIntent(context, MainActivity::class.java, 8, false))
-
 
         if (getAddSnooze()) {
             val bigContentView = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
