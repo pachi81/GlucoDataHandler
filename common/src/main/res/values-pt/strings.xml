@@ -412,6 +412,7 @@
     <string name="alarm_sound_delay_summary">Tempo em segundos antes do som ser reproduzido.\nEle vibrará o tempo todo, mesmo se não houver nenhum som selecionado.</string>
     <string name="pref_cat_alarm_vibration_sound">Som e vibração</string>
     <string name="alarm_vibrate_only">Vibrar somente</string>
+    <string name="wear_alarm_vibrate_only">Relógio: Vibrar somente</string>
     <string name="permission_alarm_notification_title">Notificação desabilitada!!!</string>
     <string name="permission_alarm_notification_message">Para mostrar alarmes, o GlucoDataHandler precisa que pelo menos o canal de notificação de alarme esteja ativado.\nVocê será encaminhado para a configuração de notificação deste aplicativo.\nAtive o canal de notificação de alarme lá.</string>
     <string name="alarm_app_sound">Som interno do aplicativo</string>
@@ -427,7 +428,7 @@
     <string name="pref_source_activate_local_nightscout_iob_summary">Pressione aqui para definir as configurações do Nightscout para usar o servidor web local para receber valores IOB adicionais.</string>
     <string name="activate_local_nightscout_iob_title">Sobrescrever Nightscout</string>
     <string name="activate_local_nightscout_iob_message">Isso substituirá as configurações atuais de recebidas do Nightscout para usar o serviço web local na porta 17580 para receber valores IOB.\n Você tem certeza?</string>
-    <string name="wear_alarm_force_sound">Wear: Force alarm sound</string>
+    <string name="wear_alarm_force_sound">Relógio: Force alarm sound</string>
     <string name="gda_media_notification_toggle_title">Notification toggle</string>
     <string name="gda_notifications_on">Notifciations are on</string>
     <string name="gda_notifications_off">Notifications are off</string>
@@ -451,4 +452,11 @@
     <string name="pref_wear_os_check_connection">Check connection</string>
     <string name="pref_wear_os_check_connection_summary">Press here to re-check the connection to Wear OS.\nYou can also trigger this check while pressing on the connection info on home screen (even in the Wear OS app).</string>
     <string name="pref_watchdrip_info_summary">WatchDrip+ supports several MiBand and Amazfit devices.\nTo get a whole list of supported devices and more information about configure WatchDrip+, please press here.</string>
+    <string name="alarm_vibrate_only_wear_info">Vibrate only without notification is not working on each device!</string>
+    <string name="alarm_use_alarm_sound">Use alarm sound</string>
+    <string name="alarm_use_alarm_sound_summary">Use volume of the alarm sound instead of ringtone sound.\nThis may be independent from vibration mode.</string>
+    <string name="alarm_vibrate_only_summary">Activate this to force not playing any alarm sound, independent of any other alarm sound setting.</string>
+    <string name="alarm_start_delay">Start delay</string>
+    <string name="alarm_start_delay_summary">Delay in milliseconds before vibration and sound is playing first time.\nSometimes the notification from phone stops vibration immediately.</string>
+    <string name="alarm_start_delay_wear_summary">Delay before vibration and sound is playing first time.\nSometimes the notification from phone stops vibration immediately.</string>
 </resources>

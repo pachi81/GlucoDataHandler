@@ -29,25 +29,21 @@
             app:layout_boxedEdges="all">
 
             <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/switchVibration"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/alarm_vibrate_only"
-                android:textAlignment="viewStart" />
-
-            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switchNotification"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/alarm_notifications_enabled"
                 android:textAlignment="viewStart" />
-
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/switchForceSound"
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/btnAlarmAdvancedSettings"
                 android:layout_height="wrap_content"
-                android:text="@string/alarm_force_sound"
-                android:textAlignment="viewStart" />
+                android:layout_width="match_parent"
+                android:text="@string/advanced_settings" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginVertical="5dp"/>
             <Button
                 android:id="@+id/btnVeryLowAlarm"
                 android:layout_height="wrap_content"

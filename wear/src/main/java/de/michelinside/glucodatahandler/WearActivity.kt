@@ -50,6 +50,8 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             binding = ActivityWearBinding.inflate(layoutInflater)
             setContentView(binding.root)
 
+            migrateSettings()
+
             txtBgValue = findViewById(R.id.txtBgValue)
             viewIcon = findViewById(R.id.viewIcon)
             txtValueInfo = findViewById(R.id.txtValueInfo)
@@ -90,6 +92,22 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             }
             if(requestPermission())
                 GlucoDataServiceWear.start(this, true)
+        } catch( exc: Exception ) {
+            Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
+        }
+    }
+
+    private fun migrateSettings() {
+        try {
+            Log.v(LOG_ID, "migrateSettings called")
+            val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            // notification to vibrate_only
+            if(!sharedPref.contains(Constants.SHARED_PREF_NOTIFICATION_VIBRATE) && sharedPref.contains("notification")) {
+                with(sharedPref.edit()) {
+                    putBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, sharedPref.getBoolean("notification", false))
+                    apply()
+                }
+            }
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }

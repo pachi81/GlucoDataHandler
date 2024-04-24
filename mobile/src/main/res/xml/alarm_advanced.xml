@@ -2,6 +2,43 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
         <PreferenceCategory
+            android:title="@string/alarm_advanced_cat_sound"
+            app:iconSpaceReserved="false">
+                <androidx.preference.SwitchPreferenceCompat
+                    android:key="alarm_vibrate_only"
+                    android:defaultValue="false"
+                    android:title="@string/alarm_vibrate_only"
+                    android:summary="@string/alarm_vibrate_only_summary"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:key="alarm_force_vibration"
+                    android:defaultValue="false"
+                    android:title="@string/alarm_force_vibration"
+                    android:summary="@string/alarm_force_vibration_summary"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:key="use_alarm_sound"
+                    android:defaultValue="true"
+                    android:title="@string/alarm_use_alarm_sound"
+                    android:summary="@string/alarm_use_alarm_sound_summary"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:key="alarm_force_sound"
+                    android:defaultValue="false"
+                    android:title="@string/alarm_force_sound"
+                    android:summary="@string/alarm_force_sound_summary"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SeekBarPreference
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="500"
+                    app:min="0"
+                    android:max="3000"
+                    android:key="alarm_start_delay"
+                    android:title="@string/alarm_start_delay"
+                    android:summary="@string/alarm_start_delay_summary"
+                    app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+        <PreferenceCategory
             android:title="@string/alarm_advanced_cat_notifcation"
             app:iconSpaceReserved="false">
                 <androidx.preference.SwitchPreferenceCompat
@@ -36,22 +73,6 @@
                     android:defaultValue="false"
                     android:title="@string/alarm_fullscreen_dismiss_keyguard"
                     android:summary="@string/alarm_fullscreen_dismiss_keyguard_summary"
-                    app:iconSpaceReserved="false" />
-        </PreferenceCategory>
-        <PreferenceCategory
-            android:title="@string/alarm_advanced_cat_sound"
-            app:iconSpaceReserved="false">
-                <androidx.preference.SwitchPreferenceCompat
-                    android:key="alarm_force_sound"
-                    android:defaultValue="false"
-                    android:title="@string/alarm_force_sound"
-                    android:summary="@string/alarm_force_sound_summary"
-                    app:iconSpaceReserved="false" />
-                <androidx.preference.SwitchPreferenceCompat
-                    android:key="alarm_force_vibration"
-                    android:defaultValue="false"
-                    android:title="@string/alarm_force_vibration"
-                    android:summary="@string/alarm_force_vibration_summary"
                     app:iconSpaceReserved="false" />
         </PreferenceCategory>
 </PreferenceScreen>

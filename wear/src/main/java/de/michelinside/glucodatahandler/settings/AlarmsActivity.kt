@@ -16,9 +16,8 @@ class AlarmsActivity : AppCompatActivity() {
     private val LOG_ID = "GDH.Main.Alarms"
 
     private lateinit var sharedPref: SharedPreferences
-    private lateinit var switchVibration: SwitchCompat
     private lateinit var switchNotification: SwitchCompat
-    private lateinit var switchForceSound: SwitchCompat
+    private lateinit var btnAlarmAdvancedSettings: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
             Log.v(LOG_ID, "onCreate called")
@@ -28,38 +27,9 @@ class AlarmsActivity : AppCompatActivity() {
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
 
 
-            switchForceSound = findViewById(R.id.switchForceSound)
-            switchVibration = findViewById(R.id.switchVibration)
             switchNotification = findViewById(R.id.switchNotification)
+            btnAlarmAdvancedSettings = findViewById(R.id.btnAlarmAdvancedSettings)
 
-
-            switchForceSound.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_FORCE_SOUND, false)
-            switchForceSound.setOnCheckedChangeListener { _, isChecked ->
-                Log.d(LOG_ID, "Force sound changed: " + isChecked.toString())
-                try {
-                    with (sharedPref.edit()) {
-                        putBoolean(Constants.SHARED_PREF_ALARM_FORCE_SOUND, isChecked)
-                        apply()
-                    }
-                } catch (exc: Exception) {
-                    Log.e(LOG_ID, "Changing notification exception: " + exc.message.toString() )
-                }
-            }
-
-            switchVibration.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, false)
-            switchVibration.setOnCheckedChangeListener { _, isChecked ->
-                Log.d(LOG_ID, "Vibration changed: " + isChecked.toString())
-                try {
-                    with (sharedPref.edit()) {
-                        putBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, isChecked)
-                        apply()
-                    }
-                    if(isChecked)
-                        switchNotification.isChecked = false
-                } catch (exc: Exception) {
-                    Log.e(LOG_ID, "Changing notification exception: " + exc.message.toString() )
-                }
-            }
 
             switchNotification.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
             switchNotification.setOnCheckedChangeListener { _, isChecked ->
@@ -69,16 +39,15 @@ class AlarmsActivity : AppCompatActivity() {
                         putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, isChecked)
                         apply()
                     }
-                    if(isChecked)
-                        switchVibration.isChecked = false
-                    switchForceSound.isEnabled = isChecked
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Changing notification exception: " + exc.message.toString() )
                 }
             }
 
-            if(switchNotification.isChecked && switchVibration.isChecked) {
-                switchVibration.isChecked = false
+            btnAlarmAdvancedSettings.setOnClickListener {
+                Log.v(LOG_ID, "${btnAlarmAdvancedSettings.text} button clicked!")
+                val intent = Intent(this, AlarmAdvancedActivity::class.java)
+                startActivity(intent)
             }
 
             setAlarmButton(R.id.btnVeryLowAlarm, "alarm_very_low_", AlarmType.VERY_LOW)

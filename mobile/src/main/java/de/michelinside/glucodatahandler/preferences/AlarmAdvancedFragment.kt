@@ -60,6 +60,8 @@ class AlarmAdvancedFragment : PreferenceFragmentCompat(), SharedPreferences.OnSh
 
     fun updateEnableStates(sharedPreferences: SharedPreferences) {
         try {
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_ALARM_FORCE_SOUND, Constants.SHARED_PREF_NOTIFICATION_VIBRATE, invert = true)
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_NOTIFICATION_USE_ALARM_SOUND, Constants.SHARED_PREF_NOTIFICATION_VIBRATE, invert = true)
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_ALARM_FULLSCREEN_DISMISS_KEYGUARD, Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())

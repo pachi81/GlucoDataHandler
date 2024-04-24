@@ -48,6 +48,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     private var curAlarmTime = 0L
     private var forceSound = false
     private var forceVibration = false
+    protected var vibrateOnly = false
     private var lastRingerMode = -1
     private var lastDndMode = NotificationManager.INTERRUPTION_FILTER_UNKNOWN
     private var retriggerTime = 0
@@ -59,7 +60,9 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     private var alarmManager: AlarmManager? = null
     private var alarmPendingIntent: PendingIntent? = null
     private var alarmNotificationActive: Boolean = false
+    private var useAlarmSound: Boolean = true
     private var currentAlarmState: AlarmState = AlarmState.DISABLED
+    private var startDelayMs: Int = 0
 
     enum class TriggerAction {
         TEST_ALARM,
@@ -82,7 +85,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
         return vibratorInstance!!
     }
-
 
     companion object {
         private var classInstance: AlarmNotificationBase? = null
@@ -363,7 +365,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
         val notificationBuilder = Notification.Builder(context, channelId)
             .setSmallIcon(CR.mipmap.ic_launcher)
-            .setContentIntent(createStopIntent(context, getNotificationId(alarmType), true))
+            //.setContentIntent(createStopIntent(context, getNotificationId(alarmType), true))
             .setDeleteIntent(createStopIntent(context, getNotificationId(alarmType)))
             .setOnlyAlertOnce(false)
             .setAutoCancel(true)
@@ -404,8 +406,11 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
         // else
         Thread {
-            Thread.sleep(1500)
+            Log.v(LOG_ID, "Start sound and vibration with a delay of $startDelayMs ms")
+            if(startDelayMs > 0)
+                Thread.sleep(startDelayMs.toLong())
             if(curNotification > 0) {
+                Log.v(LOG_ID, "Start sound and vibration")
                 vibrate(alarmType, context, false)
                 startSound(alarmType, context, false)
                 checkRetrigger(context)
@@ -429,12 +434,12 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     fun startSound(alarmType: AlarmType, context: Context, restartVibration: Boolean, forTest: Boolean = false) {
         if (getRingerMode() >= AudioManager.RINGER_MODE_NORMAL && (curNotification > 0 || forTest)) {
-            val soundUri = getSound(alarmType, context)
+            val soundUri = getSound(alarmType, context, forTest)
             if (soundUri != null) {
-                Log.d(LOG_ID, "Play ringtone $soundUri")
+                Log.d(LOG_ID, "Play ringtone $soundUri - use alarm: $useAlarmSound")
                 ringtone = RingtoneManager.getRingtone(context, soundUri)
                 val aa = AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setUsage(if(useAlarmSound)AudioAttributes.USAGE_ALARM else AudioAttributes.USAGE_VOICE_COMMUNICATION_SIGNALLING)
                     .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                     .build()
                 ringtone!!.setAudioAttributes(aa)
@@ -521,18 +526,18 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         val soundLevel = minOf(level, getMaxSoundLevel())
         Log.v(LOG_ID, "setSoundLevel: $soundLevel")
         audioManager.setStreamVolume(
-            AudioManager.STREAM_ALARM,
+            if(useAlarmSound)AudioManager.STREAM_ALARM else AudioManager.STREAM_RING,
             soundLevel,
             0
         )
     }
 
     fun getMaxSoundLevel(): Int {
-        return audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM)
+        return audioManager.getStreamMaxVolume(if(useAlarmSound)AudioManager.STREAM_ALARM else AudioManager.STREAM_RING)
     }
 
     fun getCurrentSoundLevel(): Int {
-        return audioManager.getStreamVolume(AudioManager.STREAM_ALARM)
+        return audioManager.getStreamVolume(if(useAlarmSound)AudioManager.STREAM_ALARM else AudioManager.STREAM_RING)
     }
 
     open fun getSoundMode(alarmType: AlarmType, context: Context): SoundMode {
@@ -606,7 +611,9 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
     }
 
-    private fun getSound(alarmType: AlarmType, context: Context): Uri? {
+    private fun getSound(alarmType: AlarmType, context: Context, forTest: Boolean = false): Uri? {
+        if(vibrateOnly && !forTest)
+            return null
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         val prefix = when(alarmType) {
             AlarmType.VERY_LOW -> Constants.SHARED_PREF_ALARM_VERY_LOW
@@ -708,12 +715,18 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION)
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_FORCE_SOUND)
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_FORCE_VIBRATION)
+                onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_NOTIFICATION_VIBRATE)
+                onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_NOTIFICATION_USE_ALARM_SOUND)
+                onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_START_DELAY)
             } else {
                 when(key) {
                     Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED -> setEnabled(sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, enabled))
                     Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION -> setAddSnooze(sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, addSnooze))
                     Constants.SHARED_PREF_ALARM_FORCE_SOUND -> forceSound = sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_FORCE_SOUND, forceSound)
                     Constants.SHARED_PREF_ALARM_FORCE_VIBRATION -> forceVibration = sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_FORCE_VIBRATION, forceVibration)
+                    Constants.SHARED_PREF_NOTIFICATION_VIBRATE -> vibrateOnly = sharedPreferences.getBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, vibrateOnly)
+                    Constants.SHARED_PREF_NOTIFICATION_USE_ALARM_SOUND -> useAlarmSound = sharedPreferences.getBoolean(Constants.SHARED_PREF_NOTIFICATION_USE_ALARM_SOUND, useAlarmSound)
+                    Constants.SHARED_PREF_ALARM_START_DELAY -> startDelayMs = sharedPreferences.getInt(Constants.SHARED_PREF_ALARM_START_DELAY, startDelayMs)
                 }
             }
         } catch (exc: Exception) {

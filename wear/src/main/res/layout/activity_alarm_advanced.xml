@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/box_inset_layout_padding"
+    tools:context=".settings.AlarmAdvancedActivity"
+    tools:deviceIds="wear">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:padding="10dp">
+        <requestFocus/>
+        <LinearLayout
+            android:id="@+id/frameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:gravity="center|top"
+            android:paddingTop="30dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="80dp"
+            app:layout_boxedEdges="all">
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchVibration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/alarm_vibrate_only"
+                android:textAlignment="viewStart" />
+
+            <TextView
+                android:id="@+id/txtVibrateOnlyInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/alarm_vibrate_only_wear_info"
+                android:textAlignment="textStart"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginVertical="10dp"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchUseAlarmSound"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/alarm_use_alarm_sound"
+                android:textAlignment="viewStart" />
+
+            <TextView
+                android:id="@+id/txtUseAlarmSound"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/alarm_use_alarm_sound_summary"
+                android:textAlignment="textStart"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginVertical="10dp"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchForceSound"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/alarm_force_sound"
+                android:textAlignment="viewStart" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginVertical="10dp"/>
+
+            <RelativeLayout
+                android:id="@+id/startDelayHead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/txtStartDelayTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/alarm_start_delay"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/txtStartDelayLevel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_toEndOf="@+id/txtStartDelayTitle"
+                    android:text="0s"
+                    android:textAlignment="textEnd"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    tools:ignore="HardcodedText" />
+            </RelativeLayout>
+
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/seekStartDelay"
+                android:min="0"
+                android:max="6"
+                android:progress="0"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/txtStartDelay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/alarm_start_delay_wear_summary"
+                android:textAlignment="textStart"
+                android:textSize="16sp" />
+    </LinearLayout>
+    </ScrollView>
+</androidx.wear.widget.BoxInsetLayout>

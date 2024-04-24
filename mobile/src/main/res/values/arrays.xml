@@ -36,11 +36,13 @@
         <item>@string/high_alarm_notification_name</item>
         <item>@string/very_high_alarm_notification_name</item>
         <item>@string/obsolete_alarm_notification_name</item>
-        <item>@string/alarm_force_vibration</item>
         <item>@string/alarm_force_sound</item>
+        <item>@string/alarm_force_vibration</item>
+        <item>@string/alarm_vibrate_only</item>
         <item>@string/pref_wear_notification</item>
         <item>@string/wear_alarm_notifications_enabled</item>
         <item>@string/wear_alarm_force_sound</item>
+        <item>@string/wear_alarm_vibrate_only</item>
     </array>
     <array name="tasker_supported_settings_values">
         <item>"floating_widget"</item>
@@ -53,9 +55,11 @@
         <item>"alarm_obsolete_enabled"</item>
         <item>"alarm_force_sound"</item>
         <item>"alarm_force_vibration"</item>
+        <item>"alarm_vibrate_only"</item>
         <item>"wear_notification"</item>
         <item>"wear_alarm_notifications_enabled"</item>
         <item>"wear_alarm_force_sound"</item>
+        <item>"wear_alarm_vibrate_only"</item>
     </array>
     <array name="source_request_interval_labels">
         <item>@string/source_request_interval_1</item>

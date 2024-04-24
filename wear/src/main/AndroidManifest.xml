@@ -79,6 +79,17 @@
                 android:value=".WearActivity" />
         </activity>
         <activity
+            android:name=".settings.AlarmAdvancedActivity"
+            android:label="@string/menu_alarms"
+            android:launchMode="singleTop"
+            android:parentActivityName=".settings.AlarmsActivity"
+            android:theme="@style/Theme.GlucoDataHandler"
+            android:taskAffinity="">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".settings.AlarmsActivity" />
+        </activity>
+        <activity
             android:name=".settings.AlarmTypeActivity"
             android:label="@string/menu_alarms"
             android:launchMode="singleTop"

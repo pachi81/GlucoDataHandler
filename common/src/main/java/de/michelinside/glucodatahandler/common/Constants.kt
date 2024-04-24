@@ -97,7 +97,6 @@ object Constants {
     const val WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA_IOB_COB = "glucose_trend_delta_time_iob_cob"
 
     // Wear only preferences
-    const val SHARED_PREF_NOTIFICATION_VIBRATE = "notification"
     const val SHARED_PREF_FOREGROUND_SERVICE = "foreground_service"
     const val SHARED_PREF_WEAR_COLORED_AOD = "colored_aod"
 
@@ -135,6 +134,10 @@ object Constants {
     const val ALARM_SNOOZE_EXTRA_NOTIFY_ID = "notification_id"
     const val ALARM_SNOOZE_EXTRA_START_APP = "start_application"
     const val ALARM_NOTIFICATION_EXTRA_ALARM_TYPE = "alarm_type"
+
+    const val SHARED_PREF_NOTIFICATION_USE_ALARM_SOUND = "use_alarm_sound"
+    const val SHARED_PREF_NOTIFICATION_VIBRATE = "alarm_vibrate_only"
+    const val SHARED_PREF_ALARM_START_DELAY = "alarm_start_delay"
 
     const val SHARED_PREF_ALARM_NOTIFICATION_ENABLED = "alarm_notifications_enabled"
     const val SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED = "alarm_fullscreen_notification_enabled"
