@@ -459,4 +459,6 @@
     <string name="alarm_start_delay">Start delay</string>
     <string name="alarm_start_delay_summary">Delay in milliseconds before vibration and sound is playing first time.\nSometimes the notification from phone stops vibration immediately.</string>
     <string name="alarm_start_delay_wear_summary">Delay before vibration and sound is playing first time.\nSometimes the notification from phone stops vibration immediately.</string>
+    <string name="pref_color_obsolete">Obsolete value color</string>
+    <string name="pref_color_obsolete_summary">Color for no new glucose values.</string>
 </resources>

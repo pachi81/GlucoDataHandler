@@ -2,8 +2,6 @@ package de.michelinside.glucodatahandler.preferences
 
 import android.content.Intent
 import android.content.SharedPreferences
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -15,7 +13,6 @@ import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.utils.Utils
-import de.michelinside.glucodatahandler.notification.AlarmNotification
 
 class AlarmAdvancedFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GDH.AlarmAdvancedFragment"
@@ -73,9 +70,6 @@ class AlarmAdvancedFragment : PreferenceFragmentCompat(), SharedPreferences.OnSh
             disableSwitch(Constants.SHARED_PREF_ALARM_FORCE_SOUND)
             disableSwitch(Constants.SHARED_PREF_ALARM_FORCE_VIBRATION)
         }
-        if (!AlarmNotification.hasFullscreenPermission()) {
-            disableSwitch(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED)
-        }
         val aaPref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED)
         if(aaPref != null) {
             aaPref.isEnabled = Utils.isGlucoDataAutoAvailable(requireContext())
@@ -107,31 +101,9 @@ class AlarmAdvancedFragment : PreferenceFragmentCompat(), SharedPreferences.OnSh
             when(key) {
                 Constants.SHARED_PREF_ALARM_FORCE_SOUND -> checkDisablePref(Constants.SHARED_PREF_ALARM_FORCE_SOUND, Constants.SHARED_PREF_ALARM_FORCE_VIBRATION)
                 Constants.SHARED_PREF_ALARM_FORCE_VIBRATION -> checkDisablePref(Constants.SHARED_PREF_ALARM_FORCE_VIBRATION, Constants.SHARED_PREF_ALARM_FORCE_SOUND)
-                Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED -> {
-                    if (sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, false) && !AlarmNotification.hasFullscreenPermission()) {
-                        requestFullScreenPermission()
-                    }
-                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
-        }
-    }
-
-    private fun requestFullScreenPermission() {
-        try {
-            Log.v(LOG_ID, "requestFullScreenPermission called")
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                val intent = Intent(
-                    Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT,
-                    Uri.parse("package:" + requireContext().packageName)
-                )
-                intent.putExtra(Settings.EXTRA_APP_PACKAGE,requireContext().packageName)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "requestOverlayPermission exception: " + exc.toString())
         }
     }
 

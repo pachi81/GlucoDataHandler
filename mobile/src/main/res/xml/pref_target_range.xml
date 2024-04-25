@@ -65,5 +65,12 @@
                     app:cpv_dialogTitle="@string/pref_color_ok"
                     android:summary="@string/pref_color_ok_summary"
                     app:iconSpaceReserved="false"/>
+                <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+                    android:defaultValue="@color/gray"
+                    android:key="color_obsolete"
+                    android:title="@string/pref_color_obsolete"
+                    app:cpv_dialogTitle="@string/pref_color_obsolete"
+                    android:summary="@string/pref_color_obsolete_summary"
+                    app:iconSpaceReserved="false"/>
         </PreferenceCategory>
 </PreferenceScreen>

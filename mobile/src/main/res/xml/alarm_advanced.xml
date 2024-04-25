@@ -63,12 +63,6 @@
                     android:summary="@string/alarm_snooze_on_notification_summary"
                     app:iconSpaceReserved="false" />
                 <androidx.preference.SwitchPreferenceCompat
-                    android:defaultValue="true"
-                    android:key="alarm_fullscreen_notification_enabled"
-                    android:title="@string/alarm_fullscreen_notification_enabled"
-                    android:summary="@string/alarm_fullscreen_notification_enabled_summary"
-                    app:iconSpaceReserved="false" />
-                <androidx.preference.SwitchPreferenceCompat
                     android:key="alarm_fullscreen_dismiss_keyguard"
                     android:defaultValue="false"
                     android:title="@string/alarm_fullscreen_dismiss_keyguard"

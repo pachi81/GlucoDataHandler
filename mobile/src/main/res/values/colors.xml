@@ -11,6 +11,7 @@
     <color name="yellow">#FFFFFF00</color>
     <color name="orange">#FFFF7700</color>
     <color name="green">#FF00FF00</color>
+    <color name="gray">#FF888888</color>
     <color name="text_color">@color/black</color>
     <color name="transparent_widget_background">#55000000</color>
     <color name="transparent_widget_textcolor">@color/white</color>

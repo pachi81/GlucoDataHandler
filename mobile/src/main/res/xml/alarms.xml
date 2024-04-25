@@ -11,6 +11,12 @@
             android:summaryOn="@string/alarm_notifications_enabled_summary_on"
             android:summaryOff="@string/alarm_notifications_enabled_summary_off"
             app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="alarm_fullscreen_notification_enabled"
+            android:title="@string/alarm_fullscreen_notification_enabled"
+            android:summary="@string/alarm_fullscreen_notification_enabled_summary"
+            app:iconSpaceReserved="false" />
         <Preference
             android:title="@string/advanced_settings"
             android:summary="@string/advanced_settings_alarm_summary"

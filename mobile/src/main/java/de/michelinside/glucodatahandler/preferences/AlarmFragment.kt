@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
+import android.os.Build
 import android.provider.Settings
 import android.os.Bundle
 import android.util.Log
@@ -83,15 +85,12 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
     private fun update() {
         Log.d(LOG_ID, "update called")
         try {
-            val prefAlarmEnabled = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED)
-            if(prefAlarmEnabled != null) {
-                if(prefAlarmEnabled.isChecked && !AlarmNotification.channelActive(requireContext())) {
-                    prefAlarmEnabled.isChecked = false
-                    with(preferenceManager.sharedPreferences!!.edit()) {
-                        putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
-                        apply()
-                    }
-                }
+            if(!AlarmNotification.channelActive(requireContext())) {
+                disableSwitch(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED)
+            }
+
+            if (!AlarmNotification.hasFullscreenPermission()) {
+                disableSwitch(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED)
             }
 
             updateAlarmCat(Constants.SHARED_PREF_ALARM_VERY_LOW)
@@ -101,6 +100,20 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
             updateAlarmCat(Constants.SHARED_PREF_ALARM_OBSOLETE)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.toString())
+        }
+    }
+
+
+    private fun disableSwitch(prefname: String) {
+        val pref =
+            findPreference<SwitchPreferenceCompat>(prefname)
+        if (pref != null && pref.isChecked) {
+            Log.i(LOG_ID, "Disable preference $prefname as there is no permission!")
+            pref.isChecked = false
+            with(preferenceManager.sharedPreferences!!.edit()) {
+                putBoolean(prefname, false)
+                apply()
+            }
         }
     }
 
@@ -162,6 +175,11 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
                         requestChannelActivation()
                     }
                 }
+                Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED -> {
+                    if (sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, false) && !AlarmNotification.hasFullscreenPermission()) {
+                        requestFullScreenPermission()
+                    }
+                }
             }
             if(AlarmHandler.alarmPreferencesToSend.contains(key))
                 settingsChanged = true
@@ -174,6 +192,23 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
             val intent: Intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
                 .putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
             startActivity(intent)
+        }
+    }
+
+    private fun requestFullScreenPermission() {
+        try {
+            Log.v(LOG_ID, "requestFullScreenPermission called")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                val intent = Intent(
+                    Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT,
+                    Uri.parse("package:" + requireContext().packageName)
+                )
+                intent.putExtra(Settings.EXTRA_APP_PACKAGE,requireContext().packageName)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "requestOverlayPermission exception: " + exc.toString())
         }
     }
 }

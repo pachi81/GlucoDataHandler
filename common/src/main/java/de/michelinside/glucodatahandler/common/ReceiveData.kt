@@ -105,6 +105,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private var colorAlarm: Int = Color.RED
     private var colorOutOfRange: Int = Color.YELLOW
     private var colorOK: Int = Color.GREEN
+    private var colorObsolete: Int = Color.GRAY
     private var initialized = false
 
     init {
@@ -226,7 +227,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     */
     fun getAlarmType(): AlarmType {
         if(isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
-            return AlarmType.NONE
+            return AlarmType.OBSOLETE
         if(((alarm and 7) == 6) || (high > 0F && glucose >= high))
             return AlarmType.VERY_HIGH
         if(((alarm and 7) == 7) || (low > 0F && glucose <= low))
@@ -256,10 +257,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     fun getClucoseColor(monoChrome: Boolean = false): Int {
-        if(isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
-            return Color.GRAY
-        if (monoChrome)
+        if (monoChrome) {
+            if (isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
+                return Color.GRAY
             return Color.WHITE
+        }
 
         return getAlarmTypeColor(getAlarmType())
     }
@@ -272,7 +274,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             AlarmType.OK -> colorOK
             AlarmType.HIGH -> colorOutOfRange
             AlarmType.VERY_HIGH -> colorAlarm
-            AlarmType.OBSOLETE -> Color.GRAY
+            AlarmType.OBSOLETE -> colorObsolete
         }
     }
 
@@ -477,6 +479,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             putInt(Constants.SHARED_PREF_COLOR_OK, bundle.getInt(Constants.SHARED_PREF_COLOR_OK, colorOK))
             putInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, bundle.getInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, colorOutOfRange))
             putInt(Constants.SHARED_PREF_COLOR_ALARM, bundle.getInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm))
+            putInt(Constants.SHARED_PREF_COLOR_OBSOLETE, bundle.getInt(Constants.SHARED_PREF_COLOR_OBSOLETE, colorObsolete))
             if (bundle.containsKey(Constants.SHARED_PREF_RELATIVE_TIME)) {
                 putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, bundle.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime))
             }
@@ -496,6 +499,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         bundle.putInt(Constants.SHARED_PREF_COLOR_OK, colorOK)
         bundle.putInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, colorOutOfRange)
         bundle.putInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm)
+        bundle.putInt(Constants.SHARED_PREF_COLOR_OBSOLETE, colorObsolete)
         return bundle
     }
 
@@ -508,12 +512,13 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         colorOK = sharedPref.getInt(Constants.SHARED_PREF_COLOR_OK, colorOK)
         colorOutOfRange = sharedPref.getInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, colorOutOfRange)
         colorAlarm = sharedPref.getInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm)
+        colorObsolete = sharedPref.getInt(Constants.SHARED_PREF_COLOR_OBSOLETE, colorObsolete)
         changeIsMmol(sharedPref.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol))
         calculateAlarm()  // re-calculate alarm with new settings
         Log.i(LOG_ID, "Raw low/min/max/high set: " + lowValue.toString() + "/" + targetMinValue.toString() + "/" + targetMaxValue.toString() + "/" + highValue.toString()
                 + " mg/dl - unit: " + getUnit()
                 + " - 5 min delta: " + use5minDelta
-                + " - alarm/out/ok colors: " + colorAlarm.toString() + "/" + colorOutOfRange.toString() + "/" + colorOK.toString())
+                + " - alarm/out/ok/obsolete colors: " + colorAlarm.toString() + "/" + colorOutOfRange.toString() + "/" + colorOK.toString() + "/" + colorObsolete.toString())
     }
 
     private fun readTargets(context: Context) {
@@ -633,6 +638,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     Constants.SHARED_PREF_FIVE_MINUTE_DELTA,
                     Constants.SHARED_PREF_COLOR_ALARM,
                     Constants.SHARED_PREF_COLOR_OUT_OF_RANGE,
+                    Constants.SHARED_PREF_COLOR_OBSOLETE,
                     Constants.SHARED_PREF_COLOR_OK -> {
                         updateSettings(sharedPreferences!!)
                         val extras = Bundle()

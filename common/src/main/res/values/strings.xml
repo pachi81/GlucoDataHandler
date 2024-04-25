@@ -409,7 +409,7 @@
     <string name="alarm_no_notification_auto_connected_summary_off">There will be an alarm notification on phone, even if Android Auto is connected.</string>
     <string name="alarm_retrigger">Retrigger</string>
     <string name="alarm_retrigger_summary">If the alarm notification is not closed, the alarm will be triggered again after this interval in minutes up to 3 times.\n0 - no retrigger</string>
-    <string name="alarm_obsolete">o\Obsolete</string>
+    <string name="alarm_obsolete">Obsolete</string>
     <string name="obsolete_alarm_notification_name">Obsolete alarm</string>
     <string name="alarm_obsolete_summary">Alarm settings for no new glucose value.</string>
     <string name="obsolete_alarm_notification_descr">This notification will appear, if there is no new value for in an interval.</string>
@@ -474,4 +474,6 @@
     <string name="alarm_start_delay">Start delay</string>
     <string name="alarm_start_delay_summary">Delay in milliseconds before vibration and sound is playing first time.\nSometimes the notification from phone stops vibration immediately.</string>
     <string name="alarm_start_delay_wear_summary">Delay before vibration and sound is playing first time.\nSometimes the notification from phone stops vibration immediately.</string>
+    <string name="pref_color_obsolete">Obsolete value color</string>
+    <string name="pref_color_obsolete_summary">Color for no new glucose values.</string>
 </resources>
