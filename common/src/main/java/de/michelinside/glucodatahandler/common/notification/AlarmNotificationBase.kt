@@ -314,17 +314,9 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
         channel.setSound(getUri(CR.raw.silence, context), audioAttributes)
         channel.enableVibration(false)
+        channel.enableLights(true)
 
         Channels.getNotificationManager(context).createNotificationChannel(channel)
-
-        //TODO: delete
-        Channels.deleteNotificationChannel(context, ChannelType.LOW_ALARM)
-        Channels.deleteNotificationChannel(context, ChannelType.VERY_LOW_ALARM)
-        Channels.deleteNotificationChannel(context, ChannelType.HIGH_ALARM)
-        Channels.deleteNotificationChannel(context, ChannelType.VERY_HIGH_ALARM)
-        Channels.deleteNotificationChannel(context, ChannelType.OBSOLETE_ALARM)
-        Channels.getNotificationManager(context).deleteNotificationChannel("gdh_alarm_notification_01")
-
     }
 
     protected fun createSnoozeIntent(context: Context, snoozeTime: Long, noticationId: Int): PendingIntent {
@@ -610,7 +602,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             else -> null
         }
     }
-
     private fun getSound(alarmType: AlarmType, context: Context, forTest: Boolean = false): Uri? {
         if(vibrateOnly && !forTest)
             return null
@@ -633,7 +624,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         return getDefaultAlarm(alarmType, context)
     }
 
-
     private fun getSoundLevel(alarmType: AlarmType, context: Context): Int {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         val prefix = when(alarmType) {
@@ -646,7 +636,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
         return sharedPref.getInt(prefix + "_sound_level", -1)
     }
-
 
     fun getAlarmTextRes(alarmType: AlarmType): Int? {
         return when(alarmType) {

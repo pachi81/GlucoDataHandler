@@ -57,6 +57,13 @@ object AlarmNotification : AlarmNotificationBase() {
         context: Context,
         alarmType: AlarmType
     ) {
+        @Suppress("DEPRECATION")
+        notificationBuilder.setLights(ReceiveData.getAlarmTypeColor(alarmType), 300, 100)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            @Suppress("DEPRECATION")
+            notificationBuilder.setFlag(Notification.FLAG_SHOW_LIGHTS, true)
+        }
+
         val resId = getAlarmTextRes(alarmType)
         val contentView = RemoteViews(GlucoDataService.context!!.packageName, R.layout.alarm_notification)
         contentView.setTextViewText(R.id.alarm, context.getString(resId!!))
