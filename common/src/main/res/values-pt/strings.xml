@@ -457,7 +457,6 @@
     <string name="alarm_use_alarm_sound_summary">Use volume of the alarm sound instead of ringtone sound.\nThis may be independent from vibration mode.</string>
     <string name="alarm_vibrate_only_summary">Activate this to force not playing any alarm sound, independent of any other alarm sound setting.</string>
     <string name="alarm_start_delay">Start delay</string>
-    <string name="alarm_start_delay_summary">Delay in milliseconds before vibration and sound is playing first time.\nSometimes the notification from phone stops vibration immediately.</string>
     <string name="alarm_start_delay_wear_summary">Delay before vibration and sound is playing first time.\nSometimes the notification from phone stops vibration immediately.</string>
     <string name="pref_color_obsolete">Obsolete value color</string>
     <string name="pref_color_obsolete_summary">Color for no new glucose values.</string>

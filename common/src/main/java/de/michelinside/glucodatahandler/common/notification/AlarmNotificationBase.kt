@@ -2,6 +2,7 @@ package de.michelinside.glucodatahandler.common.notification
 
 import android.app.AlarmManager
 import android.app.Notification
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -62,7 +63,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     private var alarmNotificationActive: Boolean = false
     private var useAlarmSound: Boolean = true
     private var currentAlarmState: AlarmState = AlarmState.DISABLED
-    private var startDelayMs: Int = 0
 
     enum class TriggerAction {
         TEST_ALARM,
@@ -234,7 +234,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 Log.d(LOG_ID, "Create notification for $alarmType with ID=$curNotification - triggerTime=$retriggerTime")
                 checkCreateSound(alarmType, context)
                 if(canShowNotification())
-                showNotification(alarmType, context)
+                    showNotification(alarmType, context)
                 startVibrationAndSound(alarmType, context)
             }
         } catch (exc: Exception) {
@@ -304,21 +304,19 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         )
     }
 
+    abstract fun adjustNoticiationChannel(context: Context, channel: NotificationChannel)
+
     private fun createNotificationChannel(context: Context) {
         Log.v(LOG_ID, "createNotificationChannel called")
 
         val channel = Channels.getNotificationChannel(context, ChannelType.ALARM, false)
 
-        val audioAttributes = AudioAttributes.Builder()
-            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-            .setUsage(AudioAttributes.USAGE_ALARM)
-            .build()
-
-        channel.setSound(getUri(CR.raw.silence, context), audioAttributes)
-        channel.enableVibration(false)
-        channel.enableLights(true)
+        adjustNoticiationChannel(context, channel)
 
         Channels.getNotificationManager(context).createNotificationChannel(channel)
+
+        // TODO: remove
+        Channels.getNotificationManager(context).deleteNotificationChannel("gdh_alarm_notification_sound")
     }
 
     protected fun createSnoozeIntent(context: Context, snoozeTime: Long, noticationId: Int): PendingIntent {
@@ -409,9 +407,10 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
         // else
         Thread {
-            Log.v(LOG_ID, "Start sound and vibration with a delay of $startDelayMs ms")
-            if(startDelayMs > 0)
-                Thread.sleep(startDelayMs.toLong())
+            val startDelay = getStartDelayMs(context)
+            Log.v(LOG_ID, "Start sound and vibration with a delay of $startDelay ms")
+            if(startDelay > 0)
+                Thread.sleep(startDelay.toLong())
             if(curNotification > 0) {
                 Log.v(LOG_ID, "Start sound and vibration")
                 vibrate(alarmType, context, false)
@@ -667,12 +666,12 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         return null
     }
 
-    private fun getUri(resId: Int, context: Context): Uri {
+    protected fun getUri(resId: Int, context: Context): Uri {
         val uri = "android.resource://" + context.packageName + "/" + resId
         return Uri.parse(uri)
     }
 
-    fun getVibrationPattern(alarmType: AlarmType): LongArray? {
+    private fun getVibrationPattern(alarmType: AlarmType): LongArray? {
         return when(alarmType) {
             AlarmType.VERY_LOW -> longArrayOf(0, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000)
             AlarmType.LOW -> longArrayOf(0, 700, 500, 700, 500, 700, 500, 700)
@@ -707,6 +706,10 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
     }
 
+    open fun getStartDelayMs(context: Context): Int {
+        return 0
+    }
+
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
@@ -717,7 +720,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_FORCE_VIBRATION)
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_NOTIFICATION_VIBRATE)
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_NOTIFICATION_USE_ALARM_SOUND)
-                onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_START_DELAY)
             } else {
                 when(key) {
                     Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED -> setEnabled(sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, enabled))
@@ -726,7 +728,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     Constants.SHARED_PREF_ALARM_FORCE_VIBRATION -> forceVibration = sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_FORCE_VIBRATION, forceVibration)
                     Constants.SHARED_PREF_NOTIFICATION_VIBRATE -> vibrateOnly = sharedPreferences.getBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, vibrateOnly)
                     Constants.SHARED_PREF_NOTIFICATION_USE_ALARM_SOUND -> useAlarmSound = sharedPreferences.getBoolean(Constants.SHARED_PREF_NOTIFICATION_USE_ALARM_SOUND, useAlarmSound)
-                    Constants.SHARED_PREF_ALARM_START_DELAY -> startDelayMs = sharedPreferences.getInt(Constants.SHARED_PREF_ALARM_START_DELAY, startDelayMs)
                 }
             }
         } catch (exc: Exception) {

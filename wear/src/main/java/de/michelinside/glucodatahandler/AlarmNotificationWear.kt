@@ -1,5 +1,7 @@
 package de.michelinside.glucodatahandler
 
+import android.app.NotificationChannel
+import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
@@ -16,6 +18,17 @@ object AlarmNotificationWear : AlarmNotificationBase() {
     override fun canShowNotification(): Boolean {
         return !(noAlarmOnPhoneConnected && WearPhoneConnection.nodesConnected)
     }
+
+    override fun adjustNoticiationChannel(context: Context, channel: NotificationChannel) {
+        channel.enableVibration(true)
+        channel.vibrationPattern = longArrayOf(0, 500, 100, 500)
+    }
+
+    override fun getStartDelayMs(context: Context): Int {
+        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        return maxOf(sharedPref.getInt(Constants.SHARED_PREF_ALARM_START_DELAY, 1500), 1500)
+    }
+
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         try {
             super.onSharedPreferenceChanged(sharedPreferences, key)

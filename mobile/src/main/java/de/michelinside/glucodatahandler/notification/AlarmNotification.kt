@@ -1,12 +1,14 @@
 package de.michelinside.glucodatahandler.notification
 
 import android.app.Notification
+import android.app.NotificationChannel
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Paint
+import android.media.AudioAttributes
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
@@ -42,6 +44,16 @@ object AlarmNotification : AlarmNotificationBase() {
             return true
         }
         return false
+    }
+
+    override fun adjustNoticiationChannel(context: Context, channel: NotificationChannel) {
+        val audioAttributes = AudioAttributes.Builder()
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .setUsage(AudioAttributes.USAGE_ALARM)
+            .build()
+        channel.setSound(getUri(CR.raw.silence, context), audioAttributes)
+        channel.enableVibration(false)
+        channel.enableLights(true)
     }
 
     override fun onNotificationStopped(noticationId: Int, context: Context?) {

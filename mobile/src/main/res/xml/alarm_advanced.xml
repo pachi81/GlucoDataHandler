@@ -28,15 +28,6 @@
                     android:title="@string/alarm_force_sound"
                     android:summary="@string/alarm_force_sound_summary"
                     app:iconSpaceReserved="false" />
-                <androidx.preference.SeekBarPreference
-                    app:showSeekBarValue="true"
-                    app:seekBarIncrement="500"
-                    app:min="0"
-                    android:max="3000"
-                    android:key="alarm_start_delay"
-                    android:title="@string/alarm_start_delay"
-                    android:summary="@string/alarm_start_delay_summary"
-                    app:iconSpaceReserved="false" />
         </PreferenceCategory>
         <PreferenceCategory
             android:title="@string/alarm_advanced_cat_notifcation"

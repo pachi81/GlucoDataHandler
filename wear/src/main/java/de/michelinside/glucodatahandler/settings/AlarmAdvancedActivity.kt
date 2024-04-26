@@ -95,7 +95,7 @@ class AlarmAdvancedActivity : AppCompatActivity() {
                 }
             }
 
-            seekStartDelay.progress = sharedPref.getInt(Constants.SHARED_PREF_ALARM_START_DELAY, 0)/500
+            seekStartDelay.progress = sharedPref.getInt(Constants.SHARED_PREF_ALARM_START_DELAY, 1500)/500
             txtStartDelayLevel.text = getStartDelayString()
             seekStartDelay.setOnSeekBarChangeListener(SeekBarChangeListener(Constants.SHARED_PREF_ALARM_START_DELAY, txtStartDelayLevel))
 

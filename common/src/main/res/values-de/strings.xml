@@ -447,7 +447,6 @@
     <string name="alarm_use_alarm_sound_summary">Lautstärke vom Wecker anstatt vom Klingelton verwenden.\nJe nach Modell ist das unabhängig vom Vibrationsmodus!</string>
     <string name="alarm_vibrate_only_summary">Wenn aktiv, wird keinerlei Alarmton abgespielt, unabhängig von anderen Einstellungen für den Alarmton.</string>
     <string name="alarm_start_delay">Verzögerung</string>
-    <string name="alarm_start_delay_summary">Verzögerung in Millisekunden bevor Ton und Vibration gestartet wird.\nMit dieser Einstellung nur rumspielen, wenn die Vibration oder der Ton nur ganz kurz ist.</string>
     <string name="alarm_start_delay_wear_summary">Verzögerung bevor Ton und Vibration gestartet wird.\nFalls Vibration oder Ton nur ganz kurz ist.</string>
     <string name="pref_color_obsolete">Veralteter Wert</string>
     <string name="pref_color_obsolete_summary">Farbe, wenn es keinen neuen Wert gibt.</string>
