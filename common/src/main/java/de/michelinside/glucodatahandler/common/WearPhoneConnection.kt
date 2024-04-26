@@ -443,7 +443,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             when(command) {
                 Command.STOP_ALARM -> AlarmNotificationBase.instance!!.stopCurrentNotification(context, fromClient = true)
                 Command.SNOOZE_ALARM -> AlarmHandler.setSnoozeTime(bundle!!.getLong(AlarmHandler.SNOOZE_TIME, 0L), fromClient = true)
-                Command.TEST_ALARM -> AlarmNotificationBase.instance!!.executeTest(AlarmType.fromIndex(bundle!!.getInt(Constants.ALARM_NOTIFICATION_EXTRA_ALARM_TYPE, ReceiveData.getAlarmType().ordinal)), context)
+                Command.TEST_ALARM -> AlarmNotificationBase.instance!!.executeTest(AlarmType.fromIndex(bundle!!.getInt(Constants.ALARM_NOTIFICATION_EXTRA_ALARM_TYPE, ReceiveData.getAlarmType().ordinal)), context, false)
             }
 
         } catch (exc: Exception) {

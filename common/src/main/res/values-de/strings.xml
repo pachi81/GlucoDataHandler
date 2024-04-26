@@ -451,5 +451,7 @@
     <string name="alarm_start_delay_wear_summary">Verzögerung bevor Ton und Vibration gestartet wird.\nFalls Vibration oder Ton nur ganz kurz ist.</string>
     <string name="pref_color_obsolete">Veralteter Wert</string>
     <string name="pref_color_obsolete_summary">Farbe, wenn es keinen neuen Wert gibt.</string>
+    <string name="alarm_wear_no_notification_phone_connected">Kein Popup, wenn Telefon verbunden</string>
+    <string name="alarm_wear_no_notification_phone_connected_summary">Kein zusätzliches Uhr popup, solange das Telefon verbunden ist.\nTöne und Vibration erfolgen entsprechend den Einstellungen.</string>
 
 </resources>

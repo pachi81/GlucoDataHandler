@@ -149,6 +149,7 @@ object Constants {
 
     const val SHARED_PREF_NO_ALARM_NOTIFICATION_WEAR_CONNECTED = "alarm_no_notification_wear_connected"
     const val SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED = "alarm_no_notification_auto_connected"
+    const val SHARED_PREF_WEAR_NO_ALARM_POPUP_PHONE_CONNECTED = "alarm_wear_no_popup_phone_connected"
 
 
     const val SHARED_PREF_ALARM_VERY_LOW = "alarm_very_low"

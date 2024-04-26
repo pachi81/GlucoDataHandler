@@ -83,6 +83,27 @@
                 android:background="@android:color/darker_gray"
                 android:layout_marginVertical="10dp"/>
 
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchNoAlarmPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/alarm_wear_no_notification_phone_connected"
+                android:textAlignment="viewStart" />
+
+            <TextView
+                android:id="@+id/txtNoAlarmPhone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/alarm_wear_no_notification_phone_connected_summary"
+                android:textAlignment="textStart"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginVertical="10dp"/>
+
             <RelativeLayout
                 android:id="@+id/startDelayHead"
                 android:layout_width="match_parent"

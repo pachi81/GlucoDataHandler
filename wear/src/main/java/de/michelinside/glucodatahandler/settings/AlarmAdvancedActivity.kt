@@ -19,6 +19,7 @@ class AlarmAdvancedActivity : AppCompatActivity() {
     private lateinit var switchVibration: SwitchCompat
     private lateinit var switchForceSound: SwitchCompat
     private lateinit var switchUseAlarmSound: SwitchCompat
+    private lateinit var switchNoAlarmPhone: SwitchCompat
     private lateinit var txtStartDelayLevel: TextView
     private lateinit var seekStartDelay: AppCompatSeekBar
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,17 +35,18 @@ class AlarmAdvancedActivity : AppCompatActivity() {
             switchUseAlarmSound = findViewById(R.id.switchUseAlarmSound)
             txtStartDelayLevel = findViewById(R.id.txtStartDelayLevel)
             seekStartDelay = findViewById(R.id.seekStartDelay)
+            switchNoAlarmPhone = findViewById(R.id.switchNoAlarmPhone)
 
             switchUseAlarmSound.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION_USE_ALARM_SOUND, true)
             switchUseAlarmSound.setOnCheckedChangeListener { _, isChecked ->
-                Log.d(LOG_ID, "Force sound changed: " + isChecked.toString())
+                Log.d(LOG_ID, "Use alarm changed: " + isChecked.toString())
                 try {
                     with (sharedPref.edit()) {
                         putBoolean(Constants.SHARED_PREF_NOTIFICATION_USE_ALARM_SOUND, isChecked)
                         apply()
                     }
                 } catch (exc: Exception) {
-                    Log.e(LOG_ID, "Changing notification exception: " + exc.message.toString() )
+                    Log.e(LOG_ID, "Changing use alarm exception: " + exc.message.toString() )
                 }
             }
 
@@ -57,7 +59,7 @@ class AlarmAdvancedActivity : AppCompatActivity() {
                         apply()
                     }
                 } catch (exc: Exception) {
-                    Log.e(LOG_ID, "Changing notification exception: " + exc.message.toString() )
+                    Log.e(LOG_ID, "Changing force sound exception: " + exc.message.toString() )
                 }
             }
 
@@ -72,14 +74,28 @@ class AlarmAdvancedActivity : AppCompatActivity() {
                     switchForceSound.isEnabled = !isChecked
                     switchUseAlarmSound.isEnabled = !isChecked
                 } catch (exc: Exception) {
-                    Log.e(LOG_ID, "Changing notification exception: " + exc.message.toString() )
+                    Log.e(LOG_ID, "Changing vibration exception: " + exc.message.toString() )
                 }
             }
 
             switchForceSound.isEnabled = !switchVibration.isChecked
             switchUseAlarmSound.isEnabled = !switchVibration.isChecked
 
-            seekStartDelay.progress = sharedPref.getInt(Constants.SHARED_PREF_ALARM_START_DELAY, 0)
+
+            switchNoAlarmPhone.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_NO_ALARM_POPUP_PHONE_CONNECTED, false)
+            switchNoAlarmPhone.setOnCheckedChangeListener { _, isChecked ->
+                Log.d(LOG_ID, "No popup while phone connected changed: " + isChecked.toString())
+                try {
+                    with (sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_WEAR_NO_ALARM_POPUP_PHONE_CONNECTED, isChecked)
+                        apply()
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Changing popup while phone connected exception: " + exc.message.toString() )
+                }
+            }
+
+            seekStartDelay.progress = sharedPref.getInt(Constants.SHARED_PREF_ALARM_START_DELAY, 0)/500
             txtStartDelayLevel.text = getStartDelayString()
             seekStartDelay.setOnSeekBarChangeListener(SeekBarChangeListener(Constants.SHARED_PREF_ALARM_START_DELAY, txtStartDelayLevel))
 

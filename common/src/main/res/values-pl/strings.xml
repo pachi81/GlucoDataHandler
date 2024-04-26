@@ -459,4 +459,6 @@
     <string name="alarm_start_delay_wear_summary">Delay before vibration and sound is playing first time.\nSometimes the notification from phone stops vibration immediately.</string>
     <string name="pref_color_obsolete">Obsolete value color</string>
     <string name="pref_color_obsolete_summary">Color for no new glucose values.</string>
+    <string name="alarm_wear_no_notification_phone_connected">No popup while phone connected</string>
+    <string name="alarm_wear_no_notification_phone_connected_summary">No extra wear notification popup, while phone connected.\nThe vibration and sound will be triggered as configurated.</string>
 </resources>

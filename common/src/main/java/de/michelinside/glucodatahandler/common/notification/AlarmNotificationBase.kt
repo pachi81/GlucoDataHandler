@@ -182,7 +182,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     fun stopNotification(noticationId: Int, context: Context? = null, fromClient: Boolean = false) {
         try {
-            Log.v(LOG_ID, "stopNotification called for $noticationId - current=$curNotification")
+            Log.v(LOG_ID, "stopNotification called for $noticationId - current=$curNotification - fromClient=$fromClient")
             stopTrigger()
             if(noticationId == curNotification) {
                 checkRecreateSound()
@@ -233,16 +233,18 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     AlarmType.NONE
                 Log.d(LOG_ID, "Create notification for $alarmType with ID=$curNotification - triggerTime=$retriggerTime")
                 checkCreateSound(alarmType, context)
+                if(canShowNotification())
                 showNotification(alarmType, context)
+                startVibrationAndSound(alarmType, context)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "showNotification exception: " + exc.toString() )
         }
     }
 
-    open fun executeTest(alarmType: AlarmType, context: Context) {
+    open fun executeTest(alarmType: AlarmType, context: Context, fromIntern: Boolean = true) {
         Log.v(LOG_ID, "executeTest called for $alarmType")
-        triggerNotification(alarmType, context, true)
+        triggerNotification(alarmType, context, fromIntern)
     }
 
     fun triggerDelay(action: TriggerAction, alarmType: AlarmType, context: Context, delaySeconds: Float) {
@@ -346,7 +348,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         return Notification.Action.Builder(null, title, createStopIntent(context, notificationId)).build()
     }
 
-    abstract fun buildNotification(notificationBuilder: Notification.Builder, context: Context, alarmType: AlarmType)
+    open fun buildNotification(notificationBuilder: Notification.Builder, context: Context, alarmType: AlarmType) {}
 
     private fun createNotification(context: Context, alarmType: AlarmType): Notification? {
         Log.v(LOG_ID, "createNotification called for $alarmType")
@@ -377,8 +379,17 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             .addAction(createAction(context, "90", 90L, getNotificationId(alarmType)))
             .addAction(createAction(context, "120", 120L, getNotificationId(alarmType)))*/
 
+        val extender = Notification.WearableExtender()
+        extender.addAction(createStopAction(context, context.resources.getString(CR.string.btn_dismiss), getNotificationId(alarmType)))
+        if (getAddSnooze()) {
+            extender
+                .addAction(createSnoozeAction(context, context.getString(CR.string.snooze) + ": 60", 60L, getNotificationId(alarmType)))
+                .addAction(createSnoozeAction(context, context.getString(CR.string.snooze) + ": 90", 90L, getNotificationId(alarmType)))
+                .addAction(createSnoozeAction(context, context.getString(CR.string.snooze) + ": 120", 120L, getNotificationId(alarmType)))
+        }
+        notificationBuilder.extend(extender)
+
         buildNotification(notificationBuilder, context, alarmType)
-        startVibrationAndSound(alarmType, context)
         return notificationBuilder.build()
     }
 
@@ -793,7 +804,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         return true
     }
 
-    open fun canReshowNotification(): Boolean = true
+    open fun canReshowNotification(): Boolean = canShowNotification()
+    open fun canShowNotification(): Boolean = true
 
     fun handleTimerAction(context: Context, action: String, extras: Bundle?) {
         Log.d(LOG_ID, "handleTimerAction called for ${action} with extras: ${Utils.dumpBundle(extras)}")

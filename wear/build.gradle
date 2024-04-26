@@ -117,6 +117,15 @@ afterEvaluate {
     }
     bundleRelease.finalizedBy(copyAndroidBundlePostBuild)
 
+    def bundleDev_release = tasks.getByPath(':wear:bundleDev_release')
+    def copyAndroidBundleDevPostBuild = tasks.register('copyAndroidBundleDevPostBuild', Copy) {
+        dependsOn bundleDev_release
+        from "${projectDir}/dev_release"
+        include '**/*.aab'
+        into rootProject.releasePath + "/Playstore" + "/" + versionCode.toString()
+    }
+    bundleDev_release.finalizedBy(copyAndroidBundleDevPostBuild)
+
     //noinspection ConfigurationAvoidance
     def assembleRelease = tasks.getByPath(':wear:assembleRelease')
     def copyAndroidApksPostBuild = tasks.register('copyAndroidApksPostBuild', Copy) {
