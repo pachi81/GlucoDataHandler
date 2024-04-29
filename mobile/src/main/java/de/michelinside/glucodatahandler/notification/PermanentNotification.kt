@@ -115,8 +115,8 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         val bigIcon = sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON, false)
         val coloredIcon = sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_COLORED_ICON, true)
         return when(sharedPref.getString(iconKey, StatusBarIcon.APP.pref)) {
-            StatusBarIcon.GLUCOSE.pref -> BitmapUtils.getGlucoseAsIcon(roundTarget=!bigIcon, color = if(coloredIcon) ReceiveData.getClucoseColor() else Color.WHITE)
-            StatusBarIcon.TREND.pref -> BitmapUtils.getRateAsIcon(roundTarget=true, color = if(coloredIcon) ReceiveData.getClucoseColor() else Color.WHITE, resizeFactor = if (bigIcon) 1.5F else 1F)
+            StatusBarIcon.GLUCOSE.pref -> BitmapUtils.getGlucoseAsIcon(roundTarget=!bigIcon, color = if(coloredIcon) ReceiveData.getClucoseColor() else Color.WHITE, withShadow = if(coloredIcon) true else false)
+            StatusBarIcon.TREND.pref -> BitmapUtils.getRateAsIcon(roundTarget=true, color = if(coloredIcon) ReceiveData.getClucoseColor() else Color.WHITE, resizeFactor = if (bigIcon) 1.5F else 1F, withShadow = if(coloredIcon) true else false)
             StatusBarIcon.DELTA.pref -> BitmapUtils.getDeltaAsIcon(roundTarget=!bigIcon, color = if(coloredIcon) ReceiveData.getClucoseColor(true) else Color.WHITE)
             else -> Icon.createWithResource(GlucoDataService.context, R.mipmap.ic_launcher)
         }
@@ -128,7 +128,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             remoteViews = RemoteViews(GlucoDataService.context!!.packageName, R.layout.notification)
             remoteViews.setTextViewText(R.id.glucose, ReceiveData.getClucoseAsString())
             remoteViews.setTextColor(R.id.glucose, ReceiveData.getClucoseColor())
-            remoteViews.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap())
+            remoteViews.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap(withShadow = true))
             remoteViews.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
             if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) {
                 if (!ReceiveData.isObsolete())

@@ -485,7 +485,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             } else {
                 txtBgValue.paintFlags = 0
             }
-            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
+            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(withShadow = true))
             txtLastValue.text = ReceiveData.getAsString(this)
             if (WearPhoneConnection.nodesConnected) {
                 txtWearInfo.text = resources.getString(CR.string.activity_main_connected_label, WearPhoneConnection.getBatterLevelsAsString())

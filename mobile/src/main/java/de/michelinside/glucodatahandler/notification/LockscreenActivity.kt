@@ -236,7 +236,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             } else {
                 txtBgValue.paintFlags = 0
             }
-            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
+            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(withShadow = true))
             txtDelta.text = "Δ ${ReceiveData.getDeltaAsString()}"
             txtTime.text = "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(this)}"
             val resId = (if(alarmType != null) alarmType else ReceiveData.getAlarmType())?.let {

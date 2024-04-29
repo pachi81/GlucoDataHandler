@@ -27,6 +27,8 @@
         android:text="TextView"
         android:textSize="20dp"
         android:textColor="@color/text_color"
+        android:shadowColor="@color/black"
+        android:shadowRadius="3"
         tools:ignore="HardcodedText,SpUsage" />
 
     <ImageView

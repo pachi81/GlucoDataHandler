@@ -40,6 +40,8 @@
             android:textAlignment="viewEnd"
             android:textColor="#757575"
             android:textStyle="bold"
+            android:shadowColor="@color/black"
+            android:shadowRadius="5"
             tools:ignore="HardcodedText" />
 
         <ImageView
