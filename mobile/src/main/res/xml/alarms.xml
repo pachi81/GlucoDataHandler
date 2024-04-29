@@ -21,12 +21,17 @@
             android:title="@string/advanced_settings"
             android:summary="@string/advanced_settings_alarm_summary"
             app:fragment="de.michelinside.glucodatahandler.preferences.AlarmAdvancedFragment"
-            app:iconSpaceReserved="false">
-        </Preference>
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/alarm_cat_categories"
         app:iconSpaceReserved="false">
+        <Preference
+            android:key="pref_target_range"
+            android:title="@string/pref_target_range"
+            android:summary="@string/pref_target_range_summary"
+            app:fragment="de.michelinside.glucodatahandler.preferences.RangeSettingsFragment"
+            app:iconSpaceReserved="false" />
         <Preference
             android:key="alarm_very_low"
             android:title="@string/very_low_alarm_notification_name"
