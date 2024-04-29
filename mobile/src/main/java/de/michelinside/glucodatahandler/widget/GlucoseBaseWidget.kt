@@ -185,8 +185,8 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
 
         if (!hasTrend || !shortWidget) {
             // short widget with trend, using the glucose+trend image
-            remoteViews.setTextViewText(R.id.glucose, ReceiveData.getClucoseAsString())
-            remoteViews.setTextColor(R.id.glucose, ReceiveData.getClucoseColor())
+            remoteViews.setTextViewText(R.id.glucose, ReceiveData.getGlucoseAsString())
+            remoteViews.setTextColor(R.id.glucose, ReceiveData.getGlucoseColor())
             if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete()) {
                 remoteViews.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG)
             } else {

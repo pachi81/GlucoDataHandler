@@ -260,14 +260,14 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     private fun createMessageStyle(context: Context, isObsolete: Boolean): NotificationCompat.MessagingStyle {
         val person = Person.Builder()
             .setIcon(IconCompat.createWithBitmap(BitmapUtils.getRateAsBitmap(resizeFactor = 0.75F)!!))
-            .setName(ReceiveData.getClucoseAsString())
+            .setName(ReceiveData.getGlucoseAsString())
             .setImportant(true)
             .build()
         val messagingStyle = NotificationCompat.MessagingStyle(person)
         if (isObsolete)
             messagingStyle.conversationTitle = context.getString(CR.string.no_new_value, ReceiveData.getElapsedTimeMinute())
         else
-            messagingStyle.conversationTitle = ReceiveData.getClucoseAsString()  + " (Δ " + ReceiveData.getDeltaAsString() + ")"
+            messagingStyle.conversationTitle = ReceiveData.getGlucoseAsString()  + " (Δ " + ReceiveData.getDeltaAsString() + ")"
         messagingStyle.isGroupConversation = false
         messagingStyle.addMessage(DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(ReceiveData.time)), System.currentTimeMillis(), person)
         return messagingStyle

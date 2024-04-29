@@ -238,7 +238,7 @@ object BitmapUtils {
 
     private fun getGlucoseAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, withShadow: Boolean = false): Bitmap? {
         return textToBitmap(
-            ReceiveData.getClucoseAsString(),color ?: ReceiveData.getClucoseColor(), roundTarget, ReceiveData.isObsolete(
+            ReceiveData.getGlucoseAsString(),color ?: ReceiveData.getGlucoseColor(), roundTarget, ReceiveData.isObsolete(
                 Constants.VALUE_OBSOLETE_SHORT_SEC
             ) && !ReceiveData.isObsolete(),width, height, resizeFactor = resizeFactor, withShadow = withShadow)
     }
@@ -248,7 +248,7 @@ object BitmapUtils {
     }
 
     fun getDeltaAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100): Bitmap? {
-        return textToBitmap(ReceiveData.getDeltaAsString(),color ?: ReceiveData.getClucoseColor(true), roundTarget, false, width, height)
+        return textToBitmap(ReceiveData.getDeltaAsString(),color ?: ReceiveData.getGlucoseColor(true), roundTarget, false, width, height)
     }
 
     fun getDeltaAsIcon(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100): Icon {
@@ -257,7 +257,7 @@ object BitmapUtils {
 
     fun getRateAsBitmap(color: Int? = null, roundTarget: Boolean = false, resizeFactor: Float = 1F, width: Int = 100, height: Int = 100, withShadow: Boolean = false): Bitmap? {
         return rateToBitmap(
-            ReceiveData.rate, color ?: ReceiveData.getClucoseColor(), resizeFactor = resizeFactor, width = width, height = height, strikeThrough = ReceiveData.isObsolete(
+            ReceiveData.rate, color ?: ReceiveData.getGlucoseColor(), resizeFactor = resizeFactor, width = width, height = height, strikeThrough = ReceiveData.isObsolete(
                 Constants.VALUE_OBSOLETE_SHORT_SEC
             ),
             withShadow = withShadow
@@ -270,7 +270,7 @@ object BitmapUtils {
 
     fun getGlucoseTrendBitmap(color: Int? = null, width: Int = 100, height: Int = 100, small: Boolean = false, withShadow: Boolean = false): Bitmap? {
         return textRateToBitmap(
-            ReceiveData.getClucoseAsString(), ReceiveData.rate, color ?: ReceiveData.getClucoseColor(), ReceiveData.isObsolete(
+            ReceiveData.getGlucoseAsString(), ReceiveData.rate, color ?: ReceiveData.getGlucoseColor(), ReceiveData.isObsolete(
                 Constants.VALUE_OBSOLETE_SHORT_SEC
             ), ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height, small, withShadow)
     }

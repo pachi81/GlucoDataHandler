@@ -141,7 +141,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     open fun getLargeImageComplicationData(): ComplicationData {
         return PhotoImageComplicationData.Builder (
-            photoImage = BitmapUtils.getGlucoseAsIcon(ReceiveData.getClucoseColor(), true, 500,500),
+            photoImage = BitmapUtils.getGlucoseAsIcon(ReceiveData.getGlucoseColor(), true, 500,500),
             contentDescription = descriptionText()
         )
             .setTapAction(getTapAction())
@@ -190,7 +190,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         PlainComplicationText.Builder(text).build()
 
     fun glucoseText(): PlainComplicationText =
-        plainText(ReceiveData.getClucoseAsString())
+        plainText(ReceiveData.getGlucoseAsString())
 
     fun deltaWithIconText(): PlainComplicationText =
         plainText("Δ: " + ReceiveData.getDeltaAsString())
@@ -202,7 +202,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         plainText(ReceiveData.getRateAsString())
 
     fun glucoseAndDeltaText(): PlainComplicationText =
-        plainText(ReceiveData.getClucoseAsString() + "  Δ: " + ReceiveData.getDeltaAsString())
+        plainText(ReceiveData.getGlucoseAsString() + "  Δ: " + ReceiveData.getDeltaAsString())
 
     fun resText(resId: Int): PlainComplicationText =
         plainText(getText(resId))
@@ -234,7 +234,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     fun glucoseImage(small: Boolean = false): SmallImage {
         return SmallImage.Builder(
-            image = BitmapUtils.getGlucoseAsIcon(ReceiveData.getClucoseColor(), true, resizeFactor = if(small) 0.5F else 1.0F ),
+            image = BitmapUtils.getGlucoseAsIcon(ReceiveData.getGlucoseColor(), true, resizeFactor = if(small) 0.5F else 1.0F ),
             type = SmallImageType.PHOTO
         ).setAmbientImage(ambientGlucoseAsIcon(forImage = true, small = small))
             .build()
@@ -248,7 +248,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     fun arrowImage(small: Boolean = false): SmallImage {
         return  SmallImage.Builder(
-            image = BitmapUtils.getRateAsIcon(ReceiveData.getClucoseColor(), true, resizeFactor = if(small) 0.6F else 1.0F),
+            image = BitmapUtils.getRateAsIcon(ReceiveData.getGlucoseColor(), true, resizeFactor = if(small) 0.6F else 1.0F),
             type = SmallImageType.PHOTO
         )
             .setAmbientImage(ambientArrowIcon(small))
@@ -263,7 +263,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     fun getGlucoseTrendImage(small: Boolean = false): SmallImage {
         return  SmallImage.Builder(
-            image = BitmapUtils.getGlucoseTrendIcon(ReceiveData.getClucoseColor(), small = small),
+            image = BitmapUtils.getGlucoseTrendIcon(ReceiveData.getGlucoseColor(), small = small),
             type = SmallImageType.PHOTO
         ).setAmbientImage(ambientGlucoseTrendImage())
             .build()

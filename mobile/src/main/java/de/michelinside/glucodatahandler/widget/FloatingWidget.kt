@@ -144,8 +144,8 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
     @SuppressLint("SetTextI18n")
     private fun setContent() {
         val textSize = applyStyle()
-        txtBgValue.text = ReceiveData.getClucoseAsString()
-        txtBgValue.setTextColor(ReceiveData.getClucoseColor())
+        txtBgValue.text = ReceiveData.getGlucoseAsString()
+        txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
         if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete()) {
             txtBgValue.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         } else {

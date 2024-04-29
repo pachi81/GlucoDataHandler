@@ -153,10 +153,10 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
 
     private fun getAlarmMessage(): String {
         return when(ReceiveData.getAlarmType()) {
-            AlarmType.VERY_LOW -> "VERY LOW " + ReceiveData.getClucoseAsString()
-            AlarmType.LOW -> "LOW " + ReceiveData.getClucoseAsString()
-            AlarmType.HIGH -> "HIGH " + ReceiveData.getClucoseAsString()
-            AlarmType.VERY_HIGH -> "VERY HIGH " + ReceiveData.getClucoseAsString()
+            AlarmType.VERY_LOW -> "VERY LOW " + ReceiveData.getGlucoseAsString()
+            AlarmType.LOW -> "LOW " + ReceiveData.getGlucoseAsString()
+            AlarmType.HIGH -> "HIGH " + ReceiveData.getGlucoseAsString()
+            AlarmType.VERY_HIGH -> "VERY HIGH " + ReceiveData.getGlucoseAsString()
             else -> "No alarm!"
         }
     }

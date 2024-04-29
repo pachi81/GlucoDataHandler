@@ -87,8 +87,8 @@ object AlarmNotification : AlarmNotificationBase() {
         } else {
             contentView.setViewVisibility(R.id.glucose, View.VISIBLE)
             contentView.setViewVisibility(R.id.trendImage, View.VISIBLE)
-            contentView.setTextViewText(R.id.glucose, ReceiveData.getClucoseAsString())
-            contentView.setTextColor(R.id.glucose, ReceiveData.getClucoseColor())
+            contentView.setTextViewText(R.id.glucose, ReceiveData.getGlucoseAsString())
+            contentView.setTextColor(R.id.glucose, ReceiveData.getGlucoseColor())
             contentView.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap())
             contentView.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
         }

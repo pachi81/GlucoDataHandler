@@ -224,8 +224,8 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private fun update() {
         try {
             if(ReceiveData.time > 0) {
-                txtBgValue.text = ReceiveData.getClucoseAsString()
-                txtBgValue.setTextColor(ReceiveData.getClucoseColor())
+                txtBgValue.text = ReceiveData.getGlucoseAsString()
+                txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
                 if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete()) {
                     txtBgValue.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
                 } else {

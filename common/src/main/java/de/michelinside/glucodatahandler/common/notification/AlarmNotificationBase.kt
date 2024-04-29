@@ -370,7 +370,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             .setLocalOnly(false)
             .setStyle(Notification.DecoratedCustomViewStyle())
             .setContentTitle(context.getString(resId))
-            .setContentText(ReceiveData.getClucoseAsString()  + " (Δ " + ReceiveData.getDeltaAsString() + ")")
+            .setContentText(ReceiveData.getGlucoseAsString()  + " (Δ " + ReceiveData.getDeltaAsString() + ")")
 
             /*.setLargeIcon(BitmapUtils.getRateAsIcon())
             .addAction(createAction(context, context.getString(CR.string.snooze) + ": 60", 60L, getNotificationId(alarmType)))

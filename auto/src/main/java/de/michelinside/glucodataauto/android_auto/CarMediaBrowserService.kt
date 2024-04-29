@@ -4,7 +4,6 @@ import de.michelinside.glucodataauto.R
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.media.MediaPlayer
 import android.media.session.PlaybackState
 import android.net.Uri
@@ -215,7 +214,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 MediaMetadataCompat.Builder()
                     .putString(
                         MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE,
-                        ReceiveData.getClucoseAsString() + " (Δ " + ReceiveData.getDeltaAsString() + ")"
+                        ReceiveData.getGlucoseAsString() + " (Δ " + ReceiveData.getDeltaAsString() + ")"
                     )
                     .putString(
                         MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE,
@@ -232,7 +231,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     private fun createMediaItem(): MediaBrowserCompat.MediaItem {
         val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
             .setMediaId(MEDIA_GLUCOSE_ID)
-            .setTitle(ReceiveData.getClucoseAsString() + " (Δ " + ReceiveData.getDeltaAsString() + ")\n" + ReceiveData.getElapsedTimeMinuteAsString(this))
+            .setTitle(ReceiveData.getGlucoseAsString() + " (Δ " + ReceiveData.getDeltaAsString() + ")\n" + ReceiveData.getElapsedTimeMinuteAsString(this))
             //.setSubtitle(ReceiveData.timeformat.format(Date(ReceiveData.time)))
             .setIconBitmap(getIcon()!!)
         return MediaBrowserCompat.MediaItem(

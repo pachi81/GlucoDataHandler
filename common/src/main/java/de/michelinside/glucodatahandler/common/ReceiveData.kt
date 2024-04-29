@@ -149,7 +149,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     fun isObsolete(timeoutSec: Int = Constants.VALUE_OBSOLETE_LONG_SEC): Boolean = (System.currentTimeMillis()- time) >= (timeoutSec * 1000)
     fun isIobCobObsolete(timeoutSec: Int = Constants.VALUE_OBSOLETE_LONG_SEC): Boolean = (System.currentTimeMillis()- iobCobTime) >= (timeoutSec * 1000)
 
-    fun getClucoseAsString(): String {
+    fun getGlucoseAsString(): String {
         if(isObsolete())
             return "---"
         if (isMmol)
@@ -256,7 +256,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return curAlarm
     }
 
-    fun getClucoseColor(monoChrome: Boolean = false): Int {
+    fun getGlucoseColor(monoChrome: Boolean = false): Int {
         if (monoChrome) {
             if (isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
                 return Color.GRAY
