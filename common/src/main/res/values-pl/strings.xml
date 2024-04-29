@@ -460,4 +460,8 @@
     <string name="pref_color_obsolete_summary">Color for no new glucose values.</string>
     <string name="alarm_wear_no_notification_phone_connected">No popup while phone connected</string>
     <string name="alarm_wear_no_notification_phone_connected_summary">No extra wear notification popup, while phone connected.\nThe vibration and sound will be triggered as configurated.</string>
+    <string name="table_header_details">Details</string>
+    <string name="table_header_connections">Connections</string>
+    <string name="disconnected_label">disconnected</string>
+    <string name="connected_label">connected</string>
 </resources>

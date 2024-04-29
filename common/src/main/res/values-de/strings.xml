@@ -452,5 +452,9 @@
     <string name="pref_color_obsolete_summary">Farbe, wenn es keinen neuen Wert gibt.</string>
     <string name="alarm_wear_no_notification_phone_connected">Kein Popup, wenn Telefon verbunden</string>
     <string name="alarm_wear_no_notification_phone_connected_summary">Kein zusätzliches Uhr popup, solange das Telefon verbunden ist.\nTöne und Vibration erfolgen entsprechend den Einstellungen.</string>
+    <string name="table_header_details">Details</string>
+    <string name="table_header_connections">Verbindungen</string>
+    <string name="disconnected_label">getrennt</string>
+    <string name="connected_label">verbunden</string>
 
 </resources>

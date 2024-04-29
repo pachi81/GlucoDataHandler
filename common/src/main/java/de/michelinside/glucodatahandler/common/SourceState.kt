@@ -40,7 +40,7 @@ object SourceStateData {
         }
     }
 
-    private fun getStateMessage(context: Context): String {
+    fun getStateMessage(context: Context): String {
         if (lastState == SourceState.ERROR && lastError.isNotEmpty()) {
             return lastError
         }

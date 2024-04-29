@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlarmManager
 import android.content.Context
@@ -13,23 +14,28 @@ import android.os.PowerManager
 import android.provider.Settings
 import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
 import android.util.Log
+import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TableLayout
+import android.widget.TableRow
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuCompat
+import androidx.core.view.setPadding
 import androidx.preference.PreferenceManager
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
@@ -41,20 +47,25 @@ import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.watch.LogcatReceiver
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.time.Duration.Companion.days
 import de.michelinside.glucodatahandler.common.R as CR
 
 
 class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtBgValue: TextView
     private lateinit var viewIcon: ImageView
+    private lateinit var timeText: TextView
+    private lateinit var deltaText: TextView
+    private lateinit var iobText: TextView
+    private lateinit var cobText: TextView
     private lateinit var txtLastValue: TextView
     private lateinit var txtVersion: TextView
-    private lateinit var txtWearInfo: TextView
-    private lateinit var txtCarInfo: TextView
-    private lateinit var txtSourceInfo: TextView
+    private lateinit var tableDetails: TableLayout
+    private lateinit var tableConnections: TableLayout
     private lateinit var txtBatteryOptimization: TextView
     private lateinit var txtHighContrastEnabled: TextView
     private lateinit var txtScheduleExactAlarm: TextView
@@ -78,15 +89,18 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             txtBgValue = findViewById(R.id.txtBgValue)
             viewIcon = findViewById(R.id.viewIcon)
+            timeText = findViewById(R.id.timeText)
+            deltaText = findViewById(R.id.deltaText)
+            iobText = findViewById(R.id.iobText)
+            cobText = findViewById(R.id.cobText)
             txtLastValue = findViewById(R.id.txtLastValue)
-            txtWearInfo = findViewById(R.id.txtWearInfo)
-            txtCarInfo = findViewById(R.id.txtCarInfo)
-            txtSourceInfo = findViewById(R.id.txtSourceInfo)
             txtBatteryOptimization = findViewById(R.id.txtBatteryOptimization)
             txtHighContrastEnabled = findViewById(R.id.txtHighContrastEnabled)
             txtScheduleExactAlarm = findViewById(R.id.txtScheduleExactAlarm)
             txtNotificationPermission = findViewById(R.id.txtNotificationPermission)
             btnSources = findViewById(R.id.btnSources)
+            tableConnections = findViewById(R.id.tableConnections)
+            tableDetails = findViewById(R.id.tableDetails)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -95,10 +109,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
-
-            txtWearInfo.setOnClickListener{
-                GlucoDataService.checkForConnectedNodes()
-            }
 
             btnSources.setOnClickListener{
                 val intent = Intent(this, SettingsActivity::class.java)
@@ -160,7 +170,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.NODE_BATTERY_LEVEL,
                 NotifySource.SETTINGS,
                 NotifySource.CAR_CONNECTION,
-                NotifySource.OBSOLETE_VALUE,
+                NotifySource.TIME_VALUE,
                 NotifySource.ALARM_STATE_CHANGED,
                 NotifySource.SOURCE_STATE_CHANGE))
             checkExactAlarmPermission()
@@ -475,6 +485,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun update() {
         try {
             Log.v(LOG_ID, "update values")
@@ -486,18 +497,15 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 txtBgValue.paintFlags = 0
             }
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(withShadow = true))
-            txtLastValue.text = ReceiveData.getAsString(this)
-            if (WearPhoneConnection.nodesConnected) {
-                txtWearInfo.text = resources.getString(CR.string.activity_main_connected_label, WearPhoneConnection.getBatterLevelsAsString())
-            }
-            else
-                txtWearInfo.text = resources.getText(CR.string.activity_main_disconnected_label)
-            if (Utils.isGlucoDataAutoAvailable(this)) {
-                txtCarInfo.text = if (CarModeReceiver.AA_connected) resources.getText(CR.string.activity_main_car_connected_label) else resources.getText(CR.string.activity_main_car_disconnected_label)
-                txtCarInfo.visibility = View.VISIBLE
-            } else {
-                txtCarInfo.visibility = View.GONE
-            }
+
+            timeText.text = "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(this)}"
+            deltaText.text = "Δ ${ReceiveData.getDeltaAsString()}"
+            iobText.text = "💉 " + ReceiveData.getIobAsString()
+            cobText.text = "🍔 " + ReceiveData.getCobAsString()
+            iobText.visibility = if (ReceiveData.isIobCobObsolete(1.days.inWholeSeconds.toInt())) View.GONE else View.VISIBLE
+            cobText.visibility = iobText.visibility
+
+            txtLastValue.visibility = if(ReceiveData.time>0) View.GONE else View.VISIBLE
 
             if (ReceiveData.time == 0L) {
                 btnSources.visibility = View.VISIBLE
@@ -505,7 +513,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 btnSources.visibility = View.GONE
             }
 
-            txtSourceInfo.text = SourceStateData.getState(this)
+            updateConnectionsTable()
+            updateDetailsTable()
+
             updateAlarmIcon()
             updateMenuItems()
         } catch (exc: Exception) {
@@ -552,6 +562,69 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Saving logs exception: " + exc.message.toString() )
         }
+    }
+
+    private fun updateConnectionsTable() {
+        tableConnections.removeViews(1, maxOf(0, tableConnections.childCount - 1))
+        if (SourceStateData.lastState != SourceState.NONE)
+            tableConnections.addView(createRow(SourceStateData.lastSource.resId,
+                SourceStateData.getStateMessage(this)))
+
+        if (WearPhoneConnection.nodesConnected) {
+            WearPhoneConnection.getNodeBatterLevels().forEach { name, level ->
+                tableConnections.addView(createRow(name, if (level > 0) "$level%" else "?%"))
+            }
+        } else {
+            tableConnections.addView(createRow(CR.string.source_wear, resources.getString(CR.string.disconnected_label)))
+        }
+
+        if (Utils.isGlucoDataAutoAvailable(this)) {
+            tableConnections.addView(createRow(CR.string.pref_cat_android_auto, if (CarModeReceiver.AA_connected) resources.getString(CR.string.connected_label) else resources.getString(CR.string.disconnected_label)))
+        }
+
+    }
+
+    private fun updateDetailsTable() {
+        tableDetails.removeViews(1, maxOf(0, tableDetails.childCount - 1))
+        if (ReceiveData.isMmol)
+            tableDetails.addView(createRow(CR.string.info_label_raw, "${ReceiveData.rawValue} mg/dl"))
+        tableDetails.addView(createRow(CR.string.info_label_rate, ReceiveData.rate.toString()))
+        tableDetails.addView(createRow(CR.string.info_label_alarm, resources.getString(ReceiveData.getAlarmType().resId) + (if (ReceiveData.forceAlarm) " ⚠" else "" ) + " (" + ReceiveData.alarm + ")"))
+        if (AlarmHandler.isSnoozeActive)
+            tableDetails.addView(createRow(CR.string.snooze, AlarmHandler.snoozeTimestamp))
+        if (!ReceiveData.isIobCobObsolete(1.days.inWholeSeconds.toInt()))
+            tableDetails.addView(createRow(CR.string.info_label_iob_cob_timestamp, DateFormat.getTimeInstance(
+                DateFormat.DEFAULT).format(Date(ReceiveData.iobCobTime))))
+        if (ReceiveData.sensorID?.isNotEmpty() == true) {
+            tableDetails.addView(createRow(CR.string.info_label_sensor_id, if(BuildConfig.DEBUG) "ABCDE12345" else ReceiveData.sensorID!!))
+        }
+        tableDetails.addView(createRow(CR.string.info_label_source, resources.getString(ReceiveData.source.resId)))
+    }
+
+    private fun createColumn(text: String, end: Boolean) : TextView {
+        val textView = TextView(this)
+        textView.layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1F)
+        textView.text = text
+        textView.textSize = 18F
+        if (end)
+            textView.gravity = Gravity.CENTER_VERTICAL or Gravity.END
+        else
+            textView.gravity = Gravity.CENTER_VERTICAL
+        return textView
+    }
+
+    private fun createRow(keyResId: Int, value: String) : TableRow {
+        return createRow(resources.getString(keyResId), value)
+    }
+
+    private fun createRow(key: String, value: String) : TableRow {
+        val row = TableRow(this)
+        row.weightSum = 2f
+        row.setBackgroundColor(resources.getColor(R.color.table_row))
+        row.setPadding(Utils.dpToPx(5F, this))
+        row.addView(createColumn(key, false))
+        row.addView(createColumn(value, true))
+        return row
     }
 
     companion object {

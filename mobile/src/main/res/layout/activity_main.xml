@@ -23,9 +23,6 @@
         android:layout_marginTop="20dp"
         android:gravity="center|top"
         android:orientation="horizontal"
-        app:layout_constraintStart_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="UselessParent">
 
         <TextView
@@ -54,7 +51,66 @@
             tools:ignore="ContentDescription" />
 
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout_delta_time"
+        android:layout_width="250dp"
+        android:layout_height="30dp"
+        android:gravity="center|top"
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
 
+        <TextView
+            android:id="@+id/timeText"
+            android:text="🕒 0 min"
+            android:layout_width="0dp"
+            android:layout_weight="4"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|end"
+            android:maxLines="1"
+            android:textSize="20sp"
+            android:paddingEnd="10dp"
+            tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
+        <TextView
+            android:id="@+id/deltaText"
+            android:text="Δ +0.06"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textSize="20sp"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout_iob_cob"
+        android:layout_width="250dp"
+        android:layout_height="30dp"
+        android:gravity="center|top"
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
+        <TextView
+            android:id="@+id/iobText"
+            android:text="💉 1.30U"
+            android:layout_width="0dp"
+            android:layout_weight="4"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|end"
+            android:maxLines="1"
+            android:textSize="20sp"
+            android:paddingEnd="10dp"
+            tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/cobText"
+            android:text="🍔 31.2g"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textSize="20sp"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
     <TextView
         android:id="@+id/txtLastValue"
         android:layout_width="350dp"
@@ -64,11 +120,7 @@
         android:layout_marginEnd="20dp"
         android:text="@string/no_data"
         android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_glucose_trend"
-        app:layout_constraintTop_toTopOf="@+id/layout_info_elements" />
+        android:textSize="20sp" />
     <Button
         android:id="@+id/btnSources"
         android:layout_width="wrap_content"
@@ -80,13 +132,10 @@
     <LinearLayout
         android:id="@+id/layout_info_elements"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:gravity="center|bottom"
+        android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintStart_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="UselessParent">
         <TextView
             android:id="@+id/txtNotificationPermission"
@@ -97,10 +146,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:textAlignment="center"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/txtSourceInfo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:visibility="gone"/>
         <TextView
             android:id="@+id/txtScheduleExactAlarm"
             android:layout_width="wrap_content"
@@ -109,10 +155,7 @@
             android:text="@string/activity_main_schedule_exact_alarm"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textAlignment="center"
-            app:layout_constraintBottom_toTopOf="@+id/txtSourceInfo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:textAlignment="center" />
         <TextView
             android:id="@+id/txtHighContrastEnabled"
             android:layout_width="wrap_content"
@@ -120,10 +163,7 @@
             android:layout_marginBottom="10dp"
             android:text="@string/activity_main_high_contrast_enabled"
             android:textSize="18sp"
-            android:textAlignment="center"
-            app:layout_constraintBottom_toTopOf="@+id/txtScheduleExactAlarm"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:textAlignment="center" />
         <TextView
             android:id="@+id/txtBatteryOptimization"
             android:layout_width="wrap_content"
@@ -131,60 +171,58 @@
             android:layout_marginBottom="10dp"
             android:text="@string/activity_main_battery_optimization_disabled"
             android:textSize="16sp"
-            android:textAlignment="center"
-            app:layout_constraintBottom_toTopOf="@+id/txtSourceInfo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/txtSourceInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="Source: -"
-            android:textSize="16sp"
-            tools:ignore="HardcodedText"
-            android:textAlignment="center"
-            app:layout_constraintBottom_toTopOf="@+id/txtWearInfo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/txtWearInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/activity_main_disconnected_label"
-            android:textSize="16sp"
-            android:textAlignment="center"
-            app:layout_constraintBottom_toTopOf="@+id/txtCarInfo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/txtCarInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="@string/activity_main_car_disconnected_label"
-            android:textAlignment="center"
-            app:layout_constraintBottom_toTopOf="@+id/txtVersion"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/txtVersion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="25dp"
-            android:text="1.0"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:textSize="16sp"
-            tools:ignore="HardcodedText" />
+            android:textAlignment="center" />
         </LinearLayout>
+
+    <TableLayout
+        android:id="@+id/tableConnections"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:divider="?android:attr/dividerHorizontal"
+        android:showDividers="middle">
+
+        <TableRow android:background="@color/table_header" android:padding="5dp">
+            <TextView
+                android:paddingTop="20dp"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/table_header_connections"/>
+        </TableRow>
+    </TableLayout>
+
+    <TableLayout
+        android:id="@+id/tableDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:divider="?android:attr/dividerHorizontal"
+        android:showDividers="middle">
+
+        <TableRow android:background="@color/table_header" android:padding="5dp">
+            <TextView
+                android:paddingTop="20dp"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/table_header_details"/>
+        </TableRow>
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/txtVersion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
+        android:layout_marginTop="30dp"
+        android:text="1.0"
+        android:textSize="16sp"
+        tools:ignore="HardcodedText" />
 
     </LinearLayout>
 </ScrollView>

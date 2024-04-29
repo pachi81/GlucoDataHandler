@@ -48,12 +48,12 @@ object Utils {
         ).toInt()
     }
 
-    fun spToPx(sp: Float, context: Context): Int {
+    fun spToPx(sp: Float, context: Context): Float {
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_SP,
             sp,
             context.resources.displayMetrics
-        ).toInt()
+        )
     }
 
     fun bytesToBundle(bytes: ByteArray): Bundle? {
