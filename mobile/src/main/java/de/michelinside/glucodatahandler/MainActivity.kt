@@ -18,6 +18,7 @@ import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.View.OnClickListener
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TableLayout
@@ -578,8 +579,11 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 SourceStateData.getStateMessage(this)))
 
         if (WearPhoneConnection.nodesConnected) {
+            val onClickListener = OnClickListener {
+                GlucoDataService.checkForConnectedNodes(true)
+            }
             WearPhoneConnection.getNodeBatterLevels().forEach { name, level ->
-                tableConnections.addView(createRow(name, if (level > 0) "$level%" else "?%"))
+                tableConnections.addView(createRow(name, if (level > 0) "$level%" else "?%", onClickListener))
             }
         }
         if (WatchDrip.connected) {
@@ -620,7 +624,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         table.visibility = if(table.childCount <= 1) View.GONE else View.VISIBLE
     }
 
-    private fun createColumn(text: String, end: Boolean) : TextView {
+    private fun createColumn(text: String, end: Boolean, onClickListener: OnClickListener? = null) : TextView {
         val textView = TextView(this)
         textView.layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1F)
         textView.text = text
@@ -629,20 +633,22 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             textView.gravity = Gravity.CENTER_VERTICAL or Gravity.END
         else
             textView.gravity = Gravity.CENTER_VERTICAL
+        if(onClickListener != null)
+            textView.setOnClickListener(onClickListener)
         return textView
     }
 
-    private fun createRow(keyResId: Int, value: String) : TableRow {
-        return createRow(resources.getString(keyResId), value)
+    private fun createRow(keyResId: Int, value: String, onClickListener: OnClickListener? = null) : TableRow {
+        return createRow(resources.getString(keyResId), value, onClickListener)
     }
 
-    private fun createRow(key: String, value: String) : TableRow {
+    private fun createRow(key: String, value: String, onClickListener: OnClickListener? = null) : TableRow {
         val row = TableRow(this)
         row.weightSum = 2f
         //row.setBackgroundColor(resources.getColor(R.color.table_row))
         row.setPadding(Utils.dpToPx(5F, this))
-        row.addView(createColumn(key, false))
-        row.addView(createColumn(value, true))
+        row.addView(createColumn(key, false, onClickListener))
+        row.addView(createColumn(value, true, onClickListener))
         return row
     }
 

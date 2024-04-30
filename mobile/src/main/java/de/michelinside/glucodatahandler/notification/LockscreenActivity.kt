@@ -184,10 +184,12 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
     private fun stop() {
         try {
             Log.v(LOG_ID, "stop called for id $notificationId")
+            activity = null
             if (notificationId > 0)
                 AlarmNotification.stopNotification(notificationId, this)
             else
                 AlarmNotification.stopCurrentNotification(this)
+            finish()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
