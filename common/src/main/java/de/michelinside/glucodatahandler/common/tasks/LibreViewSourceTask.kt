@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
@@ -97,9 +96,7 @@ class LibreViewSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                 reset() // reset token for client error -> trigger reconnect
             return null
         }
-        if (BuildConfig.DEBUG) {  // do not log personal data
-            Log.i(LOG_ID, "Handle json response: " + replaceSensitiveData(body))
-        }
+        Log.d(LOG_ID, "Handle json response: " + replaceSensitiveData(body))
         val jsonObj = JSONObject(body)
         if (jsonObj.has("status")) {
             val status = jsonObj.optInt("status", -1)

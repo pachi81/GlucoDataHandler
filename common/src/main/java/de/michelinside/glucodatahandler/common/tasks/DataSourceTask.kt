@@ -7,6 +7,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
@@ -16,6 +17,7 @@ import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.utils.Utils
 import java.io.DataOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
@@ -169,20 +171,40 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     }
 
     protected fun handleResult(extras: Bundle) {
+        Log.d(LOG_ID, "handleResult for $source: ${Utils.dumpBundle(extras)}")
         val done = AtomicBoolean(false)
+        val active = AtomicBoolean(false)
         val task = Runnable {
-            val lastTime = ReceiveData.time
-            val lastIobCobTime = ReceiveData.iobCobTime
-            ReceiveData.handleIntent(GlucoDataService.context!!, source, extras)
-            if (ReceiveData.time == lastTime && lastIobCobTime == ReceiveData.iobCobTime)
-                setState(SourceState.NO_NEW_VALUE)
-            else
-                setState(SourceState.CONNECTED)
+            try {
+                active.set(true)
+                Log.d(LOG_ID, "handleResult for $source in main thread")
+                val lastTime = ReceiveData.time
+                val lastIobCobTime = ReceiveData.iobCobTime
+                ReceiveData.handleIntent(GlucoDataService.context!!, source, extras)
+                if (ReceiveData.time == lastTime && lastIobCobTime == ReceiveData.iobCobTime)
+                    setState(SourceState.NO_NEW_VALUE)
+                else
+                    setState(SourceState.CONNECTED)
+            } catch (ex: Exception) {
+                Log.e(LOG_ID, "Exception during task run: " + ex)
+                setLastError(ex.message.toString())
+            }
             done.set(true)
         }
-        Handler(GlucoDataService.context!!.mainLooper).post(task)
-        while (!done.get()) {
-            Thread.sleep(5)
+        val handler = Handler(Looper.getMainLooper())
+        handler.post(task)
+        var count = 0
+        while (!done.get() && count < 30000) {
+            Thread.sleep(10)
+            count += 10
+            if(count.mod(5000) == 0) {
+                Log.w(LOG_ID, "Handle result for $source not finished after $count ms! Active: ${active.get()} Mainlopper: Queue-Idle: ${Looper.getMainLooper().queue.isIdle}")
+            }
+        }
+        if(!done.get()) {
+            Log.e(LOG_ID, "Handler for $source not finished after $count ms! Active: ${active.get()} - Stop it!")
+            handler.removeCallbacksAndMessages(null)
+            setLastError("Internal error!")
         }
         Log.d(LOG_ID, "handleResult for " + source + " done!")
     }
