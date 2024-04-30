@@ -40,6 +40,7 @@ import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmState
+import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -47,6 +48,7 @@ import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.watch.LogcatReceiver
+import de.michelinside.glucodatahandler.watch.WatchDrip
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -66,6 +68,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtVersion: TextView
     private lateinit var tableDetails: TableLayout
     private lateinit var tableConnections: TableLayout
+    private lateinit var tableAlarms: TableLayout
     private lateinit var txtBatteryOptimization: TextView
     private lateinit var txtHighContrastEnabled: TextView
     private lateinit var txtScheduleExactAlarm: TextView
@@ -100,6 +103,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             txtNotificationPermission = findViewById(R.id.txtNotificationPermission)
             btnSources = findViewById(R.id.btnSources)
             tableConnections = findViewById(R.id.tableConnections)
+            tableAlarms = findViewById(R.id.tableAlarms)
             tableDetails = findViewById(R.id.tableDetails)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
@@ -513,6 +517,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 btnSources.visibility = View.GONE
             }
 
+            updateAlarmsTable()
             updateConnectionsTable()
             updateDetailsTable()
 
@@ -574,24 +579,31 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             WearPhoneConnection.getNodeBatterLevels().forEach { name, level ->
                 tableConnections.addView(createRow(name, if (level > 0) "$level%" else "?%"))
             }
-        } else {
-            tableConnections.addView(createRow(CR.string.source_wear, resources.getString(CR.string.disconnected_label)))
+        }
+        if (WatchDrip.connected) {
+            tableConnections.addView(createRow(CR.string.pref_switch_watchdrip_enabled, resources.getString(CR.string.connected_label)))
         }
 
-        if (Utils.isGlucoDataAutoAvailable(this)) {
-            tableConnections.addView(createRow(CR.string.pref_cat_android_auto, if (CarModeReceiver.AA_connected) resources.getString(CR.string.connected_label) else resources.getString(CR.string.disconnected_label)))
+        if (CarModeReceiver.AA_connected) {
+            tableConnections.addView(createRow(CR.string.pref_cat_android_auto, resources.getString(CR.string.connected_label)))
         }
+        checkTableVisibility(tableConnections)
+    }
 
+    private fun updateAlarmsTable() {
+        tableAlarms.removeViews(1, maxOf(0, tableAlarms.childCount - 1))
+        if(ReceiveData.getAlarmType() != AlarmType.OK) {
+            tableAlarms.addView(createRow(CR.string.info_label_alarm, resources.getString(ReceiveData.getAlarmType().resId) + (if (ReceiveData.forceAlarm) " ⚠" else "" )))
+        }
+        if (AlarmHandler.isSnoozeActive)
+            tableAlarms.addView(createRow(CR.string.snooze, AlarmHandler.snoozeTimestamp))
+        checkTableVisibility(tableAlarms)
     }
 
     private fun updateDetailsTable() {
         tableDetails.removeViews(1, maxOf(0, tableDetails.childCount - 1))
         if (ReceiveData.isMmol)
             tableDetails.addView(createRow(CR.string.info_label_raw, "${ReceiveData.rawValue} mg/dl"))
-        tableDetails.addView(createRow(CR.string.info_label_rate, ReceiveData.rate.toString()))
-        tableDetails.addView(createRow(CR.string.info_label_alarm, resources.getString(ReceiveData.getAlarmType().resId) + (if (ReceiveData.forceAlarm) " ⚠" else "" ) + " (" + ReceiveData.alarm + ")"))
-        if (AlarmHandler.isSnoozeActive)
-            tableDetails.addView(createRow(CR.string.snooze, AlarmHandler.snoozeTimestamp))
         if (!ReceiveData.isIobCobObsolete(1.days.inWholeSeconds.toInt()))
             tableDetails.addView(createRow(CR.string.info_label_iob_cob_timestamp, DateFormat.getTimeInstance(
                 DateFormat.DEFAULT).format(Date(ReceiveData.iobCobTime))))
@@ -599,6 +611,11 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableDetails.addView(createRow(CR.string.info_label_sensor_id, if(BuildConfig.DEBUG) "ABCDE12345" else ReceiveData.sensorID!!))
         }
         tableDetails.addView(createRow(CR.string.info_label_source, resources.getString(ReceiveData.source.resId)))
+        checkTableVisibility(tableDetails)
+    }
+
+    private fun checkTableVisibility(table: TableLayout) {
+        table.visibility = if(table.childCount <= 1) View.GONE else View.VISIBLE
     }
 
     private fun createColumn(text: String, end: Boolean) : TextView {
@@ -620,7 +637,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun createRow(key: String, value: String) : TableRow {
         val row = TableRow(this)
         row.weightSum = 2f
-        row.setBackgroundColor(resources.getColor(R.color.table_row))
+        //row.setBackgroundColor(resources.getColor(R.color.table_row))
         row.setPadding(Utils.dpToPx(5F, this))
         row.addView(createColumn(key, false))
         row.addView(createColumn(value, true))

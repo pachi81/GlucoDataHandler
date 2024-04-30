@@ -112,6 +112,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     fun setState(state: SourceState, error: String = "", code: Int = -1) {
         if(state == SourceState.NONE) {
             Log.v(LOG_ID,"Set state for source " + source + ": " + state + " - " + error + " (" + code + ")")
+        } else if(state == SourceState.CONNECTED) {
+            Log.i(LOG_ID,"Set connected for source " + source)
         } else {
             Log.w(LOG_ID,"Set state for source " + source + ": " + state + " - " + error + " (" + code + ")")
         }
@@ -175,7 +177,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             if (ReceiveData.time == lastTime && lastIobCobTime == ReceiveData.iobCobTime)
                 setState(SourceState.NO_NEW_VALUE)
             else
-                setState(SourceState.NONE)
+                setState(SourceState.CONNECTED)
             done.set(true)
         }
         Handler(GlucoDataService.context!!.mainLooper).post(task)

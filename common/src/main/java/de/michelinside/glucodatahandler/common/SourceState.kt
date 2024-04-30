@@ -9,6 +9,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 
 enum class SourceState(val resId: Int) {
     NONE(R.string.empty_string),
+    CONNECTED(R.string.connected_label),
     NO_NEW_VALUE(R.string.source_state_no_new_value),
     NO_CONNECTION(R.string.source_state_no_connection),
     ERROR(R.string.source_state_error);

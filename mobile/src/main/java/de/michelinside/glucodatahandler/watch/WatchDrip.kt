@@ -47,6 +47,8 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
 
     private val watchDripReceiver = WatchDripReceiver()
 
+    val connected: Boolean get() = (active && receivers.size > 0)
+
     fun init(context: Context) {
         try {
             if (!init) {
