@@ -506,7 +506,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             deltaText.text = "Δ ${ReceiveData.getDeltaAsString()}"
             iobText.text = "💉 " + ReceiveData.getIobAsString()
             cobText.text = "🍔 " + ReceiveData.getCobAsString()
-            iobText.visibility = if (ReceiveData.isIobCobObsolete(1.days.inWholeSeconds.toInt())) View.GONE else View.VISIBLE
+            iobText.visibility = if (ReceiveData.isIobCobObsolete(Constants.VALUE_OBSOLETE_LONG_SEC)) View.GONE else View.VISIBLE
             cobText.visibility = iobText.visibility
 
             txtLastValue.visibility = if(ReceiveData.time>0) View.GONE else View.VISIBLE
