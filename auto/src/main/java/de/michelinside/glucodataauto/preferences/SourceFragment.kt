@@ -12,7 +12,7 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
-import de.michelinside.glucodatahandler.common.tasks.LibreViewSourceTask
+import de.michelinside.glucodatahandler.common.tasks.LibreLinkSourceTask
 
 
 class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
@@ -123,9 +123,9 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
         try {
             val listPreference = findPreference<ListPreference>(Constants.SHARED_PREF_LIBRE_PATIENT_ID)
             // force "global broadcast" to be the first entry
-            listPreference!!.entries = LibreViewSourceTask.patientData.values.toTypedArray()
-            listPreference.entryValues = LibreViewSourceTask.patientData.keys.toTypedArray()
-            listPreference.isVisible = LibreViewSourceTask.patientData.size > 1
+            listPreference!!.entries = LibreLinkSourceTask.patientData.values.toTypedArray()
+            listPreference.entryValues = LibreLinkSourceTask.patientData.keys.toTypedArray()
+            listPreference.isVisible = LibreLinkSourceTask.patientData.size > 1
         } catch (exc: Exception) {
             Log.e(LOG_ID, "setupLibrePatientData exception: $exc")
         }
