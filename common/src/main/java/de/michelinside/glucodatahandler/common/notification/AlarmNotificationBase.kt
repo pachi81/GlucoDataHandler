@@ -93,6 +93,9 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     }
 
     abstract val active: Boolean
+    val notificationActive: Boolean get() {
+        return curNotification > 0
+    }
 
     fun getAlarmState(context: Context): AlarmState {
         var state = AlarmState.currentState(context)
@@ -182,7 +185,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     fun stopNotification(noticationId: Int, context: Context? = null, fromClient: Boolean = false) {
         try {
-            Log.v(LOG_ID, "stopNotification called for $noticationId - current=$curNotification - fromClient=$fromClient")
+            Log.d(LOG_ID, "stopNotification called for $noticationId - current=$curNotification - fromClient=$fromClient")
             stopTrigger()
             if(noticationId == curNotification) {
                 checkRecreateSound()
@@ -219,9 +222,9 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     fun triggerNotification(alarmType: AlarmType, context: Context, forTest: Boolean = false) {
         try {
-            Log.v(LOG_ID, "triggerNotification called for $alarmType - active=$active - forTest=$forTest")
+            Log.d(LOG_ID, "triggerNotification called for $alarmType - active=$active - curNotification=$curNotification - forTest=$forTest")
             if (getAlarmState(context) == AlarmState.ACTIVE || forTest) {
-                stopCurrentNotification(context)
+                stopCurrentNotification(context, true)  // do not send stop to client! -> to prevent, that the client will stop the newly created notification!
                 curNotification = getNotificationId(alarmType)
                 retriggerCount = 0
                 retriggerOnDestroy = false

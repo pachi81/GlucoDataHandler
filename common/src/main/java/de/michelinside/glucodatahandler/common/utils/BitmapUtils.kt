@@ -97,7 +97,7 @@ object BitmapUtils {
                 // re-calculate size depending on the bound width -> use minOf for preventing oversize signs
                 paint.getTextBounds(text, 0, text.length, boundsText)
             }
-            Log.d(LOG_ID, "height: " + boundsText.height().toString() + " width:" + boundsText.width().toString() + " text-size:" + paint.textSize.toString() + " maxTextSize:" + maxTextSize.toString())
+            Log.v(LOG_ID, "height: " + boundsText.height().toString() + " width:" + boundsText.width().toString() + " text-size:" + paint.textSize.toString() + " maxTextSize:" + maxTextSize.toString())
             val maxTextWidthRoundTarget = Utils.round(width.toFloat() * 0.9F, 0).toInt()
             if(roundTarget && boundsText.width() > maxTextWidthRoundTarget)
                 paint.textSize = paint.textSize-(boundsText.width() - maxTextWidthRoundTarget)
@@ -112,7 +112,7 @@ object BitmapUtils {
                 else
                     ((bitmap.height + boundsText.height()) / 2) - 3
 
-            Log.d(LOG_ID, "Create bitmap for " + text + " - y:" + y.toString() + " text-size:" + paint.textSize.toString())
+            Log.d(LOG_ID, "Create bitmap for $text - y: $y - text-size: ${paint.textSize} - color: color - shadow: $withShadow")
             canvas.drawText(text, width.toFloat()/2, y.toFloat(), paint)
             return bitmap
         } catch (exc: Exception) {
@@ -195,7 +195,7 @@ object BitmapUtils {
             paint.getTextBounds(text, 0, text.length, boundsText)
             val y = ((bitmap.height + boundsText.height()) / 2) - 3
 
-            Log.d(LOG_ID, "Create bitmap for " + text + "(rate: " + rate + ") - y:" + y.toString() + " - text-size:" + paint.textSize.toString() + " - degrees:" + degrees )
+            Log.d(LOG_ID, "Create bitmap for $text (rate: $rate) - y: $y - text-size: ${paint.textSize} - degrees: $degrees - color: $color - shadow: $withShadow" )
             canvas.drawText(text, width.toFloat()/2, y.toFloat(), paint)
             return rotateBitmap(bitmap, degrees)
         } catch (exc: Exception) {

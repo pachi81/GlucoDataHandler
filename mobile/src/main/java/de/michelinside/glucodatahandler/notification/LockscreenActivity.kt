@@ -164,6 +164,8 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.BROADCAST,
                 NotifySource.MESSAGECLIENT,
                 NotifySource.TIME_VALUE))
+            if(!AlarmNotification.notificationActive)
+                stop()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
