@@ -27,6 +27,16 @@
         <item>"glucose_trend_delta_time"</item>
         <item>"glucose_trend_delta_time_iob_cob"</item>
     </array>
+    <array name="pref_application_color_scheme_labels">
+        <item>@string/application_color_scheme_system</item>
+        <item>@string/application_color_scheme_light</item>
+        <item>@string/application_color_scheme_dark</item>
+    </array>
+    <array name="pref_application_color_scheme_values">
+        <item>""</item>
+        <item>"light"</item>
+        <item>"dark"</item>
+    </array>
     <array name="tasker_supported_settings_labels">
         <item>@string/pref_floating_widget</item>
         <item>@string/pref_notification</item>

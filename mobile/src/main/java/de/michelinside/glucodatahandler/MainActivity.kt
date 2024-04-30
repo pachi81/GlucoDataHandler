@@ -145,6 +145,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             if (requestPermission())
                 GlucoDataServiceMobile.start(this, true)
+
+            Dialogs.updateColorScheme(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }

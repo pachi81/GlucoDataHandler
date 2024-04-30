@@ -128,6 +128,8 @@ object Constants {
     const val SHARED_PREF_SOURCE_JUGGLUCO_SET_NS_IOB_ACTION = "source_juggluco_activate_local_nightscout_iob_action"
     const val SHARED_PREF_SOURCE_XDRIP_SET_NS_IOB_ACTION = "source_xdrip_activate_local_nightscout_iob_action"
 
+    const val SHARED_PREF_APP_COLOR_SCHEME = "application_color_scheme"
+
     // Alarm
     const val ALARM_SNOOZE_ACTION = "de.michelinside.glucodatahandler.SNOOZE"
     const val ALARM_STOP_NOTIFICATION_ACTION = "de.michelinside.glucodatahandler.STOP_NOTIFICATION"

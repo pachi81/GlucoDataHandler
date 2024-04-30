@@ -481,4 +481,8 @@
     <string name="table_header_connections">Connections</string>
     <string name="disconnected_label">disconnected</string>
     <string name="connected_label">connected</string>
+    <string name="pref_application_color_scheme">Application color scheme</string>
+    <string name="application_color_scheme_system">Use system scheme</string>
+    <string name="application_color_scheme_light">Light scheme</string>
+    <string name="application_color_scheme_dark">Dark scheme</string>
 </resources>

@@ -20,6 +20,13 @@
     <PreferenceCategory
         android:title="@string/pref_cat_visualisation"
         app:iconSpaceReserved="false">
+        <androidx.preference.ListPreference
+            android:defaultValue=""
+            android:entries="@array/pref_application_color_scheme_labels"
+            android:entryValues="@array/pref_application_color_scheme_values"
+            android:key="application_color_scheme"
+            android:title="@string/pref_application_color_scheme"
+            app:iconSpaceReserved="false" />
         <Preference
             android:key="pref_cat_widgets"
             android:title="@string/pref_cat_widgets"
