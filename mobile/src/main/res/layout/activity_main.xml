@@ -188,7 +188,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/menu_alarms"/>
+                android:text="@string/info_label_alarm"/>
         </TableRow>
     </TableLayout>
 
@@ -230,12 +230,20 @@
         </TableRow>
     </TableLayout>
 
+    <LinearLayout
+        android:id="@+id/space"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:orientation="vertical">
+        <!-- this expands to fill the empty space if needed -->
+    </LinearLayout>
+
     <TextView
         android:id="@+id/txtVersion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="25dp"
-        android:layout_marginTop="30dp"
         android:text="1.0"
         android:textSize="16sp"
         tools:ignore="HardcodedText" />
