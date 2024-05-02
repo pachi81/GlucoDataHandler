@@ -7,9 +7,12 @@ import android.graphics.Paint
 import android.os.*
 import android.provider.Settings
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TableLayout
+import android.widget.TableRow
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import de.michelinside.glucodatahandler.common.R as CR
@@ -19,9 +22,15 @@ import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.databinding.ActivityWearBinding
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.setPadding
+import de.michelinside.glucodatahandler.common.notification.AlarmHandler
+import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.settings.AlarmsActivity
 import de.michelinside.glucodatahandler.settings.SettingsActivity
 import de.michelinside.glucodatahandler.settings.SourcesActivity
+import java.text.DateFormat
+import java.util.Date
+import kotlin.time.Duration.Companion.days
 
 class WearActivity : AppCompatActivity(), NotifierInterface {
 
@@ -29,10 +38,15 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var binding: ActivityWearBinding
     private lateinit var txtBgValue: TextView
     private lateinit var viewIcon: ImageView
+    private lateinit var timeText: TextView
+    private lateinit var deltaText: TextView
+    private lateinit var iobText: TextView
+    private lateinit var cobText: TextView
     private lateinit var txtVersion: TextView
     private lateinit var txtValueInfo: TextView
-    private lateinit var txtConnInfo: TextView
-    private lateinit var txtSourceInfo: TextView
+    private lateinit var tableDetails: TableLayout
+    private lateinit var tableConnections: TableLayout
+    private lateinit var tableAlarms: TableLayout
     private lateinit var txtHighContrastEnabled: TextView
     private lateinit var txtScheduleExactAlarm: TextView
     private lateinit var btnSettings: Button
@@ -54,9 +68,14 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
             txtBgValue = findViewById(R.id.txtBgValue)
             viewIcon = findViewById(R.id.viewIcon)
+            timeText = findViewById(R.id.timeText)
+            deltaText = findViewById(R.id.deltaText)
+            iobText = findViewById(R.id.iobText)
+            cobText = findViewById(R.id.cobText)
             txtValueInfo = findViewById(R.id.txtValueInfo)
-            txtConnInfo = findViewById(R.id.txtConnInfo)
-            txtSourceInfo = findViewById(R.id.txtSourceInfo)
+            tableConnections = findViewById(R.id.tableConnections)
+            tableAlarms = findViewById(R.id.tableAlarms)
+            tableDetails = findViewById(R.id.tableDetails)
             txtHighContrastEnabled = findViewById(R.id.txtHighContrastEnabled)
             txtScheduleExactAlarm = findViewById(R.id.txtScheduleExactAlarm)
 
@@ -64,10 +83,6 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             txtVersion.text = BuildConfig.VERSION_NAME
 
             ReceiveData.initData(this)
-
-            txtConnInfo.setOnClickListener{
-                GlucoDataService.checkForConnectedNodes()
-            }
 
             btnSettings = findViewById(R.id.btnSettings)
             btnSettings.setOnClickListener {
@@ -223,22 +238,27 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
     private fun update() {
         try {
-            if(ReceiveData.time > 0) {
-                txtBgValue.text = ReceiveData.getGlucoseAsString()
-                txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
-                if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete()) {
-                    txtBgValue.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-                } else {
-                    txtBgValue.paintFlags = 0
-                }
-                viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
-                txtValueInfo.text = ReceiveData.getAsString(this)
-                if (WearPhoneConnection.nodesConnected) {
-                    txtConnInfo.text = resources.getString(CR.string.activity_connected_label, WearPhoneConnection.getBatterLevelsAsString())
-                } else
-                    txtConnInfo.text = resources.getText(CR.string.activity_disconnected_label)
+            txtBgValue.text = ReceiveData.getGlucoseAsString()
+            txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
+            if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete()) {
+                txtBgValue.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+            } else {
+                txtBgValue.paintFlags = 0
             }
-           txtSourceInfo.text = SourceStateData.getState(this)
+            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
+
+            timeText.text = "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(this)}"
+            deltaText.text = "Δ ${ReceiveData.getDeltaAsString()}"
+            iobText.text = "💉 " + ReceiveData.getIobAsString()
+            cobText.text = "🍔 " + ReceiveData.getCobAsString()
+            iobText.visibility = if (ReceiveData.isIobCobObsolete(Constants.VALUE_OBSOLETE_LONG_SEC)) View.GONE else View.VISIBLE
+            cobText.visibility = iobText.visibility
+
+            txtValueInfo.visibility = if(ReceiveData.time>0) View.GONE else View.VISIBLE
+
+            updateAlarmsTable()
+            updateConnectionsTable()
+            updateDetailsTable()
 
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
@@ -248,5 +268,80 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.d(LOG_ID, "new intent received from: " + dataSource.toString())
         update()
+    }
+
+
+
+    private fun updateConnectionsTable() {
+        tableConnections.removeViews(1, maxOf(0, tableConnections.childCount - 1))
+        if (SourceStateData.lastState != SourceState.NONE)
+            tableConnections.addView(createRow(SourceStateData.lastSource.resId,
+                SourceStateData.getStateMessage(this)))
+
+        if (WearPhoneConnection.nodesConnected) {
+            val onClickListener = View.OnClickListener {
+                GlucoDataService.checkForConnectedNodes(true)
+            }
+            WearPhoneConnection.getNodeBatterLevels().forEach { name, level ->
+                tableConnections.addView(createRow(name, if (level > 0) "$level%" else "?%", onClickListener))
+            }
+        }
+        checkTableVisibility(tableConnections)
+    }
+
+    private fun updateAlarmsTable() {
+        tableAlarms.removeViews(1, maxOf(0, tableAlarms.childCount - 1))
+        if(ReceiveData.getAlarmType() != AlarmType.OK) {
+            tableAlarms.addView(createRow(CR.string.info_label_alarm, resources.getString(ReceiveData.getAlarmType().resId) + (if (ReceiveData.forceAlarm) " ⚠" else "" )))
+        }
+        if (AlarmHandler.isSnoozeActive)
+            tableAlarms.addView(createRow(CR.string.snooze, AlarmHandler.snoozeTimestamp))
+        checkTableVisibility(tableAlarms)
+    }
+
+    private fun updateDetailsTable() {
+        tableDetails.removeViews(1, maxOf(0, tableDetails.childCount - 1))
+        if (ReceiveData.isMmol)
+            tableDetails.addView(createRow(CR.string.info_label_raw, "${ReceiveData.rawValue} mg/dl"))
+        if (!ReceiveData.isIobCobObsolete(1.days.inWholeSeconds.toInt()))
+            tableDetails.addView(createRow(CR.string.info_label_iob_cob_timestamp, DateFormat.getTimeInstance(
+                DateFormat.DEFAULT).format(Date(ReceiveData.iobCobTime))))
+        if (ReceiveData.sensorID?.isNotEmpty() == true) {
+            tableDetails.addView(createRow(CR.string.info_label_sensor_id, if(BuildConfig.DEBUG) "ABCDE12345" else ReceiveData.sensorID!!))
+        }
+        tableDetails.addView(createRow(CR.string.info_label_source, resources.getString(ReceiveData.source.resId)))
+        checkTableVisibility(tableDetails)
+    }
+
+    private fun checkTableVisibility(table: TableLayout) {
+        table.visibility = if(table.childCount <= 1) View.GONE else View.VISIBLE
+    }
+
+    private fun createColumn(text: String, end: Boolean, onClickListener: View.OnClickListener? = null) : TextView {
+        val textView = TextView(this)
+        textView.layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1F)
+        textView.text = text
+        textView.textSize = 12F
+        if (end)
+            textView.gravity = Gravity.CENTER_VERTICAL or Gravity.END
+        else
+            textView.gravity = Gravity.CENTER_VERTICAL
+        if(onClickListener != null)
+            textView.setOnClickListener(onClickListener)
+        return textView
+    }
+
+    private fun createRow(keyResId: Int, value: String, onClickListener: View.OnClickListener? = null) : TableRow {
+        return createRow(resources.getString(keyResId), value, onClickListener)
+    }
+
+    private fun createRow(key: String, value: String, onClickListener: View.OnClickListener? = null) : TableRow {
+        val row = TableRow(this)
+        row.weightSum = 2f
+        //row.setBackgroundColor(resources.getColor(R.color.table_row))
+        row.setPadding(Utils.dpToPx(5F, this))
+        row.addView(createColumn(key, false, onClickListener))
+        row.addView(createColumn(value, true, onClickListener))
+        return row
     }
 }

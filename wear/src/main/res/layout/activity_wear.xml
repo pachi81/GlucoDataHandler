@@ -62,6 +62,75 @@
 
         </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/layout_delta_time"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:gravity="center|top"
+                android:orientation="horizontal"
+                tools:ignore="UselessParent">
+
+                <TextView
+                    android:id="@+id/timeText"
+                    android:text="🕒 0 min"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical|end"
+                    android:maxLines="1"
+                    android:autoSizeStepGranularity="1sp"
+                    android:autoSizeMinTextSize="1sp"
+                    android:autoSizeTextType="uniform"
+                    android:paddingEnd="10dp"
+                    tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
+                <TextView
+                    android:id="@+id/deltaText"
+                    android:text="Δ +0.06"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:autoSizeStepGranularity="1sp"
+                    android:autoSizeMinTextSize="1sp"
+                    android:autoSizeTextType="uniform"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout_iob_cob"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:gravity="center|top"
+                android:orientation="horizontal"
+                tools:ignore="UselessParent">
+                <TextView
+                    android:id="@+id/iobText"
+                    android:text="💉 1.30U"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical|end"
+                    android:maxLines="1"
+                    android:autoSizeStepGranularity="1sp"
+                    android:autoSizeMinTextSize="1sp"
+                    android:autoSizeTextType="uniform"
+                    android:paddingEnd="10dp"
+                    tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
+
+                <TextView
+                    android:id="@+id/cobText"
+                    android:text="🍔 31.2g"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:autoSizeStepGranularity="1sp"
+                    android:autoSizeMinTextSize="1sp"
+                    android:autoSizeTextType="uniform"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
         <TextView
             android:id="@+id/txtValueInfo"
             android:layout_width="match_parent"
@@ -111,24 +180,64 @@
             android:textAlignment="center"
             tools:ignore="HardcodedText" />
 
-        <TextView
-            android:id="@+id/txtSourceInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="LibreLink: -"
-            android:textSize="14sp"
-            android:textAlignment="center"
-            tools:ignore="HardcodedText" />
 
-        <TextView
-            android:id="@+id/txtConnInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/activity_disconnected_label"
-            android:textAlignment="center"
-            android:textSize="14sp" />
+            <TableLayout
+                android:id="@+id/tableAlarms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:divider="?android:attr/dividerHorizontal"
+                android:showDividers="middle">
+
+                <TableRow android:background="@color/table_header" android:padding="5dp">
+                    <TextView
+                        android:paddingTop="10dp"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/info_label_alarm"/>
+                </TableRow>
+            </TableLayout>
+
+            <TableLayout
+                android:id="@+id/tableDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="?android:attr/dividerHorizontal"
+                android:showDividers="middle">
+
+                <TableRow android:background="@color/table_header" android:padding="5dp">
+                    <TextView
+                        android:paddingTop="10dp"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/table_header_details"/>
+                </TableRow>
+            </TableLayout>
+
+            <TableLayout
+                android:id="@+id/tableConnections"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="?android:attr/dividerHorizontal"
+                android:showDividers="middle">
+
+                <TableRow android:background="@color/table_header" android:padding="5dp">
+                    <TextView
+                        android:paddingTop="10dp"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/table_header_connections"/>
+                </TableRow>
+            </TableLayout>
 
         <TextView
             android:id="@+id/txtVersion"
