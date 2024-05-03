@@ -99,9 +99,9 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     fun getAlarmState(context: Context): AlarmState {
         var state = AlarmState.currentState(context)
-        if(state == AlarmState.DISABLED || !channelActive(context))
-            return AlarmState.DISABLED
-        if(state == AlarmState.ACTIVE && (!active || !alarmNotificationActive)) {
+        if(state == AlarmState.DISABLED || !channelActive(context)) {
+            state = AlarmState.DISABLED
+        } else if(state == AlarmState.ACTIVE && (!active || !alarmNotificationActive)) {
             state = AlarmState.INACTIVE
         }
         if(currentAlarmState != state) {
