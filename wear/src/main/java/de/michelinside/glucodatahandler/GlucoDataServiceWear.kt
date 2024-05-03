@@ -44,6 +44,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
         try {
             Log.d(LOG_ID, "onCreate called")
             super.onCreate()
+            migrateSettings()
             AlarmNotificationWear.initNotifications(this)
             val filter = mutableSetOf(
                 NotifySource.BROADCAST,
@@ -53,6 +54,33 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
             ActiveComplicationHandler.OnNotifyData(this, NotifySource.CAPILITY_INFO, null)
         } catch (ex: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + ex)
+        }
+    }
+
+    private fun migrateSettings() {
+        try {
+            Log.v(LOG_ID, "migrateSettings called")
+            val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            // notification to vibrate_only
+            if(!sharedPref.contains(Constants.SHARED_PREF_NOTIFICATION_VIBRATE) && sharedPref.contains("notification")) {
+                with(sharedPref.edit()) {
+                    putBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, sharedPref.getBoolean("notification", false))
+                    apply()
+                }
+            }
+
+            // complications
+            if(!sharedPref.contains(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION)) {
+                val curApp = if(Utils.isPackageAvailable(this, Constants.PACKAGE_JUGGLUCO)) Constants.PACKAGE_JUGGLUCO else this.packageName
+                Log.i(LOG_ID, "Setting default tap action for complications to $curApp")
+                with(GlucoDataService.sharedPref!!.edit()) {
+                    putString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, curApp)
+                    apply()
+                }
+            }
+
+        } catch( exc: Exception ) {
+            Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
     }
 

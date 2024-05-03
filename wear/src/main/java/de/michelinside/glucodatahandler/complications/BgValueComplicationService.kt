@@ -21,6 +21,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     protected val LOG_ID = "GDH.BgValueComplicationService"
     var descriptionResId: Int = CR.string.name
     protected lateinit var sharedPref: SharedPreferences
+    protected var instanceId = 0
 
     override fun onCreate() {
         try {
@@ -78,6 +79,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     }
 
     private fun getComplicationData(request: ComplicationRequest): ComplicationData? {
+        instanceId = request.complicationInstanceId
         return when(request.complicationType) {
             ComplicationType.SHORT_TEXT -> getShortTextComplicationData()
             ComplicationType.RANGED_VALUE -> getRangeValueComplicationData()
@@ -163,26 +165,14 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     open fun getImage(): SmallImage? = null
 
     open fun getTapAction(useExternalApp: Boolean = true): PendingIntent? {
-        if (BuildConfig.DEBUG) {
+        val action = sharedPref.getString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, "")
+        if(action != null) {
+            return Utils.getTapActionIntent(this, action, instanceId)
+        } else if (BuildConfig.DEBUG) {
             // for debug create dummy broadcast (to check in emulator)
-            return PendingIntent.getBroadcast(this, 3, GlucoDataUtils.getDummyGlucodataIntent(false), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-        } else {
-            /*
-            var launchIntent: Intent? = packageManager.getLaunchIntentForPackage(Constants.PACKAGE_JUGGLUCO)
-            if (launchIntent == null) {
-                Log.d(LOG_ID, "Juggluco not found, use own one")
-                launchIntent = Intent(this, WearActivity::class.java)
-            }
-            launchIntent.action = Intent.ACTION_MAIN
-            launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-            return PendingIntent.getActivity(
-                applicationContext,
-                2,
-                launchIntent,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-            )*/
-            return Utils.getAppIntent(applicationContext, WearActivity::class.java, 2, useExternalApp)
+            return PendingIntent.getBroadcast(this, instanceId, GlucoDataUtils.getDummyGlucodataIntent(false), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         }
+        return null
     }
 
 

@@ -58,7 +58,6 @@
         </activity>
         <activity
             android:name=".settings.SettingsActivity"
-            android:label="@string/menu_settings"
             android:launchMode="singleTop"
             android:parentActivityName=".WearActivity"
             android:theme="@style/Theme.GlucoDataHandler"
@@ -68,8 +67,17 @@
                 android:value=".WearActivity" />
         </activity>
         <activity
+            android:name=".settings.ComplicationsTapActionActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".settings.SettingsActivity"
+            android:theme="@style/Theme.GlucoDataHandler"
+            android:taskAffinity="">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".settings.SettingsActivity" />
+        </activity>
+        <activity
             android:name=".settings.AlarmsActivity"
-            android:label="@string/menu_alarms"
             android:launchMode="singleTop"
             android:parentActivityName=".WearActivity"
             android:theme="@style/Theme.GlucoDataHandler"
@@ -80,7 +88,6 @@
         </activity>
         <activity
             android:name=".settings.AlarmAdvancedActivity"
-            android:label="@string/menu_alarms"
             android:launchMode="singleTop"
             android:parentActivityName=".settings.AlarmsActivity"
             android:theme="@style/Theme.GlucoDataHandler"
@@ -91,7 +98,6 @@
         </activity>
         <activity
             android:name=".settings.AlarmTypeActivity"
-            android:label="@string/menu_alarms"
             android:launchMode="singleTop"
             android:parentActivityName=".settings.AlarmsActivity"
             android:theme="@style/Theme.GlucoDataHandler"

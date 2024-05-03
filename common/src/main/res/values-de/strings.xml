@@ -464,5 +464,6 @@
     <string name="tap_action_summary">Bitte eine Aktion oder App auswählen, welche beim Tippen ausgeführt werden soll.</string>
     <string name="no_action">Keine Aktion</string>
     <string name="action_floating_widget_toggle">Schwebendes Widget umschalten</string>
+    <string name="wear_complication_tap_action">Complication Tip Aktion</string>
 
 </resources>

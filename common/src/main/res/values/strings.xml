@@ -489,4 +489,5 @@
     <string name="tap_action_summary">Select an action or application which should be executed while tapping on this item.</string>
     <string name="no_action">No action</string>
     <string name="action_floating_widget_toggle">Toggle floating widget</string>
+    <string name="wear_complication_tap_action">Complication tap action</string>
 </resources>

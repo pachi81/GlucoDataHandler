@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import de.michelinside.glucodatahandler.ActiveComplicationHandler
@@ -21,6 +22,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var switchLargeTrendArrow: SwitchCompat
     private lateinit var switchForground: SwitchCompat
     private lateinit var switchRelativeTime: SwitchCompat
+    private lateinit var btnComplicationTapAction: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
             Log.v(LOG_ID, "onCreate called")
@@ -28,6 +30,15 @@ class SettingsActivity : AppCompatActivity() {
             setContentView(R.layout.activity_settings)
 
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+
+            btnComplicationTapAction = findViewById(R.id.btnComplicationTapAction)
+
+
+            btnComplicationTapAction.setOnClickListener {
+                Log.v(LOG_ID, "${btnComplicationTapAction.text} button clicked!")
+                val intent = Intent(this, ComplicationsTapActionActivity::class.java)
+                startActivity(intent)
+            }
 
             switchForground = findViewById(R.id.switchForground)
             switchForground.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)

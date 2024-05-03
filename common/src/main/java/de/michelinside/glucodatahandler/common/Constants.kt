@@ -112,6 +112,7 @@ object Constants {
     // Wear only preferences
     const val SHARED_PREF_FOREGROUND_SERVICE = "foreground_service"
     const val SHARED_PREF_WEAR_COLORED_AOD = "colored_aod"
+    const val SHARED_PREF_COMPLICATION_TAP_ACTION = "complication_tap_action"
 
     // Data source preferences
     const val SHARED_PREF_SOURCE_INTERVAL="source_interval"

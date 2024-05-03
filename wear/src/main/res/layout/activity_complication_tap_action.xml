@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/box_inset_layout_padding"
-    tools:context=".settings.SettingsActivity"
+    tools:context=".settings.ComplicationsTapActionActivity"
     tools:deviceIds="wear">
 
     <ScrollView
@@ -28,44 +28,27 @@
             android:paddingBottom="80dp"
             app:layout_boxedEdges="all">
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/switchColoredAod"
+            <TextView
+                android:id="@+id/txtTapActionSummary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/activity_switch_colored_aod"
+                android:layout_marginTop="20dp"
+                android:text="@string/tap_action_summary"
+                android:textSize="16sp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/showAllSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/select_receiver_show_all"
                 android:textAlignment="viewStart"
                 tools:ignore="TouchTargetSizeCheck" />
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/switchLargeTrendArrow"
+            <LinearLayout
+                android:id="@+id/receiverLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/activity_large_arrow_icon"
-                android:textAlignment="viewStart"
-                tools:ignore="TouchTargetSizeCheck" />
-
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/switchForground"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/activity_switch_foreground"
-                android:textAlignment="viewStart"
-                android:visibility="gone"
-                tools:ignore="TouchTargetSizeCheck" />
-
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/switchRelativeTime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/pref_relative_time"
-                android:textAlignment="viewStart"
-                tools:ignore="TouchTargetSizeCheck" />
-
-            <Button
-                android:id="@+id/btnComplicationTapAction"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:text="@string/wear_complication_tap_action" />
+                android:orientation="vertical" />
     </LinearLayout>
     </ScrollView>
 </androidx.wear.widget.BoxInsetLayout>

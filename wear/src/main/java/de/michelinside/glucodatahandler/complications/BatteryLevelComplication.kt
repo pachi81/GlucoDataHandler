@@ -45,7 +45,7 @@ class BatteryLevelComplication: SuspendingComplicationDataSourceService() {
             plainText(getText(this.applicationInfo.labelRes))
         )
             .setTitle(getTitle())
-            .setTapAction(Utils.getAppIntent(applicationContext, WearActivity::class.java, 3, false))
+            .setTapAction(Utils.getAppIntent(applicationContext, WearActivity::class.java, request.complicationInstanceId, false))
             .build()
     }
 

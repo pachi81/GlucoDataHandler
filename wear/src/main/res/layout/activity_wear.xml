@@ -152,33 +152,15 @@
             android:textStyle="bold"
             android:textAlignment="center" />
 
-        <Button
-            android:id="@+id/btnSettings"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:text="@string/menu_settings" />
-
-        <Button
-            android:id="@+id/btnSources"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:text="@string/menu_sources" />
-
-        <Button
-            android:id="@+id/btnAlarms"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:text="@string/menu_alarms" />
-
-        <TextView
-            android:id="@+id/txtHighContrastEnabled"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/activity_main_high_contrast_enabled"
-            android:textSize="14sp"
-            android:textAlignment="center"
-            tools:ignore="HardcodedText" />
+            <TextView
+                android:id="@+id/txtHighContrastEnabled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/activity_main_high_contrast_enabled"
+                android:textSize="14sp"
+                android:textAlignment="center"
+                tools:ignore="HardcodedText" />
 
 
             <TableLayout
@@ -238,6 +220,25 @@
                         android:text="@string/table_header_connections"/>
                 </TableRow>
             </TableLayout>
+
+        <Button
+            android:id="@+id/btnSettings"
+            android:layout_marginTop="5dp"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="@string/menu_settings" />
+
+        <Button
+            android:id="@+id/btnSources"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="@string/menu_sources" />
+
+        <Button
+            android:id="@+id/btnAlarms"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="@string/menu_alarms" />
 
         <TextView
             android:id="@+id/txtVersion"
