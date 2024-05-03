@@ -107,6 +107,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableAlarms = findViewById(R.id.tableAlarms)
             tableDetails = findViewById(R.id.tableDetails)
 
+            Utils.clearPackages()
+
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
 
@@ -119,29 +121,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 val intent = Intent(this, SettingsActivity::class.java)
                 intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.SORUCE_FRAGMENT.value)
                 startActivity(intent)
-            }
-
-            val sendToAod = sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, false)
-
-            if(!sharedPref.contains(Constants.SHARED_PREF_GLUCODATA_RECEIVERS)) {
-                val receivers = HashSet<String>()
-                if (sendToAod)
-                    receivers.add("de.metalgearsonic.glucodata.aod")
-                Log.i(LOG_ID, "Upgrade receivers to " + receivers.toString())
-                with(sharedPref.edit()) {
-                    putStringSet(Constants.SHARED_PREF_GLUCODATA_RECEIVERS, receivers)
-                    apply()
-                }
-            }
-
-            if(!sharedPref.contains(Constants.SHARED_PREF_XDRIP_RECEIVERS)) {
-                val receivers = HashSet<String>()
-                receivers.add("com.eveningoutpost.dexdrip")
-                Log.i(LOG_ID, "Upgrade receivers to " + receivers.toString())
-                with(sharedPref.edit()) {
-                    putStringSet(Constants.SHARED_PREF_XDRIP_RECEIVERS, receivers)
-                    apply()
-                }
             }
 
             if (requestPermission())

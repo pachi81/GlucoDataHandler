@@ -11,7 +11,6 @@ import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import de.michelinside.glucodatahandler.GlucoDataServiceMobile
-import de.michelinside.glucodatahandler.MainActivity
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -247,7 +246,8 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
                 val pendingIntent = PendingIntent.getBroadcast(context, 5, Utils.getDummyGlucodataIntent(false), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
                 remoteViews.setOnClickPendingIntent(R.id.widget, pendingIntent)
             } else*/
-            remoteViews.setOnClickPendingIntent(R.id.widget, Utils.getAppIntent(context, MainActivity::class.java, 5, true))
+            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            remoteViews.setOnClickPendingIntent(R.id.widget, Utils.getTapActionIntent(context, sharedPref.getString(Constants.SHARED_PREF_WIDGET_TAP_ACTION, ""), appWidgetId))
 
             // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews)

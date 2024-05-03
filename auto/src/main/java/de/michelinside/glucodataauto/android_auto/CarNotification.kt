@@ -282,7 +282,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
             context,
             1,
             intent,
-            PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         return NotificationCompat.Action.Builder(R.mipmap.ic_launcher, "Reply", pendingIntent)
             //.setAllowGeneratedReplies(true)
@@ -298,7 +298,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
             context,
             2,
             intent,
-            PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         return NotificationCompat.Action.Builder(
             R.mipmap.ic_launcher,

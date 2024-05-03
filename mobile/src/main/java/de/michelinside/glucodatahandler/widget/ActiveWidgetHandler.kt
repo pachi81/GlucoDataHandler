@@ -81,7 +81,8 @@ object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPrefere
             Log.d(LOG_ID, "onSharedPreferenceChanged called for key " + key)
             if (GlucoDataService.context != null) {
                 when (key) {
-                    Constants.SHARED_PREF_WIDGET_TRANSPARENCY -> {
+                    Constants.SHARED_PREF_WIDGET_TRANSPARENCY,
+                    Constants.SHARED_PREF_WIDGET_TAP_ACTION -> {
                         OnNotifyData(GlucoDataService.context!!, NotifySource.SETTINGS, null)
                     }
                 }

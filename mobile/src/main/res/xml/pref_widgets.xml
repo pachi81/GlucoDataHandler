@@ -40,6 +40,10 @@
                     android:summary="@string/pref_floating_widget_transparency_summary"
                     android:title="@string/pref_floating_widget_transparency"
                     app:iconSpaceReserved="false" />
+                <de.michelinside.glucodatahandler.preferences.TapActionPreference
+                    android:key="floating_widget_tap_action"
+                    android:title="@string/tap_action"
+                    app:iconSpaceReserved="false" />
         </PreferenceCategory>
         <PreferenceCategory
             android:title="@string/pref_cat_widgets"
@@ -53,6 +57,10 @@
                     android:key="widget_transparency"
                     android:summary="@string/pref_widget_transparency_summary"
                     android:title="@string/pref_widget_transparency"
+                    app:iconSpaceReserved="false" />
+                <de.michelinside.glucodatahandler.preferences.TapActionPreference
+                    android:key="widget_tap_action"
+                    android:title="@string/tap_action"
                     app:iconSpaceReserved="false" />
         </PreferenceCategory>
 </PreferenceScreen>

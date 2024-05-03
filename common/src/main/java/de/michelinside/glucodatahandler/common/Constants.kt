@@ -23,6 +23,15 @@ object Constants {
     const val GLUCOSE_MAX_VALUE = 400
     const val ACTION_STOP_FOREGROUND = "stop_foreground"
 
+    const val ACTION_PREFIX = "gdh_action_"
+    const val ACTION_FLOATING_WIDGET_TOGGLE = ACTION_PREFIX + "floating_widget_toggle"
+
+    const val PACKAGE_GLUCODATAAUTO = "de.michelinside.glucodataauto"
+    const val PACKAGE_JUGGLUCO = "tk.glucodata"
+    const val PACKAGE_XDRIP = "com.eveningoutpost.dexdrip"
+    const val PACKAGE_XDRIP_PLUS = "jamorham.xdrip.plus"
+    const val PACKAGE_AAPS = "info.nightscout"
+
     const val EXTRA_SOURCE_PACKAGE = "gdh.source_package"
 
     const val XDRIP_ACTION_GLUCOSE_READING = "com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING"
@@ -30,7 +39,6 @@ object Constants {
 
     const val GLUCODATA_ACTION = "de.michelinside.glucodatahandler.GLUCODATA"
     const val GLUCODATAAUTO_STATE_ACTION = "de.michelinside.glucodataauto.state"
-    const val PACKAGE_GLUCODATAAUTO = "de.michelinside.glucodataauto"
     const val GLUCODATAAUTO_STATE_EXTRA = "state"
 
     const val VALUE_OBSOLETE_SHORT_SEC = 300
@@ -70,15 +78,19 @@ object Constants {
     const val SHARED_PREF_PERMANENT_NOTIFICATION_ICON = "status_bar_notification_icon"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_COLORED_ICON = "status_bar_notification_colored_icon"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY = "permanent_notification_empty"
+    const val SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION = "permanent_notification_tap_action"
     const val SHARED_PREF_SECOND_PERMANENT_NOTIFICATION = "second_permanent_notification"
     const val SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON = "second_status_bar_notification_icon"
+    const val SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_TAP_ACTION = "second_permanent_notification_tap_action"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON = "status_bar_notification_big_icon"
     const val SHARED_PREF_LARGE_ARROW_ICON = "large_arrow_icon"
     const val SHARED_PREF_FLOATING_WIDGET = "floating_widget"
     const val SHARED_PREF_FLOATING_WIDGET_STYLE = "floating_widget_style"
     const val SHARED_PREF_FLOATING_WIDGET_SIZE = "floating_widget_size"
     const val SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY = "floating_widget_transparency"
+    const val SHARED_PREF_FLOATING_WIDGET_TAP_ACTION = "floating_widget_tap_action"
     const val SHARED_PREF_WIDGET_TRANSPARENCY = "widget_transparency"
+    const val SHARED_PREF_WIDGET_TAP_ACTION = "widget_tap_action"
     const val SHARED_PREF_RELATIVE_TIME = "relative_time"
     const val SHARED_PREF_SEND_TO_BANGLEJS = "send_to_banglejs"
     const val SHARED_PREF_WATCHDRIP = "watchdrip_enabled"

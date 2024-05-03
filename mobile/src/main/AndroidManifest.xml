@@ -246,6 +246,7 @@
         <receiver android:name=".common.tasks.TimeAlarmReceiver" />
         <receiver android:name=".common.tasks.SourceAlarmReceiver" />
         <receiver android:name=".common.notification.AlarmIntentReceiver" />
+        <receiver android:name=".common.receiver.GlucoDataActionReceiver" />
 
         <service android:name="androidx.work.impl.foreground.SystemForegroundService"
             android:foregroundServiceType="dataSync"

@@ -457,8 +457,12 @@
     <string name="disconnected_label">getrennt</string>
     <string name="connected_label">verbunden</string>
     <string name="pref_application_color_scheme">Farbschema der App</string>
-    <string name="application_color_scheme_system">System schema</string>
-    <string name="application_color_scheme_light">Helles schema</string>
-    <string name="application_color_scheme_dark">Dunkles schema</string>
+    <string name="application_color_scheme_system">Schema des Systems</string>
+    <string name="application_color_scheme_light">Helles Schema</string>
+    <string name="application_color_scheme_dark">Dunkles Schema</string>
+    <string name="tap_action">Aktion beim Tippen</string>
+    <string name="tap_action_summary">Bitte eine Aktion oder App auswählen, welche beim Tippen ausgeführt werden soll.</string>
+    <string name="no_action">Keine Aktion</string>
+    <string name="action_floating_widget_toggle">Schwebendes Widget umschalten</string>
 
 </resources>

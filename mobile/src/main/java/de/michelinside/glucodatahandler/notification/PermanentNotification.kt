@@ -1,6 +1,7 @@
 package de.michelinside.glucodatahandler
 
 import android.app.Notification
+import android.app.PendingIntent
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
@@ -81,7 +82,6 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
         notificationCompat = Notification.Builder(context, ChannelType.MOBILE_SECOND.channelId)
             .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentIntent(Utils.getAppIntent(context, MainActivity::class.java, 5, false))
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setAutoCancel(false)
@@ -93,7 +93,6 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
         foregroundNotificationCompat = Notification.Builder(context, ChannelType.MOBILE_FOREGROUND.channelId)
             .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentIntent(Utils.getAppIntent(context, MainActivity::class.java, 4, false))
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setAutoCancel(false)
@@ -120,6 +119,17 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             StatusBarIcon.DELTA.pref -> BitmapUtils.getDeltaAsIcon(roundTarget=!bigIcon, color = if(coloredIcon) ReceiveData.getGlucoseColor(true) else Color.WHITE)
             else -> Icon.createWithResource(GlucoDataService.context, R.mipmap.ic_launcher)
         }
+    }
+
+    private fun getTapActionIntent(foreground: Boolean): PendingIntent? {
+        val tapAction = if(foreground)
+            sharedPref.getString(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION, "")
+        else
+            sharedPref.getString(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_TAP_ACTION, "")
+        if(tapAction.isNullOrEmpty())
+            return null
+        val requestCode = if(foreground) 4 else 5
+        return Utils.getTapActionIntent(GlucoDataService.context!!, tapAction, requestCode)
     }
 
     fun getNotification(withContent: Boolean, iconKey: String, foreground: Boolean) : Notification {
@@ -152,6 +162,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         val notificationBuilder = if(foreground) foregroundNotificationCompat else notificationCompat
         val notification = notificationBuilder
             .setSmallIcon(getStatusBarIcon(iconKey))
+            .setContentIntent(getTapActionIntent(foreground))
             .setWhen(ReceiveData.time)
             .setCustomContentView(remoteViews)
             .setCustomBigContentView(null)
@@ -262,8 +273,10 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON,
                 Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION,
                 Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON,
+                Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_TAP_ACTION,
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON,
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_COLORED_ICON,
+                Constants.SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION,
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY -> {
                     updatePreferences()
                 }

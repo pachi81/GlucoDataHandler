@@ -12,6 +12,7 @@ import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import de.michelinside.glucodatahandler.widget.FloatingWidget
@@ -56,6 +57,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         try {
             Log.d(LOG_ID, "onCreate called")
             super.onCreate()
+            migrateSettings()
             val filter = mutableSetOf(
                 NotifySource.BROADCAST,
                 NotifySource.MESSAGECLIENT,
@@ -71,6 +73,73 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             floatingWidget.create()
             LockScreenWallpaper.create(this)
             AlarmNotification.initNotifications(this)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
+        }
+    }
+
+    private fun migrateSettings() {
+        try {
+            Log.v(LOG_ID, "migrateSettings called")
+
+            if(!sharedPref!!.contains(Constants.SHARED_PREF_GLUCODATA_RECEIVERS)) {
+                val receivers = HashSet<String>()
+                val sendToAod = sharedPref!!.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, false)
+                if (sendToAod)
+                    receivers.add("de.metalgearsonic.glucodata.aod")
+                Log.i(LOG_ID, "Upgrade receivers to " + receivers.toString())
+                with(sharedPref!!.edit()) {
+                    putStringSet(Constants.SHARED_PREF_GLUCODATA_RECEIVERS, receivers)
+                    apply()
+                }
+            }
+
+            if(!sharedPref!!.contains(Constants.SHARED_PREF_XDRIP_RECEIVERS)) {
+                val receivers = HashSet<String>()
+                receivers.add("com.eveningoutpost.dexdrip")
+                Log.i(LOG_ID, "Upgrade receivers to " + receivers.toString())
+                with(sharedPref!!.edit()) {
+                    putStringSet(Constants.SHARED_PREF_XDRIP_RECEIVERS, receivers)
+                    apply()
+                }
+            }
+
+            // create default tap actions as it was before
+            // notifications
+            if(!sharedPref!!.contains(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION)) {
+                val curApp = this.packageName
+                Log.i(LOG_ID, "Setting default tap action for notification to $curApp")
+                with(sharedPref!!.edit()) {
+                    putString(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION, curApp)
+                    apply()
+                }
+            }
+            if(!sharedPref!!.contains(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_TAP_ACTION)) {
+                val curApp = this.packageName
+                Log.i(LOG_ID, "Setting default tap action for second notification to $curApp")
+                with(sharedPref!!.edit()) {
+                    putString(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_TAP_ACTION, curApp)
+                    apply()
+                }
+            }
+            // widgets
+            if(!sharedPref!!.contains(Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION)) {
+                val curApp = if(Utils.isPackageAvailable(this, Constants.PACKAGE_JUGGLUCO)) Constants.PACKAGE_JUGGLUCO else this.packageName
+                Log.i(LOG_ID, "Setting default tap action for floating widget to $curApp")
+                with(sharedPref!!.edit()) {
+                    putString(Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION, curApp)
+                    apply()
+                }
+            }
+            if(!sharedPref!!.contains(Constants.SHARED_PREF_WIDGET_TAP_ACTION)) {
+                val curApp = if(Utils.isPackageAvailable(this, Constants.PACKAGE_JUGGLUCO)) Constants.PACKAGE_JUGGLUCO else this.packageName
+                Log.i(LOG_ID, "Setting default tap action for widget to $curApp")
+                with(sharedPref!!.edit()) {
+                    putString(Constants.SHARED_PREF_WIDGET_TAP_ACTION, curApp)
+                    apply()
+                }
+            }
+
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }

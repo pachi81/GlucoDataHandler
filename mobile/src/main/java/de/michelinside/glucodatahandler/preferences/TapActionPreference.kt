@@ -8,9 +8,9 @@ import androidx.preference.DialogPreference
 import de.michelinside.glucodatahandler.R
 
 
-class SelectReceiverPreference : DialogPreference {
-    private val LOG_ID = "GDH.SelectReceiverPreference"
-    private var receiverSet = HashSet<String>()
+class TapActionPreference : DialogPreference {
+    private val LOG_ID = "GDH.TapActionPreference"
+    private var receiver = ""
     constructor(context: Context?) : super(context!!)  {
         initPreference()
     }
@@ -25,6 +25,7 @@ class SelectReceiverPreference : DialogPreference {
 
     fun initPreference() {
         Log.d(LOG_ID, "initPreference called")
+        setReceiver("", false)
     }
 
     override fun getDialogLayoutResource(): Int {
@@ -32,24 +33,26 @@ class SelectReceiverPreference : DialogPreference {
         return R.layout.fragment_select_receiver
     }
 
-    fun getReceivers(): HashSet<String> {
+    fun getReceiver(): String {
         Log.d(LOG_ID, "getReceivers called")
-        return receiverSet
+        return receiver
     }
 
-    fun setReceivers(receivers: HashSet<String>) {
-        Log.d(LOG_ID, "setReceivers called for " + receivers.toString())
+    fun setReceiver(newReceiver: String, save: Boolean = true) {
+        Log.d(LOG_ID, "setReceiver called for $newReceiver - save: $save")
         try {
-            receiverSet = receivers // Save to Shared Preferences
-            persistStringSet(receiverSet)
+            receiver = newReceiver // Save to Shared Preferences
+            if(save)
+                persistString(receiver)
+            this.summary = TapActionPreferenceDialogFragmentCompat.getSummary(context, receiver)
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "setReceivers exception: " + exc.toString())
+            Log.e(LOG_ID, "setReceiver exception: " + exc.toString())
         }
     }
 
     override fun onGetDefaultValue(a: TypedArray, index: Int): Any? {
         Log.d(LOG_ID, "onGetDefaultValue called for " + a.toString() + " with index " + index.toString())
-        return HashSet<String>()
+        return context.packageName
     }
 
     override fun onSetInitialValue(
@@ -59,7 +62,7 @@ class SelectReceiverPreference : DialogPreference {
         try {
             Log.d(LOG_ID, "onSetInitialValue called with restorePersistedValue " + restorePersistedValue.toString() + " - defaultValue " + defaultValue.toString())
             // Read the value. Use the default value if it is not possible.
-            setReceivers(if (restorePersistedValue || defaultValue == null) getPersistedStringSet(receiverSet) as HashSet<String> else defaultValue as HashSet<String>)
+            setReceiver(if (restorePersistedValue || defaultValue == null) getPersistedString(receiver) as String else defaultValue as String)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSetInitialValue exception: " + exc.toString())
         }

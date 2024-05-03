@@ -131,9 +131,9 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
     override fun onDisplayPreferenceDialog(preference: Preference) {
         Log.d(LOG_ID, "onDisplayPreferenceDialog called for " + preference.javaClass)
         try {
-            if (preference is SelectReceiverPreference) {
+            if (preference is TapActionPreference) {
                 Log.d(LOG_ID, "Show SelectReceiver Dialog")
-                val dialogFragment = SelectReceiverPreferenceDialogFragmentCompat.initial(preference.key)
+                val dialogFragment = TapActionPreferenceDialogFragmentCompat.initial(preference.key)
                 dialogFragment.setTargetFragment(this, 0)
                 dialogFragment.show(parentFragmentManager, "androidx.preference.PreferenceFragment.DIALOG")
             } else {
@@ -199,7 +199,7 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
         if(selectTargets != null) {
             val receivers = getReceivers(broadcastAction)
             // force "global broadcast" to be the first entry
-            selectTargets!!.entries =
+            selectTargets.entries =
                 arrayOf<CharSequence>(resources.getString(CR.string.pref_global_broadcast)) + receivers.keys.toTypedArray()
             selectTargets.entryValues = arrayOf<CharSequence>("") + receivers.values.toTypedArray()
         }

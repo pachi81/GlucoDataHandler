@@ -168,7 +168,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
             return PendingIntent.getBroadcast(this, 3, GlucoDataUtils.getDummyGlucodataIntent(false), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         } else {
             /*
-            var launchIntent: Intent? = packageManager.getLaunchIntentForPackage("tk.glucodata")
+            var launchIntent: Intent? = packageManager.getLaunchIntentForPackage(Constants.PACKAGE_JUGGLUCO)
             if (launchIntent == null) {
                 Log.d(LOG_ID, "Juggluco not found, use own one")
                 launchIntent = Intent(this, WearActivity::class.java)
