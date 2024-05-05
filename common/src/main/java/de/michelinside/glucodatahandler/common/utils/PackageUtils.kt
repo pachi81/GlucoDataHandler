@@ -8,34 +8,66 @@ import android.content.pm.ResolveInfo
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.receiver.GlucoDataActionReceiver
+import kotlinx.coroutines.*
+import java.util.concurrent.atomic.AtomicBoolean
 
 object PackageUtils {
-    private val LOG_ID = "GDH.Utils.Package"
+    private val LOG_ID = "GDH.Utils.Packages"
     private val packages = HashMap<String, String>()
 
-    fun clearPackages() {
-        packages.clear()
+    private var updateInProgress = AtomicBoolean(false)
+
+    fun updatePackages(context: Context) {
+        if(!updateInProgress.get()) {
+            updateInProgress.set(true)
+            packages.clear()
+            GlobalScope.launch {
+                Log.d(LOG_ID, "Start updating packages")
+                val receivers: List<ResolveInfo>
+                val intent = Intent(Intent.ACTION_MAIN)
+                intent.addCategory(Intent.CATEGORY_LAUNCHER)
+                receivers = context.packageManager.queryIntentActivities(
+                    intent,
+                    PackageManager.GET_META_DATA
+                )
+                for (resolveInfo in receivers) {
+                    val pkgName = resolveInfo.activityInfo.packageName
+                    val name =
+                        resolveInfo.activityInfo.loadLabel(context.packageManager).toString()
+                    if (pkgName != null) {
+                        packages[pkgName] = name
+                    }
+                }
+                updateInProgress.set(false)
+                Log.i(LOG_ID, "${packages.size} packages found")
+            }
+        }
+    }
+
+    private fun waitForUpdate() {
+        if(updateInProgress.get()) {
+            runBlocking {
+                val result = async {
+                    Log.v(LOG_ID, "Wait for updating packages")
+                    while (updateInProgress.get()) {
+                        delay(10)
+                    }
+                    Log.v(LOG_ID, "Update packages done")
+                    true
+                }
+                result.await()
+            }
+        }
     }
 
     fun getPackages(context: Context): HashMap<String, String> {
+        if(updateInProgress.get()) {
+            waitForUpdate()
+        }
         if (packages.isEmpty()) {
             Log.i(LOG_ID, "Updating receivers")
-            val receivers: List<ResolveInfo>
-            val intent = Intent(Intent.ACTION_MAIN)
-            intent.addCategory(Intent.CATEGORY_LAUNCHER)
-            receivers = context.packageManager.queryIntentActivities(
-                intent,
-                PackageManager.GET_META_DATA
-            )
-            for (resolveInfo in receivers) {
-                val pkgName = resolveInfo.activityInfo.packageName
-                val name =
-                    resolveInfo.activityInfo.loadLabel(context.packageManager).toString()
-                if (pkgName != null) {
-                    packages[pkgName] = name
-                }
-            }
-            Log.i(LOG_ID, "${packages.size} receivers found")
+            updatePackages(context)
+            waitForUpdate()
         }
         return packages
     }

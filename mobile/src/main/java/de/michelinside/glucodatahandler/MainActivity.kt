@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableAlarms = findViewById(R.id.tableAlarms)
             tableDetails = findViewById(R.id.tableDetails)
 
-            PackageUtils.clearPackages()
+            PackageUtils.updatePackages(this)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)

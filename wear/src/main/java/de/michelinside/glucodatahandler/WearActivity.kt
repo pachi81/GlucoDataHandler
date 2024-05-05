@@ -83,7 +83,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
             ReceiveData.initData(this)
 
-            PackageUtils.clearPackages()
+            PackageUtils.updatePackages(this)
 
             btnSettings = findViewById(R.id.btnSettings)
             btnSettings.setOnClickListener {
