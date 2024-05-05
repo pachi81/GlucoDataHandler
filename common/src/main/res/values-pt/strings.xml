@@ -454,11 +454,11 @@
     <string name="pref_watchdrip_info_summary">WatchDrip+ suporta vários dispositivos MiBand e Amazfit.\nPara obter uma lista completa de dispositivos suportados e mais informações sobre como configurar o WatchDrip+, clique aqui.</string>
     <string name="alarm_vibrate_only_wear_info">Vibrar apenas sem notificação não funciona em todos os dispositivos!</string>
     <string name="alarm_use_alarm_sound">Usar som de alarme</string>
-    <string name="alarm_use_alarm_sound_summary">Use volume of the alarm sound instead of ringtone sound.\nThis may be independent from vibration mode.</string>
-    <string name="alarm_vibrate_only_summary">Use o volume do som do alarme em vez do som do toque.\nIsso pode ser independente do modo de vibração.</string>
+    <string name="alarm_use_alarm_sound_summary">Use o volume do som do alarme em vez do som do toque.\nIsso pode ser independente do modo de vibração.</string>
+    <string name="alarm_vibrate_only_summary">Ative isto para forçar a não reprodução de nenhum som de alarme, independentemente de qualquer outra configuração de som de alarme.</string>
     <string name="alarm_start_delay">Iniciar atraso</string>
     <string name="alarm_start_delay_wear_summary">Atraso antes que a vibração e o som sejam reproduzidos pela primeira vez.\nÀs vezes, a notificação do telefone interrompe a vibração imediatamente.</string>
-    <string name="pref_color_obsolete">Valor de cor obsoletos</string>
+    <string name="pref_color_obsolete">Valor de cor para ausência de valor</string>
     <string name="pref_color_obsolete_summary">Cor para quando estiver sem novos valores de glicose.</string>
     <string name="alarm_wear_no_notification_phone_connected">Nenhum pop-up enquanto o telefone está conectado</string>
     <string name="alarm_wear_no_notification_phone_connected_summary">Nenhum pop-up extra de notificação do relógio, enquanto o telefone estiver conectado.\nA vibração e o som serão acionados conforme configurado.</string>
