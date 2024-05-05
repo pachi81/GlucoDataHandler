@@ -42,6 +42,7 @@ import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmState
 import de.michelinside.glucodatahandler.common.notification.AlarmType
+import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -596,7 +597,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         if (ReceiveData.sensorID?.isNotEmpty() == true) {
             tableDetails.addView(createRow(CR.string.info_label_sensor_id, if(BuildConfig.DEBUG) "ABCDE12345" else ReceiveData.sensorID!!))
         }
-        tableDetails.addView(createRow(CR.string.info_label_source, resources.getString(ReceiveData.source.resId)))
+        if(ReceiveData.source != DataSource.NONE)
+            tableDetails.addView(createRow(CR.string.info_label_source, resources.getString(ReceiveData.source.resId)))
         checkTableVisibility(tableDetails)
     }
 

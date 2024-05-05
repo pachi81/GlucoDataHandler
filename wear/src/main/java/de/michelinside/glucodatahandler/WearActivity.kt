@@ -297,7 +297,8 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         if (ReceiveData.sensorID?.isNotEmpty() == true) {
             tableDetails.addView(createRow(CR.string.info_label_sensor_id, if(BuildConfig.DEBUG) "ABCDE12345" else ReceiveData.sensorID!!))
         }
-        tableDetails.addView(createRow(CR.string.info_label_source, resources.getString(ReceiveData.source.resId)))
+        if(ReceiveData.source != DataSource.NONE)
+            tableDetails.addView(createRow(CR.string.info_label_source, resources.getString(ReceiveData.source.resId)))
         checkTableVisibility(tableDetails)
     }
 
