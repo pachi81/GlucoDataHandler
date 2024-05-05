@@ -468,7 +468,7 @@
     <string name="application_color_scheme_system">Użyj trybu systemowego</string>
     <string name="application_color_scheme_light">Tryb jasny</string>
     <string name="application_color_scheme_dark">Tryb ciemny</string>
-    <string name="tap_action">Działanie po naciśnięciu</string>
+    <string name="tap_action">Po dotknięciu</string>
     <string name="tap_action_summary">Wybierz działanie lub aplikację, która ma zostać uruchomiona po dotknięciu tego elementu.</string>
     <string name="no_action">Brak działania</string>
     <string name="action_floating_widget_toggle">Przełączanie pływającego widgetu</string>
