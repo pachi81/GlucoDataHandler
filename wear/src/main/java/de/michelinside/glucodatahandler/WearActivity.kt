@@ -303,7 +303,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         val textView = TextView(this)
         textView.layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1F)
         textView.text = text
-        textView.textSize = 12F
+        textView.textSize = 14F
         if (end)
             textView.gravity = Gravity.CENTER_VERTICAL or Gravity.END
         else

@@ -175,7 +175,7 @@
                     <TextView
                         android:paddingTop="10dp"
                         android:textStyle="bold"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:layout_weight="1"
@@ -194,7 +194,7 @@
                     <TextView
                         android:paddingTop="10dp"
                         android:textStyle="bold"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:layout_weight="1"
@@ -213,7 +213,7 @@
                     <TextView
                         android:paddingTop="10dp"
                         android:textStyle="bold"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:layout_weight="1"
