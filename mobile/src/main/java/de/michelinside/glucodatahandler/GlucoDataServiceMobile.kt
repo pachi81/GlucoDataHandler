@@ -139,6 +139,16 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                     apply()
                 }
             }
+            // full screen alarm notification
+            if(!sharedPref!!.contains(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED)) {
+                if (AlarmNotification.hasFullscreenPermission()) {
+                    Log.i(LOG_ID, "Enabling fullscreen notification as default")
+                    with(sharedPref!!.edit()) {
+                        putBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, true)
+                        apply()
+                    }
+                }
+            }
 
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )

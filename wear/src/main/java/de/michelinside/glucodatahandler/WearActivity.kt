@@ -265,8 +265,13 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             val onClickListener = View.OnClickListener {
                 GlucoDataService.checkForConnectedNodes(true)
             }
-            WearPhoneConnection.getNodeBatterLevels().forEach { name, level ->
-                tableConnections.addView(createRow(name, if (level > 0) "$level%" else "?%", onClickListener))
+            if(WearPhoneConnection.getNodeBatterLevels().size == 1 ) {
+                val level = WearPhoneConnection.getNodeBatterLevels().values.first()
+                tableConnections.addView(createRow(CR.string.source_phone, if (level > 0) "$level%" else "?%", onClickListener))
+            } else {
+                WearPhoneConnection.getNodeBatterLevels().forEach { name, level ->
+                    tableConnections.addView(createRow(name, if (level > 0) "$level%" else "?%", onClickListener))
+                }
             }
         }
         checkTableVisibility(tableConnections)
