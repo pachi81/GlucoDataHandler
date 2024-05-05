@@ -33,6 +33,7 @@ object Constants {
     const val PACKAGE_AAPS = "info.nightscout"
 
     const val EXTRA_SOURCE_PACKAGE = "gdh.source_package"
+    const val EXTRA_SOURCE_INDEX = "gdh.source_idx"
 
     const val XDRIP_ACTION_GLUCOSE_READING = "com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING"
     const val XDRIP_BROADCAST_ACTION = "com.eveningoutpost.dexdrip.BgEstimate"
@@ -40,6 +41,7 @@ object Constants {
     const val GLUCODATA_ACTION = "de.michelinside.glucodatahandler.GLUCODATA"
     const val GLUCODATAAUTO_STATE_ACTION = "de.michelinside.glucodataauto.state"
     const val GLUCODATAAUTO_STATE_EXTRA = "state"
+
 
     const val VALUE_OBSOLETE_SHORT_SEC = 300
     const val VALUE_OBSOLETE_LONG_SEC  = 600

@@ -5,14 +5,19 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.SourceState
+import de.michelinside.glucodatahandler.common.SourceStateData
+import de.michelinside.glucodatahandler.common.notifier.DataSource
+import de.michelinside.glucodatahandler.common.utils.Utils
 
 
-class GlucoDataActionReceiver: BroadcastReceiver() {
+class InternalActionReceiver: BroadcastReceiver() {
 
     private val LOG_ID = "GDH.GlucoDataActionReceiver"
     override fun onReceive(context: Context, intent: Intent) {       
         try {
-            Log.d(LOG_ID, "Action received: ${intent.action}")
+            Log.d(LOG_ID, "Action received: ${intent.action} - bundle: ${Utils.dumpBundle(intent.extras)}")
             when(intent.action) {
                 Constants.ACTION_FLOATING_WIDGET_TOGGLE -> {
                     Log.d(LOG_ID, "Action: floating widget toggle")
@@ -23,6 +28,16 @@ class GlucoDataActionReceiver: BroadcastReceiver() {
                                 Constants.SHARED_PREF_FLOATING_WIDGET, false))
                         apply()
                     }
+                }
+                Constants.GLUCODATA_ACTION -> {
+                    val extras = intent.extras!!
+                    val lastTime = ReceiveData.time
+                    val lastIobCobTime = ReceiveData.iobCobTime
+                    val source = DataSource.fromIndex(extras.getInt(Constants.EXTRA_SOURCE_INDEX,
+                        DataSource.NONE.ordinal))
+                    ReceiveData.handleIntent(context, source, extras, false)
+                    if (ReceiveData.time == lastTime && lastIobCobTime == ReceiveData.iobCobTime)
+                        SourceStateData.setState(source, SourceState.NO_NEW_VALUE)
                 }
                 else -> {
                     Log.w(LOG_ID, "Unknown action '${intent.action}' received!" )

@@ -2,6 +2,7 @@ package de.michelinside.glucodatahandler.common.tasks
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -17,6 +18,7 @@ import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver
 import de.michelinside.glucodatahandler.common.utils.Utils
 import java.io.DataOutputStream
 import java.net.HttpURLConnection
@@ -172,6 +174,15 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
 
     protected fun handleResult(extras: Bundle) {
         Log.d(LOG_ID, "handleResult for $source: ${Utils.dumpBundle(extras)}")
+        val intent = Intent(GlucoDataService.context!!, InternalActionReceiver::class.java)
+        intent.action = Constants.GLUCODATA_ACTION
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+        intent.setPackage(GlucoDataService.context!!.packageName)
+        extras.putInt(Constants.EXTRA_SOURCE_INDEX, source.ordinal)
+        intent.putExtras(extras)
+        setState(SourceState.CONNECTED)
+        GlucoDataService.context!!.sendBroadcast(intent)
+        /*
         val done = AtomicBoolean(false)
         val active = AtomicBoolean(false)
         val task = Runnable {
@@ -205,7 +216,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             Log.e(LOG_ID, "Handler for $source not finished after $count ms! Active: ${active.get()} - Stop it!")
             handler.removeCallbacksAndMessages(null)
             setLastError("Internal error!")
-        }
+        }*/
         Log.d(LOG_ID, "handleResult for " + source + " done!")
     }
 

@@ -7,7 +7,7 @@ import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
-import de.michelinside.glucodatahandler.common.receiver.GlucoDataActionReceiver
+import de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver
 import kotlinx.coroutines.*
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -102,7 +102,7 @@ object PackageUtils {
         if (tapAction.isNullOrEmpty())
             return Pair(null, false)
         if (tapAction.startsWith(Constants.ACTION_PREFIX)) {
-            val intent = Intent(context, GlucoDataActionReceiver::class.java)
+            val intent = Intent(context, InternalActionReceiver::class.java)
             intent.action = tapAction
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
             intent.setPackage(context.packageName)

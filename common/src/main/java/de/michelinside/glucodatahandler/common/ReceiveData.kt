@@ -29,7 +29,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     const val ALARM = "glucodata.Minute.Alarm"
     const val TIME = "glucodata.Minute.Time"
     const val DELTA = "glucodata.Minute.Delta"
-    const val SOURCE_INDEX = "source_idx"
     const val IOB = "glucodata.Minute.IOB"
     const val COB = "glucodata.Minute.COB"
     const val IOBCOB_TIME = "gdh.IOB_COB_time"
@@ -591,7 +590,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 putFloat(IOB, iob)
                 putFloat(COB, cob)
                 putLong(IOBCOB_TIME, iobCobTime)
-                putInt(SOURCE_INDEX, source.ordinal)
+                putInt(Constants.EXTRA_SOURCE_INDEX, source.ordinal)
                 apply()
             }
         } catch (exc: Exception) {
@@ -616,7 +615,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     extras.putFloat(IOB, sharedGlucosePref.getFloat(IOB, iob))
                     extras.putFloat(COB, sharedGlucosePref.getFloat(COB, cob))
                     extras.putLong(IOBCOB_TIME, sharedGlucosePref.getLong(IOBCOB_TIME, iobCobTime))
-                    handleIntent(context, DataSource.fromIndex(sharedGlucosePref.getInt(SOURCE_INDEX,
+                    handleIntent(context, DataSource.fromIndex(sharedGlucosePref.getInt(Constants.EXTRA_SOURCE_INDEX,
                         DataSource.NONE.ordinal)), extras)
                 }
             }
