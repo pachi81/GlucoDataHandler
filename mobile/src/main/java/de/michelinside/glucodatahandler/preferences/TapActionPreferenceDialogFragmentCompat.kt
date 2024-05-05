@@ -14,7 +14,7 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.preference.PreferenceDialogFragmentCompat
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
-import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.R as CR
 
 
@@ -33,7 +33,7 @@ class TapActionPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat()
         }
 
         private fun getReceivers(context: Context): HashMap<String, String> {
-            return Utils.getPackages(context)
+            return PackageUtils.getPackages(context)
         }
         private fun getActions(context: Context): HashMap<String, String> {
             if(actions.isEmpty()) {

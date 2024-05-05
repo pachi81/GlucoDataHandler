@@ -14,13 +14,13 @@ import android.widget.RemoteViews
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
+import de.michelinside.glucodatahandler.common.utils.PackageUtils
 
 
 object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -129,7 +129,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         if(tapAction.isNullOrEmpty())
             return null
         val requestCode = if(foreground) 4 else 5
-        return Utils.getTapActionIntent(GlucoDataService.context!!, tapAction, requestCode)
+        return PackageUtils.getTapActionIntent(GlucoDataService.context!!, tapAction, requestCode)
     }
 
     fun getNotification(withContent: Boolean, iconKey: String, foreground: Boolean) : Notification {

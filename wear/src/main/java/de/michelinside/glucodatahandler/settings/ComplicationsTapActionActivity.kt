@@ -13,7 +13,7 @@ import de.michelinside.glucodatahandler.ActiveComplicationHandler
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
-import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.common.utils.PackageUtils
 
 class ComplicationsTapActionActivity : AppCompatActivity() {
     private val LOG_ID = "GDH.Main.ComplicationsTapActionActivity"
@@ -151,7 +151,7 @@ class ComplicationsTapActionActivity : AppCompatActivity() {
     private fun updateReceiver(all: Boolean) {
         try {
             val receiverLayout: LinearLayout = findViewById(R.id.receiverLayout)
-            val receivers = Utils.getPackages(this)
+            val receivers = PackageUtils.getPackages(this)
             Log.d(LOG_ID, receivers.size.toString() + " receivers found!")
             receiverLayout.removeAllViews()
 

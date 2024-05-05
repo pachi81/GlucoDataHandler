@@ -12,6 +12,7 @@ import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.Channels
+import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 
 class AlarmAdvancedFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -72,7 +73,7 @@ class AlarmAdvancedFragment : PreferenceFragmentCompat(), SharedPreferences.OnSh
         }
         val aaPref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED)
         if(aaPref != null) {
-            aaPref.isEnabled = Utils.isGlucoDataAutoAvailable(requireContext())
+            aaPref.isEnabled = PackageUtils.isGlucoDataAutoAvailable(requireContext())
             if(!aaPref.isEnabled && aaPref.isChecked) {
                 disableSwitch(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED)
             }

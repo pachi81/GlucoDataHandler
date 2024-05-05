@@ -13,6 +13,7 @@ import androidx.wear.watchface.complications.datasource.SuspendingComplicationDa
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.R as CR
 
@@ -167,7 +168,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     open fun getTapAction(useExternalApp: Boolean = true): PendingIntent? {
         val action = sharedPref.getString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, "")
         if(action != null) {
-            return Utils.getTapActionIntent(this, action, instanceId)
+            return PackageUtils.getTapActionIntent(this, action, instanceId)
         } else if (BuildConfig.DEBUG) {
             // for debug create dummy broadcast (to check in emulator)
             return PendingIntent.getBroadcast(this, instanceId, GlucoDataUtils.getDummyGlucodataIntent(false), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)

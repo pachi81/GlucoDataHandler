@@ -9,7 +9,7 @@ import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.notifier.*
-import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.common.utils.PackageUtils
 
 
 class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterface {
@@ -71,7 +71,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
 
             // complications
             if(!sharedPref.contains(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION)) {
-                val curApp = if(Utils.isPackageAvailable(this, Constants.PACKAGE_JUGGLUCO)) Constants.PACKAGE_JUGGLUCO else this.packageName
+                val curApp = if(PackageUtils.isPackageAvailable(this, Constants.PACKAGE_JUGGLUCO)) Constants.PACKAGE_JUGGLUCO else this.packageName
                 Log.i(LOG_ID, "Setting default tap action for complications to $curApp")
                 with(GlucoDataService.sharedPref!!.edit()) {
                     putString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, curApp)
@@ -96,7 +96,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
     override fun getNotification(): Notification {
         Channels.createNotificationChannel(this, ChannelType.WEAR_FOREGROUND)
 
-        val pendingIntent = Utils.getAppIntent(this, WearActivity::class.java, 11, false)
+        val pendingIntent = PackageUtils.getAppIntent(this, WearActivity::class.java, 11, false)
 
         return Notification.Builder(this, ChannelType.WEAR_FOREGROUND.channelId)
             .setContentTitle(getString(CR.string.forground_notification_descr))

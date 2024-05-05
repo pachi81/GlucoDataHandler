@@ -12,7 +12,7 @@ import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
-import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import de.michelinside.glucodatahandler.widget.FloatingWidget
@@ -124,7 +124,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             }
             // widgets
             if(!sharedPref!!.contains(Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION)) {
-                val curApp = if(Utils.isPackageAvailable(this, Constants.PACKAGE_JUGGLUCO)) Constants.PACKAGE_JUGGLUCO else this.packageName
+                val curApp = if(PackageUtils.isPackageAvailable(this, Constants.PACKAGE_JUGGLUCO)) Constants.PACKAGE_JUGGLUCO else this.packageName
                 Log.i(LOG_ID, "Setting default tap action for floating widget to $curApp")
                 with(sharedPref!!.edit()) {
                     putString(Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION, curApp)
@@ -132,7 +132,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 }
             }
             if(!sharedPref!!.contains(Constants.SHARED_PREF_WIDGET_TAP_ACTION)) {
-                val curApp = if(Utils.isPackageAvailable(this, Constants.PACKAGE_JUGGLUCO)) Constants.PACKAGE_JUGGLUCO else this.packageName
+                val curApp = if(PackageUtils.isPackageAvailable(this, Constants.PACKAGE_JUGGLUCO)) Constants.PACKAGE_JUGGLUCO else this.packageName
                 Log.i(LOG_ID, "Setting default tap action for widget to $curApp")
                 with(sharedPref!!.edit()) {
                     putString(Constants.SHARED_PREF_WIDGET_TAP_ACTION, curApp)

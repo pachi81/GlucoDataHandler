@@ -22,7 +22,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.tasks.BackgroundWorker
 import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
-import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.common.utils.PackageUtils
 
 class GlucoDataServiceAuto: Service() {
     companion object {
@@ -199,7 +199,7 @@ class GlucoDataServiceAuto: Service() {
     private fun getNotification(): Notification {
         Channels.createNotificationChannel(this, ChannelType.ANDROID_AUTO_FOREGROUND)
 
-        val pendingIntent = Utils.getAppIntent(this, MainActivity::class.java, 11, false)
+        val pendingIntent = PackageUtils.getAppIntent(this, MainActivity::class.java, 11, false)
 
         return Notification.Builder(this, ChannelType.ANDROID_AUTO_FOREGROUND.channelId)
             .setContentTitle(getString(de.michelinside.glucodatahandler.common.R.string.activity_main_car_connected_label))

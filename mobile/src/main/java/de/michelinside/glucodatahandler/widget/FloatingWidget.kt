@@ -23,6 +23,7 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import java.util.*
 
 
@@ -224,7 +225,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
             widget.setBackgroundColor(Utils.getBackgroundColor(sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY, 3)))
             widget.setOnClickListener {
                 Log.d(LOG_ID, "onClick called")
-                val action = Utils.getTapAction(context, sharedPref.getString(Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION, ""))
+                val action = PackageUtils.getTapAction(context, sharedPref.getString(Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION, ""))
                 if(action.first != null) {
                     if (action.second) {
                         context.sendBroadcast(action.first!!)

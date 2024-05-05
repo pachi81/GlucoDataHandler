@@ -25,6 +25,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.setPadding
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmType
+import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.settings.AlarmsActivity
 import de.michelinside.glucodatahandler.settings.SettingsActivity
 import de.michelinside.glucodatahandler.settings.SourcesActivity
@@ -81,6 +82,8 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             txtVersion.text = BuildConfig.VERSION_NAME
 
             ReceiveData.initData(this)
+
+            PackageUtils.clearPackages()
 
             btnSettings = findViewById(R.id.btnSettings)
             btnSettings.setOnClickListener {
@@ -251,8 +254,6 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         Log.d(LOG_ID, "new intent received from: " + dataSource.toString())
         update()
     }
-
-
 
     private fun updateConnectionsTable() {
         tableConnections.removeViews(1, maxOf(0, tableConnections.childCount - 1))

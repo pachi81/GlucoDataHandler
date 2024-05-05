@@ -14,7 +14,7 @@ import androidx.preference.*
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
-import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.R as CR
 
 
@@ -243,7 +243,7 @@ class TransferSettingsFragment: SettingsFragmentBase(R.xml.pref_transfer) {
 class GDASettingsFragment: SettingsFragmentBase(R.xml.pref_gda) {
     override fun initPreferences() {
         Log.v(LOG_ID, "initPreferences called")
-        if (Utils.isGlucoDataAutoAvailable(requireContext())) {
+        if (PackageUtils.isGlucoDataAutoAvailable(requireContext())) {
             val sendToGDA = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO)
             sendToGDA!!.isVisible = true
             val sendPrefToGDA = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO)
