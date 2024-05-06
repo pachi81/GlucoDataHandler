@@ -66,7 +66,8 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical|end"
             android:maxLines="1"
-            android:textSize="20sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
             android:paddingEnd="10dp"
             tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
         <TextView
@@ -77,7 +78,8 @@
             android:layout_weight="3"
             android:gravity="center"
             android:maxLines="1"
-            android:textSize="20sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
             tools:ignore="HardcodedText" />
     </LinearLayout>
     <LinearLayout
@@ -95,7 +97,8 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical|end"
             android:maxLines="1"
-            android:textSize="20sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
             android:paddingEnd="10dp"
             tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
 
@@ -107,7 +110,8 @@
             android:layout_weight="3"
             android:gravity="center"
             android:maxLines="1"
-            android:textSize="20sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
             tools:ignore="HardcodedText" />
     </LinearLayout>
     <TextView
@@ -180,9 +184,9 @@
         android:divider="?android:attr/dividerHorizontal"
         android:showDividers="middle">
 
-        <TableRow android:background="@color/table_header" android:padding="5dp">
+        <TableRow android:background="@color/table_header" android:padding="5dp"
+            tools:ignore="UselessParent">
             <TextView
-                android:paddingTop="20dp"
                 android:textStyle="bold"
                 android:textSize="20sp"
                 android:layout_height="wrap_content"
@@ -199,9 +203,9 @@
         android:divider="?android:attr/dividerHorizontal"
         android:showDividers="middle">
 
-        <TableRow android:background="@color/table_header" android:padding="5dp">
+        <TableRow android:background="@color/table_header" android:padding="5dp"
+            tools:ignore="UselessParent">
             <TextView
-                android:paddingTop="20dp"
                 android:textStyle="bold"
                 android:textSize="20sp"
                 android:layout_height="wrap_content"
@@ -218,9 +222,9 @@
         android:divider="?android:attr/dividerHorizontal"
         android:showDividers="middle">
 
-        <TableRow android:background="@color/table_header" android:padding="5dp">
+        <TableRow android:background="@color/table_header" android:padding="5dp"
+            tools:ignore="UselessParent">
             <TextView
-                android:paddingTop="20dp"
                 android:textStyle="bold"
                 android:textSize="20sp"
                 android:layout_height="wrap_content"

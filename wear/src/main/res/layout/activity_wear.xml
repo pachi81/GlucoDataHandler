@@ -25,7 +25,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:paddingTop="30dp"
-            android:paddingBottom="80dp"
+            android:paddingBottom="40dp"
             app:layout_boxedEdges="all">
 
         <LinearLayout
@@ -172,9 +172,9 @@
                 android:divider="?android:attr/dividerHorizontal"
                 android:showDividers="middle">
 
-                <TableRow android:background="@color/table_header" android:padding="5dp">
+                <TableRow android:background="@color/table_header" android:padding="5dp"
+                    tools:ignore="UselessParent">
                     <TextView
-                        android:paddingTop="10dp"
                         android:textStyle="bold"
                         android:textSize="16sp"
                         android:layout_height="wrap_content"
@@ -191,9 +191,9 @@
                 android:divider="?android:attr/dividerHorizontal"
                 android:showDividers="middle">
 
-                <TableRow android:background="@color/table_header" android:padding="5dp">
+                <TableRow android:background="@color/table_header" android:padding="5dp"
+                    tools:ignore="UselessParent">
                     <TextView
-                        android:paddingTop="10dp"
                         android:textStyle="bold"
                         android:textSize="16sp"
                         android:layout_height="wrap_content"
@@ -210,9 +210,9 @@
                 android:divider="?android:attr/dividerHorizontal"
                 android:showDividers="middle">
 
-                <TableRow android:background="@color/table_header" android:padding="5dp">
+                <TableRow android:background="@color/table_header" android:padding="5dp"
+                    tools:ignore="UselessParent">
                     <TextView
-                        android:paddingTop="10dp"
                         android:textStyle="bold"
                         android:textSize="16sp"
                         android:layout_height="wrap_content"
