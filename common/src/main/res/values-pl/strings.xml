@@ -329,7 +329,7 @@
 
     <!-- New  -->
 
-    <string name="menu_alarms">Alarms</string>
+    <string name="menu_alarms">Alarmy</string>
     <string name="alarm_interval">Przerwa</string>
     <string name="alarm_interval_summary_low">Minimalna przerwa w minutach między powiadomieniami dla tego typu alarmu.\nUwaga: nowe powiadomienie pojawi się dopiero po upływie tego czasu, jeśli delta jest ujemna.</string>
     <string name="alarm_interval_summary_high">Minimalna przerwa w minutach między powiadomieniami dla tego typu alarmu.\nUwaga: nowe powiadomienie pojawi się dopiero po upływie tego czasu, jeśli delta jest dodatnia.</string>
