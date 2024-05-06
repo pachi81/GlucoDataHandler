@@ -787,6 +787,10 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
     }
 
+    open fun getNotifierFilter(): MutableSet<NotifySource> {
+        return mutableSetOf()
+    }
+
     fun initNotifier(context: Context? = null) {
         val requireConext = context ?: GlucoDataService.context!!
         val newActive = isAlarmActive(requireConext)
@@ -798,6 +802,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 filter.add(NotifySource.ALARM_TRIGGER)
                 filter.add(NotifySource.OBSOLETE_ALARM_TRIGGER)
             }
+            filter.addAll(getNotifierFilter())
             InternalNotifier.addNotifier(requireConext, this, filter )
         }
     }

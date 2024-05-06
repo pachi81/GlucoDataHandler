@@ -11,6 +11,7 @@ import android.graphics.Paint
 import android.media.AudioAttributes
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.View
@@ -20,11 +21,13 @@ import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.R
+import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notification.AlarmType
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import java.io.FileOutputStream
 
@@ -188,4 +191,34 @@ object AlarmNotification : AlarmNotificationBase() {
             Log.e(LOG_ID, "Saving alarm to file exception: " + exc.message.toString() )
         }
     }
+
+
+    override fun getNotifierFilter(): MutableSet<NotifySource> {
+        return mutableSetOf(NotifySource.CAR_CONNECTION, NotifySource.CAPILITY_INFO)
+    }
+
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
+        try {
+            when(dataSource) {
+                NotifySource.CAR_CONNECTION,
+                NotifySource.CAPILITY_INFO -> {
+                    if(WearPhoneConnection.nodesConnected) {
+                        // update AA state on wear to prevent alarms, if they should not been executed while AA connected
+                        Log.i(LOG_ID, "Car connection has changed: ${CarModeReceiver.AA_connected}")
+                        val extras = Bundle()
+                        extras.putBoolean(
+                            Constants.EXTRA_AA_CONNECTED,
+                            CarModeReceiver.AA_connected
+                        )
+                        GlucoDataService.sendCommand(Command.AA_CONNECTION_STATE, extras)
+                    }
+                }
+                else -> super.OnNotifyData(context, dataSource, extras)
+
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString())
+        }
+    }
+
 }

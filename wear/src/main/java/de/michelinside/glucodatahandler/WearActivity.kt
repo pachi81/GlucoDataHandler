@@ -139,6 +139,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.OBSOLETE_VALUE,
                 NotifySource.SOURCE_SETTINGS,
                 NotifySource.ALARM_SETTINGS,
+                NotifySource.CAR_CONNECTION,
                 NotifySource.SOURCE_STATE_CHANGE,
                 NotifySource.ALARM_STATE_CHANGED))
             checkExactAlarmPermission()
@@ -273,6 +274,9 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                     tableConnections.addView(createRow(name, if (level > 0) "$level%" else "?%", onClickListener))
                 }
             }
+        }
+        if (AlarmNotificationWear.isAaConnected) {
+            tableConnections.addView(createRow(CR.string.pref_cat_android_auto, resources.getString(CR.string.connected_label)))
         }
         checkTableVisibility(tableConnections)
     }

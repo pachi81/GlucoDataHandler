@@ -190,6 +190,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         Constants.SHARED_PREF_ALARM_OBSOLETE_SOUND_DELAY,
         Constants.SHARED_PREF_ALARM_OBSOLETE_RETRIGGER,
         Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION,
+        Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED,
     )
 
     private val alarmStatePreferences = mutableSetOf(
@@ -212,6 +213,9 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         bundle.putBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_ENABLED, veryHighEnabled)
         bundle.putBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_ENABLED, obsoleteEnabled)
         if(includeNotification && AlarmNotificationBase.instance != null) {
+            if(GlucoDataService.sharedPref != null) {
+                bundle.putBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED,  GlucoDataService.sharedPref!!.getBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED, false))
+            }
             bundle.putBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, AlarmNotificationBase.instance!!.getAddSnooze())
             bundle.putInt(Constants.SHARED_PREF_ALARM_VERY_LOW_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.VERY_LOW, GlucoDataService.context!!))
             bundle.putInt(Constants.SHARED_PREF_ALARM_LOW_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.LOW, GlucoDataService.context!!))
@@ -257,6 +261,9 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
                 putInt(Constants.SHARED_PREF_ALARM_HIGH_RETRIGGER, bundle.getInt(Constants.SHARED_PREF_ALARM_HIGH_RETRIGGER, AlarmNotificationBase.instance!!.getTriggerTime(AlarmType.HIGH, GlucoDataService.context!!)))
                 putInt(Constants.SHARED_PREF_ALARM_VERY_HIGH_RETRIGGER, bundle.getInt(Constants.SHARED_PREF_ALARM_VERY_HIGH_RETRIGGER, AlarmNotificationBase.instance!!.getTriggerTime(AlarmType.VERY_HIGH, GlucoDataService.context!!)))
                 putInt(Constants.SHARED_PREF_ALARM_OBSOLETE_RETRIGGER, bundle.getInt(Constants.SHARED_PREF_ALARM_OBSOLETE_RETRIGGER, AlarmNotificationBase.instance!!.getTriggerTime(AlarmType.OBSOLETE, GlucoDataService.context!!)))
+                if(bundle.containsKey(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED)) {
+                    putBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED, bundle.getBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED))
+                }
             }
             apply()
         }

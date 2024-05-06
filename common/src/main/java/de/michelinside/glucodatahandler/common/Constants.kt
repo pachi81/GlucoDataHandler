@@ -34,6 +34,7 @@ object Constants {
 
     const val EXTRA_SOURCE_PACKAGE = "gdh.source_package"
     const val EXTRA_SOURCE_INDEX = "gdh.source_idx"
+    const val EXTRA_AA_CONNECTED = "gdh.aa_connected"
 
     const val XDRIP_ACTION_GLUCOSE_READING = "com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING"
     const val XDRIP_BROADCAST_ACTION = "com.eveningoutpost.dexdrip.BgEstimate"
