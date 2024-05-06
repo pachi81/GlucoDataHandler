@@ -86,7 +86,7 @@ object CarModeReceiver {
                 else -> "Unknown car connection type"
             }
             Log.d(LOG_ID, "onConnectionStateUpdated: " + message + " (" + connectionState.toString() + ")")
-            val curState = connected
+            val curState = AA_connected
             if (connectionState == CarConnection.CONNECTION_TYPE_NOT_CONNECTED)  {
                 if (car_connected) {
                     Log.i(LOG_ID, "Exited Car Mode")
@@ -98,7 +98,7 @@ object CarModeReceiver {
                 car_connected = true
                 GlucoDataService.context?.setAndroidAutoConnectionState(true)
             }
-            if (curState != connected)
+            if (curState != AA_connected)
                 InternalNotifier.notify(GlucoDataService.context!!, NotifySource.CAR_CONNECTION, null)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onConnectionStateUpdated exception: " + exc.message.toString() )
