@@ -108,14 +108,14 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             btnDismiss.onSlideCompleteListener =
                 object : SlideToActView.OnSlideCompleteListener {
                     override fun onSlideComplete(view: SlideToActView) {
-                        Log.v(LOG_ID, "Slide completed!")
+                        Log.d(LOG_ID, "Slide to stop completed!")
                         stop()
                     }
                 }
             btnSnooze.onSlideCompleteListener =
                 object : SlideToActView.OnSlideCompleteListener {
                     override fun onSlideComplete(view: SlideToActView) {
-                        Log.v(LOG_ID, "Snooze completed!")
+                        Log.d(LOG_ID, "Slide to snooze completed!")
                         AlarmNotification.stopVibrationAndSound()
                         btnSnooze.visibility = View.GONE
                         txtSnooze.visibility = View.VISIBLE
@@ -183,7 +183,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
 
     private fun stop() {
         try {
-            Log.v(LOG_ID, "stop called for id $notificationId")
+            Log.d(LOG_ID, "stop called for id $notificationId")
             activity = null
             if (notificationId > 0)
                 AlarmNotification.stopNotification(notificationId, this)

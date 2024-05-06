@@ -76,7 +76,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         saveRegion()
     }
 
-    val sensitivData = mutableSetOf("id", "patienId", "firstName", "lastName", "did", "sn", "token", "deviceId", "email", "primaryValue", "secondaryValue" )
+    val sensitivData = mutableSetOf("id", "patientId", "firstName", "lastName", "did", "sn", "token", "deviceId", "email", "primaryValue", "secondaryValue" )
 
     private fun replaceSensitiveData(body: String): String {
         var result = body

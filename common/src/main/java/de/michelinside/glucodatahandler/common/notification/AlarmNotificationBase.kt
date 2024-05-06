@@ -843,7 +843,7 @@ class AlarmIntentReceiver: BroadcastReceiver() {
     private val LOG_ID = "GDH.AlarmIntentReceiver"
     override fun onReceive(context: Context, intent: Intent) {
         try {
-            Log.v(LOG_ID, "onReceive called for ${intent.action} with extras: ${Utils.dumpBundle(intent.extras)}")
+            Log.d(LOG_ID, "onReceive called for ${intent.action} with extras: ${Utils.dumpBundle(intent.extras)}")
             AlarmNotificationBase.instance!!.handleTimerAction(context, intent.action!!, intent.extras)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onReceive exception: " + exc.toString())
