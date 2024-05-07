@@ -3,6 +3,7 @@ package de.michelinside.glucodatahandler.preferences
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +23,6 @@ class TapActionPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat()
     companion object {
         private val LOG_ID = "GDH.TapActionPreferenceDialog"
         private val filter = mutableSetOf<String>()
-        private val actions = HashMap<String, String>()
         fun initial(key: String) : TapActionPreferenceDialogFragmentCompat {
             Log.d(LOG_ID, "initial called for key: " +  key )
             val dialog = TapActionPreferenceDialogFragmentCompat()
@@ -36,10 +36,11 @@ class TapActionPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat()
             return PackageUtils.getPackages(context)
         }
         private fun getActions(context: Context): HashMap<String, String> {
-            if(actions.isEmpty()) {
-                actions[""] = context.resources.getString(CR.string.no_action)
-                actions[Constants.ACTION_FLOATING_WIDGET_TOGGLE] = context.resources.getString(CR.string.action_floating_widget_toggle)
-
+            val actions = HashMap<String, String>()
+            actions[""] = context.resources.getString(CR.string.no_action)
+            if(Settings.canDrawOverlays(context)) {
+                actions[Constants.ACTION_FLOATING_WIDGET_TOGGLE] =
+                    context.resources.getString(CR.string.action_floating_widget_toggle)
             }
             return actions
         }
