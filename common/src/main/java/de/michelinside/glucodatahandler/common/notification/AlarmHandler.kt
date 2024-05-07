@@ -193,13 +193,6 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED,
     )
 
-    private val alarmStatePreferences = mutableSetOf(
-        Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED,
-        Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_WEAR_CONNECTED,
-        Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED,
-        Constants.SHARED_PREF_NOTIFICATION_VIBRATE
-    )
-
     fun getSettings(includeNotification: Boolean = true): Bundle {
         val bundle = Bundle()
         bundle.putInt(Constants.SHARED_PREF_ALARM_VERY_LOW_INTERVAL, veryLowInterval/60000)
@@ -315,8 +308,6 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
             if (GlucoDataService.context != null) {
                 if(alarmPreferencesToSend.contains(key))
                     updateSettings(sharedPreferences, GlucoDataService.context!!)
-                if(alarmStatePreferences.contains(key))
-                    InternalNotifier.notify(GlucoDataService.context!!, NotifySource.ALARM_STATE_CHANGED, null)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString() + "\n" + exc.stackTraceToString() )

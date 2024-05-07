@@ -722,6 +722,13 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         return 0
     }
 
+    private val alarmStatePreferences = mutableSetOf(
+        Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED,
+        Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_WEAR_CONNECTED,
+        Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED,
+        Constants.SHARED_PREF_NOTIFICATION_VIBRATE
+    )
+
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
@@ -742,6 +749,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     Constants.SHARED_PREF_NOTIFICATION_USE_ALARM_SOUND -> useAlarmSound = sharedPreferences.getBoolean(Constants.SHARED_PREF_NOTIFICATION_USE_ALARM_SOUND, useAlarmSound)
                 }
             }
+            if(alarmStatePreferences.contains(key))
+                InternalNotifier.notify(GlucoDataService.context!!, NotifySource.ALARM_STATE_CHANGED, null)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
         }
@@ -812,8 +821,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 filter.add(NotifySource.ALARM_TRIGGER)
                 filter.add(NotifySource.OBSOLETE_ALARM_TRIGGER)
             }
-            InternalNotifier.remNotifier(requireConext, this )
-            InternalNotifier.notify(requireConext, NotifySource.ALARM_STATE_CHANGED, null)
             filter.addAll(getNotifierFilter())
             InternalNotifier.addNotifier(requireConext, this, filter )
         }

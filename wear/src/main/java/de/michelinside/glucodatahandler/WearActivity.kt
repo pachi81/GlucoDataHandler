@@ -265,7 +265,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         try {
             val state = AlarmNotificationWear.getAlarmState(this)
             if(AlarmNotificationWear.channelActive(this)) {
-                Log.v(LOG_ID, "toggleAlarm called for state $state")
+                Log.d(LOG_ID, "toggleAlarm called for state $state")
                 when (state) {
                     AlarmState.SNOOZE -> AlarmHandler.setSnooze(0)  // disable snooze
                     AlarmState.DISABLED -> {
@@ -300,9 +300,9 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                     apply()
                 }
             }
-            updateAlarmIcon()
+            //updateAlarmIcon()
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "updateAlarmIcon exception: " + exc.message.toString() )
+            Log.e(LOG_ID, "toggleAlarm exception: " + exc + "\n" + exc.stackTraceToString() )
         }
     }
 

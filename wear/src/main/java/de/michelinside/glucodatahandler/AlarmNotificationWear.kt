@@ -51,7 +51,6 @@ object AlarmNotificationWear : AlarmNotificationBase() {
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         try {
-            super.onSharedPreferenceChanged(sharedPreferences, key)
             if (key == null) {
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_WEAR_NO_ALARM_POPUP_PHONE_CONNECTED)
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED)
@@ -63,6 +62,7 @@ object AlarmNotificationWear : AlarmNotificationBase() {
                         Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED, noAlarmOnAAConnected)
                 }
             }
+            super.onSharedPreferenceChanged(sharedPreferences, key)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
         }
