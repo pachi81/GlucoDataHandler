@@ -486,7 +486,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(withShadow = true))
 
-            timeText.text = "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(this)}"
+            timeText.text = "🕒 ${ReceiveData.getElapsedRelativeTimeAsString(this)}"
             deltaText.text = "Δ ${ReceiveData.getDeltaAsString()}"
             iobText.text = "💉 " + ReceiveData.getIobAsString()
             cobText.text = "🍔 " + ReceiveData.getCobAsString()
@@ -591,6 +591,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         tableDetails.removeViews(1, maxOf(0, tableDetails.childCount - 1))
         if (ReceiveData.isMmol)
             tableDetails.addView(createRow(CR.string.info_label_raw, "${ReceiveData.rawValue} mg/dl"))
+        tableDetails.addView(createRow(CR.string.info_label_timestamp, DateFormat.getTimeInstance(
+            DateFormat.DEFAULT).format(Date(ReceiveData.time))))
         if (!ReceiveData.isIobCobObsolete(1.days.inWholeSeconds.toInt()))
             tableDetails.addView(createRow(CR.string.info_label_iob_cob_timestamp, DateFormat.getTimeInstance(
                 DateFormat.DEFAULT).format(Date(ReceiveData.iobCobTime))))

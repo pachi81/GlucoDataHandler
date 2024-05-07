@@ -288,14 +288,18 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return Utils.round((System.currentTimeMillis()- iobCobTime).toFloat()/60000, 0, roundingMode).toLong()
     }
 
+    fun getElapsedRelativeTimeAsString(context: Context): String {
+        val elapsed_time = getElapsedTimeMinute()
+        if (elapsed_time > 60)
+            return context.getString(R.string.elapsed_time_hour)
+        return context.getString(R.string.elapsed_time, elapsed_time)
+    }
+
     fun getElapsedTimeMinuteAsString(context: Context, short: Boolean = true): String {
         if (time == 0L)
             return "--"
         if (ElapsedTimeTask.relativeTime) {
-            val elapsed_time = getElapsedTimeMinute()
-            if (elapsed_time > 60)
-                return context.getString(R.string.elapsed_time_hour)
-            return context.getString(R.string.elapsed_time, elapsed_time)
+            return getElapsedRelativeTimeAsString(context)
         } else if (short)
             return DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(time))
         else
