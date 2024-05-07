@@ -34,6 +34,57 @@
                 android:layout_height="wrap_content"
                 android:text="@string/alarm_notifications_enabled"
                 android:textAlignment="viewStart" />
+
+            <TextView
+                android:id="@+id/snooze"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/snooze"
+                android:textAlignment="textStart"
+                android:textSize="16sp"
+                tools:ignore="HardcodedText,SpUsage" />
+            <LinearLayout
+                android:id="@+id/snoozeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/snooze_60"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="60"
+                    android:textSize="9dp"
+                    tools:ignore="HardcodedText,SpUsage" />
+                <Button
+                    android:id="@+id/snooze_90"
+                    android:layout_marginStart="1dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="90"
+                    android:textSize="9dp"
+                    tools:ignore="HardcodedText,SpUsage" />
+                <Button
+                    android:id="@+id/snooze_120"
+                    android:layout_marginStart="1dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="120"
+                    android:textSize="9dp"
+                    tools:ignore="HardcodedText,SpUsage" />
+            </LinearLayout>
+            <Button
+                android:id="@+id/btnStopSnooze"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="@string/stop_snooze" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginVertical="5dp"/>
             <Button
                 android:id="@+id/btnAlarmAdvancedSettings"
                 android:layout_height="wrap_content"

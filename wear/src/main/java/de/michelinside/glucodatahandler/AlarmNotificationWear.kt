@@ -32,9 +32,12 @@ object AlarmNotificationWear : AlarmNotificationBase() {
 
     override val active: Boolean get() {
         Log.d(LOG_ID, "Check active enabled: ${getEnabled()} - vibrate: $vibrateOnly - aa-active: $isAaActive")
-        return (getEnabled() || vibrateOnly) && (!isAaActive)
+        return isEnabled() && (!isAaActive)
     }
 
+    fun isEnabled(): Boolean {
+        return (getEnabled() || vibrateOnly)
+    }
     override fun canShowNotification(): Boolean {
         return !(noAlarmOnPhoneConnected && WearPhoneConnection.nodesConnected)
     }
