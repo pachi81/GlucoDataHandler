@@ -31,6 +31,7 @@ object AlarmNotificationWear : AlarmNotificationBase() {
     }
 
     override val active: Boolean get() {
+        Log.d(LOG_ID, "Check active enabled: ${getEnabled()} - vibrate: $vibrateOnly - aa-active: $isAaActive")
         return (getEnabled() || vibrateOnly) && (!isAaActive)
     }
 

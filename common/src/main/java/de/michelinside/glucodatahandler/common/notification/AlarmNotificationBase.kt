@@ -101,8 +101,17 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         var state = AlarmState.currentState(context)
         if(state == AlarmState.DISABLED || !channelActive(context)) {
             state = AlarmState.DISABLED
-        } else if(state == AlarmState.ACTIVE && (!active || !alarmNotificationActive)) {
-            state = AlarmState.INACTIVE
+        } else if(state == AlarmState.ACTIVE) {
+            if(!alarmNotificationActive) {
+                initNotifier(context)
+            }
+            if(!active || !alarmNotificationActive) {
+                Log.d(
+                    LOG_ID,
+                    "Inactive causes by active: $active - notification-active: $alarmNotificationActive"
+                )
+                state = AlarmState.INACTIVE
+            }
         }
         if(currentAlarmState != state) {
             Log.i(LOG_ID, "Current alarm state: $state - last state: $currentAlarmState")
@@ -794,6 +803,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     fun initNotifier(context: Context? = null) {
         val requireConext = context ?: GlucoDataService.context!!
         val newActive = isAlarmActive(requireConext)
+        Log.v(LOG_ID, "initNotifier called for newActive: $newActive")
         if(alarmNotificationActive != newActive) {
             Log.i(LOG_ID, "Change alarm notification active to ${newActive}")
             alarmNotificationActive = newActive
@@ -802,6 +812,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 filter.add(NotifySource.ALARM_TRIGGER)
                 filter.add(NotifySource.OBSOLETE_ALARM_TRIGGER)
             }
+            InternalNotifier.remNotifier(requireConext, this )
+            InternalNotifier.notify(requireConext, NotifySource.ALARM_STATE_CHANGED, null)
             filter.addAll(getNotifierFilter())
             InternalNotifier.addNotifier(requireConext, this, filter )
         }

@@ -154,6 +154,8 @@ object Constants {
     const val ALARM_SNOOZE_EXTRA_START_APP = "start_application"
     const val ALARM_NOTIFICATION_EXTRA_ALARM_TYPE = "alarm_type"
 
+    const val SHARED_PREF_WEAR_LAST_ALARM_STATE = "wear_last_alarm_state"
+
     const val SHARED_PREF_NOTIFICATION_USE_ALARM_SOUND = "use_alarm_sound"
     const val SHARED_PREF_NOTIFICATION_VIBRATE = "alarm_vibrate_only"
     const val SHARED_PREF_ALARM_START_DELAY = "alarm_start_delay"

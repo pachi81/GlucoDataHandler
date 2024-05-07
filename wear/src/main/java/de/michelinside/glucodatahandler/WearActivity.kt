@@ -3,7 +3,9 @@ package de.michelinside.glucodatahandler
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Paint
+import android.graphics.drawable.Icon
 import android.os.*
 import android.provider.Settings
 import android.util.Log
@@ -24,6 +26,7 @@ import de.michelinside.glucodatahandler.databinding.ActivityWearBinding
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.setPadding
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
+import de.michelinside.glucodatahandler.common.notification.AlarmState
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.settings.AlarmsActivity
@@ -36,7 +39,9 @@ import kotlin.time.Duration.Companion.days
 class WearActivity : AppCompatActivity(), NotifierInterface {
 
     private val LOG_ID = "GDH.Main"
+    private lateinit var sharedPref: SharedPreferences
     private lateinit var binding: ActivityWearBinding
+    private lateinit var alarmIcon: ImageView
     private lateinit var txtBgValue: TextView
     private lateinit var viewIcon: ImageView
     private lateinit var timeText: TextView
@@ -61,10 +66,12 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             super.onCreate(savedInstanceState)
 
             //setTheme(android.R.style.Theme_DeviceDefault)
+            sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
 
             binding = ActivityWearBinding.inflate(layoutInflater)
             setContentView(binding.root)
 
+            alarmIcon = findViewById(R.id.alarmIcon)
             txtBgValue = findViewById(R.id.txtBgValue)
             viewIcon = findViewById(R.id.viewIcon)
             timeText = findViewById(R.id.timeText)
@@ -84,6 +91,10 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             ReceiveData.initData(this)
 
             PackageUtils.updatePackages(this)
+
+            alarmIcon.setOnClickListener {
+                toggleAlarm()
+            }
 
             btnSettings = findViewById(R.id.btnSettings)
             btnSettings.setOnClickListener {
@@ -243,9 +254,72 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             updateAlarmsTable()
             updateConnectionsTable()
             updateDetailsTable()
+            updateAlarmIcon()
 
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
+        }
+    }
+
+    private fun toggleAlarm() {
+        try {
+            val state = AlarmNotificationWear.getAlarmState(this)
+            if(AlarmNotificationWear.channelActive(this)) {
+                Log.v(LOG_ID, "toggleAlarm called for state $state")
+                when (state) {
+                    AlarmState.SNOOZE -> AlarmHandler.setSnooze(0)  // disable snooze
+                    AlarmState.DISABLED -> {
+                        val lastState = sharedPref.getInt(Constants.SHARED_PREF_WEAR_LAST_ALARM_STATE, 1)
+                        Log.d(LOG_ID, "Last alarm state $lastState")
+                        with(sharedPref.edit()) {
+                            putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, (lastState and 1) == 1)
+                            putBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, (lastState and 2) == 2)
+                            apply()
+                        }
+                    }
+                    AlarmState.INACTIVE,
+                    AlarmState.ACTIVE -> {
+                        var lastState = 0
+                        if(sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false))
+                            lastState = 1
+                        if(sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, false))
+                            lastState = lastState or 2
+                        Log.d(LOG_ID, "Saving last alarm state $lastState")
+                        with(sharedPref.edit()) {
+                            putInt(Constants.SHARED_PREF_WEAR_LAST_ALARM_STATE, lastState)
+                            putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
+                            putBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, false)
+                            apply()
+                        }
+                    }
+                }
+            } else {
+                Log.w(LOG_ID, "Alarm channel inactive!")
+                with(sharedPref.edit()) {
+                    putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
+                    apply()
+                }
+            }
+            updateAlarmIcon()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "updateAlarmIcon exception: " + exc.message.toString() )
+        }
+    }
+
+    private fun updateAlarmIcon() {
+        try {
+            if(!AlarmNotificationWear.channelActive(this)) {
+                Log.w(LOG_ID, "Alarm channel inactive!")
+                with(sharedPref.edit()) {
+                    putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
+                    apply()
+                }
+            }
+            val state = AlarmNotificationWear.getAlarmState(this)
+            Log.v(LOG_ID, "updateAlarmIcon called for state $state")
+            alarmIcon.setImageIcon(Icon.createWithResource(this, state.icon))
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "updateAlarmIcon exception: " + exc.message.toString() )
         }
     }
 

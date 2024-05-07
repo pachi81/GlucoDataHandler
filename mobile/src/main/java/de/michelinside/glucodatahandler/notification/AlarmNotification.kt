@@ -39,13 +39,16 @@ object AlarmNotification : AlarmNotificationBase() {
     override val active: Boolean get() {
         if(getEnabled()) {
             if(noAlarmOnWearConnected && WearPhoneConnection.nodesConnected) {
+                Log.d(LOG_ID, "No alarm as wear is connected")
                 return false
             }
             if(noAlarmOnAAConnected && CarModeReceiver.AA_connected) {
+                Log.d(LOG_ID, "No alarm as Android Auto is connected")
                 return false
             }
             return true
         }
+        Log.d(LOG_ID, "No alarm as enabled is ${getEnabled()}")
         return false
     }
 
@@ -205,12 +208,12 @@ object AlarmNotification : AlarmNotificationBase() {
                     if(WearPhoneConnection.nodesConnected) {
                         // update AA state on wear to prevent alarms, if they should not been executed while AA connected
                         Log.i(LOG_ID, "Car connection has changed: ${CarModeReceiver.AA_connected}")
-                        val extras = Bundle()
-                        extras.putBoolean(
+                        val bundle = Bundle()
+                        bundle.putBoolean(
                             Constants.EXTRA_AA_CONNECTED,
                             CarModeReceiver.AA_connected
                         )
-                        GlucoDataService.sendCommand(Command.AA_CONNECTION_STATE, extras)
+                        GlucoDataService.sendCommand(Command.AA_CONNECTION_STATE, bundle)
                     }
                 }
                 else -> super.OnNotifyData(context, dataSource, extras)
