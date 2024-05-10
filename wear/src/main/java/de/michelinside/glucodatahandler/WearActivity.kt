@@ -355,7 +355,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateAlarmsTable() {
         tableAlarms.removeViews(1, maxOf(0, tableAlarms.childCount - 1))
-        if(ReceiveData.getAlarmType() != AlarmType.OK) {
+        if(ReceiveData.time > 0 && ReceiveData.getAlarmType() != AlarmType.OK) {
             tableAlarms.addView(createRow(CR.string.info_label_alarm, resources.getString(ReceiveData.getAlarmType().resId) + (if (ReceiveData.forceAlarm) " ⚠" else "" )))
         }
         if (AlarmHandler.isSnoozeActive)
@@ -365,18 +365,20 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateDetailsTable() {
         tableDetails.removeViews(1, maxOf(0, tableDetails.childCount - 1))
-        if (ReceiveData.isMmol)
-            tableDetails.addView(createRow(CR.string.info_label_raw, "${ReceiveData.rawValue} mg/dl"))
-        tableDetails.addView(createRow(CR.string.info_label_timestamp, DateFormat.getTimeInstance(
-            DateFormat.DEFAULT).format(Date(ReceiveData.time))))
-        if (!ReceiveData.isIobCobObsolete(1.days.inWholeSeconds.toInt()))
-            tableDetails.addView(createRow(CR.string.info_label_iob_cob_timestamp, DateFormat.getTimeInstance(
-                DateFormat.DEFAULT).format(Date(ReceiveData.iobCobTime))))
-        if (ReceiveData.sensorID?.isNotEmpty() == true) {
-            tableDetails.addView(createRow(CR.string.info_label_sensor_id, if(BuildConfig.DEBUG) "ABCDE12345" else ReceiveData.sensorID!!))
+        if(ReceiveData.time > 0) {
+            if (ReceiveData.isMmol)
+                tableDetails.addView(createRow(CR.string.info_label_raw, "${ReceiveData.rawValue} mg/dl"))
+            tableDetails.addView(createRow(CR.string.info_label_timestamp, DateFormat.getTimeInstance(
+                DateFormat.DEFAULT).format(Date(ReceiveData.time))))
+            if (!ReceiveData.isIobCobObsolete(1.days.inWholeSeconds.toInt()))
+                tableDetails.addView(createRow(CR.string.info_label_iob_cob_timestamp, DateFormat.getTimeInstance(
+                    DateFormat.DEFAULT).format(Date(ReceiveData.iobCobTime))))
+            if (ReceiveData.sensorID?.isNotEmpty() == true) {
+                tableDetails.addView(createRow(CR.string.info_label_sensor_id, if(BuildConfig.DEBUG) "ABCDE12345" else ReceiveData.sensorID!!))
+            }
+            if(ReceiveData.source != DataSource.NONE)
+                tableDetails.addView(createRow(CR.string.info_label_source, resources.getString(ReceiveData.source.resId)))
         }
-        if(ReceiveData.source != DataSource.NONE)
-            tableDetails.addView(createRow(CR.string.info_label_source, resources.getString(ReceiveData.source.resId)))
         checkTableVisibility(tableDetails)
     }
 

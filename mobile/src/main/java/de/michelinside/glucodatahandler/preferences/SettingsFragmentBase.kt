@@ -20,6 +20,7 @@ import de.michelinside.glucodatahandler.common.R as CR
 
 abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
     protected val LOG_ID = "GDH.SettingsFragmentBase"
+    private val updateEnablePrefs = mutableSetOf<String>()
     private lateinit var activityResultOverlayLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -60,6 +61,7 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
         Log.d(LOG_ID, "onResume called")
         try {
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
+            updateEnablePrefs.clear()
             updateEnableStates(preferenceManager.sharedPreferences!!)
             super.onResume()
         } catch (exc: Exception) {
@@ -80,18 +82,12 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
         try {
+            if(updateEnablePrefs.isEmpty() || updateEnablePrefs.contains(key!!)) {
+                updateEnableStates(sharedPreferences!!)
+            }
             when(key) {
-                //Constants.SHARED_PREF_PERMANENT_NOTIFICATION,
-                Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION,
-                Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD,
-                Constants.SHARED_PREF_SEND_TO_XDRIP,
-                Constants.SHARED_PREF_SEND_XDRIP_BROADCAST,
-                Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO -> {
-                    updateEnableStates(sharedPreferences!!)
-                }
                 Constants.SHARED_PREF_FLOATING_WIDGET -> {
-                    updateEnableStates(sharedPreferences!!)
-                    if (sharedPreferences.getBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false) && !Settings.canDrawOverlays(requireContext())) {
+                    if (sharedPreferences!!.getBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false) && !Settings.canDrawOverlays(requireContext())) {
                         // as long as permission is not granted, disable immediately
                         val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_FLOATING_WIDGET)
                         if (pref != null) {
@@ -146,12 +142,21 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
 
     fun <T : Preference?> setEnableState(sharedPreferences: SharedPreferences, key: String, enableKey: String, secondEnableKey: String? = null, defValue: Boolean = false) {
         val pref = findPreference<T>(key)
-        if (pref != null)
+        if (pref != null) {
             pref.isEnabled = sharedPreferences.getBoolean(enableKey, defValue) && (if (secondEnableKey != null) sharedPreferences.getBoolean(secondEnableKey, defValue) else true)
+
+            if(!updateEnablePrefs.contains(enableKey)) {
+                Log.v(LOG_ID, "Add update enable pref $enableKey - second: $secondEnableKey")
+                updateEnablePrefs.add(enableKey)
+                if (secondEnableKey != null)
+                    updateEnablePrefs.add(secondEnableKey)
+            }
+        }
     }
 
     fun updateEnableStates(sharedPreferences: SharedPreferences) {
         try {
+            Log.d(LOG_ID, "updateEnableStates called")
             setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_GLUCODATA_RECEIVERS, Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD)
             setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_XDRIP_RECEIVERS, Constants.SHARED_PREF_SEND_TO_XDRIP)
             setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_XDRIP_BROADCAST_RECEIVERS, Constants.SHARED_PREF_SEND_XDRIP_BROADCAST)
