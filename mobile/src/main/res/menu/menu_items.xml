@@ -51,6 +51,11 @@
                         app:showAsAction="never" />
                 </group>
                 <item
+                    android:id="@+id/action_snooze_30"
+                    android:title="30"
+                    app:showAsAction="never"
+                    tools:ignore="HardcodedText" />
+                <item
                     android:id="@+id/action_snooze_60"
                     android:title="60"
                     app:showAsAction="never"

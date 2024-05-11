@@ -383,6 +383,10 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     AlarmHandler.setSnooze(0L)
                     return true
                 }
+                R.id.action_snooze_30 -> {
+                    AlarmHandler.setSnooze(30L)
+                    return true
+                }
                 R.id.action_snooze_60 -> {
                     AlarmHandler.setSnooze(60L)
                     return true

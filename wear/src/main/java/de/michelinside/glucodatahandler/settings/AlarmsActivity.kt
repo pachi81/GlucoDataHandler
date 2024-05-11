@@ -21,6 +21,7 @@ class AlarmsActivity : AppCompatActivity() {
     private lateinit var sharedPref: SharedPreferences
     private lateinit var switchNotification: SwitchCompat
     private lateinit var btnAlarmAdvancedSettings: Button
+    private lateinit var snooze_30: Button
     private lateinit var snooze_60: Button
     private lateinit var snooze_90: Button
     private lateinit var snooze_120: Button
@@ -36,6 +37,7 @@ class AlarmsActivity : AppCompatActivity() {
 
             switchNotification = findViewById(R.id.switchNotification)
             btnAlarmAdvancedSettings = findViewById(R.id.btnAlarmAdvancedSettings)
+            snooze_30 = findViewById(R.id.snooze_30)
             snooze_60 = findViewById(R.id.snooze_60)
             snooze_90 = findViewById(R.id.snooze_90)
             snooze_120 = findViewById(R.id.snooze_120)
@@ -59,6 +61,11 @@ class AlarmsActivity : AppCompatActivity() {
                 Log.v(LOG_ID, "${btnAlarmAdvancedSettings.text} button clicked!")
                 val intent = Intent(this, AlarmAdvancedActivity::class.java)
                 startActivity(intent)
+            }
+
+            snooze_30.setOnClickListener {
+                AlarmHandler.setSnooze(30)
+                update()
             }
 
             snooze_60.setOnClickListener {
@@ -122,6 +129,7 @@ class AlarmsActivity : AppCompatActivity() {
     }
 
     private fun update() {
+        snooze_30.isEnabled = AlarmNotificationWear.isEnabled()
         snooze_60.isEnabled = AlarmNotificationWear.isEnabled()
         snooze_90.isEnabled = AlarmNotificationWear.isEnabled()
         snooze_120.isEnabled = AlarmNotificationWear.isEnabled()
