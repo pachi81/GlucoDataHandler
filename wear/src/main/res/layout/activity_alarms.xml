@@ -56,7 +56,6 @@
                     android:layout_weight="1"
                     android:maxLines="1"
                     android:text="30"
-                    android:textSize="14dp"
                     tools:ignore="HardcodedText,SpUsage" />
                 <Button
                     android:id="@+id/snooze_60"
@@ -66,7 +65,6 @@
                     android:layout_weight="1"
                     android:maxLines="1"
                     android:text="60"
-                    android:textSize="14dp"
                     tools:ignore="HardcodedText,SpUsage" />
             </LinearLayout>
             <LinearLayout
@@ -82,7 +80,6 @@
                     android:layout_weight="1"
                     android:maxLines="1"
                     android:text="90"
-                    android:textSize="14dp"
                     tools:ignore="HardcodedText,SpUsage" />
                 <Button
                     android:id="@+id/snooze_120"
@@ -92,7 +89,6 @@
                     android:layout_weight="1"
                     android:maxLines="1"
                     android:text="120"
-                    android:textSize="14dp"
                     tools:ignore="HardcodedText,SpUsage" />
             </LinearLayout>
             <Button
