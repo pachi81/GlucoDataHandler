@@ -471,6 +471,6 @@
     <string name="tap_action">Działanie po dotknięciu</string>
     <string name="tap_action_summary">Wybierz działanie lub aplikację, która ma zostać uruchomiona po dotknięciu tego elementu.</string>
     <string name="no_action">Brak działania</string>
-    <string name="action_floating_widget_toggle">Przełączanie pływającego widgetu</string>
+    <string name="action_floating_widget_toggle">Wł./wył.pływającego widgetu</string>
     <string name="wear_complication_tap_action">Po dotknięciu komplikacji</string>
 </resources>
