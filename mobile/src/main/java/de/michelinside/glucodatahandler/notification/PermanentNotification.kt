@@ -165,11 +165,9 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setContentIntent(getTapActionIntent(foreground))
             .setWhen(ReceiveData.time)
             .setCustomContentView(remoteViews)
-            .setCustomBigContentView(null)
+            .setCustomBigContentView(remoteViews)
             .setColorized(false)
             .setStyle(Notification.DecoratedCustomViewStyle())
-            .setContentTitle(if (withContent) ReceiveData.getGlucoseAsString() else "")
-            .setContentText(if (withContent) "Delta: " + ReceiveData.getDeltaAsString() else "")
             .build()
 
         notification.visibility = Notification.VISIBILITY_PUBLIC
