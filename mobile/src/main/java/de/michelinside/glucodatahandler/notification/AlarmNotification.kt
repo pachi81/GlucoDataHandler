@@ -95,7 +95,7 @@ object AlarmNotification : AlarmNotificationBase() {
             contentView.setViewVisibility(R.id.trendImage, View.VISIBLE)
             contentView.setTextViewText(R.id.glucose, ReceiveData.getGlucoseAsString())
             contentView.setTextColor(R.id.glucose, ReceiveData.getGlucoseColor())
-            contentView.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap())
+            contentView.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap(withShadow = true))
             contentView.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
         }
         contentView.setOnClickPendingIntent(R.id.snooze_60, createSnoozeIntent(context, 60L, getNotificationId(alarmType)))
