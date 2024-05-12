@@ -208,12 +208,12 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
 
     fun getIobAsString(withUnit: Boolean = true): String {
         if (withUnit)
-            return iobString + "U"
+            return iobString + " U"
         return iobString
     }
     fun getCobAsString(withUnit: Boolean = true): String {
         if (withUnit)
-            return cobString + "g"
+            return cobString + " g"
         return cobString
     }
 
@@ -298,12 +298,12 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     fun getElapsedTimeMinuteAsString(context: Context, short: Boolean = true): String {
         if (time == 0L)
             return "--"
-        if (ElapsedTimeTask.relativeTime) {
-            return getElapsedRelativeTimeAsString(context)
+        return if (ElapsedTimeTask.relativeTime) {
+            getElapsedRelativeTimeAsString(context)
         } else if (short)
-            return DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(time))
+            DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(time))
         else
-            return DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(time))
+            DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(time))
     }
 
     fun handleIntent(context: Context, dataSource: DataSource, extras: Bundle?, interApp: Boolean = false) : Boolean
