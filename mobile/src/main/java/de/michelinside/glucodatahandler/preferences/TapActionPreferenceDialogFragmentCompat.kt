@@ -13,6 +13,7 @@ import android.widget.RadioGroup
 import android.widget.ScrollView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.preference.PreferenceDialogFragmentCompat
+import de.michelinside.glucodatahandler.BuildConfig
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
@@ -41,6 +42,9 @@ class TapActionPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat()
             if(Settings.canDrawOverlays(context)) {
                 actions[Constants.ACTION_FLOATING_WIDGET_TOGGLE] =
                     context.resources.getString(CR.string.action_floating_widget_toggle)
+            }
+            if(BuildConfig.DEBUG /*|| BuildConfig.BUILD_TYPE == "second"*/) {
+                actions[Constants.ACTION_DUMMY_VALUE] = "Dummy value"
             }
             return actions
         }

@@ -14,6 +14,8 @@ import androidx.preference.*
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.R as CR
 
@@ -103,6 +105,9 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
                         if (floatingWidget != null)
                             floatingWidget.isChecked = false
                     }
+                }
+                Constants.SHARED_PREF_LARGE_ARROW_ICON -> {
+                    InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SETTINGS, null)
                 }
             }
         } catch (exc: Exception) {

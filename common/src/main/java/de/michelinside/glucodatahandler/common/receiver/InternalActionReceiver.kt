@@ -9,6 +9,7 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.notifier.DataSource
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 
 
@@ -28,6 +29,9 @@ class InternalActionReceiver: BroadcastReceiver() {
                                 Constants.SHARED_PREF_FLOATING_WIDGET, false))
                         apply()
                     }
+                }
+                Constants.ACTION_DUMMY_VALUE -> {
+                    ReceiveData.handleIntent(context, DataSource.JUGGLUCO, GlucoDataUtils.getDummyGlucodataIntent(false).extras)
                 }
                 Constants.GLUCODATA_ACTION -> {
                     val extras = intent.extras!!

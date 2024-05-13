@@ -242,11 +242,6 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
             val height = if (isPortrait) maxHeight else minHeight
 
             val remoteViews = getRemoteViews(context, width, height)
-            /*if (BuildConfig.DEBUG) {
-                // for debug create dummy broadcast (to check in emulator)
-                val pendingIntent = PendingIntent.getBroadcast(context, 5, Utils.getDummyGlucodataIntent(false), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-                remoteViews.setOnClickPendingIntent(R.id.widget, pendingIntent)
-            } else*/
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             remoteViews.setOnClickPendingIntent(R.id.widget, PackageUtils.getTapActionIntent(context, sharedPref.getString(Constants.SHARED_PREF_WIDGET_TAP_ACTION, ""), appWidgetId))
 

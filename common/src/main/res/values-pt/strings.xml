@@ -475,4 +475,5 @@
     <string name="no_action">Nenhuma ação</string>
     <string name="action_floating_widget_toggle">Alternar widget flutuante</string>
     <string name="wear_complication_tap_action">Ação de toque de complicação</string>
+    <string name="activity_large_arrow_icon_summary">Você tem que verificar se o tendência está cortado, se fica muito grande.</string>
 </resources>

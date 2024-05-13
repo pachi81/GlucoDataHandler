@@ -25,6 +25,7 @@ object Constants {
 
     const val ACTION_PREFIX = "gdh_action_"
     const val ACTION_FLOATING_WIDGET_TOGGLE = ACTION_PREFIX + "floating_widget_toggle"
+    const val ACTION_DUMMY_VALUE = ACTION_PREFIX + "dummy_value"
 
     const val PACKAGE_GLUCODATAAUTO = "de.michelinside.glucodataauto"
     const val PACKAGE_JUGGLUCO = "tk.glucodata"
