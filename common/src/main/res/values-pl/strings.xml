@@ -427,10 +427,10 @@
     <string name="pref_source_activate_local_nightscout_iob_summary">Naciśnij tutaj, aby skonfigurować ustawienia nightscout do korzystania z lokalnego serwera WWW w celu odbierania dodatkowych wartości IOB.</string>
     <string name="activate_local_nightscout_iob_title">Zastąp ustawienia nightscout</string>
     <string name="activate_local_nightscout_iob_message">Opcja ta spowoduje zastąpienie bieżących ustawień źródła nightscout w celu korzystania z lokalnej usługi webservice na porcie 17580 do odbierania wartości IOB.\nCzy na pewno?</string>
-    <string name="gda_media_notification_toggle_title">Przełącznik powiadomień</string>
+    <string name="gda_media_notification_toggle_title">Przełączanie powiadomień</string>
     <string name="gda_notifications_on">Powiadomienia są włączone</string>
     <string name="gda_notifications_off">Powiadomienia są wyłączone</string>
-    <string name="gda_media_notification_toggle_action">Naciśnij przycisk odtwarzania, aby przełączyć powiadomienie</string>
+    <string name="gda_media_notification_toggle_action">Aby przełączyć, naciśnij przycisk odtwarzania</string>
     <string name="pref_gda_alarm_info_summary">Ustawienia alarmu są powiązane tylko z powiadomieniami w Android Auto i nie uruchamiają żadnego dźwięku.</string>
     <string name="pref_cat_general_summary">Ustawienia ogólne, takie jak ustawienia dotyczące jednostki, czasu i delty.</string>
     <string name="pref_target_range_summary">Ustawienia wartości granicznych i odpowiadających im kolorów.</string>
