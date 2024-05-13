@@ -157,16 +157,16 @@ object BitmapUtils {
             val text: String
             val degrees: Int
             var shortArrowRate = 0.8F
-            if(rate >= 3F) {
+            if(rate >= 3F || rate <= -3F) {
                 text = "⇈"
                 textSize -= textSize*0.05F
-                degrees = 0
+                degrees = if ( rate <= -3F ) 180 else 0
                 shortArrowRate = 0.7F
-            } else if ( rate <= -3F ) {
+            /*} else if ( rate <= -3F ) {
                 text = "⇊"
                 textSize -= textSize*0.05F
                 degrees = 0
-                shortArrowRate = 0.7F
+                shortArrowRate = 0.7F*/
             } else {
                 text = "↑"
                 degrees = Utils.round(abs(maxOf(-2F, minOf(2F, rate)) - 2F) * 90F / 2F, 0).toInt()
