@@ -7,12 +7,9 @@ import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
-import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.notifier.DataSource
@@ -26,7 +23,6 @@ import java.net.URL
 import java.net.UnknownHostException
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
-import java.util.concurrent.atomic.AtomicBoolean
 import javax.net.ssl.HttpsURLConnection
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSession
@@ -114,12 +110,16 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     }
 
     fun setState(state: SourceState, error: String = "", code: Int = -1) {
-        if(state == SourceState.NONE) {
-            Log.v(LOG_ID,"Set state for source " + source + ": " + state + " - " + error + " (" + code + ")")
-        } else if(state == SourceState.CONNECTED) {
-            Log.i(LOG_ID,"Set connected for source " + source)
-        } else {
-            Log.w(LOG_ID,"Set state for source " + source + ": " + state + " - " + error + " (" + code + ")")
+        when (state) {
+            SourceState.NONE -> {
+                Log.v(LOG_ID,"Set state for source " + source + ": " + state + " - " + error + " (" + code + ")")
+            }
+            SourceState.CONNECTED -> {
+                Log.i(LOG_ID,"Set connected for source " + source)
+            }
+            else -> {
+                Log.w(LOG_ID,"Set state for source " + source + ": " + state + " - " + error + " (" + code + ")")
+            }
         }
         lastErrorCode = code
         lastState = state
@@ -163,10 +163,10 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             try {
                 executeRequest(context)
             } catch (ex: UnknownHostException) {
-                Log.w(LOG_ID, "Internet connection issue: " + ex)
+                Log.w(LOG_ID, "Internet connection issue for $source: " + ex)
                 setState(SourceState.NO_CONNECTION)
             } catch (ex: Exception) {
-                Log.e(LOG_ID, "Exception during login: " + ex)
+                Log.e(LOG_ID, "Exception during execution for $source: " + ex)
                 setLastError(ex.message.toString())
             }
         }
@@ -263,6 +263,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             httpURLConnection.setRequestProperty(it.key, it.value)
         }
         httpURLConnection.doInput = true
+        httpURLConnection.connectTimeout = 10000
+        httpURLConnection.readTimeout = 30000
         if (postData == null) {
             httpURLConnection.requestMethod = "GET"
             httpURLConnection.doOutput = false

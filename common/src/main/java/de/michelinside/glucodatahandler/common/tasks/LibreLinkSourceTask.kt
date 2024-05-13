@@ -15,6 +15,7 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import org.json.JSONArray
 import org.json.JSONObject
+import java.net.SocketTimeoutException
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -366,10 +367,20 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     }
 
     private fun getConnection(firstCall: Boolean = true) {
-        if (login()) {
-            handleGlucoseResponse(httpGet(getUrl(CONNECTION_ENDPOINT), getHeader()))
-            if (firstCall && token.isEmpty() && lastState == SourceState.ERROR)
-                getConnection(false) // retry if internal client error (not for server error)
+        try {
+            if (login()) {
+                handleGlucoseResponse(httpGet(getUrl(CONNECTION_ENDPOINT), getHeader()))
+                if (firstCall && token.isEmpty() && lastState == SourceState.ERROR)
+                    getConnection(false) // retry if internal client error (not for server error)
+            }
+        } catch(ex: SocketTimeoutException) {
+            Log.e(LOG_ID, "Timeout occurs: ${ex.message}")
+            reset()
+            if(firstCall) {
+                getConnection(false)
+            } else {
+                setLastError("Timeout")
+            }
         }
     }
 
