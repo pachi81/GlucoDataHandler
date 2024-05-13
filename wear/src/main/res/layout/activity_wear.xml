@@ -173,12 +173,14 @@
                 android:textAlignment="center"
                 tools:ignore="HardcodedText" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"/>
 
             <TableLayout
                 android:id="@+id/tableAlarms"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
                 android:divider="?android:attr/dividerHorizontal"
                 android:showDividers="middle">
 
