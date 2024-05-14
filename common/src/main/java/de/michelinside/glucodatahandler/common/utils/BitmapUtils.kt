@@ -110,7 +110,7 @@ object BitmapUtils {
                 else if (top)
                     boundsText.height()
                 else
-                    ((bitmap.height + boundsText.height()) / 2) - 3
+                    canvas.height/2f + boundsText.height()/2f - boundsText.bottom//((bitmap.height + boundsText.height()) / 2) - 3
 
             Log.d(LOG_ID, "Create bitmap for $text - y: $y - text-size: ${paint.textSize} - color: color - shadow: $withShadow")
             canvas.drawText(text, width.toFloat()/2, y.toFloat(), paint)
@@ -186,22 +186,27 @@ object BitmapUtils {
             val paint = Paint(Paint.ANTI_ALIAS_FLAG)
             paint.color = color
             paint.textSize = textSize
-            paint.textAlign = Paint.Align.CENTER
             paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             paint.isStrikeThruText = strikeThrough
             if(withShadow)
                 paint.setShadowLayer(2F, 0F,0F, Color.BLACK)
-            val boundsText = Rect()
-            paint.getTextBounds(text, 0, text.length, boundsText)
-            val y = ((bitmap.height + boundsText.height()) / 2) - 3
-
-            Log.d(LOG_ID, "Create bitmap for $text (rate: $rate) - y: $y - text-size: ${paint.textSize} - degrees: $degrees - color: $color - shadow: $withShadow" )
-            canvas.drawText(text, width.toFloat()/2, y.toFloat(), paint)
+            Log.d(LOG_ID, "Create $width x $height bitmap for $text (rate: $rate) - text-size: ${paint.textSize} - degrees: $degrees - color: $color - shadow: $withShadow" )
+            drawCenteredText(canvas, paint, text)
             return rotateBitmap(bitmap, degrees)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Cannot create rate icon: " + exc.message.toString())
             return null
         }
+    }
+
+    private fun drawCenteredText(canvas: Canvas, paint: Paint, text: String) {
+        paint.textAlign = Paint.Align.LEFT
+        val boundsText = Rect()
+        paint.getTextBounds(text, 0, text.length, boundsText)
+        val x = canvas.width/2f - boundsText.width()/2f -boundsText.left //width.toFloat()/2
+        val y = canvas.height/2f + boundsText.height()/2f - boundsText.bottom //((bitmap.height + boundsText.height()) / 2) - 10
+        Log.d(LOG_ID, "Center ${canvas.width}x${canvas.height} bitmap for $text - x: $x - y: $y - text-size: ${paint.textSize}")
+        canvas.drawText(text, x, y, paint)
     }
 
     fun textRateToBitmap(text: String, rate: Float, color: Int, obsolete: Boolean = false, strikeThrough: Boolean, width: Int = 100, height: Int = 100, small: Boolean = false, withShadow: Boolean = false): Bitmap? {

@@ -10,6 +10,7 @@ import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import de.michelinside.glucodatahandler.ActiveComplicationHandler
+import de.michelinside.glucodatahandler.BuildConfig
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -89,6 +90,9 @@ class ComplicationsTapActionActivity : AppCompatActivity() {
     private fun getActions(context: Context): HashMap<String, String> {
         if(actions.isEmpty()) {
             actions[""] = context.resources.getString(de.michelinside.glucodatahandler.common.R.string.no_action)
+        }
+        if(BuildConfig.DEBUG) {
+            actions[Constants.ACTION_DUMMY_VALUE] = "Dummy value"
         }
         return actions
     }
