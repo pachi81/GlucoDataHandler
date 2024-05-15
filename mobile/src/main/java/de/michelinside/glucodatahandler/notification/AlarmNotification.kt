@@ -29,6 +29,7 @@ import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBas
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import de.michelinside.glucodatahandler.watch.WatchDrip
 import java.io.FileOutputStream
 
 object AlarmNotification : AlarmNotificationBase() {
@@ -195,9 +196,13 @@ object AlarmNotification : AlarmNotificationBase() {
         }
     }
 
-
     override fun getNotifierFilter(): MutableSet<NotifySource> {
         return mutableSetOf(NotifySource.CAR_CONNECTION, NotifySource.CAPILITY_INFO)
+    }
+
+    override fun executeTest(alarmType: AlarmType, context: Context, fromIntern: Boolean) {
+        super.executeTest(alarmType, context, fromIntern)
+        WatchDrip.sendTestAlert(context, alarmType)
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {

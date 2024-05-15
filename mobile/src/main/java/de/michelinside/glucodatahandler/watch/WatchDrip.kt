@@ -19,6 +19,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.notification.AlarmNotification
 
 object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
     private val LOG_ID = "GDH.WatchDrip"
@@ -33,6 +34,8 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
     const val CMD_UPDATE_BG_FORCE = "update_bg_force"
     const val CMD_UPDATE_BG = "update_bg"
     const val CMD_ALARM = "alarm"
+    const val CMD_CANCEL_ALARM= "cancel_alarm"
+    const val CMD_SNOOZE_ALARM = "snooze_alarm"
     const val TYPE_ALERT = "BG_ALERT_TYPE"
     const val TYPE_OTHER_ALERT = "BG_OTHER_ALERT_TYPE"
     const val TYPE_NO_ALERT = "BG_NO_ALERT_TYPE"
@@ -76,12 +79,14 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
         }
     }
 
-    private fun handleNewReceiver(pkg: String) {
-        if(!receivers.contains(pkg)) {
+    private fun handleNewReceiver(pkg: String): Boolean {
+        if(pkg != "" && !receivers.contains(pkg)) {
             Log.i(LOG_ID, "Adding new receiver " + pkg)
             receivers.add(pkg)
             saveReceivers()
+            return true
         }
+        return false
     }
 
     private fun handleIntent(context: Context, intent: Intent) {
@@ -98,27 +103,45 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
             val cmd = extras.getString(EXTRA_FUNCTION, "")
             val pkg = extras.getString(EXTRA_PACKAGE, "")
             Log.d(LOG_ID, "Command " + cmd + " received for package " + pkg)
-            if (CMD_UPDATE_BG_FORCE.equals(cmd) && pkg != "") {
-                handleNewReceiver(pkg)
+            val newReceiver = handleNewReceiver(pkg)
+            if(newReceiver) {
                 sendBroadcast(context, CMD_UPDATE_BG_FORCE, pkg)
-            } else {
-                Log.d(LOG_ID, "Unknown command received: " + cmd + " received from " + pkg)
+            }
+            when(cmd) {
+                CMD_UPDATE_BG_FORCE -> {
+                    if(!newReceiver)
+                        sendBroadcast(context, CMD_UPDATE_BG_FORCE, pkg)
+                }
+                CMD_CANCEL_ALARM,
+                CMD_SNOOZE_ALARM -> {
+                    AlarmNotification.stopCurrentNotification(context)
+                }
+                else -> {
+                    Log.d(LOG_ID, "Unknown command received: " + cmd + " received from " + pkg)
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "handleIntent exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
         }
     }
 
-    private fun createBundle(cmd: String): Bundle {
+    private fun createBundle(context: Context, cmd: String, alarmType: AlarmType): Bundle {
         return when(cmd) {
-            CMD_ALARM -> createAlarmBundle()
-            else -> createBgBundle(cmd)
+            CMD_ALARM -> createAlarmBundle(context, alarmType)
+            CMD_UPDATE_BG,
+            CMD_UPDATE_BG_FORCE -> createBgBundle(cmd)
+            else -> createCmdBundle(cmd)
         }
     }
 
-    private fun createBgBundle(cmd: String): Bundle {
+    private fun createCmdBundle(cmd: String): Bundle {
         val bundle = Bundle()
         bundle.putString(EXTRA_FUNCTION, cmd)
+        return bundle
+    }
+
+    private fun createBgBundle(cmd: String): Bundle {
+        val bundle = createCmdBundle(cmd)
         bundle.putDouble("bg.valueMgdl", ReceiveData.rawValue.toDouble())
         bundle.putDouble("bg.deltaValueMgdl", ReceiveData.deltaValueMgDl.toDouble())
         bundle.putString("bg.deltaName", GlucoDataUtils.getDexcomLabel(ReceiveData.rate))
@@ -135,30 +158,36 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
         return bundle
     }
 
-    private fun createAlarmBundle(): Bundle {
-        val bundle = Bundle()
-        bundle.putString(EXTRA_FUNCTION, CMD_ALARM)
-        bundle.putString(EXTRA_TYPE, getAlertType())
-        bundle.putString(EXTRA_MESSAGE, getAlarmMessage())
+    private fun createAlarmBundle(context: Context, alarmType: AlarmType): Bundle {
+        val bundle = createCmdBundle(CMD_ALARM)
+        bundle.putString(EXTRA_TYPE, getAlertType(alarmType))
+        bundle.putString(EXTRA_MESSAGE, getAlarmMessage(context, alarmType))
         return bundle
     }
 
-    private fun getAlertType(): String {
-        return when(ReceiveData.getAlarmType()) {
+    private fun getAlertType(alarmType: AlarmType): String {
+        return when(alarmType) {
             AlarmType.VERY_LOW,
             AlarmType.VERY_HIGH -> TYPE_ALERT
             AlarmType.LOW,
-            AlarmType.HIGH -> TYPE_OTHER_ALERT
+            AlarmType.HIGH,
+            AlarmType.OBSOLETE -> TYPE_OTHER_ALERT
             else -> TYPE_NO_ALERT
         }
     }
 
-    private fun getAlarmMessage(): String {
-        return when(ReceiveData.getAlarmType()) {
-            AlarmType.VERY_LOW -> "VERY LOW " + ReceiveData.getGlucoseAsString()
-            AlarmType.LOW -> "LOW " + ReceiveData.getGlucoseAsString()
-            AlarmType.HIGH -> "HIGH " + ReceiveData.getGlucoseAsString()
-            AlarmType.VERY_HIGH -> "VERY HIGH " + ReceiveData.getGlucoseAsString()
+    private fun getAlarmMessage(context: Context, alarmType: AlarmType): String {
+        val resId = AlarmNotification.getAlarmTextRes(alarmType)
+        if(resId == null) {
+            return "No alarm!"
+        }
+        val msg = context.resources.getString(resId)
+        return when(alarmType) {
+            AlarmType.VERY_LOW,
+            AlarmType.LOW,
+            AlarmType.HIGH,
+            AlarmType.VERY_HIGH -> msg + " " + ReceiveData.getGlucoseAsString()
+            AlarmType.OBSOLETE -> msg + " " + ReceiveData.getElapsedRelativeTimeAsString(context)
             else -> "No alarm!"
         }
     }
@@ -171,10 +200,10 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
         context.sendBroadcast(intent)
     }
 
-    private fun sendBroadcast(context: Context, cmd: String, receiver: String? = null) {
+    private fun sendBroadcast(context: Context, cmd: String, receiver: String? = null, alarmType: AlarmType = AlarmType.NONE) {
         try {
             if (receiver != null || receivers.size > 0) {
-                val bundle = createBundle(cmd)
+                val bundle = createBundle(context, cmd, alarmType)
                 if (receiver != null) {
                     sendBroadcastToReceiver(context, receiver, bundle)
                 } else {
@@ -206,7 +235,10 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
                     NotifySource.BROADCAST,
                     NotifySource.MESSAGECLIENT,
                     NotifySource.IOB_COB_CHANGE,
-                    NotifySource.OBSOLETE_VALUE))
+                    NotifySource.OBSOLETE_VALUE,
+                    NotifySource.ALARM_TRIGGER,
+                    NotifySource.OBSOLETE_ALARM_TRIGGER,
+                    NotifySource.NOTIFICATION_STOPPED))
                 active = true
                 if (receivers.size > 0) {
                     sendBroadcast(GlucoDataService.context!!, CMD_UPDATE_BG)
@@ -291,11 +323,24 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
             Log.v(LOG_ID, "OnNotifyData called for source " + dataSource)
-            sendBroadcast(context, CMD_UPDATE_BG)
-            if (ReceiveData.forceAlarm && dataSource != NotifySource.IOB_COB_CHANGE && ReceiveData.alarm > 0)
-                sendBroadcast(context, CMD_ALARM)
+            when(dataSource) {
+                NotifySource.NOTIFICATION_STOPPED -> {
+                    sendBroadcast(context, CMD_CANCEL_ALARM)
+                }
+                NotifySource.ALARM_TRIGGER,
+                NotifySource.OBSOLETE_ALARM_TRIGGER -> {
+                    sendBroadcast(context, CMD_ALARM, alarmType = ReceiveData.getAlarmType())
+                }
+                else -> {
+                    sendBroadcast(context, CMD_UPDATE_BG)
+                }
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
         }
+    }
+
+    fun sendTestAlert(context: Context, alarmType: AlarmType) {
+        sendBroadcast(context, CMD_ALARM, alarmType = alarmType)
     }
 }
