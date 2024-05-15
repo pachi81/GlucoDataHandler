@@ -32,6 +32,8 @@ object SourceStateData {
 
         if(state == SourceState.ERROR) {
             Log.e(LOG_ID, "Error state for source $source: $error" )
+        } else {
+            Log.i(LOG_ID, "Set state $state for source $source")
         }
 
         if (GlucoDataService.context != null) {

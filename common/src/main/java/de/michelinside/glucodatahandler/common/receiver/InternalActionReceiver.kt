@@ -37,10 +37,12 @@ class InternalActionReceiver: BroadcastReceiver() {
                     val extras = intent.extras!!
                     val lastTime = ReceiveData.time
                     val lastIobCobTime = ReceiveData.iobCobTime
+                    val lastIob = ReceiveData.iob
+                    val lastCob = ReceiveData.cob
                     val source = DataSource.fromIndex(extras.getInt(Constants.EXTRA_SOURCE_INDEX,
                         DataSource.NONE.ordinal))
                     ReceiveData.handleIntent(context, source, extras, false)
-                    if (ReceiveData.time == lastTime && lastIobCobTime == ReceiveData.iobCobTime)
+                    if (ReceiveData.time == lastTime && (lastIobCobTime == ReceiveData.iobCobTime || (lastCob == ReceiveData.cob && lastIob == ReceiveData.iob)))
                         SourceStateData.setState(source, SourceState.NO_NEW_VALUE)
                 }
                 else -> {

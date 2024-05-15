@@ -19,6 +19,7 @@ import de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver
 import de.michelinside.glucodatahandler.common.utils.Utils
 import java.io.DataOutputStream
 import java.net.HttpURLConnection
+import java.net.SocketTimeoutException
 import java.net.URL
 import java.net.UnknownHostException
 import java.security.SecureRandom
@@ -162,6 +163,9 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             Log.d(LOG_ID, "Execute request")
             try {
                 executeRequest(context)
+            } catch(ex: SocketTimeoutException) {
+                Log.w(LOG_ID, "Timeout for $source: " + ex)
+                setLastError("Timeout")
             } catch (ex: UnknownHostException) {
                 Log.w(LOG_ID, "Internet connection issue for $source: " + ex)
                 setState(SourceState.NO_CONNECTION)
@@ -264,7 +268,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         }
         httpURLConnection.doInput = true
         httpURLConnection.connectTimeout = 10000
-        httpURLConnection.readTimeout = 30000
+        httpURLConnection.readTimeout = 20000
         if (postData == null) {
             httpURLConnection.requestMethod = "GET"
             httpURLConnection.doOutput = false
