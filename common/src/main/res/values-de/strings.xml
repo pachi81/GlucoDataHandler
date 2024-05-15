@@ -466,5 +466,7 @@
     <string name="action_floating_widget_toggle">Schwebendes Widget umschalten</string>
     <string name="wear_complication_tap_action">Complication Tip Aktion</string>
     <string name="activity_large_arrow_icon_summary">Bitte deaktivieren, wenn der Trendpfeil zu groß und dadurch abgeschnitten wird.</string>
+    <string name="pref_cat_ui_settings">Oberfläche</string>
+    <string name="pref_cat_ui_settings_summary">Allgemeine Einstellung für die Oberfläche von dieser App.</string>
 
 </resources>

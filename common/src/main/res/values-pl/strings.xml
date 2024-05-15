@@ -474,4 +474,6 @@
     <string name="action_floating_widget_toggle">Wł./wył.pływającego widgetu</string>
     <string name="wear_complication_tap_action">Po dotknięciu komplikacji</string>
     <string name="activity_large_arrow_icon_summary">Należy sprawdzić, czy strzałka trendu nie jest przycięta i czy nie jest zbyt duża.</string>
+    <string name="pref_cat_ui_settings">Interfejs użytkownika</string>
+    <string name="pref_cat_ui_settings_summary">Ogólne ustawienia dotyczące interfejsu użytkownika tej aplikacji.</string>
 </resources>

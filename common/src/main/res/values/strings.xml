@@ -491,4 +491,6 @@
     <string name="action_floating_widget_toggle">Toggle floating widget</string>
     <string name="wear_complication_tap_action">Complication tap action</string>
     <string name="activity_large_arrow_icon_summary">Please disable this setting, if the trend arrow is to big and is cut off.</string>
+    <string name="pref_cat_ui_settings">User interface</string>
+    <string name="pref_cat_ui_settings_summary">General settings for the user interface of this application.</string>
 </resources>

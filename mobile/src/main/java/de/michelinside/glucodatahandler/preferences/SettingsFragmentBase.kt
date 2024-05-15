@@ -11,6 +11,7 @@ import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.preference.*
+import de.michelinside.glucodatahandler.Dialogs
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
@@ -64,7 +65,7 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
         try {
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
             updateEnablePrefs.clear()
-            updateEnableStates(preferenceManager.sharedPreferences!!)
+            update()
             super.onResume()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.toString())
@@ -105,6 +106,10 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
                         if (floatingWidget != null)
                             floatingWidget.isChecked = false
                     }
+                }
+                Constants.SHARED_PREF_APP_COLOR_SCHEME -> {
+                    update()
+                    Dialogs.updateColorScheme(requireContext())
                 }
                 Constants.SHARED_PREF_LARGE_ARROW_ICON -> {
                     InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SETTINGS, null)
@@ -156,6 +161,19 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
                 if (secondEnableKey != null)
                     updateEnablePrefs.add(secondEnableKey)
             }
+        }
+    }
+
+    private fun update() {
+        val sharedPref = preferenceManager.sharedPreferences!!
+        updateEnableStates(sharedPref)
+        val colorSchemePref = findPreference<ListPreference>(Constants.SHARED_PREF_APP_COLOR_SCHEME)
+        if(colorSchemePref != null) {
+            colorSchemePref.summary = resources.getString(when (sharedPref.getString(Constants.SHARED_PREF_APP_COLOR_SCHEME, "")) {
+                "dark" -> CR.string.application_color_scheme_dark
+                "light" -> CR.string.application_color_scheme_light
+                else -> CR.string.application_color_scheme_system
+            })
         }
     }
 
@@ -218,6 +236,7 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
 
 class GeneralSettingsFragment: SettingsFragmentBase(R.xml.pref_general) {}
 class RangeSettingsFragment: SettingsFragmentBase(R.xml.pref_target_range) {}
+class UiSettingsFragment: SettingsFragmentBase(R.xml.pref_ui) {}
 class WidgetSettingsFragment: SettingsFragmentBase(R.xml.pref_widgets) {}
 class NotificaitonSettingsFragment: SettingsFragmentBase(R.xml.pref_notification) {}
 class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen) {}
