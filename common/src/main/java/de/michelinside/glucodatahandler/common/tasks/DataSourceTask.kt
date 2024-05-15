@@ -34,6 +34,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     private var enabled = false
     private var interval = 1L
     private var delaySec = 10L
+    private var httpURLConnection: HttpURLConnection? = null
 
     companion object {
         private val LOG_ID = "GDH.Task.Source.DataSourceTask"
@@ -163,6 +164,13 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             Log.d(LOG_ID, "Execute request")
             try {
                 executeRequest(context)
+                if (httpURLConnection != null) {
+                    Log.v(LOG_ID, "Closing http connection")
+                    httpURLConnection!!.disconnect()
+                    httpURLConnection = null
+                }
+            } catch (ex: InterruptedException) {
+                throw ex // re throw interruption
             } catch(ex: SocketTimeoutException) {
                 Log.w(LOG_ID, "Timeout for $source: " + ex)
                 setLastError("Timeout")
@@ -262,25 +270,33 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             trustAllCertificates(urlConnection)
         }
 
-        val httpURLConnection = urlConnection as HttpURLConnection
+        httpURLConnection = urlConnection as HttpURLConnection
         header.forEach {
-            httpURLConnection.setRequestProperty(it.key, it.value)
+            httpURLConnection!!.setRequestProperty(it.key, it.value)
         }
-        httpURLConnection.doInput = true
-        httpURLConnection.connectTimeout = 10000
-        httpURLConnection.readTimeout = 20000
+        httpURLConnection!!.doInput = true
+        httpURLConnection!!.connectTimeout = 10000
+        httpURLConnection!!.readTimeout = 20000
         if (postData == null) {
-            httpURLConnection.requestMethod = "GET"
-            httpURLConnection.doOutput = false
+            httpURLConnection!!.requestMethod = "GET"
+            httpURLConnection!!.doOutput = false
         } else {
-            httpURLConnection.requestMethod = "POST"
-            httpURLConnection.doOutput = true
-            val dataOutputStream = DataOutputStream(httpURLConnection.outputStream)
+            httpURLConnection!!.requestMethod = "POST"
+            httpURLConnection!!.doOutput = true
+            val dataOutputStream = DataOutputStream(httpURLConnection!!.outputStream)
             val bytes: ByteArray = postData.toByteArray()
             dataOutputStream.write(bytes, 0, bytes.size)
         }
 
-        return checkResponse(httpURLConnection)
+        return checkResponse(httpURLConnection!!)
+    }
+
+    override fun interrupt() {
+        super.interrupt()
+        if(httpURLConnection != null) {
+            Log.w(LOG_ID, "Disconnect current URL connection on interrupt!")
+            httpURLConnection!!.disconnect()
+        }
     }
 
     protected fun httpGet(url: String, header: MutableMap<String, String>): String? {

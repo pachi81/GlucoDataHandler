@@ -10,4 +10,5 @@ abstract class BackgroundTask {
     open fun getDelayMs(): Long = 0L
     open fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context) : Boolean = false
     open fun hasIobCobSupport() : Boolean = false
+    open fun interrupt() {}
 }

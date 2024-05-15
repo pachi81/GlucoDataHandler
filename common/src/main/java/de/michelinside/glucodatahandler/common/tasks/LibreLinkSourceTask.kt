@@ -384,6 +384,12 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         }
     }
 
+    override fun interrupt() {
+        super.interrupt()
+        Log.w(LOG_ID, "Interrupt called!")
+        reset()
+    }
+
     override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {
         Log.v(LOG_ID, "checkPreferenceChanged called for $key")
         var trigger = false
