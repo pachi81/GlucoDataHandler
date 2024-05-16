@@ -102,15 +102,13 @@ object BitmapUtils {
             if(roundTarget && boundsText.width() > maxTextWidthRoundTarget)
                 paint.textSize = paint.textSize-(boundsText.width() - maxTextWidthRoundTarget)
             val y =
-                if (text == "---" || text == "--")
-                    if (top)
+                if(top)
+                    if (text == "---" || text == "--")
                         Utils.round(height.toFloat() * 0.5F, 0).toInt()
                     else
-                        Utils.round(height.toFloat() * 0.8F, 0).toInt()
-                else if (top)
-                    boundsText.height()
+                        boundsText.height()
                 else
-                    canvas.height/2f + boundsText.height()/2f - boundsText.bottom//((bitmap.height + boundsText.height()) / 2) - 3
+                    canvas.height/2f + boundsText.height()/2f - boundsText.bottom
 
             Log.d(LOG_ID, "Create bitmap for $text - y: $y - text-size: ${paint.textSize} - color: color - shadow: $withShadow")
             canvas.drawText(text, width.toFloat()/2, y.toFloat(), paint)
