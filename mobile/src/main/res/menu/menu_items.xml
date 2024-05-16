@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_alarm_toggle"
-        android:title="@string/alarm_toggle"
+        android:title="@string/alarm_notifications_enabled"
         android:icon="@drawable/notification_disabled"
         app:showAsAction="always" />
     <item
