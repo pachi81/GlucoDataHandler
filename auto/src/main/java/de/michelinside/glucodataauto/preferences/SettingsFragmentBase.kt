@@ -3,6 +3,7 @@ package de.michelinside.glucodataauto.preferences
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.preference.*
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodataauto.R
@@ -27,13 +28,18 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
     open fun initPreferences() {
     }
 
+
+    open fun updatePreferences() {
+
+    }
+
     override fun onResume() {
         Log.d(LOG_ID, "onResume called")
         try {
+            super.onResume()
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
             updateEnablePrefs.clear()
             update()
-            super.onResume()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.toString())
         }
@@ -42,8 +48,8 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
     override fun onPause() {
         Log.d(LOG_ID, "onPause called")
         try {
-            preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
             super.onPause()
+            preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.toString())
         }
@@ -77,12 +83,13 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
     private fun update() {
         val sharedPref = preferenceManager.sharedPreferences!!
         updateEnableStates(sharedPref)
+        updatePreferences()
     }
 
 
     fun updateEnableStates(sharedPreferences: SharedPreferences) {
         try {
-            setEnableState<SwitchPreference>(sharedPreferences, Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY, Constants.SHARED_PREF_CAR_NOTIFICATION)
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY, Constants.SHARED_PREF_CAR_NOTIFICATION)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM, Constants.SHARED_PREF_CAR_NOTIFICATION, Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_CAR_NOTIFICATION_REAPPEAR_INTERVAL, Constants.SHARED_PREF_CAR_NOTIFICATION, Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY)
         } catch (exc: Exception) {
@@ -93,4 +100,17 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
 
 class GeneralSettingsFragment: SettingsFragmentBase(R.xml.pref_general) {}
 class RangeSettingsFragment: SettingsFragmentBase(R.xml.pref_target_range) {}
-class GDASettingsFragment: SettingsFragmentBase(R.xml.pref_gda) {}
+class GDASettingsFragment: SettingsFragmentBase(R.xml.pref_gda) {
+    override fun updatePreferences() {
+        super.updatePreferences()
+        val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_CAR_NOTIFICATION) ?: return
+        pref.icon = ContextCompat.getDrawable(requireContext(), if(pref.isChecked) R.drawable.icon_popup else R.drawable.icon_off)
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        super.onSharedPreferenceChanged(sharedPreferences, key)
+        if(key == Constants.SHARED_PREF_CAR_NOTIFICATION)
+            updatePreferences()
+    }
+
+}

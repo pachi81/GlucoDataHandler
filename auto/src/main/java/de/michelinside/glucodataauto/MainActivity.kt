@@ -24,6 +24,7 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuCompat
 import androidx.core.view.setPadding
 import androidx.preference.PreferenceManager
@@ -68,6 +69,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var btnSources: Button
     private lateinit var txtNoData: TextView
     private lateinit var sharedPref: SharedPreferences
+    private var notificationIcon: MenuItem? = null
     private val LOG_ID = "GDH.AA.Main"
     private var requestNotificationPermission = false
 
@@ -273,11 +275,25 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             val inflater = menuInflater
             inflater.inflate(R.menu.menu_items, menu)
             MenuCompat.setGroupDividerEnabled(menu!!, true)
+            notificationIcon = menu.findItem(R.id.action_notification_toggle)
+            updateNotificationIcon()
             return true
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreateOptionsMenu exception: " + exc.message.toString() )
         }
         return true
+    }
+
+
+    private fun updateNotificationIcon() {
+        try {
+            if(notificationIcon != null) {
+                val enabled = sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, false)
+                notificationIcon!!.icon = ContextCompat.getDrawable(this, if(enabled) R.drawable.icon_popup_white else R.drawable.icon_off_white)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "updateAlarmIcon exception: " + exc.message.toString() )
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -328,6 +344,14 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     SaveMobileLogs()
                     return true
                 }
+                R.id.action_notification_toggle -> {
+                    Log.v(LOG_ID, "notification toggle")
+                    with(sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, !sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, false))
+                        apply()
+                    }
+                    updateNotificationIcon()
+                }
                 else -> return super.onOptionsItemSelected(item)
             }
         } catch (exc: Exception) {
@@ -346,7 +370,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             } else {
                 txtBgValue.paintFlags = 0
             }
-            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
+            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(withShadow = true))
             timeText.text = "🕒 ${ReceiveData.getElapsedRelativeTimeAsString(this)}"
             deltaText.text = "Δ ${ReceiveData.getDeltaAsString()}"
             iobText.text = "💉 " + ReceiveData.getIobAsString()
@@ -366,6 +390,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             updateAlarmsTable()
             updateConnectionsTable()
             updateDetailsTable()
+
+            updateNotificationIcon()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
         }

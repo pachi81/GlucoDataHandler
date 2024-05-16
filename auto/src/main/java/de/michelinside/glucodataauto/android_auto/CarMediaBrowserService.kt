@@ -240,9 +240,9 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
 
     private fun getToggleIcon(): Bitmap? {
         if(CarNotification.enable_notification) {
-            return ContextCompat.getDrawable(applicationContext, R.drawable.icon_popup)?.toBitmap()
+            return ContextCompat.getDrawable(applicationContext, R.drawable.icon_popup_white)?.toBitmap()
         }
-        return ContextCompat.getDrawable(applicationContext, R.drawable.icon_off)?.toBitmap()
+        return ContextCompat.getDrawable(applicationContext, R.drawable.icon_off_white)?.toBitmap()
     }
 
     private fun setToggle() {
