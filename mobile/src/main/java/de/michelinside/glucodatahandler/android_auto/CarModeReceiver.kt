@@ -105,13 +105,13 @@ object CarModeReceiver {
         }
     }
 
-    fun sendToGlucoDataAuto(context: Context, extras: Bundle) {
+    fun sendToGlucoDataAuto(context: Context, extras: Bundle, withSettings: Boolean = false) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         if (connected && sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO, true) && PackageUtils.isGlucoDataAutoAvailable(context)) {
             Log.d(LOG_ID, "sendToGlucoDataAuto")
             val intent = Intent(Constants.GLUCODATA_ACTION)
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-            if(sharedPref.getBoolean(Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO, true)) {
+            if(withSettings && sharedPref.getBoolean(Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO, true)) {
                 val settings = ReceiveData.getSettingsBundle()
                 settings.putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime)
                 extras.putBundle(Constants.SETTINGS_BUNDLE, settings)

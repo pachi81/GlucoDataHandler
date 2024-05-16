@@ -265,7 +265,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             if (dataSource == NotifySource.CAR_CONNECTION && CarModeReceiver.connected) {
                 val autoExtras = ReceiveData.createExtras()
                 if (autoExtras != null)
-                    CarModeReceiver.sendToGlucoDataAuto(context, autoExtras)
+                    CarModeReceiver.sendToGlucoDataAuto(context, autoExtras, true)
             }
             if (extras != null) {
                 if (dataSource == NotifySource.MESSAGECLIENT || dataSource == NotifySource.BROADCAST) {
