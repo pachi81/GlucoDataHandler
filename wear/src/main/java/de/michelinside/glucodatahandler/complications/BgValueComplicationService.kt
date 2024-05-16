@@ -239,7 +239,10 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     fun arrowImage(small: Boolean = false): SmallImage {
         return  SmallImage.Builder(
-            image = BitmapUtils.getRateAsIcon(ReceiveData.getGlucoseColor(), true, resizeFactor = if(small) 0.6F else 1.0F),
+            image = BitmapUtils.getRateAsIcon(
+                ReceiveData.getGlucoseColor(),
+                resizeFactor = if(small) 0.6F else 1.0F
+            ),
             type = SmallImageType.PHOTO
         )
             .setAmbientImage(ambientArrowIcon(small))
@@ -249,7 +252,10 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     fun ambientArrowIcon(small: Boolean = false): Icon? {
         if (sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false))
             return null
-        return BitmapUtils.getRateAsIcon(color = Color.WHITE, roundTarget = true, resizeFactor = if(small) 0.6F else 1.0F)
+        return BitmapUtils.getRateAsIcon(
+            color = Color.WHITE,
+            resizeFactor = if(small) 0.6F else 1.0F
+        )
     }
 
     fun getGlucoseTrendImage(small: Boolean = false): SmallImage {

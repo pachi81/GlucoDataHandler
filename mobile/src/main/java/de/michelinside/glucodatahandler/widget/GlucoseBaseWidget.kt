@@ -198,7 +198,10 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
             if (shortWidget)
                 remoteViews.setImageViewBitmap(R.id.glucose_trend, BitmapUtils.getGlucoseTrendBitmap(width = width, height = width))
             else
-                remoteViews.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap(roundTarget = false, width = size, height = size))
+                remoteViews.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap(
+                    width = size,
+                    height = size
+                ))
         }
 
         if (hasTime) {

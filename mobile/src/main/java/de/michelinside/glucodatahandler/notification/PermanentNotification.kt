@@ -115,7 +115,11 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         val coloredIcon = sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_COLORED_ICON, true)
         return when(sharedPref.getString(iconKey, StatusBarIcon.APP.pref)) {
             StatusBarIcon.GLUCOSE.pref -> BitmapUtils.getGlucoseAsIcon(roundTarget=!bigIcon, color = if(coloredIcon) ReceiveData.getGlucoseColor() else Color.WHITE, withShadow = if(coloredIcon) true else false)
-            StatusBarIcon.TREND.pref -> BitmapUtils.getRateAsIcon(roundTarget=true, color = if(coloredIcon) ReceiveData.getGlucoseColor() else Color.WHITE, resizeFactor = if (bigIcon) 1.5F else 1F, withShadow = if(coloredIcon) true else false)
+            StatusBarIcon.TREND.pref -> BitmapUtils.getRateAsIcon(
+                color = if(coloredIcon) ReceiveData.getGlucoseColor() else Color.WHITE,
+                resizeFactor = if (bigIcon) 1.5F else 1F,
+                withShadow = if(coloredIcon) true else false
+            )
             StatusBarIcon.DELTA.pref -> BitmapUtils.getDeltaAsIcon(roundTarget=!bigIcon, color = if(coloredIcon) ReceiveData.getGlucoseColor(true) else Color.WHITE)
             else -> Icon.createWithResource(GlucoDataService.context, R.mipmap.ic_launcher)
         }

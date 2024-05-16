@@ -40,27 +40,25 @@ object BitmapUtils {
         var result: Float = maxTextSize
         if(roundTarget) {
             if (!top || !isShortText(text) ) {
-                if (text.contains("."))
-                    result *= 0.7F
+                result *= if (text.contains("."))
+                    0.7F
                 else
-                    result *= 0.85F
+                    0.85F
             }
         } else {
-            val fullText: String
-            if (text.contains("+") || text.contains("-")) {
-                fullText = text // delta value
+            val fullText = if (text.contains("+") || text.contains("-")) {
+                text // delta value
             } else if (text.contains(".")) {
                 if (text.length == 3)
-                    fullText = "0.0"
+                    "0.0"
                 else
-                    fullText = "00.0"
+                    "00.0"
             } else {
-                if (text.length == 1)
-                    fullText = "0"
-                else if (text.length == 2)
-                    fullText = "00"
-                else
-                    fullText = "000"
+                when(text.length) {
+                    1 -> "0"
+                    2 -> "00"
+                    else -> "000"
+                }
             }
             val paint = Paint(Paint.ANTI_ALIAS_FLAG)
             paint.textSize = maxTextSize
@@ -258,7 +256,13 @@ object BitmapUtils {
         return Icon.createWithBitmap(getDeltaAsBitmap(color, roundTarget, width, height))
     }
 
-    fun getRateAsBitmap(color: Int? = null, roundTarget: Boolean = false, resizeFactor: Float = 1F, width: Int = 100, height: Int = 100, withShadow: Boolean = false): Bitmap? {
+    fun getRateAsBitmap(
+        color: Int? = null,
+        resizeFactor: Float = 1F,
+        width: Int = 100,
+        height: Int = 100,
+        withShadow: Boolean = false
+    ): Bitmap? {
         return rateToBitmap(
             ReceiveData.rate, color ?: ReceiveData.getGlucoseColor(), resizeFactor = resizeFactor, width = width, height = height, strikeThrough = ReceiveData.isObsolete(
                 Constants.VALUE_OBSOLETE_SHORT_SEC
@@ -267,8 +271,14 @@ object BitmapUtils {
         )
     }
 
-    fun getRateAsIcon(color: Int? = null, roundTarget: Boolean = false, resizeFactor: Float = 1F, width: Int = 100, height: Int = 100, withShadow: Boolean = false): Icon {
-        return Icon.createWithBitmap(getRateAsBitmap(color, roundTarget, resizeFactor, width, height, withShadow))
+    fun getRateAsIcon(
+        color: Int? = null,
+        resizeFactor: Float = 1F,
+        width: Int = 100,
+        height: Int = 100,
+        withShadow: Boolean = false
+    ): Icon {
+        return Icon.createWithBitmap(getRateAsBitmap(color, resizeFactor, width, height, withShadow))
     }
 
     fun getGlucoseTrendBitmap(color: Int? = null, width: Int = 100, height: Int = 100, small: Boolean = false, withShadow: Boolean = false): Bitmap? {
