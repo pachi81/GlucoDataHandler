@@ -11,6 +11,7 @@
     <color name="yellow">#FFFFFF00</color>
     <color name="orange">#FFFF7700</color>
     <color name="green">#FF00FF00</color>
+    <color name="gray">#FF888888</color>
     <color name="text_color">@color/black</color>
     <color name="table_header">#FFDDDDDD</color>
     <color name="table_row">#FFF0F0F0</color>
