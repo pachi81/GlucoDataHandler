@@ -107,7 +107,7 @@ class GDASettingsFragment: SettingsFragmentBase(R.xml.pref_gda) {
     override fun updatePreferences() {
         super.updatePreferences()
         val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_CAR_NOTIFICATION) ?: return
-        pref.icon = ContextCompat.getDrawable(requireContext(), if(pref.isChecked) R.drawable.icon_popup else R.drawable.icon_off)
+        pref.icon = ContextCompat.getDrawable(requireContext(), if(pref.isChecked) R.drawable.icon_popup else R.drawable.icon_popup_off)
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
