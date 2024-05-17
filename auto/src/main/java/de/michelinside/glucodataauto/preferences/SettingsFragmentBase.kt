@@ -72,10 +72,12 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
         if (pref != null) {
             pref.isEnabled = sharedPreferences.getBoolean(enableKey, defValue) && (if (secondEnableKey != null) !sharedPreferences.getBoolean(secondEnableKey, defValue) else true)
             if(!updateEnablePrefs.contains(enableKey)) {
-                Log.v(LOG_ID, "Add update enable pref $enableKey - second: $secondEnableKey")
+                Log.v(LOG_ID, "Add update enable pref $enableKey")
                 updateEnablePrefs.add(enableKey)
-                if (secondEnableKey != null)
-                    updateEnablePrefs.add(secondEnableKey)
+            }
+            if (secondEnableKey != null && !updateEnablePrefs.contains(secondEnableKey)) {
+                Log.v(LOG_ID, "Add update second enable pref $secondEnableKey")
+                updateEnablePrefs.add(secondEnableKey)
             }
         }
     }
@@ -89,6 +91,7 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
 
     fun updateEnableStates(sharedPreferences: SharedPreferences) {
         try {
+            Log.v(LOG_ID, "updateEnableStates called")
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY, Constants.SHARED_PREF_CAR_NOTIFICATION)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM, Constants.SHARED_PREF_CAR_NOTIFICATION, Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_CAR_NOTIFICATION_REAPPEAR_INTERVAL, Constants.SHARED_PREF_CAR_NOTIFICATION, Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY)

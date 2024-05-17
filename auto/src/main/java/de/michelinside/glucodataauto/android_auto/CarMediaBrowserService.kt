@@ -172,8 +172,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         Log.v(LOG_ID, "onSharedPreferenceChanged called for key " + key)
         try {
             when(key) {
-                Constants.SHARED_PREF_CAR_MEDIA,
                 Constants.SHARED_PREF_CAR_NOTIFICATION,
+                Constants.SHARED_PREF_CAR_MEDIA,
                 Constants.SHARED_PREF_CAR_MEDIA_ICON_STYLE -> {
                     notifyChildrenChanged(MEDIA_ROOT_ID)
                 }
@@ -201,7 +201,12 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 setGlucose()
             }
             MEDIA_NOTIFICATION_TOGGLE_ID -> {
-                setToggle()
+                curMediaItem = MEDIA_GLUCOSE_ID
+                Log.d(LOG_ID, "Toggle notification")
+                with(sharedPref.edit()) {
+                    putBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, !CarNotification.enable_notification)
+                    apply()
+                }
             }
         }
     }
