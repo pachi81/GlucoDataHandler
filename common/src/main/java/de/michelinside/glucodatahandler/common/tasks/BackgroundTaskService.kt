@@ -356,6 +356,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
 
     fun run(set_context: Context) {
         try {
+            Log.v(LOG_ID, "run called")
             context = set_context
             sharedPref = context!!.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
@@ -375,12 +376,13 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     fun stop() {
         try {
             if (context != null) {
+                Log.v(LOG_ID, "stop called")
                 InternalNotifier.remNotifier(context!!, this)
                 sharedPref.unregisterOnSharedPreferenceChangeListener(this)
                 stopTimer()
             }
         } catch (ex: Exception) {
-            Log.e(LOG_ID, "run: " + ex)
+            Log.e(LOG_ID, "stop: " + ex)
         }
     }
 

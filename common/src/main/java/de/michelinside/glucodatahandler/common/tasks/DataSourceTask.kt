@@ -322,6 +322,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     }
 
     override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {
+        Log.v(LOG_ID, "checkPreferenceChanged for $key")
         if(key == null) {
             enabled = sharedPreferences.getBoolean(enabledKey, false)
             interval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L

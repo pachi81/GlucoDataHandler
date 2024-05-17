@@ -69,6 +69,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var btnSources: Button
     private lateinit var txtNoData: TextView
     private lateinit var sharedPref: SharedPreferences
+    private var menuOpen = false
     private var notificationIcon: MenuItem? = null
     private val LOG_ID = "GDH.AA.Main"
     private var requestNotificationPermission = false
@@ -142,7 +143,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         try {
             super.onPause()
             InternalNotifier.remNotifier(this, this)
-            GlucoDataServiceAuto.stopDataSync(this)
+            if(!menuOpen)
+                GlucoDataServiceAuto.stopDataSync(this)
             Log.v(LOG_ID, "onPause called")
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.message.toString() )
@@ -173,7 +175,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 requestNotificationPermission = false
                 txtNotificationPermission.visibility = View.GONE
             }
-            GlucoDataServiceAuto.startDataSync(this)
+            if(!menuOpen)
+                GlucoDataServiceAuto.startDataSync(this)
+            menuOpen = false
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
         }
@@ -301,17 +305,20 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Log.v(LOG_ID, "onOptionsItemSelected for " + item.itemId.toString())
             when(item.itemId) {
                 R.id.action_settings -> {
+                    menuOpen = true
                     val intent = Intent(this, SettingsActivity::class.java)
                     startActivity(intent)
                     return true
                 }
                 R.id.action_sources -> {
+                    menuOpen = true
                     val intent = Intent(this, SettingsActivity::class.java)
                     intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.SORUCE_FRAGMENT.value)
                     startActivity(intent)
                     return true
                 }
                 R.id.action_alarms -> {
+                    menuOpen = true
                     val intent = Intent(this, SettingsActivity::class.java)
                     intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.ALARM_FRAGMENT.value)
                     startActivity(intent)

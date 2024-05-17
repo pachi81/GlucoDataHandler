@@ -93,7 +93,7 @@ class GlucoDataServiceAuto: Service() {
         fun startDataSync(context: Context) {
             try {
                 if (dataSyncCount == 0) {
-                    Log.d(LOG_ID, "startDataSync")
+                    Log.d(LOG_ID, "startDataSync count: $dataSyncCount")
                     TimeTaskService.run(context)
                     SourceTaskService.run(context)
                     sendStateBroadcast(context, true)

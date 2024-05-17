@@ -105,7 +105,7 @@
         </receiver>
         <receiver android:name="de.michelinside.glucodatahandler.common.tasks.TimeAlarmReceiver" />
         <receiver android:name="de.michelinside.glucodatahandler.common.tasks.SourceAlarmReceiver" />
-        <receiver android:name=".common.receiver.InternalActionReceiver" />
+        <receiver android:name="de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver" />
 
         <service
             android:name=".android_auto.CarMediaBrowserService"
