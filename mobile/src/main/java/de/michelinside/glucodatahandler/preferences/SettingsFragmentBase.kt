@@ -13,8 +13,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.preference.*
 import de.michelinside.glucodatahandler.Dialogs
 import de.michelinside.glucodatahandler.R
+import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
@@ -290,6 +292,20 @@ class GDASettingsFragment: SettingsFragmentBase(R.xml.pref_gda) {
                     )
                     startActivity(browserIntent)
                     true
+                }
+            }
+        }
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        super.onSharedPreferenceChanged(sharedPreferences, key)
+        when(key) {
+            Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO,
+            Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO -> {
+                if(CarModeReceiver.AA_connected) {
+                    val extras = ReceiveData.createExtras()
+                    if (extras != null)
+                        CarModeReceiver.sendToGlucoDataAuto(requireContext(), extras, true)
                 }
             }
         }
