@@ -147,7 +147,8 @@ object AlarmNotification : AlarmNotificationBase() {
     }
 
     override fun getStartDelayMs(context: Context): Int {
-        return 1000
+        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        return sharedPref.getInt(Constants.SHARED_PREF_ALARM_START_DELAY, 1000)
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {

@@ -133,7 +133,7 @@ class AlarmAdvancedActivity : AppCompatActivity() {
     }
 
     private fun getStartDelayString(): String {
-       return "${seekStartDelay.progress.toFloat()*0.5F}s"
+       return "${seekStartDelay.progress.toFloat()*0.5F} s"
     }
 
     inner class SeekBarChangeListener(val preference: String, val txtLevel: TextView) : SeekBar.OnSeekBarChangeListener {

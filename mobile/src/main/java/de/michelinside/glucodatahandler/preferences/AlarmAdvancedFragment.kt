@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
@@ -22,9 +23,20 @@ class AlarmAdvancedFragment : PreferenceFragmentCompat(), SharedPreferences.OnSh
             Log.v(LOG_ID, "onCreatePreferences called for key: ${Utils.dumpBundle(this.arguments)}" )
             preferenceManager.sharedPreferencesName = Constants.SHARED_PREF_TAG
             setPreferencesFromResource(R.xml.alarm_advanced, rootKey)
+            initPreferences()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
         }
+    }
+
+    private fun initPreferences() {
+        val listPreference = findPreference<ListPreference>(Constants.SHARED_PREF_ALARM_START_DELAY_STRING)
+        val delayMap = mutableMapOf<String, String>()
+        for (i in 0 until 3500 step 500) {
+            delayMap.put(i.toString(), "${(i.toFloat()/1000)} s")
+        }
+        listPreference!!.entries = delayMap.values.toTypedArray()
+        listPreference.entryValues = delayMap.keys.toTypedArray()
     }
 
     override fun onResume() {
@@ -102,6 +114,16 @@ class AlarmAdvancedFragment : PreferenceFragmentCompat(), SharedPreferences.OnSh
             when(key) {
                 Constants.SHARED_PREF_ALARM_FORCE_SOUND -> checkDisablePref(Constants.SHARED_PREF_ALARM_FORCE_SOUND, Constants.SHARED_PREF_ALARM_FORCE_VIBRATION)
                 Constants.SHARED_PREF_ALARM_FORCE_VIBRATION -> checkDisablePref(Constants.SHARED_PREF_ALARM_FORCE_VIBRATION, Constants.SHARED_PREF_ALARM_FORCE_SOUND)
+                Constants.SHARED_PREF_ALARM_START_DELAY_STRING -> {
+                    val delayString = sharedPreferences.getString(Constants.SHARED_PREF_ALARM_START_DELAY_STRING, "")
+                    if (!delayString.isNullOrEmpty()) {
+                        val delay = delayString.toInt()
+                        with(sharedPreferences.edit()) {
+                            putInt(Constants.SHARED_PREF_ALARM_START_DELAY, delay)
+                            apply()
+                        }
+                    }
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())

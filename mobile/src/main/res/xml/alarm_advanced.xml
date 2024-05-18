@@ -28,6 +28,12 @@
                     android:title="@string/alarm_force_sound"
                     android:summary="@string/alarm_force_sound_summary"
                     app:iconSpaceReserved="false" />
+                <androidx.preference.ListPreference
+                    android:defaultValue="1000"
+                    android:key="alarm_start_delay_string"
+                    android:summary="@string/alarm_start_delay_wear_summary"
+                    android:title="@string/alarm_start_delay"
+                    app:iconSpaceReserved="false" />
         </PreferenceCategory>
         <PreferenceCategory
             android:title="@string/alarm_advanced_cat_notifcation"
