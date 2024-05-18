@@ -6,7 +6,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Color
 import android.graphics.Paint
 import android.media.AudioAttributes
 import android.net.Uri
@@ -105,7 +104,7 @@ object AlarmNotification : AlarmNotificationBase() {
         if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) {
             if (!ReceiveData.isObsolete())
                 contentView.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
-            contentView.setTextColor(R.id.deltaText, Color.GRAY )
+            contentView.setTextColor(R.id.deltaText, ReceiveData.getAlarmTypeColor(AlarmType.OBSOLETE) )
         }
 
         if (getAddSnooze()) {

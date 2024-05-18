@@ -4,16 +4,21 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.RemoteViews
+import android.widget.TextView
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
@@ -136,30 +141,60 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         return PackageUtils.getTapActionIntent(GlucoDataService.context!!, tapAction, requestCode)
     }
 
+    fun createNotificationView(context: Context): Bitmap? {
+        try {
+            val notificationView = View.inflate(context, R.layout.notification_layout, null)
+            val textGlucose: TextView = notificationView.findViewById(R.id.glucose)
+            val trendIcon: ImageView = notificationView.findViewById(R.id.trendImage)
+            val textDelta: TextView = notificationView.findViewById(R.id.deltaText)
+            val textIob: TextView = notificationView.findViewById(R.id.iobText)
+            val textCob: TextView = notificationView.findViewById(R.id.cobText)
+
+
+            textGlucose.text = ReceiveData.getGlucoseAsString()
+            textGlucose.setTextColor(ReceiveData.getGlucoseColor())
+
+            if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete()) {
+                textGlucose.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+            } else {
+                textGlucose.paintFlags = 0
+            }
+
+            textDelta.text = "Δ ${ReceiveData.getDeltaAsString()}"
+            if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) {
+                textDelta.setTextColor(ReceiveData.getAlarmTypeColor(AlarmType.OBSOLETE))
+            }
+
+            trendIcon.setImageIcon(BitmapUtils.getRateAsIcon(withShadow = true))
+
+            textIob.text = "💉 " + ReceiveData.getIobAsString()
+            textCob.text = "🍔 " + ReceiveData.getCobAsString()
+            textIob.visibility = if (ReceiveData.isIobCobObsolete(Constants.VALUE_OBSOLETE_LONG_SEC)) View.GONE else View.VISIBLE
+            textCob.visibility = textIob.visibility
+
+            notificationView.setDrawingCacheEnabled(true);
+            notificationView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
+            notificationView.layout(0, 0, notificationView.measuredWidth, notificationView.measuredHeight)
+
+            val bitmap = Bitmap.createBitmap(notificationView.width, notificationView.height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+            notificationView.draw(canvas)
+            return bitmap
+
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "createImage exception: " + exc.message.toString() )
+        }
+        return null
+    }
+
     fun getNotification(withContent: Boolean, iconKey: String, foreground: Boolean) : Notification {
         var remoteViews: RemoteViews? = null
         if (withContent) {
-            remoteViews = RemoteViews(GlucoDataService.context!!.packageName, R.layout.notification)
-            remoteViews.setTextViewText(R.id.glucose, ReceiveData.getGlucoseAsString())
-            remoteViews.setTextColor(R.id.glucose, ReceiveData.getGlucoseColor())
-            remoteViews.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap(withShadow = true))
-            remoteViews.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
-            if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) {
-                if (!ReceiveData.isObsolete())
-                    remoteViews.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
-                remoteViews.setTextColor(R.id.deltaText, Color.GRAY )
-            }
-            if(!ReceiveData.isIobCob()) {
-                remoteViews.setViewVisibility(R.id.iobText, View.GONE)
-                remoteViews.setViewVisibility(R.id.cobText, View.GONE)
-            } else {
-                remoteViews.setTextViewText(R.id.iobText, GlucoDataService.context!!.getString(R.string.iob_label) + ": " + ReceiveData.getIobAsString() )
-                remoteViews.setTextViewText(R.id.cobText, GlucoDataService.context!!.getString(R.string.cob_label) + ": " + ReceiveData.getCobAsString())
-                remoteViews.setViewVisibility(R.id.iobText, View.VISIBLE)
-                if (ReceiveData.cob.isNaN())
-                    remoteViews.setViewVisibility(R.id.cobText, View.GONE)
-                else
-                    remoteViews.setViewVisibility(R.id.cobText, View.VISIBLE)
+            val bitmap = createNotificationView(GlucoDataService.context!!)
+            if(bitmap != null) {
+                remoteViews = RemoteViews(GlucoDataService.context!!.packageName, R.layout.image_view)
+                remoteViews.setImageViewBitmap(R.id.imageLayout, bitmap)
             }
         }
 
@@ -203,22 +238,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
     private fun showPrimaryNotification(show: Boolean) {
         Log.d(LOG_ID, "showPrimaryNotification " + show)
-        //if (show)
-            showNotification(GlucoDataService.NOTIFICATION_ID, !sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false), Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, true)
-        /*if (show != GlucoDataService.foreground) {
-            Log.d(LOG_ID, "change foreground notification mode")
-            with(sharedPref.edit()) {
-                putBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, show)
-                apply()
-            }
-            val serviceIntent =
-                Intent(GlucoDataService.context!!, GlucoDataServiceMobile::class.java)
-            if (show)
-                serviceIntent.putExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
-            else
-                serviceIntent.putExtra(Constants.ACTION_STOP_FOREGROUND, true)
-            GlucoDataService.context!!.startService(serviceIntent)
-        }*/
+        showNotification(GlucoDataService.NOTIFICATION_ID, !sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false), Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, true)
     }
 
     private fun hasContent(): Boolean {
