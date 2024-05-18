@@ -147,6 +147,10 @@ object AlarmNotification : AlarmNotificationBase() {
         }
     }
 
+    override fun getStartDelayMs(context: Context): Int {
+        return 1000
+    }
+
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         try {
             if (key == null) {

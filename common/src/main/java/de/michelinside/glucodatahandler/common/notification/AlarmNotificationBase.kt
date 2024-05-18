@@ -718,9 +718,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
     }
 
-    open fun getStartDelayMs(context: Context): Int {
-        return 0
-    }
+    abstract fun getStartDelayMs(context: Context): Int
 
     private val alarmStatePreferences = mutableSetOf(
         Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED,
