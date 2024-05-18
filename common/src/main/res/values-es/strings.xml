@@ -315,6 +315,7 @@
     <string name="logcat_save_failed">Error al guardar los registros!</string>
     <string name="logcat_wear_save_succeeded">Registros de wear guardados correctamente</string>
     <string name="logcat_wear_save_failed">Error al guardar los registros de wear!</string>
+    <string name="request_exact_alarm_title">Permiso para alarmas y recordatorios</string>
     <string name="request_exact_alarm_summary">Para todo el trabajo relacionado con el tiempo/intervalo, esta aplicación requiere el permiso para alarmas y recordatorios.\nNo agregará ni cambiará ningún recordatorio del usuario, es solo para programación interna.\nSi presionas OK, serás redirigido a la configuración de permisos para habilitarlo en GlucoDataHandler.</string>
     <string name="activity_main_schedule_exact_alarm">La programación de la alarma exacta está desactivada!!!\n¡¡¡GlucoDataHandler puede que no funcione correctamente!!!\nPresiona aquí para ir directamente a la configuración de permisos.</string>
 
