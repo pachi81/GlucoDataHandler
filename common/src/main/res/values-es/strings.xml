@@ -5,7 +5,7 @@
     <string name="info_label_raw">Crudo</string>
     <string name="info_label_delta">Delta</string>
     <string name="info_label_rate">Tasa</string>
-    <string name="info_label_timestamp">Marca de tiempo</string>
+    <string name="info_label_timestamp">Hora de registro</string>
     <string name="info_label_iob_cob_timestamp">Hora IOB/COB</string>
     <string name="info_label_timediff">Diferencia de tiempo</string>
     <string name="info_label_alarm">Alarma</string>
@@ -475,11 +475,11 @@
     <string name="application_color_scheme_system">Usar esquema del sistema</string>
     <string name="application_color_scheme_light">Esquema claro</string>
     <string name="application_color_scheme_dark">Esquema oscuro</string>
-    <string name="tap_action">Acción de toque</string>
+    <string name="tap_action">Acción de tocar</string>
     <string name="tap_action_summary">Selecciona una acción o aplicación que se debe ejecutar al tocar este elemento.</string>
     <string name="no_action">Sin acción</string>
     <string name="action_floating_widget_toggle">Alternar widget flotante</string>
-    <string name="wear_complication_tap_action">Acción de toque de complicación</string>
+    <string name="wear_complication_tap_action">Acción de tocar de complicación</string>
     <string name="activity_large_arrow_icon_summary">Por favor, desactiva esta configuración si la flecha de tendencia es demasiado grande y se corta.</string>
     <string name="pref_cat_ui_settings">Interfaz de usuario</string>
     <string name="pref_cat_ui_settings_summary">Ajustes generales para la interfaz de usuario de esta aplicación.</string>
