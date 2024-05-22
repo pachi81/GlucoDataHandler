@@ -80,13 +80,13 @@
     <string name="source_delay">Opóźnienie</string>
     <string name="source_delay_summary">Opóźnienie w sekundach przed zażądaniem danych z chmury, ponieważ zajmuje to trochę czasu, zanim dane się tam znajdą.</string>
 
-    <string name="src_cat_libreview">LibreLinkUp Follower</string>
+    <string name="src_cat_libreview">LibreLink Follower</string>
     <string name="src_libre_enabled">Włącz</string>
-    <string name="src_libre_enabled_summary">Włącz funkcję LibreLinkUp follower, jeśli wprowadzono adres e-mail i hasło do LibreLinkUp.</string>
+    <string name="src_libre_enabled_summary">Włącz funkcję LibreLink follower, jeśli wprowadzono adres e-mail i hasło do LibreLink.</string>
     <string name="src_libre_user">E-mail</string>
-    <string name="src_libre_user_summary">Adres e-mail do logowania do LibreLinkUp</string>
+    <string name="src_libre_user_summary">Adres e-mail do logowania do LibreLink</string>
     <string name="src_libre_password">Hasło</string>
-    <string name="src_libre_password_summary">Hasło do LibreLinkUp</string>
+    <string name="src_libre_password_summary">Hasło do LibreLink</string>
     <string name="src_libre_reconnect">Połącz ponownie</string>
     <string name="src_libre_reconnect_summary">W kolejnym odstępie czasowym nastąpi nowe logowanie.</string>
 
@@ -288,15 +288,15 @@
     <string name="pref_source_xdrip_info_1_summary">Aby odbierać wartości z xDrip+:\n- otwórz xDrip+\n- przejdź do ustawień\n- przejdź do ustawień innych aplikacji\n- włącz \"Nadawaj lokalnie\"\n- ustaw \"Blokowanie szumów\" na \"Send even Extremely noisy signals\"</string>
     <string name="pref_source_xdrip_info_2_summary">- włącz \"Kompatybilny Broadcast\"\n- sprawdź, czy pole \"Identyfikuj odbiornik\" jest puste lub dodaj nową linię z \"de.michelinside.glucodatahandler\"</string>
     <string name="pref_gda_source_xdrip_info_2_summary">- włącz \"Kompatybilny Broadcast\"\n- sprawdź, czy pole \"Identyfikuj odbiornik\" jest puste lub dodaj nową linię z \"de.michelinside.glucodataauto\"</string>
-    <string name="pref_source_librelinkup_info">Konfiguracja LibreLinkUp</string>
-    <string name="pref_source_librelinkup_info_summary">WAŻNE: to nie jest konto LibreView! Aby aktywować LibreLinkUp:\n- otwórz aplikację FreeStyle Libre i wybierz w menu Udostępnianie lub Podłączone aplikacje\n- aktywuj połączenie LibreLinkUp\n- zainstaluj LibreLinkUp ze Sklepu Play\n- skonfiguruj swoje konto i czekaj na zaproszenie</string>
+    <string name="pref_source_librelinkup_info">Konfiguracja LibreLink</string>
+    <string name="pref_source_librelinkup_info_summary">WAŻNE: to nie jest konto używane w aplikacji FreeStyle LibreLink! Aby aktywować LibreLinkUp:\n- otwórz aplikację FreeStyle LibreLink i wybierz w menu Udostępnianie lub Podłączone aplikacje\n- aktywuj połączenie LibreLinkUp\n- zainstaluj LibreLinkUp ze Sklepu Play\n- skonfiguruj swoje konto i czekaj na zaproszenie</string>
     <string name="menu_contact">Kontakt</string>
     <string name="src_ns_iob_cob">Obsługa IOB/COB</string>
     <string name="src_ns_iob_cob_summary">Odbieraj również wartości IOB (aktywnej insuliny) i COB (aktywnych węglowodanów) z pozycji "nightscout pebble endpoint".</string>
     <string name="pref_permanent_notification_info_summary">Powiadomienie jest wymagane do poprawnego działania aplikacji.\nPocząwszy od systemu Android 13 powiadomienie to można usunąć, odsuwając je palcem w bok.\nJeżeli powiadomienie nie ma być odtwarzane z każdą nową wartością glikemii, należy w części "Ikona w pasku stanu" wybrać opcję "Ikona aplikacji" i włączyć opcję "Ukryj treść".</string>
     <string name="source_aaps">AAPS</string>
     <string name="pref_source_aaps_info">AndroidAPS</string>
-    <string name="pref_source_aaps_info_summary">Aby odbierać wartości z AAPS:\n- otwórz AAPS\n- przejdź do \"Konfiguracja\"\n- włącz \"Samsung Tizen\"</string>
+    <string name="pref_source_aaps_info_summary">Aby odbierać wartości z AAPS:\n- otwórz AAPS\n- przejdź do \"Konfiguracja\"\n- włącz \"Samsung Tizen\" lub \"Data Broadcaster\"</string>
     <string name="pref_switch_watchdrip_enabled">WatchDrip+</string>
     <string name="pref_switch_watchdrip_enabled_summary">"Włącz komunikację z WatchDrip+ (bez wykresu).\nWAŻNA UWAGA: opcję \"Enable service\" w WatchDrip+ należy włączyć dopiero po włączeniu tej opcji tutaj!"</string>
     <string name="pref_car_notification_reappear_interval">Pokaż ponownie</string>
