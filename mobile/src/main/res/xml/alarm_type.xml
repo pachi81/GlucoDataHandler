@@ -51,11 +51,6 @@
                     android:title="@string/alarm_sound_delay"
                     android:summary="@string/alarm_sound_delay_summary"
                     app:iconSpaceReserved="false" />
-        </PreferenceCategory>
-        <PreferenceCategory
-            android:title="@string/advanced_settings"
-            app:iconSpaceReserved="false"
-            app:initialExpandedChildrenCount="0">
                 <androidx.preference.SeekBarPreference
                     app:showSeekBarValue="true"
                     app:seekBarIncrement="1"
@@ -66,6 +61,11 @@
                     android:title="@string/alarm_retrigger"
                     android:summary="@string/alarm_retrigger_summary"
                     app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+        <PreferenceCategory
+            android:title="@string/advanced_settings"
+            app:iconSpaceReserved="false"
+            app:initialExpandedChildrenCount="0">
                 <Preference
                     android:key="test"
                     android:title="@string/alarm_test"
