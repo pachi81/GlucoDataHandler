@@ -81,11 +81,11 @@
 
     <string name="src_cat_libreview">Seguidor de LibreLink</string>
     <string name="src_libre_enabled">Habilitar</string>
-    <string name="src_libre_enabled_summary">Habilitar seguidor de LibreLink, si el usuario y la contraseña de LibreLink están configurados.</string>
+    <string name="src_libre_enabled_summary">Habilitar seguidor de LibreLink, si el usuario y la contraseña de LibreLinkUp están configurados.</string>
     <string name="src_libre_user">E-mail</string>
-    <string name="src_libre_user_summary">E-mail para el inicio de sesión en LibreLink</string>
+    <string name="src_libre_user_summary">E-mail para el inicio de sesión en LibreLinkUp</string>
     <string name="src_libre_password">Contraseña</string>
-    <string name="src_libre_password_summary">Contraseña para LibreLink</string>
+    <string name="src_libre_password_summary">Contraseña para LibreLinkUp</string>
     <string name="src_libre_reconnect">Reconectar</string>
     <string name="src_libre_reconnect_summary">En el próximo intervalo se ejecutará un nuevo inicio de sesión.</string>
 
