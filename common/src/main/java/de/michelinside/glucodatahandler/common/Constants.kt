@@ -32,6 +32,8 @@ object Constants {
     const val PACKAGE_XDRIP = "com.eveningoutpost.dexdrip"
     const val PACKAGE_XDRIP_PLUS = "jamorham.xdrip.plus"
     const val PACKAGE_AAPS = "info.nightscout"
+    const val PACKAGE_LIBRELINK = "com.freestylelibre"
+    const val PACKAGE_LIBRELINKUP = "org.nativescript.librelinkup"
 
     const val EXTRA_SOURCE_PACKAGE = "gdh.source_package"
     const val EXTRA_SOURCE_INDEX = "gdh.source_idx"

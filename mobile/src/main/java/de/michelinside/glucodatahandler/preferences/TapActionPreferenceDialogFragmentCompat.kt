@@ -83,11 +83,13 @@ class TapActionPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat()
         filter.add(Constants.PACKAGE_AAPS)
         filter.add(Constants.PACKAGE_XDRIP)
         filter.add(Constants.PACKAGE_XDRIP_PLUS)
+        filter.add(Constants.PACKAGE_LIBRELINK)
+        filter.add(Constants.PACKAGE_LIBRELINKUP)
     }
 
     private fun filterContains(value: String): Boolean {
         filter.forEach {
-            if(value.startsWith(it))
+            if(value.lowercase().startsWith(it.lowercase()))
                 return true
         }
         return false
