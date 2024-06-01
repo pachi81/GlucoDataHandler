@@ -194,7 +194,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     fun stopNotification(noticationId: Int, context: Context? = null, fromClient: Boolean = false) {
         try {
-            Log.d(LOG_ID, "stopNotification called for $noticationId - current=$curNotification - fromClient=$fromClient")
+            Log.i(LOG_ID, "stopNotification called for $noticationId - current=$curNotification - fromClient=$fromClient")
             stopTrigger()
             if(noticationId == curNotification) {
                 checkRecreateSound()
@@ -243,7 +243,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     alarmType
                 else
                     AlarmType.NONE
-                Log.d(LOG_ID, "Create notification for $alarmType with ID=$curNotification - triggerTime=$retriggerTime")
+                Log.i(LOG_ID, "Create notification for $alarmType with ID=$curNotification - triggerTime=$retriggerTime")
                 checkCreateSound(alarmType, context)
                 if(canShowNotification())
                     showNotification(alarmType, context)
@@ -261,7 +261,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     fun triggerDelay(action: TriggerAction, alarmType: AlarmType, context: Context, delaySeconds: Float) {
         stopTrigger()
-        Log.d(LOG_ID, "Trigger action $action for $alarmType in $delaySeconds seconds")
+        Log.i(LOG_ID, "Trigger action $action for $alarmType in $delaySeconds seconds")
         alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         var hasExactAlarmPermission = true
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -406,7 +406,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     private fun startVibrationAndSound(alarmType: AlarmType, context: Context, reTrigger: Boolean = false) {
         if(!reTrigger) {
             val soundDelay = getSoundDelay(alarmType, context)
-            Log.v(LOG_ID, "Start vibration and sound with $soundDelay seconds delay")
+            Log.i(LOG_ID, "Start vibration and sound with $soundDelay seconds delay")
             if(soundDelay > 0) {
                 vibrate(alarmType, context, true)
                 if(getSound(alarmType, context) != null) {
@@ -420,11 +420,11 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         // else
         Thread {
             val startDelay = getStartDelayMs(context)
-            Log.v(LOG_ID, "Start sound and vibration with a delay of $startDelay ms")
+            Log.i(LOG_ID, "Start sound and vibration with a delay of $startDelay ms")
             if(startDelay > 0)
                 Thread.sleep(startDelay.toLong())
             if(curNotification > 0) {
-                Log.v(LOG_ID, "Start sound and vibration")
+                Log.d(LOG_ID, "Start sound and vibration")
                 vibrate(alarmType, context, false)
                 startSound(alarmType, context, false)
                 checkRetrigger(context)
@@ -437,7 +437,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         try {
             if (getRingerMode() >= AudioManager.RINGER_MODE_VIBRATE && curNotification > 0) {
                 val vibratePattern = getVibrationPattern(alarmType) ?: return
-                Log.d(LOG_ID, "start vibration for $alarmType - repeat: $repeat")
+                Log.i(LOG_ID, "start vibration for $alarmType - repeat: $repeat")
                 vibrator.cancel()
                 vibrator.vibrate(VibrationEffect.createWaveform(vibratePattern, if(repeat) 1 else -1))
             }
@@ -450,7 +450,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         if (getRingerMode() >= AudioManager.RINGER_MODE_NORMAL && (curNotification > 0 || forTest)) {
             val soundUri = getSound(alarmType, context, forTest)
             if (soundUri != null) {
-                Log.d(LOG_ID, "Play ringtone $soundUri - use alarm: $useAlarmSound")
+                Log.i(LOG_ID, "Play ringtone $soundUri - use alarm: $useAlarmSound")
                 ringtone = RingtoneManager.getRingtone(context, soundUri)
                 val aa = AudioAttributes.Builder()
                     .setUsage(if(useAlarmSound)AudioAttributes.USAGE_ALARM else AudioAttributes.USAGE_VOICE_COMMUNICATION_SIGNALLING)
@@ -486,12 +486,12 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             return AudioManager.RINGER_MODE_NORMAL  // DnD is on and can not be changed, so do not change ringer mode
         if(Channels.getNotificationManager().currentInterruptionFilter > NotificationManager.INTERRUPTION_FILTER_ALL) {
             lastDndMode = Channels.getNotificationManager().currentInterruptionFilter
-            Log.d(LOG_ID, "Disable DnD in level $lastDndMode")
+            Log.i(LOG_ID, "Disable DnD in level $lastDndMode")
             Channels.getNotificationManager()
                 .setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL)
             Thread.sleep(100)
         }
-        Log.d(LOG_ID, "Current ringer mode ${audioManager.ringerMode}")
+        Log.i(LOG_ID, "Current ringer mode ${audioManager.ringerMode}")
         return audioManager.ringerMode
     }
 
@@ -538,7 +538,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     fun setSoundLevel(level: Int) {
         val soundLevel = minOf(level, getMaxSoundLevel())
-        Log.v(LOG_ID, "setSoundLevel: $soundLevel")
+        Log.i(LOG_ID, "setSoundLevel: $soundLevel")
         audioManager.setStreamVolume(
             if(useAlarmSound)AudioManager.STREAM_ALARM else AudioManager.STREAM_RING,
             soundLevel,
@@ -579,18 +579,18 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     protected fun checkRecreateSound() {
         try {
             if(lastRingerMode >= 0 ) {
-                Log.d(LOG_ID, "Reset ringer mode to $lastRingerMode")
+                Log.i(LOG_ID, "Reset ringer mode to $lastRingerMode")
                 audioManager.ringerMode = lastRingerMode
                 lastRingerMode = -1
             }
             if(lastDndMode != NotificationManager.INTERRUPTION_FILTER_UNKNOWN) {
-                Log.d(LOG_ID, "Reset DnD mode to $lastDndMode")
+                Log.i(LOG_ID, "Reset DnD mode to $lastDndMode")
                 Channels.getNotificationManager().setInterruptionFilter(lastDndMode)
                 lastDndMode = NotificationManager.INTERRUPTION_FILTER_UNKNOWN
             }
 
             if(lastSoundLevel >= 0) {
-                Log.d(LOG_ID, "Reset sound level to $lastSoundLevel")
+                Log.i(LOG_ID, "Reset sound level to $lastSoundLevel")
                 setSoundLevel(lastSoundLevel)
                 lastSoundLevel = -1
             }
