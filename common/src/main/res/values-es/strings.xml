@@ -79,9 +79,9 @@
     <string name="source_delay">Retraso</string>
     <string name="source_delay_summary">Retraso en segundos antes de solicitar los datos de la nube, porque toma algún tiempo hasta que los datos estén presentes allí.</string>
 
-    <string name="src_cat_libreview">Seguidor de LibreLink</string>
+    <string name="src_cat_libreview">Seguidor de LibreLinkUp</string>
     <string name="src_libre_enabled">Habilitar</string>
-    <string name="src_libre_enabled_summary">Habilitar seguidor de LibreLink, si el usuario y la contraseña de LibreLinkUp están configurados.</string>
+    <string name="src_libre_enabled_summary">Habilitar seguidor de LibreLinkUp, si el usuario y la contraseña están configurados.</string>
     <string name="src_libre_user">E-mail</string>
     <string name="src_libre_user_summary">E-mail para el inicio de sesión en LibreLinkUp</string>
     <string name="src_libre_password">Contraseña</string>

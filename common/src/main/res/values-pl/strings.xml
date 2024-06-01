@@ -80,9 +80,9 @@
     <string name="source_delay">Opóźnienie</string>
     <string name="source_delay_summary">Opóźnienie w sekundach przed zażądaniem danych z chmury, ponieważ zajmuje to trochę czasu, zanim dane się tam znajdą.</string>
 
-    <string name="src_cat_libreview">LibreLink Follower</string>
+    <string name="src_cat_libreview">LibreLinkUp Follower</string>
     <string name="src_libre_enabled">Włącz</string>
-    <string name="src_libre_enabled_summary">Włącz funkcję LibreLink follower, jeśli wprowadzono adres e-mail i hasło do LibreLinkUp.</string>
+    <string name="src_libre_enabled_summary">Włącz funkcję LibreLinkUp follower, jeśli wprowadzono adres e-mail i hasło.</string>
     <string name="src_libre_user">E-mail</string>
     <string name="src_libre_user_summary">Adres e-mail do logowania do LibreLinkUp</string>
     <string name="src_libre_password">Hasło</string>
