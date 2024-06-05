@@ -4,7 +4,6 @@ import android.app.Notification
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
@@ -38,6 +37,7 @@ class GlucoDataServiceAuto: Service() {
         fun init(context: Context) {
             Log.v(LOG_ID, "init called: init=$init")
             if(!init) {
+                GlucoDataService.context = context
                 startService(context, false)
                 init = true
             }
@@ -54,7 +54,7 @@ class GlucoDataServiceAuto: Service() {
                 else
                     context.startService(serviceIntent)
             } catch (exc: Exception) {
-                Log.e(LOG_ID, "startService exception: " + exc.toString())
+                Log.e(LOG_ID, "startService exception: " + exc.message.toString() + "\n" + exc.stackTraceToString())
             }
         }
 
@@ -65,13 +65,14 @@ class GlucoDataServiceAuto: Service() {
                     startService(context, foreground)
                 }
             } catch (exc: Exception) {
-                Log.e(LOG_ID, "setForeground exception: " + exc.toString())
+                Log.e(LOG_ID, "setForeground exception: " + exc.message.toString() + "\n" + exc.stackTraceToString())
             }
         }
 
         fun start(context: Context) {
             try {
                 if(!running) {
+                    init(context)
                     Log.i(LOG_ID, "starting")
                     CarNotification.enable(context)
                     startDataSync(context)
@@ -79,7 +80,7 @@ class GlucoDataServiceAuto: Service() {
                     running = true
                 }
             } catch (exc: Exception) {
-                Log.e(LOG_ID, "start exception: " + exc.toString())
+                Log.e(LOG_ID, "start exception: " + exc.message.toString() + "\n" + exc.stackTraceToString())
             }
         }
 
@@ -93,34 +94,36 @@ class GlucoDataServiceAuto: Service() {
                     running = false
                 }
             } catch (exc: Exception) {
-                Log.e(LOG_ID, "stop exception: " + exc.toString())
+                Log.e(LOG_ID, "stop exception: " + exc.message.toString() + "\n" + exc.stackTraceToString())
             }
         }
 
         fun startDataSync(context: Context) {
             try {
+                Log.i(LOG_ID, "starting datasync - count=$dataSyncCount")
                 if (dataSyncCount == 0) {
-                    Log.d(LOG_ID, "startDataSync count: $dataSyncCount")
                     TimeTaskService.run(context)
                     SourceTaskService.run(context)
                     sendStateBroadcast(context, true)
+                    Log.i(LOG_ID, "Datasync started")
                 }
                 dataSyncCount++
             } catch (exc: Exception) {
-                Log.e(LOG_ID, "startDataSync exception: " + exc.toString())
+                Log.e(LOG_ID, "startDataSync exception: " + exc.message.toString() + "\n" + exc.stackTraceToString())
             }
         }
 
         fun stopDataSync(context: Context) {
             try {
                 dataSyncCount--
+                Log.i(LOG_ID, "stopping datasync - count=$dataSyncCount")
                 if (dataSyncCount == 0) {
-                    Log.d(LOG_ID, "stopDataSync")
                     sendStateBroadcast(context, false)
                     BackgroundWorker.stopAllWork(context)
+                    Log.i(LOG_ID, "Datasync stopped")
                 }
             } catch (exc: Exception) {
-                Log.e(LOG_ID, "stopDataSync exception: " + exc.toString())
+                Log.e(LOG_ID, "stopDataSync exception: " + exc.message.toString() + "\n" + exc.stackTraceToString())
             }
         }
 
@@ -190,7 +193,7 @@ class GlucoDataServiceAuto: Service() {
             }
             CarConnection(applicationContext).type.observeForever(GlucoDataServiceAuto::onConnectionStateUpdated)
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "onStartCommand exception: " + exc.toString())
+            Log.e(LOG_ID, "onStartCommand exception: " + exc.message.toString() + "\n" + exc.stackTraceToString())
         }
 
         return START_STICKY  // keep alive

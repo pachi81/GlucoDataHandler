@@ -1,6 +1,5 @@
 package de.michelinside.glucodataauto
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlarmManager
 import android.content.Context
@@ -70,7 +69,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var btnSources: Button
     private lateinit var txtNoData: TextView
     private lateinit var sharedPref: SharedPreferences
-    private var menuOpen = false
     private var notificationIcon: MenuItem? = null
     private val LOG_ID = "GDH.AA.Main"
     private var requestNotificationPermission = false
@@ -142,11 +140,10 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     override fun onPause() {
         try {
+            Log.d(LOG_ID, "onPause called")
             super.onPause()
             InternalNotifier.remNotifier(this, this)
-            if(!menuOpen)
-                GlucoDataServiceAuto.stopDataSync(this)
-            Log.v(LOG_ID, "onPause called")
+            GlucoDataServiceAuto.stopDataSync(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.message.toString() )
         }
@@ -154,8 +151,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     override fun onResume() {
         try {
+            Log.d(LOG_ID, "onResume called")
             super.onResume()
-            Log.v(LOG_ID, "onResume called")
             update()
             InternalNotifier.addNotifier( this, this, mutableSetOf(
                 NotifySource.BROADCAST,
@@ -166,7 +163,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.NODE_BATTERY_LEVEL,
                 NotifySource.SETTINGS,
                 NotifySource.CAR_CONNECTION,
-                NotifySource.OBSOLETE_VALUE,
+                NotifySource.TIME_VALUE,
                 NotifySource.SOURCE_STATE_CHANGE))
             checkExactAlarmPermission()
             checkBatteryOptimization()
@@ -176,20 +173,11 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 requestNotificationPermission = false
                 txtNotificationPermission.visibility = View.GONE
             }
-            if(!menuOpen)
-                GlucoDataServiceAuto.startDataSync(this)
-            menuOpen = false
+            GlucoDataServiceAuto.startDataSync(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
         }
     }
-
-    private val requestPermissionLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            Log.d(LOG_ID, "Notification permission allowed: $isGranted")
-        }
 
     fun requestPermission() : Boolean {
         requestNotificationPermission = false
@@ -306,20 +294,17 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Log.v(LOG_ID, "onOptionsItemSelected for " + item.itemId.toString())
             when(item.itemId) {
                 R.id.action_settings -> {
-                    menuOpen = true
                     val intent = Intent(this, SettingsActivity::class.java)
                     startActivity(intent)
                     return true
                 }
                 R.id.action_sources -> {
-                    menuOpen = true
                     val intent = Intent(this, SettingsActivity::class.java)
                     intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.SORUCE_FRAGMENT.value)
                     startActivity(intent)
                     return true
                 }
                 R.id.action_alarms -> {
-                    menuOpen = true
                     val intent = Intent(this, SettingsActivity::class.java)
                     intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.ALARM_FRAGMENT.value)
                     startActivity(intent)
