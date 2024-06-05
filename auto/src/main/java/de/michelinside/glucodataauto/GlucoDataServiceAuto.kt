@@ -4,6 +4,7 @@ import android.app.Notification
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
@@ -35,27 +36,33 @@ class GlucoDataServiceAuto: Service() {
         private var dataSyncCount = 0
         val connected: Boolean get() = car_connected || CarMediaBrowserService.active
         fun init(context: Context) {
+            Log.v(LOG_ID, "init called: init=$init")
             if(!init) {
-                Log.v(LOG_ID, "init called")
-                GlucoDataService.context = context
-                //TimeTaskService.useWorker = true
-                //SourceTaskService.useWorker = true
-                ReceiveData.initData(context)
-                CarConnection(context.applicationContext).type.observeForever(GlucoDataServiceAuto::onConnectionStateUpdated)
+                startService(context, false)
                 init = true
             }
         }
 
-        private fun setForeground(context: Context, foreground: Boolean) {
+        private fun startService(context: Context, foreground: Boolean) {
+            try {
+                val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                val isForeground = foreground || sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
+                val serviceIntent = Intent(context, GlucoDataServiceAuto::class.java)
+                serviceIntent.putExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, isForeground)
+                if (isForeground)
+                    context.startForegroundService(serviceIntent)
+                else
+                    context.startService(serviceIntent)
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "startService exception: " + exc.toString())
+            }
+        }
+
+        fun setForeground(context: Context, foreground: Boolean) {
             try {
                 Log.v(LOG_ID, "setForeground called " + foreground)
                 if (isForegroundService != foreground) {
-                    val serviceIntent = Intent(context, GlucoDataServiceAuto::class.java)
-                    serviceIntent.putExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, foreground)
-                    if (foreground)
-                        context.startForegroundService(serviceIntent)
-                    else
-                        context.startService(serviceIntent)
+                    startService(context, foreground)
                 }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "setForeground exception: " + exc.toString())
@@ -161,11 +168,14 @@ class GlucoDataServiceAuto: Service() {
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         try {
             Log.d(LOG_ID, "onStartCommand called")
             super.onStartCommand(intent, flags, startId)
-            val isForeground = intent.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
+            GlucoDataService.context = applicationContext
+            ReceiveData.initData(applicationContext)
+            val sharedPref = getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            val isForeground = (if(intent != null) intent.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, false) else false) || sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
             if (isForeground && !isForegroundService) {
                 Log.i(LOG_ID, "Starting service in foreground!")
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
@@ -178,12 +188,12 @@ class GlucoDataServiceAuto: Service() {
                 Log.i(LOG_ID, "Stopping service in foreground!")
                 stopForeground(STOP_FOREGROUND_REMOVE)
             }
+            CarConnection(applicationContext).type.observeForever(GlucoDataServiceAuto::onConnectionStateUpdated)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onStartCommand exception: " + exc.toString())
         }
-        if (isForegroundService)
-            return START_STICKY  // keep alive
-        return START_NOT_STICKY
+
+        return START_STICKY  // keep alive
     }
 
     override fun onDestroy() {
@@ -202,7 +212,7 @@ class GlucoDataServiceAuto: Service() {
         val pendingIntent = PackageUtils.getAppIntent(this, MainActivity::class.java, 11, false)
 
         return Notification.Builder(this, ChannelType.ANDROID_AUTO_FOREGROUND.channelId)
-            .setContentTitle(getString(de.michelinside.glucodatahandler.common.R.string.activity_main_car_connected_label))
+            .setContentTitle(getString(de.michelinside.glucodatahandler.common.R.string.gda_foreground_info))
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(pendingIntent)
             .setOngoing(true)

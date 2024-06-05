@@ -116,7 +116,6 @@ object Constants {
     const val WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA_IOB_COB = "glucose_trend_delta_time_iob_cob"
 
     // Wear only preferences
-    const val SHARED_PREF_FOREGROUND_SERVICE = "foreground_service"
     const val SHARED_PREF_WEAR_COLORED_AOD = "colored_aod"
     const val SHARED_PREF_COMPLICATION_TAP_ACTION = "complication_tap_action"
 
@@ -219,4 +218,5 @@ object Constants {
     // Android Auto
     const val AA_MEDIA_ICON_STYLE_TREND = "trend"
     const val AA_MEDIA_ICON_STYLE_GLUCOSE_TREND = "glucose_trend"
+    const val SHARED_PREF_FOREGROUND_SERVICE = "foreground_service"
 }

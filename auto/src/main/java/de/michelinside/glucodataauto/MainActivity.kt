@@ -1,5 +1,6 @@
 package de.michelinside.glucodataauto
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlarmManager
 import android.content.Context
@@ -257,16 +258,16 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         try {
             val pm = getSystemService(POWER_SERVICE) as PowerManager
             if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                Log.w(LOG_ID, "Battery optimization is inactive")
+                Log.w(LOG_ID, "Battery optimization is active")
                 txtBatteryOptimization.visibility = View.VISIBLE
                 txtBatteryOptimization.setOnClickListener {
-                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
                     intent.data = Uri.parse("package:$packageName")
                     startActivity(intent)
                 }
             } else {
                 txtBatteryOptimization.visibility = View.GONE
-                Log.i(LOG_ID, "Battery optimization is active")
+                Log.i(LOG_ID, "Battery optimization is inactive")
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )

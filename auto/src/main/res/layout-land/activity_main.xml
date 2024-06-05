@@ -157,7 +157,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
-                        android:text="@string/activity_main_battery_optimization_disabled"
+                        android:text="@string/gda_battery_optimization_disabled"
                         android:textSize="16sp"
                         android:textAlignment="center" />
                 </LinearLayout>

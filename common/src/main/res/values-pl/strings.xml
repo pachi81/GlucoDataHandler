@@ -476,4 +476,7 @@
     <string name="activity_large_arrow_icon_summary">Należy sprawdzić, czy strzałka trendu nie jest przycięta i czy nie jest zbyt duża.</string>
     <string name="pref_cat_ui_settings">Interfejs użytkownika</string>
     <string name="pref_cat_ui_settings_summary">Ogólne ustawienia dotyczące interfejsu użytkownika tej aplikacji.</string>
+    <string name="gda_foreground_info">GlucoDataAuto działa</string>
+    <string name="gda_foreground_summary">Włącz to tylko wtedy, gdy używasz źródła obserwatora i tylko powiadomień Android Auto.\nTo zapobiega zamknięciu tej aplikacji przez Androida, gdy nie jest podłączona do Android Auto, więc aplikacja nie może rozpoznać połączenia z Android Auto.\nZamiast włączać to ustawienie, możesz również otworzyć aplikację w Android Auto raz, gdy jesteś podłączony.</string>
+    <string name="gda_battery_optimization_disabled">Optymalizacja baterii jest włączona!\nNaciśnij tutaj, aby to wyłączyć.</string>
 </resources>
