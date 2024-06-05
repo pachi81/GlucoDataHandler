@@ -29,6 +29,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-dev-rules.pro'
             versionNameSuffix '-dev'
             resValue "string", "app_name", "GlucoDataHandler"
+            signingConfig signingConfigs.debug
         }
         debug {
             minifyEnabled false
@@ -76,9 +77,9 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.core:core-ktx:1.13.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.joaomgcd:taskerpluginlibrary:0.4.4'
     implementation project(path: ':common')
@@ -89,6 +90,7 @@ dependencies {
     implementation "com.jaredrummler:colorpicker:1.1.0"
     implementation "androidx.media:media:1.7.0"
     implementation 'androidx.work:work-runtime:2.9.0'
+    implementation "com.ncorti:slidetoact:0.11.0"
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -104,8 +106,18 @@ afterEvaluate {
         include '**/*.aab'
         into rootProject.releasePath + "/Playstore" + "/" + versionCode.toString()
     }
-
     bundleRelease.finalizedBy(copyAndroidBundlePostBuild)
+
+    //noinspection ConfigurationAvoidance
+    def bundleDev_release = tasks.getByPath(':mobile:bundleDev_release')
+    def copyAndroidBundleDevPostBuild = tasks.register('copyAndroidBundleDevPostBuild', Copy) {
+        dependsOn bundleDev_release
+        from "${projectDir}/dev_release"
+        include '**/*.aab'
+        into rootProject.releasePath + "/Playstore" + "/" + versionCode.toString()
+    }
+    bundleDev_release.finalizedBy(copyAndroidBundleDevPostBuild)
+
     //noinspection ConfigurationAvoidance
     def assembleRelease = tasks.getByPath(':mobile:assembleRelease')
     def copyAndroidApksPostBuild = tasks.register('copyAndroidApksPostBuild', Copy) {

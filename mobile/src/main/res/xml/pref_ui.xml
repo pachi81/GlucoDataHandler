@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+        <androidx.preference.ListPreference
+            android:defaultValue=""
+            android:entries="@array/pref_application_color_scheme_labels"
+            android:entryValues="@array/pref_application_color_scheme_values"
+            android:key="application_color_scheme"
+            android:title="@string/pref_application_color_scheme"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="large_arrow_icon"
+            android:summary="@string/activity_large_arrow_icon_summary"
+            android:title="@string/activity_large_arrow_icon"
+            app:iconSpaceReserved="false" />
+</PreferenceScreen>

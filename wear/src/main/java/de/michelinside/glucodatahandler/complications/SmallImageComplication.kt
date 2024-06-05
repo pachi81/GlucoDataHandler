@@ -30,7 +30,7 @@ class SmallImageGlucoseWithTrendComplication: BgValueComplicationService() {
 
     override fun getLargeImageComplicationData(): ComplicationData {
         return PhotoImageComplicationData.Builder (
-            photoImage = BitmapUtils.getGlucoseTrendIcon(ReceiveData.getClucoseColor(), 500, 500),
+            photoImage = BitmapUtils.getGlucoseTrendIcon(ReceiveData.getGlucoseColor(), 500, 500),
             contentDescription = descriptionText()
         )
             .setTapAction(getTapAction())
@@ -43,7 +43,7 @@ class SmallImageGlucoseWithTrendSmallComplication: BgValueComplicationService() 
 
     override fun getLargeImageComplicationData(): ComplicationData {
         return PhotoImageComplicationData.Builder (
-            photoImage = BitmapUtils.getGlucoseTrendIcon(ReceiveData.getClucoseColor(), 500, 500, true),
+            photoImage = BitmapUtils.getGlucoseTrendIcon(ReceiveData.getGlucoseColor(), 500, 500, true),
             contentDescription = descriptionText()
         )
             .setTapAction(getTapAction())

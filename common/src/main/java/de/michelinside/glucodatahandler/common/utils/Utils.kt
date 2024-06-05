@@ -1,9 +1,7 @@
 package de.michelinside.glucodatahandler.common.utils
 
 import android.annotation.SuppressLint
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -47,12 +45,12 @@ object Utils {
         ).toInt()
     }
 
-    fun spToPx(sp: Float, context: Context): Int {
+    fun spToPx(sp: Float, context: Context): Float {
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_SP,
             sp,
             context.resources.displayMetrics
-        ).toInt()
+        )
     }
 
     fun bytesToBundle(bytes: ByteArray): Bundle? {
@@ -101,26 +99,6 @@ object Utils {
         }
         Log.d(LOG_ID, "Permission " + permission + " granted!")
         return true
-    }
-
-    fun getAppIntent(context: Context, activityClass: Class<*>, requestCode: Int, useExternalApp: Boolean = false): PendingIntent {
-        var launchIntent: Intent? = null
-        if (useExternalApp) {
-            launchIntent = context.packageManager.getLaunchIntentForPackage("tk.glucodata")
-        }
-        if (launchIntent == null) {
-            launchIntent = Intent(context, activityClass)
-        }
-        return PendingIntent.getActivity(
-            context,
-            requestCode,
-            launchIntent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-    }
-
-    fun isPackageAvailable(context: Context, packageName: String): Boolean {
-        return context.packageManager.getLaunchIntentForPackage(packageName) != null
     }
 
     fun getBackgroundColor(transparancyFactor: Int) : Int {

@@ -8,9 +8,11 @@ import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import de.michelinside.glucodatahandler.widget.FloatingWidget
@@ -23,7 +25,17 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
 
     init {
         Log.d(LOG_ID, "init called")
-        InternalNotifier.addNotifier(this, TaskerDataReceiver, mutableSetOf(NotifySource.BROADCAST,NotifySource.IOB_COB_CHANGE,NotifySource.MESSAGECLIENT,NotifySource.OBSOLETE_VALUE))
+        InternalNotifier.addNotifier(
+            this,
+            TaskerDataReceiver,
+            mutableSetOf(
+                NotifySource.BROADCAST,
+                NotifySource.IOB_COB_CHANGE,
+                NotifySource.MESSAGECLIENT,
+                NotifySource.OBSOLETE_VALUE,
+                NotifySource.ALARM_TRIGGER
+            )
+        )
     }
 
     companion object {
@@ -45,6 +57,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         try {
             Log.d(LOG_ID, "onCreate called")
             super.onCreate()
+            migrateSettings()
             val filter = mutableSetOf(
                 NotifySource.BROADCAST,
                 NotifySource.MESSAGECLIENT,
@@ -59,6 +72,84 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             WatchDrip.init(applicationContext)
             floatingWidget.create()
             LockScreenWallpaper.create(this)
+            AlarmNotification.initNotifications(this)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
+        }
+    }
+
+    private fun migrateSettings() {
+        try {
+            Log.v(LOG_ID, "migrateSettings called")
+
+            if(!sharedPref!!.contains(Constants.SHARED_PREF_GLUCODATA_RECEIVERS)) {
+                val receivers = HashSet<String>()
+                val sendToAod = sharedPref!!.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, false)
+                if (sendToAod)
+                    receivers.add("de.metalgearsonic.glucodata.aod")
+                Log.i(LOG_ID, "Upgrade receivers to " + receivers.toString())
+                with(sharedPref!!.edit()) {
+                    putStringSet(Constants.SHARED_PREF_GLUCODATA_RECEIVERS, receivers)
+                    apply()
+                }
+            }
+
+            if(!sharedPref!!.contains(Constants.SHARED_PREF_XDRIP_RECEIVERS)) {
+                val receivers = HashSet<String>()
+                receivers.add("com.eveningoutpost.dexdrip")
+                Log.i(LOG_ID, "Upgrade receivers to " + receivers.toString())
+                with(sharedPref!!.edit()) {
+                    putStringSet(Constants.SHARED_PREF_XDRIP_RECEIVERS, receivers)
+                    apply()
+                }
+            }
+
+            // create default tap actions as it was before
+            // notifications
+            if(!sharedPref!!.contains(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION)) {
+                val curApp = this.packageName
+                Log.i(LOG_ID, "Setting default tap action for notification to $curApp")
+                with(sharedPref!!.edit()) {
+                    putString(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION, curApp)
+                    apply()
+                }
+            }
+            if(!sharedPref!!.contains(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_TAP_ACTION)) {
+                val curApp = this.packageName
+                Log.i(LOG_ID, "Setting default tap action for second notification to $curApp")
+                with(sharedPref!!.edit()) {
+                    putString(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_TAP_ACTION, curApp)
+                    apply()
+                }
+            }
+            // widgets
+            if(!sharedPref!!.contains(Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION)) {
+                val curApp = if(PackageUtils.isPackageAvailable(this, Constants.PACKAGE_JUGGLUCO)) Constants.PACKAGE_JUGGLUCO else this.packageName
+                Log.i(LOG_ID, "Setting default tap action for floating widget to $curApp")
+                with(sharedPref!!.edit()) {
+                    putString(Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION, curApp)
+                    apply()
+                }
+            }
+            if(!sharedPref!!.contains(Constants.SHARED_PREF_WIDGET_TAP_ACTION)) {
+                val curApp = if(PackageUtils.isPackageAvailable(this, Constants.PACKAGE_JUGGLUCO)) Constants.PACKAGE_JUGGLUCO else this.packageName
+                Log.i(LOG_ID, "Setting default tap action for widget to $curApp")
+                with(sharedPref!!.edit()) {
+                    putString(Constants.SHARED_PREF_WIDGET_TAP_ACTION, curApp)
+                    apply()
+                }
+            }
+            // full screen alarm notification
+            if(!sharedPref!!.contains(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED)) {
+                if (AlarmNotification.hasFullscreenPermission()) {
+                    Log.i(LOG_ID, "Enabling fullscreen notification as default")
+                    with(sharedPref!!.edit()) {
+                        putBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, true)
+                        apply()
+                    }
+                }
+            }
+
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -76,6 +167,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         try {
             Log.d(LOG_ID, "onDestroy called")
             PermanentNotification.destroy()
+            AlarmNotification.destroy(this)
             CarModeReceiver.cleanup(applicationContext)
             WatchDrip.close(applicationContext)
             floatingWidget.destroy()
@@ -173,7 +265,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             if (dataSource == NotifySource.CAR_CONNECTION && CarModeReceiver.connected) {
                 val autoExtras = ReceiveData.createExtras()
                 if (autoExtras != null)
-                    CarModeReceiver.sendToGlucoDataAuto(context, autoExtras)
+                    CarModeReceiver.sendToGlucoDataAuto(context, autoExtras, true)
             }
             if (extras != null) {
                 if (dataSource == NotifySource.MESSAGECLIENT || dataSource == NotifySource.BROADCAST) {

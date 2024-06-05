@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
     <uses-feature android:name="android.hardware.type.watch" />
 
@@ -34,14 +35,76 @@
             android:value="true" />
 
         <activity
-            android:name=".WaerActivity"
+            android:name=".WearActivity"
             android:exported="true"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:taskAffinity="">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".settings.SourcesActivity"
+            android:label="@string/menu_sources"
+            android:launchMode="singleTop"
+            android:parentActivityName=".WearActivity"
+            android:theme="@style/Theme.GlucoDataHandler"
+            android:taskAffinity="">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".WearActivity" />
+        </activity>
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".WearActivity"
+            android:theme="@style/Theme.GlucoDataHandler"
+            android:taskAffinity="">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".WearActivity" />
+        </activity>
+        <activity
+            android:name=".settings.ComplicationsTapActionActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".settings.SettingsActivity"
+            android:theme="@style/Theme.GlucoDataHandler"
+            android:taskAffinity="">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".settings.SettingsActivity" />
+        </activity>
+        <activity
+            android:name=".settings.AlarmsActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".WearActivity"
+            android:theme="@style/Theme.GlucoDataHandler"
+            android:taskAffinity="">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".WearActivity" />
+        </activity>
+        <activity
+            android:name=".settings.AlarmAdvancedActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".settings.AlarmsActivity"
+            android:theme="@style/Theme.GlucoDataHandler"
+            android:taskAffinity="">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".settings.AlarmsActivity" />
+        </activity>
+        <activity
+            android:name=".settings.AlarmTypeActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".settings.AlarmsActivity"
+            android:theme="@style/Theme.GlucoDataHandler"
+            android:taskAffinity="">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".settings.AlarmsActivity" />
         </activity>
         <receiver android:name=".common.receiver.GlucoseDataReceiver" android:enabled="true" android:exported="true"
             tools:ignore="ExportedReceiver">
@@ -64,8 +127,19 @@
                 <action android:name="info.nightscout.androidaps.status" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".SnoozeAlarmReceiverWear"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name= "de.michelinside.glucodatahandler.SNOOZE" />
+                <action android:name= "de.michelinside.glucodatahandler.STOP_NOTIFICATION" />
+            </intent-filter>
+        </receiver>
         <receiver android:name=".common.tasks.TimeAlarmReceiver" />
         <receiver android:name=".common.tasks.SourceAlarmReceiver" />
+        <receiver android:name=".common.notification.AlarmIntentReceiver" />
+        <receiver android:name=".common.receiver.InternalActionReceiver" />
         <receiver
             android:name=".StartServiceAtBootReceiver"
             android:enabled="true"

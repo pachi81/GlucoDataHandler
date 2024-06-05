@@ -11,7 +11,6 @@ import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import de.michelinside.glucodatahandler.GlucoDataServiceMobile
-import de.michelinside.glucodatahandler.MainActivity
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -19,6 +18,7 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import de.michelinside.glucodatahandler.common.utils.PackageUtils
 
 
 enum class WidgetType(val cls: Class<*>) {
@@ -185,8 +185,8 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
 
         if (!hasTrend || !shortWidget) {
             // short widget with trend, using the glucose+trend image
-            remoteViews.setTextViewText(R.id.glucose, ReceiveData.getClucoseAsString())
-            remoteViews.setTextColor(R.id.glucose, ReceiveData.getClucoseColor())
+            remoteViews.setTextViewText(R.id.glucose, ReceiveData.getGlucoseAsString())
+            remoteViews.setTextColor(R.id.glucose, ReceiveData.getGlucoseColor())
             if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete()) {
                 remoteViews.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG)
             } else {
@@ -198,7 +198,10 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
             if (shortWidget)
                 remoteViews.setImageViewBitmap(R.id.glucose_trend, BitmapUtils.getGlucoseTrendBitmap(width = width, height = width))
             else
-                remoteViews.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap(roundTarget = false, width = size, height = size))
+                remoteViews.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap(
+                    width = size,
+                    height = size
+                ))
         }
 
         if (hasTime) {
@@ -242,12 +245,8 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
             val height = if (isPortrait) maxHeight else minHeight
 
             val remoteViews = getRemoteViews(context, width, height)
-            /*if (BuildConfig.DEBUG) {
-                // for debug create dummy broadcast (to check in emulator)
-                val pendingIntent = PendingIntent.getBroadcast(context, 5, Utils.getDummyGlucodataIntent(false), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-                remoteViews.setOnClickPendingIntent(R.id.widget, pendingIntent)
-            } else*/
-            remoteViews.setOnClickPendingIntent(R.id.widget, Utils.getAppIntent(context, MainActivity::class.java, 5, true))
+            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            remoteViews.setOnClickPendingIntent(R.id.widget, PackageUtils.getTapActionIntent(context, sharedPref.getString(Constants.SHARED_PREF_WIDGET_TAP_ACTION, ""), appWidgetId))
 
             // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews)

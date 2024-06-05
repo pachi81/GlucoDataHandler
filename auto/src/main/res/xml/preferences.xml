@@ -1,57 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:key="pref_cat_android_auto"
+        android:title="@string/pref_cat_android_auto"
+        android:summary="@string/pref_cat_android_auto_summary"
+        app:fragment="de.michelinside.glucodataauto.preferences.GDASettingsFragment"
+        app:iconSpaceReserved="false" />
     <PreferenceCategory
-        android:title="@string/pref_switch_car_notification"
-        app:iconSpaceReserved="false">
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="car_notification"
-            android:title="@string/pref_switch_car_notification"
-            android:summary="@string/pref_switch_car_notification_summary"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="car_notification_alarm_only"
-            android:title="@string/pref_switch_car_notification_alarm_only"
-            android:summary="@string/pref_switch_car_notification_alarm_only_summary"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SeekBarPreference
-            android:defaultValue="1"
-            app:showSeekBarValue="true"
-            app:seekBarIncrement="1"
-            app:min="1"
-            android:max="60"
-            android:key="car_notification_interval_num"
-            android:title="@string/pref_car_notification_interval"
-            android:summary="@string/pref_car_notification_interval_summary"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SeekBarPreference
-            android:defaultValue="5"
-            app:showSeekBarValue="true"
-            app:seekBarIncrement="1"
-            app:min="0"
-            android:max="15"
-            android:key="car_notification_reappear_interval"
-            android:title="@string/pref_car_notification_reappear_interval"
-            android:summary="@string/pref_car_notification_reappear_interval_summary"
-            app:iconSpaceReserved="false" />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/pref_switch_car_media"
-        app:iconSpaceReserved="false">
-        <androidx.preference.ListPreference
-            android:defaultValue="glucose_trend"
-            android:entries="@array/pref_aa_media_player_icon_labels"
-            android:entryValues="@array/pref_aa_media_player_icon_values"
-            android:key="aa_media_player_icon_style"
-            android:summary="@string/pref_aa_media_player_icon_style_summary"
-            android:title="@string/pref_aa_media_player_icon_style"
-            app:iconSpaceReserved="false" />
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="@string/pref_gda_info"
+        android:title="@string/pref_information"
         app:iconSpaceReserved="false">
     <Preference
         android:key="gda_info"
@@ -60,96 +17,18 @@
         app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
-    <PreferenceCategory
+    <Preference
+        android:key="pref_general"
         android:title="@string/pref_cat_general"
-        app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="0">
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="use_mmol"
-            android:summary="@string/pref_switch_use_mmol_summary"
-            android:title="@string/pref_switch_use_mmol"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="relative_time"
-            android:summary="@string/pref_relative_time_summary"
-            android:title="@string/pref_relative_time"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="five_minute_delta"
-            android:summary="@string/pref_switch_use_5_min_delta_summary"
-            android:title="@string/pref_switch_use_5_min_delta"
-            app:iconSpaceReserved="false" />
-    </PreferenceCategory>
-    <PreferenceCategory
+        android:summary="@string/pref_cat_general_summary"
+        app:fragment="de.michelinside.glucodataauto.preferences.GeneralSettingsFragment"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="pref_target_range"
         android:title="@string/pref_target_range"
-        app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="0">
-        <de.michelinside.glucodataauto.preferences.GlucoseEditPreference
-            android:defaultValue="240"
-            android:inputType="numberDecimal"
-            android:key="high_glucose"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/pref_high_value"
-            android:summary="@string/pref_high_value_summary"
-            app:iconSpaceReserved="false" />
-        <de.michelinside.glucodataauto.preferences.GlucoseEditPreference
-            android:defaultValue="165"
-            android:inputType="numberDecimal"
-            android:key="target_max_value"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/pref_target_max_value"
-            android:summary="@string/pref_target_max_value_summary"
-            app:iconSpaceReserved="false" />
-        <de.michelinside.glucodataauto.preferences.GlucoseEditPreference
-            android:defaultValue="90"
-            android:inputType="numberDecimal"
-            android:key="target_min_value"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/pref_target_min_value"
-            android:summary="@string/pref_target_min_value_summary"
-            app:iconSpaceReserved="false" />
-        <de.michelinside.glucodataauto.preferences.GlucoseEditPreference
-            android:defaultValue="70"
-            android:inputType="numberDecimal"
-            android:key="low_glucose"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/pref_low_value"
-            android:summary="@string/pref_low_value_summary"
-            app:iconSpaceReserved="false" />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/pref_cat_colors"
-        app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="0">
-        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
-            android:defaultValue="@color/red"
-            android:key="color_alarm"
-            android:title="@string/pref_color_alarm"
-            app:cpv_dialogTitle="@string/pref_color_alarm"
-            android:summary="@string/pref_color_alarm_summary"
-            app:iconSpaceReserved="false"/>
-        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
-            android:defaultValue="@color/yellow"
-            android:key="color_out_of_range"
-            android:title="@string/pref_color_out_of_range"
-            app:cpv_dialogTitle="@string/pref_color_out_of_range"
-            android:summary="@string/pref_color_out_of_range_summary"
-            app:iconSpaceReserved="false"/>
-        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
-            android:defaultValue="@color/green"
-            android:key="color_ok"
-            android:title="@string/pref_color_ok"
-            app:cpv_dialogTitle="@string/pref_color_ok"
-            android:summary="@string/pref_color_ok_summary"
-            app:iconSpaceReserved="false"/>
-    </PreferenceCategory>
+        android:summary="@string/pref_target_range_summary"
+        app:fragment="de.michelinside.glucodataauto.preferences.RangeSettingsFragment"
+        app:iconSpaceReserved="false" />
 
     <androidx.preference.SwitchPreferenceCompat
         android:defaultValue="false"

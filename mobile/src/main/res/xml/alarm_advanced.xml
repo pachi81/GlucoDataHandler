@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+        <PreferenceCategory
+            android:title="@string/alarm_advanced_cat_sound"
+            app:iconSpaceReserved="false">
+                <androidx.preference.SwitchPreferenceCompat
+                    android:key="alarm_vibrate_only"
+                    android:defaultValue="false"
+                    android:title="@string/alarm_vibrate_only"
+                    android:summary="@string/alarm_vibrate_only_summary"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:key="alarm_force_vibration"
+                    android:defaultValue="false"
+                    android:title="@string/alarm_force_vibration"
+                    android:summary="@string/alarm_force_vibration_summary"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:key="use_alarm_sound"
+                    android:defaultValue="true"
+                    android:title="@string/alarm_use_alarm_sound"
+                    android:summary="@string/alarm_use_alarm_sound_summary"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:key="alarm_force_sound"
+                    android:defaultValue="false"
+                    android:title="@string/alarm_force_sound"
+                    android:summary="@string/alarm_force_sound_summary"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.ListPreference
+                    android:defaultValue="1000"
+                    android:key="alarm_start_delay_string"
+                    android:summary="@string/alarm_start_delay_wear_summary"
+                    android:title="@string/alarm_start_delay"
+                    app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+        <PreferenceCategory
+            android:title="@string/alarm_advanced_cat_notifcation"
+            app:iconSpaceReserved="false">
+                <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="false"
+                    android:key="alarm_no_notification_wear_connected"
+                    android:title="@string/alarm_no_notification_wear_connected"
+                    android:summaryOn="@string/alarm_no_notification_wear_connected_summary_on"
+                    android:summaryOff="@string/alarm_no_notification_wear_connected_summary_off"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="false"
+                    android:key="alarm_no_notification_auto_connected"
+                    android:title="@string/alarm_no_notification_auto_connected"
+                    android:summaryOn="@string/alarm_no_notification_auto_connected_summary_on"
+                    android:summaryOff="@string/alarm_no_notification_auto_connected_summary_off"
+                    app:enabled="false"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="false"
+                    android:key="alarm_snooze_on_notification"
+                    android:title="@string/alarm_snooze_on_notification_enabled"
+                    android:summary="@string/alarm_snooze_on_notification_summary"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:key="alarm_fullscreen_dismiss_keyguard"
+                    android:defaultValue="false"
+                    android:title="@string/alarm_fullscreen_dismiss_keyguard"
+                    android:summary="@string/alarm_fullscreen_dismiss_keyguard_summary"
+                    app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+</PreferenceScreen>

@@ -20,8 +20,9 @@ import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.tasks.BackgroundWorker
+import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
-import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.common.utils.PackageUtils
 
 class GlucoDataServiceAuto: Service() {
     companion object {
@@ -37,7 +38,8 @@ class GlucoDataServiceAuto: Service() {
             if(!init) {
                 Log.v(LOG_ID, "init called")
                 GlucoDataService.context = context
-                TimeTaskService.useWorker = true
+                //TimeTaskService.useWorker = true
+                //SourceTaskService.useWorker = true
                 ReceiveData.initData(context)
                 CarConnection(context.applicationContext).type.observeForever(GlucoDataServiceAuto::onConnectionStateUpdated)
                 init = true
@@ -91,8 +93,9 @@ class GlucoDataServiceAuto: Service() {
         fun startDataSync(context: Context) {
             try {
                 if (dataSyncCount == 0) {
-                    Log.d(LOG_ID, "startDataSync")
+                    Log.d(LOG_ID, "startDataSync count: $dataSyncCount")
                     TimeTaskService.run(context)
+                    SourceTaskService.run(context)
                     sendStateBroadcast(context, true)
                 }
                 dataSyncCount++
@@ -196,7 +199,7 @@ class GlucoDataServiceAuto: Service() {
     private fun getNotification(): Notification {
         Channels.createNotificationChannel(this, ChannelType.ANDROID_AUTO_FOREGROUND)
 
-        val pendingIntent = Utils.getAppIntent(this, MainActivity::class.java, 11, false)
+        val pendingIntent = PackageUtils.getAppIntent(this, MainActivity::class.java, 11, false)
 
         return Notification.Builder(this, ChannelType.ANDROID_AUTO_FOREGROUND.channelId)
             .setContentTitle(getString(de.michelinside.glucodatahandler.common.R.string.activity_main_car_connected_label))

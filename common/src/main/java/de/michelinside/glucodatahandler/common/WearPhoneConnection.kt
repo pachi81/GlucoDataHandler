@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.util.Log
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.*
+import de.michelinside.glucodatahandler.common.notification.AlarmHandler
+import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
+import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.notifier.DataSource
@@ -15,6 +18,14 @@ import kotlinx.coroutines.*
 import java.text.DateFormat
 import java.util.*
 import kotlin.coroutines.cancellation.CancellationException
+
+
+enum class Command {
+    STOP_ALARM,
+    SNOOZE_ALARM,
+    TEST_ALARM,
+    AA_CONNECTION_STATE
+}
 
 class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener, NotifierInterface {
     private val LOG_ID = "GDH.WearPhoneConnection"
@@ -54,6 +65,19 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             return batterLevels
         }
 
+        fun getNodeBatterLevels(addMissing: Boolean = true): Map<String, Int> {
+            val nodeBatterLevels = mutableMapOf<String, Int>()
+            connectedNodes.forEach { node ->
+                (if (nodeBatteryLevel.containsKey(node.key)) {
+                    nodeBatterLevels[node.value.displayName] = nodeBatteryLevel.getValue(node.key)
+                }
+                else if (addMissing) {
+                    nodeBatterLevels[node.value.displayName] = -1
+                })
+            }
+            return nodeBatterLevels
+        }
+
         fun getBatterLevelsAsString(): String {
             if (nodesConnected)
                 return getBatterLevels().joinToString { if (it > 0) it.toString() + "%" else "?%"}
@@ -78,6 +102,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         if (sendSettings) {
             filter.add(NotifySource.SETTINGS)   // only send setting changes from phone to wear!
             filter.add(NotifySource.SOURCE_SETTINGS)
+            filter.add(NotifySource.ALARM_SETTINGS)
         }
         InternalNotifier.addNotifier(this.context, this, filter)
         checkForConnectedNodes()
@@ -194,6 +219,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             NotifySource.CAPILITY_INFO -> Constants.REQUEST_DATA_MESSAGE_PATH
             NotifySource.SETTINGS -> Constants.SETTINGS_INTENT_MESSAGE_PATH
             NotifySource.SOURCE_SETTINGS -> Constants.SOURCE_SETTINGS_INTENT_MESSAGE_PATH
+            NotifySource.ALARM_SETTINGS -> Constants.ALARM_SETTINGS_INTENT_MESSAGE_PATH
             NotifySource.LOGCAT_REQUEST -> Constants.REQUEST_LOGCAT_MESSAGE_PATH
             else -> Constants.GLUCODATA_INTENT_MESSAGE_PATH
         }
@@ -211,6 +237,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     Log.d(LOG_ID, "Adding settings for sending")
                     extras.putBundle(Constants.SETTINGS_BUNDLE, ReceiveData.getSettingsBundle())
                     extras.putBundle(Constants.SOURCE_SETTINGS_BUNDLE, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)))
+                    extras.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings())
                 }
                 // Send a message to all nodes in parallel
                 connectedNodes.forEach { node ->
@@ -263,17 +290,73 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         }
     }
 
+    fun sendCommand(command: Command, extras: Bundle?) {
+        // Send command to all nodes in parallel
+        Log.d(LOG_ID, "sendCommand called for $command with extras: ${Utils.dumpBundle(extras)}")
+        val commandBundle = Bundle()
+        commandBundle.putString(Constants.COMMAND_EXTRA, command.toString())
+        if(extras != null) {
+            commandBundle.putBundle(Constants.COMMAND_BUNDLE, extras)
+            if (GlucoDataService.appSource == AppSource.PHONE_APP) {
+                Log.d(LOG_ID, "Adding settings for sending command")
+                commandBundle.putBundle(Constants.SETTINGS_BUNDLE, ReceiveData.getSettingsBundle())
+                commandBundle.putBundle(Constants.SOURCE_SETTINGS_BUNDLE, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)))
+                commandBundle.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings())
+            }
+        }
+        connectedNodes.forEach { node ->
+            Thread {
+                try {
+                    sendMessage(node.value, Constants.COMMAND_PATH, Utils.bundleToBytes(commandBundle), NotifySource.COMMAND)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "sendCommand to " + node.value.toString() + " exception: " + exc.toString())
+                }
+            }.start()
+        }
+    }
+
     override fun onMessageReceived(p0: MessageEvent) {
         try {
             Log.i(LOG_ID, "onMessageReceived from " + p0.sourceNodeId + " with path " + p0.path)
             checkConnectedNode(p0.sourceNodeId)
             val extras = Utils.bytesToBundle(p0.data)
+            //Log.v(LOG_ID, "Received extras for path ${p0.path}: ${Utils.dumpBundle(extras)}")
             if(extras!= null) {
+                if (extras.containsKey(Constants.SETTINGS_BUNDLE)) {
+                    val bundle = extras.getBundle(Constants.SETTINGS_BUNDLE)
+                    Log.d(LOG_ID, "Glucose settings receceived from " + p0.sourceNodeId + ": " + bundle.toString())
+                    ReceiveData.setSettings(context, bundle!!)
+                    InternalNotifier.notify(context, NotifySource.SETTINGS, bundle)
+                    extras.remove(Constants.SETTINGS_BUNDLE)
+                }
+
+                if (extras.containsKey(Constants.SOURCE_SETTINGS_BUNDLE)) {
+                    val bundle = extras.getBundle(Constants.SOURCE_SETTINGS_BUNDLE)
+                    if (bundle != null) {
+                        Log.d(LOG_ID, "Glucose source settings receceived from " + p0.sourceNodeId + ": " + bundle.toString())
+                        DataSourceTask.updateSettings(context, bundle)
+                    }
+                    extras.remove(Constants.SOURCE_SETTINGS_BUNDLE)
+                }
+
+                if (extras.containsKey(Constants.ALARM_SETTINGS_BUNDLE)) {
+                    val bundle = extras.getBundle(Constants.ALARM_SETTINGS_BUNDLE)
+                    if (bundle != null) {
+                        Log.d(LOG_ID, "Glucose alarm settings receceived from " + p0.sourceNodeId + ": " + bundle.toString())
+                        AlarmHandler.setSettings(context, bundle)
+                    }
+                    extras.remove(Constants.ALARM_SETTINGS_BUNDLE)
+                }
                 if (extras.containsKey(BatteryReceiver.LEVEL)) {
                     val level = extras.getInt(BatteryReceiver.LEVEL, -1)
                     Log.d(LOG_ID, "Battery level received for node " + p0.sourceNodeId + ": " + level + "%")
                     setNodeBatteryLevel(p0.sourceNodeId, level)
                     extras.remove(BatteryReceiver.LEVEL)
+                }
+
+                if(p0.path == Constants.COMMAND_PATH) {
+                    handleCommand(extras)
+                    return
                 }
 
                 var forceSend = false
@@ -299,28 +382,17 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     }
                 }
 
-                if (extras.containsKey(Constants.SETTINGS_BUNDLE)) {
-                    val bundle = extras.getBundle(Constants.SETTINGS_BUNDLE)
-                    Log.d(LOG_ID, "Glucose settings receceived from " + p0.sourceNodeId + ": " + bundle.toString())
-                    ReceiveData.setSettings(context, bundle!!)
-                    InternalNotifier.notify(context, NotifySource.SETTINGS, bundle)
-                    extras.remove(Constants.SETTINGS_BUNDLE)
-                }
-
-                if (extras.containsKey(Constants.SOURCE_SETTINGS_BUNDLE)) {
-                    val bundle = extras.getBundle(Constants.SOURCE_SETTINGS_BUNDLE)
-                    if (bundle != null) {
-                        Log.d(LOG_ID, "Glucose source settings receceived from " + p0.sourceNodeId + ": " + bundle.toString())
-                        DataSourceTask.updateSettings(context, bundle)
-                    }
-                    extras.remove(Constants.SOURCE_SETTINGS_BUNDLE)
-                }
-
                 if (p0.path == Constants.SOURCE_SETTINGS_INTENT_MESSAGE_PATH) {
-                    // check for other settings send...
                     if (!extras.isEmpty) {
                         Log.d(LOG_ID, "Glucose source settings receceived from " + p0.sourceNodeId + ": " + extras.toString())
                         DataSourceTask.updateSettings(context, extras)
+                    }
+                }
+
+                if (p0.path == Constants.ALARM_SETTINGS_INTENT_MESSAGE_PATH) {
+                    if (!extras.isEmpty) {
+                        Log.d(LOG_ID, "Glucose alarm settings receceived from " + p0.sourceNodeId + ": " + extras.toString())
+                        AlarmHandler.setSettings(context, extras)
                     }
                 }
 
@@ -328,6 +400,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     // check for other settings send...
                     extras.remove(Constants.SETTINGS_BUNDLE)
                     extras.remove(Constants.SOURCE_SETTINGS_BUNDLE)
+                    extras.remove(Constants.ALARM_SETTINGS_BUNDLE)
                     extras.remove(BatteryReceiver.LEVEL)
                     if (!extras.isEmpty) {
                         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -362,6 +435,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                             Log.d(LOG_ID, "Adding settings for sending")
                             bundle.putBundle(Constants.SETTINGS_BUNDLE, ReceiveData.getSettingsBundle())
                             bundle.putBundle(Constants.SOURCE_SETTINGS_BUNDLE, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)))
+                            bundle.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings())
                         }
                         sendMessage(source, bundle)
                     }
@@ -372,6 +446,23 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onMessageReceived exception: " + exc.message.toString() )
+        }
+    }
+
+    private fun handleCommand(extras: Bundle) {
+        try {
+            Log.d(LOG_ID, "Command received: ${Utils.dumpBundle(extras)}")
+            val command = Command.valueOf(extras.getString(Constants.COMMAND_EXTRA, ""))
+            val bundle = extras.getBundle(Constants.COMMAND_BUNDLE)
+            when(command) {
+                Command.STOP_ALARM -> AlarmNotificationBase.instance!!.stopCurrentNotification(context, fromClient = true)
+                Command.SNOOZE_ALARM -> AlarmHandler.setSnoozeTime(bundle!!.getLong(AlarmHandler.SNOOZE_TIME, 0L), fromClient = true)
+                Command.TEST_ALARM -> AlarmNotificationBase.instance!!.executeTest(AlarmType.fromIndex(bundle!!.getInt(Constants.ALARM_NOTIFICATION_EXTRA_ALARM_TYPE, ReceiveData.getAlarmType().ordinal)), context, false)
+                Command.AA_CONNECTION_STATE -> InternalNotifier.notify(context, NotifySource.CAR_CONNECTION, bundle)
+            }
+
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "handleCommand exception: " + exc.toString())
         }
     }
 
@@ -407,9 +498,18 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         }
     }
 
+    private fun ignoreSourceWithoutExtras(dataSource: NotifySource): Boolean {
+        return when(dataSource) {
+            NotifySource.IOB_COB_CHANGE,
+            NotifySource.IOB_COB_TIME,
+            NotifySource.ALARM_SETTINGS -> true // do not send these sources without extras
+            else -> false
+        }
+    }
+
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            if ((dataSource != NotifySource.IOB_COB_CHANGE && dataSource != NotifySource.IOB_COB_TIME) || extras != null) {  // do not send IOB change without extras
+            if (extras != null || !ignoreSourceWithoutExtras(dataSource)) {
                 Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString() + " and extras " + extras.toString())
                 sendMessage(dataSource, extras)
             }

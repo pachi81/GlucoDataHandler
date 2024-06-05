@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:baselineAligned="false">
+
+    <RelativeLayout
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        tools:ignore="UselessLeaf" />
+
+        <ScrollView
+            android:layout_weight="10"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:paddingVertical="10dp">
+            <LinearLayout
+                android:id="@+id/main_layout_left"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                tools:context=".MainActivity"
+                android:orientation="vertical"
+                android:gravity="center|top">
+
+                <LinearLayout
+                    android:id="@+id/layout_glucose_trend"
+                    android:layout_width="250dp"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center|top"
+                    android:orientation="horizontal"
+                    tools:ignore="UselessParent">
+
+                    <TextView
+                        android:id="@+id/txtBgValue"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:autoSizeStepGranularity="1sp"
+                        android:autoSizeTextType="uniform"
+                        android:maxLines="1"
+                        android:text="---"
+                        android:textAlignment="viewEnd"
+                        android:textColor="#757575"
+                        android:textStyle="bold"
+                        android:shadowColor="@color/black"
+                        android:shadowRadius="5"
+                        tools:ignore="HardcodedText" />
+
+                    <ImageView
+                        android:id="@+id/viewIcon"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:paddingVertical="2dp"
+                        android:src="@drawable/icon_question"
+                        tools:ignore="ContentDescription" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/layout_delta_time"
+                    android:layout_width="250dp"
+                    android:layout_height="30dp"
+                    android:gravity="center|top"
+                    android:orientation="horizontal"
+                    tools:ignore="UselessParent">
+
+                    <TextView
+                        android:id="@+id/timeText"
+                        android:text="🕒 0 min"
+                        android:layout_width="0dp"
+                        android:layout_weight="4"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|end"
+                        android:maxLines="1"
+                        android:autoSizeStepGranularity="1sp"
+                        android:autoSizeTextType="uniform"
+                        android:paddingEnd="10dp"
+                        tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
+                    <TextView
+                        android:id="@+id/deltaText"
+                        android:text="Δ +0.06"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:autoSizeStepGranularity="1sp"
+                        android:autoSizeTextType="uniform"
+                        tools:ignore="HardcodedText" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/layout_iob_cob"
+                    android:layout_width="250dp"
+                    android:layout_height="30dp"
+                    android:gravity="center|top"
+                    android:orientation="horizontal"
+                    tools:ignore="UselessParent">
+                    <TextView
+                        android:id="@+id/iobText"
+                        android:text="💉 1.30U"
+                        android:layout_width="0dp"
+                        android:layout_weight="4"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|end"
+                        android:maxLines="1"
+                        android:autoSizeStepGranularity="1sp"
+                        android:autoSizeTextType="uniform"
+                        android:paddingEnd="10dp"
+                        tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
+
+                    <TextView
+                        android:id="@+id/cobText"
+                        android:text="🍔 31.2g"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:autoSizeStepGranularity="1sp"
+                        android:autoSizeTextType="uniform"
+                        tools:ignore="HardcodedText" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txtNoData"
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:text="@string/no_data"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
+                <Button
+                    android:id="@+id/btnSources"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#005CCC"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/menu_sources"
+                    />
+                <LinearLayout
+                    android:id="@+id/layout_info_elements_left"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    tools:ignore="UselessParent">
+                    <TextView
+                        android:id="@+id/txtBatteryOptimization"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/activity_main_battery_optimization_disabled"
+                        android:textSize="16sp"
+                        android:textAlignment="center" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+    <RelativeLayout
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        tools:ignore="UselessLeaf" />
+
+
+        <ScrollView
+            android:layout_weight="10"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:paddingVertical="10dp">
+            <LinearLayout
+                android:id="@+id/main_layout_right"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                tools:context=".MainActivity"
+                android:orientation="vertical"
+                android:gravity="center|top">
+
+                <LinearLayout
+                    android:id="@+id/layout_info_elements_right"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    tools:ignore="UselessParent">
+                    <TextView
+                        android:id="@+id/txtLastValue"
+                        android:layout_width="350dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:text="@string/gda_no_data"
+                        android:textAlignment="center"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="20sp" />
+                    <TextView
+                        android:id="@+id/txtNotificationPermission"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/activity_main_notification_permission"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textAlignment="center"
+                        android:visibility="gone"/>
+                    <TextView
+                        android:id="@+id/txtScheduleExactAlarm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/activity_main_schedule_exact_alarm"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textAlignment="center" />
+                </LinearLayout>
+                <TableLayout
+                    android:id="@+id/tableAlarms"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="?android:attr/dividerHorizontal"
+                    android:showDividers="middle">
+
+                    <TableRow android:background="@color/table_header" android:padding="5dp"
+                        tools:ignore="UselessParent">
+                        <TextView
+                            android:textStyle="bold"
+                            android:textSize="20sp"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/info_label_alarm"/>
+                    </TableRow>
+                </TableLayout>
+
+                <TableLayout
+                    android:id="@+id/tableDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="?android:attr/dividerHorizontal"
+                    android:showDividers="middle">
+
+                    <TableRow android:background="@color/table_header" android:padding="5dp"
+                        tools:ignore="UselessParent">
+                        <TextView
+                            android:textStyle="bold"
+                            android:textSize="20sp"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/table_header_details"/>
+                    </TableRow>
+                </TableLayout>
+
+                <TableLayout
+                    android:id="@+id/tableConnections"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="?android:attr/dividerHorizontal"
+                    android:showDividers="middle">
+
+                    <TableRow android:background="@color/table_header" android:padding="5dp"
+                        tools:ignore="UselessParent">
+                        <TextView
+                            android:textStyle="bold"
+                            android:textSize="20sp"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/table_header_connections"/>
+                    </TableRow>
+                </TableLayout>
+
+                <LinearLayout
+                    android:id="@+id/space"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:orientation="vertical">
+                    <!-- this expands to fill the empty space if needed -->
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txtVersion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="25dp"
+                    android:text="1.0"
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText" />
+
+            </LinearLayout>
+        </ScrollView>
+
+    <RelativeLayout
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        tools:ignore="UselessLeaf" />
+
+</LinearLayout>

@@ -39,7 +39,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
         @SuppressLint("StaticFieldLeak")
         protected var connection: WearPhoneConnection? = null
         val foreground get() = isForegroundService
-        const val NOTIFICATION_ID = 123
+        const val NOTIFICATION_ID = 1234
         var appSource = AppSource.NOT_SET
         private var isRunning = false
         val running get() = isRunning
@@ -112,6 +112,19 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                 )
             }
         }
+
+        fun sendCommand(command: Command, extras: Bundle? = null) {
+            try {
+                if (connection!=null)
+                    connection!!.sendCommand(command, extras)
+            } catch (exc: Exception) {
+                Log.e(
+                    LOG_ID,
+                    "sendCommand exception: " + exc.message.toString()
+                )
+            }
+        }
+
     }
 
     init {

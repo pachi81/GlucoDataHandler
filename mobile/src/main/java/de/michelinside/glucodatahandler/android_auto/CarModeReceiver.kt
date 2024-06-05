@@ -10,8 +10,10 @@ import android.os.Bundle
 import android.util.Log
 import androidx.car.app.connection.CarConnection
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
+import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.tasker.setAndroidAutoConnectionState
 
@@ -84,7 +86,7 @@ object CarModeReceiver {
                 else -> "Unknown car connection type"
             }
             Log.d(LOG_ID, "onConnectionStateUpdated: " + message + " (" + connectionState.toString() + ")")
-            val curState = connected
+            val curState = AA_connected
             if (connectionState == CarConnection.CONNECTION_TYPE_NOT_CONNECTED)  {
                 if (car_connected) {
                     Log.i(LOG_ID, "Exited Car Mode")
@@ -96,22 +98,25 @@ object CarModeReceiver {
                 car_connected = true
                 GlucoDataService.context?.setAndroidAutoConnectionState(true)
             }
-            if (curState != connected)
+            if (curState != AA_connected)
                 InternalNotifier.notify(GlucoDataService.context!!, NotifySource.CAR_CONNECTION, null)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onConnectionStateUpdated exception: " + exc.message.toString() )
         }
     }
 
-    fun sendToGlucoDataAuto(context: Context, extras: Bundle) {
+    fun sendToGlucoDataAuto(context: Context, extras: Bundle, withSettings: Boolean = false) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-        if (connected && sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO, true) && Utils.isPackageAvailable(context, Constants.PACKAGE_GLUCODATAAUTO)) {
+        if (connected && sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO, true) && PackageUtils.isGlucoDataAutoAvailable(context)) {
             Log.d(LOG_ID, "sendToGlucoDataAuto")
             val intent = Intent(Constants.GLUCODATA_ACTION)
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-            val settings = ReceiveData.getSettingsBundle()
-            settings.putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime)
-            extras.putBundle(Constants.SETTINGS_BUNDLE, settings)
+            if(withSettings && sharedPref.getBoolean(Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO, true)) {
+                val settings = ReceiveData.getSettingsBundle()
+                settings.putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime)
+                extras.putBundle(Constants.SETTINGS_BUNDLE, settings)
+                extras.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings(false))
+            }
             intent.putExtras(extras)
             intent.setPackage(Constants.PACKAGE_GLUCODATAAUTO)
             context.sendBroadcast(intent)

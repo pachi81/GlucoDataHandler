@@ -1,294 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
-
     <PreferenceCategory
         android:title="@string/pref_cat_general"
-        app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="1">
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="use_mmol"
-            android:summary="@string/pref_switch_use_mmol_summary"
-            android:title="@string/pref_switch_use_mmol"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="relative_time"
-            android:summary="@string/pref_relative_time_summary"
-            android:title="@string/pref_relative_time"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="five_minute_delta"
-            android:summary="@string/pref_switch_use_5_min_delta_summary"
-            android:title="@string/pref_switch_use_5_min_delta"
-            app:iconSpaceReserved="false" />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/pref_target_range"
-        app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="0">
-        <de.michelinside.glucodatahandler.preferences.GlucoseEditPreference
-            android:defaultValue="240"
-            android:inputType="numberDecimal"
-            android:key="high_glucose"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/pref_high_value"
-            android:summary="@string/pref_high_value_summary"
-            app:iconSpaceReserved="false" />
-        <de.michelinside.glucodatahandler.preferences.GlucoseEditPreference
-            android:defaultValue="165"
-            android:inputType="numberDecimal"
-            android:key="target_max_value"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/pref_target_max_value"
-            android:summary="@string/pref_target_max_value_summary"
-            app:iconSpaceReserved="false" />
-        <de.michelinside.glucodatahandler.preferences.GlucoseEditPreference
-            android:defaultValue="90"
-            android:inputType="numberDecimal"
-            android:key="target_min_value"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/pref_target_min_value"
-            android:summary="@string/pref_target_min_value_summary"
-            app:iconSpaceReserved="false" />
-        <de.michelinside.glucodatahandler.preferences.GlucoseEditPreference
-            android:defaultValue="70"
-            android:inputType="numberDecimal"
-            android:key="low_glucose"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/pref_low_value"
-            android:summary="@string/pref_low_value_summary"
-            app:iconSpaceReserved="false" />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/pref_cat_colors"
-        app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="0">
-        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
-            android:defaultValue="@color/red"
-            android:key="color_alarm"
-            android:title="@string/pref_color_alarm"
-            app:cpv_dialogTitle="@string/pref_color_alarm"
-            android:summary="@string/pref_color_alarm_summary"
-            app:iconSpaceReserved="false"/>
-        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
-            android:defaultValue="@color/yellow"
-            android:key="color_out_of_range"
-            android:title="@string/pref_color_out_of_range"
-            app:cpv_dialogTitle="@string/pref_color_out_of_range"
-            android:summary="@string/pref_color_out_of_range_summary"
-            app:iconSpaceReserved="false"/>
-        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
-            android:defaultValue="@color/green"
-            android:key="color_ok"
-            android:title="@string/pref_color_ok"
-            app:cpv_dialogTitle="@string/pref_color_ok"
-            android:summary="@string/pref_color_ok_summary"
-            app:iconSpaceReserved="false"/>
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/pref_cat_widgets"
-        app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="1">
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="floating_widget"
-            android:summary="@string/pref_floating_widget_summary"
-            android:title="@string/pref_floating_widget"
-            android:icon="@drawable/icon_overlay"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.ListPreference
-            android:defaultValue="glucose_trend_delta_time"
-            android:entries="@array/pref_floating_widget_style_labels"
-            android:entryValues="@array/pref_floating_widget_style_values"
-            android:key="floating_widget_style"
-            android:summary="@string/pref_floating_widget_style_summary"
-            android:title="@string/pref_floating_widget_style"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SeekBarPreference
-            android:defaultValue="3"
-            app:showSeekBarValue="true"
-            app:seekBarIncrement="1"
-            app:min="1"
-            android:max="10"
-            android:key="floating_widget_size"
-            android:summary="@string/pref_floating_widget_size_summary"
-            android:title="@string/pref_floating_widget_size"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SeekBarPreference
-            android:defaultValue="3"
-            app:showSeekBarValue="true"
-            app:seekBarIncrement="1"
-            app:min="0"
-            android:max="10"
-            android:key="floating_widget_transparency"
-            android:summary="@string/pref_floating_widget_transparency_summary"
-            android:title="@string/pref_floating_widget_transparency"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SeekBarPreference
-            android:defaultValue="3"
-            app:showSeekBarValue="true"
-            app:seekBarIncrement="1"
-            app:min="0"
-            android:max="10"
-            android:key="widget_transparency"
-            android:summary="@string/pref_widget_transparency_summary"
-            android:title="@string/pref_widget_transparency"
-            app:iconSpaceReserved="false" />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/pref_cat_notification"
-        app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="0">
-        <!--<androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="permanent_notification"
-            android:summary="@string/pref_notification_summary"
-            android:title="@string/pref_notification"
-            app:iconSpaceReserved="false" />-->
+        app:iconSpaceReserved="false">
         <Preference
-            android:key="permanent_notification_info"
-            android:title="@string/pref_notification"
-            android:summary="@string/pref_permanent_notification_info_summary"
+            android:key="pref_general"
+            android:title="@string/pref_cat_general"
+            android:summary="@string/pref_cat_general_summary"
+            app:fragment="de.michelinside.glucodatahandler.preferences.GeneralSettingsFragment"
             app:iconSpaceReserved="false" />
-        <androidx.preference.ListPreference
-            android:defaultValue="app"
-            android:entries="@array/pref_status_bar_icon_labels"
-            android:entryValues="@array/pref_status_bar_icon_values"
-            android:key="status_bar_notification_icon"
-            android:summary="@string/pref_notification_icon_summary"
-            android:title="@string/pref_notification_icon"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="status_bar_notification_colored_icon"
-            android:title="@string/prefstatus_bar_notification_colored_icon"
-            android:summary="@string/pref_status_bar_notification_colored_icon_summary"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="permanent_notification_empty"
-            android:summary="@string/pref_notification_no_content_summary"
-            android:title="@string/pref_notification_no_content"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="second_permanent_notification"
-            android:summary="@string/pref_second_notification_summary"
-            android:title="@string/pref_second_notification"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.ListPreference
-            android:defaultValue="app"
-            android:entries="@array/pref_status_bar_icon_labels"
-            android:entryValues="@array/pref_status_bar_icon_values"
-            android:key="second_status_bar_notification_icon"
-            android:summary="@string/pref_second_notification_icon_summary"
-            android:title="@string/pref_second_notification_icon"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="status_bar_notification_big_icon"
-            android:summary="@string/pref_notification_big_icon_summary"
-            android:title="@string/pref_notification_big_icon"
-            app:iconSpaceReserved="false" />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/pref_cat_locksreen_wallpaper"
-        app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="1">
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="lockscreen_enabled"
-            android:title="@string/pref_lockscreen_enabled"
-            android:summary="@string/pref_lockscreen_enabled_summary"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SeekBarPreference
-            android:defaultValue="75"
-            app:showSeekBarValue="true"
-            app:seekBarIncrement="1"
-            app:min="0"
-            android:max="100"
-            android:key="lockscreen_y_pos"
-            android:title="@string/pref_lockscreen_y_pos"
-            android:summary="@string/pref_lockscreen_y_pos_summary"
-            app:iconSpaceReserved="false" />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/pref_cat_android_auto"
-        app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="1">
         <Preference
-            android:key="no_gda_info"
-            android:summary="@string/pref_no_gda_info_summary"
-            android:title="@string/pref_no_gda_info"
-            app:isPreferenceVisible="false"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="send_to_glucodataauto"
-            app:isPreferenceVisible="false"
-            android:summary="@string/pref_send_to_glucodataauto_summary"
-            android:title="@string/pref_send_to_glucodataauto"
+            android:key="pref_target_range"
+            android:title="@string/pref_target_range"
+            android:summary="@string/pref_target_range_summary"
+            app:fragment="de.michelinside.glucodatahandler.preferences.RangeSettingsFragment"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
-
     <PreferenceCategory
-        android:title="@string/pref_cat_forward_broadcast"
-        app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="1">
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="watchdrip_enabled"
-            android:summary="@string/pref_switch_watchdrip_enabled_summary"
-            android:title="@string/pref_switch_watchdrip_enabled"
+        android:title="@string/pref_cat_visualisation"
+        app:iconSpaceReserved="false">
+        <Preference
+            android:key="pref_cat_ui_settings"
+            android:title="@string/pref_cat_ui_settings"
+            android:summary="@string/pref_cat_ui_settings_summary"
+            app:fragment="de.michelinside.glucodatahandler.preferences.UiSettingsFragment"
             app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="send_to_xdrip"
-            android:summary="@string/pref_switch_send_to_xdrip_summary"
-            android:title="@string/pref_switch_send_to_xdrip"
+        <Preference
+            android:key="pref_cat_widgets"
+            android:title="@string/pref_cat_widgets"
+            android:summary="@string/pref_cat_widgets_summary"
+            app:fragment="de.michelinside.glucodatahandler.preferences.WidgetSettingsFragment"
             app:iconSpaceReserved="false" />
-        <androidx.preference.MultiSelectListPreference
-            android:key="xdrip_receivers"
-            android:summary="@string/pref_button_select_xdrip_target_summary"
-            android:title="@string/pref_button_select_xdrip_target"
+        <Preference
+            android:key="pref_cat_notification"
+            android:title="@string/pref_cat_notification"
+            android:summary="@string/pref_cat_notification_summary"
+            app:fragment="de.michelinside.glucodatahandler.preferences.NotificaitonSettingsFragment"
             app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="send_xdrip_broadcast"
-            android:summary="@string/pref_switch_send_xdrip_broadcast_summary"
-            android:title="@string/pref_switch_send_xdrip_broadcast"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.MultiSelectListPreference
-            android:key="xdrip_broadcast_receivers"
-            android:summary="@string/pref_button_select_xdrip_broadcast_target_summary"
-            android:title="@string/pref_button_select_xdrip_broadcast_target"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="send_to_glucodata_aod"
-            android:summary="@string/pref_switch_send_to_aod_summary"
-            android:title="@string/pref_switch_send_to_aod"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.MultiSelectListPreference
-            android:key="glucodata_receivers"
-            android:summary="@string/pref_button_select_target_summary"
-            android:title="@string/pref_button_select_target"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="send_to_banglejs"
-            android:summary="@string/pref_send_to_bangleJS_summary"
-            android:title="@string/pref_send_to_bangleJS"
+        <Preference
+            android:key="pref_cat_locksreen_wallpaper"
+            android:title="@string/pref_cat_locksreen_wallpaper"
+            android:summary="@string/pref_cat_locksreen_wallpaper_summary"
+            app:fragment="de.michelinside.glucodatahandler.preferences.LockscreenSettingsFragment"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
-
+    <PreferenceCategory
+        android:title="@string/table_header_connections"
+        app:iconSpaceReserved="false">
+        <Preference
+            android:key="pref_cat_watch"
+            android:title="@string/pref_cat_watch"
+            android:summary="@string/pref_cat_watch_summary"
+            app:fragment="de.michelinside.glucodatahandler.preferences.WatchSettingsFragment"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="pref_cat_android_auto"
+            android:title="@string/pref_cat_android_auto"
+            android:summary="@string/pref_cat_android_auto_summary"
+            app:fragment="de.michelinside.glucodatahandler.preferences.GDASettingsFragment"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="pref_cat_transfer"
+            android:title="@string/pref_cat_transfer"
+            android:summary="@string/pref_cat_transfer_summary"
+            app:fragment="de.michelinside.glucodatahandler.preferences.TransferSettingsFragment"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
     <androidx.preference.SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="dummy_values"

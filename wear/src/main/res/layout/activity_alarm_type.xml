@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/box_inset_layout_padding"
+    tools:context=".settings.AlarmTypeActivity"
+    tools:deviceIds="wear">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:padding="10dp">
+        <requestFocus/>
+        <LinearLayout
+            android:id="@+id/frameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:gravity="center|top"
+            android:paddingTop="30dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="80dp"
+            app:layout_boxedEdges="all">
+
+            <TextView
+                android:id="@+id/txtAlarmTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/very_low_alarm_notification_name"
+                android:textAlignment="center"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:id="@+id/soundLevelHead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/txtSoundLevelTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/alarm_sound_level"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/txtSoundLevel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_toEndOf="@+id/txtSoundLevelTitle"
+                    android:text="15"
+                    android:textAlignment="textEnd"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    tools:ignore="HardcodedText" />
+            </RelativeLayout>
+
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/seekBarSoundLevel"
+                android:min="-1"
+                android:progress="-1"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchUseCustomSound"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/alarm_use_custom_sound"
+                android:textAlignment="viewStart"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <Button
+                android:id="@+id/btnSelectSound"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:enabled="false"
+                android:text="@string/alarm_sound" />
+
+            <TextView
+                android:id="@+id/txtCustomSound"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/alarm_sound_summary"
+                android:textAlignment="center"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/btnTestAlarm"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="@string/alarm_test" />
+
+    </LinearLayout>
+    </ScrollView>
+</androidx.wear.widget.BoxInsetLayout>

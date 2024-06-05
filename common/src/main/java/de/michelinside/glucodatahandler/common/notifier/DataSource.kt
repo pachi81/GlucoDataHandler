@@ -8,7 +8,7 @@ enum class DataSource(val resId: Int) {
     XDRIP(R.string.source_xdrip),
     PHONE(R.string.source_phone),
     WEAR(R.string.source_wear),
-    LIBREVIEW(R.string.source_libreview),
+    LIBRELINK(R.string.source_libreview),
     NIGHTSCOUT(R.string.source_nightscout),
     AAPS(R.string.source_aaps),
     GDH(R.string.source_gdh);

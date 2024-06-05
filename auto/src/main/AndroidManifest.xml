@@ -48,7 +48,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".preferences.SettingsActivity"
             android:label="@string/menu_settings"
             android:parentActivityName=".MainActivity"
             tools:ignore="LockedOrientationActivity">
@@ -104,6 +104,8 @@
             </intent-filter>
         </receiver>
         <receiver android:name="de.michelinside.glucodatahandler.common.tasks.TimeAlarmReceiver" />
+        <receiver android:name="de.michelinside.glucodatahandler.common.tasks.SourceAlarmReceiver" />
+        <receiver android:name="de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver" />
 
         <service
             android:name=".android_auto.CarMediaBrowserService"

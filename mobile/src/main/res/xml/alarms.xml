@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/alarm_cat_all"
+        app:iconSpaceReserved="false">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="alarm_notifications_enabled"
+            android:title="@string/alarm_notifications_enabled"
+            android:summaryOn="@string/alarm_notifications_enabled_summary_on"
+            android:summaryOff="@string/alarm_notifications_enabled_summary_off"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="alarm_fullscreen_notification_enabled"
+            android:title="@string/alarm_fullscreen_notification_enabled"
+            android:summary="@string/alarm_fullscreen_notification_enabled_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:title="@string/advanced_settings"
+            android:summary="@string/advanced_settings_alarm_summary"
+            app:fragment="de.michelinside.glucodatahandler.preferences.AlarmAdvancedFragment"
+            app:iconSpaceReserved="false"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/alarm_cat_categories"
+        app:iconSpaceReserved="false">
+        <Preference
+            android:key="pref_target_range"
+            android:title="@string/pref_target_range"
+            android:summary="@string/pref_target_range_summary"
+            app:fragment="de.michelinside.glucodatahandler.preferences.RangeSettingsFragment"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="alarm_very_low"
+            android:title="@string/very_low_alarm_notification_name"
+            app:fragment="de.michelinside.glucodatahandler.preferences.AlarmTypeFragment"
+            app:iconSpaceReserved="false">
+            <extra
+                android:name="prefix"
+                android:value="alarm_very_low_" />
+            <extra
+                android:name="type"
+                android:value="1" />
+        </Preference>
+        <Preference
+            android:key="alarm_low"
+            android:title="@string/low_alarm_notification_name"
+            app:fragment="de.michelinside.glucodatahandler.preferences.AlarmTypeFragment"
+            app:iconSpaceReserved="false">
+            <extra
+                android:name="prefix"
+                android:value="alarm_low_" />
+            <extra
+                android:name="type"
+                android:value="2" />
+        </Preference>
+        <Preference
+            android:key="alarm_high"
+            android:title="@string/high_alarm_notification_name"
+            app:fragment="de.michelinside.glucodatahandler.preferences.AlarmTypeFragment"
+            app:iconSpaceReserved="false">
+            <extra
+                android:name="prefix"
+                android:value="alarm_high_" />
+            <extra
+                android:name="type"
+                android:value="4" />
+        </Preference>
+        <Preference
+            android:key="alarm_very_high"
+            android:title="@string/very_high_alarm_notification_name"
+            app:fragment="de.michelinside.glucodatahandler.preferences.AlarmTypeFragment"
+            app:iconSpaceReserved="false">
+            <extra
+                android:name="prefix"
+                android:value="alarm_very_high_" />
+            <extra
+                android:name="type"
+                android:value="5" />
+        </Preference>
+        <Preference
+            android:key="alarm_obsolete"
+            android:title="@string/obsolete_alarm_notification_name"
+            app:fragment="de.michelinside.glucodatahandler.preferences.AlarmTypeFragment"
+            app:iconSpaceReserved="false">
+            <extra
+                android:name="prefix"
+                android:value="alarm_obsolete_" />
+            <extra
+                android:name="type"
+                android:value="6" />
+        </Preference>
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+        <PreferenceCategory
+            android:title="@string/pref_target_range"
+            app:iconSpaceReserved="false">
+                <de.michelinside.glucodatahandler.preferences.GlucoseEditPreference
+                    android:defaultValue="240"
+                    android:inputType="numberDecimal"
+                    android:key="high_glucose"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:title="@string/pref_high_value"
+                    android:summary="@string/pref_high_value_summary"
+                    app:iconSpaceReserved="false" />
+                <de.michelinside.glucodatahandler.preferences.GlucoseEditPreference
+                    android:defaultValue="165"
+                    android:inputType="numberDecimal"
+                    android:key="target_max_value"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:title="@string/pref_target_max_value"
+                    android:summary="@string/pref_target_max_value_summary"
+                    app:iconSpaceReserved="false" />
+                <de.michelinside.glucodatahandler.preferences.GlucoseEditPreference
+                    android:defaultValue="90"
+                    android:inputType="numberDecimal"
+                    android:key="target_min_value"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:title="@string/pref_target_min_value"
+                    android:summary="@string/pref_target_min_value_summary"
+                    app:iconSpaceReserved="false" />
+                <de.michelinside.glucodatahandler.preferences.GlucoseEditPreference
+                    android:defaultValue="70"
+                    android:inputType="numberDecimal"
+                    android:key="low_glucose"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:title="@string/pref_low_value"
+                    android:summary="@string/pref_low_value_summary"
+                    app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+        <PreferenceCategory
+            android:title="@string/pref_cat_colors"
+            app:iconSpaceReserved="false">
+                <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+                    android:defaultValue="@color/red"
+                    android:key="color_alarm"
+                    android:title="@string/pref_color_alarm"
+                    app:cpv_dialogTitle="@string/pref_color_alarm"
+                    android:summary="@string/pref_color_alarm_summary"
+                    app:iconSpaceReserved="false"/>
+                <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+                    android:defaultValue="@color/yellow"
+                    android:key="color_out_of_range"
+                    android:title="@string/pref_color_out_of_range"
+                    app:cpv_dialogTitle="@string/pref_color_out_of_range"
+                    android:summary="@string/pref_color_out_of_range_summary"
+                    app:iconSpaceReserved="false"/>
+                <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+                    android:defaultValue="@color/green"
+                    android:key="color_ok"
+                    android:title="@string/pref_color_ok"
+                    app:cpv_dialogTitle="@string/pref_color_ok"
+                    android:summary="@string/pref_color_ok_summary"
+                    app:iconSpaceReserved="false"/>
+                <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+                    android:defaultValue="@color/gray"
+                    android:key="color_obsolete"
+                    android:title="@string/pref_color_obsolete"
+                    app:cpv_dialogTitle="@string/pref_color_obsolete"
+                    android:summary="@string/pref_color_obsolete_summary"
+                    app:iconSpaceReserved="false"/>
+        </PreferenceCategory>
+</PreferenceScreen>

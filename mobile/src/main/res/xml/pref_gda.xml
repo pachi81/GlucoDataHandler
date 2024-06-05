@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+        <Preference
+            android:key="no_gda_info"
+            android:summary="@string/pref_no_gda_info_summary"
+            android:title="@string/pref_no_gda_info"
+            app:isPreferenceVisible="false"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="send_to_glucodataauto"
+            app:isPreferenceVisible="false"
+            android:summary="@string/pref_send_to_glucodataauto_summary"
+            android:title="@string/pref_send_to_glucodataauto"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="send_pref_to_glucodataauto"
+            app:isPreferenceVisible="false"
+            android:title="@string/pref_send_pref_to_glucodataauto"
+            android:summary="@string/pref_send_pref_to_glucodataauto_summary"
+            app:iconSpaceReserved="false" />
+</PreferenceScreen>

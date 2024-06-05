@@ -2,27 +2,28 @@ package de.michelinside.glucodatahandler.common.tasks
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
-import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver
+import de.michelinside.glucodatahandler.common.utils.Utils
 import java.io.DataOutputStream
 import java.net.HttpURLConnection
+import java.net.SocketTimeoutException
 import java.net.URL
 import java.net.UnknownHostException
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
-import java.util.concurrent.atomic.AtomicBoolean
 import javax.net.ssl.HttpsURLConnection
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSession
@@ -33,6 +34,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     private var enabled = false
     private var interval = 1L
     private var delaySec = 10L
+    private var httpURLConnection: HttpURLConnection? = null
 
     companion object {
         private val LOG_ID = "GDH.Task.Source.DataSourceTask"
@@ -110,10 +112,16 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     }
 
     fun setState(state: SourceState, error: String = "", code: Int = -1) {
-        if(state == SourceState.NONE) {
-            Log.v(LOG_ID,"Set state for source " + source + ": " + state + " - " + error + " (" + code + ")")
-        } else {
-            Log.w(LOG_ID,"Set state for source " + source + ": " + state + " - " + error + " (" + code + ")")
+        when (state) {
+            SourceState.NONE -> {
+                Log.v(LOG_ID,"Set state for source " + source + ": " + state + " - " + error + " (" + code + ")")
+            }
+            SourceState.CONNECTED -> {
+                Log.i(LOG_ID,"Set connected for source " + source)
+            }
+            else -> {
+                Log.w(LOG_ID,"Set state for source " + source + ": " + state + " - " + error + " (" + code + ")")
+            }
         }
         lastErrorCode = code
         lastState = state
@@ -156,32 +164,71 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             Log.d(LOG_ID, "Execute request")
             try {
                 executeRequest(context)
+                if (httpURLConnection != null) {
+                    Log.v(LOG_ID, "Closing http connection")
+                    httpURLConnection!!.disconnect()
+                    httpURLConnection = null
+                }
+            } catch (ex: InterruptedException) {
+                throw ex // re throw interruption
+            } catch(ex: SocketTimeoutException) {
+                Log.w(LOG_ID, "Timeout for $source: " + ex)
+                setLastError("Timeout")
             } catch (ex: UnknownHostException) {
-                Log.w(LOG_ID, "Internet connection issue: " + ex)
+                Log.w(LOG_ID, "Internet connection issue for $source: " + ex)
                 setState(SourceState.NO_CONNECTION)
             } catch (ex: Exception) {
-                Log.e(LOG_ID, "Exception during login: " + ex)
+                Log.e(LOG_ID, "Exception during execution for $source: " + ex)
                 setLastError(ex.message.toString())
             }
         }
     }
 
     protected fun handleResult(extras: Bundle) {
+        Log.d(LOG_ID, "handleResult for $source: ${Utils.dumpBundle(extras)}")
+        val intent = Intent(GlucoDataService.context!!, InternalActionReceiver::class.java)
+        intent.action = Constants.GLUCODATA_ACTION
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+        intent.setPackage(GlucoDataService.context!!.packageName)
+        extras.putInt(Constants.EXTRA_SOURCE_INDEX, source.ordinal)
+        intent.putExtras(extras)
+        setState(SourceState.CONNECTED)
+        GlucoDataService.context!!.sendBroadcast(intent)
+        /*
         val done = AtomicBoolean(false)
+        val active = AtomicBoolean(false)
         val task = Runnable {
-            val lastTime = ReceiveData.time
-            val lastIobCobTime = ReceiveData.iobCobTime
-            ReceiveData.handleIntent(GlucoDataService.context!!, source, extras)
-            if (ReceiveData.time == lastTime && lastIobCobTime == ReceiveData.iobCobTime)
-                setState(SourceState.NO_NEW_VALUE)
-            else
-                setState(SourceState.NONE)
+            try {
+                active.set(true)
+                Log.d(LOG_ID, "handleResult for $source in main thread")
+                val lastTime = ReceiveData.time
+                val lastIobCobTime = ReceiveData.iobCobTime
+                ReceiveData.handleIntent(GlucoDataService.context!!, source, extras)
+                if (ReceiveData.time == lastTime && lastIobCobTime == ReceiveData.iobCobTime)
+                    setState(SourceState.NO_NEW_VALUE)
+                else
+                    setState(SourceState.CONNECTED)
+            } catch (ex: Exception) {
+                Log.e(LOG_ID, "Exception during task run: " + ex)
+                setLastError(ex.message.toString())
+            }
             done.set(true)
         }
-        Handler(GlucoDataService.context!!.mainLooper).post(task)
-        while (!done.get()) {
-            Thread.sleep(5)
+        val handler = Handler(Looper.getMainLooper())
+        handler.post(task)
+        var count = 0
+        while (!done.get() && count < 30000) {
+            Thread.sleep(10)
+            count += 10
+            if(count.mod(5000) == 0) {
+                Log.w(LOG_ID, "Handle result for $source not finished after $count ms! Active: ${active.get()} Mainlopper: Queue-Idle: ${Looper.getMainLooper().queue.isIdle}")
+            }
         }
+        if(!done.get()) {
+            Log.e(LOG_ID, "Handler for $source not finished after $count ms! Active: ${active.get()} - Stop it!")
+            handler.removeCallbacksAndMessages(null)
+            setLastError("Internal error!")
+        }*/
         Log.d(LOG_ID, "handleResult for " + source + " done!")
     }
 
@@ -223,23 +270,33 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             trustAllCertificates(urlConnection)
         }
 
-        val httpURLConnection = urlConnection as HttpURLConnection
+        httpURLConnection = urlConnection as HttpURLConnection
         header.forEach {
-            httpURLConnection.setRequestProperty(it.key, it.value)
+            httpURLConnection!!.setRequestProperty(it.key, it.value)
         }
-        httpURLConnection.doInput = true
+        httpURLConnection!!.doInput = true
+        httpURLConnection!!.connectTimeout = 10000
+        httpURLConnection!!.readTimeout = 20000
         if (postData == null) {
-            httpURLConnection.requestMethod = "GET"
-            httpURLConnection.doOutput = false
+            httpURLConnection!!.requestMethod = "GET"
+            httpURLConnection!!.doOutput = false
         } else {
-            httpURLConnection.requestMethod = "POST"
-            httpURLConnection.doOutput = true
-            val dataOutputStream = DataOutputStream(httpURLConnection.outputStream)
+            httpURLConnection!!.requestMethod = "POST"
+            httpURLConnection!!.doOutput = true
+            val dataOutputStream = DataOutputStream(httpURLConnection!!.outputStream)
             val bytes: ByteArray = postData.toByteArray()
             dataOutputStream.write(bytes, 0, bytes.size)
         }
 
-        return checkResponse(httpURLConnection)
+        return checkResponse(httpURLConnection!!)
+    }
+
+    override fun interrupt() {
+        super.interrupt()
+        if(httpURLConnection != null) {
+            Log.w(LOG_ID, "Disconnect current URL connection on interrupt!")
+            httpURLConnection!!.disconnect()
+        }
     }
 
     protected fun httpGet(url: String, header: MutableMap<String, String>): String? {
@@ -265,6 +322,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     }
 
     override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {
+        Log.v(LOG_ID, "checkPreferenceChanged for $key")
         if(key == null) {
             enabled = sharedPreferences.getBoolean(enabledKey, false)
             interval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L

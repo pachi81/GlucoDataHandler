@@ -18,6 +18,7 @@ import de.michelinside.glucodataauto.GlucoDataServiceAuto
 import de.michelinside.glucodataauto.R
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.notification.ChannelType
@@ -211,7 +212,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                     Log.v(LOG_ID, "Notification has forced by interval or alarm")
                     return true
                 }
-                if (ReceiveData.getAlarmType() == ReceiveData.AlarmType.VERY_LOW) {
+                if (ReceiveData.getAlarmType() == AlarmType.VERY_LOW) {
                     Log.v(LOG_ID, "Notification for very low-alarm")
                     forceNextNotify = true  // if obsolete or VERY_LOW, the next value is important!
                     return true
@@ -259,14 +260,14 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     private fun createMessageStyle(context: Context, isObsolete: Boolean): NotificationCompat.MessagingStyle {
         val person = Person.Builder()
             .setIcon(IconCompat.createWithBitmap(BitmapUtils.getRateAsBitmap(resizeFactor = 0.75F)!!))
-            .setName(ReceiveData.getClucoseAsString())
+            .setName(ReceiveData.getGlucoseAsString())
             .setImportant(true)
             .build()
         val messagingStyle = NotificationCompat.MessagingStyle(person)
         if (isObsolete)
             messagingStyle.conversationTitle = context.getString(CR.string.no_new_value, ReceiveData.getElapsedTimeMinute())
         else
-            messagingStyle.conversationTitle = ReceiveData.getClucoseAsString()  + " (Δ " + ReceiveData.getDeltaAsString() + ")"
+            messagingStyle.conversationTitle = ReceiveData.getGlucoseAsString()  + " (Δ " + ReceiveData.getDeltaAsString() + ")"
         messagingStyle.isGroupConversation = false
         messagingStyle.addMessage(DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(ReceiveData.time)), System.currentTimeMillis(), person)
         return messagingStyle
@@ -281,7 +282,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
             context,
             1,
             intent,
-            PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         return NotificationCompat.Action.Builder(R.mipmap.ic_launcher, "Reply", pendingIntent)
             //.setAllowGeneratedReplies(true)
@@ -297,7 +298,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
             context,
             2,
             intent,
-            PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         return NotificationCompat.Action.Builder(
             R.mipmap.ic_launcher,

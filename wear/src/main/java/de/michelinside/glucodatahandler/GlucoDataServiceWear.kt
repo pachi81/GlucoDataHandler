@@ -2,18 +2,14 @@ package de.michelinside.glucodatahandler
 
 import android.app.Notification
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.os.VibratorManager
 import android.util.Log
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.notifier.*
-import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.common.utils.PackageUtils
 
 
 class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterface {
@@ -48,6 +44,8 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
         try {
             Log.d(LOG_ID, "onCreate called")
             super.onCreate()
+            migrateSettings()
+            AlarmNotificationWear.initNotifications(this)
             val filter = mutableSetOf(
                 NotifySource.BROADCAST,
                 NotifySource.MESSAGECLIENT,
@@ -59,16 +57,37 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
         }
     }
 
+    private fun migrateSettings() {
+        try {
+            Log.v(LOG_ID, "migrateSettings called")
+            val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            // notification to vibrate_only
+            if(!sharedPref.contains(Constants.SHARED_PREF_NOTIFICATION_VIBRATE) && sharedPref.contains("notification")) {
+                with(sharedPref.edit()) {
+                    putBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, sharedPref.getBoolean("notification", false))
+                    apply()
+                }
+            }
+
+            // complications
+            if(!sharedPref.contains(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION)) {
+                val curApp = if(PackageUtils.isPackageAvailable(this, Constants.PACKAGE_JUGGLUCO)) Constants.PACKAGE_JUGGLUCO else this.packageName
+                Log.i(LOG_ID, "Setting default tap action for complications to $curApp")
+                with(GlucoDataService.sharedPref!!.edit()) {
+                    putString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, curApp)
+                    apply()
+                }
+            }
+
+        } catch( exc: Exception ) {
+            Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
+        }
+    }
+
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnNotifyData called for source " + dataSource.toString())
             start(context)
-            if (dataSource == NotifySource.MESSAGECLIENT || dataSource == NotifySource.BROADCAST) {
-                if (sharedPref!!.getBoolean(Constants.SHARED_PREF_NOTIFICATION, false) && ReceiveData.forceAlarm) {
-                    Log.d(LOG_ID, "Alarm vibration for alarm=" + ReceiveData.alarm.toString())
-                    vibrate(ReceiveData.getAlarmType())
-                }
-            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString())
         }
@@ -77,7 +96,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
     override fun getNotification(): Notification {
         Channels.createNotificationChannel(this, ChannelType.WEAR_FOREGROUND)
 
-        val pendingIntent = Utils.getAppIntent(this, WaerActivity::class.java, 11, false)
+        val pendingIntent = PackageUtils.getAppIntent(this, WearActivity::class.java, 11, false)
 
         return Notification.Builder(this, ChannelType.WEAR_FOREGROUND.channelId)
             .setContentTitle(getString(CR.string.forground_notification_descr))
@@ -89,35 +108,5 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
             .setCategory(Notification.CATEGORY_STATUS)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
             .build()
-    }
-
-    fun getVibrationPattern(alarmType: ReceiveData.AlarmType): LongArray? {
-        return when(alarmType) {
-            ReceiveData.AlarmType.VERY_LOW -> longArrayOf(0, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000)
-            ReceiveData.AlarmType.LOW -> longArrayOf(0, 700, 500, 700, 500, 700, 500, 700)
-            ReceiveData.AlarmType.HIGH -> longArrayOf(0, 500, 500, 500, 500, 500, 500, 500)
-            ReceiveData.AlarmType.VERY_HIGH -> longArrayOf(0, 800, 500, 800, 800, 600, 800, 800, 500, 800, 800, 600, 800)
-            else -> null
-        }
-    }
-
-    fun vibrate(alarmType: ReceiveData.AlarmType): Boolean {
-        try {
-            val vibratePattern = getVibrationPattern(alarmType) ?: return false
-            val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                val vibratorManager =
-                    getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-                vibratorManager.defaultVibrator
-            } else {
-                @Suppress("DEPRECATION")
-                getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            }
-            Log.i(LOG_ID, "vibration for " + alarmType.toString())
-            vibrator.vibrate(VibrationEffect.createWaveform(vibratePattern, -1))
-            return true
-        } catch (ex: Exception) {
-            Log.e(LOG_ID, "vibrate exception: " + ex)
-        }
-        return false
     }
 }

@@ -9,6 +9,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 
 enum class SourceState(val resId: Int) {
     NONE(R.string.empty_string),
+    CONNECTED(R.string.connected_label),
     NO_NEW_VALUE(R.string.source_state_no_new_value),
     NO_CONNECTION(R.string.source_state_no_connection),
     ERROR(R.string.source_state_error);
@@ -31,6 +32,8 @@ object SourceStateData {
 
         if(state == SourceState.ERROR) {
             Log.e(LOG_ID, "Error state for source $source: $error" )
+        } else {
+            Log.i(LOG_ID, "Set state $state for source $source")
         }
 
         if (GlucoDataService.context != null) {
@@ -40,7 +43,7 @@ object SourceStateData {
         }
     }
 
-    private fun getStateMessage(context: Context): String {
+    fun getStateMessage(context: Context): String {
         if (lastState == SourceState.ERROR && lastError.isNotEmpty()) {
             return lastError
         }

@@ -6,10 +6,20 @@
         android:title="@string/pref_source_juggluco_info"
         app:iconSpaceReserved="false"
         app:initialExpandedChildrenCount="0">
-    <Preference
-        android:key="source_juggluco_info"
-        android:summary="@string/pref_source_juggluco_info_summary"
-        app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_juggluco_info"
+            android:summary="@string/pref_source_juggluco_info_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_juggluco_iob_info"
+            android:title="@string/pref_source_juggluco_iob_info"
+            android:summary="@string/pref_source_juggluco_iob_info_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_juggluco_activate_local_nightscout_iob_action"
+            android:title="@string/pref_source_activate_local_nightscout_iob"
+            android:summary="@string/pref_source_activate_local_nightscout_iob_summary"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_source_xdrip_info"
@@ -22,6 +32,16 @@
         <Preference
             android:key="source_xdrip_info_2"
             android:summary="@string/pref_source_xdrip_info_2_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_xdrip_iob_info"
+            android:title="@string/pref_source_xdrip_iob_info"
+            android:summary="@string/pref_source_xdrip_iob_info_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_xdrip_activate_local_nightscout_iob_action"
+            android:title="@string/pref_source_activate_local_nightscout_iob"
+            android:summary="@string/pref_source_activate_local_nightscout_iob_summary"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory

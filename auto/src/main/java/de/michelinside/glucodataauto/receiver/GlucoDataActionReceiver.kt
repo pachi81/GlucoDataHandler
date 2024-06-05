@@ -7,6 +7,7 @@ import android.util.Log
 import de.michelinside.glucodataauto.GlucoDataServiceAuto
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 
 open class GlucoDataActionReceiver: BroadcastReceiver() {
@@ -24,9 +25,15 @@ open class GlucoDataActionReceiver: BroadcastReceiver() {
             if (extras != null) {
                 if (extras.containsKey(Constants.SETTINGS_BUNDLE)) {
                     val bundle = extras.getBundle(Constants.SETTINGS_BUNDLE)
-                    Log.d(LOG_ID, "Glucose settings receceived: " + bundle.toString())
+                    Log.d(LOG_ID, "Glucose settings receceived")
                     ReceiveData.setSettings(context, bundle!!)
                     extras.remove(Constants.SETTINGS_BUNDLE)
+                }
+                if (extras.containsKey(Constants.ALARM_SETTINGS_BUNDLE)) {
+                    val bundle = extras.getBundle(Constants.ALARM_SETTINGS_BUNDLE)
+                    Log.d(LOG_ID, "Alarm settings receceived")
+                    AlarmHandler.setSettings(context, bundle!!)
+                    extras.remove(Constants.ALARM_SETTINGS_BUNDLE)
                 }
                 ReceiveData.handleIntent(context, DataSource.GDH, extras, true)
             }

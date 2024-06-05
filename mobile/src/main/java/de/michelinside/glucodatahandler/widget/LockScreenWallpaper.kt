@@ -15,6 +15,8 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlin.math.max
 
 
@@ -82,16 +84,17 @@ object LockScreenWallpaper : NotifierInterface, SharedPreferences.OnSharedPrefer
     }
 
     private fun setWallpaper(bitmap: Bitmap?, context: Context) {
-        try {
-            Log.v(LOG_ID, "updateLockScreen called for bitmap $bitmap")
-            val wallpaperManager = WallpaperManager.getInstance(context)
-            val wallpaper = if(bitmap != null) createWallpaper(bitmap, context) else null
-            wallpaperManager.setBitmap(wallpaper, null, false, WallpaperManager.FLAG_LOCK)
-            //wallpaper?.recycle()
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "updateLockScreen exception: " + exc.message.toString() )
+        GlobalScope.launch {
+            try {
+                Log.v(LOG_ID, "updateLockScreen called for bitmap $bitmap")
+                val wallpaperManager = WallpaperManager.getInstance(context)
+                val wallpaper = if (bitmap != null) createWallpaper(bitmap, context) else null
+                wallpaperManager.setBitmap(wallpaper, null, false, WallpaperManager.FLAG_LOCK)
+                //wallpaper?.recycle()
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "updateLockScreen exception: " + exc.message.toString())
+            }
         }
-
     }
 
     private fun createWallpaper(bitmap: Bitmap, context: Context): Bitmap? {

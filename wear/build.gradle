@@ -62,7 +62,12 @@ android {
     }
     buildFeatures {
         viewBinding true
+        //compose true
     }
+    /*
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.11"
+    }*/
     dependenciesInfo {
         // Disables dependency metadata when building APKs.
         includeInApk = false
@@ -72,8 +77,19 @@ android {
 }
 
 dependencies {
+/*
+    def composeBom = platform('androidx.compose:compose-bom:2024.04.00')
+    implementation composeBom
+    androidTestImplementation composeBom
+    implementation "androidx.compose.runtime:runtime:1.6.5"
 
-    implementation 'androidx.core:core-ktx:1.12.0'
+    // Material Design 3
+    implementation 'androidx.compose.material3:material3'
+    // Android Studio Preview support
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+ */
+    implementation 'androidx.core:core-ktx:1.13.1'
     implementation 'com.google.android.gms:play-services-wearable:18.1.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -84,7 +100,7 @@ dependencies {
     implementation 'androidx.wear.watchface:watchface-complications-data-source-ktx:1.2.1'
     implementation 'androidx.wear.watchface:watchface-complications-rendering:1.2.1'
     implementation 'androidx.appcompat:appcompat-resources:1.6.1'
-    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.work:work-runtime:2.9.0'
     implementation "androidx.core:core-splashscreen:1.1.0-rc01"
@@ -100,6 +116,16 @@ afterEvaluate {
         into rootProject.releasePath + "/Playstore" + "/" + versionCode.toString()
     }
     bundleRelease.finalizedBy(copyAndroidBundlePostBuild)
+
+    //noinspection ConfigurationAvoidance
+    def bundleDev_release = tasks.getByPath(':wear:bundleDev_release')
+    def copyAndroidBundleDevPostBuild = tasks.register('copyAndroidBundleDevPostBuild', Copy) {
+        dependsOn bundleDev_release
+        from "${projectDir}/dev_release"
+        include '**/*.aab'
+        into rootProject.releasePath + "/Playstore" + "/" + versionCode.toString()
+    }
+    bundleDev_release.finalizedBy(copyAndroidBundleDevPostBuild)
 
     //noinspection ConfigurationAvoidance
     def assembleRelease = tasks.getByPath(':wear:assembleRelease')

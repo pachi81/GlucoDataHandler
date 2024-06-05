@@ -15,7 +15,6 @@ import android.view.*
 import android.view.View.*
 import android.widget.ImageView
 import android.widget.TextView
-import de.michelinside.glucodatahandler.MainActivity
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -24,6 +23,7 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import java.util.*
 
 
@@ -144,8 +144,8 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
     @SuppressLint("SetTextI18n")
     private fun setContent() {
         val textSize = applyStyle()
-        txtBgValue.text = ReceiveData.getClucoseAsString()
-        txtBgValue.setTextColor(ReceiveData.getClucoseColor())
+        txtBgValue.text = ReceiveData.getGlucoseAsString()
+        txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
         if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete()) {
             txtBgValue.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         } else {
@@ -225,13 +225,15 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
             widget.setBackgroundColor(Utils.getBackgroundColor(sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY, 3)))
             widget.setOnClickListener {
                 Log.d(LOG_ID, "onClick called")
-                var launchIntent: Intent? =
-                    context.packageManager.getLaunchIntentForPackage("tk.glucodata")
-                if (launchIntent == null) {
-                    launchIntent = Intent(context, MainActivity::class.java)
+                val action = PackageUtils.getTapAction(context, sharedPref.getString(Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION, ""))
+                if(action.first != null) {
+                    if (action.second) {
+                        context.sendBroadcast(action.first!!)
+                    } else {
+                        action.first!!.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        context.startActivity(action.first)
+                    }
                 }
-                launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                context.startActivity(launchIntent)
             }
             widget.setOnLongClickListener {
                 Log.d(LOG_ID, "onLongClick called")

@@ -6,13 +6,15 @@ import android.os.Bundle
 import android.text.InputType
 import android.util.Log
 import androidx.preference.*
+import de.michelinside.glucodatahandler.Dialogs
 import de.michelinside.glucodatahandler.R
+import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
-import de.michelinside.glucodatahandler.common.tasks.LibreViewSourceTask
+import de.michelinside.glucodatahandler.common.tasks.LibreLinkSourceTask
 
 
 class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
@@ -35,6 +37,10 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
             nightscoutSecret?.setOnBindEditTextListener {editText ->
                 editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             }
+
+            setupLocalIobAction(findPreference<Preference>(Constants.SHARED_PREF_SOURCE_JUGGLUCO_SET_NS_IOB_ACTION))
+            setupLocalIobAction(findPreference<Preference>(Constants.SHARED_PREF_SOURCE_XDRIP_SET_NS_IOB_ACTION))
+
 
             setupLibrePatientData()
         } catch (exc: Exception) {
@@ -61,6 +67,7 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
             updateEnableStates(preferenceManager.sharedPreferences!!)
             InternalNotifier.addNotifier(requireContext(), this, mutableSetOf(NotifySource.PATIENT_DATA_CHANGED))
+            update()
             super.onResume()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.toString())
@@ -78,22 +85,6 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
         }
     }
 
-    override fun onDisplayPreferenceDialog(preference: Preference) {
-        Log.d(LOG_ID, "onDisplayPreferenceDialog called for " + preference.javaClass)
-        try {
-            if (preference is SelectReceiverPreference) {
-                Log.d(LOG_ID, "Show SelectReceiver Dialog")
-                val dialogFragment = SelectReceiverPreferenceDialogFragmentCompat.initial(preference.key)
-                dialogFragment.setTargetFragment(this, 0)
-                dialogFragment.show(parentFragmentManager, "androidx.preference.PreferenceFragment.DIALOG")
-            } else {
-                super.onDisplayPreferenceDialog(preference)
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "onDisplayPreferenceDialog exception: " + exc.toString())
-        }
-    }
-
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
         try {
@@ -105,6 +96,10 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
                 Constants.SHARED_PREF_LIBRE_USER,
                 Constants.SHARED_PREF_NIGHTSCOUT_URL -> {
                     updateEnableStates(sharedPreferences!!)
+                    update()
+                }
+                Constants.SHARED_PREF_LIBRE_PATIENT_ID -> {
+                    update()
                 }
             }
         } catch (exc: Exception) {
@@ -135,15 +130,76 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
         }
     }
 
+    private fun setSummary(key: String, defaultResId: Int) {
+        val pref = findPreference<Preference>(key)
+        if(pref != null) {
+            val value = preferenceManager.sharedPreferences!!.getString(key, "")!!.trim()
+            pref.summary = if(value.isNullOrEmpty())
+                 resources.getString(defaultResId)
+            else
+                value
+        }
+    }
+    private fun update() {
+        setSummary(Constants.SHARED_PREF_LIBRE_USER, CR.string.src_libre_user_summary)
+        setSummary(Constants.SHARED_PREF_NIGHTSCOUT_URL, CR.string.src_ns_url_summary)
+        setPatientSummary()
+    }
+
+
+    private fun setPatientSummary() {
+        val listPreference = findPreference<ListPreference>(Constants.SHARED_PREF_LIBRE_PATIENT_ID)
+        if(listPreference != null && listPreference.isVisible) {
+            val pref = findPreference<Preference>(Constants.SHARED_PREF_LIBRE_PATIENT_ID)
+            if (pref != null) {
+                val value = preferenceManager.sharedPreferences!!.getString(
+                    Constants.SHARED_PREF_LIBRE_PATIENT_ID,
+                    ""
+                )!!.trim()
+                if (value.isNullOrEmpty() || !LibreLinkSourceTask.patientData.containsKey(value))
+                    pref.summary = resources.getString(CR.string.src_libre_patient_summary)
+                else {
+                    pref.summary = LibreLinkSourceTask.patientData[value]
+                }
+            }
+        }
+    }
     private fun setupLibrePatientData() {
         try {
             val listPreference = findPreference<ListPreference>(Constants.SHARED_PREF_LIBRE_PATIENT_ID)
             // force "global broadcast" to be the first entry
-            listPreference!!.entries = LibreViewSourceTask.patientData.values.toTypedArray()
-            listPreference.entryValues = LibreViewSourceTask.patientData.keys.toTypedArray()
-            listPreference.isVisible = LibreViewSourceTask.patientData.size > 1
+            listPreference!!.entries = LibreLinkSourceTask.patientData.values.toTypedArray()
+            listPreference.entryValues = LibreLinkSourceTask.patientData.keys.toTypedArray()
+            listPreference.isVisible = LibreLinkSourceTask.patientData.size > 1
+            if(listPreference.isVisible)
+                setPatientSummary()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "setupLibrePatientData exception: $exc")
+        }
+    }
+
+    private fun setupLocalIobAction(preference: Preference?) {
+        if(preference != null) {
+            preference.setOnPreferenceClickListener {
+                Dialogs.showOkCancelDialog(requireContext(), resources.getString(de.michelinside.glucodatahandler.common.R.string.activate_local_nightscout_iob_title), resources.getString(
+                    de.michelinside.glucodatahandler.common.R.string.activate_local_nightscout_iob_message)) { _, _ ->
+                    with(preferenceManager!!.sharedPreferences!!.edit()) {
+                        putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, true)
+                        putString(Constants.SHARED_PREF_NIGHTSCOUT_URL, "http://127.0.0.1:17580")
+                        putString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, "")
+                        putString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, "")
+                        putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, true)
+                        apply()
+                    }
+                    findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB)!!.isChecked = true
+                    findPreference<EditTextPreference>(Constants.SHARED_PREF_NIGHTSCOUT_URL)!!.text = "http://127.0.0.1:17580"
+                    findPreference<EditTextPreference>(Constants.SHARED_PREF_NIGHTSCOUT_SECRET)!!.text = ""
+                    findPreference<EditTextPreference>(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN)!!.text = ""
+                    findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED)!!.isChecked = true
+
+                }
+                true
+            }
         }
     }
 

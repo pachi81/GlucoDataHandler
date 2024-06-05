@@ -13,6 +13,7 @@ import androidx.wear.watchface.complications.datasource.SuspendingComplicationDa
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.R as CR
 
@@ -21,6 +22,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     protected val LOG_ID = "GDH.BgValueComplicationService"
     var descriptionResId: Int = CR.string.name
     protected lateinit var sharedPref: SharedPreferences
+    protected var instanceId = 0
 
     override fun onCreate() {
         try {
@@ -78,6 +80,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     }
 
     private fun getComplicationData(request: ComplicationRequest): ComplicationData? {
+        instanceId = request.complicationInstanceId
         return when(request.complicationType) {
             ComplicationType.SHORT_TEXT -> getShortTextComplicationData()
             ComplicationType.RANGED_VALUE -> getRangeValueComplicationData()
@@ -141,7 +144,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     open fun getLargeImageComplicationData(): ComplicationData {
         return PhotoImageComplicationData.Builder (
-            photoImage = BitmapUtils.getGlucoseAsIcon(ReceiveData.getClucoseColor(), true, 500,500),
+            photoImage = BitmapUtils.getGlucoseAsIcon(ReceiveData.getGlucoseColor(), true, 500,500),
             contentDescription = descriptionText()
         )
             .setTapAction(getTapAction())
@@ -163,26 +166,14 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     open fun getImage(): SmallImage? = null
 
     open fun getTapAction(useExternalApp: Boolean = true): PendingIntent? {
-        if (BuildConfig.DEBUG) {
+        val action = sharedPref.getString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, "")
+        if(action != null) {
+            return PackageUtils.getTapActionIntent(this, action, instanceId)
+        } else if (BuildConfig.DEBUG) {
             // for debug create dummy broadcast (to check in emulator)
-            return PendingIntent.getBroadcast(this, 3, GlucoDataUtils.getDummyGlucodataIntent(false), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-        } else {
-            /*
-            var launchIntent: Intent? = packageManager.getLaunchIntentForPackage("tk.glucodata")
-            if (launchIntent == null) {
-                Log.d(LOG_ID, "Juggluco not found, use own one")
-                launchIntent = Intent(this, WaerActivity::class.java)
-            }
-            launchIntent.action = Intent.ACTION_MAIN
-            launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-            return PendingIntent.getActivity(
-                applicationContext,
-                2,
-                launchIntent,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-            )*/
-            return Utils.getAppIntent(applicationContext, WaerActivity::class.java, 2, useExternalApp)
+            return PendingIntent.getBroadcast(this, instanceId, GlucoDataUtils.getDummyGlucodataIntent(false), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         }
+        return null
     }
 
 
@@ -190,7 +181,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         PlainComplicationText.Builder(text).build()
 
     fun glucoseText(): PlainComplicationText =
-        plainText(ReceiveData.getClucoseAsString())
+        plainText(ReceiveData.getGlucoseAsString())
 
     fun deltaWithIconText(): PlainComplicationText =
         plainText("Δ: " + ReceiveData.getDeltaAsString())
@@ -202,7 +193,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         plainText(ReceiveData.getRateAsString())
 
     fun glucoseAndDeltaText(): PlainComplicationText =
-        plainText(ReceiveData.getClucoseAsString() + "  Δ: " + ReceiveData.getDeltaAsString())
+        plainText(ReceiveData.getGlucoseAsString() + "  Δ: " + ReceiveData.getDeltaAsString())
 
     fun resText(resId: Int): PlainComplicationText =
         plainText(getText(resId))
@@ -234,7 +225,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     fun glucoseImage(small: Boolean = false): SmallImage {
         return SmallImage.Builder(
-            image = BitmapUtils.getGlucoseAsIcon(ReceiveData.getClucoseColor(), true, resizeFactor = if(small) 0.5F else 1.0F ),
+            image = BitmapUtils.getGlucoseAsIcon(ReceiveData.getGlucoseColor(), true, resizeFactor = if(small) 0.5F else 1.0F ),
             type = SmallImageType.PHOTO
         ).setAmbientImage(ambientGlucoseAsIcon(forImage = true, small = small))
             .build()
@@ -248,7 +239,10 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
 
     fun arrowImage(small: Boolean = false): SmallImage {
         return  SmallImage.Builder(
-            image = BitmapUtils.getRateAsIcon(ReceiveData.getClucoseColor(), true, resizeFactor = if(small) 0.6F else 1.0F),
+            image = BitmapUtils.getRateAsIcon(
+                ReceiveData.getGlucoseColor(),
+                resizeFactor = if(small) 0.6F else 1.0F
+            ),
             type = SmallImageType.PHOTO
         )
             .setAmbientImage(ambientArrowIcon(small))
@@ -258,12 +252,15 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     fun ambientArrowIcon(small: Boolean = false): Icon? {
         if (sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false))
             return null
-        return BitmapUtils.getRateAsIcon(color = Color.WHITE, roundTarget = true, resizeFactor = if(small) 0.6F else 1.0F)
+        return BitmapUtils.getRateAsIcon(
+            color = Color.WHITE,
+            resizeFactor = if(small) 0.6F else 1.0F
+        )
     }
 
     fun getGlucoseTrendImage(small: Boolean = false): SmallImage {
         return  SmallImage.Builder(
-            image = BitmapUtils.getGlucoseTrendIcon(ReceiveData.getClucoseColor(), small = small),
+            image = BitmapUtils.getGlucoseTrendIcon(ReceiveData.getGlucoseColor(), small = small),
             type = SmallImageType.PHOTO
         ).setAmbientImage(ambientGlucoseTrendImage())
             .build()

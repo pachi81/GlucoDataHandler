@@ -40,27 +40,25 @@ object BitmapUtils {
         var result: Float = maxTextSize
         if(roundTarget) {
             if (!top || !isShortText(text) ) {
-                if (text.contains("."))
-                    result *= 0.7F
+                result *= if (text.contains("."))
+                    0.7F
                 else
-                    result *= 0.85F
+                    0.85F
             }
         } else {
-            val fullText: String
-            if (text.contains("+") || text.contains("-")) {
-                fullText = text // delta value
+            val fullText = if (text.contains("+") || text.contains("-")) {
+                text // delta value
             } else if (text.contains(".")) {
                 if (text.length == 3)
-                    fullText = "0.0"
+                    "0.0"
                 else
-                    fullText = "00.0"
+                    "00.0"
             } else {
-                if (text.length == 1)
-                    fullText = "0"
-                else if (text.length == 2)
-                    fullText = "00"
-                else
-                    fullText = "000"
+                when(text.length) {
+                    1 -> "0"
+                    2 -> "00"
+                    else -> "000"
+                }
             }
             val paint = Paint(Paint.ANTI_ALIAS_FLAG)
             paint.textSize = maxTextSize
@@ -74,7 +72,7 @@ object BitmapUtils {
         return result
     }
 
-    private fun textToBitmap(text: String, color: Int, roundTarget: Boolean = false, strikeThrough: Boolean = false, width: Int = 100, height: Int = 100, top: Boolean = false, bold: Boolean = false, resizeFactor: Float = 1F): Bitmap? {
+    private fun textToBitmap(text: String, color: Int, roundTarget: Boolean = false, strikeThrough: Boolean = false, width: Int = 100, height: Int = 100, top: Boolean = false, bold: Boolean = false, resizeFactor: Float = 1F, withShadow: Boolean = false): Bitmap? {
         try {
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888 )
             val maxTextSize = calcMaxTextSizeForBitmap(bitmap, text, roundTarget, minOf(width,height).toFloat(), top, bold) * resizeFactor
@@ -86,6 +84,8 @@ object BitmapUtils {
             paint.textSize = maxTextSize
             paint.textAlign = Paint.Align.CENTER
             paint.isStrikeThruText = strikeThrough
+            if(withShadow)
+                paint.setShadowLayer(2F, 0F,0F, Color.BLACK)
             if (bold)
                 paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             val boundsText = Rect()
@@ -95,22 +95,20 @@ object BitmapUtils {
                 // re-calculate size depending on the bound width -> use minOf for preventing oversize signs
                 paint.getTextBounds(text, 0, text.length, boundsText)
             }
-            Log.d(LOG_ID, "height: " + boundsText.height().toString() + " width:" + boundsText.width().toString() + " text-size:" + paint.textSize.toString() + " maxTextSize:" + maxTextSize.toString())
+            Log.v(LOG_ID, "height: " + boundsText.height().toString() + " width:" + boundsText.width().toString() + " text-size:" + paint.textSize.toString() + " maxTextSize:" + maxTextSize.toString())
             val maxTextWidthRoundTarget = Utils.round(width.toFloat() * 0.9F, 0).toInt()
             if(roundTarget && boundsText.width() > maxTextWidthRoundTarget)
                 paint.textSize = paint.textSize-(boundsText.width() - maxTextWidthRoundTarget)
             val y =
-                if (text == "---" || text == "--")
-                    if (top)
+                if(top)
+                    if (text == "---" || text == "--")
                         Utils.round(height.toFloat() * 0.5F, 0).toInt()
                     else
-                        Utils.round(height.toFloat() * 0.8F, 0).toInt()
-                else if (top)
-                    boundsText.height()
+                        boundsText.height()
                 else
-                    ((bitmap.height + boundsText.height()) / 2) - 3
+                    canvas.height/2f + boundsText.height()/2f - boundsText.bottom
 
-            Log.d(LOG_ID, "Create bitmap for " + text + " - y:" + y.toString() + " text-size:" + paint.textSize.toString())
+            Log.d(LOG_ID, "Create bitmap for $text - y: $y - text-size: ${paint.textSize} - color: color - shadow: $withShadow")
             canvas.drawText(text, width.toFloat()/2, y.toFloat(), paint)
             return bitmap
         } catch (exc: Exception) {
@@ -146,25 +144,25 @@ object BitmapUtils {
         return rotatedBitmap
     }
 
-    private fun rateToBitmap(rate: Float, color: Int, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, strikeThrough: Boolean = false): Bitmap? {
+    private fun rateToBitmap(rate: Float, color: Int, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, strikeThrough: Boolean = false, withShadow: Boolean = false): Bitmap? {
         try {
             if (rate.isNaN()) {
-                return textToBitmap("?", color, true, false, width, height )
+                return textToBitmap("?", color, true, false, width, height, withShadow = withShadow )
             }
             var textSize = minOf(width,height).toFloat()
             val text: String
             val degrees: Int
             var shortArrowRate = 0.8F
-            if(rate >= 3F) {
+            if(rate >= 3F || rate <= -3F) {
                 text = "⇈"
                 textSize -= textSize*0.05F
-                degrees = 0
+                degrees = if ( rate <= -3F ) 180 else 0
                 shortArrowRate = 0.7F
-            } else if ( rate <= -3F ) {
+            /*} else if ( rate <= -3F ) {
                 text = "⇊"
                 textSize -= textSize*0.05F
                 degrees = 0
-                shortArrowRate = 0.7F
+                shortArrowRate = 0.7F*/
             } else {
                 text = "↑"
                 degrees = Utils.round(abs(maxOf(-2F, minOf(2F, rate)) - 2F) * 90F / 2F, 0).toInt()
@@ -184,15 +182,12 @@ object BitmapUtils {
             val paint = Paint(Paint.ANTI_ALIAS_FLAG)
             paint.color = color
             paint.textSize = textSize
-            paint.textAlign = Paint.Align.CENTER
             paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             paint.isStrikeThruText = strikeThrough
-            val boundsText = Rect()
-            paint.getTextBounds(text, 0, text.length, boundsText)
-            val y = ((bitmap.height + boundsText.height()) / 2) - 3
-
-            Log.d(LOG_ID, "Create bitmap for " + text + "(rate: " + rate + ") - y:" + y.toString() + " - text-size:" + paint.textSize.toString() + " - degrees:" + degrees )
-            canvas.drawText(text, width.toFloat()/2, y.toFloat(), paint)
+            if(withShadow)
+                paint.setShadowLayer(2F, 0F,0F, Color.BLACK)
+            Log.d(LOG_ID, "Create $width x $height bitmap for $text (rate: $rate) - text-size: ${paint.textSize} - degrees: $degrees - color: $color - shadow: $withShadow" )
+            drawCenteredText(canvas, paint, text)
             return rotateBitmap(bitmap, degrees)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Cannot create rate icon: " + exc.message.toString())
@@ -200,7 +195,17 @@ object BitmapUtils {
         }
     }
 
-    fun textRateToBitmap(text: String, rate: Float, color: Int, obsolete: Boolean = false, strikeThrough: Boolean, width: Int = 100, height: Int = 100, small: Boolean = false): Bitmap? {
+    private fun drawCenteredText(canvas: Canvas, paint: Paint, text: String) {
+        paint.textAlign = Paint.Align.LEFT
+        val boundsText = Rect()
+        paint.getTextBounds(text, 0, text.length, boundsText)
+        val x = canvas.width/2f - boundsText.width()/2f -boundsText.left //width.toFloat()/2
+        val y = canvas.height/2f + boundsText.height()/2f - boundsText.bottom //((bitmap.height + boundsText.height()) / 2) - 10
+        Log.d(LOG_ID, "Center ${canvas.width}x${canvas.height} bitmap for $text - x: $x - y: $y - text-size: ${paint.textSize}")
+        canvas.drawText(text, x, y, paint)
+    }
+
+    fun textRateToBitmap(text: String, rate: Float, color: Int, obsolete: Boolean = false, strikeThrough: Boolean, width: Int = 100, height: Int = 100, small: Boolean = false, withShadow: Boolean = false): Bitmap? {
         try {
             val padding = if (isShortText(text) || small) 0F else height.toFloat()*0.05F
             val rateFactor = if (isShortText(text)) 0.5F else 0.45F
@@ -212,9 +217,9 @@ object BitmapUtils {
                 textHeight -= topRateSmall.toInt()
             }
             val resizeWidth = Utils.round(width.toFloat()*resizeFactor, 0).toInt()
-            val textBitmap = textToBitmap(text, color, true, strikeThrough, resizeWidth, textHeight, true, false, 1F)
+            val textBitmap = textToBitmap(text, color, true, strikeThrough, resizeWidth, textHeight, true, false, 1F, withShadow)
             val rateDimension = Utils.round(rateSize.toFloat() * resizeFactor, 0).toInt()
-            val rateBitmap = rateToBitmap(rate, color, rateDimension, rateDimension, 1F, obsolete)
+            val rateBitmap = rateToBitmap(rate, color, rateDimension, rateDimension, 1F, obsolete, withShadow)
             val comboBitmap = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888)
             val comboImage = Canvas(comboBitmap)
             if (small) {
@@ -232,45 +237,58 @@ object BitmapUtils {
         }
     }
 
-    private fun getGlucoseAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F): Bitmap? {
+    private fun getGlucoseAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, withShadow: Boolean = false): Bitmap? {
         return textToBitmap(
-            ReceiveData.getClucoseAsString(),color ?: ReceiveData.getClucoseColor(), roundTarget, ReceiveData.isObsolete(
+            ReceiveData.getGlucoseAsString(),color ?: ReceiveData.getGlucoseColor(), roundTarget, ReceiveData.isObsolete(
                 Constants.VALUE_OBSOLETE_SHORT_SEC
-            ) && !ReceiveData.isObsolete(),width, height, resizeFactor = resizeFactor)
+            ) && !ReceiveData.isObsolete(),width, height, resizeFactor = resizeFactor, withShadow = withShadow)
     }
 
-    fun getGlucoseAsIcon(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F): Icon {
-        return Icon.createWithBitmap(getGlucoseAsBitmap(color, roundTarget, width, height, resizeFactor))
+    fun getGlucoseAsIcon(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, withShadow: Boolean = false): Icon {
+        return Icon.createWithBitmap(getGlucoseAsBitmap(color, roundTarget, width, height, resizeFactor, withShadow))
     }
 
     fun getDeltaAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100): Bitmap? {
-        return textToBitmap(ReceiveData.getDeltaAsString(),color ?: ReceiveData.getClucoseColor(true), roundTarget, false, width, height)
+        return textToBitmap(ReceiveData.getDeltaAsString(),color ?: ReceiveData.getGlucoseColor(true), roundTarget, false, width, height)
     }
 
     fun getDeltaAsIcon(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100): Icon {
         return Icon.createWithBitmap(getDeltaAsBitmap(color, roundTarget, width, height))
     }
 
-    fun getRateAsBitmap(color: Int? = null, roundTarget: Boolean = false, resizeFactor: Float = 1F, width: Int = 100, height: Int = 100): Bitmap? {
+    fun getRateAsBitmap(
+        color: Int? = null,
+        resizeFactor: Float = 1F,
+        width: Int = 100,
+        height: Int = 100,
+        withShadow: Boolean = false
+    ): Bitmap? {
         return rateToBitmap(
-            ReceiveData.rate, color ?: ReceiveData.getClucoseColor(), resizeFactor = resizeFactor, width = width, height = height, strikeThrough = ReceiveData.isObsolete(
+            ReceiveData.rate, color ?: ReceiveData.getGlucoseColor(), resizeFactor = resizeFactor, width = width, height = height, strikeThrough = ReceiveData.isObsolete(
                 Constants.VALUE_OBSOLETE_SHORT_SEC
-            )
+            ),
+            withShadow = withShadow
         )
     }
 
-    fun getRateAsIcon(color: Int? = null, roundTarget: Boolean = false, resizeFactor: Float = 1F, width: Int = 100, height: Int = 100): Icon {
-        return Icon.createWithBitmap(getRateAsBitmap(color, roundTarget, resizeFactor, width, height))
+    fun getRateAsIcon(
+        color: Int? = null,
+        resizeFactor: Float = 1F,
+        width: Int = 100,
+        height: Int = 100,
+        withShadow: Boolean = false
+    ): Icon {
+        return Icon.createWithBitmap(getRateAsBitmap(color, resizeFactor, width, height, withShadow))
     }
 
-    fun getGlucoseTrendBitmap(color: Int? = null, width: Int = 100, height: Int = 100, small: Boolean = false): Bitmap? {
+    fun getGlucoseTrendBitmap(color: Int? = null, width: Int = 100, height: Int = 100, small: Boolean = false, withShadow: Boolean = false): Bitmap? {
         return textRateToBitmap(
-            ReceiveData.getClucoseAsString(), ReceiveData.rate, color ?: ReceiveData.getClucoseColor(), ReceiveData.isObsolete(
+            ReceiveData.getGlucoseAsString(), ReceiveData.rate, color ?: ReceiveData.getGlucoseColor(), ReceiveData.isObsolete(
                 Constants.VALUE_OBSOLETE_SHORT_SEC
-            ), ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height, small)
+            ), ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height, small, withShadow)
     }
 
-    fun getGlucoseTrendIcon(color: Int? = null, width: Int = 100, height: Int = 100, small: Boolean = false): Icon {
-        return Icon.createWithBitmap(getGlucoseTrendBitmap(color, width, height, small))
+    fun getGlucoseTrendIcon(color: Int? = null, width: Int = 100, height: Int = 100, small: Boolean = false, withShadow: Boolean = false): Icon {
+        return Icon.createWithBitmap(getGlucoseTrendBitmap(color, width, height, small, withShadow))
     }
 }

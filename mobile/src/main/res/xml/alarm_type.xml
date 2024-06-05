@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="enabled"
+            android:defaultValue="true"
+            android:title="@string/alarm_enabled"
+            android:summaryOn="@string/alarm_enabled_summary_on"
+            android:summaryOff="@string/alarm_enabled_summary_off"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SeekBarPreference
+            app:showSeekBarValue="true"
+            app:seekBarIncrement="1"
+            app:min="5"
+            android:max="120"
+            android:key="interval"
+            android:title="@string/alarm_interval"
+            app:iconSpaceReserved="false" />
+        <PreferenceCategory
+            android:title="@string/pref_cat_alarm_vibration_sound"
+            app:iconSpaceReserved="false"
+            app:initialExpandedChildrenCount="0">
+                <androidx.preference.SeekBarPreference
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="1"
+                    app:min="-1"
+                    android:defaultValue="-1"
+                    android:key="sound_level"
+                    android:title="@string/alarm_sound_level"
+                    android:summary="@string/alarm_sound_level_summary"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:key="use_custom_sound"
+                    android:defaultValue="false"
+                    android:title="@string/alarm_use_custom_sound"
+                    android:summaryOn="@string/alarm_use_custom_sound_summary_on"
+                    android:summaryOff="@string/alarm_use_custom_sound_summary_off"
+                    app:iconSpaceReserved="false" />
+                <Preference
+                    android:key="custom_sound"
+                    android:title="@string/alarm_sound"
+                    android:summary="@string/alarm_sound_summary"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SeekBarPreference
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="1"
+                    app:defaultValue="0"
+                    app:min="0"
+                    android:max="30"
+                    android:key="sound_delay"
+                    android:title="@string/alarm_sound_delay"
+                    android:summary="@string/alarm_sound_delay_summary"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SeekBarPreference
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="1"
+                    app:defaultValue="0"
+                    app:min="0"
+                    android:max="15"
+                    android:key="retrigger"
+                    android:title="@string/alarm_retrigger"
+                    android:summary="@string/alarm_retrigger_summary"
+                    app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+        <PreferenceCategory
+            android:title="@string/advanced_settings"
+            app:iconSpaceReserved="false"
+            app:initialExpandedChildrenCount="0">
+                <Preference
+                    android:key="test"
+                    android:title="@string/alarm_test"
+                    android:summary="@string/alarm_test_summary"
+                    app:iconSpaceReserved="false" />
+                <Preference
+                    android:key="save_sound"
+                    android:title="@string/alarm_save_sound"
+                    android:summary="@string/alarm_save_sound_summary"
+                    app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+</PreferenceScreen>

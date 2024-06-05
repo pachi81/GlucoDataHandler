@@ -21,6 +21,7 @@ import java.text.DateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: String, protected val initialExecution: Boolean = false): SharedPreferences.OnSharedPreferenceChangeListener,
     NotifierInterface {
@@ -34,7 +35,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     private var pendingIntent: PendingIntent? = null
     private var alarmManager: AlarmManager? = null
     private var lastElapsedMinute = 0L
-    private var isRunning: Boolean = false
+    private var runningThread: Thread? = null
     private var currentAlarmTime = 0L
     protected var hasExactAlarmPermission = false
     private val elapsedTimeMinute: Long
@@ -110,19 +111,36 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         return false
     }
 
+    private fun isRunning(): Boolean {
+        if(runningThread!=null && runningThread!!.isAlive()) {
+            return true
+        }
+        return false
+    }
+
     private fun executeTasks(force: Boolean = false) {
         Log.v(LOG_ID, "executeTasks called with force: " + force)
         try {
             if (force || checkExecution()) {
-                Thread {
+                if(isRunning()) {
+                    Log.w(LOG_ID, "Thread still active! Kill it!")
+                    runningThread!!.interrupt()
+                }
+                runningThread = Thread {
                     WakeLockHelper(context!!).use {
                         try {
-                            isRunning = true
                             backgroundTaskList.forEach {
                                 if ((force && it.active(elapsedTimeMinute)) || checkExecution(it)) {
                                     try {
-                                        Log.i(LOG_ID,"execute after " + elapsedTimeMinute + " min: " + it.javaClass.simpleName)
+                                        Log.i(
+                                            LOG_ID,
+                                            "execute after " + elapsedTimeMinute + " min: " + it.javaClass.simpleName
+                                        )
                                         it.execute(context!!)
+                                    } catch(ex:InterruptedException) {
+                                        Log.e(LOG_ID,"execute task " + it.javaClass.simpleName + " interrupted: " + ex)
+                                        it.interrupt()
+                                        return@Thread
                                     } catch (ex: Exception) {
                                         Log.e(LOG_ID,"exception while execute task " + it.javaClass.simpleName + ": " + ex)
                                     }
@@ -131,15 +149,12 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                         } catch (ex: Exception) {
                             Log.e(LOG_ID, "exception while executing tasks: " + ex)
                         }
-                        // restart timer at the end, for the case a new value has been received
-                        startTimer()
-                        isRunning = false
                     }
-                }.start()
-            } else {
-                // restart timer
-                startTimer()
+                }
+                runningThread!!.start()
             }
+            // restart timer
+            startTimer()
         } catch (ex: Exception) {
             Log.e(LOG_ID, "executeTasks: " + ex)
         }
@@ -216,7 +231,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                 if (nextAlarmCal.get(Calendar.SECOND) < TimeUnit.MILLISECONDS.toSeconds(DEFAULT_DELAY_MS)) {
                     nextAlarmCal.add(Calendar.SECOND, -1*(nextAlarmCal.get(Calendar.SECOND)+1))
                 }
-                if (currentAlarmTime != nextAlarmCal.timeInMillis) {
+                if (abs(currentAlarmTime-nextAlarmCal.timeInMillis) > 1000) {
                     Log.i(LOG_ID, "Set next alarm after " + nextTriggerMin + " minute(s) at " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(nextAlarmCal.time)
                           + " (received at " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(ReceiveData.time)) + ") with a delay of " + getDelay()/1000 + "s")
                 }
@@ -265,7 +280,9 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                     }
                 }
 
-                if (currentAlarmTime != nextAlarm.timeInMillis) {
+                Log.v(LOG_ID, "Cur time $currentAlarmTime - next time ${nextAlarm.timeInMillis} - diff ${abs(currentAlarmTime-nextAlarm.timeInMillis)}")
+
+                if (abs(currentAlarmTime-nextAlarm.timeInMillis) > 1000) {
                     if (hasExactAlarmPermission) {
                         alarmManager!!.setExactAndAllowWhileIdle(
                             AlarmManager.RTC_WAKEUP,
@@ -283,6 +300,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                     lastElapsedMinute = elapsedTimeMinute
                 } else {
                     Log.d(LOG_ID, "Ignore next alarm as it is already active")
+                    currentAlarmTime = nextAlarm.timeInMillis
                 }
                 return
             }
@@ -323,7 +341,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
             Log.v(LOG_ID, "OnNotifyData for source " + dataSource.toString())
-            if (!isRunning) {  // check only if for not already in execution
+            if (!isRunning()) {  // check only if for not already in execution
                 if(mutableSetOf(NotifySource.BROADCAST, NotifySource.MESSAGECLIENT).contains(dataSource))
                     executeTasks()    // check for additional IOB - COB content or restart time
                 else
@@ -338,6 +356,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
 
     fun run(set_context: Context) {
         try {
+            Log.v(LOG_ID, "run called")
             context = set_context
             sharedPref = context!!.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
@@ -357,12 +376,13 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     fun stop() {
         try {
             if (context != null) {
+                Log.v(LOG_ID, "stop called")
                 InternalNotifier.remNotifier(context!!, this)
                 sharedPref.unregisterOnSharedPreferenceChangeListener(this)
                 stopTimer()
             }
         } catch (ex: Exception) {
-            Log.e(LOG_ID, "run: " + ex)
+            Log.e(LOG_ID, "stop: " + ex)
         }
     }
 

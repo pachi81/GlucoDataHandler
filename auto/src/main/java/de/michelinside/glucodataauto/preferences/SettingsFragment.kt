@@ -1,6 +1,5 @@
 package de.michelinside.glucodataauto.preferences
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.preference.*
@@ -9,7 +8,7 @@ import de.michelinside.glucodataauto.R
 import de.michelinside.glucodatahandler.common.Constants
 
 
-class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
+class SettingsFragment : PreferenceFragmentCompat() {
     private val LOG_ID = "GDH.AA.SettingsFragment"
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -28,54 +27,4 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         }
     }
 
-    override fun onResume() {
-        Log.d(LOG_ID, "onResume called")
-        try {
-            preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
-            updateEnableStates(preferenceManager.sharedPreferences!!)
-            super.onResume()
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "onResume exception: " + exc.toString())
-        }
-    }
-
-    override fun onPause() {
-        Log.d(LOG_ID, "onPause called")
-        try {
-            preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
-            super.onPause()
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "onPause exception: " + exc.toString())
-        }
-    }
-
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
-        try {
-            when(key) {
-                Constants.SHARED_PREF_CAR_NOTIFICATION,
-                Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY -> {
-                    updateEnableStates(sharedPreferences!!)
-                }
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
-        }
-    }
-
-    fun <T : Preference?> setEnableState(sharedPreferences: SharedPreferences, key: String, enableKey: String, secondEnableKey: String? = null, defValue: Boolean = false) {
-        val pref = findPreference<T>(key)
-        if (pref != null)
-            pref.isEnabled = sharedPreferences.getBoolean(enableKey, defValue) && (if (secondEnableKey != null) !sharedPreferences.getBoolean(secondEnableKey, defValue) else true)
-    }
-
-    fun updateEnableStates(sharedPreferences: SharedPreferences) {
-        try {
-            setEnableState<SwitchPreference>(sharedPreferences, Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY, Constants.SHARED_PREF_CAR_NOTIFICATION)
-            setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM, Constants.SHARED_PREF_CAR_NOTIFICATION, Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY)
-            setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_CAR_NOTIFICATION_REAPPEAR_INTERVAL, Constants.SHARED_PREF_CAR_NOTIFICATION, Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY)
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
-        }
-    }
 }
