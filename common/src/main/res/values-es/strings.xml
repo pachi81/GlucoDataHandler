@@ -486,4 +486,5 @@
     <string name="gda_foreground_info">GlucoDataAuto se está ejecutando</string>
     <string name="gda_foreground_summary">Actívalo solo si estás usando una fuente de seguidor y solo notificaciones de Android Auto.\nEsto evita que Android cierre esta aplicación mientras no esté conectado a Android Auto, por lo que la aplicación no puede reconocer la conexión a Android Auto.\nEn lugar de habilitar esta configuración, también puedes abrir la aplicación en Android Auto una vez, si estás conectado.</string>
     <string name="gda_battery_optimization_disabled">La optimización de batería está habilitada!\nPulsa aquí para desactivarlo.</string>
+    <string name="gda_source_follower_info_summary">Si estás usando una fuente de seguidor, la aplicación puede no iniciarse mientras estés conectado a Android Auto, si solo usas notificaciones de Android Auto.\nPara asegurarte de que la aplicación detecte la conexión de Android Auto, tienes que desactivar la optimización de batería.\nSi aún no funciona, también puedes habilitar el modo de primer plano o tienes que abrir la aplicación en Android Auto una vez, cuando esté conectado a Android Auto.</string>
 </resources>

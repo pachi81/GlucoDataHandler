@@ -63,6 +63,11 @@
             android:title="@string/source_delay"
             android:summary="@string/source_delay_summary"
             app:iconSpaceReserved="false" />
+        <Preference
+            android:key="gda_source_follower_info"
+            android:title="@string/pref_information"
+            android:summary="@string/gda_source_follower_info_summary"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/src_cat_libreview"
