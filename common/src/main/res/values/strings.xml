@@ -504,5 +504,5 @@
     <string name="gda_help_aa_sources">2. Activate \"Unknown sources\"</string>
     <string name="gda_help_aa_sources_summary">- open Android Auto app\n- open in the 3-dot menu the \"Developer settings\"\n- scroll down to \"Unknown source\"\n- enable it</string>
     <string name="gda_help_aa_notification">3. Set notification settings</string>
-    <string name="gda_help_aa_notification_summary">- open Android Auto app\n- scroll down to \"Notifications\"\n- enable \"Show conversations\"\n- enable \"Show first line of conversations\"</string>
+    <string name="gda_help_aa_notification_summary">- open Android Auto app\n- scroll down to \"Messaging\"\n- enable \"Show message notifications\"\n- enable \"Show first line of messages\"</string>
 </resources>

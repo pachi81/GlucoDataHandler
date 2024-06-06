@@ -479,5 +479,5 @@
     <string name="gda_help_aa_sources">2. \"Unbekannte Quellen\" aktivieren</string>
     <string name="gda_help_aa_sources_summary">- Android Auto App öffnen\n- in den 3-Punkt Menü \"Entwicklereinstellungen auswählen\"\n- bis zu \"Unbekannte Quellen\" scrollen und aktivieren</string>
     <string name="gda_help_aa_notification">3. Benachrichtigungen aktivieren</string>
-    <string name="gda_help_aa_notification_summary">- Android Auto App öffnen\n- bis zu \"Benachrichtigungen\" scrollen\n- \"Unterhaltungen anzeigen\" aktivieren\n- \"Erste Zeile einer Unterhaltung anzeigen\" aktivieren</string>
+    <string name="gda_help_aa_notification_summary">- Android Auto App öffnen\n- bis zu \"Messaging\" scrollen\n- \"Benachrichtigungen für Nachrichten anzeigen\" aktivieren\n- \"Erste Zeile einer Nachricht anzeigen\" aktivieren</string>
 </resources>
