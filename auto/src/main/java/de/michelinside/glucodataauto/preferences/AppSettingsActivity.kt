@@ -12,7 +12,8 @@ import de.michelinside.glucodatahandler.common.R as RC
 enum class SettingsFragmentClass(val value: Int, val titleRes: Int) {
     SETTINGS_FRAGMENT(0, RC.string.menu_settings),
     SORUCE_FRAGMENT(1, RC.string.menu_sources),
-    ALARM_FRAGMENT(2, RC.string.menu_alarms)
+    ALARM_FRAGMENT(2, RC.string.menu_alarms),
+    HELP_FRAGMENT(3, RC.string.menu_help),
 }
 class SettingsActivity : AppCompatActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
@@ -49,6 +50,14 @@ class SettingsActivity : AppCompatActivity(),
                             this.applicationContext.resources.getText(SettingsFragmentClass.ALARM_FRAGMENT.titleRes)
                         supportFragmentManager.beginTransaction()
                             .replace(R.id.content, AlarmFragment())
+                            .commit()
+                    }
+
+                    SettingsFragmentClass.HELP_FRAGMENT.value -> {
+                        this.supportActionBar!!.title =
+                            this.applicationContext.resources.getText(SettingsFragmentClass.HELP_FRAGMENT.titleRes)
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.content, HelpFragment())
                             .commit()
                     }
                 }

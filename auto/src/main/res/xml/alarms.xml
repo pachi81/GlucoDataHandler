@@ -5,7 +5,7 @@
         android:title="@string/pref_information"
         app:iconSpaceReserved="false">
         <Preference
-            android:key="gda_alarn_info"
+            android:key="gda_alarm_info"
             android:summary="@string/pref_gda_alarm_info_summary"
             app:iconSpaceReserved="false" />
         <Preference

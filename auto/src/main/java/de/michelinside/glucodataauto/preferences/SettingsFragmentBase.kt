@@ -14,7 +14,7 @@ import de.michelinside.glucodatahandler.common.notification.Channels
 
 
 abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
-    protected val LOG_ID = "GDH.SettingsFragmentBase"
+    protected val LOG_ID = "GDH.AA.SettingsFragmentBase"
     private val updateEnablePrefs = mutableSetOf<String>()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

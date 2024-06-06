@@ -482,4 +482,12 @@
     <string name="gda_foreground_summary">Ative isso apenas se você estiver usando uma fonte seguidora e somente notificações do Android Auto.\nIsso impede que o Android feche este aplicativo enquanto não estiver conectado ao Android Auto, para que o aplicativo não possa reconhecer a conexão com o Android Auto.\nEm vez de habilitar esta configuração, você também pode abrir o aplicativo no Android Auto uma vez, se estiver conectado.</string>
     <string name="gda_battery_optimization_disabled">Otimização da bateria está habilitada!\nPressione aqui para desativá-lo.</string>
     <string name="gda_source_follower_info_summary">Se você estiver usando uma fonte seguidora, o aplicativo pode não ser iniciado enquanto estiver conectado ao Android Auto, se você estiver usando apenas notificações do Android Auto.\nPara garantir que o aplicativo detecte a conexão com o Android Auto, você deve desativar a otimização da bateria.\nSe ainda não funcionar, você também pode habilitar o modo de primeiro plano ou abrir o aplicativo no Android Auto uma vez, quando estiver conectado ao Android Auto.</string>
+    <string name="gda_help_aa_title">Configurar Android Auto</string>
+    <string name="gda_help_aa_title_summary">Para ativar o GlucoDataAuto para Android Auto, você deve seguir os seguintes passos:</string>
+    <string name="gda_help_aa_dev_mode">1. Ativar o modo desenvolvedor</string>
+    <string name="gda_help_aa_dev_mode_summary">- Abra o aplicativo Android Auto\n- Role para baixo até a Versão\n- Toque várias vezes na Versão até aparecer um pop-up para \"Permitir definições de programação\"\n- Pressione \"OK\"</string>
+    <string name="gda_help_aa_sources">2. Ativar \"Fontes desconhecidas\"</string>
+    <string name="gda_help_aa_sources_summary">- Abra o aplicativo Android Auto\n- Abra no menu de 3 pontos as \"Definições do programador\"\n- Role para baixo até \"Fontes desconhecidas\"\n- Ative-o</string>
+    <string name="gda_help_aa_notification">3. Configurar as configurações de notificações</string>
+    <string name="gda_help_aa_notification_summary">- Abra o aplicativo Android Auto\n- Role para baixo até \"Mensagens\"\n- Ative \"Mostrar notificações de mensagens\"\n- Ative \"Mostrar primeira linha das mensagens\"</string>
 </resources>

@@ -472,4 +472,12 @@
     <string name="gda_foreground_summary">Aktiviere dies nur, wenn du eine Online Datenquelle und nur Android Auto-Benachrichtigungen verwendest.\nDies verhindert, dass Android diese App schließt, wenn sie nicht mit Android Auto verbunden ist, sodass die App die Android Auto-Verbindung nicht erkennen kann.\nAnstatt diese Einstellung zu aktivieren, kannst du die App auch einmal in Android Auto öffnen, wenn du verbunden bist.</string>
     <string name="gda_battery_optimization_disabled">Akkuoptimierungen sind aktiv!\nHier drücken, um es zu deaktivieren.</string>
     <string name="gda_source_follower_info_summary">Wenn du eine Online Datenquelle verwendest, wird die App möglicherweise nicht gestartet, wenn du mit Android Auto verbunden bist und nur Android Auto-Benachrichtigungen verwendest.\nUm sicherzustellen, dass die App die Android Auto-Verbindung erkennt, musst du die Akkuoptimierung deaktivieren.\nWenn es immer noch nicht funktioniert, kannst du auch den Vordergrundmodus aktivieren oder die App einmal in Android Auto öffnen, wenn sie mit Android Auto verbunden ist.</string>
+    <string name="gda_help_aa_title">Android Auto einrichten</string>
+    <string name="gda_help_aa_title_summary">Um GlucoDataAuto in Android Auto zu verwenden, müssen die folgende Schritte durchgeführt werden:</string>
+    <string name="gda_help_aa_dev_mode">1. Entwicklereinstellungen aktivieren</string>
+    <string name="gda_help_aa_dev_mode_summary">- Android Auto App öffnen\n- bis zu Version scrollen\n- mehrfach auf Version drücken bis ein Popup mit \"Entwicklereinstellungen zulassen\" kommt\n- \"OK\" drücken</string>
+    <string name="gda_help_aa_sources">2. \"Unbekannte Quellen\" aktivieren</string>
+    <string name="gda_help_aa_sources_summary">- Android Auto App öffnen\n- in den 3-Punkt Menü \"Entwicklereinstellungen auswählen\"\n- bis zu \"Unbekannte Quellen\" scrollen und aktivieren</string>
+    <string name="gda_help_aa_notification">3. Benachrichtigungen aktivieren</string>
+    <string name="gda_help_aa_notification_summary">- Android Auto App öffnen\n- bis zu \"Benachrichtigungen\" scrollen\n- \"Unterhaltungen anzeigen\" aktivieren\n- \"Erste Zeile einer Unterhaltung anzeigen\" aktivieren</string>
 </resources>

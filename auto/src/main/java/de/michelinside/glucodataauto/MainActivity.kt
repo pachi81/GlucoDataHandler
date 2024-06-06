@@ -21,7 +21,6 @@ import android.widget.ImageView
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -317,6 +316,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 R.id.action_alarms -> {
                     val intent = Intent(this, SettingsActivity::class.java)
                     intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.ALARM_FRAGMENT.value)
+                    startActivity(intent)
+                    return true
+                }
+                R.id.action_gda_help -> {
+                    val intent = Intent(this, SettingsActivity::class.java)
+                    intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.HELP_FRAGMENT.value)
                     startActivity(intent)
                     return true
                 }

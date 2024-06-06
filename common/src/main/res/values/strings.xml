@@ -497,4 +497,12 @@
     <string name="gda_foreground_summary">Only enable it, if you are using a follower source and Android Auto notifications only.\nThis prevents Android to close this app, while not connected to Android Auto, so the app can not recognize the Android Auto connection.\nInstead of enable this setting, you can also open the app in Android Auto once, if you are connected.</string>
     <string name="gda_battery_optimization_disabled">Battery optimization is enabled!\nPress here to disable it.</string>
     <string name="gda_source_follower_info_summary">If you are using a follower source, the app may not be started while connected to Android Auto, if you are using Android Auto Notifications only.\nTo make sure, the app detects Android Auto connection you have to disable battery optimization.\nIf it still not work, you can als enable foreground mode or you have to open the app in Android Auto once, if it is connected to Android Auto.</string>
+    <string name="gda_help_aa_title">Setup Android Auto</string>
+    <string name="gda_help_aa_title_summary">To activate GlucoDataAuto for Android Auto, you have to do the following steps:</string>
+    <string name="gda_help_aa_dev_mode">1. Activate developer mode</string>
+    <string name="gda_help_aa_dev_mode_summary">- open Android Auto app\n- scroll down to the Version\n- tap several times on the Version until a popup appears to \"Allow development settings\"\n- press \"OK\"</string>
+    <string name="gda_help_aa_sources">2. Activate \"Unknown sources\"</string>
+    <string name="gda_help_aa_sources_summary">- open Android Auto app\n- open in the 3-dot menu the \"Developer settings\"\n- scroll down to \"Unknown source\"\n- enable it</string>
+    <string name="gda_help_aa_notification">3. Set notification settings</string>
+    <string name="gda_help_aa_notification_summary">- open Android Auto app\n- scroll down to \"Notifications\"\n- enable \"Show conversations\"\n- enable \"Show first line of conversations\"</string>
 </resources>
