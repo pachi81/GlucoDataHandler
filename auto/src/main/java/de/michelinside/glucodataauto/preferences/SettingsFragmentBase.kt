@@ -126,10 +126,14 @@ class GDASettingsFragment: SettingsFragmentBase(R.xml.pref_gda) {
         super.onSharedPreferenceChanged(sharedPreferences, key)
         if(key == Constants.SHARED_PREF_CAR_NOTIFICATION) {
             if (preferenceManager.sharedPreferences!!.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, false) && !Channels.notificationChannelActive(requireContext(), ChannelType.ANDROID_AUTO)) {
-                val intent: Intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
-                    .putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
-                if (Channels.notificationActive(requireContext())) // only the channel is inactive!
-                    intent.putExtra(Settings.EXTRA_CHANNEL_ID, ChannelType.ANDROID_AUTO.channelId)
+                val intent: Intent = if (Channels.notificationActive(requireContext())) { // only the channel is inactive!
+                    Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+                        .putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
+                        .putExtra(Settings.EXTRA_CHANNEL_ID, ChannelType.ANDROID_AUTO.channelId)
+                } else {
+                    Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                        .putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
+                }
                 startActivity(intent)
             } else {
                 updatePreferences()

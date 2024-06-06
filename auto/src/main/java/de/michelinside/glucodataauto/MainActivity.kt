@@ -356,10 +356,14 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     Log.v(LOG_ID, "notification toggle")
                     if(!sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, false) && !Channels.notificationChannelActive(this, ChannelType.ANDROID_AUTO))
                     {
-                        val intent: Intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
-                            .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
-                        if (Channels.notificationActive(this)) // only the channel is inactive!
-                            intent.putExtra(Settings.EXTRA_CHANNEL_ID, ChannelType.ANDROID_AUTO.channelId)
+                        val intent: Intent = if (Channels.notificationActive(this)) { // only the channel is inactive!
+                            Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+                                .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
+                                .putExtra(Settings.EXTRA_CHANNEL_ID, ChannelType.ANDROID_AUTO.channelId)
+                        } else {
+                            Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                                .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
+                        }
                         startActivity(intent)
                     } else {
                         with(sharedPref.edit()) {
