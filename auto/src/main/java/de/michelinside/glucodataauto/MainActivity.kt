@@ -38,6 +38,8 @@ import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmType
+import de.michelinside.glucodatahandler.common.notification.ChannelType
+import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
@@ -281,7 +283,15 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun updateNotificationIcon() {
         try {
             if(notificationIcon != null) {
-                val enabled = sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, false)
+                var enabled = sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, false)
+                if(enabled && !Channels.notificationChannelActive(this, ChannelType.ANDROID_AUTO)) {
+                    Log.i(LOG_ID, "Disable car notification as there is no permission!")
+                    with(sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, false)
+                        apply()
+                    }
+                    enabled = false
+                }
                 notificationIcon!!.icon = ContextCompat.getDrawable(this, if(enabled) R.drawable.icon_popup_white else R.drawable.icon_popup_off_white)
             }
         } catch (exc: Exception) {
@@ -339,11 +349,20 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 }
                 R.id.action_notification_toggle -> {
                     Log.v(LOG_ID, "notification toggle")
-                    with(sharedPref.edit()) {
-                        putBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, !sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, false))
-                        apply()
+                    if(!sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, false) && !Channels.notificationChannelActive(this, ChannelType.ANDROID_AUTO))
+                    {
+                        val intent: Intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                            .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
+                        if (Channels.notificationActive(this)) // only the channel is inactive!
+                            intent.putExtra(Settings.EXTRA_CHANNEL_ID, ChannelType.ANDROID_AUTO.channelId)
+                        startActivity(intent)
+                    } else {
+                        with(sharedPref.edit()) {
+                            putBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, !sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, false))
+                            apply()
+                        }
+                        updateNotificationIcon()
                     }
-                    updateNotificationIcon()
                 }
                 else -> return super.onOptionsItemSelected(item)
             }

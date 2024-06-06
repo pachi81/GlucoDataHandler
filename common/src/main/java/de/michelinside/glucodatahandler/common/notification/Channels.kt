@@ -1,11 +1,15 @@
 package de.michelinside.glucodatahandler.common.notification
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.os.Build
+import android.util.Log
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
+import de.michelinside.glucodatahandler.common.utils.Utils
 
 enum class ChannelType(val channelId: String, val nameResId: Int, val descrResId: Int, val importance: Int = NotificationManager.IMPORTANCE_DEFAULT) {
     MOBILE_FOREGROUND("GDH_foreground", R.string.mobile_foreground_notification_name, R.string.mobile_foreground_notification_descr ),
@@ -17,6 +21,7 @@ enum class ChannelType(val channelId: String, val nameResId: Int, val descrResId
     ALARM("gdh_alarm_notification_channel", R.string.alarm_notification_name, R.string.alarm_notification_descr, NotificationManager.IMPORTANCE_MAX );
 }
 object Channels {
+    private val LOG_ID = "GDH.Channels"
     private var notificationMgr: NotificationManager? = null
 
     private val obsoleteNotifications = mutableSetOf(
@@ -59,5 +64,19 @@ object Channels {
 
     fun deleteNotificationChannel(context: Context, type: ChannelType) {
         getNotificationManager(context).deleteNotificationChannel(type.channelId)
+    }
+
+    @SuppressLint("InlinedApi")
+    fun notificationActive(context: Context): Boolean {
+        return Utils.checkPermission(context, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)
+    }
+
+    fun notificationChannelActive(context: Context, type: ChannelType): Boolean {
+        if(notificationActive(context)) {
+            val channel = Channels.getNotificationManager(context).getNotificationChannel(type.channelId)
+            Log.d(LOG_ID, "Channel: prio=${channel.importance}")
+            return (channel.importance > NotificationManager.IMPORTANCE_NONE)
+        }
+        return false
     }
 }

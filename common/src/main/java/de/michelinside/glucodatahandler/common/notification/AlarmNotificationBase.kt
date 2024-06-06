@@ -568,12 +568,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     }
 
     fun channelActive(context: Context): Boolean {
-        if(Utils.checkPermission(context, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
-            val channel = Channels.getNotificationManager(context).getNotificationChannel(getChannelId())
-            Log.d(LOG_ID, "Channel: prio=${channel.importance}")
-            return (channel.importance > NotificationManager.IMPORTANCE_NONE)
-        }
-        return false
+        return Channels.notificationChannelActive(context, getChannel())
     }
 
     protected fun checkRecreateSound() {
@@ -610,8 +605,12 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
     }
 
+    fun getChannel(): ChannelType {
+        return ChannelType.ALARM
+    }
+
     fun getChannelId(): String {
-        return ChannelType.ALARM.channelId
+        return getChannel().channelId
     }
 
     fun getAlarmSoundRes(alarmType: AlarmType): Int? {
