@@ -20,6 +20,7 @@
             android:key="alarm_very_low"
             android:title="@string/very_low_alarm_notification_name"
             android:summary="@string/very_low_alarm_summary"
+            android:icon="@drawable/icon_popup"
             app:iconSpaceReserved="false">
         </Preference>
         <Preference

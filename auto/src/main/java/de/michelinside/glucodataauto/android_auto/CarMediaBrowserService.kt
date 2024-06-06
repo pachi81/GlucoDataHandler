@@ -166,7 +166,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
-        Log.v(LOG_ID, "OnNotifyData called")
+        Log.d(LOG_ID, "OnNotifyData called for source $dataSource")
         try {
             notifyChildrenChanged(MEDIA_ROOT_ID)
         } catch (exc: Exception) {
@@ -175,7 +175,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        Log.v(LOG_ID, "onSharedPreferenceChanged called for key " + key)
+        Log.d(LOG_ID, "onSharedPreferenceChanged called for key " + key)
         try {
             when(key) {
                 Constants.SHARED_PREF_CAR_NOTIFICATION,

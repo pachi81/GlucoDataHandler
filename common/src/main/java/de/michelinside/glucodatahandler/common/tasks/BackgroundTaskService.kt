@@ -317,6 +317,8 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
             alarmManager!!.cancel(pendingIntent!!)
             alarmManager = null
             currentAlarmTime = 0L
+            curDelay = -1L
+            curInterval = -1L
         }
     }
 

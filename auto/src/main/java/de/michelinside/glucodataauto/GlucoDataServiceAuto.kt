@@ -38,6 +38,7 @@ class GlucoDataServiceAuto: Service() {
             Log.v(LOG_ID, "init called: init=$init")
             if(!init) {
                 GlucoDataService.context = context
+                CarNotification.initNotification(context)
                 startService(context, false)
                 init = true
             }
@@ -177,6 +178,7 @@ class GlucoDataServiceAuto: Service() {
             super.onStartCommand(intent, flags, startId)
             GlucoDataService.context = applicationContext
             ReceiveData.initData(applicationContext)
+            CarNotification.initNotification(this)
             val sharedPref = getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             val isForeground = (if(intent != null) intent.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, false) else false) || sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
             if (isForeground && !isForegroundService) {

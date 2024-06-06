@@ -73,9 +73,13 @@ object Channels {
 
     fun notificationChannelActive(context: Context, type: ChannelType): Boolean {
         if(notificationActive(context)) {
-            val channel = Channels.getNotificationManager(context).getNotificationChannel(type.channelId)
-            Log.d(LOG_ID, "Channel: prio=${channel.importance}")
-            return (channel.importance > NotificationManager.IMPORTANCE_NONE)
+            val channel = getNotificationManager(context).getNotificationChannel(type.channelId)
+            if (channel != null) {
+                Log.d(LOG_ID, "Channel: prio=${channel.importance}")
+                return (channel.importance > NotificationManager.IMPORTANCE_NONE)
+            } else {
+                Log.w(LOG_ID, "Notification channel $type still not exists!")
+            }
         }
         return false
     }
