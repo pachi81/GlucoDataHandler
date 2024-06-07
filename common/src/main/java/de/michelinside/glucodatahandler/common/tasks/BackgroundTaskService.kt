@@ -66,7 +66,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
 
     fun checkExecution(task: BackgroundTask? = null): Boolean {
         if(task != null) {
-            Log.v(LOG_ID, "checkExecution for " + task.javaClass.simpleName + ": elapsedTimeMinute=" + elapsedTimeMinute
+            Log.d(LOG_ID, "checkExecution for " + task.javaClass.simpleName + ": elapsedTimeMinute=" + elapsedTimeMinute
                     + " - lastElapsedMinute=" + lastElapsedMinute
                     + " - elapsedIobCobTimeMinute=" + elapsedIobCobTimeMinute
                     + " - interval=" + task.getIntervalMinute()
@@ -74,17 +74,17 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
             if(task.active(elapsedTimeMinute)) {
                 if (elapsedTimeMinute != 0L) {
                     if (lastElapsedMinute < 0 && initialExecution) {
-                        Log.v(LOG_ID, "Trigger initial task execution")
+                        Log.d(LOG_ID, "Trigger initial task execution")
                         return true   // trigger initial execution
                     }
                     if (elapsedTimeMinute.mod(task.getIntervalMinute()) == 0L) {
-                        Log.v(LOG_ID, "Trigger "+ task.javaClass.simpleName + " execution after " + elapsedTimeMinute + " min")
+                        Log.d(LOG_ID, "Trigger "+ task.javaClass.simpleName + " execution after " + elapsedTimeMinute + " min")
                         return true   // interval expired for active task
                     }
                 }
                 if (task.hasIobCobSupport()) {
                     if (elapsedIobCobTimeMinute >= task.getIntervalMinute()) {
-                        Log.v(LOG_ID, "Trigger " + task.javaClass.simpleName + " IOB/COB execution after " + elapsedIobCobTimeMinute + " min")
+                        Log.d(LOG_ID, "Trigger " + task.javaClass.simpleName + " IOB/COB execution after " + elapsedIobCobTimeMinute + " min")
                         return true   // IOB/COB interval expired for active task
                     }
                 }
@@ -94,11 +94,11 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                     + " - lastElapsedMinute=" + lastElapsedMinute
                     + " - elapsedIobCobTimeMinute=" + elapsedIobCobTimeMinute)
             if ((lastElapsedMinute != elapsedTimeMinute && elapsedTimeMinute != 0L)) {
-                Log.v(LOG_ID, "Check task execution after " + elapsedTimeMinute + " min")
+                Log.d(LOG_ID, "Check task execution after " + elapsedTimeMinute + " min")
                 return true   // time expired and no new value
             }
             if (hasIobCobSupport() && elapsedIobCobTimeMinute > 0) {
-                Log.v(LOG_ID, "Check IOB/COB task execution after " + elapsedIobCobTimeMinute + " min")
+                Log.d(LOG_ID, "Check IOB/COB task execution after " + elapsedIobCobTimeMinute + " min")
                 return true // check each task for additional IOB COB data
             }
         }
@@ -197,10 +197,11 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                 return // not yet initialized
             val newInterval = getInterval()
             val newDelay = getDelay()
-            if (initialExecution || curInterval != newInterval || curDelay != newDelay) {
-                Log.i(LOG_ID, "Interval has changed from " + curInterval + "m+" + curDelay + "ms to " + newInterval + "m+" + newDelay + "ms")
-                var triggerExecute = initialExecution || (curInterval <= 0 && newInterval > 0)  // changed from inactive to active so trigger an initial execution
-                if (!triggerExecute && curInterval > newInterval && elapsedTimeMinute >= newInterval) {
+            Log.d(LOG_ID, "checkTimer for current: ${curInterval}m+${curDelay}ms and new: ${newInterval}m+${newDelay}ms - initialExecution=$initialExecution")
+            if (curInterval != newInterval || curDelay != newDelay) {
+                Log.i(LOG_ID, "Interval has changed from ${curInterval}m+${curDelay}ms to ${newInterval}m+${newDelay}ms - initialExecution=$initialExecution")
+                var triggerExecute = initialExecution && (curInterval <= 0 && newInterval > 0)  // changed from inactive to active so trigger an initial execution
+                if (!triggerExecute && newInterval > 0 && curInterval > newInterval && elapsedTimeMinute >= newInterval) {
                     // interval get decreased, so check for execution is needed
                     triggerExecute = true
                 }
@@ -325,7 +326,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         try {
             if (sharedPreferences != null) {
-                    Log.v(LOG_ID, "onSharedPreferenceChanged called for " + key)
+                    Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
                     var changed = false
                     backgroundTaskList.forEach {
                         if (it.checkPreferenceChanged(sharedPreferences, key, context!!))
