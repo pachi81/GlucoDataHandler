@@ -5,8 +5,8 @@ plugins {
     id 'org.jetbrains.kotlin.android' version '1.9.23' apply false
 }
 
-project.ext.set("versionCode", 46)
-project.ext.set("versionName", "1.0")
+project.ext.set("versionCode", 47)
+project.ext.set("versionName", "1.0.1")
 project.ext.set("compileSdk", 34)
 project.ext.set("targetSdk", 33)
 project.ext.set("minSdk", 26)
