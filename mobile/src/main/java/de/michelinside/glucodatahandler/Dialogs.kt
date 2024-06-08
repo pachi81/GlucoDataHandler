@@ -11,17 +11,17 @@ import de.michelinside.glucodatahandler.common.R
 
 
 object Dialogs {
-    fun showOkDialog(context: Context, title: String, message: String, okListener: DialogInterface.OnClickListener) {
+    fun showOkDialog(context: Context, titleResId: Int, messageResId: Int, okListener: DialogInterface.OnClickListener?) {
         MaterialAlertDialogBuilder(context)
-            .setTitle(title)
-            .setMessage(message)
+            .setTitle(context.resources.getString(titleResId))
+            .setMessage(context.resources.getString(messageResId))
             .setPositiveButton(context.resources.getText(R.string.button_ok), okListener)
             .show()
     }
-    fun showOkCancelDialog(context: Context, title: String, message: String, okListener: DialogInterface.OnClickListener) {
+    fun showOkCancelDialog(context: Context, titleResId: Int, messageResId: Int, okListener: DialogInterface.OnClickListener?) {
         MaterialAlertDialogBuilder(context)
-            .setTitle(title)
-            .setMessage(message)
+            .setTitle(context.resources.getString(titleResId))
+            .setMessage(context.resources.getString(messageResId))
             .setPositiveButton(context.resources.getText(R.string.button_ok), okListener)
             .setNegativeButton(context.resources.getText(R.string.button_cancel), null)
             .show()

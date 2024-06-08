@@ -480,4 +480,8 @@
     <string name="gda_help_aa_sources_summary">- Android Auto App öffnen\n- in den 3-Punkt Menü \"Entwicklereinstellungen auswählen\"\n- bis zu \"Unbekannte Quellen\" scrollen und aktivieren</string>
     <string name="gda_help_aa_notification">3. Benachrichtigungen aktivieren</string>
     <string name="gda_help_aa_notification_summary">- Android Auto App öffnen\n- bis zu \"Messaging\" scrollen\n- \"Benachrichtigungen für Nachrichten anzeigen\" aktivieren\n- \"Erste Zeile einer Nachricht anzeigen\" aktivieren</string>
+    <string name="pref_notification_custom_layout">Farbiges Layout</string>
+    <string name="pref_notification_custom_layout_summary">Zeigt die Werte in großer und farbiger Schrift.\nAuf einigen Samsung Geräte ab Android 13 kann dies zu einem Absturz der App führen, aufgrund eines Bugs auf Seite von Samsung.\nWenn das Problem auftritt, wird diese Einstellung automatisch deaktiviert, damit die App wieder lauffähig ist.</string>
+    <string name="app_crash_title">Absturz erkannt!</string>
+    <string name="app_crash_message">Es tut mir so leid, dass die App während der Ausführung abgestürzt ist!\nBitte sendet mir die Logs zu, dann kann ich den Fehler analysieren und versuchen so schnell wie möglich zu fixen.\nDanke!</string>
 </resources>

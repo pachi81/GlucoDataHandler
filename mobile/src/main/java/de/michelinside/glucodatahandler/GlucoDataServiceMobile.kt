@@ -159,7 +159,9 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         Log.v(LOG_ID, "getNotification called")
         return PermanentNotification.getNotification(
             !sharedPref!!.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false),
-            Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, true
+            Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON,
+            true,
+            sharedPref!!.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, true)
         )
     }
 

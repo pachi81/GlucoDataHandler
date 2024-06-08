@@ -134,7 +134,7 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
         val pref = findPreference<Preference>(key)
         if(pref != null) {
             val value = preferenceManager.sharedPreferences!!.getString(key, "")!!.trim()
-            pref.summary = if(value.isNullOrEmpty())
+            pref.summary = if(value.isEmpty())
                  resources.getString(defaultResId)
             else
                 value
@@ -156,7 +156,7 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
                     Constants.SHARED_PREF_LIBRE_PATIENT_ID,
                     ""
                 )!!.trim()
-                if (value.isNullOrEmpty() || !LibreLinkSourceTask.patientData.containsKey(value))
+                if (value.isEmpty() || !LibreLinkSourceTask.patientData.containsKey(value))
                     pref.summary = resources.getString(CR.string.src_libre_patient_summary)
                 else {
                     pref.summary = LibreLinkSourceTask.patientData[value]
@@ -181,8 +181,8 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
     private fun setupLocalIobAction(preference: Preference?) {
         if(preference != null) {
             preference.setOnPreferenceClickListener {
-                Dialogs.showOkCancelDialog(requireContext(), resources.getString(de.michelinside.glucodatahandler.common.R.string.activate_local_nightscout_iob_title), resources.getString(
-                    de.michelinside.glucodatahandler.common.R.string.activate_local_nightscout_iob_message)) { _, _ ->
+                Dialogs.showOkCancelDialog(requireContext(), CR.string.activate_local_nightscout_iob_title,
+                    CR.string.activate_local_nightscout_iob_message) { _, _ ->
                     with(preferenceManager!!.sharedPreferences!!.edit()) {
                         putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, true)
                         putString(Constants.SHARED_PREF_NIGHTSCOUT_URL, "http://127.0.0.1:17580")

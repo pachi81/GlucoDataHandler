@@ -25,6 +25,12 @@
                     android:title="@string/pref_notification_icon"
                     app:iconSpaceReserved="false" />
                 <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="true"
+                    android:key="permanent_notification_custom_layout"
+                    android:summary="@string/pref_notification_custom_layout_summary"
+                    android:title="@string/pref_notification_custom_layout"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
                     android:defaultValue="false"
                     android:key="permanent_notification_empty"
                     android:summary="@string/pref_notification_no_content_summary"

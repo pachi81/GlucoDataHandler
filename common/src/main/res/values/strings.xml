@@ -505,4 +505,8 @@
     <string name="gda_help_aa_sources_summary">- open Android Auto app\n- open in the 3-dot menu the \"Developer settings\"\n- scroll down to \"Unknown source\"\n- enable it</string>
     <string name="gda_help_aa_notification">3. Set notification settings</string>
     <string name="gda_help_aa_notification_summary">- open Android Auto app\n- scroll down to \"Messaging\"\n- enable \"Show message notifications\"\n- enable \"Show first line of messages\"</string>
+    <string name="pref_notification_custom_layout">Colored layout</string>
+    <string name="pref_notification_custom_layout_summary">Displays the values in large and colored text.\nOn some Samsung devices with Android 13 and higher, this may cause the app to crash due to a bug on Samsung\'s side.\nIf the problem occurs, this setting will be automatically disabled to ensure the app remains functional.</string>
+    <string name="app_crash_title">Crash detected!</string>
+    <string name="app_crash_message">I am so sorry that the app crashed during execution!\nPlease send me the logs so I can analyze the error and try to fix it as soon as possible.\nThank you!</string>
 </resources>
