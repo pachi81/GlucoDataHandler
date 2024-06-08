@@ -154,6 +154,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         try {
             Log.d(LOG_ID, "onResume called")
             super.onResume()
+            checkUncaughtException()
             update()
             InternalNotifier.addNotifier( this, this, mutableSetOf(
                 NotifySource.BROADCAST,
@@ -540,5 +541,18 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     companion object {
         const val CREATE_FILE = 1
+    }
+
+    private fun checkUncaughtException() {
+        Log.d(LOG_ID, "Check uncaught exception ${sharedPref.getBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)}")
+        if(sharedPref.getBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)) {
+            val excMsg = sharedPref.getString(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE, "")
+            Log.e(LOG_ID, "Uncaught exception detected last time: $excMsg")
+            with(sharedPref.edit()) {
+                putBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)
+                apply()
+            }
+            Dialogs.showOkDialog(this, CR.string.app_crash_title, CR.string.app_crash_message, null)
+        }
     }
 }
