@@ -26,7 +26,7 @@ import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 
 class GlucoDataServiceAuto: Service() {
-    private lateinit var uncaughtExecptionHandler: GdhUncaughtExecptionHandler
+
     companion object {
         private const val LOG_ID = "GDH.AA.GlucoDataServiceAuto"
         private var isForegroundService = false
@@ -177,7 +177,7 @@ class GlucoDataServiceAuto: Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         try {
             Log.d(LOG_ID, "onStartCommand called")
-            uncaughtExecptionHandler = GdhUncaughtExecptionHandler(this)
+            GdhUncaughtExecptionHandler.init()
             super.onStartCommand(intent, flags, startId)
             GlucoDataService.context = applicationContext
             ReceiveData.initData(applicationContext)

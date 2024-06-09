@@ -30,7 +30,6 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
     private lateinit var batteryReceiver: BatteryReceiver
     private lateinit var xDripReceiver: XDripBroadcastReceiver
     private lateinit var aapsReceiver: AAPSReceiver
-    private lateinit var uncaughtExecptionHandler: GdhUncaughtExecptionHandler
 
     @SuppressLint("StaticFieldLeak")
     companion object {
@@ -138,7 +137,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         try {
             Log.v(LOG_ID, "onStartCommand called")
-            uncaughtExecptionHandler = GdhUncaughtExecptionHandler(this)
+            GdhUncaughtExecptionHandler.init()
             super.onStartCommand(intent, flags, startId)
             val isForeground = true // intent?.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)    --> always use foreground!!!
             if (isForeground && !isForegroundService) {
