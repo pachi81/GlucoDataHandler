@@ -80,6 +80,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     }
 
     private fun createNofitication(context: Context) {
+        Log.d(LOG_ID, "createNofitication called")
         createNotificationChannel(context)
 
         Channels.getNotificationManager().cancel(GlucoDataService.NOTIFICATION_ID)
@@ -188,6 +189,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     }
 
     fun getNotification(withContent: Boolean, iconKey: String, foreground: Boolean, customLayout: Boolean) : Notification {
+        Log.d(LOG_ID, "getNotification withContent=$withContent - foreground=$foreground - customLayout=$customLayout")
         val notificationBuilder = if(foreground) foregroundNotificationCompat else notificationCompat
         val notificationBuild = notificationBuilder
             .setSmallIcon(getStatusBarIcon(iconKey))
@@ -244,13 +246,23 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         }
     }
 
-    fun showNotifications() {
-        showPrimaryNotification(true)
-        if (sharedPref.getBoolean(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, false)) {
-            Log.d(LOG_ID, "show second notification")
-            showNotification(SECOND_NOTIFICATION_ID, false, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, false, false)
-        } else {
-            Channels.getNotificationManager().cancel(SECOND_NOTIFICATION_ID)
+    fun showNotifications(onlySecond: Boolean = false) {
+        Log.d(LOG_ID, "showNotifications service running: ${GlucoDataService.foreground} - onlySecond=$onlySecond")
+        if (GlucoDataService.foreground) {
+            if (!onlySecond)
+                showPrimaryNotification(true)
+            if (sharedPref.getBoolean(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, false)) {
+                Log.d(LOG_ID, "show second notification")
+                showNotification(
+                    SECOND_NOTIFICATION_ID,
+                    false,
+                    Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON,
+                    false,
+                    false
+                )
+            } else {
+                Channels.getNotificationManager().cancel(SECOND_NOTIFICATION_ID)
+            }
         }
     }
 

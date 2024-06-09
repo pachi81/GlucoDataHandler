@@ -158,6 +158,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
         return START_STICKY  // keep alive
     }
 
+
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate() {
         try {
