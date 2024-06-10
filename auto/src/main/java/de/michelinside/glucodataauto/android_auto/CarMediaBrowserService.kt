@@ -21,6 +21,8 @@ import androidx.media.MediaBrowserServiceCompat
 import de.michelinside.glucodataauto.GlucoDataServiceAuto
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.notification.ChannelType
+import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -149,7 +151,11 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         try {
             Log.d(LOG_ID, "onLoadChildren for parent: " + parentId)
             if (MEDIA_ROOT_ID == parentId) {
-                result.sendResult(mutableListOf(createMediaItem(), createToggleItem()))
+                val items = mutableListOf(createMediaItem())
+                if (Channels.notificationChannelActive(this, ChannelType.ANDROID_AUTO)) {
+                    items.add(createToggleItem())
+                }
+                result.sendResult(items)
             } else {
                 result.sendResult(null)
             }
@@ -160,7 +166,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
-        Log.v(LOG_ID, "OnNotifyData called")
+        Log.d(LOG_ID, "OnNotifyData called for source $dataSource")
         try {
             notifyChildrenChanged(MEDIA_ROOT_ID)
         } catch (exc: Exception) {
@@ -169,7 +175,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        Log.v(LOG_ID, "onSharedPreferenceChanged called for key " + key)
+        Log.d(LOG_ID, "onSharedPreferenceChanged called for key " + key)
         try {
             when(key) {
                 Constants.SHARED_PREF_CAR_NOTIFICATION,

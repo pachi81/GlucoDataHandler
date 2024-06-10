@@ -1,7 +1,12 @@
 package de.michelinside.glucodatahandler.common.notification
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Command
@@ -38,6 +43,9 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
     private var initialized = false
     private var snoozeTime = 0L
     private lateinit var sharedExtraPref: SharedPreferences
+
+    private var alarmManager: AlarmManager? = null
+    private var snoozeEndPendingIntent: PendingIntent? = null
 
     val isSnoozeActive: Boolean get() {
         return snoozeTime >= System.currentTimeMillis()
@@ -112,10 +120,11 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
 
     fun setSnoozeTime(time: Long, fromClient: Boolean = false) {
         snoozeTime = time
-        Log.d(LOG_ID, "New snooze-time: $snoozeTimestamp")
+        Log.i(LOG_ID, "New snooze-time: $snoozeTimestamp")
         saveExtras()
         if(GlucoDataService.context != null) {
             InternalNotifier.notify(GlucoDataService.context!!, NotifySource.ALARM_STATE_CHANGED, null)
+            triggerSnoozeEnd(GlucoDataService.context!!)
         }
         if(!fromClient) {
             val bundle = Bundle()
@@ -332,6 +341,68 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
                 Log.i(LOG_ID, "Trigger obsolete alarm after ${ReceiveData.getElapsedTimeMinute()} minutes.")
                 InternalNotifier.notify(context, NotifySource.OBSOLETE_ALARM_TRIGGER, null)
             }
+        }
+    }
+
+    fun triggerSnoozeEnd(context: Context) {
+        stopSnoozeEnd()
+        if(isSnoozeActive) {
+            alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            var hasExactAlarmPermission = true
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (!alarmManager!!.canScheduleExactAlarms()) {
+                    Log.d(LOG_ID, "Need permission to set exact alarm!")
+                    hasExactAlarmPermission = false
+                }
+            }
+            val intent = Intent(context, AlarmSnoozeEndReceiver::class.java)
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+            snoozeEndPendingIntent = PendingIntent.getBroadcast(
+                context,
+                800,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
+            )
+            Log.i(LOG_ID, "Trigger SnoozeEnd at $snoozeTimestamp - exact-alarm=$hasExactAlarmPermission")
+            if (hasExactAlarmPermission) {
+                alarmManager!!.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    snoozeTime,
+                    snoozeEndPendingIntent!!
+                )
+            } else {
+                alarmManager!!.setAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    snoozeTime,
+                    snoozeEndPendingIntent!!
+                )
+            }
+        }
+    }
+
+    fun stopSnoozeEnd() {
+        if(alarmManager != null && snoozeEndPendingIntent != null) {
+            Log.i(LOG_ID, "Stop SnoozeEnd triggered")
+            alarmManager!!.cancel(snoozeEndPendingIntent!!)
+            alarmManager = null
+            snoozeEndPendingIntent = null
+        }
+    }
+}
+
+
+class AlarmSnoozeEndReceiver: BroadcastReceiver() {
+    private val LOG_ID = "GDH.AlarmSnoozeEndReceiver"
+    override fun onReceive(context: Context, intent: Intent) {
+        try {
+            Log.d(LOG_ID, "onReceive called snoozeActive:${AlarmHandler.isSnoozeActive}")
+            if(!AlarmHandler.isSnoozeActive) {
+                Log.i(LOG_ID, "End of snooze reached")
+                InternalNotifier.notify(context, NotifySource.ALARM_STATE_CHANGED, null)
+                AlarmHandler.stopSnoozeEnd()
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onReceive exception: " + exc.toString())
         }
     }
 }

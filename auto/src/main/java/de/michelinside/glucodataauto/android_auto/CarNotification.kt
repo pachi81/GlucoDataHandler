@@ -106,7 +106,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         }
     }
 
-    private fun initNotification(context: Context) {
+    fun initNotification(context: Context) {
         try {
             if(!init) {
                 Log.v(LOG_ID, "initNotification called")
@@ -154,7 +154,8 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     private fun getFilter(): MutableSet<NotifySource> {
         val filter = mutableSetOf(
             NotifySource.BROADCAST,
-            NotifySource.MESSAGECLIENT)
+            NotifySource.MESSAGECLIENT,
+            NotifySource.OBSOLETE_ALARM_TRIGGER)
         if (notification_reappear_interval > 0)
             filter.add(NotifySource.TIME_VALUE)
         return filter
@@ -207,28 +208,32 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                     + "\nnotification_interval: " + notification_interval
                     + "\nnotification_reappear_interval: " + notification_reappear_interval
             )
-            if (dataSource == NotifySource.BROADCAST || dataSource == NotifySource.MESSAGECLIENT) {
+            if (dataSource == NotifySource.OBSOLETE_ALARM_TRIGGER) {
+                Log.d(LOG_ID, "Obsolete alarm triggered")
+                forceNextNotify = true
+                return true
+            } else if (dataSource == NotifySource.BROADCAST || dataSource == NotifySource.MESSAGECLIENT) {
                 if(notification_interval == 1L || ReceiveData.forceAlarm) {
-                    Log.v(LOG_ID, "Notification has forced by interval or alarm")
+                    Log.d(LOG_ID, "Notification has forced by interval or alarm")
                     return true
                 }
                 if (ReceiveData.getAlarmType() == AlarmType.VERY_LOW) {
-                    Log.v(LOG_ID, "Notification for very low-alarm")
+                    Log.d(LOG_ID, "Notification for very low-alarm")
                     forceNextNotify = true  // if obsolete or VERY_LOW, the next value is important!
                     return true
                 }
                 if (forceNextNotify) {
-                    Log.v(LOG_ID, "Force notification")
+                    Log.d(LOG_ID, "Force notification")
                     forceNextNotify = false
                     return true
                 }
                 if (notification_interval > 1L && getTimeDiffMinute() >= notification_interval && ReceiveData.getElapsedTimeMinute() == 0L) {
-                    Log.v(LOG_ID, "Interval for new value elapsed")
+                    Log.d(LOG_ID, "Interval for new value elapsed")
                     return true
                 }
             } else if(dataSource == NotifySource.TIME_VALUE) {
                 if (notification_reappear_interval > 0 && ReceiveData.getElapsedTimeMinute().mod(notification_reappear_interval) == 0L) {
-                    Log.v(LOG_ID, "reappear after: " + ReceiveData.getElapsedTimeMinute() + " - interval: " + notification_reappear_interval)
+                    Log.d(LOG_ID, "reappear after: " + ReceiveData.getElapsedTimeMinute() + " - interval: " + notification_reappear_interval)
                     return true
                 }
             }

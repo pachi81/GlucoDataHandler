@@ -21,7 +21,6 @@ import android.widget.ImageView
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -38,6 +37,8 @@ import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmType
+import de.michelinside.glucodatahandler.common.notification.ChannelType
+import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
@@ -69,7 +70,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var btnSources: Button
     private lateinit var txtNoData: TextView
     private lateinit var sharedPref: SharedPreferences
-    private var menuOpen = false
     private var notificationIcon: MenuItem? = null
     private val LOG_ID = "GDH.AA.Main"
     private var requestNotificationPermission = false
@@ -141,11 +141,10 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     override fun onPause() {
         try {
+            Log.d(LOG_ID, "onPause called")
             super.onPause()
             InternalNotifier.remNotifier(this, this)
-            if(!menuOpen)
-                GlucoDataServiceAuto.stopDataSync(this)
-            Log.v(LOG_ID, "onPause called")
+            GlucoDataServiceAuto.stopDataSync(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.message.toString() )
         }
@@ -153,8 +152,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     override fun onResume() {
         try {
+            Log.d(LOG_ID, "onResume called")
             super.onResume()
-            Log.v(LOG_ID, "onResume called")
+            checkUncaughtException()
             update()
             InternalNotifier.addNotifier( this, this, mutableSetOf(
                 NotifySource.BROADCAST,
@@ -165,7 +165,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.NODE_BATTERY_LEVEL,
                 NotifySource.SETTINGS,
                 NotifySource.CAR_CONNECTION,
-                NotifySource.OBSOLETE_VALUE,
+                NotifySource.TIME_VALUE,
                 NotifySource.SOURCE_STATE_CHANGE))
             checkExactAlarmPermission()
             checkBatteryOptimization()
@@ -175,20 +175,11 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 requestNotificationPermission = false
                 txtNotificationPermission.visibility = View.GONE
             }
-            if(!menuOpen)
-                GlucoDataServiceAuto.startDataSync(this)
-            menuOpen = false
+            GlucoDataServiceAuto.startDataSync(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
         }
     }
-
-    private val requestPermissionLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            Log.d(LOG_ID, "Notification permission allowed: $isGranted")
-        }
 
     fun requestPermission() : Boolean {
         requestNotificationPermission = false
@@ -257,16 +248,16 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         try {
             val pm = getSystemService(POWER_SERVICE) as PowerManager
             if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                Log.w(LOG_ID, "Battery optimization is inactive")
+                Log.w(LOG_ID, "Battery optimization is active")
                 txtBatteryOptimization.visibility = View.VISIBLE
                 txtBatteryOptimization.setOnClickListener {
-                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
                     intent.data = Uri.parse("package:$packageName")
                     startActivity(intent)
                 }
             } else {
                 txtBatteryOptimization.visibility = View.GONE
-                Log.i(LOG_ID, "Battery optimization is active")
+                Log.i(LOG_ID, "Battery optimization is inactive")
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
@@ -292,7 +283,15 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun updateNotificationIcon() {
         try {
             if(notificationIcon != null) {
-                val enabled = sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, false)
+                var enabled = sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, false)
+                if(enabled && !Channels.notificationChannelActive(this, ChannelType.ANDROID_AUTO)) {
+                    Log.i(LOG_ID, "Disable car notification as there is no permission!")
+                    with(sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, false)
+                        apply()
+                    }
+                    enabled = false
+                }
                 notificationIcon!!.icon = ContextCompat.getDrawable(this, if(enabled) R.drawable.icon_popup_white else R.drawable.icon_popup_off_white)
             }
         } catch (exc: Exception) {
@@ -305,22 +304,25 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Log.v(LOG_ID, "onOptionsItemSelected for " + item.itemId.toString())
             when(item.itemId) {
                 R.id.action_settings -> {
-                    menuOpen = true
                     val intent = Intent(this, SettingsActivity::class.java)
                     startActivity(intent)
                     return true
                 }
                 R.id.action_sources -> {
-                    menuOpen = true
                     val intent = Intent(this, SettingsActivity::class.java)
                     intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.SORUCE_FRAGMENT.value)
                     startActivity(intent)
                     return true
                 }
                 R.id.action_alarms -> {
-                    menuOpen = true
                     val intent = Intent(this, SettingsActivity::class.java)
                     intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.ALARM_FRAGMENT.value)
+                    startActivity(intent)
+                    return true
+                }
+                R.id.action_gda_help -> {
+                    val intent = Intent(this, SettingsActivity::class.java)
+                    intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.HELP_FRAGMENT.value)
                     startActivity(intent)
                     return true
                 }
@@ -353,11 +355,24 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 }
                 R.id.action_notification_toggle -> {
                     Log.v(LOG_ID, "notification toggle")
-                    with(sharedPref.edit()) {
-                        putBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, !sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, false))
-                        apply()
+                    if(!sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, false) && !Channels.notificationChannelActive(this, ChannelType.ANDROID_AUTO))
+                    {
+                        val intent: Intent = if (Channels.notificationActive(this)) { // only the channel is inactive!
+                            Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+                                .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
+                                .putExtra(Settings.EXTRA_CHANNEL_ID, ChannelType.ANDROID_AUTO.channelId)
+                        } else {
+                            Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                                .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
+                        }
+                        startActivity(intent)
+                    } else {
+                        with(sharedPref.edit()) {
+                            putBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, !sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, false))
+                            apply()
+                        }
+                        updateNotificationIcon()
                     }
-                    updateNotificationIcon()
                 }
                 else -> return super.onOptionsItemSelected(item)
             }
@@ -526,5 +541,18 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     companion object {
         const val CREATE_FILE = 1
+    }
+
+    private fun checkUncaughtException() {
+        Log.d(LOG_ID, "Check uncaught exception ${sharedPref.getBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)}")
+        if(sharedPref.getBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)) {
+            val excMsg = sharedPref.getString(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE, "")
+            Log.e(LOG_ID, "Uncaught exception detected last time: $excMsg")
+            with(sharedPref.edit()) {
+                putBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)
+                apply()
+            }
+            Dialogs.showOkDialog(this, CR.string.app_crash_title, CR.string.app_crash_message, null)
+        }
     }
 }

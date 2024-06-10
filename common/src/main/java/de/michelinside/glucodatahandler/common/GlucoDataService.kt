@@ -137,6 +137,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         try {
             Log.v(LOG_ID, "onStartCommand called")
+            GdhUncaughtExecptionHandler.init()
             super.onStartCommand(intent, flags, startId)
             val isForeground = true // intent?.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)    --> always use foreground!!!
             if (isForeground && !isForegroundService) {
@@ -156,6 +157,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
         }
         return START_STICKY  // keep alive
     }
+
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate() {

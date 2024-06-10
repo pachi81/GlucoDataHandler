@@ -124,7 +124,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.SORUCE_FRAGMENT.value)
                 startActivity(intent)
             }
-
             if (requestPermission())
                 GlucoDataServiceMobile.start(this, true)
 
@@ -148,6 +147,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         try {
             super.onResume()
             Log.v(LOG_ID, "onResume called")
+            checkUncaughtException()
             update()
             InternalNotifier.addNotifier(this, this, mutableSetOf(
                 NotifySource.BROADCAST,
@@ -198,7 +198,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }*/
             if (this.shouldShowRequestPermissionRationale(
                     android.Manifest.permission.POST_NOTIFICATIONS)) {
-                Dialogs.showOkDialog(this, resources.getString(CR.string.permission_notification_title), resources.getString(CR.string.permission_notification_message)) { _, _ -> requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS) }
+                Dialogs.showOkDialog(this, CR.string.permission_notification_title, CR.string.permission_notification_message) { _, _ -> requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS) }
             } else {
                 this.requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 3)
             }
@@ -384,7 +384,11 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     return true
                 }
                 R.id.action_snooze_30 -> {
-                    AlarmHandler.setSnooze(30L)
+                    if(BuildConfig.DEBUG) {
+                        AlarmHandler.setSnooze(1L)
+                    } else {
+                        AlarmHandler.setSnooze(30L)
+                    }
                     return true
                 }
                 R.id.action_snooze_60 -> {
@@ -444,7 +448,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
                     apply()
                 }
-                Dialogs.showOkDialog(this, resources.getString(CR.string.permission_alarm_notification_title), resources.getString(CR.string.permission_alarm_notification_message)) { _, _ ->
+                Dialogs.showOkDialog(this, CR.string.permission_alarm_notification_title, CR.string.permission_alarm_notification_message) { _, _ ->
                     val intent: Intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
                         .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
                     startActivity(intent)
@@ -645,5 +649,18 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     companion object {
         const val CREATE_PHONE_FILE = 1
         const val CREATE_WEAR_FILE = 2
+    }
+
+    private fun checkUncaughtException() {
+        Log.d(LOG_ID, "Check uncaught exception ${sharedPref.getBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)}")
+        if(sharedPref.getBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)) {
+            val excMsg = sharedPref.getString(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE, "")
+            Log.e(LOG_ID, "Uncaught exception detected last time: $excMsg")
+            with(sharedPref.edit()) {
+                putBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)
+                apply()
+            }
+            Dialogs.showOkDialog(this, CR.string.app_crash_title, CR.string.app_crash_message, null)
+        }
     }
 }

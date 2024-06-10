@@ -84,6 +84,7 @@ object Constants {
     const val SHARED_PREF_PERMANENT_NOTIFICATION_ICON = "status_bar_notification_icon"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_COLORED_ICON = "status_bar_notification_colored_icon"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY = "permanent_notification_empty"
+    const val SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT = "permanent_notification_custom_layout"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION = "permanent_notification_tap_action"
     const val SHARED_PREF_SECOND_PERMANENT_NOTIFICATION = "second_permanent_notification"
     const val SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON = "second_status_bar_notification_icon"
@@ -103,6 +104,8 @@ object Constants {
     const val SHARED_PREF_WATCHDRIP_RECEIVERS = "watchdrip_receivers"
     const val SHARED_PREF_CHECK_WEAR_OS_CONNECTION = "wear_os_check_connection"
     const val SHARED_PREF_OPEN_WATCH_DRIP_LINK = "open_watchdrip_link"
+    const val SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT = "uncaught_exception_detected"
+    const val SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE = "uncaught_exception_message"
 
     // internal app preferences (not changed by settings) -> use separate tag for not trigger onChanged events
     const val SHARED_PREF_INTERNAL_TAG = "GlucoDataHandlerInternalAppPrefs"
@@ -116,7 +119,6 @@ object Constants {
     const val WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA_IOB_COB = "glucose_trend_delta_time_iob_cob"
 
     // Wear only preferences
-    const val SHARED_PREF_FOREGROUND_SERVICE = "foreground_service"
     const val SHARED_PREF_WEAR_COLORED_AOD = "colored_aod"
     const val SHARED_PREF_COMPLICATION_TAP_ACTION = "complication_tap_action"
 
@@ -219,4 +221,5 @@ object Constants {
     // Android Auto
     const val AA_MEDIA_ICON_STYLE_TREND = "trend"
     const val AA_MEDIA_ICON_STYLE_GLUCOSE_TREND = "glucose_trend"
+    const val SHARED_PREF_FOREGROUND_SERVICE = "foreground_service"
 }

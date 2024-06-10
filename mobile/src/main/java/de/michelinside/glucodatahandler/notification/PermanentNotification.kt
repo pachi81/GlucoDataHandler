@@ -80,6 +80,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     }
 
     private fun createNofitication(context: Context) {
+        Log.d(LOG_ID, "createNofitication called")
         createNotificationChannel(context)
 
         Channels.getNotificationManager().cancel(GlucoDataService.NOTIFICATION_ID)
@@ -107,7 +108,6 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setCategory(Notification.CATEGORY_STATUS)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
     }
-
 
     private fun removeNotifications() {
         //notificationMgr.cancel(NOTIFICATION_ID)  // remove notification
@@ -188,57 +188,93 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         return null
     }
 
-    fun getNotification(withContent: Boolean, iconKey: String, foreground: Boolean) : Notification {
-        var remoteViews: RemoteViews? = null
-        if (withContent) {
-            val bitmap = createNotificationView(GlucoDataService.context!!)
-            if(bitmap != null) {
-                remoteViews = RemoteViews(GlucoDataService.context!!.packageName, R.layout.image_view)
-                remoteViews.setImageViewBitmap(R.id.imageLayout, bitmap)
-            }
-        }
-
+    fun getNotification(withContent: Boolean, iconKey: String, foreground: Boolean, customLayout: Boolean) : Notification {
+        Log.d(LOG_ID, "getNotification withContent=$withContent - foreground=$foreground - customLayout=$customLayout")
         val notificationBuilder = if(foreground) foregroundNotificationCompat else notificationCompat
-        val notification = notificationBuilder
+        val notificationBuild = notificationBuilder
             .setSmallIcon(getStatusBarIcon(iconKey))
             .setContentIntent(getTapActionIntent(foreground))
             .setWhen(ReceiveData.time)
-            .setCustomContentView(remoteViews)
-            .setCustomBigContentView(remoteViews)
             .setColorized(false)
-            .setStyle(Notification.DecoratedCustomViewStyle())
-            .build()
+
+        if (customLayout) {
+            Log.v(LOG_ID, "Use custom layout")
+            var remoteViews: RemoteViews? = null
+            if (withContent) {
+                val bitmap = createNotificationView(GlucoDataService.context!!)
+                if (bitmap != null) {
+                    remoteViews =
+                        RemoteViews(GlucoDataService.context!!.packageName, R.layout.image_view)
+                    remoteViews.setImageViewBitmap(R.id.imageLayout, bitmap)
+                }
+            }
+            notificationBuild.setCustomContentView(remoteViews)
+            notificationBuild.setCustomBigContentView(remoteViews)
+            notificationBuild.setStyle(Notification.DecoratedCustomViewStyle())
+        } else {
+            Log.v(LOG_ID, "Use default layout")
+            if (withContent) {
+                notificationBuild.setContentTitle(ReceiveData.getGlucoseAsString() + "   Δ " + ReceiveData.getDeltaAsString())
+                if (!ReceiveData.isIobCobObsolete(Constants.VALUE_OBSOLETE_LONG_SEC)) {
+                    notificationBuild.setContentText("💉 " + ReceiveData.getIobAsString() + if (!ReceiveData.cob.isNaN()) ("  " + "🍔 " + ReceiveData.getCobAsString()) else "")
+                } else {
+                    notificationBuild.setContentText(null)
+                }
+                notificationBuild.setLargeIcon(BitmapUtils.getRateAsBitmap(withShadow = true))
+            } else {
+                notificationBuild.setContentTitle(null)
+                notificationBuild.setContentText(null)
+            }
+            notificationBuild.setStyle(null)
+        }
+        val notification = notificationBuild.build()
 
         notification.visibility = Notification.VISIBILITY_PUBLIC
         notification.flags = notification.flags or Notification.FLAG_NO_CLEAR
         return notification
     }
 
-    private fun showNotification(id: Int, withContent: Boolean, iconKey: String, foreground: Boolean) {
+    private fun showNotification(id: Int, withContent: Boolean, iconKey: String, foreground: Boolean, customLayout: Boolean) {
         try {
             Log.v(LOG_ID, "showNotification called for id " + id)
             Channels.getNotificationManager().notify(
                 id,
-                getNotification(withContent, iconKey, foreground)
+                getNotification(withContent, iconKey, foreground, customLayout)
             )
         } catch (exc: Exception) {
             Log.e(LOG_ID, "showNotification exception: " + exc.toString() )
         }
     }
 
-    fun showNotifications() {
-        showPrimaryNotification(true)
-        if (sharedPref.getBoolean(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, false)) {
-            Log.d(LOG_ID, "show second notification")
-            showNotification(SECOND_NOTIFICATION_ID, false, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, false)
-        } else {
-            Channels.getNotificationManager().cancel(SECOND_NOTIFICATION_ID)
+    fun showNotifications(onlySecond: Boolean = false) {
+        Log.d(LOG_ID, "showNotifications service running: ${GlucoDataService.foreground} - onlySecond=$onlySecond")
+        if (GlucoDataService.foreground) {
+            if (!onlySecond)
+                showPrimaryNotification(true)
+            if (sharedPref.getBoolean(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, false)) {
+                Log.d(LOG_ID, "show second notification")
+                showNotification(
+                    SECOND_NOTIFICATION_ID,
+                    false,
+                    Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON,
+                    false,
+                    false
+                )
+            } else {
+                Channels.getNotificationManager().cancel(SECOND_NOTIFICATION_ID)
+            }
         }
     }
 
     private fun showPrimaryNotification(show: Boolean) {
         Log.d(LOG_ID, "showPrimaryNotification " + show)
-        showNotification(GlucoDataService.NOTIFICATION_ID, !sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false), Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, true)
+        showNotification(
+            GlucoDataService.NOTIFICATION_ID,
+            !sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false),
+            Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON,
+            true,
+            sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, true)
+        )
     }
 
     private fun hasContent(): Boolean {
@@ -287,7 +323,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         }
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called for key " + key)
             when(key) {
@@ -298,8 +334,16 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
                 Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_TAP_ACTION,
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON,
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_COLORED_ICON,
-                Constants.SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION,
+                Constants.SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION -> {
+                    updatePreferences()
+                }
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY -> {
+                    if(!sharedPreferences.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, true))
+                        createNofitication(GlucoDataService.context!!) // reset notification to remove large icon
+                    updatePreferences()
+                }
+                Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT-> {
+                    createNofitication(GlucoDataService.context!!) // reset notification to remove large icon
                     updatePreferences()
                 }
             }

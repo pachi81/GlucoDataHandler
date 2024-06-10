@@ -483,4 +483,22 @@
     <string name="activity_large_arrow_icon_summary">Por favor, desactiva esta configuración si la flecha de tendencia es demasiado grande y se corta.</string>
     <string name="pref_cat_ui_settings">Interfaz de usuario</string>
     <string name="pref_cat_ui_settings_summary">Ajustes generales para la interfaz de usuario de esta aplicación.</string>
+    <string name="gda_foreground_info">GlucoDataAuto se está ejecutando</string>
+    <string name="gda_foreground_summary">Actívalo solo si estás usando una fuente de seguidor y solo notificaciones de Android Auto.\nEsto evita que Android cierre esta aplicación mientras no esté conectado a Android Auto, por lo que la aplicación no puede reconocer la conexión a Android Auto.\nEn lugar de habilitar esta configuración, también puedes abrir la aplicación en Android Auto una vez, si estás conectado.</string>
+    <string name="gda_battery_optimization_disabled">La optimización de batería está habilitada!\nPulsa aquí para desactivarlo.</string>
+    <string name="gda_source_follower_info_summary">Si estás usando una fuente de seguidor, la aplicación puede no iniciarse mientras estés conectado a Android Auto, si solo usas notificaciones de Android Auto.\nPara asegurarte de que la aplicación detecte la conexión de Android Auto, tienes que desactivar la optimización de batería.\nSi aún no funciona, también puedes habilitar el modo de primer plano o tienes que abrir la aplicación en Android Auto una vez, cuando esté conectado a Android Auto.</string>
+    <string name="gda_help_aa_title">Configurar Android Auto</string>
+    <string name="gda_help_aa_title_summary">Android Auto es una aplicación independiente o parte del sistema y se puede acceder a ella a través de la configuración de Android.\nPara activar GlucoDataAuto para Android Auto, debes seguir los siguientes pasos:</string>
+    <string name="gda_help_aa_dev_mode">1. Activar el modo de desarrollador</string>
+    <string name="gda_help_aa_dev_mode_summary">- Abre Android Auto\n- Desplázate hacia abajo hasta la Versión\n- Toca varias veces en la Versión hasta que aparezca una ventana emergente que diga \"Permitir ajustes de desarollo\"\n- Presiona \"Aceptar\"</string>
+    <string name="gda_help_aa_sources">2. Activar \"Fuentes desconocidas\"</string>
+    <string name="gda_help_aa_sources_summary">- Abre Android Auto\n- Abre en el menú de 3 puntos las \"Ajustes de desarrollador\"\n- Desplázate hacia abajo hasta \"Fuentes desconocidas\"\n- Actívalo</string>
+    <string name="gda_help_aa_notification">3. Configurar las configuraciones de notificaciones</string>
+    <string name="gda_help_aa_notification_summary">- Abre Android Auto\n- Desplázate hacia abajo hasta \"Mensajes\"\n- Activa \"Mostrar notificaciones de mensajes\"\n- Activa \"Mostrar la primera línea de los mensajes\"</string>
+    <string name="gda_help_aa_enable_gda">4. Habilitar GlucoDataAuto</string>
+    <string name="gda_help_aa_enable_gda_summary">- Abre Android Auto\n- Desplázate hacia abajo hasta \"Pantalla\"\n- Abre \"Personalizar menú de apps\"\n- Habilita \"GlucoDataAuto\"\nSi GlucoDataAuto no está disponible, por favor reinicia el teléfono.</string>
+    <string name="pref_notification_custom_layout">Diseño colorido</string>
+    <string name="pref_notification_custom_layout_summary">Muestra los valores en texto grande y colorido.\nEn algunos dispositivos Samsung con Android 13 y superior, esto puede hacer que la aplicación se bloquee debido a un error del lado de Samsung.\nSi ocurre el problema, esta configuración se desactivará automáticamente para garantizar que la aplicación siga siendo funcional.</string>
+    <string name="app_crash_title">¡Error detectado!</string>
+    <string name="app_crash_message">¡Lo siento mucho que la aplicación se haya bloqueado durante la ejecución!\nPor favor, envíame los registros para que pueda analizar el error e intentar solucionarlo lo antes posible.\n¡Gracias!</string>
 </resources>

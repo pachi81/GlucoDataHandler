@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
-
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <queries>
         <package android:name="tk.glucodata" />
@@ -106,6 +106,7 @@
         <receiver android:name="de.michelinside.glucodatahandler.common.tasks.TimeAlarmReceiver" />
         <receiver android:name="de.michelinside.glucodatahandler.common.tasks.SourceAlarmReceiver" />
         <receiver android:name="de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver" />
+        <receiver android:name="de.michelinside.glucodatahandler.common.notification.AlarmSnoozeEndReceiver" />
 
         <service
             android:name=".android_auto.CarMediaBrowserService"

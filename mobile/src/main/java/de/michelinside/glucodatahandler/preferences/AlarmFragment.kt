@@ -188,7 +188,7 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
         }
     }
     private fun requestChannelActivation() {
-        Dialogs.showOkDialog(requireContext(), resources.getString(CR.string.permission_alarm_notification_title), resources.getString(CR.string.permission_alarm_notification_message)) { _, _ ->
+        Dialogs.showOkDialog(requireContext(),CR.string.permission_alarm_notification_title, CR.string.permission_alarm_notification_message) { _, _ ->
             val intent: Intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
                 .putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
             startActivity(intent)

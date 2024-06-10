@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+        <PreferenceCategory
+            android:title="@string/gda_help_aa_title"
+            app:iconSpaceReserved="false">
+                <Preference
+                    android:key="gda_help_aa_title_summary"
+                    android:summary="@string/gda_help_aa_title_summary"
+                    app:iconSpaceReserved="false" />
+                <Preference
+                    android:key="gda_help_aa_dev_mode"
+                    android:title="@string/gda_help_aa_dev_mode"
+                    android:summary="@string/gda_help_aa_dev_mode_summary"
+                    app:iconSpaceReserved="false" />
+                <Preference
+                    android:key="gda_help_aa_sources"
+                    android:title="@string/gda_help_aa_sources"
+                    android:summary="@string/gda_help_aa_sources_summary"
+                    app:iconSpaceReserved="false" />
+                <Preference
+                    android:key="gda_help_aa_notification"
+                    android:title="@string/gda_help_aa_notification"
+                    android:summary="@string/gda_help_aa_notification_summary"
+                    app:iconSpaceReserved="false" />
+                <Preference
+                    android:key="gda_help_aa_enable_gda"
+                    android:title="@string/gda_help_aa_enable_gda"
+                    android:summary="@string/gda_help_aa_enable_gda_summary"
+                    app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+</PreferenceScreen>

@@ -3,6 +3,7 @@ package de.michelinside.glucodataauto.preferences
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import de.michelinside.glucodataauto.R
@@ -82,6 +83,14 @@ class AlarmFragment : PreferenceFragmentCompat() {
         val pref = findPreference<Preference>(key) ?: return
         val alarmType = AlarmType.fromIndex(pref.extras.getInt("type"))
         pref.summary = getAlarmCatSummary(alarmType)
+        pref.icon = ContextCompat.getDrawable(requireContext(), getAlarmCatIcon(alarmType, key + "_enabled"))
+    }
+
+    private fun getAlarmCatIcon(alarmType: AlarmType, enableKey: String): Int {
+        if(alarmType != AlarmType.VERY_LOW && !preferenceManager.sharedPreferences!!.getBoolean(enableKey, true)) {
+            return R.drawable.icon_popup_off
+        }
+        return R.drawable.icon_popup
     }
 
     private fun getAlarmCatSummary(alarmType: AlarmType): String {

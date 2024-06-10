@@ -4,8 +4,10 @@ import android.app.Notification
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import androidx.annotation.RequiresApi
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.notification.AlarmNotification
@@ -76,6 +78,19 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        try {
+            Log.d(LOG_ID, "onStartCommand called")
+            val start = super.onStartCommand(intent, flags, startId)
+            PermanentNotification.showNotifications(true)
+            return start
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onStartCommand exception: " + exc.toString())
+        }
+        return START_STICKY  // keep alive
     }
 
     private fun migrateSettings() {
@@ -159,7 +174,9 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         Log.v(LOG_ID, "getNotification called")
         return PermanentNotification.getNotification(
             !sharedPref!!.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false),
-            Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, true
+            Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON,
+            true,
+            sharedPref!!.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, true)
         )
     }
 

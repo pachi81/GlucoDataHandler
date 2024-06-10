@@ -61,6 +61,7 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
             updateEnableStates(preferenceManager.sharedPreferences!!)
             InternalNotifier.addNotifier(requireContext(), this, mutableSetOf(NotifySource.PATIENT_DATA_CHANGED))
+            //GlucoDataServiceAuto.startDataSync(requireContext())
             super.onResume()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.toString())
@@ -72,6 +73,7 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
         try {
             preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
             InternalNotifier.remNotifier(requireContext(), this)
+            //GlucoDataServiceAuto.stopDataSync(requireContext())
             super.onPause()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.toString())
