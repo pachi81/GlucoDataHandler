@@ -384,7 +384,11 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     return true
                 }
                 R.id.action_snooze_30 -> {
-                    AlarmHandler.setSnooze(30L)
+                    if(BuildConfig.DEBUG) {
+                        AlarmHandler.setSnooze(1L)
+                    } else {
+                        AlarmHandler.setSnooze(30L)
+                    }
                     return true
                 }
                 R.id.action_snooze_60 -> {

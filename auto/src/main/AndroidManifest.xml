@@ -106,6 +106,7 @@
         <receiver android:name="de.michelinside.glucodatahandler.common.tasks.TimeAlarmReceiver" />
         <receiver android:name="de.michelinside.glucodatahandler.common.tasks.SourceAlarmReceiver" />
         <receiver android:name="de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver" />
+        <receiver android:name="de.michelinside.glucodatahandler.common.notification.AlarmSnoozeEndReceiver" />
 
         <service
             android:name=".android_auto.CarMediaBrowserService"
