@@ -481,15 +481,17 @@
     <string name="gda_battery_optimization_disabled">Optymalizacja baterii jest włączona!\nNaciśnij tutaj, aby ją wyłączyć.</string>
     <string name="gda_source_follower_info_summary">Jeżeli jako źródła używasz funkcji „follower” (obserwatora), aplikacja może nie zostać uruchomiona podczas połączenia z Android Auto, gdy używa się wyłącznie powiadomień z Android Auto.\nAby upewnić się, że aplikacja wykrywa połączenie z Android Auto, należy wyłączyć optymalizację baterii.\nJeśli to nadal nie działa, można również włączyć tryb pierwszoplanowy lub otworzyć aplikację w Android Auto raz, gdy jest podłączona do Android Auto.</string>
     <string name="gda_help_aa_title">Konfiguracja Android Auto</string>
-    <string name="gda_help_aa_title_summary">Aby aktywować GlucoDataAuto dla Android Auto, należy wykonać następujące kroki:</string>
+    <string name="gda_help_aa_title_summary">Android Auto jest albo osobną aplikacją, albo częścią systemu i można do niej uzyskać dostęp poprzez ustawienia Androida.\nAby aktywować GlucoDataAuto dla Android Auto, należy wykonać następujące kroki:</string>
     <string name="gda_help_aa_dev_mode">1. Aktywacja trybu programisty</string>
-    <string name="gda_help_aa_dev_mode_summary">- otwórz aplikację Android Auto\n- przewiń w dół do pozycji Wersja\n- dotknij kilkakrotnie pozycji Wersja, aż pojawi się wyskakujące okienko „Zezwalaj na ustawienia programisty\"\n- naciśnij \"OK\"</string>
+    <string name="gda_help_aa_dev_mode_summary">- otwórz Android Auto\n- przewiń w dół do pozycji Wersja\n- dotknij kilkakrotnie pozycji Wersja, aż pojawi się wyskakujące okienko „Zezwalaj na ustawienia programisty\"\n- naciśnij \"OK\"</string>
     <string name="gda_help_aa_sources">2. Aktywuj „Nieznane źródła\"</string>
-    <string name="gda_help_aa_sources_summary">- otwórz aplikację Android Auto\n- otwórz w menu (3 kropki) „Ustawienia programisty\"\n- przewiń w dół do pozycji „Nieznane źródła\"\n- włącz ją</string>
+    <string name="gda_help_aa_sources_summary">- otwórz Android Auto\n- otwórz w menu (3 kropki) „Ustawienia programisty\"\n- przewiń w dół do pozycji „Nieznane źródła\"\n- włącz ją</string>
     <string name="gda_help_aa_notification">3. Ustawienia powiadomień</string>
-    <string name="gda_help_aa_notification_summary">- otwórz aplikację Android Auto\n- przewiń w dół do pozycji „Powiadomienia\"\n- włącz „Pokaż podgląd wiadomości przychodzących\"\n- włącz „Pokazuj pierwszy wiersz wiadomości\"</string>
+    <string name="gda_help_aa_notification_summary">- otwórz Android Auto\n- przewiń w dół do pozycji „Powiadomienia\"\n- włącz „Pokaż podgląd wiadomości przychodzących\"\n- włącz „Pokazuj pierwszy wiersz wiadomości\"</string>
     <string name="pref_notification_custom_layout">Kolorowy układ</string>
     <string name="pref_notification_custom_layout_summary">Wyświetla wartości dużą i kolorową czcionką.\nNa niektórych urządzeniach Samsung z Androidem 13 i nowszym, może to spowodować awarię aplikacji z powodu błędu po stronie Samsunga.\nJeśli problem wystąpi, to ustawienie zostanie automatycznie wyłączone, aby aplikacja mogła działać poprawnie.</string>
     <string name="app_crash_title">Wykryto awarię!</string>
     <string name="app_crash_message">Bardzo mi przykro, że aplikacja zawiesiła się podczas działania!\nProszę, wyślij mi logi, abym mógł przeanalizować błąd i spróbować go jak najszybciej naprawić.\nDziękuję!</string>
+    <string name="gda_help_aa_enable_gda">4. Włącz GlucoDataAuto</string>
+    <string name="gda_help_aa_enable_gda_summary">- otwórz Android Auto\n- przewiń w dół do pozycji \"Wyświetlanie\"\n- otwórz \"Dostosuj aplikacje w menu\"\n- włącz \"GlucoDataAuto\"\nJeśli GlucoDataAuto nie jest dostępny, proszę zrestartować telefon.</string>
 </resources>

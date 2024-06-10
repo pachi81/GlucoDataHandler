@@ -483,15 +483,17 @@
     <string name="gda_battery_optimization_disabled">Otimização da bateria está habilitada!\nPressione aqui para desativá-lo.</string>
     <string name="gda_source_follower_info_summary">Se você estiver usando uma fonte seguidora, o aplicativo pode não ser iniciado enquanto estiver conectado ao Android Auto, se você estiver usando apenas notificações do Android Auto.\nPara garantir que o aplicativo detecte a conexão com o Android Auto, você deve desativar a otimização da bateria.\nSe ainda não funcionar, você também pode habilitar o modo de primeiro plano ou abrir o aplicativo no Android Auto uma vez, quando estiver conectado ao Android Auto.</string>
     <string name="gda_help_aa_title">Configurar Android Auto</string>
-    <string name="gda_help_aa_title_summary">Para ativar o GlucoDataAuto para Android Auto, você deve seguir os seguintes passos:</string>
+    <string name="gda_help_aa_title_summary">O Android Auto é um aplicativo separado ou parte do sistema e pode ser acessado através das configurações do Android.\nPara ativar o GlucoDataAuto para Android Auto, você deve seguir os seguintes passos:</string>
     <string name="gda_help_aa_dev_mode">1. Ativar o modo desenvolvedor</string>
-    <string name="gda_help_aa_dev_mode_summary">- Abra o aplicativo Android Auto\n- Role para baixo até a Versão\n- Toque várias vezes na Versão até aparecer um pop-up para \"Permitir definições de programação\"\n- Pressione \"OK\"</string>
+    <string name="gda_help_aa_dev_mode_summary">- Abra o Android Auto\n- Role para baixo até a Versão\n- Toque várias vezes na Versão até aparecer um pop-up para \"Permitir definições de programação\"\n- Pressione \"OK\"</string>
     <string name="gda_help_aa_sources">2. Ativar \"Fontes desconhecidas\"</string>
-    <string name="gda_help_aa_sources_summary">- Abra o aplicativo Android Auto\n- Abra no menu de 3 pontos as \"Definições do programador\"\n- Role para baixo até \"Fontes desconhecidas\"\n- Ative-o</string>
+    <string name="gda_help_aa_sources_summary">- Abra o Android Auto\n- Abra no menu de 3 pontos as \"Definições do programador\"\n- Role para baixo até \"Fontes desconhecidas\"\n- Ative-o</string>
     <string name="gda_help_aa_notification">3. Configurar as configurações de notificações</string>
-    <string name="gda_help_aa_notification_summary">- Abra o aplicativo Android Auto\n- Role para baixo até \"Mensagens\"\n- Ative \"Mostrar notificações de mensagens\"\n- Ative \"Mostrar primeira linha das mensagens\"</string>
+    <string name="gda_help_aa_notification_summary">- Abra o Android Auto\n- Role para baixo até \"Mensagens\"\n- Ative \"Mostrar notificações de mensagens\"\n- Ative \"Mostrar primeira linha das mensagens\"</string>
     <string name="pref_notification_custom_layout">Layout colorido</string>
     <string name="pref_notification_custom_layout_summary">Exibe os valores em texto grande e colorido.\nEm alguns dispositivos Samsung com Android 13 e superior, isso pode fazer com que o aplicativo trave devido a um bug do lado da Samsung.\nSe o problema ocorrer, essa configuração será desativada automaticamente para garantir que o aplicativo permaneça funcional.</string>
     <string name="app_crash_title">Falha detectada!</string>
     <string name="app_crash_message">Sinto muito que o aplicativo tenha travado durante a execução!\nPor favor, envie-me os logs para que eu possa analisar o erro e tentar corrigi-lo o mais rápido possível.\nObrigado!</string>
+    <string name="gda_help_aa_enable_gda">4. Habilitar GlucoDataAuto</string>
+    <string name="gda_help_aa_enable_gda_summary">- Abra o Android Auto\n- Role para baixo até \"Ecrã\"\n- Abra \"Personalize o Launcher\"\n- Habilite \"GlucoDataAuto\"\nSe o GlucoDataAuto não estiver disponível, reinicie o telefone, por favor.</string>
 </resources>
