@@ -60,7 +60,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     private var vibratorInstance: Vibrator? = null
     private var alarmManager: AlarmManager? = null
     private var alarmPendingIntent: PendingIntent? = null
-    private var alarmNotificationActive: Boolean = false
     private var useAlarmSound: Boolean = true
     private var currentAlarmState: AlarmState = AlarmState.DISABLED
 
@@ -102,13 +101,10 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         if(state == AlarmState.DISABLED || !channelActive(context)) {
             state = AlarmState.DISABLED
         } else if(state == AlarmState.ACTIVE) {
-            if(!alarmNotificationActive) {
-                initNotifier(context)
-            }
-            if(!active || !alarmNotificationActive) {
+            if(!active) {
                 Log.d(
                     LOG_ID,
-                    "Inactive causes by active: $active - notification-active: $alarmNotificationActive"
+                    "Inactive causes by active: $active"
                 )
                 state = AlarmState.INACTIVE
             }
@@ -120,10 +116,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         return state
     }
 
-    private fun isAlarmActive(context: Context): Boolean {
-        return AlarmState.currentState(context) == AlarmState.ACTIVE
-    }
-
     fun initNotifications(context: Context) {
         try {
             Log.v(LOG_ID, "initNotifications called")
@@ -133,10 +125,23 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
             onSharedPreferenceChanged(sharedPref, null)
-            initNotifier()
+            initNotifier(context)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "initNotifications exception: " + exc.toString() )
         }
+    }
+
+    open fun getNotifierFilter(): MutableSet<NotifySource> {
+        return mutableSetOf()
+    }
+
+    fun initNotifier(context: Context) {
+        Log.v(LOG_ID, "initNotifier called")
+        val filter = mutableSetOf(NotifySource.ALARM_STATE_CHANGED)
+        filter.add(NotifySource.ALARM_TRIGGER)
+        filter.add(NotifySource.OBSOLETE_ALARM_TRIGGER)
+        filter.addAll(getNotifierFilter())
+        InternalNotifier.addNotifier(context, this, filter )
     }
 
     fun getEnabled(): Boolean = enabled
@@ -147,7 +152,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             if (enabled != newEnabled) {
                 enabled = newEnabled
                 Log.i(LOG_ID, "enable alarm notifications: $newEnabled")
-                initNotifier()
                 if(!enabled) {
                     stopCurrentNotification()
                 }
@@ -760,14 +764,13 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             Log.d(LOG_ID, "OnNotifyData called for $dataSource")
             when(dataSource) {
                 NotifySource.ALARM_TRIGGER -> {
-                    if (ReceiveData.forceAlarm)
-                        triggerNotification(ReceiveData.getAlarmType(), context)
+                    triggerNotification(ReceiveData.getAlarmType(), context)
                 }
                 NotifySource.OBSOLETE_ALARM_TRIGGER -> {
                     triggerNotification(AlarmType.OBSOLETE, context)
                 }
                 NotifySource.ALARM_STATE_CHANGED -> {
-                    initNotifier(context)
+                    AlarmState.currentState(context)
                 }
                 else -> Log.w(LOG_ID, "Unsupported source $dataSource")
             }
@@ -799,27 +802,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 DateFormat.DEFAULT).format(nextAlarmTime)} (alarm from ${DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(curAlarmTime))})")
             retriggerCount++
             triggerDelay(TriggerAction.RETRIGGER_SOUND, getAlarmType(), context, (timeInMillis.toFloat()/1000))
-        }
-    }
-
-    open fun getNotifierFilter(): MutableSet<NotifySource> {
-        return mutableSetOf()
-    }
-
-    fun initNotifier(context: Context? = null) {
-        val requireConext = context ?: GlucoDataService.context!!
-        val newActive = isAlarmActive(requireConext)
-        Log.v(LOG_ID, "initNotifier called for newActive: $newActive")
-        if(alarmNotificationActive != newActive) {
-            Log.i(LOG_ID, "Change alarm notification active to ${newActive}")
-            alarmNotificationActive = newActive
-            val filter = mutableSetOf(NotifySource.ALARM_STATE_CHANGED)
-            if(alarmNotificationActive) {
-                filter.add(NotifySource.ALARM_TRIGGER)
-                filter.add(NotifySource.OBSOLETE_ALARM_TRIGGER)
-            }
-            filter.addAll(getNotifierFilter())
-            InternalNotifier.addNotifier(requireConext, this, filter )
         }
     }
 
