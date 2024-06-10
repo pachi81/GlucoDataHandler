@@ -770,7 +770,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     triggerNotification(AlarmType.OBSOLETE, context)
                 }
                 NotifySource.ALARM_STATE_CHANGED -> {
-                    AlarmState.currentState(context)
+                    getAlarmState(context)
                 }
                 else -> Log.w(LOG_ID, "Unsupported source $dataSource")
             }
