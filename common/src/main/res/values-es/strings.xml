@@ -495,10 +495,10 @@
     <string name="gda_help_aa_sources_summary">- Abre Android Auto\n- Abre en el menú de 3 puntos las \"Ajustes de desarrollador\"\n- Desplázate hacia abajo hasta \"Fuentes desconocidas\"\n- Actívalo</string>
     <string name="gda_help_aa_notification">3. Configurar las configuraciones de notificaciones</string>
     <string name="gda_help_aa_notification_summary">- Abre Android Auto\n- Desplázate hacia abajo hasta \"Mensajes\"\n- Activa \"Mostrar notificaciones de mensajes\"\n- Activa \"Mostrar la primera línea de los mensajes\"</string>
+    <string name="gda_help_aa_enable_gda">4. Habilitar GlucoDataAuto</string>
+    <string name="gda_help_aa_enable_gda_summary">- Abre Android Auto\n- Desplázate hacia abajo hasta \"Pantalla\"\n- Abre \"Personalizar menú de apps\"\n- Habilita \"GlucoDataAuto\"\nSi GlucoDataAuto no está disponible, por favor reinicia el teléfono.</string>
     <string name="pref_notification_custom_layout">Diseño colorido</string>
     <string name="pref_notification_custom_layout_summary">Muestra los valores en texto grande y colorido.\nEn algunos dispositivos Samsung con Android 13 y superior, esto puede hacer que la aplicación se bloquee debido a un error del lado de Samsung.\nSi ocurre el problema, esta configuración se desactivará automáticamente para garantizar que la aplicación siga siendo funcional.</string>
     <string name="app_crash_title">¡Error detectado!</string>
     <string name="app_crash_message">¡Lo siento mucho que la aplicación se haya bloqueado durante la ejecución!\nPor favor, envíame los registros para que pueda analizar el error e intentar solucionarlo lo antes posible.\n¡Gracias!</string>
-    <string name="gda_help_aa_enable_gda">4. Habilitar GlucoDataAuto</string>
-    <string name="gda_help_aa_enable_gda_summary">- Abre Android Auto\n- Desplázate hacia abajo hasta \"Pantalla\"\n- Abre \"Personalizar menú de apps\"\n- Habilita \"GlucoDataAuto\"\nSi GlucoDataAuto no está disponible, por favor reinicia el teléfono.</string>
 </resources>
