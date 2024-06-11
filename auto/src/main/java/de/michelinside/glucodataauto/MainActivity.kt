@@ -57,8 +57,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var viewIcon: ImageView
     private lateinit var timeText: TextView
     private lateinit var deltaText: TextView
-    private lateinit var iobText: TextView
-    private lateinit var cobText: TextView
     private lateinit var txtLastValue: TextView
     private lateinit var txtVersion: TextView
     private lateinit var tableDetails: TableLayout
@@ -84,8 +82,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             viewIcon = findViewById(R.id.viewIcon)
             timeText = findViewById(R.id.timeText)
             deltaText = findViewById(R.id.deltaText)
-            iobText = findViewById(R.id.iobText)
-            cobText = findViewById(R.id.cobText)
             txtLastValue = findViewById(R.id.txtLastValue)
             txtBatteryOptimization = findViewById(R.id.txtBatteryOptimization)
             txtScheduleExactAlarm = findViewById(R.id.txtScheduleExactAlarm)
@@ -395,10 +391,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(withShadow = true))
             timeText.text = "🕒 ${ReceiveData.getElapsedRelativeTimeAsString(this)}"
             deltaText.text = "Δ ${ReceiveData.getDeltaAsString()}"
-            iobText.text = "💉 " + ReceiveData.getIobAsString()
-            cobText.text = "🍔 " + ReceiveData.getCobAsString()
-            iobText.visibility = if (ReceiveData.isIobCobObsolete(Constants.VALUE_OBSOLETE_LONG_SEC)) View.GONE else View.VISIBLE
-            cobText.visibility = iobText.visibility
 
             if(ReceiveData.time == 0L) {
                 txtLastValue.visibility = View.VISIBLE
@@ -453,11 +445,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         if(ReceiveData.time > 0) {
             if (ReceiveData.isMmol)
                 tableDetails.addView(createRow(CR.string.info_label_raw, "${ReceiveData.rawValue} mg/dl"))
-            tableDetails.addView(createRow(CR.string.info_label_timestamp, DateFormat.getTimeInstance(
-                DateFormat.DEFAULT).format(Date(ReceiveData.time))))
-            if (!ReceiveData.isIobCobObsolete(1.days.inWholeSeconds.toInt()))
-                tableDetails.addView(createRow(CR.string.info_label_iob_cob_timestamp, DateFormat.getTimeInstance(
-                    DateFormat.DEFAULT).format(Date(ReceiveData.iobCobTime))))
+            tableDetails.addView(createRow(CR.string.info_label_timestamp, DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(ReceiveData.time))))
             if (ReceiveData.sensorID?.isNotEmpty() == true) {
                 tableDetails.addView(createRow(CR.string.info_label_sensor_id, if(BuildConfig.DEBUG) "ABCDE12345" else ReceiveData.sensorID!!))
             }
