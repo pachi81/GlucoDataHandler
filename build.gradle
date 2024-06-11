@@ -5,9 +5,13 @@ plugins {
     id 'org.jetbrains.kotlin.android' version '1.9.23' apply false
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 project.ext.set("versionCode", 50)
-project.ext.set("versionName", "1.0.1")
+project.ext.set("versionName", "1.0.2")
 project.ext.set("compileSdk", 34)
 project.ext.set("targetSdk", 33)
 project.ext.set("minSdk", 26)
-project.ext.set("releasePath", "D:/Daten/Michel/OneDrive/Projekte/Release")
+project.ext.set("releasePath", properties.getProperty('releasePath'))
+project.ext.set("DEXCOM_APPLICATION_ID", properties.getProperty('DEXCOM_APPLICATION_ID'))
