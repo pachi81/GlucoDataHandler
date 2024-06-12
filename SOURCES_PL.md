@@ -27,7 +27,7 @@ Jeśli używasz xDrip+ do odbierania wartości glukozy, otwórz xDrip+, przejdź
 * włącz "Nadawaj lokalnie"
 * ustaw "Blokowanie szumów" na "Send even Extremely noisy signals"
 * włącz "Kompatybilny Broadcast"
-* sprawdź, czy pole "Identyfikuj odbiornik" jest puste lub dodaj `de.michelinside.glucodatahandler` oddzielone spacją
+* sprawdź, czy pole "Identyfikuj odbiornik" jest puste, a jeśli jest już tam jakiś wpis, dodaj za nim spację a następnie wpisz `de.michelinside.glucodatahandler`
 
 <img src='images/xDrip_InterAppSettings.png' height=340> <img src='images/xDrip+_noise_blocking.jpg' height=340>
 
