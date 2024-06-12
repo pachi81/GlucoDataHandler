@@ -77,6 +77,8 @@
     <string name="source_xdrip" translatable="false">xDrip+</string>
     <string name="source_libreview" translatable="false">LibreLinkUp</string>
     <string name="source_nightscout" translatable="false">Nightscout</string>
+    <string name="source_dexcom_share" translatable="false">Dexcom Share</string>
+    <string name="source_dexcom_byoda" translatable="false">Dexcom</string>
     <string name="source_phone">Phone</string>
     <string name="source_wear">Wear</string>
 

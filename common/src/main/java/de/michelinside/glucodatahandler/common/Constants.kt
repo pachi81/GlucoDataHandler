@@ -34,6 +34,7 @@ object Constants {
     const val PACKAGE_AAPS = "info.nightscout"
     const val PACKAGE_LIBRELINK = "com.freestylelibre"
     const val PACKAGE_LIBRELINKUP = "org.nativescript.librelinkup"
+    const val PACKAGE_DEXCOM = "com.dexcom."
 
     const val EXTRA_SOURCE_PACKAGE = "gdh.source_package"
     const val EXTRA_SOURCE_INDEX = "gdh.source_idx"
@@ -134,6 +135,13 @@ object Constants {
     const val SHARED_PREF_LIBRE_TOKEN_EXPIRE="source_libre_token_expire"
     const val SHARED_PREF_LIBRE_REGION="source_libre_region"
     const val SHARED_PREF_LIBRE_PATIENT_ID="source_libre_patient_id"
+
+    const val SHARED_PREF_DEXCOM_SHARE_ENABLED="source_dexcom_share_enabled"
+    const val SHARED_PREF_DEXCOM_SHARE_USER="source_dexcom_share_user"
+    const val SHARED_PREF_DEXCOM_SHARE_PASSWORD="source_dexcom_share_password"
+    const val SHARED_PREF_DEXCOM_SHARE_USE_US_URL="source_dexcom_share_use_us_url"
+    const val SHARED_PREF_DEXCOM_SHARE_RECONNECT="source_dexcom_share_reconnect"
+    const val SHARED_PREF_DEXCOM_SHARE_TOKEN="source_dexcom_share_token"
 
     const val SHARED_PREF_NIGHTSCOUT_ENABLED="src_ns_enabled"
     const val SHARED_PREF_NIGHTSCOUT_URL="src_ns_url"

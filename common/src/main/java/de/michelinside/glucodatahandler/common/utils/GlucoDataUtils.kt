@@ -54,7 +54,9 @@ object GlucoDataUtils {
         return if (java.lang.Float.isNaN(rate)) "" else "DoubleDown"
     }
 
-    fun getRateFromLabel(trendLabel: String): Float {
+    fun getRateFromLabel(trendLabel: String?): Float {
+        if(trendLabel==null)
+            return Float.NaN
         return when(trendLabel) {
             "DoubleDown" -> -4F
             "SingleDown" -> -2F

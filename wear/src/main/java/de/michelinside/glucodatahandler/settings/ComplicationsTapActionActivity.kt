@@ -107,6 +107,7 @@ class ComplicationsTapActionActivity : AppCompatActivity() {
         filter.add(Constants.PACKAGE_XDRIP_PLUS)
         filter.add(Constants.PACKAGE_LIBRELINK)
         filter.add(Constants.PACKAGE_LIBRELINKUP)
+        filter.add(Constants.PACKAGE_DEXCOM)
     }
 
 
