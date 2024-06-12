@@ -9,6 +9,10 @@
 * receives glucose, IOB and COB values from [AndroidAPS](./SOURCES.md#androidaps)
 * receives glucose values from [Juggluco](./SOURCES.md#juggluco)
 * receives glucose values from [xDrip+](./SOURCES.md#xdrip)
+* Support for **[alarms](#alarms)**:
+  * alarm for very low, low, high, very high and obsolete values
+  * individual sound settings for each alarm type
+  * fullscreen alarm on lockscreen
 * provides several **[widgets](#widgets)** and a floating widget for the phone
 * provides optional **[notifications](#notifications)** with different icons for the phone
 * provides several **[complications](#complications)** for Wear OS
@@ -43,6 +47,12 @@ You can download the current version [here](https://github.com/pachi81/GlucoData
 ### Phone
 
 The settings for the phone are described in the app itself. The settings from the phone will be send to the wear, if it is connected.
+
+## Alarms
+
+Individual alarm configuration for the different types, which can be displayed as a notification or as full screen on the lock screen:
+
+<img src='images/playstore/phone_alarm_notification.png' width=200>  <img src='images/playstore/phone_alarm_fullscreen_notification.png' width=200>
 
 ## Widgets
 There are several types of widgets and a floating widget for the phone:
