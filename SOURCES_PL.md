@@ -27,7 +27,7 @@ Jeśli używasz xDrip+ do odbierania wartości glukozy, otwórz xDrip+, przejdź
 * włącz "Nadawaj lokalnie"
 * ustaw "Blokowanie szumów" na "Send even Extremely noisy signals"
 * włącz "Kompatybilny Broadcast"
-* sprawdź, czy pole "Identyfikuj odbiornik" jest puste lub dodaj nową linię z "de.michelinside.glucodatahandler"
+* sprawdź, czy pole "Identyfikuj odbiornik" jest puste lub dodaj `de.michelinside.glucodatahandler` oddzielone spacją
 
 <img src='images/xDrip_InterAppSettings.png' height=340> <img src='images/xDrip+_noise_blocking.jpg' height=340>
 
@@ -36,6 +36,6 @@ Jeśli używasz xDrip+ do odbierania wartości glukozy, otwórz xDrip+, przejdź
 Aby odbierać wartości z AAPS:
 * otwórz AAPS
 * przejdź do "Konfiguracja"
-* włącz "Samsung Tizen"
+* włącz "Samsung Tizen" lub "Data Broadcaster"
 
 <img src='images/pl/AAPS_config.jpg' width=340>
