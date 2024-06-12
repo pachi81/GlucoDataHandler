@@ -10,7 +10,7 @@
 * odbiera wartości glukozy, IOB i COB z **[AndroidAPS](./SOURCES_PL.md#androidaps)**
 * odbiera wartości glukozy z **[Juggluco](./SOURCES_PL.md#juggluco)**
 * odbiera wartości glukozy z **[xDrip+](./SOURCES_PL.md#xdrip)**
-* Wsparcie dla **[alarmów](#alarmów)**:
+* Obsługa **[alarmów](#alarmów)**:
   * alarm dla bardzo niskich, niskich, wysokich, bardzo wysokich i nieaktualnych wartości
   * indywidualne ustawienia dźwięku dla każdego typu alarmu
   * alarm na pełnym ekranie na ekranie blokady
@@ -50,7 +50,7 @@ Aktualną wersję można pobrać [tutaj](https://github.com/pachi81/GlucoDataHan
 
 Ustawienia dla aplikacji na telefon opisane są w samej aplikacji. Ustawienia z telefonu zostaną przesłane do zegarka, jeśli jest on podłączony.
 
-## Alarmów
+## Alarmy
 
 Indywidualna konfiguracja alarmów dla różnych typów, które mogą być wyświetlane jako powiadomienie lub na pełnym ekranie na ekranie blokady:
 
