@@ -57,7 +57,7 @@ Individual alarm configuration for the different types, which can be displayed a
 ## Widgets
 There are several types of widgets and a floating widget for the phone:
 
-<img src='images/widgets.jpg' width=200>  <img src='images/FloatingWidget.jpg' width=200>
+<img src='images/playstore/phone_widgets.png' width=200>  <img src='images/playstore/phone_settings_floating_widget.png' width=200>
 
 ## Notifications
 There are two notifciations which can be activated. For each notification the icon can be choosen, which will appear in the status bar of your phone.
