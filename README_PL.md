@@ -60,7 +60,7 @@ Indywidualna konfiguracja alarmów dla różnych typów, które mogą być wyśw
 Dostępnych jest kilka rodzajów widgetów na telefon.
 Dostępny jest również pływający widget, który może być obsługiwany przez aplikację Tasker.
 
-<img src='images/widgets.jpg' width=200>  <img src='images/pl/FloatingWidget.jpg' width=200>
+<img src='images/playstore/phone_widgets.png' width=200>  <img src='images/playstore/phone_settings_floating_widget.png' width=200>
 
 ## Powiadomienia
 Dostępne są dwa powiadomienia, które można aktywować. Dla każdego powiadomienia można wybrać ikonę, która pojawi się na pasku stanu telefonu.
