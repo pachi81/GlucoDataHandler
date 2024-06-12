@@ -24,7 +24,7 @@ Anschließend speichern und mit OK beenden.
 Für die Benutzer von xDrip+, in den Einstellung den Eintrag Inter-App Einstellungen öffnen und wie folgt konfigurieren:
 * "Lokaler Broadcast" aktivieren
 * "Kompatible Broadcast" aktivieren
-* prüfen, ob "Identifiziere Empfänger" leer ist; ist bereits ein Eintrag vorhanden, dann eine neue Zeile mit `de.michelinside.glucodatahandler` hinzufügen
+* prüfen, ob "Identifiziere Empfänger" leer ist; ist bereits ein Eintrag vorhanden, dann durch ein Leerzeichen getrennt `de.michelinside.glucodatahandler` hinzufügen
 * in Verrauschungsunterdrückung \"Send even Extremely noisy signals\" auswählen
   
 <img src='images/de/xDrip_InterAppSettings.png' height=340> <img src='images/de/xDrip+_Verrauschungsunterdrückung.jpg' height=340>
@@ -33,6 +33,6 @@ Für die Benutzer von xDrip+, in den Einstellung den Eintrag Inter-App Einstellu
 Konfiguration von AAPS:
 * AAPS App öffnen
 * "Konfiguration" öffnen
-* "Samsung Tizen" aktivieren
+* "Samsung Tizen" oder "Data Broadcaster" aktivieren
 
 <img src='images/de/AAPS_config.jpg' width=340>
