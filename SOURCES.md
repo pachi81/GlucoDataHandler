@@ -23,7 +23,7 @@ If you are using Juggluco to receive glucose values, open Juggluco and enable `G
 If you are using xDrip+ to receive glucose values, open xDrip+, go to setting and select Inter-app settings
 * Enable "Broadcast locally"
 * Enable "Compatible Broadcast"
-* Check "Identify receiver" to be empty or if there is already an entry, add a new line with `de.michelinside.glucodatahandler`
+* Check "Identify receiver" to be empty or if an entry already exists, then add `de.michelinside.glucodatahandler` separated by a space
 * set \"Noise Blocking\" to \"Send even Extremely noisy signals\"
   
 <img src='images/xDrip_InterAppSettings.png' height=340> <img src='images/xDrip+_noise_blocking.jpg' height=340>
@@ -32,6 +32,6 @@ If you are using xDrip+ to receive glucose values, open xDrip+, go to setting an
 To receive values from AAPS:
 * open AAPS app
 * go to "Config Builder"
-* enable "Samsung Tizen"
+* enable "Samsung Tizen" or "Data Broadcaster"
 
 <img src='images/AAPS_config.jpg' width=340>
