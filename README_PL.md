@@ -10,6 +10,10 @@
 * odbiera wartości glukozy, IOB i COB z **[AndroidAPS](./SOURCES_PL.md#androidaps)**
 * odbiera wartości glukozy z **[Juggluco](./SOURCES_PL.md#juggluco)**
 * odbiera wartości glukozy z **[xDrip+](./SOURCES_PL.md#xdrip)**
+* Wsparcie dla **[alarmów](#alarmów)**:
+  * alarm dla bardzo niskich, niskich, wysokich, bardzo wysokich i nieaktualnych wartości
+  * indywidualne ustawienia dźwięku dla każdego typu alarmu
+  * alarm na pełnym ekranie na ekranie blokady
 * udostępnia kilka **[widgetów](#widgety)** i pływający widget dla telefonu
 * udostępnia opcjonalne **[powiadomienia](#powiadomienia)** z różnymi ikonami dla telefonu
 * udostępnia kilka **[komplikacji](#komplikacje)** dla Wear OS
@@ -45,6 +49,12 @@ Aktualną wersję można pobrać [tutaj](https://github.com/pachi81/GlucoDataHan
 ### Telefon
 
 Ustawienia dla aplikacji na telefon opisane są w samej aplikacji. Ustawienia z telefonu zostaną przesłane do zegarka, jeśli jest on podłączony.
+
+## Alarmów
+
+Indywidualna konfiguracja alarmów dla różnych typów, które mogą być wyświetlane jako powiadomienie lub na pełnym ekranie na ekranie blokady:
+
+<img src='images/playstore/phone_alarm_notification.png' width=200>  <img src='images/playstore/phone_alarm_fullscreen_notification.png' width=200>
 
 ## Widgety
 Dostępnych jest kilka rodzajów widgetów na telefon.
