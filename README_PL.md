@@ -10,7 +10,7 @@
 * odbiera wartości glukozy, IOB i COB z **[AndroidAPS](./SOURCES_PL.md#androidaps)**
 * odbiera wartości glukozy z **[Juggluco](./SOURCES_PL.md#juggluco)**
 * odbiera wartości glukozy z **[xDrip+](./SOURCES_PL.md#xdrip)**
-* Obsługa **[alarmów](#alarmów)**:
+* Obsługa **[alarmów](#alarmy)**:
   * alarm dla bardzo niskich, niskich, wysokich, bardzo wysokich i nieaktualnych wartości
   * indywidualne ustawienia dźwięku dla każdego typu alarmu
   * alarm na pełnym ekranie na ekranie blokady
