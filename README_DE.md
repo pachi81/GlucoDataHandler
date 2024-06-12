@@ -9,6 +9,10 @@
 * empfängt Glukose, IOB und COB Werte von **[AndroidAPS](./SOURCES_DE.md#androidaps)**
 * empfängt Glukose Werte von **[Juggluco](./SOURCES_DE.md#juggluco)**
 * empfängt Glukose Werte von **[xDrip+](./SOURCES_DE.md#xdrip)**
+* Unterstützung von **[Alarmen](#alarme)**:
+  * Alarmtypen: sehr tiefe, tiefe, hohe, sehr hohe und veraltete Werte
+  * Individuelle Ton und Vibrationseinstellungen für jeden Alarmtypen
+  * Vollbildbenachrichtigung auf dem Sperrbildschirm
 * stellt mehrere **[Widgets](#widgets)** für Android zur Verfügung
 * optionale **[Benachrichtigungen](#benachrichtigungen)** um weitere Statusbar-Icons zur Verfügung zu haben
 * stellt mehrere **[Complications](#complications)** für Wear OS zur Verfügung
@@ -45,10 +49,16 @@ Die neuste Version kann [hier](https://github.com/pachi81/GlucoDataHandler/relea
 
 Die einzelnen Einstellungen sind in der App entsprechend beschrieben. Sobald die Smartwatch verbunden ist, werden die Einstellungen übermittelt.
 
-## Widgets
-Es gibt verschiedene Arten von Widgets und ein schwebendes Widget:
+## Alarme
 
-<img src='images/widgets.jpg' width=200>  <img src='images/de/FloatingWidget.jpg' width=200>
+Individuelle Alarmkonfiguration für die verschiedenen Typen, welche als Benachrichtigung oder als Vollbild auf dem Sperrbildschirm angezeigt werden:
+
+<img src='images/playstore/de/phone_alarm_notification.png' width=200>  <img src='images/playstore/de/phone_alarm_fullscreen_notification.png' width=200>
+
+## Widgets
+Es gibt verschiedene Arten von Widgets und ein konfigurierbares schwebendes Widget:
+
+<img src='images/playstore/phone_widgets.png' width=200>  <img src='images/playstore/de/phone_settings_floating_widget.png' width=200>
 
 ## Benachrichtigungen
 Es gibt 2 Benachrichtigungen um zusätzliche Icons in der Statusbar zur Verfügung zu haben.
