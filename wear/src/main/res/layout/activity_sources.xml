@@ -36,6 +36,13 @@
                 android:textAlignment="viewStart" />
 
             <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchDexcomShareSource"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/src_cat_dexcom_share"
+                android:textAlignment="viewStart" />
+
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switchNightscoutSource"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

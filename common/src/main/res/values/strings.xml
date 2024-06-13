@@ -78,7 +78,7 @@
     <string name="source_libreview" translatable="false">LibreLinkUp</string>
     <string name="source_nightscout" translatable="false">Nightscout</string>
     <string name="source_dexcom_share" translatable="false">Dexcom Share</string>
-    <string name="source_dexcom_byoda" translatable="false">Dexcom</string>
+    <string name="source_dexcom_byoda" translatable="false">Dexcom BYODA</string>
     <string name="source_phone">Phone</string>
     <string name="source_wear">Wear</string>
 
@@ -95,11 +95,11 @@
     <string name="source_delay_summary">Delay in seconds before requesting the data from cloud, because if takes some time until the data is present there.</string>
 
     <string name="src_cat_libreview">LibreLinkUp Follower</string>
-    <string name="src_libre_enabled">Enable</string>
+    <string name="src_enabled">Enable</string>
     <string name="src_libre_enabled_summary">Enable LibreLinkUp follower, if user and password are set.</string>
     <string name="src_libre_user">E-mail</string>
     <string name="src_libre_user_summary">E-mail for LibreLinkUp login</string>
-    <string name="src_libre_password">Password</string>
+    <string name="src_password">Password</string>
     <string name="src_libre_password_summary">Password for LibreLinkUp</string>
     <string name="src_libre_reconnect">Reconnect</string>
     <string name="src_libre_reconnect_summary">On next interval a new login will be executed.</string>
@@ -513,4 +513,14 @@
     <string name="pref_notification_custom_layout_summary">Displays the values in large and colored text.\nOn some Samsung devices with Android 13 and higher, this may cause the app to crash due to a bug on Samsung\'s side.\nIf the problem occurs, this setting will be automatically disabled to ensure the app remains functional.</string>
     <string name="app_crash_title">Crash detected!</string>
     <string name="app_crash_message">I am so sorry that the app crashed during execution!\nPlease send me the logs so I can analyze the error and try to fix it as soon as possible.\nThank you!</string>
+    <string name="src_cat_dexcom_share">Dexcom Share</string>
+    <string name="src_dexcom_share_us_server">US account</string>
+    <string name="src_dexcom_share_us_server_summary_on">US account is used.</string>
+    <string name="src_dexcom_share_us_server_summary_off">International account is used.</string>
+    <string name="src_dexcom_share_enabled_summary">Enable Dexcom Share account. You need to set username and password before.</string>
+    <string name="src_username">Username</string>
+    <string name="src_dexcom_share_user_summary">Username or E-Mail for Dexcom Share account.</string>
+    <string name="src_dexcom_share_password_summary">Password for Dexcom Share account.</string>
+    <string name="pref_source_dexcom_share_info">Setup Dexcom Share</string>
+    <string name="pref_source_dexcom_share_info_summary">To receive data from Dexcom Share servers, you need to have:\n\n- sharing enabled on the Dexcom application that is connected to the sensor\n- accepted the invitation on the Dexcom Follower app (you can uninstall it afterwards)</string>
 </resources>

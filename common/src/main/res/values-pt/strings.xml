@@ -79,11 +79,11 @@
     <string name="source_delay_summary">Atraso em segundos antes de solicitar os dados da nuvem, pois demora algum tempo até que os dados estejam presentes lá.</string>
 
     <string name="src_cat_libreview">LibreLinkUp Seguidor</string>
-    <string name="src_libre_enabled">Habilita</string>
+    <string name="src_enabled">Habilita</string>
     <string name="src_libre_enabled_summary">Habilite o seguidor do LibreLinkUp, se o usuário e a senha estiverem definidos.</string>
     <string name="src_libre_user">E-mail</string>
     <string name="src_libre_user_summary">E-mail para acesso LibreLinkUp</string>
-    <string name="src_libre_password">Senha</string>
+    <string name="src_password">Senha</string>
     <string name="src_libre_password_summary">Senha para acesso LibreLinkUp</string>
     <string name="src_libre_reconnect">Reconectar</string>
     <string name="src_libre_reconnect_summary">No próximo intervalo um novo login será requerido.</string>
@@ -496,4 +496,14 @@
     <string name="pref_notification_custom_layout_summary">Exibe os valores em texto grande e colorido.\nEm alguns dispositivos Samsung com Android 13 e superior, isso pode fazer com que o aplicativo trave devido a um bug do lado da Samsung.\nSe o problema ocorrer, essa configuração será desativada automaticamente para garantir que o aplicativo permaneça funcional.</string>
     <string name="app_crash_title">Falha detectada!</string>
     <string name="app_crash_message">Sinto muito que o aplicativo tenha travado durante a execução!\nPor favor, envie-me os logs para que eu possa analisar o erro e tentar corrigi-lo o mais rápido possível.\nObrigado!</string>
+    <string name="src_cat_dexcom_share">Dexcom Share</string>
+    <string name="src_dexcom_share_us_server">Conta dos EUA</string>
+    <string name="src_dexcom_share_us_server_summary_on">Uma conta dos EUA está sendo usada.</string>
+    <string name="src_dexcom_share_us_server_summary_off">Uma conta internacional está sendo usada.</string>
+    <string name="src_dexcom_share_enabled_summary">Habilitar conta Dexcom Share.\nVocê precisa configurar o nome de usuário e a senha antes.</string>
+    <string name="src_username">Nome de usuário</string>
+    <string name="src_dexcom_share_user_summary">Nome de usuário ou e-mail para a conta Dexcom Share.</string>
+    <string name="src_dexcom_share_password_summary">Senha para a conta Dexcom Share.</string>
+    <string name="pref_source_dexcom_share_info">Configurar Dexcom Share</string>
+    <string name="pref_source_dexcom_share_info_summary">Para receber dados dos servidores Dexcom Share, você precisa ter:\n\n- compartilhamento habilitado no aplicativo Dexcom que está conectado ao sensor\n- aceita a solicitação no aplicativo Dexcom Follower (você pode desinstalá-lo depois)</string>
 </resources>

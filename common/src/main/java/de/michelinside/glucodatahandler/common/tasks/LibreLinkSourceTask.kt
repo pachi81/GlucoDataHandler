@@ -91,10 +91,14 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         return result
     }
 
+    override fun checkErrorResponse(code: Int, message: String, errorResponse: String?) {
+        super.checkErrorResponse(code, message, errorResponse)
+        if (code in 400..499)
+            reset() // reset token for client error -> trigger reconnect
+    }
+
     private fun checkResponse(body: String?): JSONObject? {
         if (body.isNullOrEmpty()) {
-            if (lastErrorCode in 400..499)
-                reset() // reset token for client error -> trigger reconnect
             return null
         }
         Log.d(LOG_ID, "Handle json response: " + replaceSensitiveData(body))

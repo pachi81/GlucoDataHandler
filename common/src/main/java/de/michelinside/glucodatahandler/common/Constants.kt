@@ -141,7 +141,6 @@ object Constants {
     const val SHARED_PREF_DEXCOM_SHARE_PASSWORD="source_dexcom_share_password"
     const val SHARED_PREF_DEXCOM_SHARE_USE_US_URL="source_dexcom_share_use_us_url"
     const val SHARED_PREF_DEXCOM_SHARE_RECONNECT="source_dexcom_share_reconnect"
-    const val SHARED_PREF_DEXCOM_SHARE_TOKEN="source_dexcom_share_token"
 
     const val SHARED_PREF_NIGHTSCOUT_ENABLED="src_ns_enabled"
     const val SHARED_PREF_NIGHTSCOUT_URL="src_ns_url"

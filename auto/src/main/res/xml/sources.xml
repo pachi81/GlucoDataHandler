@@ -76,7 +76,7 @@
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="source_libre_enabled"
-            android:title="@string/src_libre_enabled"
+            android:title="@string/src_enabled"
             android:summary="@string/src_libre_enabled_summary"
             app:iconSpaceReserved="false" />
         <androidx.preference.EditTextPreference
@@ -88,7 +88,7 @@
         <androidx.preference.EditTextPreference
             android:defaultValue=""
             android:key="source_libre_password"
-            android:title="@string/src_libre_password"
+            android:title="@string/src_password"
             android:summary="@string/src_libre_password_summary"
             android:inputType="textPassword"
             app:iconSpaceReserved="false" />
@@ -107,6 +107,49 @@
             android:key="source_librelinkup_info"
             android:title="@string/pref_source_librelinkup_info"
             android:summary="@string/pref_source_librelinkup_info_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/src_cat_dexcom_share"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="1">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="source_dexcom_share_enabled"
+            android:title="@string/src_enabled"
+            android:summary="@string/src_dexcom_share_enabled_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.EditTextPreference
+            android:defaultValue=""
+            android:key="source_dexcom_share_user"
+            android:title="@string/src_username"
+            android:summary="@string/src_dexcom_share_user_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.EditTextPreference
+            android:defaultValue=""
+            android:key="source_dexcom_share_password"
+            android:title="@string/src_password"
+            android:summary="@string/src_dexcom_share_password_summary"
+            android:inputType="textPassword"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="source_dexcom_share_use_us_url"
+            android:title="@string/src_dexcom_share_us_server"
+            android:summaryOn="@string/src_dexcom_share_us_server_summary_on"
+            android:summaryOff="@string/src_dexcom_share_us_server_summary_off"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="source_dexcom_share_reconnect"
+            android:title="@string/src_libre_reconnect"
+            android:summary="@string/src_libre_reconnect_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_dexcom_share_info"
+            android:title="@string/pref_source_dexcom_share_info"
+            android:summary="@string/pref_source_dexcom_share_info_summary"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 

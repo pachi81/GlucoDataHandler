@@ -15,13 +15,13 @@ class SourcesActivity : AppCompatActivity() {
 
     private lateinit var sharedPref: SharedPreferences
     private lateinit var switchLibreSource: SwitchCompat
+    private lateinit var switchDexcomShareSource: SwitchCompat
     private lateinit var switchNightscoutSource: SwitchCompat
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
             Log.v(LOG_ID, "onCreate called")
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_sources)
-
 
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
 
@@ -32,6 +32,20 @@ class SourcesActivity : AppCompatActivity() {
                 try {
                     with (sharedPref.edit()) {
                         putBoolean(Constants.SHARED_PREF_LIBRE_ENABLED, isChecked)
+                        apply()
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Changing Libre view exception: " + exc.message.toString() )
+                }
+            }
+
+            switchDexcomShareSource = findViewById(R.id.switchDexcomShareSource)
+            switchDexcomShareSource.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_ENABLED, true)
+            switchDexcomShareSource.setOnCheckedChangeListener { _, isChecked ->
+                Log.d(LOG_ID, "Libre view changed: " + isChecked.toString())
+                try {
+                    with (sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_ENABLED, isChecked)
                         apply()
                     }
                 } catch (exc: Exception) {
@@ -88,12 +102,20 @@ class SourcesActivity : AppCompatActivity() {
 
     private fun update() {
         try {
-            val user = sharedPref.getString(Constants.SHARED_PREF_LIBRE_USER, "")!!.trim()
-            val password = sharedPref.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, "")!!.trim()
+            val libreUser = sharedPref.getString(Constants.SHARED_PREF_LIBRE_USER, "")!!.trim()
+            val librePwd = sharedPref.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, "")!!.trim()
             if (!BuildConfig.DEBUG)
-                switchLibreSource.isEnabled = user.isNotEmpty() && password.isNotEmpty()
+                switchLibreSource.isEnabled = libreUser.isNotEmpty() && librePwd.isNotEmpty()
             if(!switchLibreSource.isEnabled) {
                 switchLibreSource.isChecked = false
+            }
+
+            val dexUser = sharedPref.getString(Constants.SHARED_PREF_DEXCOM_SHARE_USER, "")!!.trim()
+            val dexPwd = sharedPref.getString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, "")!!.trim()
+            if (!BuildConfig.DEBUG)
+                switchDexcomShareSource.isEnabled = dexUser.isNotEmpty() && dexPwd.isNotEmpty()
+            if(!switchDexcomShareSource.isEnabled) {
+                switchDexcomShareSource.isChecked = false
             }
 
             val url = sharedPref.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, "")!!.trim()

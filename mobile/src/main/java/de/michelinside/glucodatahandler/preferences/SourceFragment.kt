@@ -28,23 +28,23 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
             preferenceManager.sharedPreferencesName = Constants.SHARED_PREF_TAG
             setPreferencesFromResource(R.xml.sources, rootKey)
 
-            val librePassword = findPreference<EditTextPreference>(Constants.SHARED_PREF_LIBRE_PASSWORD)
-            librePassword?.setOnBindEditTextListener {editText ->
-                editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            }
+            setPasswordPref(Constants.SHARED_PREF_LIBRE_PASSWORD)
+            setPasswordPref(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD)
+            setPasswordPref(Constants.SHARED_PREF_NIGHTSCOUT_SECRET)
 
-            val nightscoutSecret = findPreference<EditTextPreference>(Constants.SHARED_PREF_NIGHTSCOUT_SECRET)
-            nightscoutSecret?.setOnBindEditTextListener {editText ->
-                editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            }
-
-            setupLocalIobAction(findPreference<Preference>(Constants.SHARED_PREF_SOURCE_JUGGLUCO_SET_NS_IOB_ACTION))
-            setupLocalIobAction(findPreference<Preference>(Constants.SHARED_PREF_SOURCE_XDRIP_SET_NS_IOB_ACTION))
-
+            setupLocalIobAction(findPreference(Constants.SHARED_PREF_SOURCE_JUGGLUCO_SET_NS_IOB_ACTION))
+            setupLocalIobAction(findPreference(Constants.SHARED_PREF_SOURCE_XDRIP_SET_NS_IOB_ACTION))
 
             setupLibrePatientData()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
+        }
+    }
+
+    private fun setPasswordPref(prefName: String) {
+        val pwdPref = findPreference<EditTextPreference>(prefName)
+        pwdPref?.setOnBindEditTextListener {editText ->
+            editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
         }
     }
 
@@ -94,6 +94,8 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
             when(key) {
                 Constants.SHARED_PREF_LIBRE_PASSWORD,
                 Constants.SHARED_PREF_LIBRE_USER,
+                Constants.SHARED_PREF_DEXCOM_SHARE_USER,
+                Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD,
                 Constants.SHARED_PREF_NIGHTSCOUT_URL -> {
                     updateEnableStates(sharedPreferences!!)
                     update()
@@ -116,6 +118,15 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
                 switchLibreSource.isEnabled = libreUser.isNotEmpty() && librePassword.isNotEmpty()
                 if(!switchLibreSource.isEnabled)
                     switchLibreSource.isChecked = false
+            }
+
+            val switchDexcomSource = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_DEXCOM_SHARE_ENABLED)
+            if (switchDexcomSource != null) {
+                val dexcomUser = sharedPreferences.getString(Constants.SHARED_PREF_DEXCOM_SHARE_USER, "")!!.trim()
+                val dexcomPassword = sharedPreferences.getString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, "")!!.trim()
+                switchDexcomSource.isEnabled = dexcomUser.isNotEmpty() && dexcomPassword.isNotEmpty()
+                if(!switchDexcomSource.isEnabled)
+                    switchDexcomSource.isChecked = false
             }
 
             val switchNightscoutSource = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED)

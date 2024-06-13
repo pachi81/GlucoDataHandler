@@ -80,11 +80,11 @@
     <string name="source_delay_summary">Wartezeit in Sekunden bis die Daten abgerufen werden, da es eine gewisse Zeit dauert, bis die Daten verfügbar sind.</string>
 
     <string name="src_cat_libreview">LibreLinkUp Datenquelle</string>
-    <string name="src_libre_enabled">Aktiv</string>
+    <string name="src_enabled">Aktiv</string>
     <string name="src_libre_enabled_summary">Aktiviere LibreLinkUp Datenquelle, falls der Benutzer und das Passwort gesetzt sind.</string>
     <string name="src_libre_user">E-Mail</string>
     <string name="src_libre_user_summary">E-Mail für das Login zu LibreLinkUp</string>
-    <string name="src_libre_password">Passwort</string>
+    <string name="src_password">Passwort</string>
     <string name="src_libre_password_summary">Passwort für LibreLinkUp</string>
     <string name="src_libre_reconnect">Reconnect</string>
     <string name="src_libre_reconnect_summary">Bei der nächsten Ausführung wird ein erneutes Login ausgeführt.</string>
@@ -486,4 +486,14 @@
     <string name="pref_notification_custom_layout_summary">Zeigt die Werte in großer und farbiger Schrift.\nAuf einigen Samsung Geräte ab Android 13 kann dies zu einem Absturz der App führen, aufgrund eines Bugs auf Seite von Samsung.\nWenn das Problem auftritt, wird diese Einstellung automatisch deaktiviert, damit die App wieder lauffähig ist.</string>
     <string name="app_crash_title">Absturz erkannt!</string>
     <string name="app_crash_message">Es tut mir so leid, dass die App während der Ausführung abgestürzt ist!\nBitte sendet mir die Logs zu, dann kann ich den Fehler analysieren und versuchen so schnell wie möglich zu fixen.\nDanke!</string>
+    <string name="src_cat_dexcom_share">Dexcom Share</string>
+    <string name="src_dexcom_share_us_server">US Konto</string>
+    <string name="src_dexcom_share_us_server_summary_on">US Konto wird verwendet.</string>
+    <string name="src_dexcom_share_us_server_summary_off">Internationales Konto wird verwendet.</string>
+    <string name="src_dexcom_share_enabled_summary">Aktiviere Dexcom Share Datenquelle.\nBenutzer und Passwort müssen dafür gesetzt sein.</string>
+    <string name="src_username">Benutzername</string>
+    <string name="src_dexcom_share_user_summary">Benutzername oder E-Mail für das Dexcom Share Konto.</string>
+    <string name="src_dexcom_share_password_summary">Passwort für das Dexcom Share Konto.</string>
+    <string name="pref_source_dexcom_share_info">Dexcom Share einrichten</string>
+    <string name="pref_source_dexcom_share_info_summary">Um Daten von Dexcom Share zu empfangen, müssen folgende Schritte erfüllt sein:\n\n- in der Dexcom App, welche mit dem Sensor verbunden ist, Teilen aktivieren\n- einmalig die Einladung in der Dexcom Follower App annehmen (die App kann danach wieder deinstalliert werden)</string>
 </resources>
