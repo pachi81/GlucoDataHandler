@@ -353,10 +353,23 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         return enabled
     }
 
+    private fun setEnabled(newEnabled: Boolean): Boolean {
+        Log.v(LOG_ID, "Set enabled=$newEnabled (old: $enabled) for $source")
+        var changed = false
+        if(newEnabled != enabled) {
+            enabled = newEnabled
+            Log.i(LOG_ID, "Set enabled=$enabled for $source")
+            changed = true
+        }
+        if (!enabled && source == SourceStateData.lastSource)
+            setState(SourceState.NONE)
+        return changed
+    }
+
     override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {
         Log.d(LOG_ID, "checkPreferenceChanged for $key")
         if(key == null) {
-            enabled = sharedPreferences.getBoolean(enabledKey, false)
+            setEnabled(sharedPreferences.getBoolean(enabledKey, false))
             interval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
             delaySec = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, 10).toLong()
             return true
@@ -364,12 +377,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             var result = false
             when(key) {
                 enabledKey -> {
-                    if (enabled != sharedPreferences.getBoolean(enabledKey, false)) {
-                        enabled = sharedPreferences.getBoolean(enabledKey, false)
-                        result = true
-                        if (!enabled && source == SourceStateData.lastSource)
-                            setState(SourceState.NONE)
-                    }
+                    result = setEnabled(sharedPreferences.getBoolean(enabledKey, false))
                 }
                 Constants.SHARED_PREF_SOURCE_INTERVAL -> {
                     if (interval != (sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L)) {
