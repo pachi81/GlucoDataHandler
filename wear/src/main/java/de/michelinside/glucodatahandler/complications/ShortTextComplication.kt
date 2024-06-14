@@ -20,10 +20,6 @@ class ShortGlucoseWithDeltaComplication: ShortClucoseComplication() {
     override fun getTitle(): PlainComplicationText = deltaText()
 }
 
-class ShortGlucoseWithTrendTextComplication: ShortClucoseComplication() {
-    override fun getTitle(): PlainComplicationText = trendText()
-}
-
 class ShortGlucoseWithDeltaAndTrendComplication: ShortClucoseComplication() {
     override fun getTitle(): PlainComplicationText = deltaText()
     override fun getIcon(): MonochromaticImage = arrowIcon()
@@ -54,15 +50,6 @@ open class ShortGlucoseWithTrendRangeComplication: BgValueComplicationService() 
     }
 }
 
-class ShortGlucoseWithDeltaAndTrendRangeComplication: ShortGlucoseWithTrendRangeComplication() {
-    override fun getTitle(): PlainComplicationText = deltaText()
-}
-
-class ShortDeltaWithTrendArrowAndTrendRangeComplication: ShortGlucoseWithTrendRangeComplication() {
-    override fun getText(): PlainComplicationText = deltaText()
-    override fun getIcon(): MonochromaticImage = arrowIcon()
-}
-
 open class ShortDeltaComplication: ShortClucoseComplication() {
     override fun getText(): PlainComplicationText = deltaText()
 }
@@ -73,17 +60,5 @@ class ShortDeltaWithTrendComplication: ShortDeltaComplication() {
 
 class ShortDeltaWithIconComplication: ShortDeltaComplication() {
     override fun getIcon(): MonochromaticImage = deltaIcon()
-}
-
-open class ShortTrendComplication: ShortClucoseComplication() {
-    override fun getText(): PlainComplicationText = trendText()
-}
-
-class ShortTrendWithTrendArrowComplication: ShortTrendComplication() {
-    override fun getIcon(): MonochromaticImage = arrowIcon()
-}
-
-class ShortTrendWithIconComplication: ShortTrendComplication() {
-    override fun getIcon(): MonochromaticImage = trendIcon()
 }
 
