@@ -26,11 +26,7 @@ enum class AppSource {
 }
 
 abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
-    private lateinit var receiver: GlucoseDataReceiver
     private lateinit var batteryReceiver: BatteryReceiver
-    private lateinit var xDripReceiver: XDripBroadcastReceiver
-    private lateinit var aapsReceiver: AAPSReceiver
-    private lateinit var dexcomReceiver: DexcomBroadcastReceiver
 
     @SuppressLint("StaticFieldLeak")
     companion object {
@@ -126,6 +122,61 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
             }
         }
 
+        private var glucoDataReceiver: GlucoseDataReceiver? = null
+        private var xDripReceiver: XDripBroadcastReceiver?  = null
+        //private var aapsReceiver: AAPSReceiver?  = null
+        private var dexcomReceiver: DexcomBroadcastReceiver? = null
+
+        @SuppressLint("UnspecifiedRegisterReceiverFlag")
+        fun registerSourceReceiver(context: Context) {
+            Log.d(LOG_ID, "Register receiver")
+            try {
+                if (glucoDataReceiver == null) {
+                    glucoDataReceiver = GlucoseDataReceiver()
+                    xDripReceiver = XDripBroadcastReceiver()
+                    //aapsReceiver = AAPSReceiver()
+                    dexcomReceiver = DexcomBroadcastReceiver()
+                    val dexcomFilter = IntentFilter()
+                    dexcomFilter.addAction("com.dexcom.cgm.EXTERNAL_BROADCAST")
+                    dexcomFilter.addAction("com.dexcom.g7.EXTERNAL_BROADCAST")
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        context.registerReceiver(glucoDataReceiver, IntentFilter("glucodata.Minute"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
+                        context.registerReceiver(xDripReceiver,IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
+                        //registerReceiver(aapsReceiver,IntentFilter("info.nightscout.androidaps.status"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
+                        context.registerReceiver(dexcomReceiver,dexcomFilter, RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
+                    } else {
+                        context.registerReceiver(glucoDataReceiver, IntentFilter("glucodata.Minute"))
+                        context.registerReceiver(xDripReceiver,IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"))
+                        //registerReceiver(aapsReceiver,IntentFilter("info.nightscout.androidaps.status"))
+                        context.registerReceiver(dexcomReceiver,dexcomFilter)
+
+                    }
+                }
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "registerSourceReceiver exception: " + exc.toString())
+            }
+        }
+
+        fun unregisterSourceReceiver(context: Context) {
+            try {
+                Log.d(LOG_ID, "Unregister receiver")
+                if (glucoDataReceiver != null) {
+                    context.unregisterReceiver(glucoDataReceiver)
+                    glucoDataReceiver = null
+                }
+                if (xDripReceiver != null) {
+                    context.unregisterReceiver(xDripReceiver)
+                    xDripReceiver = null
+                }
+                if (dexcomReceiver != null) {
+                    context.unregisterReceiver(dexcomReceiver)
+                    dexcomReceiver = null
+                }
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "unregisterSourceReceiver exception: " + exc.toString())
+            }
+        }
+
     }
 
     init {
@@ -174,26 +225,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
             connection = WearPhoneConnection()
             connection!!.open(this, appSource == AppSource.PHONE_APP)
 
-            Log.d(LOG_ID, "Register Receiver")
-            receiver = GlucoseDataReceiver()
-            xDripReceiver = XDripBroadcastReceiver()
-            aapsReceiver = AAPSReceiver()
-            dexcomReceiver = DexcomBroadcastReceiver()
-            val dexcomFilter = IntentFilter()
-            dexcomFilter.addAction("com.dexcom.cgm.EXTERNAL_BROADCAST")
-            dexcomFilter.addAction("com.dexcom.g7.EXTERNAL_BROADCAST")
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                registerReceiver(receiver, IntentFilter("glucodata.Minute"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
-                registerReceiver(xDripReceiver,IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
-                //registerReceiver(aapsReceiver,IntentFilter("info.nightscout.androidaps.status"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
-                registerReceiver(dexcomReceiver,dexcomFilter, RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
-            } else {
-                registerReceiver(receiver, IntentFilter("glucodata.Minute"))
-                registerReceiver(xDripReceiver,IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"))
-                //registerReceiver(aapsReceiver,IntentFilter("info.nightscout.androidaps.status"))
-                registerReceiver(dexcomReceiver,dexcomFilter)
-
-            }
+            registerSourceReceiver(this)
             batteryReceiver = BatteryReceiver()
             registerReceiver(batteryReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
 
@@ -221,11 +253,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
     override fun onDestroy() {
         try {
             Log.w(LOG_ID, "onDestroy called")
-            unregisterReceiver(receiver)
+            unregisterSourceReceiver(this)
             unregisterReceiver(batteryReceiver)
-            unregisterReceiver(xDripReceiver)
-            //unregisterReceiver(aapsReceiver)
-            unregisterReceiver(dexcomReceiver)
             TimeTaskService.stop()
             SourceTaskService.stop()
             connection!!.close()

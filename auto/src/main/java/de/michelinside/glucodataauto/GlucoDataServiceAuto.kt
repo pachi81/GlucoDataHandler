@@ -105,6 +105,7 @@ class GlucoDataServiceAuto: Service() {
             try {
                 Log.i(LOG_ID, "starting datasync - count=$dataSyncCount")
                 if (dataSyncCount == 0) {
+                    GlucoDataService.registerSourceReceiver(context)
                     TimeTaskService.run(context)
                     SourceTaskService.run(context)
                     sendStateBroadcast(context, true)
@@ -121,6 +122,7 @@ class GlucoDataServiceAuto: Service() {
                 dataSyncCount--
                 Log.i(LOG_ID, "stopping datasync - count=$dataSyncCount")
                 if (dataSyncCount == 0) {
+                    GlucoDataService.unregisterSourceReceiver(context)
                     sendStateBroadcast(context, false)
                     BackgroundWorker.stopAllWork(context)
                     Log.i(LOG_ID, "Datasync stopped")
