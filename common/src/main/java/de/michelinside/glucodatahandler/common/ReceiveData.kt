@@ -145,11 +145,14 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 )
     }
 
-    fun isObsolete(timeoutSec: Int = Constants.VALUE_OBSOLETE_LONG_SEC): Boolean = (System.currentTimeMillis()- time) >= (timeoutSec * 1000)
+    fun isObsoleteTime(timeoutSec: Int = Constants.VALUE_OBSOLETE_LONG_SEC): Boolean = (System.currentTimeMillis()- time) >= (timeoutSec * 1000)
+
+    fun isObsoleteShort(): Boolean = isObsoleteTime(Constants.VALUE_OBSOLETE_SHORT_SEC)
+    fun isObsoleteLong(): Boolean = isObsoleteTime(Constants.VALUE_OBSOLETE_LONG_SEC)
     fun isIobCobObsolete(timeoutSec: Int = Constants.VALUE_OBSOLETE_LONG_SEC): Boolean = (System.currentTimeMillis()- iobCobTime) >= (timeoutSec * 1000)
 
     fun getGlucoseAsString(): String {
-        if(isObsolete())
+        if(isObsoleteLong())
             return "---"
         if (isMmol)
             return glucose.toString()
@@ -157,7 +160,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     fun getDeltaAsString(): String {
-        if(isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) || deltaValue.isNaN())
+        if(isObsoleteShort() || deltaValue.isNaN())
             return "--"
         var deltaVal = ""
         if (delta > 0)
@@ -170,7 +173,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     fun getRateAsString(): String {
-        if(isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
+        if(isObsoleteShort())
             return "--"
         return (if (rate > 0) "+" else "") + rate.toString()
     }
@@ -225,7 +228,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         7 = 0111 -> very low
     */
     fun getAlarmType(): AlarmType {
-        if(isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
+        if(isObsoleteShort())
             return AlarmType.OBSOLETE
         if(((alarm and 7) == 6) || (high > 0F && glucose >= high))
             return AlarmType.VERY_HIGH
@@ -257,7 +260,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
 
     fun getGlucoseColor(monoChrome: Boolean = false): Int {
         if (monoChrome) {
-            if (isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
+            if (isObsoleteShort())
                 return Color.GRAY
             return Color.WHITE
         }

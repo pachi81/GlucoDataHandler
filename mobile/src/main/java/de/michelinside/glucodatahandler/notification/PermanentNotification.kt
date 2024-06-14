@@ -154,14 +154,14 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             textGlucose.text = ReceiveData.getGlucoseAsString()
             textGlucose.setTextColor(ReceiveData.getGlucoseColor())
 
-            if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete()) {
+            if (ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong()) {
                 textGlucose.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
             } else {
                 textGlucose.paintFlags = 0
             }
 
             textDelta.text = "Δ ${ReceiveData.getDeltaAsString()}"
-            if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) {
+            if (ReceiveData.isObsoleteShort()) {
                 textDelta.setTextColor(ReceiveData.getAlarmTypeColor(AlarmType.OBSOLETE))
             }
 

@@ -507,7 +507,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Log.v(LOG_ID, "update values")
             txtBgValue.text = ReceiveData.getGlucoseAsString()
             txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
-            if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete()) {
+            if (ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong()) {
                 txtBgValue.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
             } else {
                 txtBgValue.paintFlags = 0

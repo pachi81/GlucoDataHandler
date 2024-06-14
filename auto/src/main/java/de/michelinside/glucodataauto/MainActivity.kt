@@ -49,7 +49,6 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import kotlin.time.Duration.Companion.days
 import de.michelinside.glucodatahandler.common.R as CR
 
 class MainActivity : AppCompatActivity(), NotifierInterface {
@@ -383,7 +382,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Log.v(LOG_ID, "update values")
             txtBgValue.text = ReceiveData.getGlucoseAsString()
             txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
-            if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete()) {
+            if (ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong()) {
                 txtBgValue.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
             } else {
                 txtBgValue.paintFlags = 0

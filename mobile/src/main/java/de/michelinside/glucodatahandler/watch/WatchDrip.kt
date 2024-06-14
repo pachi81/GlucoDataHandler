@@ -146,7 +146,7 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
         bundle.putDouble("bg.deltaValueMgdl", ReceiveData.deltaValueMgDl.toDouble())
         bundle.putString("bg.deltaName", GlucoDataUtils.getDexcomLabel(ReceiveData.rate))
         bundle.putLong("bg.timeStamp", ReceiveData.time)
-        bundle.putBoolean("bg.isStale", ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
+        bundle.putBoolean("bg.isStale", ReceiveData.isObsoleteShort())
         bundle.putBoolean("doMgdl", !ReceiveData.isMmol)
         bundle.putBoolean("bg.isHigh", ReceiveData.getAlarmType() == AlarmType.VERY_HIGH)
         bundle.putBoolean("bg.isLow", ReceiveData.getAlarmType() == AlarmType.VERY_LOW)

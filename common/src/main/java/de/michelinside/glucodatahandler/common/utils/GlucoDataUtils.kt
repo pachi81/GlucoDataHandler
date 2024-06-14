@@ -31,7 +31,7 @@ object GlucoDataUtils {
     }
 
     fun getRateSymbol(rate: Float): Char {
-        if(ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) || java.lang.Float.isNaN(
+        if(ReceiveData.isObsoleteShort() || java.lang.Float.isNaN(
                 rate
             ))
             return '?'
