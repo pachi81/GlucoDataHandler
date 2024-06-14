@@ -286,7 +286,7 @@
     <string name="pref_gda_source_juggluco_info_summary">Aby odbierać wartości z Juggluco: \n- otwórz Juggluco \n- przejdź do ustawień \n- włącz Glucodata broadcast \n- włącz \"de.michelinside.glucodataauto\"</string>
     <string name="pref_source_xdrip_info">XDrip+</string>
     <string name="pref_source_xdrip_info_1_summary">Aby odbierać wartości z xDrip+:\n- otwórz xDrip+\n- przejdź do ustawień\n- przejdź do ustawień innych aplikacji\n- włącz \"Nadawaj lokalnie\"\n- ustaw \"Blokowanie szumów\" na \"Send even Extremely noisy signals\"</string>
-    <string name="pref_source_xdrip_info_2_summary">- włącz \"Kompatybilny Broadcast\"\n- sprawdź, czy pole \"Identyfikuj odbiornik\" jest puste lub dodaj nową linię z \"de.michelinside.glucodatahandler\"</string>
+    <string name="pref_source_xdrip_info_2_summary">- włącz \"Kompatybilny Broadcast\"\n- sprawdź, czy pole \"Identyfikuj odbiornik\" jest puste, a jeśli jest już tam jakiś wpis, dodaj za nim spację a następnie wpisz \"de.michelinside.glucodatahandler\"</string>
     <string name="pref_gda_source_xdrip_info_2_summary">- włącz \"Kompatybilny Broadcast\"\n- sprawdź, czy pole \"Identyfikuj odbiornik\" jest puste lub dodaj nową linię z \"de.michelinside.glucodataauto\"</string>
     <string name="pref_source_librelinkup_info">Konfiguracja LibrelinkUp</string>
     <string name="pref_source_librelinkup_info_summary">WAŻNE: to nie jest konto używane w aplikacji FreeStyle LibreLink! Aby aktywować LibreLinkUp:\n- otwórz aplikację FreeStyle LibreLink i wybierz w menu Udostępnianie lub Podłączone aplikacje\n- aktywuj połączenie LibreLinkUp\n- zainstaluj LibreLinkUp ze Sklepu Play\n- skonfiguruj swoje konto i czekaj na zaproszenie</string>

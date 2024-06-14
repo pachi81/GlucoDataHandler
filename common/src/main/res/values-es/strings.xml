@@ -291,7 +291,7 @@
     <string name="pref_gda_source_juggluco_info_summary">Para recibir valores de Juggluco:\n- abre Juggluco\n- ve a "Configuración"\n- habilita "Transmisión de glucodata"\n- habilita "de.michelinside.glucodataauto"</string>
     <string name="pref_source_xdrip_info">xDrip+</string>
     <string name="pref_source_xdrip_info_1_summary">Para recibir valores de xDrip+:\n- abre xDrip+\n- ve a configuración\n- ve a configuración interaplicaciones\n- habilita "Transmitir localmente"\n- configura "Bloqueo de ruido" en "Enviar incluso señales extremadamente ruidosas"</string>
-    <string name="pref_source_xdrip_info_2_summary">- habilita "Transmisión compatible"\n- verifica que "Identificar receptores" esté vacío o agrega una nueva línea con "de.michelinside.glucodatahandler"</string>
+    <string name="pref_source_xdrip_info_2_summary">- habilita Transmisión compatible\n- verifica que \"Identificar receptor\" esté vacío o, si ya existe una entrada, agrega \"de.michelinside.glucodatahandler\" separado por un espacio</string>
     <string name="pref_gda_source_xdrip_info_2_summary">- habilita "Transmisión compatible"\n- verifica que "Identificar receptores" esté vacío o agrega una nueva línea con "de.michelinside.glucodataauto"</string>
     <string name="pref_source_librelinkup_info">Configurar LibreLinkUp</string>
     <string name="pref_source_librelinkup_info_summary">IMPORTANTE: esto no es la cuenta de LibreView!\nPara activar LibreLinkUp:\n- abre tu aplicación FreeStyle Libre y selecciona en el menú Compartir o Aplicaciones conectadas\n- activa la conexión de LibreLinkUp\n- instala LibreLinkUp desde PlayStore\n- configura tu cuenta y espera la invitación</string>
