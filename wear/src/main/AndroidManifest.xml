@@ -128,6 +128,16 @@
             </intent-filter>
         </receiver>
         <receiver
+            android:name=".common.receiver.DexcomBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="com.dexcom.cgm.EXTERNAL_BROADCAST" />
+                <action android:name="com.dexcom.g7.EXTERNAL_BROADCAST" />
+            </intent-filter>
+        </receiver>
+        <receiver
             android:name=".SnoozeAlarmReceiverWear"
             android:enabled="true"
             android:exported="true">

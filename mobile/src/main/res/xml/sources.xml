@@ -152,6 +152,11 @@
             android:title="@string/src_libre_reconnect"
             android:summary="@string/src_libre_reconnect_summary"
             app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_dexcom_share_info"
+            android:title="@string/pref_source_dexcom_share_info"
+            android:summary="@string/pref_source_dexcom_share_info_summary"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <PreferenceCategory

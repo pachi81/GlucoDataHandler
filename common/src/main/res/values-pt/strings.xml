@@ -508,4 +508,5 @@
     <string name="pref_source_dexcom_share_info_summary">Para receber dados dos servidores Dexcom Share, você precisa ter:\n\n- compartilhamento habilitado no aplicativo Dexcom que está conectado ao sensor\n- aceita a solicitação no aplicativo Dexcom Follower (você pode desinstalá-lo depois)</string>
     <string name="permission_missing_title">Missing permission!</string>
     <string name="setting_permission_missing_message">A configuração \'%1$s\' está ativada, mas a permissão relacionada não foi concedida! \nPressione \"OK\" para ser direcionado ao diálogo de permissões ou pressione \"Cancelar\" para desativar esta configuração.</string>
+    <string name="pref_source_dexcom_byoda_info">Dexcom BYODA</string>
 </resources>
