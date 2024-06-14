@@ -523,4 +523,6 @@
     <string name="src_dexcom_share_password_summary">Password for Dexcom Share account.</string>
     <string name="pref_source_dexcom_share_info">Setup Dexcom Share</string>
     <string name="pref_source_dexcom_share_info_summary">To receive data from Dexcom Share servers, you need to have:\n\n- sharing enabled on the Dexcom application that is connected to the sensor\n- accepted the invitation on the Dexcom Follower app (you can uninstall it afterwards)</string>
+    <string name="permission_missing_title">Missing permission!</string>
+    <string name="setting_permission_missing_message">The settings \'%1$s\' is set, but the related permission is not granted! Press \"OK\" to be forwared the permission dialog or press \"Cancel\" to disable this setting.</string>
 </resources>

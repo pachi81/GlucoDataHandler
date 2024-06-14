@@ -192,9 +192,10 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
     private fun setupLocalIobAction(preference: Preference?) {
         if(preference != null) {
             preference.setOnPreferenceClickListener {
-                Dialogs.showOkCancelDialog(requireContext(), CR.string.activate_local_nightscout_iob_title,
-                    CR.string.activate_local_nightscout_iob_message) { _, _ ->
-                    with(preferenceManager!!.sharedPreferences!!.edit()) {
+                Dialogs.showOkCancelDialog(requireContext(),
+                    CR.string.activate_local_nightscout_iob_title,
+                    CR.string.activate_local_nightscout_iob_message,
+                    { _, _ -> with(preferenceManager!!.sharedPreferences!!.edit()) {
                         putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, true)
                         putString(Constants.SHARED_PREF_NIGHTSCOUT_URL, "http://127.0.0.1:17580")
                         putString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, "")
@@ -208,7 +209,7 @@ class SourceFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
                     findPreference<EditTextPreference>(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN)!!.text = ""
                     findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED)!!.isChecked = true
 
-                }
+                })
                 true
             }
         }

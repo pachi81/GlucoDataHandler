@@ -496,4 +496,6 @@
     <string name="src_dexcom_share_password_summary">Passwort für das Dexcom Share Konto.</string>
     <string name="pref_source_dexcom_share_info">Dexcom Share einrichten</string>
     <string name="pref_source_dexcom_share_info_summary">Um Daten von Dexcom Share zu empfangen, müssen folgende Schritte erfüllt sein:\n\n- in der Dexcom App, welche mit dem Sensor verbunden ist, Teilen aktivieren\n- einmalig die Einladung in der Dexcom Follower App annehmen (die App kann danach wieder deinstalliert werden)</string>
+    <string name="permission_missing_title">Fehlende Berechtigung!</string>
+    <string name="setting_permission_missing_message">Für die gesetzt Einstellung \'%1$s\' wurde die Berechtigung entfernt!\nBitte \"OK\" drücken, um zu der entsprechenden Berechtigungseinstellung weitergeleitet zu werden, um diese zu wieder zu aktivieren.\nBeim Drücken von \"Abbrechen\" wird die Einstellung deaktiviert und kann später über das Menü wieder aktiviert werden.</string>
 </resources>

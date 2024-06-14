@@ -27,9 +27,26 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 
 class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
-    private val LOG_ID = "GDH.AlarmFragment"
     companion object {
+        private val LOG_ID = "GDH.AlarmFragment"
         var settingsChanged = false
+
+        fun requestFullScreenPermission(context: Context) {
+            try {
+                Log.v(LOG_ID, "requestFullScreenPermission called")
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    val intent = Intent(
+                        Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT,
+                        Uri.parse("package:" + context.packageName)
+                    )
+                    intent.putExtra(Settings.EXTRA_APP_PACKAGE,context.packageName)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(intent)
+                }
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "requestOverlayPermission exception: " + exc.toString())
+            }
+        }
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -177,7 +194,7 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
                 }
                 Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED -> {
                     if (sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, false) && !AlarmNotification.hasFullscreenPermission()) {
-                        requestFullScreenPermission()
+                        requestFullScreenPermission(requireContext())
                     }
                 }
             }
@@ -192,23 +209,6 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
             val intent: Intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
                 .putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
             startActivity(intent)
-        }
-    }
-
-    private fun requestFullScreenPermission() {
-        try {
-            Log.v(LOG_ID, "requestFullScreenPermission called")
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                val intent = Intent(
-                    Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT,
-                    Uri.parse("package:" + requireContext().packageName)
-                )
-                intent.putExtra(Settings.EXTRA_APP_PACKAGE,requireContext().packageName)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "requestOverlayPermission exception: " + exc.toString())
         }
     }
 }
