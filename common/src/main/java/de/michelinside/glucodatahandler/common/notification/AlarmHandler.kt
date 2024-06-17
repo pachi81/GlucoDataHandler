@@ -77,15 +77,15 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
                 " - newAlarmType=" + newAlarmType.toString() +
                 " - lastAlarmType=" + lastAlarmType.toString() +
                 " - lastAlarmTime=" +  DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime)) +
-                " - snoozeTime=" + if(isSnoozeActive)snoozeTimestamp else "off" +
+                " - snoozeTime=" + (if(isSnoozeActive)snoozeTimestamp else "off") +
                 " - time=" + DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(ReceiveData.time)) +
                 " - delta=" + ReceiveData.delta.toString() +
                 " - rate=" + ReceiveData.rate.toString() +
                 " - diff=" + (ReceiveData.time - lastAlarmTime).toString() +
-                " - veryLow=>" + if(veryLowEnabled) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+veryLowInterval)) else "off" +
-                " - low=>" + if(lowEnabled) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+lowInterval)) else "off" +
-                " - high=>" + if(highEnabled) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+highInterval)) else "off" +
-                " - veryHigh=>" + if(veryHighEnabled) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+veryHighInterval)) else "off"
+                " - veryLow=>" + (if(veryLowEnabled) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+veryLowInterval)) else "off") +
+                " - low=>" + (if(lowEnabled) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+lowInterval)) else "off") +
+                " - high=>" + (if(highEnabled) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+highInterval)) else "off") +
+                " - veryHigh=>" + (if(veryHighEnabled) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+veryHighInterval)) else "off")
         )
         if (isSnoozeActive)
             return false
