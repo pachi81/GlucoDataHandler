@@ -13,11 +13,12 @@ enum class DataSource(val resId: Int) {
     AAPS(R.string.source_aaps),
     GDH(R.string.source_gdh),
     DEXCOM_SHARE(R.string.source_dexcom_share),
-    DEXCOM_BYODA(R.string.source_dexcom_byoda);
+    DEXCOM_BYODA(R.string.source_dexcom_byoda),
+    NS_EMULATOR(R.string.source_ns_emulator);
     
     companion object {
         fun fromIndex(idx: Int): DataSource {
-            DataSource.values().forEach {
+            entries.forEach {
                 if(it.ordinal == idx) {
                     return it
                 }

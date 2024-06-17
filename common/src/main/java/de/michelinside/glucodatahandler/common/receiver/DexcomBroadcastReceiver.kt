@@ -53,11 +53,11 @@ open class DexcomBroadcastReceiver: BroadcastReceiver() {
                         glucoExtras.putInt(ReceiveData.MGDL,glucoseValue)
                         glucoExtras.putFloat(ReceiveData.RATE, GlucoDataUtils.getRateFromLabel(trendStr))
                         glucoExtras.putInt(ReceiveData.ALARM, 0)
-                        ReceiveData.handleIntent(context, DataSource.XDRIP, glucoExtras)
-                        SourceStateData.setState(DataSource.XDRIP, SourceState.NONE)
+                        ReceiveData.handleIntent(context, DataSource.DEXCOM_BYODA, glucoExtras)
+                        SourceStateData.setState(DataSource.DEXCOM_BYODA, SourceState.NONE)
                     } else {
                         Log.w(LOG_ID, "Invalid value: " + Utils.dumpBundle(intent.extras))
-                        SourceStateData.setError(DataSource.XDRIP, "Invalid glucose value: " + glucoseValue )
+                        SourceStateData.setError(DataSource.DEXCOM_BYODA, "Invalid glucose value: " + glucoseValue )
                     }
                 }
             }

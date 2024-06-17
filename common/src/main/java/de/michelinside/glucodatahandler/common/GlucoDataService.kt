@@ -126,6 +126,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
         private var xDripReceiver: XDripBroadcastReceiver?  = null
         //private var aapsReceiver: AAPSReceiver?  = null
         private var dexcomReceiver: DexcomBroadcastReceiver? = null
+        private var nsEmulatorReceiver: NsEmulatorReceiver? = null
 
         @SuppressLint("UnspecifiedRegisterReceiverFlag")
         fun registerSourceReceiver(context: Context) {
@@ -136,6 +137,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                     xDripReceiver = XDripBroadcastReceiver()
                     //aapsReceiver = AAPSReceiver()
                     dexcomReceiver = DexcomBroadcastReceiver()
+                    nsEmulatorReceiver = NsEmulatorReceiver()
                     val dexcomFilter = IntentFilter()
                     dexcomFilter.addAction("com.dexcom.cgm.EXTERNAL_BROADCAST")
                     dexcomFilter.addAction("com.dexcom.g7.EXTERNAL_BROADCAST")
@@ -144,12 +146,13 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                         context.registerReceiver(xDripReceiver,IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
                         //registerReceiver(aapsReceiver,IntentFilter("info.nightscout.androidaps.status"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
                         context.registerReceiver(dexcomReceiver,dexcomFilter, RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
+                        context.registerReceiver(nsEmulatorReceiver,IntentFilter("com.eveningoutpost.dexdrip.NS_EMULATOR"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
                     } else {
                         context.registerReceiver(glucoDataReceiver, IntentFilter("glucodata.Minute"))
                         context.registerReceiver(xDripReceiver,IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"))
                         //registerReceiver(aapsReceiver,IntentFilter("info.nightscout.androidaps.status"))
                         context.registerReceiver(dexcomReceiver,dexcomFilter)
-
+                        context.registerReceiver(nsEmulatorReceiver,IntentFilter("com.eveningoutpost.dexdrip.NS_EMULATOR"))
                     }
                 }
             } catch (exc: Exception) {
@@ -171,6 +174,10 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                 if (dexcomReceiver != null) {
                     context.unregisterReceiver(dexcomReceiver)
                     dexcomReceiver = null
+                }
+                if (nsEmulatorReceiver != null) {
+                    context.unregisterReceiver(nsEmulatorReceiver)
+                    nsEmulatorReceiver = null
                 }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "unregisterSourceReceiver exception: " + exc.toString())
