@@ -16,7 +16,6 @@ import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import org.json.JSONArray
 import org.json.JSONObject
 import java.net.HttpURLConnection
-import java.net.SocketTimeoutException
 
 
 // API docu: https://gist.github.com/StephenBlackWasAlreadyTaken/adb0525344bedade1e25
@@ -40,31 +39,6 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
         private const val INVALID_ID = "00000000-0000-0000-0000-000000000000"
     }
 
-    override fun executeRequest(context: Context) {
-        Log.d(LOG_ID, "getting data from dexcom share")
-        getData()
-    }
-
-    private fun getData(firstCall: Boolean = true) {
-        try {
-            Log.d(LOG_ID, "getData called: firstCall: $firstCall")
-            if(reconnect) {
-                reset()
-            }
-            if (authenticate()) {
-                if(!getValue() && firstCall && sessionId.isNullOrEmpty())
-                    getData(false) // retry if internal client error or invalid session id
-            }
-        } catch(ex: SocketTimeoutException) {
-            Log.e(LOG_ID, "Timeout occurs: ${ex.message}")
-            reset()
-            if(firstCall) {
-                getData(false)
-            } else {
-                setLastError("Timeout")
-            }
-        }
-    }
     private fun getUrl(endpoint: String, queryParameters: String? = null): String {
         var url = (if(use_us_server) URL_US else URL_DEFAULT) + endpoint
         Log.i(LOG_ID, "Send request to " + url)
@@ -86,7 +60,7 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
         return result
     }
 
-    private fun reset() {
+    override fun reset() {
         Log.i(LOG_ID, "reset called")
         sessionId = null
         if (reconnect) {
@@ -98,21 +72,48 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
         }
     }
 
+    override fun getValue(): Boolean {
+        Log.v(LOG_ID, "getValue called")
+        if(sessionId.isNullOrEmpty())
+            return false
+        val query = "sessionId=${sessionId}&minutes=30&maxCount=1"
+        return handleValueResponse(httpPost(getUrl(DEXCOM_PATH_GET_VALUE, query), getHeader(false), ""))
+    }
+
+    override fun authenticate() : Boolean {
+        if(reconnect)
+            reset()
+        Log.v(LOG_ID, "authenticate called - sessionId: $sessionId")
+        if(!sessionId.isNullOrEmpty())
+            return true
+
+        val json = JSONObject()
+        json.put("accountName", user)
+        json.put("password", password)
+        json.put("applicationId", BuildConfig.DEXCOM_APPLICATION_ID)
+        val accountId = handleIdResponse(httpPost(getUrl(DEXCOM_PATH_AUTHENTICATE), getHeader(), json.toString()))
+        return getSessionId(accountId)
+    }
+
     override fun checkErrorResponse(code: Int, message: String, errorResponse: String?) {
         Log.e(LOG_ID, "Error $code received: $message - $errorResponse")
         if (code == HttpURLConnection.HTTP_INTERNAL_ERROR && errorResponse != null) {
             val obj = JSONObject(errorResponse)
             val errCode: String = obj.optString("Code")
-            val errMessage: String = obj.optString("Message")
-            setLastError("${errCode}: $errMessage", code)
             when(errCode) {
                 "SessionNotValid",
-                "SessionIdNotFound" -> reset()
+                "SessionIdNotFound" -> {
+                    reset()
+                    if(firstGetValue) {
+                        retry = true
+                        return
+                    }
+                }
             }
+            val errMessage: String = obj.optString("Message")
+            setLastError("${errCode}: $errMessage", code)
         } else {
             super.checkErrorResponse(code, message, errorResponse)
-            if (code in 400..499)
-                reset() // reset token for client error -> trigger reconnect
         }
     }
 
@@ -213,13 +214,6 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
         return null
     }
 
-    private fun getValue(): Boolean {
-        Log.v(LOG_ID, "getValue called")
-        if(sessionId.isNullOrEmpty())
-            return false
-        val query = "sessionId=${sessionId}&minutes=30&maxCount=1"
-        return handleValueResponse(httpPost(getUrl(DEXCOM_PATH_GET_VALUE, query), getHeader(false), ""))
-    }
     private fun getSessionId(accountId: String?) : Boolean {
         Log.v(LOG_ID, "getSessionId called for accountId $accountId")
         if(accountId == null)
@@ -231,19 +225,6 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
         sessionId = handleIdResponse(httpPost(getUrl(DEXCOM_PATH_GET_SESSION_ID), getHeader(), json.toString()))
         Log.d(LOG_ID, "Using sessionId: $sessionId")
         return !sessionId.isNullOrEmpty()
-    }
-
-    private fun authenticate() : Boolean {
-        Log.v(LOG_ID, "authenticate called - sessionId: $sessionId")
-        if(!sessionId.isNullOrEmpty())
-            return true
-
-        val json = JSONObject()
-        json.put("accountName", user)
-        json.put("password", password)
-        json.put("applicationId", BuildConfig.DEXCOM_APPLICATION_ID)
-        val accountId = handleIdResponse(httpPost(getUrl(DEXCOM_PATH_AUTHENTICATE), getHeader(), json.toString()))
-        return getSessionId(accountId)
     }
 
     private fun getRateFromTrend(trend: Int): Float {

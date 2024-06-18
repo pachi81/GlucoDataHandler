@@ -36,6 +36,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     private var interval = 1L
     private var delaySec = 10L
     private var httpURLConnection: HttpURLConnection? = null
+    protected var retry = false
+    protected var firstGetValue = false
 
     companion object {
         private val LOG_ID = "GDH.Task.Source.DataSourceTask"
@@ -167,7 +169,31 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         }
     }
 
-    abstract fun executeRequest(context: Context)
+    open fun authenticate(): Boolean = true
+
+    open fun reset() {}
+
+    abstract fun getValue(): Boolean
+
+    private fun executeRequest(firstCall: Boolean = true) {
+        try {
+            Log.d(LOG_ID, "getData called: firstCall: $firstCall")
+            if (authenticate()) {
+                firstGetValue = firstCall
+                retry = false
+                if(!getValue() && firstCall && retry)
+                    executeRequest(false) // retry if internal client error or invalid session id
+            }
+        } catch(ex: SocketTimeoutException) {
+            Log.e(LOG_ID, "Timeout occurs: ${ex.message}")
+            reset()
+            if(firstCall) {
+                executeRequest(false)
+            } else {
+                setLastError("Timeout")
+            }
+        }
+    }
 
     open fun needsInternet(): Boolean = true
 
@@ -178,9 +204,9 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                 setState(SourceState.NO_CONNECTION)
                 return
             }
-            Log.d(LOG_ID, "Execute request")
+            Log.d(LOG_ID, "Execute request for $source")
             try {
-                executeRequest(context)
+                executeRequest()
                 if (httpURLConnection != null) {
                     Log.v(LOG_ID, "Closing http connection")
                     httpURLConnection!!.disconnect()
@@ -270,6 +296,13 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     }
 
     open fun checkErrorResponse(code: Int, message: String, errorResponse: String? = null) {
+        if (code in 400..499) {
+            reset() // reset token for client error -> trigger reconnect
+            if(firstGetValue) {
+                retry = true
+                return
+            }
+        }
         setLastError(message, code)
     }
 
