@@ -185,7 +185,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     fun isIobCob() : Boolean {
-        if (isIobCobObsolete(Constants.VALUE_OBSOLETE_LONG_SEC)) {
+        if (isIobCobObsolete()) {
             iob = Float.NaN
             cob = Float.NaN
         }
@@ -193,17 +193,17 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     val iobString: String get() {
-        if (isIobCobObsolete(Constants.VALUE_OBSOLETE_LONG_SEC))
+        if (isIobCobObsolete())
             iob = Float.NaN
-        if(iob.isNaN() || isIobCobObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) {
+        if(iob.isNaN()) {
             return " - "
         }
         return "%.2f".format(Locale.ROOT, iob)
     }
     val cobString: String get() {
-        if (isIobCobObsolete(Constants.VALUE_OBSOLETE_LONG_SEC))
+        if (isIobCobObsolete())
             cob = Float.NaN
-        if(cob.isNaN() || isIobCobObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) {
+        if(cob.isNaN()) {
             return " - "
         }
         return Utils.round(cob, 0).toInt().toString()

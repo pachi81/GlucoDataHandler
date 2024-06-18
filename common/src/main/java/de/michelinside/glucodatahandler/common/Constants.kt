@@ -63,6 +63,7 @@ object Constants {
     const val SHARED_PREF_XDRIP_RECEIVERS = "xdrip_receivers"
     const val SHARED_PREF_SEND_XDRIP_BROADCAST = "send_xdrip_broadcast"
     const val SHARED_PREF_XDRIP_BROADCAST_RECEIVERS = "xdrip_broadcast_receivers"
+    const val SHARED_PREF_XDRIP_BROADCAST_SERVICE_API = "xdrip_broadcast_service_api"
     const val SHARED_PREF_TARGET_MIN = "target_min_value"
     const val SHARED_PREF_TARGET_MAX = "target_max_value"
     const val SHARED_PREF_CAR_NOTIFICATION = "car_notification"

@@ -19,8 +19,8 @@ public class Settings implements Parcelable {
     //   @Setter
     private long graphStart;
     private long graphEnd;
-    private String apkName;
-    private boolean displayGraph;
+    private final String apkName;
+    private final boolean displayGraph;
 
     public Settings(Parcel in) {
         apkName = in.readString();
@@ -30,6 +30,13 @@ public class Settings implements Parcelable {
     }
 
     public Settings() {
+        apkName = "";
+        displayGraph = false;
+    }
+
+    public Settings(String appName) {
+        apkName = appName;
+        displayGraph = false;
     }
 
     @Override

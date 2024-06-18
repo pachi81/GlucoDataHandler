@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
@@ -231,6 +232,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun update() {
         try {
             txtBgValue.text = ReceiveData.getGlucoseAsString()
@@ -244,9 +246,9 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
             timeText.text = "🕒 ${ReceiveData.getElapsedRelativeTimeAsString(this)}"
             deltaText.text = "Δ ${ReceiveData.getDeltaAsString()}"
-            iobText.text = "💉 " + ReceiveData.getIobAsString()
-            cobText.text = "🍔 " + ReceiveData.getCobAsString()
-            iobText.visibility = if (ReceiveData.isIobCobObsolete(Constants.VALUE_OBSOLETE_LONG_SEC)) View.GONE else View.VISIBLE
+            iobText.text = "💉 ${ReceiveData.getIobAsString()}"
+            cobText.text = "🍔 ${ReceiveData.getCobAsString()}"
+            iobText.visibility = if (ReceiveData.isIobCobObsolete()) View.GONE else View.VISIBLE
             cobText.visibility = iobText.visibility
 
             txtValueInfo.visibility = if(ReceiveData.time>0) View.GONE else View.VISIBLE

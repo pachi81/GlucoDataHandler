@@ -127,6 +127,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
         //private var aapsReceiver: AAPSReceiver?  = null
         private var dexcomReceiver: DexcomBroadcastReceiver? = null
         private var nsEmulatorReceiver: NsEmulatorReceiver? = null
+        private val broadcastServiceAPI = BroadcastServiceAPI()
 
         @SuppressLint("UnspecifiedRegisterReceiverFlag")
         fun registerSourceReceiver(context: Context) {
@@ -154,6 +155,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                         context.registerReceiver(dexcomReceiver,dexcomFilter)
                         context.registerReceiver(nsEmulatorReceiver,IntentFilter("com.eveningoutpost.dexdrip.NS_EMULATOR"))
                     }
+                    broadcastServiceAPI.init()
                 }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "registerSourceReceiver exception: " + exc.toString())
@@ -179,6 +181,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                     context.unregisterReceiver(nsEmulatorReceiver)
                     nsEmulatorReceiver = null
                 }
+                broadcastServiceAPI.close(context)
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "unregisterSourceReceiver exception: " + exc.toString())
             }
