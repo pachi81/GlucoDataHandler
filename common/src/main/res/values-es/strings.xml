@@ -516,4 +516,6 @@
     <string name="pref_source_dexcom_byoda_info">Dexcom BYODA</string>
     <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
     <string name="xdrip_broadcast_service_api_enabled_summary">Use xDrip+ Broadcast Service API to communicate with xDrip+.\nPlease activate \"Broadcast Service API\" in \"Inter-App settings\" in xDrip+ first!</string>
+    <string name="obsolete_time">Obsolete time</string>
+    <string name="obsolete_time_summary">Time in minutes after the value is handled as obsolete (getting obsolete color).\nAfter twice this time, the value is removed.</string>
 </resources>

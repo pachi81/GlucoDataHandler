@@ -105,6 +105,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private var colorOutOfRange: Int = Color.YELLOW
     private var colorOK: Int = Color.GREEN
     private var colorObsolete: Int = Color.GRAY
+    private var obsoleteTimeMin: Int = 5
+    val obsoleteTimeInMinute get() = obsoleteTimeMin
     private var initialized = false
 
     init {
@@ -145,10 +147,10 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 )
     }
 
-    fun isObsoleteTime(timeoutSec: Int = Constants.VALUE_OBSOLETE_LONG_SEC): Boolean = (System.currentTimeMillis()- time) >= (timeoutSec * 1000)
+    fun isObsoleteTime(timeoutSec: Int): Boolean = (System.currentTimeMillis()- time) >= (timeoutSec * 1000)
 
-    fun isObsoleteShort(): Boolean = isObsoleteTime(Constants.VALUE_OBSOLETE_SHORT_SEC)
-    fun isObsoleteLong(): Boolean = isObsoleteTime(Constants.VALUE_OBSOLETE_LONG_SEC)
+    fun isObsoleteShort(): Boolean = isObsoleteTime(obsoleteTimeMin*60)
+    fun isObsoleteLong(): Boolean = isObsoleteTime(obsoleteTimeMin*120)
     fun isIobCobObsolete(timeoutSec: Int = Constants.VALUE_OBSOLETE_LONG_SEC): Boolean = (System.currentTimeMillis()- iobCobTime) >= (timeoutSec * 1000)
 
     fun getGlucoseAsString(): String {
@@ -486,6 +488,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             putInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, bundle.getInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, colorOutOfRange))
             putInt(Constants.SHARED_PREF_COLOR_ALARM, bundle.getInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm))
             putInt(Constants.SHARED_PREF_COLOR_OBSOLETE, bundle.getInt(Constants.SHARED_PREF_COLOR_OBSOLETE, colorObsolete))
+            putInt(Constants.SHARED_PREF_OBSOLETE_TIME, bundle.getInt(Constants.SHARED_PREF_OBSOLETE_TIME, obsoleteTimeMin))
             if (bundle.containsKey(Constants.SHARED_PREF_RELATIVE_TIME)) {
                 putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, bundle.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime))
             }
@@ -506,6 +509,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         bundle.putInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, colorOutOfRange)
         bundle.putInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm)
         bundle.putInt(Constants.SHARED_PREF_COLOR_OBSOLETE, colorObsolete)
+        bundle.putInt(Constants.SHARED_PREF_OBSOLETE_TIME, obsoleteTimeMin)
         return bundle
     }
 
@@ -519,11 +523,13 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         colorOutOfRange = sharedPref.getInt(Constants.SHARED_PREF_COLOR_OUT_OF_RANGE, colorOutOfRange)
         colorAlarm = sharedPref.getInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm)
         colorObsolete = sharedPref.getInt(Constants.SHARED_PREF_COLOR_OBSOLETE, colorObsolete)
+        obsoleteTimeMin = sharedPref.getInt(Constants.SHARED_PREF_OBSOLETE_TIME, obsoleteTimeMin)
         changeIsMmol(sharedPref.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol))
         calculateAlarm()  // re-calculate alarm with new settings
         Log.i(LOG_ID, "Raw low/min/max/high set: " + lowValue.toString() + "/" + targetMinValue.toString() + "/" + targetMaxValue.toString() + "/" + highValue.toString()
                 + " mg/dl - unit: " + getUnit()
                 + " - 5 min delta: " + use5minDelta
+                + " - obsolete time: " + obsoleteTimeMin
                 + " - alarm/out/ok/obsolete colors: " + colorAlarm.toString() + "/" + colorOutOfRange.toString() + "/" + colorOK.toString() + "/" + colorObsolete.toString())
     }
 
@@ -646,7 +652,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     Constants.SHARED_PREF_COLOR_ALARM,
                     Constants.SHARED_PREF_COLOR_OUT_OF_RANGE,
                     Constants.SHARED_PREF_COLOR_OBSOLETE,
-                    Constants.SHARED_PREF_COLOR_OK -> {
+                    Constants.SHARED_PREF_COLOR_OK,
+                    Constants.SHARED_PREF_OBSOLETE_TIME -> {
                         updateSettings(sharedPreferences!!)
                         val extras = Bundle()
                         extras.putBundle(Constants.SETTINGS_BUNDLE, getSettingsBundle())

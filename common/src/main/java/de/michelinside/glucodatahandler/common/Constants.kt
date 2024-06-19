@@ -48,7 +48,7 @@ object Constants {
     const val GLUCODATAAUTO_STATE_EXTRA = "state"
 
 
-    const val VALUE_OBSOLETE_SHORT_SEC = 300
+    //const val VALUE_OBSOLETE_SHORT_SEC = 300
     const val VALUE_OBSOLETE_LONG_SEC  = 600
 
     const val SHARED_PREF_TAG = "GlucoDataHandlerPrefs"
@@ -82,6 +82,7 @@ object Constants {
     const val SHARED_PREF_COLOR_OUT_OF_RANGE = "color_out_of_range"
     const val SHARED_PREF_COLOR_OK = "color_ok"
     const val SHARED_PREF_COLOR_OBSOLETE = "color_obsolete"
+    const val SHARED_PREF_OBSOLETE_TIME = "obsolete_time"
     //const val SHARED_PREF_PERMANENT_NOTIFICATION = "permanent_notification"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_ICON = "status_bar_notification_icon"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_COLORED_ICON = "status_bar_notification_colored_icon"
