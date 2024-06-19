@@ -238,13 +238,17 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
         }
     }
 
-    private fun deactivate() {
+    private fun deactivate(removeReceivers: Boolean) {
         try {
             if (GlucoDataService.context != null && active) {
-                Log.v(LOG_ID, "deactivate called")
+                Log.v(LOG_ID, "deactivate called removeReceivers=$removeReceivers")
                 InternalNotifier.remNotifier(GlucoDataService.context!!, this)
                 GlucoDataService.context!!.unregisterReceiver(watchDripReceiver)
                 active = false
+                if(removeReceivers) {
+                    receivers.clear()
+                    saveReceivers()
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "deactivate exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
@@ -284,13 +288,13 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
         }
     }
 
-    private fun updateSettings(sharedPreferences: SharedPreferences) {
+    private fun updateSettings(sharedPreferences: SharedPreferences, removeReceiversOnDisable: Boolean = false) {
         try {
             Log.v(LOG_ID, "updateSettings called")
             if (sharedPreferences.getBoolean(Constants.SHARED_PREF_WATCHDRIP, false))
                 activate()
             else
-                deactivate()
+                deactivate(removeReceiversOnDisable)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateSettings exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
         }
@@ -301,7 +305,7 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
             Log.v(LOG_ID, "onSharedPreferenceChanged called for key " + key)
             when(key) {
                 Constants.SHARED_PREF_WATCHDRIP -> {
-                    updateSettings(sharedPreferences!!)
+                    updateSettings(sharedPreferences!!, true)
                 }
             }
         } catch (exc: Exception) {
