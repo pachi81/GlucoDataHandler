@@ -1,9 +1,14 @@
 package de.michelinside.glucodatahandler.common.receiver
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Context.RECEIVER_EXPORTED
+import android.content.Context.RECEIVER_VISIBLE_TO_INSTANT_APPS
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import com.eveningoutpost.dexdrip.services.broadcastservice.models.Settings
@@ -37,6 +42,7 @@ open class BroadcastServiceAPI: BroadcastReceiver(), NotifierInterface,
         const val CMD_UPDATE_BG_FORCE = "update_bg_force"
         const val CMD_UPDATE_BG = "update_bg"
         const val CMD_ALARM = "alarm"
+        const val CMD_START = "start"
         const val CMD_CANCEL_ALARM = "cancel_alarm"
         const val CMD_SNOOZE_ALARM = "snooze_alarm"
         const val TYPE_ALERT = "BG_ALERT_TYPE"
@@ -74,11 +80,17 @@ open class BroadcastServiceAPI: BroadcastReceiver(), NotifierInterface,
         }
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun enable(context: Context) {
         if(!enabled) {
             Log.i(LOG_ID, "enable")
             enabled = true
             InternalNotifier.addNotifier(context, this, mutableSetOf(NotifySource.OBSOLETE_VALUE))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                context.registerReceiver(this, IntentFilter("com.eveningoutpost.dexdrip.watch.wearintegration.BROADCAST_SERVICE_SENDER"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
+            } else {
+                context.registerReceiver(this, IntentFilter("com.eveningoutpost.dexdrip.watch.wearintegration.BROADCAST_SERVICE_SENDER"))
+            }
             sendForceDataRequest(context)
         }
     }
@@ -88,13 +100,17 @@ open class BroadcastServiceAPI: BroadcastReceiver(), NotifierInterface,
             Log.i(LOG_ID, "disable")
             enabled = false
             InternalNotifier.remNotifier(context, this)
+            context.unregisterReceiver(this)
         }
     }
 
     private fun sendForceDataRequest(context: Context) {
-        val intent = Intent(BROADCAST_RECEIVE_ACTION)
-        intent.putExtra(EXTRA_SETTINGS, Settings(context.packageName))
-        sendBroadcast(context, CMD_UPDATE_BG_FORCE, intent)
+        if(enabled) {
+            Log.d(LOG_ID, "sendForceDataRequest called")
+            val intent = Intent(BROADCAST_RECEIVE_ACTION)
+            intent.putExtra(EXTRA_SETTINGS, Settings(context.packageName))
+            sendBroadcast(context, CMD_UPDATE_BG_FORCE, intent)
+        }
     }
 
     @Suppress("SameParameterValue")
@@ -165,6 +181,7 @@ open class BroadcastServiceAPI: BroadcastReceiver(), NotifierInterface,
                         if(intent.extras != null)
                             handleBgBundle(context, intent.extras!!)
                     }
+                    CMD_START -> sendForceDataRequest(context)
                 }
             }
         } catch (exc: Exception) {

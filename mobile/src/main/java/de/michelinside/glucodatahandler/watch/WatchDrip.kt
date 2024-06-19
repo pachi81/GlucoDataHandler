@@ -180,12 +180,13 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
             else -> "No alarm!"
         }
     }
-    private fun sendBroadcastToReceiver(context: Context, receiver: String, bundle: Bundle) {
+    private fun sendBroadcastToReceiver(context: Context, receiver: String?, bundle: Bundle) {
         Log.d(LOG_ID, "Sending broadcast to " + receiver + ":\n" + Utils.dumpBundle(bundle))
         val intent = Intent(BroadcastServiceAPI.BROADCAST_SENDER_ACTION)
+        if(receiver != null)
+            intent.setPackage(receiver)
         intent.putExtras(bundle)
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-        intent.setPackage(receiver)
         context.sendBroadcast(intent)
     }
 
@@ -229,6 +230,7 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
                     NotifySource.OBSOLETE_ALARM_TRIGGER,
                     NotifySource.NOTIFICATION_STOPPED))
                 active = true
+                sendBroadcastToReceiver(GlucoDataService.context!!, null, createCmdBundle(BroadcastServiceAPI.CMD_START))
                 if (receivers.size > 0) {
                     sendBroadcast(GlucoDataService.context!!, BroadcastServiceAPI.CMD_UPDATE_BG)
                 }
