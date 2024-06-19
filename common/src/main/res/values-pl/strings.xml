@@ -80,7 +80,7 @@
     <string name="source_delay">Opóźnienie</string>
     <string name="source_delay_summary">Opóźnienie w sekundach przed zażądaniem danych z chmury, ponieważ zajmuje to trochę czasu, zanim dane się tam znajdą.</string>
 
-    <string name="src_cat_libreview">LibreLinkUp Follower</string>
+    <string name="src_cat_libreview">LibreLinkUp</string>
     <string name="src_enabled">Włącz</string>
     <string name="src_libre_enabled_summary">Włącz funkcję LibreLinkUp follower, jeśli wprowadzono adres e-mail i hasło.</string>
     <string name="src_libre_user">E-mail</string>
@@ -90,7 +90,7 @@
     <string name="src_libre_reconnect">Połącz ponownie</string>
     <string name="src_libre_reconnect_summary">W kolejnym odstępie czasowym nastąpi nowe logowanie.</string>
 
-    <string name="src_cat_nightscout">Nightscout Follower</string>
+    <string name="src_cat_nightscout">Nightscout</string>
     <string name="src_ns_enabled">Włącz</string>
     <string name="src_ns_enabled_summary">Włącz Nightscout Follower.</string>
     <string name="src_ns_url">Adres URL Nightscout</string>
@@ -280,7 +280,7 @@
     <string name="info_label_iob">IOB</string>
     <string name="info_label_cob">COB</string>
     <string name="src_xdrip_noise_blocking">Włączono blokowanie szumu w ustawieniach aplikacji xDrip+! \nZmień na \"Ekstremalnie głośny\"!</string>
-    <string name="pref_cat_follower">Follower (Obserwator)</string>
+    <string name="pref_cat_follower">Cloud services</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
     <string name="pref_source_juggluco_info_summary">Aby odbierać wartości z Juggluco: \n- otwórz Juggluco \n- przejdź do ustawień \n- włącz Glucodata broadcast \n- włącz \"de.michelinside.glucodatahandler\"</string>
     <string name="pref_gda_source_juggluco_info_summary">Aby odbierać wartości z Juggluco: \n- otwórz Juggluco \n- przejdź do ustawień \n- włącz Glucodata broadcast \n- włącz \"de.michelinside.glucodataauto\"</string>
@@ -511,4 +511,10 @@
     <string name="xdrip_broadcast_service_api_enabled_summary">Use xDrip+ Broadcast Service API to communicate with xDrip+.\nPlease activate \"Broadcast Service API\" in \"Inter-App settings\" in xDrip+ first!</string>
     <string name="obsolete_time">Obsolete time</string>
     <string name="obsolete_time_summary">Time in minutes after the value is handled as obsolete (getting obsolete color).\nAfter twice this time, the value is removed.</string>
+    <string name="pref_source_offline">Offline sources</string>
+    <string name="pref_source_offline_summary">Applications on same device providing glucose values as internal broadcast message, like Juggluco, xDrip+, AAPS and so on.</string>
+    <string name="pref_cat_follower_summary">Cloud services providing glucose values other an API, like LibreLinkUp, Dexcom Share and Nightscout.</string>
+    <string name="pref_source_xdrip_broadcast">Alternative: xDrip+ local broadcast</string>
+    <string name="pref_source_dexcom_byoda_info_summary">To receive values from Dexcom BYODA you have to enable broadcast to xDrip+, AAPS or both while building the app.</string>
+    <string name="pref_source_eversense_info_summary">To receive values from Eversense, you have to use ESEL either in companion mode (reading notification) or connected to the patched Eversense app.\nFor more information about ESEL, press here.</string>
 </resources>

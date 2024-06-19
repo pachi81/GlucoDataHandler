@@ -78,7 +78,7 @@
     <string name="source_delay">Atraso</string>
     <string name="source_delay_summary">Atraso em segundos antes de solicitar os dados da nuvem, pois demora algum tempo até que os dados estejam presentes lá.</string>
 
-    <string name="src_cat_libreview">LibreLinkUp Seguidor</string>
+    <string name="src_cat_libreview">LibreLinkUp</string>
     <string name="src_enabled">Habilita</string>
     <string name="src_libre_enabled_summary">Habilite o seguidor do LibreLinkUp, se o usuário e a senha estiverem definidos.</string>
     <string name="src_libre_user">E-mail</string>
@@ -88,7 +88,7 @@
     <string name="src_libre_reconnect">Reconectar</string>
     <string name="src_libre_reconnect_summary">No próximo intervalo um novo login será requerido.</string>
 
-    <string name="src_cat_nightscout">Seguidor Nightscout</string>
+    <string name="src_cat_nightscout">Nightscout</string>
     <string name="src_ns_enabled">Habilita</string>
     <string name="src_ns_enabled_summary">Habilita Nightscout seguidor.</string>
     <string name="src_ns_url">Nightscout URL</string>
@@ -282,7 +282,7 @@
     <string name="info_label_iob">IOB</string>
     <string name="info_label_cob">COB</string>
     <string name="src_xdrip_noise_blocking">NNoise-Block ativo nas configurações entre aplicativos do xDrip+!\nPor favor, altere para \"Extremamente barulhento\"!</string>
-    <string name="pref_cat_follower">Seguidor</string>
+    <string name="pref_cat_follower">Serviços na nuvem</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
     <string name="pref_source_juggluco_info_summary">Para receber valores do Juggluco:\n- abra o Juggluco\n- acesse as configurações\n- ative a transmissão do Glucodata\n- ative \"de.michelinside.glucodatahandler\"</string>
     <string name="pref_gda_source_juggluco_info_summary">Para receber valores do Juggluco:\n- abra o Juggluco\n- acesse as configurações\n- ative a transmissão do Glucodata\n- ative \"de.michelinside.glucodataauto\"</string>
@@ -510,7 +510,13 @@
     <string name="setting_permission_missing_message">A configuração \'%1$s\' está ativada, mas a permissão relacionada não foi concedida! \nPressione \"OK\" para ser direcionado ao diálogo de permissões ou pressione \"Cancelar\" para desativar esta configuração.</string>
     <string name="pref_source_dexcom_byoda_info">Dexcom BYODA</string>
     <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
-    <string name="xdrip_broadcast_service_api_enabled_summary">Use xDrip+ Broadcast Service API to communicate with xDrip+.\nPlease activate \"Broadcast Service API\" in \"Inter-App settings\" in xDrip+ first!</string>
-    <string name="obsolete_time">Obsolete time</string>
-    <string name="obsolete_time_summary">Time in minutes after the value is handled as obsolete (getting obsolete color).\nAfter twice this time, the value is removed.</string>
+    <string name="xdrip_broadcast_service_api_enabled_summary">Use a API do Serviço de Transmissão xDrip+ para receber dados (incluindo IOB) do xDrip+.\nPor favor, ative o \"API do Serviço de Transmissão\" nas \"Configurações entre aplicações\" no xDrip+ primeiro!</string>
+    <string name="obsolete_time">Tempo obsoleto</string>
+    <string name="obsolete_time_summary">Tempo em minutos após o qual o valor é considerado obsoleto.\nDepois do dobro deste tempo, o valor é removido.</string>
+    <string name="pref_source_offline">Aplicações locais</string>
+    <string name="pref_source_offline_summary">Aplicações no mesmo dispositivo que fornecem valores de glicose como mensagem de transmissão interna, como Juggluco, xDrip+, AAPS e assim por diante.</string>
+    <string name="pref_cat_follower_summary">Serviços na nuvem que fornecem valores de glicose através de uma API, como LibreLinkUp, Dexcom Share e Nightscout.</string>
+    <string name="pref_source_xdrip_broadcast">Alternativa: Transmissão local</string>
+    <string name="pref_source_dexcom_byoda_info_summary">Para receber valores do Dexcom BYODA, você precisa habilitar a transmissão para xDrip+, AAPS ou ambos durante a construção do aplicativo.</string>
+    <string name="pref_source_eversense_info_summary">Para receber os valores do Eversense, você precisa usar o ESEL, seja no modo companheiro (notificação de leitura) ou conectado ao aplicativo Eversense modificado.\nPara mais informações sobre o ESEL, clique aqui.</string>
 </resources>

@@ -160,6 +160,8 @@ object Constants {
 
     const val SHARED_PREF_APP_COLOR_SCHEME = "application_color_scheme"
 
+    const val SHARED_PREF_EVERSENSE_ESEL_INFO = "source_eversense_info"
+
     // Alarm
     const val ALARM_SNOOZE_ACTION = "de.michelinside.glucodatahandler.SNOOZE"
     const val ALARM_STOP_NOTIFICATION_ACTION = "de.michelinside.glucodatahandler.STOP_NOTIFICATION"

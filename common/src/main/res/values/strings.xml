@@ -61,6 +61,7 @@
     <string name="support_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/issues</string>
     <string name="gda_support_link" translatable="false">https://github.com/pachi81/GlucoDataAuto/issues</string>
     <string name="watchdrip_link" translatable="false">https://github.com/bigdigital/watchdrip/blob/main/README.md</string>
+    <string name="esel_link" translatable="false">https://github.com/BernhardRo/Esel/blob/master/README.md</string>
 
     <!-- tasker -->
 
@@ -95,7 +96,7 @@
     <string name="source_delay">Delay</string>
     <string name="source_delay_summary">Delay in seconds before requesting the data from cloud, because if takes some time until the data is present there.</string>
 
-    <string name="src_cat_libreview">LibreLinkUp Follower</string>
+    <string name="src_cat_libreview">LibreLinkUp</string>
     <string name="src_enabled">Enable</string>
     <string name="src_libre_enabled_summary">Enable LibreLinkUp follower, if user and password are set.</string>
     <string name="src_libre_user">E-mail</string>
@@ -105,7 +106,7 @@
     <string name="src_libre_reconnect">Reconnect</string>
     <string name="src_libre_reconnect_summary">On next interval a new login will be executed.</string>
 
-    <string name="src_cat_nightscout">Nightscout Follower</string>
+    <string name="src_cat_nightscout">Nightscout</string>
     <string name="src_ns_enabled">Enable</string>
     <string name="src_ns_enabled_summary">Enable Nightscout follower.</string>
     <string name="src_ns_url">Nightscout URL</string>
@@ -298,7 +299,7 @@
     <string name="info_label_iob">IOB</string>
     <string name="info_label_cob">COB</string>
     <string name="src_xdrip_noise_blocking">Noise-Block active in xDrip+ Inter-app settings!\nPlease change it to \"Extremely noisy\"!</string>
-    <string name="pref_cat_follower">Follower</string>
+    <string name="pref_cat_follower">Cloud services</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
     <string name="pref_source_juggluco_info_summary">To receive values from Juggluco:\n- open Juggluco\n- go to \"Settings\"\n- enable \"Glucodata broadcast\"\n- enable \"de.michelinside.glucodatahandler\"</string>
     <string name="pref_gda_source_juggluco_info_summary">To receive values from Juggluco:\n- open Juggluco\n- go to \"Settings\"\n- enable \"Glucodata broadcast\"\n- enable \"de.michelinside.glucodataauto\"</string>
@@ -528,7 +529,14 @@
     <string name="setting_permission_missing_message">The settings \'%1$s\' is set, but the related permission is not granted! Press \"OK\" to be forwared the permission dialog or press \"Cancel\" to disable this setting.</string>
     <string name="pref_source_dexcom_byoda_info">Dexcom BYODA</string>
     <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
-    <string name="xdrip_broadcast_service_api_enabled_summary">Use xDrip+ Broadcast Service API to communicate with xDrip+.\nPlease activate \"Broadcast Service API\" in \"Inter-App settings\" in xDrip+ first!</string>
+    <string name="xdrip_broadcast_service_api_enabled_summary">Use xDrip+ Broadcast Service API to receive data (also IOB) from xDrip+.\nPlease activate \"Broadcast Service API\" in \"Inter-App settings\" in xDrip+ first!</string>
     <string name="obsolete_time">Obsolete time</string>
-    <string name="obsolete_time_summary">Time in minutes after the value is handled as obsolete (getting obsolete color).\nAfter twice this time, the value is removed.</string>
+    <string name="obsolete_time_summary">Time in minutes after the value is handled as obsolete.\nAfter twice this time, the value is removed.</string>
+    <string name="pref_source_offline">Local applications</string>
+    <string name="pref_source_offline_summary">Applications on same device providing glucose values as internal broadcast message, like Juggluco, xDrip+, AAPS and so on.</string>
+    <string name="pref_cat_follower_summary">Cloud services providing glucose values other an API, like LibreLinkUp, Dexcom Share and Nightscout.</string>
+    <string name="pref_source_xdrip_broadcast">Alternative: Broadcast locally</string>
+    <string name="pref_source_dexcom_byoda_info_summary">To receive values from Dexcom BYODA you have to enable broadcast to xDrip+, AAPS or both while building the app.</string>
+    <string name="pref_source_eversense_info" translatable="false">Eversense (ESEL)</string>
+    <string name="pref_source_eversense_info_summary">To receive values from Eversense, you have to use ESEL either in companion mode (reading notification) or connected to the patched Eversense app.\nFor more information about ESEL, press here.</string>
 </resources>
