@@ -507,7 +507,7 @@
     <string name="src_dexcom_share_user_summary">Username or E-Mail for Dexcom Share account.</string>
     <string name="src_dexcom_share_password_summary">Password for Dexcom Share account.</string>
     <string name="pref_source_dexcom_share_info">Konfiguracja Dexcom Share</string>
-    <string name="pref_source_dexcom_share_info_summary">To receive data from Dexcom Share servers, you need to have:\n\n- sharing enabled on the Dexcom application that is connected to the sensor\n- accepted the invitation on the Dexcom Follower app (you can uninstall it afterwards)</string>
+    <string name="pref_source_dexcom_share_info_summary">To receive data from Dexcom Share servers, you need to have:\n- sharing enabled on the Dexcom application that is connected to the sensor\n- accepted the invitation on the Dexcom Follower app (you can uninstall it afterwards)\n\nImportant: it does not work with a follower user!</string>
     <string name="permission_missing_title">Missing permission!</string>
     <string name="setting_permission_missing_message">The settings \'%1$s\' is set, but the related permission is not granted!\nPress \"OK\" to be forwared the the permission dialog or press \"Cancel\" to disable this setting.</string>
     <string name="pref_source_dexcom_byoda_info">Dexcom BYODA</string>
