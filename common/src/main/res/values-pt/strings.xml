@@ -126,12 +126,16 @@
     <string name="pref_cat_colors">Coress</string>
 
     <string name="pref_switch_notification">Valores fictícios</string>
+    <string name="pref_very_high_value">Glicose muito alta</string>
+    <string name="pref_very_high_value_summary">Limite para valores muito altos de glicose.</string>
     <string name="pref_high_value">Glicose alta</string>
     <string name="pref_high_value_summary">Limite para valores altos de glicose.</string>
     <string name="pref_target_max_value">Meta de glicose superior</string>
     <string name="pref_target_max_value_summary">Valor superior para o intervalo desejado.</string>
     <string name="pref_target_min_value">Meta de glicose superior inferior</string>
     <string name="pref_target_min_value_summary">Valor inferior para o intervalo desejado.</string>
+    <string name="pref_very_low_value">Glicose muito baixa</string>
+    <string name="pref_very_low_value_summary">Limite para valores muito baixos de glicose.</string>
     <string name="pref_low_value">Glicose baixa</string>
     <string name="pref_low_value_summary">Limite para valores baixos de glicose.</string>
     <string name="pref_switch_car_notification">Android Auto notificações</string>
@@ -158,10 +162,10 @@
     <string name="pref_switch_use_mmol_summary">Use mmol/l em vez de mg/dl.</string>
     <string name="pref_switch_use_5_min_delta">5 minutos delta</string>
     <string name="pref_switch_use_5_min_delta_summary">Ative esta opção para usar valores delta para intervalos de 5 minutos; caso contrário, será usado intervalo de 1 minuto.</string>
-    <string name="pref_color_alarm">Cores Alto/Baixo</string>
-    <string name="pref_color_alarm_summary">Cor para valores altos e baixos de glicose.</string>
-    <string name="pref_color_out_of_range">Cor fora do intervalo</string>
-    <string name="pref_color_out_of_range_summary">Cor para valores de glicose fora da faixa alvo.</string>
+    <string name="pref_color_alarm">Cores muito Alto/Baixo</string>
+    <string name="pref_color_alarm_summary">Cor para valores muito altos e muito baixos de glicose.</string>
+    <string name="pref_color_out_of_range">Cores Alto/Baixo</string>
+    <string name="pref_color_out_of_range_summary">Cor para valores altos e baixos de glicose.</string>
     <string name="pref_color_ok">Cor alvo</string>
     <string name="pref_color_ok_summary">Cor para valores de glicose na faixa do alvo.</string>
     <string name="pref_notification">Notificação</string>

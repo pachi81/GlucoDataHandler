@@ -5,22 +5,13 @@
             android:title="@string/pref_target_range"
             app:iconSpaceReserved="false">
                 <de.michelinside.glucodataauto.preferences.GlucoseEditPreference
-                    android:defaultValue="240"
+                    android:defaultValue="70"
                     android:inputType="numberDecimal"
-                    android:key="high_glucose"
+                    android:key="low_glucose"
                     android:selectAllOnFocus="true"
                     android:singleLine="true"
-                    android:title="@string/pref_high_value"
-                    android:summary="@string/pref_high_value_summary"
-                    app:iconSpaceReserved="false" />
-                <de.michelinside.glucodataauto.preferences.GlucoseEditPreference
-                    android:defaultValue="165"
-                    android:inputType="numberDecimal"
-                    android:key="target_max_value"
-                    android:selectAllOnFocus="true"
-                    android:singleLine="true"
-                    android:title="@string/pref_target_max_value"
-                    android:summary="@string/pref_target_max_value_summary"
+                    android:title="@string/pref_very_low_value"
+                    android:summary="@string/pref_very_low_value_summary"
                     app:iconSpaceReserved="false" />
                 <de.michelinside.glucodataauto.preferences.GlucoseEditPreference
                     android:defaultValue="90"
@@ -32,13 +23,22 @@
                     android:summary="@string/pref_target_min_value_summary"
                     app:iconSpaceReserved="false" />
                 <de.michelinside.glucodataauto.preferences.GlucoseEditPreference
-                    android:defaultValue="70"
+                    android:defaultValue="165"
                     android:inputType="numberDecimal"
-                    android:key="low_glucose"
+                    android:key="target_max_value"
                     android:selectAllOnFocus="true"
                     android:singleLine="true"
-                    android:title="@string/pref_low_value"
-                    android:summary="@string/pref_low_value_summary"
+                    android:title="@string/pref_target_max_value"
+                    android:summary="@string/pref_target_max_value_summary"
+                    app:iconSpaceReserved="false" />
+                <de.michelinside.glucodataauto.preferences.GlucoseEditPreference
+                    android:defaultValue="240"
+                    android:inputType="numberDecimal"
+                    android:key="high_glucose"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:title="@string/pref_very_high_value"
+                    android:summary="@string/pref_very_high_value_summary"
                     app:iconSpaceReserved="false" />
         </PreferenceCategory>
         <PreferenceCategory

@@ -59,7 +59,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
         }
 
         fun start(source: AppSource, context: Context, cls: Class<*>, force: Boolean = false) {
-            if (!running || !foreground) {
+            if (!running) {
                 Log.v(LOG_ID, "start called (running: $running - foreground: $foreground)")
                 try {
                     isRunning = true

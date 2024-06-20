@@ -144,12 +144,16 @@
     <string name="pref_cat_colors">Colors</string>
 
     <string name="pref_switch_notification">Dummy values</string>
+    <string name="pref_very_high_value">Very high glucose</string>
+    <string name="pref_very_high_value_summary">Border for very high glucose values.</string>
     <string name="pref_high_value">High glucose</string>
     <string name="pref_high_value_summary">Border for high glucose values.</string>
     <string name="pref_target_max_value">Target top glucose</string>
     <string name="pref_target_max_value_summary">Top value for the target range.</string>
     <string name="pref_target_min_value">Target bottom glucose</string>
     <string name="pref_target_min_value_summary">Bottom value for the target range.</string>
+    <string name="pref_very_low_value">Very low glucose</string>
+    <string name="pref_very_low_value_summary">Border for very low glucose values.</string>
     <string name="pref_low_value">Low glucose</string>
     <string name="pref_low_value_summary">Border for low glucose values.</string>
     <string name="pref_switch_car_notification">Android Auto notifications</string>
@@ -176,10 +180,10 @@
     <string name="pref_switch_use_mmol_summary">Use mmol/l instead of mg/dl.</string>
     <string name="pref_switch_use_5_min_delta">5 minute delta</string>
     <string name="pref_switch_use_5_min_delta_summary">Switch this on to use delta values for 5 minute interval, otherwise 1 minute interval is used.</string>
-    <string name="pref_color_alarm">High/low color</string>
-    <string name="pref_color_alarm_summary">Color for high and low glucose values.</string>
-    <string name="pref_color_out_of_range">Out of range color</string>
-    <string name="pref_color_out_of_range_summary">Color for glucose values out of the target range.</string>
+    <string name="pref_color_alarm">Very high/low color</string>
+    <string name="pref_color_alarm_summary">Color for very high and very low glucose values.</string>
+    <string name="pref_color_out_of_range">High/low color</string>
+    <string name="pref_color_out_of_range_summary">Color for high and low glucose values.</string>
     <string name="pref_color_ok">Target color</string>
     <string name="pref_color_ok_summary">Color for glucose values in the target range.</string>
     <string name="pref_notification">Notification</string>
