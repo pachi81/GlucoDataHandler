@@ -24,8 +24,15 @@
         android:title="@string/pref_source_xdrip_info"
         app:iconSpaceReserved="false"
         app:initialExpandedChildrenCount="0">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="xdrip_broadcast_service_api"
+            android:title="@string/xdrip_broadcast_service_api_enabled"
+            android:summary="@string/xdrip_broadcast_service_api_enabled_summary"
+            app:iconSpaceReserved="false" />
         <Preference
             android:key="source_xdrip_info_1"
+            android:title="@string/pref_source_xdrip_broadcast"
             android:summary="@string/pref_source_xdrip_info_1_summary"
             app:iconSpaceReserved="false" />
         <Preference
