@@ -23,7 +23,6 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
-import java.lang.NumberFormatException
 
 
 open class BroadcastServiceAPI: BroadcastReceiver(), NotifierInterface,
@@ -32,6 +31,8 @@ open class BroadcastServiceAPI: BroadcastReceiver(), NotifierInterface,
     companion object {
         private var enabled = false
         private var init = false
+        private var lastData = ""
+
         const val BROADCAST_SENDER_ACTION = "com.eveningoutpost.dexdrip.watch.wearintegration.BROADCAST_SERVICE_SENDER"
         const val BROADCAST_RECEIVE_ACTION = "com.eveningoutpost.dexdrip.watch.wearintegration.BROADCAST_SERVICE_RECEIVER"
         const val EXTRA_FUNCTION = "FUNCTION"
@@ -60,6 +61,8 @@ open class BroadcastServiceAPI: BroadcastReceiver(), NotifierInterface,
         const val PUMP_JSON = "pumpJSON"
         const val PREDICT_IOB = "predict.IOB"
         const val PREDICT_IOB_TIME = "predict.IOB.timeStamp"
+        const val EXTERNAL_STATUSLINE = "external.statusLine"
+        const val EXTERNAL_TIMESTAMP = "external.timeStamp"
     }
 
     fun init() {
@@ -147,16 +150,46 @@ open class BroadcastServiceAPI: BroadcastReceiver(), NotifierInterface,
         glucoExtras.putFloat(ReceiveData.RATE, GlucoDataUtils.getRateFromLabel(bundle.getString(BG_DELTA_NAME)))
         glucoExtras.putInt(ReceiveData.ALARM, 0)
 
-        if(bundle.containsKey(PREDICT_IOB)) {
+        if(bundle.containsKey(EXTERNAL_STATUSLINE)) {
+            val statusLine = bundle.getString(EXTERNAL_STATUSLINE)
+            if(!statusLine.isNullOrEmpty() && statusLine.contains("IE")) {
+                /*
+                    Loop deaktiviert
+                    2,07IE(2,07|0,00) 19g
+                    or
+                    Loop deaktiviert
+                    2,07IE 19g
+                    or
+                    Loop deaktiviert
+                    2,07IE --g
+                 */
+                try {
+                    val pattern = "(\\d+[.|,]\\d+)IE(.* (\\d+)g)?"
+                    val match = Regex(pattern).find(statusLine)
+                    if (match != null) {
+                        Log.d(LOG_ID, "Statusline $statusLine found values: ${match.groupValues}")
+                        if(match.groupValues.size > 1) {
+                            glucoExtras.putFloat(ReceiveData.IOB, Utils.parseFloatString(match.groupValues[1]))
+                            if(match.groupValues.size == 4) {
+                                glucoExtras.putFloat(ReceiveData.COB, Utils.parseFloatString(match.groupValues[3]))
+                            }
+                            if(bundle.containsKey(EXTERNAL_TIMESTAMP)) {
+                                glucoExtras.putLong(ReceiveData.IOBCOB_TIME, bundle.getLong(EXTERNAL_TIMESTAMP))
+                            }
+                        }
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Error parsing statusline ${statusLine}: ${exc.message}")
+                }
+            }
+        }
+
+        if(!glucoExtras.containsKey(ReceiveData.IOB) && bundle.containsKey(PREDICT_IOB)) {
             val iobString = bundle.getString(PREDICT_IOB)
             if (!iobString.isNullOrEmpty()) {
-                try {
-                    glucoExtras.putFloat(ReceiveData.IOB, iobString.replace(',', '.').toFloat())
-                    if(bundle.containsKey(PREDICT_IOB_TIME))
-                        glucoExtras.putLong(ReceiveData.IOBCOB_TIME, bundle.getLong(PREDICT_IOB_TIME)) // time when IOB was given!!!
-                } catch (exc: NumberFormatException) {
-                    Log.e(LOG_ID, "Convert IOB $iobString exception: " + exc.message.toString() )
-                }
+                glucoExtras.putFloat(ReceiveData.IOB, Utils.parseFloatString(iobString))
+                if(bundle.containsKey(PREDICT_IOB_TIME))
+                    glucoExtras.putLong(ReceiveData.IOBCOB_TIME, bundle.getLong(PREDICT_IOB_TIME))
             }
         }
 
@@ -172,8 +205,14 @@ open class BroadcastServiceAPI: BroadcastReceiver(), NotifierInterface,
 
     override fun onReceive(context: Context, intent: Intent) {
         try {
-            Log.i(LOG_ID, "onReceive called for action ${intent.action} (enaled=$enabled): ${Utils.dumpBundle(intent.extras)}")
+            val data = Utils.dumpBundle(intent.extras)
+            if (data == lastData) {
+                Log.d(LOG_ID, "Ignoring double receiving data: $data")
+                return
+            }
+            Log.i(LOG_ID, "onReceive called for action ${intent.action} (enaled=$enabled): $data")
             if(enabled) {
+                lastData = data
                 val function = intent.getStringExtra(EXTRA_FUNCTION)
                 when(function) {
                     CMD_UPDATE_BG,
