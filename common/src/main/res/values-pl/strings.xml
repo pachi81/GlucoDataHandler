@@ -284,7 +284,7 @@
     <string name="info_label_iob">IOB</string>
     <string name="info_label_cob">COB</string>
     <string name="src_xdrip_noise_blocking">Włączono blokowanie szumu w ustawieniach aplikacji xDrip+! \nZmień na \"Ekstremalnie głośny\"!</string>
-    <string name="pref_cat_follower">Cloud services</string>
+    <string name="pref_cat_follower">Usługi chmurowe</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
     <string name="pref_source_juggluco_info_summary">Aby odbierać wartości z Juggluco: \n- otwórz Juggluco \n- przejdź do ustawień \n- włącz Glucodata broadcast \n- włącz \"de.michelinside.glucodatahandler\"</string>
     <string name="pref_gda_source_juggluco_info_summary">Aby odbierać wartości z Juggluco: \n- otwórz Juggluco \n- przejdź do ustawień \n- włącz Glucodata broadcast \n- włącz \"de.michelinside.glucodataauto\"</string>
@@ -517,7 +517,7 @@
     <string name="obsolete_time_summary">Czas w minutach, po którym wartość zostanie uznana za nieaktualną (zostanie oznaczona kolorem dla wartości nieaktualnych).\nPo dwukrotnym upływie tego czasu wartość zostanie usunięta.</string>
     <string name="pref_source_offline">Źródła offline</string>
     <string name="pref_source_offline_summary">Aplikacje na tym samym urządzeniu dostarczające wartości glukozy w formie transmisji wewnętrznej, takie jak Juggluco, xDrip+, AAPS itp.</string>
-    <string name="pref_cat_follower_summary">Usługi w chmurze dostarczające wartości glukozy za pośrednictwem innych interfejsów API, takie jak LibreLinkUp, Dexcom Share i Nightscout.</string>
+    <string name="pref_cat_follower_summary">Usługi chmurowe dostarczające wartości glukozy za pośrednictwem innych interfejsów API, takie jak LibreLinkUp, Dexcom Share i Nightscout.</string>
     <string name="pref_source_xdrip_broadcast">Alternatywa: nadawanie lokalne xDrip+</string>
     <string name="pref_source_dexcom_byoda_info_summary">Aby otrzymywać wartości z Dexcom BYODA, należy włączyć transmisję do xDrip+, AAPS lub obu podczas tworzenia aplikacji.</string>
     <string name="pref_source_eversense_info_summary">Aby odbierać wartości z Eversense, musisz używać ESEL w trybie towarzyszącym (czytanie powiadomień) lub połączyć się z poprawioną (patched) aplikacją Eversense.\n Aby uzyskać więcej informacji na temat ESEL, naciśnij tutaj.</string>
