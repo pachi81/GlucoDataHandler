@@ -391,7 +391,7 @@
     <string name="alarm_retrigger_summary">Solange die Alarmbenachrichtigung nicht geschlossen wird, wird nach diesem Intervall in Minuten der Alarm erneut ausgelöst.\n0 - um keinen erneuten Alarm auszulösen</string>
     <string name="alarm_obsolete">veraltet</string>
     <string name="obsolete_alarm_notification_name">Veralteter Wert</string>
-    <string name="alarm_obsolete_summary">Alarmeinstellungen für einen veralteten Wert.</string>
+    <string name="alarm_obsolete_summary">Alarm, wenn kein neuer Wert für %1$s Minuten empfangen wird.</string>
     <string name="obsolete_alarm_notification_descr">Diese Benachrichtigung erscheint, wenn es keinen neuen Wert gibt.</string>
     <string name="obsolete_alarm_text">Kein neuer Wert!</string>
     <string name="permission_notification_title">Die Anzeige von Benachrichtigungen ist deaktiviert!!!</string>

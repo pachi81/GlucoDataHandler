@@ -405,7 +405,7 @@
     <string name="alarm_retrigger_summary">Si la notificación de alarma no se cierra, la alarma se activará nuevamente después de este intervalo en minutos hasta 3 veces.\n0: no volver a activar</string>
     <string name="alarm_obsolete">Obsoleto</string>
     <string name="obsolete_alarm_notification_name">Alarma obsoleta</string>
-    <string name="alarm_obsolete_summary">Configuraciones de alarma para ningún nuevo valor de glucosa.</string>
+    <string name="alarm_obsolete_summary">Alarma si no hay un nuevo valor de glucosa durante %1$s minutos.</string>
     <string name="obsolete_alarm_notification_descr">Esta notificación aparecerá si no hay un nuevo valor durante un intervalo.</string>
     <string name="obsolete_alarm_text">¡Sin nuevo valor!</string>
 

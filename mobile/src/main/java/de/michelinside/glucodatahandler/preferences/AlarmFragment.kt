@@ -154,7 +154,7 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
             AlarmType.LOW,
             AlarmType.HIGH,
             AlarmType.VERY_HIGH -> resources.getString(CR.string.alarm_type_summary, getBorderText(alarmType))
-            AlarmType.OBSOLETE -> resources.getString(CR.string.alarm_obsolete_summary)
+            AlarmType.OBSOLETE -> resources.getString(CR.string.alarm_obsolete_summary, getBorderText(alarmType))
             else -> ""
         }
     }
@@ -165,8 +165,14 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
             AlarmType.LOW -> ReceiveData.targetMin
             AlarmType.HIGH -> ReceiveData.targetMax
             AlarmType.VERY_HIGH -> ReceiveData.high
+            AlarmType.OBSOLETE -> AlarmHandler.obsoleteInterval.toFloat()
             else -> 0F
         }
+
+        if (alarmType == AlarmType.OBSOLETE) {
+            return "${value.toInt()}"
+        }
+
         if (alarmType == AlarmType.LOW) {
             if(ReceiveData.isMmol)
                 value = Utils.round(value-0.1F, 1)

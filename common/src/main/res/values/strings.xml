@@ -419,7 +419,7 @@
     <string name="alarm_retrigger_summary">If the alarm notification is not closed, the alarm will be triggered again after this interval in minutes up to 3 times.\n0 - no retrigger</string>
     <string name="alarm_obsolete">Obsolete</string>
     <string name="obsolete_alarm_notification_name">Obsolete alarm</string>
-    <string name="alarm_obsolete_summary">Alarm settings for no new glucose value.</string>
+    <string name="alarm_obsolete_summary">Alarm if there is no new glucose value for %1$s minutes.</string>
     <string name="obsolete_alarm_notification_descr">This notification will appear, if there is no new value for in an interval.</string>
     <string name="obsolete_alarm_text">No new value!</string>
 

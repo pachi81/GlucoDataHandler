@@ -55,6 +55,8 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         return DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(snoozeTime))
     }
 
+    val obsoleteInterval get() = obsoleteIntervalMin
+
     fun initData(context: Context) {
         try {
             if (!initialized) {

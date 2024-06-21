@@ -398,7 +398,7 @@
     <string name="alarm_retrigger_summary">Jeśli powiadomienie o alarmie nie zostanie zamknięte, alarm zostanie uruchomiony ponownie po upływie tego czasu w minutach maksymalnie 3 razy.\n0 – nie uruchamiaj ponownie</string>
     <string name="alarm_obsolete">Nieaktualne wartości</string>
     <string name="obsolete_alarm_notification_name">Alarm nieaktualnych wartości</string>
-    <string name="alarm_obsolete_summary">Ustawienia alarmu dla braku nowej wartości glukozy.</string>
+    <string name="alarm_obsolete_summary">Alarm if there is no new glucose value for %1$s minutes.</string>
     <string name="obsolete_alarm_notification_descr">Powiadomienie zostanie uruchomione, jeśli po upływie określonego czasu nie pojawi się nowa wartość.</string>
     <string name="obsolete_alarm_text">Brak nowej wartości!</string>
 
