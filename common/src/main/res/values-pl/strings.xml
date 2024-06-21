@@ -127,7 +127,7 @@
     <string name="pref_cat_colors">Kolory</string>
 
     <string name="pref_switch_notification">Wartości fikcyjne</string>
-    <string name="pref_very_high_value">Bardzo wysokie stężenie glukozy</string>
+    <string name="pref_very_high_value">Bardzo wysokie stęż. glukozy</string>
     <string name="pref_very_high_value_summary">Granica dla bardzo wysokich wartości stężenia glukozy.</string>
     <string name="pref_high_value">Wysokie stęż. glukozy</string>
     <string name="pref_high_value_summary">Granica dla wysokich wartości stężenia glukozy.</string>
