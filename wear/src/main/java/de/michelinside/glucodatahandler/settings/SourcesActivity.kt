@@ -26,7 +26,7 @@ class SourcesActivity : AppCompatActivity() {
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
 
             switchLibreSource = findViewById(R.id.switchLibreSource)
-            switchLibreSource.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_LIBRE_ENABLED, true)
+            switchLibreSource.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_LIBRE_ENABLED, false)
             switchLibreSource.setOnCheckedChangeListener { _, isChecked ->
                 Log.d(LOG_ID, "Libre view changed: " + isChecked.toString())
                 try {
@@ -40,7 +40,7 @@ class SourcesActivity : AppCompatActivity() {
             }
 
             switchDexcomShareSource = findViewById(R.id.switchDexcomShareSource)
-            switchDexcomShareSource.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_ENABLED, true)
+            switchDexcomShareSource.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_ENABLED, false)
             switchDexcomShareSource.setOnCheckedChangeListener { _, isChecked ->
                 Log.d(LOG_ID, "Libre view changed: " + isChecked.toString())
                 try {
@@ -54,7 +54,7 @@ class SourcesActivity : AppCompatActivity() {
             }
 
             switchNightscoutSource = findViewById(R.id.switchNightscoutSource)
-            switchNightscoutSource.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, true)
+            switchNightscoutSource.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, false)
             switchNightscoutSource.setOnCheckedChangeListener { _, isChecked ->
                 Log.d(LOG_ID, "Nightscout changed: " + isChecked.toString())
                 try {
