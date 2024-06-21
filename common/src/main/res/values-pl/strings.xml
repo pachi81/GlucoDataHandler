@@ -127,16 +127,16 @@
     <string name="pref_cat_colors">Kolory</string>
 
     <string name="pref_switch_notification">Wartości fikcyjne</string>
-    <string name="pref_very_high_value">Very high glucose</string>
-    <string name="pref_very_high_value_summary">Granica dla wysokich wartości stężenia glukozy.</string>
+    <string name="pref_very_high_value">Bardzo wysokie stężenie glukozy</string>
+    <string name="pref_very_high_value_summary">Granica dla bardzo wysokich wartości stężenia glukozy.</string>
     <string name="pref_high_value">Wysokie stęż. glukozy</string>
     <string name="pref_high_value_summary">Granica dla wysokich wartości stężenia glukozy.</string>
     <string name="pref_target_max_value">Górna granica zakresu docelowego</string>
     <string name="pref_target_max_value_summary">Najwyższa wartość dla zakresu docelowego.</string>
     <string name="pref_target_min_value">Dolna granica zakresu docelowego</string>
     <string name="pref_target_min_value_summary">Najniższa wartość dla zakresu docelowego.</string>
-    <string name="pref_very_low_value">Very low glucose</string>
-    <string name="pref_very_low_value_summary">Granica dla niskich wartości stężenia glukozy.</string>
+    <string name="pref_very_low_value">Bardzo niskie stęż. glukozy</string>
+    <string name="pref_very_low_value_summary">Granica dla bardzo niskich wartości stężenia glukozy.</string>
     <string name="pref_low_value">Niskie stęż. glukozy</string>
     <string name="pref_low_value_summary">Granica dla niskich wartości stężenia glukozy.</string>
     <string name="pref_switch_car_notification">Powiadomienia w Android Auto</string>
@@ -163,8 +163,8 @@
     <string name="pref_switch_use_mmol_summary">Używaj mmol/l zamiast mg/dl.</string>
     <string name="pref_switch_use_5_min_delta">5-minutowa delta</string>
     <string name="pref_switch_use_5_min_delta_summary">Włącz tę opcję, aby używać wartości delta dla odstępu czasu wynoszącego 5 minut, w przeciwnym razie używany jest odstęp 1-minutowy.</string>
-    <string name="pref_color_alarm">Very high/low color</string>
-    <string name="pref_color_alarm_summary">Color for very high and very low glucose values.</string>
+    <string name="pref_color_alarm">Kolor dla bardzo wysokiego/niskiego stęż. glukozy</string>
+    <string name="pref_color_alarm_summary">Kolor dla bardzo wysokich i niskich wartości stężenia glukozy.</string>
     <string name="pref_color_out_of_range">Kolor dla wysokiego/niskiego stęż. glukozy</string>
     <string name="pref_color_out_of_range_summary">Kolor dla wysokich i niskich wartości stężenia glukozy.</string>
     <string name="pref_color_ok">Kolor w zakresie docelowym</string>
