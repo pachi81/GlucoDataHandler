@@ -47,7 +47,6 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
-import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.preferences.AlarmFragment
@@ -92,7 +91,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             setContentView(R.layout.activity_main)
             Log.v(LOG_ID, "onCreate called")
 
-            GlucoDataServiceMobile.start(this, true)
+            GlucoDataServiceMobile.start(this)
 
             txtBgValue = findViewById(R.id.txtBgValue)
             viewIcon = findViewById(R.id.viewIcon)
@@ -110,8 +109,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableAlarms = findViewById(R.id.tableAlarms)
             tableDetails = findViewById(R.id.tableDetails)
 
-            PackageUtils.updatePackages(this)
-
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
 
@@ -128,7 +125,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Dialogs.updateColorScheme(this)
 
             if (requestPermission())
-                GlucoDataServiceMobile.start(this, true)
+                GlucoDataServiceMobile.start(this)
 
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )

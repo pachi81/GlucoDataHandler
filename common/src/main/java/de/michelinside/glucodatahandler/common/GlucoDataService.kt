@@ -18,6 +18,7 @@ import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
+import de.michelinside.glucodatahandler.common.utils.PackageUtils
 
 enum class AppSource {
     NOT_SET,
@@ -58,9 +59,9 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
             return null
         }
 
-        fun start(source: AppSource, context: Context, cls: Class<*>, force: Boolean = false) {
+        fun start(source: AppSource, context: Context, cls: Class<*>) {
+            Log.v(LOG_ID, "start called (running: $running - foreground: $foreground)")
             if (!running) {
-                Log.v(LOG_ID, "start called (running: $running - foreground: $foreground)")
                 try {
                     isRunning = true
                     appSource = source
@@ -186,7 +187,6 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                 Log.e(LOG_ID, "unregisterSourceReceiver exception: " + exc.toString())
             }
         }
-
     }
 
     init {
@@ -231,6 +231,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
 
             ReceiveData.initData(this)
             SourceTaskService.run(this)
+            PackageUtils.updatePackages(this)
 
             connection = WearPhoneConnection()
             connection!!.open(this, appSource == AppSource.PHONE_APP)

@@ -40,9 +40,21 @@ class GlucoDataServiceAuto: Service() {
             Log.v(LOG_ID, "init called: init=$init")
             if(!init) {
                 GlucoDataService.context = context
+                migrateSettings(context)
                 CarNotification.initNotification(context)
                 startService(context, false)
                 init = true
+            }
+        }
+
+        private fun migrateSettings(context: Context) {
+            Log.v(LOG_ID, "migrateSettings called")
+            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            if(sharedPref.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, true)) {
+                with(sharedPref.edit()) {
+                    putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, false)
+                    apply()
+                }
             }
         }
 
@@ -179,7 +191,6 @@ class GlucoDataServiceAuto: Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         try {
             Log.d(LOG_ID, "onStartCommand called")
-            migrateSettings()
             GdhUncaughtExecptionHandler.init()
             super.onStartCommand(intent, flags, startId)
             GlucoDataService.context = applicationContext
@@ -205,17 +216,6 @@ class GlucoDataServiceAuto: Service() {
         }
 
         return START_STICKY  // keep alive
-    }
-
-    private fun migrateSettings() {
-        Log.v(LOG_ID, "migrateSettings called")
-        val sharedPref = getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-        if(sharedPref.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, true)) {
-            with(sharedPref.edit()) {
-                putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, false)
-                apply()
-            }
-        }
     }
 
     override fun onDestroy() {

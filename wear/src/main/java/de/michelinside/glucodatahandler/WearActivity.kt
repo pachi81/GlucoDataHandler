@@ -29,7 +29,6 @@ import androidx.core.view.setPadding
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmState
 import de.michelinside.glucodatahandler.common.notification.AlarmType
-import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.settings.AlarmsActivity
 import de.michelinside.glucodatahandler.settings.SettingsActivity
 import de.michelinside.glucodatahandler.settings.SourcesActivity
@@ -91,8 +90,6 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
             ReceiveData.initData(this)
 
-            PackageUtils.updatePackages(this)
-
             alarmIcon.setOnClickListener {
                 toggleAlarm()
             }
@@ -119,7 +116,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 startActivity(intent)
             }
             if(requestPermission())
-                GlucoDataServiceWear.start(this, true)
+                GlucoDataServiceWear.start(this)
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
@@ -157,7 +154,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Notification permission granted")
                 requestNotificationPermission = false
-                GlucoDataServiceWear.start(this, true)
+                GlucoDataServiceWear.start(this)
             }
             GlucoDataService.checkForConnectedNodes(true)
         } catch( exc: Exception ) {

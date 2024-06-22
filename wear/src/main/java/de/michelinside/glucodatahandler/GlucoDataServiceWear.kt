@@ -35,8 +35,8 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
     }
 
     companion object {
-        fun start(context: Context, force: Boolean = false) {
-            start(AppSource.WEAR_APP, context, GlucoDataServiceWear::class.java, force)
+        fun start(context: Context) {
+            start(AppSource.WEAR_APP, context, GlucoDataServiceWear::class.java)
         }
     }
 
