@@ -23,7 +23,8 @@ import de.michelinside.glucodatahandler.common.utils.PackageUtils
 enum class AppSource {
     NOT_SET,
     PHONE_APP,
-    WEAR_APP;
+    WEAR_APP,
+    AUTO_APP;
 }
 
 abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
@@ -65,6 +66,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                 try {
                     isRunning = true
                     appSource = source
+                    migrateSettings(context)
                     val serviceIntent = Intent(
                         context,
                         cls
@@ -185,6 +187,26 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                 broadcastServiceAPI.close(context)
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "unregisterSourceReceiver exception: " + exc.toString())
+            }
+        }
+
+        fun migrateSettings(context: Context) {
+            val sharedPrefs = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            Log.v(LOG_ID, "migrateSettings called")
+            if(!sharedPrefs.contains(Constants.SHARED_PREF_OBSOLETE_TIME)) {
+                val sharedGlucosePref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, Context.MODE_PRIVATE)
+                var obsoleteTime = 6
+                if(sharedGlucosePref.contains(Constants.EXTRA_SOURCE_INDEX)) {
+                    val srcOrdinal = sharedGlucosePref.getInt(Constants.EXTRA_SOURCE_INDEX, DataSource.NONE.ordinal)
+                    if (srcOrdinal == DataSource.JUGGLUCO.ordinal || srcOrdinal == DataSource.LIBRELINK.ordinal) {
+                        obsoleteTime = 5
+                    }
+                }
+                Log.i(LOG_ID, "Migrate default obsolete time $obsoleteTime minutes")
+                with(sharedPrefs.edit()) {
+                    putInt(Constants.SHARED_PREF_OBSOLETE_TIME, obsoleteTime)
+                    apply()
+                }
             }
         }
     }

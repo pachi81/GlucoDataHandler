@@ -20,7 +20,7 @@
             android:title="@string/pref_switch_use_5_min_delta"
             app:iconSpaceReserved="false" />
         <androidx.preference.SeekBarPreference
-            android:defaultValue="5"
+            android:defaultValue="6"
             app:showSeekBarValue="true"
             app:seekBarIncrement="1"
             app:min="2"

@@ -105,7 +105,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private var colorOutOfRange: Int = Color.YELLOW
     private var colorOK: Int = Color.GREEN
     private var colorObsolete: Int = Color.GRAY
-    private var obsoleteTimeMin: Int = 5
+    private var obsoleteTimeMin: Int = 6
     val obsoleteTimeInMinute get() = obsoleteTimeMin
     private var initialized = false
 
