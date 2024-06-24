@@ -87,8 +87,8 @@
     <string name="src_password">Passwort</string>
     <string name="src_libre_password_summary">Passwort für LibreLinkUp</string>
     <string name="src_libre_reconnect">Reconnect</string>
-    <string name="src_libre_reconnect_summary">Bei der nächsten Ausführung wird ein erneutes Login ausgeführt.</string>
-    <string name="src_libre_setup_librelink">Keine Daten! Bitte akzeptieren Sie zuerst die Einladung in der LibreLinkUp App!</string>
+    <string name="src_libre_reconnect_summary">Bei der nächsten Ausführung wird eine erneute Anmeldung ausgeführt.</string>
+    <string name="src_libre_setup_librelink">Keine Daten! Bitte zuerst die Einladung in der LibreLinkUp App akzeptieren!</string>
 
     <string name="src_cat_nightscout">Nightscout</string>
     <string name="src_ns_enabled">Aktiv</string>
@@ -137,7 +137,7 @@
     <string name="pref_switch_send_to_aod">Glucodata Broadcast senden</string>
     <string name="pref_switch_send_to_aod_summary">Glucodata Broadcast für neue Werte von allen Quellen senden.</string>
     <string name="pref_button_select_target">Glucodata Empfänger definieren</string>
-    <string name="pref_button_select_target_summary">Empfänger auswählen, an die der Glucodata Broadcast gesendet wird. Ein globaler Broadcast kann von allen Apps empfangen werden, welche sich für diesen Broadcast intern registriert haben.</string>
+    <string name="pref_button_select_target_summary">Empfänger auswählen, die den Glucodata Broadcast erhalten sollen. Ein globaler Broadcast kann von allen Apps empfangen werden, welche sich für diesen Broadcast intern registriert haben.</string>
     <string name="pref_switch_send_to_xdrip">Patched libre Broadcast senden</string>
     <string name="pref_switch_send_to_xdrip_summary">Weiterleiten von Glucose Werten zu xDrip+.\nIn xDrip+ als Quelle \'Libre (patched app)\' einstellen.</string>
     <string name="pref_button_select_xdrip_target">Patched Libre Empfänger definieren</string>
@@ -181,7 +181,7 @@
     <string name="pref_second_notification_icon">2. Statusbar Icon</string>
     <string name="pref_second_notification_icon_summary">Art des Statusbar Icons für die zweite Benachrichtigung.</string>
     <string name="pref_floating_widget">Schwebendes Widget</string>
-    <string name="pref_floating_widget_summary">Zeigt Trendpfeil, den Glucose-, Deltawert, Zeipunkt und IOB/COB als schwebendes Widget.\nUm es zu deaktivieren, drücken und halten sie das Widget für mindestens 5 Sekunden.</string>
+    <string name="pref_floating_widget_summary">Zeigt Trendpfeil, den Glucose-, Deltawert, Zeipunkt und IOB/COB als schwebendes Widget.\nUm es zu deaktivieren, muss das Widget für mindestens 5 Sekunden gedrückt werden, ohne es zu bewegen.</string>
     <string name="pref_floating_widget_size">Größe</string>
     <string name="pref_floating_widget_size_summary">Größe des schwebenden Widgets ändern</string>
     <string name="pref_floating_widget_style">Stil</string>
@@ -262,9 +262,9 @@
     <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataAuto/blob/main/README_DE.md</string>
     <string name="gda_no_data">Um diese App in Android Auto zu verwenden, müssen die Entwicklereinstellungen aktiviert werden. Dafür mehrfach in Android Auto auf Version klicken. Danach in den Entwicklereinstellungen \"Unbekannte Quellen\" aktivieren.</string>
     <string name="pref_information">Information</string>
-    <string name="pref_gda_info_summary">Wenn GlucoDataHandler als Quelle verwendet wird, dann werden die Daten von GlucoDataHandler überschrieben und müssen hier nicht konfigiert werden.</string>
+    <string name="pref_gda_info_summary">Wenn GlucoDataHandler als Quelle verwendet wird, dann werden die Daten von GlucoDataHandler überschrieben und müssen hier nicht konfiguriert werden.</string>
     <string name="pref_no_gda_info">GlucoDataAuto installieren</string>
-    <string name="pref_no_gda_info_summary">Um GlucoDataHandler für Android Auto zu verwenden, muss GlucoDataAuto von GitHub installiert werden.\nKlicken sie hier, für mehr Informationen und um zum Download zu gelangen.</string>
+    <string name="pref_no_gda_info_summary">Um GlucoDataHandler für Android Auto zu verwenden, muss GlucoDataAuto von GitHub installiert werden.\nHier klicken, um mehr Informationen zu erhalten und um zum Download zu gelangen.</string>
     <string name="pref_send_to_glucodataauto">An GlucoDataAuto senden</string>
     <string name="pref_send_to_glucodataauto_summary">Sendet den aktuellen Glucose Wert und die Einstellungen an GlucoDataAuto.</string>
 
@@ -313,14 +313,14 @@
     <string name="logcat_save_failed">Fehler beim Speichern der Logs!</string>
     <string name="logcat_wear_save_succeeded">Logs von der Uhr erfolgreich gespeichert</string>
     <string name="logcat_wear_save_failed">Fehler beim Speichern der Logs von der Uhr!</string>
-    <string name="request_exact_alarm_summary">Für alle Zeit und Intervall spezifischen Aufgaben, benötigt die App die Berechtigung für Wecker und Erinnerungen.\nDie App verändert keine vom Benutzer eingerichteten Wecker oder Erinnerung. Sie benötigt die Berechtigung nur für interne Trigger.\nNach dem Drücken von OK leitet die App Sie zur entsprechenden Berechtigungseinstellung weiter. Bitte aktivieren Sie diese Berechtigung für GlucoDataHandler.</string>
+    <string name="request_exact_alarm_summary">Für alle Zeit und Intervall spezifischen Aufgaben, benötigt die App die Berechtigung für Wecker und Erinnerungen.\nDie App verändert keine vom Benutzer eingerichteten Wecker oder Erinnerung. Sie benötigt die Berechtigung nur für interne Trigger.\nNach dem Drücken von OK wird die entsprechende Berechtigungseinstellung geöffnet. Bitte diese Berechtigung für GlucoDataHandler aktivieren.</string>
     <string name="request_exact_alarm_title">Berechtigung für Wecker und Erinnerungen</string>
     <string name="activity_main_schedule_exact_alarm">Genaue Bearbeitung von Intervallen deaktiviert!!!\nKorrekte Funktionalität von GlucoDataHandler ist nicht gewährleistet!!!\nBitte hier drücken, um zu der entsprechenden Berechtigungseinstellung zu gelangen.</string>
     <string name="src_libre_patient">Patient</string>
-    <string name="src_libre_patient_summary">Wenn der Libre Accout für mehr als einen Patienten verwendet wird, bitte wählen sie den entsprechenden Patienten aus, für den die Daten empfangen werden sollen.</string>
+    <string name="src_libre_patient_summary">Wenn der Libre Accout für mehr als einen Patienten verwendet wird, bitte den entsprechenden Patienten auswählen, für den die Daten empfangen werden sollen.</string>
     <string name="pref_cat_locksreen_wallpaper">Hintergrundbild Sperrbildschirm</string>
     <string name="pref_lockscreen_enabled">Aktivieren</string>
-    <string name="pref_lockscreen_enabled_summary">Wenn sie das Hintergrundbild für den Sperrbildschirm aktivieren, erstellt die App einen Hintergrund auf dem Sperrbildschirm, welcher den Glucosewert und den Trendpfeil enthält.</string>
+    <string name="pref_lockscreen_enabled_summary">Wenn das Hintergrundbild für den Sperrbildschirm aktiviert wird, erstellt die App einen Hintergrund auf dem Sperrbildschirm, welcher den Glucosewert und den Trendpfeil enthält.</string>
     <string name="pref_lockscreen_y_pos">Vertikale Position</string>
     <string name="pref_lockscreen_y_pos_summary">Vertikale Position auf dem Sperrbildschirm:\n0: am oberen Rand des Bildschirms\n100: am unteren Rand des Bildschirms</string>
     <string name="activity_main_notification_permission">!!!Die Anzeige von Benachrichtigungen ist deaktiviert!!!\nKorrekte Funktionalität von GlucoDataHandler ist nicht gewährleistet und es können keine Alarme angezeigt werden!!!\nBitte hier drücken, um zu der entsprechenden Berechtigungseinstellung zu gelangen.</string>
@@ -343,10 +343,10 @@
     <string name="alarm_saved">Alarm gespeichert!</string>
     <string name="snooze">Schlummern</string>
     <string name="alarm_cat_all">Alle Alarme</string>
-    <string name="wear_alarm_notifications_enabled">Uhr: Alarm Benachrichtigungen</string>
-    <string name="alarm_notifications_enabled">Alarm Benachrichtigungen</string>
-    <string name="alarm_notifications_enabled_summary_on">Alarm Benachrichtigungen sind aktiv auf dem Telefon.\nHinweise: die Alarme benutzen die Alarm-/Weckerlautstärke Einstellungen vom Telefon.</string>
-    <string name="alarm_notifications_enabled_summary_off">Alarm Benachrichtigungen sind ausgeschaltet auf dem Telefon.</string>
+    <string name="wear_alarm_notifications_enabled">Uhr: Alarmbenachrichtigungen</string>
+    <string name="alarm_notifications_enabled">Alarmbenachrichtigungen</string>
+    <string name="alarm_notifications_enabled_summary_on">Alarmbenachrichtigungen sind aktiv auf dem Telefon.\nHinweise: die Alarme benutzen die Alarm-/Weckerlautstärke Einstellungen vom Telefon.</string>
+    <string name="alarm_notifications_enabled_summary_off">Alarmbenachrichtigungen sind ausgeschaltet auf dem Telefon.</string>
     <string name="stop_snooze">Stop</string>
     <string name="very_low_alarm_text">Sehr tief!</string>
     <string name="very_low_text">Tief!</string>
@@ -382,11 +382,11 @@
     <string name="alarm_advanced_cat_sound">Ton</string>
     <string name="alarm_type_summary">Alarmeinstellungen für Glukosewerte ab %1$s.</string>
     <string name="alarm_no_notification_wear_connected">Kein Alarm, wenn Uhr verbunden</string>
-    <string name="alarm_no_notification_wear_connected_summary_on">Es gibt keine Alarm Benachrichtigung auf dem Telefon, solange GlucoDataHandler auf der Uhr verbunden ist.</string>
-    <string name="alarm_no_notification_wear_connected_summary_off">Es gibt auch eine Alarm Benachrichtigung auf dem Telefon, wenn GlucoDataHandler auf der Uhr verbunden ist.</string>
+    <string name="alarm_no_notification_wear_connected_summary_on">Es gibt keine Alarmbenachrichtigung auf dem Telefon, solange GlucoDataHandler auf der Uhr verbunden ist.</string>
+    <string name="alarm_no_notification_wear_connected_summary_off">Es gibt auch eine Alarmbenachrichtigung auf dem Telefon, wenn GlucoDataHandler auf der Uhr verbunden ist.</string>
     <string name="alarm_no_notification_auto_connected">Kein Alarm, wenn Android Auto verbunden</string>
-    <string name="alarm_no_notification_auto_connected_summary_on">Es gibt keine Alarm Benachrichtigung auf dem Telefon, solange Android Auto verbunden ist.</string>
-    <string name="alarm_no_notification_auto_connected_summary_off">Es gibt auch eine Alarm Benachrichtigung auf dem Telefon, wenn Android Auto verbunden ist.</string>
+    <string name="alarm_no_notification_auto_connected_summary_on">Es gibt keine Alarmbenachrichtigung auf dem Telefon, solange Android Auto verbunden ist.</string>
+    <string name="alarm_no_notification_auto_connected_summary_off">Es gibt auch eine Alarmbenachrichtigung auf dem Telefon, wenn Android Auto verbunden ist.</string>
     <string name="alarm_retrigger">Erneut auslösen</string>
     <string name="alarm_retrigger_summary">Solange die Alarmbenachrichtigung nicht geschlossen wird, wird nach diesem Intervall in Minuten der Alarm erneut ausgelöst.\n0 - um keinen erneuten Alarm auszulösen</string>
     <string name="alarm_obsolete">veraltet</string>
@@ -396,8 +396,8 @@
     <string name="obsolete_alarm_text">Kein neuer Wert!</string>
     <string name="permission_notification_title">Die Anzeige von Benachrichtigungen ist deaktiviert!!!</string>
     <string name="permission_notification_message">GlucoDataHandler benötigt die Benachrichtigungen, um im Hintergrund Aufgaben durchzuführen und um Alarme anzuzeigen.</string>
-    <string name="alarm_notification_name">Alarm Benachrichtigung</string>
-    <string name="alarm_notification_descr">Alarm Benachrichtigungen. Bitte nicht ändern, da Töne und Vibration intern erzeugt wird.</string>
+    <string name="alarm_notification_name">Alarmbenachrichtigung</string>
+    <string name="alarm_notification_descr">Alarmbenachrichtigungen. Bitte nicht ändern, da Töne und Vibration intern erzeugt wird.</string>
     <string name="alarm_sound_summary">Stumm</string>
     <string name="alarm_sound">Benachrichtigungston auswählen</string>
     <string name="alarm_use_custom_sound">Externen Benachrichtigungston.</string>
@@ -409,7 +409,7 @@
     <string name="alarm_vibrate_only">Nur vibrieren</string>
     <string name="wear_alarm_vibrate_only">Uhr: Nur vibrieren</string>
     <string name="permission_alarm_notification_title">Benachrichtigung deaktiviert!</string>
-    <string name="permission_alarm_notification_message">Um Alarme zu nutzen, muss die Benachrichtigungkategorie für Alarme aktiv sein!\nNachdem Drücken von OK werden Sie zu den Benachrichtigungseinstellung weitergeleitet.\nBitte aktivieren Sie dort die Benachrichtigungskategorie für Alarme.</string>
+    <string name="permission_alarm_notification_message">Um Alarme zu nutzen, muss die Benachrichtigungkategorie für Alarme aktiv sein!\nNachdem Drücken von OK werden die Benachrichtigungseinstellungen geöffnet.\nBitte dort die Benachrichtigungskategorie für Alarme aktivieren.</string>
     <string name="alarm_app_sound">Interner App Ton</string>
     <string name="pref_send_pref_to_glucodataauto">Einstellungen senden</string>
     <string name="pref_send_pref_to_glucodataauto_summary">Einstellungen mit an GlucoDataAuto senden.\nDie Einstellungen in GlucoDataAuto werden mit diesen überschrieben.</string>
@@ -473,9 +473,9 @@
     <string name="pref_cat_ui_settings">Oberfläche</string>
     <string name="pref_cat_ui_settings_summary">Allgemeine Einstellung für die Oberfläche von dieser App.</string>
     <string name="gda_foreground_info">GlucoDataAuto wird ausgeführt</string>
-    <string name="gda_foreground_summary">Aktiviere dies nur, wenn du eine Online Datenquelle und nur Android Auto-Benachrichtigungen verwendest.\nDies verhindert, dass Android diese App schließt, wenn sie nicht mit Android Auto verbunden ist, sodass die App die Android Auto-Verbindung nicht erkennen kann.\nAnstatt diese Einstellung zu aktivieren, kannst du die App auch einmal in Android Auto öffnen, wenn du verbunden bist.</string>
+    <string name="gda_foreground_summary">Nur ktivieren, wenn eine Online Datenquelle und nur Android Auto-Benachrichtigungen verwendet werden.\nDiese Einstellung verhindert, dass Android diese App schließt, wenn sie nicht mit Android Auto verbunden ist, sodass die App die Android Auto-Verbindung nicht erkennen kann.\nAlternativ kann man auch einmal die App direkt in Android Auto öffnen.</string>
     <string name="gda_battery_optimization_disabled">Akkuoptimierungen sind aktiv!\nHier drücken, um es zu deaktivieren.</string>
-    <string name="gda_source_follower_info_summary">Wenn du eine Online Datenquelle verwendest, wird die App möglicherweise nicht gestartet, wenn du mit Android Auto verbunden bist und nur Android Auto-Benachrichtigungen verwendest.\nUm sicherzustellen, dass die App die Android Auto-Verbindung erkennt, musst du die Akkuoptimierung deaktivieren.\nWenn es immer noch nicht funktioniert, kannst du auch den Vordergrundmodus aktivieren oder die App einmal in Android Auto öffnen, wenn sie mit Android Auto verbunden ist.</string>
+    <string name="gda_source_follower_info_summary">Wenn eine Online Datenquelle verwendet wird, wird die App möglicherweise nicht gestartet, wenn man mit Android Auto verbunden ist und nur Android Auto-Benachrichtigungen verwendet werden.\nUm sicherzustellen, dass die App die Android Auto-Verbindung erkennt, muss die Akkuoptimierung deaktiviert werden.\nWenn es immer noch nicht funktioniert, sollte man auch den Vordergrundmodus aktivieren oder die App einmal direkt in Android Auto öffnen.</string>
     <string name="gda_help_aa_title">Android Auto einrichten</string>
     <string name="gda_help_aa_title_summary">Android Auto ist entweder eine separate App oder Bestandteil vom System und kann über die Android Einstellungen geöffnet werden.\nUm GlucoDataAuto in Android Auto zu verwenden, müssen die folgende Schritte durchgeführt werden:</string>
     <string name="gda_help_aa_dev_mode">1. Entwicklereinstellungen aktivieren</string>
