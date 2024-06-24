@@ -166,6 +166,33 @@ object PackageUtils {
         return null
     }
 
+
+    private val tapActionFilter = mutableSetOf<String>()
+    private fun getTapActionFilter(context: Context): MutableSet<String> {
+        if (tapActionFilter.isEmpty()) {
+            tapActionFilter.add(context.packageName)
+            tapActionFilter.add(Constants.PACKAGE_JUGGLUCO)
+            tapActionFilter.add(Constants.PACKAGE_GLUCODATAAUTO)
+            tapActionFilter.add("info.nightscout")  // AAPS
+            tapActionFilter.add("com.eveningoutpost.dexdrip")
+            tapActionFilter.add("jamorham.xdrip.plus")
+            tapActionFilter.add("com.freestylelibre")
+            tapActionFilter.add("org.nativescript.librelinkup")
+            tapActionFilter.add("com.dexcom.")
+            tapActionFilter.add("com.senseonics.")  // Eversense CGM
+            tapActionFilter.add("esel.esel.")   // ESEL for Eversense
+        }
+        return tapActionFilter
+    }
+
+    fun tapActionFilterContains(context: Context, value: String): Boolean {
+        getTapActionFilter(context).forEach {
+            if(value.lowercase().startsWith(it.lowercase()))
+                return true
+        }
+        return false
+    }
+
     /*
     fun getAppIntent(context: Context, packageName: String, requestCode: Int): PendingIntent? {
         val launchIntent = context.packageManager.getLaunchIntentForPackage(packageName)
