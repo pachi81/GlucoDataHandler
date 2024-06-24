@@ -253,7 +253,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
 
             ReceiveData.initData(this)
             SourceTaskService.run(this)
-            PackageUtils.updatePackages(this)
+            PackageUtils.updatePackages(this, true)
 
             connection = WearPhoneConnection()
             connection!!.open(this, appSource == AppSource.PHONE_APP)

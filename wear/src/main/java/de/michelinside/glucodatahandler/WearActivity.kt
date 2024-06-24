@@ -29,6 +29,7 @@ import androidx.core.view.setPadding
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmState
 import de.michelinside.glucodatahandler.common.notification.AlarmType
+import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.settings.AlarmsActivity
 import de.michelinside.glucodatahandler.settings.SettingsActivity
 import de.michelinside.glucodatahandler.settings.SourcesActivity
@@ -117,6 +118,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             }
             if(requestPermission())
                 GlucoDataServiceWear.start(this)
+            PackageUtils.updatePackages(this)
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }

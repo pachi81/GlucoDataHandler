@@ -47,6 +47,7 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.preferences.AlarmFragment
@@ -92,6 +93,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Log.v(LOG_ID, "onCreate called")
 
             GlucoDataServiceMobile.start(this)
+            PackageUtils.updatePackages(this)
 
             txtBgValue = findViewById(R.id.txtBgValue)
             viewIcon = findViewById(R.id.viewIcon)

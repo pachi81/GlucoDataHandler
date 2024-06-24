@@ -19,7 +19,7 @@ object PackageUtils {
 
     private var updateInProgress = AtomicBoolean(false)
 
-    fun updatePackages(context: Context) {
+    fun updatePackages(context: Context, migrateSettings: Boolean = false) {
         if(!updateInProgress.get()) {
             updateInProgress.set(true)
             packages.clear()
@@ -42,7 +42,8 @@ object PackageUtils {
                 }
                 updateInProgress.set(false)
                 Log.i(LOG_ID, "${packages.size} packages found")
-                migratePackageSettings(context)
+                if(migrateSettings)
+                    migratePackageSettings(context)
             }
         }
     }
@@ -68,6 +69,17 @@ object PackageUtils {
                     apply()
                 }
             }
+        } else if(GlucoDataService.appSource == AppSource.WEAR_APP) {
+            val sharedPrefs = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            // complications
+            if(!sharedPrefs.contains(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION)) {
+                val curApp = if(isPackageAvailable(context, Constants.PACKAGE_JUGGLUCO)) Constants.PACKAGE_JUGGLUCO else context.packageName
+                Log.i(LOG_ID, "Setting default tap action for complications to $curApp")
+                with(sharedPrefs.edit()) {
+                    putString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, curApp)
+                    apply()
+                }
+            }
         }
     }
 
@@ -88,9 +100,7 @@ object PackageUtils {
     }
 
     fun getPackages(context: Context): HashMap<String, String> {
-        if(updateInProgress.get()) {
-            waitForUpdate()
-        }
+        waitForUpdate()
         if (packages.isEmpty()) {
             Log.i(LOG_ID, "Updating receivers")
             updatePackages(context)
