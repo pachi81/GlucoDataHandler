@@ -50,6 +50,7 @@ import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
+import de.michelinside.glucodatahandler.preferences.AlarmFragment
 import de.michelinside.glucodatahandler.watch.LogcatReceiver
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import java.text.DateFormat
@@ -91,7 +92,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             setContentView(R.layout.activity_main)
             Log.v(LOG_ID, "onCreate called")
 
-            GlucoDataServiceMobile.start(this, true)
+            GlucoDataServiceMobile.start(this)
+            PackageUtils.updatePackages(this)
 
             txtBgValue = findViewById(R.id.txtBgValue)
             viewIcon = findViewById(R.id.viewIcon)
@@ -109,8 +111,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableAlarms = findViewById(R.id.tableAlarms)
             tableDetails = findViewById(R.id.tableDetails)
 
-            PackageUtils.updatePackages(this)
-
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
 
@@ -124,10 +124,11 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.SORUCE_FRAGMENT.value)
                 startActivity(intent)
             }
-            if (requestPermission())
-                GlucoDataServiceMobile.start(this, true)
-
             Dialogs.updateColorScheme(this)
+
+            if (requestPermission())
+                GlucoDataServiceMobile.start(this)
+
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -164,6 +165,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             checkExactAlarmPermission()
             checkBatteryOptimization()
             checkHighContrast()
+            checkFullscreenPermission()
 
             if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Notification permission granted")
@@ -286,6 +288,23 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
+        }
+    }
+
+    private fun checkFullscreenPermission() {
+        if(sharedPref.contains(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED) && sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, true)) {
+            if (!AlarmNotification.hasFullscreenPermission()) {
+                Dialogs.showOkCancelDialog(this,
+                    resources.getString(CR.string.permission_missing_title),
+                    resources.getString(CR.string.setting_permission_missing_message, resources.getString(CR.string.alarm_fullscreen_notification_enabled)),
+                    { _, _ -> AlarmFragment.requestFullScreenPermission(this) },
+                    { _, _ ->
+                        with(sharedPref.edit()) {
+                            putBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, false)
+                        }
+                    }
+                )
+            }
         }
     }
 
@@ -487,7 +506,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Log.v(LOG_ID, "update values")
             txtBgValue.text = ReceiveData.getGlucoseAsString()
             txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
-            if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete()) {
+            if (ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong()) {
                 txtBgValue.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
             } else {
                 txtBgValue.paintFlags = 0
@@ -498,7 +517,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             deltaText.text = "Δ ${ReceiveData.getDeltaAsString()}"
             iobText.text = "💉 " + ReceiveData.getIobAsString()
             cobText.text = "🍔 " + ReceiveData.getCobAsString()
-            iobText.visibility = if (ReceiveData.isIobCobObsolete(Constants.VALUE_OBSOLETE_LONG_SEC)) View.GONE else View.VISIBLE
+            iobText.visibility = if (ReceiveData.isIobCobObsolete()) View.GONE else View.VISIBLE
             cobText.visibility = iobText.visibility
 
             txtLastValue.visibility = if(ReceiveData.time>0) View.GONE else View.VISIBLE

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/pref_source_juggluco_info"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="0">
+        <Preference
+            android:key="source_juggluco_info"
+            android:summary="@string/pref_source_juggluco_info_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_juggluco_iob_info"
+            android:title="@string/pref_source_juggluco_iob_info"
+            android:summary="@string/pref_source_juggluco_iob_info_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_juggluco_activate_local_nightscout_iob_action"
+            android:title="@string/pref_source_activate_local_nightscout_iob"
+            android:summary="@string/pref_source_activate_local_nightscout_iob_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_source_xdrip_info"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="0">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="xdrip_broadcast_service_api"
+            android:title="@string/xdrip_broadcast_service_api_enabled"
+            android:summary="@string/xdrip_broadcast_service_api_enabled_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_xdrip_info_1"
+            android:title="@string/pref_source_xdrip_broadcast"
+            android:summary="@string/pref_source_xdrip_info_1_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_xdrip_info_2"
+            android:summary="@string/pref_source_xdrip_info_2_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_xdrip_iob_info"
+            android:title="@string/pref_source_xdrip_iob_info"
+            android:summary="@string/pref_source_xdrip_iob_info_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_xdrip_activate_local_nightscout_iob_action"
+            android:title="@string/pref_source_activate_local_nightscout_iob"
+            android:summary="@string/pref_source_activate_local_nightscout_iob_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_source_aaps_info"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="0">
+        <Preference
+            android:key="source_aaps_info"
+            android:summary="@string/pref_source_aaps_info_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_source_dexcom_byoda_info"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="0">
+        <Preference
+            android:key="source_dexcom_byoda_info"
+            android:summary="@string/pref_source_dexcom_byoda_info_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_source_eversense_info"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="0">
+        <Preference
+            android:key="source_eversense_info"
+            android:summary="@string/pref_source_eversense_info_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+</PreferenceScreen>

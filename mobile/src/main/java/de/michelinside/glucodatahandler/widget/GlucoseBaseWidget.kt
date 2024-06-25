@@ -175,7 +175,6 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
         Log.d(LOG_ID, "Create remote views for " + type.toString() + " with width/height=" + width + "/" + height + " and ratio=" + ratio)
         val shortWidget = (width <= 110 || ratio < 0.5F)
         val longWidget = ratio > 2.8F
-        val size = maxOf(width, height)
 
         val layout = if (shortWidget) getShortLayout() else if (longWidget) getLongLayout() else getLayout()
         val remoteViews = RemoteViews(context.packageName, layout)
@@ -187,7 +186,7 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
             // short widget with trend, using the glucose+trend image
             remoteViews.setTextViewText(R.id.glucose, ReceiveData.getGlucoseAsString())
             remoteViews.setTextColor(R.id.glucose, ReceiveData.getGlucoseColor())
-            if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete()) {
+            if (ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong()) {
                 remoteViews.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG)
             } else {
                 remoteViews.setInt(R.id.glucose, "setPaintFlags", 0)
@@ -197,11 +196,15 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
         if (hasTrend) {
             if (shortWidget)
                 remoteViews.setImageViewBitmap(R.id.glucose_trend, BitmapUtils.getGlucoseTrendBitmap(width = width, height = width))
-            else
-                remoteViews.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap(
-                    width = size,
-                    height = size
-                ))
+            else {
+                val size = maxOf(width, height)
+                remoteViews.setImageViewBitmap(
+                    R.id.trendImage, BitmapUtils.getRateAsBitmap(
+                        width = size,
+                        height = size
+                    )
+                )
+            }
         }
 
         if (hasTime) {

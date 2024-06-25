@@ -239,9 +239,8 @@ object BitmapUtils {
 
     private fun getGlucoseAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, withShadow: Boolean = false): Bitmap? {
         return textToBitmap(
-            ReceiveData.getGlucoseAsString(),color ?: ReceiveData.getGlucoseColor(), roundTarget, ReceiveData.isObsolete(
-                Constants.VALUE_OBSOLETE_SHORT_SEC
-            ) && !ReceiveData.isObsolete(),width, height, resizeFactor = resizeFactor, withShadow = withShadow)
+            ReceiveData.getGlucoseAsString(),color ?: ReceiveData.getGlucoseColor(), roundTarget, ReceiveData.isObsoleteShort() &&
+                    !ReceiveData.isObsoleteLong(),width, height, resizeFactor = resizeFactor, withShadow = withShadow)
     }
 
     fun getGlucoseAsIcon(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, withShadow: Boolean = false): Icon {
@@ -264,9 +263,7 @@ object BitmapUtils {
         withShadow: Boolean = false
     ): Bitmap? {
         return rateToBitmap(
-            ReceiveData.rate, color ?: ReceiveData.getGlucoseColor(), resizeFactor = resizeFactor, width = width, height = height, strikeThrough = ReceiveData.isObsolete(
-                Constants.VALUE_OBSOLETE_SHORT_SEC
-            ),
+            ReceiveData.rate, color ?: ReceiveData.getGlucoseColor(), resizeFactor = resizeFactor, width = width, height = height, strikeThrough = ReceiveData.isObsoleteShort(),
             withShadow = withShadow
         )
     }
@@ -283,9 +280,7 @@ object BitmapUtils {
 
     fun getGlucoseTrendBitmap(color: Int? = null, width: Int = 100, height: Int = 100, small: Boolean = false, withShadow: Boolean = false): Bitmap? {
         return textRateToBitmap(
-            ReceiveData.getGlucoseAsString(), ReceiveData.rate, color ?: ReceiveData.getGlucoseColor(), ReceiveData.isObsolete(
-                Constants.VALUE_OBSOLETE_SHORT_SEC
-            ), ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete(),width, height, small, withShadow)
+            ReceiveData.getGlucoseAsString(), ReceiveData.rate, color ?: ReceiveData.getGlucoseColor(), ReceiveData.isObsoleteShort(), ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong(),width, height, small, withShadow)
     }
 
     fun getGlucoseTrendIcon(color: Int? = null, width: Int = 100, height: Int = 100, small: Boolean = false, withShadow: Boolean = false): Icon {

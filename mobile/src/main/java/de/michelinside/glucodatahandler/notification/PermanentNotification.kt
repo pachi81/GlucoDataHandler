@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
@@ -141,6 +142,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         return PackageUtils.getTapActionIntent(GlucoDataService.context!!, tapAction, requestCode)
     }
 
+    @SuppressLint("SetTextI18n")
     fun createNotificationView(context: Context): Bitmap? {
         try {
             val notificationView = View.inflate(context, R.layout.notification_layout, null)
@@ -154,25 +156,25 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             textGlucose.text = ReceiveData.getGlucoseAsString()
             textGlucose.setTextColor(ReceiveData.getGlucoseColor())
 
-            if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete()) {
+            if (ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong()) {
                 textGlucose.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
             } else {
                 textGlucose.paintFlags = 0
             }
 
             textDelta.text = "Δ ${ReceiveData.getDeltaAsString()}"
-            if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) {
+            if (ReceiveData.isObsoleteShort()) {
                 textDelta.setTextColor(ReceiveData.getAlarmTypeColor(AlarmType.OBSOLETE))
             }
 
             trendIcon.setImageIcon(BitmapUtils.getRateAsIcon(withShadow = true))
 
-            textIob.text = "💉 " + ReceiveData.getIobAsString()
-            textCob.text = "🍔 " + ReceiveData.getCobAsString()
-            textIob.visibility = if (ReceiveData.isIobCobObsolete(Constants.VALUE_OBSOLETE_LONG_SEC)) View.GONE else View.VISIBLE
+            textIob.text = "💉 ${ReceiveData.getIobAsString()}"
+            textCob.text = "🍔 ${ReceiveData.getCobAsString()}"
+            textIob.visibility = if (ReceiveData.isIobCobObsolete()) View.GONE else View.VISIBLE
             textCob.visibility = textIob.visibility
 
-            notificationView.setDrawingCacheEnabled(true);
+            notificationView.setDrawingCacheEnabled(true)
             notificationView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
             notificationView.layout(0, 0, notificationView.measuredWidth, notificationView.measuredHeight)
@@ -215,7 +217,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             Log.v(LOG_ID, "Use default layout")
             if (withContent) {
                 notificationBuild.setContentTitle(ReceiveData.getGlucoseAsString() + "   Δ " + ReceiveData.getDeltaAsString())
-                if (!ReceiveData.isIobCobObsolete(Constants.VALUE_OBSOLETE_LONG_SEC)) {
+                if (!ReceiveData.isIobCobObsolete()) {
                     notificationBuild.setContentText("💉 " + ReceiveData.getIobAsString() + if (!ReceiveData.cob.isNaN()) ("  " + "🍔 " + ReceiveData.getCobAsString()) else "")
                 } else {
                     notificationBuild.setContentText(null)

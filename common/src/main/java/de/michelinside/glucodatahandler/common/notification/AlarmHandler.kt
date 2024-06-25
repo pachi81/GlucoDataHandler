@@ -55,6 +55,8 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         return DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(snoozeTime))
     }
 
+    val obsoleteInterval get() = obsoleteIntervalMin
+
     fun initData(context: Context) {
         try {
             if (!initialized) {
@@ -77,15 +79,15 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
                 " - newAlarmType=" + newAlarmType.toString() +
                 " - lastAlarmType=" + lastAlarmType.toString() +
                 " - lastAlarmTime=" +  DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime)) +
-                " - snoozeTime=" + snoozeTimestamp +
+                " - snoozeTime=" + (if(isSnoozeActive)snoozeTimestamp else "off") +
                 " - time=" + DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(ReceiveData.time)) +
                 " - delta=" + ReceiveData.delta.toString() +
                 " - rate=" + ReceiveData.rate.toString() +
                 " - diff=" + (ReceiveData.time - lastAlarmTime).toString() +
-                " - veryLowInt=>" + DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+veryLowInterval)) +
-                " - lowInt=>" + DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+lowInterval)) +
-                " - highInt=>" + DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+highInterval)) +
-                " - veryHighInt=>" + DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+veryHighInterval))
+                " - veryLow=>" + (if(veryLowEnabled) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+veryLowInterval)) else "off") +
+                " - low=>" + (if(lowEnabled) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+lowInterval)) else "off") +
+                " - high=>" + (if(highEnabled) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+highInterval)) else "off") +
+                " - veryHigh=>" + (if(veryHighEnabled) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+veryHighInterval)) else "off")
         )
         if (isSnoozeActive)
             return false

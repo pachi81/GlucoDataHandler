@@ -21,7 +21,6 @@ class ComplicationsTapActionActivity : AppCompatActivity() {
 
     private lateinit var sharedPref: SharedPreferences
     private lateinit var showAllSwitch: SwitchCompat
-    private val filter = mutableSetOf<String>()
     private var receiver = ""
     private var hasChanged = false
     private val actions = HashMap<String, String>()
@@ -30,7 +29,6 @@ class ComplicationsTapActionActivity : AppCompatActivity() {
             Log.v(LOG_ID, "onCreate called")
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_complication_tap_action)
-            initFilter()
 
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
 
@@ -98,27 +96,6 @@ class ComplicationsTapActionActivity : AppCompatActivity() {
     }
 
 
-    private fun initFilter() {
-        filter.add(this.packageName)
-        filter.add(Constants.PACKAGE_JUGGLUCO)
-        filter.add(Constants.PACKAGE_GLUCODATAAUTO)
-        filter.add(Constants.PACKAGE_AAPS)
-        filter.add(Constants.PACKAGE_XDRIP)
-        filter.add(Constants.PACKAGE_XDRIP_PLUS)
-        filter.add(Constants.PACKAGE_LIBRELINK)
-        filter.add(Constants.PACKAGE_LIBRELINKUP)
-    }
-
-
-    private fun filterContains(value: String): Boolean {
-        filter.forEach {
-            if(value.startsWith(it))
-                return true
-        }
-        return false
-    }
-
-
     private fun createRadioButtons(group: RadioGroup, list: HashMap<String, String>, all: Boolean, sort: Boolean): RadioButton? {
         var current: RadioButton? = null
         val map = if(sort) {
@@ -130,7 +107,7 @@ class ComplicationsTapActionActivity : AppCompatActivity() {
         }
 
         for (item in map) {
-            if (all || filterContains(item.key)) {
+            if (all || PackageUtils.tapActionFilterContains(this, item.key)) {
                 val ch = RadioButton(this)
                 ch.text = item.value
                 ch.hint = item.key

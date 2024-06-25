@@ -20,46 +20,47 @@ enum class SettingsFragmentClass(val value: Int, val titleRes: Int) {
 class SettingsActivity : AppCompatActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
     private val LOG_ID = "GDH.SettingsActivity"
-    private var titleMap = mutableMapOf<Int, CharSequence>()
     companion object {
         const val FRAGMENT_EXTRA = "fragment"
+        private var titleMap = mutableMapOf<Int, CharSequence>()
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
-            Log.v(LOG_ID, "onCreate called for fragment " + intent.getIntExtra(FRAGMENT_EXTRA, 0) + " with instance: " + (savedInstanceState!=null) )
+            Log.v(LOG_ID, "onCreate called for fragment ${intent.getIntExtra(FRAGMENT_EXTRA, -1)} with instance: ${(savedInstanceState!=null)} count=${supportFragmentManager.backStackEntryCount}" )
             super.onCreate(savedInstanceState)
             if(savedInstanceState==null) {
+                titleMap.clear()
                 when (intent.getIntExtra(FRAGMENT_EXTRA, 0)) {
                     SettingsFragmentClass.SETTINGS_FRAGMENT.value -> {
-                        this.supportActionBar!!.title =
-                            this.applicationContext.resources.getText(SettingsFragmentClass.SETTINGS_FRAGMENT.titleRes)
+                        setTitle(0, this.applicationContext.resources.getText(SettingsFragmentClass.SETTINGS_FRAGMENT.titleRes))
                         supportFragmentManager.beginTransaction()
                             .replace(R.id.content, SettingsFragment())
                             .commit()
                     }
 
                     SettingsFragmentClass.SORUCE_FRAGMENT.value -> {
-                        this.supportActionBar!!.title =
-                            this.applicationContext.resources.getText(SettingsFragmentClass.SORUCE_FRAGMENT.titleRes)
+                        setTitle(0, this.applicationContext.resources.getText(SettingsFragmentClass.SORUCE_FRAGMENT.titleRes))
                         supportFragmentManager.beginTransaction()
                             .replace(R.id.content, SourceFragment())
                             .commit()
                     }
 
                     SettingsFragmentClass.ALARM_FRAGMENT.value -> {
-                        this.supportActionBar!!.title =
-                            this.applicationContext.resources.getText(SettingsFragmentClass.ALARM_FRAGMENT.titleRes)
+                        setTitle(0, this.applicationContext.resources.getText(SettingsFragmentClass.ALARM_FRAGMENT.titleRes))
                         supportFragmentManager.beginTransaction()
                             .replace(R.id.content, AlarmFragment())
                             .commit()
                     }
                 }
+            } else if(titleMap.isNotEmpty()) {
+                this.supportActionBar!!.title = titleMap.values.last()
             }
 
             supportFragmentManager.addOnBackStackChangedListener {
-                Log.v(LOG_ID, "addOnBackStackChangedListener called count=${supportFragmentManager.backStackEntryCount}")
+                Log.v(LOG_ID, "addOnBackStackChangedListener called count=${supportFragmentManager.backStackEntryCount} - map count ${titleMap.size}")
                 if (titleMap.containsKey(supportFragmentManager.backStackEntryCount)) {
                     this.supportActionBar!!.title = titleMap[supportFragmentManager.backStackEntryCount]
+                    titleMap.remove(supportFragmentManager.backStackEntryCount+1)
                 }
             }
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -96,11 +97,16 @@ class SettingsActivity : AppCompatActivity(),
                 .addToBackStack(null)
                 .commit()
 
-            titleMap.put(supportFragmentManager.backStackEntryCount, this.supportActionBar!!.title!!)
-            this.supportActionBar!!.title = pref.title
+            setTitle(supportFragmentManager.backStackEntryCount+1, pref.title!!.toString())
         } catch (ex: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + ex)
         }
         return true
+    }
+
+    private fun setTitle(index: Int, title: CharSequence) {
+        Log.v(LOG_ID, "Set title for index $index: $title")
+        titleMap.put(index, title)
+        this.supportActionBar!!.title = title
     }
 }

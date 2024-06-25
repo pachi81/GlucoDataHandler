@@ -16,6 +16,7 @@ import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
 import java.io.FileOutputStream
 import java.io.OutputStream
+import java.lang.NumberFormatException
 import java.math.RoundingMode
 import java.security.MessageDigest
 import java.util.concurrent.TimeUnit
@@ -35,6 +36,17 @@ object Utils {
         if (value < min)
             return min
         return value
+    }
+
+    fun parseFloatString(floatValue: String?): Float {
+        if(!floatValue.isNullOrEmpty()) {
+            try {
+                return floatValue.replace(',', '.').toFloat()
+            } catch (exc: NumberFormatException) {
+                Log.e(LOG_ID, "Error parsing float value $floatValue exception: ${exc.message}")
+            }
+        }
+        return Float.NaN
     }
 
     fun dpToPx(dp: Float, context: Context): Int {

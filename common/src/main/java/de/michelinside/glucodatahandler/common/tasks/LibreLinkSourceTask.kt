@@ -15,7 +15,6 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import org.json.JSONArray
 import org.json.JSONObject
-import java.net.SocketTimeoutException
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -43,11 +42,6 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         const val CONNECTION_ENDPOINT = "/llu/connections"
     }
 
-    override fun executeRequest(context: Context) {
-        Log.d(LOG_ID, "getting data from libre view")
-        getConnection()
-    }
-
     private fun getUrl(endpoint: String): String {
         val url = (if(region.isEmpty()) server else region_server.format(region)) + endpoint
         Log.i(LOG_ID, "Send request to " + url)
@@ -68,7 +62,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         return result
     }
 
-    private fun reset() {
+    override fun reset() {
         Log.i(LOG_ID, "reset called")
         token = ""
         region = ""
@@ -93,8 +87,6 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
 
     private fun checkResponse(body: String?): JSONObject? {
         if (body.isNullOrEmpty()) {
-            if (lastErrorCode in 400..499)
-                reset() // reset token for client error -> trigger reconnect
             return null
         }
         Log.d(LOG_ID, "Handle json response: " + replaceSensitiveData(body))
@@ -116,6 +108,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         }
         setLastError("Missing data in response!", 500)
         reset()
+        retry = true
         return null
     }
 
@@ -152,7 +145,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                         region = data.optString("region", "")
                         Log.i(LOG_ID, "Handle redirect to region: " + region)
                         saveRegion()
-                        return login()
+                        return authenticate()
                     } else {
                         setLastError("redirect without region!!!", 500)
                     }
@@ -194,7 +187,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         }
     }
 
-    private fun login(): Boolean {
+    override fun authenticate(): Boolean {
         if (token.isNotEmpty() && (reconnect || tokenExpire <= System.currentTimeMillis())) {
             if (!reconnect)
                 Log.i(LOG_ID, "Token expired!")
@@ -214,6 +207,10 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             return handleLoginResponse(httpPost(getUrl(LOGIN_ENDPOINT), getHeader(), json.toString()))
         }
         return true
+    }
+
+    override fun getValue(): Boolean {
+        return handleGlucoseResponse(httpGet(getUrl(CONNECTION_ENDPOINT), getHeader()))
     }
 
     private fun getRateFromTrend(trend: Int): Float {
@@ -241,7 +238,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         return format.parse(time)!!.time
     }
 
-    private fun handleGlucoseResponse(body: String?) {
+    private fun handleGlucoseResponse(body: String?): Boolean {
         /*
             {
               "status": 0,
@@ -281,12 +278,12 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                     } else {
                         setLastError(GlucoDataService.context!!.getString(R.string.src_libre_setup_librelink))
                     }
-                    return
+                    return false
                 }
                 val data = getPatientData(array)
                 if (data == null) {
                     setState(SourceState.NO_NEW_VALUE)
-                    return
+                    return false
                 }
                 if(data.has("glucoseMeasurement")) {
                     val glucoseData = data.optJSONObject("glucoseMeasurement")
@@ -317,15 +314,17 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                         }
                         dataReceived = true
                         handleResult(glucoExtras)
+                        return true
                     }
                 }
             } else {
                 Log.e(LOG_ID, "No data array found in response: ${replaceSensitiveData(body!!)}")
                 setLastError("Invalid response! Please send logs to developer.")
                 reset()
-                return
+                retry = true
             }
         }
+        return false
     }
 
     private fun getPatientData(dataArray: JSONArray): JSONObject? {
@@ -364,24 +363,6 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         }
         // default: use first one
         return dataArray.optJSONObject(0)
-    }
-
-    private fun getConnection(firstCall: Boolean = true) {
-        try {
-            if (login()) {
-                handleGlucoseResponse(httpGet(getUrl(CONNECTION_ENDPOINT), getHeader()))
-                if (firstCall && token.isEmpty() && lastState == SourceState.ERROR)
-                    getConnection(false) // retry if internal client error (not for server error)
-            }
-        } catch(ex: SocketTimeoutException) {
-            Log.e(LOG_ID, "Timeout occurs: ${ex.message}")
-            reset()
-            if(firstCall) {
-                getConnection(false)
-            } else {
-                setLastError("Timeout")
-            }
-        }
     }
 
     override fun interrupt() {

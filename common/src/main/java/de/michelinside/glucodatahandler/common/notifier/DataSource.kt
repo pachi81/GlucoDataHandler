@@ -11,11 +11,14 @@ enum class DataSource(val resId: Int) {
     LIBRELINK(R.string.source_libreview),
     NIGHTSCOUT(R.string.source_nightscout),
     AAPS(R.string.source_aaps),
-    GDH(R.string.source_gdh);
+    GDH(R.string.source_gdh),
+    DEXCOM_SHARE(R.string.source_dexcom_share),
+    DEXCOM_BYODA(R.string.source_dexcom_byoda),
+    NS_EMULATOR(R.string.source_ns_emulator);
     
     companion object {
         fun fromIndex(idx: Int): DataSource {
-            DataSource.values().forEach {
+            entries.forEach {
                 if(it.ordinal == idx) {
                     return it
                 }

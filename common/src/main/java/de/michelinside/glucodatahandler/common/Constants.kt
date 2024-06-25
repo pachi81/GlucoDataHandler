@@ -29,11 +29,6 @@ object Constants {
 
     const val PACKAGE_GLUCODATAAUTO = "de.michelinside.glucodataauto"
     const val PACKAGE_JUGGLUCO = "tk.glucodata"
-    const val PACKAGE_XDRIP = "com.eveningoutpost.dexdrip"
-    const val PACKAGE_XDRIP_PLUS = "jamorham.xdrip.plus"
-    const val PACKAGE_AAPS = "info.nightscout"
-    const val PACKAGE_LIBRELINK = "com.freestylelibre"
-    const val PACKAGE_LIBRELINKUP = "org.nativescript.librelinkup"
 
     const val EXTRA_SOURCE_PACKAGE = "gdh.source_package"
     const val EXTRA_SOURCE_INDEX = "gdh.source_idx"
@@ -47,7 +42,7 @@ object Constants {
     const val GLUCODATAAUTO_STATE_EXTRA = "state"
 
 
-    const val VALUE_OBSOLETE_SHORT_SEC = 300
+    //const val VALUE_OBSOLETE_SHORT_SEC = 300
     const val VALUE_OBSOLETE_LONG_SEC  = 600
 
     const val SHARED_PREF_TAG = "GlucoDataHandlerPrefs"
@@ -62,6 +57,7 @@ object Constants {
     const val SHARED_PREF_XDRIP_RECEIVERS = "xdrip_receivers"
     const val SHARED_PREF_SEND_XDRIP_BROADCAST = "send_xdrip_broadcast"
     const val SHARED_PREF_XDRIP_BROADCAST_RECEIVERS = "xdrip_broadcast_receivers"
+    const val SHARED_PREF_XDRIP_BROADCAST_SERVICE_API = "xdrip_broadcast_service_api"
     const val SHARED_PREF_TARGET_MIN = "target_min_value"
     const val SHARED_PREF_TARGET_MAX = "target_max_value"
     const val SHARED_PREF_CAR_NOTIFICATION = "car_notification"
@@ -80,6 +76,7 @@ object Constants {
     const val SHARED_PREF_COLOR_OUT_OF_RANGE = "color_out_of_range"
     const val SHARED_PREF_COLOR_OK = "color_ok"
     const val SHARED_PREF_COLOR_OBSOLETE = "color_obsolete"
+    const val SHARED_PREF_OBSOLETE_TIME = "obsolete_time"
     //const val SHARED_PREF_PERMANENT_NOTIFICATION = "permanent_notification"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_ICON = "status_bar_notification_icon"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_COLORED_ICON = "status_bar_notification_colored_icon"
@@ -135,6 +132,12 @@ object Constants {
     const val SHARED_PREF_LIBRE_REGION="source_libre_region"
     const val SHARED_PREF_LIBRE_PATIENT_ID="source_libre_patient_id"
 
+    const val SHARED_PREF_DEXCOM_SHARE_ENABLED="source_dexcom_share_enabled"
+    const val SHARED_PREF_DEXCOM_SHARE_USER="source_dexcom_share_user"
+    const val SHARED_PREF_DEXCOM_SHARE_PASSWORD="source_dexcom_share_password"
+    const val SHARED_PREF_DEXCOM_SHARE_USE_US_URL="source_dexcom_share_use_us_url"
+    const val SHARED_PREF_DEXCOM_SHARE_RECONNECT="source_dexcom_share_reconnect"
+
     const val SHARED_PREF_NIGHTSCOUT_ENABLED="src_ns_enabled"
     const val SHARED_PREF_NIGHTSCOUT_URL="src_ns_url"
     const val SHARED_PREF_NIGHTSCOUT_SECRET="src_ns_secret"
@@ -150,6 +153,8 @@ object Constants {
     const val SHARED_PREF_SOURCE_XDRIP_SET_NS_IOB_ACTION = "source_xdrip_activate_local_nightscout_iob_action"
 
     const val SHARED_PREF_APP_COLOR_SCHEME = "application_color_scheme"
+
+    const val SHARED_PREF_EVERSENSE_ESEL_INFO = "source_eversense_info"
 
     // Alarm
     const val ALARM_SNOOZE_ACTION = "de.michelinside.glucodatahandler.SNOOZE"

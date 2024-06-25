@@ -35,19 +35,22 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
         return true
     }
 
-    override fun executeRequest(context: Context) {
+    override fun getValue() : Boolean {
         if (!handlePebbleResponse(httpGet(getUrl(PEBBLE_ENDPOINT), getHeader()))) {
             if (!hasIobCobSupport() || ReceiveData.getElapsedIobCobTimeMinute() > 0) {
                 // only check for new value, if there is no (otherwise it was only called for IOB/COB)
                 val body = httpGet(getUrl(ENTRIES_ENDPOINT), getHeader())
                 if (body == null && lastErrorCode >= 300)
-                    return
+                    return false
                 val (result, errorText) = handleEntriesResponse(body)
                 if (!result) {
                     setLastError(errorText)
+                    return false
                 }
+                return true
             }
         }
+        return false
     }
 
     override fun getTrustAllCertificates(): Boolean = true
