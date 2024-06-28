@@ -521,4 +521,7 @@
     <string name="pref_source_xdrip_broadcast">Alternatywa: nadawanie lokalne xDrip+</string>
     <string name="pref_source_dexcom_byoda_info_summary">Aby otrzymywać wartości z Dexcom BYODA, należy włączyć transmisję do xDrip+, AAPS lub obu podczas tworzenia aplikacji.</string>
     <string name="pref_source_eversense_info_summary">Aby odbierać wartości z Eversense, musisz używać ESEL w trybie towarzyszącym (czytanie powiadomień) lub połączyć się z poprawioną (patched) aplikacją Eversense.\n Aby uzyskać więcej informacji na temat ESEL, naciśnij tutaj.</string>
+    <string name="new_version">Version %s is available</string>
+    <string name="info_label_notes">Notes</string>
+    <string name="gda_notification_permission">Notifications are disabled! \nPress here to enable them.</string>
 </resources>

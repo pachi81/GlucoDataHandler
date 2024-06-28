@@ -112,23 +112,23 @@
                     android:layout_marginTop="20dp"
                     android:text="@string/menu_sources"
                     />
+
                 <LinearLayout
-                    android:id="@+id/layout_info_elements_left"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    tools:ignore="UselessParent">
-                    <TextView
-                        android:id="@+id/txtBatteryOptimization"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:text="@string/gda_battery_optimization_disabled"
-                        android:textSize="16sp"
-                        android:textAlignment="center" />
+                    android:id="@+id/space"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:orientation="vertical">
+                    <!-- this expands to fill the empty space if needed -->
                 </LinearLayout>
+                <TextView
+                    android:id="@+id/txtVersion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="25dp"
+                    android:text="1.0"
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText" />
             </LinearLayout>
         </ScrollView>
 
@@ -171,26 +171,27 @@
                         android:textAlignment="center"
                         android:layout_marginBottom="10dp"
                         android:textSize="20sp" />
-                    <TextView
-                        android:id="@+id/txtNotificationPermission"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:text="@string/activity_main_notification_permission"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textAlignment="center"
-                        android:visibility="gone"/>
-                    <TextView
-                        android:id="@+id/txtScheduleExactAlarm"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:text="@string/activity_main_schedule_exact_alarm"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textAlignment="center" />
                 </LinearLayout>
+
+                <TableLayout
+                    android:id="@+id/tableNotes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="?android:attr/dividerHorizontal"
+                    android:showDividers="middle">
+
+                    <TableRow android:background="@color/table_header" android:padding="5dp"
+                        tools:ignore="UselessParent">
+                        <TextView
+                            android:textStyle="bold"
+                            android:textSize="20sp"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/info_label_notes"/>
+                    </TableRow>
+                </TableLayout>
+
                 <TableLayout
                     android:id="@+id/tableAlarms"
                     android:layout_width="match_parent"
@@ -247,24 +248,6 @@
                             android:text="@string/table_header_connections"/>
                     </TableRow>
                 </TableLayout>
-
-                <LinearLayout
-                    android:id="@+id/space"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:orientation="vertical">
-                    <!-- this expands to fill the empty space if needed -->
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/txtVersion"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="25dp"
-                    android:text="1.0"
-                    android:textSize="16sp"
-                    tools:ignore="HardcodedText" />
 
             </LinearLayout>
         </ScrollView>

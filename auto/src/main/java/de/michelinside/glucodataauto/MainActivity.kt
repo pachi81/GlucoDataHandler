@@ -44,6 +44,7 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import de.michelinside.glucodatahandler.common.utils.GitHubVersionChecker
 import de.michelinside.glucodatahandler.common.utils.Utils
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -61,15 +62,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var tableDetails: TableLayout
     private lateinit var tableConnections: TableLayout
     private lateinit var tableAlarms: TableLayout
-    private lateinit var txtBatteryOptimization: TextView
-    private lateinit var txtScheduleExactAlarm: TextView
-    private lateinit var txtNotificationPermission: TextView
+    private lateinit var tableNotes: TableLayout
     private lateinit var btnSources: Button
     private lateinit var txtNoData: TextView
     private lateinit var sharedPref: SharedPreferences
+    private lateinit var versionChecker: GitHubVersionChecker
     private var notificationIcon: MenuItem? = null
     private val LOG_ID = "GDH.AA.Main"
-    private var requestNotificationPermission = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -82,14 +81,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             timeText = findViewById(R.id.timeText)
             deltaText = findViewById(R.id.deltaText)
             txtLastValue = findViewById(R.id.txtLastValue)
-            txtBatteryOptimization = findViewById(R.id.txtBatteryOptimization)
-            txtScheduleExactAlarm = findViewById(R.id.txtScheduleExactAlarm)
-            txtNotificationPermission = findViewById(R.id.txtNotificationPermission)
             btnSources = findViewById(R.id.btnSources)
             tableConnections = findViewById(R.id.tableConnections)
             tableAlarms = findViewById(R.id.tableAlarms)
+            tableNotes = findViewById(R.id.tableNotes)
             tableDetails = findViewById(R.id.tableDetails)
             txtNoData = findViewById(R.id.txtNoData)
+            versionChecker = GitHubVersionChecker("GlucoDataAuto", BuildConfig.VERSION_NAME, this)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -161,27 +159,20 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.SETTINGS,
                 NotifySource.CAR_CONNECTION,
                 NotifySource.TIME_VALUE,
-                NotifySource.SOURCE_STATE_CHANGE))
-            checkExactAlarmPermission()
-            checkBatteryOptimization()
+                NotifySource.SOURCE_STATE_CHANGE,
+                NotifySource.NEW_VERSION_AVAILABLE))
 
-            if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
-                Log.i(LOG_ID, "Notification permission granted")
-                requestNotificationPermission = false
-                txtNotificationPermission.visibility = View.GONE
-            }
             GlucoDataServiceAuto.startDataSync(this)
+            versionChecker.checkVersion()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
         }
     }
 
     fun requestPermission() : Boolean {
-        requestNotificationPermission = false
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (!Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Request notification permission...")
-                requestNotificationPermission = true
                 this.requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 3)
                 return false
             }
@@ -220,42 +211,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 }
             val dialog: AlertDialog = builder.create()
             dialog.show()
-        }
-    }
-    private fun checkExactAlarmPermission() {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !canScheduleExactAlarms()) {
-                Log.w(LOG_ID, "Schedule exact alarm is not active!!!")
-                txtScheduleExactAlarm.visibility = View.VISIBLE
-                txtScheduleExactAlarm.setOnClickListener {
-                    startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
-                }
-            } else {
-                txtScheduleExactAlarm.visibility = View.GONE
-                Log.i(LOG_ID, "Schedule exact alarm is active")
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
-        }
-    }
-
-    private fun checkBatteryOptimization() {
-        try {
-            val pm = getSystemService(POWER_SERVICE) as PowerManager
-            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                Log.w(LOG_ID, "Battery optimization is active")
-                txtBatteryOptimization.visibility = View.VISIBLE
-                txtBatteryOptimization.setOnClickListener {
-                    val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-                    intent.data = Uri.parse("package:$packageName")
-                    startActivity(intent)
-                }
-            } else {
-                txtBatteryOptimization.visibility = View.GONE
-                Log.i(LOG_ID, "Battery optimization is inactive")
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
         }
     }
 
@@ -400,6 +355,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 txtNoData.visibility = View.GONE
                 btnSources.visibility = View.GONE
             }
+            updateNotesTable()
             updateAlarmsTable()
             updateConnectionsTable()
             updateDetailsTable()
@@ -427,6 +383,56 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         }
         tableConnections.addView(createRow(CR.string.pref_cat_android_auto, if (GlucoDataServiceAuto.connected) resources.getString(CR.string.connected_label) else resources.getString(CR.string.disconnected_label)))
         checkTableVisibility(tableConnections)
+    }
+
+    private fun updateNotesTable() {
+        tableNotes.removeViews(1, maxOf(0, tableNotes.childCount - 1))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !canScheduleExactAlarms()) {
+            Log.w(LOG_ID, "Schedule exact alarm is not active!!!")
+            val onClickListener = View.OnClickListener {
+                startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+            }
+            tableNotes.addView(createRow(resources.getString(CR.string.activity_main_schedule_exact_alarm), onClickListener))
+        }
+        if(!sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, false) && !Channels.notificationChannelActive(this, ChannelType.ANDROID_AUTO))
+        {
+            val onClickListener = View.OnClickListener {
+                val intent: Intent = if (Channels.notificationActive(this)) { // only the channel is inactive!
+                    Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+                        .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
+                        .putExtra(Settings.EXTRA_CHANNEL_ID, ChannelType.ANDROID_AUTO.channelId)
+                } else {
+                    Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                        .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
+                }
+                startActivity(intent)
+            }
+            tableNotes.addView(createRow(resources.getString(CR.string.gda_notification_permission), onClickListener))
+        }
+        if (versionChecker.hasNewVersion) {
+            val onClickListener = View.OnClickListener {
+                Dialogs.showOkCancelDialog(this, resources.getString(CR.string.new_version).format(versionChecker.version), versionChecker.content,
+                    { _, _ -> val browserIntent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(versionChecker.url)
+                        )
+                        startActivity(browserIntent)
+                    }
+                )
+            }
+            tableNotes.addView(createRow(resources.getString(CR.string.new_version).format(versionChecker.version), onClickListener))
+        }
+        val pm = getSystemService(POWER_SERVICE) as PowerManager
+        if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+            Log.w(LOG_ID, "Battery optimization is active")
+            val onClickListener = View.OnClickListener {
+                val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+                intent.data = Uri.parse("package:$packageName")
+                startActivity(intent)
+            }
+            tableNotes.addView(createRow(resources.getString(CR.string.gda_battery_optimization_disabled), onClickListener))
+        }
+        checkTableVisibility(tableNotes)
     }
 
     private fun updateAlarmsTable() {
@@ -483,6 +489,15 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         row.setPadding(Utils.dpToPx(5F, this))
         row.addView(createColumn(key, false, onClickListener))
         row.addView(createColumn(value, true, onClickListener))
+        return row
+    }
+
+    private fun createRow(key: String, onClickListener: View.OnClickListener? = null) : TableRow {
+        val row = TableRow(this)
+        row.weightSum = 1f
+        //row.setBackgroundColor(resources.getColor(R.color.table_row))
+        row.setPadding(Utils.dpToPx(5F, this))
+        row.addView(createColumn(key, false, onClickListener))
         return row
     }
 

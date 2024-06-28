@@ -16,10 +16,10 @@ import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
 import java.io.FileOutputStream
 import java.io.OutputStream
-import java.lang.NumberFormatException
 import java.math.RoundingMode
 import java.security.MessageDigest
 import java.util.concurrent.TimeUnit
+import kotlin.math.max
 
 
 object Utils {
@@ -36,6 +36,38 @@ object Utils {
         if (value < min)
             return min
         return value
+    }
+
+    fun getVersion(versionString: String?): String {
+        if(!versionString.isNullOrEmpty()) {
+            val regex = "[0-9]+(\\.[0-9]+)*".toRegex()
+            // If there is matching string, then find method returns non-null MatchResult
+            val match = regex.find(versionString)
+            if (match != null) {
+                return match.value
+            }
+        }
+        return ""
+    }
+
+    // return -1 if current < new, 1 if current > new
+    fun compareVersion(current: String?, new: String?): Int {
+        val curVersion = getVersion(current)
+        val newVersion = getVersion(new)
+        if (curVersion.isEmpty() && newVersion.isEmpty())
+            return 0
+        if (newVersion.isEmpty()) return 1
+        if (curVersion.isEmpty()) return -1
+        val curParts = curVersion.split(".")
+        val newParts = newVersion.split(".")
+        val length = max(curParts.size, newParts.size)
+        for (i in 0 until length) {
+            val curPart = if (i < curParts.size) curParts[i].toInt() else 0
+            val newPart = if (i < newParts.size) newParts[i].toInt() else 0
+            if (curPart < newPart) return -1
+            if (curPart > newPart) return 1
+        }
+        return 0
     }
 
     fun parseFloatString(floatValue: String?): Float {

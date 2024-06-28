@@ -1,14 +1,10 @@
 package de.michelinside.glucodatahandler.common.tasks
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
-import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.SourceState
@@ -17,27 +13,20 @@ import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver
+import de.michelinside.glucodatahandler.common.utils.HttpRequest
 import de.michelinside.glucodatahandler.common.utils.Utils
-import java.io.DataOutputStream
 import java.net.HttpURLConnection
 import java.net.SocketTimeoutException
-import java.net.URL
 import java.net.UnknownHostException
-import java.security.SecureRandom
-import java.security.cert.X509Certificate
-import javax.net.ssl.HttpsURLConnection
-import javax.net.ssl.SSLContext
-import javax.net.ssl.SSLSession
-import javax.net.ssl.TrustManager
-import javax.net.ssl.X509TrustManager
 
 abstract class DataSourceTask(private val enabledKey: String, protected val source: DataSource) : BackgroundTask() {
     private var enabled = false
     private var interval = 1L
     private var delaySec = 10L
-    private var httpURLConnection: HttpURLConnection? = null
+    private var httpRequest = HttpRequest()
     protected var retry = false
     protected var firstGetValue = false
+
 
     companion object {
         private val LOG_ID = "GDH.Task.Source.DataSourceTask"
@@ -99,27 +88,6 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             bundle.putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, sharedPref.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, false))
             bundle.putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, sharedPref.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, false))
             return bundle
-        }
-
-        fun isConnected(context: Context): Boolean {
-            try {
-                val connectivityManager = context.getSystemService(
-                    Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
-                    ?: return false
-
-                val activeNetwork = connectivityManager.activeNetwork ?: return false
-                val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
-
-                // If we check only for "NET_CAPABILITY_INTERNET", we get "true" if we are connected to a wifi
-                // which has no access to the internet. "NET_CAPABILITY_VALIDATED" also verifies that we
-                // are online
-                return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                        && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
-
-            } catch (exc: Exception) {
-                Log.e(LOG_ID, "isConnected exception: " + exc.message.toString() )
-            }
-            return false
         }
     }
 
@@ -199,7 +167,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
 
     override fun execute(context: Context) {
         if (enabled) {
-            if (needsInternet() && !isConnected(context)) {
+            if (needsInternet() && !HttpRequest.isConnected(context)) {
                 Log.w(LOG_ID, "No internet connection")
                 setState(SourceState.NO_CONNECTION)
                 return
@@ -207,11 +175,6 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             Log.d(LOG_ID, "Execute request for $source")
             try {
                 executeRequest()
-                if (httpURLConnection != null) {
-                    Log.v(LOG_ID, "Closing http connection")
-                    httpURLConnection!!.disconnect()
-                    httpURLConnection = null
-                }
             } catch (ex: InterruptedException) {
                 throw ex // re throw interruption
             } catch(ex: SocketTimeoutException) {
@@ -224,6 +187,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                 Log.e(LOG_ID, "Exception during execution for $source: " + ex)
                 setLastError(ex.message.toString())
             }
+            httpRequest.stop()
         }
     }
 
@@ -275,27 +239,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         Log.d(LOG_ID, "handleResult for " + source + " done!")
     }
 
-    protected fun trustAllCertificates(httpURLConnection: HttpsURLConnection) {
-        // trust all certificates (see https://www.baeldung.com/okhttp-client-trust-all-certificates)
-        val trustAllCerts = arrayOf<TrustManager>(
-            @SuppressLint("CustomX509TrustManager")
-            object : X509TrustManager {
-                @SuppressLint("TrustAllX509TrustManager")
-                override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {}
-                @SuppressLint("TrustAllX509TrustManager")
-                override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {}
-                override fun getAcceptedIssuers(): Array<X509Certificate> {
-                    return arrayOf()
-                }
-            }
-        )
-        val sslContext = SSLContext.getInstance("SSL")
-        sslContext.init(null, trustAllCerts, SecureRandom())
-        httpURLConnection.sslSocketFactory = sslContext.socketFactory
-        httpURLConnection.setHostnameVerifier { _: String?, _: SSLSession? -> true }
-    }
-
-    open fun checkErrorResponse(code: Int, message: String, errorResponse: String? = null) {
+    open fun checkErrorResponse(code: Int, message: String?, errorResponse: String? = null) {
         if (code in 400..499) {
             reset() // reset token for client error -> trigger reconnect
             if(firstGetValue) {
@@ -303,73 +247,40 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                 return
             }
         }
-        setLastError(message, code)
-    }
-
-    private fun checkResponse(httpURLConnection: HttpURLConnection): String? {
-        val responseCode = httpURLConnection.responseCode
-        if (responseCode != HttpURLConnection.HTTP_OK) {
-            if(responseCode == HttpURLConnection.HTTP_INTERNAL_ERROR) {
-                if (httpURLConnection.errorStream != null ) {
-                    val errorResponse = httpURLConnection.errorStream.bufferedReader()
-                    checkErrorResponse(responseCode, httpURLConnection.responseMessage, errorResponse.readText())
-                    return null
-                }
-            }
-            checkErrorResponse(responseCode, httpURLConnection.responseMessage)
-            return null
-        }
-        val response = httpURLConnection.inputStream.bufferedReader()
-        return response.readText()
+        setLastError(message ?: code.toString(), code)
     }
 
     open fun getTrustAllCertificates(): Boolean = false
 
-    private fun httpRequest(url: String, header: MutableMap<String, String>, postData: String? = null): String? {
-        val urlConnection = URL(url).openConnection()
-        if(getTrustAllCertificates() && urlConnection is HttpsURLConnection) {
-            trustAllCertificates(urlConnection)
-        }
-
-        httpURLConnection = urlConnection as HttpURLConnection
-        header.forEach {
-            if(BuildConfig.DEBUG)
-                Log.v(LOG_ID, "Add to header: ${it.key} = ${it.value}")
-            httpURLConnection!!.setRequestProperty(it.key, it.value)
-        }
-        httpURLConnection!!.doInput = true
-        httpURLConnection!!.connectTimeout = 10000
-        httpURLConnection!!.readTimeout = 20000
-        if (postData == null) {
-            Log.d(LOG_ID, "Send GET request to ${httpURLConnection!!.url}")
-            httpURLConnection!!.requestMethod = "GET"
-            httpURLConnection!!.doOutput = false
-        } else {
-            Log.d(LOG_ID, "Send POST request to ${httpURLConnection!!.url}")
-            httpURLConnection!!.requestMethod = "POST"
-            httpURLConnection!!.doOutput = true
-            val dataOutputStream = DataOutputStream(httpURLConnection!!.outputStream)
-            val bytes: ByteArray = postData.toByteArray()
-            dataOutputStream.write(bytes, 0, bytes.size)
-        }
-
-        return checkResponse(httpURLConnection!!)
-    }
 
     override fun interrupt() {
         super.interrupt()
-        if(httpURLConnection != null) {
+        if(httpRequest.connected) {
             Log.w(LOG_ID, "Disconnect current URL connection on interrupt!")
-            httpURLConnection!!.disconnect()
+            httpRequest.stop()
         }
     }
 
+    private fun checkResponse(responseCode: Int): String? {
+        if (responseCode != HttpURLConnection.HTTP_OK) {
+            if(responseCode == HttpURLConnection.HTTP_INTERNAL_ERROR) {
+                if (httpRequest.responseError != null ) {
+                    checkErrorResponse(responseCode, httpRequest.responseMessage, httpRequest.responseError)
+                    return null
+                }
+            }
+            checkErrorResponse(responseCode, httpRequest.responseMessage)
+            return null
+        }
+        return httpRequest.response
+    }
+
     protected fun httpGet(url: String, header: MutableMap<String, String>): String? {
-        return httpRequest(url, header)
+        return checkResponse(httpRequest.get(url, header, getTrustAllCertificates()))
     }
 
     protected fun httpPost(url: String, header: MutableMap<String, String>, postData: String): String? {
-        return httpRequest(url, header, postData)
+        return checkResponse(httpRequest.post(url, postData, header, getTrustAllCertificates()))
     }
 
     override fun getIntervalMinute(): Long {

@@ -95,7 +95,7 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
         return getSessionId(accountId)
     }
 
-    override fun checkErrorResponse(code: Int, message: String, errorResponse: String?) {
+    override fun checkErrorResponse(code: Int, message: String?, errorResponse: String?) {
         Log.e(LOG_ID, "Error $code received: $message - $errorResponse")
         if (code == HttpURLConnection.HTTP_INTERNAL_ERROR && errorResponse != null) {
             val obj = JSONObject(errorResponse)
