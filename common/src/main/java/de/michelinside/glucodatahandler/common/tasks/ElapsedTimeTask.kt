@@ -19,6 +19,11 @@ class ElapsedTimeTask : BackgroundTask() {
             interval = new_interval
             TimeTaskService.checkTimer()
         }
+
+        val isActive: Boolean get() {
+            Log.v(LOG_ID, "Check active: - has notifier: ${InternalNotifier.hasTimeNotifier} - relativeTime: $relativeTime - interval: $interval")
+            return (relativeTime || interval > 0 || InternalNotifier.hasTimeNotifier)
+        }
     }
 
     override fun getIntervalMinute(): Long {
@@ -36,8 +41,8 @@ class ElapsedTimeTask : BackgroundTask() {
     }
 
     override fun active(elapsetTimeMinute: Long): Boolean {
-        Log.v(LOG_ID, "Check active for elapsed time $elapsetTimeMinute min - has notifier: ${InternalNotifier.hasTimeNotifier} - relativeTime: $relativeTime - interval: $interval")
-        return (relativeTime || interval > 0 || InternalNotifier.hasTimeNotifier) && elapsetTimeMinute <= 60
+        Log.v(LOG_ID, "Check active for elapsed time $elapsetTimeMinute min")
+        return isActive && elapsetTimeMinute <= 60
     }
 
     override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {

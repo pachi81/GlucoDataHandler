@@ -21,16 +21,16 @@ class ObsoleteTask : BackgroundTask() {
         Handler(context.mainLooper).post {
             Log.d(LOG_ID, "send obsolete notifier")
             InternalNotifier.notify(context, NotifySource.OBSOLETE_VALUE, null)
-            if (!ElapsedTimeTask.relativeTime) {// also send time_value, if the ElapsedTimeTask not running
-                Log.d(LOG_ID, "send time notifier")
+            if (!ElapsedTimeTask.isActive) {// also send time_value, if the ElapsedTimeTask not running
+                Log.d(LOG_ID, "send time notifier from obsolete")
                 InternalNotifier.notify(context, NotifySource.TIME_VALUE, null)
             }
         }
     }
 
     override fun active(elapsetTimeMinute: Long): Boolean {
-        Log.v(LOG_ID, "Check active for elapsed time $elapsetTimeMinute min - has notifier: ${InternalNotifier.hasObsoleteNotifier} - time active: ${(!ElapsedTimeTask.relativeTime && InternalNotifier.hasTimeNotifier)}")
-        return elapsetTimeMinute <= (2*getIntervalMinute()) && (InternalNotifier.hasObsoleteNotifier || (!ElapsedTimeTask.relativeTime && InternalNotifier.hasTimeNotifier) )
+        Log.v(LOG_ID, "Check active for elapsed time $elapsetTimeMinute min - has notifier: ${InternalNotifier.hasObsoleteNotifier}")
+        return elapsetTimeMinute <= (2*getIntervalMinute()) && InternalNotifier.hasObsoleteNotifier
     }
     override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {
         if ((key == null || key == Constants.SHARED_PREF_OBSOLETE_TIME)) {
@@ -38,7 +38,7 @@ class ObsoleteTask : BackgroundTask() {
                 obsoleteTime = sharedPreferences.getInt(Constants.SHARED_PREF_OBSOLETE_TIME, obsoleteTime)
                 Log.i(LOG_ID, "obsolete time setting changed to $obsoleteTime")
                 InternalNotifier.notify(context, NotifySource.OBSOLETE_VALUE, null)
-                if (!ElapsedTimeTask.relativeTime) {// also send time_value, if the ElapsedTimeTask not running
+                if (!ElapsedTimeTask.isActive) {// also send time_value, if the ElapsedTimeTask not running
                     Log.d(LOG_ID, "send time notifier")
                     InternalNotifier.notify(context, NotifySource.TIME_VALUE, null)
                 }

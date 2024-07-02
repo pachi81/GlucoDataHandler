@@ -32,6 +32,9 @@ import java.math.RoundingMode
 import java.text.DateFormat
 import java.util.Date
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.locks.ReentrantReadWriteLock
+import kotlin.concurrent.read
+import kotlin.concurrent.write
 import de.michelinside.glucodatahandler.common.R as CR
 
 
@@ -57,11 +60,13 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     private var curTestAlarmType = AlarmType.NONE
     private var retriggerOnDestroy = false
     private var ringtone: Ringtone? = null
+    private val ringtoneRWLock = ReentrantReadWriteLock()
     private var vibratorInstance: Vibrator? = null
     private var alarmManager: AlarmManager? = null
     private var alarmPendingIntent: PendingIntent? = null
     private var useAlarmSound: Boolean = true
     private var currentAlarmState: AlarmState = AlarmState.DISABLED
+    private var startDelayThread: Thread? = null
 
     enum class TriggerAction {
         TEST_ALARM,
@@ -224,9 +229,11 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         try {
             Log.d(LOG_ID, "stopVibrationAndSound called")
             vibrator.cancel()
-            if(ringtone!=null) {
-                ringtone!!.stop()
-                ringtone = null
+            ringtoneRWLock.write {
+                if (ringtone != null) {
+                    ringtone!!.stop()
+                    ringtone = null
+                }
             }
         } catch (ex: Exception) {
             Log.e(LOG_ID, "stopVibrationAndSound exception: " + ex)
@@ -421,19 +428,28 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 return
             }
         }
-        // else
-        Thread {
-            val startDelay = getStartDelayMs(context)
-            Log.i(LOG_ID, "Start sound and vibration with a delay of $startDelay ms")
-            if(startDelay > 0)
-                Thread.sleep(startDelay.toLong())
-            if(curNotification > 0) {
-                Log.d(LOG_ID, "Start sound and vibration")
-                vibrate(alarmType, context, false)
-                startSound(alarmType, context, false)
-                checkRetrigger(context)
+
+        if(startDelayThread!=null && startDelayThread!!.isAlive) {
+            Log.w(LOG_ID, "Start sound thread is already running!")
+            return
+        }
+
+        if(curNotification > 0) {
+            // else
+            startDelayThread = Thread {
+                val startDelay = getStartDelayMs(context)
+                Log.i(LOG_ID, "Start sound and vibration with a delay of $startDelay ms")
+                if (startDelay > 0)
+                    Thread.sleep(startDelay.toLong())
+                if (curNotification > 0) {
+                    Log.d(LOG_ID, "Start sound and vibration")
+                    vibrate(alarmType, context, false)
+                    startSound(alarmType, context, false)
+                    checkRetrigger(context)
+                }
             }
-        }.start()
+            startDelayThread!!.start()
+        }
     }
 
 
@@ -451,27 +467,39 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     }
 
     fun startSound(alarmType: AlarmType, context: Context, restartVibration: Boolean, forTest: Boolean = false) {
-        if (getRingerMode() >= AudioManager.RINGER_MODE_NORMAL && (curNotification > 0 || forTest)) {
-            val soundUri = getSound(alarmType, context, forTest)
-            if (soundUri != null) {
-                Log.i(LOG_ID, "Play ringtone $soundUri - use alarm: $useAlarmSound")
-                ringtone = RingtoneManager.getRingtone(context, soundUri)
-                val aa = AudioAttributes.Builder()
-                    .setUsage(if(useAlarmSound)AudioAttributes.USAGE_ALARM else AudioAttributes.USAGE_VOICE_COMMUNICATION_SIGNALLING)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .build()
-                ringtone!!.setAudioAttributes(aa)
-                ringtone!!.play()
+        try {
+            if (getRingerMode() >= AudioManager.RINGER_MODE_NORMAL && (curNotification > 0 || forTest)) {
+                val soundUri = getSound(alarmType, context, forTest)
+                if (soundUri != null && !isRingtonePlaying()) {
+                    ringtoneRWLock.write {
+                        if (ringtone != null && ringtone!!.isPlaying) {
+                            Log.w(LOG_ID,"Ringtone still playing!")
+                            return
+                        }
+                        Log.i(LOG_ID, "Play ringtone $soundUri - use alarm: $useAlarmSound")
+                        ringtone = RingtoneManager.getRingtone(context, soundUri)
+                        val aa = AudioAttributes.Builder()
+                            .setUsage(if (useAlarmSound) AudioAttributes.USAGE_ALARM else AudioAttributes.USAGE_VOICE_COMMUNICATION_SIGNALLING)
+                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                            .build()
+                        ringtone!!.setAudioAttributes(aa)
+                        ringtone!!.play()
+                    }
+                }
             }
-        }
-        if(restartVibration) {
-            vibrate(alarmType, context, false)
+            if (restartVibration) {
+                vibrate(alarmType, context, false)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Exception while starting sound for alarm $alarmType - restartVibration=$restartVibration - forTest=${forTest}: ${exc.message}")
         }
     }
 
     fun isRingtonePlaying(): Boolean {
-        if(ringtone!=null)
-            return ringtone!!.isPlaying
+        ringtoneRWLock.read {
+            if (ringtone != null)
+                return ringtone!!.isPlaying
+        }
         return false
     }
 
