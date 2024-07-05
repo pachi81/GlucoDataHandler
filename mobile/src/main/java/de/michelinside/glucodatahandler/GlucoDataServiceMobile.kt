@@ -111,7 +111,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 }
                 // full screen alarm notification
                 if(!sharedPrefs.contains(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED)) {
-                    if (AlarmNotification.hasFullscreenPermission()) {
+                    if (AlarmNotification.hasFullscreenPermission(context)) {
                         Log.i(LOG_ID, "Enabling fullscreen notification as default")
                         with(sharedPrefs.edit()) {
                             putBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, true)
@@ -121,7 +121,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 }
 
             } catch (exc: Exception) {
-                Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
+                Log.e(LOG_ID, "migrateSettings exception: " + exc.message.toString() )
             }
         }
 

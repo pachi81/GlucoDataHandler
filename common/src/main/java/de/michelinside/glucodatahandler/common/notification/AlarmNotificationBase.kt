@@ -833,9 +833,9 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
     }
 
-    fun hasFullscreenPermission(): Boolean {
+    fun hasFullscreenPermission(context: Context? = null): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-            return Channels.getNotificationManager().canUseFullScreenIntent()
+            return Channels.getNotificationManager(context).canUseFullScreenIntent()
         return true
     }
 
