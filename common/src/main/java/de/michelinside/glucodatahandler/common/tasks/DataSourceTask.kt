@@ -8,6 +8,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.SourceState
@@ -35,6 +36,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     private var interval = 1L
     private var delaySec = 10L
     private var httpURLConnection: HttpURLConnection? = null
+    protected var retry = false
+    protected var firstGetValue = false
 
     companion object {
         private val LOG_ID = "GDH.Task.Source.DataSourceTask"
@@ -48,13 +51,18 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             Constants.SHARED_PREF_NIGHTSCOUT_URL,
             Constants.SHARED_PREF_NIGHTSCOUT_SECRET,
             Constants.SHARED_PREF_NIGHTSCOUT_TOKEN,
-            Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB
+            Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB,
+            Constants.SHARED_PREF_DEXCOM_SHARE_USER,
+            Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD,
+            Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL,
+            Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT
         )
         fun updateSettings(context: Context, bundle: Bundle) {
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             with(sharedPref.edit()) {
                 putInt(Constants.SHARED_PREF_SOURCE_DELAY, bundle.getInt(Constants.SHARED_PREF_SOURCE_DELAY, -1))
                 putString(Constants.SHARED_PREF_SOURCE_INTERVAL, bundle.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1"))
+
                 putString(Constants.SHARED_PREF_LIBRE_USER, bundle.getString(Constants.SHARED_PREF_LIBRE_USER, ""))
                 putString(Constants.SHARED_PREF_LIBRE_PASSWORD, bundle.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, ""))
                 putBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, bundle.getBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false))
@@ -63,6 +71,11 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                 putString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, bundle.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, ""))
                 putString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, bundle.getString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, ""))
                 putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, bundle.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, true))
+
+                putString(Constants.SHARED_PREF_DEXCOM_SHARE_USER, bundle.getString(Constants.SHARED_PREF_DEXCOM_SHARE_USER, ""))
+                putString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, bundle.getString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, ""))
+                putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, bundle.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, false))
+                putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, bundle.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, false))
                 apply()
             }
             InternalNotifier.notify(context, NotifySource.SOURCE_SETTINGS, null)
@@ -71,6 +84,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             val bundle = Bundle()
             bundle.putInt(Constants.SHARED_PREF_SOURCE_DELAY, sharedPref.getInt(Constants.SHARED_PREF_SOURCE_DELAY, -1))
             bundle.putString(Constants.SHARED_PREF_SOURCE_INTERVAL, sharedPref.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1"))
+
             bundle.putString(Constants.SHARED_PREF_LIBRE_USER, sharedPref.getString(Constants.SHARED_PREF_LIBRE_USER, ""))
             bundle.putString(Constants.SHARED_PREF_LIBRE_PASSWORD, sharedPref.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, ""))
             bundle.putBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, sharedPref.getBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false))
@@ -79,6 +93,11 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             bundle.putString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, sharedPref.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, ""))
             bundle.putString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, sharedPref.getString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, ""))
             bundle.putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, sharedPref.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, true))
+
+            bundle.putString(Constants.SHARED_PREF_DEXCOM_SHARE_USER, sharedPref.getString(Constants.SHARED_PREF_DEXCOM_SHARE_USER, ""))
+            bundle.putString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, sharedPref.getString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, ""))
+            bundle.putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, sharedPref.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, false))
+            bundle.putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, sharedPref.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, false))
             return bundle
         }
 
@@ -150,7 +169,31 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         }
     }
 
-    abstract fun executeRequest(context: Context)
+    open fun authenticate(): Boolean = true
+
+    open fun reset() {}
+
+    abstract fun getValue(): Boolean
+
+    private fun executeRequest(firstCall: Boolean = true) {
+        try {
+            Log.d(LOG_ID, "getData called: firstCall: $firstCall")
+            if (authenticate()) {
+                firstGetValue = firstCall
+                retry = false
+                if(!getValue() && firstCall && retry)
+                    executeRequest(false) // retry if internal client error or invalid session id
+            }
+        } catch(ex: SocketTimeoutException) {
+            Log.e(LOG_ID, "Timeout occurs: ${ex.message}")
+            reset()
+            if(firstCall) {
+                executeRequest(false)
+            } else {
+                setLastError("Timeout")
+            }
+        }
+    }
 
     open fun needsInternet(): Boolean = true
 
@@ -161,9 +204,9 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                 setState(SourceState.NO_CONNECTION)
                 return
             }
-            Log.d(LOG_ID, "Execute request")
+            Log.d(LOG_ID, "Execute request for $source")
             try {
-                executeRequest(context)
+                executeRequest()
                 if (httpURLConnection != null) {
                     Log.v(LOG_ID, "Closing http connection")
                     httpURLConnection!!.disconnect()
@@ -252,10 +295,28 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         httpURLConnection.setHostnameVerifier { _: String?, _: SSLSession? -> true }
     }
 
+    open fun checkErrorResponse(code: Int, message: String, errorResponse: String? = null) {
+        if (code in 400..499) {
+            reset() // reset token for client error -> trigger reconnect
+            if(firstGetValue) {
+                retry = true
+                return
+            }
+        }
+        setLastError(message, code)
+    }
+
     private fun checkResponse(httpURLConnection: HttpURLConnection): String? {
         val responseCode = httpURLConnection.responseCode
         if (responseCode != HttpURLConnection.HTTP_OK) {
-            setLastError(httpURLConnection.responseMessage, responseCode)
+            if(responseCode == HttpURLConnection.HTTP_INTERNAL_ERROR) {
+                if (httpURLConnection.errorStream != null ) {
+                    val errorResponse = httpURLConnection.errorStream.bufferedReader()
+                    checkErrorResponse(responseCode, httpURLConnection.responseMessage, errorResponse.readText())
+                    return null
+                }
+            }
+            checkErrorResponse(responseCode, httpURLConnection.responseMessage)
             return null
         }
         val response = httpURLConnection.inputStream.bufferedReader()
@@ -272,15 +333,19 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
 
         httpURLConnection = urlConnection as HttpURLConnection
         header.forEach {
+            if(BuildConfig.DEBUG)
+                Log.v(LOG_ID, "Add to header: ${it.key} = ${it.value}")
             httpURLConnection!!.setRequestProperty(it.key, it.value)
         }
         httpURLConnection!!.doInput = true
         httpURLConnection!!.connectTimeout = 10000
         httpURLConnection!!.readTimeout = 20000
         if (postData == null) {
+            Log.d(LOG_ID, "Send GET request to ${httpURLConnection!!.url}")
             httpURLConnection!!.requestMethod = "GET"
             httpURLConnection!!.doOutput = false
         } else {
+            Log.d(LOG_ID, "Send POST request to ${httpURLConnection!!.url}")
             httpURLConnection!!.requestMethod = "POST"
             httpURLConnection!!.doOutput = true
             val dataOutputStream = DataOutputStream(httpURLConnection!!.outputStream)
@@ -321,10 +386,23 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         return enabled
     }
 
+    private fun setEnabled(newEnabled: Boolean): Boolean {
+        Log.v(LOG_ID, "Set enabled=$newEnabled (old: $enabled) for $source")
+        var changed = false
+        if(newEnabled != enabled) {
+            enabled = newEnabled
+            Log.i(LOG_ID, "Set enabled=$enabled for $source")
+            changed = true
+        }
+        if (!enabled && source == SourceStateData.lastSource)
+            setState(SourceState.NONE)
+        return changed
+    }
+
     override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {
         Log.d(LOG_ID, "checkPreferenceChanged for $key")
         if(key == null) {
-            enabled = sharedPreferences.getBoolean(enabledKey, false)
+            setEnabled(sharedPreferences.getBoolean(enabledKey, false))
             interval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
             delaySec = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, 10).toLong()
             return true
@@ -332,12 +410,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             var result = false
             when(key) {
                 enabledKey -> {
-                    if (enabled != sharedPreferences.getBoolean(enabledKey, false)) {
-                        enabled = sharedPreferences.getBoolean(enabledKey, false)
-                        result = true
-                        if (!enabled && source == SourceStateData.lastSource)
-                            setState(SourceState.NONE)
-                    }
+                    result = setEnabled(sharedPreferences.getBoolean(enabledKey, false))
                 }
                 Constants.SHARED_PREF_SOURCE_INTERVAL -> {
                     if (interval != (sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L)) {

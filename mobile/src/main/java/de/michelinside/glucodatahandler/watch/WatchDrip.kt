@@ -17,6 +17,7 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.receiver.BroadcastServiceAPI
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
@@ -25,20 +26,6 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
     private val LOG_ID = "GDH.WatchDrip"
     private var init = false
     private var active = false
-    const val BROADCAST_SENDER_ACTION =  "com.eveningoutpost.dexdrip.watch.wearintegration.BROADCAST_SERVICE_SENDER"
-    const val BROADCAST_RECEIVE_ACTION = "com.eveningoutpost.dexdrip.watch.wearintegration.BROADCAST_SERVICE_RECEIVER"
-    const val EXTRA_FUNCTION = "FUNCTION"
-    const val EXTRA_PACKAGE = "PACKAGE"
-    const val EXTRA_TYPE = "type"
-    const val EXTRA_MESSAGE = "message"
-    const val CMD_UPDATE_BG_FORCE = "update_bg_force"
-    const val CMD_UPDATE_BG = "update_bg"
-    const val CMD_ALARM = "alarm"
-    const val CMD_CANCEL_ALARM= "cancel_alarm"
-    const val CMD_SNOOZE_ALARM = "snooze_alarm"
-    const val TYPE_ALERT = "BG_ALERT_TYPE"
-    const val TYPE_OTHER_ALERT = "BG_OTHER_ALERT_TYPE"
-    const val TYPE_NO_ALERT = "BG_NO_ALERT_TYPE"
     val receivers = mutableSetOf<String>()
     class WatchDripReceiver: BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -96,24 +83,26 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
                 return
             }
             val extras = intent.extras!!
-            if (!extras.containsKey(EXTRA_FUNCTION) || !extras.containsKey(EXTRA_PACKAGE)) {
+            if (!extras.containsKey(BroadcastServiceAPI.EXTRA_FUNCTION) || !extras.containsKey(BroadcastServiceAPI.EXTRA_PACKAGE)) {
                 Log.w(LOG_ID, "Missing mandatory extras: " + Utils.dumpBundle(intent.extras))
                 return
             }
-            val cmd = extras.getString(EXTRA_FUNCTION, "")
-            val pkg = extras.getString(EXTRA_PACKAGE, "")
+            val pkg = extras.getString(BroadcastServiceAPI.EXTRA_PACKAGE, "")
+            if(pkg == context.packageName)
+                return // ignore messages from itself
+            val cmd = extras.getString(BroadcastServiceAPI.EXTRA_FUNCTION, "")
             Log.d(LOG_ID, "Command " + cmd + " received for package " + pkg)
             val newReceiver = handleNewReceiver(pkg)
             if(newReceiver) {
-                sendBroadcast(context, CMD_UPDATE_BG_FORCE, pkg)
+                sendBroadcast(context, BroadcastServiceAPI.CMD_UPDATE_BG_FORCE, pkg)
             }
             when(cmd) {
-                CMD_UPDATE_BG_FORCE -> {
+                BroadcastServiceAPI.CMD_UPDATE_BG_FORCE -> {
                     if(!newReceiver)
-                        sendBroadcast(context, CMD_UPDATE_BG_FORCE, pkg)
+                        sendBroadcast(context, BroadcastServiceAPI.CMD_UPDATE_BG_FORCE, pkg)
                 }
-                CMD_CANCEL_ALARM,
-                CMD_SNOOZE_ALARM -> {
+                BroadcastServiceAPI.CMD_CANCEL_ALARM,
+                BroadcastServiceAPI.CMD_SNOOZE_ALARM -> {
                     AlarmNotification.stopCurrentNotification(context)
                 }
                 else -> {
@@ -127,52 +116,52 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
 
     private fun createBundle(context: Context, cmd: String, alarmType: AlarmType): Bundle {
         return when(cmd) {
-            CMD_ALARM -> createAlarmBundle(context, alarmType)
-            CMD_UPDATE_BG,
-            CMD_UPDATE_BG_FORCE -> createBgBundle(cmd)
+            BroadcastServiceAPI.CMD_ALARM -> createAlarmBundle(context, alarmType)
+            BroadcastServiceAPI.CMD_UPDATE_BG,
+            BroadcastServiceAPI.CMD_UPDATE_BG_FORCE -> createBgBundle(cmd)
             else -> createCmdBundle(cmd)
         }
     }
 
     private fun createCmdBundle(cmd: String): Bundle {
         val bundle = Bundle()
-        bundle.putString(EXTRA_FUNCTION, cmd)
+        bundle.putString(BroadcastServiceAPI.EXTRA_FUNCTION, cmd)
         return bundle
     }
 
     private fun createBgBundle(cmd: String): Bundle {
         val bundle = createCmdBundle(cmd)
-        bundle.putDouble("bg.valueMgdl", ReceiveData.rawValue.toDouble())
-        bundle.putDouble("bg.deltaValueMgdl", ReceiveData.deltaValueMgDl.toDouble())
-        bundle.putString("bg.deltaName", GlucoDataUtils.getDexcomLabel(ReceiveData.rate))
-        bundle.putLong("bg.timeStamp", ReceiveData.time)
-        bundle.putBoolean("bg.isStale", ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC))
-        bundle.putBoolean("doMgdl", !ReceiveData.isMmol)
-        bundle.putBoolean("bg.isHigh", ReceiveData.getAlarmType() == AlarmType.VERY_HIGH)
-        bundle.putBoolean("bg.isLow", ReceiveData.getAlarmType() == AlarmType.VERY_LOW)
-        bundle.putString("pumpJSON", "{}")
-        if (!ReceiveData.isIobCobObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.iob.isNaN()) {
-            bundle.putString("predict.IOB", ReceiveData.iobString)
-            bundle.putLong("predict.IOB.timeStamp", ReceiveData.iobCobTime)
+        bundle.putDouble(BroadcastServiceAPI.BG_VALUE_MGDL, ReceiveData.rawValue.toDouble())
+        bundle.putDouble(BroadcastServiceAPI.BG_DELTA_VALUE_MGDL, ReceiveData.deltaValueMgDl.toDouble())
+        bundle.putString(BroadcastServiceAPI.BG_DELTA_NAME, GlucoDataUtils.getDexcomLabel(ReceiveData.rate))
+        bundle.putLong(BroadcastServiceAPI.BG_TIMESTAMP, ReceiveData.time)
+        bundle.putBoolean(BroadcastServiceAPI.BG_IS_STALE, ReceiveData.isObsoleteShort())
+        bundle.putBoolean(BroadcastServiceAPI.BG_DO_MGDL, !ReceiveData.isMmol)
+        bundle.putBoolean(BroadcastServiceAPI.BG_IS_HIGH, ReceiveData.getAlarmType() == AlarmType.VERY_HIGH)
+        bundle.putBoolean(BroadcastServiceAPI.BG_IS_LOW, ReceiveData.getAlarmType() == AlarmType.VERY_LOW)
+        bundle.putString(BroadcastServiceAPI.PUMP_JSON, "{}")
+        if (!ReceiveData.isIobCobObsolete() && !ReceiveData.iob.isNaN()) {
+            bundle.putString(BroadcastServiceAPI.PREDICT_IOB, ReceiveData.iobString)
+            bundle.putLong(BroadcastServiceAPI.PREDICT_IOB_TIME, ReceiveData.iobCobTime)
         }
         return bundle
     }
 
     private fun createAlarmBundle(context: Context, alarmType: AlarmType): Bundle {
-        val bundle = createCmdBundle(CMD_ALARM)
-        bundle.putString(EXTRA_TYPE, getAlertType(alarmType))
-        bundle.putString(EXTRA_MESSAGE, getAlarmMessage(context, alarmType))
+        val bundle = createCmdBundle(BroadcastServiceAPI.CMD_ALARM)
+        bundle.putString(BroadcastServiceAPI.EXTRA_TYPE, getAlertType(alarmType))
+        bundle.putString(BroadcastServiceAPI.EXTRA_MESSAGE, getAlarmMessage(context, alarmType))
         return bundle
     }
 
     private fun getAlertType(alarmType: AlarmType): String {
         return when(alarmType) {
             AlarmType.VERY_LOW,
-            AlarmType.VERY_HIGH -> TYPE_ALERT
+            AlarmType.VERY_HIGH -> BroadcastServiceAPI.TYPE_ALERT
             AlarmType.LOW,
             AlarmType.HIGH,
-            AlarmType.OBSOLETE -> TYPE_OTHER_ALERT
-            else -> TYPE_NO_ALERT
+            AlarmType.OBSOLETE -> BroadcastServiceAPI.TYPE_OTHER_ALERT
+            else -> BroadcastServiceAPI.TYPE_NO_ALERT
         }
     }
 
@@ -191,12 +180,13 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
             else -> "No alarm!"
         }
     }
-    private fun sendBroadcastToReceiver(context: Context, receiver: String, bundle: Bundle) {
+    private fun sendBroadcastToReceiver(context: Context, receiver: String?, bundle: Bundle) {
         Log.d(LOG_ID, "Sending broadcast to " + receiver + ":\n" + Utils.dumpBundle(bundle))
-        val intent = Intent(BROADCAST_SENDER_ACTION)
+        val intent = Intent(BroadcastServiceAPI.BROADCAST_SENDER_ACTION)
+        if(receiver != null)
+            intent.setPackage(receiver)
         intent.putExtras(bundle)
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-        intent.setPackage(receiver)
         context.sendBroadcast(intent)
     }
 
@@ -226,10 +216,10 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
                 Log.v(LOG_ID, "activate called")
                 loadReceivers()
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    GlucoDataService.context!!.registerReceiver(watchDripReceiver, IntentFilter(BROADCAST_RECEIVE_ACTION),
+                    GlucoDataService.context!!.registerReceiver(watchDripReceiver, IntentFilter(BroadcastServiceAPI.BROADCAST_RECEIVE_ACTION),
                         Context.RECEIVER_EXPORTED or Context.RECEIVER_VISIBLE_TO_INSTANT_APPS)
                 } else {
-                    GlucoDataService.context!!.registerReceiver(watchDripReceiver, IntentFilter(BROADCAST_RECEIVE_ACTION))
+                    GlucoDataService.context!!.registerReceiver(watchDripReceiver, IntentFilter(BroadcastServiceAPI.BROADCAST_RECEIVE_ACTION))
                 }
                 InternalNotifier.addNotifier(GlucoDataService.context!!, this, mutableSetOf(
                     NotifySource.BROADCAST,
@@ -240,8 +230,9 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
                     NotifySource.OBSOLETE_ALARM_TRIGGER,
                     NotifySource.NOTIFICATION_STOPPED))
                 active = true
+                sendBroadcastToReceiver(GlucoDataService.context!!, null, createCmdBundle(BroadcastServiceAPI.CMD_START))
                 if (receivers.size > 0) {
-                    sendBroadcast(GlucoDataService.context!!, CMD_UPDATE_BG)
+                    sendBroadcast(GlucoDataService.context!!, BroadcastServiceAPI.CMD_UPDATE_BG)
                 }
             }
         } catch (exc: Exception) {
@@ -249,13 +240,17 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
         }
     }
 
-    private fun deactivate() {
+    private fun deactivate(removeReceivers: Boolean) {
         try {
             if (GlucoDataService.context != null && active) {
-                Log.v(LOG_ID, "deactivate called")
+                Log.v(LOG_ID, "deactivate called removeReceivers=$removeReceivers")
                 InternalNotifier.remNotifier(GlucoDataService.context!!, this)
                 GlucoDataService.context!!.unregisterReceiver(watchDripReceiver)
                 active = false
+                if(removeReceivers) {
+                    receivers.clear()
+                    saveReceivers()
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "deactivate exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
@@ -295,13 +290,13 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
         }
     }
 
-    private fun updateSettings(sharedPreferences: SharedPreferences) {
+    private fun updateSettings(sharedPreferences: SharedPreferences, removeReceiversOnDisable: Boolean = false) {
         try {
             Log.v(LOG_ID, "updateSettings called")
             if (sharedPreferences.getBoolean(Constants.SHARED_PREF_WATCHDRIP, false))
                 activate()
             else
-                deactivate()
+                deactivate(removeReceiversOnDisable)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateSettings exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
         }
@@ -312,7 +307,7 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
             Log.v(LOG_ID, "onSharedPreferenceChanged called for key " + key)
             when(key) {
                 Constants.SHARED_PREF_WATCHDRIP -> {
-                    updateSettings(sharedPreferences!!)
+                    updateSettings(sharedPreferences!!, true)
                 }
             }
         } catch (exc: Exception) {
@@ -325,14 +320,14 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
             Log.v(LOG_ID, "OnNotifyData called for source " + dataSource)
             when(dataSource) {
                 NotifySource.NOTIFICATION_STOPPED -> {
-                    sendBroadcast(context, CMD_CANCEL_ALARM)
+                    sendBroadcast(context, BroadcastServiceAPI.CMD_CANCEL_ALARM)
                 }
                 NotifySource.ALARM_TRIGGER,
                 NotifySource.OBSOLETE_ALARM_TRIGGER -> {
-                    sendBroadcast(context, CMD_ALARM, alarmType = ReceiveData.getAlarmType())
+                    sendBroadcast(context, BroadcastServiceAPI.CMD_ALARM, alarmType = ReceiveData.getAlarmType())
                 }
                 else -> {
-                    sendBroadcast(context, CMD_UPDATE_BG)
+                    sendBroadcast(context, BroadcastServiceAPI.CMD_UPDATE_BG)
                 }
             }
         } catch (exc: Exception) {
@@ -341,6 +336,6 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
     }
 
     fun sendTestAlert(context: Context, alarmType: AlarmType) {
-        sendBroadcast(context, CMD_ALARM, alarmType = alarmType)
+        sendBroadcast(context, BroadcastServiceAPI.CMD_ALARM, alarmType = alarmType)
     }
 }

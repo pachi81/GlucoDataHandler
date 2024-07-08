@@ -23,7 +23,6 @@ import de.michelinside.glucodatahandler.common.R as CR
 class TapActionPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat() {
     companion object {
         private val LOG_ID = "GDH.TapActionPreferenceDialog"
-        private val filter = mutableSetOf<String>()
         fun initial(key: String) : TapActionPreferenceDialogFragmentCompat {
             Log.d(LOG_ID, "initial called for key: " +  key )
             val dialog = TapActionPreferenceDialogFragmentCompat()
@@ -69,30 +68,10 @@ class TapActionPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat()
         super.onCreate(savedInstanceState)
         Log.d(LOG_ID, "onCreate called with bundle: " +  savedInstanceState?.toString() )
         try {
-            initFilter()
             tapActionPreference = preference as TapActionPreference
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Setting preference exception: " + exc.toString())
         }
-    }
-
-    private fun initFilter() {
-        filter.add(requireContext().packageName)
-        filter.add(Constants.PACKAGE_JUGGLUCO)
-        filter.add(Constants.PACKAGE_GLUCODATAAUTO)
-        filter.add(Constants.PACKAGE_AAPS)
-        filter.add(Constants.PACKAGE_XDRIP)
-        filter.add(Constants.PACKAGE_XDRIP_PLUS)
-        filter.add(Constants.PACKAGE_LIBRELINK)
-        filter.add(Constants.PACKAGE_LIBRELINKUP)
-    }
-
-    private fun filterContains(value: String): Boolean {
-        filter.forEach {
-            if(value.lowercase().startsWith(it.lowercase()))
-                return true
-        }
-        return false
     }
 
     override fun onBindDialogView(view: View) {
@@ -142,7 +121,7 @@ class TapActionPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat()
         }
 
         for (item in map) {
-            if (all || filterContains(item.key)) {
+            if (all || PackageUtils.tapActionFilterContains(requireContext(), item.key)) {
                 val ch = RadioButton(requireContext())
                 ch.text = item.value
                 ch.hint = item.key

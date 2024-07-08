@@ -6,7 +6,9 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.util.Log
+import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver
 import kotlinx.coroutines.*
 import java.util.concurrent.atomic.AtomicBoolean
@@ -17,7 +19,7 @@ object PackageUtils {
 
     private var updateInProgress = AtomicBoolean(false)
 
-    fun updatePackages(context: Context) {
+    fun updatePackages(context: Context, migrateSettings: Boolean = false) {
         if(!updateInProgress.get()) {
             updateInProgress.set(true)
             packages.clear()
@@ -40,6 +42,43 @@ object PackageUtils {
                 }
                 updateInProgress.set(false)
                 Log.i(LOG_ID, "${packages.size} packages found")
+                if(migrateSettings)
+                    migratePackageSettings(context)
+            }
+        }
+    }
+
+    private fun migratePackageSettings(context: Context) {
+        Log.d(LOG_ID, "migratePackageSettings")
+        if(GlucoDataService.appSource == AppSource.PHONE_APP) {
+            val sharedPrefs = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            // widgets
+            if(!sharedPrefs.contains(Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION)) {
+                val curApp = if(isPackageAvailable(context, Constants.PACKAGE_JUGGLUCO)) Constants.PACKAGE_JUGGLUCO else context.packageName
+                Log.i(LOG_ID, "Setting default tap action for floating widget to $curApp")
+                with(sharedPrefs.edit()) {
+                    putString(Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION, curApp)
+                    apply()
+                }
+            }
+            if(!sharedPrefs.contains(Constants.SHARED_PREF_WIDGET_TAP_ACTION)) {
+                val curApp = if(isPackageAvailable(context, Constants.PACKAGE_JUGGLUCO)) Constants.PACKAGE_JUGGLUCO else context.packageName
+                Log.i(LOG_ID, "Setting default tap action for widget to $curApp")
+                with(sharedPrefs.edit()) {
+                    putString(Constants.SHARED_PREF_WIDGET_TAP_ACTION, curApp)
+                    apply()
+                }
+            }
+        } else if(GlucoDataService.appSource == AppSource.WEAR_APP) {
+            val sharedPrefs = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            // complications
+            if(!sharedPrefs.contains(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION)) {
+                val curApp = if(isPackageAvailable(context, Constants.PACKAGE_JUGGLUCO)) Constants.PACKAGE_JUGGLUCO else context.packageName
+                Log.i(LOG_ID, "Setting default tap action for complications to $curApp")
+                with(sharedPrefs.edit()) {
+                    putString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, curApp)
+                    apply()
+                }
             }
         }
     }
@@ -61,9 +100,7 @@ object PackageUtils {
     }
 
     fun getPackages(context: Context): HashMap<String, String> {
-        if(updateInProgress.get()) {
-            waitForUpdate()
-        }
+        waitForUpdate()
         if (packages.isEmpty()) {
             Log.i(LOG_ID, "Updating receivers")
             updatePackages(context)
@@ -137,6 +174,33 @@ object PackageUtils {
             )
         }
         return null
+    }
+
+
+    private val tapActionFilter = mutableSetOf<String>()
+    private fun getTapActionFilter(context: Context): MutableSet<String> {
+        if (tapActionFilter.isEmpty()) {
+            tapActionFilter.add(context.packageName)
+            tapActionFilter.add(Constants.PACKAGE_JUGGLUCO)
+            tapActionFilter.add(Constants.PACKAGE_GLUCODATAAUTO)
+            tapActionFilter.add("info.nightscout")  // AAPS
+            tapActionFilter.add("com.eveningoutpost.dexdrip")
+            tapActionFilter.add("jamorham.xdrip.plus")
+            tapActionFilter.add("com.freestylelibre")
+            tapActionFilter.add("org.nativescript.librelinkup")
+            tapActionFilter.add("com.dexcom.")
+            tapActionFilter.add("com.senseonics.")  // Eversense CGM
+            tapActionFilter.add("esel.esel.")   // ESEL for Eversense
+        }
+        return tapActionFilter
+    }
+
+    fun tapActionFilterContains(context: Context, value: String): Boolean {
+        getTapActionFilter(context).forEach {
+            if(value.lowercase().startsWith(it.lowercase()))
+                return true
+        }
+        return false
     }
 
     /*

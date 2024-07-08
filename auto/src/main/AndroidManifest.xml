@@ -103,6 +103,34 @@
                 <action android:name="info.nightscout.androidaps.status" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".receiver.DexcomBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="com.dexcom.cgm.EXTERNAL_BROADCAST" />
+                <action android:name="com.dexcom.g7.EXTERNAL_BROADCAST" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receiver.NsEmulatorReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="com.eveningoutpost.dexdrip.NS_EMULATOR" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receiver.BroadcastServiceAPI"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="com.eveningoutpost.dexdrip.watch.wearintegration.BROADCAST_SERVICE_SENDER" />
+            </intent-filter>
+        </receiver>
         <receiver android:name="de.michelinside.glucodatahandler.common.tasks.TimeAlarmReceiver" />
         <receiver android:name="de.michelinside.glucodatahandler.common.tasks.SourceAlarmReceiver" />
         <receiver android:name="de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver" />

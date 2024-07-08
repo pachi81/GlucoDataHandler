@@ -101,8 +101,8 @@ object AlarmNotification : AlarmNotificationBase() {
         contentView.setOnClickPendingIntent(R.id.snooze_60, createSnoozeIntent(context, 60L, getNotificationId(alarmType)))
         contentView.setOnClickPendingIntent(R.id.snooze_90, createSnoozeIntent(context, 90L, getNotificationId(alarmType)))
         contentView.setOnClickPendingIntent(R.id.snooze_120, createSnoozeIntent(context, 120L, getNotificationId(alarmType)))
-        if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)) {
-            if (!ReceiveData.isObsolete())
+        if (ReceiveData.isObsoleteShort()) {
+            if (!ReceiveData.isObsoleteLong())
                 contentView.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
             contentView.setTextColor(R.id.deltaText, ReceiveData.getAlarmTypeColor(AlarmType.OBSOLETE) )
         }

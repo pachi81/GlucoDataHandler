@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi
 import androidx.car.app.connection.CarConnection
 import de.michelinside.glucodataauto.android_auto.CarMediaBrowserService
 import de.michelinside.glucodataauto.android_auto.CarNotification
+import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GdhUncaughtExecptionHandler
 import de.michelinside.glucodatahandler.common.GlucoDataService
@@ -40,9 +41,23 @@ class GlucoDataServiceAuto: Service() {
             Log.v(LOG_ID, "init called: init=$init")
             if(!init) {
                 GlucoDataService.context = context
+                GlucoDataService.appSource = AppSource.AUTO_APP
+                migrateSettings(context)
                 CarNotification.initNotification(context)
                 startService(context, false)
                 init = true
+            }
+        }
+
+        private fun migrateSettings(context: Context) {
+            Log.v(LOG_ID, "migrateSettings called")
+            GlucoDataService.migrateSettings(context)
+            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            if(sharedPref.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, true)) {
+                with(sharedPref.edit()) {
+                    putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, false)
+                    apply()
+                }
             }
         }
 
@@ -105,6 +120,7 @@ class GlucoDataServiceAuto: Service() {
             try {
                 Log.i(LOG_ID, "starting datasync - count=$dataSyncCount")
                 if (dataSyncCount == 0) {
+                    GlucoDataService.registerSourceReceiver(context)
                     TimeTaskService.run(context)
                     SourceTaskService.run(context)
                     sendStateBroadcast(context, true)
@@ -121,6 +137,7 @@ class GlucoDataServiceAuto: Service() {
                 dataSyncCount--
                 Log.i(LOG_ID, "stopping datasync - count=$dataSyncCount")
                 if (dataSyncCount == 0) {
+                    GlucoDataService.unregisterSourceReceiver(context)
                     sendStateBroadcast(context, false)
                     BackgroundWorker.stopAllWork(context)
                     Log.i(LOG_ID, "Datasync stopped")

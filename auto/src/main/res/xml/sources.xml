@@ -1,149 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <PreferenceCategory
-        android:title="@string/source_gdh"
-        app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="0">
-        <Preference
-            android:key="source_ghd_info"
-            android:summary="@string/pref_source_gdh_info_summary"
-            app:iconSpaceReserved="false" />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/pref_source_juggluco_info"
-        app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="0">
     <Preference
-        android:key="source_juggluco_info"
-        android:summary="@string/pref_gda_source_juggluco_info_summary"
+        android:key="pref_source_offline"
+        android:title="@string/pref_source_offline"
+        android:summary="@string/pref_source_offline_summary"
+        app:fragment="de.michelinside.glucodataauto.preferences.SourceOfflineFragment"
         app:iconSpaceReserved="false" />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/pref_source_xdrip_info"
-        app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="0">
-        <Preference
-            android:key="source_xdrip_info_1"
-            android:summary="@string/pref_source_xdrip_info_1_summary"
-            app:iconSpaceReserved="false" />
-        <Preference
-            android:key="source_xdrip_info_2"
-            android:summary="@string/pref_gda_source_xdrip_info_2_summary"
-            app:iconSpaceReserved="false" />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/pref_source_aaps_info"
-        app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="0">
-        <Preference
-            android:key="source_aaps_info"
-            android:summary="@string/pref_source_aaps_info_summary"
-            app:iconSpaceReserved="false" />
-    </PreferenceCategory>
-    <PreferenceCategory
+    <Preference
+        android:key="pref_source_online"
         android:title="@string/pref_cat_follower"
-        app:iconSpaceReserved="false">
-        <androidx.preference.ListPreference
-            android:defaultValue="1"
-            android:entries="@array/source_request_interval_labels"
-            android:entryValues="@array/source_request_interval_values"
-            android:key="source_interval"
-            android:title="@string/source_interval"
-            android:summary="@string/source_interval_summary"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SeekBarPreference
-            android:defaultValue="10"
-            app:showSeekBarValue="true"
-            app:seekBarIncrement="10"
-            app:min="5"
-            android:max="50"
-            android:key="source_delay"
-            android:title="@string/source_delay"
-            android:summary="@string/source_delay_summary"
-            app:iconSpaceReserved="false" />
-        <Preference
-            android:key="gda_source_follower_info"
-            android:title="@string/pref_information"
-            android:summary="@string/gda_source_follower_info_summary"
-            app:iconSpaceReserved="false" />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/src_cat_libreview"
-        app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="1">
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="source_libre_enabled"
-            android:title="@string/src_libre_enabled"
-            android:summary="@string/src_libre_enabled_summary"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.EditTextPreference
-            android:defaultValue=""
-            android:key="source_libre_user"
-            android:title="@string/src_libre_user"
-            android:summary="@string/src_libre_user_summary"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.EditTextPreference
-            android:defaultValue=""
-            android:key="source_libre_password"
-            android:title="@string/src_libre_password"
-            android:summary="@string/src_libre_password_summary"
-            android:inputType="textPassword"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.ListPreference
-            android:key="source_libre_patient_id"
-            android:title="@string/src_libre_patient"
-            android:summary="@string/src_libre_patient_summary"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="source_libre_reconnect"
-            android:title="@string/src_libre_reconnect"
-            android:summary="@string/src_libre_reconnect_summary"
-            app:iconSpaceReserved="false" />
-        <Preference
-            android:key="source_librelinkup_info"
-            android:title="@string/pref_source_librelinkup_info"
-            android:summary="@string/pref_source_librelinkup_info_summary"
-            app:iconSpaceReserved="false" />
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="@string/src_cat_nightscout"
-        app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="1">
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="src_ns_enabled"
-            android:title="@string/src_ns_enabled"
-            android:summary="@string/src_ns_enabled_summary"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.EditTextPreference
-            android:defaultValue=""
-            android:key="src_ns_url"
-            android:title="@string/src_ns_url"
-            android:summary="@string/src_ns_url_summary"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.EditTextPreference
-            android:defaultValue=""
-            android:key="src_ns_secret"
-            android:title="@string/src_ns_secret"
-            android:summary="@string/src_ns_secret_summary"
-            android:inputType="textPassword"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.EditTextPreference
-            android:defaultValue=""
-            android:key="src_ns_token"
-            android:title="@string/src_ns_token"
-            android:summary="@string/src_ns_token_summary"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="src_ns_iob_cob"
-            android:title="@string/src_ns_iob_cob"
-            android:summary="@string/src_ns_iob_cob_summary"
-            app:iconSpaceReserved="false" />
-    </PreferenceCategory>
+        android:summary="@string/pref_cat_follower_summary"
+        app:fragment="de.michelinside.glucodataauto.preferences.SourceOnlineFragment"
+        app:iconSpaceReserved="false" />
 </PreferenceScreen>

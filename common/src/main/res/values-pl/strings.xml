@@ -80,17 +80,17 @@
     <string name="source_delay">Opóźnienie</string>
     <string name="source_delay_summary">Opóźnienie w sekundach przed zażądaniem danych z chmury, ponieważ zajmuje to trochę czasu, zanim dane się tam znajdą.</string>
 
-    <string name="src_cat_libreview">LibreLinkUp Follower</string>
-    <string name="src_libre_enabled">Włącz</string>
+    <string name="src_cat_libreview">LibreLinkUp</string>
+    <string name="src_enabled">Włącz</string>
     <string name="src_libre_enabled_summary">Włącz funkcję LibreLinkUp follower, jeśli wprowadzono adres e-mail i hasło.</string>
     <string name="src_libre_user">E-mail</string>
     <string name="src_libre_user_summary">Adres e-mail do logowania do LibreLinkUp</string>
-    <string name="src_libre_password">Hasło</string>
+    <string name="src_password">Hasło</string>
     <string name="src_libre_password_summary">Hasło do LibreLinkUp</string>
     <string name="src_libre_reconnect">Połącz ponownie</string>
     <string name="src_libre_reconnect_summary">W kolejnym odstępie czasowym nastąpi nowe logowanie.</string>
 
-    <string name="src_cat_nightscout">Nightscout Follower</string>
+    <string name="src_cat_nightscout">Nightscout</string>
     <string name="src_ns_enabled">Włącz</string>
     <string name="src_ns_enabled_summary">Włącz Nightscout Follower.</string>
     <string name="src_ns_url">Adres URL Nightscout</string>
@@ -127,12 +127,16 @@
     <string name="pref_cat_colors">Kolory</string>
 
     <string name="pref_switch_notification">Wartości fikcyjne</string>
+    <string name="pref_very_high_value">Bardzo wysokie stęż. glukozy</string>
+    <string name="pref_very_high_value_summary">Granica dla bardzo wysokich wartości stężenia glukozy.</string>
     <string name="pref_high_value">Wysokie stęż. glukozy</string>
     <string name="pref_high_value_summary">Granica dla wysokich wartości stężenia glukozy.</string>
     <string name="pref_target_max_value">Górna granica zakresu docelowego</string>
     <string name="pref_target_max_value_summary">Najwyższa wartość dla zakresu docelowego.</string>
     <string name="pref_target_min_value">Dolna granica zakresu docelowego</string>
     <string name="pref_target_min_value_summary">Najniższa wartość dla zakresu docelowego.</string>
+    <string name="pref_very_low_value">Bardzo niskie stęż. glukozy</string>
+    <string name="pref_very_low_value_summary">Granica dla bardzo niskich wartości stężenia glukozy.</string>
     <string name="pref_low_value">Niskie stęż. glukozy</string>
     <string name="pref_low_value_summary">Granica dla niskich wartości stężenia glukozy.</string>
     <string name="pref_switch_car_notification">Powiadomienia w Android Auto</string>
@@ -159,10 +163,10 @@
     <string name="pref_switch_use_mmol_summary">Używaj mmol/l zamiast mg/dl.</string>
     <string name="pref_switch_use_5_min_delta">5-minutowa delta</string>
     <string name="pref_switch_use_5_min_delta_summary">Włącz tę opcję, aby używać wartości delta dla odstępu czasu wynoszącego 5 minut, w przeciwnym razie używany jest odstęp 1-minutowy.</string>
-    <string name="pref_color_alarm">Kolor dla wysokiego/niskiego stęż. glukozy</string>
-    <string name="pref_color_alarm_summary">Kolor dla wysokich i niskich wartości stężenia glukozy.</string>
-    <string name="pref_color_out_of_range">Kolor poza zakresem</string>
-    <string name="pref_color_out_of_range_summary">Kolor dla wartości stęż. glukozy poza zakresem docelowym.</string>
+    <string name="pref_color_alarm">Kolor dla bardzo wysokiego/niskiego stęż. glukozy</string>
+    <string name="pref_color_alarm_summary">Kolor dla bardzo wysokich i niskich wartości stężenia glukozy.</string>
+    <string name="pref_color_out_of_range">Kolor dla wysokiego/niskiego stęż. glukozy</string>
+    <string name="pref_color_out_of_range_summary">Kolor dla wysokich i niskich wartości stężenia glukozy.</string>
     <string name="pref_color_ok">Kolor w zakresie docelowym</string>
     <string name="pref_color_ok_summary">Kolor dla wartości stęż. glukozy w zakresie docelowym.</string>
     <string name="pref_notification">Powiadomienie</string>
@@ -280,13 +284,13 @@
     <string name="info_label_iob">IOB</string>
     <string name="info_label_cob">COB</string>
     <string name="src_xdrip_noise_blocking">Włączono blokowanie szumu w ustawieniach aplikacji xDrip+! \nZmień na \"Ekstremalnie głośny\"!</string>
-    <string name="pref_cat_follower">Follower (Obserwator)</string>
+    <string name="pref_cat_follower">Usługi chmurowe</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
     <string name="pref_source_juggluco_info_summary">Aby odbierać wartości z Juggluco: \n- otwórz Juggluco \n- przejdź do ustawień \n- włącz Glucodata broadcast \n- włącz \"de.michelinside.glucodatahandler\"</string>
     <string name="pref_gda_source_juggluco_info_summary">Aby odbierać wartości z Juggluco: \n- otwórz Juggluco \n- przejdź do ustawień \n- włącz Glucodata broadcast \n- włącz \"de.michelinside.glucodataauto\"</string>
     <string name="pref_source_xdrip_info">XDrip+</string>
     <string name="pref_source_xdrip_info_1_summary">Aby odbierać wartości z xDrip+:\n- otwórz xDrip+\n- przejdź do ustawień\n- przejdź do ustawień innych aplikacji\n- włącz \"Nadawaj lokalnie\"\n- ustaw \"Blokowanie szumów\" na \"Send even Extremely noisy signals\"</string>
-    <string name="pref_source_xdrip_info_2_summary">- włącz \"Kompatybilny Broadcast\"\n- sprawdź, czy pole \"Identyfikuj odbiornik\" jest puste lub dodaj nową linię z \"de.michelinside.glucodatahandler\"</string>
+    <string name="pref_source_xdrip_info_2_summary">- włącz \"Kompatybilny Broadcast\"\n- sprawdź, czy pole \"Identyfikuj odbiornik\" jest puste, a jeśli jest już tam jakiś wpis, dodaj za nim spację a następnie wpisz \"de.michelinside.glucodatahandler\"</string>
     <string name="pref_gda_source_xdrip_info_2_summary">- włącz \"Kompatybilny Broadcast\"\n- sprawdź, czy pole \"Identyfikuj odbiornik\" jest puste lub dodaj nową linię z \"de.michelinside.glucodataauto\"</string>
     <string name="pref_source_librelinkup_info">Konfiguracja LibrelinkUp</string>
     <string name="pref_source_librelinkup_info_summary">WAŻNE: to nie jest konto używane w aplikacji FreeStyle LibreLink! Aby aktywować LibreLinkUp:\n- otwórz aplikację FreeStyle LibreLink i wybierz w menu Udostępnianie lub Podłączone aplikacje\n- aktywuj połączenie LibreLinkUp\n- zainstaluj LibreLinkUp ze Sklepu Play\n- skonfiguruj swoje konto i czekaj na zaproszenie</string>
@@ -394,7 +398,7 @@
     <string name="alarm_retrigger_summary">Jeśli powiadomienie o alarmie nie zostanie zamknięte, alarm zostanie uruchomiony ponownie po upływie tego czasu w minutach maksymalnie 3 razy.\n0 – nie uruchamiaj ponownie</string>
     <string name="alarm_obsolete">Nieaktualne wartości</string>
     <string name="obsolete_alarm_notification_name">Alarm nieaktualnych wartości</string>
-    <string name="alarm_obsolete_summary">Ustawienia alarmu dla braku nowej wartości glukozy.</string>
+    <string name="alarm_obsolete_summary">Alarm włącza się, gdy nie ma nowej wartości glukozy przez %1$s minut.</string>
     <string name="obsolete_alarm_notification_descr">Powiadomienie zostanie uruchomione, jeśli po upływie określonego czasu nie pojawi się nowa wartość.</string>
     <string name="obsolete_alarm_text">Brak nowej wartości!</string>
 
@@ -494,4 +498,27 @@
     <string name="pref_notification_custom_layout_summary">Wyświetla wartości dużą i kolorową czcionką.\nNa niektórych urządzeniach Samsung z Androidem 13 i nowszym, może to spowodować awarię aplikacji z powodu błędu po stronie Samsunga.\nJeśli problem wystąpi, to ustawienie zostanie automatycznie wyłączone, aby aplikacja mogła działać poprawnie.</string>
     <string name="app_crash_title">Wykryto awarię!</string>
     <string name="app_crash_message">Bardzo mi przykro, że aplikacja zawiesiła się podczas działania!\nProszę, wyślij mi logi, abym mógł przeanalizować błąd i spróbować go jak najszybciej naprawić.\nDziękuję!</string>
+	<string name="src_cat_dexcom_share">Dexcom Share</string>
+    <string name="src_dexcom_share_us_server">Konto z USA</string>
+    <string name="src_dexcom_share_us_server_summary_on">Używane jest konto amerykańskie.</string>
+    <string name="src_dexcom_share_us_server_summary_off">Używane jest konto międzynarodowe.</string>
+    <string name="src_dexcom_share_enabled_summary">Włącz konto Dexcom Share.\nNależy wcześniej ustawić nazwę użytkownika i hasło.</string>
+    <string name="src_username">Nazwa użytkownika</string>
+    <string name="src_dexcom_share_user_summary">Nazwa użytkownika lub adres e-mail dla konta Dexcom Share.</string>
+    <string name="src_dexcom_share_password_summary">Hasło do konta Dexcom Share.</string>
+    <string name="pref_source_dexcom_share_info">Konfiguracja Dexcom Share</string>
+    <string name="pref_source_dexcom_share_info_summary">Aby odbierać dane z serwerów Dexcom Share, musisz mieć:\n- włączone udostępnianie danych w aplikacji Dexcom, która jest połączona z sensorem\n- zaakceptowane zaproszenie w aplikacji Dexcom Follower (możesz ją później odinstalować)\n\n Ważne: nie działa z użytkownikiem obserwującym!</string>
+    <string name="permission_missing_title">Brak uprawnienia!</string>
+    <string name="setting_permission_missing_message">Ustawienie \&quot;%1$s\&quot; jest ustawione, ale powiązane uprawnienie nie zostało przyznane! Naciśnij \&quot;OK\&quot;, aby wyświetlić okno dialogowe uprawnień lub naciśnij \&quot;Anuluj\&quot;, aby wyłączyć to ustawienie.</string>
+    <string name="pref_source_dexcom_byoda_info">Dexcom BYODA</string>
+    <string name="xdrip_broadcast_service_api_enabled">Interfejs API usługi transmisji</string>
+    <string name="xdrip_broadcast_service_api_enabled_summary">Użyj transmisji „Broadcast Service API” do komunikacji z xDrip+.\nNajpierw aktywuj \&quot;Broadcast Service API\&quot; w \&quot;Ustawieniach innych aplikacji\&quot; w xDrip+!</string>
+    <string name="obsolete_time">Okres wart. nieaktualnych</string>
+    <string name="obsolete_time_summary">Czas w minutach, po którym wartość zostanie uznana za nieaktualną (zostanie oznaczona kolorem dla wartości nieaktualnych).\nPo dwukrotnym upływie tego czasu wartość zostanie usunięta.</string>
+    <string name="pref_source_offline">Źródła offline</string>
+    <string name="pref_source_offline_summary">Aplikacje na tym samym urządzeniu dostarczające wartości glukozy w formie transmisji wewnętrznej, takie jak Juggluco, xDrip+, AAPS itp.</string>
+    <string name="pref_cat_follower_summary">Usługi chmurowe dostarczające wartości glukozy za pośrednictwem innych interfejsów API, takie jak LibreLinkUp, Dexcom Share i Nightscout.</string>
+    <string name="pref_source_xdrip_broadcast">Alternatywa: nadawanie lokalne xDrip+</string>
+    <string name="pref_source_dexcom_byoda_info_summary">Aby otrzymywać wartości z Dexcom BYODA, należy włączyć transmisję do xDrip+, AAPS lub obu podczas tworzenia aplikacji.</string>
+    <string name="pref_source_eversense_info_summary">Aby odbierać wartości z Eversense, musisz używać ESEL w trybie towarzyszącym (czytanie powiadomień) lub połączyć się z poprawioną (patched) aplikacją Eversense.\n Aby uzyskać więcej informacji na temat ESEL, naciśnij tutaj.</string>
 </resources>

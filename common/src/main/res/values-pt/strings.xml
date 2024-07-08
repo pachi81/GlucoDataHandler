@@ -78,17 +78,17 @@
     <string name="source_delay">Atraso</string>
     <string name="source_delay_summary">Atraso em segundos antes de solicitar os dados da nuvem, pois demora algum tempo até que os dados estejam presentes lá.</string>
 
-    <string name="src_cat_libreview">LibreLinkUp Seguidor</string>
-    <string name="src_libre_enabled">Habilita</string>
+    <string name="src_cat_libreview">LibreLinkUp</string>
+    <string name="src_enabled">Habilita</string>
     <string name="src_libre_enabled_summary">Habilite o seguidor do LibreLinkUp, se o usuário e a senha estiverem definidos.</string>
     <string name="src_libre_user">E-mail</string>
     <string name="src_libre_user_summary">E-mail para acesso LibreLinkUp</string>
-    <string name="src_libre_password">Senha</string>
+    <string name="src_password">Senha</string>
     <string name="src_libre_password_summary">Senha para acesso LibreLinkUp</string>
     <string name="src_libre_reconnect">Reconectar</string>
     <string name="src_libre_reconnect_summary">No próximo intervalo um novo login será requerido.</string>
 
-    <string name="src_cat_nightscout">Seguidor Nightscout</string>
+    <string name="src_cat_nightscout">Nightscout</string>
     <string name="src_ns_enabled">Habilita</string>
     <string name="src_ns_enabled_summary">Habilita Nightscout seguidor.</string>
     <string name="src_ns_url">Nightscout URL</string>
@@ -126,12 +126,16 @@
     <string name="pref_cat_colors">Coress</string>
 
     <string name="pref_switch_notification">Valores fictícios</string>
+    <string name="pref_very_high_value">Glicose muito alta</string>
+    <string name="pref_very_high_value_summary">Limite para valores muito altos de glicose.</string>
     <string name="pref_high_value">Glicose alta</string>
     <string name="pref_high_value_summary">Limite para valores altos de glicose.</string>
     <string name="pref_target_max_value">Meta de glicose superior</string>
     <string name="pref_target_max_value_summary">Valor superior para o intervalo desejado.</string>
     <string name="pref_target_min_value">Meta de glicose superior inferior</string>
     <string name="pref_target_min_value_summary">Valor inferior para o intervalo desejado.</string>
+    <string name="pref_very_low_value">Glicose muito baixa</string>
+    <string name="pref_very_low_value_summary">Limite para valores muito baixos de glicose.</string>
     <string name="pref_low_value">Glicose baixa</string>
     <string name="pref_low_value_summary">Limite para valores baixos de glicose.</string>
     <string name="pref_switch_car_notification">Android Auto notificações</string>
@@ -158,10 +162,10 @@
     <string name="pref_switch_use_mmol_summary">Use mmol/l em vez de mg/dl.</string>
     <string name="pref_switch_use_5_min_delta">5 minutos delta</string>
     <string name="pref_switch_use_5_min_delta_summary">Ative esta opção para usar valores delta para intervalos de 5 minutos; caso contrário, será usado intervalo de 1 minuto.</string>
-    <string name="pref_color_alarm">Cores Alto/Baixo</string>
-    <string name="pref_color_alarm_summary">Cor para valores altos e baixos de glicose.</string>
-    <string name="pref_color_out_of_range">Cor fora do intervalo</string>
-    <string name="pref_color_out_of_range_summary">Cor para valores de glicose fora da faixa alvo.</string>
+    <string name="pref_color_alarm">Cores muito Alto/Baixo</string>
+    <string name="pref_color_alarm_summary">Cor para valores muito altos e muito baixos de glicose.</string>
+    <string name="pref_color_out_of_range">Cores Alto/Baixo</string>
+    <string name="pref_color_out_of_range_summary">Cor para valores altos e baixos de glicose.</string>
     <string name="pref_color_ok">Cor alvo</string>
     <string name="pref_color_ok_summary">Cor para valores de glicose na faixa do alvo.</string>
     <string name="pref_notification">Notificação</string>
@@ -282,7 +286,7 @@
     <string name="info_label_iob">IOB</string>
     <string name="info_label_cob">COB</string>
     <string name="src_xdrip_noise_blocking">NNoise-Block ativo nas configurações entre aplicativos do xDrip+!\nPor favor, altere para \"Extremamente barulhento\"!</string>
-    <string name="pref_cat_follower">Seguidor</string>
+    <string name="pref_cat_follower">Serviços na nuvem</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
     <string name="pref_source_juggluco_info_summary">Para receber valores do Juggluco:\n- abra o Juggluco\n- acesse as configurações\n- ative a transmissão do Glucodata\n- ative \"de.michelinside.glucodatahandler\"</string>
     <string name="pref_gda_source_juggluco_info_summary">Para receber valores do Juggluco:\n- abra o Juggluco\n- acesse as configurações\n- ative a transmissão do Glucodata\n- ative \"de.michelinside.glucodataauto\"</string>
@@ -395,7 +399,7 @@
     <string name="alarm_retrigger_summary">Se a notificação de alarme não for fechada, o alarme será acionado novamente após esse intervalo em minutos, até 3 vezes.\n0 - sem reativação</string>
     <string name="alarm_obsolete">obsoleto</string>
     <string name="obsolete_alarm_notification_name">Alarme obsoleto</string>
-    <string name="alarm_obsolete_summary">Configurações de alarme para nenhum novo valor de glicose.</string>
+    <string name="alarm_obsolete_summary">Alarme se não houver um novo valor de glicose por %1$s minutos.</string>
     <string name="obsolete_alarm_notification_descr">Esta notificação aparecerá se não houver nenhum novo valor em um intervalo.</string>
     <string name="obsolete_alarm_text">Sem novo valor!</string>
 
@@ -496,4 +500,27 @@
     <string name="pref_notification_custom_layout_summary">Exibe os valores em texto grande e colorido.\nEm alguns dispositivos Samsung com Android 13 e superior, isso pode fazer com que o aplicativo trave devido a um bug do lado da Samsung.\nSe o problema ocorrer, essa configuração será desativada automaticamente para garantir que o aplicativo permaneça funcional.</string>
     <string name="app_crash_title">Falha detectada!</string>
     <string name="app_crash_message">Sinto muito que o aplicativo tenha travado durante a execução!\nPor favor, envie-me os logs para que eu possa analisar o erro e tentar corrigi-lo o mais rápido possível.\nObrigado!</string>
+    <string name="src_cat_dexcom_share">Dexcom Share</string>
+    <string name="src_dexcom_share_us_server">Conta dos EUA</string>
+    <string name="src_dexcom_share_us_server_summary_on">Uma conta dos EUA está sendo usada.</string>
+    <string name="src_dexcom_share_us_server_summary_off">Uma conta internacional está sendo usada.</string>
+    <string name="src_dexcom_share_enabled_summary">Habilitar conta Dexcom Share.\nVocê precisa configurar o nome de usuário e a senha antes.</string>
+    <string name="src_username">Nome de usuário</string>
+    <string name="src_dexcom_share_user_summary">Nome de usuário ou e-mail para a conta Dexcom Share.</string>
+    <string name="src_dexcom_share_password_summary">Senha para a conta Dexcom Share.</string>
+    <string name="pref_source_dexcom_share_info">Configurar Dexcom Share</string>
+    <string name="pref_source_dexcom_share_info_summary">Para receber dados dos servidores Dexcom Share, você precisa ter:\n- compartilhamento habilitado no aplicativo Dexcom que está conectado ao sensor\n- aceita a solicitação no aplicativo Dexcom Follower (você pode desinstalá-lo depois)\n\nImportante: não funciona com um usuário seguidor!</string>
+    <string name="permission_missing_title">Missing permission!</string>
+    <string name="setting_permission_missing_message">A configuração \'%1$s\' está ativada, mas a permissão relacionada não foi concedida! \nPressione \"OK\" para ser direcionado ao diálogo de permissões ou pressione \"Cancelar\" para desativar esta configuração.</string>
+    <string name="pref_source_dexcom_byoda_info">Dexcom BYODA</string>
+    <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
+    <string name="xdrip_broadcast_service_api_enabled_summary">Use a API do Serviço de Transmissão xDrip+ para receber dados (incluindo IOB) do xDrip+.\nPor favor, ative o \"API do Serviço de Transmissão\" nas \"Configurações entre aplicações\" no xDrip+ primeiro!</string>
+    <string name="obsolete_time">Tempo obsoleto</string>
+    <string name="obsolete_time_summary">Tempo em minutos após o qual o valor é considerado obsoleto.\nDepois do dobro deste tempo, o valor é removido.</string>
+    <string name="pref_source_offline">Aplicações locais</string>
+    <string name="pref_source_offline_summary">Aplicações no mesmo dispositivo que fornecem valores de glicose como mensagem de transmissão interna, como Juggluco, xDrip+, AAPS e assim por diante.</string>
+    <string name="pref_cat_follower_summary">Serviços em nuvem que fornecem valores de glicose pela internet, como LibreLinkUp, Dexcom Share e Nightscout.</string>
+    <string name="pref_source_xdrip_broadcast">Alternativa: Transmissão local</string>
+    <string name="pref_source_dexcom_byoda_info_summary">Para receber valores do Dexcom BYODA, você precisa habilitar a transmissão para xDrip+, AAPS ou ambos durante a construção do aplicativo.</string>
+    <string name="pref_source_eversense_info_summary">Para receber os valores do Eversense, você precisa usar o ESEL, seja no modo companheiro (notificação de leitura) ou conectado ao aplicativo Eversense modificado.\nPara mais informações sobre o ESEL, clique aqui.</string>
 </resources>

@@ -31,7 +31,7 @@ class TimeStampComplication: TimeComplicationBase() {
     override fun getRangeValueComplicationData(): ComplicationData {
         val time = Date(ReceiveData.time)
 
-        val value = if (ReceiveData.isObsolete(3600)) 0F else (time.minutes * 60 + time.seconds).toFloat()
+        val value = if (ReceiveData.isObsoleteTime(3600)) 0F else (time.minutes * 60 + time.seconds).toFloat()
         return RangedValueComplicationData.Builder(
             value = Utils.rangeValue(value, 0F, 3599F),
             min = 0F,

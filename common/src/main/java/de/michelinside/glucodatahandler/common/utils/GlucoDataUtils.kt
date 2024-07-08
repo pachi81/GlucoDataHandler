@@ -31,7 +31,7 @@ object GlucoDataUtils {
     }
 
     fun getRateSymbol(rate: Float): Char {
-        if(ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) || java.lang.Float.isNaN(
+        if(ReceiveData.isObsoleteShort() || java.lang.Float.isNaN(
                 rate
             ))
             return '?'
@@ -54,7 +54,9 @@ object GlucoDataUtils {
         return if (java.lang.Float.isNaN(rate)) "" else "DoubleDown"
     }
 
-    fun getRateFromLabel(trendLabel: String): Float {
+    fun getRateFromLabel(trendLabel: String?): Float {
+        if(trendLabel==null)
+            return Float.NaN
         return when(trendLabel) {
             "DoubleDown" -> -4F
             "SingleDown" -> -2F

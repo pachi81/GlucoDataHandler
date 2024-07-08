@@ -216,6 +216,34 @@
             </intent-filter>
         </receiver>
         <receiver
+            android:name=".common.receiver.DexcomBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="com.dexcom.cgm.EXTERNAL_BROADCAST" />
+                <action android:name="com.dexcom.g7.EXTERNAL_BROADCAST" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".common.receiver.NsEmulatorReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="com.eveningoutpost.dexdrip.NS_EMULATOR" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".common.receiver.BroadcastServiceAPI"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="com.eveningoutpost.dexdrip.watch.wearintegration.BROADCAST_SERVICE_SENDER" />
+            </intent-filter>
+        </receiver>
+        <receiver
             android:name=".StartServiceAtBootReceiver"
             android:enabled="true"
             android:exported="true">

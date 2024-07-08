@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
@@ -90,8 +91,6 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
             ReceiveData.initData(this)
 
-            PackageUtils.updatePackages(this)
-
             alarmIcon.setOnClickListener {
                 toggleAlarm()
             }
@@ -118,7 +117,8 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 startActivity(intent)
             }
             if(requestPermission())
-                GlucoDataServiceWear.start(this, true)
+                GlucoDataServiceWear.start(this)
+            PackageUtils.updatePackages(this)
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
@@ -156,7 +156,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Notification permission granted")
                 requestNotificationPermission = false
-                GlucoDataServiceWear.start(this, true)
+                GlucoDataServiceWear.start(this)
             }
             GlucoDataService.checkForConnectedNodes(true)
         } catch( exc: Exception ) {
@@ -231,11 +231,12 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun update() {
         try {
             txtBgValue.text = ReceiveData.getGlucoseAsString()
             txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
-            if (ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC) && !ReceiveData.isObsolete()) {
+            if (ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong()) {
                 txtBgValue.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
             } else {
                 txtBgValue.paintFlags = 0
@@ -244,9 +245,9 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
             timeText.text = "🕒 ${ReceiveData.getElapsedRelativeTimeAsString(this)}"
             deltaText.text = "Δ ${ReceiveData.getDeltaAsString()}"
-            iobText.text = "💉 " + ReceiveData.getIobAsString()
-            cobText.text = "🍔 " + ReceiveData.getCobAsString()
-            iobText.visibility = if (ReceiveData.isIobCobObsolete(Constants.VALUE_OBSOLETE_LONG_SEC)) View.GONE else View.VISIBLE
+            iobText.text = "💉 ${ReceiveData.getIobAsString()}"
+            cobText.text = "🍔 ${ReceiveData.getCobAsString()}"
+            iobText.visibility = if (ReceiveData.isIobCobObsolete()) View.GONE else View.VISIBLE
             cobText.visibility = iobText.visibility
 
             txtValueInfo.visibility = if(ReceiveData.time>0) View.GONE else View.VISIBLE

@@ -250,7 +250,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                 notificationCompat
                     .setLargeIcon(BitmapUtils.getRateAsBitmap(resizeFactor = 0.75F))
                     .setWhen(ReceiveData.time)
-                    .setStyle(createMessageStyle(context, ReceiveData.isObsolete(Constants.VALUE_OBSOLETE_SHORT_SEC)))
+                    .setStyle(createMessageStyle(context, ReceiveData.isObsoleteShort()))
                 notificationMgr.notify(NOTIFICATION_ID, notificationCompat)
                 if(dataSource != NotifySource.TIME_VALUE) {
                     last_notification_time = ReceiveData.time
