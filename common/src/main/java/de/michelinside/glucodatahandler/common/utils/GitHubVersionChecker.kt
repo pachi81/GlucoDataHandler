@@ -119,9 +119,9 @@ class GitHubVersionChecker(val repo: String, val curVersion: String, val context
         return duration(time) >= minDuration
     }
 
-    private fun isObsolete(): Boolean {
+    private fun isObsolete(days: Long): Boolean {
         if(latestVersionTime > 0 && latestVersionObject != null) {
-            return checkObsolete(latestVersionTime, Duration.ofDays(7))
+            return checkObsolete(latestVersionTime, Duration.ofDays(days))
         }
         return true
     }
@@ -145,16 +145,16 @@ class GitHubVersionChecker(val repo: String, val curVersion: String, val context
         return getStringFromObject(TAG_CONTENT)
     }
 
-    private fun canCheckVersion(): Boolean {
-        return !checkVersionActive.get() && isObsolete() && checkObsolete(lastCheckTime, Duration.ofDays(1))
+    private fun canCheckVersion(days: Long): Boolean {
+        return !checkVersionActive.get() && isObsolete(days) && checkObsolete(lastCheckTime, Duration.ofDays(1))
     }
 
     val hasNewVersion: Boolean get() = newVersionAvailable
 
-    fun checkVersion() {
+    fun checkVersion(days: Long = 7) {
         try {
             Log.v(LOG_ID, "checkVersion called")
-            if(canCheckVersion()) {
+            if(canCheckVersion(days)) {
                 checkVersionActive.set(true)
                 scope.launch() {
                     requestLatest()
