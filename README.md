@@ -5,12 +5,15 @@
 ## Features
 
 * receives glucose values as **[LibreLink follower](./SOURCES.md#librelink)**
-* receives glucose, IOB and COB values from Nightscout (pebble interface)
-* receives glucose, IOB and COB values from [AndroidAPS](./SOURCES.md#androidaps)
-* receives glucose values from [Juggluco](./SOURCES.md#juggluco)
-* receives glucose values from [xDrip+](./SOURCES.md#xdrip)
+* receives glucose values as **[Dexcom Share follower](./SOURCES.md#dexcom-share)**
+* receives glucose, IOB and COB values from **Nightscout** (pebble interface)
+* receives glucose, IOB and COB values from **[AndroidAPS](./SOURCES.md#androidaps)**
+* receives glucose values from **[Juggluco](./SOURCES.md#juggluco)**
+* receives glucose values from **[xDrip+](./SOURCES.md#xdrip)**
+* receives glucose values from **[Eversense](./SOURCES.md#eversense)** (using **[ESEL](https://github.com/BernhardRo/Esel)**)
+* receives glucose values from **[Dexom BYODA](./SOURCES.md#dexcom-byoda)** (not tested, yet!)
 * Support for **[alarms](#alarms)**:
-  * alarm for very low, low, high, very high and obsolete values
+  * alarm for very low, low, high, very high and obsolete glucose values
   * individual sound settings for each alarm type
   * fullscreen alarm on lockscreen
 * provides several **[widgets](#widgets)** and a floating widget for the phone

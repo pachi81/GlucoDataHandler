@@ -6,10 +6,13 @@
 ## Funkcje
 
 * odbiera wartości glukozy jako **[LibreLink follower](./SOURCES_PL.md#librelink)**
-* odbiera wartości glukozy, IOB i COB z Nightscout (interfejs pebble)
+* odbiera wartości glukozy jako **[Dexcom Share follower](./SOURCES_PL.md#dexcom-share)**
+* odbiera wartości glukozy, IOB i COB z **Nightscout** (interfejs pebble)
 * odbiera wartości glukozy, IOB i COB z **[AndroidAPS](./SOURCES_PL.md#androidaps)**
 * odbiera wartości glukozy z **[Juggluco](./SOURCES_PL.md#juggluco)**
 * odbiera wartości glukozy z **[xDrip+](./SOURCES_PL.md#xdrip)**
+* odbiera wartości glukozy z **[Eversense](./SOURCES_PL.md#eversense)** (using [ESEL](https://github.com/BernhardRo/Esel))
+* odbiera wartości glukozy z **[Dexom BYODA](./SOURCES_PL.md#dexcom-byoda)** (not tested, yet!)
 * Obsługa **[alarmów](#alarmy)**:
   * alarm dla bardzo niskich, niskich, wysokich, bardzo wysokich i nieaktualnych wartości
   * indywidualne ustawienia dźwięku dla każdego typu alarmu
