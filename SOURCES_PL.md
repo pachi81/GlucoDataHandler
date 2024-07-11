@@ -31,7 +31,7 @@ Aby odbierać dane z serwerów Dexcom Share, musisz mieć:
 
 # Juggluco
 
-Jeśli używasz Juggluco do odbierania wartości glukozy, otwórz Juggluco i włącz w Ustawieniach opcję `Glucodata broadcast` i wybierz `de.michelinside.glucodatahandler` (or `de.michelinside.glucodataauto` for [GlucoDataAuto](https://github.com/pachi81/GlucoDataAuto/blob/main/README_PL.md)). Zapisz i OK.
+Jeśli używasz Juggluco do odbierania wartości glukozy, otwórz Juggluco i włącz w Ustawieniach opcję `Glucodata broadcast` i wybierz `de.michelinside.glucodatahandler` (lub `de.michelinside.glucodataauto` w przypadku [GlucoDataAuto](https://github.com/pachi81/GlucoDataAuto/blob/main/README_PL.md)). Zapisz i OK.
 
 <img src='images/broadcast.png' width=700>
 
@@ -47,7 +47,7 @@ Przejdź do ustawień i wybierz Ustawienia innych aplikacji
 * włącz "Nadawaj lokalnie"
 * ustaw "Blokowanie szumów" na "Send even Extremely noisy signals"
 * włącz "Kompatybilny Broadcast"
-* sprawdź, czy pole "Identyfikuj odbiornik" jest puste, a jeśli jest już tam jakiś wpis, dodaj za nim spację a następnie wpisz `de.michelinside.glucodatahandler` (lub `de.michelinside.glucodataauto` for [GlucoDataAuto](https://github.com/pachi81/GlucoDataAuto/blob/main/README_PL.md))
+* sprawdź, czy pole "Identyfikuj odbiornik" jest puste, a jeśli jest już tam jakiś wpis, dodaj za nim spację a następnie wpisz `de.michelinside.glucodatahandler` (lub `de.michelinside.glucodataauto` w przypadku [GlucoDataAuto](https://github.com/pachi81/GlucoDataAuto/blob/main/README_PL.md))
 
 <img src='images/xDrip_InterAppSettings.png' height=340> <img src='images/xDrip+_noise_blocking.jpg' height=340>
 
