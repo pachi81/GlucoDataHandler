@@ -1,8 +1,17 @@
 [<img src='images/en.png' height=10> English version](SOURCES.md)  
 [<img src='images/pl.png' height=10> Wersja polska](SOURCES_PL.md)
 
-# LibreLink
+# Quellen <!-- omit in toc -->
+- [LibreLink](#librelink)
+- [Dexcom Share](#dexcom-share)
+- [Juggluco](#juggluco)
+- [xDrip+](#xdrip)
+- [AndroidAPS](#androidaps)
+- [Eversense](#eversense)
+- [Dexcom BYODA](#dexcom-byoda)
 
+
+# LibreLink
 Um LibreLink zu verwenden wird ein LibreLinkUp Konto benötigt.
 Wenn noch keines erstellt wurde, folgen Sie bitte dieser [Anleitung](https://librelinkup.com/articles/getting-started).
 
@@ -34,7 +43,7 @@ Für die Benutzer von xDrip+, in den Einstellung den Eintrag Inter-App Einstellu
 
 <img src='images/de/xdrip_broadcast_api.jpg' height=340>
 
-## Alternative: Lokaler Broadcast
+## Alternative: Lokaler Broadcast <!-- omit in toc -->
 In den Einstellung den Eintrag Inter-App Einstellungen öffnen und wie folgt konfigurieren:
 * "Lokaler Broadcast" aktivieren
 * "Kompatible Broadcast" aktivieren

@@ -1,6 +1,16 @@
 [<img src='images/de.png' height=10> Deutsche Version](SOURCES_DE.md)  
 [<img src='images/pl.png' height=10> Wersja polska](SOURCES_PL.md)
 
+# Sources <!-- omit in toc -->
+- [LibreLink](#librelink)
+- [Dexcom Share](#dexcom-share)
+- [Juggluco](#juggluco)
+- [xDrip+](#xdrip)
+- [AndroidAPS](#androidaps)
+- [Eversense](#eversense)
+- [Dexcom BYODA](#dexcom-byoda)
+
+
 # LibreLink
 
 To set up LibreLink as follower, you need the account data from LibreLinkUp.
@@ -34,7 +44,7 @@ If you are using xDrip+ to receive glucose values, open xDrip+, go to setting an
 
 <img src='images/xdrip_broadcast_api.jpg' height=340>
 
-## Alternative: Broadcast locally
+## Alternative: Broadcast locally <!-- omit in toc -->
 Go to setting and select Inter-app settings
 * Enable "Broadcast locally"
 * Enable "Compatible Broadcast"

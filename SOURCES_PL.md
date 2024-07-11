@@ -1,8 +1,16 @@
 [<img src='images/en.png' height=10> English version](SOURCES.md)  
 [<img src='images/de.png' height=10> Deutsche Version](SOURCES_DE.md)
 
-# LibreLink
+# Źródła <!-- omit in toc -->
+- [LibreLink](#librelink)
+- [Dexcom Share](#dexcom-share)
+- [Juggluco](#juggluco)
+- [xDrip+](#xdrip)
+- [AndroidAPS](#androidaps)
+- [Eversense](#eversense)
+- [Dexcom BYODA](#dexcom-byoda)
 
+# LibreLink
 Aby skonfigurować LibreLink jako „follower”, potrzebne są dane konta z LibreLinkUp.
 Jeśli nie skonfigurowałeś jeszcze swojego konta LibreLinkUp, postępuj zgodnie z tą [instrukcją](https://librelinkup.com/articles/getting-started).
 
@@ -34,7 +42,7 @@ Jeśli używasz xDrip+ do odbierania wartości glukozy, otwórz xDrip+, przejdź
 
 <img src='images/xdrip_broadcast_api.jpg' height=340>
 
-## Alternatywa: nadawanie lokalne xDrip+
+## Alternatywa: nadawanie lokalne xDrip+ <!-- omit in toc -->
 Przejdź do ustawień i wybierz Ustawienia innych aplikacji
 * włącz "Nadawaj lokalnie"
 * ustaw "Blokowanie szumów" na "Send even Extremely noisy signals"
