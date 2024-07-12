@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.media.AudioManager
 import android.media.MediaScannerConnection
 import android.media.RingtoneManager
 import android.net.Uri
@@ -223,6 +224,7 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
         val pref = findPreference<Preference>(preference)
         pref?.setOnPreferenceClickListener {
             Log.d(LOG_ID, "Trigger test for $alarmType")
+            stopTestSound()
             pref.isEnabled = false
             AlarmNotification.triggerTest(alarmType, requireContext())
             true
@@ -362,22 +364,26 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
     }
 
     private fun startTestSound() {
-        if(curAlarmLevel < 0) {
-            curAlarmLevel = AlarmNotification.getCurrentSoundLevel()
-        }
-        var soundLevel = preferenceManager!!.sharedPreferences!!.getInt(soundLevelPref, -1)
-        if(soundLevel<0)
-            soundLevel =  curAlarmLevel
-        Log.d(LOG_ID, "Start test sound with level $soundLevel")
-        AlarmNotification.stopVibrationAndSound()
-        AlarmNotification.setSoundLevel(soundLevel)
-        if(!AlarmNotification.isRingtonePlaying()) {
-            AlarmNotification.startSound(alarmType, requireContext(), false, forTest = true)
+        val audioManager = requireContext().getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        Log.d(LOG_ID, "start test sound in mode ${audioManager.ringerMode}")
+        if (audioManager.ringerMode >= AudioManager.RINGER_MODE_NORMAL) {
+            if (curAlarmLevel < 0) {
+                curAlarmLevel = AlarmNotification.getCurrentSoundLevel()
+            }
+            var soundLevel = preferenceManager!!.sharedPreferences!!.getInt(soundLevelPref, -1)
+            if (soundLevel < 0)
+                soundLevel = curAlarmLevel
+            Log.d(LOG_ID, "Start test sound with level $soundLevel - current $curAlarmLevel")
+            AlarmNotification.stopVibrationAndSound()
+            AlarmNotification.setSoundLevel(soundLevel)
+            if (!AlarmNotification.isRingtonePlaying()) {
+                AlarmNotification.startSound(alarmType, requireContext(), false, forTest = true)
+            }
         }
     }
 
     private fun stopTestSound() {
-        Log.d(LOG_ID, "Stop test sound")
+        Log.d(LOG_ID, "Stop test sound with current $curAlarmLevel")
         if(curAlarmLevel >= 0) {
             AlarmNotification.stopVibrationAndSound()
             AlarmNotification.setSoundLevel(curAlarmLevel)
