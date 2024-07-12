@@ -605,6 +605,11 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     protected fun checkRecreateSound() {
         try {
+            if(lastSoundLevel >= 0) {
+                Log.i(LOG_ID, "Reset sound level to $lastSoundLevel")
+                setSoundLevel(lastSoundLevel)
+                lastSoundLevel = -1
+            }
             if(lastRingerMode >= 0 ) {
                 Log.i(LOG_ID, "Reset ringer mode to $lastRingerMode")
                 audioManager.ringerMode = lastRingerMode
@@ -614,12 +619,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 Log.i(LOG_ID, "Reset DnD mode to $lastDndMode")
                 Channels.getNotificationManager().setInterruptionFilter(lastDndMode)
                 lastDndMode = NotificationManager.INTERRUPTION_FILTER_UNKNOWN
-            }
-
-            if(lastSoundLevel >= 0) {
-                Log.i(LOG_ID, "Reset sound level to $lastSoundLevel")
-                setSoundLevel(lastSoundLevel)
-                lastSoundLevel = -1
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "checkCreateSound exception: " + exc.message.toString() )
