@@ -556,12 +556,13 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     }
                 }
             }
-            val soundLevel = getSoundLevel(alarmType, context)
-            if (soundLevel >= 0) {
-                lastSoundLevel = getCurrentSoundLevel()
-                Log.d(LOG_ID, "Set cur sound level $lastSoundLevel to $soundLevel")
-                setSoundLevel(soundLevel)
-
+            if(audioManager.ringerMode == AudioManager.RINGER_MODE_NORMAL) {
+                val soundLevel = getSoundLevel(alarmType, context)
+                if (soundLevel >= 0) {
+                    lastSoundLevel = getCurrentSoundLevel()
+                    Log.d(LOG_ID, "Set cur sound level $lastSoundLevel to $soundLevel")
+                    setSoundLevel(soundLevel)
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "checkCreateSound exception: " + exc.message.toString() )
