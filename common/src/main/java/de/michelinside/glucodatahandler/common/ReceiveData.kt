@@ -186,6 +186,20 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return "mg/dl"
     }
 
+    fun getOtherUnit(): String {
+        if (isMmol)
+            return "mg/dl"
+        return "mmol/l"
+    }
+
+    fun getGlucoseAsOtherUnit(): String {
+        if(isObsoleteLong())
+            return "---"
+        if (isMmol)
+            return rawValue.toString()
+        return GlucoDataUtils.mgToMmol(rawValue.toFloat()).toString()
+    }
+
     fun isIobCob() : Boolean {
         if (isIobCobObsolete()) {
             iob = Float.NaN

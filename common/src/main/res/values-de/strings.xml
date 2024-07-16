@@ -516,4 +516,6 @@
     <string name="new_version">Version %s ist verfügbar!</string>
     <string name="info_label_notes">Hinweise</string>
     <string name="gda_notification_permission">Benachrichtigungen sind deaktiviert!\nHier klicken um die Einstellungen zu ändern.</string>
+    <string name="pref_show_other_unit">Zeige andere Einheit</string>
+    <string name="pref_show_other_unit_summary">Zeige den Glukosewert zusätzlich in %s in den Details.</string>
 </resources>

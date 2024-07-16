@@ -239,7 +239,35 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
     }
 }
 
-class GeneralSettingsFragment: SettingsFragmentBase(R.xml.pref_general) {}
+class GeneralSettingsFragment: SettingsFragmentBase(R.xml.pref_general) {
+
+    override fun initPreferences() {
+        Log.v(LOG_ID, "initPreferences called")
+        super.initPreferences()
+        updateSummary()
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        try {
+            super.onSharedPreferenceChanged(sharedPreferences, key)
+            when (key) {
+                Constants.SHARED_PREF_USE_MMOL -> updateSummary()
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
+        }
+    }
+
+    private fun updateSummary() {
+        val useMmol = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_USE_MMOL)
+        val otherUnitPref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_SHOW_OTHER_UNIT)
+        if(otherUnitPref != null && useMmol != null) {
+            val otherUnit = if(useMmol.isChecked) "mg/dl" else "mmol/l"
+            otherUnitPref.summary = requireContext().resources.getString(CR.string.pref_show_other_unit_summary).format(otherUnit)
+        }
+    }
+}
+
 class RangeSettingsFragment: SettingsFragmentBase(R.xml.pref_target_range) {}
 class UiSettingsFragment: SettingsFragmentBase(R.xml.pref_ui) {}
 class WidgetSettingsFragment: SettingsFragmentBase(R.xml.pref_widgets) {
@@ -263,8 +291,8 @@ class WidgetSettingsFragment: SettingsFragmentBase(R.xml.pref_widgets) {
             stylePref.summary = stylePref.entry
         }
     }
-
 }
+
 class NotificaitonSettingsFragment: SettingsFragmentBase(R.xml.pref_notification) {}
 class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen) {}
 class WatchSettingsFragment: SettingsFragmentBase(R.xml.pref_watch) {
