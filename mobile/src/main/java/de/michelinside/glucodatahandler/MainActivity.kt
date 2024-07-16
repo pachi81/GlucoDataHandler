@@ -617,8 +617,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun updateDetailsTable() {
         tableDetails.removeViews(1, maxOf(0, tableDetails.childCount - 1))
         if(ReceiveData.time > 0) {
-            if (ReceiveData.isMmol)
-                tableDetails.addView(createRow(CR.string.info_label_raw, "${ReceiveData.rawValue} mg/dl"))
+            if (sharedPref.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, false)) {
+                tableDetails.addView(createRow(ReceiveData.getOtherUnit(), ReceiveData.getGlucoseAsOtherUnit()))
+            }
             tableDetails.addView(createRow(CR.string.info_label_timestamp, DateFormat.getTimeInstance(
                 DateFormat.DEFAULT).format(Date(ReceiveData.time))))
             if (!ReceiveData.isIobCobObsolete(1.days.inWholeSeconds.toInt()))

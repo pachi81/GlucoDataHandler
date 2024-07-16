@@ -531,4 +531,6 @@
     <string name="new_version">Versión %s está disponible</string>
     <string name="info_label_notes">Notas</string>
     <string name="gda_notification_permission">¡Las notificaciones están desactivadas!\nPresiona aquí para activarlas.</string>
+    <string name="pref_show_other_unit">Show other unit</string>
+    <string name="pref_show_other_unit_summary">Show glucose value in %s in the details.</string>
 </resources>

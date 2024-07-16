@@ -103,6 +103,8 @@ object Constants {
     const val SHARED_PREF_OPEN_WATCH_DRIP_LINK = "open_watchdrip_link"
     const val SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT = "uncaught_exception_detected"
     const val SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE = "uncaught_exception_message"
+    const val SHARED_PREF_SHOW_OTHER_UNIT = "show_other_unit"
+
 
     // internal app preferences (not changed by settings) -> use separate tag for not trigger onChanged events
     const val SHARED_PREF_INTERNAL_TAG = "GlucoDataHandlerInternalAppPrefs"
