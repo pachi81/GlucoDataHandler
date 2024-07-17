@@ -543,4 +543,7 @@
     <string name="pref_source_dexcom_byoda_info_summary">To receive values from Dexcom BYODA you have to enable broadcast to xDrip+, AAPS or both while building the app.</string>
     <string name="pref_source_eversense_info" translatable="false">Eversense (ESEL)</string>
     <string name="pref_source_eversense_info_summary">To receive values from Eversense, you have to use ESEL either in companion mode (reading notification) or connected to the patched Eversense app.\nFor more information about ESEL, press here.</string>
+    <string name="new_version">Version %s is available</string>
+    <string name="info_label_notes">Notes</string>
+    <string name="gda_notification_permission">Notifications are disabled! \nPress here to enable them.</string>
 </resources>
