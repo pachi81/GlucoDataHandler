@@ -12,7 +12,7 @@
 * odbiera wartości glukozy z **[Juggluco](./SOURCES_PL.md#juggluco)**
 * odbiera wartości glukozy z **[xDrip+](./SOURCES_PL.md#xdrip)**
 * odbiera wartości glukozy z **[Eversense](./SOURCES_PL.md#eversense)** (przy użyciu [ESEL](https://github.com/BernhardRo/Esel))
-* odbiera wartości glukozy z **[Dexom BYODA](./SOURCES_PL.md#dexcom-byoda)** (funkcja jeszcze nie została przetestowana!)
+* odbiera wartości glukozy z **[Dexcom BYODA](./SOURCES_PL.md#dexcom-byoda)** (funkcja jeszcze nie została przetestowana!)
 * Obsługa **[alarmów](#alarmy)**:
   * alarm dla bardzo niskich, niskich, wysokich, bardzo wysokich i nieaktualnych wartości
   * indywidualne ustawienia dźwięku dla każdego typu alarmu

@@ -11,7 +11,7 @@
 * empfängt Glukose Werte von **[Juggluco](./SOURCES_DE.md#juggluco)**
 * empfängt Glukose Werte von **[xDrip+](./SOURCES_DE.md#xdrip)**
 * empfängt Glukose Werte von **[Eversense](./SOURCES_DE.md#eversense)** (mittels **[ESEL](https://github.com/BernhardRo/Esel)**)
-* empfängt Glukose Werte von **[Dexom BYODA](./SOURCES_DE.md#dexcom-byoda)** (bisher nicht getestet!)
+* empfängt Glukose Werte von **[Dexcom BYODA](./SOURCES_DE.md#dexcom-byoda)** (bisher nicht getestet!)
 * Unterstützung von **[Alarmen](#alarme)**:
   * Alarmtypen: sehr tiefe, tiefe, hohe, sehr hohe und veraltete Werte
   * Individuelle Ton und Vibrationseinstellungen für jeden Alarmtypen
