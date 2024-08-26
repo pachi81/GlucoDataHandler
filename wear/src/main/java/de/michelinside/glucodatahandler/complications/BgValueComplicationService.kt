@@ -107,8 +107,8 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     }
 
     open fun getRangeValueComplicationData(): ComplicationData {
-        val value = ReceiveData.glucose
-        val max = if(ReceiveData.isMmol) 16F else 280F
+        val value = ReceiveData.rawValue.toFloat()
+        val max = 280F
         return RangedValueComplicationData.Builder(
             value = Utils.rangeValue(value, 0F, max),
             min = 0F,

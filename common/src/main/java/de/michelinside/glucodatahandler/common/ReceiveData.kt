@@ -388,9 +388,10 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                         glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
                         changeIsMmol(rawValue!=glucose.toInt() && GlucoDataUtils.isMmolValue(glucose), context)
                     } else {
-                        glucose = rawValue.toFloat()
                         if (isMmol) {
                             glucose = GlucoDataUtils.mgToMmol(glucose)
+                        } else {
+                            glucose = rawValue.toFloat()
                         }
                     }
                     time = extras.getLong(TIME) //time in msec
