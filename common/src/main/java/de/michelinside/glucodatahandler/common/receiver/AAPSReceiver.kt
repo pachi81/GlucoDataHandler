@@ -58,12 +58,12 @@ open class AAPSReceiver: BroadcastReceiver() {
                         }
                         glucoExtras.putFloat(ReceiveData.RATE, slope)
                         if(extras.containsKey(IOB_VALUE)) {
-                            glucoExtras.putFloat(ReceiveData.IOB, extras.getDouble(IOB_VALUE, Double.NaN).toFloat())
+                            glucoExtras.putFloat(ReceiveData.IOB, Utils.getIobCobValue(extras.getDouble(IOB_VALUE, Double.NaN).toFloat()))
                         } else {
                             glucoExtras.putFloat(ReceiveData.IOB, Float.NaN)
                         }
                         if(extras.containsKey(COB_VALUE)) {
-                            glucoExtras.putFloat(ReceiveData.COB, extras.getDouble(COB_VALUE, Double.NaN).toFloat())
+                            glucoExtras.putFloat(ReceiveData.COB, Utils.getIobCobValue(extras.getDouble(COB_VALUE, Double.NaN).toFloat()))
                         } else {
                             glucoExtras.putFloat(ReceiveData.COB, Float.NaN)
                         }

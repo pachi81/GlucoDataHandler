@@ -30,6 +30,13 @@ object Utils {
         return value.toBigDecimal().setScale( scale, roundingMode).toFloat()
     }
 
+    // check for valid values
+    fun getIobCobValue(value: Float): Float {
+        if (value < 0)
+            return Float.NaN
+        return value
+    }
+
     fun rangeValue(value: Float, min: Float, max: Float): Float {
         if (value > max)
             return max

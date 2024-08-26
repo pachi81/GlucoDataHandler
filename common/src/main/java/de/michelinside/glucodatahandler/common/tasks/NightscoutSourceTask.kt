@@ -160,9 +160,9 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
                     glucoExtras.putString(ReceiveData.SERIAL, jsonObject.getString("device"))
                 if (iob_cob_support) {
                     if (jsonObject.has("iob"))
-                        glucoExtras.putFloat(ReceiveData.IOB, JsonUtils.getFloat("iob", jsonObject))
+                        glucoExtras.putFloat(ReceiveData.IOB, Utils.getIobCobValue(JsonUtils.getFloat("iob", jsonObject)))
                     if (jsonObject.has("cob"))
-                        glucoExtras.putFloat(ReceiveData.COB, JsonUtils.getFloat("cob", jsonObject))
+                        glucoExtras.putFloat(ReceiveData.COB, Utils.getIobCobValue(JsonUtils.getFloat("cob", jsonObject)))
                 } else {
                     glucoExtras.putFloat(ReceiveData.IOB, Float.NaN)
                     glucoExtras.putFloat(ReceiveData.COB, Float.NaN)
