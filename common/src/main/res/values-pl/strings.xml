@@ -524,6 +524,10 @@
     <string name="new_version">Dostępna jest nowa wersja %s</string>
     <string name="info_label_notes">Uwagi</string>
     <string name="gda_notification_permission">Powiadomienia są wyłączone! \nNaciśnij tutaj, aby je włączyć.</string>
+
+
     <string name="pref_show_other_unit">Show other unit</string>
     <string name="pref_show_other_unit_summary">Show glucose value in %s in the details.</string>
+    <string name="watch_battery_level">Watch battery level</string>
+    <string name="phone_battery_level">Phone battery level</string>
 </resources>
