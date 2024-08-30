@@ -247,10 +247,12 @@
     <string name="long_value_arrow_delta_time">Glucosa, delta, tendencia y marca de tiempo</string>
     <string name="short_value_rate">Glucosa y valor de tendencia</string>
     <string name="icon_delta">Delta (grande)</string>
+    <string name="image_delta">Delta (grande, en color)</string>
     <string name="short_delta">Delta</string>
     <string name="short_delta_arrow">Delta y tendencia</string>
     <string name="short_delta_icon">Delta con icono</string>
     <string name="short_delta_time">Delta y marca de tiempo</string>
+    <string name="image_delta_time">Delta y marca de tiempo (en color)</string>
     <string name="image_arrow">Tendencia (grande, en color)</string>
     <string name="small_image_arrow">Tendencia (en color)</string>
     <string name="icon_arrow">Icono de tendencia</string>
@@ -259,6 +261,7 @@
     <string name="short_rate_arrow">Valor de tendencia y flecha</string>
     <string name="short_rate_icon">Valor de tendencia con icono</string>
     <string name="timestamp">Marca de tiempo de glucosa</string>
+    <string name="image_timestamp">Tiempo (en color)</string>
     <string name="battery_level">Nivel de batería (wear y teléfono)</string>
     <string name="iob_cob">IOB/COB</string>
 

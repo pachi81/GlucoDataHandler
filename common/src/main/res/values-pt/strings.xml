@@ -243,10 +243,12 @@
     <string name="long_value_arrow_delta_time">Glicose, delta, tendência e timestamp</string>
     <string name="short_value_rate">Glicose e valor de tendência</string>
     <string name="icon_delta">Delta (grande)</string>
+    <string name="image_delta">Delta (grande, colorido)</string>
     <string name="short_delta">Delta</string>
     <string name="short_delta_arrow">Delta and tendência</string>
     <string name="short_delta_icon">Delta com ícone</string>
     <string name="short_delta_time">Delta e timestamp</string>
+    <string name="image_delta_time">Delta e timestamp (colorido)</string>
     <string name="image_arrow">Tendência (grande, colorido)</string>
     <string name="small_image_arrow">Tendência (colorido)</string>
     <string name="icon_arrow">Ícone de tendência</string>
@@ -255,6 +257,7 @@
     <string name="short_rate_arrow">Valor de tendênciae seta</string>
     <string name="short_rate_icon">Valor de tendência e ícone</string>
     <string name="timestamp">Glicose timestamp</string>
+    <string name="image_timestamp">Timestamp (colorido)</string>
     <string name="battery_level">Nível da bateria (wear e Telefone)</string>
     <string name="iob_cob">IOB/COB</string>
 

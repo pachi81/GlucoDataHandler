@@ -261,10 +261,12 @@
     <string name="long_value_arrow_delta_time">Glucose, delta, trend and timestamp</string>
     <string name="short_value_rate">Glucose and trend-value</string>
     <string name="icon_delta">Delta (big)</string>
+    <string name="image_delta">Delta (big, colored)</string>
     <string name="short_delta">Delta</string>
     <string name="short_delta_arrow">Delta and trend</string>
     <string name="short_delta_icon">Delta with Icon</string>
     <string name="short_delta_time">Delta and timestamp</string>
+    <string name="image_delta_time">Delta and timestamp (colored)</string>
     <string name="image_arrow">Trend (big, colored)</string>
     <string name="small_image_arrow">Trend (colored)</string>
     <string name="icon_arrow">Trend icon</string>
@@ -273,6 +275,7 @@
     <string name="short_rate_arrow">Trend value and arrow</string>
     <string name="short_rate_icon">Trend value with icon</string>
     <string name="timestamp">Glucose timestamp</string>
+    <string name="image_timestamp">Timestamp (colored)</string>
     <string name="battery_level">Battery level (watch and phone)</string>
     <string name="watch_battery_level">Watch battery level</string>
     <string name="phone_battery_level">Phone battery level</string>
