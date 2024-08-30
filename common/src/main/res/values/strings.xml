@@ -342,7 +342,6 @@
     <string name="request_exact_alarm_title">Alarms &amp; reminders permission</string>
     <string name="activity_main_schedule_exact_alarm">Schedule exact alarm is disabled!!!\nGlucoDataHandler may not work correct!!!\nPress here to go direct to the permission setting.</string>
 
-    <!-- New  -->
 
     <string name="src_libre_patient">Patient</string>
     <string name="src_libre_patient_summary">If there is more then one patient connected to the libre account, please select the patient receiving the data for.</string>
@@ -356,8 +355,6 @@
     <string name="src_libre_setup_librelink">Missing data! Please accept invitation in LibreLinkUp app first!</string>
     <string name="prefstatus_bar_notification_colored_icon">Colored status bar icon</string>
     <string name="pref_status_bar_notification_colored_icon_summary">If your device supports colored status bar icons, you can also deactivate it to use a white item.</string>
-
-    <!-- New  -->
 
     <string name="menu_alarms">Alarms</string>
     <string name="alarm_interval">Interval</string>
@@ -551,6 +548,9 @@
     <string name="new_version">Version %s is available</string>
     <string name="info_label_notes">Notes</string>
     <string name="gda_notification_permission">Notifications are disabled! \nPress here to enable them.</string>
+
+    <!-- New  -->
+
     <string name="pref_show_other_unit">Show other unit</string>
     <string name="pref_show_other_unit_summary">Show glucose value in %s in the details.</string>
 </resources>
