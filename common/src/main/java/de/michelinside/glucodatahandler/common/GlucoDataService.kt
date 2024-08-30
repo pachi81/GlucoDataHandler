@@ -208,6 +208,18 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                     apply()
                 }
             }
+
+            // show other unit should be default on for mmol/l as there was the raw value before
+            // so this is only related, if use mmol/l is already set, else set to false
+            if(!sharedPrefs.contains(Constants.SHARED_PREF_SHOW_OTHER_UNIT)) {
+                val useMmol = if(sharedPrefs.contains(Constants.SHARED_PREF_USE_MMOL))
+                    sharedPrefs.getBoolean(Constants.SHARED_PREF_USE_MMOL, false)
+                else false
+                with(sharedPrefs.edit()) {
+                    putBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, useMmol)
+                    apply()
+                }
+            }
         }
     }
 

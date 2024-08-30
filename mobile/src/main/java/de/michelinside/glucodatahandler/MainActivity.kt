@@ -301,6 +301,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     { _, _ ->
                         with(sharedPref.edit()) {
                             putBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, false)
+                            apply()
                         }
                     }
                 )
@@ -618,7 +619,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         tableDetails.removeViews(1, maxOf(0, tableDetails.childCount - 1))
         if(ReceiveData.time > 0) {
             if (sharedPref.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, false)) {
-                tableDetails.addView(createRow(ReceiveData.getOtherUnit(), ReceiveData.getGlucoseAsOtherUnit()))
+                tableDetails.addView(createRow(ReceiveData.getOtherUnit(), ReceiveData.getGlucoseAsOtherUnit() + " (Δ " + ReceiveData.getDeltaAsOtherUnit() + ")"))
             }
             tableDetails.addView(createRow(CR.string.info_label_timestamp, DateFormat.getTimeInstance(
                 DateFormat.DEFAULT).format(Date(ReceiveData.time))))

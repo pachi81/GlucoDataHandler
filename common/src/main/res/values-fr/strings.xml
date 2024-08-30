@@ -535,5 +535,6 @@
 
     <string name="pref_show_other_unit">Afficher l\'autre unité</string>
     <string name="pref_show_other_unit_summary">Afficher la valeur du glucose en %s dans les détails.</string>
-    
+    <string name="other_unit">Other unit</string>
+
 </resources>

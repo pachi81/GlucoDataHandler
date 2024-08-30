@@ -200,6 +200,20 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return GlucoDataUtils.mgToMmol(rawValue.toFloat()).toString()
     }
 
+    fun getDeltaAsOtherUnit(): String {
+        if(isObsoleteShort() || deltaValue.isNaN())
+            return "--"
+        val otherDelta = if(isMmol) Utils.round(deltaValue, 1) else GlucoDataUtils.mgToMmol(deltaValue, if (abs(deltaValue) > 1.0F) 1 else 2)
+        var deltaVal = ""
+        if (otherDelta > 0F)
+            deltaVal += "+"
+        deltaVal += if( isMmol && otherDelta.toDouble() == Math.floor(otherDelta.toDouble()) )
+            otherDelta.toInt().toString()
+        else
+            otherDelta.toString()
+        return deltaVal
+    }
+
     fun isIobCob() : Boolean {
         if (isIobCobObsolete()) {
             iob = Float.NaN
@@ -507,6 +521,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             if (bundle.containsKey(Constants.SHARED_PREF_RELATIVE_TIME)) {
                 putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, bundle.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime))
             }
+            // other
+            putBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, bundle.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, isMmol))
             apply()
         }
         updateSettings(sharedPref)
@@ -525,6 +541,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         bundle.putInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm)
         bundle.putInt(Constants.SHARED_PREF_COLOR_OBSOLETE, colorObsolete)
         bundle.putInt(Constants.SHARED_PREF_OBSOLETE_TIME, obsoleteTimeMin)
+
+        // other settings
+        if (GlucoDataService.sharedPref != null) {
+            bundle.putBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, GlucoDataService.sharedPref!!.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, isMmol))
+        }
         return bundle
     }
 
@@ -668,7 +689,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     Constants.SHARED_PREF_COLOR_OUT_OF_RANGE,
                     Constants.SHARED_PREF_COLOR_OBSOLETE,
                     Constants.SHARED_PREF_COLOR_OK,
-                    Constants.SHARED_PREF_OBSOLETE_TIME -> {
+                    Constants.SHARED_PREF_OBSOLETE_TIME,
+                    Constants.SHARED_PREF_SHOW_OTHER_UNIT -> {
                         updateSettings(sharedPreferences!!)
                         val extras = Bundle()
                         extras.putBundle(Constants.SETTINGS_BUNDLE, getSettingsBundle())

@@ -540,4 +540,5 @@
     <string name="pref_show_other_unit_summary">Show glucose value in %s in the details.</string>
     <string name="watch_battery_level">Watch battery level</string>
     <string name="phone_battery_level">Phone battery level</string>
+    <string name="other_unit">Other unit</string>
 </resources>

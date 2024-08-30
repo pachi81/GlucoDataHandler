@@ -525,8 +525,7 @@
     <string name="pref_show_other_unit_summary">Zeige den Glukosewert zusätzlich in %s in den Details.</string>
     <string name="watch_battery_level">Akku Uhr</string>
     <string name="phone_battery_level">Akku Telefon</string>
-
-
+    <string name="other_unit">Andere Einheit</string>
 
 
 </resources>

@@ -324,7 +324,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             if(extras!= null) {
                 if (extras.containsKey(Constants.SETTINGS_BUNDLE)) {
                     val bundle = extras.getBundle(Constants.SETTINGS_BUNDLE)
-                    Log.d(LOG_ID, "Glucose settings receceived from " + p0.sourceNodeId + ": " + bundle.toString())
+                    Log.d(LOG_ID, "Glucose settings receceived from " + p0.sourceNodeId + ": " + Utils.dumpBundle(bundle))
                     ReceiveData.setSettings(context, bundle!!)
                     InternalNotifier.notify(context, NotifySource.SETTINGS, bundle)
                     extras.remove(Constants.SETTINGS_BUNDLE)
@@ -333,7 +333,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 if (extras.containsKey(Constants.SOURCE_SETTINGS_BUNDLE)) {
                     val bundle = extras.getBundle(Constants.SOURCE_SETTINGS_BUNDLE)
                     if (bundle != null) {
-                        Log.d(LOG_ID, "Glucose source settings receceived from " + p0.sourceNodeId + ": " + bundle.toString())
+                        Log.d(LOG_ID, "Glucose source settings receceived from " + p0.sourceNodeId + ": " + Utils.dumpBundle(bundle))
                         DataSourceTask.updateSettings(context, bundle)
                     }
                     extras.remove(Constants.SOURCE_SETTINGS_BUNDLE)
@@ -342,7 +342,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 if (extras.containsKey(Constants.ALARM_SETTINGS_BUNDLE)) {
                     val bundle = extras.getBundle(Constants.ALARM_SETTINGS_BUNDLE)
                     if (bundle != null) {
-                        Log.d(LOG_ID, "Glucose alarm settings receceived from " + p0.sourceNodeId + ": " + bundle.toString())
+                        Log.d(LOG_ID, "Glucose alarm settings receceived from " + p0.sourceNodeId + ": " + Utils.dumpBundle(bundle))
                         AlarmHandler.setSettings(context, bundle)
                     }
                     extras.remove(Constants.ALARM_SETTINGS_BUNDLE)
