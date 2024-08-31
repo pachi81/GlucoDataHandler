@@ -583,9 +583,34 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateConnectionsTable() {
         tableConnections.removeViews(1, maxOf(0, tableConnections.childCount - 1))
-        if (SourceStateData.lastState != SourceState.NONE)
-            tableConnections.addView(createRow(SourceStateData.lastSource.resId,
-                SourceStateData.getStateMessage(this)))
+        if (SourceStateData.lastState != SourceState.NONE) {
+            val msg = SourceStateData.getStateMessage(this)
+            tableConnections.addView(
+                createRow(
+                    SourceStateData.lastSource.resId,
+                    msg
+                )
+            )
+            if(SourceStateData.lastState == SourceState.ERROR && SourceStateData.lastSource == DataSource.DEXCOM_SHARE) {
+                if (msg.contains("500:")) { // invalid password
+                    val us_account = sharedPref.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, false)
+                    val browserIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(resources.getString(if(us_account)CR.string.dexcom_account_us_url else CR.string.dexcom_account_non_us_url))
+                    )
+                    val onClickListener = OnClickListener {
+                        startActivity(browserIntent)
+                    }
+                    tableConnections.addView(
+                        createRow(
+                            SourceStateData.lastSource.resId,
+                            resources.getString(if(us_account) CR.string.dexcom_share_check_us_account else CR.string.dexcom_share_check_non_us_account),
+                            onClickListener
+                        )
+                    )
+                }
+            }
+        }
 
         if (WearPhoneConnection.nodesConnected) {
             val onClickListener = OnClickListener {

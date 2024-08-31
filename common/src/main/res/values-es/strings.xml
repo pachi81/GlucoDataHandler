@@ -541,4 +541,6 @@
     <string name="watch_battery_level">Watch battery level</string>
     <string name="phone_battery_level">Phone battery level</string>
     <string name="other_unit">Other unit</string>
+    <string name="dexcom_share_check_non_us_account">Press here to check your Dexcom Share account data for your non-US account.</string>
+    <string name="dexcom_share_check_us_account">Press here to check your Dexcom Share account data for your US account.</string>
 </resources>

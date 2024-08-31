@@ -536,5 +536,7 @@
     <string name="pref_show_other_unit">Afficher l\'autre unité</string>
     <string name="pref_show_other_unit_summary">Afficher la valeur du glucose en %s dans les détails.</string>
     <string name="other_unit">Other unit</string>
+    <string name="dexcom_share_check_non_us_account">Press here to check your Dexcom Share account data for your non-US account.</string>
+    <string name="dexcom_share_check_us_account">Press here to check your Dexcom Share account data for your US account.</string>
 
 </resources>

@@ -62,6 +62,8 @@
     <string name="gda_support_link" translatable="false">https://github.com/pachi81/GlucoDataAuto/issues</string>
     <string name="watchdrip_link" translatable="false">https://github.com/bigdigital/watchdrip/blob/main/README.md</string>
     <string name="esel_link" translatable="false">https://github.com/BernhardRo/Esel/blob/master/README.md</string>
+    <string name="dexcom_account_non_us_url" translatable="false">https://myaccount.dexcom.eu</string>
+    <string name="dexcom_account_us_url" translatable="false">https://myaccount.dexcom.com</string>
 
     <!-- tasker -->
 
@@ -554,4 +556,6 @@
     <string name="pref_show_other_unit">Show other unit</string>
     <string name="pref_show_other_unit_summary">Show glucose value in %s in the details.</string>
     <string name="other_unit">Other unit</string>
+    <string name="dexcom_share_check_non_us_account">Press here to check your Dexcom Share account data for your non-US account.</string>
+    <string name="dexcom_share_check_us_account">Press here to check your Dexcom Share account data for your US account.</string>
 </resources>
