@@ -26,14 +26,16 @@ enum class WidgetType(val cls: Class<*>) {
     GLUCOSE_TREND(GlucoseTrendWidget::class.java),
     GLUCOSE_TREND_DELTA(GlucoseTrendDeltaWidget::class.java),
     GLUCOSE_TREND_DELTA_TIME(GlucoseTrendDeltaTimeWidget::class.java),
-    GLUCOSE_TREND_DELTA_TIME_IOB_COB(GlucoseTrendDeltaTimeIobCobWidget::class.java);
+    GLUCOSE_TREND_DELTA_TIME_IOB_COB(GlucoseTrendDeltaTimeIobCobWidget::class.java),
+    OTHER_UNIT(OtherUnitWidget::class.java);
 }
 
 abstract class GlucoseBaseWidget(private val type: WidgetType,
                                  private val hasTrend: Boolean = false,
                                  private val hasDelta: Boolean = false,
                                  private val hasTime: Boolean = false,
-                                 private val hasIobCob: Boolean = false): AppWidgetProvider(), NotifierInterface {
+                                 private val hasIobCob: Boolean = false,
+                                 private val hasOtherUnit: Boolean = false): AppWidgetProvider(), NotifierInterface {
     init {
         Log.d(LOG_ID, "init called for "+ this.toString())
     }
@@ -184,7 +186,10 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
 
         if (!hasTrend || !shortWidget) {
             // short widget with trend, using the glucose+trend image
-            remoteViews.setTextViewText(R.id.glucose, ReceiveData.getGlucoseAsString())
+            if(hasOtherUnit)
+                remoteViews.setTextViewText(R.id.glucose, ReceiveData.getGlucoseAsOtherUnit())
+            else
+                remoteViews.setTextViewText(R.id.glucose, ReceiveData.getGlucoseAsString())
             remoteViews.setTextColor(R.id.glucose, ReceiveData.getGlucoseColor())
             if (ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong()) {
                 remoteViews.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG)
@@ -210,8 +215,17 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
         if (hasTime) {
             remoteViews.setTextViewText(R.id.timeText, "🕒 " + ReceiveData.getElapsedTimeMinuteAsString(context))
         }
-        if (hasDelta)
-            remoteViews.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
+        if (hasDelta) {
+            if(hasOtherUnit) {
+                if(!shortWidget)
+                    remoteViews.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsOtherUnit())
+            }
+            else
+                remoteViews.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
+        }
+
+        if (hasOtherUnit)
+            remoteViews.setTextViewText(R.id.unitText,  ReceiveData.getOtherUnit())
 
         if (hasIobCob) {
             remoteViews.setTextViewText(R.id.iobText, "💉 " + ReceiveData.getIobAsString())
