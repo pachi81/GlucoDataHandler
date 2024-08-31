@@ -507,7 +507,7 @@
     <string name="src_dexcom_share_us_server_summary_off">Używane jest konto międzynarodowe.</string>
     <string name="src_dexcom_share_enabled_summary">Włącz konto Dexcom Share.\nNależy wcześniej ustawić nazwę użytkownika i hasło.</string>
     <string name="src_username">Nazwa użytkownika</string>
-    <string name="src_dexcom_share_user_summary">Nazwa użytkownika lub adres e-mail dla konta Dexcom Share.</string>
+    <string name="src_dexcom_share_user_summary">Nazwa użytkownika, adres e-mail lub numer telefonu do logowania do konta Dexcom Share.\nWAŻNE: numer telefonu musi zawierać prefiks kraju, np. +48 dla Polski.</string>
     <string name="src_dexcom_share_password_summary">Hasło do konta Dexcom Share.</string>
     <string name="pref_source_dexcom_share_info">Konfiguracja Dexcom Share</string>
     <string name="pref_source_dexcom_share_info_summary">Aby odbierać dane z serwerów Dexcom Share, musisz mieć:\n- włączone udostępnianie danych w aplikacji Dexcom, która jest połączona z sensorem\n- zaakceptowane zaproszenie w aplikacji Dexcom Follower (możesz ją później odinstalować)\n\n Ważne: nie działa z użytkownikiem obserwującym!</string>

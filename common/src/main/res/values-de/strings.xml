@@ -499,7 +499,7 @@
     <string name="src_dexcom_share_us_server_summary_off">Internationales Konto wird verwendet.</string>
     <string name="src_dexcom_share_enabled_summary">Aktiviere Dexcom Share Datenquelle.\nBenutzer und Passwort müssen dafür gesetzt sein.</string>
     <string name="src_username">Benutzername</string>
-    <string name="src_dexcom_share_user_summary">Benutzername oder E-Mail für das Dexcom Share Konto.</string>
+    <string name="src_dexcom_share_user_summary">Benutzername, E-Mail oder Telefonnumber für das Login zum Dexcom Share Konto.\nWICHTIG: die Telefonnumber muss die Länderkennung enthalten, z.B. +49 für Deutschland.</string>
     <string name="src_dexcom_share_password_summary">Passwort für das Dexcom Share Konto.</string>
     <string name="pref_source_dexcom_share_info">Dexcom Share einrichten</string>
     <string name="pref_source_dexcom_share_info_summary">Um Daten von Dexcom Share zu empfangen, müssen folgende Schritte erfüllt sein:\n- in der Dexcom App, welche mit dem Sensor verbunden ist, Teilen aktivieren\n- einmalig die Einladung in der Dexcom Follower App annehmen (die App kann danach wieder deinstalliert werden)\n\nWichtig: es funktioniert nicht mit einem Follower Benutzer!</string>

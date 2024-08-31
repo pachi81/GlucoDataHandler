@@ -150,6 +150,7 @@ class SourceOnlineFragment : PreferenceFragmentCompat(), SharedPreferences.OnSha
     private fun update() {
         setSummary(Constants.SHARED_PREF_LIBRE_USER, CR.string.src_libre_user_summary)
         setSummary(Constants.SHARED_PREF_NIGHTSCOUT_URL, CR.string.src_ns_url_summary)
+        setSummary(Constants.SHARED_PREF_DEXCOM_SHARE_USER, CR.string.src_dexcom_share_user_summary)
         setPatientSummary()
     }
 

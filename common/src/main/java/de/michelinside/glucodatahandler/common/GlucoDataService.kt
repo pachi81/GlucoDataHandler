@@ -7,18 +7,27 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.content.pm.ServiceInfo
-import android.os.*
+import android.os.Build
+import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.google.android.gms.wearable.*
-import de.michelinside.glucodatahandler.common.notifier.*
-import de.michelinside.glucodatahandler.common.receiver.*
+import com.google.android.gms.wearable.WearableListenerService
+import de.michelinside.glucodatahandler.common.notification.ChannelType
+import de.michelinside.glucodatahandler.common.notification.Channels
+import de.michelinside.glucodatahandler.common.notifier.DataSource
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
+import de.michelinside.glucodatahandler.common.receiver.BroadcastServiceAPI
+import de.michelinside.glucodatahandler.common.receiver.DexcomBroadcastReceiver
+import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
+import de.michelinside.glucodatahandler.common.receiver.NsEmulatorReceiver
+import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
 import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
-import de.michelinside.glucodatahandler.common.notification.ChannelType
-import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import java.util.Locale
+
 
 enum class AppSource {
     NOT_SET,
@@ -218,6 +227,19 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                 with(sharedPrefs.edit()) {
                     putBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, useMmol)
                     apply()
+                }
+            }
+
+            if(!sharedPrefs.contains(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL)) {
+                // check local for US and set to true if set
+                val currentLocale = Locale.getDefault()
+                val countryCode = currentLocale.country
+                Log.i(LOG_ID, "Using country code $countryCode")
+                if(countryCode == "US") {
+                    with(sharedPrefs.edit()) {
+                        putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, true)
+                        apply()
+                    }
                 }
             }
         }

@@ -70,6 +70,13 @@
             android:title="@string/src_enabled"
             android:summary="@string/src_dexcom_share_enabled_summary"
             app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="source_dexcom_share_use_us_url"
+            android:title="@string/src_dexcom_share_us_server"
+            android:summaryOn="@string/src_dexcom_share_us_server_summary_on"
+            android:summaryOff="@string/src_dexcom_share_us_server_summary_off"
+            app:iconSpaceReserved="false" />
         <androidx.preference.EditTextPreference
             android:defaultValue=""
             android:key="source_dexcom_share_user"
@@ -82,13 +89,6 @@
             android:title="@string/src_password"
             android:summary="@string/src_dexcom_share_password_summary"
             android:inputType="textPassword"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="source_dexcom_share_use_us_url"
-            android:title="@string/src_dexcom_share_us_server"
-            android:summaryOn="@string/src_dexcom_share_us_server_summary_on"
-            android:summaryOff="@string/src_dexcom_share_us_server_summary_off"
             app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
