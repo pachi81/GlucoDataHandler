@@ -199,6 +199,7 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO, Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO, defValue = true)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_Y_POS, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
+            setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_SIZE, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
         }

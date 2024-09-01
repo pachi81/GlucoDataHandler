@@ -5,7 +5,7 @@
     android:minWidth="30dp"
     android:minHeight="50dp"
     android:previewImage="@drawable/glucose_trend_delta_widget_preview"
-    android:previewLayout="@layout/glucose_trend_delta_widget_short"
+    android:previewLayout="@layout/glucose_trend_delta_widget"
     android:resizeMode="vertical|horizontal"
     android:targetCellWidth="1"
     android:targetCellHeight="1"

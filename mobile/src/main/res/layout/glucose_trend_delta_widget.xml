@@ -26,7 +26,7 @@
         android:autoSizeStepGranularity="1sp"
         android:autoSizeMinTextSize="1sp"
         android:autoSizeTextType="uniform"
-        android:text="333"
+        android:text="12.3"
         android:maxLines="1"
         tools:ignore="HardcodedText,NestedWeights" />
 
@@ -53,7 +53,7 @@
             android:layout_height="0dp"
             android:layout_weight="2"
             android:gravity="center_horizontal"
-            android:text="+0.06"
+            android:text="Δ +0.06"
             android:maxLines="1"
             android:autoSizeMaxTextSize="24sp"
             android:autoSizeMinTextSize="1sp"

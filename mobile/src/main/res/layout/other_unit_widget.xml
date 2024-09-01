@@ -26,7 +26,7 @@
         android:autoSizeMinTextSize="1sp"
         android:autoSizeStepGranularity="1sp"
         android:autoSizeTextType="uniform"
-        android:text="333"
+        android:text="135"
         android:maxLines="1"
         tools:ignore="HardcodedText,NestedWeights" />
     </LinearLayout>
@@ -46,7 +46,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical|end"
-            android:text="+0.06"
+            android:text="+6"
             android:maxLines="1"
             android:autoSizeMinTextSize="1sp"
             android:autoSizeMaxTextSize="24sp"
