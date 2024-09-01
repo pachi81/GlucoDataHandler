@@ -330,7 +330,7 @@
     <string name="src_libre_patient_summary">S\'il y a plus d\'un patient connecté au compte Libre, veuillez sélectionner le patient pour lequel les données sont reçues.</string>
     <string name="pref_cat_locksreen_wallpaper">Fond d\'écran de l\'écran de verrouillage</string>
     <string name="pref_lockscreen_enabled">Activer</string>
-    <string name="pref_lockscreen_enabled_summary">Si vous activez le fond d\'écran de l\'écran de verrouillage, l\'application remplace le fond d\'écran de l\'écran de verrouillage par une image contenant la valeur et la tendance.</string>
+    <string name="pref_lockscreen_enabled_summary">Si vous activez le fond d\'écran de l\'écran de verrouillage, l\'application remplace le fond d\'écran de l\'écran de verrouillage.</string>
     <string name="pref_lockscreen_y_pos">Position verticale</string>
     <string name="pref_lockscreen_y_pos_summary">Position verticale de l\'image de la tendance de la glycémie sur l\'écran de verrouillage:\n0 est le haut de l\'écran\n100 est le bas de l\'écran</string>
     <string name="activity_main_notification_permission">L\'affichage des notifications est désactivé !!!\nGlucoDataHandler peut ne pas fonctionner correctement et ne peut pas afficher les alarmes !!!\nAppuyez ici pour accéder directement au paramètre d\'autorisation.</string>
@@ -538,5 +538,6 @@
     <string name="other_unit">L\'autre unité</string>
     <string name="dexcom_share_check_non_us_account">Press here to check your Dexcom Share account data for your non-US account.</string>
     <string name="dexcom_share_check_us_account">Press here to check your Dexcom Share account data for your US account.</string>
+    <string name="pref_lockscreen_size_summary">Change size of the lockscreen data.</string>
 
 </resources>

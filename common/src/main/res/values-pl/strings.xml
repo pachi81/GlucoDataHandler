@@ -325,7 +325,7 @@
     <string name="src_libre_patient_summary">Jeśli do konta libre podłączony jest więcej niż jeden pacjent, wybierz pacjenta, dla którego odbierane są dane.</string>
     <string name="pref_cat_locksreen_wallpaper">Tapeta ekranu blokady</string>
     <string name="pref_lockscreen_enabled">Włącz</string>
-    <string name="pref_lockscreen_enabled_summary">Jeśli włączysz tę opcję, aplikacja zastąpi tapetę ekranu blokady obrazem zawierającym wartość stężenia glukozy i trend.</string>
+    <string name="pref_lockscreen_enabled_summary">Jeśli włączysz tę opcję, aplikacja zastąpi tapetę ekranu blokady.</string>
     <string name="pref_lockscreen_y_pos">Położenie pionowe</string>
     <string name="pref_lockscreen_y_pos_summary">Pozycja pionowa obrazu wartości glukozy - trendu na ekranie blokady: \n0 to góra ekranu\n100 to dół ekranu</string>
     <string name="activity_main_notification_permission">Wyłączono wyśietlanie powiadomień!!!\nGlucoDataHandler może nie działać poprawnie i nie może pokazywać alarmów!!!\nNaciśnij tutaj, aby przejść bezpośrednio do ustawień uprawnień.</string>
@@ -536,4 +536,5 @@
     <string name="other_unit">Other unit</string>
     <string name="dexcom_share_check_non_us_account">Press here to check your Dexcom Share account data for your non-US account.</string>
     <string name="dexcom_share_check_us_account">Press here to check your Dexcom Share account data for your US account.</string>
+    <string name="pref_lockscreen_size_summary">Change size of the lockscreen data.</string>
 </resources>

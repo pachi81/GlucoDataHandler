@@ -7,6 +7,24 @@
             android:title="@string/pref_lockscreen_enabled"
             android:summary="@string/pref_lockscreen_enabled_summary"
             app:iconSpaceReserved="false" />
+        <androidx.preference.ListPreference
+            android:defaultValue="glucose_trend"
+            android:entries="@array/pref_floating_widget_style_labels"
+            android:entryValues="@array/pref_floating_widget_style_values"
+            android:key="lockscreen_style"
+            android:summary="@string/pref_floating_widget_style"
+            android:title="@string/pref_floating_widget_style"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SeekBarPreference
+            android:defaultValue="10"
+            app:showSeekBarValue="true"
+            app:seekBarIncrement="1"
+            app:min="1"
+            android:max="20"
+            android:key="lockscreen_size"
+            android:summary="@string/pref_lockscreen_size_summary"
+            android:title="@string/pref_floating_widget_size"
+            app:iconSpaceReserved="false" />
         <androidx.preference.SeekBarPreference
             android:defaultValue="75"
             app:showSeekBarValue="true"

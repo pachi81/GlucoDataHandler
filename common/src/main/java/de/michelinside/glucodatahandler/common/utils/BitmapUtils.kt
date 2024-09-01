@@ -253,7 +253,7 @@ object BitmapUtils {
         }
     }
 
-    private fun getGlucoseAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, withShadow: Boolean = false): Bitmap? {
+    fun getGlucoseAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, withShadow: Boolean = false): Bitmap? {
         return textToBitmap(
             ReceiveData.getGlucoseAsString(),color ?: ReceiveData.getGlucoseColor(), roundTarget, ReceiveData.isObsoleteShort() &&
                     !ReceiveData.isObsoleteLong(),width, height, resizeFactor = resizeFactor, withShadow = withShadow)

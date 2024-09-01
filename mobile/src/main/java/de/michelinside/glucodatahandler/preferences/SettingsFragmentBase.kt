@@ -198,6 +198,7 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO, Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO, defValue = true)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_Y_POS, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
+            setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
         }
@@ -286,15 +287,36 @@ class WidgetSettingsFragment: SettingsFragmentBase(R.xml.pref_widgets) {
     }
 
     private fun updateStyleSummary() {
-        val stylePref = findPreference<ListPreference>(Constants.SHARED_PREF_FLOATING_WIDGET_STYLE)
-        if(stylePref != null) {
-            stylePref.summary = stylePref.entry
+        val widgetStylePref = findPreference<ListPreference>(Constants.SHARED_PREF_FLOATING_WIDGET_STYLE)
+        if(widgetStylePref != null) {
+            widgetStylePref.summary = widgetStylePref.entry
+        }
+    }
+}
+
+class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
+    override fun initPreferences() {
+        Log.v(LOG_ID, "initPreferences called")
+        super.initPreferences()
+        updateStyleSummary()
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        super.onSharedPreferenceChanged(sharedPreferences, key)
+        when (key) {
+            Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE -> updateStyleSummary()
+        }
+    }
+
+    private fun updateStyleSummary() {
+        val lockscreenStylePref = findPreference<ListPreference>(Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE)
+        if(lockscreenStylePref != null) {
+            lockscreenStylePref.summary = lockscreenStylePref.entry
         }
     }
 }
 
 class NotificaitonSettingsFragment: SettingsFragmentBase(R.xml.pref_notification) {}
-class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen) {}
 class WatchSettingsFragment: SettingsFragmentBase(R.xml.pref_watch) {
     override fun initPreferences() {
         Log.v(LOG_ID, "initPreferences called")
