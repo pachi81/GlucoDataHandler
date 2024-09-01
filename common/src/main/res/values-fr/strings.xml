@@ -5,11 +5,11 @@
     <string name="info_label_raw">Brut</string>
     <string name="info_label_delta">Delta</string>
     <string name="info_label_rate">Taux</string>
-    <string name="info_label_timestamp">Horodatage</string>
+    <string name="info_label_timestamp">Dernière actualisation</string>
     <string name="info_label_iob_cob_timestamp">Heure IOB/COB</string>
     <string name="info_label_timediff">Différence de temps</string>
     <string name="info_label_alarm">Alarme</string>
-    <string name="info_label_source">La source</string>
+    <string name="info_label_source">Source</string>
     <string name="info_label_per_minute">par minute</string>
     <string name="no_data">Aucune donnée reçue pour l\'instant!\nVeuillez d\'abord configurer une source.</string>
 
@@ -36,9 +36,9 @@
     <!-- mobile -->
 
     <string name="activity_main_battery_optimization_disabled">L\'optimisation de la batterie est activée.</string>
-    <string name="activity_main_no_source_label">Source: non active</string>
-    <string name="activity_main_connected_label">Wear: connecté (%1$s)</string>
-    <string name="activity_main_disconnected_label">Wear: déconnecté</string>
+    <string name="activity_main_no_source_label">Source: inactive</string>
+    <string name="activity_main_connected_label">Montre: connecté (%1$s)</string>
+    <string name="activity_main_disconnected_label">Montre: déconnecté</string>
     <string name="activity_main_car_connected_label">Android Auto: connecté</string>
     <string name="activity_main_car_disconnected_label">Android Auto: déconnecté</string>
     <string name="activity_main_high_contrast_enabled">L\'accessibilité à contraste élevé est active!\nAppuyez ici pour accéder aux paramètres.</string>
@@ -48,39 +48,39 @@
     <string name="menu_sources">Sources</string>
     <string name="menu_group_github">GitHub</string>
     <string name="menu_update">Mises à jour</string>
-    <string name="menu_support">Soutien</string>
-    <string name="menu_help">Aider</string>
+    <string name="menu_support">Support</string>
+    <string name="menu_help">Aide</string>
 
     <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
 
     <!-- tasker -->
 
-    <string name="tasker_event_glucodata">Nouvelle valeur de glucose</string>
+    <string name="tasker_event_glucodata">Nouvelle valeur de glycémie</string>
     <string name="tasker_event_glucodata_obsolete">Valeur obsolète</string>
-    <string name="tasker_event_glucodata_alarm">Alarme glucose</string>
-    <string name="tasker_wear_connection_state">État de la connexion Wear</string>
-    <string name="tasker_android_auto_connection_state">Connexion Android Auto</string>
-    <string name="tasker_target_range_state">Changement de plage de glucose</string>
+    <string name="tasker_event_glucodata_alarm">Alarme glycémie</string>
+    <string name="tasker_wear_connection_state">État de la connexion de la montre</string>
+    <string name="tasker_android_auto_connection_state">État de la connexion Android Auto</string>
+    <string name="tasker_target_range_state">Changement de plage de glycémie</string>
 
     <!-- sources -->
 
     <string name="source_phone">Téléphone</string>
-    <string name="source_wear">Porter</string>
+    <string name="source_wear">Montre</string>
 
-    <string name="source_state_not_active">Non actif</string>
+    <string name="source_state_not_active">Inactif</string>
     <string name="source_state_in_progress">En cours</string>
-    <string name="source_state_ok">D\'ACCORD</string>
+    <string name="source_state_ok">OK</string>
     <string name="source_state_no_new_value">Aucune nouvelle valeur</string>
     <string name="source_state_no_connection">Pas de connexion Internet</string>
     <string name="source_state_error">Erreur</string>
 
     <string name="source_interval">Intervalle</string>
     <string name="source_interval_summary">Intervalle de demande de données à la source.</string>
-    <string name="source_delay">Retard</string>
-    <string name="source_delay_summary">Délai en secondes avant de demander les données au cloud, car si cela prend un certain temps jusqu\'à ce que les données y soient présentes.</string>
+    <string name="source_delay">Délai</string>
+    <string name="source_delay_summary">Délai de chargement des données du cloud en secondes.</string>
 
     <string name="src_cat_libreview">LibreLinkUp</string>
-    <string name="src_enabled">Activer</string>
+    <string name="src_enabled">Actif</string>
     <string name="src_libre_enabled_summary">Activer le suiveur LibreLinkUp, si l\'utilisateur et le mot de passe sont définis.</string>
     <string name="src_libre_user">E-mail</string>
     <string name="src_libre_user_summary">E-mail pour la connexion LibreLinkUp</string>
@@ -94,10 +94,10 @@
     <string name="src_ns_enabled_summary">Activer le suiveur Nightscout.</string>
     <string name="src_ns_url">URL Nightscout</string>
     <string name="src_ns_url_summary">URL du serveur Nightscout.</string>
-    <string name="src_ns_secret">Secret de l\'API</string>
-    <string name="src_ns_secret_summary">Secret API pour accéder aux données (facultatif).</string>
-    <string name="src_ns_token">Jeton d\'accès</string>
-    <string name="src_ns_token_summary">Ajoutez votre jeton d\'accès, si vous en avez besoin (facultatif).</string>
+    <string name="src_ns_secret">API secret</string>
+    <string name="src_ns_secret_summary">API secret pour accéder aux données (facultatif).</string>
+    <string name="src_ns_token">Token d\'accès</string>
+    <string name="src_ns_token_summary">Ajoutez votre token d\'accès, si vous en avez besoin (facultatif).</string>
 
     <string name="source_request_interval_always">Toujours</string>
     <string name="source_request_interval_1">1 minute</string>
@@ -122,23 +122,23 @@
     <string name="pref_cat_notification">Notification</string>
     <string name="pref_cat_widgets">Widgets</string>
     <string name="pref_cat_android_auto">Android Auto</string>
-    <string name="pref_cat_forward_broadcast">Transférer les valeurs de glucose</string>
+    <string name="pref_cat_forward_broadcast">Transférer les valeurs de glycémie</string>
     <string name="pref_target_range">Plage cible</string>
     <string name="pref_cat_colors">Couleurs</string>
 
     <string name="pref_switch_notification">Valeurs factices</string>
-    <string name="pref_very_high_value">Glucose très élevé</string>
-    <string name="pref_very_high_value_summary">Limite pour les valeurs de glucose très élevées.</string>
-    <string name="pref_high_value">Glucose élevé</string>
-    <string name="pref_high_value_summary">Limite pour les valeurs de glucose élevées.</string>
-    <string name="pref_target_max_value">Glucose cible supérieur</string>
-    <string name="pref_target_max_value_summary">Valeur supérieure pour la plage cible.</string>
-    <string name="pref_target_min_value">Glucose cible inférieur</string>
-    <string name="pref_target_min_value_summary">Valeur inférieure pour la plage cible.</string>
-    <string name="pref_very_low_value">Glucose très bas</string>
-    <string name="pref_very_low_value_summary">Limite pour les valeurs de glucose très basses.</string>
-    <string name="pref_low_value">Glucose bas</string>
-    <string name="pref_low_value_summary">Limite pour les valeurs de glucose basses.</string>
+    <string name="pref_very_high_value">Glycémie très élevée</string>
+    <string name="pref_very_high_value_summary">Limite de glycémie très élevées.</string>
+    <string name="pref_high_value">Glycémie élevée</string>
+    <string name="pref_high_value_summary">Limite de glycémie élevées.</string>
+    <string name="pref_target_max_value">Limite maximale</string>
+    <string name="pref_target_max_value_summary">Limite maximale de la plage cible.</string>
+    <string name="pref_target_min_value">Limite minimale</string>
+    <string name="pref_target_min_value_summary">Limite minimale pour la plage cible.</string>
+    <string name="pref_very_low_value">Glycémie très basse</string>
+    <string name="pref_very_low_value_summary">Limite de glycémie très basses.</string>
+    <string name="pref_low_value">Glycémie basse</string>
+    <string name="pref_low_value_summary">Limite pour les valeurs de glycémie basses.</string>
     <string name="pref_switch_car_notification">Notifications Android Auto</string>
     <string name="pref_switch_car_notification_summary">Notification pour Android Auto.</string>
     <string name="pref_car_notification_interval">Intervalle de notification</string>
@@ -146,13 +146,13 @@
     <string name="pref_switch_car_notification_alarm_only">Alarme seulement</string>
     <string name="pref_switch_car_notification_alarm_only_summary">Ne déclenchera les notifications que pour les alarmes dans leur intervalle spécifique.\nLes valeurs très basses afficheront toujours une notification.</string>
     <string name="pref_switch_car_media">Lecteur multimédia factice</string>
-    <string name="pref_switch_car_media_summary">Afficher la valeur du glucose comme chanson actuelle pour Android Auto.</string>
+    <string name="pref_switch_car_media_summary">Afficher la valeur du glycémie comme chanson actuelle pour Android Auto.</string>
     <string name="pref_switch_send_to_aod">Envoyer une diffusion de données glucosiques</string>
     <string name="pref_switch_send_to_aod_summary">Envoyer une diffusion de données glucosiques pour les nouvelles valeurs reçues de n\'importe quelle source.</string>
     <string name="pref_button_select_target">Identifier les récepteurs de données glucosiques</string>
     <string name="pref_button_select_target_summary">Choisissez les récepteurs auxquels envoyer la diffusion de données glucosiques. Une diffusion globale enverra à chaque application s\'inscrivant dynamiquement sur la diffusion.</string>
     <string name="pref_switch_send_to_xdrip">Envoyer une diffusion libre corrigée</string>
-    <string name="pref_switch_send_to_xdrip_summary">Transférer les valeurs de glucose vers xDrip+. Sélectionnez \'Libre (application corrigée)\' comme source dans xDrip+.</string>
+    <string name="pref_switch_send_to_xdrip_summary">Transférer les valeurs de glycémie vers xDrip+. Sélectionnez \'Libre (application corrigée)\' comme source dans xDrip+.</string>
     <string name="pref_button_select_xdrip_target">Identifier les récepteurs libres corrigés</string>
     <string name="pref_button_select_xdrip_target_summary">Choisissez les récepteurs auxquels envoyer la diffusion libre corrigée. Une diffusion globale enverra à chaque application s\'inscrivant dynamiquement sur la diffusion.</string>
     <string name="pref_switch_send_xdrip_broadcast">Envoyer une diffusion xDrip+</string>
@@ -164,13 +164,13 @@
     <string name="pref_switch_use_5_min_delta">Delta de 5 minutes</string>
     <string name="pref_switch_use_5_min_delta_summary">Activez cette option pour utiliser les valeurs delta pour un intervalle de 5 minutes, sinon un intervalle de 1 minute est utilisé.</string>
     <string name="pref_color_alarm">Couleur très haut/bas</string>
-    <string name="pref_color_alarm_summary">Couleur pour les valeurs de glucose très élevées et très basses.</string>
+    <string name="pref_color_alarm_summary">Couleur pour les valeurs de glycémie très élevées et très basses.</string>
     <string name="pref_color_out_of_range">Couleur haut/bas</string>
-    <string name="pref_color_out_of_range_summary">Couleur pour les valeurs de glucose élevées et basses.</string>
+    <string name="pref_color_out_of_range_summary">Couleur pour les valeurs de glycémie élevées et basses.</string>
     <string name="pref_color_ok">Couleur cible</string>
-    <string name="pref_color_ok_summary">Couleur pour les valeurs de glucose dans la plage cible.</string>
+    <string name="pref_color_ok_summary">Couleur pour les valeurs de glycémie dans la plage cible.</string>
     <string name="pref_notification">Notification</string>
-    <string name="pref_notification_summary">Affiche une notification permanente avec la flèche de tendance actuelle, la valeur du glucose et du delta dans la barre d\'état.\nCette notification empêche Android d\'arrêter cette application.</string>
+    <string name="pref_notification_summary">Affiche une notification permanente avec la flèche de tendance actuelle, la valeur du glycémie et du delta dans la barre d\'état.\nCette notification empêche Android d\'arrêter cette application.</string>
     <string name="pref_notification_icon">Icône de la barre d\'état</string>
     <string name="pref_notification_icon_summary">Style de la petite icône de la barre d\'état de la notification.</string>
     <string name="pref_notification_big_icon">Grande icône de la barre d\'état</string>
@@ -182,7 +182,7 @@
     <string name="pref_second_notification_icon">2. icône de la barre d\'état</string>
     <string name="pref_second_notification_icon_summary">Style de la petite icône de la barre d\'état de la seconde notification.</string>
     <string name="pref_floating_widget">Widget flottant</string>
-    <string name="pref_floating_widget_summary">Afficher le glucose, la tendance, le delta, l\'heure et l\'IOB/COB comme widget flottant.\nSi vous maintenez le widget sans le déplacer pendant plus de 5 secondes, il disparaîtra.</string>
+    <string name="pref_floating_widget_summary">Afficher le glycémie, la tendance, le delta, l\'heure et l\'IOB/COB comme widget flottant.\nSi vous maintenez le widget sans le déplacer pendant plus de 5 secondes, il disparaîtra.</string>
     <string name="pref_floating_widget_size">Taille</string>
     <string name="pref_floating_widget_size_summary">Changer la taille du widget flottant</string>
     <string name="pref_floating_widget_style">Style</string>
@@ -191,26 +191,26 @@
     <string name="pref_floating_widget_transparency_summary">Transparence de l\'arrière-plan pour le widget flottant.</string>
     <string name="pref_widget_transparency">Transparence du widget</string>
     <string name="pref_widget_transparency_summary">Transparence de l\'arrière-plan pour les widgets.</string>
-    <string name="pref_relative_time">Temps relatif</string>
-    <string name="pref_relative_time_summary">Utiliser le temps relatif au lieu de l\'horodatage du glucose pour les widgets.\nLe temps relatif dépend des paramètres de la batterie de votre appareil et peut ne pas fonctionner correctement.</string>
+    <string name="pref_relative_time">Temps réel</string>
+    <string name="pref_relative_time_summary">Utiliser l\'actualisation en temps réel de la glycémie pour les widgets.\nDépend des paramètres de la batterie de votre appareil et peut ne pas fonctionner correctement.</string>
 
     <string name="pref_status_bar_icon_app">Icône de l\'application</string>
-    <string name="pref_status_bar_icon_glucose">Valeur du glucose</string>
+    <string name="pref_status_bar_icon_glucose">Valeur de glycémie</string>
     <string name="pref_status_bar_icon_trend">Flèche de tendance</string>
     <string name="pref_status_bar_icon_delta">Delta</string>
 
-    <string name="pref_wear_notification">Wear : vibration</string>
+    <string name="pref_wear_notification">Montre : vibration</string>
 
     <string name="pref_global_broadcast">Diffusion globale</string>
 
     <string name="select_receiver_show_all">Tout afficher</string>
     <string name="select_receiver_no_glucodata_receiver">Aucun récepteur trouvé !</string>
 
-    <string name="widget_glucose">Glucose</string>
-    <string name="widget_glucose_trend">Glucose et tendance</string>
-    <string name="widget_glucose_trend_delta">Glucose, tendance et delta</string>
-    <string name="widget_glucose_trend_delta_timestamp">Glucose, tendance, delta et horodatage</string>
-    <string name="widget_glucose_trend_delta_timestamp_iob_cob">Glucose, tendance, delta, heure et IOB/COB</string>
+    <string name="widget_glucose">glycémie</string>
+    <string name="widget_glucose_trend">glycémie et tendance</string>
+    <string name="widget_glucose_trend_delta">glycémie, tendance et delta</string>
+    <string name="widget_glucose_trend_delta_timestamp">glycémie, tendance, delta et horodatage</string>
+    <string name="widget_glucose_trend_delta_timestamp_iob_cob">glycémie, tendance, delta, heure et IOB/COB</string>
 
     <string name="pref_send_to_bangleJS">Prise en charge de BangleJS</string>
     <string name="pref_send_to_bangleJS_summary">Transférer les valeurs vers le widget widbgjs pour BangleJS.</string>
@@ -228,28 +228,28 @@
 
     <!-- complications -->
 
-    <string name="short_value">Glucose</string>
-    <string name="image_value">Glucose (très grand et coloré)</string>
-    <string name="small_image_value">Glucose (coloré)</string>
-    <string name="icon_value">Glucose (grand)</string>
-    <string name="short_value_icon">Glucose avec icône</string>
-    <string name="short_value_arrow">Glucose et tendance</string>
-    <string name="short_value_arrow_image">Glucose et tendance (grand et coloré)</string>
-    <string name="short_value_arrow_small_image">Glucose et tendance (coloré)</string>
-    <string name="short_value_trend_range">Glucose et plage de tendance (si pris en charge)</string>
-    <string name="short_value_delta_trend_range">Glucose, delta et plage de tendance (si pris en charge)</string>
+    <string name="short_value">glycémie</string>
+    <string name="image_value">glycémie (très grand et coloré)</string>
+    <string name="small_image_value">glycémie (coloré)</string>
+    <string name="icon_value">glycémie (grand)</string>
+    <string name="short_value_icon">glycémie avec icône</string>
+    <string name="short_value_arrow">glycémie et tendance</string>
+    <string name="short_value_arrow_image">glycémie et tendance (grand et coloré)</string>
+    <string name="short_value_arrow_small_image">glycémie et tendance (coloré)</string>
+    <string name="short_value_trend_range">glycémie et plage de tendance (si pris en charge)</string>
+    <string name="short_value_delta_trend_range">glycémie, delta et plage de tendance (si pris en charge)</string>
     <string name="short_delta_trend_arrow_range">Delta, flèche de tendance et plage de tendance (si pris en charge)</string>
-    <string name="short_value_delta">Glucose et delta</string>
-    <string name="long_value_arrow_delta">Glucose, delta et tendance</string>
-    <string name="long_value_arrow_delta_time">Glucose, delta, tendance et horodatage</string>
-    <string name="short_value_rate">Glucose et valeur de tendance</string>
+    <string name="short_value_delta">glycémie et delta</string>
+    <string name="long_value_arrow_delta">glycémie, delta et tendance</string>
+    <string name="long_value_arrow_delta_time">glycémie, delta, tendance et dernière actualisation</string>
+    <string name="short_value_rate">glycémie et valeur de tendance</string>
     <string name="icon_delta">Delta (grand)</string>
     <string name="image_delta">Delta (grand, coloré)</string>
     <string name="short_delta">Delta</string>
     <string name="short_delta_arrow">Delta et tendance</string>
     <string name="short_delta_icon">Delta avec icône</string>
-    <string name="short_delta_time">Delta et horodatage</string>
-    <string name="image_delta_time">Delta et horodatage (coloré)</string>
+    <string name="short_delta_time">Delta et dernière actualisation</string>
+    <string name="image_delta_time">Delta et dernière actualisation (coloré)</string>
     <string name="image_arrow">Tendance (grand, coloré)</string>
     <string name="small_image_arrow">Tendance (coloré)</string>
     <string name="icon_arrow">Icône de tendance</string>
@@ -257,8 +257,8 @@
     <string name="short_rate">Valeur de tendance</string>
     <string name="short_rate_arrow">Valeur et flèche de tendance</string>
     <string name="short_rate_icon">Valeur de tendance avec icône</string>
-    <string name="timestamp">Horodatage du glucose</string>
-    <string name="image_timestamp">Horodatage (coloré)</string>
+    <string name="timestamp">Dernière actualisation de la glycémie</string>
+    <string name="image_timestamp">Dernière actualisation (coloré)</string>
     <string name="battery_level">Niveau de batterie (montre et téléphone)</string>
     <string name="watch_battery_level">Niveau de batterie de la montre</string>
     <string name="phone_battery_level">Niveau de batterie du téléphone</string>
@@ -273,7 +273,7 @@
     <string name="pref_no_gda_info">GlucoDataAuto manquant</string>
     <string name="pref_no_gda_info_summary">Pour utiliser GlucoDataHandler pour Android Auto, vous devez installer GlucoDataAuto depuis GitHub.\nVeuillez cliquer ici pour plus d\'informations et pour télécharger GlucoDataAuto.</string>
     <string name="pref_send_to_glucodataauto">Transférer vers GlucoDataAuto</string>
-    <string name="pref_send_to_glucodataauto_summary">Envoyer les valeurs de glucose et les paramètres à GlucoDataAuto, si le téléphone est connecté à Android Auto.</string>
+    <string name="pref_send_to_glucodataauto_summary">Envoyer les valeurs de glycémie et les paramètres à GlucoDataAuto, si le téléphone est connecté à Android Auto.</string>
 
 
     <!-- Notifications -->
@@ -282,8 +282,8 @@
     <string name="mobile_foreground_notification_descr">Notification de premier plan qui empêche l\'arrêt de l\'application lorsqu\'elle s\'exécute en arrière-plan.</string>
     <string name="mobile_second_notification_name">Deuxième notification</string>
     <string name="mobile_second_notification_descr">Notification supplémentaire pour afficher une icône supplémentaire dans la barre d\'état.</string>
-    <string name="worker_notification_name">Notification de travailleur</string>
-    <string name="worker_notification_descr">Notification de travailleur affichée lors de l\'exécution de tâches en arrière-plan.</string>
+    <string name="worker_notification_name">Notification de Worker</string>
+    <string name="worker_notification_descr">Notification de Worker affichée lors de l\'exécution de tâches en arrière-plan.</string>
     <string name="wear_foreground_notification_name">Notification de premier plan</string>
     <string name="wear_foreground_notification_descr">Notification de premier plan qui empêche l\'arrêt de l\'application lorsqu\'elle s\'exécute en arrière-plan.</string>
     <string name="android_auto_notification_name">Notification pour Android Auto</string>
@@ -309,21 +309,21 @@
     <string name="pref_source_aaps_info">AndroidAPS</string>
     <string name="pref_source_aaps_info_summary">Pour recevoir les valeurs d\'AAPS:\n- ouvrez l\'application AAPS\n- allez dans "Config Builder"\n- activez "Samsung Tizen" ou "Data Broadcaster"</string>
     <string name="pref_switch_watchdrip_enabled">WatchDrip+</string>
-    <string name="pref_switch_watchdrip_enabled_summary">"Activer la communication WatchDrip+ (sans graphique).\nIMPORTANT: activez "Activer le service" dans WatchDrip+ après avoir activé ce paramètre ici!"</string>
+    <string name="pref_switch_watchdrip_enabled_summary">"Activer la communication WatchDrip+ (sans graphique).\nIMPORTANT: activez "Activer le service" dans WatchDrip+ après avoir activé ce paramètre ici !"</string>
     <string name="pref_car_notification_reappear_interval">Réapparaître</string>
     <string name="pref_car_notification_reappear_interval_summary">Intervalle auquel la notification doit réapparaître s\'il n\'y a pas de nouvelle valeur. (0 pour jamais).</string>
     <string name="pref_aa_media_player_icon_style_summary">Style de l\'icône/image du lecteur multimédia factice.</string>
     <string name="pref_aa_media_player_icon_style">Style d\'icône/image</string>
-    <string name="menu_save_mobile_logs">Mobile</string>
-    <string name="menu_save_wear_logs">Porter</string>
+    <string name="menu_save_mobile_logs">Téléphone</string>
+    <string name="menu_save_wear_logs">Montre</string>
     <string name="menu_save_logs">Enregistrer les journaux</string>
     <string name="logcat_save_succeeded">Journaux enregistrés avec succès</string>
-    <string name="logcat_save_failed">Échec de l\'enregistrement des journaux!</string>
-    <string name="logcat_wear_save_succeeded">Journaux de Wear enregistrés avec succès</string>
-    <string name="logcat_wear_save_failed">Échec de l\'enregistrement des journaux de Wear!</string>
-    <string name="request_exact_alarm_summary">Pour tous les travaux liés au temps/intervalle, cette application nécessite l\'autorisation pour les alarmes et les rappels.\nElle n\'ajoutera ni ne modifiera aucun rappel utilisateur, c\'est uniquement pour la planification interne.\nSi vous appuyez sur OK, vous serez redirigé vers le paramètre d\'autorisation pour l\'activer pour GlucoDataHandler.</string>
+    <string name="logcat_save_failed">Échec de l\'enregistrement des journaux !</string>
+    <string name="logcat_wear_save_succeeded">Journaux de la montre enregistrés avec succès</string>
+    <string name="logcat_wear_save_failed">Échec de l\'enregistrement des journaux de la montre !</string>
+    <string name="request_exact_alarm_summary">Pour toutes les tâches liés au temps/intervalle, cette application nécessite l\'autorisation pour les alarmes et les rappels.\nElle n\'ajoutera ni ne modifiera aucun rappel utilisateur, c\'est uniquement pour la planification interne.\nSi vous appuyez sur OK, vous serez redirigé vers le paramètre d\'autorisation pour l\'activer pour GlucoDataHandler.</string>
     <string name="request_exact_alarm_title">Autorisation pour les alarmes et les rappels</string>
-    <string name="activity_main_schedule_exact_alarm">La planification d\'alarmes précises est désactivée!!!\nGlucoDataHandler peut ne pas fonctionner correctement!!!\nAppuyez ici pour accéder directement au paramètre d\'autorisation.</string>
+    <string name="activity_main_schedule_exact_alarm">La planification d\'alarmes précises est désactivée !!!\nGlucoDataHandler peut ne pas fonctionner correctement !!!\nAppuyez ici pour accéder directement au paramètre d\'autorisation.</string>
 
 
     <string name="src_libre_patient">Patient</string>
@@ -332,10 +332,10 @@
     <string name="pref_lockscreen_enabled">Activer</string>
     <string name="pref_lockscreen_enabled_summary">Si vous activez le fond d\'écran de l\'écran de verrouillage, l\'application remplace le fond d\'écran de l\'écran de verrouillage par une image contenant la valeur et la tendance.</string>
     <string name="pref_lockscreen_y_pos">Position verticale</string>
-    <string name="pref_lockscreen_y_pos_summary">Position verticale de l\'image de la tendance du glucose sur l\'écran de verrouillage:\n0 est le haut de l\'écran\n100 est le bas de l\'écran</string>
-    <string name="activity_main_notification_permission">L\'affichage des notifications est désactivé!!!\nGlucoDataHandler peut ne pas fonctionner correctement et ne peut pas afficher les alarmes!!!\nAppuyez ici pour accéder directement au paramètre d\'autorisation.</string>
+    <string name="pref_lockscreen_y_pos_summary">Position verticale de l\'image de la tendance de la glycémie sur l\'écran de verrouillage:\n0 est le haut de l\'écran\n100 est le bas de l\'écran</string>
+    <string name="activity_main_notification_permission">L\'affichage des notifications est désactivé !!!\nGlucoDataHandler peut ne pas fonctionner correctement et ne peut pas afficher les alarmes !!!\nAppuyez ici pour accéder directement au paramètre d\'autorisation.</string>
 
-    <string name="src_libre_setup_librelink">Données manquantes! Veuillez d\'abord accepter l\'invitation dans l\'application LibreLinkUp!</string>
+    <string name="src_libre_setup_librelink">Données manquantes ! Veuillez d\'abord accepter l\'invitation dans l\'application LibreLinkUp !</string>
     <string name="prefstatus_bar_notification_colored_icon">Icône de la barre d\'état colorée</string>
     <string name="pref_status_bar_notification_colored_icon_summary">Si votre appareil prend en charge les icônes de la barre d\'état colorées, vous pouvez également les désactiver pour utiliser un élément blanc.</string>
 
@@ -343,28 +343,28 @@
     <string name="alarm_interval">Intervalle</string>
     <string name="alarm_interval_summary_low">Intervalle minimum en minutes entre les notifications pour ce type d\'alarme.\nInformation: il n\'y aura une nouvelle notification qu\'après l\'écoulement du temps, si le delta est négatif.</string>
     <string name="alarm_interval_summary_high">Intervalle minimum en minutes entre les notifications pour ce type d\'alarme.\nInformation: il n\'y aura une nouvelle notification qu\'après l\'écoulement du temps, si le delta est positif.</string>
-    <string name="alarm_interval_summary_obsolete">Temps en minutes depuis la réception de la dernière valeur de glucose pour déclencher cette notification. Elle réapparaîtra également dans cet intervalle.</string>
+    <string name="alarm_interval_summary_obsolete">Temps en minutes depuis la réception de la dernière valeur de glycémie pour déclencher cette notification. Elle réapparaîtra également dans cet intervalle.</string>
     <string name="alarm_enabled">Activé</string>
     <string name="alarm_enabled_summary_on">Les notifications sont activées pour ce type d\'alarme.</string>
     <string name="alarm_enabled_summary_off">Les notifications sont désactivées pour ce type d\'alarme.</string>
-    <string name="alarm_test">Testez-le</string>
-    <string name="alarm_test_summary">Appuyez ici pour déclencher une notification après 3secondes pour ce type d\'alarme.</string>
+    <string name="alarm_test">Test</string>
+    <string name="alarm_test_summary">Appuyez ici pour déclencher une notification après 3 secondes pour ce type d\'alarme.</string>
     <string name="alarm_settings">Paramètres</string>
     <string name="alarm_settings_summary">Appuyez ici pour accéder aux paramètres du canal de notification pour cette alarme.\nVous pouvez y modifier tous les paramètres associés.</string>
     <string name="alarm_save_sound">Enregistrer le son</string>
     <string name="alarm_save_sound_summary">Appuyez ici si vous souhaitez enregistrer le son d\'alarme par défaut dans un fichier sur votre téléphone.</string>
     <string name="alarm_saved">Alarme enregistrée!</string>
-    <string name="snooze">Reporter</string>
+    <string name="snooze">Rappel d\'alarme</string>
     <string name="alarm_cat_all">Toutes les alarmes</string>
     <string name="alarm_notifications_enabled">Notifications d\'alarme</string>
-    <string name="wear_alarm_notifications_enabled">Wear: Notifications d\'alarme</string>
+    <string name="wear_alarm_notifications_enabled">Montre : Notifications d\'alarme</string>
     <string name="alarm_notifications_enabled_summary_on">Les notifications d\'alarme sont actives sur le téléphone.\nRemarque: les alarmes utilisent le volume d\'alarme du téléphone.</string>
     <string name="alarm_notifications_enabled_summary_off">Les notifications d\'alarme sont inactives sur le téléphone.</string>
-    <string name="stop_snooze">Arrêter</string>
-    <string name="very_low_alarm_text">Très bas!</string>
-    <string name="very_low_text">Bas!</string>
-    <string name="very_high_text">Haut!</string>
-    <string name="very_high_alarm_text">Très haut!</string>
+    <string name="stop_snooze">Stop</string>
+    <string name="very_low_alarm_text">Très bas !</string>
+    <string name="very_low_text">Bas !</string>
+    <string name="very_high_text">Haut !</string>
+    <string name="very_high_alarm_text">Très haut !</string>
     <string name="very_low_alarm_notification_name">Alarme très basse</string>
     <string name="very_low_alarm_notification_descr">Notification pour les alarmes très basses.</string>
     <string name="low_alarm_notification_name">Alarme basse</string>
@@ -374,7 +374,7 @@
     <string name="very_high_alarm_notification_name">Alarme très haute</string>
     <string name="very_high_alarm_notification_descr">Notification pour les alarmes très hautes.</string>
     <string name="btn_dismiss">Rejeter</string>
-    <string name="test_alarm">Alarme de test!</string>
+    <string name="test_alarm">Alarme de test !</string>
     <string name="alarm_cat_categories">Catégories d\'alarmes</string>
     <string name="alarm_fullscreen_notification_enabled">Notification plein écran</string>
     <string name="alarm_fullscreen_notification_enabled_summary">Active la notification plein écran sur l\'écran de verrouillage.\nCela peut nécessiter une autorisation supplémentaire.</string>
@@ -384,17 +384,17 @@
     <string name="alarm_fullscreen_dismiss_keyguard_summary">Veuillez activer ce paramètre si vous rencontrez des problèmes avec la notification plein écran.\nSur certains appareils, cela provoquera le déverrouillage de l\'écran lorsque la notification plein écran est déclenchée.\nVeuillez donc ne pas l\'activer si vous n\'avez aucun problème.</string>
     <string name="alarm_force_sound">Forcer le son de l\'alarme</string>
     <string name="alarm_force_sound_summary">Cela forcera un son d\'alarme et une vibration même si le téléphone est en mode silencieux ou vibration. Cela arrêtera toujours le mode Ne pas déranger!\nPour activer ce paramètre, il se peut que vous soyez invité à autoriser cette application à modifier le mode Ne pas déranger.</string>
-    <string name="wear_alarm_force_sound">Wear: Forcer le son de l\'alarme</string>
+    <string name="wear_alarm_force_sound">Montre : Forcer le son de l\'alarme</string>
     <string name="alarm_force_vibration">Forcer la vibration</string>
-    <string name="alarm_force_vibration_summary">Forcer la vibration, même si le téléphone est en mode silencieux. Cela arrêtera toujours le mode Ne pas déranger!\nPour activer ce paramètre, il se peut que vous soyez invité à autoriser cette application à modifier le mode Ne pas déranger.</string>
+    <string name="alarm_force_vibration_summary">Forcer la vibration, même si le téléphone est en mode silencieux. Cela arrêtera toujours le mode Ne pas déranger !\nPour activer ce paramètre, il se peut que vous soyez invité à autoriser cette application à modifier le mode Ne pas déranger.</string>
     <string name="alarm_sound_level">Niveau sonore</string>
     <string name="alarm_sound_level_summary">Forcer le réglage du niveau sonore pour le son de l\'alarme.\n-1 pour utiliser les paramètres par défaut du téléphone.</string>
-    <string name="advanced_settings">Avancé</string>
+    <string name="advanced_settings">Paramètre avancé</string>
     <string name="advanced_settings_alarm_summary">Paramètres d\'alarme avancés pour la notification plein écran et les sons.</string>
     <string name="alarm_advanced_cat_notifcation">Notification</string>
     <string name="alarm_advanced_cat_sound">Son</string>
-    <string name="alarm_type_summary">Paramètres d\'alarme pour les valeurs de glucose à partir de %1$s.</string>
-    <string name="alarm_no_notification_wear_connected">Pas d\'alarme lorsque Wear est connecté</string>
+    <string name="alarm_type_summary">Paramètres d\'alarme pour les valeurs de glycémie à partir de %1$s.</string>
+    <string name="alarm_no_notification_wear_connected">Pas d\'alarme lorsque la montre est connectée</string>
     <string name="alarm_no_notification_wear_connected_summary_on">Il n\'y aura pas de notification d\'alarme sur le téléphone si le téléphone est connecté à GlucoDataHandler sur la montre.</string>
     <string name="alarm_no_notification_wear_connected_summary_off">Il y aura une notification d\'alarme sur le téléphone, même si le téléphone est connecté à GlucoDataHandler sur la montre.</string>
     <string name="alarm_no_notification_auto_connected">Pas d\'alarme lorsque Android Auto est connecté</string>
@@ -404,11 +404,11 @@
     <string name="alarm_retrigger_summary">Si la notification d\'alarme n\'est pas fermée, l\'alarme sera redéclenchée après cet intervalle en minutes jusqu\'à 3fois.\n0 - pas de redéclenchement</string>
     <string name="alarm_obsolete">Obsolète</string>
     <string name="obsolete_alarm_notification_name">Alarme obsolète</string>
-    <string name="alarm_obsolete_summary">Alarme s\'il n\'y a pas de nouvelle valeur de glucose pendant %1$s minutes.</string>
+    <string name="alarm_obsolete_summary">Alarme s\'il n\'y a pas de nouvelle valeur de glycémie pendant %1$s minutes.</string>
     <string name="obsolete_alarm_notification_descr">Cette notification apparaîtra s\'il n\'y a pas de nouvelle valeur dans un intervalle.</string>
-    <string name="obsolete_alarm_text">Aucune nouvelle valeur!</string>
+    <string name="obsolete_alarm_text">Aucune nouvelle valeur !</string>
 
-    <string name="permission_notification_title">L\'affichage des notifications est désactivé!!!</string>
+    <string name="permission_notification_title">L\'affichage des notifications est désactivé !!!</string>
     <string name="permission_notification_message">GlucoDataHandler a besoin de notifications pour exécuter des tâches en arrière-plan et afficher les alarmes.</string>
     <string name="alarm_notification_name">Notification d\'alarme</string>
     <string name="alarm_notification_descr">Notifications d\'alarme. Veuillez ne pas modifier les paramètres, car l\'application fournit le son et les vibrations pour les notifications en interne.</string>
@@ -421,8 +421,8 @@
     <string name="alarm_sound_delay_summary">Temps en secondes avant que le son ne soit joué.\nIl vibrera tout le temps, même si aucun son n\'est sélectionné.</string>
     <string name="pref_cat_alarm_vibration_sound">Son et vibration</string>
     <string name="alarm_vibrate_only">Vibrer uniquement</string>
-    <string name="wear_alarm_vibrate_only">Wear: Vibrer uniquement</string>
-    <string name="permission_alarm_notification_title">Notification désactivée!</string>
+    <string name="wear_alarm_vibrate_only">Montre : Vibrer uniquement</string>
+    <string name="permission_alarm_notification_title">Notification désactivée !</string>
     <string name="permission_alarm_notification_message">Pour afficher les alarmes, GlucoDataHandler a besoin qu\'au moins le canal de notification d\'alarme soit activé.\nVous serez redirigé vers le paramètre de notification pour cette application.\nVeuillez activer le canal de notification d\'alarme ici.</string>
     <string name="alarm_app_sound">Son interne de l\'application</string>
     <string name="pref_send_pref_to_glucodataauto">Inclure les paramètres</string>
@@ -443,7 +443,7 @@
     <string name="gda_media_notification_toggle_action">Appuyez sur lecture pour activer/désactiver la notification</string>
     <string name="pref_gda_alarm_info_summary">Les paramètres d\'alarme sont uniquement liés aux notifications sur Android Auto et ne déclenchent aucun son.</string>
     <string name="pref_cat_general_summary">Paramètres généraux, tels que les paramètres d\'unité, d\'heure et de delta.</string>
-    <string name="pref_target_range_summary">Paramètres pour les limites de glucose et les couleurs correspondantes.</string>
+    <string name="pref_target_range_summary">Paramètres pour les limites de glycémie et les couleurs correspondantes.</string>
     <string name="pref_cat_widgets_summary">Paramètres pour les widgets du téléphone et le widget flottant.</string>
     <string name="pref_cat_notification_summary">Paramètres de notification.</string>
     <string name="pref_cat_locksreen_wallpaper_summary">Paramètres pour remplacer le fond d\'écran de l\'écran de verrouillage.</string>
@@ -452,7 +452,7 @@
     <string name="pref_cat_wear_os">Montres Wear OS</string>
     <string name="pref_cat_watch">Montre</string>
     <string name="pref_cat_watch_summary">Paramètres pour les montres intelligentes connectées.</string>
-    <string name="pref_cat_transfer_summary">Paramètres pour transférer les valeurs de glucose vers d\'autres applications.</string>
+    <string name="pref_cat_transfer_summary">Paramètres pour transférer les valeurs de glycémie vers d\'autres applications.</string>
     <string name="pref_cat_transfer">Transférer les valeurs</string>
     <string name="pref_cat_visualisation">Visualisation</string>
     <string name="pref_cat_banglejs">Montres BangleJS</string>
@@ -467,7 +467,7 @@
     <string name="alarm_start_delay">Délai de démarrage</string>
     <string name="alarm_start_delay_wear_summary">Délai avant que la vibration et le son ne soient lus pour la première fois.\nParfois, la notification du téléphone arrête immédiatement la vibration.</string>
     <string name="pref_color_obsolete">Couleur de la valeur obsolète</string>
-    <string name="pref_color_obsolete_summary">Couleur pour aucune nouvelle valeur de glucose.</string>
+    <string name="pref_color_obsolete_summary">Couleur pour aucune nouvelle valeur de glycémie.</string>
     <string name="alarm_wear_no_notification_phone_connected">Pas de fenêtre contextuelle lorsque le téléphone est connecté</string>
     <string name="alarm_wear_no_notification_phone_connected_summary">Pas de fenêtre contextuelle de notification supplémentaire sur la montre lorsque le téléphone est connecté.\nLa vibration et le son seront déclenchés comme configurés.</string>
     <string name="table_header_details">Détails</string>
@@ -510,7 +510,7 @@
     <string name="src_dexcom_share_us_server_summary_off">Le compte international est utilisé.</string>
     <string name="src_dexcom_share_enabled_summary">Activer le compte Dexcom Share. Vous devez d\'abord définir le nom d\'utilisateur et le mot de passe.</string>
     <string name="src_username">Nom d\'utilisateur</string>
-    <string name="src_dexcom_share_user_summary">Nom d\'utilisateur, adresse e-mail ou numéro de téléphone pour la connexion au compte Dexcom Share.\nIMPORTANT: le numéro de téléphone doit inclure l\'indicatif pays, par exemple +33 pour la France.</string>
+    <string name="src_dexcom_share_user_summary">Nom d\'utilisateur ou e-mail pour le compte Dexcom Share.</string>
     <string name="src_dexcom_share_password_summary">Mot de passe pour le compte Dexcom Share.</string>
     <string name="pref_source_dexcom_share_info">Configurer Dexcom Share</string>
     <string name="pref_source_dexcom_share_info_summary">Pour recevoir des données des serveurs Dexcom Share, vous devez avoir:\n- le partage activé sur l\'application Dexcom connectée au capteur\n- l\'invitation acceptée sur l\'application Dexcom Follower (vous pouvez la désinstaller par la suite)\n\nImportant: cela ne fonctionne pas avec un utilisateur suiveur!</string>
@@ -522,20 +522,20 @@
     <string name="obsolete_time">Temps d\'obsolescence</string>
     <string name="obsolete_time_summary">Temps en minutes après lequel la valeur est traitée comme obsolète.\nAprès deux fois ce temps, la valeur est supprimée.</string>
     <string name="pref_source_offline">Applications locales</string>
-    <string name="pref_source_offline_summary">Applications sur le même appareil fournissant des valeurs de glucose sous forme de message de diffusion interne, telles que Juggluco, xDrip+, AAPS, etc.</string>
-    <string name="pref_cat_follower_summary">Services cloud fournissant des valeurs de glucose sur Internet, tels que LibreLinkUp, Dexcom Share et Nightscout.</string>
+    <string name="pref_source_offline_summary">Applications sur le même appareil fournissant des valeurs de glycémie sous forme de message de diffusion interne, telles que Juggluco, xDrip+, AAPS, etc.</string>
+    <string name="pref_cat_follower_summary">Services cloud fournissant des valeurs de glycémie sur Internet, tels que LibreLinkUp, Dexcom Share et Nightscout.</string>
     <string name="pref_source_xdrip_broadcast">Alternative: Diffuser localement</string>
     <string name="pref_source_dexcom_byoda_info_summary">Pour recevoir des valeurs de Dexcom BYODA, vous devez activer la diffusion vers xDrip+, AAPS ou les deux lors de la création de l\'application.</string>
     <string name="pref_source_eversense_info_summary">Pour recevoir des valeurs d\'Eversense, vous devez utiliser ESEL soit en mode compagnon (lecture de la notification), soit connecté à l\'application Eversense corrigée.\nPour plus d\'informations sur ESEL, appuyez ici.</string>
     <string name="new_version">La version %s est disponible</string>
     <string name="info_label_notes">Remarques</string>
-    <string name="gda_notification_permission">Les notifications sont désactivées! \nAppuyez ici pour les activer.</string>
+    <string name="gda_notification_permission">Les notifications sont désactivées ! \nAppuyez ici pour les activer.</string>
 
     <!-- New  -->
 
     <string name="pref_show_other_unit">Afficher l\'autre unité</string>
-    <string name="pref_show_other_unit_summary">Afficher la valeur du glucose en %s dans les détails.</string>
-    <string name="other_unit">Other unit</string>
+    <string name="pref_show_other_unit_summary">Afficher la valeur de la glycémie en %s dans les détails.</string>
+    <string name="other_unit">L\'autre unité</string>
     <string name="dexcom_share_check_non_us_account">Press here to check your Dexcom Share account data for your non-US account.</string>
     <string name="dexcom_share_check_us_account">Press here to check your Dexcom Share account data for your US account.</string>
 
