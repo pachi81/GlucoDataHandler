@@ -209,8 +209,8 @@
     <string name="widget_glucose">glycémie</string>
     <string name="widget_glucose_trend">glycémie et tendance</string>
     <string name="widget_glucose_trend_delta">glycémie, tendance et delta</string>
-    <string name="widget_glucose_trend_delta_timestamp">glycémie, tendance, delta et horodatage</string>
-    <string name="widget_glucose_trend_delta_timestamp_iob_cob">glycémie, tendance, delta, heure et IOB/COB</string>
+    <string name="widget_glucose_trend_delta_timestamp">glycémie, tendance, delta et derniére actualisation</string>
+    <string name="widget_glucose_trend_delta_timestamp_iob_cob">glycémie, tendance, delta, derniére actualisation et IOB/COB</string>
 
     <string name="pref_send_to_bangleJS">Prise en charge de BangleJS</string>
     <string name="pref_send_to_bangleJS_summary">Transférer les valeurs vers le widget widbgjs pour BangleJS.</string>
@@ -378,7 +378,7 @@
     <string name="alarm_cat_categories">Catégories d\'alarmes</string>
     <string name="alarm_fullscreen_notification_enabled">Notification plein écran</string>
     <string name="alarm_fullscreen_notification_enabled_summary">Active la notification plein écran sur l\'écran de verrouillage.\nCela peut nécessiter une autorisation supplémentaire.</string>
-    <string name="alarm_snooze_on_notification_enabled">Reporter sur la notification</string>
+    <string name="alarm_snooze_on_notification_enabled">Snoozer à partir de la notification</string>
     <string name="alarm_snooze_on_notification_summary">Si cette option est activée, les notifications incluront également des boutons pour activer la répétition.</string>
     <string name="alarm_fullscreen_dismiss_keyguard">Rejeter le verrouillage du clavier</string>
     <string name="alarm_fullscreen_dismiss_keyguard_summary">Veuillez activer ce paramètre si vous rencontrez des problèmes avec la notification plein écran.\nSur certains appareils, cela provoquera le déverrouillage de l\'écran lorsque la notification plein écran est déclenchée.\nVeuillez donc ne pas l\'activer si vous n\'avez aucun problème.</string>
@@ -536,8 +536,8 @@
     <string name="pref_show_other_unit">Afficher l\'autre unité</string>
     <string name="pref_show_other_unit_summary">Afficher la valeur de la glycémie en %s dans les détails.</string>
     <string name="other_unit">L\'autre unité</string>
-    <string name="dexcom_share_check_non_us_account">Press here to check your Dexcom Share account data for your non-US account.</string>
-    <string name="dexcom_share_check_us_account">Press here to check your Dexcom Share account data for your US account.</string>
-    <string name="pref_lockscreen_size_summary">Change size of the lockscreen data.</string>
+    <string name="dexcom_share_check_non_us_account">Appuyez ici pour vérifier les données de votre compte Dexcom Share pour votre compte hors U.S.A.</string>
+    <string name="dexcom_share_check_us_account">Appuyez ici pour vérifier les données de votre compte Dexcom Share pour votre compte américain.</string>
+    <string name="pref_lockscreen_size_summary">Modifiez la taille des données de l\'écran de verrouillage.</string>
 
 </resources>
