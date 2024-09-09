@@ -299,6 +299,14 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     startActivity(mailIntent)
                     return true
                 }
+                R.id.action_facebook -> {
+                    val browserIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(resources.getText(CR.string.facebook_gdh_group_url).toString())
+                    )
+                    startActivity(browserIntent)
+                    return true
+                }
                 R.id.action_save_mobile_logs -> {
                     SaveMobileLogs()
                     return true
