@@ -621,11 +621,18 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         }
 
         if (WearPhoneConnection.nodesConnected) {
-            val onClickListener = OnClickListener {
+            val onCheckClickListener = OnClickListener {
                 GlucoDataService.checkForConnectedNodes(true)
             }
+            val onResetClickListener = OnClickListener {
+                GlucoDataService.resetWearPhoneConnection()
+            }
             WearPhoneConnection.getNodeBatterLevels().forEach { name, level ->
-                tableConnections.addView(createRow(name, if (level > 0) "$level%" else "?%", onClickListener))
+                if (level > 0) {
+                    tableConnections.addView(createRow(name, if (level > 0) "$level%" else "?%", onCheckClickListener))
+                } else {
+                    tableConnections.addView(createRow(name, resources.getString(CR.string.detail_reset_connection), onResetClickListener))
+                }
             }
         }
         if (WatchDrip.connected) {

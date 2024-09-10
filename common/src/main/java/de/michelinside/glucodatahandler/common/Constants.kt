@@ -100,6 +100,7 @@ object Constants {
     const val SHARED_PREF_WATCHDRIP = "watchdrip_enabled"
     const val SHARED_PREF_WATCHDRIP_RECEIVERS = "watchdrip_receivers"
     const val SHARED_PREF_CHECK_WEAR_OS_CONNECTION = "wear_os_check_connection"
+    const val SHARED_PREF_RESET_WEAR_OS_CONNECTION = "wear_os_reset_connection"
     const val SHARED_PREF_OPEN_WATCH_DRIP_LINK = "open_watchdrip_link"
     const val SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT = "uncaught_exception_detected"
     const val SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE = "uncaught_exception_message"

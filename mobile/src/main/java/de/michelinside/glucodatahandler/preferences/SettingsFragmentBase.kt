@@ -327,6 +327,12 @@ class WatchSettingsFragment: SettingsFragmentBase(R.xml.pref_watch) {
             true
         }
 
+        val prefResetWearOS = findPreference<Preference>(Constants.SHARED_PREF_RESET_WEAR_OS_CONNECTION)
+        prefResetWearOS!!.setOnPreferenceClickListener {
+            GlucoDataService.resetWearPhoneConnection()
+            true
+        }
+
         val prefWatchDripLink = findPreference<Preference>(Constants.SHARED_PREF_OPEN_WATCH_DRIP_LINK)
         prefWatchDripLink!!.setOnPreferenceClickListener {
             val browserIntent = Intent(

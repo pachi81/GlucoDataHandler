@@ -122,6 +122,17 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
             }
         }
 
+        fun resetWearPhoneConnection() {
+            try {
+                if (connection != null) {
+                    connection!!.close()
+                    connection!!.open(context!!, appSource == AppSource.PHONE_APP)
+                }
+            } catch (exc: Exception) {
+                Log.e(LOG_ID,"resetWearPhoneConnection exception: " + exc.message.toString())
+            }
+        }
+
         fun sendCommand(command: Command, extras: Bundle? = null) {
             try {
                 if (connection!=null)

@@ -529,6 +529,9 @@
     <string name="dexcom_share_check_non_us_account">Hier klicken, um Ihre Logindaten für das Internationalen Dexcom Share Konto zu überprüfen.</string>
     <string name="dexcom_share_check_us_account">Hier klicken, um Ihre Logindaten für das US Dexcom Share Konto zu überprüfen.</string>
     <string name="pref_lockscreen_size_summary">Größe der Darstellung auf dem Sperrbildschirm anpassen.</string>
+    <string name="pref_wear_os_reset_connection">Verbindung zurücksetzen</string>
+    <string name="pref_wear_os_reset_connection_summary">Hier drücken, wenn die Verbindung zwischen Telefon und Uhr nicht funktioniert, wie erwartet.\nWenn das Problem dadurch nicht gelöst wird, bitte die Uhr neustarten.</string>
+    <string name="detail_reset_connection">Verbindung funktioniert noch nicht!\nBitte hier drücken, um die Verbindung zurückzusetzen.\nWenn das Problem dadurch nicht gelöst wird, bitte die Uhr neustarten.</string>
 
 
 </resources>

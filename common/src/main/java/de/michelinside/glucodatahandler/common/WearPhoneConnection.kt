@@ -112,6 +112,8 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         InternalNotifier.remNotifier(context, this)
         Wearable.getMessageClient(context).removeListener(this)
         Wearable.getCapabilityClient(context).removeListener(this)
+        connectedNodes.clear()
+        nodeBatteryLevel.clear()
         Log.d(LOG_ID, "connection closed")
     }
 

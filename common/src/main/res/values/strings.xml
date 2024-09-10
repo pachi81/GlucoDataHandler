@@ -561,4 +561,7 @@
     <string name="dexcom_share_check_non_us_account">Press here to check your Dexcom Share account data for your non-US account.</string>
     <string name="dexcom_share_check_us_account">Press here to check your Dexcom Share account data for your US account.</string>
     <string name="pref_lockscreen_size_summary">Change size of the lockscreen data.</string>
+    <string name="pref_wear_os_reset_connection">Reset connection</string>
+    <string name="pref_wear_os_reset_connection_summary">Press here to reset the wear-phone connection if it is not working as expected.\nIf the reset does not solve the problem, please restart your watch.</string>
+    <string name="detail_reset_connection">Connection is not working as expected! Press here to reset the wear-phone connection.\nIf the reset does not solve the problem, please restart your watch.</string>
 </resources>
