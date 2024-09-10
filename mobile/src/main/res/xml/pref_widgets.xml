@@ -40,6 +40,16 @@
                     android:summary="@string/pref_floating_widget_transparency_summary"
                     android:title="@string/pref_floating_widget_transparency"
                     app:iconSpaceReserved="false" />
+                <androidx.preference.SeekBarPreference
+                    android:defaultValue="4"
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="1"
+                    app:min="0"
+                    android:max="10"
+                    android:key="floating_widget_time_to_close"
+                    android:summary="@string/pref_floating_widget_time_to_close_summary"
+                    android:title="@string/pref_floating_widget_time_to_close"
+                    app:iconSpaceReserved="false" />
                 <de.michelinside.glucodatahandler.preferences.TapActionPreference
                     android:key="floating_widget_tap_action"
                     android:title="@string/tap_action"

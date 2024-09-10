@@ -274,9 +274,12 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
                                     if (duration < 200) {
                                         Log.d(LOG_ID, "Call onClick after " + duration.toString() + "ms")
                                         widget.performClick()
-                                    } else if (duration > 4000) {
-                                        Log.d(LOG_ID, "Call onLongClick after " + duration.toString() + "ms")
-                                        widget.performLongClick()
+                                    } else {
+                                        val longClickTime = sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_TIME_TO_CLOSE, 4) * 1000
+                                        if (longClickTime > 0 && duration > longClickTime) {
+                                            Log.d(LOG_ID, "Call onLongClick after " + duration.toString() + "ms")
+                                            widget.performLongClick()
+                                        }
                                     }
                                 }
                                 return true
