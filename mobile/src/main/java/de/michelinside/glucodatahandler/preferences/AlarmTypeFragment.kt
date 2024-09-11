@@ -16,11 +16,14 @@ import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.DialogFragment
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SeekBarPreference
 import androidx.preference.SwitchPreferenceCompat
+import com.takisoft.preferencex.TimePickerPreference
+import com.takisoft.preferencex.TimePickerPreferenceDialogFragmentCompat
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
@@ -31,6 +34,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
+import java.time.LocalTime
 
 class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
     private val LOG_ID = "GDH.AlarmTypeFragment"
@@ -54,10 +58,16 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
     private val soundLevelPref: String get() {
         return alarmPrefix + "sound_level"
     }
-    /*
-    private val settingsPref: String get() {
-        return alarmPrefix + "settings"
-    }*/
+    private val inactiveEnabledPref: String get() {
+        return alarmPrefix + "inactive_enabled"
+    }
+    private val inactiveStartPref: String get() {
+        return alarmPrefix + "inactive_start_time"
+    }
+    private val inactiveEndPref: String get() {
+        return alarmPrefix + "inactive_end_time"
+    }
+
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         try {
@@ -98,6 +108,27 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
         }
     }
 
+    override fun onDisplayPreferenceDialog(preference: Preference) {
+        Log.d(LOG_ID, "onDisplayPreferenceDialog called for " + preference.javaClass)
+        try {
+            var dialogFragment: DialogFragment? = null
+            if (preference is TimePickerPreference) {
+                dialogFragment = TimePickerPreferenceDialogFragmentCompat()
+                val bundle = Bundle(1)
+                bundle.putString("key", preference.key)
+                dialogFragment.arguments = bundle
+            }
+            if (dialogFragment != null) {
+                dialogFragment.setTargetFragment(this, 0)
+                dialogFragment.show(parentFragmentManager, "androidx.preference.PreferenceFragment.DIALOG")
+            } else {
+                super.onDisplayPreferenceDialog(preference)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onDisplayPreferenceDialog exception: " + exc.toString())
+        }
+    }
+
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
         try {
@@ -115,14 +146,6 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
     private fun update() {
         Log.d(LOG_ID, "update called")
         try {
-            /*
-            val pref = findPreference<Preference>(settingsPref)
-            if (pref != null) {
-                pref.icon = ContextCompat.getDrawable(
-                    requireContext(),
-                    AlarmNotification.getSoundMode(alarmType, requireContext()).icon
-                )
-            }*/
             val prefTest = findPreference<Preference>(testAlarmPref)
             if (prefTest != null) {
                 prefTest.isEnabled = true
@@ -131,6 +154,15 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
             val prefUseCustomRingtone = findPreference<SwitchPreferenceCompat>(useCustomSoundPref)
             prefSelectRingtone!!.isEnabled = prefUseCustomRingtone!!.isChecked
             updateRingtoneSelectSummary()
+
+            val inactivePref = findPreference<SwitchPreferenceCompat>(inactiveEnabledPref)
+            if (inactivePref != null) {
+                val prefStart = findPreference<TimePickerPreference>(inactiveStartPref)
+                val prefEnd = findPreference<TimePickerPreference>(inactiveEndPref)
+                prefStart!!.isEnabled = inactivePref.isChecked
+                prefEnd!!.isEnabled = inactivePref.isChecked
+            }
+
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.toString())
         }
@@ -207,6 +239,15 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
             levelPref.max = AlarmNotification.getMaxSoundLevel()
             levelPref.value = preferenceManager.sharedPreferences!!.getInt(levelPref.key, -1)
         }
+
+        val inactivePref = findPreference<SwitchPreferenceCompat>(inactiveEnabledPref)
+        inactivePref!!.isChecked = preferenceManager.sharedPreferences!!.getBoolean(inactivePref.key, false)
+
+        val prefStart = findPreference<TimePickerPreference>(inactiveStartPref)
+        prefStart!!.isEnabled = inactivePref.isChecked
+
+        val prefEnd = findPreference<TimePickerPreference>(inactiveEndPref)
+        prefEnd!!.isEnabled = inactivePref.isChecked
     }
 
     private fun getIntervalSummary(alarmType: AlarmType): String {

@@ -38,6 +38,22 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
     private var obsoleteEnabled = true
     private var obsoleteIntervalMin = 20
 
+    private var veryLowInactiveEnabled = false
+    private var veryLowInactiveStartTime = ""
+    private var veryLowInactiveEndTime = ""
+    private var lowInactiveEnabled = false
+    private var lowInactiveStartTime = ""
+    private var lowInactiveEndTime = ""
+    private var highInactiveEnabled = false
+    private var highInactiveStartTime = ""
+    private var highInactiveEndTime = ""
+    private var veryHighInactiveEnabled = false
+    private var veryHighInactiveStartTime = ""
+    private var veryHighInactiveEndTime = ""
+    private var obsoleteInactiveEnabled = false
+    private var obsoleteInactiveStartTime = ""
+    private var obsoleteInactiveEndTime = ""
+
     private var lastAlarmTime = 0L
     private var lastAlarmType = AlarmType.OK
     private var initialized = false
@@ -184,22 +200,37 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         Constants.SHARED_PREF_ALARM_VERY_LOW_INTERVAL,
         Constants.SHARED_PREF_ALARM_VERY_LOW_SOUND_DELAY,
         Constants.SHARED_PREF_ALARM_VERY_LOW_RETRIGGER,
+        Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_ENABLED,
+        Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_START_TIME,
+        Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_END_TIME,
         Constants.SHARED_PREF_ALARM_LOW_ENABLED,
         Constants.SHARED_PREF_ALARM_LOW_INTERVAL,
         Constants.SHARED_PREF_ALARM_LOW_SOUND_DELAY,
         Constants.SHARED_PREF_ALARM_LOW_RETRIGGER,
+        Constants.SHARED_PREF_ALARM_LOW_INACTIVE_ENABLED,
+        Constants.SHARED_PREF_ALARM_LOW_INACTIVE_START_TIME,
+        Constants.SHARED_PREF_ALARM_LOW_INACTIVE_END_TIME,
         Constants.SHARED_PREF_ALARM_HIGH_ENABLED,
         Constants.SHARED_PREF_ALARM_HIGH_INTERVAL,
         Constants.SHARED_PREF_ALARM_HIGH_SOUND_DELAY,
         Constants.SHARED_PREF_ALARM_HIGH_RETRIGGER,
+        Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_ENABLED,
+        Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_START_TIME,
+        Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_END_TIME,
         Constants.SHARED_PREF_ALARM_VERY_HIGH_ENABLED,
         Constants.SHARED_PREF_ALARM_VERY_HIGH_INTERVAL,
         Constants.SHARED_PREF_ALARM_VERY_HIGH_SOUND_DELAY,
         Constants.SHARED_PREF_ALARM_VERY_HIGH_RETRIGGER,
+        Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_ENABLED,
+        Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_START_TIME,
+        Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_END_TIME,
         Constants.SHARED_PREF_ALARM_OBSOLETE_ENABLED,
         Constants.SHARED_PREF_ALARM_OBSOLETE_INTERVAL,
         Constants.SHARED_PREF_ALARM_OBSOLETE_SOUND_DELAY,
         Constants.SHARED_PREF_ALARM_OBSOLETE_RETRIGGER,
+        Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_ENABLED,
+        Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_START_TIME,
+        Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_END_TIME,
         Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION,
         Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED,
     )
@@ -216,6 +247,24 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         bundle.putBoolean(Constants.SHARED_PREF_ALARM_HIGH_ENABLED, highEnabled)
         bundle.putBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_ENABLED, veryHighEnabled)
         bundle.putBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_ENABLED, obsoleteEnabled)
+
+        bundle.putBoolean(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_ENABLED, veryLowInactiveEnabled)
+        bundle.putBoolean(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_ENABLED, lowInactiveEnabled)
+        bundle.putBoolean(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_ENABLED, highInactiveEnabled)
+        bundle.putBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_ENABLED, veryHighInactiveEnabled)
+        bundle.putBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_ENABLED, obsoleteInactiveEnabled)
+
+        bundle.putString(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_START_TIME, veryLowInactiveStartTime)
+        bundle.putString(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_END_TIME, veryLowInactiveEndTime)
+        bundle.putString(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_START_TIME, lowInactiveStartTime)
+        bundle.putString(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_END_TIME, lowInactiveEndTime)
+        bundle.putString(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_START_TIME, highInactiveStartTime)
+        bundle.putString(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_END_TIME, highInactiveEndTime)
+        bundle.putString(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_START_TIME, veryHighInactiveStartTime)
+        bundle.putString(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_END_TIME, veryHighInactiveEndTime)
+        bundle.putString(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_START_TIME, obsoleteInactiveStartTime)
+        bundle.putString(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_END_TIME, obsoleteInactiveEndTime)
+
         if(includeNotification && AlarmNotificationBase.instance != null) {
             if(GlucoDataService.sharedPref != null) {
                 bundle.putBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED,  GlucoDataService.sharedPref!!.getBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED, false))
@@ -252,6 +301,24 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
             putBoolean(Constants.SHARED_PREF_ALARM_HIGH_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_HIGH_ENABLED, highEnabled))
             putBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_ENABLED, veryHighEnabled))
             putBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_ENABLED, obsoleteEnabled))
+
+            putBoolean(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_ENABLED, veryLowInactiveEnabled))
+            putBoolean(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_ENABLED, lowInactiveEnabled))
+            putBoolean(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_ENABLED, highInactiveEnabled))
+            putBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_ENABLED, veryHighInactiveEnabled))
+            putBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_ENABLED, obsoleteInactiveEnabled))
+
+            putString(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_START_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_START_TIME, veryLowInactiveStartTime))
+            putString(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_END_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_END_TIME, veryLowInactiveEndTime))
+            putString(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_START_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_START_TIME, lowInactiveStartTime))
+            putString(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_END_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_END_TIME, lowInactiveEndTime))
+            putString(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_START_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_START_TIME, highInactiveStartTime))
+            putString(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_END_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_END_TIME, highInactiveEndTime))
+            putString(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_START_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_START_TIME, veryHighInactiveStartTime))
+            putString(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_END_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_END_TIME, veryHighInactiveEndTime))
+            putString(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_START_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_START_TIME, obsoleteInactiveStartTime))
+            putString(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_END_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_END_TIME, obsoleteInactiveEndTime))
+
             if(AlarmNotificationBase.instance != null && bundle.containsKey(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION)) {
                 putBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, bundle.getBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, AlarmNotificationBase.instance!!.getAddSnooze()))
                 putInt(Constants.SHARED_PREF_ALARM_VERY_LOW_SOUND_DELAY, bundle.getInt(Constants.SHARED_PREF_ALARM_VERY_LOW_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.VERY_LOW, GlucoDataService.context!!)))
@@ -289,6 +356,25 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         highEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_HIGH_ENABLED, highEnabled)
         veryHighEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_ENABLED, veryHighEnabled)
         obsoleteEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_ENABLED, obsoleteEnabled)
+
+        veryLowInactiveEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_ENABLED, veryLowInactiveEnabled)
+        lowInactiveEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_ENABLED, lowInactiveEnabled)
+        highInactiveEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_ENABLED, highInactiveEnabled)
+        veryHighInactiveEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_ENABLED, veryHighInactiveEnabled)
+        obsoleteInactiveEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_ENABLED, obsoleteInactiveEnabled)
+
+        veryLowInactiveStartTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_START_TIME, veryLowInactiveStartTime)!!
+        lowInactiveStartTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_START_TIME, lowInactiveStartTime)!!
+        highInactiveStartTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_START_TIME, highInactiveStartTime)!!
+        veryHighInactiveStartTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_START_TIME, veryHighInactiveStartTime)!!
+        obsoleteInactiveStartTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_START_TIME, obsoleteInactiveStartTime)!!
+
+        veryLowInactiveEndTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_END_TIME, veryLowInactiveEndTime)!!
+        lowInactiveEndTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_END_TIME, lowInactiveEndTime)!!
+        highInactiveEndTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_END_TIME, highInactiveEndTime)!!
+        veryHighInactiveEndTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_END_TIME, veryHighInactiveEndTime)!!
+        obsoleteInactiveEndTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_END_TIME, obsoleteInactiveEndTime)!!
+
         checkNotifier(context)
     }
 

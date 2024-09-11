@@ -534,6 +534,12 @@
     <string name="detail_reset_connection">Verbindung funktioniert noch nicht!\nBitte hier drücken, um die Verbindung zurückzusetzen.\nWenn das Problem dadurch nicht gelöst wird, bitte die Uhr neustarten.</string>
     <string name="pref_floating_widget_time_to_close">Zeit zum Schließen</string>
     <string name="pref_floating_widget_time_to_close_summary">Zeit in Sekunden, wie lange man auf das Schwebende Widget drücken muss, ohne es zu Bewegen, damit es deaktiviert wird.\n0 zum Deaktivieren dieser Einstellung.\n</string>
+    <string name="alarm_inactive_enabled">Disable alarm time range</string>
+    <string name="alarm_inactive_enabled_summary">To disable the alarm in a specific time, activate this and set the start- and endtime.</string>
+    <string name="alarm_inactive_start_time">Disable from</string>
+    <string name="alarm_inactive_start_time_summary">From this time, the alarm will not fire.</string>
+    <string name="alarm_inactive_end_time">Disable until</string>
+    <string name="alarm_inactive_end_time_summary">Until this time, the alarm will not fire.</string>
 
 
 </resources>

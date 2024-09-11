@@ -196,6 +196,9 @@ object Constants {
     //const val SHARED_PREF_ALARM_VERY_LOW_USE_CUSTOM_SOUND = "alarm_very_low_use_custom_sound"
     //const val SHARED_PREF_ALARM_VERY_LOW_CUSTOM_SOUND = "alarm_very_low_custom_sound"
     const val SHARED_PREF_ALARM_VERY_LOW_SOUND_DELAY = "alarm_very_low_sound_delay"
+    const val SHARED_PREF_ALARM_VERY_LOW_INACTIVE_ENABLED = "alarm_very_low_inactive_enabled"
+    const val SHARED_PREF_ALARM_VERY_LOW_INACTIVE_START_TIME = "alarm_very_low_inactive_start_time"
+    const val SHARED_PREF_ALARM_VERY_LOW_INACTIVE_END_TIME = "alarm_very_low_inactive_end_time"
 
     const val SHARED_PREF_ALARM_LOW = "alarm_low"
     const val SHARED_PREF_ALARM_LOW_ENABLED = "alarm_low_enabled"
@@ -204,6 +207,9 @@ object Constants {
     //const val SHARED_PREF_ALARM_LOW_USE_CUSTOM_SOUND = "alarm_low_use_custom_sound"
     //const val SHARED_PREF_ALARM_LOW_CUSTOM_SOUND = "alarm_low_custom_sound"
     const val SHARED_PREF_ALARM_LOW_SOUND_DELAY = "alarm_low_sound_delay"
+    const val SHARED_PREF_ALARM_LOW_INACTIVE_ENABLED = "alarm_low_inactive_enabled"
+    const val SHARED_PREF_ALARM_LOW_INACTIVE_START_TIME = "alarm_low_inactive_start_time"
+    const val SHARED_PREF_ALARM_LOW_INACTIVE_END_TIME = "alarm_low_inactive_end_time"
 
     const val SHARED_PREF_ALARM_HIGH = "alarm_high"
     const val SHARED_PREF_ALARM_HIGH_ENABLED = "alarm_high_enabled"
@@ -212,6 +218,9 @@ object Constants {
     //const val SHARED_PREF_ALARM_HIGH_USE_CUSTOM_SOUND = "alarm_high_use_custom_sound"
     //const val SHARED_PREF_ALARM_HIGHCUSTOM_SOUND = "alarm_high_custom_sound"
     const val SHARED_PREF_ALARM_HIGH_SOUND_DELAY = "alarm_high_sound_delay"
+    const val SHARED_PREF_ALARM_HIGH_INACTIVE_ENABLED = "alarm_high_inactive_enabled"
+    const val SHARED_PREF_ALARM_HIGH_INACTIVE_START_TIME = "alarm_high_inactive_start_time"
+    const val SHARED_PREF_ALARM_HIGH_INACTIVE_END_TIME = "alarm_high_inactive_end_time"
 
     const val SHARED_PREF_ALARM_VERY_HIGH = "alarm_very_high"
     const val SHARED_PREF_ALARM_VERY_HIGH_ENABLED = "alarm_very_high_enabled"
@@ -220,6 +229,9 @@ object Constants {
     //const val SHARED_PREF_ALARM_VERY_HIGH_USE_CUSTOM_SOUND = "alarm_very_high_use_custom_sound"
     //const val SHARED_PREF_ALARM_VERY_HIGH_CUSTOM_SOUND = "alarm_very_high_custom_sound"
     const val SHARED_PREF_ALARM_VERY_HIGH_SOUND_DELAY = "alarm_very_high_sound_delay"
+    const val SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_ENABLED = "alarm_very_high_inactive_enabled"
+    const val SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_START_TIME = "alarm_very_high_inactive_start_time"
+    const val SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_END_TIME = "alarm_very_high_inactive_end_time"
 
     const val SHARED_PREF_ALARM_OBSOLETE = "alarm_obsolete"
     const val SHARED_PREF_ALARM_OBSOLETE_ENABLED = "alarm_obsolete_enabled"
@@ -228,6 +240,9 @@ object Constants {
     //const val SHARED_PREF_ALARM_OBSOLETE_USE_CUSTOM_SOUND = "alarm_obsolete_use_custom_sound"
     //const val SHARED_PREF_ALARM_OBSOLETE_CUSTOM_SOUND = "alarm_obsolete_custom_sound"
     const val SHARED_PREF_ALARM_OBSOLETE_SOUND_DELAY = "alarm_obsolete_sound_delay"
+    const val SHARED_PREF_ALARM_OBSOLETE_INACTIVE_ENABLED = "alarm_obsolete_inactive_enabled"
+    const val SHARED_PREF_ALARM_OBSOLETE_INACTIVE_START_TIME = "alarm_obsolete_inactive_start_time"
+    const val SHARED_PREF_ALARM_OBSOLETE_INACTIVE_END_TIME = "alarm_obsolete_inactive_end_time"
 
     // Android Auto
     const val AA_MEDIA_ICON_STYLE_TREND = "trend"

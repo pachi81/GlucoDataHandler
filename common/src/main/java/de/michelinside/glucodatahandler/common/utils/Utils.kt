@@ -18,6 +18,7 @@ import java.io.FileOutputStream
 import java.io.OutputStream
 import java.math.RoundingMode
 import java.security.MessageDigest
+import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
@@ -270,6 +271,34 @@ object Utils {
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Saving logs exception: " + exc.message.toString() )
         }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    fun timeBetweenTimes(currentTime: String, startTime: String, endTime: String): Boolean {
+        try {
+            if (currentTime.isEmpty() || startTime.isEmpty() || endTime.isEmpty())
+                return false
+            val timeCur = SimpleDateFormat("HH:mm").parse(currentTime)
+            val timeStart = SimpleDateFormat("HH:mm").parse(startTime)
+            val timeEnd = SimpleDateFormat("HH:mm").parse(endTime)
+
+            if (timeCur == null || timeStart == null || timeEnd == null)
+                return false
+
+            if (timeCur == timeStart || timeCur == timeEnd)
+                return true
+
+            if (timeStart.after(timeEnd)) {  // night shift
+                if (timeCur.after(timeStart) || timeCur.before(timeEnd))
+                    return true
+            } else {
+                if (timeCur.after(timeStart) && timeCur.before(timeEnd))
+                    return true
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "timeBetweenTimes exception: " + exc.message.toString() )
+        }
+        return false
     }
 
 }

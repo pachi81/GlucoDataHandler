@@ -10,7 +10,15 @@ import android.provider.Settings
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.preference.*
+import androidx.fragment.app.DialogFragment
+import androidx.preference.ListPreference
+import androidx.preference.MultiSelectListPreference
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SeekBarPreference
+import androidx.preference.SwitchPreferenceCompat
+import com.takisoft.preferencex.TimePickerPreference
+import com.takisoft.preferencex.TimePickerPreferenceDialogFragmentCompat
 import de.michelinside.glucodatahandler.Dialogs
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
@@ -20,6 +28,12 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import kotlin.collections.HashMap
+import kotlin.collections.List
+import kotlin.collections.mutableSetOf
+import kotlin.collections.plus
+import kotlin.collections.set
+import kotlin.collections.toTypedArray
 import de.michelinside.glucodatahandler.common.R as CR
 
 
@@ -139,9 +153,17 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
     override fun onDisplayPreferenceDialog(preference: Preference) {
         Log.d(LOG_ID, "onDisplayPreferenceDialog called for " + preference.javaClass)
         try {
-            if (preference is TapActionPreference) {
+            var dialogFragment: DialogFragment? = null
+            if (preference is TimePickerPreference) {
+                dialogFragment = TimePickerPreferenceDialogFragmentCompat()
+                val bundle = Bundle(1)
+                bundle.putString("key", preference.key)
+                dialogFragment.arguments = bundle
+            } else if (preference is TapActionPreference) {
                 Log.d(LOG_ID, "Show SelectReceiver Dialog")
-                val dialogFragment = TapActionPreferenceDialogFragmentCompat.initial(preference.key)
+                dialogFragment = TapActionPreferenceDialogFragmentCompat.initial(preference.key)
+            }
+            if (dialogFragment != null) {
                 dialogFragment.setTargetFragment(this, 0)
                 dialogFragment.show(parentFragmentManager, "androidx.preference.PreferenceFragment.DIALOG")
             } else {
