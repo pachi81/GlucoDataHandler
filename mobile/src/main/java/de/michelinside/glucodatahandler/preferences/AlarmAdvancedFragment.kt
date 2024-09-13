@@ -109,7 +109,7 @@ class AlarmAdvancedFragment : PreferenceFragmentCompat(), SharedPreferences.OnSh
         Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
         try {
             updateEnableStates(sharedPreferences)
-            if(AlarmHandler.alarmPreferencesToSend.contains(key))
+            if(AlarmHandler.isAlarmSettingToShare(key))
                 AlarmFragment.settingsChanged = true
             when(key) {
                 Constants.SHARED_PREF_ALARM_FORCE_SOUND -> checkDisablePref(Constants.SHARED_PREF_ALARM_FORCE_SOUND, Constants.SHARED_PREF_ALARM_FORCE_VIBRATION)

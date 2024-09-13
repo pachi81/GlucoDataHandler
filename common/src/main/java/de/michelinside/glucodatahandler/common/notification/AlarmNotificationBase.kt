@@ -248,7 +248,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 curNotification = getNotificationId(alarmType)
                 retriggerCount = 0
                 retriggerOnDestroy = false
-                retriggerTime = getTriggerTime(alarmType, context)
+                retriggerTime = getTriggerTime(alarmType)
                 curAlarmTime = System.currentTimeMillis()
                 curTestAlarmType = if(forTest)
                     alarmType
@@ -416,7 +416,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     private fun startVibrationAndSound(alarmType: AlarmType, context: Context, reTrigger: Boolean = false) {
         if(!reTrigger) {
-            val soundDelay = getSoundDelay(alarmType, context)
+            val soundDelay = getSoundDelay(alarmType)
             Log.i(LOG_ID, "Start vibration and sound with $soundDelay seconds delay")
             if(soundDelay > 0) {
                 vibrate(alarmType, context, true)
@@ -557,7 +557,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 }
             }
             if(audioManager.ringerMode == AudioManager.RINGER_MODE_NORMAL) {
-                val soundLevel = getSoundLevel(alarmType, context)
+                val soundLevel = getSoundLevel(alarmType)
                 if (soundLevel >= 0) {
                     lastSoundLevel = getCurrentSoundLevel()
                     Log.d(LOG_ID, "Set cur sound level $lastSoundLevel to $soundLevel")
@@ -658,36 +658,21 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     private fun getSound(alarmType: AlarmType, context: Context, forTest: Boolean = false): Uri? {
         if(vibrateOnly && !forTest)
             return null
-        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-        val prefix = when(alarmType) {
-            AlarmType.VERY_LOW -> Constants.SHARED_PREF_ALARM_VERY_LOW
-            AlarmType.LOW -> Constants.SHARED_PREF_ALARM_LOW
-            AlarmType.HIGH -> Constants.SHARED_PREF_ALARM_HIGH
-            AlarmType.VERY_HIGH -> Constants.SHARED_PREF_ALARM_VERY_HIGH
-            AlarmType.OBSOLETE -> Constants.SHARED_PREF_ALARM_OBSOLETE
-            else -> ""
-        }
-        if(prefix.isNotEmpty() && sharedPref.getBoolean(prefix + "_use_custom_sound", false)) {
-            val path = sharedPref.getString(prefix + "_custom_sound", "")
-            if(path.isNullOrEmpty())
+        if (alarmType.setting == null)
+            return null
+        if(alarmType.setting.useCustomSound) {
+            val path = alarmType.setting.customSoundPath
+            if(path.isEmpty())
                 return null
             return Uri.parse(path)
         }
-
         return getDefaultAlarm(alarmType, context)
     }
 
-    private fun getSoundLevel(alarmType: AlarmType, context: Context): Int {
-        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-        val prefix = when(alarmType) {
-            AlarmType.VERY_LOW -> Constants.SHARED_PREF_ALARM_VERY_LOW
-            AlarmType.LOW -> Constants.SHARED_PREF_ALARM_LOW
-            AlarmType.HIGH -> Constants.SHARED_PREF_ALARM_HIGH
-            AlarmType.VERY_HIGH -> Constants.SHARED_PREF_ALARM_VERY_HIGH
-            AlarmType.OBSOLETE -> Constants.SHARED_PREF_ALARM_OBSOLETE
-            else -> ""
-        }
-        return sharedPref.getInt(prefix + "_sound_level", -1)
+    private fun getSoundLevel(alarmType: AlarmType): Int {
+        if (alarmType.setting == null)
+            return -1
+        return alarmType.setting.soundLevel
     }
 
     fun getAlarmTextRes(alarmType: AlarmType): Int? {
@@ -725,28 +710,18 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
     }
 
-    fun getTriggerTime(alarmType: AlarmType, context: Context): Int {
-        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-        return when(alarmType) {
-            AlarmType.VERY_LOW -> sharedPref.getInt(Constants.SHARED_PREF_ALARM_VERY_LOW_RETRIGGER, 0)
-            AlarmType.LOW -> sharedPref.getInt(Constants.SHARED_PREF_ALARM_LOW_RETRIGGER, 0)
-            AlarmType.HIGH -> sharedPref.getInt(Constants.SHARED_PREF_ALARM_HIGH_RETRIGGER, 0)
-            AlarmType.VERY_HIGH -> sharedPref.getInt(Constants.SHARED_PREF_ALARM_VERY_HIGH_RETRIGGER, 0)
-            AlarmType.OBSOLETE -> sharedPref.getInt(Constants.SHARED_PREF_ALARM_OBSOLETE_RETRIGGER, 0)
-            else -> 0
+    private fun getTriggerTime(alarmType: AlarmType): Int {
+        if (alarmType.setting!=null) {
+            return alarmType.setting.retriggerTime
         }
+        return 0
     }
 
-    fun getSoundDelay(alarmType: AlarmType, context: Context): Int {
-        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-        return when(alarmType) {
-            AlarmType.VERY_LOW -> sharedPref.getInt(Constants.SHARED_PREF_ALARM_VERY_LOW_SOUND_DELAY, 0)
-            AlarmType.LOW -> sharedPref.getInt(Constants.SHARED_PREF_ALARM_LOW_SOUND_DELAY, 0)
-            AlarmType.HIGH -> sharedPref.getInt(Constants.SHARED_PREF_ALARM_HIGH_SOUND_DELAY, 0)
-            AlarmType.VERY_HIGH -> sharedPref.getInt(Constants.SHARED_PREF_ALARM_VERY_HIGH_SOUND_DELAY, 0)
-            AlarmType.OBSOLETE -> sharedPref.getInt(Constants.SHARED_PREF_ALARM_OBSOLETE_SOUND_DELAY, 0)
-            else -> 0
+    private fun getSoundDelay(alarmType: AlarmType): Int {
+        if (alarmType.setting!=null) {
+            return alarmType.setting.soundDelay
         }
+        return 0
     }
 
     abstract fun getStartDelayMs(context: Context): Int

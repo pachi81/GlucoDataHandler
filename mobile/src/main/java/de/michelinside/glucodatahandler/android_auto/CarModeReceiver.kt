@@ -115,7 +115,7 @@ object CarModeReceiver {
                 val settings = ReceiveData.getSettingsBundle()
                 settings.putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime)
                 extras.putBundle(Constants.SETTINGS_BUNDLE, settings)
-                extras.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings(false))
+                extras.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings(true))
             }
             intent.putExtras(extras)
             intent.setPackage(Constants.PACKAGE_GLUCODATAAUTO)

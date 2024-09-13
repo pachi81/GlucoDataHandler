@@ -27,33 +27,6 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
     private const val LAST_ALARM_TIME = "last_alarm_time"
     const val SNOOZE_TIME = "snooze_time"
 
-    private var veryLowEnabled = true
-    private var veryLowInterval = 15*60000 // ms -> 15 minutes
-    private var lowEnabled = true
-    private var lowInterval = 25*60000 // ms -> 25 minutes
-    private var highEnabled = true
-    private var highInterval = 30*60000 // ms -> 30 minutes
-    private var veryHighEnabled = true
-    private var veryHighInterval = 25*60000 // ms -> 25 minutes
-    private var obsoleteEnabled = true
-    private var obsoleteIntervalMin = 20
-
-    private var veryLowInactiveEnabled = false
-    private var veryLowInactiveStartTime = ""
-    private var veryLowInactiveEndTime = ""
-    private var lowInactiveEnabled = false
-    private var lowInactiveStartTime = ""
-    private var lowInactiveEndTime = ""
-    private var highInactiveEnabled = false
-    private var highInactiveStartTime = ""
-    private var highInactiveEndTime = ""
-    private var veryHighInactiveEnabled = false
-    private var veryHighInactiveStartTime = ""
-    private var veryHighInactiveEndTime = ""
-    private var obsoleteInactiveEnabled = false
-    private var obsoleteInactiveStartTime = ""
-    private var obsoleteInactiveEndTime = ""
-
     private var lastAlarmTime = 0L
     private var lastAlarmType = AlarmType.OK
     private var initialized = false
@@ -70,8 +43,6 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
     val snoozeTimestamp: String get() {
         return DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(snoozeTime))
     }
-
-    val obsoleteInterval get() = obsoleteIntervalMin
 
     fun initData(context: Context) {
         try {
@@ -90,6 +61,8 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
     }
 
     fun checkForAlarmTrigger(newAlarmType: AlarmType): Boolean {
+        if (newAlarmType.setting == null)
+            return false
         Log.d(
             LOG_ID, "Check force alarm:" +
                 " - newAlarmType=" + newAlarmType.toString() +
@@ -100,18 +73,19 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
                 " - delta=" + ReceiveData.delta.toString() +
                 " - rate=" + ReceiveData.rate.toString() +
                 " - diff=" + (ReceiveData.time - lastAlarmTime).toString() +
-                " - veryLow=>" + (if(veryLowEnabled) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+veryLowInterval)) else "off") +
-                " - low=>" + (if(lowEnabled) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+lowInterval)) else "off") +
-                " - high=>" + (if(highEnabled) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+highInterval)) else "off") +
-                " - veryHigh=>" + (if(veryHighEnabled) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+veryHighInterval)) else "off")
+                " - veryLow=>" + (if(AlarmType.VERY_LOW.setting!!.isActive) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+AlarmType.VERY_LOW.setting.intervalMS)) else "off") +
+                " - low=>" + (if(AlarmType.LOW.setting!!.isActive) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+AlarmType.LOW.setting.intervalMS)) else "off") +
+                " - high=>" + (if(AlarmType.HIGH.setting!!.isActive) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+AlarmType.HIGH.setting.intervalMS)) else "off") +
+                " - veryHigh=>" + (if(AlarmType.VERY_HIGH.setting!!.isActive) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+AlarmType.VERY_HIGH.setting.intervalMS)) else "off")
         )
         if (isSnoozeActive)
             return false
+
         val triggerAlarm = when(newAlarmType) {
-            AlarmType.VERY_LOW -> veryLowEnabled && checkLowAlarm(newAlarmType, veryLowInterval)
-            AlarmType.LOW -> lowEnabled && checkLowAlarm(newAlarmType, lowInterval)
-            AlarmType.HIGH -> highEnabled && checkHighAlarm(newAlarmType, highInterval)
-            AlarmType.VERY_HIGH -> veryHighEnabled && checkHighAlarm(newAlarmType, veryHighInterval)
+            AlarmType.VERY_LOW,
+            AlarmType.LOW -> newAlarmType.setting.isActive && checkLowAlarm(newAlarmType, newAlarmType.setting.intervalMS)
+            AlarmType.HIGH,
+            AlarmType.VERY_HIGH -> newAlarmType.setting.isActive && checkHighAlarm(newAlarmType, newAlarmType.setting.intervalMS)
             else -> false
         }
         if (triggerAlarm) {
@@ -195,92 +169,33 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         }
     }
 
-    val alarmPreferencesToSend = mutableSetOf(
-        Constants.SHARED_PREF_ALARM_VERY_LOW_ENABLED,
-        Constants.SHARED_PREF_ALARM_VERY_LOW_INTERVAL,
-        Constants.SHARED_PREF_ALARM_VERY_LOW_SOUND_DELAY,
-        Constants.SHARED_PREF_ALARM_VERY_LOW_RETRIGGER,
-        Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_ENABLED,
-        Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_START_TIME,
-        Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_END_TIME,
-        Constants.SHARED_PREF_ALARM_LOW_ENABLED,
-        Constants.SHARED_PREF_ALARM_LOW_INTERVAL,
-        Constants.SHARED_PREF_ALARM_LOW_SOUND_DELAY,
-        Constants.SHARED_PREF_ALARM_LOW_RETRIGGER,
-        Constants.SHARED_PREF_ALARM_LOW_INACTIVE_ENABLED,
-        Constants.SHARED_PREF_ALARM_LOW_INACTIVE_START_TIME,
-        Constants.SHARED_PREF_ALARM_LOW_INACTIVE_END_TIME,
-        Constants.SHARED_PREF_ALARM_HIGH_ENABLED,
-        Constants.SHARED_PREF_ALARM_HIGH_INTERVAL,
-        Constants.SHARED_PREF_ALARM_HIGH_SOUND_DELAY,
-        Constants.SHARED_PREF_ALARM_HIGH_RETRIGGER,
-        Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_ENABLED,
-        Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_START_TIME,
-        Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_END_TIME,
-        Constants.SHARED_PREF_ALARM_VERY_HIGH_ENABLED,
-        Constants.SHARED_PREF_ALARM_VERY_HIGH_INTERVAL,
-        Constants.SHARED_PREF_ALARM_VERY_HIGH_SOUND_DELAY,
-        Constants.SHARED_PREF_ALARM_VERY_HIGH_RETRIGGER,
-        Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_ENABLED,
-        Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_START_TIME,
-        Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_END_TIME,
-        Constants.SHARED_PREF_ALARM_OBSOLETE_ENABLED,
-        Constants.SHARED_PREF_ALARM_OBSOLETE_INTERVAL,
-        Constants.SHARED_PREF_ALARM_OBSOLETE_SOUND_DELAY,
-        Constants.SHARED_PREF_ALARM_OBSOLETE_RETRIGGER,
-        Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_ENABLED,
-        Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_START_TIME,
-        Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_END_TIME,
-        Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION,
-        Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED,
-    )
+    fun isAlarmSettingToShare(key: String?): Boolean {
+        when(key) {
+            null -> return false
+            Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION,
+            Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED -> return true
+            else -> {
+                AlarmType.entries.forEach {
+                    if (it.setting != null && it.setting.isAlarmSettingToShare(key))
+                        return true
+                }
+                return false
+            }
+        }
+    }
 
-    fun getSettings(includeNotification: Boolean = true): Bundle {
+    fun getSettings(forAndroidAuto: Boolean = false): Bundle {
         val bundle = Bundle()
-        bundle.putInt(Constants.SHARED_PREF_ALARM_VERY_LOW_INTERVAL, veryLowInterval/60000)
-        bundle.putInt(Constants.SHARED_PREF_ALARM_LOW_INTERVAL, lowInterval/60000)
-        bundle.putInt(Constants.SHARED_PREF_ALARM_HIGH_INTERVAL, highInterval/60000)
-        bundle.putInt(Constants.SHARED_PREF_ALARM_VERY_HIGH_INTERVAL, veryHighInterval/60000)
-        bundle.putInt(Constants.SHARED_PREF_ALARM_OBSOLETE_INTERVAL, obsoleteIntervalMin)
-        bundle.putBoolean(Constants.SHARED_PREF_ALARM_VERY_LOW_ENABLED, veryLowEnabled)
-        bundle.putBoolean(Constants.SHARED_PREF_ALARM_LOW_ENABLED, lowEnabled)
-        bundle.putBoolean(Constants.SHARED_PREF_ALARM_HIGH_ENABLED, highEnabled)
-        bundle.putBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_ENABLED, veryHighEnabled)
-        bundle.putBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_ENABLED, obsoleteEnabled)
+        AlarmType.entries.forEach {
+            if (it.setting != null)
+                bundle.putAll(it.setting.getSettings(forAndroidAuto))
+        }
 
-        bundle.putBoolean(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_ENABLED, veryLowInactiveEnabled)
-        bundle.putBoolean(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_ENABLED, lowInactiveEnabled)
-        bundle.putBoolean(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_ENABLED, highInactiveEnabled)
-        bundle.putBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_ENABLED, veryHighInactiveEnabled)
-        bundle.putBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_ENABLED, obsoleteInactiveEnabled)
-
-        bundle.putString(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_START_TIME, veryLowInactiveStartTime)
-        bundle.putString(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_END_TIME, veryLowInactiveEndTime)
-        bundle.putString(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_START_TIME, lowInactiveStartTime)
-        bundle.putString(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_END_TIME, lowInactiveEndTime)
-        bundle.putString(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_START_TIME, highInactiveStartTime)
-        bundle.putString(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_END_TIME, highInactiveEndTime)
-        bundle.putString(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_START_TIME, veryHighInactiveStartTime)
-        bundle.putString(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_END_TIME, veryHighInactiveEndTime)
-        bundle.putString(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_START_TIME, obsoleteInactiveStartTime)
-        bundle.putString(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_END_TIME, obsoleteInactiveEndTime)
-
-        if(includeNotification && AlarmNotificationBase.instance != null) {
+        if(!forAndroidAuto && AlarmNotificationBase.instance != null) {
+            bundle.putBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, AlarmNotificationBase.instance!!.getAddSnooze())
             if(GlucoDataService.sharedPref != null) {
                 bundle.putBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED,  GlucoDataService.sharedPref!!.getBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED, false))
             }
-            bundle.putBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, AlarmNotificationBase.instance!!.getAddSnooze())
-            bundle.putInt(Constants.SHARED_PREF_ALARM_VERY_LOW_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.VERY_LOW, GlucoDataService.context!!))
-            bundle.putInt(Constants.SHARED_PREF_ALARM_LOW_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.LOW, GlucoDataService.context!!))
-            bundle.putInt(Constants.SHARED_PREF_ALARM_HIGH_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.HIGH, GlucoDataService.context!!))
-            bundle.putInt(Constants.SHARED_PREF_ALARM_VERY_HIGH_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.VERY_HIGH, GlucoDataService.context!!))
-            bundle.putInt(Constants.SHARED_PREF_ALARM_OBSOLETE_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.OBSOLETE, GlucoDataService.context!!))
-
-            bundle.putInt(Constants.SHARED_PREF_ALARM_VERY_LOW_RETRIGGER, AlarmNotificationBase.instance!!.getTriggerTime(AlarmType.VERY_LOW, GlucoDataService.context!!))
-            bundle.putInt(Constants.SHARED_PREF_ALARM_LOW_RETRIGGER, AlarmNotificationBase.instance!!.getTriggerTime(AlarmType.LOW, GlucoDataService.context!!))
-            bundle.putInt(Constants.SHARED_PREF_ALARM_HIGH_RETRIGGER, AlarmNotificationBase.instance!!.getTriggerTime(AlarmType.HIGH, GlucoDataService.context!!))
-            bundle.putInt(Constants.SHARED_PREF_ALARM_VERY_HIGH_RETRIGGER, AlarmNotificationBase.instance!!.getTriggerTime(AlarmType.VERY_HIGH, GlucoDataService.context!!))
-            bundle.putInt(Constants.SHARED_PREF_ALARM_OBSOLETE_RETRIGGER, AlarmNotificationBase.instance!!.getTriggerTime(AlarmType.OBSOLETE, GlucoDataService.context!!))
         }
         bundle.putLong(SNOOZE_TIME, snoozeTime)
         bundle.putLong(LAST_ALARM_TIME, lastAlarmTime)
@@ -290,48 +205,16 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
 
     fun setSettings(context: Context, bundle: Bundle) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+
+
         with(sharedPref.edit()) {
-            putInt(Constants.SHARED_PREF_ALARM_VERY_LOW_INTERVAL, bundle.getInt(Constants.SHARED_PREF_ALARM_VERY_LOW_INTERVAL, veryLowInterval/60000))
-            putInt(Constants.SHARED_PREF_ALARM_LOW_INTERVAL, bundle.getInt(Constants.SHARED_PREF_ALARM_LOW_INTERVAL, lowInterval/60000))
-            putInt(Constants.SHARED_PREF_ALARM_HIGH_INTERVAL, bundle.getInt(Constants.SHARED_PREF_ALARM_HIGH_INTERVAL, highInterval/60000))
-            putInt(Constants.SHARED_PREF_ALARM_VERY_HIGH_INTERVAL, bundle.getInt(Constants.SHARED_PREF_ALARM_VERY_HIGH_INTERVAL, veryHighInterval/60000))
-            putInt(Constants.SHARED_PREF_ALARM_OBSOLETE_INTERVAL, bundle.getInt(Constants.SHARED_PREF_ALARM_OBSOLETE_INTERVAL, obsoleteIntervalMin))
-            putBoolean(Constants.SHARED_PREF_ALARM_VERY_LOW_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_VERY_LOW_ENABLED, veryLowEnabled))
-            putBoolean(Constants.SHARED_PREF_ALARM_LOW_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_LOW_ENABLED, lowEnabled))
-            putBoolean(Constants.SHARED_PREF_ALARM_HIGH_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_HIGH_ENABLED, highEnabled))
-            putBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_ENABLED, veryHighEnabled))
-            putBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_ENABLED, obsoleteEnabled))
 
-            putBoolean(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_ENABLED, veryLowInactiveEnabled))
-            putBoolean(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_ENABLED, lowInactiveEnabled))
-            putBoolean(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_ENABLED, highInactiveEnabled))
-            putBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_ENABLED, veryHighInactiveEnabled))
-            putBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_ENABLED, obsoleteInactiveEnabled))
-
-            putString(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_START_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_START_TIME, veryLowInactiveStartTime))
-            putString(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_END_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_END_TIME, veryLowInactiveEndTime))
-            putString(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_START_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_START_TIME, lowInactiveStartTime))
-            putString(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_END_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_END_TIME, lowInactiveEndTime))
-            putString(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_START_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_START_TIME, highInactiveStartTime))
-            putString(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_END_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_END_TIME, highInactiveEndTime))
-            putString(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_START_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_START_TIME, veryHighInactiveStartTime))
-            putString(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_END_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_END_TIME, veryHighInactiveEndTime))
-            putString(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_START_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_START_TIME, obsoleteInactiveStartTime))
-            putString(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_END_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_END_TIME, obsoleteInactiveEndTime))
-
+            AlarmType.entries.forEach {
+                if (it.setting != null)
+                    it.setting.saveSettings(bundle, this)
+            }
             if(AlarmNotificationBase.instance != null && bundle.containsKey(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION)) {
                 putBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, bundle.getBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, AlarmNotificationBase.instance!!.getAddSnooze()))
-                putInt(Constants.SHARED_PREF_ALARM_VERY_LOW_SOUND_DELAY, bundle.getInt(Constants.SHARED_PREF_ALARM_VERY_LOW_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.VERY_LOW, GlucoDataService.context!!)))
-                putInt(Constants.SHARED_PREF_ALARM_LOW_SOUND_DELAY, bundle.getInt(Constants.SHARED_PREF_ALARM_LOW_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.LOW, GlucoDataService.context!!)))
-                putInt(Constants.SHARED_PREF_ALARM_HIGH_SOUND_DELAY, bundle.getInt(Constants.SHARED_PREF_ALARM_HIGH_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.HIGH, GlucoDataService.context!!)))
-                putInt(Constants.SHARED_PREF_ALARM_VERY_HIGH_SOUND_DELAY, bundle.getInt(Constants.SHARED_PREF_ALARM_VERY_HIGH_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.VERY_HIGH, GlucoDataService.context!!)))
-                putInt(Constants.SHARED_PREF_ALARM_OBSOLETE_SOUND_DELAY, bundle.getInt(Constants.SHARED_PREF_ALARM_OBSOLETE_SOUND_DELAY, AlarmNotificationBase.instance!!.getSoundDelay(AlarmType.OBSOLETE, GlucoDataService.context!!)))
-
-                putInt(Constants.SHARED_PREF_ALARM_VERY_LOW_RETRIGGER, bundle.getInt(Constants.SHARED_PREF_ALARM_VERY_LOW_RETRIGGER, AlarmNotificationBase.instance!!.getTriggerTime(AlarmType.VERY_LOW, GlucoDataService.context!!)))
-                putInt(Constants.SHARED_PREF_ALARM_LOW_RETRIGGER, bundle.getInt(Constants.SHARED_PREF_ALARM_LOW_RETRIGGER, AlarmNotificationBase.instance!!.getTriggerTime(AlarmType.LOW, GlucoDataService.context!!)))
-                putInt(Constants.SHARED_PREF_ALARM_HIGH_RETRIGGER, bundle.getInt(Constants.SHARED_PREF_ALARM_HIGH_RETRIGGER, AlarmNotificationBase.instance!!.getTriggerTime(AlarmType.HIGH, GlucoDataService.context!!)))
-                putInt(Constants.SHARED_PREF_ALARM_VERY_HIGH_RETRIGGER, bundle.getInt(Constants.SHARED_PREF_ALARM_VERY_HIGH_RETRIGGER, AlarmNotificationBase.instance!!.getTriggerTime(AlarmType.VERY_HIGH, GlucoDataService.context!!)))
-                putInt(Constants.SHARED_PREF_ALARM_OBSOLETE_RETRIGGER, bundle.getInt(Constants.SHARED_PREF_ALARM_OBSOLETE_RETRIGGER, AlarmNotificationBase.instance!!.getTriggerTime(AlarmType.OBSOLETE, GlucoDataService.context!!)))
                 if(bundle.containsKey(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED)) {
                     putBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED, bundle.getBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED))
                 }
@@ -345,42 +228,21 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         InternalNotifier.notify(context, NotifySource.ALARM_SETTINGS, null)
     }
 
-    fun updateSettings(sharedPref: SharedPreferences, context: Context) {
-        veryLowInterval = sharedPref.getInt(Constants.SHARED_PREF_ALARM_VERY_LOW_INTERVAL, veryLowInterval/60000)*60000
-        lowInterval = sharedPref.getInt(Constants.SHARED_PREF_ALARM_LOW_INTERVAL, lowInterval/60000)*60000
-        highInterval = sharedPref.getInt(Constants.SHARED_PREF_ALARM_HIGH_INTERVAL, highInterval/60000)*60000
-        veryHighInterval = sharedPref.getInt(Constants.SHARED_PREF_ALARM_VERY_HIGH_INTERVAL, veryHighInterval/60000)*60000
-        obsoleteIntervalMin = sharedPref.getInt(Constants.SHARED_PREF_ALARM_OBSOLETE_INTERVAL, obsoleteIntervalMin)
-        veryLowEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_VERY_LOW_ENABLED, veryLowEnabled)
-        lowEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_LOW_ENABLED, lowEnabled)
-        highEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_HIGH_ENABLED, highEnabled)
-        veryHighEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_ENABLED, veryHighEnabled)
-        obsoleteEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_ENABLED, obsoleteEnabled)
-
-        veryLowInactiveEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_ENABLED, veryLowInactiveEnabled)
-        lowInactiveEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_ENABLED, lowInactiveEnabled)
-        highInactiveEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_ENABLED, highInactiveEnabled)
-        veryHighInactiveEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_ENABLED, veryHighInactiveEnabled)
-        obsoleteInactiveEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_ENABLED, obsoleteInactiveEnabled)
-
-        veryLowInactiveStartTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_START_TIME, veryLowInactiveStartTime)!!
-        lowInactiveStartTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_START_TIME, lowInactiveStartTime)!!
-        highInactiveStartTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_START_TIME, highInactiveStartTime)!!
-        veryHighInactiveStartTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_START_TIME, veryHighInactiveStartTime)!!
-        obsoleteInactiveStartTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_START_TIME, obsoleteInactiveStartTime)!!
-
-        veryLowInactiveEndTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_VERY_LOW_INACTIVE_END_TIME, veryLowInactiveEndTime)!!
-        lowInactiveEndTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_LOW_INACTIVE_END_TIME, lowInactiveEndTime)!!
-        highInactiveEndTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_HIGH_INACTIVE_END_TIME, highInactiveEndTime)!!
-        veryHighInactiveEndTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_VERY_HIGH_INACTIVE_END_TIME, veryHighInactiveEndTime)!!
-        obsoleteInactiveEndTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_OBSOLETE_INACTIVE_END_TIME, obsoleteInactiveEndTime)!!
-
-        checkNotifier(context)
+    private fun updateSettings(sharedPref: SharedPreferences, context: Context, key: String? = null) {
+        Log.d(LOG_ID, "updateSettings called for key $key")
+        AlarmType.entries.forEach {
+            if(it.setting != null && (key == null || it.setting.isAlarmSetting(key))) {
+                it.setting.updateSettings(sharedPref)
+            }
+        }
+        if (key == null || key == AlarmType.OBSOLETE.setting!!.getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_ENABLED))
+            checkNotifier(context)
     }
 
     private fun checkNotifier(context: Context) {
-        if(obsoleteEnabled != InternalNotifier.hasNotifier(this)) {
-            if(obsoleteEnabled) {
+        Log.v(LOG_ID, "checkNotifier called")
+        if(AlarmType.OBSOLETE.setting!!.isActive != InternalNotifier.hasNotifier(this)) {
+            if(AlarmType.OBSOLETE.setting.isActive) {
                 InternalNotifier.addNotifier(context, this, mutableSetOf(NotifySource.TIME_VALUE))
             } else {
                 InternalNotifier.remNotifier(context, this)
@@ -389,22 +251,14 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
     }
 
     fun getDefaultIntervalMin(alarmType: AlarmType): Int {
-        return when(alarmType) {
-            AlarmType.VERY_LOW -> veryLowInterval/60000
-            AlarmType.LOW -> lowInterval/60000
-            AlarmType.HIGH -> highInterval/60000
-            AlarmType.VERY_HIGH -> veryHighInterval/60000
-            AlarmType.OBSOLETE -> obsoleteIntervalMin
-            else -> 0
-        }
+        return alarmType.setting?.intervalMin ?: 0
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         try {
-            Log.d(LOG_ID, "onSharedPreferenceChanged called for key " + key)
+            Log.d(LOG_ID, "onSharedPreferenceChanged called for key $key")
             if (GlucoDataService.context != null) {
-                if(alarmPreferencesToSend.contains(key))
-                    updateSettings(sharedPreferences, GlucoDataService.context!!)
+                updateSettings(sharedPreferences, GlucoDataService.context!!, key)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
@@ -423,16 +277,16 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
     }
 
     private fun checkObsoleteAlarm(context: Context) {
-        Log.d(LOG_ID, "checkObsoleteAlarm: enabled=$obsoleteEnabled - interval=$obsoleteIntervalMin - elapsed=${ReceiveData.getElapsedTimeMinute()}")
-        if(obsoleteEnabled && obsoleteIntervalMin > 0 && ReceiveData.getElapsedTimeMinute() >= obsoleteIntervalMin) {
-            if (ReceiveData.getElapsedTimeMinute().mod(obsoleteIntervalMin) == 0) {
+        Log.d(LOG_ID, "checkObsoleteAlarm: enabled=${AlarmType.OBSOLETE.setting!!.isActive} - interval=${AlarmType.OBSOLETE.setting.intervalMin} - elapsed=${ReceiveData.getElapsedTimeMinute()}")
+        if(AlarmType.OBSOLETE.setting.isActive && AlarmType.OBSOLETE.setting.intervalMin > 0 && ReceiveData.getElapsedTimeMinute() >= AlarmType.OBSOLETE.setting.intervalMin) {
+            if (ReceiveData.getElapsedTimeMinute().mod(AlarmType.OBSOLETE.setting.intervalMin) == 0) {
                 Log.i(LOG_ID, "Trigger obsolete alarm after ${ReceiveData.getElapsedTimeMinute()} minutes.")
                 InternalNotifier.notify(context, NotifySource.OBSOLETE_ALARM_TRIGGER, null)
             }
         }
     }
 
-    fun triggerSnoozeEnd(context: Context) {
+    private fun triggerSnoozeEnd(context: Context) {
         stopSnoozeEnd()
         if(isSnoozeActive) {
             alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager

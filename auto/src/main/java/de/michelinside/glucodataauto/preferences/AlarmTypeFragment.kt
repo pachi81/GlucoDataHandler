@@ -16,16 +16,29 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 class AlarmTypeFragment : PreferenceFragmentCompat() {
     private val LOG_ID = "GDH.AA.AlarmTypeFragment"
     private var alarmType = AlarmType.NONE
-    private var alarmPrefix = ""
+
+    private fun getPrefKey(suffix: String): String {
+        return alarmType.setting!!.getSettingName(suffix)
+    }
+
+    private val enabledPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_ENABLED)
+    }
+    private val intervalPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_INTERVAL)
+    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         try {
             Log.v(LOG_ID, "onCreatePreferences called for key: ${Utils.dumpBundle(this.arguments)}" )
             preferenceManager.sharedPreferencesName = Constants.SHARED_PREF_TAG
             setPreferencesFromResource(R.xml.alarm_type, rootKey)
-            if (requireArguments().containsKey("prefix") && requireArguments().containsKey("type")) {
+            if (requireArguments().containsKey("type")) {
                 alarmType = AlarmType.fromIndex(requireArguments().getInt("type"))
-                alarmPrefix = requireArguments().getString("prefix")!!
+                if (alarmType.setting == null) {
+                    Log.e(LOG_ID, "Unsupported alarm type for creating fragment: $alarmType!")
+                    return
+                }
                 createAlarmPrefSettings()
             }
         } catch (exc: Exception) {
@@ -52,7 +65,7 @@ class AlarmTypeFragment : PreferenceFragmentCompat() {
     }
 
     private fun createAlarmPrefSettings() {
-        Log.v(LOG_ID, "createAlarmPrefSettings for alarm $alarmType with prefix $alarmPrefix")
+        Log.v(LOG_ID, "createAlarmPrefSettings for alarm $alarmType")
         updatePreferenceKeys()
         updateData()
     }
@@ -61,7 +74,7 @@ class AlarmTypeFragment : PreferenceFragmentCompat() {
         for (i in 0 until preferenceScreen.preferenceCount) {
             val pref: Preference = preferenceScreen.getPreference(i)
             if(!pref.key.isNullOrEmpty()) {
-                val newKey = alarmPrefix + pref.key
+                val newKey = getPrefKey(pref.key)
                 Log.v(LOG_ID, "Replace key ${pref.key} with $newKey")
                 pref.key = newKey
             } else {
@@ -76,7 +89,7 @@ class AlarmTypeFragment : PreferenceFragmentCompat() {
         for (i in 0 until preferenceCategory.preferenceCount) {
             val pref: Preference = preferenceCategory.getPreference(i)
             if(!pref.key.isNullOrEmpty()) {
-                val newKey = alarmPrefix + pref.key
+                val newKey = getPrefKey(pref.key)
                 Log.v(LOG_ID, "Replace key ${pref.key} with $newKey")
                 pref.key = newKey
             } else {
@@ -86,12 +99,12 @@ class AlarmTypeFragment : PreferenceFragmentCompat() {
         }
     }
     private fun updateData() {
-        val enablePref = findPreference<SwitchPreferenceCompat>(alarmPrefix+"enabled")
-        enablePref!!.isChecked = preferenceManager.sharedPreferences!!.getBoolean(enablePref.key, true)
+        val prefEnabled = findPreference<SwitchPreferenceCompat>(enabledPref)
+        prefEnabled!!.isChecked = preferenceManager.sharedPreferences!!.getBoolean(prefEnabled.key, true)
 
-        val intervalPref = findPreference<SeekBarPreference>(alarmPrefix+"interval")
-        intervalPref!!.value = preferenceManager.sharedPreferences!!.getInt(intervalPref.key, AlarmHandler.getDefaultIntervalMin(alarmType))
-        intervalPref.summary = getIntervalSummary(alarmType)
+        val prefInterval = findPreference<SeekBarPreference>(intervalPref)
+        prefInterval!!.value = preferenceManager.sharedPreferences!!.getInt(prefInterval.key, AlarmHandler.getDefaultIntervalMin(alarmType))
+        prefInterval.summary = getIntervalSummary(alarmType)
     }
 
     private fun getIntervalSummary(alarmType: AlarmType): String {

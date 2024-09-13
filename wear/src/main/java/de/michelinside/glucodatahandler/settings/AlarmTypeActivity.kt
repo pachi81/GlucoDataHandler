@@ -39,18 +39,17 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var seekBarSoundLevel: AppCompatSeekBar
     private lateinit var txtSoundLevel: TextView
     private var alarmType = AlarmType.NONE
-    private var alarmPrefix = ""
     private var alarmTitle = ""
 
     private var ringtoneSelecter: ActivityResultLauncher<Intent>? = null
     private val useCustomSoundPref: String get() {
-        return alarmPrefix + "use_custom_sound"
+        return alarmType.setting!!.getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_USE_CUSTOM_SOUND)
     }
     private val customSoundPref: String get() {
-        return alarmPrefix + "custom_sound"
+        return alarmType.setting!!.getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_CUSTOM_SOUND)
     }
     private val soundLevelPref: String get() {
-        return alarmPrefix + "sound_level"
+        return alarmType.setting!!.getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_LEVEL)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +58,7 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_alarm_type)
 
-            if(intent.extras == null || !intent.extras!!.containsKey("type") || !intent.extras!!.containsKey("prefix") || !intent.extras!!.containsKey("title")) {
+            if(intent.extras == null || !intent.extras!!.containsKey("type") || !intent.extras!!.containsKey("title")) {
                 Log.e(LOG_ID, "Missing extras: ${Utils.dumpBundle(intent.extras)}")
                 finish()
             }
@@ -67,9 +66,13 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
 
             alarmType = AlarmType.fromIndex(intent.extras!!.getInt("type"))
-            alarmPrefix = intent.extras!!.getString("prefix")!!
+            if (alarmType.setting == null) {
+                Log.e(LOG_ID, "Unsupported alarm type for creating activity: $alarmType!")
+                finish()
+            }
+
             alarmTitle = intent.extras!!.getString("title")!!
-            Log.d(LOG_ID, "Create for $alarmTitle with prefix: $alarmPrefix")
+            Log.d(LOG_ID, "Create for $alarmTitle for: $alarmType")
 
             txtAlarmTitle = findViewById(R.id.txtAlarmTitle)
             switchUseCustomSound = findViewById(R.id.switchUseCustomSound)

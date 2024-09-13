@@ -38,7 +38,7 @@ class AlarmFragment : PreferenceFragmentCompat() {
         try {
             if (settingsChanged) {
                 Log.v(LOG_ID, "Notify alarm_settings change")
-                InternalNotifier.notify(requireContext(), NotifySource.ALARM_SETTINGS, AlarmHandler.getSettings())
+                InternalNotifier.notify(requireContext(), NotifySource.ALARM_SETTINGS, AlarmHandler.getSettings(true))
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroyView exception: " + exc.toString())
@@ -110,7 +110,7 @@ class AlarmFragment : PreferenceFragmentCompat() {
             AlarmType.LOW -> ReceiveData.targetMin
             AlarmType.HIGH -> ReceiveData.targetMax
             AlarmType.VERY_HIGH -> ReceiveData.high
-            AlarmType.OBSOLETE -> AlarmHandler.obsoleteInterval.toFloat()
+            AlarmType.OBSOLETE -> AlarmType.OBSOLETE.setting!!.intervalMin.toFloat()
             else -> 0F
         }
 

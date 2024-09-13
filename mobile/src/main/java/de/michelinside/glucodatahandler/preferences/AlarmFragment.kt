@@ -137,12 +137,12 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
     private fun updateAlarmCat(key: String) {
         val pref = findPreference<Preference>(key) ?: return
         val alarmType = AlarmType.fromIndex(pref.extras.getInt("type"))
-        pref.icon = ContextCompat.getDrawable(requireContext(), getAlarmCatIcon(alarmType, key + "_enabled", requireContext()))
+        pref.icon = ContextCompat.getDrawable(requireContext(), getAlarmCatIcon(alarmType, requireContext()))
         pref.summary = getAlarmCatSummary(alarmType)
     }
 
-    private fun getAlarmCatIcon(alarmType: AlarmType, enableKey: String, context: Context): Int {
-        if(!preferenceManager.sharedPreferences!!.getBoolean(enableKey, true)) {
+    private fun getAlarmCatIcon(alarmType: AlarmType, context: Context): Int {
+        if(alarmType.setting == null || !alarmType.setting!!.isActive) {
             return SoundMode.OFF.icon
         }
         return AlarmNotification.getSoundMode(alarmType, context).icon
@@ -165,7 +165,7 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
             AlarmType.LOW -> ReceiveData.targetMin
             AlarmType.HIGH -> ReceiveData.targetMax
             AlarmType.VERY_HIGH -> ReceiveData.high
-            AlarmType.OBSOLETE -> AlarmHandler.obsoleteInterval.toFloat()
+            AlarmType.OBSOLETE -> AlarmType.OBSOLETE.setting!!.intervalMin.toFloat()
             else -> 0F
         }
 
@@ -204,7 +204,7 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
                     }
                 }
             }
-            if(AlarmHandler.alarmPreferencesToSend.contains(key))
+            if(AlarmHandler.isAlarmSettingToShare(key))
                 settingsChanged = true
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())

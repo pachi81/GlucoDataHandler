@@ -34,49 +34,66 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
-import java.time.LocalTime
 
 class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
     private val LOG_ID = "GDH.AlarmTypeFragment"
     private lateinit var soundSaver: ActivityResultLauncher<Intent>
     private var ringtoneSelecter: ActivityResultLauncher<Intent>? = null
     private var alarmType = AlarmType.NONE
-    private var alarmPrefix = ""
     private var curAlarmLevel = -1
-    private val useCustomSoundPref: String get() {
-        return alarmPrefix + "use_custom_sound"
-    }
-    private val customSoundPref: String get() {
-        return alarmPrefix + "custom_sound"
-    }
-    private val testAlarmPref: String get() {
-        return alarmPrefix + "test"
-    }
-    private val saveSoundPref: String get() {
-        return alarmPrefix + "save_sound"
-    }
-    private val soundLevelPref: String get() {
-        return alarmPrefix + "sound_level"
-    }
-    private val inactiveEnabledPref: String get() {
-        return alarmPrefix + "inactive_enabled"
-    }
-    private val inactiveStartPref: String get() {
-        return alarmPrefix + "inactive_start_time"
-    }
-    private val inactiveEndPref: String get() {
-        return alarmPrefix + "inactive_end_time"
+
+    private fun getPrefKey(suffix: String): String {
+        return alarmType.setting!!.getSettingName(suffix)
     }
 
+    private val enabledPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_ENABLED)
+    }
+    private val intervalPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_INTERVAL)
+    }
+    private val retriggerPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_RETRIGGER)
+    }
+    private val soundDelayPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_DELAY)
+    }
+    private val useCustomSoundPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_USE_CUSTOM_SOUND)
+    }
+    private val customSoundPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_CUSTOM_SOUND)
+    }
+    private val testAlarmPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_TEST)
+    }
+    private val saveSoundPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_SAVE_SOUND)
+    }
+    private val soundLevelPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_LEVEL)
+    }
+    private val inactiveEnabledPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_ENABLED)
+    }
+    private val inactiveStartPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_START_TIME)
+    }
+    private val inactiveEndPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_END_TIME)
+    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         try {
             Log.v(LOG_ID, "onCreatePreferences called for key: ${Utils.dumpBundle(this.arguments)}" )
             preferenceManager.sharedPreferencesName = Constants.SHARED_PREF_TAG
             setPreferencesFromResource(R.xml.alarm_type, rootKey)
-            if (requireArguments().containsKey("prefix") && requireArguments().containsKey("type")) {
+            if (requireArguments().containsKey("type")) {
                 alarmType = AlarmType.fromIndex(requireArguments().getInt("type"))
-                alarmPrefix = requireArguments().getString("prefix")!!
+                if (alarmType.setting == null) {
+                    Log.e(LOG_ID, "Unsupported alarm type for creating fragment: $alarmType!")
+                    return
+                }
                 createAlarmPrefSettings()
             }
         } catch (exc: Exception) {
@@ -132,7 +149,7 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
         try {
-            if(AlarmHandler.alarmPreferencesToSend.contains(key))
+            if(AlarmHandler.isAlarmSettingToShare(key))
                 AlarmFragment.settingsChanged = true
             update()
             if(key == soundLevelPref) {
@@ -169,7 +186,7 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
     }
 
     private fun createAlarmPrefSettings() {
-        Log.v(LOG_ID, "createAlarmPrefSettings for alarm $alarmType with prefix $alarmPrefix")
+        Log.v(LOG_ID, "createAlarmPrefSettings for alarm $alarmType")
         updatePreferenceKeys()
         updateData()
 
@@ -193,7 +210,7 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
         for (i in 0 until preferenceScreen.preferenceCount) {
             val pref: Preference = preferenceScreen.getPreference(i)
             if(!pref.key.isNullOrEmpty()) {
-                val newKey = alarmPrefix + pref.key
+                val newKey = getPrefKey(pref.key)
                 Log.v(LOG_ID, "Replace key ${pref.key} with $newKey")
                 pref.key = newKey
             } else {
@@ -208,7 +225,7 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
         for (i in 0 until preferenceCategory.preferenceCount) {
             val pref: Preference = preferenceCategory.getPreference(i)
             if(!pref.key.isNullOrEmpty()) {
-                val newKey = alarmPrefix + pref.key
+                val newKey = getPrefKey(pref.key)
                 Log.v(LOG_ID, "Replace key ${pref.key} with $newKey")
                 pref.key = newKey
             } else {
@@ -218,17 +235,17 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
         }
     }
     private fun updateData() {
-        val enablePref = findPreference<SwitchPreferenceCompat>(alarmPrefix+"enabled")
+        val enablePref = findPreference<SwitchPreferenceCompat>(enabledPref)
         enablePref!!.isChecked = preferenceManager.sharedPreferences!!.getBoolean(enablePref.key, true)
 
-        val intervalPref = findPreference<SeekBarPreference>(alarmPrefix+"interval")
-        intervalPref!!.value = preferenceManager.sharedPreferences!!.getInt(intervalPref.key, AlarmHandler.getDefaultIntervalMin(alarmType))
-        intervalPref.summary = getIntervalSummary(alarmType)
+        val prefInterval = findPreference<SeekBarPreference>(intervalPref)
+        prefInterval!!.value = preferenceManager.sharedPreferences!!.getInt(prefInterval.key, AlarmHandler.getDefaultIntervalMin(alarmType))
+        prefInterval.summary = getIntervalSummary(alarmType)
 
-        val retriggerPref = findPreference<SeekBarPreference>(alarmPrefix+"retrigger")
-        retriggerPref!!.value = preferenceManager.sharedPreferences!!.getInt(retriggerPref.key, 0)
+        val prefRetrigger = findPreference<SeekBarPreference>(retriggerPref)
+        prefRetrigger!!.value = preferenceManager.sharedPreferences!!.getInt(prefRetrigger.key, 0)
 
-        val prefSoundDelay = findPreference<SeekBarPreference>(alarmPrefix+"sound_delay")
+        val prefSoundDelay = findPreference<SeekBarPreference>(soundDelayPref)
         prefSoundDelay!!.value = preferenceManager.sharedPreferences!!.getInt(prefSoundDelay.key, 0)
 
         val prefUseCustomRingtone = findPreference<SwitchPreferenceCompat>(useCustomSoundPref)
