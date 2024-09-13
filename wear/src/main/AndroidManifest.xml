@@ -196,10 +196,15 @@
             tools:node="merge" />
 
         <!-- ****************************** Complications  ****************************** -->
+        <!-- Create png icon: https://svgeditoronline.com/editor/ -->
+        <!-- Size:      300x300 -->
+        <!-- Text:      Oswald - 70 -->
+        <!-- Image:     Open Sans - 100 -->
+        <!-- Big Image: Open Sans - 150 -->
         <service
             android:name=".ShortClucoseComplication"
             android:exported="true"
-            android:icon="@drawable/glucose"
+            android:icon="@drawable/comp_short_value"
             android:label="@string/short_value"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -216,7 +221,7 @@
         <service
             android:name=".SmallValueImageComplication"
             android:exported="true"
-            android:icon="@drawable/glucose"
+            android:icon="@drawable/comp_image_value"
             android:label="@string/image_value"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -233,7 +238,7 @@
         <service
             android:name=".SmallValueSmallImageComplication"
             android:exported="true"
-            android:icon="@drawable/glucose"
+            android:icon="@drawable/comp_small_image_value"
             android:label="@string/small_image_value"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -250,7 +255,7 @@
         <service
             android:name=".ValueIconComplication"
             android:exported="true"
-            android:icon="@drawable/glucose"
+            android:icon="@drawable/comp_icon_value"
             android:label="@string/icon_value"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -267,7 +272,7 @@
         <service
             android:name=".ShortGlucoseWithIconComplication"
             android:exported="true"
-            android:icon="@drawable/glucose"
+            android:icon="@drawable/comp_short_value_icon"
             android:label="@string/short_value_icon"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -284,7 +289,7 @@
         <service
             android:name=".ShortGlucoseWithTrendComplication"
             android:exported="true"
-            android:icon="@drawable/glucose"
+            android:icon="@drawable/comp_short_value_arrow"
             android:label="@string/short_value_arrow"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -301,7 +306,7 @@
         <service
             android:name=".SmallImageGlucoseWithTrendComplication"
             android:exported="true"
-            android:icon="@drawable/glucose"
+            android:icon="@drawable/comp_short_value_arrow_image"
             android:label="@string/short_value_arrow_image"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -318,7 +323,7 @@
         <service
             android:name=".SmallImageGlucoseWithTrendSmallComplication"
             android:exported="true"
-            android:icon="@drawable/glucose"
+            android:icon="@drawable/comp_short_value_arrow_small_image"
             android:label="@string/short_value_arrow_small_image"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -335,7 +340,7 @@
         <service
             android:name=".ShortGlucoseWithDeltaComplication"
             android:exported="true"
-            android:icon="@drawable/glucose"
+            android:icon="@drawable/comp_short_value_delta"
             android:label="@string/short_value_delta"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -352,7 +357,7 @@
         <service
             android:name=".ShortGlucoseWithDeltaAndTrendComplication"
             android:exported="true"
-            android:icon="@drawable/glucose"
+            android:icon="@drawable/comp_long_value_arrow_delta"
             android:label="@string/long_value_arrow_delta"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -369,7 +374,7 @@
         <service
             android:name=".LongGlucoseWithDeltaAndTrendAndTimeComplication"
             android:exported="true"
-            android:icon="@drawable/glucose"
+            android:icon="@drawable/comp_long_value_arrow_delta_time"
             android:label="@string/long_value_arrow_delta_time"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -386,7 +391,7 @@
         <service
             android:name=".DeltaIconComplication"
             android:exported="true"
-            android:icon="@drawable/glucose"
+            android:icon="@drawable/comp_icon_delta"
             android:label="@string/icon_delta"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -403,7 +408,7 @@
         <service
             android:name=".DeltaImageComplication"
             android:exported="true"
-            android:icon="@drawable/glucose"
+            android:icon="@drawable/comp_image_delta"
             android:label="@string/image_delta"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -420,7 +425,7 @@
         <service
             android:name=".ShortDeltaComplication"
             android:exported="true"
-            android:icon="@drawable/icon_delta"
+            android:icon="@drawable/comp_short_delta"
             android:label="@string/short_delta"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -437,7 +442,7 @@
         <service
             android:name=".ShortDeltaWithTrendComplication"
             android:exported="true"
-            android:icon="@drawable/icon_delta"
+            android:icon="@drawable/comp_short_delta_arrow"
             android:label="@string/short_delta_arrow"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -454,7 +459,7 @@
         <service
             android:name=".ShortDeltaWithIconComplication"
             android:exported="true"
-            android:icon="@drawable/icon_delta"
+            android:icon="@drawable/comp_short_delta_icon"
             android:label="@string/short_delta_icon"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -471,7 +476,7 @@
         <service
             android:name=".ShortDeltaWithTimeComplication"
             android:exported="true"
-            android:icon="@drawable/icon_delta"
+            android:icon="@drawable/comp_short_delta_time"
             android:label="@string/short_delta_time"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -488,7 +493,7 @@
         <service
             android:name=".SmallImageDeltaWithTimeComplication"
             android:exported="true"
-            android:icon="@drawable/icon_delta"
+            android:icon="@drawable/comp_image_delta_time"
             android:label="@string/image_delta_time"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -505,7 +510,7 @@
         <service
             android:name=".SmallTrendImageComplication"
             android:exported="true"
-            android:icon="@drawable/arrow_up_15"
+            android:icon="@drawable/comp_image_arrow"
             android:label="@string/image_arrow"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -522,7 +527,7 @@
         <service
             android:name=".SmallTrendSmallImageComplication"
             android:exported="true"
-            android:icon="@drawable/arrow_up_15"
+            android:icon="@drawable/comp_small_image_arrow"
             android:label="@string/small_image_arrow"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -539,7 +544,7 @@
         <service
             android:name=".TrendIconComplication"
             android:exported="true"
-            android:icon="@drawable/arrow_up_15"
+            android:icon="@drawable/comp_icon_arrow"
             android:label="@string/icon_arrow"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -556,7 +561,7 @@
         <service
             android:name=".TimeStampComplication"
             android:exported="true"
-            android:icon="@drawable/clock"
+            android:icon="@drawable/comp_timestamp"
             android:label="@string/timestamp"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -572,7 +577,7 @@
         <service
             android:name=".TimeImageComplication"
             android:exported="true"
-            android:icon="@drawable/glucose"
+            android:icon="@drawable/comp_image_timestamp"
             android:label="@string/image_timestamp"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -589,7 +594,7 @@
         <service
             android:name=".BatteryLevelComplication"
             android:exported="true"
-            android:icon="@drawable/battery"
+            android:icon="@drawable/comp_battery_level"
             android:label="@string/battery_level"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -605,7 +610,7 @@
         <service
             android:name=".PhoneBatteryLevelComplication"
             android:exported="true"
-            android:icon="@drawable/battery"
+            android:icon="@drawable/comp_phone_battery_level"
             android:label="@string/phone_battery_level"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -621,7 +626,7 @@
         <service
             android:name=".WatchBatteryLevelComplication"
             android:exported="true"
-            android:icon="@drawable/battery"
+            android:icon="@drawable/comp_watch_battery_level"
             android:label="@string/watch_battery_level"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -685,7 +690,7 @@
         <service
             android:name=".OtherUnitComplication"
             android:exported="true"
-            android:icon="@drawable/glucose"
+            android:icon="@drawable/comp_other_unit"
             android:label="@string/other_unit"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>

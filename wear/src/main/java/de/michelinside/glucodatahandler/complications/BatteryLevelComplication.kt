@@ -105,14 +105,13 @@ open class BatteryLevelComplicationBase: SuspendingComplicationDataSourceService
         plainText(getText(this.applicationInfo.labelRes))
 
     private fun getTapAction(
-        complicationInstanceId: Int,
-        useExternalApp: Boolean = true
+        complicationInstanceId: Int
     ): PendingIntent {
         return PackageUtils.getAppIntent(
             applicationContext,
             WearActivity::class.java,
             complicationInstanceId,
-            useExternalApp
+            false
         )
     }
 
