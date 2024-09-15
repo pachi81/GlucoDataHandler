@@ -38,7 +38,7 @@ class GlucoseEditPreference : EditTextPreference, OnBindEditTextListener {
     }
 
     override fun persistFloat(value: Float): Boolean {
-        Log.i(LOG_ID, "persistFloat called with value " + value)
+        Log.d(LOG_ID, "persistFloat called with value " + value)
         return super.persistFloat(value)
     }
 
@@ -56,12 +56,12 @@ class GlucoseEditPreference : EditTextPreference, OnBindEditTextListener {
     }
 
     override fun getPersistedString(defaultReturnValue: String?): String {
-        Log.i(LOG_ID, "getPersistedString called")
+        Log.d(LOG_ID, "getPersistedString called")
         return getPersistedFloat(defaultValue).toString()
     }
 
     override fun persistString(value: String?): Boolean {
-        Log.i(LOG_ID, "persistString called with value " + value)
+        Log.d(LOG_ID, "persistString called with value " + value)
         try {
             if (GlucoDataUtils.isMmolValue(value!!.toFloat()))
                 return persistFloat(GlucoDataUtils.mmolToMg(value.toFloat()))
@@ -72,8 +72,20 @@ class GlucoseEditPreference : EditTextPreference, OnBindEditTextListener {
         return false
     }
 
+    override fun getSummary(): CharSequence? {
+        Log.d(LOG_ID, "getSummary called")
+        val value = getPersistedFloat(defaultValue)
+        if (value.isNaN())
+            return super.getSummary()
+        val summary = super.getSummary().toString() + "\n"
+        if (ReceiveData.isMmol) {
+            return summary + GlucoDataUtils.mgToMmol(value, 1).toString() + " mmol/l"
+        }
+        return summary + value.toInt().toString() + " mg/dl"
+    }
+
     override fun onBindEditText(editText: EditText) {
-        Log.i(LOG_ID, "onBindEditText called " + editText.text)
+        Log.d(LOG_ID, "onBindEditText called " + editText.text)
         try {
             editText.inputType = if (ReceiveData.isMmol) InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL else InputType.TYPE_CLASS_NUMBER
             var value = editText.getText().toString().toFloat()
