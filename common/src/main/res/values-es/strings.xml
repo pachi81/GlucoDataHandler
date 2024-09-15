@@ -555,4 +555,6 @@
     <string name="alarm_inactive_start_time_summary">From this time, the alarm will not fire.</string>
     <string name="alarm_inactive_end_time">Disable until</string>
     <string name="alarm_inactive_end_time_summary">Until this time, the alarm will not fire.</string>
+
+    <string name="app_crash_bad_notification">The app crashes because of the colored notification layout!\nIt has been disabled to prevent this crash.\nThis is an issue on Samsung phones so please create a error report in the Samsung members app. Thank you!</string>
 </resources>

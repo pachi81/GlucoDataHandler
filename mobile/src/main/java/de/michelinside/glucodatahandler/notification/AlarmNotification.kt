@@ -81,45 +81,51 @@ object AlarmNotification : AlarmNotificationBase() {
             @Suppress("DEPRECATION")
             notificationBuilder.setFlag(Notification.FLAG_SHOW_LIGHTS, true)
         }
-
-        val resId = getAlarmTextRes(alarmType)
-        val contentView = RemoteViews(GlucoDataService.context!!.packageName, R.layout.alarm_notification)
-        contentView.setTextViewText(R.id.alarm, context.getString(resId!!))
-        contentView.setTextViewText(R.id.snooze, context.getString(CR.string.snooze))
-        if(alarmType == AlarmType.OBSOLETE) {
-            contentView.setTextViewText(R.id.deltaText, "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(context)}")
-            contentView.setViewVisibility(R.id.glucose, View.GONE)
-            contentView.setViewVisibility(R.id.trendImage, View.GONE)
-        } else {
-            contentView.setViewVisibility(R.id.glucose, View.VISIBLE)
-            contentView.setViewVisibility(R.id.trendImage, View.VISIBLE)
-            contentView.setTextViewText(R.id.glucose, ReceiveData.getGlucoseAsString())
-            contentView.setTextColor(R.id.glucose, ReceiveData.getGlucoseColor())
-            contentView.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap(withShadow = true))
-            contentView.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
-        }
-        contentView.setOnClickPendingIntent(R.id.snooze_60, createSnoozeIntent(context, 60L, getNotificationId(alarmType)))
-        contentView.setOnClickPendingIntent(R.id.snooze_90, createSnoozeIntent(context, 90L, getNotificationId(alarmType)))
-        contentView.setOnClickPendingIntent(R.id.snooze_120, createSnoozeIntent(context, 120L, getNotificationId(alarmType)))
-        if (ReceiveData.isObsoleteShort()) {
-            if (!ReceiveData.isObsoleteLong())
-                contentView.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
-            contentView.setTextColor(R.id.deltaText, ReceiveData.getAlarmTypeColor(AlarmType.OBSOLETE) )
-        }
-
-        if (getAddSnooze()) {
-            val bigContentView = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                RemoteViews(contentView)
+        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        if (sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, true)) {
+            val resId = getAlarmTextRes(alarmType)
+            val contentView = RemoteViews(GlucoDataService.context!!.packageName, R.layout.alarm_notification)
+            contentView.setTextViewText(R.id.alarm, context.getString(resId!!))
+            contentView.setTextViewText(R.id.snooze, context.getString(CR.string.snooze))
+            if(alarmType == AlarmType.OBSOLETE) {
+                contentView.setTextViewText(R.id.deltaText, "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(context)}")
+                contentView.setViewVisibility(R.id.glucose, View.GONE)
+                contentView.setViewVisibility(R.id.trendImage, View.GONE)
             } else {
-                @Suppress("DEPRECATION")
-                contentView.clone()
+                contentView.setViewVisibility(R.id.glucose, View.VISIBLE)
+                contentView.setViewVisibility(R.id.trendImage, View.VISIBLE)
+                contentView.setTextViewText(R.id.glucose, ReceiveData.getGlucoseAsString())
+                contentView.setTextColor(R.id.glucose, ReceiveData.getGlucoseColor())
+                contentView.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap(withShadow = true))
+                contentView.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
             }
-            notificationBuilder.setCustomBigContentView(bigContentView)
-        } else {
-            notificationBuilder.setCustomBigContentView(null)
+            contentView.setOnClickPendingIntent(R.id.snooze_60, createSnoozeIntent(context, 60L, getNotificationId(alarmType)))
+            contentView.setOnClickPendingIntent(R.id.snooze_90, createSnoozeIntent(context, 90L, getNotificationId(alarmType)))
+            contentView.setOnClickPendingIntent(R.id.snooze_120, createSnoozeIntent(context, 120L, getNotificationId(alarmType)))
+            if (ReceiveData.isObsoleteShort()) {
+                if (!ReceiveData.isObsoleteLong())
+                    contentView.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
+                contentView.setTextColor(R.id.deltaText, ReceiveData.getAlarmTypeColor(AlarmType.OBSOLETE) )
+            }
+
+            if (getAddSnooze()) {
+                val bigContentView = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    RemoteViews(contentView)
+                } else {
+                    @Suppress("DEPRECATION")
+                    contentView.clone()
+                }
+                notificationBuilder.setCustomBigContentView(bigContentView)
+            } else {
+                notificationBuilder.setCustomBigContentView(null)
+            }
+            contentView.setViewVisibility(R.id.snoozeLayout, View.GONE)
+            notificationBuilder.setCustomContentView(contentView)
+        } else if (getAddSnooze()) {
+            notificationBuilder.addAction(createSnoozeAction(context, context.getString(CR.string.snooze) + ": 60", 60L, getNotificationId(alarmType)))
+            notificationBuilder.addAction(createSnoozeAction(context, "90", 90L, getNotificationId(alarmType)))
+            notificationBuilder.addAction(createSnoozeAction(context, "120", 120L, getNotificationId(alarmType)))
         }
-        contentView.setViewVisibility(R.id.snoozeLayout, View.GONE)
-        notificationBuilder.setCustomContentView(contentView)
 
         if (fullscreenEnabled && hasFullscreenPermission()) {
             val fullScreenIntent = Intent(context, LockscreenActivity::class.java)

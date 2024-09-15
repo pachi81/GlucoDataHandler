@@ -715,13 +715,20 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun checkUncaughtException() {
         Log.d(LOG_ID, "Check uncaught exception ${sharedPref.getBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)}")
         if(sharedPref.getBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)) {
-            val excMsg = sharedPref.getString(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE, "")
+            val excMsg = sharedPref.getString(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE, "") ?: ""
             Log.e(LOG_ID, "Uncaught exception detected last time: $excMsg")
             with(sharedPref.edit()) {
                 putBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)
                 apply()
             }
-            Dialogs.showOkDialog(this, CR.string.app_crash_title, CR.string.app_crash_message, null)
+            if (excMsg.contains("BadForegroundServiceNotificationException") || excMsg.contains(
+                    "RemoteServiceException"
+                )
+            ) {
+                Dialogs.showOkDialog(this, CR.string.app_crash_title, CR.string.app_crash_bad_notification, null)
+            } else {
+                Dialogs.showOkDialog(this, CR.string.app_crash_title, CR.string.app_crash_message, null)
+            }
         }
     }
 }

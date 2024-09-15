@@ -541,5 +541,6 @@
     <string name="alarm_inactive_end_time">Disable until</string>
     <string name="alarm_inactive_end_time_summary">Until this time, the alarm will not fire.</string>
 
+    <string name="app_crash_bad_notification">Die App ist aufgrund des farbigen Layouts in den Benachrichtigungen abegstürzt!\nDie Einstellung wurde daher deaktiviert.\nDas Problem tritt bisher nur bei Samsung auf und scheint ein Problem auf Seite von Samsung zu sein.\nBitte senden Sie daher einen Fehlerbericht an Samsung. Vielen Dank!</string>
 
 </resources>

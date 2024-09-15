@@ -395,11 +395,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             .setContentTitle(context.getString(resId))
             .setContentText(ReceiveData.getGlucoseAsString()  + " (Δ " + ReceiveData.getDeltaAsString() + ")")
 
-            /*.setLargeIcon(BitmapUtils.getRateAsIcon())
-            .addAction(createAction(context, context.getString(CR.string.snooze) + ": 60", 60L, getNotificationId(alarmType)))
-            .addAction(createAction(context, "90", 90L, getNotificationId(alarmType)))
-            .addAction(createAction(context, "120", 120L, getNotificationId(alarmType)))*/
-
         val extender = Notification.WearableExtender()
         extender.addAction(createStopAction(context, context.resources.getString(CR.string.btn_dismiss), getNotificationId(alarmType)))
         if (getAddSnooze()) {
