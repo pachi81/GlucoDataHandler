@@ -11,6 +11,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.media.AudioAttributes
 import android.media.AudioManager
+import android.media.MediaPlayer
 import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
@@ -65,6 +66,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     private var alarmManager: AlarmManager? = null
     private var alarmPendingIntent: PendingIntent? = null
     private var useAlarmSound: Boolean = true
+    private var autoCloseNotification: Boolean = false
     private var currentAlarmState: AlarmState = AlarmState.DISABLED
     private var startDelayThread: Thread? = null
 
@@ -73,6 +75,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         START_ALARM_SOUND,
         STOP_VIBRATION,
         RETRIGGER_SOUND,
+        CLOSE_NOTIFICATION,
     }
 
     private var lastSoundLevel = -1
@@ -439,8 +442,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 if (curNotification > 0) {
                     Log.d(LOG_ID, "Start sound and vibration")
                     vibrate(alarmType, context, false)
-                    startSound(alarmType, context, false)
-                    checkRetrigger(context)
+                    val duration = startSound(alarmType, context, false)
+                    checkRetriggerAndAutoClose(context, duration)
                 }
             }
             startDelayThread!!.start()
@@ -448,30 +451,37 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     }
 
 
-    open fun vibrate(alarmType: AlarmType, context: Context, repeat: Boolean = false, vibrateOnly: Boolean = false) {
+    open fun vibrate(alarmType: AlarmType, context: Context, repeat: Boolean = false, vibrateOnly: Boolean = false) : Int {
         try {
             if (getRingerMode() >= AudioManager.RINGER_MODE_VIBRATE && curNotification > 0) {
-                val vibratePattern = getVibrationPattern(alarmType) ?: return
-                Log.i(LOG_ID, "start vibration for $alarmType - repeat: $repeat")
+                val vibratePattern = getVibrationPattern(alarmType) ?: return 0
+                val duration = if(repeat) -1 else vibratePattern.sum().toInt()
+                Log.i(LOG_ID, "start vibration for $alarmType - repeat: $repeat - duration: $duration ms")
                 vibrator.cancel()
                 vibrator.vibrate(VibrationEffect.createWaveform(vibratePattern, if(repeat) 1 else -1))
+                return duration
             }
         } catch (ex: Exception) {
             Log.e(LOG_ID, "vibrate exception: " + ex)
         }
+        return 0
     }
 
-    fun startSound(alarmType: AlarmType, context: Context, restartVibration: Boolean, forTest: Boolean = false) {
+    fun startSound(alarmType: AlarmType, context: Context, restartVibration: Boolean, forTest: Boolean = false): Int {
         try {
+            var soundDuration = 0
             if (getRingerMode() >= AudioManager.RINGER_MODE_NORMAL && (curNotification > 0 || forTest)) {
                 val soundUri = getSound(alarmType, context, forTest)
                 if (soundUri != null && !isRingtonePlaying()) {
                     ringtoneRWLock.write {
                         if (ringtone != null && ringtone!!.isPlaying) {
                             Log.w(LOG_ID,"Ringtone still playing!")
-                            return
+                            return 0
                         }
-                        Log.i(LOG_ID, "Play ringtone $soundUri - use alarm: $useAlarmSound")
+                        val player = MediaPlayer.create(context, soundUri)
+                        soundDuration = player.duration
+                        player.release()
+                        Log.i(LOG_ID, "Play ringtone $soundUri - use alarm: $useAlarmSound - length: {${soundDuration} ms}")
                         ringtone = RingtoneManager.getRingtone(context, soundUri)
                         val aa = AudioAttributes.Builder()
                             .setUsage(if (useAlarmSound) AudioAttributes.USAGE_ALARM else AudioAttributes.USAGE_VOICE_COMMUNICATION_SIGNALLING)
@@ -482,12 +492,15 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     }
                 }
             }
+            var vibrateDuration = 0
             if (restartVibration) {
-                vibrate(alarmType, context, false)
+                vibrateDuration = vibrate(alarmType, context, false)
             }
+            return maxOf(soundDuration, vibrateDuration)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Exception while starting sound for alarm $alarmType - restartVibration=$restartVibration - forTest=${forTest}: ${exc.message}")
         }
+        return 0
     }
 
     fun isRingtonePlaying(): Boolean {
@@ -738,6 +751,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_FORCE_VIBRATION)
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_NOTIFICATION_VIBRATE)
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_NOTIFICATION_USE_ALARM_SOUND)
+                onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_NOTIFICATION_AUTO_CLOSE)
             } else {
                 when(key) {
                     Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED -> setEnabled(sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, enabled))
@@ -746,6 +760,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     Constants.SHARED_PREF_ALARM_FORCE_VIBRATION -> forceVibration = sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_FORCE_VIBRATION, forceVibration)
                     Constants.SHARED_PREF_NOTIFICATION_VIBRATE -> vibrateOnly = sharedPreferences.getBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, vibrateOnly)
                     Constants.SHARED_PREF_NOTIFICATION_USE_ALARM_SOUND -> useAlarmSound = sharedPreferences.getBoolean(Constants.SHARED_PREF_NOTIFICATION_USE_ALARM_SOUND, useAlarmSound)
+                    Constants.SHARED_PREF_NOTIFICATION_AUTO_CLOSE -> autoCloseNotification = sharedPreferences.getBoolean(Constants.SHARED_PREF_NOTIFICATION_AUTO_CLOSE, autoCloseNotification)
                 }
             }
             if(alarmStatePreferences.contains(key))
@@ -787,7 +802,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         return ReceiveData.getAlarmType()
     }
 
-    private fun checkRetrigger(context: Context) {
+    private fun checkRetriggerAndAutoClose(context: Context, soundDuration: Int = 0): Boolean {
         if(isTriggerActive()) {
             val elapsedTimeMin = Utils.round((System.currentTimeMillis() - curAlarmTime).toFloat()/60000, 0, RoundingMode.DOWN).toLong()
             val nextTriggerMin = (elapsedTimeMin/retriggerTime)*retriggerTime + retriggerTime
@@ -800,7 +815,17 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 DateFormat.DEFAULT).format(nextAlarmTime)} (alarm from ${DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(curAlarmTime))})")
             retriggerCount++
             triggerDelay(TriggerAction.RETRIGGER_SOUND, getAlarmType(), context, (timeInMillis.toFloat()/1000))
+            return true
+        } else if(autoCloseNotification && curNotification > 0 && soundDuration >= 0) {
+            if(soundDuration==0){
+                stopCurrentNotification(context)
+            } else {
+                val delaySec = maxOf((soundDuration.toFloat()/1000)+3F, 30F)  // at least 30 seconds delay
+                Log.i(LOG_ID, "Trigger close notification after $delaySec seconds")
+                triggerDelay(TriggerAction.CLOSE_NOTIFICATION, getAlarmType(), context, delaySec)
+            }
         }
+        return false
     }
 
     fun hasFullscreenPermission(context: Context? = null): Boolean {
@@ -822,22 +847,24 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     GlucoDataService.sendCommand(Command.TEST_ALARM, extras)
                 }
                 TriggerAction.START_ALARM_SOUND -> {
-                    startSound(alarmType, context, true)
-                    checkRetrigger(context)
+                    val duration = startSound(alarmType, context, true)
+                    checkRetriggerAndAutoClose(context, duration)
                 }
                 TriggerAction.STOP_VIBRATION -> {
                     stopVibrationAndSound()
-                    checkRetrigger(context)
+                    checkRetriggerAndAutoClose(context, 0)
                 }
                 TriggerAction.RETRIGGER_SOUND -> {
                     if(canReshowNotification())
                         showNotification(alarmType, context)
                     startVibrationAndSound(alarmType, context, true)
                 }
+                TriggerAction.CLOSE_NOTIFICATION -> {
+                    stopCurrentNotification(context)
+                }
             }
         }
     }
-
 }
 
 class AlarmIntentReceiver: BroadcastReceiver() {

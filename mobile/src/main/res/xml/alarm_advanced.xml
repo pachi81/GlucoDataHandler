@@ -17,16 +17,22 @@
                     android:summary="@string/alarm_force_vibration_summary"
                     app:iconSpaceReserved="false" />
                 <androidx.preference.SwitchPreferenceCompat
+                    android:key="alarm_force_sound"
+                    android:defaultValue="false"
+                    android:title="@string/alarm_force_sound"
+                    android:summary="@string/alarm_force_sound_summary"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
                     android:key="use_alarm_sound"
                     android:defaultValue="true"
                     android:title="@string/alarm_use_alarm_sound"
                     android:summary="@string/alarm_use_alarm_sound_summary"
                     app:iconSpaceReserved="false" />
                 <androidx.preference.SwitchPreferenceCompat
-                    android:key="alarm_force_sound"
+                    android:key="auto_close_notification"
                     android:defaultValue="false"
-                    android:title="@string/alarm_force_sound"
-                    android:summary="@string/alarm_force_sound_summary"
+                    android:title="@string/auto_close_notification"
+                    android:summary="@string/auto_close_notification_summary"
                     app:iconSpaceReserved="false" />
                 <androidx.preference.ListPreference
                     android:defaultValue="1000"

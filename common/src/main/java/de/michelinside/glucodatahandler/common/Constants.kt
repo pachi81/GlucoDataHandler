@@ -176,6 +176,7 @@ object Constants {
     const val SHARED_PREF_NOTIFICATION_VIBRATE = "alarm_vibrate_only"
     const val SHARED_PREF_ALARM_START_DELAY = "alarm_start_delay"
     const val SHARED_PREF_ALARM_START_DELAY_STRING = "alarm_start_delay_string"
+    const val SHARED_PREF_NOTIFICATION_AUTO_CLOSE = "auto_close_notification"
 
     const val SHARED_PREF_ALARM_NOTIFICATION_ENABLED = "alarm_notifications_enabled"
     const val SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED = "alarm_fullscreen_notification_enabled"

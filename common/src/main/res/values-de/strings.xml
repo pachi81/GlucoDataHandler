@@ -542,5 +542,7 @@
     <string name="alarm_inactive_end_time_summary">Until this time, the alarm will not fire.</string>
 
     <string name="app_crash_bad_notification">Die App ist aufgrund des farbigen Layouts in den Benachrichtigungen abegstürzt!\nDie Einstellung wurde daher deaktiviert.\nDas Problem tritt bisher nur bei Samsung auf und scheint ein Problem auf Seite von Samsung zu sein.\nBitte senden Sie daher einen Fehlerbericht an Samsung. Vielen Dank!</string>
+    <string name="auto_close_notification">Benachrichtigung automatisch schließen</string>
+    <string name="auto_close_notification_summary">Alarm Benachrichtigung automatisch schließen, nachdem der Ton und Vibration gestoppt haben.\nWenn \"Erneut auslösen\" aktiv ist, wird die Benachrichtigung erst geschlossen, wenn der Alarm nicht mehr erneut ausgelöst wird.</string>
 
 </resources>

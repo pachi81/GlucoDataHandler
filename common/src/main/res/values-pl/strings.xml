@@ -550,4 +550,6 @@
     <string name="alarm_inactive_end_time_summary">Until this time, the alarm will not fire.</string>
 
     <string name="app_crash_bad_notification">The app crashes because of the colored notification layout!\nIt has been disabled to prevent this crash.\nThis is an issue on Samsung phones so please create a error report in the Samsung members app. Thank you!</string>
+    <string name="auto_close_notification">Auto close notification</string>
+    <string name="auto_close_notification_summary">Auto close alarm notification after sound and vibration has finished.\nIf retrigger is active, the notification will be closed, if there is no additional trigger.</string>
 </resources>
