@@ -59,14 +59,15 @@ android {
 
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = '1.8'
+    kotlin {
+        jvmToolchain(21)
     }
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
     dependenciesInfo {
         // Disables dependency metadata when building APKs.
@@ -92,11 +93,10 @@ dependencies {
     implementation 'androidx.work:work-runtime:2.9.1'
     implementation "com.ncorti:slidetoact:0.11.0"
     implementation 'com.takisoft.preferencex:preferencex-datetimepicker:1.1.0'
-    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.0.0'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.2.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
-    wearApp project(':wear')
 }
 
 afterEvaluate {
