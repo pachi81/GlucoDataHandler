@@ -143,6 +143,8 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
 
     private fun getAlarmCatIcon(alarmType: AlarmType, context: Context): Int {
         if(alarmType.setting == null || !alarmType.setting!!.isActive) {
+            if (alarmType.setting?.isTempInactive == true)
+                return CR.drawable.icon_clock_snooze_com
             return SoundMode.OFF.icon
         }
         return AlarmNotification.getSoundMode(alarmType, context).icon

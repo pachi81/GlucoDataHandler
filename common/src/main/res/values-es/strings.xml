@@ -549,11 +549,11 @@
     <string name="detail_reset_connection">Connection is not working as expected!\nPress here to reset the wear-phone connection.\nIf the reset does not solve the problem, please restart your watch.</string>
     <string name="pref_floating_widget_time_to_close">Time to close</string>
     <string name="pref_floating_widget_time_to_close_summary">Time in seconds to close the floating widget while pressing on the widget without moving it.\n0 for disable this setting.</string>
-    <string name="alarm_inactive_enabled">Disable alarm time range</string>
+    <string name="alarm_inactive_enabled">Inactive time</string>
     <string name="alarm_inactive_enabled_summary">To disable the alarm in a specific time, activate this and set the start- and endtime.</string>
-    <string name="alarm_inactive_start_time">Disable from</string>
+    <string name="alarm_inactive_start_time">Inactive from</string>
     <string name="alarm_inactive_start_time_summary">From this time, the alarm will not fire.</string>
-    <string name="alarm_inactive_end_time">Disable until</string>
+    <string name="alarm_inactive_end_time">Inactive until</string>
     <string name="alarm_inactive_end_time_summary">Until this time, the alarm will not fire.</string>
 
     <string name="app_crash_bad_notification">The app crashes because of the colored notification layout!\nIt has been disabled to prevent this crash.\nThis is an issue on Samsung phones so please create a error report in the Samsung members app. Thank you!</string>

@@ -38,7 +38,7 @@
             android:title="@string/alarm_inactive_end_time"
             android:summary="@string/alarm_inactive_end_time_summary"
             app:pref_hourFormat="auto"
-            app:pref_pickerTime="23:00"
+            app:pref_pickerTime="07:00"
             app:pref_summaryHasTime="%s"
             app:iconSpaceReserved="false" />
         </PreferenceCategory>

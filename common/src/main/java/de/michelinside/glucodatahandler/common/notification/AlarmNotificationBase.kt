@@ -41,6 +41,7 @@ import de.michelinside.glucodatahandler.common.R as CR
 
 abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
     protected val LOG_ID = "GDH.AlarmNotification"
+    private val MIN_AUTO_CLOSE_DELAY = 30F
     private var enabled: Boolean = false
     private var addSnooze: Boolean = false
     private val VERY_LOW_NOTIFICATION_ID = 801
@@ -817,13 +818,26 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             triggerDelay(TriggerAction.RETRIGGER_SOUND, getAlarmType(), context, (timeInMillis.toFloat()/1000))
             return true
         } else if(autoCloseNotification && curNotification > 0 && soundDuration >= 0) {
-            if(soundDuration==0){
-                stopCurrentNotification(context)
-            } else {
-                val delaySec = maxOf((soundDuration.toFloat()/1000)+3F, 30F)  // at least 30 seconds delay
-                Log.i(LOG_ID, "Trigger close notification after $delaySec seconds")
+            val delaySec =
+                if(soundDuration==0) {
+                    if(curAlarmTime > 0) {
+                        val elapsedTimeSec = (System.currentTimeMillis() - curAlarmTime).toFloat()/1000
+                        if (elapsedTimeSec >= MIN_AUTO_CLOSE_DELAY) {
+                            0F
+                        } else {
+                            MIN_AUTO_CLOSE_DELAY-elapsedTimeSec
+                        }
+                    } else {
+                        0F
+                    }
+                } else {
+                    maxOf((soundDuration.toFloat()/1000)+3F, MIN_AUTO_CLOSE_DELAY)  // at least 30 seconds delay
+                }
+            Log.d(LOG_ID, "Trigger close notification after $delaySec seconds")
+            if (delaySec > 0)
                 triggerDelay(TriggerAction.CLOSE_NOTIFICATION, getAlarmType(), context, delaySec)
-            }
+            else
+                stopCurrentNotification(context)
         }
         return false
     }

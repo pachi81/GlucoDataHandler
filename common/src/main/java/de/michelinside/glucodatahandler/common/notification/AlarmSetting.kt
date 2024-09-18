@@ -28,17 +28,21 @@ class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
         Log.v(LOG_ID, "init called")
     }
 
-    val isActive: Boolean get() {
-        if (!enabled)
-            return false
-        if (inactiveEnabled) {
+    val isTempInactive: Boolean get() {
+        if (enabled && inactiveEnabled) {
             val currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))
             if (Utils.timeBetweenTimes(currentTime, inactiveStartTime, inactiveEndTime)) {
                 Log.v(LOG_ID, "Alarm is inactive: $inactiveStartTime < $currentTime < $inactiveEndTime")
-                return false
+                return true
             }
         }
-        return true
+        return false
+    }
+
+    val isActive: Boolean get() {
+        if (!enabled)
+            return false
+        return !isTempInactive
     }
 
     fun getSettingName(key: String): String {
@@ -52,6 +56,7 @@ class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_RETRIGGER),
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_ENABLED),
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_START_TIME),
+        getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_END_TIME),
     )
 
     private val alarmPreferencesLocalOnly = mutableSetOf(
