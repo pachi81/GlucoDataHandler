@@ -531,7 +531,7 @@
     <string name="pref_lockscreen_size_summary">Größe der Darstellung auf dem Sperrbildschirm anpassen.</string>
     <string name="pref_wear_os_reset_connection">Verbindung zurücksetzen</string>
     <string name="pref_wear_os_reset_connection_summary">Hier drücken, wenn die Verbindung zwischen Telefon und Uhr nicht funktioniert, wie erwartet.\nWenn das Problem dadurch nicht gelöst wird, bitte die Uhr neustarten.</string>
-    <string name="detail_reset_connection">Verbindung funktioniert noch nicht!\nBitte hier drücken, um die Verbindung zurückzusetzen.\nWenn das Problem dadurch nicht gelöst wird, bitte die Uhr neustarten.</string>
+    <string name="detail_reset_connection">Verbindung funktioniert nicht korrekt! Bitte die Uhr neustarten.</string>
     <string name="pref_floating_widget_time_to_close">Zeit zum Schließen</string>
     <string name="pref_floating_widget_time_to_close_summary">Zeit in Sekunden, wie lange man auf das Schwebende Widget drücken muss, ohne es zu Bewegen, damit es deaktiviert wird.\n0 zum Deaktivieren dieser Einstellung.\n</string>
     <string name="alarm_inactive_enabled">Inaktive Zeit</string>

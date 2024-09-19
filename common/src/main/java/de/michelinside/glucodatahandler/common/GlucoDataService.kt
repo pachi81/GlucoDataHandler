@@ -111,8 +111,9 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                 Log.d(LOG_ID, "checkForConnectedNodes called for dataOnly=$refreshDataOnly - connection: ${connection!=null}")
                 if (connection!=null) {
                     if(!refreshDataOnly)
-                        connection!!.checkForConnectedNodes()
-                    connection!!.checkForNodesWithoutData()
+                        connection!!.checkForConnectedNodes(true)
+                    else
+                        connection!!.checkForNodesWithoutData()
                 }
             } catch (exc: Exception) {
                 Log.e(
@@ -125,8 +126,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
         fun resetWearPhoneConnection() {
             try {
                 if (connection != null) {
-                    connection!!.close()
-                    connection!!.open(context!!, appSource == AppSource.PHONE_APP)
+                    connection!!.resetConnection()
                 }
             } catch (exc: Exception) {
                 Log.e(LOG_ID,"resetWearPhoneConnection exception: " + exc.message.toString())

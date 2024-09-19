@@ -336,25 +336,21 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 SourceStateData.getStateMessage(this)))
 
         if (WearPhoneConnection.nodesConnected) {
-            val onCheckClickListener = View.OnClickListener {
-                GlucoDataService.checkForConnectedNodes(true)
-            }
-            val onResetClickListener = View.OnClickListener {
-                GlucoDataService.resetWearPhoneConnection()
-            }
-            if(WearPhoneConnection.getNodeBatterLevels().size == 1 ) {
-                val level = WearPhoneConnection.getNodeBatterLevels().values.first()
-                if (level > 0) {
+            if (WearPhoneConnection.connectionError) {
+                val onResetClickListener = View.OnClickListener {
+                    GlucoDataService.resetWearPhoneConnection()
+                }
+                tableConnections.addView(createRow(CR.string.source_phone, resources.getString(CR.string.detail_reset_connection), onResetClickListener))
+            } else {
+                val onCheckClickListener = View.OnClickListener {
+                    GlucoDataService.checkForConnectedNodes(false)
+                }
+                if(WearPhoneConnection.getNodeBatterLevels().size == 1 ) {
+                    val level = WearPhoneConnection.getNodeBatterLevels().values.first()
                     tableConnections.addView(createRow(CR.string.source_phone, if (level > 0) "$level%" else "?%", onCheckClickListener))
                 } else {
-                    tableConnections.addView(createRow(CR.string.source_phone, resources.getString(CR.string.detail_reset_connection), onResetClickListener))
-                }
-            } else {
-                WearPhoneConnection.getNodeBatterLevels().forEach { name, level ->
-                    if (level > 0) {
+                    WearPhoneConnection.getNodeBatterLevels().forEach { (name, level) ->
                         tableConnections.addView(createRow(name, if (level > 0) "$level%" else "?%", onCheckClickListener))
-                    } else {
-                        tableConnections.addView(createRow(name, resources.getString(CR.string.detail_reset_connection), onResetClickListener))
                     }
                 }
             }

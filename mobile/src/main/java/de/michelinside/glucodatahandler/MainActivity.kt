@@ -621,17 +621,17 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         }
 
         if (WearPhoneConnection.nodesConnected) {
-            val onCheckClickListener = OnClickListener {
-                GlucoDataService.checkForConnectedNodes(true)
-            }
-            val onResetClickListener = OnClickListener {
-                GlucoDataService.resetWearPhoneConnection()
-            }
-            WearPhoneConnection.getNodeBatterLevels().forEach { name, level ->
-                if (level > 0) {
+            if (!WearPhoneConnection.connectionError) {
+                val onResetClickListener = OnClickListener {
+                    GlucoDataService.resetWearPhoneConnection()
+                }
+                tableConnections.addView(createRow(CR.string.source_wear, resources.getString(CR.string.detail_reset_connection), onResetClickListener))
+            } else {
+                val onCheckClickListener = OnClickListener {
+                    GlucoDataService.checkForConnectedNodes(false)
+                }
+                WearPhoneConnection.getNodeBatterLevels().forEach { (name, level) ->
                     tableConnections.addView(createRow(name, if (level > 0) "$level%" else "?%", onCheckClickListener))
-                } else {
-                    tableConnections.addView(createRow(name, resources.getString(CR.string.detail_reset_connection), onResetClickListener))
                 }
             }
         }

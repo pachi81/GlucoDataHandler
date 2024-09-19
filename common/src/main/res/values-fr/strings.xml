@@ -541,7 +541,7 @@
     <string name="pref_lockscreen_size_summary">Modifiez la taille des données de l\'écran de verrouillage.</string>
     <string name="pref_wear_os_reset_connection">Reset connection</string>
     <string name="pref_wear_os_reset_connection_summary">Press here to reset the wear-phone connection if it is not working as expected. If the reset does not solve the problem, please restart your watch.</string>
-    <string name="detail_reset_connection">Connection is not working as expected!\nPress here to reset the wear-phone connection.\nIf the reset does not solve the problem, please restart your watch.</string>
+    <string name="detail_reset_connection">Connection is not working as expected! Please try to restart your watch.</string>
     <string name="pref_floating_widget_time_to_close">Time to close</string>
     <string name="pref_floating_widget_time_to_close_summary">Time in seconds to close the floating widget while pressing on the widget without moving it.\n0 for disable this setting.</string>
     <string name="alarm_inactive_enabled">Inactive time</string>

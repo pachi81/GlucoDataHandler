@@ -30,11 +30,9 @@ import androidx.preference.PreferenceManager
 import de.michelinside.glucodataauto.preferences.SettingsActivity
 import de.michelinside.glucodataauto.preferences.SettingsFragmentClass
 import de.michelinside.glucodatahandler.common.Constants
-import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
-import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notification.ChannelType
@@ -380,15 +378,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableConnections.addView(createRow(
                 SourceStateData.lastSource.resId,
                 SourceStateData.getStateMessage(this)))
-
-        if (WearPhoneConnection.nodesConnected) {
-            val onClickListener = View.OnClickListener {
-                GlucoDataService.checkForConnectedNodes(true)
-            }
-            WearPhoneConnection.getNodeBatterLevels().forEach { name, level ->
-                tableConnections.addView(createRow(name, if (level > 0) "$level%" else "?%", onClickListener))
-            }
-        }
         tableConnections.addView(createRow(CR.string.pref_cat_android_auto, if (GlucoDataServiceAuto.connected) resources.getString(CR.string.connected_label) else resources.getString(CR.string.disconnected_label)))
         checkTableVisibility(tableConnections)
     }

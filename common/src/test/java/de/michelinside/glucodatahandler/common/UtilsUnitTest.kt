@@ -4,6 +4,7 @@ import android.util.Log
 import de.michelinside.glucodatahandler.common.utils.Utils
 import io.mockk.every
 import io.mockk.mockkStatic
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -46,5 +47,15 @@ class UtilsUnitTest {
         assertFalse(Utils.timeBetweenTimes("abc", "14:00", "14:00"))
         assertFalse(Utils.timeBetweenTimes("14:00", "abc", "14:00"))
         assertFalse(Utils.timeBetweenTimes("14:00", "14:00", "abc"))
+    }
+
+
+    @Test
+    fun testSets() {
+        val set1 = mutableSetOf("a", "b", "c")
+        val set2 = mutableSetOf("b", "c", "d")
+
+        assertEquals(mutableSetOf("a", "b", "c", "d"), set1 + set2)
+        assertEquals(mutableSetOf("a", "b", "c", "d"), set1.union(set2))
     }
 }

@@ -3,10 +3,11 @@ package de.michelinside.glucodatahandler.common.notifier
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import java.util.Collections
 
 object InternalNotifier {
     private const val LOG_ID = "GDH.InternalNotifier"
-    private var notifiers = mutableMapOf<NotifierInterface, MutableSet<NotifySource>?>()
+    private var notifiers = Collections.synchronizedMap(mutableMapOf<NotifierInterface, MutableSet<NotifySource>?>())
     private var timeNotifierCount = 0
     private var obsoleteNotifierCount = 0
     val hasTimeNotifier: Boolean get() = timeNotifierCount>0
