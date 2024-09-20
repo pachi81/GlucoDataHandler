@@ -106,6 +106,8 @@ object Constants {
     const val SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT = "uncaught_exception_detected"
     const val SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE = "uncaught_exception_message"
     const val SHARED_PREF_SHOW_OTHER_UNIT = "show_other_unit"
+    const val SHARED_PREF_EXPORT_SETTINGS = "export_settings"
+    const val SHARED_PREF_IMPORT_SETTINGS = "import_settings"
 
 
     // internal app preferences (not changed by settings) -> use separate tag for not trigger onChanged events

@@ -554,4 +554,14 @@
     <string name="app_crash_bad_notification">The app crashes because of the colored notification layout!\nIt has been disabled to prevent this crash.\nThis is an issue on Samsung phones so please create a error report in the Samsung members app. Thank you!</string>
     <string name="auto_close_notification">Auto close notification</string>
     <string name="auto_close_notification_summary">Auto close alarm notification after sound and vibration has finished, but only after at least 30 seconds.\nIf retrigger is active, the notification will be closed, if there is no additional trigger.</string>
+    <string name="settings_save_succeeded">Settings saved successfully</string>
+    <string name="settings_save_failed">Failed saving settings!</string>
+    <string name="settings_read_succeeded">Settings read successfully</string>
+    <string name="settings_read_failed">Failed reading settings!</string>
+    <string name="pref_cat_export_import">Export / Import</string>
+    <string name="pref_cat_export_import_summary">Export or import all settings.</string>
+    <string name="pref_export_settings">Export</string>
+    <string name="pref_export_settings_summary">Press here to export all settings to a file.\nIMPORTANT: this will only export changed settings! Settings with default values will not be part of the export.</string>
+    <string name="pref_import_settings">IMPORTANT: this will only export changed settings! Settings with default values will not be part of the export.</string>
+    <string name="pref_import_settings_summary">Press here to import settings from a file.\nIMPORTANT: this will not re-create default settings, as there are not part of the export.\nIf you want to reset to default, delete the app data first and import afterwards.</string>
 </resources>

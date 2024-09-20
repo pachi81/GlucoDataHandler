@@ -12,9 +12,14 @@ import android.provider.Settings
 import android.util.Log
 import android.util.TypedValue
 import android.widget.Toast
+import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
+import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
 import java.io.OutputStream
 import java.math.RoundingMode
 import java.security.MessageDigest
@@ -178,7 +183,7 @@ object Utils {
                         return result
                     }
                 } catch (e: Exception) {
-                    Log.i(LOG_ID, "isHighTextContrastEnabled invoked with an exception" + e.message)
+                    Log.i(LOG_ID, "isHighTextContrastEnabled invoked with an exception" + entry.message)
                 }
             }
         }
@@ -270,6 +275,94 @@ object Utils {
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Saving logs exception: " + exc.message.toString() )
+        }
+    }
+
+    fun saveSettings(context: Context, uri: Uri) {
+        try {
+            Thread {
+                context.contentResolver.openFileDescriptor(uri, "w")?.use {
+                    FileOutputStream(it.fileDescriptor).use { os ->
+                        saveSettings(os, context)
+                    }
+                }
+            }.start()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Saving logs to file exception: " + exc.message.toString() )
+        }
+    }
+
+    private fun saveSettings(outputStream: OutputStream, context: Context) {
+        var success = false
+        try {
+            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            val oos = ObjectOutputStream(outputStream)
+            oos.writeObject(sharedPref.getAll())
+            oos.close()
+            success = true
+            Log.i(LOG_ID, "Settings saved")
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Saving settings exception: " + exc.message.toString() )
+        }
+        val text = if (success) {
+            GlucoDataService.context!!.resources.getText(R.string.settings_save_succeeded)
+        } else {
+            GlucoDataService.context!!.resources.getText(R.string.settings_save_failed)
+        }
+        Handler(GlucoDataService.context!!.mainLooper).post {
+            Toast.makeText(GlucoDataService.context!!, text, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun readSettings(context: Context, uri: Uri) {
+        try {
+            Thread {
+                context.contentResolver.openFileDescriptor(uri, "r")?.use {
+                    FileInputStream(it.fileDescriptor).use { iss ->
+                        readSettings(iss, context)
+                    }
+                }
+            }.start()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Saving logs to file exception: " + exc.message.toString() )
+        }
+    }
+
+    private fun readSettings(inputStream: InputStream, context: Context) {
+        var success = false
+        try {
+            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            val ois = ObjectInputStream(inputStream)
+            val map = ois.readObject() as HashMap<*, *>
+            with(sharedPref.edit()) {
+                map.forEach { entry ->
+                    putString(entry.key.toString(), entry.value.toString())
+                    when (entry.value) {
+                        is Boolean -> putBoolean(entry.key.toString(), entry.value as Boolean)
+                        is String -> putString(entry.key.toString(), entry.value as String)
+                        is Int -> putInt(entry.key.toString(), entry.value as Int)
+                        is Float -> putFloat(entry.key.toString(), entry.value as Float)
+                        is Long -> putLong(entry.key.toString(), entry.value as Long)
+                        is Set<*> -> putStringSet(entry.key.toString(), entry.value as Set<String>)
+                        else -> throw IllegalArgumentException(
+                            ("Type " + (entry.value?.javaClass?.name ?: "unknown") + " is unknown")
+                        )
+                    }
+                }
+                apply()
+            }
+            success = true
+            Log.i(LOG_ID, "Settings red")
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Reading settings exception: " + exc.message.toString() )
+        }
+        val text = if (success) {
+            GlucoDataService.context!!.resources.getText(R.string.settings_read_succeeded)
+        } else {
+            GlucoDataService.context!!.resources.getText(R.string.settings_read_failed)
+        }
+        Handler(GlucoDataService.context!!.mainLooper).post {
+            Toast.makeText(GlucoDataService.context!!, text, Toast.LENGTH_SHORT).show()
         }
     }
 

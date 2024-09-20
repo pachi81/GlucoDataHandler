@@ -1,11 +1,15 @@
 package de.michelinside.glucodatahandler.preferences
 
+import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.DocumentsContract
 import android.provider.Settings
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
@@ -28,6 +32,10 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlin.collections.HashMap
 import kotlin.collections.List
 import kotlin.collections.mutableSetOf
@@ -367,6 +375,72 @@ class WatchSettingsFragment: SettingsFragmentBase(R.xml.pref_watch) {
         }
     }
 }
+
+class ExportImportSettingsFragment: SettingsFragmentBase(R.xml.pref_export_import) {
+
+    companion object {
+        const val EXPORT_PHONE_SETTINGS = 1
+        const val IMPORT_PHONE_SETTINGS = 2
+    }
+    override fun initPreferences() {
+        Log.v(LOG_ID, "initPreferences called")
+
+        var downloadUri: Uri? = null
+        MediaScannerConnection.scanFile(requireContext(), arrayOf(
+            Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOWNLOADS
+            ).absolutePath), null
+        ) { s: String, uri: Uri ->
+            Log.v(LOG_ID, "Set URI $uri for path $s")
+            downloadUri = uri
+        }
+
+        val prefExportSettings = findPreference<Preference>(Constants.SHARED_PREF_EXPORT_SETTINGS)
+        prefExportSettings!!.setOnPreferenceClickListener {
+            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                type = "text/plain"
+                val currentDateandTime = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(
+                    Date()
+                )
+                val fileName = "GDH_phone_settings_" + currentDateandTime + ".gdh"
+                putExtra(Intent.EXTRA_TITLE, fileName)
+                putExtra(DocumentsContract.EXTRA_INITIAL_URI, downloadUri)
+            }
+            startActivityForResult(intent, EXPORT_PHONE_SETTINGS)
+            true
+        }
+        val prefImportSettings = findPreference<Preference>(Constants.SHARED_PREF_IMPORT_SETTINGS)
+        prefImportSettings!!.setOnPreferenceClickListener {
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                type = "text/plain"
+                putExtra(DocumentsContract.EXTRA_INITIAL_URI, downloadUri)
+            }
+            startActivityForResult(intent, IMPORT_PHONE_SETTINGS)
+            true
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        try {
+            Log.v(LOG_ID, "onActivityResult called for requestCode: " + requestCode + " - resultCode: " + resultCode + " - data: " + Utils.dumpBundle(data?.extras))
+            super.onActivityResult(requestCode, resultCode, data)
+            if (resultCode == Activity.RESULT_OK) {
+                data?.data?.also { uri ->
+                    Log.i(LOG_ID, "Export/Import exception for ${requestCode} to $uri")
+                    when(requestCode) {
+                        EXPORT_PHONE_SETTINGS -> Utils.saveSettings(requireContext(), uri)
+                        IMPORT_PHONE_SETTINGS -> Utils.readSettings(requireContext(), uri)
+                    }
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Export/Import exception for ${requestCode}: " + exc.message.toString() )
+        }
+    }
+}
+
 class TransferSettingsFragment: SettingsFragmentBase(R.xml.pref_transfer) {
     override fun initPreferences() {
         Log.v(LOG_ID, "initPreferences called")
