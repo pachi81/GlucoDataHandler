@@ -42,7 +42,8 @@ object InternalNotifier {
     fun notify(context: Context, notifySource: NotifySource, extras: Bundle?)
     {
         Log.d(LOG_ID, "Sending new data from " + notifySource.toString() + " to " + getNotifierCount(notifySource) + " notifier(s).")
-        notifiers.forEach{
+        val curNotifiers = notifiers.toMutableMap()
+        curNotifiers.forEach{
             try {
                 if (it.value == null || it.value!!.contains(notifySource)) {
                     Log.v(LOG_ID, "Sending new data from " + notifySource.toString() + " to " + it.toString())
@@ -56,8 +57,10 @@ object InternalNotifier {
 
     fun getNotifierCount(notifySource: NotifySource): Int {
         var count = 0
-        notifiers.forEach {
+        val curNotifiers = notifiers.toMutableMap()
+        curNotifiers.forEach {
             if (it.value == null || it.value!!.contains(notifySource)) {
+                Log.v(LOG_ID, "Notifier " + it.toString() + " has source " + notifySource.toString())
                 count++
             }
         }

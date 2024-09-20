@@ -321,16 +321,17 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     extras.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings())
                 }
                 // Send a message to all nodes in parallel
-                connectedNodes.forEach { node ->
+                val curNodes = connectedNodes.values
+                curNodes.forEach { node ->
                     Thread {
                         try {
-                            if ((ignoreReceiverId == null && filterReceiverId == null) || ignoreReceiverId != node.value.id || filterReceiverId == node.value.id) {
+                            if ((ignoreReceiverId == null && filterReceiverId == null) || ignoreReceiverId != node.id || filterReceiverId == node.id) {
                                 if (dataSource == NotifySource.CAPILITY_INFO)
                                     Thread.sleep(1000)  // wait a bit after the connection has changed
-                                sendMessage(node.value, getPath(dataSource), Utils.bundleToBytes(extras), dataSource)
+                                sendMessage(node, getPath(dataSource), Utils.bundleToBytes(extras), dataSource)
                             }
                         } catch (exc: Exception) {
-                            Log.e(LOG_ID, "sendMessage to " + node.value.toString() + " exception: " + exc.toString())
+                            Log.e(LOG_ID, "sendMessage to " + node.toString() + " exception: " + exc.toString())
                         }
                     }.start()
                 }
@@ -345,7 +346,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
     private fun sendMessage(node: Node, path: String, data: ByteArray?, dataSource: NotifySource, retryCount: Long = 0L) {
         if (retryCount > 0) {
             Log.i(LOG_ID, "Sleep " + (retryCount).toString() + " seconds, before retry sending.")
-            Thread.sleep(retryCount * 1000)
+            Thread.sleep(retryCount * 5000)
         }
         if (connectedNodes.containsKey(node.id)) {
             Wearable.getMessageClient(context).sendMessage(
