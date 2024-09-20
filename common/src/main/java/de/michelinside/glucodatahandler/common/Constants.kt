@@ -108,6 +108,8 @@ object Constants {
     const val SHARED_PREF_SHOW_OTHER_UNIT = "show_other_unit"
     const val SHARED_PREF_EXPORT_SETTINGS = "export_settings"
     const val SHARED_PREF_IMPORT_SETTINGS = "import_settings"
+    const val SHARED_PREF_SAVE_MOBILE_LOGS = "save_mobile_logs"
+    const val SHARED_PREF_SAVE_WEAR_LOGS = "save_wear_logs"
 
 
     // internal app preferences (not changed by settings) -> use separate tag for not trigger onChanged events

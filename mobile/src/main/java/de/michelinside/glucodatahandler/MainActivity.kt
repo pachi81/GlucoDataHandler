@@ -389,19 +389,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     startActivity(browserIntent)
                     return true
                 }
-                R.id.action_save_mobile_logs -> {
-                    SaveLogs(AppSource.PHONE_APP)
-                    return true
-                }
-                R.id.action_save_wear_logs -> {
-                    SaveLogs(AppSource.WEAR_APP)
-                    return true
-                }
-                R.id.group_log_title -> {
-                    Log.v(LOG_ID, "log group selected")
-                    val menuIt: MenuItem = optionsMenu.findItem(R.id.action_save_wear_logs)
-                    menuIt.isEnabled = WearPhoneConnection.nodesConnected && !LogcatReceiver.isActive
-                }
                 R.id.group_snooze_title -> {
                     Log.v(LOG_ID, "snooze group selected - snoozeActive=${AlarmHandler.isSnoozeActive}")
                     val snoozeStop: MenuItem = optionsMenu.findItem(R.id.action_stop_snooze)
@@ -553,42 +540,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         update()
     }
 
-    private fun SaveLogs(source: AppSource) {
-        try {
-            Log.v(LOG_ID, "Save logs called for " + source)
-            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-                addCategory(Intent.CATEGORY_OPENABLE)
-                type = "text/plain"
-                val currentDateandTime = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-                val fileName = "GDH_" + source + "_" + currentDateandTime + ".txt"
-                putExtra(Intent.EXTRA_TITLE, fileName)
-            }
-            startActivityForResult(intent, if (source == AppSource.WEAR_APP) CREATE_WEAR_FILE else CREATE_PHONE_FILE)
-
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "Saving mobile logs exception: " + exc.message.toString() )
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        try {
-            Log.v(LOG_ID, "onActivityResult called for requestCode: " + requestCode + " - resultCode: " + resultCode + " - data: " + Utils.dumpBundle(data?.extras))
-            super.onActivityResult(requestCode, resultCode, data)
-            if (resultCode == Activity.RESULT_OK) {
-                data?.data?.also { uri ->
-                    Log.v(LOG_ID, "Save logs to " + uri)
-                    if (requestCode == CREATE_PHONE_FILE) {
-                        Utils.saveLogs(this, uri)
-                    } else if(requestCode == CREATE_WEAR_FILE) {
-                        LogcatReceiver.requestLogs(this, uri)
-                    }
-                }
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "Saving logs exception: " + exc.message.toString() )
-        }
-    }
-
     private fun updateConnectionsTable() {
         tableConnections.removeViews(1, maxOf(0, tableConnections.childCount - 1))
         if (SourceStateData.lastState != SourceState.NONE) {
@@ -621,7 +572,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         }
 
         if (WearPhoneConnection.nodesConnected) {
-            if (!WearPhoneConnection.connectionError) {
+            if (WearPhoneConnection.connectionError) {
                 val onResetClickListener = OnClickListener {
                     GlucoDataService.resetWearPhoneConnection()
                 }
@@ -705,11 +656,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         row.addView(createColumn(key, false, onClickListener))
         row.addView(createColumn(value, true, onClickListener))
         return row
-    }
-
-    companion object {
-        const val CREATE_PHONE_FILE = 1
-        const val CREATE_WEAR_FILE = 2
     }
 
     private fun checkUncaughtException() {
