@@ -17,6 +17,7 @@ class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
     private var inactiveEndTime = ""
     var soundDelay = 0
     var retriggerTime = 0
+    var repeatTime = 0
     // not for sharing with watch!
     var soundLevel = -1
     var useCustomSound = false
@@ -57,6 +58,7 @@ class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_ENABLED),
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_START_TIME),
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_END_TIME),
+        getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT),
     )
 
     private val alarmPreferencesLocalOnly = mutableSetOf(
@@ -84,6 +86,7 @@ class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
             bundle.putString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_END_TIME), inactiveEndTime)
             bundle.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_DELAY), soundDelay)
             bundle.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_RETRIGGER), retriggerTime)
+            bundle.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT), repeatTime)
         }
         return bundle
     }
@@ -98,6 +101,7 @@ class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
             editor.putString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_END_TIME), bundle.getString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_END_TIME), inactiveEndTime))
             editor.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_DELAY), bundle.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_DELAY), soundDelay))
             editor.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_RETRIGGER), bundle.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_RETRIGGER), retriggerTime))
+            editor.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT), bundle.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT), repeatTime))
         } catch (exc: Exception) {
             Log.e(LOG_ID, "saveSettings exception: " + exc.toString() + ": " + exc.stackTraceToString() )
         }
@@ -109,13 +113,14 @@ class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
             enabled = sharedPref.getBoolean(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_ENABLED), enabled)
             intervalMin = sharedPref.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INTERVAL), intervalMin)
             inactiveEnabled = sharedPref.getBoolean(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_ENABLED), inactiveEnabled)
-            inactiveStartTime = sharedPref.getString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_START_TIME), inactiveStartTime) ?: ""
-            inactiveEndTime = sharedPref.getString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_END_TIME), inactiveEndTime) ?: ""
+            inactiveStartTime = sharedPref.getString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_START_TIME), null) ?: ""
+            inactiveEndTime = sharedPref.getString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_END_TIME), null) ?: ""
             soundDelay = sharedPref.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_DELAY), soundDelay)
             retriggerTime = sharedPref.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_RETRIGGER), retriggerTime)
             soundLevel = sharedPref.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_LEVEL), soundLevel)
             useCustomSound = sharedPref.getBoolean(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_USE_CUSTOM_SOUND), useCustomSound)
-            customSoundPath = sharedPref.getString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_CUSTOM_SOUND), customSoundPath) ?: ""
+            customSoundPath = sharedPref.getString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_CUSTOM_SOUND), null) ?: ""
+            repeatTime = sharedPref.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT), repeatTime)
 
             Log.d(LOG_ID, "updateSettings: " +
                     "enabled=$enabled, " +
@@ -124,6 +129,7 @@ class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
                     "inactiveStartTime=$inactiveStartTime, " +
                     "inactiveEndTime=$inactiveEndTime, " +
                     "soundDelay=$soundDelay, " +
+                    "repeatTime=$repeatTime, " +
                     "retriggerTime=$retriggerTime, " +
                     "soundLevel=$soundLevel, " +
                     "useCustomSound=$useCustomSound, " +

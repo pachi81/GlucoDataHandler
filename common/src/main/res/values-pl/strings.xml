@@ -564,4 +564,6 @@
     <string name="pref_import_settings_summary">Press here to import settings from a file.\nIMPORTANT: this will not re-create default settings, as there are not part of the export.\nIf you want to reset to default, delete the app data first and import afterwards.</string>
     <string name="menu_save_mobile_logs_summary">Save logs from the phone to file.</string>
     <string name="menu_save_wear_logs_summary">Save logs from connected Wear OS watch to file.</string>
+    <string name="alarm_repeat">Repeat</string>
+    <string name="alarm_repeat_summary">"Repeat alarm sound and vibration. \n0: Disables the repeat functionality. \nPositive values: Set the repeat interval in minutes. \n-1: Enables unlimited repetition. "</string>
 </resources>

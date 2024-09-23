@@ -29,10 +29,6 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.Utils
-import java.math.RoundingMode
-import java.text.DateFormat
-import java.util.Date
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
 import kotlin.concurrent.write
@@ -70,11 +66,13 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     private var autoCloseNotification: Boolean = false
     private var currentAlarmState: AlarmState = AlarmState.DISABLED
     private var startDelayThread: Thread? = null
+    private var checkSoundThread: Thread? = null
 
     enum class TriggerAction {
         TEST_ALARM,
         START_ALARM_SOUND,
         STOP_VIBRATION,
+        STOP_REPEAT,
         RETRIGGER_SOUND,
         CLOSE_NOTIFICATION,
     }
@@ -232,6 +230,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     fun stopVibrationAndSound() {
         try {
             Log.d(LOG_ID, "stopVibrationAndSound called")
+            stopSoundThread()
             vibrator.cancel()
             ringtoneRWLock.write {
                 if (ringtone != null) {
@@ -414,6 +413,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     }
 
     private fun startVibrationAndSound(alarmType: AlarmType, context: Context, reTrigger: Boolean = false) {
+        val repeat = getRepeat(alarmType)
         if(!reTrigger) {
             val soundDelay = getSoundDelay(alarmType)
             Log.i(LOG_ID, "Start vibration and sound with $soundDelay seconds delay")
@@ -423,7 +423,12 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     triggerDelay(TriggerAction.START_ALARM_SOUND, alarmType, context, soundDelay.toFloat())
                     return
                 }
-                triggerDelay(TriggerAction.STOP_VIBRATION, alarmType, context, soundDelay.toFloat())
+                if(repeat > 0) {
+                    triggerDelay(TriggerAction.STOP_REPEAT, alarmType, context, (repeat*60).toFloat())
+                    return
+                }
+                if(repeat == 0)
+                    triggerDelay(TriggerAction.STOP_VIBRATION, alarmType, context, soundDelay.toFloat())
                 return
             }
         }
@@ -442,8 +447,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     Thread.sleep(startDelay.toLong())
                 if (curNotification > 0) {
                     Log.d(LOG_ID, "Start sound and vibration")
-                    vibrate(alarmType, context, false)
-                    val duration = startSound(alarmType, context, false)
+                    val duration = startSound(alarmType, context, true)
                     checkRetriggerAndAutoClose(context, duration)
                 }
             }
@@ -451,12 +455,11 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
     }
 
-
-    open fun vibrate(alarmType: AlarmType, context: Context, repeat: Boolean = false, vibrateOnly: Boolean = false) : Int {
+    private fun vibrate(alarmType: AlarmType, context: Context, repeat: Boolean = false, forceReturnDuration: Boolean = false) : Int {
         try {
             if (getRingerMode() >= AudioManager.RINGER_MODE_VIBRATE && curNotification > 0) {
                 val vibratePattern = getVibrationPattern(alarmType) ?: return 0
-                val duration = if(repeat) -1 else vibratePattern.sum().toInt()
+                val duration = if(repeat && !forceReturnDuration) -1 else vibratePattern.sum().toInt()
                 Log.i(LOG_ID, "start vibration for $alarmType - repeat: $repeat - duration: $duration ms")
                 vibrator.cancel()
                 vibrator.vibrate(VibrationEffect.createWaveform(vibratePattern, if(repeat) 1 else -1))
@@ -468,9 +471,44 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         return 0
     }
 
+    private fun startSoundThread(duration: Int) {
+        Log.v(LOG_ID, "Start sound thread for $duration ms")
+        stopSoundThread()
+        checkSoundThread = Thread {
+            try {
+                Log.i(LOG_ID, "Start sound thread for $duration ms")
+                Thread.sleep(duration.toLong() + 10)
+                while (isRingtonePlaying())
+                    Thread.sleep(10)
+                Log.d(LOG_ID, "Ringtone finished, stop vibration")
+                vibrator.cancel()
+            } catch (exc: InterruptedException) {
+                Log.d(LOG_ID, "Sound thread interrupted")
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "Exception in sound thread: " + exc.toString())
+            }
+        }
+        checkSoundThread!!.start()
+    }
+
+    private fun stopSoundThread() {
+        Log.v(LOG_ID, "Stop sound thread for $checkSoundThread")
+        if (checkSoundThread != null && checkSoundThread!!.isAlive )
+        {
+            Log.i(LOG_ID, "Stop running sound thread!")
+            checkSoundThread!!.interrupt()
+            while(checkSoundThread!!.isAlive)
+                Thread.sleep(1)
+            Log.i(LOG_ID, "Sound thread stopped!")
+            checkSoundThread = null
+        }
+    }
+
     fun startSound(alarmType: AlarmType, context: Context, restartVibration: Boolean, forTest: Boolean = false): Int {
         try {
             var soundDuration = 0
+            val repeat = getRepeat(alarmType)
+            var repeatVibration = false
             if (getRingerMode() >= AudioManager.RINGER_MODE_NORMAL && (curNotification > 0 || forTest)) {
                 val soundUri = getSound(alarmType, context, forTest)
                 if (soundUri != null && !isRingtonePlaying()) {
@@ -479,9 +517,17 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                             Log.w(LOG_ID,"Ringtone still playing!")
                             return 0
                         }
-                        val player = MediaPlayer.create(context, soundUri)
-                        soundDuration = player.duration
-                        player.release()
+                        if (repeat == 0) {
+                            val player = MediaPlayer.create(context, soundUri)
+                            soundDuration = player.duration
+                            player.release()
+                            repeatVibration = true
+                        } else if (repeat > 0) {
+                            soundDuration = -1
+                            triggerDelay(TriggerAction.STOP_REPEAT, alarmType, context, (repeat*60).toFloat())
+                        } else {  // repeat < 0
+                            soundDuration = -1
+                        }
                         Log.i(LOG_ID, "Play ringtone $soundUri - use alarm: $useAlarmSound - length: {${soundDuration} ms}")
                         ringtone = RingtoneManager.getRingtone(context, soundUri)
                         val aa = AudioAttributes.Builder()
@@ -489,15 +535,24 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                             .build()
                         ringtone!!.setAudioAttributes(aa)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                            ringtone!!.isLooping = (repeat!=0)
+                        }
                         ringtone!!.play()
                     }
                 }
             }
-            var vibrateDuration = 0
             if (restartVibration) {
-                vibrateDuration = vibrate(alarmType, context, false)
+                Log.v(LOG_ID, "Restart vibration with repeatVibration=$repeatVibration")
+                var vibrateDuration = vibrate(alarmType, context, repeatVibration || repeat != 0, repeatVibration)
+                if(repeat > 0 && soundDuration == 0) {
+                    triggerDelay(TriggerAction.STOP_REPEAT, alarmType, context, (repeat*60).toFloat())
+                } else if(repeatVibration) {
+                    startSoundThread(maxOf(soundDuration, vibrateDuration))
+                }
+                return maxOf(soundDuration, vibrateDuration)
             }
-            return maxOf(soundDuration, vibrateDuration)
+            return soundDuration
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Exception while starting sound for alarm $alarmType - restartVibration=$restartVibration - forTest=${forTest}: ${exc.message}")
         }
@@ -631,7 +686,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 lastDndMode = NotificationManager.INTERRUPTION_FILTER_UNKNOWN
             }
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "checkCreateSound exception: " + exc.message.toString() )
+            Log.e(LOG_ID, "checkRecreateSound exception: " + exc.message.toString() )
         }
     }
 
@@ -733,6 +788,13 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         return 0
     }
 
+    private fun getRepeat(alarmType: AlarmType): Int {
+        if (alarmType.setting!=null) {
+            return alarmType.setting.repeatTime
+        }
+        return 0
+    }
+
     abstract fun getStartDelayMs(context: Context): Int
 
     private val alarmStatePreferences = mutableSetOf(
@@ -804,20 +866,15 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     }
 
     private fun checkRetriggerAndAutoClose(context: Context, soundDuration: Int = 0): Boolean {
+        if(soundDuration < 0) {
+            return false
+        }
         if(isTriggerActive()) {
-            val elapsedTimeMin = Utils.round((System.currentTimeMillis() - curAlarmTime).toFloat()/60000, 0, RoundingMode.DOWN).toLong()
-            val nextTriggerMin = (elapsedTimeMin/retriggerTime)*retriggerTime + retriggerTime
-            val nextAlarmTime = curAlarmTime + TimeUnit.MINUTES.toMillis(nextTriggerMin)
-            val timeInMillis = nextAlarmTime - System.currentTimeMillis()
-            Log.d(LOG_ID,
-                "elapsed: $elapsedTimeMin nextTrigger: $nextTriggerMin - retrigger-time: $retriggerTime - in $timeInMillis ms"
-            )
-            Log.i(LOG_ID, "Retrigger sound after $nextTriggerMin minute(s) at ${DateFormat.getTimeInstance(
-                DateFormat.DEFAULT).format(nextAlarmTime)} (alarm from ${DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(curAlarmTime))})")
+            Log.i(LOG_ID, "Retrigger sound after $retriggerTime minute(s) + $soundDuration ms")
             retriggerCount++
-            triggerDelay(TriggerAction.RETRIGGER_SOUND, getAlarmType(), context, (timeInMillis.toFloat()/1000))
+            triggerDelay(TriggerAction.RETRIGGER_SOUND, getAlarmType(), context, (retriggerTime*60).toFloat() + (soundDuration.toFloat()/1000))
             return true
-        } else if(autoCloseNotification && curNotification > 0 && soundDuration >= 0) {
+        } else if(autoCloseNotification && curNotification > 0) {
             val delaySec =
                 if(soundDuration==0) {
                     if(curAlarmTime > 0) {
@@ -865,6 +922,10 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     checkRetriggerAndAutoClose(context, duration)
                 }
                 TriggerAction.STOP_VIBRATION -> {
+                    stopVibrationAndSound()
+                    checkRetriggerAndAutoClose(context, 0)
+                }
+                TriggerAction.STOP_REPEAT -> {
                     stopVibrationAndSound()
                     checkRetriggerAndAutoClose(context, 0)
                 }

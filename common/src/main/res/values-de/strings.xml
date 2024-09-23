@@ -556,5 +556,7 @@
     <string name="pref_import_settings_summary">Hier drücken, um die Einstellungen aus einer Datei zu importieren\nWICHTIG: es werden keine Standardeinstellungen wiederhergestellt.\nWenn dies gewünscht ist, erst die Daten der App löschen und dann den Import durchführen.</string>
     <string name="menu_save_mobile_logs_summary">Logs vom Telefon in eine Datei speichern.</string>
     <string name="menu_save_wear_logs_summary">Logs von einer verbundenen Wear OS Uhr in eine Datei speichern.</string>
+    <string name="alarm_repeat">Wiederholung</string>
+    <string name="alarm_repeat_summary">"Ton und Vibration wiederholen.\n0: Keine Wiederholung.\nPositive Werte: Wiederholung in Minuten. \n-1: Wiederholung bis der Alarm geschlossen wird. "</string>
 
 </resources>

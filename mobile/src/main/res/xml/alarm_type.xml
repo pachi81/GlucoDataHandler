@@ -2,6 +2,7 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
         <PreferenceCategory
+            android:key="cat_alarm"
             app:iconSpaceReserved="false"
             app:initialExpandedChildrenCount="2">
         <androidx.preference.SwitchPreferenceCompat
@@ -43,6 +44,7 @@
             app:iconSpaceReserved="false" />
         </PreferenceCategory>
         <PreferenceCategory
+            android:key="cat_alarm_sound"
             android:title="@string/pref_cat_alarm_vibration_sound"
             app:iconSpaceReserved="false"
             app:initialExpandedChildrenCount="0">
@@ -81,6 +83,16 @@
                     app:showSeekBarValue="true"
                     app:seekBarIncrement="1"
                     app:defaultValue="0"
+                    app:min="-1"
+                    android:max="5"
+                    android:key="_repeat"
+                    android:title="@string/alarm_repeat"
+                    android:summary="@string/alarm_repeat_summary"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SeekBarPreference
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="1"
+                    app:defaultValue="0"
                     app:min="0"
                     android:max="15"
                     android:key="_retrigger"
@@ -89,6 +101,7 @@
                     app:iconSpaceReserved="false" />
         </PreferenceCategory>
         <PreferenceCategory
+            android:key="cat_alarm_advanced"
             android:title="@string/advanced_settings"
             app:iconSpaceReserved="false"
             app:initialExpandedChildrenCount="0">

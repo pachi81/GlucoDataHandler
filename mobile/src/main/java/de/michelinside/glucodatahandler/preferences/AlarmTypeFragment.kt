@@ -52,6 +52,9 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
     private val intervalPref: String get() {
         return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_INTERVAL)
     }
+    private val repeatPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT)
+    }
     private val retriggerPref: String get() {
         return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_RETRIGGER)
     }
@@ -172,6 +175,10 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
             prefSelectRingtone!!.isEnabled = prefUseCustomRingtone!!.isChecked
             updateRingtoneSelectSummary()
 
+            val prefRepeat = findPreference<SeekBarPreference>(repeatPref)
+            val prefRetrigger = findPreference<SeekBarPreference>(retriggerPref)
+            prefRetrigger!!.isEnabled = prefRepeat!!.value >= 0
+
             val inactivePref = findPreference<SwitchPreferenceCompat>(inactiveEnabledPref)
             if (inactivePref != null) {
                 val prefStart = findPreference<TimePickerPreference>(inactiveStartPref)
@@ -181,7 +188,7 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
             }
 
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "onPause exception: " + exc.toString())
+            Log.e(LOG_ID, "update exception: " + exc.toString())
         }
     }
 
@@ -209,13 +216,12 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
     private fun updatePreferenceKeys() {
         for (i in 0 until preferenceScreen.preferenceCount) {
             val pref: Preference = preferenceScreen.getPreference(i)
-            if(!pref.key.isNullOrEmpty()) {
+            if(pref is PreferenceCategory) {
+                updatePreferenceKeys(pref)
+            } else if(pref.key.startsWith("_")) {
                 val newKey = getPrefKey(pref.key)
                 Log.v(LOG_ID, "Replace key ${pref.key} with $newKey")
                 pref.key = newKey
-            } else {
-                val cat = pref as PreferenceCategory
-                updatePreferenceKeys(cat)
             }
         }
     }
@@ -244,6 +250,12 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
 
         val prefRetrigger = findPreference<SeekBarPreference>(retriggerPref)
         prefRetrigger!!.value = preferenceManager.sharedPreferences!!.getInt(prefRetrigger.key, 0)
+
+        val prefRepeat = findPreference<SeekBarPreference>(repeatPref)
+        prefRepeat!!.value = preferenceManager.sharedPreferences!!.getInt(prefRetrigger.key, 0)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            prefRepeat.isVisible = false  // looping is supported for API 28 and above only
+        }
 
         val prefSoundDelay = findPreference<SeekBarPreference>(soundDelayPref)
         prefSoundDelay!!.value = preferenceManager.sharedPreferences!!.getInt(prefSoundDelay.key, 0)
