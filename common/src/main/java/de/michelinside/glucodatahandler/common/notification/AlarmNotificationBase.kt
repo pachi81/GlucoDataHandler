@@ -478,10 +478,11 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             try {
                 Log.i(LOG_ID, "Start sound thread for $duration ms")
                 Thread.sleep(duration.toLong() + 10)
-                while (isRingtonePlaying())
+                var count = 0
+                while (isRingtonePlaying() && count++ < 100)
                     Thread.sleep(10)
-                Log.d(LOG_ID, "Ringtone finished, stop vibration")
-                vibrator.cancel()
+                Log.d(LOG_ID, "Ringtone finished, stop sound and vibration")
+                stopVibrationAndSound()
             } catch (exc: InterruptedException) {
                 Log.d(LOG_ID, "Sound thread interrupted")
             } catch (exc: Exception) {
@@ -493,7 +494,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     private fun stopSoundThread() {
         Log.v(LOG_ID, "Stop sound thread for $checkSoundThread")
-        if (checkSoundThread != null && checkSoundThread!!.isAlive )
+        if (checkSoundThread != null && checkSoundThread!!.isAlive && checkSoundThread!!.id != Thread.currentThread().id )
         {
             Log.i(LOG_ID, "Stop running sound thread!")
             checkSoundThread!!.interrupt()
@@ -544,7 +545,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             }
             if (restartVibration) {
                 Log.v(LOG_ID, "Restart vibration with repeatVibration=$repeatVibration")
-                var vibrateDuration = vibrate(alarmType, context, repeatVibration || repeat != 0, repeatVibration)
+                val vibrateDuration = vibrate(alarmType, context, repeatVibration || repeat != 0, repeatVibration)
                 if(repeat > 0 && soundDuration == 0) {
                     triggerDelay(TriggerAction.STOP_REPEAT, alarmType, context, (repeat*60).toFloat())
                 } else if(repeatVibration) {
