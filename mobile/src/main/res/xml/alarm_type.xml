@@ -69,6 +69,20 @@
                     android:title="@string/alarm_sound"
                     android:summary="@string/alarm_sound_summary"
                     app:iconSpaceReserved="false" />
+                <de.michelinside.glucodatahandler.preferences.VibratePatternPreference
+                    android:key="_vibrate_pattern"
+                    android:title="@string/alarm_vibrate_mode"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SeekBarPreference
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="1"
+                    app:defaultValue="15"
+                    app:min="1"
+                    android:max="15"
+                    android:key="_vibrate_amplitude"
+                    android:title="@string/alarm_vibrate_amplitude"
+                    android:summary="@string/alarm_vibrate_amplitude_summary"
+                    app:iconSpaceReserved="false" />
                 <androidx.preference.SeekBarPreference
                     app:showSeekBarValue="true"
                     app:seekBarIncrement="1"

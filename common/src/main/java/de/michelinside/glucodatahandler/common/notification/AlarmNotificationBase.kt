@@ -17,9 +17,6 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.os.VibratorManager
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.Constants
@@ -59,7 +56,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     private var retriggerOnDestroy = false
     private var ringtone: Ringtone? = null
     private val ringtoneRWLock = ReentrantReadWriteLock()
-    private var vibratorInstance: Vibrator? = null
     private var alarmManager: AlarmManager? = null
     private var alarmPendingIntent: PendingIntent? = null
     private var useAlarmSound: Boolean = true
@@ -78,19 +74,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     }
 
     private var lastSoundLevel = -1
-
-    protected val vibrator: Vibrator get() {
-        if(vibratorInstance == null) {
-            vibratorInstance = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                val manager = GlucoDataService.context!!.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-                manager.defaultVibrator
-            } else {
-                @Suppress("DEPRECATION")
-                GlucoDataService.context!!.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            }
-        }
-        return vibratorInstance!!
-    }
 
     companion object {
         private var classInstance: AlarmNotificationBase? = null
@@ -231,7 +214,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         try {
             Log.d(LOG_ID, "stopVibrationAndSound called")
             stopSoundThread()
-            vibrator.cancel()
+            Vibrator.cancel()
             ringtoneRWLock.write {
                 if (ringtone != null) {
                     ringtone!!.stop()
@@ -461,8 +444,9 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 val vibratePattern = getVibrationPattern(alarmType) ?: return 0
                 val duration = if(repeat && !forceReturnDuration) -1 else vibratePattern.sum().toInt()
                 Log.i(LOG_ID, "start vibration for $alarmType - repeat: $repeat - duration: $duration ms")
-                vibrator.cancel()
-                vibrator.vibrate(VibrationEffect.createWaveform(vibratePattern, if(repeat) 1 else -1))
+                Vibrator.vibrate(vibratePattern, if(repeat) 1 else -1,
+                    alarmType.setting?.vibrateAmplitude ?: -1
+                )
                 return duration
             }
         } catch (ex: Exception) {
@@ -659,7 +643,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         if(channel.importance >= NotificationManager.IMPORTANCE_DEFAULT) {
             if(getSound(alarmType, context) != null)
                 return SoundMode.NORMAL
-            return SoundMode.VIBRATE
+            if (alarmType.setting?.vibratePattern != null)
+                return SoundMode.VIBRATE
         } else if(channel.importance == NotificationManager.IMPORTANCE_NONE)
             return SoundMode.OFF
         return SoundMode.SILENT
@@ -765,14 +750,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     }
 
     private fun getVibrationPattern(alarmType: AlarmType): LongArray? {
-        return when(alarmType) {
-            AlarmType.VERY_LOW -> longArrayOf(0, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000)
-            AlarmType.LOW -> longArrayOf(0, 700, 500, 700, 500, 700, 500, 700)
-            AlarmType.HIGH -> longArrayOf(0, 500, 500, 500, 500, 500, 500, 500)
-            AlarmType.VERY_HIGH -> longArrayOf(0, 800, 500, 800, 800, 600, 800, 800, 500, 800, 800, 600, 800)
-            AlarmType.OBSOLETE -> longArrayOf(0, 600, 500, 500, 500, 600, 500, 500)
-            else -> null
-        }
+        return alarmType.setting?.vibratePattern
     }
 
     private fun getTriggerTime(alarmType: AlarmType): Int {

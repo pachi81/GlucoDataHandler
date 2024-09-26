@@ -9,7 +9,9 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.RelativeLayout
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.activity.result.ActivityResult
@@ -22,6 +24,8 @@ import de.michelinside.glucodatahandler.AlarmNotificationWear
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notification.AlarmType
+import de.michelinside.glucodatahandler.common.notification.VibratePattern
+import de.michelinside.glucodatahandler.common.notification.Vibrator
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -35,9 +39,13 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var switchUseCustomSound: SwitchCompat
     private lateinit var btnSelectSound: Button
     private lateinit var txtCustomSound: TextView
-    private lateinit var btnTestAlarm: Button
     private lateinit var seekBarSoundLevel: AppCompatSeekBar
     private lateinit var txtSoundLevel: TextView
+    private lateinit var txtVibrationPattern: TextView
+    private lateinit var btnSelectVibration: Button
+    private lateinit var seekBarVibrationAmplitude: AppCompatSeekBar
+    private lateinit var txtVibrationAmplitude: TextView
+    private lateinit var btnTestAlarm: Button
     private var alarmType = AlarmType.NONE
     private var alarmTitle = ""
 
@@ -50,6 +58,9 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
     }
     private val soundLevelPref: String get() {
         return alarmType.setting!!.getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_LEVEL)
+    }
+    private val vibrateAmplitudePref: String get() {
+        return alarmType.setting!!.getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_VIBRATE_AMPLITUDE)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,6 +92,10 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
             btnTestAlarm = findViewById(R.id.btnTestAlarm)
             seekBarSoundLevel = findViewById(R.id.seekBarSoundLevel)
             txtSoundLevel = findViewById(R.id.txtSoundLevel)
+            txtVibrationPattern = findViewById(R.id.txtVibrationPattern)
+            btnSelectVibration = findViewById(R.id.btnSelectVibration)
+            seekBarVibrationAmplitude = findViewById(R.id.seekBarVibrationAmplitude)
+            txtVibrationAmplitude = findViewById(R.id.txtVibrationAmplitude)
 
             txtAlarmTitle.text = alarmTitle
 
@@ -88,7 +103,7 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
             seekBarSoundLevel.max = AlarmNotificationWear.getMaxSoundLevel()
             seekBarSoundLevel.progress = sharedPref.getInt(soundLevelPref, -1)
             txtSoundLevel.text = seekBarSoundLevel.progress.toString()
-            seekBarSoundLevel.setOnSeekBarChangeListener(SeekBarChangeListener(soundLevelPref, txtSoundLevel))
+            seekBarSoundLevel.setOnSeekBarChangeListener(SeekBarChangeListener(soundLevelPref, txtSoundLevel, true))
 
             switchUseCustomSound.isChecked = sharedPref.getBoolean(useCustomSoundPref, false)
             switchUseCustomSound.setOnCheckedChangeListener { _, isChecked ->
@@ -116,6 +131,26 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
 
             setRingtoneSelect(Uri.parse(sharedPref.getString(customSoundPref, "")))
 
+            // vibration
+
+
+            btnSelectVibration.setOnClickListener {
+                Log.v(LOG_ID, "${btnSelectVibration.text} button clicked!")
+                val intent = Intent(this, VibrationPatternActivity::class.java)
+                intent.putExtra("type", alarmType.ordinal)
+                startActivity(intent)
+            }
+
+            val vibatrionAmbituteLayout = findViewById<RelativeLayout>(R.id.vibrationAmplitudeHead)
+            vibatrionAmbituteLayout.visibility = if(Vibrator.vibrator.hasAmplitudeControl()) View.VISIBLE else View.GONE
+            seekBarVibrationAmplitude.visibility = vibatrionAmbituteLayout.visibility
+
+            if (seekBarVibrationAmplitude.visibility == View.VISIBLE) {
+                seekBarVibrationAmplitude.progress = sharedPref.getInt(vibrateAmplitudePref, 15)
+                txtVibrationAmplitude.text = seekBarVibrationAmplitude.progress.toString()
+                seekBarVibrationAmplitude.setOnSeekBarChangeListener(SeekBarChangeListener(vibrateAmplitudePref, txtVibrationAmplitude, false))
+            }
+
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
@@ -124,6 +159,7 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
     override fun onPause() {
         try {
             Log.v(LOG_ID, "onPause called")
+            Vibrator.cancel()
             super.onPause()
             InternalNotifier.remNotifier(this, this)
         } catch( exc: Exception ) {
@@ -194,6 +230,8 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
 
     private fun update() {
         btnTestAlarm.isEnabled = true
+        seekBarVibrationAmplitude.isEnabled = alarmType.setting!!.vibratePattern != null
+        txtVibrationPattern.text = resources.getString(VibratePattern.getByKey(alarmType.setting!!.vibratePatternKey).resId)
     }
 
     private fun updateSoundText() {
@@ -231,7 +269,7 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
 
 
 
-    inner class SeekBarChangeListener(val preference: String, val txtLevel: TextView) : SeekBar.OnSeekBarChangeListener {
+    inner class SeekBarChangeListener(val preference: String, val txtLevel: TextView, val isSoundLevel: Boolean) : SeekBar.OnSeekBarChangeListener {
         private val LOG_ID = "GDH.Main.AlarmTypeSeekBar"
         private var curProgress = -1
         private var lastSoundLevel = -1
@@ -241,7 +279,10 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
                 if(fromUser) {
                     curProgress = progress
                     txtLevel.text = curProgress.toString()
-                    setSoundLevel(curProgress)
+                    if(isSoundLevel)
+                        setSoundLevel(curProgress)
+                    else if (alarmType.setting!!.vibratePattern != null)
+                        Vibrator.vibrate(alarmType.setting!!.vibratePattern!!, -1, curProgress*17)
                 }
             } catch( exc: Exception ) {
                 Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
@@ -251,10 +292,12 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
         override fun onStartTrackingTouch(seekBar: SeekBar?) {
             try {
                 Log.v(LOG_ID, "onStartTrackingTouch called")
-                lastSoundLevel = AlarmNotificationWear.getCurrentSoundLevel()
-                if(seekBar!=null)
-                    setSoundLevel(seekBar.progress)
-                AlarmNotificationWear.startSound(alarmType, baseContext, false, forTest = true)
+                if(isSoundLevel) {
+                    lastSoundLevel = AlarmNotificationWear.getCurrentSoundLevel()
+                    if(seekBar!=null)
+                        setSoundLevel(seekBar.progress)
+                    AlarmNotificationWear.startSound(alarmType, baseContext, false, forTest = true)
+                }
             } catch( exc: Exception ) {
                 Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
             }
@@ -263,8 +306,10 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
         override fun onStopTrackingTouch(seekBar: SeekBar?) {
             try {
                 Log.v(LOG_ID, "onStopTrackingTouch called with current progress: $curProgress")
-                AlarmNotificationWear.stopVibrationAndSound()
-                setSoundLevel(lastSoundLevel)
+                if(isSoundLevel) {
+                    AlarmNotificationWear.stopVibrationAndSound()
+                    setSoundLevel(lastSoundLevel)
+                }
                 with (sharedPref.edit()) {
                     putInt(preference, curProgress)
                     apply()

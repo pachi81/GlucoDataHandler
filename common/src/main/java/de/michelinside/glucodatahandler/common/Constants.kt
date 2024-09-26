@@ -199,6 +199,8 @@ object Constants {
     const val SHARED_PREF_ALARM_SUFFIX_RETRIGGER = "_retrigger"
     const val SHARED_PREF_ALARM_SUFFIX_USE_CUSTOM_SOUND = "_use_custom_sound"
     const val SHARED_PREF_ALARM_SUFFIX_CUSTOM_SOUND = "_custom_sound"
+    const val SHARED_PREF_ALARM_SUFFIX_VIBRATE_PATTERN = "_vibrate_pattern"
+    const val SHARED_PREF_ALARM_SUFFIX_VIBRATE_AMPLITUDE = "_vibrate_amplitude"
     const val SHARED_PREF_ALARM_SUFFIX_SOUND_DELAY = "_sound_delay"
     const val SHARED_PREF_ALARM_SUFFIX_SOUND_LEVEL = "_sound_level"
     const val SHARED_PREF_ALARM_SUFFIX_INACTIVE_ENABLED = "_inactive_enabled"
@@ -213,6 +215,8 @@ object Constants {
     const val SHARED_PREF_ALARM_HIGH = "alarm_high"
     const val SHARED_PREF_ALARM_VERY_HIGH = "alarm_very_high"
     const val SHARED_PREF_ALARM_OBSOLETE = "alarm_obsolete"
+    const val SHARED_PREF_ALARM_RISING_FAST = "alarm_rising_fast"
+    const val SHARED_PREF_ALARM_FALLING_FAST = "alarm_falling_fast"
 
     // Android Auto
     const val AA_MEDIA_ICON_STYLE_TREND = "trend"

@@ -29,6 +29,7 @@ import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmType
+import de.michelinside.glucodatahandler.common.notification.Vibrator
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -66,6 +67,12 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
     }
     private val customSoundPref: String get() {
         return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_CUSTOM_SOUND)
+    }
+    private val vibratePatternPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_VIBRATE_PATTERN)
+    }
+    private val vibrateAmplitudePref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_VIBRATE_AMPLITUDE)
     }
     private val testAlarmPref: String get() {
         return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_TEST)
@@ -120,6 +127,7 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
         Log.d(LOG_ID, "onPause called")
         try {
             stopTestSound()
+            Vibrator.cancel()
             preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
             InternalNotifier.remNotifier(requireContext(), this)
             super.onPause()
@@ -137,6 +145,9 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
                 val bundle = Bundle(1)
                 bundle.putString("key", preference.key)
                 dialogFragment.arguments = bundle
+            } else if (preference is VibratePatternPreference) {
+                Log.d(LOG_ID, "Show vibration dialog")
+                dialogFragment = VibratePatternPreferenceDialogFragmentCompat.initial(preference.key, alarmType.setting!!.vibrateAmplitude)
             }
             if (dialogFragment != null) {
                 dialogFragment.setTargetFragment(this, 0)
@@ -157,6 +168,9 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
             update()
             if(key == soundLevelPref) {
                 startTestSound()
+            } else if( key == vibrateAmplitudePref) {
+                alarmType.setting!!.updateSettings(sharedPreferences)
+                Vibrator.vibrate(alarmType.setting!!.vibratePattern!!, -1, alarmType.setting!!.vibrateAmplitude)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
@@ -186,6 +200,9 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
                 prefStart!!.isEnabled = inactivePref.isChecked
                 prefEnd!!.isEnabled = inactivePref.isChecked
             }
+
+            val prefVibrateAmplitude = findPreference<SeekBarPreference>(vibrateAmplitudePref)
+            prefVibrateAmplitude!!.isEnabled = alarmType.setting!!.vibratePattern != null
 
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.toString())
@@ -262,6 +279,14 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
 
         val prefUseCustomRingtone = findPreference<SwitchPreferenceCompat>(useCustomSoundPref)
         prefUseCustomRingtone!!.isChecked = preferenceManager.sharedPreferences!!.getBoolean(prefUseCustomRingtone.key, false)
+
+        val prefVibratePattern = findPreference<VibratePatternPreference>(vibratePatternPref)
+        prefVibratePattern!!.setPattern(alarmType.setting!!.vibratePatternKey, false)
+
+        val prefVibrateAmplitude = findPreference<SeekBarPreference>(vibrateAmplitudePref)
+        prefVibrateAmplitude!!.value = alarmType.setting!!.vibrateAmplitude
+        prefVibrateAmplitude.isVisible = Vibrator.vibrator.hasAmplitudeControl()
+
 
         val levelPref = findPreference<SeekBarPreference>(soundLevelPref)
         if (levelPref != null) {
@@ -460,6 +485,5 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
             curAlarmLevel = -1
         }
     }
-
 
 }

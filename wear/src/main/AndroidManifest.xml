@@ -106,6 +106,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".settings.AlarmsActivity" />
         </activity>
+        <activity
+            android:name=".settings.VibrationPatternActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".settings.AlarmTypeActivity"
+            android:theme="@style/Theme.GlucoDataHandler"
+            android:taskAffinity="">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".settings.AlarmTypeActivity" />
+        </activity>
         <receiver android:name=".common.receiver.GlucoseDataReceiver" android:enabled="true" android:exported="true"
             tools:ignore="ExportedReceiver">
             <intent-filter>

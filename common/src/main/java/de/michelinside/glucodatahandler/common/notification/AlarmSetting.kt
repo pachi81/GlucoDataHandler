@@ -15,6 +15,8 @@ class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
     private var inactiveEnabled = false
     private var inactiveStartTime = ""
     private var inactiveEndTime = ""
+    var vibratePatternKey = alarmPrefix
+    private var vibrateAmplitudePref = 15
     var soundDelay = 0
     var retriggerTime = 0
     var repeatTime = 0
@@ -46,6 +48,14 @@ class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
         return !isTempInactive
     }
 
+    val vibratePattern: LongArray? get() {
+        return VibratePattern.getByKey(vibratePatternKey).pattern
+    }
+
+    val vibrateAmplitude: Int get() {
+        return vibrateAmplitudePref * 17
+    }
+
     fun getSettingName(key: String): String {
         return alarmPrefix+key
     }
@@ -58,13 +68,15 @@ class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_ENABLED),
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_START_TIME),
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_END_TIME),
-        getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT),
+        getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT)
     )
 
     private val alarmPreferencesLocalOnly = mutableSetOf(
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_LEVEL),
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_USE_CUSTOM_SOUND),
-        getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_CUSTOM_SOUND)
+        getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_CUSTOM_SOUND),
+        getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_VIBRATE_PATTERN),
+        getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_VIBRATE_AMPLITUDE),
     )
 
     fun isAlarmSettingToShare(key: String): Boolean {
@@ -121,6 +133,8 @@ class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
             useCustomSound = sharedPref.getBoolean(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_USE_CUSTOM_SOUND), useCustomSound)
             customSoundPath = sharedPref.getString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_CUSTOM_SOUND), null) ?: ""
             repeatTime = sharedPref.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT), repeatTime)
+            vibratePatternKey = sharedPref.getString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_VIBRATE_PATTERN), alarmPrefix) ?: alarmPrefix
+            vibrateAmplitudePref = sharedPref.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_VIBRATE_AMPLITUDE), vibrateAmplitudePref)
 
             Log.d(LOG_ID, "updateSettings: " +
                     "enabled=$enabled, " +
@@ -133,7 +147,10 @@ class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
                     "retriggerTime=$retriggerTime, " +
                     "soundLevel=$soundLevel, " +
                     "useCustomSound=$useCustomSound, " +
-                    "customSoundPath=$customSoundPath")
+                    "customSoundPath=$customSoundPath" +
+                    "vibratePattern=$vibratePatternKey" +
+                    "vibrateAmplitudePref=$vibrateAmplitudePref"
+            )
 
         } catch (exc: Exception) {
             Log.e(LOG_ID, "saveSettings exception: " + exc.toString() + ": " + exc.stackTraceToString() )
