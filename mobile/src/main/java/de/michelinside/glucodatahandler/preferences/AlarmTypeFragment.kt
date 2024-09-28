@@ -284,7 +284,7 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
         prefVibratePattern!!.setPattern(alarmType.setting!!.vibratePatternKey, false)
 
         val prefVibrateAmplitude = findPreference<SeekBarPreference>(vibrateAmplitudePref)
-        prefVibrateAmplitude!!.value = alarmType.setting!!.vibrateAmplitude
+        prefVibrateAmplitude!!.value = preferenceManager.sharedPreferences!!.getInt(prefVibrateAmplitude.key, 15)
         prefVibrateAmplitude.isVisible = Vibrator.vibrator.hasAmplitudeControl()
 
 
