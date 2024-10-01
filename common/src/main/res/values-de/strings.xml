@@ -169,7 +169,7 @@
     <string name="pref_color_ok">Werte im Zielbereich</string>
     <string name="pref_color_ok_summary">Farbe für Glukosewerte im Zielbereich.</string>
     <string name="pref_notification">Benachrichtigung</string>
-    <string name="pref_notification_summary">Zeigt eine permanente Benachrichtigung mit dem aktuellen Trendpfeil, dem Glucose- und Deltawert in der Statusbar.\nDiese Benachrichtigung hindert Android daran, die App im Hintergrund zu Beenden.</string>
+    <string name="pref_notification_summary">Zeigt eine permanente Benachrichtigung mit dem aktuellen Trendpfeil, dem Glukose- und Deltawert in der Statusbar.\nDiese Benachrichtigung hindert Android daran, die App im Hintergrund zu Beenden.</string>
     <string name="pref_notification_icon">Statusbar Icon</string>
     <string name="pref_notification_icon_summary">Art des Statusbar Icons für die Benachrichtigung.</string>
     <string name="pref_notification_big_icon">Großes Statusbar Icon</string>
@@ -181,7 +181,7 @@
     <string name="pref_second_notification_icon">2. Statusbar Icon</string>
     <string name="pref_second_notification_icon_summary">Art des Statusbar Icons für die zweite Benachrichtigung.</string>
     <string name="pref_floating_widget">Schwebendes Widget</string>
-    <string name="pref_floating_widget_summary">Zeigt Trendpfeil, den Glucose-, Deltawert, Zeipunkt und IOB/COB als schwebendes Widget.\nUm es zu deaktivieren, muss das Widget für mindestens 5 Sekunden gedrückt werden, ohne es zu bewegen.</string>
+    <string name="pref_floating_widget_summary">Zeigt Trendpfeil, den Glukose-, Deltawert, Zeipunkt und IOB/COB als schwebendes Widget.\nUm es zu deaktivieren, muss das Widget für mindestens 5 Sekunden gedrückt werden, ohne es zu bewegen.</string>
     <string name="pref_floating_widget_size">Größe</string>
     <string name="pref_floating_widget_size_summary">Größe des schwebenden Widgets ändern</string>
     <string name="pref_floating_widget_style">Stil</string>
@@ -191,7 +191,7 @@
     <string name="pref_widget_transparency">Widget Transparenz</string>
     <string name="pref_widget_transparency_summary">Hintergrundtransparenz der Widgets.</string>
     <string name="pref_relative_time">Relative Zeit</string>
-    <string name="pref_relative_time_summary">Relative Zeit anstatt des festen Glucose Zeitpunktes verwenden.\nJe nach den Batterieoptimierungen des Gerätes kann es sein, dass dies nicht korrekt funktioniert.</string>
+    <string name="pref_relative_time_summary">Relative Zeit anstatt des festen Glukose Zeitpunktes verwenden.\nJe nach den Batterieoptimierungen des Gerätes kann es sein, dass dies nicht korrekt funktioniert.</string>
 
     <string name="pref_status_bar_icon_app">App Icon</string>
     <string name="pref_status_bar_icon_glucose">Zuckerwert</string>
@@ -269,7 +269,7 @@
     <string name="pref_no_gda_info">GlucoDataAuto installieren</string>
     <string name="pref_no_gda_info_summary">Um GlucoDataHandler für Android Auto zu verwenden, muss GlucoDataAuto von GitHub installiert werden.\nHier klicken, um mehr Informationen zu erhalten und um zum Download zu gelangen.</string>
     <string name="pref_send_to_glucodataauto">An GlucoDataAuto senden</string>
-    <string name="pref_send_to_glucodataauto_summary">Sendet den aktuellen Glucose Wert und die Einstellungen an GlucoDataAuto.</string>
+    <string name="pref_send_to_glucodataauto_summary">Sendet den aktuellen Glukose Wert und die Einstellungen an GlucoDataAuto.</string>
 
     <!-- Notifications -->
 
@@ -432,7 +432,7 @@
     <string name="gda_media_notification_toggle_action">Zum umschalten, Play drücken</string>
     <string name="pref_gda_alarm_info_summary">Alarmeinstellungen beziehen sich nur auf die Benachrichtigungen in Android Auto und erzeugen keinen Ton oder ähnliches.</string>
     <string name="pref_cat_general_summary">Allgemeine Einstellung, wie die Einheit, die Zeitanzeige und die Deltaberechnung</string>
-    <string name="pref_target_range_summary">Einstellungen für die Glucose Grenzen und die entsprechenden Farben</string>
+    <string name="pref_target_range_summary">Einstellungen für die Glukose Grenzen und die entsprechenden Farben</string>
     <string name="pref_cat_widgets_summary">Einstellungen für die Widgetes und das schwebende Widget.</string>
     <string name="pref_cat_notification_summary">Benachrichtigungseinstellung, wie das Icon und der Inhalt.</string>
     <string name="pref_cat_locksreen_wallpaper_summary">Einstellungen, um den Hintergrund auf dem Sperrbildschirm zu ändern.</string>
@@ -441,7 +441,7 @@
     <string name="pref_cat_wear_os">Wear OS Uhren</string>
     <string name="pref_cat_watch">Uhren</string>
     <string name="pref_cat_watch_summary">Einstellungen für die Anzeige auf den verbundenen Uhren.</string>
-    <string name="pref_cat_transfer_summary">Einstellungen um die Glucosewerte an andere Apps weiterzuleiten.</string>
+    <string name="pref_cat_transfer_summary">Einstellungen um die Glukosewerte an andere Apps weiterzuleiten.</string>
     <string name="pref_cat_transfer">Glucosewerte weiterleiten</string>
     <string name="pref_cat_visualisation">Visualisierung</string>
     <string name="pref_cat_banglejs">BangleJS Uhren</string>
@@ -561,17 +561,24 @@
     <string name="no_vibration">Keine Vibration</string>
     <string name="alarm_vibrate_mode">Vibration Modus</string>
 
-    <string name="alarm_rising_fast">Rising fast</string>
-    <string name="rising_fast_alarm_notification_name">Rising fast alarm</string>
-    <string name="alarm_rising_fast_summary">Alarm if the delta between two glucose values is greater than or equal to %1$s.</string>
-    <string name="rising_fast_alarm_notification_descr">This notification will appear, if the delta between two glucose values is too high.</string>
-    <string name="rising_fast_alarm_text">Rising fast!</string>
+    <string name="alarm_rising_fast">Steigt schnell</string>
+    <string name="rising_fast_alarm_notification_name">Schnell steigender Alarm</string>
+    <string name="alarm_rising_fast_summary">"Alarm, wenn der Zuckerwert größer gleich %1$s und das Delta %3$d mal um mindestens +%2$s steigt. "</string>
+    <string name="rising_fast_alarm_text">Schnell steigend!</string>
 
-    <string name="alarm_falling_fast">Falling fast</string>
-    <string name="falling_fast_alarm_notification_name">Falling fast alarm</string>
-    <string name="alarm_falling_fast_summary">Alarm if the delta between two glucose values is less than or equal to %1$s.</string>
-    <string name="falling_fast_alarm_notification_descr">This notification will appear, if the delta between two glucose values is too high.</string>
-    <string name="falling_fast_alarm_text">Falling fast!</string>
+    <string name="alarm_falling_fast">Fällt schnell</string>
+    <string name="falling_fast_alarm_notification_name">Schnell fallender Alarm</string>
+    <string name="alarm_falling_fast_summary">Alarm, wenn der Zuckerwert kleiner gleich %1$s und das Delta %3$d mal um mindestens -%2$s fällt.</string>
+    <string name="falling_fast_alarm_text">Fällt schnell!</string>
     <string name="alarm_vibrate_amplitude">Vibrationsstärke</string>
     <string name="alarm_vibrate_amplitude_summary">Intensität der Vibration</string>
+    <string name="pref_cat_alarm_settings">Alarm Einstellungen</string>
+    <string name="pref_alarm_delta_summary">Delta Wert ab wann der Alarm getriggert wird.</string>
+    <string name="alarm_occurrence_count">Anzahl</string>
+    <string name="alarm_occurrence_count_summary">Anzahl, wie oft der Deltawert hintereinander erreicht werden muss.</string>
+    <string name="pref_alarm_rising_falling_border">Grenze</string>
+    <string name="pref_alarm_rising_falling_border_summary">Grenzwert für den steigenden oder fallenden Alarm.\nDer Glukosewert muss größer, bzw. kleiner sein, damit der Alarm getriggert wird.</string>
+    <string name="delta_per_minute">pro Minute</string>
+    <string name="delta_per_5_minute">pro 5 Minuten</string>
+    <string name="other_alarm_cat_categories">Weitere Alarme</string>
 </resources>

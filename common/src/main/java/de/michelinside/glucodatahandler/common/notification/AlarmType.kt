@@ -11,8 +11,8 @@ enum class AlarmType(val resId: Int, val setting: AlarmSetting? = null) {
     HIGH(R.string.alarm_high, AlarmSetting(Constants.SHARED_PREF_ALARM_HIGH, 30)),
     VERY_HIGH(R.string.alarm_very_high, AlarmSetting(Constants.SHARED_PREF_ALARM_VERY_HIGH, 25)),
     OBSOLETE(R.string.alarm_obsolete, AlarmSetting(Constants.SHARED_PREF_ALARM_OBSOLETE, 20)),
-    RISING_FAST(R.string.alarm_rising_fast, AlarmSetting(Constants.SHARED_PREF_ALARM_RISING_FAST, 20)),
-    FALLING_FAST(R.string.alarm_falling_fast, AlarmSetting(Constants.SHARED_PREF_ALARM_FALLING_FAST, 20));
+    FALLING_FAST(R.string.alarm_falling_fast, DeltaAlarmSetting(Constants.SHARED_PREF_ALARM_FALLING_FAST, 20)),
+    RISING_FAST(R.string.alarm_rising_fast, DeltaAlarmSetting(Constants.SHARED_PREF_ALARM_RISING_FAST, 20));
 
     companion object {
         fun fromIndex(idx: Int): AlarmType {

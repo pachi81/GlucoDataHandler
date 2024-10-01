@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodatahandler.Dialogs
 import de.michelinside.glucodatahandler.R
@@ -23,10 +22,11 @@ import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notification.SoundMode
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 
-class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
+class AlarmFragment : SettingsFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener {
     companion object {
         private val LOG_ID = "GDH.AlarmFragment"
         var settingsChanged = false
@@ -115,6 +115,8 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
             updateAlarmCat(Constants.SHARED_PREF_ALARM_HIGH)
             updateAlarmCat(Constants.SHARED_PREF_ALARM_VERY_HIGH)
             updateAlarmCat(Constants.SHARED_PREF_ALARM_OBSOLETE)
+            updateAlarmCat(Constants.SHARED_PREF_ALARM_RISING_FAST)
+            updateAlarmCat(Constants.SHARED_PREF_ALARM_FALLING_FAST)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.toString())
         }
@@ -157,6 +159,8 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
             AlarmType.HIGH,
             AlarmType.VERY_HIGH -> resources.getString(CR.string.alarm_type_summary, getBorderText(alarmType))
             AlarmType.OBSOLETE -> resources.getString(CR.string.alarm_obsolete_summary, getBorderText(alarmType))
+            AlarmType.RISING_FAST,
+            AlarmType.FALLING_FAST -> getAlarmDeltaSummary(alarmType)
             else -> ""
         }
     }
@@ -189,6 +193,21 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
                 value += 1F
         }
         return "$value ${ReceiveData.getUnit()}"
+    }
+
+    private fun getAlarmDeltaSummary(alarmType: AlarmType): String {
+        val resId = if(alarmType == AlarmType.RISING_FAST) CR.string.alarm_rising_fast_summary else CR.string.alarm_falling_fast_summary
+        var unit = " " + ReceiveData.getUnit()
+        val delta = if(ReceiveData.isMmol) GlucoDataUtils.mgToMmol(alarmType.setting!!.delta) else alarmType.setting!!.delta
+        val border = if(ReceiveData.isMmol) GlucoDataUtils.mgToMmol(alarmType.setting!!.deltaBorder) else alarmType.setting!!.deltaBorder
+        val borderString = (if(ReceiveData.isMmol) border.toString() else border.toInt().toString()) + unit
+        if (ReceiveData.use5minDelta) {
+            unit += " " + resources.getString(CR.string.delta_per_5_minute)
+        } else {
+            unit += " " + resources.getString(CR.string.delta_per_minute)
+        }
+        val deltaString = delta.toString() + unit
+        return resources.getString(resId, borderString, deltaString, alarmType.setting!!.deltaCount)
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {

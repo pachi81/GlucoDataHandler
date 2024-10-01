@@ -25,9 +25,13 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
 
     private const val LAST_ALARM_INDEX = "last_alarm_index"
     private const val LAST_ALARM_TIME = "last_alarm_time"
+    private const val LAST_FALLING_ALARM_TIME = "last_falling_alarm_time"
+    private const val LAST_RISING_ALARM_TIME = "last_rising_alarm_time"
     const val SNOOZE_TIME = "snooze_time"
 
     private var lastAlarmTime = 0L
+    private var lastFallingAlarmTime = 0L
+    private var lastRisingAlarmTime = 0L
     private var lastAlarmType = AlarmType.OK
     private var initialized = false
     private var snoozeTime = 0L
@@ -65,18 +69,18 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
             return false
         Log.d(
             LOG_ID, "Check force alarm:" +
-                " - newAlarmType=" + newAlarmType.toString() +
-                " - lastAlarmType=" + lastAlarmType.toString() +
-                " - lastAlarmTime=" +  DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime)) +
-                " - snoozeTime=" + (if(isSnoozeActive)snoozeTimestamp else "off") +
-                " - time=" + DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(ReceiveData.time)) +
-                " - delta=" + ReceiveData.delta.toString() +
-                " - rate=" + ReceiveData.rate.toString() +
-                " - diff=" + (ReceiveData.time - lastAlarmTime).toString() +
-                " - veryLow=>" + (if(AlarmType.VERY_LOW.setting!!.isActive) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+AlarmType.VERY_LOW.setting.intervalMS)) else "off") +
-                " - low=>" + (if(AlarmType.LOW.setting!!.isActive) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+AlarmType.LOW.setting.intervalMS)) else "off") +
-                " - high=>" + (if(AlarmType.HIGH.setting!!.isActive) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+AlarmType.HIGH.setting.intervalMS)) else "off") +
-                " - veryHigh=>" + (if(AlarmType.VERY_HIGH.setting!!.isActive) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+AlarmType.VERY_HIGH.setting.intervalMS)) else "off")
+                    " - newAlarmType=" + newAlarmType.toString() +
+                    " - lastAlarmType=" + lastAlarmType.toString() +
+                    " - lastAlarmTime=" +  DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime)) +
+                    " - snoozeTime=" + (if(isSnoozeActive)snoozeTimestamp else "off") +
+                    " - time=" + DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(ReceiveData.time)) +
+                    " - delta=" + ReceiveData.delta.toString() +
+                    " - rate=" + ReceiveData.rate.toString() +
+                    " - diff=" + (ReceiveData.time - lastAlarmTime).toString() +
+                    " - veryLow=>" + (if(AlarmType.VERY_LOW.setting!!.isActive) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+AlarmType.VERY_LOW.setting.intervalMS)) else "off") +
+                    " - low=>" + (if(AlarmType.LOW.setting!!.isActive) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+AlarmType.LOW.setting.intervalMS)) else "off") +
+                    " - high=>" + (if(AlarmType.HIGH.setting!!.isActive) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+AlarmType.HIGH.setting.intervalMS)) else "off") +
+                    " - veryHigh=>" + (if(AlarmType.VERY_HIGH.setting!!.isActive) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+AlarmType.VERY_HIGH.setting.intervalMS)) else "off")
         )
         if (isSnoozeActive)
             return false
@@ -88,17 +92,21 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
             AlarmType.VERY_HIGH -> newAlarmType.setting.isActive && checkHighAlarm(newAlarmType, newAlarmType.setting.intervalMS)
             else -> false
         }
-        if (triggerAlarm) {
-            setLastAlarm(newAlarmType)
-            Log.i(LOG_ID, "Trigger alarm for type $newAlarmType")
-        }
         return triggerAlarm
     }
 
     fun setLastAlarm(alarmType: AlarmType) {
-        Log.v(LOG_ID, "Set last alarm type to $alarmType")
-        lastAlarmTime = ReceiveData.time
-        lastAlarmType = alarmType
+        if (alarmType == AlarmType.NONE || alarmType == AlarmType.OK)
+            return
+        Log.i(LOG_ID, "Set last alarm type to $alarmType - time=${DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(ReceiveData.time))}")
+        if (alarmType < AlarmType.OBSOLETE) {
+            lastAlarmTime = ReceiveData.time
+            lastAlarmType = alarmType
+        } else if (alarmType == AlarmType.FALLING_FAST) {
+            lastFallingAlarmTime = ReceiveData.time
+        } else if (alarmType == AlarmType.RISING_FAST) {
+            lastRisingAlarmTime = ReceiveData.time
+        }
         saveExtras()
     }
 
@@ -147,10 +155,35 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         return false
     }
 
+    fun checkDeltaAlarmTrigger(deltaFallingCount: Int, deltaRisingCount: Int): AlarmType {
+        var result = AlarmType.NONE
+        Log.d(LOG_ID, "Check delta alarm trigger: deltaFallingCount=$deltaFallingCount - deltaRisingCount=$deltaRisingCount" +
+                " - time=" + DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(ReceiveData.time)) +
+                " - lastFallingAlarmTime=" +  DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastFallingAlarmTime)) +
+                " - lastRisingAlarmTime=" +  DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastRisingAlarmTime)) +
+                " - falling=>" + (if(AlarmType.FALLING_FAST.setting!!.isActive) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastFallingAlarmTime+AlarmType.FALLING_FAST.setting.intervalMS)) else "off") +
+                " - rising=>" + (if(AlarmType.RISING_FAST.setting!!.isActive) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastRisingAlarmTime+AlarmType.RISING_FAST.setting.intervalMS)) else "off")
+        )
+        if(AlarmType.FALLING_FAST.setting.isActive && deltaFallingCount >= AlarmType.FALLING_FAST.setting.deltaCount && ReceiveData.rawValue <= AlarmType.FALLING_FAST.setting.deltaBorder) {
+            if (ReceiveData.time - lastFallingAlarmTime >= AlarmType.FALLING_FAST.setting.intervalMS) {
+                Log.i(LOG_ID, "Trigger falling fast alarm")
+                result = AlarmType.FALLING_FAST
+            }
+        } else if (AlarmType.RISING_FAST.setting.isActive && deltaRisingCount >= AlarmType.RISING_FAST.setting.deltaCount && ReceiveData.rawValue >= AlarmType.RISING_FAST.setting.deltaBorder) {
+            if (ReceiveData.time - lastRisingAlarmTime >= AlarmType.RISING_FAST.setting.intervalMS) {
+                Log.i(LOG_ID, "Trigger rising fast alarm")
+                result = AlarmType.RISING_FAST
+            }
+        }
+        return result
+    }
+
     private fun saveExtras() {
         Log.d(LOG_ID, "Saving extras")
         with(sharedExtraPref.edit()) {
             putLong(LAST_ALARM_TIME, lastAlarmTime)
+            putLong(LAST_FALLING_ALARM_TIME, lastFallingAlarmTime)
+            putLong(LAST_RISING_ALARM_TIME, lastRisingAlarmTime)
             putInt(LAST_ALARM_INDEX, lastAlarmType.ordinal)
             putLong(SNOOZE_TIME, snoozeTime)
             apply()
@@ -163,6 +196,8 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
             Log.i(LOG_ID, "Reading saved values...")
             lastAlarmType = AlarmType.fromIndex(sharedExtraPref.getInt(LAST_ALARM_INDEX, AlarmType.NONE.ordinal))
             lastAlarmTime = sharedExtraPref.getLong(LAST_ALARM_TIME, 0L)
+            lastFallingAlarmTime = sharedExtraPref.getLong(LAST_FALLING_ALARM_TIME, 0L)
+            lastRisingAlarmTime = sharedExtraPref.getLong(LAST_RISING_ALARM_TIME, 0L)
             snoozeTime = sharedExtraPref.getLong(SNOOZE_TIME, 0L)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Loading receivers exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
@@ -199,6 +234,8 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         }
         bundle.putLong(SNOOZE_TIME, snoozeTime)
         bundle.putLong(LAST_ALARM_TIME, lastAlarmTime)
+        bundle.putLong(LAST_FALLING_ALARM_TIME, lastFallingAlarmTime)
+        bundle.putLong(LAST_RISING_ALARM_TIME, lastRisingAlarmTime)
         bundle.putInt(LAST_ALARM_INDEX, lastAlarmType.ordinal)
         return bundle
     }
@@ -223,6 +260,8 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         }
         lastAlarmType = AlarmType.fromIndex(bundle.getInt(LAST_ALARM_INDEX, lastAlarmType.ordinal))
         lastAlarmTime = bundle.getLong(LAST_ALARM_TIME, lastAlarmTime)
+        lastFallingAlarmTime = bundle.getLong(LAST_FALLING_ALARM_TIME, lastFallingAlarmTime)
+        lastRisingAlarmTime = bundle.getLong(LAST_RISING_ALARM_TIME, lastRisingAlarmTime)
         setSnoozeTime(bundle.getLong(SNOOZE_TIME, snoozeTime), true)
         updateSettings(sharedPref, context)
         InternalNotifier.notify(context, NotifySource.ALARM_SETTINGS, null)

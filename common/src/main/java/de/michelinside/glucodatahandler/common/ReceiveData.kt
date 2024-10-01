@@ -32,6 +32,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     const val IOB = "glucodata.Minute.IOB"
     const val COB = "glucodata.Minute.COB"
     const val IOBCOB_TIME = "gdh.IOB_COB_time"
+    const val DELTA_FALLING_COUNT = "gdh.delta_falling_count"
+    const val DELTA_RISING_COUNT = "gdh.delta_rising_count"
 
     var sensorID: String? = null
     var rawValue: Int = 0
@@ -44,6 +46,9 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var source: DataSource = DataSource.NONE
     val forceAlarm: Boolean get() {
         return ((alarm and 8) == 8)
+    }
+    val forceDeltaAlarm: Boolean get() {
+        return ((alarm and 16) == 16)
     }
 
     var iob: Float = Float.NaN
@@ -100,7 +105,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
 
     private var isMmolValue = false
     val isMmol get() = isMmolValue
-    private var use5minDelta = false
+    var use5minDelta = false
     private var colorAlarm: Int = Color.RED
     private var colorOutOfRange: Int = Color.YELLOW
     private var colorOK: Int = Color.GREEN
@@ -108,6 +113,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private var obsoleteTimeMin: Int = 6
     val obsoleteTimeInMinute get() = obsoleteTimeMin
     private var initialized = false
+    private var deltaFallingCount = 0
+    private var deltaRisingCount = 0
 
     init {
         Log.v(LOG_ID, "init called")
@@ -250,7 +257,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return cobString
     }
 
-    // alarm bits: 1111 -> first: force alarm (8), second: high or low alarm (4), last: low (1) 
+    // alarm bits: 1111 -> first: force alarm (8), second: high or low alarm (4), last: low (1)
+    // additional: 1 0000 -> force delta alarm (16)
     /* examples: 
         6 = 0110 -> very high
         2 = 0010 -> high (out of range)
@@ -286,6 +294,34 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             return curAlarm or 8
         }
         return curAlarm
+    }
+
+    fun getDeltaAlarmType(): AlarmType {
+        if(!isObsoleteLong() && !delta.isNaN()) {
+            if (deltaFallingCount>0)
+                return AlarmType.FALLING_FAST
+            else if (deltaRisingCount>0)
+                return AlarmType.RISING_FAST
+        }
+        return AlarmType.NONE
+    }
+
+    private fun calculateDeltaAlarmCount() {
+        if (delta.isNaN() || delta == 0F) {
+            deltaFallingCount = 0
+            deltaRisingCount = 0
+        } else {
+            if (deltaValue >= AlarmType.RISING_FAST.setting!!.delta) {
+                deltaFallingCount = 0
+                deltaRisingCount++
+            } else if (deltaValue <= -AlarmType.FALLING_FAST.setting!!.delta) {
+                deltaFallingCount++
+                deltaRisingCount = 0
+            } else {
+                deltaFallingCount = 0
+                deltaRisingCount = 0
+            }
+        }
     }
 
     fun getGlucoseColor(monoChrome: Boolean = false): Int {
@@ -423,9 +459,20 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     // check for alarm
                     if (interApp) {
                         alarm = extras.getInt(ALARM) // if bit 8 is set, then an alarm is triggered
-                        AlarmHandler.setLastAlarm(getAlarmType())
                     } else {
                         alarm = calculateAlarm()
+                    }
+                    if(extras.containsKey(DELTA_FALLING_COUNT) && extras.containsKey(DELTA_RISING_COUNT)) {
+                        deltaFallingCount = extras.getInt(DELTA_FALLING_COUNT)
+                        deltaRisingCount = extras.getInt(DELTA_RISING_COUNT)
+                    } else {
+                        calculateDeltaAlarmCount()
+                    }
+                    if(!interApp && !forceAlarm && !forceDeltaAlarm) {
+                        val deltaAlarmType = AlarmHandler.checkDeltaAlarmTrigger(deltaFallingCount, deltaRisingCount)
+                        if(deltaAlarmType != AlarmType.NONE) {
+                            alarm = alarm or 16
+                        }
                     }
 
                     val notifySource = if(interApp) NotifySource.MESSAGECLIENT else NotifySource.BROADCAST
@@ -433,6 +480,10 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     InternalNotifier.notify(context, notifySource, createExtras())  // re-create extras to have all changed value inside...
                     if(forceAlarm) {
                         InternalNotifier.notify(context, NotifySource.ALARM_TRIGGER, null)
+                    } else if(forceDeltaAlarm) {
+                        val bundle = Bundle()
+                        bundle.putInt(Constants.ALARM_TYPE_EXTRA, getDeltaAlarmType().ordinal)
+                        InternalNotifier.notify(context, NotifySource.DELTA_ALARM_TRIGGER, bundle)
                     }
                     saveExtras(context)
                     result = true
@@ -621,6 +672,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         extras.putFloat(IOB, iob)
         extras.putFloat(COB, cob)
         extras.putLong(IOBCOB_TIME, iobCobTime)
+        extras.putInt(DELTA_FALLING_COUNT, deltaFallingCount)
+        extras.putInt(DELTA_RISING_COUNT, deltaRisingCount)
         return extras
     }
 
@@ -640,6 +693,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 putFloat(IOB, iob)
                 putFloat(COB, cob)
                 putLong(IOBCOB_TIME, iobCobTime)
+                putInt(DELTA_FALLING_COUNT, deltaFallingCount)
+                putInt(DELTA_RISING_COUNT, deltaRisingCount)
                 putInt(Constants.EXTRA_SOURCE_INDEX, source.ordinal)
                 apply()
             }
@@ -665,6 +720,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     extras.putFloat(IOB, sharedGlucosePref.getFloat(IOB, iob))
                     extras.putFloat(COB, sharedGlucosePref.getFloat(COB, cob))
                     extras.putLong(IOBCOB_TIME, sharedGlucosePref.getLong(IOBCOB_TIME, iobCobTime))
+                    extras.putInt(DELTA_FALLING_COUNT, sharedGlucosePref.getInt(DELTA_FALLING_COUNT, deltaFallingCount))
+                    extras.putInt(DELTA_RISING_COUNT, sharedGlucosePref.getInt(DELTA_RISING_COUNT, deltaRisingCount))
                     val source = DataSource.fromIndex(sharedGlucosePref.getInt(Constants.EXTRA_SOURCE_INDEX,
                         DataSource.NONE.ordinal))
                     handleIntent(context, source, extras)

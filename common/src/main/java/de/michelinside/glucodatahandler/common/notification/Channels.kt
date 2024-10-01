@@ -18,7 +18,7 @@ enum class ChannelType(val channelId: String, val nameResId: Int, val descrResId
     WEAR_FOREGROUND("glucodatahandler_service_01", R.string.wear_foreground_notification_name, R.string.wear_foreground_notification_descr, NotificationManager.IMPORTANCE_LOW),
     ANDROID_AUTO("GlucoDataNotify_Car", R.string.android_auto_notification_name, R.string.android_auto_notification_descr ),
     ANDROID_AUTO_FOREGROUND("GlucoDataAuto_foreground", R.string.mobile_foreground_notification_name, R.string.mobile_foreground_notification_descr, NotificationManager.IMPORTANCE_LOW ),
-    ALARM("gdh_alarm_notification_channel", R.string.alarm_notification_name, R.string.alarm_notification_descr, NotificationManager.IMPORTANCE_MAX );
+    ALARM("gdh_alarm_notification_silence_channel", R.string.alarm_notification_name, R.string.alarm_notification_descr, NotificationManager.IMPORTANCE_MAX );
 }
 object Channels {
     private val LOG_ID = "GDH.Channels"

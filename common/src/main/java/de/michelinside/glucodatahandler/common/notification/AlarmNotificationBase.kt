@@ -42,6 +42,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     private val HIGH_NOTIFICATION_ID = 803
     private val VERY_HIGH_NOTIFICATION_ID = 804
     private val OBSOLETE_NOTIFICATION_ID = 805
+    private val FALLING_FAST_NOTIFICATION_ID = 806
+    private val RISING_FAST_NOTIFICATION_ID = 807
     lateinit var audioManager:AudioManager
     protected var curNotification = 0
     private var curAlarmTime = 0L
@@ -130,6 +132,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         val filter = mutableSetOf(NotifySource.ALARM_STATE_CHANGED)
         filter.add(NotifySource.ALARM_TRIGGER)
         filter.add(NotifySource.OBSOLETE_ALARM_TRIGGER)
+        filter.add(NotifySource.DELTA_ALARM_TRIGGER)
         filter.addAll(getNotifierFilter())
         InternalNotifier.addNotifier(context, this, filter )
     }
@@ -226,10 +229,12 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
     }
 
-    fun triggerNotification(alarmType: AlarmType, context: Context, forTest: Boolean = false) {
+    private fun triggerNotification(alarmType: AlarmType, context: Context, forTest: Boolean = false, setLastAlarm: Boolean = false) {
         try {
             Log.d(LOG_ID, "triggerNotification called for $alarmType - active=$active - curNotification=$curNotification - forTest=$forTest")
             if (getAlarmState(context) == AlarmState.ACTIVE || forTest) {
+                if(setLastAlarm)
+                    AlarmHandler.setLastAlarm(alarmType)
                 stopCurrentNotification(context, true)  // do not send stop to client! -> to prevent, that the client will stop the newly created notification!
                 curNotification = getNotificationId(alarmType)
                 retriggerCount = 0
@@ -247,7 +252,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 startVibrationAndSound(alarmType, context)
             }
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "showNotification exception: " + exc.toString() )
+            Log.e(LOG_ID, "triggerNotification exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
         }
     }
 
@@ -270,7 +275,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         val intent = Intent(context, AlarmIntentReceiver::class.java)
         intent.action = action.toString()
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-        intent.putExtra(Constants.ALARM_NOTIFICATION_EXTRA_ALARM_TYPE, alarmType.ordinal)
+        intent.putExtra(Constants.ALARM_TYPE_EXTRA, alarmType.ordinal)
         alarmPendingIntent = PendingIntent.getBroadcast(
             context,
             800,
@@ -325,6 +330,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         Channels.getNotificationManager(context).createNotificationChannel(channel)
 
         // TODO: remove
+        Channels.getNotificationManager(context).deleteNotificationChannel("gdh_alarm_notification_channel")
         Channels.getNotificationManager(context).deleteNotificationChannel("gdh_alarm_notification_sound")
     }
 
@@ -401,7 +407,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             val soundDelay = getSoundDelay(alarmType)
             Log.i(LOG_ID, "Start vibration and sound with $soundDelay seconds delay")
             if(soundDelay > 0) {
-                vibrate(alarmType, context, true)
+                vibrate(alarmType, true)
                 if(getSound(alarmType, context) != null) {
                     triggerDelay(TriggerAction.START_ALARM_SOUND, alarmType, context, soundDelay.toFloat())
                     return
@@ -438,7 +444,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
     }
 
-    private fun vibrate(alarmType: AlarmType, context: Context, repeat: Boolean = false, forceReturnDuration: Boolean = false) : Int {
+    private fun vibrate(alarmType: AlarmType, repeat: Boolean = false, forceReturnDuration: Boolean = false) : Int {
         try {
             if (getRingerMode() >= AudioManager.RINGER_MODE_VIBRATE && curNotification > 0) {
                 val vibratePattern = getVibrationPattern(alarmType) ?: return 0
@@ -529,7 +535,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             }
             if (restartVibration) {
                 Log.v(LOG_ID, "Restart vibration with repeatVibration=$repeatVibration")
-                val vibrateDuration = vibrate(alarmType, context, repeatVibration || repeat != 0, repeatVibration)
+                val vibrateDuration = vibrate(alarmType, repeatVibration || repeat != 0, repeatVibration)
                 if(repeat > 0 && soundDuration == 0) {
                     triggerDelay(TriggerAction.STOP_REPEAT, alarmType, context, (repeat*60).toFloat())
                 } else if(repeatVibration) {
@@ -683,6 +689,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             AlarmType.HIGH -> HIGH_NOTIFICATION_ID
             AlarmType.VERY_HIGH -> VERY_HIGH_NOTIFICATION_ID
             AlarmType.OBSOLETE -> OBSOLETE_NOTIFICATION_ID
+            AlarmType.RISING_FAST -> RISING_FAST_NOTIFICATION_ID
+            AlarmType.FALLING_FAST -> FALLING_FAST_NOTIFICATION_ID
             else -> -1
         }
     }
@@ -702,6 +710,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             AlarmType.HIGH -> CR.raw.gdh_high_alarm
             AlarmType.VERY_HIGH -> CR.raw.gdh_very_high_alarm
             AlarmType.OBSOLETE -> CR.raw.gdh_obsolete_alarm
+            AlarmType.RISING_FAST -> CR.raw.gdh_rising_fast_alarm
+            AlarmType.FALLING_FAST -> CR.raw.gdh_falling_fast_alarm
             else -> null
         }
     }
@@ -732,6 +742,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             AlarmType.HIGH -> CR.string.very_high_text
             AlarmType.VERY_HIGH -> CR.string.very_high_alarm_text
             AlarmType.OBSOLETE -> CR.string.obsolete_alarm_text
+            AlarmType.RISING_FAST -> CR.string.rising_fast_alarm_text
+            AlarmType.FALLING_FAST -> CR.string.falling_fast_alarm_text
             else -> null
         }
     }
@@ -819,10 +831,18 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             Log.d(LOG_ID, "OnNotifyData called for $dataSource")
             when(dataSource) {
                 NotifySource.ALARM_TRIGGER -> {
-                    triggerNotification(ReceiveData.getAlarmType(), context)
+                    triggerNotification(ReceiveData.getAlarmType(), context, setLastAlarm = true)
                 }
                 NotifySource.OBSOLETE_ALARM_TRIGGER -> {
                     triggerNotification(AlarmType.OBSOLETE, context)
+                }
+                NotifySource.DELTA_ALARM_TRIGGER -> {
+                    if(extras?.containsKey(Constants.ALARM_TYPE_EXTRA) == true) {
+                        val alarmType = AlarmType.fromIndex(extras.getInt(Constants.ALARM_TYPE_EXTRA, AlarmType.NONE.ordinal))
+                        Log.i(LOG_ID, "Delta alarm trigger: $alarmType")
+                        if(alarmType != AlarmType.NONE)
+                            triggerNotification(alarmType, context, setLastAlarm = true)
+                    }
                 }
                 NotifySource.ALARM_STATE_CHANGED -> {
                     getAlarmState(context)
@@ -889,8 +909,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     fun handleTimerAction(context: Context, action: String, extras: Bundle?) {
         Log.d(LOG_ID, "handleTimerAction called for ${action} with extras: ${Utils.dumpBundle(extras)}")
-        if(extras?.containsKey(Constants.ALARM_NOTIFICATION_EXTRA_ALARM_TYPE) == true && instance != null) {
-            val alarmType = AlarmType.fromIndex(extras.getInt(Constants.ALARM_NOTIFICATION_EXTRA_ALARM_TYPE, ReceiveData.getAlarmType().ordinal))
+        if(extras?.containsKey(Constants.ALARM_TYPE_EXTRA) == true && instance != null) {
+            val alarmType = AlarmType.fromIndex(extras.getInt(Constants.ALARM_TYPE_EXTRA, ReceiveData.getAlarmType().ordinal))
             when(TriggerAction.valueOf(action)) {
                 TriggerAction.TEST_ALARM -> {
                     executeTest(alarmType, context)

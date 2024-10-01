@@ -77,8 +77,8 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             setContentView(R.layout.activity_lockscreen)
             hideSystemUI()
 
-            if(this.intent.extras?.containsKey(Constants.ALARM_NOTIFICATION_EXTRA_ALARM_TYPE) == true) {
-                alarmType = AlarmType.fromIndex(this.intent.extras!!.getInt(Constants.ALARM_NOTIFICATION_EXTRA_ALARM_TYPE, ReceiveData.getAlarmType().ordinal))
+            if(this.intent.extras?.containsKey(Constants.ALARM_TYPE_EXTRA) == true) {
+                alarmType = AlarmType.fromIndex(this.intent.extras!!.getInt(Constants.ALARM_TYPE_EXTRA, ReceiveData.getAlarmType().ordinal))
             }
 
             if(this.intent.extras?.containsKey(Constants.ALARM_SNOOZE_EXTRA_NOTIFY_ID) == true) {

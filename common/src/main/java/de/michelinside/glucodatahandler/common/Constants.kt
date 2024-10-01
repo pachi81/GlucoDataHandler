@@ -172,7 +172,7 @@ object Constants {
     const val ALARM_SNOOZE_EXTRA_TIME = "snooze_time"
     const val ALARM_SNOOZE_EXTRA_NOTIFY_ID = "notification_id"
     const val ALARM_SNOOZE_EXTRA_START_APP = "start_application"
-    const val ALARM_NOTIFICATION_EXTRA_ALARM_TYPE = "alarm_type"
+    const val ALARM_TYPE_EXTRA = "alarm_type"
 
     const val SHARED_PREF_WEAR_LAST_ALARM_STATE = "wear_last_alarm_state"
 
@@ -209,6 +209,9 @@ object Constants {
     const val SHARED_PREF_ALARM_SUFFIX_TEST = "_test"
     const val SHARED_PREF_ALARM_SUFFIX_SAVE_SOUND = "_save_sound"
     const val SHARED_PREF_ALARM_SUFFIX_REPEAT = "_repeat"
+    const val SHARED_PREF_ALARM_SUFFIX_DELTA = "_delta"
+    const val SHARED_PREF_ALARM_SUFFIX_OCCURRENCE_COUNT = "_occurrence_count"
+    const val SHARED_PREF_ALARM_SUFFIX_BORDER = "_border"
 
     const val SHARED_PREF_ALARM_VERY_LOW = "alarm_very_low"
     const val SHARED_PREF_ALARM_LOW = "alarm_low"
@@ -217,6 +220,8 @@ object Constants {
     const val SHARED_PREF_ALARM_OBSOLETE = "alarm_obsolete"
     const val SHARED_PREF_ALARM_RISING_FAST = "alarm_rising_fast"
     const val SHARED_PREF_ALARM_FALLING_FAST = "alarm_falling_fast"
+
+    const val SHARED_PREF_ALARM_TYPE_SETTINGS_CAT = "cat_alarm_settings"
 
     // Android Auto
     const val AA_MEDIA_ICON_STYLE_TREND = "trend"

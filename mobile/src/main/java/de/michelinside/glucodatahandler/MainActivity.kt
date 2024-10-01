@@ -1,7 +1,6 @@
 package de.michelinside.glucodatahandler
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
@@ -32,7 +31,6 @@ import androidx.core.view.MenuCompat
 import androidx.core.view.setPadding
 import androidx.preference.PreferenceManager
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
-import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -51,12 +49,9 @@ import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.preferences.AlarmFragment
-import de.michelinside.glucodatahandler.watch.LogcatReceiver
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
 import kotlin.time.Duration.Companion.days
 import de.michelinside.glucodatahandler.common.R as CR
 
@@ -598,8 +593,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateAlarmsTable() {
         tableAlarms.removeViews(1, maxOf(0, tableAlarms.childCount - 1))
-        if(ReceiveData.time > 0 && ReceiveData.getAlarmType() != AlarmType.OK) {
-            tableAlarms.addView(createRow(CR.string.info_label_alarm, resources.getString(ReceiveData.getAlarmType().resId) + (if (ReceiveData.forceAlarm) " ⚠" else "" )))
+        if(ReceiveData.time > 0) {
+            val alarmType = ReceiveData.getAlarmType()
+            if (alarmType != AlarmType.OK)
+                tableAlarms.addView(createRow(CR.string.info_label_alarm, resources.getString(alarmType.resId)))
+            val deltaAlarmType = ReceiveData.getDeltaAlarmType()
+            if (deltaAlarmType != AlarmType.NONE)
+                tableAlarms.addView(createRow(CR.string.info_label_alarm, resources.getString(deltaAlarmType.resId)))
         }
         if (AlarmHandler.isSnoozeActive)
             tableAlarms.addView(createRow(CR.string.snooze, AlarmHandler.snoozeTimestamp))
@@ -609,7 +609,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun updateDetailsTable() {
         tableDetails.removeViews(1, maxOf(0, tableDetails.childCount - 1))
         if(ReceiveData.time > 0) {
-            if (sharedPref.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, false)) {
+            if (!ReceiveData.isObsoleteLong() && sharedPref.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, false)) {
                 tableDetails.addView(createRow(ReceiveData.getOtherUnit(), ReceiveData.getGlucoseAsOtherUnit() + " (Δ " + ReceiveData.getDeltaAsOtherUnit() + ")"))
             }
             tableDetails.addView(createRow(CR.string.info_label_timestamp, DateFormat.getTimeInstance(

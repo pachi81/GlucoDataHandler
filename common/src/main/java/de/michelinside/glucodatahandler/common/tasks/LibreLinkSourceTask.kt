@@ -44,7 +44,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
 
     private fun getUrl(endpoint: String): String {
         val url = (if(region.isEmpty()) server else region_server.format(region)) + endpoint
-        Log.i(LOG_ID, "Send request to " + url)
+        Log.i(LOG_ID, "Using URL: " + url)
         return url
     }
 

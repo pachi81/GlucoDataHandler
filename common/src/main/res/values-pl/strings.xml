@@ -571,15 +571,22 @@
 
     <string name="alarm_rising_fast">Rising fast</string>
     <string name="rising_fast_alarm_notification_name">Rising fast alarm</string>
-    <string name="alarm_rising_fast_summary">Alarm if the delta between two glucose values is greater than or equal to %1$s.</string>
-    <string name="rising_fast_alarm_notification_descr">This notification will appear, if the delta between two glucose values is too high.</string>
+    <string name="alarm_rising_fast_summary">Alarm if the glucose value is higher or equal to %1$s and the delta rises by at least +%2$s for %3$d consecutive readings.</string>
     <string name="rising_fast_alarm_text">Rising fast!</string>
 
     <string name="alarm_falling_fast">Falling fast</string>
     <string name="falling_fast_alarm_notification_name">Falling fast alarm</string>
-    <string name="alarm_falling_fast_summary">Alarm if the delta between two glucose values is less than or equal to %1$s.</string>
-    <string name="falling_fast_alarm_notification_descr">This notification will appear, if the delta between two glucose values is too high.</string>
+    <string name="alarm_falling_fast_summary">Alarm if the glucose value is lower or equal to %1$s and the delta falls by at least -%2$s for %3$d consecutive readings.</string>
     <string name="falling_fast_alarm_text">Falling fast!</string>
     <string name="alarm_vibrate_amplitude">Vibration Intensity</string>
     <string name="alarm_vibrate_amplitude_summary">Intensity of the vibration</string>
+    <string name="pref_cat_alarm_settings">Alarm settings</string>
+    <string name="pref_alarm_delta_summary">Delta value when the alarm should be triggered.</string>
+    <string name="alarm_occurrence_count">Number of occurrence</string>
+    <string name="alarm_occurrence_count_summary">Number of times the delta value must be reached consecutively.</string>
+    <string name="pref_alarm_rising_falling_border">Border</string>
+    <string name="pref_alarm_rising_falling_border_summary">Border for the rising/falling alarm.\nThe glucose value must be higher/lower to trigger the alarm.</string>
+    <string name="delta_per_minute">per minute</string>
+    <string name="delta_per_5_minute">per 5 minutes</string>
+    <string name="other_alarm_cat_categories">Other alarms</string>
 </resources>

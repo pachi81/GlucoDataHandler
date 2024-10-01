@@ -8,10 +8,17 @@ import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.utils.Utils
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import kotlin.math.abs
 
-class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
-    private val LOG_ID = "GDH.AlarmSetting.$alarmPrefix"
-    private var enabled = true
+open class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
+    companion object {
+        const val defaultDelta = 5F
+        const val defaultDeltaCount = 3
+        const val defaultDeltaBorder = 145F
+    }
+
+    protected val LOG_ID = "GDH.AlarmSetting.$alarmPrefix"
+    var enabled = true
     private var inactiveEnabled = false
     private var inactiveStartTime = ""
     private var inactiveEndTime = ""
@@ -24,6 +31,9 @@ class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
     var soundLevel = -1
     var useCustomSound = false
     var customSoundPath = ""
+    var delta = 0F
+    var deltaCount = 0
+    var deltaBorder = 0F
 
     val intervalMS get() = intervalMin*60000
 
@@ -71,6 +81,10 @@ class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT)
     )
 
+    open fun getPreferencesToShare(): MutableSet<String> {
+        return alarmPreferencesToShare
+    }
+
     private val alarmPreferencesLocalOnly = mutableSetOf(
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_LEVEL),
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_USE_CUSTOM_SOUND),
@@ -80,7 +94,7 @@ class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
     )
 
     fun isAlarmSettingToShare(key: String): Boolean {
-        return alarmPreferencesToShare.contains(key)
+        return getPreferencesToShare().contains(key)
     }
 
     fun isAlarmSetting(key: String): Boolean {
@@ -99,6 +113,11 @@ class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
             bundle.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_DELAY), soundDelay)
             bundle.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_RETRIGGER), retriggerTime)
             bundle.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT), repeatTime)
+            if (hasDelta()) {
+                bundle.putFloat(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_DELTA), delta)
+                bundle.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_OCCURRENCE_COUNT), deltaCount)
+                bundle.putFloat(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_BORDER), deltaBorder)
+            }
         }
         return bundle
     }
@@ -114,6 +133,11 @@ class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
             editor.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_DELAY), bundle.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_DELAY), soundDelay))
             editor.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_RETRIGGER), bundle.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_RETRIGGER), retriggerTime))
             editor.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT), bundle.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT), repeatTime))
+            if (hasDelta()) {
+                editor.putFloat(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_DELTA), bundle.getFloat(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_DELTA), 5F))
+                editor.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_OCCURRENCE_COUNT), bundle.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_OCCURRENCE_COUNT), 1))
+                editor.putFloat(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_BORDER), bundle.getFloat(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_BORDER), 145F))
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "saveSettings exception: " + exc.toString() + ": " + exc.stackTraceToString() )
         }
@@ -135,7 +159,11 @@ class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
             repeatTime = sharedPref.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT), repeatTime)
             vibratePatternKey = sharedPref.getString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_VIBRATE_PATTERN), alarmPrefix) ?: alarmPrefix
             vibrateAmplitudePref = sharedPref.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_VIBRATE_AMPLITUDE), vibrateAmplitudePref)
-
+            if(hasDelta()) {
+                delta = abs(sharedPref.getFloat(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_DELTA), defaultDelta))
+                deltaCount = sharedPref.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_OCCURRENCE_COUNT), defaultDeltaCount)
+                deltaBorder = sharedPref.getFloat(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_BORDER), defaultDeltaBorder)
+            }
             Log.d(LOG_ID, "updateSettings: " +
                     "enabled=$enabled, " +
                     "intervalMin=$intervalMin, " +
@@ -147,13 +175,36 @@ class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
                     "retriggerTime=$retriggerTime, " +
                     "soundLevel=$soundLevel, " +
                     "useCustomSound=$useCustomSound, " +
-                    "customSoundPath=$customSoundPath" +
-                    "vibratePattern=$vibratePatternKey" +
-                    "vibrateAmplitudePref=$vibrateAmplitudePref"
+                    "customSoundPath=$customSoundPath, " +
+                    "vibratePattern=$vibratePatternKey, " +
+                    "vibrateAmplitudePref=$vibrateAmplitudePref, " +
+                    "delta=$delta, " +
+                    "deltaCount=$deltaCount, " +
+                    "border=$deltaBorder"
             )
 
         } catch (exc: Exception) {
             Log.e(LOG_ID, "saveSettings exception: " + exc.toString() + ": " + exc.stackTraceToString() )
         }
+    }
+
+    open fun hasDelta(): Boolean = false
+}
+
+class DeltaAlarmSetting(alarmPrefix: String, intervalMin: Int) : AlarmSetting(alarmPrefix, intervalMin) {
+    init {
+        enabled = false
+    }
+
+    private val deltaPreferencesToShare = mutableSetOf(
+        getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_DELTA),
+        getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_OCCURRENCE_COUNT),
+        getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_BORDER)
+    )
+
+    override fun hasDelta(): Boolean  = true
+
+    override fun getPreferencesToShare(): MutableSet<String> {
+        return (super.getPreferencesToShare() + deltaPreferencesToShare).toMutableSet()
     }
 }

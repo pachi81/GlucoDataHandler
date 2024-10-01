@@ -68,6 +68,10 @@
                 android:name="type"
                 android:value="5" />
         </Preference>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/other_alarm_cat_categories"
+        app:iconSpaceReserved="false">
         <Preference
             android:key="alarm_obsolete"
             android:title="@string/obsolete_alarm_notification_name"
@@ -76,6 +80,24 @@
             <extra
                 android:name="type"
                 android:value="6" />
+        </Preference>
+        <Preference
+            android:key="alarm_falling_fast"
+            android:title="@string/falling_fast_alarm_notification_name"
+            app:fragment="de.michelinside.glucodatahandler.preferences.AlarmTypeFragment"
+            app:iconSpaceReserved="false">
+            <extra
+                android:name="type"
+                android:value="7" />
+        </Preference>
+        <Preference
+            android:key="alarm_rising_fast"
+            android:title="@string/rising_fast_alarm_notification_name"
+            app:fragment="de.michelinside.glucodatahandler.preferences.AlarmTypeFragment"
+            app:iconSpaceReserved="false">
+            <extra
+                android:name="type"
+                android:value="8" />
         </Preference>
     </PreferenceCategory>
 </PreferenceScreen>

@@ -10,15 +10,11 @@ import android.provider.Settings
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.DialogFragment
 import androidx.preference.ListPreference
 import androidx.preference.MultiSelectListPreference
 import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SeekBarPreference
 import androidx.preference.SwitchPreferenceCompat
-import com.takisoft.preferencex.TimePickerPreference
-import com.takisoft.preferencex.TimePickerPreferenceDialogFragmentCompat
 import de.michelinside.glucodatahandler.Dialogs
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
@@ -37,7 +33,7 @@ import kotlin.collections.toTypedArray
 import de.michelinside.glucodatahandler.common.R as CR
 
 
-abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
+abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener {
     protected val LOG_ID = "GDH.SettingsFragmentBase"
     private val updateEnablePrefs = mutableSetOf<String>()
     private lateinit var activityResultOverlayLauncher: ActivityResultLauncher<Intent>
@@ -147,30 +143,6 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
             activityResultOverlayLauncher.launch(intent)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "requestOverlayPermission exception: " + exc.toString())
-        }
-    }
-
-    override fun onDisplayPreferenceDialog(preference: Preference) {
-        Log.d(LOG_ID, "onDisplayPreferenceDialog called for " + preference.javaClass)
-        try {
-            var dialogFragment: DialogFragment? = null
-            if (preference is TimePickerPreference) {
-                dialogFragment = TimePickerPreferenceDialogFragmentCompat()
-                val bundle = Bundle(1)
-                bundle.putString("key", preference.key)
-                dialogFragment.arguments = bundle
-            } else if (preference is TapActionPreference) {
-                Log.d(LOG_ID, "Show SelectReceiver Dialog")
-                dialogFragment = TapActionPreferenceDialogFragmentCompat.initial(preference.key)
-            }
-            if (dialogFragment != null) {
-                dialogFragment.setTargetFragment(this, 0)
-                dialogFragment.show(parentFragmentManager, "androidx.preference.PreferenceFragment.DIALOG")
-            } else {
-                super.onDisplayPreferenceDialog(preference)
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "onDisplayPreferenceDialog exception: " + exc.toString())
         }
     }
 

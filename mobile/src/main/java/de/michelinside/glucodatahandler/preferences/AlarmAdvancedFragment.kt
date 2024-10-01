@@ -7,7 +7,6 @@ import android.provider.Settings
 import android.util.Log
 import androidx.preference.ListPreference
 import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
@@ -16,7 +15,7 @@ import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 
-class AlarmAdvancedFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
+class AlarmAdvancedFragment : SettingsFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GDH.AlarmAdvancedFragment"
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         try {

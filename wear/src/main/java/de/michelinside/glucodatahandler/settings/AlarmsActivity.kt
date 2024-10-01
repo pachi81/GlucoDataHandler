@@ -88,13 +88,13 @@ class AlarmsActivity : AppCompatActivity() {
                 update()
             }
 
-
             setAlarmButton(R.id.btnVeryLowAlarm, AlarmType.VERY_LOW)
             setAlarmButton(R.id.btnLowAlarm, AlarmType.LOW)
             setAlarmButton(R.id.btnHighAlarm, AlarmType.HIGH)
             setAlarmButton(R.id.btnVeryHighAlarm, AlarmType.VERY_HIGH)
             setAlarmButton(R.id.btnObsoleteAlarm,  AlarmType.OBSOLETE)
-
+            setAlarmButton(R.id.btnFallingFastAlarm,  AlarmType.FALLING_FAST)
+            setAlarmButton(R.id.btnRisingFastAlarm,  AlarmType.RISING_FAST)
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }

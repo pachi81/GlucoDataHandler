@@ -19,15 +19,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.DialogFragment
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SeekBarPreference
 import androidx.preference.SwitchPreferenceCompat
 import com.takisoft.preferencex.TimePickerPreference
-import com.takisoft.preferencex.TimePickerPreferenceDialogFragmentCompat
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
+import de.michelinside.glucodatahandler.common.notification.AlarmSetting
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notification.Vibrator
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
@@ -36,7 +35,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 
-class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
+class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
     private val LOG_ID = "GDH.AlarmTypeFragment"
     private lateinit var soundSaver: ActivityResultLauncher<Intent>
     private var ringtoneSelecter: ActivityResultLauncher<Intent>? = null
@@ -92,6 +91,15 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
     private val inactiveEndPref: String get() {
         return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_END_TIME)
     }
+    private val deltaPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_DELTA)
+    }
+    private val occurrenceCountPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_OCCURRENCE_COUNT)
+    }
+    private val borderPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_BORDER)
+    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         try {
@@ -136,28 +144,13 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
         }
     }
 
-    override fun onDisplayPreferenceDialog(preference: Preference) {
-        Log.d(LOG_ID, "onDisplayPreferenceDialog called for " + preference.javaClass)
-        try {
-            var dialogFragment: DialogFragment? = null
-            if (preference is TimePickerPreference) {
-                dialogFragment = TimePickerPreferenceDialogFragmentCompat()
-                val bundle = Bundle(1)
-                bundle.putString("key", preference.key)
-                dialogFragment.arguments = bundle
-            } else if (preference is VibratePatternPreference) {
-                Log.d(LOG_ID, "Show vibration dialog")
-                dialogFragment = VibratePatternPreferenceDialogFragmentCompat.initial(preference.key, alarmType.setting!!.vibrateAmplitude)
-            }
-            if (dialogFragment != null) {
-                dialogFragment.setTargetFragment(this, 0)
-                dialogFragment.show(parentFragmentManager, "androidx.preference.PreferenceFragment.DIALOG")
-            } else {
-                super.onDisplayPreferenceDialog(preference)
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "onDisplayPreferenceDialog exception: " + exc.toString())
+    override fun getDialogFragment(preference: Preference): DialogFragment? {
+        var dialogFragment = super.getDialogFragment(preference)
+        if(dialogFragment == null && preference is VibratePatternPreference) {
+            Log.d(LOG_ID, "Show vibration dialog")
+            dialogFragment = VibratePatternPreferenceDialogFragmentCompat.initial(preference.key, alarmType.setting!!.vibrateAmplitude)
         }
+        return dialogFragment
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
@@ -259,7 +252,7 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
     }
     private fun updateData() {
         val enablePref = findPreference<SwitchPreferenceCompat>(enabledPref)
-        enablePref!!.isChecked = preferenceManager.sharedPreferences!!.getBoolean(enablePref.key, true)
+        enablePref!!.isChecked = preferenceManager.sharedPreferences!!.getBoolean(enablePref.key, alarmType.setting!!.enabled)
 
         val prefInterval = findPreference<SeekBarPreference>(intervalPref)
         prefInterval!!.value = preferenceManager.sharedPreferences!!.getInt(prefInterval.key, AlarmHandler.getDefaultIntervalMin(alarmType))
@@ -302,6 +295,24 @@ class AlarmTypeFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
 
         val prefEnd = findPreference<TimePickerPreference>(inactiveEndPref)
         prefEnd!!.isEnabled = inactivePref.isChecked
+
+
+        if (alarmType.setting!!.hasDelta()) {
+            val alarmSettingsCat = findPreference<PreferenceCategory>(Constants.SHARED_PREF_ALARM_TYPE_SETTINGS_CAT)
+            alarmSettingsCat!!.isVisible = true
+
+            val prefDelta = findPreference<GlucoseEditPreference>(deltaPref)
+            prefDelta!!.text = preferenceManager.sharedPreferences!!.getFloat(prefDelta.key, AlarmSetting.defaultDelta).toString()
+            if(alarmType == AlarmType.FALLING_FAST)
+                prefDelta.isNegative = true
+
+            val prefOccurrenceCount = findPreference<SeekBarPreference>(occurrenceCountPref)
+            prefOccurrenceCount!!.value = preferenceManager.sharedPreferences!!.getInt(prefOccurrenceCount.key, AlarmSetting.defaultDeltaCount)
+
+            val prefBorder = findPreference<GlucoseEditPreference>(borderPref)
+            prefBorder!!.text = preferenceManager.sharedPreferences!!.getFloat(prefBorder.key, AlarmSetting.defaultDeltaBorder).toString()
+        }
+
     }
 
     private fun getIntervalSummary(alarmType: AlarmType): String {
