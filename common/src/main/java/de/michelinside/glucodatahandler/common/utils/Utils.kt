@@ -23,7 +23,10 @@ import java.io.ObjectOutputStream
 import java.io.OutputStream
 import java.math.RoundingMode
 import java.security.MessageDigest
-import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
@@ -366,27 +369,45 @@ object Utils {
         }
     }
 
-    @SuppressLint("SimpleDateFormat")
-    fun timeBetweenTimes(currentTime: String, startTime: String, endTime: String): Boolean {
+    fun timeInDayFilter(currentDateTime: LocalDateTime, startTime: LocalTime, weekDayFilter: MutableSet<String>?): Boolean {
         try {
-            if (currentTime.isEmpty() || startTime.isEmpty() || endTime.isEmpty())
+            if(weekDayFilter == null || weekDayFilter.size == 7)
+                return true
+            if (weekDayFilter.isEmpty())
                 return false
-            val timeCur = SimpleDateFormat("HH:mm").parse(currentTime)
-            val timeStart = SimpleDateFormat("HH:mm").parse(startTime)
-            val timeEnd = SimpleDateFormat("HH:mm").parse(endTime)
+            val currentTime = currentDateTime.toLocalTime()
+            val timeDiff = if(currentTime.isBefore(startTime)) startTime.until(currentTime, ChronoUnit.MINUTES) + 1440 else startTime.until(currentTime, ChronoUnit.MINUTES)
+            val startDateTime = currentDateTime.minusMinutes(timeDiff)
+            if(weekDayFilter.contains(startDateTime.dayOfWeek.value.toString()))
+                return true
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "timeInDayFilter exception: " + exc.message.toString() )
+        }
+        return false
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    fun timeBetweenTimes(currentTime: LocalDateTime, startTime: String, endTime: String, weekDayFilter: MutableSet<String>? = null): Boolean {
+        try {
+            if (startTime.isEmpty() || endTime.isEmpty())
+                return false
+            val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+            val timeCur = currentTime.toLocalTime()
+            val timeStart = LocalTime.parse(startTime, timeFormatter)
+            val timeEnd = LocalTime.parse(endTime, timeFormatter)
 
             if (timeCur == null || timeStart == null || timeEnd == null)
                 return false
 
             if (timeCur == timeStart || timeCur == timeEnd)
-                return true
+                return timeInDayFilter(currentTime, timeStart, weekDayFilter)
 
-            if (timeStart.after(timeEnd)) {  // night shift
-                if (timeCur.after(timeStart) || timeCur.before(timeEnd))
-                    return true
+            if (timeStart.isAfter(timeEnd)) {  // night shift
+                if (timeCur.isAfter(timeStart) || timeCur.isBefore(timeEnd))
+                    return timeInDayFilter(currentTime, timeStart, weekDayFilter)
             } else {
-                if (timeCur.after(timeStart) && timeCur.before(timeEnd))
-                    return true
+                if (timeCur.isAfter(timeStart) && timeCur.isBefore(timeEnd))
+                    return timeInDayFilter(currentTime, timeStart, weekDayFilter)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "timeBetweenTimes exception: " + exc.message.toString() )

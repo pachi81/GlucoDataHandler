@@ -581,4 +581,6 @@
     <string name="delta_per_minute">pro Minute</string>
     <string name="delta_per_5_minute">pro 5 Minuten</string>
     <string name="other_alarm_cat_categories">Weitere Alarme</string>
+    <string name="alarm_inactive_weekdays">Inaktive Wochentage</string>
+    <string name="alarm_inactive_weekdays_summary">Filtere auf Wochentage, an denen der Alarm innerhalb des Zeitraums inaktiv ist. Der Wochentag bezieht sich dabei immer auf den Startzeitpunkt.</string>
 </resources>

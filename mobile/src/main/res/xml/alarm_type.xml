@@ -42,6 +42,11 @@
             app:pref_pickerTime="07:00"
             app:pref_summaryHasTime="%s"
             app:iconSpaceReserved="false" />
+        <androidx.preference.MultiSelectListPreference
+            android:key="_inactive_weekdays"
+            android:title="@string/alarm_inactive_weekdays"
+            android:summary="@string/alarm_inactive_weekdays_summary"
+            app:iconSpaceReserved="false" />
         </PreferenceCategory>
         <PreferenceCategory
             android:key="cat_alarm_settings"

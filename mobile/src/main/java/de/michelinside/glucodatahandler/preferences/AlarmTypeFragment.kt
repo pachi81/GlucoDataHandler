@@ -17,6 +17,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.DialogFragment
+import androidx.preference.MultiSelectListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.SeekBarPreference
@@ -34,6 +35,9 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
+import java.time.DayOfWeek
+import java.time.format.TextStyle
+import java.util.Locale
 
 class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
     private val LOG_ID = "GDH.AlarmTypeFragment"
@@ -90,6 +94,9 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
     }
     private val inactiveEndPref: String get() {
         return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_END_TIME)
+    }
+    private val inactiveWeekdaysPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_WEEKDAYS)
     }
     private val deltaPref: String get() {
         return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_DELTA)
@@ -186,12 +193,18 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
             val prefRetrigger = findPreference<SeekBarPreference>(retriggerPref)
             prefRetrigger!!.isEnabled = prefRepeat!!.value >= 0
 
+            val prefWeekdays = findPreference<MultiSelectListPreference>(inactiveWeekdaysPref)
+            prefWeekdays!!.summary = resources.getString(CR.string.alarm_inactive_weekdays_summary) + "\n" + prefWeekdays.values.joinToString(
+                ", "
+            ) { DayOfWeek.of(it.toInt()).getDisplayName(TextStyle.SHORT, Locale.getDefault()) }
+
             val inactivePref = findPreference<SwitchPreferenceCompat>(inactiveEnabledPref)
             if (inactivePref != null) {
-                val prefStart = findPreference<TimePickerPreference>(inactiveStartPref)
-                val prefEnd = findPreference<TimePickerPreference>(inactiveEndPref)
+                val prefStart = findPreference<Preference>(inactiveStartPref)
+                val prefEnd = findPreference<Preference>(inactiveEndPref)
                 prefStart!!.isEnabled = inactivePref.isChecked
                 prefEnd!!.isEnabled = inactivePref.isChecked
+                prefWeekdays.isEnabled = inactivePref.isChecked
             }
 
             val prefVibrateAmplitude = findPreference<SeekBarPreference>(vibrateAmplitudePref)
@@ -296,6 +309,10 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
         val prefEnd = findPreference<TimePickerPreference>(inactiveEndPref)
         prefEnd!!.isEnabled = inactivePref.isChecked
 
+        val prefWeekdays = findPreference<MultiSelectListPreference>(inactiveWeekdaysPref)
+        prefWeekdays!!.entries = DayOfWeek.entries.map { it.getDisplayName(TextStyle.FULL, Locale.getDefault()) }.toTypedArray()
+        prefWeekdays.entryValues = DayOfWeek.entries.map { it.value.toString() }.toTypedArray()
+        prefWeekdays.values = preferenceManager.sharedPreferences!!.getStringSet(prefWeekdays.key, AlarmSetting.defaultWeekdays)!!
 
         if (alarmType.setting!!.hasDelta()) {
             val alarmSettingsCat = findPreference<PreferenceCategory>(Constants.SHARED_PREF_ALARM_TYPE_SETTINGS_CAT)

@@ -8,9 +8,23 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 class UtilsUnitTest {
+
+    fun time(time: String): LocalDateTime {
+        val dateTime = "30.09.2024 $time"
+        val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
+        return LocalDateTime.parse(dateTime, formatter)
+    }
+
+    fun datetime(dateTime: String): LocalDateTime {
+        val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
+        return LocalDateTime.parse(dateTime, formatter)
+    }
+
     @Test
     fun testTimeBetweenTimes() {
         mockkStatic(Log::class)
@@ -19,34 +33,61 @@ class UtilsUnitTest {
         every { Log.i(any(), any()) } returns 0
         every { Log.e(any(), any()) } returns 0
 
-        assertTrue(Utils.timeBetweenTimes("12:00:01", "10:00:00", "14:00:00"))
-        assertTrue(Utils.timeBetweenTimes("10:00", "10:00", "14:00"))
-        assertTrue(Utils.timeBetweenTimes("14:00", "10:00", "14:00"))
-        assertFalse(Utils.timeBetweenTimes("15:00", "10:00", "14:00"))
-        assertFalse(Utils.timeBetweenTimes("00:00", "10:00", "14:00"))
-        assertFalse(Utils.timeBetweenTimes("09:59:59", "10:00:00", "14:00:00"))
-        assertFalse(Utils.timeBetweenTimes("14:01", "10:00", "14:00"))
+        assertTrue(Utils.timeBetweenTimes(time("12:00"), "10:00", "14:00"))
+        assertTrue(Utils.timeBetweenTimes(time("10:00"), "10:00", "14:00"))
+        assertTrue(Utils.timeBetweenTimes(time("14:00"), "10:00", "14:00"))
+        assertFalse(Utils.timeBetweenTimes(time("15:00"), "10:00", "14:00"))
+        assertFalse(Utils.timeBetweenTimes(time("00:00"), "10:00", "14:00"))
+        assertFalse(Utils.timeBetweenTimes(time("09:59"), "10:00", "14:00"))
+        assertFalse(Utils.timeBetweenTimes(time("14:01"), "10:00", "14:00"))
 
         // with night shift
-        assertTrue(Utils.timeBetweenTimes("00:00", "23:00", "14:00"))
-        assertTrue(Utils.timeBetweenTimes("23:00", "23:00", "10:00"))
-        assertTrue(Utils.timeBetweenTimes("10:00", "23:00", "10:00"))
-        assertFalse(Utils.timeBetweenTimes("18:00", "23:00", "14:00"))
-        assertFalse(Utils.timeBetweenTimes("22:59", "23:00", "10:00"))
-        assertFalse(Utils.timeBetweenTimes("10:01", "23:00", "10:00"))
+        assertTrue(Utils.timeBetweenTimes(time("00:00"), "23:00", "14:00"))
+        assertTrue(Utils.timeBetweenTimes(time("23:00"), "23:00", "10:00"))
+        assertTrue(Utils.timeBetweenTimes(time("10:00"), "23:00", "10:00"))
+        assertFalse(Utils.timeBetweenTimes(time("18:00"), "23:00", "14:00"))
+        assertFalse(Utils.timeBetweenTimes(time("22:59"), "23:00", "10:00"))
+        assertFalse(Utils.timeBetweenTimes(time("10:01"), "23:00", "10:00"))
 
         // same time
-        assertTrue(Utils.timeBetweenTimes("14:00", "14:00", "14:00"))
-        assertFalse(Utils.timeBetweenTimes("14:01", "14:00", "14:00"))
-        assertFalse(Utils.timeBetweenTimes("13:59", "14:00", "14:00"))
+        assertTrue(Utils.timeBetweenTimes(time("14:00"), "14:00", "14:00"))
+        assertFalse(Utils.timeBetweenTimes(time("14:01"), "14:00", "14:00"))
+        assertFalse(Utils.timeBetweenTimes(time("13:59"), "14:00", "14:00"))
 
         // invalid times
-        assertFalse(Utils.timeBetweenTimes("", "14:00", "14:00"))
-        assertFalse(Utils.timeBetweenTimes("14:00", "", "14:00"))
-        assertFalse(Utils.timeBetweenTimes("14:00", "14:00", ""))
-        assertFalse(Utils.timeBetweenTimes("abc", "14:00", "14:00"))
-        assertFalse(Utils.timeBetweenTimes("14:00", "abc", "14:00"))
-        assertFalse(Utils.timeBetweenTimes("14:00", "14:00", "abc"))
+        assertFalse(Utils.timeBetweenTimes(time("14:00"), "", "14:00"))
+        assertFalse(Utils.timeBetweenTimes(time("14:00"), "14:00", ""))
+        assertFalse(Utils.timeBetweenTimes(time("14:00"), "abc", "14:00"))
+        assertFalse(Utils.timeBetweenTimes(time("14:00"), "14:00", "abc"))
+    }
+
+
+    @Test
+    fun testTimeBetweenTimesWithDayFilter() {
+        mockkStatic(Log::class)
+        every { Log.v(any(), any()) } returns 0
+        every { Log.d(any(), any()) } returns 0
+        every { Log.i(any(), any()) } returns 0
+        every { Log.e(any(), any()) } returns 0
+
+        assertTrue(Utils.timeBetweenTimes(time("23:00"), "23:00", "14:00", mutableSetOf("1")))
+        assertTrue(Utils.timeBetweenTimes(time("23:10"), "23:00", "14:00", mutableSetOf("1")))
+        assertTrue(Utils.timeBetweenTimes(datetime("01.10.2024 00:00"), "23:00", "14:00", mutableSetOf("1")))
+        assertTrue(Utils.timeBetweenTimes(datetime("01.10.2024 10:00"), "23:00", "14:00", mutableSetOf("1")))
+        assertTrue(Utils.timeBetweenTimes(datetime("01.10.2024 14:00"), "23:00", "14:00", mutableSetOf("1")))
+        assertFalse(Utils.timeBetweenTimes(time("23:10"), "23:00", "14:00", mutableSetOf()))
+        assertFalse(Utils.timeBetweenTimes(time("23:10"), "23:00", "14:00", mutableSetOf("2", "3", "4", "5", "6", "7")))
+        assertFalse(Utils.timeBetweenTimes(datetime("01.10.2024 00:00"), "23:00", "14:00", mutableSetOf("2", "3", "4", "5", "6", "7")))
+        assertFalse(Utils.timeBetweenTimes(datetime("01.10.2024 00:00"), "23:00", "14:00", mutableSetOf("2", "3", "4", "5", "6", "7")))
+        assertTrue(Utils.timeBetweenTimes(datetime("01.10.2024 00:00"), "23:00", "14:00", mutableSetOf("1", "2", "3", "4", "5", "6", "7")))
+        assertFalse(Utils.timeBetweenTimes(datetime("01.10.2024 23:10"), "23:00", "14:00", mutableSetOf("1")))
+        assertFalse(Utils.timeBetweenTimes(datetime("02.10.2024 10:10"), "23:00", "14:00", mutableSetOf("1")))
+        assertTrue(Utils.timeBetweenTimes(datetime("02.10.2024 10:10"), "23:00", "14:00", mutableSetOf("2")))
+        assertFalse(Utils.timeBetweenTimes(datetime("02.10.2024 14:10"), "23:00", "14:00", mutableSetOf("2")))
+        assertTrue(Utils.timeBetweenTimes(time("23:00"), "10:00", "00:00", mutableSetOf("1")))
+        assertFalse(Utils.timeBetweenTimes(time("00:00"), "10:00", "00:00", mutableSetOf("1")))
+        assertTrue(Utils.timeBetweenTimes(datetime("01.10.2024 00:00"), "10:00", "00:00", mutableSetOf("1")))
+        assertFalse(Utils.timeBetweenTimes(datetime("02.10.2024 00:00"), "10:00", "00:00", mutableSetOf("1")))
     }
 
 

@@ -6,7 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.utils.Utils
-import java.time.LocalTime
+import java.time.DayOfWeek
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.math.abs
 
@@ -15,8 +16,10 @@ open class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
         const val defaultDelta = 5F
         const val defaultDeltaCount = 3
         const val defaultDeltaBorder = 145F
+        val defaultWeekdays = DayOfWeek.entries.map { it.value.toString() }.toMutableSet()
     }
 
+    private var inactiveWeekdays = defaultWeekdays
     protected val LOG_ID = "GDH.AlarmSetting.$alarmPrefix"
     var enabled = true
     private var inactiveEnabled = false
@@ -43,8 +46,10 @@ open class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
 
     val isTempInactive: Boolean get() {
         if (enabled && inactiveEnabled) {
-            val currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))
-            if (Utils.timeBetweenTimes(currentTime, inactiveStartTime, inactiveEndTime)) {
+            val now = LocalDateTime.now()
+            //now.dayOfWeek
+            val currentTime = now.format(DateTimeFormatter.ofPattern("HH:mm"))
+            if (Utils.timeBetweenTimes(now, inactiveStartTime, inactiveEndTime, inactiveWeekdays)) {
                 Log.v(LOG_ID, "Alarm is inactive: $inactiveStartTime < $currentTime < $inactiveEndTime")
                 return true
             }
@@ -78,6 +83,7 @@ open class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_ENABLED),
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_START_TIME),
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_END_TIME),
+        getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_WEEKDAYS),
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT)
     )
 
@@ -110,6 +116,7 @@ open class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
             bundle.putBoolean(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_ENABLED), inactiveEnabled)
             bundle.putString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_START_TIME), inactiveStartTime)
             bundle.putString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_END_TIME), inactiveEndTime)
+            bundle.putStringArray(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_WEEKDAYS), inactiveWeekdays.toTypedArray())
             bundle.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_DELAY), soundDelay)
             bundle.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_RETRIGGER), retriggerTime)
             bundle.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT), repeatTime)
@@ -130,6 +137,7 @@ open class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
             editor.putBoolean(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_ENABLED), bundle.getBoolean(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_ENABLED), inactiveEnabled))
             editor.putString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_START_TIME), bundle.getString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_START_TIME), inactiveStartTime))
             editor.putString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_END_TIME), bundle.getString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_END_TIME), inactiveEndTime))
+            editor.putStringSet(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_WEEKDAYS), bundle.getStringArray(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_WEEKDAYS))?.toMutableSet() ?: defaultWeekdays)
             editor.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_DELAY), bundle.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_DELAY), soundDelay))
             editor.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_RETRIGGER), bundle.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_RETRIGGER), retriggerTime))
             editor.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT), bundle.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT), repeatTime))
@@ -151,6 +159,7 @@ open class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
             inactiveEnabled = sharedPref.getBoolean(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_ENABLED), inactiveEnabled)
             inactiveStartTime = sharedPref.getString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_START_TIME), null) ?: ""
             inactiveEndTime = sharedPref.getString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_END_TIME), null) ?: ""
+            inactiveWeekdays = sharedPref.getStringSet(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_WEEKDAYS), defaultWeekdays) ?: defaultWeekdays
             soundDelay = sharedPref.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_DELAY), soundDelay)
             retriggerTime = sharedPref.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_RETRIGGER), retriggerTime)
             soundLevel = sharedPref.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_LEVEL), soundLevel)

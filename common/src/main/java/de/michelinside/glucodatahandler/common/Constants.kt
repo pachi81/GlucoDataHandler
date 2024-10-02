@@ -206,6 +206,7 @@ object Constants {
     const val SHARED_PREF_ALARM_SUFFIX_INACTIVE_ENABLED = "_inactive_enabled"
     const val SHARED_PREF_ALARM_SUFFIX_INACTIVE_START_TIME = "_inactive_start_time"
     const val SHARED_PREF_ALARM_SUFFIX_INACTIVE_END_TIME = "_inactive_end_time"
+    const val SHARED_PREF_ALARM_SUFFIX_INACTIVE_WEEKDAYS = "_inactive_weekdays"
     const val SHARED_PREF_ALARM_SUFFIX_TEST = "_test"
     const val SHARED_PREF_ALARM_SUFFIX_SAVE_SOUND = "_save_sound"
     const val SHARED_PREF_ALARM_SUFFIX_REPEAT = "_repeat"
