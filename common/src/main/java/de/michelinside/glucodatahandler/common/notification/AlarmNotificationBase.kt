@@ -231,7 +231,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     private fun triggerNotification(alarmType: AlarmType, context: Context, forTest: Boolean = false, setLastAlarm: Boolean = false) {
         try {
-            Log.d(LOG_ID, "triggerNotification called for $alarmType - active=$active - curNotification=$curNotification - forTest=$forTest")
+            Log.d(LOG_ID, "triggerNotification called for $alarmType - active=$active - curNotification=$curNotification - forTest=$forTest - setLastAlarm=$setLastAlarm")
             if (getAlarmState(context) == AlarmState.ACTIVE || forTest) {
                 if(setLastAlarm)
                     AlarmHandler.setLastAlarm(alarmType)
