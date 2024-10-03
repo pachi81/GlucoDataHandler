@@ -330,6 +330,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         Channels.getNotificationManager(context).createNotificationChannel(channel)
 
         // TODO: remove
+        Channels.getNotificationManager(context).deleteNotificationChannel("gdh_alarm_notification_silence_channel")
         Channels.getNotificationManager(context).deleteNotificationChannel("gdh_alarm_notification_channel")
         Channels.getNotificationManager(context).deleteNotificationChannel("gdh_alarm_notification_sound")
     }

@@ -57,7 +57,7 @@ object AlarmNotification : AlarmNotificationBase() {
             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
             .setUsage(AudioAttributes.USAGE_ALARM)
             .build()
-        channel.setSound(getUri(CR.raw.silence, context), audioAttributes)
+        channel.setSound(null, audioAttributes)
         channel.enableVibration(false)
         channel.enableLights(true)
     }
