@@ -535,11 +535,14 @@
     <string name="pref_floating_widget_time_to_close">Zeit zum Schließen</string>
     <string name="pref_floating_widget_time_to_close_summary">Zeit in Sekunden, wie lange man auf das Schwebende Widget drücken muss, ohne es zu Bewegen, damit es deaktiviert wird.\n0 zum Deaktivieren dieser Einstellung.\n</string>
     <string name="alarm_inactive_enabled">Inaktive Zeit</string>
-    <string name="alarm_inactive_enabled_summary">Zeit während der Alarm nicht aktiv ist.\nAktiviere diese Einstellung und setze die Start- und Endzeit.</string>
+    <string name="alarm_inactive_enabled_summary">Zeitspanne während dieser Alarm nicht ausgelöst wird.\nUm diese Einstellung zu aktivieren, muss zuerst die Start- und Endzeit gesetzt werden.</string>
+    <string name="all_alarm_inactive_enabled_summary">Zeitspanne während alle Alarme nicht ausgelöst werden.\nUm diese Einstellung zu aktivieren, muss zuerst die Start- und Endzeit gesetzt werden.</string>
     <string name="alarm_inactive_start_time">Inaktiv von</string>
-    <string name="alarm_inactive_start_time_summary">Von diesem Zeitpunkt an erscheint kein Alarm.</string>
+    <string name="alarm_inactive_start_time_summary">Ab dieser Zeit wird dieser Alarm nicht mehr ausgelöst.</string>
+    <string name="all_alarm_inactive_start_time_summary">Ab dieser Zeit werden alle Alarme nicht mehr ausgelöst.</string>
     <string name="alarm_inactive_end_time">Inaktiv bis</string>
-    <string name="alarm_inactive_end_time_summary">Bis zu diesem Zeitpunkt an erscheint kein Alarm.</string>
+    <string name="alarm_inactive_end_time_summary">Bis zu dieser Zeit wird dieser Alarm nicht mehr ausgelöst.</string>
+    <string name="all_alarm_inactive_end_time_summary">Bis zu dieser Zeit werden alle Alarme nicht mehr ausgelöst.</string>
 
     <string name="app_crash_bad_notification">Die App ist aufgrund des farbigen Layouts in den Benachrichtigungen abegstürzt!\nDie Einstellung wurde daher deaktiviert.\nDas Problem tritt bisher nur bei Samsung auf und scheint ein Problem auf Seite von Samsung zu sein.\nBitte senden Sie daher einen Fehlerbericht an Samsung. Vielen Dank!</string>
     <string name="auto_close_notification">Benachrichtigung automatisch schließen</string>

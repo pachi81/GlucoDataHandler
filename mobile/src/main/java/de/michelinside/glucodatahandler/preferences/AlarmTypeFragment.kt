@@ -22,7 +22,6 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.SeekBarPreference
 import androidx.preference.SwitchPreferenceCompat
-import com.takisoft.preferencex.TimePickerPreference
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
@@ -200,11 +199,9 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
 
             val inactivePref = findPreference<SwitchPreferenceCompat>(inactiveEnabledPref)
             if (inactivePref != null) {
-                val prefStart = findPreference<Preference>(inactiveStartPref)
-                val prefEnd = findPreference<Preference>(inactiveEndPref)
-                prefStart!!.isEnabled = inactivePref.isChecked
-                prefEnd!!.isEnabled = inactivePref.isChecked
-                prefWeekdays.isEnabled = inactivePref.isChecked
+                val prefStart = findPreference<MyTimeTickerPreference>(inactiveStartPref)
+                val prefEnd = findPreference<MyTimeTickerPreference>(inactiveEndPref)
+                inactivePref.isEnabled = Utils.isValidTime(prefStart!!.getTimeString()) && Utils.isValidTime(prefEnd!!.getTimeString()) && prefWeekdays.values.isNotEmpty()
             }
 
             val prefVibrateAmplitude = findPreference<SeekBarPreference>(vibrateAmplitudePref)
@@ -302,12 +299,6 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
 
         val inactivePref = findPreference<SwitchPreferenceCompat>(inactiveEnabledPref)
         inactivePref!!.isChecked = preferenceManager.sharedPreferences!!.getBoolean(inactivePref.key, false)
-
-        val prefStart = findPreference<TimePickerPreference>(inactiveStartPref)
-        prefStart!!.isEnabled = inactivePref.isChecked
-
-        val prefEnd = findPreference<TimePickerPreference>(inactiveEndPref)
-        prefEnd!!.isEnabled = inactivePref.isChecked
 
         val prefWeekdays = findPreference<MultiSelectListPreference>(inactiveWeekdaysPref)
         prefWeekdays!!.entries = DayOfWeek.entries.map { it.getDisplayName(TextStyle.FULL, Locale.getDefault()) }.toTypedArray()

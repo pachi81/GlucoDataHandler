@@ -19,12 +19,12 @@ open class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
         val defaultWeekdays = DayOfWeek.entries.map { it.value.toString() }.toMutableSet()
     }
 
-    private var inactiveWeekdays = defaultWeekdays
     protected val LOG_ID = "GDH.AlarmSetting.$alarmPrefix"
     var enabled = true
     private var inactiveEnabled = false
     private var inactiveStartTime = ""
     private var inactiveEndTime = ""
+    private var inactiveWeekdays = defaultWeekdays
     var vibratePatternKey = alarmPrefix
     private var vibrateAmplitudePref = 15
     var soundDelay = 0
@@ -47,7 +47,6 @@ open class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
     val isTempInactive: Boolean get() {
         if (enabled && inactiveEnabled) {
             val now = LocalDateTime.now()
-            //now.dayOfWeek
             val currentTime = now.format(DateTimeFormatter.ofPattern("HH:mm"))
             if (Utils.timeBetweenTimes(now, inactiveStartTime, inactiveEndTime, inactiveWeekdays)) {
                 Log.v(LOG_ID, "Alarm is inactive: $inactiveStartTime < $currentTime < $inactiveEndTime")

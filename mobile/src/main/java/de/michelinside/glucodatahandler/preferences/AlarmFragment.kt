@@ -10,6 +10,7 @@ import android.provider.Settings
 import android.os.Bundle
 import android.util.Log
 import androidx.core.content.ContextCompat
+import androidx.preference.MultiSelectListPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodatahandler.Dialogs
@@ -18,6 +19,7 @@ import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
+import de.michelinside.glucodatahandler.common.notification.AlarmSetting
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notification.SoundMode
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
@@ -25,6 +27,9 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
+import java.time.DayOfWeek
+import java.time.format.TextStyle
+import java.util.Locale
 
 class AlarmFragment : SettingsFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener {
     companion object {
@@ -58,6 +63,11 @@ class AlarmFragment : SettingsFragmentCompatBase(), SharedPreferences.OnSharedPr
             if(!AlarmNotification.channelActive(requireContext())) {
                 Log.e(LOG_ID, "Notification disabled!!!")
             }
+
+            val prefWeekdays = findPreference<MultiSelectListPreference>(Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS)
+            prefWeekdays!!.entries = DayOfWeek.entries.map { it.getDisplayName(TextStyle.FULL, Locale.getDefault()) }.toTypedArray()
+            prefWeekdays.entryValues = DayOfWeek.entries.map { it.value.toString() }.toTypedArray()
+            prefWeekdays.values = preferenceManager.sharedPreferences!!.getStringSet(prefWeekdays.key, AlarmSetting.defaultWeekdays)!!
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
         }
@@ -110,6 +120,8 @@ class AlarmFragment : SettingsFragmentCompatBase(), SharedPreferences.OnSharedPr
                 disableSwitch(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED)
             }
 
+            updateInactiveTime()
+
             updateAlarmCat(Constants.SHARED_PREF_ALARM_VERY_LOW)
             updateAlarmCat(Constants.SHARED_PREF_ALARM_LOW)
             updateAlarmCat(Constants.SHARED_PREF_ALARM_HIGH)
@@ -119,6 +131,20 @@ class AlarmFragment : SettingsFragmentCompatBase(), SharedPreferences.OnSharedPr
             updateAlarmCat(Constants.SHARED_PREF_ALARM_FALLING_FAST)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.toString())
+        }
+    }
+
+    private fun updateInactiveTime() {
+        val prefWeekdays = findPreference<MultiSelectListPreference>(Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS)
+        prefWeekdays!!.summary = resources.getString(CR.string.alarm_inactive_weekdays_summary) + "\n" + prefWeekdays.values.joinToString(
+            ", "
+        ) { DayOfWeek.of(it.toInt()).getDisplayName(TextStyle.SHORT, Locale.getDefault()) }
+
+        val inactivePref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED)
+        if (inactivePref != null) {
+            val prefStart = findPreference<MyTimeTickerPreference>(Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME)
+            val prefEnd = findPreference<MyTimeTickerPreference>(Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME)
+            inactivePref.isEnabled = Utils.isValidTime(prefStart!!.getTimeString()) && Utils.isValidTime(prefEnd!!.getTimeString()) && prefWeekdays.values.isNotEmpty()
         }
     }
 
@@ -224,6 +250,9 @@ class AlarmFragment : SettingsFragmentCompatBase(), SharedPreferences.OnSharedPr
                         requestFullScreenPermission(requireContext())
                     }
                 }
+                Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS,
+                Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME,
+                Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME -> updateInactiveTime()
             }
             if(AlarmHandler.isAlarmSettingToShare(key))
                 settingsChanged = true

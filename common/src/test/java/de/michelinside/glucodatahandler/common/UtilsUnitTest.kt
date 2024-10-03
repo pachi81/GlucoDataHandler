@@ -25,6 +25,24 @@ class UtilsUnitTest {
         return LocalDateTime.parse(dateTime, formatter)
     }
 
+
+    @Test
+    fun testIsValidTime() {
+        mockkStatic(Log::class)
+        every { Log.v(any(), any()) } returns 0
+        every { Log.d(any(), any()) } returns 0
+        every { Log.i(any(), any()) } returns 0
+        every { Log.e(any(), any()) } returns 0
+
+        assertTrue(Utils.isValidTime("12:00"))
+        assertTrue(Utils.isValidTime("00:00"))
+        assertTrue(Utils.isValidTime("23:59"))
+        assertFalse(Utils.isValidTime("24:01"))
+        assertFalse(Utils.isValidTime("12:60"))
+        assertFalse(Utils.isValidTime(null))
+        assertFalse(Utils.isValidTime(""))
+    }
+
     @Test
     fun testTimeBetweenTimes() {
         mockkStatic(Log::class)
@@ -60,7 +78,6 @@ class UtilsUnitTest {
         assertFalse(Utils.timeBetweenTimes(time("14:00"), "abc", "14:00"))
         assertFalse(Utils.timeBetweenTimes(time("14:00"), "14:00", "abc"))
     }
-
 
     @Test
     fun testTimeBetweenTimesWithDayFilter() {

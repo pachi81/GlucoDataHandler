@@ -18,4 +18,6 @@ class MyTimeTickerPreference : TimePickerPreference {
         super.setKey(key)
         onSetInitialValue(null)
     }
+
+    fun getTimeString(): String = getPersistedString("")
 }

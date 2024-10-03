@@ -452,6 +452,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                             apply()
                         }
                     }
+                    AlarmState.TEMP_INACTIVE -> {
+                        with(sharedPref.edit()) {
+                            putBoolean(Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED, false)
+                            apply()
+                        }
+                    }
                 }
             } else {
                 with(sharedPref.edit()) {

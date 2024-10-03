@@ -386,12 +386,24 @@ object Utils {
         return false
     }
 
+    private val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+
+    fun isValidTime(time: String?): Boolean {
+        if (time.isNullOrEmpty())
+            return false
+        try {
+            LocalTime.parse(time, timeFormatter)
+            return true
+        } catch(_: Exception) {
+        }
+        return false
+    }
+
     @SuppressLint("SimpleDateFormat")
     fun timeBetweenTimes(currentTime: LocalDateTime, startTime: String, endTime: String, weekDayFilter: MutableSet<String>? = null): Boolean {
         try {
-            if (startTime.isEmpty() || endTime.isEmpty())
+            if (!isValidTime(startTime) || !isValidTime(endTime))
                 return false
-            val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
             val timeCur = currentTime.toLocalTime()
             val timeStart = LocalTime.parse(startTime, timeFormatter)
             val timeEnd = LocalTime.parse(endTime, timeFormatter)

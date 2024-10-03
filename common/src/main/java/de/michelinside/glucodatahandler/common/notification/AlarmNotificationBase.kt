@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.SharedPreferences.Editor
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -793,7 +794,11 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED,
         Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_WEAR_CONNECTED,
         Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED,
-        Constants.SHARED_PREF_NOTIFICATION_VIBRATE
+        Constants.SHARED_PREF_NOTIFICATION_VIBRATE,
+        Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED,
+        Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME,
+        Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME,
+        Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS
     )
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
@@ -822,6 +827,24 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 InternalNotifier.notify(GlucoDataService.context!!, NotifySource.ALARM_STATE_CHANGED, null)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
+        }
+    }
+
+    fun getSettings(): Bundle {
+        val bundle = Bundle()
+        bundle.putBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, getAddSnooze())
+        if(GlucoDataService.sharedPref != null) {
+            bundle.putBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED,  GlucoDataService.sharedPref!!.getBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED, false))
+        }
+        return bundle
+    }
+
+    fun saveSettings(bundle: Bundle, editor: Editor) {
+        if(bundle.containsKey(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION)) {
+            editor.putBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, bundle.getBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, getAddSnooze()))
+            if(bundle.containsKey(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED)) {
+                editor.putBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED, bundle.getBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED))
+            }
         }
     }
 

@@ -4,7 +4,7 @@
         <PreferenceCategory
             android:key="cat_alarm"
             app:iconSpaceReserved="false"
-            app:initialExpandedChildrenCount="2">
+            app:initialExpandedChildrenCount="3">
         <androidx.preference.SwitchPreferenceCompat
             android:key="_enabled"
             android:defaultValue="true"
