@@ -180,9 +180,11 @@
     <string name="pref_notification_no_content">Ocultar contenido</string>
     <string name="pref_notification_no_content_summary">Esto eliminará el contenido de la notificación, para tener solo una pequeña notificación con el icono relacionado.</string>
     <string name="pref_second_notification">2. notificación</string>
-    <string name="pref_second_notification_summary">Mostrar una segunda notificación sin contenido para tener un icono adicional en la barra de estado.</string>
+    <string name="pref_second_notification_summary">Mostrar una notificación sin contenido para tener un icono adicional en la barra de estado.</string>
     <string name="pref_second_notification_icon">2. icono de la barra de estado</string>
-    <string name="pref_second_notification_icon_summary">Estilo de icono pequeño en la barra de estado de la segunda notificación.</string>
+    <string name="pref_second_notification_icon_summary">Estilo de icono pequeño en la barra de estado de la notificación.</string>
+    <string name="pref_third_notification">3. notificación</string>
+    <string name="pref_third_notification_icon">3. icono de la barra de estado</string>
     <string name="pref_floating_widget">Widget flotante</string>
     <string name="pref_floating_widget_summary">Mostrar glucosa, tendencia, delta, hora y IOB/COB como widget flotante.\nSi mantienes y no mueves el widget durante más de 5 segundos, desaparecerá.</string>
     <string name="pref_floating_widget_size">Tamaño</string>
@@ -282,6 +284,7 @@
     <string name="mobile_foreground_notification_name">Notificación en primer plano</string>
     <string name="mobile_foreground_notification_descr">Notificación en primer plano que evita que la aplicación se detenga mientras se ejecuta en segundo plano.</string>
     <string name="mobile_second_notification_name">Segunda notificación</string>
+    <string name="mobile_third_notification_name">Tercera notificación</string>
     <string name="mobile_second_notification_descr">Notificación adicional para mostrar un icono extra en la barra de estado.</string>
     <string name="worker_notification_name">Notificación del trabajador</string>
     <string name="worker_notification_descr">Notificación del trabajador mostrada mientras se ejecutan tareas en segundo plano.</string>
@@ -549,15 +552,15 @@
     <string name="detail_reset_connection">Connection is not working as expected! Please try to restart your watch.</string>
     <string name="pref_floating_widget_time_to_close">Time to close</string>
     <string name="pref_floating_widget_time_to_close_summary">Time in seconds to close the floating widget while pressing on the widget without moving it.\n0 for disable this setting.</string>
-    <string name="alarm_inactive_enabled">Inactive time</string>
-    <string name="alarm_inactive_enabled_summary">To disable this alarm in a specific time range.\nTo enable it, set the start- and end time first.</string>
-    <string name="all_alarm_inactive_enabled_summary">To disable all alarms in a specific time range.\nTo enable it, set the start- and end time first.</string>
-    <string name="alarm_inactive_start_time">Inactive from</string>
-    <string name="alarm_inactive_start_time_summary">From this time, this alarm will not fire.</string>
-    <string name="all_alarm_inactive_start_time_summary">From this time, all alarms will not fire.</string>
-    <string name="alarm_inactive_end_time">Inactive until</string>
-    <string name="alarm_inactive_end_time_summary">Until this time, this alarm will not fire.</string>
-    <string name="all_alarm_inactive_end_time_summary">Until this time, all alarms will not fire.</string>
+    <string name="alarm_inactive_enabled">Enable quiet hours</string>
+    <string name="alarm_inactive_enabled_summary">No alarm notifications for this alarm during quiet hours.\nConfigure your preferred times to use this feature.</string>
+    <string name="all_alarm_inactive_enabled_summary">No alarm notifications for all alarms during quiet hours.\nConfigure your preferred times to use this feature.</string>
+    <string name="alarm_inactive_start_time">Start time</string>
+    <string name="alarm_inactive_start_time_summary">Select the time you want your quiet hours to start.</string>
+    <string name="alarm_inactive_end_time">End time</string>
+    <string name="alarm_inactive_end_time_summary">Select the time you want your quiet hours to end.</string>
+    <string name="alarm_inactive_weekdays">Days for quiet hours</string>
+    <string name="alarm_inactive_weekdays_summary">Specify the days of the week on which quiet hours should start at the selected start time.</string>
 
     <string name="app_crash_bad_notification">The app crashes because of the colored notification layout!\nIt has been disabled to prevent this crash.\nThis is an issue on Samsung phones so please create a error report in the Samsung members app. Thank you!</string>
     <string name="auto_close_notification">Auto close notification</string>
@@ -599,6 +602,5 @@
     <string name="delta_per_minute">per minute</string>
     <string name="delta_per_5_minute">per 5 minutes</string>
     <string name="other_alarm_cat_categories">Other alarms</string>
-    <string name="alarm_inactive_weekdays">Inactive weekdays</string>
-    <string name="alarm_inactive_weekdays_summary">Filter for weekdays where the alarm is inactive within the time period. The weekday always refers to the start time.</string>
+    <string name="advanced_settings_alarm">Advanced alarm settings</string>
 </resources>

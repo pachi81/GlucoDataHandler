@@ -179,7 +179,9 @@
     <string name="pref_second_notification">2. Benachrichtigung</string>
     <string name="pref_second_notification_summary">Zeigt eine weitere Benachrichtigung ohne Inhalt an, um ein zusätzliches Statusbar Icon hinzuzufügen.</string>
     <string name="pref_second_notification_icon">2. Statusbar Icon</string>
-    <string name="pref_second_notification_icon_summary">Art des Statusbar Icons für die zweite Benachrichtigung.</string>
+    <string name="pref_second_notification_icon_summary">Art des Statusbar Icons für die Benachrichtigung.</string>
+    <string name="pref_third_notification">3. Benachrichtigung</string>
+    <string name="pref_third_notification_icon">3. Statusbar Icon</string>
     <string name="pref_floating_widget">Schwebendes Widget</string>
     <string name="pref_floating_widget_summary">Zeigt Trendpfeil, den Glukose-, Deltawert, Zeipunkt und IOB/COB als schwebendes Widget.\nUm es zu deaktivieren, muss das Widget für mindestens 5 Sekunden gedrückt werden, ohne es zu bewegen.</string>
     <string name="pref_floating_widget_size">Größe</string>
@@ -276,6 +278,7 @@
     <string name="mobile_foreground_notification_name">Vordergrund Benachrichtigung</string>
     <string name="mobile_foreground_notification_descr">Die Vordergrund-Benachrichtigung verhindert, dass die App von Android geschlossen wird.</string>
     <string name="mobile_second_notification_name">Zweite Benachrichtigung</string>
+    <string name="mobile_third_notification_name">Dritte Benachrichtigung</string>
     <string name="mobile_second_notification_descr">Zusätzliche Benachrichtigung um ein weiteres Icon in der Statusbar anzuzeigen.</string>
     <string name="worker_notification_name">Worker Benachrichtigung</string>
     <string name="worker_notification_descr">Worker Benachrichtigung welche angezeigt wird, solange im Hintergrund eine Aktivität ausgeführt wird.</string>
@@ -534,15 +537,15 @@
     <string name="detail_reset_connection">Verbindung funktioniert nicht korrekt! Bitte die Uhr neustarten.</string>
     <string name="pref_floating_widget_time_to_close">Zeit zum Schließen</string>
     <string name="pref_floating_widget_time_to_close_summary">Zeit in Sekunden, wie lange man auf das Schwebende Widget drücken muss, ohne es zu Bewegen, damit es deaktiviert wird.\n0 zum Deaktivieren dieser Einstellung.\n</string>
-    <string name="alarm_inactive_enabled">Inaktive Zeit</string>
-    <string name="alarm_inactive_enabled_summary">Zeitspanne während dieser Alarm nicht ausgelöst wird.\nUm diese Einstellung zu aktivieren, muss zuerst die Start- und Endzeit gesetzt werden.</string>
-    <string name="all_alarm_inactive_enabled_summary">Zeitspanne während alle Alarme nicht ausgelöst werden.\nUm diese Einstellung zu aktivieren, muss zuerst die Start- und Endzeit gesetzt werden.</string>
-    <string name="alarm_inactive_start_time">Inaktiv von</string>
-    <string name="alarm_inactive_start_time_summary">Ab dieser Zeit wird dieser Alarm nicht mehr ausgelöst.</string>
-    <string name="all_alarm_inactive_start_time_summary">Ab dieser Zeit werden alle Alarme nicht mehr ausgelöst.</string>
-    <string name="alarm_inactive_end_time">Inaktiv bis</string>
-    <string name="alarm_inactive_end_time_summary">Bis zu dieser Zeit wird dieser Alarm nicht mehr ausgelöst.</string>
-    <string name="all_alarm_inactive_end_time_summary">Bis zu dieser Zeit werden alle Alarme nicht mehr ausgelöst.</string>
+    <string name="alarm_inactive_enabled">Ruhezeit aktivieren</string>
+    <string name="alarm_inactive_enabled_summary">Während der festgelegten Ruhezeit erhalten Sie keine Benachrichtigung zu diesem Alarm.\nStellen Sie die Start- und Endzeit ein, um diese Funktion zu nutzen.</string>
+    <string name="all_alarm_inactive_enabled_summary">Alle Alarme werden während der Ruhezeit nicht ausgelöst.\nStellen Sie die Start- und Endzeit ein, um diese Funktion zu nutzen.</string>
+    <string name="alarm_inactive_start_time">Startzeit</string>
+    <string name="alarm_inactive_start_time_summary">Stellen Sie die Uhrzeit ein, zu der die Ruhezeit starten sollen.</string>
+    <string name="alarm_inactive_end_time">Endzeit</string>
+    <string name="alarm_inactive_end_time_summary">Stellen Sie die Uhrzeit ein, zu der die Ruhezeit enden sollen.</string>
+    <string name="alarm_inactive_weekdays">Tage für Ruhezeit</string>
+    <string name="alarm_inactive_weekdays_summary">Legen Sie fest, an welchen Wochentagen die Ruhezeit zur gewählten Startzeit aktiviert werden sollen.</string>
 
     <string name="app_crash_bad_notification">Die App ist aufgrund des farbigen Layouts in den Benachrichtigungen abegstürzt!\nDie Einstellung wurde daher deaktiviert.\nDas Problem tritt bisher nur bei Samsung auf und scheint ein Problem auf Seite von Samsung zu sein.\nBitte senden Sie daher einen Fehlerbericht an Samsung. Vielen Dank!</string>
     <string name="auto_close_notification">Benachrichtigung automatisch schließen</string>
@@ -584,6 +587,5 @@
     <string name="delta_per_minute">pro Minute</string>
     <string name="delta_per_5_minute">pro 5 Minuten</string>
     <string name="other_alarm_cat_categories">Weitere Alarme</string>
-    <string name="alarm_inactive_weekdays">Inaktive Wochentage</string>
-    <string name="alarm_inactive_weekdays_summary">Filtere auf Wochentage, an denen der Alarm innerhalb des Zeitraums inaktiv ist. Der Wochentag bezieht sich dabei immer auf den Startzeitpunkt.</string>
+    <string name="advanced_settings_alarm">Erweiterte Alarmeinstellungen</string>
 </resources>

@@ -28,12 +28,6 @@
                     android:title="@string/alarm_use_alarm_sound"
                     android:summary="@string/alarm_use_alarm_sound_summary"
                     app:iconSpaceReserved="false" />
-                <androidx.preference.SwitchPreferenceCompat
-                    android:key="auto_close_notification"
-                    android:defaultValue="false"
-                    android:title="@string/auto_close_notification"
-                    android:summary="@string/auto_close_notification_summary"
-                    app:iconSpaceReserved="false" />
                 <androidx.preference.ListPreference
                     android:defaultValue="1000"
                     android:key="alarm_start_delay_string"
@@ -44,6 +38,12 @@
         <PreferenceCategory
             android:title="@string/alarm_advanced_cat_notifcation"
             app:iconSpaceReserved="false">
+                <androidx.preference.SwitchPreferenceCompat
+                    android:key="auto_close_notification"
+                    android:defaultValue="false"
+                    android:title="@string/auto_close_notification"
+                    android:summary="@string/auto_close_notification_summary"
+                    app:iconSpaceReserved="false" />
                 <androidx.preference.SwitchPreferenceCompat
                     android:defaultValue="false"
                     android:key="alarm_no_notification_wear_connected"

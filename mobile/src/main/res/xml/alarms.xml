@@ -27,7 +27,7 @@
         <de.michelinside.glucodatahandler.preferences.MyTimeTickerPreference
             android:key="alarm_inactive_start_time"
             android:title="@string/alarm_inactive_start_time"
-            android:summary="@string/all_alarm_inactive_start_time_summary"
+            android:summary="@string/alarm_inactive_start_time_summary"
             app:pref_hourFormat="auto"
             app:pref_pickerTime="23:00"
             app:pref_summaryHasTime="%s"
@@ -35,7 +35,7 @@
         <de.michelinside.glucodatahandler.preferences.MyTimeTickerPreference
             android:key="alarm_inactive_end_time"
             android:title="@string/alarm_inactive_end_time"
-            android:summary="@string/all_alarm_inactive_end_time_summary"
+            android:summary="@string/alarm_inactive_end_time_summary"
             app:pref_hourFormat="auto"
             app:pref_pickerTime="07:00"
             app:pref_summaryHasTime="%s"
