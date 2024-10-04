@@ -25,7 +25,7 @@
                     app:showSeekBarValue="true"
                     app:seekBarIncrement="1"
                     app:min="1"
-                    android:max="10"
+                    android:max="30"
                     android:key="floating_widget_size"
                     android:summary="@string/pref_floating_widget_size_summary"
                     android:title="@string/pref_floating_widget_size"
