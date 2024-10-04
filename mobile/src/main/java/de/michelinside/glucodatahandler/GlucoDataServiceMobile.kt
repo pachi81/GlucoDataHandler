@@ -10,6 +10,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
@@ -169,7 +170,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         return PermanentNotification.getNotification(
             !sharedPref!!.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false),
             Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON,
-            true,
+            ChannelType.MOBILE_FOREGROUND,
             sharedPref!!.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, true)
         )
     }

@@ -32,7 +32,9 @@ import de.michelinside.glucodatahandler.common.utils.PackageUtils
 object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
     private const val LOG_ID = "GDH.PermanentNotification"
     private const val SECOND_NOTIFICATION_ID = 124
-    private lateinit var notificationCompat: Notification.Builder
+    private const val THIRD_NOTIFICATION_ID = 234
+    private lateinit var secondNotificationCompat: Notification.Builder
+    private lateinit var thirdNotificationCompat: Notification.Builder
     private lateinit var foregroundNotificationCompat: Notification.Builder
     private lateinit var sharedPref: SharedPreferences
 
@@ -78,6 +80,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     private fun createNotificationChannel(context: Context) {
         Channels.createNotificationChannel(context, ChannelType.MOBILE_FOREGROUND)
         Channels.createNotificationChannel(context, ChannelType.MOBILE_SECOND)
+        Channels.createNotificationChannel(context, ChannelType.MOBILE_THIRD)
     }
 
     private fun createNofitication(context: Context) {
@@ -86,8 +89,9 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
         Channels.getNotificationManager().cancel(GlucoDataService.NOTIFICATION_ID)
         Channels.getNotificationManager().cancel(SECOND_NOTIFICATION_ID)
+        Channels.getNotificationManager().cancel(THIRD_NOTIFICATION_ID)
 
-        notificationCompat = Notification.Builder(context, ChannelType.MOBILE_SECOND.channelId)
+        secondNotificationCompat = Notification.Builder(context, ChannelType.MOBILE_SECOND.channelId)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
@@ -95,6 +99,17 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setShowWhen(true)
             .setColorized(true)
             .setGroup(ChannelType.MOBILE_SECOND.channelId)
+            .setCategory(Notification.CATEGORY_STATUS)
+            .setVisibility(Notification.VISIBILITY_PUBLIC)
+
+        thirdNotificationCompat = Notification.Builder(context, ChannelType.MOBILE_THIRD.channelId)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setOngoing(true)
+            .setOnlyAlertOnce(true)
+            .setAutoCancel(false)
+            .setShowWhen(true)
+            .setColorized(true)
+            .setGroup(ChannelType.MOBILE_THIRD.channelId)
             .setCategory(Notification.CATEGORY_STATUS)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
 
@@ -114,6 +129,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         //notificationMgr.cancel(NOTIFICATION_ID)  // remove notification
         showPrimaryNotification(false)
         Channels.getNotificationManager().cancel(SECOND_NOTIFICATION_ID)
+        Channels.getNotificationManager().cancel(THIRD_NOTIFICATION_ID)
     }
 
     private fun getStatusBarIcon(iconKey: String): Icon {
@@ -131,14 +147,25 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         }
     }
 
-    private fun getTapActionIntent(foreground: Boolean): PendingIntent? {
-        val tapAction = if(foreground)
-            sharedPref.getString(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION, "")
-        else
-            sharedPref.getString(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_TAP_ACTION, "")
+    private fun getNotificationBuilder(channel: ChannelType): Notification.Builder? {
+        when(channel) {
+            ChannelType.MOBILE_FOREGROUND -> return foregroundNotificationCompat
+            ChannelType.MOBILE_SECOND -> return secondNotificationCompat
+            ChannelType.MOBILE_THIRD -> return thirdNotificationCompat
+            else -> return null
+        }
+    }
+
+    private fun getTapActionIntent(channel: ChannelType): PendingIntent? {
+        val tapAction = when(channel) {
+            ChannelType.MOBILE_FOREGROUND -> sharedPref.getString(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION, "")
+            ChannelType.MOBILE_SECOND -> sharedPref.getString(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_TAP_ACTION, "")
+            ChannelType.MOBILE_THIRD -> sharedPref.getString(Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_TAP_ACTION, "")
+            else -> null
+        }
         if(tapAction.isNullOrEmpty())
             return null
-        val requestCode = if(foreground) 4 else 5
+        val requestCode = channel.ordinal
         return PackageUtils.getTapActionIntent(GlucoDataService.context!!, tapAction, requestCode)
     }
 
@@ -190,12 +217,12 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         return null
     }
 
-    fun getNotification(withContent: Boolean, iconKey: String, foreground: Boolean, customLayout: Boolean) : Notification {
-        Log.d(LOG_ID, "getNotification withContent=$withContent - foreground=$foreground - customLayout=$customLayout")
-        val notificationBuilder = if(foreground) foregroundNotificationCompat else notificationCompat
-        val notificationBuild = notificationBuilder
+    fun getNotification(withContent: Boolean, iconKey: String, channel: ChannelType, customLayout: Boolean) : Notification {
+        Log.d(LOG_ID, "getNotification withContent=$withContent - channel=${channel} - customLayout=$customLayout")
+        val notificationBuilder = getNotificationBuilder(channel)
+        val notificationBuild = notificationBuilder!!
             .setSmallIcon(getStatusBarIcon(iconKey))
-            .setContentIntent(getTapActionIntent(foreground))
+            .setContentIntent(getTapActionIntent(channel))
             .setWhen(ReceiveData.time)
             .setColorized(false)
 
@@ -236,12 +263,12 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         return notification
     }
 
-    private fun showNotification(id: Int, withContent: Boolean, iconKey: String, foreground: Boolean, customLayout: Boolean) {
+    private fun showNotification(id: Int, withContent: Boolean, iconKey: String, channel: ChannelType, customLayout: Boolean) {
         try {
             Log.v(LOG_ID, "showNotification called for id " + id)
             Channels.getNotificationManager().notify(
                 id,
-                getNotification(withContent, iconKey, foreground, customLayout)
+                getNotification(withContent, iconKey, channel, customLayout)
             )
         } catch (exc: Exception) {
             Log.e(LOG_ID, "showNotification exception: " + exc.toString() )
@@ -259,11 +286,23 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
                     SECOND_NOTIFICATION_ID,
                     false,
                     Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON,
-                    false,
+                    ChannelType.MOBILE_SECOND,
                     false
                 )
             } else {
                 Channels.getNotificationManager().cancel(SECOND_NOTIFICATION_ID)
+            }
+            if (sharedPref.getBoolean(Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION, false)) {
+                Log.d(LOG_ID, "show third notification")
+                showNotification(
+                    THIRD_NOTIFICATION_ID,
+                    false,
+                    Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_ICON,
+                    ChannelType.MOBILE_THIRD,
+                    false
+                )
+            } else {
+                Channels.getNotificationManager().cancel(THIRD_NOTIFICATION_ID)
             }
         }
     }
@@ -274,7 +313,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             GlucoDataService.NOTIFICATION_ID,
             !sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false),
             Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON,
-            true,
+            ChannelType.MOBILE_FOREGROUND,
             sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, true)
         )
     }
@@ -289,6 +328,12 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
         if (sharedPref.getBoolean(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, false)) {
             if (sharedPref.getString(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, StatusBarIcon.APP.pref) != StatusBarIcon.APP.pref) {
+                return true
+            }
+        }
+
+        if (sharedPref.getBoolean(Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION, false)) {
+            if (sharedPref.getString(Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_ICON, StatusBarIcon.APP.pref) != StatusBarIcon.APP.pref) {
                 return true
             }
         }
@@ -334,6 +379,9 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
                 Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION,
                 Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON,
                 Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_TAP_ACTION,
+                Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION,
+                Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_ICON,
+                Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_TAP_ACTION,
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON,
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_COLORED_ICON,
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION -> {

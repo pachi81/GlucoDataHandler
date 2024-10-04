@@ -181,12 +181,7 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
             setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_GLUCODATA_RECEIVERS, Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD)
             setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_XDRIP_RECEIVERS, Constants.SHARED_PREF_SEND_TO_XDRIP)
             setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_XDRIP_BROADCAST_RECEIVERS, Constants.SHARED_PREF_SEND_XDRIP_BROADCAST)
-            /*setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION, defValue = true)
-            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, Constants.SHARED_PREF_PERMANENT_NOTIFICATION, defValue = true)
-            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION, defValue = true)
-            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, Constants.SHARED_PREF_PERMANENT_NOTIFICATION, defValue = true)*/
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, defValue = true, invert = true)
-            setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, /*Constants.SHARED_PREF_PERMANENT_NOTIFICATION,*/Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, defValue = false)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_STYLE, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY, Constants.SHARED_PREF_FLOATING_WIDGET)
