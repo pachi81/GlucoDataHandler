@@ -58,7 +58,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     val low: Float get() {
         if(isMmol && lowValue > 0F)  // mmol/l
         {
-            return GlucoDataUtils.mgToMmol(lowValue, 1)
+            return GlucoDataUtils.mgToMmol(lowValue)
         }
         return lowValue
     }
@@ -66,7 +66,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     val high: Float get() {
         if(isMmol && highValue > 0F)  // mmol/l
         {
-            return GlucoDataUtils.mgToMmol(highValue, 1)
+            return GlucoDataUtils.mgToMmol(highValue)
         }
         return highValue
     }
@@ -74,7 +74,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     val targetMin: Float get() {
         if(isMmol)  // mmol/l
         {
-            return GlucoDataUtils.mgToMmol(targetMinValue, 1)
+            return GlucoDataUtils.mgToMmol(targetMinValue)
         }
         return targetMinValue
     }
@@ -82,7 +82,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     val targetMax: Float get() {
         if(isMmol)  // mmol/l
         {
-            return GlucoDataUtils.mgToMmol(targetMaxValue, 1)
+            return GlucoDataUtils.mgToMmol(targetMaxValue)
         }
         return targetMaxValue
     }
@@ -93,7 +93,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             return deltaValue
         if(isMmol)  // mmol/l
         {
-            return GlucoDataUtils.mgToMmol(deltaValue, if (abs(deltaValue) > 1.0F) 1 else 2)
+            return GlucoDataUtils.mgToMmol(deltaValue)
         }
         return Utils.round(deltaValue, 1)
     }
@@ -210,7 +210,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     fun getDeltaAsOtherUnit(): String {
         if(isObsoleteShort() || deltaValue.isNaN())
             return "--"
-        val otherDelta = if(isMmol) Utils.round(deltaValue, 1) else GlucoDataUtils.mgToMmol(deltaValue, if (abs(deltaValue) > 1.0F) 1 else 2)
+        val otherDelta = if(isMmol) Utils.round(deltaValue, 1) else GlucoDataUtils.mgToMmol(deltaValue)
         var deltaVal = ""
         if (otherDelta > 0F)
             deltaVal += "+"

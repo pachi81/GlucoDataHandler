@@ -5,6 +5,7 @@ import android.content.Intent
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
+import kotlin.math.abs
 import kotlin.random.Random
 
 object GlucoDataUtils {
@@ -22,8 +23,8 @@ object GlucoDataUtils {
 
     fun isMmolValue(value: Float): Boolean = value < Constants.GLUCOSE_MIN_VALUE.toFloat()
 
-    fun mgToMmol(value: Float, scale: Int = 1): Float {
-        return Utils.round(value / Constants.GLUCOSE_CONVERSION_FACTOR, scale)
+    fun mgToMmol(value: Float): Float {
+        return Utils.round(value / Constants.GLUCOSE_CONVERSION_FACTOR, if(abs(value) > 1.7F) 1 else 2)
     }
 
     fun mmolToMg(value: Float): Float {
