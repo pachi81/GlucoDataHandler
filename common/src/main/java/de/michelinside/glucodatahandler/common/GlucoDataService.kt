@@ -2,6 +2,7 @@ package de.michelinside.glucodatahandler.common
 
 import android.annotation.SuppressLint
 import android.app.Notification
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -16,6 +17,7 @@ import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.receiver.AAPSReceiver
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.receiver.BroadcastServiceAPI
 import de.michelinside.glucodatahandler.common.receiver.DexcomBroadcastReceiver
@@ -36,7 +38,7 @@ enum class AppSource {
     AUTO_APP;
 }
 
-abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
+abstract class GlucoDataService(source: AppSource) : WearableListenerService(), SharedPreferences.OnSharedPreferenceChangeListener {
     private lateinit var batteryReceiver: BatteryReceiver
 
     @SuppressLint("StaticFieldLeak")
@@ -147,38 +149,102 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
 
         private var glucoDataReceiver: GlucoseDataReceiver? = null
         private var xDripReceiver: XDripBroadcastReceiver?  = null
-        //private var aapsReceiver: AAPSReceiver?  = null
+        private var aapsReceiver: AAPSReceiver?  = null
         private var dexcomReceiver: DexcomBroadcastReceiver? = null
         private var nsEmulatorReceiver: NsEmulatorReceiver? = null
         private val broadcastServiceAPI = BroadcastServiceAPI()
+        private val registeredReceivers = mutableSetOf<String>()
 
         @SuppressLint("UnspecifiedRegisterReceiverFlag")
-        fun registerSourceReceiver(context: Context) {
+        private fun registerReceiver(context: Context, receiver: BroadcastReceiver, filter: IntentFilter) {
+            Log.i(LOG_ID, "Register receiver ${receiver.javaClass.simpleName}")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                context.registerReceiver(receiver, filter, RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
+            } else {
+                context.registerReceiver(receiver, filter)
+            }
+            registeredReceivers.add(receiver.javaClass.simpleName)
+        }
+
+        private fun unregisterReceiver(context: Context, receiver: BroadcastReceiver?) {
+            if (receiver != null) {
+                Log.i(LOG_ID, "Unregister receiver ${receiver.javaClass.simpleName}")
+                context.unregisterReceiver(receiver)
+                registeredReceivers.remove(receiver.javaClass.simpleName)
+            }
+        }
+
+        fun isRegistered(receiver: BroadcastReceiver): Boolean {
+            return registeredReceivers.contains(receiver.javaClass.simpleName)
+        }
+
+        fun updateSourceReceiver(context: Context, key: String? = null) {
             Log.d(LOG_ID, "Register receiver")
             try {
-                if (glucoDataReceiver == null) {
-                    glucoDataReceiver = GlucoseDataReceiver()
-                    xDripReceiver = XDripBroadcastReceiver()
-                    //aapsReceiver = AAPSReceiver()
-                    dexcomReceiver = DexcomBroadcastReceiver()
-                    nsEmulatorReceiver = NsEmulatorReceiver()
-                    val dexcomFilter = IntentFilter()
-                    dexcomFilter.addAction("com.dexcom.cgm.EXTERNAL_BROADCAST")
-                    dexcomFilter.addAction("com.dexcom.g7.EXTERNAL_BROADCAST")
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        context.registerReceiver(glucoDataReceiver, IntentFilter("glucodata.Minute"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
-                        context.registerReceiver(xDripReceiver,IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
-                        //registerReceiver(aapsReceiver,IntentFilter("info.nightscout.androidaps.status"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
-                        context.registerReceiver(dexcomReceiver,dexcomFilter, RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
-                        context.registerReceiver(nsEmulatorReceiver,IntentFilter("com.eveningoutpost.dexdrip.NS_EMULATOR"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
-                    } else {
-                        context.registerReceiver(glucoDataReceiver, IntentFilter("glucodata.Minute"))
-                        context.registerReceiver(xDripReceiver,IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"))
-                        //registerReceiver(aapsReceiver,IntentFilter("info.nightscout.androidaps.status"))
-                        context.registerReceiver(dexcomReceiver,dexcomFilter)
-                        context.registerReceiver(nsEmulatorReceiver,IntentFilter("com.eveningoutpost.dexdrip.NS_EMULATOR"))
+                val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED) {
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, true)) {
+                        if(glucoDataReceiver == null) {
+                            glucoDataReceiver = GlucoseDataReceiver()
+                            registerReceiver(context, glucoDataReceiver!!, IntentFilter("glucodata.Minute"))
+                        }
+                    } else if (glucoDataReceiver != null) {
+                        unregisterReceiver(context, glucoDataReceiver)
+                        glucoDataReceiver = null
                     }
-                    broadcastServiceAPI.init()
+                }
+
+                if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED) {
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED, true)) {
+                        if(xDripReceiver == null) {
+                            xDripReceiver = XDripBroadcastReceiver()
+                            registerReceiver(context, xDripReceiver!!, IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"))
+                        }
+                    } else if (xDripReceiver != null) {
+                        unregisterReceiver(context, xDripReceiver)
+                        xDripReceiver = null
+                    }
+                }
+
+                if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_AAPS_ENABLED) {
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, true)) {
+                        if(aapsReceiver == null) {
+                            aapsReceiver = AAPSReceiver()
+                            registerReceiver(context, aapsReceiver!!, IntentFilter("info.nightscout.androidaps.status"))
+                        }
+                    } else if (aapsReceiver != null) {
+                        unregisterReceiver(context, aapsReceiver)
+                        aapsReceiver = null
+                    }
+                }
+
+                if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_BYODA_ENABLED) {
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, true)) {
+                        if(dexcomReceiver == null) {
+                            val dexcomFilter = IntentFilter()
+                            dexcomFilter.addAction("com.dexcom.cgm.EXTERNAL_BROADCAST")
+                            dexcomFilter.addAction("com.dexcom.g7.EXTERNAL_BROADCAST")
+                            dexcomReceiver = DexcomBroadcastReceiver()
+                            registerReceiver(context, dexcomReceiver!!, dexcomFilter)
+                            broadcastServiceAPI.init()
+                        }
+                    } else if (dexcomReceiver != null) {
+                        unregisterReceiver(context, dexcomReceiver)
+                        dexcomReceiver = null
+                        broadcastServiceAPI.close(context)
+                    }
+                }
+
+                if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED) {
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true)) {
+                        if(nsEmulatorReceiver == null) {
+                            nsEmulatorReceiver = NsEmulatorReceiver()
+                            registerReceiver(context, nsEmulatorReceiver!!, IntentFilter("com.eveningoutpost.dexdrip.NS_EMULATOR"))
+                        }
+                    } else if (nsEmulatorReceiver != null) {
+                        unregisterReceiver(context, nsEmulatorReceiver)
+                        nsEmulatorReceiver = null
+                    }
                 }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "registerSourceReceiver exception: " + exc.toString())
@@ -189,19 +255,19 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
             try {
                 Log.d(LOG_ID, "Unregister receiver")
                 if (glucoDataReceiver != null) {
-                    context.unregisterReceiver(glucoDataReceiver)
+                    unregisterReceiver(context, glucoDataReceiver)
                     glucoDataReceiver = null
                 }
                 if (xDripReceiver != null) {
-                    context.unregisterReceiver(xDripReceiver)
+                    unregisterReceiver(context, xDripReceiver)
                     xDripReceiver = null
                 }
                 if (dexcomReceiver != null) {
-                    context.unregisterReceiver(dexcomReceiver)
+                    unregisterReceiver(context, dexcomReceiver)
                     dexcomReceiver = null
                 }
                 if (nsEmulatorReceiver != null) {
-                    context.unregisterReceiver(nsEmulatorReceiver)
+                    unregisterReceiver(context, nsEmulatorReceiver)
                     nsEmulatorReceiver = null
                 }
                 broadcastServiceAPI.close(context)
@@ -309,9 +375,11 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
             connection = WearPhoneConnection()
             connection!!.open(this, appSource == AppSource.PHONE_APP)
 
-            registerSourceReceiver(this)
+            updateSourceReceiver(this)
             batteryReceiver = BatteryReceiver()
             registerReceiver(batteryReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+
+            sharedPref!!.registerOnSharedPreferenceChangeListener(this)
 
             if (BuildConfig.DEBUG && sharedPref!!.getBoolean(Constants.SHARED_PREF_DUMMY_VALUES, false)) {
                 Thread {
@@ -337,6 +405,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
     override fun onDestroy() {
         try {
             Log.w(LOG_ID, "onDestroy called")
+            sharedPref!!.unregisterOnSharedPreferenceChangeListener(this)
             unregisterSourceReceiver(this)
             unregisterReceiver(batteryReceiver)
             TimeTaskService.stop()
@@ -349,6 +418,21 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
             isForegroundService = false
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.toString())
+        }
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        try {
+            Log.d(LOG_ID, "onSharedPreferenceChanged called with key $key")
+            when(key) {
+                Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED,
+                Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED,
+                Constants.SHARED_PREF_SOURCE_AAPS_ENABLED,
+                Constants.SHARED_PREF_SOURCE_BYODA_ENABLED,
+                Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED -> updateSourceReceiver(this, key)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
         }
     }
 

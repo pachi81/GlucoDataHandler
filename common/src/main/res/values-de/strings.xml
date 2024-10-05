@@ -517,8 +517,9 @@
     <string name="pref_source_offline_summary">Apps, welche auf dem gleichen Gerät laufen und interne Nachrichten (Broadcasts) verschicken, wie etwas Juggluco, xDrip+, AAPS usw..</string>
     <string name="pref_cat_follower_summary">Cloud Dienste, welche die Daten über das Internet zur Verfügung stellen, wie LibreLinkUp, Dexcom Share und Nightscout.</string>
     <string name="pref_source_xdrip_broadcast">Alternative: Lokaler Broadcast</string>
-    <string name="pref_source_dexcom_byoda_info_summary">Um Werte von Dexcom BYODA zu erhalten, muss bei der Erstellung der App, die Übertragung an xDrip+, AAPS oder an beide aktiviert werden.</string>
+    <string name="pref_source_dexcom_byoda_info_summary">Um Werte von Dexcom BYODA zu erhalten, muss bei der Erstellung der App, die Übertragung an AAPS oder an beide aktiviert werden.</string>
     <string name="pref_source_eversense_info_summary">Um Werte von Eversense zu empfangen, benötigt es die App ESEL, welche entweder im Companion Mode (Benachrichtigung lesen) oder in Verbindungen mit der gepatchten Eversense App betrieben werden kann.\nUm mehr Informationen über ESEL zu erhalten, bitte hier klicken.</string>
+    <string name="pref_source_eversense_byoda_info_summary">Um Werte von Dexcom BYODA zu erhalten, muss bei der Erstellung der App, die Übertragung an xDrip+ oder an beide aktiviert werden.</string>
     <string name="new_version">Version %s ist verfügbar!</string>
     <string name="info_label_notes">Hinweise</string>
     <string name="gda_notification_permission">Benachrichtigungen sind deaktiviert!\nHier klicken um die Einstellungen zu ändern.</string>
@@ -588,4 +589,6 @@
     <string name="delta_per_5_minute">pro 5 Minuten</string>
     <string name="other_alarm_cat_categories">Weitere Alarme</string>
     <string name="advanced_settings_alarm">Erweiterte Alarmeinstellungen</string>
+    <string name="src_offline_enabled_summary_on">Interne Nachrichten von dieser App werden verarbeitet.</string>
+    <string name="src_offline_enabled_summary_off">Interne Nachrichten von dieser App werden ignoriert.</string>
 </resources>

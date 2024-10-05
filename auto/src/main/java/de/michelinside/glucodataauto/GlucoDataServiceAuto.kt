@@ -120,7 +120,7 @@ class GlucoDataServiceAuto: Service() {
             try {
                 Log.i(LOG_ID, "starting datasync - count=$dataSyncCount")
                 if (dataSyncCount == 0) {
-                    GlucoDataService.registerSourceReceiver(context)
+                    GlucoDataService.updateSourceReceiver(context)
                     TimeTaskService.run(context)
                     SourceTaskService.run(context)
                     sendStateBroadcast(context, true)

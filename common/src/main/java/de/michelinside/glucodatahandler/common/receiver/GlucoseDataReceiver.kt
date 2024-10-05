@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
@@ -15,6 +16,8 @@ open class GlucoseDataReceiver: BroadcastReceiver() {
     private val LOG_ID = "GDH.GlucoseDataReceiver"
     override fun onReceive(context: Context, intent: Intent) {
         try {
+            if(!GlucoDataService.isRegistered(this))
+                return
             val action = intent.action
             if (action != Constants.GLUCODATA_BROADCAST_ACTION) {
                 Log.e(LOG_ID, "action=" + action + " != " + Constants.GLUCODATA_BROADCAST_ACTION)

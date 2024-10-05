@@ -549,9 +549,10 @@
     <string name="pref_source_offline_summary">Applications on same device providing glucose values as internal broadcast message, like Juggluco, xDrip+, AAPS and so on.</string>
     <string name="pref_cat_follower_summary">Cloud services providing glucose values over the internet, like LibreLinkUp, Dexcom Share and Nightscout.</string>
     <string name="pref_source_xdrip_broadcast">Alternative: Broadcast locally</string>
-    <string name="pref_source_dexcom_byoda_info_summary">To receive values from Dexcom BYODA you have to enable broadcast to xDrip+, AAPS or both while building the app.</string>
-    <string name="pref_source_eversense_info" translatable="false">Eversense (ESEL)</string>
+    <string name="pref_source_dexcom_byoda_info_summary">To receive values from Dexcom BYODA you have to enable broadcast to AAPS or both while building the app.</string>
+    <string name="pref_source_eversense_info" translatable="false">Eversense (ESEL/BYODA)</string>
     <string name="pref_source_eversense_info_summary">To receive values from Eversense, you have to use ESEL either in companion mode (reading notification) or connected to the patched Eversense app.\nFor more information about ESEL, press here.</string>
+    <string name="pref_source_eversense_byoda_info_summary">To receive values from Dexcom BYODA you have to enable broadcast to xDrip+ or both while building the app.</string>
     <string name="new_version">Version %s is available</string>
     <string name="info_label_notes">Notes</string>
     <string name="gda_notification_permission">Notifications are disabled! \nPress here to enable them.</string>
@@ -629,6 +630,8 @@
     <string name="delta_per_5_minute">per 5 minutes</string>
     <string name="other_alarm_cat_categories">Other alarms</string>
     <string name="advanced_settings_alarm">Advanced alarm settings</string>
+    <string name="src_offline_enabled_summary_on">Internal messages from this source will be handled.</string>
+    <string name="src_offline_enabled_summary_off">Internal messages from this source will be ignored.</string>
 
 
 </resources>

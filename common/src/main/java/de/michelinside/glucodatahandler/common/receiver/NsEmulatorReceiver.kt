@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
@@ -19,6 +20,8 @@ open class NsEmulatorReceiver: BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         try {
+            if(!GlucoDataService.isRegistered(this))
+                return
             val extras = intent.extras
             Log.i(LOG_ID, "onReceive called for " + intent.action + ": " + Utils.dumpBundle(extras))
             if (extras != null) {

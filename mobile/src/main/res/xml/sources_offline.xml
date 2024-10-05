@@ -4,7 +4,14 @@
     <PreferenceCategory
         android:title="@string/pref_source_juggluco_info"
         app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="0">
+        app:initialExpandedChildrenCount="1">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="source_juggluco_enabled"
+            android:title="@string/src_enabled"
+            android:summaryOn="@string/src_offline_enabled_summary_on"
+            android:summaryOff="@string/src_offline_enabled_summary_off"
+            app:iconSpaceReserved="false" />
         <Preference
             android:key="source_juggluco_info"
             android:summary="@string/pref_source_juggluco_info_summary"
@@ -23,7 +30,14 @@
     <PreferenceCategory
         android:title="@string/pref_source_xdrip_info"
         app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="0">
+        app:initialExpandedChildrenCount="1">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="source_xdrip_enabled"
+            android:title="@string/src_enabled"
+            android:summaryOn="@string/src_offline_enabled_summary_on"
+            android:summaryOff="@string/src_offline_enabled_summary_off"
+            app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="xdrip_broadcast_service_api"
@@ -53,7 +67,14 @@
     <PreferenceCategory
         android:title="@string/pref_source_aaps_info"
         app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="0">
+        app:initialExpandedChildrenCount="1">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="source_aaps_enabled"
+            android:title="@string/src_enabled"
+            android:summaryOn="@string/src_offline_enabled_summary_on"
+            android:summaryOff="@string/src_offline_enabled_summary_off"
+            app:iconSpaceReserved="false" />
         <Preference
             android:key="source_aaps_info"
             android:summary="@string/pref_source_aaps_info_summary"
@@ -62,7 +83,14 @@
     <PreferenceCategory
         android:title="@string/pref_source_dexcom_byoda_info"
         app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="0">
+        app:initialExpandedChildrenCount="1">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="source_byoda_enabled"
+            android:title="@string/src_enabled"
+            android:summaryOn="@string/src_offline_enabled_summary_on"
+            android:summaryOff="@string/src_offline_enabled_summary_off"
+            app:iconSpaceReserved="false" />
         <Preference
             android:key="source_dexcom_byoda_info"
             android:summary="@string/pref_source_dexcom_byoda_info_summary"
@@ -71,10 +99,21 @@
     <PreferenceCategory
         android:title="@string/pref_source_eversense_info"
         app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="0">
+        app:initialExpandedChildrenCount="1">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="source_eversense_enabled"
+            android:title="@string/src_enabled"
+            android:summaryOn="@string/src_offline_enabled_summary_on"
+            android:summaryOff="@string/src_offline_enabled_summary_off"
+            app:iconSpaceReserved="false" />
         <Preference
             android:key="source_eversense_info"
             android:summary="@string/pref_source_eversense_info_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_eversense_byoda_info"
+            android:summary="@string/pref_source_eversense_byoda_info_summary"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 </PreferenceScreen>
