@@ -158,6 +158,20 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         }
     }
 
+    fun disableInactiveTime(fromClient: Boolean = false) {
+        Log.i(LOG_ID, "Disable inactive time called - fromClient=$fromClient")
+        if (GlucoDataService.sharedPref!=null) {
+            inactiveEnabled = false
+            with(GlucoDataService.sharedPref!!.edit()) {
+                putBoolean(Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED, false)
+                apply()
+            }
+            if(!fromClient) {
+                GlucoDataService.sendCommand(Command.DISABLE_INACTIVE_TIME)
+            }
+        }
+    }
+
     private fun checkHighAlarm(newAlarmType: AlarmType, alarmInterval: Int): Boolean {
         if(newAlarmType > lastAlarmType)
             return true
@@ -239,7 +253,11 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         when(key) {
             null -> return false
             Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION,
-            Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED -> return true
+            Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED,
+            Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED,
+            Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME,
+            Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME,
+            Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS -> return true
             else -> {
                 AlarmType.entries.forEach {
                     if (it.setting != null && it.setting.isAlarmSettingToShare(key))

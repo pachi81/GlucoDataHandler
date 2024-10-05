@@ -13,9 +13,11 @@ import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.android.gms.wearable.WearableListenerService
+import de.michelinside.glucodatahandler.common.ReceiveData.isMmol
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.notifier.DataSource
+import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.receiver.AAPSReceiver
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
@@ -28,6 +30,7 @@ import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
 import java.util.Locale
 
 
@@ -320,6 +323,37 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 }
             }
         }
+
+        fun getSettings(): Bundle {
+            val bundle = ReceiveData.getSettingsBundle()
+            // other settings
+            if (sharedPref != null) {
+                bundle.putBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, sharedPref!!.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, isMmol))
+                bundle.putBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, true))
+                bundle.putBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED, true))
+                bundle.putBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, true))
+                bundle.putBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, true))
+                bundle.putBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true))
+            }
+            Log.v(LOG_ID, "getSettings called with bundle ${(Utils.dumpBundle(bundle))}")
+            return bundle
+        }
+
+        fun setSettings(context: Context, bundle: Bundle) {
+            Log.v(LOG_ID, "setSettings called with bundle ${(Utils.dumpBundle(bundle))}")
+            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            with(sharedPref!!.edit()) {
+                putBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, bundle.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, isMmol))
+                putBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, true))
+                putBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED, true))
+                putBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, true))
+                putBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, true))
+                putBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true))
+                apply()
+            }
+            ReceiveData.setSettings(sharedPref, bundle)
+        }
+
     }
 
     init {
@@ -424,12 +458,24 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called with key $key")
+            var shareSettings = false
             when(key) {
                 Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED,
                 Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED,
                 Constants.SHARED_PREF_SOURCE_AAPS_ENABLED,
                 Constants.SHARED_PREF_SOURCE_BYODA_ENABLED,
-                Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED -> updateSourceReceiver(this, key)
+                Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED -> {
+                    updateSourceReceiver(this, key)
+                    shareSettings = true
+                }
+                Constants.SHARED_PREF_SHOW_OTHER_UNIT -> {
+                    shareSettings = true
+                }
+            }
+            if (shareSettings) {
+                val extras = Bundle()
+                extras.putBundle(Constants.SETTINGS_BUNDLE, getSettings())
+                InternalNotifier.notify(this, NotifySource.SETTINGS, extras)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())

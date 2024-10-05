@@ -453,10 +453,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                         }
                     }
                     AlarmState.TEMP_INACTIVE -> {
-                        with(sharedPref.edit()) {
-                            putBoolean(Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED, false)
-                            apply()
-                        }
+                        AlarmHandler.disableInactiveTime()
                     }
                 }
             } else {

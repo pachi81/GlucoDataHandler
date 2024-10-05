@@ -24,7 +24,8 @@ enum class Command {
     STOP_ALARM,
     SNOOZE_ALARM,
     TEST_ALARM,
-    AA_CONNECTION_STATE
+    AA_CONNECTION_STATE,
+    DISABLE_INACTIVE_TIME
 }
 
 class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener, NotifierInterface {
@@ -316,7 +317,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 }
                 if (extras != null && dataSource == NotifySource.CAPILITY_INFO && GlucoDataService.appSource == AppSource.PHONE_APP) {
                     Log.d(LOG_ID, "Adding settings for sending")
-                    extras.putBundle(Constants.SETTINGS_BUNDLE, ReceiveData.getSettingsBundle())
+                    extras.putBundle(Constants.SETTINGS_BUNDLE, GlucoDataService.getSettings())
                     extras.putBundle(Constants.SOURCE_SETTINGS_BUNDLE, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)))
                     extras.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings())
                 }
@@ -388,7 +389,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             commandBundle.putBundle(Constants.COMMAND_BUNDLE, extras)
             if (GlucoDataService.appSource == AppSource.PHONE_APP) {
                 Log.d(LOG_ID, "Adding settings for sending command")
-                commandBundle.putBundle(Constants.SETTINGS_BUNDLE, ReceiveData.getSettingsBundle())
+                commandBundle.putBundle(Constants.SETTINGS_BUNDLE, GlucoDataService.getSettings())
                 commandBundle.putBundle(Constants.SOURCE_SETTINGS_BUNDLE, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)))
                 commandBundle.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings())
             }
@@ -415,7 +416,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 if (extras.containsKey(Constants.SETTINGS_BUNDLE)) {
                     val bundle = extras.getBundle(Constants.SETTINGS_BUNDLE)
                     Log.d(LOG_ID, "Glucose settings receceived from " + p0.sourceNodeId + ": " + Utils.dumpBundle(bundle))
-                    ReceiveData.setSettings(context, bundle!!)
+                    GlucoDataService.setSettings(context, bundle!!)
                     InternalNotifier.notify(context, NotifySource.SETTINGS, bundle)
                     extras.remove(Constants.SETTINGS_BUNDLE)
                 }
@@ -523,7 +524,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     if (bundle != null) {
                         if (GlucoDataService.appSource == AppSource.PHONE_APP) {
                             Log.d(LOG_ID, "Adding settings for sending")
-                            bundle.putBundle(Constants.SETTINGS_BUNDLE, ReceiveData.getSettingsBundle())
+                            bundle.putBundle(Constants.SETTINGS_BUNDLE, GlucoDataService.getSettings())
                             bundle.putBundle(Constants.SOURCE_SETTINGS_BUNDLE, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)))
                             bundle.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings())
                         }
@@ -552,6 +553,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 Command.SNOOZE_ALARM -> AlarmHandler.setSnoozeTime(bundle!!.getLong(AlarmHandler.SNOOZE_TIME, 0L), fromClient = true)
                 Command.TEST_ALARM -> AlarmNotificationBase.instance!!.executeTest(AlarmType.fromIndex(bundle!!.getInt(Constants.ALARM_TYPE_EXTRA, ReceiveData.getAlarmType().ordinal)), context, false)
                 Command.AA_CONNECTION_STATE -> InternalNotifier.notify(context, NotifySource.CAR_CONNECTION, bundle)
+                Command.DISABLE_INACTIVE_TIME -> AlarmHandler.disableInactiveTime(fromClient = true)
             }
 
         } catch (exc: Exception) {

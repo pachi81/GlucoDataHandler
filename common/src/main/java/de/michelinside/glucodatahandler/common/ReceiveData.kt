@@ -555,8 +555,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         }
     }
 
-    fun setSettings(context: Context, bundle: Bundle) {
-        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+    fun setSettings(sharedPref: SharedPreferences, bundle: Bundle) {
         with(sharedPref.edit()) {
             putFloat(Constants.SHARED_PREF_TARGET_MIN, bundle.getFloat(Constants.SHARED_PREF_TARGET_MIN, targetMinValue))
             putFloat(Constants.SHARED_PREF_TARGET_MAX, bundle.getFloat(Constants.SHARED_PREF_TARGET_MAX, targetMaxValue))
@@ -572,8 +571,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             if (bundle.containsKey(Constants.SHARED_PREF_RELATIVE_TIME)) {
                 putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, bundle.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime))
             }
-            // other
-            putBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, bundle.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, isMmol))
             apply()
         }
         updateSettings(sharedPref)
@@ -593,10 +590,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         bundle.putInt(Constants.SHARED_PREF_COLOR_OBSOLETE, colorObsolete)
         bundle.putInt(Constants.SHARED_PREF_OBSOLETE_TIME, obsoleteTimeMin)
 
-        // other settings
-        if (GlucoDataService.sharedPref != null) {
-            bundle.putBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, GlucoDataService.sharedPref!!.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, isMmol))
-        }
         return bundle
     }
 
@@ -746,16 +739,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     Constants.SHARED_PREF_COLOR_OUT_OF_RANGE,
                     Constants.SHARED_PREF_COLOR_OBSOLETE,
                     Constants.SHARED_PREF_COLOR_OK,
-                    Constants.SHARED_PREF_OBSOLETE_TIME,
-                    Constants.SHARED_PREF_SHOW_OTHER_UNIT -> {
+                    Constants.SHARED_PREF_OBSOLETE_TIME -> {
                         updateSettings(sharedPreferences!!)
                         val extras = Bundle()
-                        extras.putBundle(Constants.SETTINGS_BUNDLE, getSettingsBundle())
-                        InternalNotifier.notify(
-                            GlucoDataService.context!!,
-                            NotifySource.SETTINGS,
-                            extras
-                        )
+                        extras.putBundle(Constants.SETTINGS_BUNDLE, GlucoDataService.getSettings())
+                        InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SETTINGS, extras)
                     }
                 }
             }

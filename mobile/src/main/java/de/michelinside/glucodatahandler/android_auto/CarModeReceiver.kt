@@ -112,7 +112,7 @@ object CarModeReceiver {
             val intent = Intent(Constants.GLUCODATA_ACTION)
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
             if(withSettings && sharedPref.getBoolean(Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO, true)) {
-                val settings = ReceiveData.getSettingsBundle()
+                val settings = GlucoDataService.getSettings()
                 settings.putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime)
                 extras.putBundle(Constants.SETTINGS_BUNDLE, settings)
                 extras.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings(true))
