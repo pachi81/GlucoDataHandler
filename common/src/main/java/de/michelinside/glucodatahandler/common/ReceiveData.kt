@@ -17,7 +17,6 @@ import de.michelinside.glucodatahandler.common.utils.WakeLockHelper
 import java.math.RoundingMode
 import java.text.DateFormat
 import java.util.*
-import kotlin.math.abs
 import kotlin.time.Duration.Companion.days
 
 object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
@@ -440,7 +439,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                         changeIsMmol(rawValue!=glucose.toInt() && GlucoDataUtils.isMmolValue(glucose), context)
                     } else {
                         if (isMmol) {
-                            glucose = GlucoDataUtils.mgToMmol(glucose)
+                            glucose = GlucoDataUtils.mgToMmol(rawValue.toFloat())
                         } else {
                             glucose = rawValue.toFloat()
                         }
