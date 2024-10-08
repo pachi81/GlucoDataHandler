@@ -143,15 +143,15 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             return context.getString(R.string.no_new_value, getElapsedTimeMinute())
         var text = getGlucoseAsString()
         if(!rate.isNaN())
-            text += " " + getRateAsText(context)
+            text += ", " + getRateAsText(context)
         if(!delta.isNaN())
-            text += " Δ " + getDeltaAsString()
-        text += " " + getElapsedRelativeTimeAsString(context)
+            text += ", Δ " + getDeltaAsString()
+        text += ", " + getElapsedRelativeTimeAsString(context, true)
         if(withIobCob && !isIobCobObsolete()) {
             if(!iob.isNaN())
-                text += " " + context.getString(R.string.info_label_iob) + " " + getIobAsString()
+                text += ", " + context.getString(R.string.info_label_iob) + " " + getIobAsString()
             if(!cob.isNaN())
-                text += " " + context.getString(R.string.info_label_cob) + " " + getCobAsString()
+                text += ", " + context.getString(R.string.info_label_cob) + " " + getCobAsString()
         }
         return text
     }
@@ -375,10 +375,12 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return Utils.round((System.currentTimeMillis()- iobCobTime).toFloat()/60000, 0, roundingMode).toLong()
     }
 
-    fun getElapsedRelativeTimeAsString(context: Context): String {
+    fun getElapsedRelativeTimeAsString(context: Context, fullText: Boolean = false): String {
         val elapsed_time = getElapsedTimeMinute()
         if (elapsed_time > 60)
             return context.getString(R.string.elapsed_time_hour)
+        if(fullText)
+            return context.resources.getQuantityString(R.plurals.elapsed_time_full_text, elapsed_time.toInt(), elapsed_time)
         return context.getString(R.string.elapsed_time, elapsed_time)
     }
 

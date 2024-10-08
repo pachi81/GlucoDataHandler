@@ -530,7 +530,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             viewIcon.contentDescription = ReceiveData.getRateAsText(this)
 
             timeText.text = "🕒 ${ReceiveData.getElapsedRelativeTimeAsString(this)}"
-            timeText.contentDescription = ReceiveData.getElapsedRelativeTimeAsString(this)
+            timeText.contentDescription = ReceiveData.getElapsedRelativeTimeAsString(this, true)
             deltaText.text = "Δ ${ReceiveData.getDeltaAsString()}"
             iobText.text = "💉 " + ReceiveData.getIobAsString()
             iobText.contentDescription = getString(CR.string.info_label_iob) + " " + ReceiveData.getIobAsString()

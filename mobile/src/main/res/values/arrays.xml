@@ -46,6 +46,8 @@
         <item>@string/high_alarm_notification_name</item>
         <item>@string/very_high_alarm_notification_name</item>
         <item>@string/obsolete_alarm_notification_name</item>
+        <item>@string/falling_fast_alarm_notification_name</item>
+        <item>@string/rising_fast_alarm_notification_name</item>
         <item>@string/alarm_force_sound</item>
         <item>@string/alarm_force_vibration</item>
         <item>@string/alarm_vibrate_only</item>
@@ -63,6 +65,8 @@
         <item>"alarm_high_enabled"</item>
         <item>"alarm_very_high_enabled"</item>
         <item>"alarm_obsolete_enabled"</item>
+        <item>"alarm_falling_fast_enabled"</item>
+        <item>"alarm_rising_fast_enabled"</item>
         <item>"alarm_force_sound"</item>
         <item>"alarm_force_vibration"</item>
         <item>"alarm_vibrate_only"</item>

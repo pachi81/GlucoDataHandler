@@ -12,9 +12,11 @@ import androidx.appcompat.widget.SwitchCompat
 import de.michelinside.glucodatahandler.ActiveComplicationHandler
 import de.michelinside.glucodatahandler.BuildConfig
 import de.michelinside.glucodatahandler.R
+import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 
 class ComplicationsTapActionActivity : AppCompatActivity() {
     private val LOG_ID = "GDH.Main.ComplicationsTapActionActivity"
@@ -23,7 +25,6 @@ class ComplicationsTapActionActivity : AppCompatActivity() {
     private lateinit var showAllSwitch: SwitchCompat
     private var receiver = ""
     private var hasChanged = false
-    private val actions = HashMap<String, String>()
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
             Log.v(LOG_ID, "onCreate called")
@@ -86,9 +87,10 @@ class ComplicationsTapActionActivity : AppCompatActivity() {
     }
 
     private fun getActions(context: Context): HashMap<String, String> {
-        if(actions.isEmpty()) {
-            actions[""] = context.resources.getString(de.michelinside.glucodatahandler.common.R.string.no_action)
-        }
+        val actions = HashMap<String, String>()
+        actions[""] = context.resources.getString(CR.string.no_action)
+        if (TextToSpeechUtils.isAvailable())
+            actions[Constants.ACTION_SPEAK] = context.resources.getString(CR.string.action_read_values)
         if(BuildConfig.DEBUG) {
             actions[Constants.ACTION_DUMMY_VALUE] = "Dummy value"
         }

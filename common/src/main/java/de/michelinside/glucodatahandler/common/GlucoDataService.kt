@@ -30,6 +30,7 @@ import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import java.util.Locale
 
@@ -56,8 +57,10 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         var appSource = AppSource.NOT_SET
         private var isRunning = false
         val running get() = isRunning
+
         @SuppressLint("StaticFieldLeak")
         var service: GlucoDataService? = null
+
         var context: Context? get() {
             if(service != null)
                 return service!!.applicationContext
@@ -65,6 +68,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         } set(value) {
             extContext = value
         }
+
         @SuppressLint("StaticFieldLeak")
         private var extContext: Context? = null
         val sharedPref: SharedPreferences? get() {
@@ -353,7 +357,6 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             }
             ReceiveData.setSettings(sharedPref, bundle)
         }
-
     }
 
     init {
@@ -415,6 +418,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
 
             sharedPref!!.registerOnSharedPreferenceChangeListener(this)
 
+            TextToSpeechUtils.initTextToSpeech(this)
+
             if (BuildConfig.DEBUG && sharedPref!!.getBoolean(Constants.SHARED_PREF_DUMMY_VALUES, false)) {
                 Thread {
                     try {
@@ -450,6 +455,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             service = null
             isRunning = false
             isForegroundService = false
+            TextToSpeechUtils.destroyTextToSpeech()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.toString())
         }

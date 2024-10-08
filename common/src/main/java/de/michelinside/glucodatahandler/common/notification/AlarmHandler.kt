@@ -235,16 +235,28 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
     }
 
     private fun saveExtras() {
-        Log.d(LOG_ID, "Saving extras")
-        with(sharedExtraPref.edit()) {
-            putLong(LAST_ALARM_TIME, lastAlarmTime)
-            putLong(LAST_FALLING_ALARM_TIME, lastFallingAlarmTime)
-            putLong(LAST_RISING_ALARM_TIME, lastRisingAlarmTime)
-            putInt(LAST_ALARM_INDEX, lastAlarmType.ordinal)
-            putLong(SNOOZE_TIME, snoozeTime)
-            apply()
+        try {
+            Log.d(LOG_ID, "Saving extras")
+            if(!initialized) {
+                Log.w(LOG_ID, "saveExtras called before initData")
+                return
+            }
+            with(sharedExtraPref.edit()) {
+                putLong(LAST_ALARM_TIME, lastAlarmTime)
+                putLong(LAST_FALLING_ALARM_TIME, lastFallingAlarmTime)
+                putLong(LAST_RISING_ALARM_TIME, lastRisingAlarmTime)
+                putInt(LAST_ALARM_INDEX, lastAlarmType.ordinal)
+                putLong(SNOOZE_TIME, snoozeTime)
+                apply()
+            }
+            InternalNotifier.notify(
+                GlucoDataService.context!!,
+                NotifySource.ALARM_SETTINGS,
+                getSettings()
+            )
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "saveExtras exception: " + exc.toString() + " " + exc.stackTraceToString() )
         }
-        InternalNotifier.notify(GlucoDataService.context!!, NotifySource.ALARM_SETTINGS, getSettings())
     }
 
     private fun loadExtras() {

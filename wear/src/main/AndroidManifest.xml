@@ -188,6 +188,15 @@
                 <action android:name= "android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED"  />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".common.utils.LocaleChangeNotifier"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name= "android.intent.action.LOCALE_CHANGED" />
+            </intent-filter>
+        </receiver>
         <service android:name=".GlucoDataServiceWear"
             android:enabled="true"
             android:exported="true"
@@ -716,6 +725,9 @@
     </application>
     <queries>
         <package android:name="tk.glucodata"/>
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
     </queries>
 
 </manifest>

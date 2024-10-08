@@ -22,12 +22,12 @@
 
     <queries>
         <package android:name="tk.glucodata" />
-    </queries>
-    <queries>
         <intent>
             <action android:name="android.intent.action.MAIN" />
-
             <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
         </intent>
     </queries>
 
@@ -293,6 +293,15 @@
         <receiver android:name=".common.notification.AlarmIntentReceiver" />
         <receiver android:name=".common.receiver.InternalActionReceiver" />
         <receiver android:name=".common.notification.AlarmSnoozeEndReceiver" />
+        <receiver
+            android:name=".common.utils.LocaleChangeNotifier"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name= "android.intent.action.LOCALE_CHANGED" />
+            </intent-filter>
+        </receiver>
 
         <service android:name="androidx.work.impl.foreground.SystemForegroundService"
             android:foregroundServiceType="dataSync"
