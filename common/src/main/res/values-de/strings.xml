@@ -607,4 +607,5 @@
     <string name="disabled">deaktiviert</string>
 
     <string name="not_available">nicht verfügbar</string>
+    <string name="action_read_values">Werte vorlesen</string>
 </resources>

@@ -653,4 +653,6 @@
     <string name="disabled">disabled</string>
 
     <string name="not_available">not available</string>
+
+    <string name="action_read_values">Read values</string>
 </resources>
