@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="locale">pl</string>
 
     <string name="info_label_sensor_id">Sensor</string>
     <string name="info_label_value">Wartość</string>
@@ -615,4 +616,11 @@
 
     <string name="not_available">not available</string>
     <string name="action_read_values">Read values</string>
+
+    <plurals name="elapsed_time_full_text">
+        <item quantity="one">Czas %d minuta</item>
+        <item quantity="few">Czas %d minuty</item>
+        <item quantity="many">Czas %d minut</item>
+        <item quantity="other">Czas %d minut</item>
+    </plurals>
 </resources>

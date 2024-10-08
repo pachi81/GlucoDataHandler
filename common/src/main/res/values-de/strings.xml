@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="locale">de</string>
 
     <string name="info_label_per_minute">pro Minute</string>
     <string name="info_label_alarm">Alarm</string>
@@ -608,4 +609,9 @@
 
     <string name="not_available">nicht verfügbar</string>
     <string name="action_read_values">Werte vorlesen</string>
+
+    <plurals name="elapsed_time_full_text">
+        <item quantity="one">Zeit %d Minute</item>
+        <item quantity="other">Zeit %d Minuten</item>
+    </plurals>
 </resources>

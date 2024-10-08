@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="locale">en</string>
     <string name="name" translatable="false">GlucoDataHandler</string>
     <string name="source_gdh" translatable="false">GlucoDataHandler</string>
 
@@ -655,4 +656,10 @@
     <string name="not_available">not available</string>
 
     <string name="action_read_values">Read values</string>
+
+    <plurals name="elapsed_time_full_text">
+        <item quantity="one">Time %d minute</item>
+        <item quantity="other">Time %d minutes</item>
+    </plurals>
+
 </resources>
