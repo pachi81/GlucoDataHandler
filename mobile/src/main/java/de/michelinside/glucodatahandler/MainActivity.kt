@@ -80,6 +80,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private var floatingWidgetItem: MenuItem? = null
     private val LOG_ID = "GDH.Main"
     private var requestNotificationPermission = false
+    private var doNotUpdate = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -144,6 +145,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             super.onResume()
             Log.v(LOG_ID, "onResume called")
             checkUncaughtException()
+            doNotUpdate = false
             update()
             InternalNotifier.addNotifier(this, this, mutableSetOf(
                 NotifySource.BROADCAST,
@@ -324,8 +326,16 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     }
 
     private fun updateMenuItems() {
-        if(floatingWidgetItem!=null)
+        if(floatingWidgetItem!=null) {
             floatingWidgetItem!!.isVisible = Settings.canDrawOverlays(this)
+            if(floatingWidgetItem!!.isVisible) {
+                if(sharedPref.getBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false)) {
+                    floatingWidgetItem!!.title = resources.getString(CR.string.pref_floating_widget) + " " + resources.getString(CR.string.enabled)
+                } else {
+                    floatingWidgetItem!!.title = resources.getString(CR.string.pref_floating_widget) + " " + resources.getString(CR.string.disabled)
+                }
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -423,6 +433,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                         putBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, !sharedPref.getBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false))
                         apply()
                     }
+                    updateMenuItems()
                 }
                 else -> return super.onOptionsItemSelected(item)
             }
@@ -434,6 +445,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun toggleAlarm() {
         try {
+            doNotUpdate = true
             val state = AlarmNotification.getAlarmState(this)
             if(AlarmNotification.channelActive(this)) {
                 Log.v(LOG_ID, "toggleAlarm called for state $state")
@@ -452,7 +464,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                             apply()
                         }
                     }
-                    AlarmState.TEMP_INACTIVE -> {
+                    AlarmState.TEMP_DISABLED -> {
                         AlarmHandler.disableInactiveTime()
                     }
                 }
@@ -467,10 +479,11 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     startActivity(intent)
                 }
             }
-            //updateAlarmIcon()
+            updateAlarmIcon()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateAlarmIcon exception: " + exc.message.toString() )
         }
+        doNotUpdate = false
     }
 
     private fun updateAlarmIcon() {
@@ -485,9 +498,15 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Log.v(LOG_ID, "updateAlarmIcon called for state $state")
             if(alarmIcon != null) {
                 alarmIcon!!.icon = ContextCompat.getDrawable(this, state.icon)
+                alarmIcon!!.title = resources.getString(CR.string.alarm_toggle_state,
+                    when(state) {
+                        AlarmState.SNOOZE -> resources.getString(state.descr, AlarmHandler.snoozeShortTimestamp)
+                        AlarmState.TEMP_DISABLED -> resources.getString(state.descr, AlarmHandler.inactiveEndTimestamp)
+                        else -> resources.getString(state.descr)
+                    })
             }
             if(snoozeMenu != null) {
-                snoozeMenu!!.isVisible = (state != AlarmState.DISABLED)
+                snoozeMenu!!.isVisible = (state == AlarmState.ACTIVE || state == AlarmState.SNOOZE)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateAlarmIcon exception: " + exc.message.toString() )
@@ -497,7 +516,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     @SuppressLint("SetTextI18n")
     private fun update() {
         try {
-            Log.v(LOG_ID, "update values")
+            Log.v(LOG_ID, "update values - doNotUpdate=$doNotUpdate")
+            if(doNotUpdate)
+                return
             txtBgValue.text = ReceiveData.getGlucoseAsString()
             txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
             if (ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong()) {
@@ -506,11 +527,15 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 txtBgValue.paintFlags = 0
             }
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(withShadow = true))
+            viewIcon.contentDescription = ReceiveData.getRateAsText(this)
 
             timeText.text = "🕒 ${ReceiveData.getElapsedRelativeTimeAsString(this)}"
+            timeText.contentDescription = ReceiveData.getElapsedRelativeTimeAsString(this)
             deltaText.text = "Δ ${ReceiveData.getDeltaAsString()}"
             iobText.text = "💉 " + ReceiveData.getIobAsString()
+            iobText.contentDescription = getString(CR.string.info_label_iob) + " " + ReceiveData.getIobAsString()
             cobText.text = "🍔 " + ReceiveData.getCobAsString()
+            iobText.contentDescription = getString(CR.string.info_label_cob) + " " + ReceiveData.getCobAsString()
             iobText.visibility = if (ReceiveData.isIobCobObsolete()) View.GONE else View.VISIBLE
             cobText.visibility = iobText.visibility
 
@@ -604,7 +629,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             if (deltaAlarmType != AlarmType.NONE)
                 tableAlarms.addView(createRow(CR.string.info_label_alarm, resources.getString(deltaAlarmType.resId)))
         }
-        if (AlarmHandler.isSnoozeActive)
+        if (AlarmHandler.isTempInactive)
+            tableAlarms.addView(createRow(CR.string.temp_disabled, AlarmHandler.inactiveEndTimestamp))
+        else if (AlarmHandler.isSnoozeActive)
             tableAlarms.addView(createRow(CR.string.snooze, AlarmHandler.snoozeTimestamp))
         checkTableVisibility(tableAlarms)
     }

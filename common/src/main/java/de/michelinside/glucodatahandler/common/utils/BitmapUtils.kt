@@ -168,7 +168,7 @@ object BitmapUtils {
                 shortArrowRate = 0.7F*/
             } else {
                 text = "↑"
-                degrees = Utils.round(abs(maxOf(-2F, minOf(2F, rate)) - 2F) * 90F / 2F, 0).toInt()
+                degrees = abs(GlucoDataUtils.getRateDegrees(rate)-90)
             } /*else {  // < 0
                 text = "↓"
                 degrees = round((maxOf(-2F, rate) + 2F) * -90F/2F, 0).toInt()

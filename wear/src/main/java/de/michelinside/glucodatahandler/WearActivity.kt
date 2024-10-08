@@ -59,6 +59,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var btnSettings: Button
     private lateinit var btnSources: Button
     private lateinit var btnAlarms: Button
+    private var doNotUpdate = false
     private var requestNotificationPermission = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -138,6 +139,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         try {
             super.onResume()
             Log.d(LOG_ID, "onResume called")
+            doNotUpdate = false
             update()
             InternalNotifier.addNotifier(this, this, mutableSetOf(
                 NotifySource.BROADCAST,
@@ -234,6 +236,9 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     @SuppressLint("SetTextI18n")
     private fun update() {
         try {
+            Log.v(LOG_ID, "update values - doNotUpdate=$doNotUpdate")
+            if(doNotUpdate)
+                return
             txtBgValue.text = ReceiveData.getGlucoseAsString()
             txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
             if (ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong()) {
@@ -242,11 +247,15 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 txtBgValue.paintFlags = 0
             }
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
+            viewIcon.contentDescription = ReceiveData.getRateAsText(this)
 
             timeText.text = "🕒 ${ReceiveData.getElapsedRelativeTimeAsString(this)}"
+            timeText.contentDescription = ReceiveData.getElapsedRelativeTimeAsString(this)
             deltaText.text = "Δ ${ReceiveData.getDeltaAsString()}"
             iobText.text = "💉 ${ReceiveData.getIobAsString()}"
+            iobText.contentDescription = getString(CR.string.info_label_iob) + " " + ReceiveData.getIobAsString()
             cobText.text = "🍔 ${ReceiveData.getCobAsString()}"
+            iobText.contentDescription = getString(CR.string.info_label_cob) + " " + ReceiveData.getCobAsString()
             iobText.visibility = if (ReceiveData.isIobCobObsolete()) View.GONE else View.VISIBLE
             cobText.visibility = iobText.visibility
 
@@ -264,6 +273,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
     private fun toggleAlarm() {
         try {
+            doNotUpdate = true
             val state = AlarmNotificationWear.getAlarmState(this)
             if(AlarmNotificationWear.channelActive(this)) {
                 Log.d(LOG_ID, "toggleAlarm called for state $state")
@@ -293,7 +303,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                             apply()
                         }
                     }
-                    AlarmState.TEMP_INACTIVE -> {
+                    AlarmState.TEMP_DISABLED -> {
                         AlarmHandler.disableInactiveTime()
                     }
                 }
@@ -304,10 +314,11 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                     apply()
                 }
             }
-            //updateAlarmIcon()
+            updateAlarmIcon()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "toggleAlarm exception: " + exc + "\n" + exc.stackTraceToString() )
         }
+        doNotUpdate = false
     }
 
     private fun updateAlarmIcon() {
@@ -322,6 +333,12 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             val state = AlarmNotificationWear.getAlarmState(this)
             Log.v(LOG_ID, "updateAlarmIcon called for state $state")
             alarmIcon.setImageIcon(Icon.createWithResource(this, state.icon))
+            alarmIcon.contentDescription = resources.getString(CR.string.alarm_toggle_state,
+                when(state) {
+                    AlarmState.SNOOZE -> resources.getString(state.descr, AlarmHandler.snoozeShortTimestamp)
+                    AlarmState.TEMP_DISABLED -> resources.getString(state.descr, AlarmHandler.inactiveEndTimestamp)
+                    else -> resources.getString(state.descr)
+                })
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateAlarmIcon exception: " + exc.message.toString() )
         }

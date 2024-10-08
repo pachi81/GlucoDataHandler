@@ -349,7 +349,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 txtBgValue.paintFlags = 0
             }
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(withShadow = true))
+            viewIcon.contentDescription = ReceiveData.getRateAsText(this)
             timeText.text = "🕒 ${ReceiveData.getElapsedRelativeTimeAsString(this)}"
+            timeText.contentDescription = ReceiveData.getElapsedRelativeTimeAsString(this)
             deltaText.text = "Δ ${ReceiveData.getDeltaAsString()}"
 
             if(ReceiveData.time == 0L) {

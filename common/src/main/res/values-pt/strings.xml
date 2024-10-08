@@ -339,8 +339,6 @@
     <string name="prefstatus_bar_notification_colored_icon">Ícone colorido da barra de status</string>
     <string name="pref_status_bar_notification_colored_icon_summary">Se o seu dispositivo suportar ícones coloridos da barra de status, você também poderá desativá-lo para usar um item branco.</string>
 
-    <!-- New  -->
-
     <string name="menu_alarms">Alarmes</string>
     <string name="alarm_interval">Intervalo</string>
     <string name="alarm_interval_summary_low">Intervalo mínimo em minutos entre notificações para este tipo de alarme.\nInformação: somente haverá nova notificação após decorrido o tempo, caso o delta seja negativo.</string>
@@ -527,13 +525,14 @@
     <string name="pref_source_offline_summary">Aplicações no mesmo dispositivo que fornecem valores de glicose como mensagem de transmissão interna, como Juggluco, xDrip+, AAPS e assim por diante.</string>
     <string name="pref_cat_follower_summary">Serviços em nuvem que fornecem valores de glicose pela internet, como LibreLinkUp, Dexcom Share e Nightscout.</string>
     <string name="pref_source_xdrip_broadcast">Alternativa: Transmissão local</string>
-    <string name="pref_source_dexcom_byoda_info_summary">Para receber valores do Dexcom BYODA, você precisa habilitar a transmissão para AAPS ou ambos durante a construção do aplicativo.</string>
+    <string name="pref_source_dexcom_byoda_info_summary">Para receber valores do Dexcom BYODA, você precisa habilitar a transmissão para AAPS durante a construção do aplicativo.</string>
     <string name="pref_source_eversense_info_summary">Para receber os valores do Eversense, você precisa usar o ESEL, seja no modo companheiro (notificação de leitura) ou conectado ao aplicativo Eversense modificado.\nPara mais informações sobre o ESEL, clique aqui.</string>
-    <string name="pref_source_eversense_byoda_info_summary">Para receber valores do Dexcom BYODA, você precisa habilitar a transmissão para xDrip+ ou ambos durante a construção do aplicativo.</string>
+    <string name="pref_source_eversense_byoda_info_summary">Para receber valores do Dexcom BYODA, você precisa habilitar a transmissão para xDrip+ durante a construção do aplicativo.</string>
     <string name="new_version">Versão %s está disponível</string>
     <string name="info_label_notes">Notas</string>
     <string name="gda_notification_permission">As notificações estão desativadas!\nPressione aqui para ativá-las.</string>
 
+    <!-- New  -->
 
     <string name="pref_show_other_unit">Show other unit</string>
     <string name="pref_show_other_unit_summary">Show glucose value in %s in the details.</string>
@@ -601,4 +600,20 @@
     <string name="advanced_settings_alarm">Advanced alarm settings</string>
     <string name="src_offline_enabled_summary_on">Internal messages from this source will be handled.</string>
     <string name="src_offline_enabled_summary_off">Internal messages from this source will be ignored.</string>
+    <string name="temp_disabled">Temporary disabled</string>
+
+    <!-- Talkback -->
+    <string name="trend">Trend</string>
+    <string name="rate_rising">%1$d degrees up</string>
+    <string name="rate_falling">%1$d degrees down</string>
+
+    <string name="alarm_toggle_state">Alarms: %1$s</string>
+    <string name="alarm_state_inactive">inactive</string>
+    <string name="alarm_state_snooze">snooze until %1$s</string>
+    <string name="alarm_state_temp_disabled">temporary disabled until %1$s</string>
+
+    <string name="enabled">enabled</string>
+    <string name="disabled">disabled</string>
+
+    <string name="not_available">not available</string>
 </resources>

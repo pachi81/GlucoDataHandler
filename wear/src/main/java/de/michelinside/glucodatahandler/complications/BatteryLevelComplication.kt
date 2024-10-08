@@ -16,12 +16,19 @@ import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUp
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 
-open class BatteryLevelComplicationBase: SuspendingComplicationDataSourceService() {
+enum class BatteryLevelType {
+    PHONE_WATCH_BATTERY_LEVEL,
+    WATCH_BATTERY_LEVEL,
+    PHONE_BATTERY_LEVEL
+}
+
+open class BatteryLevelComplicationBase(val type: BatteryLevelType): SuspendingComplicationDataSourceService() {
     protected val LOG_ID = "GDH.BatteryLevelComplication"
 
     override suspend fun onComplicationRequest(request: ComplicationRequest): ComplicationData? {
@@ -101,8 +108,27 @@ open class BatteryLevelComplicationBase: SuspendingComplicationDataSourceService
     open fun getIcon(): MonochromaticImage? = null
     open fun getTitle(): PlainComplicationText? = null
 
-    private fun descriptionText(): PlainComplicationText =
-        plainText(getText(this.applicationInfo.labelRes))
+    fun getPhoneBatteryDescr(force: Boolean): String {
+        val level = getPhoneLevel()
+        if (level != null) {
+            return resources.getString(CR.string.source_phone) + " " + level.toString() + "%"
+        } else if (force) {
+            return resources.getString(CR.string.source_phone) + " " + resources.getString(CR.string.not_available)
+        }
+        return ""
+    }
+
+    fun getWatchBatteryDescr(): String {
+        return resources.getString(CR.string.source_wear) + " " + BatteryReceiver.batteryPercentage.toString() + "%"
+    }
+
+    private fun descriptionText(): PlainComplicationText {
+        return plainText(when (type) {
+            BatteryLevelType.PHONE_WATCH_BATTERY_LEVEL -> getWatchBatteryDescr() + " " + getPhoneBatteryDescr(false)
+            BatteryLevelType.WATCH_BATTERY_LEVEL -> getWatchBatteryDescr()
+            BatteryLevelType.PHONE_BATTERY_LEVEL -> getPhoneBatteryDescr(true)
+        })
+    }
 
     private fun getTapAction(
         complicationInstanceId: Int
@@ -128,7 +154,7 @@ open class BatteryLevelComplicationBase: SuspendingComplicationDataSourceService
 }
 
 
-class BatteryLevelComplication: BatteryLevelComplicationBase() {
+class BatteryLevelComplication: BatteryLevelComplicationBase(BatteryLevelType.PHONE_WATCH_BATTERY_LEVEL) {
 
     override fun getTitle(): PlainComplicationText? {
         val level = getPhoneLevel()
@@ -139,7 +165,7 @@ class BatteryLevelComplication: BatteryLevelComplicationBase() {
     }
 }
 
-class WatchBatteryLevelComplication: BatteryLevelComplicationBase() {
+class WatchBatteryLevelComplication: BatteryLevelComplicationBase(BatteryLevelType.WATCH_BATTERY_LEVEL) {
     override fun getRangeValue(): Float = BatteryReceiver.batteryPercentage.toFloat()
 
     override fun getText(): PlainComplicationText =
@@ -151,7 +177,7 @@ class WatchBatteryLevelComplication: BatteryLevelComplicationBase() {
         ).build()
 }
 
-class PhoneBatteryLevelComplication: BatteryLevelComplicationBase() {
+class PhoneBatteryLevelComplication: BatteryLevelComplicationBase(BatteryLevelType.PHONE_BATTERY_LEVEL) {
     override fun getText(): PlainComplicationText {
         val level = getPhoneLevel()
         if (level != null) {

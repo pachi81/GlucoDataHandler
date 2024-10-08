@@ -23,7 +23,7 @@
     <string name="sensor_id_label">Sensor ID</string>
     <string name="sensor_id_html_label">ID des aktuell verwendeten Sensors</string>
     <string name="glucose_label">Blutzuckerwert</string>
-    <string name="glucose_html_label">Blutzuckerwert in der Einheit, welche in Juggluco konfiguriert ist</string>
+    <string name="glucose_html_label">Blutzuckerwert</string>
     <string name="obsolete_time_label">Zeit seit letztem Wert</string>
     <string name="obsolete_time_html_label">Zeit in Minuten (5 or 10) seit der letzte Wert empfangen wurde.</string>
     <string name="iob_label">IOB</string>

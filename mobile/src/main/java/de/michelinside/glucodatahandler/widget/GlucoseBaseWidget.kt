@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.RemoteViews
 import de.michelinside.glucodatahandler.GlucoDataServiceMobile
 import de.michelinside.glucodatahandler.R
+import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.utils.Utils
@@ -199,9 +200,10 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
         }
 
         if (hasTrend) {
-            if (shortWidget)
+            if (shortWidget) {
                 remoteViews.setImageViewBitmap(R.id.glucose_trend, BitmapUtils.getGlucoseTrendBitmap(width = width, height = width))
-            else {
+                remoteViews.setContentDescription(R.id.glucose_trend, ReceiveData.getAsText(context))
+            } else {
                 val size = maxOf(width, height)
                 remoteViews.setImageViewBitmap(
                     R.id.trendImage, BitmapUtils.getRateAsBitmap(
@@ -209,11 +211,13 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
                         height = size
                     )
                 )
+                remoteViews.setContentDescription(R.id.trendImage, ReceiveData.getRateAsText(context))
             }
         }
 
         if (hasTime) {
             remoteViews.setTextViewText(R.id.timeText, "🕒 " + ReceiveData.getElapsedTimeMinuteAsString(context))
+            remoteViews.setContentDescription(R.id.timeText, ReceiveData.getElapsedTimeMinuteAsString(context))
         }
         if (hasDelta) {
             if(hasOtherUnit) {
@@ -229,7 +233,9 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
 
         if (hasIobCob) {
             remoteViews.setTextViewText(R.id.iobText, "💉 " + ReceiveData.getIobAsString())
+            remoteViews.setContentDescription(R.id.iobText, context.getString(CR.string.info_label_iob) + " " + ReceiveData.getIobAsString())
             remoteViews.setTextViewText(R.id.cobText, "🍔 " + ReceiveData.getCobAsString())
+            remoteViews.setContentDescription(R.id.cobText, context.getString(CR.string.info_label_cob) + " " + ReceiveData.getCobAsString())
             if(ReceiveData.cob.isNaN())
                 remoteViews.setViewVisibility(R.id.cobText, View.GONE)
             else

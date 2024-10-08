@@ -528,14 +528,12 @@
     <string name="pref_source_offline_summary">Applications sur le même appareil fournissant des valeurs de glycémie sous forme de message de diffusion interne, telles que Juggluco, xDrip+, AAPS, etc.</string>
     <string name="pref_cat_follower_summary">Services cloud fournissant des valeurs de glycémie sur Internet, tels que LibreLinkUp, Dexcom Share et Nightscout.</string>
     <string name="pref_source_xdrip_broadcast">Alternative: Diffuser localement</string>
-    <string name="pref_source_dexcom_byoda_info_summary">Pour recevoir des valeurs de Dexcom BYODA, vous devez activer la diffusion vers AAPS ou les deux lors de la création de l\'application.</string>
+    <string name="pref_source_dexcom_byoda_info_summary">Pour recevoir des valeurs de Dexcom BYODA, vous devez activer la diffusion vers AAPS lors de la création de l\'application.</string>
     <string name="pref_source_eversense_info_summary">Pour recevoir des valeurs d\'Eversense, vous devez utiliser ESEL soit en mode compagnon (lecture de la notification), soit connecté à l\'application Eversense corrigée.\nPour plus d\'informations sur ESEL, appuyez ici.</string>
-    <string name="pref_source_eversense_byoda_info_summary">Pour recevoir des valeurs de Dexcom BYODA, vous devez activer la diffusion vers xDrip+ ou les deux lors de la création de l\'application.</string>
+    <string name="pref_source_eversense_byoda_info_summary">Pour recevoir des valeurs de Dexcom BYODA, vous devez activer la diffusion vers xDrip+ lors de la création de l\'application.</string>
     <string name="new_version">La version %s est disponible</string>
     <string name="info_label_notes">Remarques</string>
     <string name="gda_notification_permission">Les notifications sont désactivées ! \nAppuyez ici pour les activer.</string>
-
-    <!-- New  -->
 
     <string name="pref_show_other_unit">Afficher l\'autre unité</string>
     <string name="pref_show_other_unit_summary">Afficher la valeur de la glycémie en %s dans les détails.</string>
@@ -543,6 +541,9 @@
     <string name="dexcom_share_check_non_us_account">Appuyez ici pour vérifier les données de votre compte Dexcom Share pour votre compte hors U.S.A.</string>
     <string name="dexcom_share_check_us_account">Appuyez ici pour vérifier les données de votre compte Dexcom Share pour votre compte américain.</string>
     <string name="pref_lockscreen_size_summary">Modifiez la taille des données de l\'écran de verrouillage.</string>
+
+    <!-- New  -->
+
     <string name="pref_wear_os_reset_connection">Reset connection</string>
     <string name="pref_wear_os_reset_connection_summary">Press here to reset the wear-phone connection if it is not working as expected. If the reset does not solve the problem, please restart your watch.</string>
     <string name="detail_reset_connection">Connection is not working as expected! Please try to restart your watch.</string>
@@ -601,4 +602,20 @@
     <string name="advanced_settings_alarm">Advanced alarm settings</string>
     <string name="src_offline_enabled_summary_on">Internal messages from this source will be handled.</string>
     <string name="src_offline_enabled_summary_off">Internal messages from this source will be ignored.</string>
+    <string name="temp_disabled">Temporary disabled</string>
+
+    <!-- Talkback -->
+    <string name="trend">Trend</string>
+    <string name="rate_rising">%1$d degrees up</string>
+    <string name="rate_falling">%1$d degrees down</string>
+
+    <string name="alarm_toggle_state">Alarms: %1$s</string>
+    <string name="alarm_state_inactive">inactive</string>
+    <string name="alarm_state_snooze">snooze until %1$s</string>
+    <string name="alarm_state_temp_disabled">temporary disabled until %1$s</string>
+
+    <string name="enabled">enabled</string>
+    <string name="disabled">disabled</string>
+
+    <string name="not_available">not available</string>
 </resources>

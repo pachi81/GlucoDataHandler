@@ -77,7 +77,13 @@ object GlucoDataUtils {
         if (rate > -1.0f) return context.getString(R.string.rate_flat)
         if (rate > -2.0f) return context.getString(R.string.rate_forty_five_down)
         if (rate > -3.0f) return context.getString(R.string.rate_single_down)
-        return if (rate.isNaN()) "" else context.getString(R.string.rate_double_down)
+        return if (rate.isNaN()) context.getString(R.string.not_available) else context.getString(R.string.rate_double_down)
+    }
+
+    fun getRateDegrees(rate: Float): Int {
+        if (rate.isNaN())
+            return 0
+        return Utils.round(maxOf(-2F, minOf(2F, rate)) / 2F * 90F, 0).toInt()
     }
 
     private var rateDelta = 0.1F

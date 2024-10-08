@@ -198,8 +198,8 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     fun resText(resId: Int): PlainComplicationText =
         plainText(getText(resId))
 
-    fun descriptionText(): PlainComplicationText =
-        resText(descriptionResId)
+    open fun descriptionText(): PlainComplicationText =
+        plainText(ReceiveData.getAsText(this, false))
 
     fun arrowIcon(): MonochromaticImage =
         MonochromaticImage.Builder(

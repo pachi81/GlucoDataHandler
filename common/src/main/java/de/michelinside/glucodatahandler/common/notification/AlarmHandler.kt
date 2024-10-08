@@ -21,7 +21,9 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 import java.text.DateFormat
 import java.time.Duration
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.Date
 
 object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
@@ -56,16 +58,25 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         return DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(snoozeTime))
     }
 
+    val snoozeShortTimestamp: String get() {
+        return DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(snoozeTime))
+    }
+
+    private val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
     val isTempInactive: Boolean get() {
         if (inactiveEnabled) {
             val now = LocalDateTime.now()
-            val currentTime = now.format(DateTimeFormatter.ofPattern("HH:mm"))
+            val currentTime = now.format(timeFormatter)
             if (Utils.timeBetweenTimes(now, inactiveStartTime, inactiveEndTime, inactiveWeekdays)) {
                 Log.v(LOG_ID, "Alarm is inactive: $inactiveStartTime < $currentTime < $inactiveEndTime")
                 return true
             }
         }
         return false
+    }
+
+    val inactiveEndTimestamp: String get() {
+        return LocalTime.parse(inactiveEndTime, timeFormatter).format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
     }
 
     private val isInactive: Boolean get() {

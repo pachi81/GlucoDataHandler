@@ -89,6 +89,7 @@ object AlarmNotification : AlarmNotificationBase() {
             contentView.setTextViewText(R.id.snooze, context.getString(CR.string.snooze))
             if(alarmType == AlarmType.OBSOLETE) {
                 contentView.setTextViewText(R.id.deltaText, "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(context)}")
+                contentView.setContentDescription(R.id.deltaText, ReceiveData.getElapsedTimeMinuteAsString(context))
                 contentView.setViewVisibility(R.id.glucose, View.GONE)
                 contentView.setViewVisibility(R.id.trendImage, View.GONE)
             } else {
@@ -97,6 +98,7 @@ object AlarmNotification : AlarmNotificationBase() {
                 contentView.setTextViewText(R.id.glucose, ReceiveData.getGlucoseAsString())
                 contentView.setTextColor(R.id.glucose, ReceiveData.getGlucoseColor())
                 contentView.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap(withShadow = true))
+                contentView.setContentDescription(R.id.trendImage, ReceiveData.getRateAsText(context))
                 contentView.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
             }
             contentView.setOnClickPendingIntent(R.id.snooze_60, createSnoozeIntent(context, 60L, getNotificationId(alarmType)))

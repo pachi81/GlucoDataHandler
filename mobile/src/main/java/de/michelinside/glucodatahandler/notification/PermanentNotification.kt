@@ -195,6 +195,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             }
 
             trendIcon.setImageIcon(BitmapUtils.getRateAsIcon(withShadow = true))
+            trendIcon.contentDescription = ReceiveData.getRateAsText(context)
 
             textIob.text = "💉 ${ReceiveData.getIobAsString()}"
             textCob.text = "🍔 ${ReceiveData.getCobAsString()}"
@@ -235,6 +236,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
                     remoteViews =
                         RemoteViews(GlucoDataService.context!!.packageName, R.layout.image_view)
                     remoteViews.setImageViewBitmap(R.id.imageLayout, bitmap)
+                    remoteViews.setContentDescription(R.id.imageLayout, ReceiveData.getAsText(GlucoDataService.context!!, true))
                 }
             }
             notificationBuild.setCustomContentView(remoteViews)

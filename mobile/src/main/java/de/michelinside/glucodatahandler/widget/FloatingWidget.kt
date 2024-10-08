@@ -152,6 +152,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
             txtBgValue.paintFlags = 0
         }
         viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
+        viewIcon.contentDescription = ReceiveData.getRateAsText(context)
         txtDelta.text =ReceiveData.getDeltaAsString()
         txtTime.text = ReceiveData.getElapsedTimeMinuteAsString(context)
         txtIob.text = ReceiveData.getIobAsString()

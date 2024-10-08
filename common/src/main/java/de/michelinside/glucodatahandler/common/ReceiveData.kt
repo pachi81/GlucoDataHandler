@@ -17,7 +17,6 @@ import de.michelinside.glucodatahandler.common.utils.WakeLockHelper
 import java.math.RoundingMode
 import java.text.DateFormat
 import java.util.*
-import kotlin.time.Duration.Companion.days
 
 object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private const val LOG_ID = "GDH.ReceiveData"
@@ -115,6 +114,9 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private var deltaFallingCount = 0
     private var deltaRisingCount = 0
 
+    private var unitMgDl = "mg/dl"
+    private var unitMmol = "mmol/l"
+
     init {
         Log.v(LOG_ID, "init called")
     }
@@ -124,6 +126,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             if (!initialized) {
                 Log.v(LOG_ID, "initData called")
                 initialized = true
+                unitMgDl = context.resources.getString(R.string.unit_mgdl)
+                unitMmol = context.resources.getString(R.string.unit_mmol)
                 AlarmHandler.initData(context)
                 readTargets(context)
                 loadExtras(context)
@@ -134,23 +138,22 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         }
     }
 
-    fun getAsString(context: Context, noDataResId: Int = R.string.no_data): String {
-        if (time == 0L)
-            return context.getString(noDataResId)
-        return (context.getString(R.string.info_label_delta) + ": " + getDeltaAsString() + " " + getUnit() + "\r\n" +
-                context.getString(R.string.info_label_rate) + ": " + rate + "\r\n" +
-                context.getString(R.string.info_label_timestamp) + ": " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(time)) + "\r\n" +
-                context.getString(R.string.info_label_alarm) + ": " + context.getString(getAlarmType().resId) + (if (forceAlarm) " ⚠" else "" ) + " (" + alarm + ")\r\n" +
-                (if (AlarmHandler.isSnoozeActive) context.getString(R.string.snooze) + ": " + AlarmHandler.snoozeTimestamp + "\r\n" else "" ) +
-                (if (isMmol) context.getString(R.string.info_label_raw) + ": " + rawValue + " mg/dl\r\n" else "") +
-                (       if (!isIobCobObsolete(1.days.inWholeSeconds.toInt())) {
-                            context.getString(R.string.info_label_iob) + ": " + getIobAsString() + " / " + context.getString(R.string.info_label_cob) + ": " + getCobAsString() + "\r\n" +
-                                    context.getString(R.string.info_label_iob_cob_timestamp) + ": " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(iobCobTime)) + "\r\n"
-                        }
-                        else "" ) +
-                (if (sensorID.isNullOrEmpty()) "" else context.getString(R.string.info_label_sensor_id) + ": " + (if(BuildConfig.DEBUG) "ABCDE12345" else sensorID) + "\r\n") +
-                context.getString(R.string.info_label_source) + ": " + context.getString(source.resId)
-                )
+    fun getAsText(context: Context, withIobCob: Boolean = false): String {
+        if(isObsoleteShort())
+            return context.getString(R.string.no_new_value, getElapsedTimeMinute())
+        var text = getGlucoseAsString()
+        if(!rate.isNaN())
+            text += " " + getRateAsText(context)
+        if(!delta.isNaN())
+            text += " Δ " + getDeltaAsString()
+        text += " " + getElapsedRelativeTimeAsString(context)
+        if(withIobCob && !isIobCobObsolete()) {
+            if(!iob.isNaN())
+                text += " " + context.getString(R.string.info_label_iob) + " " + getIobAsString()
+            if(!cob.isNaN())
+                text += " " + context.getString(R.string.info_label_cob) + " " + getCobAsString()
+        }
+        return text
     }
 
     fun isObsoleteTime(timeoutSec: Int): Boolean = (System.currentTimeMillis()- time) >= (timeoutSec * 1000)
@@ -186,16 +189,31 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return (if (rate > 0) "+" else "") + rate.toString()
     }
 
+    fun getRateAsText(context: Context): String {
+        var rateText = if(rate < 2F && rate > -2F && rate != 0F) {
+            // calculate degrees
+            val degrees = GlucoDataUtils.getRateDegrees(rate)
+            if (degrees > 0) {
+                context.getString(R.string.rate_rising, degrees)
+            } else if (degrees < 0) {
+                context.getString(R.string.rate_falling, degrees)
+            } else null
+        } else null
+        if(rateText.isNullOrEmpty())
+            rateText = GlucoDataUtils.getRateLabel(context, rate)
+        return context.resources.getString(R.string.trend) + " " + rateText
+    }
+
     fun getUnit(): String {
         if (isMmol)
-            return "mmol/l"
-        return "mg/dl"
+            return unitMmol
+        return unitMgDl
     }
 
     fun getOtherUnit(): String {
         if (isMmol)
-            return "mg/dl"
-        return "mmol/l"
+            return unitMgDl
+        return unitMmol
     }
 
     fun getGlucoseAsOtherUnit(): String {

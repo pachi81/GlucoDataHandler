@@ -6,15 +6,14 @@ import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
 
-enum class AlarmState(val icon: Int) {
-    DISABLED(R.drawable.notification_disabled),
-    ACTIVE(R.drawable.notification_on),
-    SNOOZE(R.drawable.notification_snooze),
-    INACTIVE(R.drawable.notification_minus),
-    TEMP_INACTIVE(R.drawable.notification_clock_snooze);
+enum class AlarmState(val icon: Int, val descr: Int) {
+    DISABLED(R.drawable.notification_disabled, R.string.disabled),
+    ACTIVE(R.drawable.notification_on, R.string.enabled),
+    SNOOZE(R.drawable.notification_snooze, R.string.alarm_state_snooze),
+    INACTIVE(R.drawable.notification_minus, R.string.alarm_state_inactive),
+    TEMP_DISABLED(R.drawable.notification_clock_snooze, R.string.alarm_state_temp_disabled);
 
     companion object {
-
         fun currentState(context: Context): AlarmState {
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             var enabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
@@ -22,7 +21,7 @@ enum class AlarmState(val icon: Int) {
                 enabled = sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, false)
             if(enabled) {
                 if(AlarmHandler.isTempInactive)
-                    return TEMP_INACTIVE
+                    return TEMP_DISABLED
                 if(AlarmHandler.isSnoozeActive)
                     return SNOOZE
                 return ACTIVE
