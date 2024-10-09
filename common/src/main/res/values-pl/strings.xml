@@ -30,10 +30,10 @@
     <string name="button_cancel">Anuluj</string>
 
     <string name="alarm_none">-</string>
-    <string name="alarm_very_low">bardzo nisko</string>
-    <string name="alarm_low">nisko</string>
-    <string name="alarm_high">wysoko</string>
-    <string name="alarm_very_high">bardzo wysoko</string>
+    <string name="alarm_very_low">Poziom bardzo niski</string>
+    <string name="alarm_low">Poziom niski</string>
+    <string name="alarm_high">Poziom wysoki</string>
+    <string name="alarm_very_high">Poziom bardzo wysoki</string>
 
     <!-- mobile -->
 
@@ -146,7 +146,7 @@
     <string name="pref_car_notification_interval_summary">Minimalna przerwa między wyświetlaniem powiadomień o nowej wartości. Alarmy zawsze będą wyświetlać powiadomienia.</string>
     <string name="pref_switch_car_notification_alarm_only">Tylko alarm</string>
     <string name="pref_switch_car_notification_alarm_only_summary">Powiadomienia będą pojawiać się tylko w przypadku alarmów w ustawionych odstępach.\nBardzo niskie wartości zawsze będą uruchamiać powiadomienie.</string>
-    <string name="pref_switch_car_media">Odtwarzacz fikcyjnych multimediów</string>
+    <string name="pref_switch_car_media">Pseudoodtwarzacz multimediów</string>
     <string name="pref_switch_car_media_summary">Wyświetl wartość glukozy jako bieżący utwór dla Android Auto.</string>
     <string name="pref_switch_send_to_aod">Wyślij transmisję \"glucodata broadcast\"</string>
     <string name="pref_switch_send_to_aod_summary">Wyślij transmisję \"glucodata broadcast\" dla nowych wartości otrzymanych z dowolnego źródła.</string>
@@ -312,7 +312,7 @@
     <string name="pref_switch_watchdrip_enabled_summary">"Włącz komunikację z WatchDrip+ (bez wykresu).\nWAŻNA UWAGA: opcję \"Enable service\" w WatchDrip+ należy włączyć dopiero po włączeniu tej opcji tutaj!"</string>
     <string name="pref_car_notification_reappear_interval">Pokaż ponownie</string>
     <string name="pref_car_notification_reappear_interval_summary"> Czas, po którym powiadomienie pojawi się ponownie, jeśli nie ma nowej wartości. (0 = nigdy).</string>
-    <string name="pref_aa_media_player_icon_style_summary">Styl ikony/obrazu odtwarzacza fikcyjnych multimediów.</string>
+    <string name="pref_aa_media_player_icon_style_summary">Styl ikony/obrazu pseudoodtwarzacza multimediów.</string>
     <string name="pref_aa_media_player_icon_style"> Styl ikony/obrazu </string>
     <string name="menu_save_mobile_logs">Telefon</string>
     <string name="menu_save_wear_logs">Zegarek</string>
@@ -496,7 +496,7 @@
     <string name="gda_help_aa_sources">2. Aktywuj „Nieznane źródła\"</string>
     <string name="gda_help_aa_sources_summary">- otwórz Android Auto\n- otwórz w menu (3 kropki) „Ustawienia programisty\"\n- przewiń w dół do pozycji „Nieznane źródła\"\n- włącz ją</string>
     <string name="gda_help_aa_notification">3. Ustawienia powiadomień</string>
-    <string name="gda_help_aa_notification_summary">- otwórz Android Auto\n- przewiń w dół do pozycji „Powiadomienia\"\n- włącz „Pokaż podgląd wiadomości przychodzących\"\n- włącz „Pokazuj pierwszy wiersz wiadomości\"</string>
+    <string name="gda_help_aa_notification_summary">- otwórz Android Auto\n- przewiń w dół do pozycji „Powiadomienia\"\n- włącz „Powiadamiaj o wiadomościach\"\n- włącz „Pokazuj pierwszy wiersz wiadomości\"</string>
     <string name="gda_help_aa_enable_gda">4. Włącz GlucoDataAuto</string>
     <string name="gda_help_aa_enable_gda_summary">- otwórz Android Auto\n- przewiń w dół do pozycji \"Wyświetlanie\"\n- otwórz \"Dostosuj aplikacje w menu\"\n- włącz \"GlucoDataAuto\"\nJeśli GlucoDataAuto nie jest dostępny, proszę zrestartować telefon.</string>
     <string name="pref_notification_custom_layout">Kolorowy układ</string>
@@ -533,89 +533,89 @@
 
     <!-- New  -->
 
-    <string name="pref_show_other_unit">Show other unit</string>
-    <string name="pref_show_other_unit_summary">Show glucose value in %s in the details.</string>
-    <string name="watch_battery_level">Watch battery level</string>
-    <string name="phone_battery_level">Phone battery level</string>
-    <string name="other_unit">Other unit</string>
-    <string name="dexcom_share_check_non_us_account">Press here to check your Dexcom Share account data for your non-US account.</string>
-    <string name="dexcom_share_check_us_account">Press here to check your Dexcom Share account data for your US account.</string>
-    <string name="pref_lockscreen_size_summary">Change size of the lockscreen data.</string>
-    <string name="pref_wear_os_reset_connection">Reset connection</string>
-    <string name="pref_wear_os_reset_connection_summary">Press here to reset the wear-phone connection if it is not working as expected.\nIf the reset does not solve the problem, please restart your watch.</string>
-    <string name="detail_reset_connection">Connection is not working as expected! Please try to restart your watch.</string>
-    <string name="pref_floating_widget_time_to_close">Time to close</string>
-    <string name="pref_floating_widget_time_to_close_summary">Time in seconds to close the floating widget while pressing on the widget without moving it.\n0 for disable this setting.</string>
-    <string name="alarm_inactive_enabled">Enable quiet hours</string>
-    <string name="alarm_inactive_enabled_summary">No alarm notifications for this alarm during quiet hours.\nConfigure your preferred times to use this feature.</string>
-    <string name="all_alarm_inactive_enabled_summary">No alarm notifications for all alarms during quiet hours.\nConfigure your preferred times to use this feature.</string>
-    <string name="alarm_inactive_start_time">Start time</string>
-    <string name="alarm_inactive_start_time_summary">Select the time you want your quiet hours to start.</string>
-    <string name="alarm_inactive_end_time">End time</string>
-    <string name="alarm_inactive_end_time_summary">Select the time you want your quiet hours to end.</string>
-    <string name="alarm_inactive_weekdays">Days for quiet hours</string>
-    <string name="alarm_inactive_weekdays_summary">Specify the days of the week on which quiet hours should start at the selected start time.</string>
+    <string name="pref_show_other_unit">Pokaż drugą jednostkę</string>
+    <string name="pref_show_other_unit_summary">Pokaż wartość glukozy w %s w szczegółach.</string>
+    <string name="watch_battery_level">Poziom baterii zegarka</string>
+    <string name="phone_battery_level">Poziom baterii telefonu</string>
+    <string name="other_unit">Druga jednostka</string>
+    <string name="dexcom_share_check_non_us_account">Naciśnij tutaj, aby sprawdzić dane konta Dexcom Share dla konta spoza USA.</string>
+    <string name="dexcom_share_check_us_account">Naciśnij tutaj, aby sprawdzić dane konta Dexcom Share dla konta z USA.</string>
+    <string name="pref_lockscreen_size_summary">Zmiana rozmiaru danych ekranu blokady.</string>
+    <string name="pref_wear_os_reset_connection">Zresetuj połączenie</string>
+    <string name="pref_wear_os_reset_connection_summary">Naciśnij tutaj, aby zresetować połączenie między zegarkiem a telefonem, jeśli nie działa, jak powinno.\nJeśli reset nie rozwiąże problemu, uruchom ponownie zegarek.</string>
+    <string name="detail_reset_connection">Połączenie nie działa, jak powinno! Spróbuj ponownie uruchomić zegarek.</string>
+    <string name="pref_floating_widget_time_to_close">Czas do zamknięcia</string>
+    <string name="pref_floating_widget_time_to_close_summary">Czas w sekundach do zamknięcia pływającego widgetu po naciśnięciu widgetu bez przesuwania go.\n0, aby wyłączyć to ustawienie.</string>
+    <string name="alarm_inactive_enabled">Włącz godziny ciszy</string>
+    <string name="alarm_inactive_enabled_summary">Brak powiadomień o tym alarmie w godzinach ciszy.\nUstaw wybrane godziny korzystania z tej funkcji.</string>
+    <string name="all_alarm_inactive_enabled_summary">Brak powiadomień o wszystkich alarmach w godzinach ciszy.\nUstaw wybrane godziny korzystania z tej funkcji.</string>
+    <string name="alarm_inactive_start_time">Godzina rozpoczęcia</string>
+    <string name="alarm_inactive_start_time_summary">Wybierz godzinę rozpoczęcia godzin ciszy.</string>
+    <string name="alarm_inactive_end_time">Godzina zakończenia</string>
+    <string name="alarm_inactive_end_time_summary">Wybierz godzinę zakończenia godzin ciszy.</string>
+    <string name="alarm_inactive_weekdays">Dni godzin ciszy</string>
+    <string name="alarm_inactive_weekdays_summary">Określ dni tygodnia, w których godziny ciszy powinny rozpoczynać się o wybranej godzinie rozpoczęcia.</string>
 
-    <string name="app_crash_bad_notification">The app crashes because of the colored notification layout!\nIt has been disabled to prevent this crash.\nThis is an issue on Samsung phones so please create a error report in the Samsung members app. Thank you!</string>
-    <string name="auto_close_notification">Auto close notification</string>
-    <string name="auto_close_notification_summary">Auto close alarm notification after sound and vibration has finished, but only after at least 30 seconds.\nIf retrigger is active, the notification will be closed, if there is no additional trigger.</string>
-    <string name="settings_save_succeeded">Settings saved successfully</string>
-    <string name="settings_save_failed">Failed saving settings!</string>
-    <string name="settings_read_succeeded">Settings read successfully</string>
-    <string name="settings_read_failed">Failed reading settings!</string>
-    <string name="pref_cat_export_import">Export / Import</string>
-    <string name="pref_cat_export_import_summary">Export or import settings and save logs.</string>
-    <string name="pref_export_settings">Export</string>
-    <string name="pref_export_settings_summary">Press here to export all settings to a file. \nIMPORTANT: this will only export changed settings! Settings with default values will not be part of the export.</string>
+    <string name="app_crash_bad_notification">Aplikacja zawiesza się z powodu układu kolorowych powiadomień! Został on wyłączony, aby zapobiec tej awarii. Jest to problem dotyczący telefonów Samsung, więc utwórz raport o błędzie w aplikacji Samsung Members. Dziękuję!</string>
+    <string name="auto_close_notification">Automatyczne zamknięcie powiadomienia</string>
+    <string name="auto_close_notification_summary">Automatyczne zamknięcie powiadomienia alarmowego po zakończeniu odtwarzania dźwięku i wibracji, ale dopiero po upływie co najmniej 30 sekund.\nJeśli aktywna jest opcja ponownego włączenia, powiadomienie zostanie zamknięte, jeśli nie będzie dodatkowego wyzwalacza alarmu.</string>
+    <string name="settings_save_succeeded">Ustawienia zapisane pomyślnie</string>
+    <string name="settings_save_failed">Nie udało się zapisać ustawień!</string>
+    <string name="settings_read_succeeded">Ustawienia wczytane pomyślnie</string>
+    <string name="settings_read_failed">Nie udało się wczytać ustawień!</string>
+    <string name="pref_cat_export_import">Eksport / Import</string>
+    <string name="pref_cat_export_import_summary">Eksportuj lub importuj ustawienia i zapisuj logi.</string>
+    <string name="pref_export_settings">Eksport</string>
+    <string name="pref_export_settings_summary">Naciśnij tutaj, aby wyeksportować wszystkie ustawienia do pliku. \nUWAGA: spowoduje to wyeksportowanie tylko zmienionych ustawień! Ustawienia z wartościami domyślnymi nie będą częścią eksportu.</string>
     <string name="pref_import_settings">Import</string>
-    <string name="pref_import_settings_summary">Press here to import settings from a file.\nIMPORTANT: this will not re-create default settings, as there are not part of the export.\nIf you want to reset to default, delete the app data first and import afterwards.</string>
-    <string name="menu_save_mobile_logs_summary">Save logs from the phone to file.</string>
-    <string name="menu_save_wear_logs_summary">Save logs from connected Wear OS watch to file.</string>
-    <string name="alarm_repeat">Repeat</string>
-    <string name="alarm_repeat_summary">"Repeat alarm sound and vibration. \n0: Disables the repeat functionality. \nPositive values: Set the repeat interval in minutes. \n-1: Enables unlimited repetition. "</string>
-    <string name="no_vibration">No vibration</string>
-    <string name="alarm_vibrate_mode">Vibration mode</string>
+    <string name="pref_import_settings_summary">Naciśnij tutaj, aby zaimportować ustawienia z pliku.\nUWAGA: nie spowoduje to ponownego utworzenia ustawień domyślnych, ponieważ nie są one częścią eksportu. Jeśli chcesz przywrócić ustawienia domyślne, najpierw usuń dane aplikacji, a następnie dokonaj importu danych z pliku.</string>
+    <string name="menu_save_mobile_logs_summary">Zapisz logi z telefonu do pliku.</string>
+    <string name="menu_save_wear_logs_summary">Zapisz logi z podłączonego zegarka Wear OS do pliku.</string>
+    <string name="alarm_repeat">Powtórz</string>
+    <string name="alarm_repeat_summary">&quot;Powtórz dźwięk alarmu i wibracje. \n0: Wyłącza funkcję powtarzania. \nWartości dodatnie: Ustawienie czasu do powtórzenia w minutach. \n-1: Włącza nieograniczone powtarzanie. &quot;</string>
+    <string name="no_vibration">Brak wibracji</string>
+    <string name="alarm_vibrate_mode">Tryb wibracji</string>
 
-    <string name="alarm_rising_fast">Rising fast</string>
-    <string name="rising_fast_alarm_notification_name">Rising fast alarm</string>
-    <string name="alarm_rising_fast_summary">Alarm if the glucose value is higher or equal to %1$s and the delta rises by at least +%2$s for %3$d consecutive readings.</string>
-    <string name="rising_fast_alarm_text">Rising fast!</string>
+    <string name="alarm_rising_fast">Szybki wzrost</string>
+    <string name="rising_fast_alarm_notification_name">Alarm dla szybkiego wzrostu glukozy</string>
+    <string name="alarm_rising_fast_summary">Alarm jeśli wartość glukozy jest wyższa lub równa %1$s, a delta wzrasta o co najmniej +%2$s przez %3$d kolejnych odczytów.</string>
+    <string name="rising_fast_alarm_text">Szybki wzrost!</string>
 
-    <string name="alarm_falling_fast">Falling fast</string>
-    <string name="falling_fast_alarm_notification_name">Falling fast alarm</string>
-    <string name="alarm_falling_fast_summary">Alarm if the glucose value is lower or equal to %1$s and the delta falls by at least -%2$s for %3$d consecutive readings.</string>
-    <string name="falling_fast_alarm_text">Falling fast!</string>
-    <string name="alarm_vibrate_amplitude">Vibration Intensity</string>
-    <string name="alarm_vibrate_amplitude_summary">Intensity of the vibration</string>
-    <string name="pref_cat_alarm_settings">Alarm settings</string>
-    <string name="pref_alarm_delta_summary">Delta value when the alarm should be triggered.</string>
-    <string name="alarm_occurrence_count">Number of occurrence</string>
-    <string name="alarm_occurrence_count_summary">Number of times the delta value must be reached consecutively.</string>
-    <string name="pref_alarm_rising_falling_border">Border</string>
-    <string name="pref_alarm_rising_falling_border_summary">Border for the rising/falling alarm.\nThe glucose value must be higher/lower to trigger the alarm.</string>
-    <string name="delta_per_minute">per minute</string>
-    <string name="delta_per_5_minute">per 5 minutes</string>
-    <string name="other_alarm_cat_categories">Other alarms</string>
-    <string name="advanced_settings_alarm">Advanced alarm settings</string>
-    <string name="src_offline_enabled_summary_on">Internal messages from this source will be handled.</string>
-    <string name="src_offline_enabled_summary_off">Internal messages from this source will be ignored.</string>
-    <string name="temp_disabled">Temporary disabled</string>
+    <string name="alarm_falling_fast">Szybki spadek</string>
+    <string name="falling_fast_alarm_notification_name">Alarm dla szybkiego spadku glukozy</string>
+    <string name="alarm_falling_fast_summary">Alarm jeśli wartość glukozy jest niższa lub równa %1$s, a delta spada o co najmniej -%2$s przez %3$d kolejnych odczytów.</string>
+    <string name="falling_fast_alarm_text">Szybki spadek!</string>
+    <string name="alarm_vibrate_amplitude">Intensywność wibracji</string>
+    <string name="alarm_vibrate_amplitude_summary">Ustawienie intensywności wibracji</string>
+    <string name="pref_cat_alarm_settings">Ustawienia alarmów</string>
+    <string name="pref_alarm_delta_summary">Wartość delta, kiedy alarm powinien zostać uruchomiony.</string>
+    <string name="alarm_occurrence_count">Liczba wystąpień</string>
+    <string name="alarm_occurrence_count_summary">Liczba kolejnych osiągnięć danej wartości delta.</string>
+    <string name="pref_alarm_rising_falling_border">Granica</string>
+    <string name="pref_alarm_rising_falling_border_summary">Granica alarmu dla wzrostu/spadku.\nWartość glukozy musi być wyższa/niższa, aby włączyć ten alarm.</string>
+    <string name="delta_per_minute">na min.</string>
+    <string name="delta_per_5_minute">a 5 minut</string>
+    <string name="other_alarm_cat_categories">Inne alarmy</string>
+    <string name="advanced_settings_alarm">Zaawansowane ustawienia alarmów</string>
+    <string name="src_offline_enabled_summary_on">Wewnętrzne wiadomości z tego źródła będą obsługiwane.</string>
+    <string name="src_offline_enabled_summary_off">Wewnętrzne wiadomości z tego źródła będą ignorowane.</string>
+    <string name="temp_disabled">Tymczasowo wyłączony</string>
 
     <!-- Talkback -->
     <string name="trend">Trend</string>
-    <string name="rate_rising">%1$d degrees up</string>
-    <string name="rate_falling">%1$d degrees down</string>
+    <string name="rate_rising">%1$d stopni w górę</string>
+    <string name="rate_falling">%1$d stopni w dół</string>
 
-    <string name="alarm_toggle_state">Alarms: %1$s</string>
-    <string name="alarm_state_inactive">inactive</string>
-    <string name="alarm_state_snooze">snooze until %1$s</string>
-    <string name="alarm_state_temp_disabled">temporary disabled until %1$s</string>
+    <string name="alarm_toggle_state">Alarmy: %1$s</string>
+    <string name="alarm_state_inactive">nieaktywne</string>
+    <string name="alarm_state_snooze">drzemka do %1$s</string>
+    <string name="alarm_state_temp_disabled">tymczasowo wyłączone do %1$s</string>
 
-    <string name="enabled">enabled</string>
-    <string name="disabled">disabled</string>
+    <string name="enabled">włączone</string>
+    <string name="disabled">wyłączone</string>
 
-    <string name="not_available">not available</string>
-    <string name="action_read_values">Read values</string>
+    <string name="not_available">niedostępne</string>
+    <string name="action_read_values">Odczytuj wartości na głos</string>
 
     <plurals name="elapsed_time_full_text">
         <item quantity="one">Czas %d minuta</item>
