@@ -275,8 +275,7 @@
     <string name="pref_no_gda_info">GlucoDataAuto ausente</string>
     <string name="pref_no_gda_info_summary">TPara usar o GlucoDataHandler para Android Auto, você deve instalar o GlucoDataAuto do GitHub.\nClique aqui para obter mais informações e fazer o download do GlucoDataAuto.</string>
     <string name="pref_send_to_glucodataauto">Encaminhar para GlucoDataAuto</string>
-    <string name="pref_send_to_glucodataauto_summary">Envie valores e configurações de glicose para GlucoDataAuto, se o telefone estiver conectado ao Android Auto.
-</string>
+    <string name="pref_send_to_glucodataauto_summary">Envie valores e configurações de glicose para GlucoDataAuto, se o telefone estiver conectado ao Android Auto.</string>
 
 
     <!-- Notifications -->

@@ -144,6 +144,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         try {
             super.onResume()
             Log.v(LOG_ID, "onResume called")
+            GlucoDataService.checkServices(this)
             checkUncaughtException()
             doNotUpdate = false
             update()

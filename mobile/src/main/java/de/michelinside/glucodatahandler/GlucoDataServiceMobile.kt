@@ -137,7 +137,8 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 NotifySource.MESSAGECLIENT,
                 NotifySource.OBSOLETE_VALUE, // to trigger re-start for the case of stopped by the system
                 NotifySource.CAR_CONNECTION,
-                NotifySource.CAPILITY_INFO)
+                NotifySource.CAPILITY_INFO,
+                NotifySource.BATTERY_LEVEL)  // used for watchdog-check
             InternalNotifier.addNotifier(this, this, filter)
             floatingWidget = FloatingWidget(this)
             PermanentNotification.create(applicationContext)

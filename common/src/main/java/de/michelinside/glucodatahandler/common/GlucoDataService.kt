@@ -26,6 +26,7 @@ import de.michelinside.glucodatahandler.common.receiver.DexcomBroadcastReceiver
 import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
 import de.michelinside.glucodatahandler.common.receiver.NsEmulatorReceiver
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
+import de.michelinside.glucodatahandler.common.tasks.BackgroundWorker
 import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
@@ -112,6 +113,16 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     )
                     isRunning = false
                 }
+            } else {
+                checkServices(context)
+            }
+        }
+
+        fun checkServices(context: Context) {
+            try {
+                BackgroundWorker.checkServiceRunning(context)
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "checkServices exception: " + exc.message.toString())
             }
         }
 

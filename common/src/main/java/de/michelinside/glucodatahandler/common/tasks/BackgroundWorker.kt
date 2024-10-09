@@ -20,8 +20,8 @@ import de.michelinside.glucodatahandler.common.notification.Channels
 import java.time.Duration
 
 abstract class BackgroundWorker(val context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
-    private val LOG_ID = "GDH.Task.BackgroundWorker"
     companion object {
+        private val LOG_ID = "GDH.Task.BackgroundWorker"
         fun triggerWork(context: Context, taskServiceClass: Class<out BackgroundWorker>) {
             Log.v("GDH.Task.BackgroundTaskService", "triggerWork called for class " + taskServiceClass.simpleName)
             val builder = OneTimeWorkRequest.Builder(taskServiceClass)
@@ -40,6 +40,18 @@ abstract class BackgroundWorker(val context: Context, workerParams: WorkerParame
             workManager.cancelAllWork()
             TimeTaskService.stop()
             SourceTaskService.stop()
+        }
+
+        fun checkServiceRunning(context: Context) {
+            // watchdog to check, if all services are running
+            if(!TimeTaskService.checkRunning()) {
+                Log.e(LOG_ID, "TimeTaskService not running! Restart it")
+                TimeTaskService.run(context)
+            }
+            if(!SourceTaskService.checkRunning()) {
+                Log.e(LOG_ID, "SourceTaskService not running! Restart it")
+                SourceTaskService.run(context)
+            }
         }
     }
 

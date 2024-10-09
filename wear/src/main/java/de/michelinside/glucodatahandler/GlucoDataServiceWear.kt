@@ -78,7 +78,8 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
             val filter = mutableSetOf(
                 NotifySource.BROADCAST,
                 NotifySource.MESSAGECLIENT,
-                NotifySource.OBSOLETE_VALUE) // to trigger re-start for the case of stopped by the system
+                NotifySource.OBSOLETE_VALUE, // to trigger re-start for the case of stopped by the system
+                NotifySource.BATTERY_LEVEL)  // used for watchdog-check
             InternalNotifier.addNotifier(this, this, filter)
             ActiveComplicationHandler.OnNotifyData(this, NotifySource.CAPILITY_INFO, null)
         } catch (ex: Exception) {
