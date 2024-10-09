@@ -461,7 +461,7 @@
     <string name="pref_cat_transfer">Transferir valores</string>
     <string name="pref_cat_visualisation">Visualización</string>
     <string name="pref_cat_banglejs">Relojes BangleJS</string>
-    <string name="pref_wearos_info_summary">Para usar GlucoDataHandler en relojes con Wear OS, por favor instálalo desde Google Play Store.</string>
+    <string name="pref_wearos_info_summary">Para usar GlucoDataHandler en relojes con Wear OS, por favor instálalo desde Google Play Store.\nEsta aplicación no proporciona una esfera de reloj, sino que proporciona varias complicaciones (las pequeñas partes redondas de la esfera del reloj), que se pueden usar en la mayoría de las esferas de reloj.</string>
     <string name="pref_wear_os_check_connection">Verificar conexión</string>
     <string name="pref_wear_os_check_connection_summary">Presiona aquí para volver a verificar la conexión con Wear OS.\nTambién puedes activar esta verificación al presionar sobre la información de la conexión en la pantalla de inicio (incluso en la aplicación de Wear OS).</string>
     <string name="pref_watchdrip_info_summary">WatchDrip+ admite varios dispositivos MiBand y Amazfit.\nPara obtener una lista completa de dispositivos compatibles y más información sobre cómo configurar WatchDrip+, por favor presiona aquí.</string>

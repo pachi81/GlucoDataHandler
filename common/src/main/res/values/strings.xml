@@ -494,7 +494,7 @@
     <string name="pref_cat_transfer">Transfer values</string>
     <string name="pref_cat_visualisation">Visualisation</string>
     <string name="pref_cat_banglejs">BangleJS watches</string>
-    <string name="pref_wearos_info_summary">To use GlucoDataHandler on Wear OS watches, please install it from Google Playstore.</string>
+    <string name="pref_wearos_info_summary">To use GlucoDataHandler on Wear OS watches, please install it from Google Playstore on watch.\nThis app does not provide a watchface, it provides several complications (the small round watchface parts), which can be used for the most watchfaces.</string>
     <string name="pref_wear_os_check_connection">Check connection</string>
     <string name="pref_wear_os_check_connection_summary">Press here to re-check the connection to Wear OS.\nYou can also trigger this check while pressing on the connection info on home screen (even in the Wear OS app).</string>
     <string name="pref_watchdrip_info_summary">WatchDrip+ supports several MiBand and Amazfit devices.\nTo get a whole list of supported devices and more information about configure WatchDrip+, please press here.</string>
