@@ -460,7 +460,7 @@
     <string name="pref_cat_transfer">Transférer les valeurs</string>
     <string name="pref_cat_visualisation">Visualisation</string>
     <string name="pref_cat_banglejs">Montres BangleJS</string>
-    <string name="pref_wearos_info_summary">Pour utiliser GlucoDataHandler sur les montres Wear OS, veuillez l\'installer depuis le Google Playstore.\nCette application ne fournit pas de cadran de montre, mais fournit plusieurs complications (les petites parties rondes du cadran de la montre), qui peuvent être utilisées pour la plupart des cadrans de montre.</string>
+    <string name="pref_wearos_info_summary">Pour utiliser GlucoDataHandler sur les montres Wear OS, veuillez l\'installer depuis le Google Playstore.\nCette application ne fournit pas de cadran de montre, mais fournit plusieurs complications (les petites parties rondes du cadran de la montre), qui peuvent être utilisées pour les cadrans de montre prenant en charge les complications tierces.</string>
     <string name="pref_wear_os_check_connection">Vérifier la connexion</string>
     <string name="pref_wear_os_check_connection_summary">Appuyez ici pour revérifier la connexion à Wear OS.\nVous pouvez également déclencher cette vérification en appuyant sur les informations de connexion sur l\'écran d\'accueil (même dans l\'application Wear OS).</string>
     <string name="pref_watchdrip_info_summary">WatchDrip+ prend en charge plusieurs appareils MiBand et Amazfit.\nPour obtenir une liste complète des appareils pris en charge et plus d\'informations sur la configuration de WatchDrip+, veuillez appuyer ici.</string>
