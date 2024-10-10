@@ -101,6 +101,10 @@
             android:title="@string/pref_source_dexcom_share_info"
             android:summary="@string/pref_source_dexcom_share_info_summary"
             app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_dexcom_account_link"
+            android:summary="@string/dexcom_share_check_non_us_account"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <PreferenceCategory
