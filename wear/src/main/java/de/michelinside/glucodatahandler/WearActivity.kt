@@ -139,6 +139,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         try {
             super.onResume()
             Log.d(LOG_ID, "onResume called")
+            GlucoDataService.checkServices(this)
             doNotUpdate = false
             update()
             InternalNotifier.addNotifier(this, this, mutableSetOf(
