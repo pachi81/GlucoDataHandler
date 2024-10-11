@@ -88,15 +88,6 @@
             android:title="@string/pref_cat_alarm_vibration_sound"
             app:iconSpaceReserved="false"
             app:initialExpandedChildrenCount="0">
-                <androidx.preference.SeekBarPreference
-                    app:showSeekBarValue="true"
-                    app:seekBarIncrement="1"
-                    app:min="-1"
-                    android:defaultValue="-1"
-                    android:key="_sound_level"
-                    android:title="@string/alarm_sound_level"
-                    android:summary="@string/alarm_sound_level_summary"
-                    app:iconSpaceReserved="false" />
                 <androidx.preference.SwitchPreferenceCompat
                     android:key="_use_custom_sound"
                     android:defaultValue="false"
@@ -108,6 +99,25 @@
                     android:key="_custom_sound"
                     android:title="@string/alarm_sound"
                     android:summary="@string/alarm_sound_summary"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SeekBarPreference
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="1"
+                    app:min="-1"
+                    android:defaultValue="-1"
+                    android:key="_sound_level"
+                    android:title="@string/alarm_sound_level"
+                    android:summary="@string/alarm_sound_level_summary"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SeekBarPreference
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="1"
+                    app:defaultValue="0"
+                    app:min="0"
+                    android:max="30"
+                    android:key="_sound_delay"
+                    android:title="@string/alarm_sound_delay"
+                    android:summary="@string/alarm_sound_delay_summary"
                     app:iconSpaceReserved="false" />
                 <de.michelinside.glucodatahandler.preferences.VibratePatternPreference
                     android:key="_vibrate_pattern"
@@ -123,17 +133,13 @@
                     android:title="@string/alarm_vibrate_amplitude"
                     android:summary="@string/alarm_vibrate_amplitude_summary"
                     app:iconSpaceReserved="false" />
-                <androidx.preference.SeekBarPreference
-                    app:showSeekBarValue="true"
-                    app:seekBarIncrement="1"
-                    app:defaultValue="0"
-                    app:min="0"
-                    android:max="30"
-                    android:key="_sound_delay"
-                    android:title="@string/alarm_sound_delay"
-                    android:summary="@string/alarm_sound_delay_summary"
-                    app:iconSpaceReserved="false" />
-                <androidx.preference.SeekBarPreference
+        </PreferenceCategory>
+        <PreferenceCategory
+            android:key="cat_alarm_advanced"
+            android:title="@string/advanced_settings"
+            app:iconSpaceReserved="false"
+            app:initialExpandedChildrenCount="0">
+                <!--<androidx.preference.SeekBarPreference
                     app:showSeekBarValue="true"
                     app:seekBarIncrement="1"
                     app:defaultValue="0"
@@ -142,7 +148,7 @@
                     android:key="_repeat"
                     android:title="@string/alarm_repeat"
                     android:summary="@string/alarm_repeat_summary"
-                    app:iconSpaceReserved="false" />
+                    app:iconSpaceReserved="false" />-->
                 <androidx.preference.SeekBarPreference
                     app:showSeekBarValue="true"
                     app:seekBarIncrement="1"
@@ -153,12 +159,6 @@
                     android:title="@string/alarm_retrigger"
                     android:summary="@string/alarm_retrigger_summary"
                     app:iconSpaceReserved="false" />
-        </PreferenceCategory>
-        <PreferenceCategory
-            android:key="cat_alarm_advanced"
-            android:title="@string/advanced_settings"
-            app:iconSpaceReserved="false"
-            app:initialExpandedChildrenCount="0">
                 <Preference
                     android:key="_test"
                     android:title="@string/alarm_test"

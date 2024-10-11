@@ -55,9 +55,9 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
     private val intervalPref: String get() {
         return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_INTERVAL)
     }
-    private val repeatPref: String get() {
+    /*private val repeatPref: String get() {
         return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT)
-    }
+    }*/
     private val retriggerPref: String get() {
         return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_RETRIGGER)
     }
@@ -187,11 +187,11 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
             val prefUseCustomRingtone = findPreference<SwitchPreferenceCompat>(useCustomSoundPref)
             prefSelectRingtone!!.isEnabled = prefUseCustomRingtone!!.isChecked
             updateRingtoneSelectSummary()
-
+            /*
             val prefRepeat = findPreference<SeekBarPreference>(repeatPref)
             val prefRetrigger = findPreference<SeekBarPreference>(retriggerPref)
             prefRetrigger!!.isEnabled = prefRepeat!!.value >= 0
-
+            */
             val prefWeekdays = findPreference<MultiSelectListPreference>(inactiveWeekdaysPref)
             prefWeekdays!!.summary = resources.getString(CR.string.alarm_inactive_weekdays_summary) + "\n" + prefWeekdays.values.joinToString(
                 ", "
@@ -271,11 +271,12 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
         val prefRetrigger = findPreference<SeekBarPreference>(retriggerPref)
         prefRetrigger!!.value = preferenceManager.sharedPreferences!!.getInt(prefRetrigger.key, 0)
 
+        /*
         val prefRepeat = findPreference<SeekBarPreference>(repeatPref)
-        prefRepeat!!.value = preferenceManager.sharedPreferences!!.getInt(prefRetrigger.key, 0)
+        prefRepeat!!.value = preferenceManager.sharedPreferences!!.getInt(prefRepeat.key, 0)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
             prefRepeat.isVisible = false  // looping is supported for API 28 and above only
-        }
+        }*/
 
         val prefSoundDelay = findPreference<SeekBarPreference>(soundDelayPref)
         prefSoundDelay!!.value = preferenceManager.sharedPreferences!!.getInt(prefSoundDelay.key, 0)
