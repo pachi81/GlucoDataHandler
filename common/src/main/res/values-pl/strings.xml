@@ -237,6 +237,7 @@
     <string name="short_value_icon">Glukoza z ikoną</string>
     <string name="short_value_arrow">Glukoza i trend</string>
     <string name="short_value_arrow_image">Glukoza i trend (duże i w kolorze)</string>
+    <string name="icon_value_arrow">Glukoza i trend (duże)</string>
     <string name="short_value_arrow_small_image">Glukoza i trend (kolor)</string>
     <string name="short_value_trend_range">Glukoza i zakres trendu (jeśli obsługiwane)</string>
     <string name="short_value_delta_trend_range">Glukoza, delta i zakres trendu (jeśli obsługiwane)</string>
@@ -252,6 +253,7 @@
     <string name="short_delta_icon">Delta z ikoną</string>
     <string name="short_delta_time">Delta i znacznik czasu</string>
     <string name="image_delta_time">Delta i znacznik czasu (kolor)</string>
+    <string name="icon_delta_time">Delta i znacznik czasu (duży)</string>
     <string name="image_arrow">Trend (duży, kolor)</string>
     <string name="small_image_arrow">Trend (kolor)</string>
     <string name="icon_arrow">Ikona trendu</string>
@@ -260,7 +262,9 @@
     <string name="short_rate_arrow">Wartość trendu i strzałka</string>
     <string name="short_rate_icon">Wartość trendu z ikoną</string>
     <string name="timestamp">Znacznik czasu glukozy</string>
+    <string name="short_timestamp">Znacznik czasu</string>
     <string name="image_timestamp">Znacznik czasu (kolor)</string>
+    <string name="icon_timestamp">Znacznik czasu (duży)</string>
     <string name="battery_level">Poziom baterii (zegarek i telefon)</string>
     <string name="iob_cob">IOB/COB</string>
 

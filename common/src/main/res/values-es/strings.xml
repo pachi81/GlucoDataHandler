@@ -241,6 +241,7 @@
     <string name="short_value_icon">Glucosa con icono</string>
     <string name="short_value_arrow">Glucosa y tendencia</string>
     <string name="short_value_arrow_image">Glucosa y tendencia (grande y en color)</string>
+    <string name="icon_value_arrow">Glucosa y tendencia (grande)</string>
     <string name="short_value_arrow_small_image">Glucosa y tendencia (en color)</string>
     <string name="short_value_trend_range">Glucosa y rango de tendencia (si es compatible)</string>
     <string name="short_value_delta_trend_range">Glucosa, delta y rango de tendencia (si es compatible)</string>
@@ -256,6 +257,7 @@
     <string name="short_delta_icon">Delta con icono</string>
     <string name="short_delta_time">Delta y marca de tiempo</string>
     <string name="image_delta_time">Delta y marca de tiempo (en color)</string>
+    <string name="icon_delta_time">Delta y marca de tiempo (grande)</string>
     <string name="image_arrow">Tendencia (grande, en color)</string>
     <string name="small_image_arrow">Tendencia (en color)</string>
     <string name="icon_arrow">Icono de tendencia</string>
@@ -264,7 +266,9 @@
     <string name="short_rate_arrow">Valor de tendencia y flecha</string>
     <string name="short_rate_icon">Valor de tendencia con icono</string>
     <string name="timestamp">Marca de tiempo de glucosa</string>
+    <string name="short_timestamp">Tiempo</string>
     <string name="image_timestamp">Tiempo (en color)</string>
+    <string name="icon_timestamp">Tiempo (grande)</string>
     <string name="battery_level">Nivel de batería (wear y teléfono)</string>
     <string name="watch_battery_level">Nivel de batería del reloj</string>
     <string name="phone_battery_level">Nivel de batería del teléfono</string>

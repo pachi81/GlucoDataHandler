@@ -237,6 +237,7 @@
     <string name="short_value_icon">Glicose com ícone</string>
     <string name="short_value_arrow">Glicose e tendência</string>
     <string name="short_value_arrow_image">Glicose e tendência (grande e colorida)</string>
+    <string name="icon_value_arrow">Glicose e tendência (grande)</string>
     <string name="short_value_arrow_small_image">Glicose e tendência (colorida)</string>
     <string name="short_value_trend_range">Glicose and faixa de tendência (se suportado)</string>
     <string name="short_value_delta_trend_range">Glicose, delta e faixa de tendência (se suportado)</string>
@@ -252,6 +253,7 @@
     <string name="short_delta_icon">Delta com ícone</string>
     <string name="short_delta_time">Delta e timestamp</string>
     <string name="image_delta_time">Delta e timestamp (colorido)</string>
+    <string name="icon_delta_time">Delta e timestamp (grande)</string>
     <string name="image_arrow">Tendência (grande, colorido)</string>
     <string name="small_image_arrow">Tendência (colorido)</string>
     <string name="icon_arrow">Ícone de tendência</string>
@@ -260,7 +262,9 @@
     <string name="short_rate_arrow">Valor de tendênciae seta</string>
     <string name="short_rate_icon">Valor de tendência e ícone</string>
     <string name="timestamp">Glicose timestamp</string>
+    <string name="short_timestamp">Timestamp</string>
     <string name="image_timestamp">Timestamp (colorido)</string>
+    <string name="icon_timestamp">Timestamp (grande)</string>
     <string name="battery_level">Nível da bateria (wear e Telefone)</string>
     <string name="watch_battery_level">Nível da bateria do relógio</string>
     <string name="phone_battery_level">Nível da bateria do telefone</string>

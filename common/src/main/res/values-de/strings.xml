@@ -236,6 +236,7 @@
     <string name="short_value_icon">Zuckerwert mit Icon</string>
     <string name="short_value_arrow">Zuckerwert und Trendpfeil</string>
     <string name="short_value_arrow_image">Zuckerwert und Trendpfeil (groß und farbig)</string>
+    <string name="icon_value_arrow">Zuckerwert und Trendpfeil (groß)</string>
     <string name="short_value_arrow_small_image">Zuckerwert und Trendpfeil (farbig)</string>
     <string name="short_value_trend_range">Zuckerwert und Trendkreis (wenn unterstützt)</string>
     <string name="short_value_delta_trend_range">Zuckerwert, Delta und Trendkreis (wenn unterstützt)</string>
@@ -251,6 +252,7 @@
     <string name="short_delta_icon">Delta mit Icon</string>
     <string name="short_delta_time">Delta und Zeitpunkt</string>
     <string name="image_delta_time">Delta und Zeitpunkt (farbig)</string>
+    <string name="icon_delta_time">Delta und Zeitpunkt (groß)</string>
     <string name="image_arrow">Trendpfeil (groß, farbig)</string>
     <string name="small_image_arrow">Trendpfeil (farbig)</string>
     <string name="icon_arrow">Trendpfeil</string>
@@ -259,6 +261,8 @@
     <string name="short_rate_arrow">Trendwert und -pfeil</string>
     <string name="short_rate_icon">Trendwert mit Icon</string>
     <string name="timestamp">Zeitpunkt des Zuckerwertes</string>
+    <string name="short_timestamp">Zeitpunkt</string>
+    <string name="icon_timestamp">Zeitpunkt (groß)</string>
     <string name="image_timestamp">Zeitpunkt (farbig)</string>
     <string name="battery_level">Akku (Uhr und Telefon)</string>
     <string name="iob_cob">IOB/COB</string>

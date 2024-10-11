@@ -340,6 +340,23 @@
                 android:value="300" />
         </service>
         <service
+            android:name=".IconGlucoseWithTrendComplication"
+            android:exported="true"
+            android:icon="@drawable/comp_icon_value_arrow"
+            android:label="@string/icon_value_arrow"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="ICON, SMALL_IMAGE" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+        </service>
+        <service
             android:name=".SmallImageGlucoseWithTrendSmallComplication"
             android:exported="true"
             android:icon="@drawable/comp_short_value_arrow_small_image"
@@ -527,6 +544,23 @@
                 android:value="300" />
         </service>
         <service
+            android:name=".IconDeltaWithTimeComplication"
+            android:exported="true"
+            android:icon="@drawable/comp_icon_delta_time"
+            android:label="@string/icon_delta_time"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="ICON, SMALL_IMAGE" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+        </service>
+        <service
             android:name=".SmallTrendImageComplication"
             android:exported="true"
             android:icon="@drawable/comp_image_arrow"
@@ -581,7 +615,7 @@
             android:name=".TimeStampComplication"
             android:exported="true"
             android:icon="@drawable/comp_timestamp"
-            android:label="@string/timestamp"
+            android:label="@string/short_timestamp"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
@@ -606,6 +640,23 @@
             <meta-data
                 android:name="android.support.wearable.complications.SUPPORTED_TYPES"
                 android:value="SMALL_IMAGE" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+        </service>
+        <service
+            android:name=".TimeIconComplication"
+            android:exported="true"
+            android:icon="@drawable/comp_icon_timestamp"
+            android:label="@string/icon_timestamp"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="ICON, SMALL_IMAGE" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
