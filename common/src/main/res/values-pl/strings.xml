@@ -30,10 +30,10 @@
     <string name="button_cancel">Anuluj</string>
 
     <string name="alarm_none">-</string>
-    <string name="alarm_very_low">Poziom bardzo niski</string>
-    <string name="alarm_low">Poziom niski</string>
-    <string name="alarm_high">Poziom wysoki</string>
-    <string name="alarm_very_high">Poziom bardzo wysoki</string>
+    <string name="alarm_very_low">Bardzo niski poziom glukozy</string>
+    <string name="alarm_low">Niski poziom glukozy</string>
+    <string name="alarm_high">Wysoki poziom glukozy</string>
+    <string name="alarm_very_high">Bardzo wysoki poziom glukozy</string>
 
     <!-- mobile -->
 
@@ -403,7 +403,7 @@
     <string name="alarm_retrigger_summary">Jeśli powiadomienie o alarmie nie zostanie zamknięte, alarm zostanie uruchomiony ponownie po upływie tego czasu w minutach maksymalnie 3 razy.\n0 – nie uruchamiaj ponownie</string>
     <string name="alarm_obsolete">Nieaktualne wartości</string>
     <string name="obsolete_alarm_notification_name">Alarm nieaktualnych wartości</string>
-    <string name="alarm_obsolete_summary">Alarm włącza się, gdy nie ma nowej wartości glukozy przez %1$s minut.</string>
+    <string name="alarm_obsolete_summary">Alarm włącza się, gdy nie ma nowej wartości glukozy przez %1$s minut(y).</string>
     <string name="obsolete_alarm_notification_descr">Powiadomienie zostanie uruchomione, jeśli po upływie określonego czasu nie pojawi się nowa wartość.</string>
     <string name="obsolete_alarm_text">Brak nowej wartości!</string>
 
