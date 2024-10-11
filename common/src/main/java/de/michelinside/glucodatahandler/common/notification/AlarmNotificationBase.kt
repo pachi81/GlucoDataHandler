@@ -485,8 +485,9 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 var count = 0
                 while (isRingtonePlaying() && count++ < 100)
                     Thread.sleep(10)
-                Log.d(LOG_ID, "Ringtone finished, stop sound and vibration")
-                stopVibrationAndSound()
+                Log.d(LOG_ID, "Ringtone finished, stop vibration")
+                //stopVibrationAndSound()
+                Vibrator.cancel()
             } catch (exc: InterruptedException) {
                 Log.d(LOG_ID, "Sound thread interrupted")
             } catch (exc: Exception) {
