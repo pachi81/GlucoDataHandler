@@ -547,8 +547,8 @@
     <string name="pref_floating_widget_time_to_close">Czas do zamknięcia</string>
     <string name="pref_floating_widget_time_to_close_summary">Czas w sekundach do zamknięcia pływającego widgetu po naciśnięciu widgetu bez przesuwania go.\n0, aby wyłączyć to ustawienie.</string>
     <string name="alarm_inactive_enabled">Włącz godziny ciszy</string>
-    <string name="alarm_inactive_enabled_summary">Brak powiadomień o tym alarmie w godzinach ciszy.\nUstaw wybrane godziny korzystania z tej funkcji.</string>
-    <string name="all_alarm_inactive_enabled_summary">Brak powiadomień o wszystkich alarmach w godzinach ciszy.\nUstaw wybrane godziny korzystania z tej funkcji.</string>
+    <string name="alarm_inactive_enabled_summary">Brak powiadomień o tym alarmie w godzinach ciszy.\nBy skorzystać z tej funkcji, ustaw najpierw wybrane godziny.</string>
+    <string name="all_alarm_inactive_enabled_summary">Brak powiadomień o wszystkich alarmach w godzinach ciszy.\nBy skorzystać z tej funkcji, ustaw najpierw wybrane godziny.</string>
     <string name="alarm_inactive_start_time">Godzina rozpoczęcia</string>
     <string name="alarm_inactive_start_time_summary">Wybierz godzinę rozpoczęcia godzin ciszy.</string>
     <string name="alarm_inactive_end_time">Godzina zakończenia</string>
