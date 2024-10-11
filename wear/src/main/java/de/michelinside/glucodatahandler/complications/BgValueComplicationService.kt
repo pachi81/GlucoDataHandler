@@ -166,7 +166,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     open fun getImage(): SmallImage? = null
 
     open fun getTapAction(useExternalApp: Boolean = true): PendingIntent? {
-        val action = sharedPref.getString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, "")
+        val action = sharedPref.getString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, null)
         if(action != null) {
             return PackageUtils.getTapActionIntent(this, action, instanceId)
         } else if (BuildConfig.DEBUG) {

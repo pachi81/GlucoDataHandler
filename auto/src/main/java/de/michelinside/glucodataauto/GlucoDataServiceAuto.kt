@@ -234,7 +234,7 @@ class GlucoDataServiceAuto: Service() {
     private fun getNotification(): Notification {
         Channels.createNotificationChannel(this, ChannelType.ANDROID_AUTO_FOREGROUND)
 
-        val pendingIntent = PackageUtils.getAppIntent(this, MainActivity::class.java, 11, false)
+        val pendingIntent = PackageUtils.getAppIntent(this, MainActivity::class.java, 11)
 
         return Notification.Builder(this, ChannelType.ANDROID_AUTO_FOREGROUND.channelId)
             .setContentTitle(getString(de.michelinside.glucodatahandler.common.R.string.gda_foreground_info))

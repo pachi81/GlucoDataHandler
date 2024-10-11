@@ -6,9 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.util.Log
-import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
-import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver
 import kotlinx.coroutines.*
 import java.util.concurrent.atomic.AtomicBoolean
@@ -19,7 +17,7 @@ object PackageUtils {
 
     private var updateInProgress = AtomicBoolean(false)
 
-    fun updatePackages(context: Context, migrateSettings: Boolean = false) {
+    fun updatePackages(context: Context) {
         if(!updateInProgress.get()) {
             updateInProgress.set(true)
             packages.clear()
@@ -42,43 +40,6 @@ object PackageUtils {
                 }
                 updateInProgress.set(false)
                 Log.i(LOG_ID, "${packages.size} packages found")
-                if(migrateSettings)
-                    migratePackageSettings(context)
-            }
-        }
-    }
-
-    private fun migratePackageSettings(context: Context) {
-        Log.d(LOG_ID, "migratePackageSettings")
-        if(GlucoDataService.appSource == AppSource.PHONE_APP) {
-            val sharedPrefs = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-            // widgets
-            if(!sharedPrefs.contains(Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION)) {
-                val curApp = if(isPackageAvailable(context, Constants.PACKAGE_JUGGLUCO)) Constants.PACKAGE_JUGGLUCO else context.packageName
-                Log.i(LOG_ID, "Setting default tap action for floating widget to $curApp")
-                with(sharedPrefs.edit()) {
-                    putString(Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION, curApp)
-                    apply()
-                }
-            }
-            if(!sharedPrefs.contains(Constants.SHARED_PREF_WIDGET_TAP_ACTION)) {
-                val curApp = if(isPackageAvailable(context, Constants.PACKAGE_JUGGLUCO)) Constants.PACKAGE_JUGGLUCO else context.packageName
-                Log.i(LOG_ID, "Setting default tap action for widget to $curApp")
-                with(sharedPrefs.edit()) {
-                    putString(Constants.SHARED_PREF_WIDGET_TAP_ACTION, curApp)
-                    apply()
-                }
-            }
-        } else if(GlucoDataService.appSource == AppSource.WEAR_APP) {
-            val sharedPrefs = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-            // complications
-            if(!sharedPrefs.contains(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION)) {
-                val curApp = if(isPackageAvailable(context, Constants.PACKAGE_JUGGLUCO)) Constants.PACKAGE_JUGGLUCO else context.packageName
-                Log.i(LOG_ID, "Setting default tap action for complications to $curApp")
-                with(sharedPrefs.edit()) {
-                    putString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, curApp)
-                    apply()
-                }
             }
         }
     }
@@ -112,17 +73,9 @@ object PackageUtils {
     fun getAppIntent(
         context: Context,
         activityClass: Class<*>,
-        requestCode: Int,
-        useExternalApp: Boolean = false
+        requestCode: Int
     ): PendingIntent {
-        var launchIntent: Intent? = null
-        if (useExternalApp) {
-            launchIntent =
-                context.packageManager.getLaunchIntentForPackage(Constants.PACKAGE_JUGGLUCO)
-        }
-        if (launchIntent == null) {
-            launchIntent = Intent(context, activityClass)
-        }
+        val launchIntent = Intent(context, activityClass)
         return PendingIntent.getActivity(
             context,
             requestCode,
@@ -136,6 +89,9 @@ object PackageUtils {
         tapAction: String?
     ): Pair<Intent?, Boolean> {  // Boolean: true = Broadcase - false = Activity
         Log.d(LOG_ID, "Get tap action $tapAction")
+        if (tapAction == null && context.packageName != null) {
+            return getTapAction(context, context.packageName)
+        }
         if (tapAction.isNullOrEmpty())
             return Pair(null, false)
         if (tapAction.startsWith(Constants.ACTION_PREFIX)) {

@@ -33,7 +33,7 @@ class ComplicationsTapActionActivity : AppCompatActivity() {
 
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
 
-            receiver = sharedPref.getString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, "")!!
+            receiver = sharedPref.getString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, this.packageName)!!
             hasChanged = false
 
             showAllSwitch = findViewById(R.id.showAllSwitch)

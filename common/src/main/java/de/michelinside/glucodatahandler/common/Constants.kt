@@ -108,6 +108,7 @@ object Constants {
     const val SHARED_PREF_RESET_WEAR_OS_CONNECTION = "wear_os_reset_connection"
     const val SHARED_PREF_OPEN_WATCH_DRIP_LINK = "open_watchdrip_link"
     const val SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT = "uncaught_exception_detected"
+    const val SHARED_PREF_UNCAUGHT_EXCEPTION_TIME = "uncaught_exception_time"
     const val SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE = "uncaught_exception_message"
     const val SHARED_PREF_SHOW_OTHER_UNIT = "show_other_unit"
     const val SHARED_PREF_EXPORT_SETTINGS = "export_settings"

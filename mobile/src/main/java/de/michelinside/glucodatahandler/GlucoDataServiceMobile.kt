@@ -92,7 +92,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                     }
                 }
 
-                // create default tap actions as it was before
+                // create default tap actions
                 // notifications
                 if(!sharedPrefs.contains(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION)) {
                     val curApp = context.packageName
@@ -110,6 +110,24 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                         apply()
                     }
                 }
+                // widgets
+                if(!sharedPrefs.contains(Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION)) {
+                    val curApp = context.packageName
+                    Log.i(LOG_ID, "Setting default tap action for floating widget to $curApp")
+                    with(sharedPrefs.edit()) {
+                        putString(Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION, curApp)
+                        apply()
+                    }
+                }
+                if(!sharedPrefs.contains(Constants.SHARED_PREF_WIDGET_TAP_ACTION)) {
+                    val curApp = context.packageName
+                    Log.i(LOG_ID, "Setting default tap action for widget to $curApp")
+                    with(sharedPrefs.edit()) {
+                        putString(Constants.SHARED_PREF_WIDGET_TAP_ACTION, curApp)
+                        apply()
+                    }
+                }
+
                 // full screen alarm notification
                 if(!sharedPrefs.contains(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED)) {
                     if (AlarmNotification.hasFullscreenPermission(context)) {

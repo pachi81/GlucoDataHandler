@@ -269,7 +269,7 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
 
             val remoteViews = getRemoteViews(context, width, height)
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-            remoteViews.setOnClickPendingIntent(R.id.widget, PackageUtils.getTapActionIntent(context, sharedPref.getString(Constants.SHARED_PREF_WIDGET_TAP_ACTION, ""), appWidgetId))
+            remoteViews.setOnClickPendingIntent(R.id.widget, PackageUtils.getTapActionIntent(context, sharedPref.getString(Constants.SHARED_PREF_WIDGET_TAP_ACTION, null), appWidgetId))
 
             // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews)

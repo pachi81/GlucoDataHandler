@@ -158,9 +158,9 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
     private fun getTapActionIntent(channel: ChannelType): PendingIntent? {
         val tapAction = when(channel) {
-            ChannelType.MOBILE_FOREGROUND -> sharedPref.getString(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION, "")
-            ChannelType.MOBILE_SECOND -> sharedPref.getString(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_TAP_ACTION, "")
-            ChannelType.MOBILE_THIRD -> sharedPref.getString(Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_TAP_ACTION, "")
+            ChannelType.MOBILE_FOREGROUND -> sharedPref.getString(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION, GlucoDataService.context!!.packageName)
+            ChannelType.MOBILE_SECOND -> sharedPref.getString(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_TAP_ACTION, GlucoDataService.context!!.packageName)
+            ChannelType.MOBILE_THIRD -> sharedPref.getString(Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_TAP_ACTION, GlucoDataService.context!!.packageName)
             else -> null
         }
         if(tapAction.isNullOrEmpty())

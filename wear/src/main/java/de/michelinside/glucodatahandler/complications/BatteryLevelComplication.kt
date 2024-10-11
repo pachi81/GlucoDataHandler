@@ -85,8 +85,7 @@ open class BatteryLevelComplicationBase(val type: BatteryLevelType): SuspendingC
                 PackageUtils.getAppIntent(
                     applicationContext,
                     WearActivity::class.java,
-                    complicationInstanceId,
-                    false
+                    complicationInstanceId
                 )
             )
             .build()
@@ -136,8 +135,7 @@ open class BatteryLevelComplicationBase(val type: BatteryLevelType): SuspendingC
         return PackageUtils.getAppIntent(
             applicationContext,
             WearActivity::class.java,
-            complicationInstanceId,
-            false
+            complicationInstanceId
         )
     }
 

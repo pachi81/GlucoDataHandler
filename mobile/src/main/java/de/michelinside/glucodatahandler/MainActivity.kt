@@ -690,21 +690,26 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     }
 
     private fun checkUncaughtException() {
-        Log.d(LOG_ID, "Check uncaught exception ${sharedPref.getBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)}")
+        Log.i(LOG_ID, "Check uncaught exception exists: ${sharedPref.getBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)} - " +
+                "last occured at ${DateFormat.getDateTimeInstance().format(Date(sharedPref.getLong(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_TIME, 0)))}")
         if(sharedPref.getBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)) {
             val excMsg = sharedPref.getString(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE, "") ?: ""
-            Log.e(LOG_ID, "Uncaught exception detected last time: $excMsg")
+            val time = sharedPref.getLong(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_TIME, 0)
+            Log.e(LOG_ID, "Uncaught exception detected at ${DateFormat.getDateTimeInstance().format(Date(sharedPref.getLong(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_TIME, 0)))}: $excMsg")
             with(sharedPref.edit()) {
                 putBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)
                 apply()
             }
-            if (excMsg.contains("BadForegroundServiceNotificationException") || excMsg.contains(
-                    "RemoteServiceException"
-                )
-            ) {
-                Dialogs.showOkDialog(this, CR.string.app_crash_title, CR.string.app_crash_bad_notification, null)
-            } else {
-                Dialogs.showOkDialog(this, CR.string.app_crash_title, CR.string.app_crash_message, null)
+
+            if(time > 0 && (System.currentTimeMillis()- ReceiveData.time) < (60*60 * 1000)) {
+                if (excMsg.contains("BadForegroundServiceNotificationException") || excMsg.contains(
+                        "RemoteServiceException"
+                    )
+                ) {
+                    Dialogs.showOkDialog(this, CR.string.app_crash_title, CR.string.app_crash_bad_notification, null)
+                } else {
+                    Dialogs.showOkDialog(this, CR.string.app_crash_title, CR.string.app_crash_message, null)
+                }
             }
         }
     }

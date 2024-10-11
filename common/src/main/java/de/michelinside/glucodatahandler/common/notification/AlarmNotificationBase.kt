@@ -89,6 +89,18 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         return curNotification > 0
     }
 
+    private fun isNotificationActive(): Boolean {
+        if(curNotification > 0) {
+            Channels.getNotificationManager().activeNotifications.forEach {
+                if(it.id == curNotification)
+                    return true
+            }
+            Log.w(LOG_ID, "Notification not found for current id $curNotification")
+            stopCurrentNotification()
+        }
+        return false
+    }
+
     fun getAlarmState(context: Context): AlarmState {
         var state = AlarmState.currentState(context)
         if(state == AlarmState.DISABLED || !channelActive(context)) {
@@ -436,7 +448,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 Log.i(LOG_ID, "Start sound and vibration with a delay of $startDelay ms")
                 if (startDelay > 0)
                     Thread.sleep(startDelay.toLong())
-                if (curNotification > 0) {
+                if (isNotificationActive()) {
                     Log.d(LOG_ID, "Start sound and vibration")
                     val duration = startSound(alarmType, context, true)
                     checkRetriggerAndAutoClose(context, duration)
@@ -448,7 +460,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     private fun vibrate(alarmType: AlarmType, repeat: Boolean = false, forceReturnDuration: Boolean = false) : Int {
         try {
-            if (getRingerMode() >= AudioManager.RINGER_MODE_VIBRATE && curNotification > 0) {
+            if (isNotificationActive() && getRingerMode() >= AudioManager.RINGER_MODE_VIBRATE) {
                 val vibratePattern = getVibrationPattern(alarmType) ?: return 0
                 val duration = if(repeat && !forceReturnDuration) -1 else vibratePattern.sum().toInt()
                 Log.i(LOG_ID, "start vibration for $alarmType - repeat: $repeat - duration: $duration ms")
@@ -502,7 +514,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             var soundDuration = 0
             val repeat = getRepeat(alarmType)
             var repeatVibration = false
-            if (getRingerMode() >= AudioManager.RINGER_MODE_NORMAL && (curNotification > 0 || forTest)) {
+            if (getRingerMode() >= AudioManager.RINGER_MODE_NORMAL && (forTest || isNotificationActive())) {
                 val soundUri = getSound(alarmType, context, forTest)
                 if (soundUri != null && !isRingtonePlaying()) {
                     ringtoneRWLock.write {
@@ -897,7 +909,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             retriggerCount++
             triggerDelay(TriggerAction.RETRIGGER_SOUND, getAlarmType(), context, (retriggerTime*60).toFloat() + (soundDuration.toFloat()/1000))
             return true
-        } else if(autoCloseNotification && curNotification > 0) {
+        } else if(autoCloseNotification && isNotificationActive()) {
             val delaySec =
                 if(soundDuration==0) {
                     if(curAlarmTime > 0) {
