@@ -99,10 +99,10 @@ dependencies {
     implementation project(path: ':common')
     implementation 'androidx.wear.watchface:watchface-complications-data-source-ktx:1.2.1'
     implementation 'androidx.wear.watchface:watchface-complications-rendering:1.2.1'
-    implementation 'androidx.appcompat:appcompat-resources:1.6.1'
+    implementation 'androidx.appcompat:appcompat-resources:1.7.0'
     implementation 'com.google.android.material:material:1.12.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.work:work-runtime:2.9.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.work:work-runtime:2.9.1'
     implementation "androidx.core:core-splashscreen:1.1.0-rc01"
 }
 

@@ -7,7 +7,6 @@
 
     <TextView
         android:id="@+id/glucose"
-        android:contentDescription="@string/glucose_html_label"
         android:layout_margin="6dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,7 +14,7 @@
         android:autoSizeMinTextSize="1sp"
         android:autoSizeStepGranularity="1sp"
         android:autoSizeTextType="uniform"
-        android:text="333"
+        android:text="12.3"
         android:maxLines="1"
         tools:ignore="HardcodedText,NestedWeights" />
 </FrameLayout>

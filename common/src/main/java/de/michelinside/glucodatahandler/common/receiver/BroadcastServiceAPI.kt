@@ -169,9 +169,9 @@ open class BroadcastServiceAPI: BroadcastReceiver(), NotifierInterface,
                     if (match != null) {
                         Log.d(LOG_ID, "Statusline $statusLine found values: ${match.groupValues}")
                         if(match.groupValues.size > 1) {
-                            glucoExtras.putFloat(ReceiveData.IOB, Utils.parseFloatString(match.groupValues[1]))
+                            glucoExtras.putFloat(ReceiveData.IOB, Utils.getIobCobValue(Utils.parseFloatString(match.groupValues[1])))
                             if(match.groupValues.size == 4) {
-                                glucoExtras.putFloat(ReceiveData.COB, Utils.parseFloatString(match.groupValues[3]))
+                                glucoExtras.putFloat(ReceiveData.COB, Utils.getIobCobValue(Utils.parseFloatString(match.groupValues[3])))
                             }
                             if(bundle.containsKey(EXTERNAL_TIMESTAMP)) {
                                 glucoExtras.putLong(ReceiveData.IOBCOB_TIME, bundle.getLong(EXTERNAL_TIMESTAMP))
@@ -187,7 +187,7 @@ open class BroadcastServiceAPI: BroadcastReceiver(), NotifierInterface,
         if(!glucoExtras.containsKey(ReceiveData.IOB) && bundle.containsKey(PREDICT_IOB)) {
             val iobString = bundle.getString(PREDICT_IOB)
             if (!iobString.isNullOrEmpty()) {
-                glucoExtras.putFloat(ReceiveData.IOB, Utils.parseFloatString(iobString))
+                glucoExtras.putFloat(ReceiveData.IOB, Utils.getIobCobValue(Utils.parseFloatString(iobString)))
                 if(bundle.containsKey(PREDICT_IOB_TIME))
                     glucoExtras.putLong(ReceiveData.IOBCOB_TIME, bundle.getLong(PREDICT_IOB_TIME))
             }

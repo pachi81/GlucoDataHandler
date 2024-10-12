@@ -62,3 +62,8 @@ class ShortDeltaWithIconComplication: ShortDeltaComplication() {
     override fun getIcon(): MonochromaticImage = deltaIcon()
 }
 
+class OtherUnitComplication: BgValueComplicationService() {
+    override fun getText(): PlainComplicationText = plainText(ReceiveData.getGlucoseAsOtherUnit())
+    override fun getTitle(): PlainComplicationText = plainText(ReceiveData.getOtherUnit())
+}
+

@@ -28,6 +28,7 @@
             <RelativeLayout
                 android:layout_weight="10"
                 android:layout_width="match_parent"
+                android:layout_marginTop="50dp"
                 android:layout_height="0dp">
 
                 <LinearLayout
@@ -50,13 +51,11 @@
                                 android:id="@+id/layout_glucose_trend"
                                 android:layout_width="250dp"
                                 android:layout_height="80dp"
-                                android:layout_alignParentTop="true"
                                 android:gravity="center|top"
                                 android:orientation="horizontal"
                                 app:layout_constraintStart_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                android:layout_centerHorizontal="true"
                                 tools:ignore="UselessParent">
 
                                 <TextView
@@ -85,15 +84,13 @@
                             </LinearLayout>
 
                             <LinearLayout
-                            android:id="@+id/layout_delta_time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/layout_glucose_trend"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="10dp"
-                            android:gravity="center|top"
-                            android:orientation="horizontal"
-                            tools:ignore="UselessParent">
+                                android:id="@+id/layout_delta_time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:gravity="center|top"
+                                android:orientation="horizontal"
+                                tools:ignore="UselessParent">
                             <TextView
                                 android:id="@+id/txtTime"
                                 android:layout_width="wrap_content"
@@ -240,7 +237,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </RelativeLayout>
-
         </LinearLayout>
 
 

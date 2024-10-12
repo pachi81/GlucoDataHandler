@@ -77,8 +77,8 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             setContentView(R.layout.activity_lockscreen)
             hideSystemUI()
 
-            if(this.intent.extras?.containsKey(Constants.ALARM_NOTIFICATION_EXTRA_ALARM_TYPE) == true) {
-                alarmType = AlarmType.fromIndex(this.intent.extras!!.getInt(Constants.ALARM_NOTIFICATION_EXTRA_ALARM_TYPE, ReceiveData.getAlarmType().ordinal))
+            if(this.intent.extras?.containsKey(Constants.ALARM_TYPE_EXTRA) == true) {
+                alarmType = AlarmType.fromIndex(this.intent.extras!!.getInt(Constants.ALARM_TYPE_EXTRA, ReceiveData.getAlarmType().ordinal))
             }
 
             if(this.intent.extras?.containsKey(Constants.ALARM_SNOOZE_EXTRA_NOTIFY_ID) == true) {
@@ -241,8 +241,10 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
                 txtBgValue.paintFlags = 0
             }
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(withShadow = true))
+            viewIcon.contentDescription = ReceiveData.getRateAsText(this)
             txtDelta.text = "Δ ${ReceiveData.getDeltaAsString()}"
             txtTime.text = "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(this)}"
+            txtTime.contentDescription = ReceiveData.getElapsedTimeMinuteAsString(this)
             val resId = (if(alarmType != null) alarmType else ReceiveData.getAlarmType())?.let {
                 AlarmNotification.getAlarmTextRes(
                     it

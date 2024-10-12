@@ -41,7 +41,7 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
 
     private fun getUrl(endpoint: String, queryParameters: String? = null): String {
         var url = (if(use_us_server) URL_US else URL_DEFAULT) + endpoint
-        Log.i(LOG_ID, "Send request to " + url)
+        Log.i(LOG_ID, "Using URL: " + url)
         if(!queryParameters.isNullOrEmpty()) {
             url += "?$queryParameters"
         }

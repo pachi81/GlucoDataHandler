@@ -107,8 +107,8 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     }
 
     open fun getRangeValueComplicationData(): ComplicationData {
-        val value = ReceiveData.glucose
-        val max = if(ReceiveData.isMmol) 16F else 280F
+        val value = ReceiveData.rawValue.toFloat()
+        val max = 280F
         return RangedValueComplicationData.Builder(
             value = Utils.rangeValue(value, 0F, max),
             min = 0F,
@@ -166,7 +166,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     open fun getImage(): SmallImage? = null
 
     open fun getTapAction(useExternalApp: Boolean = true): PendingIntent? {
-        val action = sharedPref.getString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, "")
+        val action = sharedPref.getString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, null)
         if(action != null) {
             return PackageUtils.getTapActionIntent(this, action, instanceId)
         } else if (BuildConfig.DEBUG) {
@@ -198,8 +198,8 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     fun resText(resId: Int): PlainComplicationText =
         plainText(getText(resId))
 
-    fun descriptionText(): PlainComplicationText =
-        resText(descriptionResId)
+    open fun descriptionText(): PlainComplicationText =
+        plainText(ReceiveData.getAsText(this, false))
 
     fun arrowIcon(): MonochromaticImage =
         MonochromaticImage.Builder(

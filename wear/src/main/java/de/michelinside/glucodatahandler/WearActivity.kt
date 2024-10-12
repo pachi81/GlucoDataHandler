@@ -59,6 +59,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var btnSettings: Button
     private lateinit var btnSources: Button
     private lateinit var btnAlarms: Button
+    private var doNotUpdate = false
     private var requestNotificationPermission = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -119,6 +120,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             if(requestPermission())
                 GlucoDataServiceWear.start(this)
             PackageUtils.updatePackages(this)
+            checkUncaughtException()
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
@@ -138,6 +140,8 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         try {
             super.onResume()
             Log.d(LOG_ID, "onResume called")
+            GlucoDataService.checkServices(this)
+            doNotUpdate = false
             update()
             InternalNotifier.addNotifier(this, this, mutableSetOf(
                 NotifySource.BROADCAST,
@@ -234,6 +238,9 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     @SuppressLint("SetTextI18n")
     private fun update() {
         try {
+            Log.v(LOG_ID, "update values - doNotUpdate=$doNotUpdate")
+            if(doNotUpdate)
+                return
             txtBgValue.text = ReceiveData.getGlucoseAsString()
             txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
             if (ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong()) {
@@ -242,11 +249,15 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 txtBgValue.paintFlags = 0
             }
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
+            viewIcon.contentDescription = ReceiveData.getRateAsText(this)
 
             timeText.text = "🕒 ${ReceiveData.getElapsedRelativeTimeAsString(this)}"
+            timeText.contentDescription = ReceiveData.getElapsedRelativeTimeAsString(this, true)
             deltaText.text = "Δ ${ReceiveData.getDeltaAsString()}"
             iobText.text = "💉 ${ReceiveData.getIobAsString()}"
+            iobText.contentDescription = getString(CR.string.info_label_iob) + " " + ReceiveData.getIobAsString()
             cobText.text = "🍔 ${ReceiveData.getCobAsString()}"
+            iobText.contentDescription = getString(CR.string.info_label_cob) + " " + ReceiveData.getCobAsString()
             iobText.visibility = if (ReceiveData.isIobCobObsolete()) View.GONE else View.VISIBLE
             cobText.visibility = iobText.visibility
 
@@ -264,6 +275,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
     private fun toggleAlarm() {
         try {
+            doNotUpdate = true
             val state = AlarmNotificationWear.getAlarmState(this)
             if(AlarmNotificationWear.channelActive(this)) {
                 Log.d(LOG_ID, "toggleAlarm called for state $state")
@@ -293,6 +305,9 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                             apply()
                         }
                     }
+                    AlarmState.TEMP_DISABLED -> {
+                        AlarmHandler.disableInactiveTime()
+                    }
                 }
             } else {
                 Log.w(LOG_ID, "Alarm channel inactive!")
@@ -301,10 +316,11 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                     apply()
                 }
             }
-            //updateAlarmIcon()
+            updateAlarmIcon()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "toggleAlarm exception: " + exc + "\n" + exc.stackTraceToString() )
         }
+        doNotUpdate = false
     }
 
     private fun updateAlarmIcon() {
@@ -319,6 +335,12 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             val state = AlarmNotificationWear.getAlarmState(this)
             Log.v(LOG_ID, "updateAlarmIcon called for state $state")
             alarmIcon.setImageIcon(Icon.createWithResource(this, state.icon))
+            alarmIcon.contentDescription = resources.getString(CR.string.alarm_toggle_state,
+                when(state) {
+                    AlarmState.SNOOZE -> resources.getString(state.descr, AlarmHandler.snoozeShortTimestamp)
+                    AlarmState.TEMP_DISABLED -> resources.getString(state.descr, AlarmHandler.inactiveEndTimestamp)
+                    else -> resources.getString(state.descr)
+                })
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateAlarmIcon exception: " + exc.message.toString() )
         }
@@ -336,15 +358,22 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 SourceStateData.getStateMessage(this)))
 
         if (WearPhoneConnection.nodesConnected) {
-            val onClickListener = View.OnClickListener {
-                GlucoDataService.checkForConnectedNodes(true)
-            }
-            if(WearPhoneConnection.getNodeBatterLevels().size == 1 ) {
-                val level = WearPhoneConnection.getNodeBatterLevels().values.first()
-                tableConnections.addView(createRow(CR.string.source_phone, if (level > 0) "$level%" else "?%", onClickListener))
+            if (WearPhoneConnection.connectionError) {
+                val onResetClickListener = View.OnClickListener {
+                    GlucoDataService.resetWearPhoneConnection()
+                }
+                tableConnections.addView(createRow(CR.string.source_phone, resources.getString(CR.string.detail_reset_connection), onResetClickListener))
             } else {
-                WearPhoneConnection.getNodeBatterLevels().forEach { name, level ->
-                    tableConnections.addView(createRow(name, if (level > 0) "$level%" else "?%", onClickListener))
+                val onCheckClickListener = View.OnClickListener {
+                    GlucoDataService.checkForConnectedNodes(false)
+                }
+                if(WearPhoneConnection.getNodeBatterLevels().size == 1 ) {
+                    val level = WearPhoneConnection.getNodeBatterLevels().values.first()
+                    tableConnections.addView(createRow(CR.string.source_phone, if (level > 0) "$level%" else "?%", onCheckClickListener))
+                } else {
+                    WearPhoneConnection.getNodeBatterLevels().forEach { (name, level) ->
+                        tableConnections.addView(createRow(name, if (level > 0) "$level%" else "?%", onCheckClickListener))
+                    }
                 }
             }
         }
@@ -356,8 +385,13 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateAlarmsTable() {
         tableAlarms.removeViews(1, maxOf(0, tableAlarms.childCount - 1))
-        if(ReceiveData.time > 0 && ReceiveData.getAlarmType() != AlarmType.OK) {
-            tableAlarms.addView(createRow(CR.string.info_label_alarm, resources.getString(ReceiveData.getAlarmType().resId) + (if (ReceiveData.forceAlarm) " ⚠" else "" )))
+        if(ReceiveData.time > 0) {
+            val alarmType = ReceiveData.getAlarmType()
+            if (alarmType != AlarmType.OK)
+                tableAlarms.addView(createRow(CR.string.info_label_alarm, resources.getString(alarmType.resId)))
+            val deltaAlarmType = ReceiveData.getDeltaAlarmType()
+            if (deltaAlarmType != AlarmType.NONE)
+                tableAlarms.addView(createRow(CR.string.info_label_alarm, resources.getString(deltaAlarmType.resId)))
         }
         if (AlarmHandler.isSnoozeActive)
             tableAlarms.addView(createRow(CR.string.snooze, AlarmHandler.snoozeTimestamp))
@@ -367,8 +401,10 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private fun updateDetailsTable() {
         tableDetails.removeViews(1, maxOf(0, tableDetails.childCount - 1))
         if(ReceiveData.time > 0) {
-            if (ReceiveData.isMmol)
-                tableDetails.addView(createRow(CR.string.info_label_raw, "${ReceiveData.rawValue} mg/dl"))
+            if (!ReceiveData.isObsoleteLong() && sharedPref.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, false)) {
+                tableDetails.addView(createRow(ReceiveData.getOtherUnit(), ReceiveData.getGlucoseAsOtherUnit() + " (Δ " + ReceiveData.getDeltaAsOtherUnit() + ")"))
+            }
+
             tableDetails.addView(createRow(CR.string.info_label_timestamp, DateFormat.getTimeInstance(
                 DateFormat.DEFAULT).format(Date(ReceiveData.time))))
             if (!ReceiveData.isIobCobObsolete(1.days.inWholeSeconds.toInt()))
@@ -413,5 +449,20 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         row.addView(createColumn(key, false, onClickListener))
         row.addView(createColumn(value, true, onClickListener))
         return row
+    }
+
+
+    private fun checkUncaughtException() {
+        Log.i(LOG_ID, "Check uncaught exception exists: ${sharedPref.getBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)} - " +
+                "last occured at ${DateFormat.getDateTimeInstance().format(Date(sharedPref.getLong(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_TIME, 0)))}")
+        if(sharedPref.getBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)) {
+            val excMsg = sharedPref.getString(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE, "") ?: ""
+            val time = sharedPref.getLong(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_TIME, 0)
+            Log.e(LOG_ID, "Uncaught exception detected at ${DateFormat.getDateTimeInstance().format(Date(time))}: $excMsg")
+            with(sharedPref.edit()) {
+                putBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)
+                apply()
+            }
+        }
     }
 }
