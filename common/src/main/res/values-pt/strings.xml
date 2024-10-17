@@ -622,4 +622,5 @@
         <item quantity="many">Tempo %d minutos</item>
         <item quantity="other">Tempo %d minutos</item>
     </plurals>
+    <string name="pref_source_diabox_info_summary">Abra Integração e ative \"Share data with GWatch\"\nObservação: a transmissão do DiaBox contém apenas o valor da glicose e nenhuma informação adicional, como a tendência!</string>
 </resources>

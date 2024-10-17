@@ -618,4 +618,5 @@
         <item quantity="one">Zeit %d Minute</item>
         <item quantity="other">Zeit %d Minuten</item>
     </plurals>
+    <string name="pref_source_diabox_info_summary">Öffne Integration und aktiviere \"Share data with GWatch\"\nHinweis: der DiaBox Broadcast beinhaltet nur den Zuckerwert und keine weiteren Informationen, wie den Trend!</string>
 </resources>

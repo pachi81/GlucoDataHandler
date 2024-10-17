@@ -30,23 +30,22 @@
     <PreferenceCategory
         android:title="@string/pref_source_xdrip_info"
         app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="1">
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="source_xdrip_enabled"
-            android:title="@string/src_enabled"
-            android:summaryOn="@string/src_offline_enabled_summary_on"
-            android:summaryOff="@string/src_offline_enabled_summary_off"
-            app:iconSpaceReserved="false" />
+        app:initialExpandedChildrenCount="2">
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="xdrip_broadcast_service_api"
             android:title="@string/xdrip_broadcast_service_api_enabled"
             android:summary="@string/xdrip_broadcast_service_api_enabled_summary"
             app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="source_xdrip_enabled"
+            android:title="@string/pref_source_xdrip_broadcast"
+            android:summaryOn="@string/src_offline_enabled_summary_on"
+            android:summaryOff="@string/src_offline_enabled_summary_off"
+            app:iconSpaceReserved="false" />
         <Preference
             android:key="source_xdrip_info_1"
-            android:title="@string/pref_source_xdrip_broadcast"
             android:summary="@string/pref_source_xdrip_info_1_summary"
             app:iconSpaceReserved="false" />
         <Preference
@@ -114,6 +113,22 @@
         <Preference
             android:key="source_eversense_byoda_info"
             android:summary="@string/pref_source_eversense_byoda_info_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/source_diabox"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="1">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="source_diabox_enabled"
+            android:title="@string/src_enabled"
+            android:summaryOn="@string/src_offline_enabled_summary_on"
+            android:summaryOff="@string/src_offline_enabled_summary_off"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_diabox_info"
+            android:summary="@string/pref_source_diabox_info_summary"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 </PreferenceScreen>

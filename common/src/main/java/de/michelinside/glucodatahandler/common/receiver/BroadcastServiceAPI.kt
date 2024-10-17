@@ -256,5 +256,4 @@ open class BroadcastServiceAPI: BroadcastReceiver(), NotifierInterface,
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.message.toString() )
         }
     }
-
 }

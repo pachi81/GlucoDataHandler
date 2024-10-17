@@ -142,6 +142,7 @@ object Constants {
     const val SHARED_PREF_SOURCE_AAPS_ENABLED="source_aaps_enabled"
     const val SHARED_PREF_SOURCE_BYODA_ENABLED="source_byoda_enabled"
     const val SHARED_PREF_SOURCE_EVERSENSE_ENABLED="source_eversense_enabled"
+    const val SHARED_PREF_SOURCE_DIABOX_ENABLED="source_diabox_enabled"
 
     // online sources
     const val SHARED_PREF_LIBRE_ENABLED="source_libre_enabled"

@@ -14,7 +14,8 @@ enum class DataSource(val resId: Int) {
     GDH(R.string.source_gdh),
     DEXCOM_SHARE(R.string.source_dexcom_share),
     DEXCOM_BYODA(R.string.source_dexcom_byoda),
-    NS_EMULATOR(R.string.source_ns_emulator);
+    NS_EMULATOR(R.string.source_ns_emulator),
+    DIABOX(R.string.source_diabox);
     
     companion object {
         fun fromIndex(idx: Int): DataSource {

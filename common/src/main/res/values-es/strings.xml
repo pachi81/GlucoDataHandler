@@ -625,4 +625,5 @@
         <item quantity="many">Tiempo %d minutos</item>
         <item quantity="other">Tiempo %d minutos</item>
     </plurals>
+    <string name="pref_source_diabox_info_summary">Abre Integración y activa \"Share data with GWatch\"\nNota: la transmisión de DiaBox solo contiene el valor de glucosa y no más información como la tendencia.</string>
 </resources>

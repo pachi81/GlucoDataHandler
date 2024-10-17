@@ -157,6 +157,15 @@
             </intent-filter>
         </receiver>
         <receiver
+            android:name=".common.receiver.DiaboxReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="com.outshineiot.diabox.BgEstimate" />
+            </intent-filter>
+        </receiver>
+        <receiver
             android:name=".SnoozeAlarmReceiverWear"
             android:enabled="true"
             android:exported="true">

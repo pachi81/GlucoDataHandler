@@ -23,6 +23,7 @@ import de.michelinside.glucodatahandler.common.receiver.AAPSReceiver
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.receiver.BroadcastServiceAPI
 import de.michelinside.glucodatahandler.common.receiver.DexcomBroadcastReceiver
+import de.michelinside.glucodatahandler.common.receiver.DiaboxReceiver
 import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
 import de.michelinside.glucodatahandler.common.receiver.NsEmulatorReceiver
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
@@ -45,6 +46,7 @@ enum class AppSource {
 
 abstract class GlucoDataService(source: AppSource) : WearableListenerService(), SharedPreferences.OnSharedPreferenceChangeListener {
     private lateinit var batteryReceiver: BatteryReceiver
+    private lateinit var broadcastServiceAPI: BroadcastServiceAPI
 
     @SuppressLint("StaticFieldLeak")
     companion object {
@@ -170,7 +172,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         private var aapsReceiver: AAPSReceiver?  = null
         private var dexcomReceiver: DexcomBroadcastReceiver? = null
         private var nsEmulatorReceiver: NsEmulatorReceiver? = null
-        private val broadcastServiceAPI = BroadcastServiceAPI()
+        private var diaboxReceiver: DiaboxReceiver? = null
         private val registeredReceivers = mutableSetOf<String>()
 
         @SuppressLint("UnspecifiedRegisterReceiverFlag")
@@ -244,12 +246,10 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                             dexcomFilter.addAction("com.dexcom.g7.EXTERNAL_BROADCAST")
                             dexcomReceiver = DexcomBroadcastReceiver()
                             registerReceiver(context, dexcomReceiver!!, dexcomFilter)
-                            broadcastServiceAPI.init()
                         }
                     } else if (dexcomReceiver != null) {
                         unregisterReceiver(context, dexcomReceiver)
                         dexcomReceiver = null
-                        broadcastServiceAPI.close(context)
                     }
                 }
 
@@ -264,6 +264,19 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                         nsEmulatorReceiver = null
                     }
                 }
+
+                if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED) {
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true)) {
+                        if(diaboxReceiver == null) {
+                            diaboxReceiver = DiaboxReceiver()
+                            registerReceiver(context, diaboxReceiver!!, IntentFilter("com.outshineiot.diabox.BgEstimate"))
+                        }
+                    } else if (diaboxReceiver != null) {
+                        unregisterReceiver(context, diaboxReceiver)
+                        diaboxReceiver = null
+                    }
+                }
+
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "registerSourceReceiver exception: " + exc.toString())
             }
@@ -288,7 +301,14 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     unregisterReceiver(context, nsEmulatorReceiver)
                     nsEmulatorReceiver = null
                 }
-                broadcastServiceAPI.close(context)
+                if (aapsReceiver != null) {
+                    unregisterReceiver(context, aapsReceiver)
+                    aapsReceiver = null
+                }
+                if (diaboxReceiver != null) {
+                    unregisterReceiver(context, diaboxReceiver)
+                    diaboxReceiver = null
+                }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "unregisterSourceReceiver exception: " + exc.toString())
             }
@@ -349,6 +369,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 bundle.putBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, true))
                 bundle.putBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, true))
                 bundle.putBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true))
+                bundle.putBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true))
             }
             Log.v(LOG_ID, "getSettings called with bundle ${(Utils.dumpBundle(bundle))}")
             return bundle
@@ -364,6 +385,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 putBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, true))
                 putBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, true))
                 putBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true))
+                putBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true))
                 apply()
             }
             ReceiveData.setSettings(sharedPref, bundle)
@@ -424,6 +446,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             connection!!.open(this, appSource == AppSource.PHONE_APP)
 
             updateSourceReceiver(this)
+            broadcastServiceAPI = BroadcastServiceAPI()
+            broadcastServiceAPI.init()
             batteryReceiver = BatteryReceiver()
             registerReceiver(batteryReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
 
@@ -457,6 +481,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             Log.w(LOG_ID, "onDestroy called")
             sharedPref!!.unregisterOnSharedPreferenceChangeListener(this)
             unregisterSourceReceiver(this)
+            broadcastServiceAPI.close(this)
             unregisterReceiver(batteryReceiver)
             TimeTaskService.stop()
             SourceTaskService.stop()
@@ -481,7 +506,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED,
                 Constants.SHARED_PREF_SOURCE_AAPS_ENABLED,
                 Constants.SHARED_PREF_SOURCE_BYODA_ENABLED,
-                Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED -> {
+                Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED,
+                Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED -> {
                     updateSourceReceiver(this, key)
                     shareSettings = true
                 }
