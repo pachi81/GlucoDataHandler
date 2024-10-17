@@ -245,6 +245,7 @@
     <string name="short_value_delta">Glicose e tendência</string>
     <string name="long_value_arrow_delta">Glicose, delta e tendência</string>
     <string name="long_value_arrow_delta_time">Glicose, delta, tendência e timestamp</string>
+    <string name="long_value_arrow_icon_delta_time">Glicose, ícone de tendência, delta e timestamp</string>
     <string name="short_value_rate">Glicose e valor de tendência</string>
     <string name="icon_delta">Delta (grande)</string>
     <string name="image_delta">Delta (grande, colorido)</string>

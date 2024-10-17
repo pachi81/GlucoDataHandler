@@ -3,9 +3,11 @@ package de.michelinside.glucodatahandler
 import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
+import androidx.wear.watchface.complications.data.ColorRamp
 import androidx.wear.watchface.complications.data.ComplicationData
 import androidx.wear.watchface.complications.data.ComplicationType
 import androidx.wear.watchface.complications.data.MonochromaticImage
@@ -72,6 +74,8 @@ open class BatteryLevelComplicationBase(val type: BatteryLevelType): SuspendingC
         val value = getRangeValue()
         if(value.isNaN())
             return null
+        val colors = intArrayOf(Color.RED, Color.YELLOW, Color.GREEN)
+        val colorRamp = ColorRamp(colors, true)
         return RangedValueComplicationData.Builder(
             value = Utils.rangeValue(value, 0F, 100F),
             min = 0F,
@@ -88,6 +92,7 @@ open class BatteryLevelComplicationBase(val type: BatteryLevelType): SuspendingC
                     complicationInstanceId
                 )
             )
+            .setColorRamp(colorRamp)
             .build()
     }
 

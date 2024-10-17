@@ -246,6 +246,7 @@
     <string name="short_value_delta">glycémie et delta</string>
     <string name="long_value_arrow_delta">glycémie, delta et tendance</string>
     <string name="long_value_arrow_delta_time">glycémie, delta, tendance et dernière actualisation</string>
+    <string name="long_value_arrow_icon_delta_time">glycémie, icône de tendance, delta et dernière actualisation</string>
     <string name="short_value_rate">glycémie et valeur de tendance</string>
     <string name="icon_delta">Delta (grand)</string>
     <string name="image_delta">Delta (grand, coloré)</string>

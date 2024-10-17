@@ -281,6 +281,7 @@
     <string name="short_value_delta">Glucose and delta</string>
     <string name="long_value_arrow_delta">Glucose, delta and trend</string>
     <string name="long_value_arrow_delta_time">Glucose, delta, trend and timestamp</string>
+    <string name="long_value_arrow_icon_delta_time">Glucose, trend icon, delta and timestamp</string>
     <string name="short_value_rate">Glucose and trend-value</string>
     <string name="icon_delta">Delta (big)</string>
     <string name="image_delta">Delta (big, colored)</string>

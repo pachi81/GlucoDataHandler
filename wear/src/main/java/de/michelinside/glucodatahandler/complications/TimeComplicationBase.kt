@@ -24,6 +24,20 @@ class LongGlucoseWithDeltaAndTrendAndTimeComplication: TimeComplicationBase() {
     }
 }
 
+class LongGlucoseWithDeltaAndTrendIconAndTimeComplication: TimeComplicationBase() {
+    override fun getLongTextComplicationData(): ComplicationData {
+        return LongTextComplicationData.Builder(
+            plainText(" Δ: " + ReceiveData.getDeltaAsString()),
+            descriptionText()
+        )
+            .setTitle(timeText())
+            .setSmallImage(glucoseImage())
+            .setMonochromaticImage(arrowIcon())
+            .setTapAction(getTapAction())
+            .build()
+    }
+}
+
 class TimeStampComplication: TimeComplicationBase() {
     override fun getText(): PlainComplicationText = timeText(true)
     override fun getIcon(): MonochromaticImage = glucoseIcon()
@@ -36,7 +50,7 @@ class TimeStampComplication: TimeComplicationBase() {
             value = Utils.rangeValue(value, 0F, 3599F),
             min = 0F,
             max = 3599F,
-            contentDescription = descriptionText()
+            contentDescription = descriptionText(),
         )
             .setText(getText())
             .setMonochromaticImage(getIcon())

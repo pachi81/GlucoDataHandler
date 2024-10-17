@@ -434,6 +434,23 @@
                 android:value="300" />
         </service>
         <service
+            android:name=".LongGlucoseWithDeltaAndTrendIconAndTimeComplication"
+            android:exported="true"
+            android:icon="@drawable/comp_long_value_trendicon_delta_time"
+            android:label="@string/long_value_arrow_icon_delta_time"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="LONG_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+        </service>
+        <service
             android:name=".DeltaIconComplication"
             android:exported="true"
             android:icon="@drawable/comp_icon_delta"

@@ -244,6 +244,7 @@
     <string name="short_value_delta">Zuckerwert und Delta</string>
     <string name="long_value_arrow_delta">Zuckerwert, Trendpfeil und Delta</string>
     <string name="long_value_arrow_delta_time">Zuckerwert, Trendpfeil, Delta und Zeitpunkt</string>
+    <string name="long_value_arrow_icon_delta_time">Zuckerwert, Trendicon, Delta und Zeitpunkt</string>
     <string name="short_value_rate">Zuckerwert und Trendwert</string>
     <string name="icon_delta">Delta (groß)</string>
     <string name="image_delta">Delta (groß, farbig)</string>

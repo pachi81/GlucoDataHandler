@@ -109,6 +109,8 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     open fun getRangeValueComplicationData(): ComplicationData {
         val value = ReceiveData.rawValue.toFloat()
         val max = 280F
+        val colors = intArrayOf(ReceiveData.getGlucoseColor())
+        val colorRamp = ColorRamp(colors, false)
         return RangedValueComplicationData.Builder(
             value = Utils.rangeValue(value, 0F, max),
             min = 0F,
@@ -119,6 +121,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
             .setText(getText())
             .setMonochromaticImage(getIcon())
             .setTapAction(getTapAction())
+            .setColorRamp(colorRamp)
             .build()
     }
 
