@@ -60,6 +60,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         var appSource = AppSource.NOT_SET
         private var isRunning = false
         val running get() = isRunning
+        private var created = false
 
         @SuppressLint("StaticFieldLeak")
         var service: GlucoDataService? = null
@@ -122,7 +123,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
 
         fun checkServices(context: Context) {
             try {
-                BackgroundWorker.checkServiceRunning(context)
+                if(created)
+                    BackgroundWorker.checkServiceRunning(context)
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "checkServices exception: " + exc.message.toString())
             }
@@ -454,6 +456,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             sharedPref!!.registerOnSharedPreferenceChangeListener(this)
 
             TextToSpeechUtils.initTextToSpeech(this)
+            created = true
 
             if (BuildConfig.DEBUG && sharedPref!!.getBoolean(Constants.SHARED_PREF_DUMMY_VALUES, false)) {
                 Thread {
@@ -489,6 +492,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             connection = null
             super.onDestroy()
             service = null
+            created = false
             isRunning = false
             isForegroundService = false
             TextToSpeechUtils.destroyTextToSpeech()
