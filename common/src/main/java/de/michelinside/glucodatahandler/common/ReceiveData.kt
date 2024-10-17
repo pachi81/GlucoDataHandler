@@ -160,7 +160,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
 
     fun isObsoleteShort(): Boolean = isObsoleteTime(obsoleteTimeMin*60)
     fun isObsoleteLong(): Boolean = isObsoleteTime(obsoleteTimeMin*120)
-    fun isIobCobObsolete(timeoutSec: Int = Constants.VALUE_OBSOLETE_LONG_SEC): Boolean = (System.currentTimeMillis()- iobCobTime) >= (timeoutSec * 1000)
+    fun isIobCobObsolete(timeoutSec: Int = Constants.VALUE_IOB_COBOBSOLETE_SEC): Boolean = (System.currentTimeMillis()- iobCobTime) >= (timeoutSec * 1000)
 
     fun getGlucoseAsString(): String {
         if(isObsoleteLong())

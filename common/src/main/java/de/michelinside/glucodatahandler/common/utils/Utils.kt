@@ -40,7 +40,7 @@ object Utils {
     }
 
     // check for valid values
-    fun getIobCobValue(value: Float): Float {
+    fun getCobValue(value: Float): Float {
         if (value < 0)
             return Float.NaN
         return value

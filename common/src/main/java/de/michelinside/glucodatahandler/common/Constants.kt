@@ -45,6 +45,7 @@ object Constants {
 
     //const val VALUE_OBSOLETE_SHORT_SEC = 300
     const val VALUE_OBSOLETE_LONG_SEC  = 600
+    const val VALUE_IOB_COBOBSOLETE_SEC  = 1800
 
     const val SHARED_PREF_TAG = "GlucoDataHandlerPrefs"
     const val SHARED_PREF_AUTO_TAG = "GlucoDataAutoPrefs"
