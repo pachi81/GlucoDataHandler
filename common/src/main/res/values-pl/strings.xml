@@ -520,7 +520,6 @@
     <string name="pref_source_dexcom_share_info_summary">Aby odbierać dane z serwerów Dexcom Share, musisz mieć:\n- włączone udostępnianie danych w aplikacji Dexcom, która jest połączona z sensorem\n- zaakceptowane zaproszenie w aplikacji Dexcom Follower (możesz ją później odinstalować)\n\n Ważne: nie działa z użytkownikiem obserwującym!</string>
     <string name="permission_missing_title">Brak uprawnienia!</string>
     <string name="setting_permission_missing_message">Ustawienie \&quot;%1$s\&quot; jest ustawione, ale powiązane uprawnienie nie zostało przyznane! Naciśnij \&quot;OK\&quot;, aby wyświetlić okno dialogowe uprawnień lub naciśnij \&quot;Anuluj\&quot;, aby wyłączyć to ustawienie.</string>
-    <string name="pref_source_dexcom_byoda_info">Dexcom BYODA</string>
     <string name="xdrip_broadcast_service_api_enabled">Interfejs API usługi transmisji</string>
     <string name="xdrip_broadcast_service_api_enabled_summary">Użyj transmisji „Broadcast Service API” do komunikacji z xDrip+.\nNajpierw aktywuj \&quot;Broadcast Service API\&quot; w \&quot;Ustawieniach innych aplikacji\&quot; w xDrip+!</string>
     <string name="obsolete_time">Okres wart. nieaktualnych</string>
@@ -628,5 +627,5 @@
         <item quantity="many">Czas %d minut</item>
         <item quantity="other">Czas %d minut</item>
     </plurals>
-    <string name="pref_source_diabox_info_summary">Otwórz Integrację i włącz \"Share data with GWatch\"\nUwaga: transmisja DiaBox zawiera tylko wartość glukozy i żadnych dodatkowych informacji, takich jak trend!</string>
+    <string name="pref_source_diabox_info_summary">Otwórz menu Integracja i włącz opcję \"Share data with GWatch\" (udostępnij dane aplikacji GWatch).\nUwaga: transmisja DiaBox zawiera tylko wartość glukozy i żadnych dodatkowych informacji, takich jak trend!</string>
 </resources>

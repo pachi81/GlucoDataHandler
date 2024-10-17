@@ -525,7 +525,6 @@
     <string name="pref_source_dexcom_share_info_summary">Pour recevoir des données des serveurs Dexcom Share, vous devez avoir:\n- le partage activé sur l\'application Dexcom connectée au capteur\n- l\'invitation acceptée sur l\'application Dexcom Follower (vous pouvez la désinstaller par la suite)\n\nImportant: cela ne fonctionne pas avec un utilisateur suiveur!</string>
     <string name="permission_missing_title">Autorisation manquante!</string>
     <string name="setting_permission_missing_message">Le paramètre \'%1$s\' est défini, mais l\'autorisation correspondante n\'est pas accordée! Appuyez sur "OK" pour être redirigé vers la boîte de dialogue d\'autorisation ou appuyez sur "Annuler" pour désactiver ce paramètre.</string>
-    <string name="pref_source_dexcom_byoda_info">Dexcom BYODA</string>
     <string name="xdrip_broadcast_service_api_enabled">API du service de diffusion</string>
     <string name="xdrip_broadcast_service_api_enabled_summary">Utiliser l\'API du service de diffusion xDrip+ pour recevoir des données (y compris l\'IOB) de xDrip+.\nVeuillez d\'abord activer "API du service de diffusion" dans "Paramètres inter-applications" dans xDrip+!</string>
     <string name="obsolete_time">Temps d\'obsolescence</string>

@@ -99,7 +99,8 @@
     <string name="source_dexcom_byoda" translatable="false">Dexcom BYODA</string>
     <string name="source_ns_emulator" translatable="false">Dexcom/Eversense</string>
     <string name="source_diabox" translatable="false">DiaBox</string>
-    <string name="pref_source_eversense_info" translatable="false">Eversense (ESEL/BYODA/640G)</string>
+    <string name="pref_source_eversense_info" translatable="false">Eversense (ESEL)/Dexcom BYODA (xDrip+)</string>
+    <string name="pref_source_dexcom_byoda_info" translatable="false">Dexcom BYODA (AAPS)</string>
     <string name="source_phone">Phone</string>
     <string name="source_wear">Wear</string>
 
@@ -560,7 +561,6 @@
     <string name="pref_source_dexcom_share_info_summary">To receive data from Dexcom Share servers, you need to have:\n- sharing enabled on the Dexcom application that is connected to the sensor\n- accepted the invitation on the Dexcom Follower app (you can uninstall it afterwards)\n\nImportant: it does not work with a follower user!</string>
     <string name="permission_missing_title">Missing permission!</string>
     <string name="setting_permission_missing_message">The settings \'%1$s\' is set, but the related permission is not granted! Press \"OK\" to be forwared the permission dialog or press \"Cancel\" to disable this setting.</string>
-    <string name="pref_source_dexcom_byoda_info">Dexcom BYODA</string>
     <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
     <string name="xdrip_broadcast_service_api_enabled_summary">Use xDrip+ Broadcast Service API to receive data (also IOB) from xDrip+.\nPlease activate \"Broadcast Service API\" in \"Inter-App settings\" in xDrip+ first!</string>
     <string name="obsolete_time">Obsolete time</string>
