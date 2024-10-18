@@ -25,7 +25,15 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
         const val ENTRIES_ENDPOINT = "/api/v1/entries/current.json"
     }
 
-    override fun hasIobCobSupport(): Boolean = active(1L) && iob_cob_support
+    override fun hasIobCobSupport(): Boolean {
+        if (ReceiveData.source == DataSource.NIGHTSCOUT) {
+            Log.d(LOG_ID, "Ignore IOB/COB request, as the last data source was Nightscout")
+            return false
+        }
+        if (active(1L) && iob_cob_support)
+            return true
+        return false
+    }
 
     override fun needsInternet(): Boolean {
         if(url.contains("127.0.0.1") || url.lowercase().contains("localhost")) {
@@ -162,7 +170,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
                     if (jsonObject.has("iob"))
                         glucoExtras.putFloat(ReceiveData.IOB, JsonUtils.getFloat("iob", jsonObject))
                     if (jsonObject.has("cob"))
-                        glucoExtras.putFloat(ReceiveData.COB, JsonUtils.getFloat("cob", jsonObject))
+                        glucoExtras.putFloat(ReceiveData.COB, Utils.getCobValue(JsonUtils.getFloat("cob", jsonObject)))
                 } else {
                     glucoExtras.putFloat(ReceiveData.IOB, Float.NaN)
                     glucoExtras.putFloat(ReceiveData.COB, Float.NaN)

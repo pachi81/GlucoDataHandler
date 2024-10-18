@@ -399,6 +399,26 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
             Log.e(LOG_ID, "alarmTrigger: " + ex)
         }
     }
+
+    fun checkRunning(): Boolean {
+        // timer must run, if there is something to do
+        if (active(elapsedTimeMinute)) {
+            if(!active()) {
+                Log.e(LOG_ID, "Still tasks active, but timer not running!")
+                return false
+            }
+            if(alarmManager==null || currentAlarmTime < (System.currentTimeMillis()-10000)) {
+                Log.e(LOG_ID, "No next alarm set!")
+                return false
+            }
+        } else {
+            if(!InternalNotifier.hasNotifier(this)) {
+                Log.e(LOG_ID, "No notifier set! Service is not running!")
+                return false
+            }
+        }
+        return true
+    }
 }
 
 class AlarmPermissionReceiver: BroadcastReceiver() {

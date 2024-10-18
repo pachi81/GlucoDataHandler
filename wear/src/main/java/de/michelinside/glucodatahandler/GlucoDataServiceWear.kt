@@ -44,6 +44,15 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
                         apply()
                     }
                 }
+                // complications
+                if(!sharedPref.contains(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION)) {
+                    val curApp = context.packageName
+                    Log.i(LOG_ID, "Setting default tap action for complications to $curApp")
+                    with(sharedPref.edit()) {
+                        putString(de.michelinside.glucodatahandler.common.Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, curApp)
+                        apply()
+                    }
+                }
             } catch( exc: Exception ) {
                 Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
             }
@@ -78,7 +87,8 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
             val filter = mutableSetOf(
                 NotifySource.BROADCAST,
                 NotifySource.MESSAGECLIENT,
-                NotifySource.OBSOLETE_VALUE) // to trigger re-start for the case of stopped by the system
+                NotifySource.OBSOLETE_VALUE, // to trigger re-start for the case of stopped by the system
+                NotifySource.BATTERY_LEVEL)  // used for watchdog-check
             InternalNotifier.addNotifier(this, this, filter)
             ActiveComplicationHandler.OnNotifyData(this, NotifySource.CAPILITY_INFO, null)
         } catch (ex: Exception) {
@@ -98,7 +108,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
     override fun getNotification(): Notification {
         Channels.createNotificationChannel(this, ChannelType.WEAR_FOREGROUND)
 
-        val pendingIntent = PackageUtils.getAppIntent(this, WearActivity::class.java, 11, false)
+        val pendingIntent = PackageUtils.getAppIntent(this, WearActivity::class.java, 11)
 
         return Notification.Builder(this, ChannelType.WEAR_FOREGROUND.channelId)
             .setContentTitle(getString(CR.string.forground_notification_descr))

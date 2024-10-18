@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.RemoteViews
 import de.michelinside.glucodatahandler.GlucoDataServiceMobile
 import de.michelinside.glucodatahandler.R
+import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.utils.Utils
@@ -26,14 +27,16 @@ enum class WidgetType(val cls: Class<*>) {
     GLUCOSE_TREND(GlucoseTrendWidget::class.java),
     GLUCOSE_TREND_DELTA(GlucoseTrendDeltaWidget::class.java),
     GLUCOSE_TREND_DELTA_TIME(GlucoseTrendDeltaTimeWidget::class.java),
-    GLUCOSE_TREND_DELTA_TIME_IOB_COB(GlucoseTrendDeltaTimeIobCobWidget::class.java);
+    GLUCOSE_TREND_DELTA_TIME_IOB_COB(GlucoseTrendDeltaTimeIobCobWidget::class.java),
+    OTHER_UNIT(OtherUnitWidget::class.java);
 }
 
 abstract class GlucoseBaseWidget(private val type: WidgetType,
                                  private val hasTrend: Boolean = false,
                                  private val hasDelta: Boolean = false,
                                  private val hasTime: Boolean = false,
-                                 private val hasIobCob: Boolean = false): AppWidgetProvider(), NotifierInterface {
+                                 private val hasIobCob: Boolean = false,
+                                 private val hasOtherUnit: Boolean = false): AppWidgetProvider(), NotifierInterface {
     init {
         Log.d(LOG_ID, "init called for "+ this.toString())
     }
@@ -184,7 +187,10 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
 
         if (!hasTrend || !shortWidget) {
             // short widget with trend, using the glucose+trend image
-            remoteViews.setTextViewText(R.id.glucose, ReceiveData.getGlucoseAsString())
+            if(hasOtherUnit)
+                remoteViews.setTextViewText(R.id.glucose, ReceiveData.getGlucoseAsOtherUnit())
+            else
+                remoteViews.setTextViewText(R.id.glucose, ReceiveData.getGlucoseAsString())
             remoteViews.setTextColor(R.id.glucose, ReceiveData.getGlucoseColor())
             if (ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong()) {
                 remoteViews.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG)
@@ -194,9 +200,10 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
         }
 
         if (hasTrend) {
-            if (shortWidget)
+            if (shortWidget) {
                 remoteViews.setImageViewBitmap(R.id.glucose_trend, BitmapUtils.getGlucoseTrendBitmap(width = width, height = width))
-            else {
+                remoteViews.setContentDescription(R.id.glucose_trend, ReceiveData.getAsText(context))
+            } else {
                 val size = maxOf(width, height)
                 remoteViews.setImageViewBitmap(
                     R.id.trendImage, BitmapUtils.getRateAsBitmap(
@@ -204,18 +211,31 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
                         height = size
                     )
                 )
+                remoteViews.setContentDescription(R.id.trendImage, ReceiveData.getRateAsText(context))
             }
         }
 
         if (hasTime) {
             remoteViews.setTextViewText(R.id.timeText, "🕒 " + ReceiveData.getElapsedTimeMinuteAsString(context))
+            remoteViews.setContentDescription(R.id.timeText, ReceiveData.getElapsedTimeMinuteAsString(context))
         }
-        if (hasDelta)
-            remoteViews.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
+        if (hasDelta) {
+            if(hasOtherUnit) {
+                if(!shortWidget)
+                    remoteViews.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsOtherUnit())
+            }
+            else
+                remoteViews.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
+        }
+
+        if (hasOtherUnit)
+            remoteViews.setTextViewText(R.id.unitText,  ReceiveData.getOtherUnit())
 
         if (hasIobCob) {
             remoteViews.setTextViewText(R.id.iobText, "💉 " + ReceiveData.getIobAsString())
+            remoteViews.setContentDescription(R.id.iobText, context.getString(CR.string.info_label_iob) + " " + ReceiveData.getIobAsString())
             remoteViews.setTextViewText(R.id.cobText, "🍔 " + ReceiveData.getCobAsString())
+            remoteViews.setContentDescription(R.id.cobText, context.getString(CR.string.info_label_cob) + " " + ReceiveData.getCobAsString())
             if(ReceiveData.cob.isNaN())
                 remoteViews.setViewVisibility(R.id.cobText, View.GONE)
             else
@@ -249,7 +269,7 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
 
             val remoteViews = getRemoteViews(context, width, height)
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-            remoteViews.setOnClickPendingIntent(R.id.widget, PackageUtils.getTapActionIntent(context, sharedPref.getString(Constants.SHARED_PREF_WIDGET_TAP_ACTION, ""), appWidgetId))
+            remoteViews.setOnClickPendingIntent(R.id.widget, PackageUtils.getTapActionIntent(context, sharedPref.getString(Constants.SHARED_PREF_WIDGET_TAP_ACTION, null), appWidgetId))
 
             // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews)

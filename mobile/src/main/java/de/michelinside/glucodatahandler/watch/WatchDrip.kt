@@ -228,6 +228,7 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
                     NotifySource.OBSOLETE_VALUE,
                     NotifySource.ALARM_TRIGGER,
                     NotifySource.OBSOLETE_ALARM_TRIGGER,
+                    NotifySource.DELTA_ALARM_TRIGGER,
                     NotifySource.NOTIFICATION_STOPPED))
                 active = true
                 sendBroadcastToReceiver(GlucoDataService.context!!, null, createCmdBundle(BroadcastServiceAPI.CMD_START))
@@ -325,6 +326,13 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
                 NotifySource.ALARM_TRIGGER,
                 NotifySource.OBSOLETE_ALARM_TRIGGER -> {
                     sendBroadcast(context, BroadcastServiceAPI.CMD_ALARM, alarmType = ReceiveData.getAlarmType())
+                }
+                NotifySource.DELTA_ALARM_TRIGGER -> {
+                    if(extras?.containsKey(Constants.ALARM_TYPE_EXTRA) == true) {
+                        val alarmType = AlarmType.fromIndex(extras.getInt(Constants.ALARM_TYPE_EXTRA, AlarmType.NONE.ordinal))
+                        if(alarmType != AlarmType.NONE)
+                            sendBroadcast(context, BroadcastServiceAPI.CMD_ALARM, alarmType = alarmType)
+                    }
                 }
                 else -> {
                     sendBroadcast(context, BroadcastServiceAPI.CMD_UPDATE_BG)

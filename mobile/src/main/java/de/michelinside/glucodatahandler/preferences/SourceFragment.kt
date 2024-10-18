@@ -2,12 +2,11 @@ package de.michelinside.glucodatahandler.preferences
 
 import android.os.Bundle
 import android.util.Log
-import androidx.preference.*
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 
 
-class SourceFragment : PreferenceFragmentCompat() {
+class SourceFragment : SettingsFragmentCompatBase() {
     private val LOG_ID = "GDH.SourceFragment"
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

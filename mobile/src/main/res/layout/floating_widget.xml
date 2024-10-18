@@ -12,7 +12,6 @@
         <TableRow>
             <TextView
                 android:id="@+id/glucose"
-                android:contentDescription="@string/glucose_html_label"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"

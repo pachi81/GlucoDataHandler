@@ -11,7 +11,7 @@ import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
 
 
-class SourceOfflineFragment : PreferenceFragmentCompat() {
+class SourceOfflineFragment : SettingsFragmentCompatBase() {
     private val LOG_ID = "GDH.SourceFragment"
     private var settingsChanged = false
 

@@ -29,9 +29,6 @@
             app:fragment="de.michelinside.glucodataauto.preferences.AlarmTypeFragment"
             app:iconSpaceReserved="false">
             <extra
-                android:name="prefix"
-                android:value="alarm_low_" />
-            <extra
                 android:name="type"
                 android:value="2" />
         </Preference>
@@ -40,9 +37,6 @@
             android:title="@string/high_alarm_notification_name"
             app:fragment="de.michelinside.glucodataauto.preferences.AlarmTypeFragment"
             app:iconSpaceReserved="false">
-            <extra
-                android:name="prefix"
-                android:value="alarm_high_" />
             <extra
                 android:name="type"
                 android:value="4" />
@@ -53,9 +47,6 @@
             app:fragment="de.michelinside.glucodataauto.preferences.AlarmTypeFragment"
             app:iconSpaceReserved="false">
             <extra
-                android:name="prefix"
-                android:value="alarm_very_high_" />
-            <extra
                 android:name="type"
                 android:value="5" />
         </Preference>
@@ -64,9 +55,6 @@
             android:title="@string/obsolete_alarm_notification_name"
             app:fragment="de.michelinside.glucodataauto.preferences.AlarmTypeFragment"
             app:iconSpaceReserved="false">
-            <extra
-                android:name="prefix"
-                android:value="alarm_obsolete_" />
             <extra
                 android:name="type"
                 android:value="6" />
