@@ -19,8 +19,42 @@
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
+    <!-- xDrip+ integration -->
+    <uses-permission android:name="com.eveningoutpost.dexdrip.permissions.RECEIVE_BG_ESTIMATE" />
+    <!-- BYODA integration -->
+    <uses-permission android:name="com.dexcom.cgm.EXTERNAL_PERMISSION" />
 
     <queries>
+        <package android:name="com.eveningoutpost.dexdrip" />
+        <package android:name="info.nightscout.androidaps" />
+        <package android:name="com.dexcom.g6.region1.mmol" />
+        <package android:name="com.dexcom.g6.region2.mmol" />
+        <package android:name="com.dexcom.g6.region3.mmol" />
+        <package android:name="com.dexcom.g6.region4.mmol" />
+        <package android:name="com.dexcom.g6.region5.mmol" />
+        <package android:name="com.dexcom.g6.region6.mmol" />
+        <package android:name="com.dexcom.g6.region7.mmol" />
+        <package android:name="com.dexcom.g6.region1.mgdl" />
+        <package android:name="com.dexcom.g6.region2.mgdl" />
+        <package android:name="com.dexcom.g6.region3.mgdl" />
+        <package android:name="com.dexcom.g6.region4.mgdl" />
+        <package android:name="com.dexcom.g6.region5.mgdl" />
+        <package android:name="com.dexcom.g6.region6.mgdl" />
+        <package android:name="com.dexcom.g6.region7.mgdl" />
+        <package android:name="com.dexcom.follow.region1.mmol" />
+        <package android:name="com.dexcom.follow.region2.mmol" />
+        <package android:name="com.dexcom.follow.region3.mmol" />
+        <package android:name="com.dexcom.follow.region4.mmol" />
+        <package android:name="com.dexcom.follow.region5.mmol" />
+        <package android:name="com.dexcom.follow.region6.mmol" />
+        <package android:name="com.dexcom.follow.region7.mmol" />
+        <package android:name="com.dexcom.follow.region1.mgdl" />
+        <package android:name="com.dexcom.follow.region2.mgdl" />
+        <package android:name="com.dexcom.follow.region3.mgdl" />
+        <package android:name="com.dexcom.follow.region4.mgdl" />
+        <package android:name="com.dexcom.follow.region5.mgdl" />
+        <package android:name="com.dexcom.follow.region6.mgdl" />
+        <package android:name="com.dexcom.follow.region7.mgdl" />
         <package android:name="tk.glucodata" />
         <intent>
             <action android:name="android.intent.action.MAIN" />
