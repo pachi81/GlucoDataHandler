@@ -255,7 +255,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
                 putLong(SNOOZE_TIME, snoozeTime)
                 apply()
             }
-            if(notify) {
+            if(notify && GlucoDataService.context != null) {
                 InternalNotifier.notify(
                     GlucoDataService.context!!,
                     NotifySource.ALARM_SETTINGS,

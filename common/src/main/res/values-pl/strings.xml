@@ -628,4 +628,5 @@
         <item quantity="other">Czas %d minut</item>
     </plurals>
     <string name="pref_source_diabox_info_summary">Otwórz menu Integracja i włącz opcję \"Share data with GWatch\" (udostępnij dane aplikacji GWatch).\nUwaga: transmisja DiaBox zawiera tylko wartość glukozy i żadnych dodatkowych informacji, takich jak trend!</string>
+    <string name="pref_source_dexcom_byoda_not_working_info_summary">Uwaga: zdaje się, że transmisja AAPS z BYODA nie działa z innymi aplikacjami.\nW BYODA należy używać transmisji xDrip+.\n\n</string>
 </resources>

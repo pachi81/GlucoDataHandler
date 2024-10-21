@@ -619,4 +619,5 @@
         <item quantity="other">Zeit %d Minuten</item>
     </plurals>
     <string name="pref_source_diabox_info_summary">Öffne Integration und aktiviere \"Share data with GWatch\"\nHinweis: der DiaBox Broadcast beinhaltet nur den Zuckerwert und keine weiteren Informationen, wie den Trend!</string>
+    <string name="pref_source_dexcom_byoda_not_working_info_summary">Hinweis: der AAPS Broadcast von BYODA funktioniert anscheinend nicht mit anderen Apps.\nDaher sollte der xDrip+ Broadcast von BYODA verwendet werden.</string>
 </resources>

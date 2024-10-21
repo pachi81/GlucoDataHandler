@@ -623,4 +623,5 @@
         <item quantity="other">Tempo %d minutos</item>
     </plurals>
     <string name="pref_source_diabox_info_summary">Abra Integração e ative \"Share data with GWatch\"\nObservação: a transmissão do DiaBox contém apenas o valor da glicose e nenhuma informação adicional, como a tendência!</string>
+    <string name="pref_source_dexcom_byoda_not_working_info_summary">Observação: a transmissão AAPS do BYODA parece não funcionar com outros aplicativos.\nUtilize a transmissão xDrip+ no BYODA.</string>
 </resources>
