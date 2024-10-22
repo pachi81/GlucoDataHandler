@@ -1,37 +1,28 @@
-package de.michelinside.glucodatahandler.preferences
+package de.michelinside.glucodataauto.preferences
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.media.MediaScannerConnection
 import android.net.Uri
-import android.os.Bundle
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.util.Log
 import androidx.preference.Preference
-import de.michelinside.glucodatahandler.R
-import de.michelinside.glucodatahandler.common.AppSource
+import de.michelinside.glucodataauto.MainActivity.Companion.CREATE_FILE
+import de.michelinside.glucodataauto.R
 import de.michelinside.glucodatahandler.common.Constants
-import de.michelinside.glucodatahandler.common.WearPhoneConnection
-import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
-import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
-import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.Utils
-import de.michelinside.glucodatahandler.watch.LogcatReceiver
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 
-class ExportImportSettingsFragment: SettingsFragmentBase(R.xml.pref_export_import),
-    NotifierInterface {
+class ExportImportSettingsFragment: SettingsFragmentBase(R.xml.pref_export_import) {
 
     companion object {
         const val CREATE_PHONE_FILE = 1
-        const val CREATE_WEAR_FILE = 2
-        const val EXPORT_PHONE_SETTINGS = 3
-        const val IMPORT_PHONE_SETTINGS = 4
+        const val EXPORT_PHONE_SETTINGS = 2
+        const val IMPORT_PHONE_SETTINGS = 3
     }
     override fun initPreferences() {
         Log.v(LOG_ID, "initPreferences called")
@@ -54,7 +45,7 @@ class ExportImportSettingsFragment: SettingsFragmentBase(R.xml.pref_export_impor
                 val currentDateandTime = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(
                     Date()
                 )
-                val fileName = "GDH_phone_settings_" + currentDateandTime
+                val fileName = "GDA_settings_" + currentDateandTime
                 putExtra(Intent.EXTRA_TITLE, fileName)
                 putExtra(DocumentsContract.EXTRA_INITIAL_URI, downloadUri)
             }
@@ -74,48 +65,25 @@ class ExportImportSettingsFragment: SettingsFragmentBase(R.xml.pref_export_impor
 
         val prefSaveMobileLogs = findPreference<Preference>(Constants.SHARED_PREF_SAVE_MOBILE_LOGS)
         prefSaveMobileLogs!!.setOnPreferenceClickListener {
-            SaveLogs(AppSource.PHONE_APP, downloadUri)
+            SaveLogs(downloadUri)
             true
         }
-
-        val prefSaveWearLogs = findPreference<Preference>(Constants.SHARED_PREF_SAVE_WEAR_LOGS)
-        prefSaveWearLogs!!.isEnabled = WearPhoneConnection.nodesConnected && !LogcatReceiver.isActive
-        prefSaveWearLogs.setOnPreferenceClickListener {
-            SaveLogs(AppSource.WEAR_APP, downloadUri)
-            true
-        }
-
     }
 
-    override fun onResume() {
-        super.onResume()
-        InternalNotifier.addNotifier(requireContext(), this, mutableSetOf(NotifySource.CAPILITY_INFO))
-    }
-
-    override fun onPause() {
-        super.onPause()
-        InternalNotifier.remNotifier(requireContext(), this)
-    }
-
-    private fun updateWearPrefs() {
-        val prefSaveWearLogs = findPreference<Preference>(Constants.SHARED_PREF_SAVE_WEAR_LOGS)
-        prefSaveWearLogs!!.isEnabled = WearPhoneConnection.nodesConnected && !LogcatReceiver.isActive
-    }
-
-    private fun SaveLogs(source: AppSource, downloadUri: Uri?) {
+    private fun SaveLogs(downloadUri: Uri?) {
         try {
-            Log.v(LOG_ID, "Save logs called for " + source)
+            Log.v(LOG_ID, "Save mobile logs called")
             val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
                 addCategory(Intent.CATEGORY_OPENABLE)
                 type = "text/plain"
                 val currentDateandTime = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(
                     Date()
                 )
-                val fileName = "GDH_" + source + "_" + currentDateandTime + ".txt"
-                putExtra(DocumentsContract.EXTRA_INITIAL_URI, downloadUri)
+                val fileName = "GDA_" + currentDateandTime + ".txt"
                 putExtra(Intent.EXTRA_TITLE, fileName)
+                putExtra(DocumentsContract.EXTRA_INITIAL_URI, downloadUri)
             }
-            startActivityForResult(intent, if (source == AppSource.WEAR_APP) CREATE_WEAR_FILE else CREATE_PHONE_FILE)
+            startActivityForResult(intent, CREATE_FILE)
 
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Saving mobile logs exception: " + exc.message.toString() )
@@ -131,7 +99,6 @@ class ExportImportSettingsFragment: SettingsFragmentBase(R.xml.pref_export_impor
                     Log.i(LOG_ID, "Export/Import for ${requestCode} to $uri")
                     when(requestCode) {
                         CREATE_PHONE_FILE -> Utils.saveLogs(requireContext(), uri)
-                        CREATE_WEAR_FILE -> LogcatReceiver.requestLogs(requireContext(), uri)
                         EXPORT_PHONE_SETTINGS -> Utils.saveSettings(requireContext(), uri)
                         IMPORT_PHONE_SETTINGS -> Utils.readSettings(requireContext(), uri)
                     }
@@ -139,12 +106,6 @@ class ExportImportSettingsFragment: SettingsFragmentBase(R.xml.pref_export_impor
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Export/Import exception for ${requestCode}: " + exc.message.toString() )
-        }
-    }
-
-    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
-        if(dataSource == NotifySource.CAPILITY_INFO) {
-            updateWearPrefs()
         }
     }
 }

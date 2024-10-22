@@ -107,7 +107,9 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
 
 class GeneralSettingsFragment: SettingsFragmentBase(R.xml.pref_general) {}
 class RangeSettingsFragment: SettingsFragmentBase(R.xml.pref_target_range) {}
-class GDASettingsFragment: SettingsFragmentBase(R.xml.pref_gda) {
+
+class GDAMediaSettingsFragment: SettingsFragmentBase(R.xml.pref_gda_media) {}
+class GDANotificationSettingsFragment: SettingsFragmentBase(R.xml.pref_gda_notification) {
     override fun updatePreferences() {
         super.updatePreferences()
         val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_CAR_NOTIFICATION) ?: return

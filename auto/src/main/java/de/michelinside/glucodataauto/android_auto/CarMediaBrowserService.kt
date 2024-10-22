@@ -194,6 +194,9 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             Constants.AA_MEDIA_ICON_STYLE_TREND -> {
                 BitmapUtils.getRateAsBitmap(width = size, height = size)
             }
+            Constants.AA_MEDIA_ICON_STYLE_GLUCOSE -> {
+                BitmapUtils.getGlucoseAsBitmap(width = size, height = size)
+            }
             else -> {
                 BitmapUtils.getGlucoseTrendBitmap(width = size, height = size)
             }

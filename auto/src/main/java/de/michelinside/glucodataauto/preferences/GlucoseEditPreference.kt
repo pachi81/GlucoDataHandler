@@ -8,38 +8,80 @@ import android.util.Log
 import android.widget.EditText
 import androidx.preference.EditTextPreference
 import androidx.preference.EditTextPreference.OnBindEditTextListener
+import de.michelinside.glucodataauto.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import kotlin.math.abs
+import de.michelinside.glucodatahandler.common.R as CR
 
+@Suppress("unused")
 class GlucoseEditPreference : EditTextPreference, OnBindEditTextListener {
     companion object {
         private val LOG_ID = "GDH.AA.GlucoseEditPreference"
     }
+
+    var isNegative = false
     private var defaultValue = 0F
+    private var isDelta = false
+    private var fromDialog = false
     constructor(context: Context?) : super(context!!)  {
-        initDialog()
+        initDialog(null)
     }
     constructor(context: Context?, attrs: AttributeSet?) : super(context!!, attrs) {
-        initDialog()
+        initDialog(attrs)
     }
     constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(
         context!!, attrs, defStyle
     ) {
-        initDialog()
+        initDialog(attrs)
     }
 
-    fun initDialog() {
+    fun initDialog(attrs: AttributeSet?) {
         try {
             Log.d(LOG_ID, "initDialog called")
             setOnBindEditTextListener(this)
+            if (attrs != null) {
+                val typedArray = context.obtainStyledAttributes(attrs, R.styleable.GlucoseEditPreference)
+                isDelta = typedArray.getBoolean(R.styleable.GlucoseEditPreference_isDelta, false)
+                typedArray.recycle()
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "initDialog exception: " + exc.toString())
         }
     }
 
+    private fun getPersistValue(value: String): Float {
+        var result = value.toFloat()
+        if (fromDialog) {
+            if ((isDelta && ReceiveData.isMmol) || (!isDelta && GlucoDataUtils.isMmolValue(value.toFloat()))) {
+                result = GlucoDataUtils.mmolToMg(result)
+            }
+        }
+        Log.v(LOG_ID, "$value -> persistValue = $result - fromDialog: $fromDialog")
+        return result
+    }
+
+    private fun getDisplayValue(curText: String): String {
+        val curDisplayValue: String
+        var value = curText.toFloat()
+        if (isNegative && value > 0)
+            value = -value
+        if (!ReceiveData.isMmol && !isDelta) {
+            if(GlucoDataUtils.isMmolValue(value))
+                value = GlucoDataUtils.mmolToMg(value)
+            curDisplayValue = value.toInt().toString()
+        } else if (ReceiveData.isMmol && (!GlucoDataUtils.isMmolValue(value) || isDelta)) {
+            curDisplayValue = GlucoDataUtils.mgToMmol(value).toString()
+        } else {
+            curDisplayValue = value.toString()
+        }
+        Log.v(LOG_ID, "$curText -> display value = $curDisplayValue")
+        return curDisplayValue
+    }
+
     override fun persistFloat(value: Float): Boolean {
-        Log.i(LOG_ID, "persistFloat called with value " + value)
-        return super.persistFloat(value)
+        Log.d(LOG_ID, "persistFloat called with value " + abs(value))
+        return super.persistFloat(abs(value))
     }
 
     override fun onGetDefaultValue(a: TypedArray, index: Int): Any? {
@@ -56,34 +98,52 @@ class GlucoseEditPreference : EditTextPreference, OnBindEditTextListener {
     }
 
     override fun getPersistedString(defaultReturnValue: String?): String {
-        Log.i(LOG_ID, "getPersistedString called")
+        Log.d(LOG_ID, "getPersistedString called")
         return getPersistedFloat(defaultValue).toString()
     }
 
     override fun persistString(value: String?): Boolean {
-        Log.i(LOG_ID, "persistString called with value " + value)
+        Log.d(LOG_ID, "persistString called with value " + value)
         try {
-            if (GlucoDataUtils.isMmolValue(value!!.toFloat()))
-                return persistFloat(GlucoDataUtils.mmolToMg(value.toFloat()))
-            return persistFloat(value.toFloat())
+            return persistFloat(value!!.toFloat())
         } catch (exc: Exception) {
             Log.e(LOG_ID, "persistString exception: " + exc.toString())
         }
         return false
     }
 
-    override fun onBindEditText(editText: EditText) {
-        Log.i(LOG_ID, "onBindEditText called " + editText.text)
-        try {
-            editText.inputType = if (ReceiveData.isMmol) InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL else InputType.TYPE_CLASS_NUMBER
-            var value = editText.getText().toString().toFloat()
-            if (!ReceiveData.isMmol) {
-                if(GlucoDataUtils.isMmolValue(value))
-                    value = GlucoDataUtils.mmolToMg(value)
-                editText.setText(value.toInt().toString())
-            } else if (ReceiveData.isMmol && !GlucoDataUtils.isMmolValue(value)) {
-                editText.setText(GlucoDataUtils.mgToMmol(value).toString())
+    override fun setText(text: String?) {
+        Log.d(LOG_ID, "setText called " + text)
+        super.setText(getPersistValue(text!!).toString())
+    }
+
+    override fun getSummary(): CharSequence? {
+        Log.d(LOG_ID, "getSummary called")
+        val value = getPersistedFloat(defaultValue)
+        if (value.isNaN())
+            return super.getSummary()
+        val summary = super.getSummary().toString() + "\n"
+        var unit = ReceiveData.getUnit()
+        if (isDelta) {
+            if (ReceiveData.use5minDelta) {
+                unit += " " + context.getString(CR.string.delta_per_5_minute)
+            } else {
+                unit += " " + context.getString(CR.string.delta_per_minute)
             }
+        }
+
+        val sign = if(isDelta && !isNegative) "+" else ""
+        return summary + sign + getDisplayValue(value.toString()) + " " + unit
+    }
+
+    override fun onBindEditText(editText: EditText) {
+        Log.d(LOG_ID, "onBindEditText called " + editText.text)
+        try {
+            fromDialog = true
+            editText.inputType = if (ReceiveData.isMmol || isDelta) InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL else InputType.TYPE_CLASS_NUMBER
+            if(isNegative)
+                editText.inputType = editText.inputType or InputType.TYPE_NUMBER_FLAG_SIGNED
+            editText.setText(getDisplayValue(editText.text.toString()))
             Log.i(LOG_ID, "onBindEditText new text: " + editText.text)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onBindEditText exception: " + exc.toString())

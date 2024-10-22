@@ -10,6 +10,7 @@ import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodataauto.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
+import de.michelinside.glucodatahandler.common.notification.AlarmSetting
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.utils.Utils
 
@@ -26,6 +27,15 @@ class AlarmTypeFragment : PreferenceFragmentCompat() {
     }
     private val intervalPref: String get() {
         return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_INTERVAL)
+    }
+    private val deltaPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_DELTA)
+    }
+    private val occurrenceCountPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_OCCURRENCE_COUNT)
+    }
+    private val borderPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_BORDER)
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -73,17 +83,15 @@ class AlarmTypeFragment : PreferenceFragmentCompat() {
     private fun updatePreferenceKeys() {
         for (i in 0 until preferenceScreen.preferenceCount) {
             val pref: Preference = preferenceScreen.getPreference(i)
-            if(!pref.key.isNullOrEmpty()) {
+            if(pref is PreferenceCategory) {
+                updatePreferenceKeys(pref)
+            } else if(pref.key.startsWith("_")) {
                 val newKey = getPrefKey(pref.key)
                 Log.v(LOG_ID, "Replace key ${pref.key} with $newKey")
                 pref.key = newKey
-            } else {
-                val cat = pref as PreferenceCategory
-                updatePreferenceKeys(cat)
             }
         }
     }
-
 
     private fun updatePreferenceKeys(preferenceCategory: PreferenceCategory) {
         for (i in 0 until preferenceCategory.preferenceCount) {
@@ -98,13 +106,30 @@ class AlarmTypeFragment : PreferenceFragmentCompat() {
             }
         }
     }
+
     private fun updateData() {
         val prefEnabled = findPreference<SwitchPreferenceCompat>(enabledPref)
-        prefEnabled!!.isChecked = preferenceManager.sharedPreferences!!.getBoolean(prefEnabled.key, true)
+        prefEnabled!!.isChecked = preferenceManager.sharedPreferences!!.getBoolean(prefEnabled.key, alarmType.setting!!.enabled)
 
         val prefInterval = findPreference<SeekBarPreference>(intervalPref)
         prefInterval!!.value = preferenceManager.sharedPreferences!!.getInt(prefInterval.key, AlarmHandler.getDefaultIntervalMin(alarmType))
         prefInterval.summary = getIntervalSummary(alarmType)
+
+        if (alarmType.setting!!.hasDelta()) {
+            val alarmSettingsCat = findPreference<PreferenceCategory>(Constants.SHARED_PREF_ALARM_TYPE_SETTINGS_CAT)
+            alarmSettingsCat!!.isVisible = true
+
+            val prefDelta = findPreference<GlucoseEditPreference>(deltaPref)
+            prefDelta!!.text = preferenceManager.sharedPreferences!!.getFloat(prefDelta.key, AlarmSetting.defaultDelta).toString()
+            if(alarmType == AlarmType.FALLING_FAST)
+                prefDelta.isNegative = true
+
+            val prefOccurrenceCount = findPreference<SeekBarPreference>(occurrenceCountPref)
+            prefOccurrenceCount!!.value = preferenceManager.sharedPreferences!!.getInt(prefOccurrenceCount.key, AlarmSetting.defaultDeltaCount)
+
+            val prefBorder = findPreference<GlucoseEditPreference>(borderPref)
+            prefBorder!!.text = preferenceManager.sharedPreferences!!.getFloat(prefBorder.key, AlarmSetting.defaultDeltaBorder).toString()
+        }
     }
 
     private fun getIntervalSummary(alarmType: AlarmType): String {

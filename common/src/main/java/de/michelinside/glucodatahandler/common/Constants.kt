@@ -247,5 +247,6 @@ object Constants {
     // Android Auto
     const val AA_MEDIA_ICON_STYLE_TREND = "trend"
     const val AA_MEDIA_ICON_STYLE_GLUCOSE_TREND = "glucose_trend"
+    const val AA_MEDIA_ICON_STYLE_GLUCOSE = "glucose"
     const val SHARED_PREF_FOREGROUND_SERVICE = "foreground_service"
 }

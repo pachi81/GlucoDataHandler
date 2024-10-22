@@ -45,9 +45,7 @@ import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.GitHubVersionChecker
 import de.michelinside.glucodatahandler.common.utils.Utils
 import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
 import de.michelinside.glucodatahandler.common.R as CR
 
 class MainActivity : AppCompatActivity(), NotifierInterface {
@@ -268,12 +266,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     startActivity(intent)
                     return true
                 }
-                R.id.action_gda_help -> {
-                    val intent = Intent(this, SettingsActivity::class.java)
-                    intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.HELP_FRAGMENT.value)
-                    startActivity(intent)
-                    return true
-                }
                 R.id.action_help -> {
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
@@ -303,10 +295,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                         Uri.parse(resources.getText(CR.string.facebook_gdh_group_url).toString())
                     )
                     startActivity(browserIntent)
-                    return true
-                }
-                R.id.action_save_mobile_logs -> {
-                    SaveMobileLogs()
                     return true
                 }
                 R.id.action_notification_toggle -> {
@@ -503,25 +491,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.v(LOG_ID, "new intent received")
         update()
-    }
-
-    private fun SaveMobileLogs() {
-        try {
-            Log.v(LOG_ID, "Save mobile logs called")
-            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-                addCategory(Intent.CATEGORY_OPENABLE)
-                type = "text/plain"
-                val currentDateandTime = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(
-                    Date()
-                )
-                val fileName = "GDA_" + currentDateandTime + ".txt"
-                putExtra(Intent.EXTRA_TITLE, fileName)
-            }
-            startActivityForResult(intent, CREATE_FILE)
-
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "Saving mobile logs exception: " + exc.message.toString() )
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

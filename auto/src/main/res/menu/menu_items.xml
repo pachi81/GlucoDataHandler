@@ -30,13 +30,6 @@
             app:showAsAction="never" />
     </group>
     <group
-        android:id="@+id/group_help">
-        <item
-            android:id="@+id/action_gda_help"
-            android:title="@string/menu_help"
-            app:showAsAction="never" />
-    </group>
-    <group
         android:id="@+id/group_github">
         <item
             android:id="@+id/group_github_title"
@@ -58,13 +51,6 @@
         <item
             android:id="@+id/action_facebook"
             android:title="@string/menu_facebook"
-            app:showAsAction="never" />
-    </group>
-    <group
-        android:id="@+id/group_logs">
-        <item
-            android:id="@+id/action_save_mobile_logs"
-            android:title="@string/menu_save_logs"
             app:showAsAction="never" />
     </group>
     <group

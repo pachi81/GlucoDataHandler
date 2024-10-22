@@ -246,7 +246,6 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
         }
     }
 
-
     private fun updatePreferenceKeys(preferenceCategory: PreferenceCategory) {
         for (i in 0 until preferenceCategory.preferenceCount) {
             val pref: Preference = preferenceCategory.getPreference(i)

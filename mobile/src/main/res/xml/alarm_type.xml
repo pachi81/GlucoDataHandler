@@ -59,7 +59,7 @@
                     android:key="_delta"
                     android:selectAllOnFocus="true"
                     android:singleLine="true"
-                    android:title="@string/delta_label"
+                    android:title="@string/info_label_delta"
                     android:summary="@string/pref_alarm_delta_summary"
                     app:isDelta="true"
                     app:iconSpaceReserved="false" />
