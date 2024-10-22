@@ -27,6 +27,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.common.utils.Utils.isScreenReaderOn
 import de.michelinside.glucodatahandler.common.R as CR
 
 
@@ -39,6 +40,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtAlarm: TextView
     private lateinit var txtSnooze: TextView
     private lateinit var btnDismiss: SlideToActView
+    private lateinit var btnClose: Button
     private lateinit var btnSnooze: SlideToActView
     private lateinit var btnSnooze60: Button
     private lateinit var btnSnooze90: Button
@@ -91,6 +93,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             txtTime = findViewById(R.id.txtTime)
             txtAlarm = findViewById(R.id.txtAlarm)
             btnDismiss = findViewById(R.id.btnDismiss)
+            btnClose = findViewById(R.id.btnClose)
             btnSnooze = findViewById(R.id.btnSnooze)
             txtSnooze = findViewById(R.id.txtSnooze)
             btnSnooze60 = findViewById(R.id.btnSnooze60)
@@ -105,23 +108,45 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             else
                 layoutSnooze.visibility = View.GONE
 
-            btnDismiss.onSlideCompleteListener =
-                object : SlideToActView.OnSlideCompleteListener {
-                    override fun onSlideComplete(view: SlideToActView) {
-                        Log.d(LOG_ID, "Slide to stop completed!")
-                        stop()
-                    }
+            if(this.isScreenReaderOn()) {
+                Log.d(LOG_ID, "Screen reader is on!")
+                btnDismiss.visibility = View.GONE
+                btnClose.visibility = View.VISIBLE
+                btnSnooze.visibility = View.GONE
+                txtSnooze.visibility = View.GONE
+                btnSnooze60.contentDescription = resources.getString(CR.string.snooze) + " 60"
+                btnSnooze90.contentDescription = resources.getString(CR.string.snooze) + " 90"
+                btnSnooze120.contentDescription = resources.getString(CR.string.snooze) + " 120"
+                layoutSnoozeButtons.visibility = View.VISIBLE
+                btnClose.setOnClickListener{
+                    Log.d(LOG_ID, "Stop button clicked!")
+                    stop()
                 }
-            btnSnooze.onSlideCompleteListener =
-                object : SlideToActView.OnSlideCompleteListener {
-                    override fun onSlideComplete(view: SlideToActView) {
-                        Log.d(LOG_ID, "Slide to snooze completed!")
-                        AlarmNotification.stopVibrationAndSound()
-                        btnSnooze.visibility = View.GONE
-                        txtSnooze.visibility = View.VISIBLE
-                        layoutSnoozeButtons.visibility = View.VISIBLE
+            } else {
+                btnClose.visibility = View.GONE
+                btnDismiss.visibility = View.VISIBLE
+                btnSnooze.visibility = View.VISIBLE
+                txtSnooze.visibility = View.GONE
+                layoutSnoozeButtons.visibility = View.GONE
+
+                btnDismiss.onSlideCompleteListener =
+                    object : SlideToActView.OnSlideCompleteListener {
+                        override fun onSlideComplete(view: SlideToActView) {
+                            Log.d(LOG_ID, "Slide to stop completed!")
+                            stop()
+                        }
                     }
-                }
+                btnSnooze.onSlideCompleteListener =
+                    object : SlideToActView.OnSlideCompleteListener {
+                        override fun onSlideComplete(view: SlideToActView) {
+                            Log.d(LOG_ID, "Slide to snooze completed!")
+                            AlarmNotification.stopVibrationAndSound()
+                            btnSnooze.visibility = View.GONE
+                            txtSnooze.visibility = View.VISIBLE
+                            layoutSnoozeButtons.visibility = View.VISIBLE
+                        }
+                    }
+            }
             btnSnooze60.setOnClickListener{
                 AlarmHandler.setSnooze(60)
                 stop()

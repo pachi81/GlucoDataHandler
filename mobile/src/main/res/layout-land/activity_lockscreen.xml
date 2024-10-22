@@ -135,7 +135,6 @@
                 android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="0dp">
-
                 <com.ncorti.slidetoact.SlideToActView
                     android:id="@+id/btnDismiss"
                     android:layout_width="match_parent"
@@ -148,7 +147,16 @@
                     android:layout_alignParentBottom="true"
                     android:layout_marginBottom="30dp"
                     app:text="@string/btn_dismiss"/>
-
+                <Button
+                    android:id="@+id/btnClose"
+                    android:visibility="gone"
+                    android:layout_centerVertical="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:backgroundTint="#005CCC"
+                    android:text="@string/btn_dismiss"
+                    android:textSize="25sp"
+                    tools:ignore="HardcodedText,SpUsage" />
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"

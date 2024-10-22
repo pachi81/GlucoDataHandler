@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler.common.utils
 
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
@@ -11,6 +12,7 @@ import android.os.Parcel
 import android.provider.Settings
 import android.util.Log
 import android.util.TypedValue
+import android.view.accessibility.AccessibilityManager
 import android.widget.Toast
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
@@ -423,6 +425,17 @@ object Utils {
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "timeBetweenTimes exception: " + exc.message.toString() )
+        }
+        return false
+    }
+
+    fun Context.isScreenReaderOn():Boolean{
+        val am = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+        if (am != null && am.isEnabled) {
+            val serviceInfoList =
+                am.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_SPOKEN)
+            if (serviceInfoList.isNotEmpty())
+                return true
         }
         return false
     }
