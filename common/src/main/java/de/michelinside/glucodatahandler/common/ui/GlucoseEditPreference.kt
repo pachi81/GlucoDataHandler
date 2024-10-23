@@ -1,4 +1,4 @@
-package de.michelinside.glucodatahandler.preferences
+package de.michelinside.glucodatahandler.common.ui
 
 import android.content.Context
 import android.content.res.TypedArray
@@ -8,11 +8,10 @@ import android.util.Log
 import android.widget.EditText
 import androidx.preference.EditTextPreference
 import androidx.preference.EditTextPreference.OnBindEditTextListener
-import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import kotlin.math.abs
-import de.michelinside.glucodatahandler.common.R as CR
+import de.michelinside.glucodatahandler.common.R
 
 @Suppress("unused")
 class GlucoseEditPreference : EditTextPreference, OnBindEditTextListener {
@@ -126,9 +125,9 @@ class GlucoseEditPreference : EditTextPreference, OnBindEditTextListener {
         var unit = ReceiveData.getUnit()
         if (isDelta) {
             if (ReceiveData.use5minDelta) {
-                unit += " " + context.getString(CR.string.delta_per_5_minute)
+                unit += " " + context.getString(R.string.delta_per_5_minute)
             } else {
-                unit += " " + context.getString(CR.string.delta_per_minute)
+                unit += " " + context.getString(R.string.delta_per_minute)
             }
         }
 

@@ -1,4 +1,4 @@
-package de.michelinside.glucodataauto
+package de.michelinside.glucodatahandler.common.ui
 
 import android.app.UiModeManager
 import android.content.Context

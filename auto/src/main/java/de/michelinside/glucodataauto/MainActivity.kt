@@ -44,6 +44,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.GitHubVersionChecker
 import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.common.ui.Dialogs
 import java.text.DateFormat
 import java.util.Date
 import de.michelinside.glucodatahandler.common.R as CR

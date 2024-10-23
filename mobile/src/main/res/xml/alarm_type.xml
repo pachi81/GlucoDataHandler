@@ -53,7 +53,7 @@
             app:isPreferenceVisible="false"
             android:title="@string/pref_cat_alarm_settings"
             app:iconSpaceReserved="false">
-                <de.michelinside.glucodatahandler.preferences.GlucoseEditPreference
+                <de.michelinside.glucodatahandler.common.ui.GlucoseEditPreference
                     android:defaultValue="5"
                     android:inputType="numberDecimal"
                     android:key="_delta"
@@ -73,7 +73,7 @@
                     android:title="@string/alarm_occurrence_count"
                     android:summary="@string/alarm_occurrence_count_summary"
                     app:iconSpaceReserved="false" />
-                <de.michelinside.glucodatahandler.preferences.GlucoseEditPreference
+                <de.michelinside.glucodatahandler.common.ui.GlucoseEditPreference
                     android:defaultValue="145"
                     android:inputType="numberDecimal"
                     android:key="_border"
