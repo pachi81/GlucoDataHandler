@@ -171,8 +171,8 @@ class TimeIconComplication: TimeImageComplication() {
 
 open class SmallImageDeltaWithTimeComplication: BgValueComplicationService() {
     protected fun getDeltaTimeIcon(color: Int): Icon {
-        val deltaBitmap = BitmapUtils.getDeltaAsBitmap(color = color, roundTarget = true, height = 50, width = 90, top = true)
-        val timeBitmap = BitmapUtils.textToBitmap(ReceiveData.getElapsedTimeMinuteAsString(this, true), color = color, height = 50, width = 75, bottom = true)
+        val deltaBitmap = BitmapUtils.getDeltaAsBitmap(color = color, roundTarget = true, height = 45, width = 90, top = true)
+        val timeBitmap = BitmapUtils.textToBitmap(ReceiveData.getElapsedTimeMinuteAsString(this, true), color = color, height = 45, width = 75, bottom = true)
         return Icon.createWithBitmap(BitmapUtils.createComboBitmap(timeBitmap!!, deltaBitmap!!, height = 100, width = 100))
     }
 

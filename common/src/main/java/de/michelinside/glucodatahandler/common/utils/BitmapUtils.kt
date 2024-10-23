@@ -244,8 +244,8 @@ object BitmapUtils {
         try {
             val comboBitmap = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888)
             val comboImage = Canvas(comboBitmap)
-            comboImage.drawBitmap(bitmapAbove, ((height-bitmapAbove.width)/2).toFloat(), 0F, null)
-            comboImage.drawBitmap(bitmapBelow, ((width-bitmapBelow.width)/2).toFloat(), bitmapAbove.height.toFloat(), null)
+            comboImage.drawBitmap(bitmapAbove, ((width-bitmapAbove.width)/2).toFloat(), 0F, null)
+            comboImage.drawBitmap(bitmapBelow, ((width-bitmapBelow.width)/2).toFloat(), height - bitmapBelow.height.toFloat(), null)
             return comboBitmap
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Cannot create combo bitmap: " + exc.message.toString())
