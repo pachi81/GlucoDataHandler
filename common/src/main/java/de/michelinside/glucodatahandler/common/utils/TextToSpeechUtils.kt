@@ -8,6 +8,7 @@ import android.util.Log
 import de.michelinside.glucodatahandler.common.R
 import java.util.Locale
 
+
 object TextToSpeechUtils {
     private val LOG_ID = "GDH.TTS_Utils"
     private var textToSpeech: TextToSpeech? = null
@@ -59,9 +60,13 @@ object TextToSpeechUtils {
     fun speak(text: String) {
         Log.d(LOG_ID, "speak called with text='${text}'")
         if(textToSpeech != null) {
-            if(textToSpeech!!.isSpeaking)
+            if(textToSpeech!!.isSpeaking) {
                 textToSpeech!!.stop()
-            textToSpeech!!.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+            } else {
+                /*val bundle = Bundle()
+                bundle.putInt(TextToSpeech.Engine.KEY_PARAM_STREAM, AudioManager.STREAM_ALARM)*/
+                textToSpeech!!.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+            }
         }
     }
 }
