@@ -136,6 +136,7 @@ object Constants {
     const val SHARED_PREF_SOURCE_DELAY="source_delay"
 
     // offline sources
+    const val SHARED_PREF_SOURCE_GDH_ENABLED="source_gdh_enabled"
     const val SHARED_PREF_SOURCE_JUGGLUCO_ENABLED="source_juggluco_enabled"
     const val SHARED_PREF_SOURCE_XDRIP_ENABLED="source_xdrip_enabled"
     const val SHARED_PREF_SOURCE_AAPS_ENABLED="source_aaps_enabled"
