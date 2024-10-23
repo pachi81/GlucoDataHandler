@@ -200,11 +200,13 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     private fun canShowNotification(dataSource: NotifySource): Boolean {
         if (init && enable_notification && GlucoDataServiceAuto.connected) {
             Log.d(LOG_ID, "Check showing notificiation:"
-                    + "\ndataSource: " + dataSource
-                    + "\nalarm-type: " + ReceiveData.getAlarmType()
+                    + "\ndataSource:    " + dataSource
+                    + "\nglucose-alarm: " + ReceiveData.getAlarmType()
+                    + "\ndelta-alarm:   " + ReceiveData.getDeltaAlarmType()
+                    + "\nforce-alarm:   " + ReceiveData.forceAlarm
                     + "\nforceNextNotify: " + forceNextNotify
-                    + "\nnotify-elapsed: " + getTimeDiffMinute()
-                    + "\ndata-elapsed: " + ReceiveData.getElapsedTimeMinute()
+                    + "\nnotify-elapsed:  " + getTimeDiffMinute()
+                    + "\ndata-elapsed:    " + ReceiveData.getElapsedTimeMinute()
                     + "\nnotification_interval: " + notification_interval
                     + "\nnotification_reappear_interval: " + notification_reappear_interval
             )

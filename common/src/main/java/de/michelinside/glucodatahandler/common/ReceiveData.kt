@@ -42,12 +42,13 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var timeDiff: Long = 0
     var rateLabel: String? = null
     var source: DataSource = DataSource.NONE
-    val forceAlarm: Boolean get() {
+    val forceGlucoseAlarm: Boolean get() {
         return ((alarm and 8) == 8)
     }
     val forceDeltaAlarm: Boolean get() {
         return ((alarm and 16) == 16)
     }
+    val forceAlarm = forceGlucoseAlarm || forceDeltaAlarm
 
     var iob: Float = Float.NaN
     var cob: Float = Float.NaN
@@ -487,7 +488,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     } else {
                         calculateDeltaAlarmCount()
                     }
-                    if(!interApp && !forceAlarm && !forceDeltaAlarm) {
+                    if(!interApp && !forceGlucoseAlarm && !forceDeltaAlarm) {
                         val deltaAlarmType = AlarmHandler.checkDeltaAlarmTrigger(deltaFallingCount, deltaRisingCount)
                         if(deltaAlarmType != AlarmType.NONE) {
                             alarm = alarm or 16
@@ -497,7 +498,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     val notifySource = if(interApp) NotifySource.MESSAGECLIENT else NotifySource.BROADCAST
 
                     InternalNotifier.notify(context, notifySource, createExtras())  // re-create extras to have all changed value inside...
-                    if(forceAlarm) {
+                    if(forceGlucoseAlarm) {
                         InternalNotifier.notify(context, NotifySource.ALARM_TRIGGER, null)
                     } else if(forceDeltaAlarm) {
                         val bundle = Bundle()

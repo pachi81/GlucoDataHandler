@@ -35,7 +35,8 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 NotifySource.IOB_COB_CHANGE,
                 NotifySource.MESSAGECLIENT,
                 NotifySource.OBSOLETE_VALUE,
-                NotifySource.ALARM_TRIGGER
+                NotifySource.ALARM_TRIGGER,
+                NotifySource.DELTA_ALARM_TRIGGER
             )
         )
     }

@@ -425,8 +425,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateAlarmsTable() {
         tableAlarms.removeViews(1, maxOf(0, tableAlarms.childCount - 1))
-        if(ReceiveData.time > 0 && ReceiveData.getAlarmType() != AlarmType.OK) {
-            tableAlarms.addView(createRow(CR.string.info_label_alarm, resources.getString(ReceiveData.getAlarmType().resId) + (if (ReceiveData.forceAlarm) " ⚠" else "" )))
+        if(ReceiveData.time > 0) {
+            val alarmType = ReceiveData.getAlarmType()
+            if (alarmType != AlarmType.OK)
+                tableAlarms.addView(createRow(CR.string.info_label_alarm, resources.getString(alarmType.resId)))
+            val deltaAlarmType = ReceiveData.getDeltaAlarmType()
+            if (deltaAlarmType != AlarmType.NONE)
+                tableAlarms.addView(createRow(CR.string.info_label_alarm, resources.getString(deltaAlarmType.resId)))
         }
         if (AlarmHandler.isSnoozeActive)
             tableAlarms.addView(createRow(CR.string.snooze, AlarmHandler.snoozeTimestamp))
