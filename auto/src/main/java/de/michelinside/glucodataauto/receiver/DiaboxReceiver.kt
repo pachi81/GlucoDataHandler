@@ -4,10 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import de.michelinside.glucodataauto.GlucoDataServiceAuto
-import de.michelinside.glucodatahandler.common.receiver.NsEmulatorReceiver as BaseNsEmulatorReceiver
+import de.michelinside.glucodatahandler.common.receiver.DiaboxReceiver
 
-class NsEmulatorReceiver : BaseNsEmulatorReceiver() {
-    private val LOG_ID = "GDH.AA.NsEmulatorReceiver"
+class DiaboxReceiver : DiaboxReceiver() {
+    private val LOG_ID = "GDH.AA.DiaboxReceiver"
     override fun onReceive(context: Context, intent: Intent) {
         try {
             Log.v(LOG_ID, intent.action + " received: " + intent.extras.toString())

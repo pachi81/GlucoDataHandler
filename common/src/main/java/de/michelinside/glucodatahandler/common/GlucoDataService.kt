@@ -232,7 +232,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, true)) {
                         if(aapsReceiver == null) {
                             aapsReceiver = AAPSReceiver()
-                            registerReceiver(context, aapsReceiver!!, IntentFilter("info.nightscout.androidaps.status"))
+                            registerReceiver(context, aapsReceiver!!, IntentFilter(Intents.AAPS_BROADCAST_ACTION))
                         }
                     } else if (aapsReceiver != null) {
                         unregisterReceiver(context, aapsReceiver)
@@ -244,8 +244,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, true)) {
                         if(dexcomReceiver == null) {
                             val dexcomFilter = IntentFilter()
-                            dexcomFilter.addAction("com.dexcom.cgm.EXTERNAL_BROADCAST")
-                            dexcomFilter.addAction("com.dexcom.g7.EXTERNAL_BROADCAST")
+                            dexcomFilter.addAction(Intents.DEXCOM_CGM_BROADCAST_ACTION)
+                            dexcomFilter.addAction(Intents.DEXCOM_G7_BROADCAST_ACTION)
                             dexcomReceiver = DexcomBroadcastReceiver()
                             registerReceiver(context, dexcomReceiver!!, dexcomFilter)
                         }
@@ -259,7 +259,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true)) {
                         if(nsEmulatorReceiver == null) {
                             nsEmulatorReceiver = NsEmulatorReceiver()
-                            registerReceiver(context, nsEmulatorReceiver!!, IntentFilter("com.eveningoutpost.dexdrip.NS_EMULATOR"))
+                            registerReceiver(context, nsEmulatorReceiver!!, IntentFilter(Intents.NS_EMULATOR_BROADCAST_ACTION))
                         }
                     } else if (nsEmulatorReceiver != null) {
                         unregisterReceiver(context, nsEmulatorReceiver)
@@ -271,7 +271,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true)) {
                         if(diaboxReceiver == null) {
                             diaboxReceiver = DiaboxReceiver()
-                            registerReceiver(context, diaboxReceiver!!, IntentFilter("com.outshineiot.diabox.BgEstimate"))
+                            registerReceiver(context, diaboxReceiver!!, IntentFilter(Intents.DIABOX_BROADCAST_ACTION))
                         }
                     } else if (diaboxReceiver != null) {
                         unregisterReceiver(context, diaboxReceiver)

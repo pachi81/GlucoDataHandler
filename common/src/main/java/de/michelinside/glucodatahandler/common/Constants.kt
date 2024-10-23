@@ -36,9 +36,7 @@ object Constants {
     const val EXTRA_AA_CONNECTED = "gdh.aa_connected"
 
     const val XDRIP_ACTION_GLUCOSE_READING = "com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING"
-    const val XDRIP_BROADCAST_ACTION = "com.eveningoutpost.dexdrip.BgEstimate"
 
-    const val GLUCODATA_ACTION = "de.michelinside.glucodatahandler.GLUCODATA"
     const val GLUCODATAAUTO_STATE_ACTION = "de.michelinside.glucodataauto.state"
     const val GLUCODATAAUTO_STATE_EXTRA = "state"
 

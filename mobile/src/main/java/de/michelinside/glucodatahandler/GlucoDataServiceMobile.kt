@@ -270,7 +270,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_XDRIP_BROADCAST, false)) {
             val xDripExtras = XDripBroadcastReceiver.createExtras(context)
             if (xDripExtras != null) {
-                val intent = Intent(Constants.XDRIP_BROADCAST_ACTION)
+                val intent = Intent(Intents.XDRIP_BROADCAST_ACTION)
                 intent.putExtras(xDripExtras)
                 sendBroadcast(intent, Constants.SHARED_PREF_XDRIP_BROADCAST_RECEIVERS, context, sharedPref)
             }

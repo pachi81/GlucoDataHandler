@@ -109,7 +109,7 @@ object CarModeReceiver {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         if (connected && sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO, true) && PackageUtils.isGlucoDataAutoAvailable(context)) {
             Log.d(LOG_ID, "sendToGlucoDataAuto")
-            val intent = Intent(Constants.GLUCODATA_ACTION)
+            val intent = Intent(Intents.GLUCODATA_ACTION)
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
             if(withSettings && sharedPref.getBoolean(Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO, true)) {
                 val settings = GlucoDataService.getSettings()
