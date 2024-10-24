@@ -4,9 +4,12 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.speech.tts.TextToSpeech
+import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import de.michelinside.glucodatahandler.common.R
+import java.io.File
 import java.util.Locale
+import java.util.concurrent.atomic.AtomicBoolean
 
 
 object TextToSpeechUtils {
@@ -68,6 +71,49 @@ object TextToSpeechUtils {
                 textToSpeech!!.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
             }
         }
+    }
+
+    fun getAsFile(text: String): File? {
+        try {
+            Log.d(LOG_ID, "getAsFile called with text='${text}'")
+            if(textToSpeech != null) {
+                val created = AtomicBoolean(false)
+                val error = AtomicBoolean(true)
+                val result = textToSpeech!!.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+                    override fun onStart(utteranceId: String?) {
+                        Log.d(LOG_ID, "onStart called for utteranceId=$utteranceId")
+                    }
+                    override fun onDone(utteranceId: String?) {
+                        Log.d(LOG_ID, "onDone called for utteranceId=$utteranceId")
+                        error.set(false)
+                        created.set(true)
+                    }
+                    override fun onError(utteranceId: String?) {
+                        Log.d(LOG_ID, "onError called for utteranceId=$utteranceId")
+                        error.set(true)
+                        created.set(true)
+                    }
+                })
+                if(result == TextToSpeech.SUCCESS){
+                    val tempFile = kotlin.io.path.createTempFile(prefix = "gdh_tts", suffix = ".wav")
+                    textToSpeech!!.synthesizeToFile(text, null, tempFile.toFile(), "createFile")
+                    var count = 0
+                    while(!created.get() && count++ < 100) {
+                        Thread.sleep(50)
+                    }
+                    if(error.get()) {
+                        Log.d(LOG_ID, "getAsFile error")
+                        tempFile.toFile().delete()
+                        return null
+                    }
+                    Log.d(LOG_ID, "file created: ${tempFile.fileName}")
+                    return tempFile.toFile()
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "getAsFile exception: " + exc.toString())
+        }
+        return null
     }
 }
 

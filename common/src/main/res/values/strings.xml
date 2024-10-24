@@ -670,5 +670,13 @@
     <string name="pref_source_diabox_info_summary">Open Integration and enable \"Share data with GWatch\"\nRemark: the DiaBox broadcast only contains the glucose value and no more information like trend!</string>
     <string name="pref_source_dexcom_byoda_not_working_info_summary">Remark: the AAPS broadcast from BYODA doesn\'t seem to work with other apps. \nPlease use the xDrip+ broadcast in BYODA.</string>
     <string name="gda_help_aa_summary">Introduction to enable GDA on Android Auto</string>
+    <string name="pref_aa_media_player_speak_values">Speak value</string>
+    <string name="pref_aa_media_player_speak_values_on_summary">Speak current value after pressing on play button. This will need TextToSpeech is available!</string>
+    <string name="pref_aa_media_player_speak_values_off_summary">Empty sound is played to bring media player in front of the split screen.</string>
+    <string name="pref_aa_media_player_request_audio_focus">Request Audio Focus</string>
+    <string name="pref_aa_media_player_request_audio_focus_on_summary">Audio focus will requested while speaking. This will lower the volume of the other music currently played. This may not work with each other app.</string>
+    <string name="pref_aa_media_player_request_audio_focus_off_summary">No audio focus will be requested, so will played next to the current music. If radio is on, you may not hear anything.</string>
+    <string name="pref_aa_media_player_always_speak">Speak new value</string>
+    <string name="pref_aa_media_player_always_speak_summary">New value will be spoken automatically.</string>
 
 </resources>

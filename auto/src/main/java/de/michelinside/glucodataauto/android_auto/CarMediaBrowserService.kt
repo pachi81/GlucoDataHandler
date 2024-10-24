@@ -4,6 +4,8 @@ import de.michelinside.glucodataauto.R
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
+import android.media.AudioFocusRequest
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.session.PlaybackState
 import android.net.Uri
@@ -27,7 +29,12 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
+import android.media.AudioAttributes
+import android.support.v4.media.session.MediaControllerCompat
+import java.io.File
 import de.michelinside.glucodatahandler.common.R as CR
+lateinit var audioManager: AudioManager
 
 
 class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -37,8 +44,11 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     private val MEDIA_NOTIFICATION_TOGGLE_ID = "toggle_notification"
     private lateinit var  sharedPref: SharedPreferences
     private lateinit var session: MediaSessionCompat
+    private lateinit var mediaController: MediaControllerCompat
     private val player = MediaPlayer()
     private var curMediaItem = MEDIA_GLUCOSE_ID
+    private var file: File? = null
+    private var create = true
 
     companion object {
         var active = false
@@ -53,8 +63,35 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             GlucoDataServiceAuto.start(this)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
+            audioManager = this.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            TextToSpeechUtils.initTextToSpeech(this)
 
             session = MediaSessionCompat(this, "MyMusicService")
+            val audioFocusTransientRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
+                .setOnAudioFocusChangeListener { focusChange ->
+                    Log.i(LOG_ID, "Audio focus change: $focusChange")
+                    when (focusChange) {
+                        AudioManager.AUDIOFOCUS_GAIN -> {
+                            session.isActive = true
+                            // Start or resume playback
+                        }
+                        AudioManager.AUDIOFOCUS_LOSS -> {
+                            session.isActive = false
+                            // Stop playback
+                        }
+                        // Handle other focus changes as needed
+                    }
+                }
+                .setAudioAttributes(
+                    AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .build()
+                )
+                .build()
+
+            var curAudioFocus: AudioFocusRequest? = null
+
             // Callbacks to handle events from the user (play, pause, search)
             session.setCallback(object : MediaSessionCompat.Callback() {
                 override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {
@@ -64,17 +101,39 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 }
 
                 override fun onPlay() {
-                    Log.i(LOG_ID, "onPlay called for $curMediaItem")
+                    Log.i(LOG_ID, "onPlay called for $curMediaItem - create: $create")
                     try {
                         if(curMediaItem == MEDIA_GLUCOSE_ID) {
+                            onStop()
                             // Current song is ready, but paused, so start playing the music.
+                            var uri: String? = null
+                            var requestAudioFocus = false
+                            if(!create && sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_VALUES, false)) {
+                                file = TextToSpeechUtils.getAsFile(ReceiveData.getAsText(applicationContext, false, false))
+                                if(file != null) {
+                                    uri = file!!.absolutePath
+                                    requestAudioFocus = true
+                                }
+                            }
+                            if(uri.isNullOrEmpty()) {
+                                uri = "android.resource://" + applicationContext.packageName + "/" + CR.raw.silence
+                                requestAudioFocus = false
+                            }
+                            Log.d(LOG_ID, "onPlay uri: $uri")
                             player.reset()
-                            val uri =
-                                "android.resource://" + applicationContext.packageName + "/" + CR.raw.silence
                             player.setDataSource(applicationContext, Uri.parse(uri))
+                            player.prepare()
                             player.setOnCompletionListener {
                                 Log.d(LOG_ID, "setOnCompletionListener called")
                                 onStop()
+                            }
+                            if(requestAudioFocus && sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_REQUEST_AUDIO_FOCUS, false)) {
+                                if(audioManager.requestAudioFocus(audioFocusTransientRequest) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                                    Log.d(LOG_ID, "requestAudioFocus transient")
+                                    curAudioFocus = audioFocusTransientRequest
+                                } else {
+                                    Log.w(LOG_ID, "requestAudioFocus transient failed")
+                                }
                             }
                             player.start()
                             // Update the UI to show we are playing.
@@ -97,7 +156,17 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                         if(player.isPlaying) {
                             player.stop()
                         }
+                        if(file != null) {
+                            Log.d(LOG_ID, "delete file ${file!!.absolutePath}")
+                            file?.delete()
+                            file = null
+                        }
                         session.setPlaybackState(buildState(PlaybackState.STATE_STOPPED))
+                        if(curAudioFocus!=null) {
+                            Log.d(LOG_ID, "abandonAudioFocusRequest")
+                            audioManager.abandonAudioFocusRequest(curAudioFocus!!)
+                            curAudioFocus = null
+                        }
                     } catch (exc: Exception) {
                         Log.e(LOG_ID, "onStop exception: " + exc.message.toString() )
                     }
@@ -105,6 +174,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             })
 
             sessionToken = session.sessionToken
+            mediaController = MediaControllerCompat(this, session.sessionToken)
 
             InternalNotifier.addNotifier(this, this, mutableSetOf(
                 NotifySource.BROADCAST,
@@ -124,6 +194,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
             session.release()
             GlucoDataServiceAuto.stop(this)
+            TextToSpeechUtils.destroyTextToSpeech()
             super.onDestroy()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )
@@ -151,6 +222,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         try {
             Log.d(LOG_ID, "onLoadChildren for parent: " + parentId)
             if (MEDIA_ROOT_ID == parentId) {
+                create = false
                 val items = mutableListOf(createMediaItem())
                 if (Channels.notificationChannelActive(this, ChannelType.ANDROID_AUTO)) {
                     items.add(createToggleItem())
@@ -204,19 +276,23 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     }
 
     fun setItem() {
-        Log.d(LOG_ID, "set current media: $curMediaItem")
-        when(curMediaItem) {
-            MEDIA_GLUCOSE_ID -> {
-                setGlucose()
-            }
-            MEDIA_NOTIFICATION_TOGGLE_ID -> {
-                curMediaItem = MEDIA_GLUCOSE_ID
-                Log.d(LOG_ID, "Toggle notification")
-                with(sharedPref.edit()) {
-                    putBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, !CarNotification.enable_notification)
-                    apply()
+        try {
+            Log.d(LOG_ID, "set current media: $curMediaItem")
+            when(curMediaItem) {
+                MEDIA_GLUCOSE_ID -> {
+                    setGlucose()
+                }
+                MEDIA_NOTIFICATION_TOGGLE_ID -> {
+                    curMediaItem = MEDIA_GLUCOSE_ID
+                    Log.d(LOG_ID, "Toggle notification")
+                    with(sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, !CarNotification.enable_notification)
+                        apply()
+                    }
                 }
             }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "setItem exception: " + exc.message.toString() )
         }
     }
 
@@ -237,6 +313,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                     .putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, getIcon(400)!!)
                     .build()
             )
+            if(sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, false))
+                mediaController.transportControls.play()
         } else {
             session.setPlaybackState(buildState(PlaybackState.STATE_NONE))
         }

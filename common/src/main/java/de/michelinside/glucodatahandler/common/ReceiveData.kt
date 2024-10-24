@@ -139,7 +139,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         }
     }
 
-    fun getAsText(context: Context, withIobCob: Boolean = false): String {
+    fun getAsText(context: Context, withIobCob: Boolean = false, withZeroTime: Boolean = true): String {
         if(isObsoleteShort())
             return context.getString(R.string.no_new_value, getElapsedTimeMinute())
         var text = getGlucoseAsString()
@@ -147,7 +147,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             text += ", " + getRateAsText(context)
         if(!delta.isNaN())
             text += ", Δ " + getDeltaAsString()
-        text += ", " + getElapsedRelativeTimeAsString(context, true)
+        if(withZeroTime || getElapsedTimeMinute() > 0)
+            text += ", " + getElapsedRelativeTimeAsString(context, true)
         if(withIobCob && !isIobCobObsolete()) {
             if(!iob.isNaN())
                 text += ", " + context.getString(R.string.info_label_iob) + " " + getIobAsString()

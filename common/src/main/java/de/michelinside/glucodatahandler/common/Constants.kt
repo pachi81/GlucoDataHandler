@@ -248,4 +248,7 @@ object Constants {
     const val AA_MEDIA_ICON_STYLE_GLUCOSE_TREND = "glucose_trend"
     const val AA_MEDIA_ICON_STYLE_GLUCOSE = "glucose"
     const val SHARED_PREF_FOREGROUND_SERVICE = "foreground_service"
+    const val AA_MEDIA_PLAYER_SPEAK_VALUES = "aa_media_player_speak_values"
+    const val AA_MEDIA_PLAYER_REQUEST_AUDIO_FOCUS = "aa_media_player_request_audio_focus"
+    const val AA_MEDIA_PLAYER_SPEAK_NEW_VALUE = "aa_media_player_speak_new_value"
 }
