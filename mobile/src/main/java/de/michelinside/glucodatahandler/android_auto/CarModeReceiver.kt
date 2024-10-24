@@ -36,6 +36,10 @@ object CarModeReceiver {
     class GDAReceiver: BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             Log.d(LOG_ID, "onReceive called for intent " + intent + ": " + Utils.dumpBundle(intent.extras))
+            if(!PackageUtils.isGlucoDataAutoAvailable(context)) {
+                Log.i(LOG_ID, "GlucoDataAuto not available, but package received -> update packages")
+                PackageUtils.updatePackages(context)
+            }
             gda_enabled = intent.getBooleanExtra(Constants.GLUCODATAAUTO_STATE_EXTRA, false)
             if(!car_connected && gda_enabled) {
                 InternalNotifier.notify(context, NotifySource.CAR_CONNECTION, null)
