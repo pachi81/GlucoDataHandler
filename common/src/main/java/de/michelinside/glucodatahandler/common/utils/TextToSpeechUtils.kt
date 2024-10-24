@@ -32,9 +32,9 @@ object TextToSpeechUtils {
     }
 
     fun initTextToSpeech(context: Context) {
-        Log.d(LOG_ID, "initTextToSpeech called")
         try {
             if(textToSpeech == null) {
+                Log.i(LOG_ID, "initTextToSpeech called")
                 textToSpeech = TextToSpeech(context) { status ->
                     Log.d(LOG_ID, "initTextToSpeech status=$status")
                     if (status == TextToSpeech.SUCCESS) {

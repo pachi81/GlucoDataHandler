@@ -32,6 +32,8 @@ import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import android.media.AudioAttributes
 import android.support.v4.media.session.MediaControllerCompat
+import de.michelinside.glucodatahandler.common.notification.AlarmType
+import de.michelinside.glucodatahandler.common.utils.Utils
 import java.io.File
 import de.michelinside.glucodatahandler.common.R as CR
 lateinit var audioManager: AudioManager
@@ -49,6 +51,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     private var curMediaItem = MEDIA_GLUCOSE_ID
     private var file: File? = null
     private var create = true
+    private var last_speak_time = 0L
 
     companion object {
         var active = false
@@ -64,7 +67,6 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
             audioManager = this.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-            TextToSpeechUtils.initTextToSpeech(this)
 
             session = MediaSessionCompat(this, "MyMusicService")
             val audioFocusTransientRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
@@ -127,7 +129,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                                 Log.d(LOG_ID, "setOnCompletionListener called")
                                 onStop()
                             }
-                            if(requestAudioFocus && sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_REQUEST_AUDIO_FOCUS, false)) {
+                            if(requestAudioFocus && sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_REQUEST_AUDIO_FOCUS, true)) {
                                 if(audioManager.requestAudioFocus(audioFocusTransientRequest) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                                     Log.d(LOG_ID, "requestAudioFocus transient")
                                     curAudioFocus = audioFocusTransientRequest
@@ -175,12 +177,13 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
 
             sessionToken = session.sessionToken
             mediaController = MediaControllerCompat(this, session.sessionToken)
-
+            TextToSpeechUtils.initTextToSpeech(this)
             InternalNotifier.addNotifier(this, this, mutableSetOf(
                 NotifySource.BROADCAST,
                 NotifySource.MESSAGECLIENT,
                 NotifySource.SETTINGS,
                 NotifySource.TIME_VALUE))
+
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -194,7 +197,6 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
             session.release()
             GlucoDataServiceAuto.stop(this)
-            TextToSpeechUtils.destroyTextToSpeech()
             super.onDestroy()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )
@@ -313,11 +315,35 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                     .putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, getIcon(400)!!)
                     .build()
             )
-            if(sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, false))
+            if(checkSpeakNewValue()) {
+                Log.i(LOG_ID, "speak new value")
                 mediaController.transportControls.play()
+                last_speak_time = ReceiveData.time
+            }
         } else {
             session.setPlaybackState(buildState(PlaybackState.STATE_NONE))
         }
+    }
+
+    private fun getTimeDiffMinute(): Long {
+        return Utils.round((ReceiveData.time-last_speak_time).toFloat()/60000, 0).toLong()
+    }
+
+    private fun checkSpeakNewValue(): Boolean {
+        if(!sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_VALUES, false))
+            return false
+        if(!sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, false))
+            return false
+        if(ReceiveData.getAlarmType() == AlarmType.VERY_LOW)
+            return true
+        if(sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_ALARM_ONLY, true) && !ReceiveData.forceAlarm)
+            return false
+        val interval = sharedPref.getInt(Constants.AA_MEDIA_PLAYER_SPEAK_INTERVAL, 1).toLong()
+        if (interval == 1L)
+            return true
+        if (interval > 1L && getTimeDiffMinute() >= interval && ReceiveData.getElapsedTimeMinute() == 0L)
+            return true
+        return false
     }
 
     private fun createMediaItem(): MediaBrowserCompat.MediaItem {

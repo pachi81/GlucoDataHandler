@@ -179,6 +179,15 @@
         <receiver android:name="de.michelinside.glucodatahandler.common.tasks.SourceAlarmReceiver" />
         <receiver android:name="de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver" />
         <receiver android:name="de.michelinside.glucodatahandler.common.notification.AlarmSnoozeEndReceiver" />
+        <receiver
+            android:name="de.michelinside.glucodatahandler.common.utils.LocaleChangeNotifier"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name= "android.intent.action.LOCALE_CHANGED" />
+            </intent-filter>
+        </receiver>
 
         <service
             android:name=".android_auto.CarMediaBrowserService"

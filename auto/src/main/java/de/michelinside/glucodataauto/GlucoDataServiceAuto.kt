@@ -26,6 +26,7 @@ import de.michelinside.glucodatahandler.common.tasks.BackgroundWorker
 import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 
 class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -200,6 +201,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
             GlucoDataService.context = applicationContext
             ReceiveData.initData(applicationContext)
             CarNotification.initNotification(this)
+            TextToSpeechUtils.initTextToSpeech(this)
             val sharedPref = getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
             val isForeground = (if(intent != null) intent.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, false) else false) || sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
@@ -227,6 +229,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
         Log.v(LOG_ID, "onDestroy called")
         val sharedPref = getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         sharedPref.unregisterOnSharedPreferenceChangeListener(this)
+        TextToSpeechUtils.destroyTextToSpeech()
         super.onDestroy()
     }
 

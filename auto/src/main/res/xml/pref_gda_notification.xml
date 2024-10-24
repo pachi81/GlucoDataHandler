@@ -18,7 +18,7 @@
         app:showSeekBarValue="true"
         app:seekBarIncrement="1"
         app:min="1"
-        android:max="60"
+        android:max="30"
         android:key="car_notification_interval_num"
         android:title="@string/pref_car_notification_interval"
         android:summary="@string/pref_car_notification_interval_summary"

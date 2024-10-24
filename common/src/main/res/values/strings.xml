@@ -678,5 +678,6 @@
     <string name="pref_aa_media_player_request_audio_focus_off_summary">No audio focus will be requested, so will played next to the current music. If radio is on, you may not hear anything.</string>
     <string name="pref_aa_media_player_always_speak">Speak new value</string>
     <string name="pref_aa_media_player_always_speak_summary">New value will be spoken automatically.</string>
+    <string name="tts_test_summary">Press here to test Text To Speech on phone.</string>
 
 </resources>
