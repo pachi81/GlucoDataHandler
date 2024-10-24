@@ -10,7 +10,7 @@ class GlucoDataReceiver : GlucoseDataReceiver() {
     private val LOG_ID = "GDH.AA.GlucoDataReceiver"
     override fun onReceive(context: Context, intent: Intent) {
         try {
-            Log.v(LOG_ID, intent.action + " receveived: " + intent.extras.toString())
+            Log.v(LOG_ID, intent.action + " received: " + intent.extras.toString())
             GlucoDataServiceAuto.init(context)
             super.onReceive(context, intent)
         } catch (exc: Exception) {

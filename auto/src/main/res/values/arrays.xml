@@ -70,9 +70,11 @@
     <array name="pref_aa_media_player_icon_labels">
         <item>@string/short_value_arrow</item>
         <item>@string/pref_status_bar_icon_trend</item>
+        <item>@string/pref_status_bar_icon_glucose</item>
     </array>
     <array name="pref_aa_media_player_icon_values">
         <item>"glucose_trend"</item>
         <item>"trend"</item>
+        <item>"glucose"</item>
     </array>
 </resources>

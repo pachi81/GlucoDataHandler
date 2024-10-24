@@ -30,11 +30,9 @@ import androidx.preference.PreferenceManager
 import de.michelinside.glucodataauto.preferences.SettingsActivity
 import de.michelinside.glucodataauto.preferences.SettingsFragmentClass
 import de.michelinside.glucodatahandler.common.Constants
-import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
-import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notification.ChannelType
@@ -46,10 +44,9 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.GitHubVersionChecker
 import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.common.ui.Dialogs
 import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
 import de.michelinside.glucodatahandler.common.R as CR
 
 class MainActivity : AppCompatActivity(), NotifierInterface {
@@ -270,12 +267,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     startActivity(intent)
                     return true
                 }
-                R.id.action_gda_help -> {
-                    val intent = Intent(this, SettingsActivity::class.java)
-                    intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.HELP_FRAGMENT.value)
-                    startActivity(intent)
-                    return true
-                }
                 R.id.action_help -> {
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
@@ -299,8 +290,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     startActivity(mailIntent)
                     return true
                 }
-                R.id.action_save_mobile_logs -> {
-                    SaveMobileLogs()
+                R.id.action_facebook -> {
+                    val browserIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(resources.getText(CR.string.facebook_gdh_group_url).toString())
+                    )
+                    startActivity(browserIntent)
                     return true
                 }
                 R.id.action_notification_toggle -> {
@@ -343,7 +338,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 txtBgValue.paintFlags = 0
             }
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(withShadow = true))
+            viewIcon.contentDescription = ReceiveData.getRateAsText(this)
             timeText.text = "🕒 ${ReceiveData.getElapsedRelativeTimeAsString(this)}"
+            timeText.contentDescription = ReceiveData.getElapsedRelativeTimeAsString(this, true)
             deltaText.text = "Δ ${ReceiveData.getDeltaAsString()}"
 
             if(ReceiveData.time == 0L) {
@@ -372,15 +369,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableConnections.addView(createRow(
                 SourceStateData.lastSource.resId,
                 SourceStateData.getStateMessage(this)))
-
-        if (WearPhoneConnection.nodesConnected) {
-            val onClickListener = View.OnClickListener {
-                GlucoDataService.checkForConnectedNodes(true)
-            }
-            WearPhoneConnection.getNodeBatterLevels().forEach { name, level ->
-                tableConnections.addView(createRow(name, if (level > 0) "$level%" else "?%", onClickListener))
-            }
-        }
         tableConnections.addView(createRow(CR.string.pref_cat_android_auto, if (GlucoDataServiceAuto.connected) resources.getString(CR.string.connected_label) else resources.getString(CR.string.disconnected_label)))
         checkTableVisibility(tableConnections)
     }
@@ -437,8 +425,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateAlarmsTable() {
         tableAlarms.removeViews(1, maxOf(0, tableAlarms.childCount - 1))
-        if(ReceiveData.time > 0 && ReceiveData.getAlarmType() != AlarmType.OK) {
-            tableAlarms.addView(createRow(CR.string.info_label_alarm, resources.getString(ReceiveData.getAlarmType().resId) + (if (ReceiveData.forceAlarm) " ⚠" else "" )))
+        if(ReceiveData.time > 0) {
+            val alarmType = ReceiveData.getAlarmType()
+            if (alarmType != AlarmType.OK)
+                tableAlarms.addView(createRow(CR.string.info_label_alarm, resources.getString(alarmType.resId)))
+            val deltaAlarmType = ReceiveData.getDeltaAlarmType()
+            if (deltaAlarmType != AlarmType.NONE)
+                tableAlarms.addView(createRow(CR.string.info_label_alarm, resources.getString(deltaAlarmType.resId)))
         }
         if (AlarmHandler.isSnoozeActive)
             tableAlarms.addView(createRow(CR.string.snooze, AlarmHandler.snoozeTimestamp))
@@ -504,25 +497,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.v(LOG_ID, "new intent received")
         update()
-    }
-
-    private fun SaveMobileLogs() {
-        try {
-            Log.v(LOG_ID, "Save mobile logs called")
-            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-                addCategory(Intent.CATEGORY_OPENABLE)
-                type = "text/plain"
-                val currentDateandTime = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(
-                    Date()
-                )
-                val fileName = "GDA_" + currentDateandTime + ".txt"
-                putExtra(Intent.EXTRA_TITLE, fileName)
-            }
-            startActivityForResult(intent, CREATE_FILE)
-
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "Saving mobile logs exception: " + exc.message.toString() )
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

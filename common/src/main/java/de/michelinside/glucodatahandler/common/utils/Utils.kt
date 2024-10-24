@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler.common.utils
 
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
@@ -11,13 +12,23 @@ import android.os.Parcel
 import android.provider.Settings
 import android.util.Log
 import android.util.TypedValue
+import android.view.accessibility.AccessibilityManager
 import android.widget.Toast
+import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
+import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
 import java.io.OutputStream
 import java.math.RoundingMode
 import java.security.MessageDigest
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
@@ -28,6 +39,13 @@ object Utils {
         if (value.isNaN())
             return value
         return value.toBigDecimal().setScale( scale, roundingMode).toFloat()
+    }
+
+    // check for valid values
+    fun getCobValue(value: Float): Float {
+        if (value < 0)
+            return Float.NaN
+        return value
     }
 
     fun rangeValue(value: Float, min: Float, max: Float): Float {
@@ -170,7 +188,7 @@ object Utils {
                         return result
                     }
                 } catch (e: Exception) {
-                    Log.i(LOG_ID, "isHighTextContrastEnabled invoked with an exception" + e.message)
+                    Log.i(LOG_ID, "isHighTextContrastEnabled invoked with an exception" + entry.message)
                 }
             }
         }
@@ -263,6 +281,163 @@ object Utils {
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Saving logs exception: " + exc.message.toString() )
         }
+    }
+
+    fun saveSettings(context: Context, uri: Uri) {
+        try {
+            Thread {
+                context.contentResolver.openFileDescriptor(uri, "w")?.use {
+                    FileOutputStream(it.fileDescriptor).use { os ->
+                        saveSettings(os, context)
+                    }
+                }
+            }.start()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Saving logs to file exception: " + exc.message.toString() )
+        }
+    }
+
+    private fun saveSettings(outputStream: OutputStream, context: Context) {
+        var success = false
+        try {
+            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            val oos = ObjectOutputStream(outputStream)
+            oos.writeObject(sharedPref.getAll())
+            oos.close()
+            success = true
+            Log.i(LOG_ID, "Settings saved")
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Saving settings exception: " + exc.message.toString() )
+        }
+        val text = if (success) {
+            GlucoDataService.context!!.resources.getText(R.string.settings_save_succeeded)
+        } else {
+            GlucoDataService.context!!.resources.getText(R.string.settings_save_failed)
+        }
+        Handler(GlucoDataService.context!!.mainLooper).post {
+            Toast.makeText(GlucoDataService.context!!, text, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun readSettings(context: Context, uri: Uri) {
+        try {
+            Thread {
+                context.contentResolver.openFileDescriptor(uri, "r")?.use {
+                    FileInputStream(it.fileDescriptor).use { iss ->
+                        readSettings(iss, context)
+                    }
+                }
+            }.start()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Saving logs to file exception: " + exc.message.toString() )
+        }
+    }
+
+    private fun readSettings(inputStream: InputStream, context: Context) {
+        var success = false
+        try {
+            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            val ois = ObjectInputStream(inputStream)
+            val map = ois.readObject() as HashMap<*, *>
+            with(sharedPref.edit()) {
+                map.forEach { entry ->
+                    putString(entry.key.toString(), entry.value.toString())
+                    when (entry.value) {
+                        is Boolean -> putBoolean(entry.key.toString(), entry.value as Boolean)
+                        is String -> putString(entry.key.toString(), entry.value as String)
+                        is Int -> putInt(entry.key.toString(), entry.value as Int)
+                        is Float -> putFloat(entry.key.toString(), entry.value as Float)
+                        is Long -> putLong(entry.key.toString(), entry.value as Long)
+                        is Set<*> -> putStringSet(entry.key.toString(), entry.value as Set<String>)
+                        else -> throw IllegalArgumentException(
+                            ("Type " + (entry.value?.javaClass?.name ?: "unknown") + " is unknown")
+                        )
+                    }
+                }
+                apply()
+            }
+            success = true
+            Log.i(LOG_ID, "Settings red")
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Reading settings exception: " + exc.message.toString() )
+        }
+        val text = if (success) {
+            GlucoDataService.context!!.resources.getText(R.string.settings_read_succeeded)
+        } else {
+            GlucoDataService.context!!.resources.getText(R.string.settings_read_failed)
+        }
+        Handler(GlucoDataService.context!!.mainLooper).post {
+            Toast.makeText(GlucoDataService.context!!, text, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun timeInDayFilter(currentDateTime: LocalDateTime, startTime: LocalTime, weekDayFilter: MutableSet<String>?): Boolean {
+        try {
+            if(weekDayFilter == null || weekDayFilter.size == 7)
+                return true
+            if (weekDayFilter.isEmpty())
+                return false
+            val currentTime = currentDateTime.toLocalTime()
+            val timeDiff = if(currentTime.isBefore(startTime)) startTime.until(currentTime, ChronoUnit.MINUTES) + 1440 else startTime.until(currentTime, ChronoUnit.MINUTES)
+            val startDateTime = currentDateTime.minusMinutes(timeDiff)
+            if(weekDayFilter.contains(startDateTime.dayOfWeek.value.toString()))
+                return true
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "timeInDayFilter exception: " + exc.message.toString() )
+        }
+        return false
+    }
+
+    private val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+
+    fun isValidTime(time: String?): Boolean {
+        if (time.isNullOrEmpty())
+            return false
+        try {
+            LocalTime.parse(time, timeFormatter)
+            return true
+        } catch(_: Exception) {
+        }
+        return false
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    fun timeBetweenTimes(currentTime: LocalDateTime, startTime: String, endTime: String, weekDayFilter: MutableSet<String>? = null): Boolean {
+        try {
+            if (!isValidTime(startTime) || !isValidTime(endTime))
+                return false
+            val timeCur = currentTime.toLocalTime()
+            val timeStart = LocalTime.parse(startTime, timeFormatter)
+            val timeEnd = LocalTime.parse(endTime, timeFormatter)
+
+            if (timeCur == null || timeStart == null || timeEnd == null)
+                return false
+
+            if (timeCur == timeStart || timeCur == timeEnd)
+                return timeInDayFilter(currentTime, timeStart, weekDayFilter)
+
+            if (timeStart.isAfter(timeEnd)) {  // night shift
+                if (timeCur.isAfter(timeStart) || timeCur.isBefore(timeEnd))
+                    return timeInDayFilter(currentTime, timeStart, weekDayFilter)
+            } else {
+                if (timeCur.isAfter(timeStart) && timeCur.isBefore(timeEnd))
+                    return timeInDayFilter(currentTime, timeStart, weekDayFilter)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "timeBetweenTimes exception: " + exc.message.toString() )
+        }
+        return false
+    }
+
+    fun Context.isScreenReaderOn():Boolean{
+        val am = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+        if (am != null && am.isEnabled) {
+            val serviceInfoList =
+                am.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_SPOKEN)
+            if (serviceInfoList.isNotEmpty())
+                return true
+        }
+        return false
     }
 
 }

@@ -42,7 +42,7 @@ class ElapsedTimeTask : BackgroundTask() {
 
     override fun active(elapsetTimeMinute: Long): Boolean {
         Log.v(LOG_ID, "Check active for elapsed time $elapsetTimeMinute min")
-        return isActive && elapsetTimeMinute <= 60
+        return isActive && (InternalNotifier.hasTimeNotifier || elapsetTimeMinute <= 60)
     }
 
     override fun checkPreferenceChanged(sharedPreferences: SharedPreferences, key: String?, context: Context): Boolean {

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+        <PreferenceCategory
+            android:title="@string/menu_settings"
+            app:iconSpaceReserved="false">
+                <Preference
+                    android:key="export_settings"
+                    android:title="@string/pref_export_settings"
+                    android:summary="@string/pref_export_settings_summary"
+                    app:iconSpaceReserved="false" />
+                <Preference
+                    android:key="import_settings"
+                    android:title="@string/pref_import_settings"
+                    android:summary="@string/pref_import_settings_summary"
+                    app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+        <PreferenceCategory
+            android:title="@string/menu_save_logs"
+            app:iconSpaceReserved="false">
+                <Preference
+                    android:key="save_mobile_logs"
+                    android:title="@string/menu_save_mobile_logs"
+                    android:summary="@string/menu_save_mobile_logs_summary"
+                    app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+</PreferenceScreen>

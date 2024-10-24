@@ -10,6 +10,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
@@ -34,7 +35,8 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 NotifySource.IOB_COB_CHANGE,
                 NotifySource.MESSAGECLIENT,
                 NotifySource.OBSOLETE_VALUE,
-                NotifySource.ALARM_TRIGGER
+                NotifySource.ALARM_TRIGGER,
+                NotifySource.DELTA_ALARM_TRIGGER
             )
         )
     }
@@ -91,7 +93,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                     }
                 }
 
-                // create default tap actions as it was before
+                // create default tap actions
                 // notifications
                 if(!sharedPrefs.contains(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION)) {
                     val curApp = context.packageName
@@ -109,6 +111,24 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                         apply()
                     }
                 }
+                // widgets
+                if(!sharedPrefs.contains(Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION)) {
+                    val curApp = context.packageName
+                    Log.i(LOG_ID, "Setting default tap action for floating widget to $curApp")
+                    with(sharedPrefs.edit()) {
+                        putString(Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION, curApp)
+                        apply()
+                    }
+                }
+                if(!sharedPrefs.contains(Constants.SHARED_PREF_WIDGET_TAP_ACTION)) {
+                    val curApp = context.packageName
+                    Log.i(LOG_ID, "Setting default tap action for widget to $curApp")
+                    with(sharedPrefs.edit()) {
+                        putString(Constants.SHARED_PREF_WIDGET_TAP_ACTION, curApp)
+                        apply()
+                    }
+                }
+
                 // full screen alarm notification
                 if(!sharedPrefs.contains(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED)) {
                     if (AlarmNotification.hasFullscreenPermission(context)) {
@@ -136,7 +156,8 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 NotifySource.MESSAGECLIENT,
                 NotifySource.OBSOLETE_VALUE, // to trigger re-start for the case of stopped by the system
                 NotifySource.CAR_CONNECTION,
-                NotifySource.CAPILITY_INFO)
+                NotifySource.CAPILITY_INFO,
+                NotifySource.BATTERY_LEVEL)  // used for watchdog-check
             InternalNotifier.addNotifier(this, this, filter)
             floatingWidget = FloatingWidget(this)
             PermanentNotification.create(applicationContext)
@@ -169,7 +190,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         return PermanentNotification.getNotification(
             !sharedPref!!.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false),
             Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON,
-            true,
+            ChannelType.MOBILE_FOREGROUND,
             sharedPref!!.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, true)
         )
     }
@@ -249,7 +270,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_XDRIP_BROADCAST, false)) {
             val xDripExtras = XDripBroadcastReceiver.createExtras(context)
             if (xDripExtras != null) {
-                val intent = Intent(Constants.XDRIP_BROADCAST_ACTION)
+                val intent = Intent(Intents.XDRIP_BROADCAST_ACTION)
                 intent.putExtras(xDripExtras)
                 sendBroadcast(intent, Constants.SHARED_PREF_XDRIP_BROADCAST_RECEIVERS, context, sharedPref)
             }

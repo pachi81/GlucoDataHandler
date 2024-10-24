@@ -36,6 +36,10 @@ object CarModeReceiver {
     class GDAReceiver: BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             Log.d(LOG_ID, "onReceive called for intent " + intent + ": " + Utils.dumpBundle(intent.extras))
+            if(!PackageUtils.isGlucoDataAutoAvailable(context)) {
+                Log.i(LOG_ID, "GlucoDataAuto not available, but package received -> update packages")
+                PackageUtils.updatePackages(context)
+            }
             gda_enabled = intent.getBooleanExtra(Constants.GLUCODATAAUTO_STATE_EXTRA, false)
             if(!car_connected && gda_enabled) {
                 InternalNotifier.notify(context, NotifySource.CAR_CONNECTION, null)
@@ -109,13 +113,13 @@ object CarModeReceiver {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         if (connected && sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO, true) && PackageUtils.isGlucoDataAutoAvailable(context)) {
             Log.d(LOG_ID, "sendToGlucoDataAuto")
-            val intent = Intent(Constants.GLUCODATA_ACTION)
+            val intent = Intent(Intents.GLUCODATA_ACTION)
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
             if(withSettings && sharedPref.getBoolean(Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO, true)) {
-                val settings = ReceiveData.getSettingsBundle()
+                val settings = GlucoDataService.getSettings()
                 settings.putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime)
                 extras.putBundle(Constants.SETTINGS_BUNDLE, settings)
-                extras.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings(false))
+                extras.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings(true))
             }
             intent.putExtras(extras)
             intent.setPackage(Constants.PACKAGE_GLUCODATAAUTO)

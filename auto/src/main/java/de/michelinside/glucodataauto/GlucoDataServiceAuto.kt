@@ -4,6 +4,7 @@ import android.app.Notification
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
@@ -25,8 +26,9 @@ import de.michelinside.glucodatahandler.common.tasks.BackgroundWorker
 import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 
-class GlucoDataServiceAuto: Service() {
+class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     companion object {
         private const val LOG_ID = "GDH.AA.GlucoDataServiceAuto"
@@ -120,7 +122,7 @@ class GlucoDataServiceAuto: Service() {
             try {
                 Log.i(LOG_ID, "starting datasync - count=$dataSyncCount")
                 if (dataSyncCount == 0) {
-                    GlucoDataService.registerSourceReceiver(context)
+                    GlucoDataService.updateSourceReceiver(context)
                     TimeTaskService.run(context)
                     SourceTaskService.run(context)
                     sendStateBroadcast(context, true)
@@ -199,7 +201,9 @@ class GlucoDataServiceAuto: Service() {
             GlucoDataService.context = applicationContext
             ReceiveData.initData(applicationContext)
             CarNotification.initNotification(this)
+            TextToSpeechUtils.initTextToSpeech(this)
             val sharedPref = getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            sharedPref.registerOnSharedPreferenceChangeListener(this)
             val isForeground = (if(intent != null) intent.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, false) else false) || sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
             if (isForeground && !isForegroundService) {
                 Log.i(LOG_ID, "Starting service in foreground!")
@@ -223,6 +227,9 @@ class GlucoDataServiceAuto: Service() {
 
     override fun onDestroy() {
         Log.v(LOG_ID, "onDestroy called")
+        val sharedPref = getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        sharedPref.unregisterOnSharedPreferenceChangeListener(this)
+        TextToSpeechUtils.destroyTextToSpeech()
         super.onDestroy()
     }
 
@@ -234,7 +241,7 @@ class GlucoDataServiceAuto: Service() {
     private fun getNotification(): Notification {
         Channels.createNotificationChannel(this, ChannelType.ANDROID_AUTO_FOREGROUND)
 
-        val pendingIntent = PackageUtils.getAppIntent(this, MainActivity::class.java, 11, false)
+        val pendingIntent = PackageUtils.getAppIntent(this, MainActivity::class.java, 11)
 
         return Notification.Builder(this, ChannelType.ANDROID_AUTO_FOREGROUND.channelId)
             .setContentTitle(getString(de.michelinside.glucodatahandler.common.R.string.gda_foreground_info))
@@ -246,6 +253,25 @@ class GlucoDataServiceAuto: Service() {
             .setCategory(Notification.CATEGORY_STATUS)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
             .build()
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        try {
+            Log.d(LOG_ID, "onSharedPreferenceChanged called with key $key")
+            when(key) {
+                Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED,
+                Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED,
+                Constants.SHARED_PREF_SOURCE_AAPS_ENABLED,
+                Constants.SHARED_PREF_SOURCE_BYODA_ENABLED,
+                Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED,
+                Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED -> {
+                    if(dataSyncCount>0)
+                        GlucoDataService.updateSourceReceiver(this, key)
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
+        }
     }
 
 }

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
@@ -27,8 +28,9 @@ open class AAPSReceiver: BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         try {
-            Log.i( LOG_ID,"onReceive called for " + intent.action + ": " + Utils.dumpBundle(intent.extras)
-            )
+            if(!GlucoDataService.isRegistered(this))
+                return
+            Log.i( LOG_ID,"onReceive called for " + intent.action + ": " + Utils.dumpBundle(intent.extras))
             if (intent.extras != null) {
                 val extras = intent.extras!!
                 if (extras.containsKey(BG_VALUE) && extras.containsKey(BG_TIMESTAMP)) {
@@ -63,7 +65,7 @@ open class AAPSReceiver: BroadcastReceiver() {
                             glucoExtras.putFloat(ReceiveData.IOB, Float.NaN)
                         }
                         if(extras.containsKey(COB_VALUE)) {
-                            glucoExtras.putFloat(ReceiveData.COB, extras.getDouble(COB_VALUE, Double.NaN).toFloat())
+                            glucoExtras.putFloat(ReceiveData.COB, Utils.getCobValue(extras.getDouble(COB_VALUE, Double.NaN).toFloat()))
                         } else {
                             glucoExtras.putFloat(ReceiveData.COB, Float.NaN)
                         }

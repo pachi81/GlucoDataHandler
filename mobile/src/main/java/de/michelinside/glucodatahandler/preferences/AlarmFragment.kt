@@ -10,23 +10,28 @@ import android.provider.Settings
 import android.os.Bundle
 import android.util.Log
 import androidx.core.content.ContextCompat
+import androidx.preference.MultiSelectListPreference
 import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
-import de.michelinside.glucodatahandler.Dialogs
+import de.michelinside.glucodatahandler.common.ui.Dialogs
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
+import de.michelinside.glucodatahandler.common.notification.AlarmSetting
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notification.SoundMode
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
+import java.time.DayOfWeek
+import java.time.format.TextStyle
+import java.util.Locale
 
-class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
+class AlarmFragment : SettingsFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener {
     companion object {
         private val LOG_ID = "GDH.AlarmFragment"
         var settingsChanged = false
@@ -58,6 +63,11 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
             if(!AlarmNotification.channelActive(requireContext())) {
                 Log.e(LOG_ID, "Notification disabled!!!")
             }
+
+            val prefWeekdays = findPreference<MultiSelectListPreference>(Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS)
+            prefWeekdays!!.entries = DayOfWeek.entries.map { it.getDisplayName(TextStyle.FULL, Locale.getDefault()) }.toTypedArray()
+            prefWeekdays.entryValues = DayOfWeek.entries.map { it.value.toString() }.toTypedArray()
+            prefWeekdays.values = preferenceManager.sharedPreferences!!.getStringSet(prefWeekdays.key, AlarmSetting.defaultWeekdays)!!
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
         }
@@ -110,13 +120,31 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
                 disableSwitch(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED)
             }
 
+            updateInactiveTime()
+
             updateAlarmCat(Constants.SHARED_PREF_ALARM_VERY_LOW)
             updateAlarmCat(Constants.SHARED_PREF_ALARM_LOW)
             updateAlarmCat(Constants.SHARED_PREF_ALARM_HIGH)
             updateAlarmCat(Constants.SHARED_PREF_ALARM_VERY_HIGH)
             updateAlarmCat(Constants.SHARED_PREF_ALARM_OBSOLETE)
+            updateAlarmCat(Constants.SHARED_PREF_ALARM_RISING_FAST)
+            updateAlarmCat(Constants.SHARED_PREF_ALARM_FALLING_FAST)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.toString())
+        }
+    }
+
+    private fun updateInactiveTime() {
+        val prefWeekdays = findPreference<MultiSelectListPreference>(Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS)
+        prefWeekdays!!.summary = resources.getString(CR.string.alarm_inactive_weekdays_summary) + "\n" + prefWeekdays.values.joinToString(
+            ", "
+        ) { DayOfWeek.of(it.toInt()).getDisplayName(TextStyle.SHORT, Locale.getDefault()) }
+
+        val inactivePref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED)
+        if (inactivePref != null) {
+            val prefStart = findPreference<MyTimeTickerPreference>(Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME)
+            val prefEnd = findPreference<MyTimeTickerPreference>(Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME)
+            inactivePref.isEnabled = Utils.isValidTime(prefStart!!.getTimeString()) && Utils.isValidTime(prefEnd!!.getTimeString()) && prefWeekdays.values.isNotEmpty()
         }
     }
 
@@ -137,12 +165,14 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
     private fun updateAlarmCat(key: String) {
         val pref = findPreference<Preference>(key) ?: return
         val alarmType = AlarmType.fromIndex(pref.extras.getInt("type"))
-        pref.icon = ContextCompat.getDrawable(requireContext(), getAlarmCatIcon(alarmType, key + "_enabled", requireContext()))
+        pref.icon = ContextCompat.getDrawable(requireContext(), getAlarmCatIcon(alarmType, requireContext()))
         pref.summary = getAlarmCatSummary(alarmType)
     }
 
-    private fun getAlarmCatIcon(alarmType: AlarmType, enableKey: String, context: Context): Int {
-        if(!preferenceManager.sharedPreferences!!.getBoolean(enableKey, true)) {
+    private fun getAlarmCatIcon(alarmType: AlarmType, context: Context): Int {
+        if(alarmType.setting == null || !alarmType.setting!!.isActive) {
+            if (alarmType.setting?.isTempInactive == true)
+                return CR.drawable.icon_clock_snooze_com
             return SoundMode.OFF.icon
         }
         return AlarmNotification.getSoundMode(alarmType, context).icon
@@ -155,6 +185,8 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
             AlarmType.HIGH,
             AlarmType.VERY_HIGH -> resources.getString(CR.string.alarm_type_summary, getBorderText(alarmType))
             AlarmType.OBSOLETE -> resources.getString(CR.string.alarm_obsolete_summary, getBorderText(alarmType))
+            AlarmType.RISING_FAST,
+            AlarmType.FALLING_FAST -> getAlarmDeltaSummary(alarmType)
             else -> ""
         }
     }
@@ -165,7 +197,7 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
             AlarmType.LOW -> ReceiveData.targetMin
             AlarmType.HIGH -> ReceiveData.targetMax
             AlarmType.VERY_HIGH -> ReceiveData.high
-            AlarmType.OBSOLETE -> AlarmHandler.obsoleteInterval.toFloat()
+            AlarmType.OBSOLETE -> AlarmType.OBSOLETE.setting!!.intervalMin.toFloat()
             else -> 0F
         }
 
@@ -189,6 +221,21 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
         return "$value ${ReceiveData.getUnit()}"
     }
 
+    private fun getAlarmDeltaSummary(alarmType: AlarmType): String {
+        val resId = if(alarmType == AlarmType.RISING_FAST) CR.string.alarm_rising_fast_summary else CR.string.alarm_falling_fast_summary
+        var unit = " " + ReceiveData.getUnit()
+        val delta = if(ReceiveData.isMmol) GlucoDataUtils.mgToMmol(alarmType.setting!!.delta) else alarmType.setting!!.delta
+        val border = if(ReceiveData.isMmol) GlucoDataUtils.mgToMmol(alarmType.setting!!.deltaBorder) else alarmType.setting!!.deltaBorder
+        val borderString = (if(ReceiveData.isMmol) border.toString() else border.toInt().toString()) + unit
+        if (ReceiveData.use5minDelta) {
+            unit += " " + resources.getString(CR.string.delta_per_5_minute)
+        } else {
+            unit += " " + resources.getString(CR.string.delta_per_minute)
+        }
+        val deltaString = delta.toString() + unit
+        return resources.getString(resId, borderString, deltaString, alarmType.setting!!.deltaCount)
+    }
+
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
         try {
@@ -203,8 +250,11 @@ class AlarmFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPref
                         requestFullScreenPermission(requireContext())
                     }
                 }
+                Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS,
+                Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME,
+                Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME -> updateInactiveTime()
             }
-            if(AlarmHandler.alarmPreferencesToSend.contains(key))
+            if(AlarmHandler.isAlarmSettingToShare(key))
                 settingsChanged = true
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())

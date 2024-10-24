@@ -67,11 +67,21 @@
             app:fragment="de.michelinside.glucodatahandler.preferences.TransferSettingsFragment"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
-    <androidx.preference.SwitchPreferenceCompat
-        android:defaultValue="false"
-        android:key="dummy_values"
-        android:title="@string/pref_switch_notification"
-        app:iconSpaceReserved="false"
-        app:isPreferenceVisible="false" />
+    <PreferenceCategory
+        android:title="@string/advanced_settings"
+        app:iconSpaceReserved="false">
+        <Preference
+            android:key="pref_cat_export_import"
+            android:title="@string/pref_cat_export_import"
+            android:summary="@string/pref_cat_export_import_summary"
+            app:fragment="de.michelinside.glucodatahandler.preferences.ExportImportSettingsFragment"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="dummy_values"
+            android:title="@string/pref_switch_notification"
+            app:iconSpaceReserved="false"
+            app:isPreferenceVisible="false" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

@@ -38,7 +38,15 @@ object SourceStateData {
 
         if (GlucoDataService.context != null) {
             Handler(GlucoDataService.context!!.mainLooper).post {
-                InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
+                try {
+                    InternalNotifier.notify(
+                        GlucoDataService.context!!,
+                        NotifySource.SOURCE_STATE_CHANGE,
+                        null
+                    )
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "setState exception: " + exc.toString())
+                }
             }
         }
     }

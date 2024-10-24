@@ -14,6 +14,11 @@
                     android:title="@string/pref_wear_os_check_connection"
                     android:summary="@string/pref_wear_os_check_connection_summary"
                     app:iconSpaceReserved="false" />
+                <Preference
+                    android:key="wear_os_reset_connection"
+                    android:title="@string/pref_wear_os_reset_connection"
+                    android:summary="@string/pref_wear_os_reset_connection_summary"
+                    app:iconSpaceReserved="false" />
         </PreferenceCategory>
         <PreferenceCategory
             android:title="@string/pref_cat_watchdrip"

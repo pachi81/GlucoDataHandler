@@ -36,7 +36,7 @@ object BitmapUtils {
 
     private fun isShortText(text: String): Boolean = text.length <= (if (text.contains(".")) 3 else 2)
 
-    private fun calcMaxTextSizeForBitmap(bitmap: Bitmap, text: String, roundTarget: Boolean, maxTextSize: Float, top: Boolean, bold: Boolean): Float {
+    fun calcMaxTextSizeForBitmap(bitmap: Bitmap, text: String, roundTarget: Boolean, maxTextSize: Float, top: Boolean, bold: Boolean): Float {
         var result: Float = maxTextSize
         if(roundTarget) {
             if (!top || !isShortText(text) ) {
@@ -57,7 +57,8 @@ object BitmapUtils {
                 when(text.length) {
                     1 -> "0"
                     2 -> "00"
-                    else -> "000"
+                    3 -> "000"
+                    else -> text
                 }
             }
             val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -72,7 +73,7 @@ object BitmapUtils {
         return result
     }
 
-    private fun textToBitmap(text: String, color: Int, roundTarget: Boolean = false, strikeThrough: Boolean = false, width: Int = 100, height: Int = 100, top: Boolean = false, bold: Boolean = false, resizeFactor: Float = 1F, withShadow: Boolean = false): Bitmap? {
+    fun textToBitmap(text: String, color: Int, roundTarget: Boolean = false, strikeThrough: Boolean = false, width: Int = 100, height: Int = 100, top: Boolean = false, bold: Boolean = false, resizeFactor: Float = 1F, withShadow: Boolean = false, bottom: Boolean = false): Bitmap? {
         try {
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888 )
             val maxTextSize = calcMaxTextSizeForBitmap(bitmap, text, roundTarget, minOf(width,height).toFloat(), top, bold) * resizeFactor
@@ -105,6 +106,8 @@ object BitmapUtils {
                         Utils.round(height.toFloat() * 0.5F, 0).toInt()
                     else
                         boundsText.height()
+                else if(bottom)
+                    canvas.height - (canvas.height*0.1F).toInt()
                 else
                     canvas.height/2f + boundsText.height()/2f - boundsText.bottom
 
@@ -165,7 +168,7 @@ object BitmapUtils {
                 shortArrowRate = 0.7F*/
             } else {
                 text = "↑"
-                degrees = Utils.round(abs(maxOf(-2F, minOf(2F, rate)) - 2F) * 90F / 2F, 0).toInt()
+                degrees = abs(GlucoDataUtils.getRateDegrees(rate)-90)
             } /*else {  // < 0
                 text = "↓"
                 degrees = round((maxOf(-2F, rate) + 2F) * -90F/2F, 0).toInt()
@@ -237,7 +240,20 @@ object BitmapUtils {
         }
     }
 
-    private fun getGlucoseAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, withShadow: Boolean = false): Bitmap? {
+    fun createComboBitmap(bitmapAbove: Bitmap, bitmapBelow: Bitmap, width: Int = 100, height: Int = 100) : Bitmap? {
+        try {
+            val comboBitmap = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888)
+            val comboImage = Canvas(comboBitmap)
+            comboImage.drawBitmap(bitmapAbove, ((width-bitmapAbove.width)/2).toFloat(), 0F, null)
+            comboImage.drawBitmap(bitmapBelow, ((width-bitmapBelow.width)/2).toFloat(), height - bitmapBelow.height.toFloat(), null)
+            return comboBitmap
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Cannot create combo bitmap: " + exc.message.toString())
+            return null
+        }
+    }
+
+    fun getGlucoseAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, withShadow: Boolean = false): Bitmap? {
         return textToBitmap(
             ReceiveData.getGlucoseAsString(),color ?: ReceiveData.getGlucoseColor(), roundTarget, ReceiveData.isObsoleteShort() &&
                     !ReceiveData.isObsoleteLong(),width, height, resizeFactor = resizeFactor, withShadow = withShadow)
@@ -247,8 +263,8 @@ object BitmapUtils {
         return Icon.createWithBitmap(getGlucoseAsBitmap(color, roundTarget, width, height, resizeFactor, withShadow))
     }
 
-    fun getDeltaAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100): Bitmap? {
-        return textToBitmap(ReceiveData.getDeltaAsString(),color ?: ReceiveData.getGlucoseColor(true), roundTarget, false, width, height)
+    fun getDeltaAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, top: Boolean = false): Bitmap? {
+        return textToBitmap(ReceiveData.getDeltaAsString(),color ?: ReceiveData.getGlucoseColor(true), roundTarget, false, width, height, top = top)
     }
 
     fun getDeltaAsIcon(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100): Icon {

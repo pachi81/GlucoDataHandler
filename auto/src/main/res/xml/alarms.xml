@@ -29,9 +29,6 @@
             app:fragment="de.michelinside.glucodataauto.preferences.AlarmTypeFragment"
             app:iconSpaceReserved="false">
             <extra
-                android:name="prefix"
-                android:value="alarm_low_" />
-            <extra
                 android:name="type"
                 android:value="2" />
         </Preference>
@@ -40,9 +37,6 @@
             android:title="@string/high_alarm_notification_name"
             app:fragment="de.michelinside.glucodataauto.preferences.AlarmTypeFragment"
             app:iconSpaceReserved="false">
-            <extra
-                android:name="prefix"
-                android:value="alarm_high_" />
             <extra
                 android:name="type"
                 android:value="4" />
@@ -53,23 +47,39 @@
             app:fragment="de.michelinside.glucodataauto.preferences.AlarmTypeFragment"
             app:iconSpaceReserved="false">
             <extra
-                android:name="prefix"
-                android:value="alarm_very_high_" />
-            <extra
                 android:name="type"
                 android:value="5" />
         </Preference>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/other_alarm_cat_categories"
+        app:iconSpaceReserved="false">
         <Preference
             android:key="alarm_obsolete"
             android:title="@string/obsolete_alarm_notification_name"
             app:fragment="de.michelinside.glucodataauto.preferences.AlarmTypeFragment"
             app:iconSpaceReserved="false">
             <extra
-                android:name="prefix"
-                android:value="alarm_obsolete_" />
-            <extra
                 android:name="type"
                 android:value="6" />
+        </Preference>
+        <Preference
+            android:key="alarm_falling_fast"
+            android:title="@string/falling_fast_alarm_notification_name"
+            app:fragment="de.michelinside.glucodataauto.preferences.AlarmTypeFragment"
+            app:iconSpaceReserved="false">
+            <extra
+                android:name="type"
+                android:value="7" />
+        </Preference>
+        <Preference
+            android:key="alarm_rising_fast"
+            android:title="@string/rising_fast_alarm_notification_name"
+            app:fragment="de.michelinside.glucodataauto.preferences.AlarmTypeFragment"
+            app:iconSpaceReserved="false">
+            <extra
+                android:name="type"
+                android:value="8" />
         </Preference>
     </PreferenceCategory>
 </PreferenceScreen>

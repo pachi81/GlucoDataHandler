@@ -8,6 +8,11 @@
             android:title="@string/pref_switch_use_mmol"
             app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="show_other_unit"
+            android:title="@string/pref_show_other_unit"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="relative_time"
             android:summary="@string/pref_relative_time_summary"
