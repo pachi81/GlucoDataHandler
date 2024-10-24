@@ -6,6 +6,10 @@ import android.content.Intent
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.util.Log
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import de.michelinside.glucodatahandler.common.R
 import java.io.File
 import java.util.Locale
@@ -45,6 +49,7 @@ object TextToSpeechUtils {
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "initTextToSpeech exception: " + exc.toString())
+            destroyTextToSpeech()
         }
     }
 
@@ -117,21 +122,27 @@ object TextToSpeechUtils {
     }
 }
 
-
-
 class LocaleChangeNotifier: BroadcastReceiver() {
-
     private val LOG_ID = "GDH.LocaleChangeNotifier"
     override fun onReceive(context: Context, intent: Intent) {
         try {
             Log.d(LOG_ID, "Action received: ${intent.action} - bundle: ${Utils.dumpBundle(intent.extras)}")
             if (TextToSpeechUtils.localChanged(context)) {
-                TextToSpeechUtils.destroyTextToSpeech()
-                TextToSpeechUtils.initTextToSpeech(context)
+                val workRequest =
+                    OneTimeWorkRequestBuilder<TextToSpeechWorker>().build()
+                WorkManager.getInstance(context).enqueue(workRequest)
             }
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + ": " + exc.stackTraceToString())
         }
+    }
+}
+
+class TextToSpeechWorker(appContext: Context, workerParams: WorkerParameters) :
+    Worker(appContext, workerParams) {
+    override fun doWork(): Result {TextToSpeechUtils.destroyTextToSpeech()
+        TextToSpeechUtils.initTextToSpeech(applicationContext)
+        return Result.success()
     }
 }
 
