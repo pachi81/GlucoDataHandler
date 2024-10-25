@@ -336,11 +336,18 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             return false
         if(ReceiveData.getAlarmType() == AlarmType.VERY_LOW)
             return true
+        val interval = sharedPref.getInt(Constants.AA_MEDIA_PLAYER_SPEAK_INTERVAL, 1).toLong()
+        Log.d(LOG_ID, "Check speak new value:"
+                + "\nglucose-alarm:  " + ReceiveData.getAlarmType()
+                + "\ndelta-alarm:    " + ReceiveData.getDeltaAlarmType()
+                + "\nforce-alarm:    " + ReceiveData.forceAlarm
+                + "\nspeak-elapsed:  " + getTimeDiffMinute()
+                + "\nspeak-interval: " + interval
+                + "\ndata-elapsed:   " + ReceiveData.getElapsedTimeMinute())
         if(sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_ALARM_ONLY, true) && !ReceiveData.forceAlarm)
             return false
         if(ReceiveData.forceAlarm)
             return true
-        val interval = sharedPref.getInt(Constants.AA_MEDIA_PLAYER_SPEAK_INTERVAL, 1).toLong()
         if (interval == 1L)
             return true
         if (interval > 1L && getTimeDiffMinute() >= interval && ReceiveData.getElapsedTimeMinute() == 0L)
