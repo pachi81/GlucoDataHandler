@@ -36,13 +36,38 @@ object TextToSpeechUtils {
             if(textToSpeech == null) {
                 Log.i(LOG_ID, "initTextToSpeech called")
                 textToSpeech = TextToSpeech(context) { status ->
-                    Log.d(LOG_ID, "initTextToSpeech status=$status")
-                    if (status == TextToSpeech.SUCCESS) {
-                        curLocal = context.resources.getString(R.string.locale)
-                        textToSpeech!!.language = Locale(curLocal)
-                        Log.i(LOG_ID, "TextToSpeech enabled for language=${textToSpeech!!.voice.locale}")
-                    } else {
-                        Log.w(LOG_ID, "TextToSpeech failed to init with error=$status")
+                    try {
+                        Log.d(LOG_ID, "initTextToSpeech status=$status")
+                        if (status == TextToSpeech.SUCCESS) {
+                            if(textToSpeech!!.voices != null && textToSpeech!!.voices.isNotEmpty()) {
+                                Log.i(LOG_ID, "language: ${textToSpeech!!.language} - default: ${textToSpeech!!.defaultVoice?.name} - voices: ${textToSpeech!!.voices}")
+                                val curLanguage = textToSpeech!!.voice?.locale
+                                curLocal = context.resources.getString(R.string.locale)
+                                textToSpeech!!.language = Locale(curLocal)
+                                if(textToSpeech!!.voice == null) {
+                                    Log.w(LOG_ID, "TextToSpeech voice is null, try default: ${textToSpeech!!.defaultVoice} or old language: ${curLanguage}")
+                                    if(textToSpeech!!.defaultVoice != null)
+                                        textToSpeech!!.voice = textToSpeech!!.defaultVoice
+                                    else if(curLanguage != null) {
+                                        textToSpeech!!.language = curLanguage
+                                    }
+                                }
+                                if(textToSpeech!!.voice == null) {
+                                    Log.w(LOG_ID, "TextToSpeech voice is still null, destroy it")
+                                    destroyTextToSpeech()
+                                } else {
+                                    Log.i(LOG_ID, "TextToSpeech enabled for language=${textToSpeech!!.voice?.locale}")
+                                }
+                            } else {
+                                Log.w(LOG_ID, "TextToSpeech failed to init, no voices available")
+                                destroyTextToSpeech()
+                            }
+                        } else {
+                            Log.w(LOG_ID, "TextToSpeech failed to init with error=$status")
+                            destroyTextToSpeech()
+                        }
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "initTextToSpeech status exception: " + exc.toString())
                         destroyTextToSpeech()
                     }
                 }

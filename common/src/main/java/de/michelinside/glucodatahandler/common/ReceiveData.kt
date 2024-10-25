@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
+import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.notifier.DataSource
@@ -142,7 +143,18 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     fun getAsText(context: Context, withIobCob: Boolean = false, withZeroTime: Boolean = true): String {
         if(isObsoleteShort())
             return context.getString(R.string.no_new_value, getElapsedTimeMinute())
-        var text = getGlucoseAsString()
+        var text = ""
+        val resId: Int? = if(forceGlucoseAlarm && getAlarmType() != AlarmType.NONE) {
+                AlarmNotificationBase.getAlarmTextRes(getAlarmType())
+            } else if(forceDeltaAlarm && getDeltaAlarmType() != AlarmType.NONE) {
+            AlarmNotificationBase.getAlarmTextRes(getDeltaAlarmType())
+            } else {
+                null
+            }
+        if (resId != null) {
+            text += context.getString(resId) + ", "
+        }
+        text += getGlucoseAsString()
         if(!rate.isNaN())
             text += ", " + getRateAsText(context)
         if(!delta.isNaN())

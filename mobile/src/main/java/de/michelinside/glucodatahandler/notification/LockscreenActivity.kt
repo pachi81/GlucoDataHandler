@@ -21,6 +21,7 @@ import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
+import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
@@ -271,7 +272,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             txtTime.text = "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(this)}"
             txtTime.contentDescription = ReceiveData.getElapsedTimeMinuteAsString(this)
             val resId = (if(alarmType != null) alarmType else ReceiveData.getAlarmType())?.let {
-                AlarmNotification.getAlarmTextRes(
+                AlarmNotificationBase.getAlarmTextRes(
                     it
                 )
             }

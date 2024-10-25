@@ -14,6 +14,7 @@ import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -166,10 +167,7 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
     }
 
     private fun getAlarmMessage(context: Context, alarmType: AlarmType): String {
-        val resId = AlarmNotification.getAlarmTextRes(alarmType)
-        if(resId == null) {
-            return "No alarm!"
-        }
+        val resId = AlarmNotificationBase.getAlarmTextRes(alarmType) ?: return "No alarm!"
         val msg = context.resources.getString(resId)
         return when(alarmType) {
             AlarmType.VERY_LOW,

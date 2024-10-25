@@ -83,6 +83,19 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         private var classInstance: AlarmNotificationBase? = null
         val instance: AlarmNotificationBase? get() = classInstance
 
+
+        fun getAlarmTextRes(alarmType: AlarmType): Int? {
+            return when(alarmType) {
+                AlarmType.VERY_LOW -> CR.string.very_low_alarm_text
+                AlarmType.LOW -> CR.string.very_low_text
+                AlarmType.HIGH -> CR.string.very_high_text
+                AlarmType.VERY_HIGH -> CR.string.very_high_alarm_text
+                AlarmType.OBSOLETE -> CR.string.obsolete_alarm_text
+                AlarmType.RISING_FAST -> CR.string.rising_fast_alarm_text
+                AlarmType.FALLING_FAST -> CR.string.falling_fast_alarm_text
+                else -> null
+            }
+        }
     }
 
     abstract val active: Boolean
@@ -752,19 +765,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         if (alarmType.setting == null)
             return -1
         return alarmType.setting.soundLevel
-    }
-
-    fun getAlarmTextRes(alarmType: AlarmType): Int? {
-        return when(alarmType) {
-            AlarmType.VERY_LOW -> CR.string.very_low_alarm_text
-            AlarmType.LOW -> CR.string.very_low_text
-            AlarmType.HIGH -> CR.string.very_high_text
-            AlarmType.VERY_HIGH -> CR.string.very_high_alarm_text
-            AlarmType.OBSOLETE -> CR.string.obsolete_alarm_text
-            AlarmType.RISING_FAST -> CR.string.rising_fast_alarm_text
-            AlarmType.FALLING_FAST -> CR.string.falling_fast_alarm_text
-            else -> null
-        }
     }
 
     protected fun getDefaultAlarm(alarmType: AlarmType, context: Context): Uri? {
