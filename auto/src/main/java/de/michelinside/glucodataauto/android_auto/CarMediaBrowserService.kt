@@ -99,7 +99,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {
                     Log.i(LOG_ID, "onPlayFromMediaId: " + mediaId)
                     curMediaItem = mediaId
-                    setItem()
+                    setItem(true)
                 }
 
                 override fun onPlay() {
@@ -115,6 +115,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                                 if(file != null) {
                                     uri = file!!.absolutePath
                                     requestAudioFocus = true
+                                    last_speak_time = ReceiveData.time
                                 }
                             }
                             if(uri.isNullOrEmpty()) {
@@ -129,7 +130,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                                 Log.d(LOG_ID, "setOnCompletionListener called")
                                 onStop()
                             }
-                            if(requestAudioFocus && sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_REQUEST_AUDIO_FOCUS, true)) {
+                            if(requestAudioFocus) {
                                 if(audioManager.requestAudioFocus(audioFocusTransientRequest) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                                     Log.d(LOG_ID, "requestAudioFocus transient")
                                     curAudioFocus = audioFocusTransientRequest
@@ -224,7 +225,6 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         try {
             Log.d(LOG_ID, "onLoadChildren for parent: " + parentId)
             if (MEDIA_ROOT_ID == parentId) {
-                create = false
                 val items = mutableListOf(createMediaItem())
                 if (Channels.notificationChannelActive(this, ChannelType.ANDROID_AUTO)) {
                     items.add(createToggleItem())
@@ -233,7 +233,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             } else {
                 result.sendResult(null)
             }
-            setItem()
+            setItem(create)
+            create = false
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onLoadChildren exception: " + exc.message.toString() )
         }
@@ -277,12 +278,12 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         }
     }
 
-    fun setItem() {
+    fun setItem(onCreate: Boolean) {
         try {
             Log.d(LOG_ID, "set current media: $curMediaItem")
             when(curMediaItem) {
                 MEDIA_GLUCOSE_ID -> {
-                    setGlucose()
+                    setGlucose(onCreate)
                 }
                 MEDIA_NOTIFICATION_TOGGLE_ID -> {
                     curMediaItem = MEDIA_GLUCOSE_ID
@@ -298,7 +299,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         }
     }
 
-    private fun setGlucose() {
+    private fun setGlucose(onCreate: Boolean = false) {
         if (sharedPref.getBoolean(Constants.SHARED_PREF_CAR_MEDIA,true)) {
             Log.i(LOG_ID, "setGlucose called")
             session.setPlaybackState(buildState(PlaybackState.STATE_PAUSED))
@@ -315,10 +316,9 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                     .putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, getIcon(400)!!)
                     .build()
             )
-            if(checkSpeakNewValue()) {
+            if(!onCreate && checkSpeakNewValue()) {
                 Log.i(LOG_ID, "speak new value")
                 mediaController.transportControls.play()
-                last_speak_time = ReceiveData.time
             }
         } else {
             session.setPlaybackState(buildState(PlaybackState.STATE_NONE))
@@ -338,6 +338,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             return true
         if(sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_ALARM_ONLY, true) && !ReceiveData.forceAlarm)
             return false
+        if(ReceiveData.forceAlarm)
+            return true
         val interval = sharedPref.getInt(Constants.AA_MEDIA_PLAYER_SPEAK_INTERVAL, 1).toLong()
         if (interval == 1L)
             return true

@@ -24,13 +24,6 @@
             android:summaryOff="@string/pref_aa_media_player_speak_values_off_summary"
             app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="aa_media_player_request_audio_focus"
-            android:title="@string/pref_aa_media_player_request_audio_focus"
-            android:summaryOn="@string/pref_aa_media_player_request_audio_focus_on_summary"
-            android:summaryOff="@string/pref_aa_media_player_request_audio_focus_off_summary"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="aa_media_player_speak_new_value"
             android:title="@string/pref_aa_media_player_always_speak"
@@ -40,7 +33,7 @@
             android:defaultValue="true"
             android:key="aa_media_player_speak_alarm_only"
             android:title="@string/pref_switch_car_notification_alarm_only"
-            android:summary="@string/pref_switch_car_notification_alarm_only_summary"
+            android:summary="@string/pref_aa_media_player_speak_alarm_only_summary"
             app:iconSpaceReserved="false" />
         <androidx.preference.SeekBarPreference
             android:key="aa_media_player_speak_interval"
@@ -49,8 +42,8 @@
             app:seekBarIncrement="1"
             app:min="1"
             android:max="30"
-            android:title="@string/pref_car_notification_interval"
-            android:summary="@string/pref_car_notification_interval_summary"
+            android:title="@string/alarm_interval"
+            android:summary="@string/pref_aa_media_player_speak_interval_summary"
             app:iconSpaceReserved="false" />
         <Preference
             android:key="aa_media_player_speak_test"

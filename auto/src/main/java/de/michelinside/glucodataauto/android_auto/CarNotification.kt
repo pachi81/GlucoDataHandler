@@ -18,6 +18,7 @@ import de.michelinside.glucodataauto.GlucoDataServiceAuto
 import de.michelinside.glucodataauto.R
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
@@ -264,6 +265,22 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         }
     }
 
+    private fun getAlarmText(context: Context): String {
+        if(ReceiveData.forceAlarm) {
+            val resId: Int? = if(ReceiveData.forceGlucoseAlarm && ReceiveData.getAlarmType() != AlarmType.NONE) {
+                AlarmNotificationBase.getAlarmTextRes(ReceiveData.getAlarmType())
+            } else if(ReceiveData.forceDeltaAlarm && ReceiveData.getDeltaAlarmType() != AlarmType.NONE) {
+                AlarmNotificationBase.getAlarmTextRes(ReceiveData.getDeltaAlarmType())
+            } else {
+                null
+            }
+            if (resId != null) {
+                return " - " + context.getString(resId)
+            }
+        }
+        return ""
+    }
+
     private fun createMessageStyle(context: Context, isObsolete: Boolean): NotificationCompat.MessagingStyle {
         val person = Person.Builder()
             .setIcon(IconCompat.createWithBitmap(BitmapUtils.getRateAsBitmap(resizeFactor = 0.75F)!!))
@@ -274,7 +291,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         if (isObsolete)
             messagingStyle.conversationTitle = context.getString(CR.string.no_new_value, ReceiveData.getElapsedTimeMinute())
         else
-            messagingStyle.conversationTitle = ReceiveData.getGlucoseAsString()  + " (Δ " + ReceiveData.getDeltaAsString() + ")"
+            messagingStyle.conversationTitle = ReceiveData.getGlucoseAsString()  + " (Δ " + ReceiveData.getDeltaAsString() + ")" + getAlarmText(context)
         messagingStyle.isGroupConversation = false
         messagingStyle.addMessage(DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(ReceiveData.time)), System.currentTimeMillis(), person)
         return messagingStyle

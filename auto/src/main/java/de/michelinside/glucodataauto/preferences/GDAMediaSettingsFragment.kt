@@ -24,7 +24,6 @@ class GDAMediaSettingsFragment: SettingsFragmentBase(R.xml.pref_gda_media) {
     override fun updateEnableStates(sharedPreferences: SharedPreferences) {
         try {
             Log.v(LOG_ID, "updateEnableStates called")
-            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.AA_MEDIA_PLAYER_REQUEST_AUDIO_FOCUS, Constants.AA_MEDIA_PLAYER_SPEAK_VALUES)
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, Constants.AA_MEDIA_PLAYER_SPEAK_VALUES)
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.AA_MEDIA_PLAYER_SPEAK_ALARM_ONLY, Constants.AA_MEDIA_PLAYER_SPEAK_VALUES)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.AA_MEDIA_PLAYER_SPEAK_INTERVAL, Constants.AA_MEDIA_PLAYER_SPEAK_VALUES)
