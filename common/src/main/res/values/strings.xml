@@ -673,13 +673,15 @@
     <!-- new for GDA -->
 
     <string name="gda_help_aa_summary">Introduction to enable GDA on Android Auto</string>
-    <string name="pref_aa_media_player_speak_values">Speak value</string>
+    <string name="no_tts">No Text-To-Speech (TTS) enabled.\nTo use this feature you have to enable TTS first.</string>
+    <string name="pref_cat_android_auto_speak">Speak value</string>
+    <string name="pref_cat_play_button">Play button</string>
     <string name="pref_aa_media_player_speak_values_on_summary">Speak current value on play.\nThis will only work, if Text To Speech is available!</string>
-    <string name="pref_aa_media_player_speak_values_off_summary">Empty sound is played to bring media player in front of the split screen.</string>
+    <string name="pref_aa_media_player_speak_values_off_summary">Empty sound is played on play to bring media player in front of the split screen.</string>
     <string name="pref_aa_media_player_always_speak">Speak new value</string>
-    <string name="pref_aa_media_player_always_speak_summary">New value will be spoken automatically.\nThis will only work, of the Media Player is the current one in front of the split screen.</string>
-    <string name="tts_test_summary">Press here to test Text To Speech on phone.</string>
-    <string name="pref_aa_media_player_speak_alarm_only_summary">Only speaks alarms.</string>
-    <string name="pref_aa_media_player_speak_interval_summary">Interval of new value will be spoken by Android Auto Media Player.</string>
+    <string name="pref_aa_media_player_always_speak_summary">New value will be spoken in Android Auto, even if you are using another media player.</string>
+    <string name="tts_test_summary">Press here to test Text To Speech.</string>
+    <string name="pref_aa_media_player_speak_alarm_only_summary">Only alarms will be spoken.</string>
+    <string name="pref_aa_media_player_speak_interval_summary">Interval of new value will be spoken in Android Auto.</string>
 
 </resources>

@@ -14,41 +14,14 @@
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="@string/pref_aa_media_player_speak_values"
+        android:title="@string/pref_cat_play_button"
         app:iconSpaceReserved="false">
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="aa_media_player_speak_values"
-            android:title="@string/pref_aa_media_player_speak_values"
+            android:title="@string/pref_cat_android_auto_speak"
             android:summaryOn="@string/pref_aa_media_player_speak_values_on_summary"
             android:summaryOff="@string/pref_aa_media_player_speak_values_off_summary"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="aa_media_player_speak_new_value"
-            android:title="@string/pref_aa_media_player_always_speak"
-            android:summary="@string/pref_aa_media_player_always_speak_summary"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="aa_media_player_speak_alarm_only"
-            android:title="@string/pref_switch_car_notification_alarm_only"
-            android:summary="@string/pref_aa_media_player_speak_alarm_only_summary"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SeekBarPreference
-            android:key="aa_media_player_speak_interval"
-            android:defaultValue="1"
-            app:showSeekBarValue="true"
-            app:seekBarIncrement="1"
-            app:min="1"
-            android:max="30"
-            android:title="@string/alarm_interval"
-            android:summary="@string/pref_aa_media_player_speak_interval_summary"
-            app:iconSpaceReserved="false" />
-        <Preference
-            android:key="aa_media_player_speak_test"
-            android:title="@string/alarm_test"
-            android:summary="@string/tts_test_summary"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 </PreferenceScreen>

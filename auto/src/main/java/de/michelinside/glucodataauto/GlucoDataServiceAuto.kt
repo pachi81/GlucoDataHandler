@@ -12,6 +12,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.car.app.connection.CarConnection
 import de.michelinside.glucodataauto.android_auto.CarMediaBrowserService
+import de.michelinside.glucodataauto.android_auto.CarMediaPlayer
 import de.michelinside.glucodataauto.android_auto.CarNotification
 import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
@@ -94,6 +95,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                 if(!running) {
                     init(context)
                     Log.i(LOG_ID, "starting")
+                    CarMediaPlayer.enable(context)
                     CarNotification.enable(context)
                     startDataSync(context)
                     setForeground(context, true)
@@ -108,6 +110,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
             try {
                 if(!connected && running) {
                     Log.i(LOG_ID, "stopping")
+                    CarMediaPlayer.disable(context)
                     CarNotification.disable(context)
                     stopDataSync(context)
                     setForeground(context, false)
