@@ -11,6 +11,8 @@ import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import de.michelinside.glucodatahandler.common.R
+import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import java.io.File
 import java.util.Locale
 import java.util.concurrent.atomic.AtomicBoolean
@@ -54,36 +56,38 @@ object TextToSpeechUtils {
                                 }
                                 if(textToSpeech!!.voice == null) {
                                     Log.w(LOG_ID, "TextToSpeech voice is still null, destroy it")
-                                    destroyTextToSpeech()
+                                    destroyTextToSpeech(context)
                                 } else {
                                     Log.i(LOG_ID, "TextToSpeech enabled for language=${textToSpeech!!.voice?.locale}")
+                                    InternalNotifier.notify(context, NotifySource.TTS_STATE_CHANGED, null)
                                 }
                             } else {
                                 Log.w(LOG_ID, "TextToSpeech failed to init, no voices available")
-                                destroyTextToSpeech()
+                                destroyTextToSpeech(context)
                             }
                         } else {
                             Log.w(LOG_ID, "TextToSpeech failed to init with error=$status")
-                            destroyTextToSpeech()
+                            destroyTextToSpeech(context)
                         }
                     } catch (exc: Exception) {
                         Log.e(LOG_ID, "initTextToSpeech status exception: " + exc.toString())
-                        destroyTextToSpeech()
+                        destroyTextToSpeech(context)
                     }
                 }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "initTextToSpeech exception: " + exc.toString())
-            destroyTextToSpeech()
+            destroyTextToSpeech(context)
         }
     }
 
-    fun destroyTextToSpeech() {
+    fun destroyTextToSpeech(context: Context) {
         Log.i(LOG_ID, "destroyTextToSpeech called")
         try {
             if (textToSpeech != null) {
                 textToSpeech!!.shutdown()
                 textToSpeech = null
+                InternalNotifier.notify(context, NotifySource.TTS_STATE_CHANGED, null)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "destroyTextToSpeech exception: " + exc.toString())
@@ -165,7 +169,8 @@ class LocaleChangeNotifier: BroadcastReceiver() {
 
 class TextToSpeechWorker(appContext: Context, workerParams: WorkerParameters) :
     Worker(appContext, workerParams) {
-    override fun doWork(): Result {TextToSpeechUtils.destroyTextToSpeech()
+    override fun doWork(): Result {
+        TextToSpeechUtils.destroyTextToSpeech(applicationContext)
         TextToSpeechUtils.initTextToSpeech(applicationContext)
         return Result.success()
     }

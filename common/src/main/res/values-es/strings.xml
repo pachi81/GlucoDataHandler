@@ -627,4 +627,17 @@
     </plurals>
     <string name="pref_source_diabox_info_summary">Abre Integración y activa \"Share data with GWatch\"\nNota: la transmisión de DiaBox solo contiene el valor de glucosa y no más información como la tendencia.</string>
     <string name="pref_source_dexcom_byoda_not_working_info_summary">Nota: la transmisión de AAPS desde BYODA no parece funcionar con otras aplicaciones.\nPor favor, utiliza la transmisión de xDrip+ en BYODA.</string>
+
+    <string name="gda_help_aa_summary">Empieza con GDA en Android Auto</string>
+    <string name="no_tts">La función de texto a voz (TTS) no está habilitada.\nPara usar esta función, habilita TTS en la configuración de accesibilidad de Android.\nUna vez habilitada, toca aquí para actualizar.</string>
+    <string name="pref_cat_android_auto_speak">Pronunciar valor</string>
+    <string name="pref_cat_play_button">Botón de reproducción</string>
+    <string name="pref_aa_media_player_speak_values_on_summary">Pronunciar el valor actual durante la reproducción.\nRequiere que la función de texto a voz esté habilitada.</string>
+    <string name="pref_aa_media_player_speak_values_off_summary">Reproducir un sonido vacío para que el reproductor multimedia aparezca en la parte frontal de la pantalla dividida.</string>
+    <string name="pref_aa_media_player_always_speak">Pronunciar nuevo valor</string>
+    <string name="pref_aa_media_player_always_speak_summary">Pronunciar los nuevos valores en Android Auto, incluso cuando se utiliza otro reproductor multimedia.</string>
+    <string name="tts_test_summary">Toca para probar la función de texto a voz.</string>
+    <string name="pref_aa_media_player_speak_alarm_only_summary">Pronunciar solo las alarmas.</string>
+    <string name="pref_aa_media_player_speak_interval_summary">Establecer el intervalo para pronunciar los nuevos valores en Android Auto.</string>
+
 </resources>

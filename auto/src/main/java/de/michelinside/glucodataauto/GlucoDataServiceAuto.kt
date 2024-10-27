@@ -232,7 +232,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
         Log.v(LOG_ID, "onDestroy called")
         val sharedPref = getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         sharedPref.unregisterOnSharedPreferenceChangeListener(this)
-        TextToSpeechUtils.destroyTextToSpeech()
+        TextToSpeechUtils.destroyTextToSpeech(this)
         super.onDestroy()
     }
 

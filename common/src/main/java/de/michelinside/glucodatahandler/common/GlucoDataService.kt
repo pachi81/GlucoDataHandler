@@ -495,7 +495,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             created = false
             isRunning = false
             isForegroundService = false
-            TextToSpeechUtils.destroyTextToSpeech()
+            TextToSpeechUtils.destroyTextToSpeech(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.toString())
         }

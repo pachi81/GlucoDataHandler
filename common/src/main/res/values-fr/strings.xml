@@ -627,4 +627,19 @@
     </plurals>
     <string name="pref_source_diabox_info_summary">Ouvrez Intégration et activez \"Share data with GWatch\"\nRemarque: la diffusion DiaBox contient uniquement la valeur de glucose et aucune autre information comme la tendance!</string>
     <string name="pref_source_dexcom_byoda_not_working_info_summary">Remarque: la diffusion AAPS de BYODA ne semble pas fonctionner avec d’autres applications.\nVeuillez utiliser la diffusion xDrip+ dans BYODA.</string>
+
+
+    <string name="gda_help_aa_summary">Démarrer avec GDA sur Android Auto</string>
+    <string name="no_tts">La synthèse vocale (TTS) n\'est pas activée.\nPour utiliser cette fonctionnalité, activez la synthèse vocale dans les paramètres d\'accessibilité d\'Android.\nUne fois activée, appuyez ici pour mettre à jour.</string>
+    <string name="pref_cat_android_auto_speak">Lire la valeur</string>
+    <string name="pref_cat_play_button">Bouton de lecture</string>
+    <string name="pref_aa_media_player_speak_values_on_summary">Lire la valeur actuelle lors de la lecture.\nNécessite que la synthèse vocale soit activée.</string>
+    <string name="pref_aa_media_player_speak_values_off_summary">Lire un son vide pour amener le lecteur multimédia au premier plan de l\'écran partagé.</string>
+    <string name="pref_aa_media_player_always_speak">Lire la nouvelle valeur</string>
+    <string name="pref_aa_media_player_always_speak_summary">Lire les nouvelles valeurs dans Android Auto, même lorsque vous utilisez un autre lecteur multimédia.</string>
+    <string name="tts_test_summary">Appuyez pour tester la synthèse vocale.</string>
+    <string name="pref_aa_media_player_speak_alarm_only_summary">Lire uniquement les alarmes.</string>
+    <string name="pref_aa_media_player_speak_interval_summary">Définir l\'intervalle pour lire les nouvelles valeurs dans Android Auto.</string>
+
+
 </resources>

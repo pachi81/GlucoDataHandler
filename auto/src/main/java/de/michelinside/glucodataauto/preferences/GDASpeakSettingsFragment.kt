@@ -16,14 +16,23 @@ class GDASpeakSettingsFragment: SettingsFragmentBase(R.xml.pref_gda_speak) {
 
     override fun initPreferences() {
         super.initPreferences()
-        val pref = findPreference<Preference>(Constants.AA_MEDIA_PLAYER_SPEAK_TEST)
-        pref?.setOnPreferenceClickListener {
+        val prefTest = findPreference<Preference>(Constants.AA_MEDIA_PLAYER_SPEAK_TEST)
+        prefTest?.setOnPreferenceClickListener {
             if(GlucoDataServiceAuto.connected) {
                 CarMediaPlayer.play(requireContext())
             } else {
                 TextToSpeechUtils.speak(ReceiveData.getAsText(requireContext(), false, false))
             }
             true
+        }
+        if(!TextToSpeechUtils.isAvailable()) {
+            val prefSpeak = findPreference<SwitchPreferenceCompat>(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE)
+            if(prefSpeak!!.isChecked) {
+                prefSpeak.isChecked = false
+                preferenceManager.sharedPreferences?.edit()?.putBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, false)?.apply()
+            }
+            prefSpeak.isEnabled = false
+            prefTest!!.isEnabled = false
         }
     }
 

@@ -45,6 +45,7 @@ import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.GitHubVersionChecker
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.ui.Dialogs
+import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import java.text.DateFormat
 import java.util.Date
 import de.michelinside.glucodatahandler.common.R as CR
@@ -90,6 +91,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
 
             ReceiveData.initData(this)
+            TextToSpeechUtils.initTextToSpeech(this)
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
@@ -157,7 +159,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.CAR_CONNECTION,
                 NotifySource.TIME_VALUE,
                 NotifySource.SOURCE_STATE_CHANGE,
-                NotifySource.NEW_VERSION_AVAILABLE))
+                NotifySource.NEW_VERSION_AVAILABLE,
+                NotifySource.TTS_STATE_CHANGED))
 
             GlucoDataServiceAuto.startDataSync(this)
             versionChecker.checkVersion(1)
@@ -419,6 +422,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 startActivity(intent)
             }
             tableNotes.addView(createRow(resources.getString(CR.string.gda_battery_optimization_disabled), onClickListener))
+        }
+        if (!TextToSpeechUtils.isAvailable()) {
+            val onClickListener = View.OnClickListener {
+                TextToSpeechUtils.initTextToSpeech(this)
+            }
+            tableNotes.addView(createRow(resources.getString(CR.string.no_tts), onClickListener))
         }
         checkTableVisibility(tableNotes)
     }

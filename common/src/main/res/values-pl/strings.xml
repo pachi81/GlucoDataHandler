@@ -629,4 +629,20 @@
     </plurals>
     <string name="pref_source_diabox_info_summary">Otwórz menu Integracja i włącz opcję \"Share data with GWatch\" (udostępnij dane aplikacji GWatch).\nUwaga: transmisja DiaBox zawiera tylko wartość glukozy i żadnych dodatkowych informacji, takich jak trend!</string>
     <string name="pref_source_dexcom_byoda_not_working_info_summary">Uwaga: zdaje się, że transmisja AAPS z BYODA nie działa z innymi aplikacjami.\nW BYODA należy używać transmisji xDrip+.\n\n</string>
+
+    <!-- new for GDA -->
+
+    <string name="gda_help_aa_summary">Get started with GDA on Android Auto</string>
+    <string name="no_tts">Text-to-speech (TTS) is not enabled.\nTo use this feature, enable TTS in Android Accessibility settings.\nOnce enabled, tap here to update.</string>
+    <string name="pref_cat_android_auto_speak">Speak Value</string>
+    <string name="pref_cat_play_button">Play Button</string>
+    <string name="pref_aa_media_player_speak_values_on_summary">Speak current value when playing.\nRequires Text-to-speech to be enabled.</string>
+    <string name="pref_aa_media_player_speak_values_off_summary">Play an empty sound to bring the media player to the front of the split screen.</string>
+    <string name="pref_aa_media_player_always_speak">Speak New Value</string>
+    <string name="pref_aa_media_player_always_speak_summary">Speak new values in Android Auto, even when using another media player.</string>
+    <string name="tts_test_summary">Tap to test text-to-speech.</string>
+    <string name="pref_aa_media_player_speak_alarm_only_summary">Speak alarms only.</string>
+    <string name="pref_aa_media_player_speak_interval_summary">Set the interval for speaking new values in Android Auto.</string>
+
+
 </resources>

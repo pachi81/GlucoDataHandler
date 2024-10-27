@@ -672,16 +672,16 @@
 
     <!-- new for GDA -->
 
-    <string name="gda_help_aa_summary">Introduction to enable GDA on Android Auto</string>
-    <string name="no_tts">No Text-To-Speech (TTS) enabled.\nTo use this feature you have to enable TTS first.</string>
-    <string name="pref_cat_android_auto_speak">Speak value</string>
-    <string name="pref_cat_play_button">Play button</string>
-    <string name="pref_aa_media_player_speak_values_on_summary">Speak current value on play.\nThis will only work, if Text To Speech is available!</string>
-    <string name="pref_aa_media_player_speak_values_off_summary">Empty sound is played on play to bring media player in front of the split screen.</string>
-    <string name="pref_aa_media_player_always_speak">Speak new value</string>
-    <string name="pref_aa_media_player_always_speak_summary">New value will be spoken in Android Auto, even if you are using another media player.</string>
-    <string name="tts_test_summary">Press here to test Text To Speech.</string>
-    <string name="pref_aa_media_player_speak_alarm_only_summary">Only alarms will be spoken.</string>
-    <string name="pref_aa_media_player_speak_interval_summary">Interval of new value will be spoken in Android Auto.</string>
+    <string name="gda_help_aa_summary">Get started with GDA on Android Auto</string>
+    <string name="no_tts">Text-to-speech (TTS) is not enabled.\nTo use this feature, enable TTS in Android Accessibility settings.\nOnce enabled, tap here to update.</string>
+    <string name="pref_cat_android_auto_speak">Speak Value</string>
+    <string name="pref_cat_play_button">Play Button</string>
+    <string name="pref_aa_media_player_speak_values_on_summary">Speak current value when playing.\nRequires Text-to-speech to be enabled.</string>
+    <string name="pref_aa_media_player_speak_values_off_summary">Play an empty sound to bring the media player to the front of the split screen.</string>
+    <string name="pref_aa_media_player_always_speak">Speak New Value</string>
+    <string name="pref_aa_media_player_always_speak_summary">Speak new values in Android Auto, even when using another media player.</string>
+    <string name="tts_test_summary">Tap to test text-to-speech.</string>
+    <string name="pref_aa_media_player_speak_alarm_only_summary">Speak alarms only.</string>
+    <string name="pref_aa_media_player_speak_interval_summary">Set the interval for speaking new values in Android Auto.</string>
 
 </resources>
