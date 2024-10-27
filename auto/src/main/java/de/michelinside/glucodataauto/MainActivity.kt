@@ -66,6 +66,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var sharedPref: SharedPreferences
     private lateinit var versionChecker: GitHubVersionChecker
     private var notificationIcon: MenuItem? = null
+    private var speakIcon: MenuItem? = null
     private val LOG_ID = "GDH.AA.Main"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -221,7 +222,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             inflater.inflate(R.menu.menu_items, menu)
             MenuCompat.setGroupDividerEnabled(menu!!, true)
             notificationIcon = menu.findItem(R.id.action_notification_toggle)
+            speakIcon = menu.findItem(R.id.action_speak_toggle)
             updateNotificationIcon()
+            updateSpeakIcon()
             return true
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreateOptionsMenu exception: " + exc.message.toString() )
@@ -243,6 +246,21 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     enabled = false
                 }
                 notificationIcon!!.icon = ContextCompat.getDrawable(this, if(enabled) R.drawable.icon_popup_white else R.drawable.icon_popup_off_white)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "updateAlarmIcon exception: " + exc.message.toString() )
+        }
+    }
+
+    private fun updateSpeakIcon() {
+        try {
+            if(speakIcon != null) {
+                if(!TextToSpeechUtils.isAvailable()) {
+                    speakIcon!!.isVisible = false
+                } else {
+                    speakIcon!!.isVisible = true
+                    speakIcon!!.icon = ContextCompat.getDrawable(this, if(sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, false)) CR.drawable.icon_volume_normal_white else CR.drawable.icon_volume_off_white)
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateAlarmIcon exception: " + exc.message.toString() )
@@ -322,6 +340,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                         updateNotificationIcon()
                     }
                 }
+                R.id.action_speak_toggle -> {
+                    with(sharedPref.edit()) {
+                        putBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, !sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, false))
+                        apply()
+                    }
+                    updateSpeakIcon()
+                }
                 else -> return super.onOptionsItemSelected(item)
             }
         } catch (exc: Exception) {
@@ -361,6 +386,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             updateDetailsTable()
 
             updateNotificationIcon()
+            updateSpeakIcon()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
         }

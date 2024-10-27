@@ -637,4 +637,7 @@
     <string name="pref_aa_media_player_speak_alarm_only_summary">Falar apenas os alarmes.</string>
     <string name="pref_aa_media_player_speak_interval_summary">Definir o intervalo para falar os novos valores no Android Auto.</string>
 
+    <string name="gda_media_speak_toggle_title">Alternar Falar Novo Valor</string>
+    <string name="gda_speak_on">Falar está ligado</string>
+    <string name="gda_speak_off">Falar está desligado</string>
 </resources>

@@ -182,7 +182,7 @@
     <string name="pref_car_notification_interval_summary">Minimum interval for showing notifications for a new value.\nAlarms will always show a notification.</string>
     <string name="pref_switch_car_notification_alarm_only">Alarm only</string>
     <string name="pref_switch_car_notification_alarm_only_summary">Will only trigger notifications for alarms in their specific interval.\nVery low values will always show a notification.</string>
-    <string name="pref_switch_car_media">Dummy Media Player</string>
+    <string name="pref_switch_car_media">Fake Media Player</string>
     <string name="pref_switch_car_media_summary">Show the glucose value as current song for Android Auto.</string>
     <string name="pref_switch_send_to_aod">Send glucodata broadcast</string>
     <string name="pref_switch_send_to_aod_summary">Send glucodata broadcast for new values received from any source.</string>
@@ -683,5 +683,9 @@
     <string name="tts_test_summary">Tap to test text-to-speech.</string>
     <string name="pref_aa_media_player_speak_alarm_only_summary">Speak alarms only.</string>
     <string name="pref_aa_media_player_speak_interval_summary">Set the interval for speaking new values in Android Auto.</string>
+
+    <string name="gda_media_speak_toggle_title">Speak New Value toggle</string>
+    <string name="gda_speak_on">Speak is on</string>
+    <string name="gda_speak_off">Speak is off</string>
 
 </resources>

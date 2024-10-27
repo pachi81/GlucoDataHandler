@@ -641,5 +641,8 @@
     <string name="pref_aa_media_player_speak_alarm_only_summary">Lire uniquement les alarmes.</string>
     <string name="pref_aa_media_player_speak_interval_summary">Définir l\'intervalle pour lire les nouvelles valeurs dans Android Auto.</string>
 
+    <string name="gda_media_speak_toggle_title">Basculer la lecture de la nouvelle valeur</string>
+    <string name="gda_speak_on">La lecture est activée</string>
+    <string name="gda_speak_off">La lecture est désactivée</string>
 
 </resources>

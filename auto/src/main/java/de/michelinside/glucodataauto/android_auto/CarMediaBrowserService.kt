@@ -35,6 +35,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     private val MEDIA_ROOT_ID = "root"
     private val MEDIA_GLUCOSE_ID = "glucose_value"
     private val MEDIA_NOTIFICATION_TOGGLE_ID = "toggle_notification"
+    private val MEDIA_SPEAK_TOGGLE_ID = "toggle_speak"
     private lateinit var  sharedPref: SharedPreferences
     private lateinit var session: MediaSessionCompat
     private lateinit var mediaController: MediaControllerCompat
@@ -74,6 +75,12 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                             Log.d(LOG_ID, "Toggle notification")
                             with(sharedPref.edit()) {
                                 putBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, !CarNotification.enable_notification)
+                                apply()
+                            }
+                        } else if(curMediaItem == MEDIA_SPEAK_TOGGLE_ID) {
+                            Log.d(LOG_ID, "Toggle speak")
+                            with(sharedPref.edit()) {
+                                putBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, !sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, false))
                                 apply()
                             }
                         }
@@ -157,7 +164,10 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                     curMediaItem = MEDIA_GLUCOSE_ID
                 val items = mutableListOf(createMediaItem())
                 if (Channels.notificationChannelActive(this, ChannelType.ANDROID_AUTO)) {
-                    items.add(createToggleItem())
+                    items.add(createNotificationToggleItem())
+                }
+                if(TextToSpeechUtils.isAvailable()) {
+                    items.add(createSpeakToggleItem())
                 }
                 result.sendResult(items)
             } else {
@@ -183,6 +193,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         try {
             when(key) {
                 Constants.SHARED_PREF_CAR_NOTIFICATION,
+                Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE,
                 Constants.SHARED_PREF_CAR_MEDIA,
                 Constants.SHARED_PREF_CAR_MEDIA_ICON_STYLE -> {
                     notifyChildrenChanged(MEDIA_ROOT_ID)
@@ -219,6 +230,14 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                     Log.d(LOG_ID, "Toggle notification")
                     with(sharedPref.edit()) {
                         putBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, !CarNotification.enable_notification)
+                        apply()
+                    }
+                }
+               MEDIA_SPEAK_TOGGLE_ID -> {
+                   curMediaItem = MEDIA_GLUCOSE_ID
+                    Log.d(LOG_ID, "Toggle speak")
+                    with(sharedPref.edit()) {
+                        putBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, !sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, false))
                         apply()
                     }
                 }
@@ -259,7 +278,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             mediaDescriptionBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE)
     }
 
-    private fun getToggleIcon(): Bitmap? {
+    private fun getNotificationToggleIcon(): Bitmap? {
         if(CarNotification.enable_notification) {
             return ContextCompat.getDrawable(applicationContext, R.drawable.icon_popup_white)?.toBitmap()
         }
@@ -287,12 +306,29 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         }
     }
 */
-    private fun createToggleItem(): MediaBrowserCompat.MediaItem {
+    private fun createNotificationToggleItem(): MediaBrowserCompat.MediaItem {
         val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
             .setMediaId(MEDIA_NOTIFICATION_TOGGLE_ID)
             .setTitle(resources.getString(CR.string.gda_media_notification_toggle_title))
             .setSubtitle(resources.getString(if(CarNotification.enable_notification) CR.string.gda_notifications_on else CR.string.gda_notifications_off))
-            .setIconBitmap(getToggleIcon())
+            .setIconBitmap(getNotificationToggleIcon())
+        return MediaBrowserCompat.MediaItem(
+            mediaDescriptionBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE)
+    }
+
+    private fun getSpeakToggleIcon(): Bitmap? {
+        if(sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, false))
+            return ContextCompat.getDrawable(applicationContext, CR.drawable.icon_volume_normal_white)?.toBitmap()
+        else
+            return ContextCompat.getDrawable(applicationContext, CR.drawable.icon_volume_off_white)?.toBitmap()
+    }
+
+    private fun createSpeakToggleItem(): MediaBrowserCompat.MediaItem {
+        val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
+            .setMediaId(MEDIA_SPEAK_TOGGLE_ID)
+            .setTitle(resources.getString(CR.string.gda_media_speak_toggle_title))
+            .setSubtitle(resources.getString(if(sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, false)) CR.string.gda_speak_on else CR.string.gda_speak_off))
+            .setIconBitmap(getSpeakToggleIcon())
         return MediaBrowserCompat.MediaItem(
             mediaDescriptionBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE)
     }

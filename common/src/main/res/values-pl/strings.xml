@@ -644,5 +644,8 @@
     <string name="pref_aa_media_player_speak_alarm_only_summary">Speak alarms only.</string>
     <string name="pref_aa_media_player_speak_interval_summary">Set the interval for speaking new values in Android Auto.</string>
 
+    <string name="gda_media_speak_toggle_title">Speak New Value toggle</string>
+    <string name="gda_speak_on">Speak is on</string>
+    <string name="gda_speak_off">Speak is off</string>
 
 </resources>

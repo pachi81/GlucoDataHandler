@@ -640,4 +640,7 @@
     <string name="pref_aa_media_player_speak_alarm_only_summary">Pronunciar solo las alarmas.</string>
     <string name="pref_aa_media_player_speak_interval_summary">Establecer el intervalo para pronunciar los nuevos valores en Android Auto.</string>
 
+    <string name="gda_media_speak_toggle_title">Alternar pronunciar nuevo valor</string>
+    <string name="gda_speak_on">Pronunciar está activado</string>
+    <string name="gda_speak_off">Pronunciar está desactivado</string>
 </resources>

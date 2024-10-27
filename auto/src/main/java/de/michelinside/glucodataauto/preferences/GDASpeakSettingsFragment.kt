@@ -2,11 +2,13 @@ package de.michelinside.glucodataauto.preferences
 
 import android.content.SharedPreferences
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.preference.Preference
 import androidx.preference.SeekBarPreference
 import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodataauto.GlucoDataServiceAuto
 import de.michelinside.glucodataauto.R
+import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodataauto.android_auto.CarMediaPlayer
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -45,4 +47,18 @@ class GDASpeakSettingsFragment: SettingsFragmentBase(R.xml.pref_gda_speak) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
         }
     }
+
+    override fun updatePreferences() {
+        super.updatePreferences()
+        val prefSpeak = findPreference<SwitchPreferenceCompat>(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE) ?: return
+        prefSpeak.icon = ContextCompat.getDrawable(requireContext(), if(prefSpeak.isChecked) CR.drawable.icon_volume_normal else CR.drawable.icon_volume_off)
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        super.onSharedPreferenceChanged(sharedPreferences, key)
+        if(key == Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE) {
+            updatePreferences()
+        }
+    }
+
 }

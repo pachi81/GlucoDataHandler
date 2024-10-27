@@ -6,6 +6,11 @@
         android:title="@string/pref_switch_car_notification"
         android:icon="@drawable/icon_off_white"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/action_speak_toggle"
+        android:title="@string/pref_aa_media_player_always_speak"
+        android:icon="@drawable/icon_volume_off_white"
+        app:showAsAction="always" />
     <group
         android:id="@+id/group_settings">
         <item

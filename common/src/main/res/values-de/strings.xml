@@ -129,7 +129,7 @@
     <string name="pref_switch_notification">Dummy Werte</string>
     <string name="pref_switch_car_notification">Android Auto Benachrichtigung</string>
     <string name="pref_switch_car_notification_summary">Benachrichtigung für Android Auto.</string>
-    <string name="pref_switch_car_media">Dummy Media Player</string>
+    <string name="pref_switch_car_media">Fake Media Player</string>
     <string name="pref_switch_car_media_summary">Stellt den Glucose Wert als aktuellen Song dar.</string>
     <string name="pref_car_notification_interval">Benachrichtigungsintervall</string>
     <string name="pref_car_notification_interval_summary">Intervall, um die Benachrichtigungspopups in Android Auto für neue Werte anzuzeigen.\nAlarme werden unabhängig davon immer angezeigt.</string>
@@ -634,5 +634,9 @@
     <string name="tts_test_summary">Tippen Sie hier, um die Text-to-Speech-Funktion zu testen.</string>
     <string name="pref_aa_media_player_speak_alarm_only_summary">Nur Alarme sprechen.</string>
     <string name="pref_aa_media_player_speak_interval_summary">Intervall für das Sprechen neuer Werte in Android Auto festlegen.</string>
+
+    <string name="gda_media_speak_toggle_title">Neuen Wert sprechen umschalten</string>
+    <string name="gda_speak_on">Sprechen ist an</string>
+    <string name="gda_speak_off">Sprechen ist aus</string>
 
 </resources>
