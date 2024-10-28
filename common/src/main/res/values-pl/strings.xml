@@ -623,29 +623,29 @@
 
     <plurals name="elapsed_time_full_text">
         <item quantity="one">Czas %d minuta</item>
-        <item quantity="few">Czas %d minuty</item>
-        <item quantity="many">Czas %d minut</item>
-        <item quantity="other">Czas %d minut</item>
+        <item quantity="few">Czas %d minut(y)</item>
+        <item quantity="many">Czas %d minut(y)</item>
+        <item quantity="other">Czas %d minut(y)</item>
     </plurals>
     <string name="pref_source_diabox_info_summary">Otwórz menu Integracja i włącz opcję \"Share data with GWatch\" (udostępnij dane aplikacji GWatch).\nUwaga: transmisja DiaBox zawiera tylko wartość glukozy i żadnych dodatkowych informacji, takich jak trend!</string>
     <string name="pref_source_dexcom_byoda_not_working_info_summary">Uwaga: zdaje się, że transmisja AAPS z BYODA nie działa z innymi aplikacjami.\nW BYODA należy używać transmisji xDrip+.\n\n</string>
 
     <!-- new for GDA -->
 
-    <string name="gda_help_aa_summary">Get started with GDA on Android Auto</string>
-    <string name="no_tts">Text-to-speech (TTS) is not enabled.\nTo use this feature, enable TTS in Android Accessibility settings.\nOnce enabled, tap here to update.</string>
-    <string name="pref_cat_android_auto_speak">Speak Value</string>
-    <string name="pref_cat_play_button">Play Button</string>
-    <string name="pref_aa_media_player_speak_values_on_summary">Speak current value when playing.\nRequires Text-to-speech to be enabled.</string>
-    <string name="pref_aa_media_player_speak_values_off_summary">Play an empty sound to bring the media player to the front of the split screen.</string>
-    <string name="pref_aa_media_player_always_speak">Speak New Value</string>
-    <string name="pref_aa_media_player_always_speak_summary">Speak new values in Android Auto, even when using another media player.</string>
-    <string name="tts_test_summary">Tap to test text-to-speech.</string>
-    <string name="pref_aa_media_player_speak_alarm_only_summary">Speak alarms only.</string>
-    <string name="pref_aa_media_player_speak_interval_summary">Set the interval for speaking new values in Android Auto.</string>
+    <string name="gda_help_aa_summary">Zacznij korzystać z GDA w Android Auto</string>
+    <string name="no_tts">Funkcja zamiany tekstu na mowę (TTS) nie jest włączona.\nAby korzystać z tej funkcji, włącz TTS w ustawieniach dostępności systemu Android.\nPo jej włączeniu dotknij tutaj, aby dokonać aktualizacji ustawień.</string>
+    <string name="pref_cat_android_auto_speak">Odczytuj wartość</string>
+    <string name="pref_cat_play_button">Przycisk odtwarzania</string>
+    <string name="pref_aa_media_player_speak_values_on_summary">Odczytuj aktualną wartość glukozy w czasie odtwarzania.\nWymaga włączenia funkcji zamiany tekstu na mowę.</string>
+    <string name="pref_aa_media_player_speak_values_off_summary">Odtwórz pusty dźwięk, aby przenieść odtwarzacz multimediów na pierwszy plan podzielonego ekranu.</string>
+    <string name="pref_aa_media_player_always_speak">Odczytuj nową wartość</string>
+    <string name="pref_aa_media_player_always_speak_summary">Odczytywanie nowych wartości glukozy w Android Auto, nawet podczas korzystania z innego odtwarzacza multimediów.</string>
+    <string name="tts_test_summary">Stuknij, aby przetestować zamianę tekstu na mowę.</string>
+    <string name="pref_aa_media_player_speak_alarm_only_summary">Odczytuj wyłącznie alarmy.</string>
+    <string name="pref_aa_media_player_speak_interval_summary">Ustaw przerwę między odczytywaniem nowych wartości w Android Auto.</string>
 
-    <string name="gda_media_speak_toggle_title">Speak New Value toggle</string>
-    <string name="gda_speak_on">Speak is on</string>
-    <string name="gda_speak_off">Speak is off</string>
+    <string name="gda_media_speak_toggle_title">Wł./Wył. odczytywania nowej wartości</string>
+    <string name="gda_speak_on">Funkcja odczytywania jest włączona</string>
+    <string name="gda_speak_off">Funkcja odczytywania jest wyłączona</string>
 
 </resources>
