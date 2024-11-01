@@ -245,12 +245,10 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
     }
 
-    private fun triggerNotification(alarmType: AlarmType, context: Context, forTest: Boolean = false, setLastAlarm: Boolean = false) {
+    private fun triggerNotification(alarmType: AlarmType, context: Context, forTest: Boolean = false) {
         try {
-            Log.d(LOG_ID, "triggerNotification called for $alarmType - active=$active - curNotification=$curNotification - forTest=$forTest - setLastAlarm=$setLastAlarm")
+            Log.d(LOG_ID, "triggerNotification called for $alarmType - active=$active - curNotification=$curNotification - forTest=$forTest")
             if (getAlarmState(context) == AlarmState.ACTIVE || forTest) {
-                if(setLastAlarm)
-                    AlarmHandler.setLastAlarm(alarmType)
                 stopCurrentNotification(context, true)  // do not send stop to client! -> to prevent, that the client will stop the newly created notification!
                 curNotification = getNotificationId(alarmType)
                 retriggerCount = 0
@@ -872,7 +870,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             Log.d(LOG_ID, "OnNotifyData called for $dataSource")
             when(dataSource) {
                 NotifySource.ALARM_TRIGGER -> {
-                    triggerNotification(ReceiveData.getAlarmType(), context, setLastAlarm = true)
+                    triggerNotification(ReceiveData.getAlarmType(), context)
                 }
                 NotifySource.OBSOLETE_ALARM_TRIGGER -> {
                     triggerNotification(AlarmType.OBSOLETE, context)
@@ -882,7 +880,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                         val alarmType = AlarmType.fromIndex(extras.getInt(Constants.ALARM_TYPE_EXTRA, AlarmType.NONE.ordinal))
                         Log.i(LOG_ID, "Delta alarm trigger: $alarmType")
                         if(alarmType != AlarmType.NONE)
-                            triggerNotification(alarmType, context, setLastAlarm = true)
+                            triggerNotification(alarmType, context)
                     }
                 }
                 NotifySource.ALARM_STATE_CHANGED -> {

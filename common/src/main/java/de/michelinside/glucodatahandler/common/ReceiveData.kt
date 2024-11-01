@@ -494,12 +494,16 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     // check for alarm
                     if (interApp) {
                         alarm = extras.getInt(ALARM) // if bit 8 is set, then an alarm is triggered
+                        if(forceGlucoseAlarm)
+                            AlarmHandler.setLastAlarm(getAlarmType())
                     } else {
                         alarm = calculateAlarm()
                     }
                     if(extras.containsKey(DELTA_FALLING_COUNT) && extras.containsKey(DELTA_RISING_COUNT)) {
                         deltaFallingCount = extras.getInt(DELTA_FALLING_COUNT)
                         deltaRisingCount = extras.getInt(DELTA_RISING_COUNT)
+                        if(interApp && forceDeltaAlarm)
+                            AlarmHandler.setLastAlarm(getDeltaAlarmType())
                     } else {
                         calculateDeltaAlarmCount()
                     }

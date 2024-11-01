@@ -128,6 +128,10 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
             AlarmType.VERY_HIGH -> newAlarmType.setting.isActive && checkHighAlarm(newAlarmType, newAlarmType.setting.intervalMS)
             else -> false
         }
+        if (triggerAlarm) {
+            setLastAlarm(newAlarmType)
+            Log.i(LOG_ID, "Trigger alarm for type $newAlarmType")
+        }
         return triggerAlarm
     }
 
@@ -231,6 +235,8 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
                 result = AlarmType.RISING_FAST
             }
         }
+        if(result != AlarmType.NONE)
+            setLastAlarm(result)
         return result
     }
 
