@@ -69,4 +69,21 @@ class ReceiveDataTest {
         assertEquals(-2F, ReceiveData.rate)
         assertTrue(ReceiveData.isMmol)
     }
+
+    @Test
+    fun testReceiveInternalGlucoseAlarm() {
+        // Context of the app under test.
+        val glucoExtras = Bundle()
+        glucoExtras.putLong(ReceiveData.TIME, ReceiveData.time + 60000)
+        glucoExtras.putInt(ReceiveData.MGDL,280)
+        glucoExtras.putFloat(ReceiveData.RATE, 1F)
+        glucoExtras.putInt(ReceiveData.ALARM, 14)  // very high + force
+        assertTrue(ReceiveData.handleIntent(appContext, DataSource.NONE, glucoExtras, true))
+        assertEquals(280, ReceiveData.rawValue)
+        assertEquals(280F, ReceiveData.glucose)
+        assertEquals(1F, ReceiveData.rate)
+        assertEquals(14, ReceiveData.alarm)
+        assertTrue(ReceiveData.forceGlucoseAlarm)
+        assertTrue(ReceiveData.forceAlarm)
+    }
 }

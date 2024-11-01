@@ -49,7 +49,9 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     val forceDeltaAlarm: Boolean get() {
         return ((alarm and 16) == 16)
     }
-    val forceAlarm = forceGlucoseAlarm || forceDeltaAlarm
+    val forceAlarm: Boolean get() {
+        return (forceGlucoseAlarm || forceDeltaAlarm)
+    }
 
     var iob: Float = Float.NaN
     var cob: Float = Float.NaN
@@ -144,10 +146,10 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         if(isObsoleteShort())
             return context.getString(R.string.no_new_value, getElapsedTimeMinute())
         var text = ""
-        val resId: Int? = if(forceGlucoseAlarm && getAlarmType() != AlarmType.NONE) {
+        val resId: Int? = if(getAlarmType() != AlarmType.OK) {
                 AlarmNotificationBase.getAlarmTextRes(getAlarmType())
-            } else if(forceDeltaAlarm && getDeltaAlarmType() != AlarmType.NONE) {
-            AlarmNotificationBase.getAlarmTextRes(getDeltaAlarmType())
+            } else if(getDeltaAlarmType() != AlarmType.NONE) {
+                AlarmNotificationBase.getAlarmTextRes(getDeltaAlarmType())
             } else {
                 null
             }
