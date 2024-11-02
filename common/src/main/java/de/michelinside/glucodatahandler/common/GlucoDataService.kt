@@ -116,8 +116,6 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     )
                     isRunning = false
                 }
-            } else {
-                checkServices(context)
             }
         }
 
