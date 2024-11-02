@@ -143,6 +143,10 @@ class AlarmAdvancedActivity : AppCompatActivity() {
                 Log.v(LOG_ID, "onProgressChanged called for $preference with progress=$progress - fromUser=$fromUser")
                 if(fromUser) {
                     txtLevel.text = getStartDelayString()
+                    with(sharedPref.edit()) {
+                        putInt(preference, progress*500)
+                        apply()
+                    }
                 }
             } catch( exc: Exception ) {
                 Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())

@@ -279,6 +279,10 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
                 if(fromUser) {
                     curProgress = progress
                     txtLevel.text = curProgress.toString()
+                    with (sharedPref.edit()) {
+                        putInt(preference, curProgress)
+                        apply()
+                    }
                     if(isSoundLevel)
                         setSoundLevel(curProgress)
                     else if (alarmType.setting!!.vibratePattern != null)
@@ -318,6 +322,7 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
                 Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
             }
         }
+
 
         private fun setSoundLevel(level: Int) {
             Log.v(LOG_ID, "setSoundLevel: $level")
