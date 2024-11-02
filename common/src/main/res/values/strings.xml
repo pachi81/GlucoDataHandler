@@ -687,5 +687,7 @@
     <string name="gda_media_speak_toggle_title">Speak New Value toggle</string>
     <string name="gda_speak_on">Speak is on</string>
     <string name="gda_speak_off">Speak is off</string>
+    <string name="enable_alarm_icon_toggle">Enable Alarm Icon</string>
+    <string name="enable_alarm_icon_toggle_summary">Enable alarm icon on main screen to toggle alarm state.</string>
 
 </resources>

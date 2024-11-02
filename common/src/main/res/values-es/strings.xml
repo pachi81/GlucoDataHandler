@@ -643,4 +643,6 @@
     <string name="gda_media_speak_toggle_title">Alternar pronunciar nuevo valor</string>
     <string name="gda_speak_on">Pronunciar está activado</string>
     <string name="gda_speak_off">Pronunciar está desactivado</string>
+    <string name="enable_alarm_icon_toggle">Habilitar icono de alarma</string>
+    <string name="enable_alarm_icon_toggle_summary">Habilitar icono de alarma en la pantalla principal para cambiar el estado de la alarma.</string>
 </resources>

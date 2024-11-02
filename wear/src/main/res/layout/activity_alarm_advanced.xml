@@ -147,6 +147,28 @@
                 android:text="@string/alarm_start_delay_wear_summary"
                 android:textAlignment="textStart"
                 android:textSize="16sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginVertical="10dp"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchEnableAlarmIcon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/enable_alarm_icon_toggle"
+                android:checked="true"
+                android:textAlignment="viewStart" />
+
+            <TextView
+                android:id="@+id/txtEnableAlarmIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/enable_alarm_icon_toggle_summary"
+                android:textAlignment="textStart"
+                android:textSize="16sp" />
     </LinearLayout>
     </ScrollView>
 </androidx.wear.widget.BoxInsetLayout>

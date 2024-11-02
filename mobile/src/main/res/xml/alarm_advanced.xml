@@ -72,4 +72,14 @@
                     android:summary="@string/alarm_fullscreen_dismiss_keyguard_summary"
                     app:iconSpaceReserved="false" />
         </PreferenceCategory>
+        <PreferenceCategory
+            android:title="@string/advanced_settings"
+            app:iconSpaceReserved="false">
+                <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="true"
+                    android:key="enable_alarm_icon_toggle"
+                    android:title="@string/enable_alarm_icon_toggle"
+                    android:summary="@string/enable_alarm_icon_toggle_summary"
+                    app:iconSpaceReserved="false" />
+        </PreferenceCategory>
 </PreferenceScreen>

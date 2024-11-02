@@ -647,5 +647,7 @@
     <string name="gda_media_speak_toggle_title">Wł./Wył. odczytywania nowej wartości</string>
     <string name="gda_speak_on">Funkcja odczytywania jest włączona</string>
     <string name="gda_speak_off">Funkcja odczytywania jest wyłączona</string>
+    <string name="enable_alarm_icon_toggle">Enable Alarm Icon</string>
+    <string name="enable_alarm_icon_toggle_summary">Enable alarm icon on main screen to toggle alarm state.</string>
 
 </resources>

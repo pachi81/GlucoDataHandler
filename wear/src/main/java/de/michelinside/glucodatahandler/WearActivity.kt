@@ -336,6 +336,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             }
             val state = AlarmNotificationWear.getAlarmState(this)
             Log.v(LOG_ID, "updateAlarmIcon called for state $state")
+            alarmIcon.isEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ENABLE_ALARM_ICON_TOGGLE, true)
             alarmIcon.setImageIcon(Icon.createWithResource(this, state.icon))
             alarmIcon.contentDescription = resources.getString(CR.string.alarm_toggle_state,
                 when(state) {

@@ -22,6 +22,7 @@ class AlarmAdvancedActivity : AppCompatActivity() {
     private lateinit var switchNoAlarmPhone: SwitchCompat
     private lateinit var txtStartDelayLevel: TextView
     private lateinit var seekStartDelay: AppCompatSeekBar
+    private lateinit var switchEnableAlarmIcon: SwitchCompat
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
             Log.v(LOG_ID, "onCreate called")
@@ -36,10 +37,11 @@ class AlarmAdvancedActivity : AppCompatActivity() {
             txtStartDelayLevel = findViewById(R.id.txtStartDelayLevel)
             seekStartDelay = findViewById(R.id.seekStartDelay)
             switchNoAlarmPhone = findViewById(R.id.switchNoAlarmPhone)
+            switchEnableAlarmIcon = findViewById(R.id.switchEnableAlarmIcon)
 
             switchUseAlarmSound.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION_USE_ALARM_SOUND, true)
             switchUseAlarmSound.setOnCheckedChangeListener { _, isChecked ->
-                Log.d(LOG_ID, "Use alarm changed: " + isChecked.toString())
+                Log.d(LOG_ID, "Use alarm changed: $isChecked")
                 try {
                     with (sharedPref.edit()) {
                         putBoolean(Constants.SHARED_PREF_NOTIFICATION_USE_ALARM_SOUND, isChecked)
@@ -52,7 +54,7 @@ class AlarmAdvancedActivity : AppCompatActivity() {
 
             switchForceSound.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_FORCE_SOUND, false)
             switchForceSound.setOnCheckedChangeListener { _, isChecked ->
-                Log.d(LOG_ID, "Force sound changed: " + isChecked.toString())
+                Log.d(LOG_ID, "Force sound changed: $isChecked")
                 try {
                     with (sharedPref.edit()) {
                         putBoolean(Constants.SHARED_PREF_ALARM_FORCE_SOUND, isChecked)
@@ -65,7 +67,7 @@ class AlarmAdvancedActivity : AppCompatActivity() {
 
             switchVibration.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, false)
             switchVibration.setOnCheckedChangeListener { _, isChecked ->
-                Log.d(LOG_ID, "Vibration changed: " + isChecked.toString())
+                Log.d(LOG_ID, "Vibration changed: $isChecked")
                 try {
                     with (sharedPref.edit()) {
                         putBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, isChecked)
@@ -81,17 +83,16 @@ class AlarmAdvancedActivity : AppCompatActivity() {
             switchForceSound.isEnabled = !switchVibration.isChecked
             switchUseAlarmSound.isEnabled = !switchVibration.isChecked
 
-
-            switchNoAlarmPhone.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_NO_ALARM_POPUP_PHONE_CONNECTED, false)
-            switchNoAlarmPhone.setOnCheckedChangeListener { _, isChecked ->
-                Log.d(LOG_ID, "No popup while phone connected changed: " + isChecked.toString())
+            switchUseAlarmSound.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_NOTIFICATION_USE_ALARM_SOUND, true)
+            switchUseAlarmSound.setOnCheckedChangeListener { _, isChecked ->
+                Log.d(LOG_ID, "Use alarm changed: " + isChecked.toString())
                 try {
                     with (sharedPref.edit()) {
-                        putBoolean(Constants.SHARED_PREF_WEAR_NO_ALARM_POPUP_PHONE_CONNECTED, isChecked)
+                        putBoolean(Constants.SHARED_PREF_NOTIFICATION_USE_ALARM_SOUND, isChecked)
                         apply()
                     }
                 } catch (exc: Exception) {
-                    Log.e(LOG_ID, "Changing popup while phone connected exception: " + exc.message.toString() )
+                    Log.e(LOG_ID, "Changing use alarm exception: " + exc.message.toString() )
                 }
             }
 
@@ -99,6 +100,18 @@ class AlarmAdvancedActivity : AppCompatActivity() {
             txtStartDelayLevel.text = getStartDelayString()
             seekStartDelay.setOnSeekBarChangeListener(SeekBarChangeListener(Constants.SHARED_PREF_ALARM_START_DELAY, txtStartDelayLevel))
 
+            switchEnableAlarmIcon.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_ENABLE_ALARM_ICON_TOGGLE, true)
+            switchEnableAlarmIcon.setOnCheckedChangeListener { _, isChecked ->
+                Log.d(LOG_ID, "Enable Alarm Icon changed: $isChecked")
+                try {
+                    with (sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_ENABLE_ALARM_ICON_TOGGLE, isChecked)
+                        apply()
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Changing alarm icon exception: " + exc.message.toString() )
+                }
+            }
 
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())

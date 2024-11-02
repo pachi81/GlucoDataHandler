@@ -640,4 +640,6 @@
     <string name="gda_media_speak_toggle_title">Alternar Falar Novo Valor</string>
     <string name="gda_speak_on">Falar está ligado</string>
     <string name="gda_speak_off">Falar está desligado</string>
+    <string name="enable_alarm_icon_toggle">Ativar ícone de alarme</string>
+    <string name="enable_alarm_icon_toggle_summary">Ativar ícone de alarme na tela principal para alternar o estado do alarme.</string>
 </resources>

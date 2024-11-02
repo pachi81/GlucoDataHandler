@@ -638,5 +638,7 @@
     <string name="gda_media_speak_toggle_title">Neuen Wert sprechen umschalten</string>
     <string name="gda_speak_on">Sprechen ist an</string>
     <string name="gda_speak_off">Sprechen ist aus</string>
+    <string name="enable_alarm_icon_toggle">Alarmsymbol aktivieren</string>
+    <string name="enable_alarm_icon_toggle_summary">Alarmsymbol auf dem Hauptbildschirm aktivieren, um den Alarmstatus umzuschalten.</string>
 
 </resources>

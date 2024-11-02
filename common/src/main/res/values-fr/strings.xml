@@ -644,5 +644,7 @@
     <string name="gda_media_speak_toggle_title">Basculer la lecture de la nouvelle valeur</string>
     <string name="gda_speak_on">La lecture est activée</string>
     <string name="gda_speak_off">La lecture est désactivée</string>
+    <string name="enable_alarm_icon_toggle">Activer l\'icône d\'alarme</string>
+    <string name="enable_alarm_icon_toggle_summary">Activer l\'icône d\'alarme sur l\'écran principal pour activer/désactiver l\'état de l\'alarme.</string>
 
 </resources>
