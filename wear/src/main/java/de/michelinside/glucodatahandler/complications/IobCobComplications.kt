@@ -33,14 +33,23 @@ abstract class IobCobComplicationsBase : BgValueComplicationService() {
 class IobCobComplication: IobCobComplicationsBase() {
     override fun getText(): PlainComplicationText = iobText(true)
     override fun getTitle(): PlainComplicationText = cobText(true)
+    override fun getDescription(): String {
+        return getDescriptionForContent(iob = true, cob = true)
+    }
 }
 
 class IobComplication: IobCobComplicationsBase() {
     override fun getText(): PlainComplicationText = iobText(false)
-    override fun getIcon(): MonochromaticImage? = iobIcon()
+    override fun getIcon(): MonochromaticImage = iobIcon()
+    override fun getDescription(): String {
+        return getDescriptionForContent(iob = true)
+    }
 }
 
 class CobComplication: IobCobComplicationsBase() {
     override fun getText(): PlainComplicationText = cobText(false)
-    override fun getIcon(): MonochromaticImage? = cobIcon()
+    override fun getIcon(): MonochromaticImage = cobIcon()
+    override fun getDescription(): String {
+        return getDescriptionForContent(cob = true)
+    }
 }

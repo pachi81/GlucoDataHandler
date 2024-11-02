@@ -201,8 +201,35 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     fun resText(resId: Int): PlainComplicationText =
         plainText(getText(resId))
 
+    private fun appendText(text: String, append: String): String {
+        var textOut = text
+        if(textOut.isNotEmpty())
+            textOut += ", "
+        textOut += append
+        return textOut
+    }
+
+    fun getDescriptionForContent(glucose: Boolean = false, delta: Boolean = false, trend: Boolean = false, time: Boolean = false, iob: Boolean = false, cob: Boolean = false): String {
+        var text = ""
+        if(glucose)
+            text = ReceiveData.getGlucoseAsString()
+        if(delta)
+            text = appendText(text, this.getString(CR.string.info_label_delta) + " " + ReceiveData.getDeltaAsString())
+        if(trend)
+            text = appendText(text, ReceiveData.getRateAsText(this))
+        if(time)
+            text = appendText(text, ReceiveData.getElapsedRelativeTimeAsString(this, true))
+        if(iob)
+            text = appendText(text, this.getString(CR.string.info_label_iob) + " " + ReceiveData.getIobAsString())
+        if(cob)
+            text = appendText(text, this.getString(CR.string.info_label_cob) + " " + ReceiveData.getCobAsString())
+        return text
+    }
+
+    abstract fun getDescription(): String
+
     open fun descriptionText(): PlainComplicationText =
-        plainText(ReceiveData.getAsText(this, false))
+        plainText(getDescription())
 
     fun arrowIcon(): MonochromaticImage =
         MonochromaticImage.Builder(

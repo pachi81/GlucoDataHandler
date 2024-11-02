@@ -5,18 +5,30 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.utils.Utils
 
 open class ShortClucoseComplication:  BgValueComplicationService() {
+    override fun getDescription(): String {
+        return getDescriptionForContent(glucose = true)
+    }
 }
 
 class ShortGlucoseWithIconComplication: BgValueComplicationService() {
     override fun getIcon(): MonochromaticImage = glucoseIcon()
+    override fun getDescription(): String {
+        return getDescriptionForContent(glucose = true)
+    }
 }
 
 class ShortGlucoseWithTrendComplication: BgValueComplicationService() {
     override fun getIcon(): MonochromaticImage = arrowIcon()
+    override fun getDescription(): String {
+        return getDescriptionForContent(glucose = true, trend = true)
+    }
 }
 
 class ShortGlucoseWithDeltaComplication: ShortClucoseComplication() {
     override fun getTitle(): PlainComplicationText = deltaText()
+    override fun getDescription(): String {
+        return getDescriptionForContent(glucose = true, delta = true)
+    }
 }
 
 class ShortGlucoseWithDeltaAndTrendComplication: ShortClucoseComplication() {
@@ -31,6 +43,9 @@ class ShortGlucoseWithDeltaAndTrendComplication: ShortClucoseComplication() {
             .setMonochromaticImage(getIcon())
             .setTapAction(getTapAction())
             .build()
+    }
+    override fun getDescription(): String {
+        return getDescriptionForContent(glucose = true, delta = true, trend = true)
     }
 }
 
@@ -48,14 +63,23 @@ open class ShortGlucoseWithTrendRangeComplication: BgValueComplicationService() 
             .setTapAction(getTapAction())
             .build()
     }
+    override fun getDescription(): String {
+        return getDescriptionForContent(glucose = true, trend = true)
+    }
 }
 
 open class ShortDeltaComplication: ShortClucoseComplication() {
     override fun getText(): PlainComplicationText = deltaText()
+    override fun getDescription(): String {
+        return getDescriptionForContent(delta = true)
+    }
 }
 
 class ShortDeltaWithTrendComplication: ShortDeltaComplication() {
     override fun getIcon(): MonochromaticImage = arrowIcon()
+    override fun getDescription(): String {
+        return getDescriptionForContent(delta = true, trend = true)
+    }
 }
 
 class ShortDeltaWithIconComplication: ShortDeltaComplication() {
@@ -65,5 +89,8 @@ class ShortDeltaWithIconComplication: ShortDeltaComplication() {
 class OtherUnitComplication: BgValueComplicationService() {
     override fun getText(): PlainComplicationText = plainText(ReceiveData.getGlucoseAsOtherUnit())
     override fun getTitle(): PlainComplicationText = plainText(ReceiveData.getOtherUnit())
+    override fun getDescription(): String {
+        return ReceiveData.getGlucoseAsOtherUnit() + " " + ReceiveData.getOtherUnit()
+    }
 }
 

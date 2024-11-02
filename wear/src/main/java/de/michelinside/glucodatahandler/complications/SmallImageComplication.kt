@@ -9,20 +9,35 @@ import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 
 class SmallTrendImageComplication: BgValueComplicationService() {
     override fun getImage(): SmallImage = arrowImage()
+    override fun getDescription(): String {
+        return getDescriptionForContent(trend = true)
+    }
 }
 class SmallTrendSmallImageComplication: BgValueComplicationService() {
     override fun getImage(): SmallImage = arrowImage(true)
+    override fun getDescription(): String {
+        return getDescriptionForContent(trend = true)
+    }
 }
 
 class TrendIconComplication: BgValueComplicationService() {
     override fun getIcon(): MonochromaticImage = arrowIcon()
+    override fun getDescription(): String {
+        return getDescriptionForContent(trend = true)
+    }
 }
 
 class SmallValueImageComplication: BgValueComplicationService() {
     override fun getImage(): SmallImage = glucoseImage()
+    override fun getDescription(): String {
+        return getDescriptionForContent(glucose = true)
+    }
 }
 class SmallValueSmallImageComplication: BgValueComplicationService() {
     override fun getImage(): SmallImage = glucoseImage(true)
+    override fun getDescription(): String {
+        return getDescriptionForContent(glucose = true)
+    }
 }
 
 class SmallImageGlucoseWithTrendComplication: BgValueComplicationService() {
@@ -36,6 +51,10 @@ class SmallImageGlucoseWithTrendComplication: BgValueComplicationService() {
         )
             .setTapAction(getTapAction())
             .build()
+    }
+
+    override fun getDescription(): String {
+        return getDescriptionForContent(glucose = true, trend = true)
     }
 }
 
@@ -60,6 +79,10 @@ class IconGlucoseWithTrendComplication: BgValueComplicationService() {
             .setTapAction(getTapAction())
             .build()
     }
+
+    override fun getDescription(): String {
+        return getDescriptionForContent(glucose = true, trend = true)
+    }
 }
 
 class SmallImageGlucoseWithTrendSmallComplication: BgValueComplicationService() {
@@ -73,6 +96,10 @@ class SmallImageGlucoseWithTrendSmallComplication: BgValueComplicationService() 
         )
             .setTapAction(getTapAction())
             .build()
+    }
+
+    override fun getDescription(): String {
+        return getDescriptionForContent(glucose = true, trend = true)
     }
 }
 
@@ -97,6 +124,10 @@ class ValueIconComplication: BgValueComplicationService() {
             .setTapAction(getTapAction())
             .build()
     }
+
+    override fun getDescription(): String {
+        return getDescriptionForContent(glucose = true)
+    }
 }
 
 class DeltaIconComplication: BgValueComplicationService() {
@@ -120,6 +151,10 @@ class DeltaIconComplication: BgValueComplicationService() {
             .setTapAction(getTapAction())
             .build()
     }
+
+    override fun getDescription(): String {
+        return getDescriptionForContent(delta = true)
+    }
 }
 
 class DeltaImageComplication: BgValueComplicationService() {
@@ -129,6 +164,9 @@ class DeltaImageComplication: BgValueComplicationService() {
             type = SmallImageType.PHOTO
         ).setAmbientImage(BitmapUtils.getDeltaAsIcon(color = Color.WHITE))
             .build()
+    }
+    override fun getDescription(): String {
+        return getDescriptionForContent(delta = true)
     }
 }
 
@@ -142,6 +180,9 @@ open class TimeImageComplication: BgValueComplicationService() {
             type = SmallImageType.PHOTO
         ).setAmbientImage(getTimeIcon(Color.WHITE))
             .build()
+    }
+    override fun getDescription(): String {
+        return getDescriptionForContent(time = true)
     }
 }
 
@@ -167,6 +208,9 @@ class TimeIconComplication: TimeImageComplication() {
             .setTapAction(getTapAction())
             .build()
     }
+    override fun getDescription(): String {
+        return getDescriptionForContent(time = true)
+    }
 }
 
 open class SmallImageDeltaWithTimeComplication: BgValueComplicationService() {
@@ -182,6 +226,9 @@ open class SmallImageDeltaWithTimeComplication: BgValueComplicationService() {
             type = SmallImageType.PHOTO
         ).setAmbientImage(getDeltaTimeIcon(Color.WHITE))
             .build()
+    }
+    override fun getDescription(): String {
+        return getDescriptionForContent(delta = true, time = true)
     }
 }
 
@@ -205,5 +252,8 @@ class IconDeltaWithTimeComplication: SmallImageDeltaWithTimeComplication() {
         )
             .setTapAction(getTapAction())
             .build()
+    }
+    override fun getDescription(): String {
+        return getDescriptionForContent(delta = true, time = true)
     }
 }
