@@ -648,6 +648,6 @@
     <string name="gda_speak_on">Funkcja odczytywania jest włączona</string>
     <string name="gda_speak_off">Funkcja odczytywania jest wyłączona</string>
     <string name="enable_alarm_icon_toggle">Włącz ikonę alarmów</string>
-    <string name="enable_alarm_icon_toggle_summary">Włącz pokazywanie ikony alarmów na ekranie głównym, by móc włączać i wyłączać alarmy.</string>
+    <string name="enable_alarm_icon_toggle_summary">Pokaż na ekranie głównym ikonę alarmów, która umożliwia włączanie i wyłączanie alarmów.</string>
 
 </resources>
