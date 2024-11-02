@@ -1,11 +1,9 @@
 package de.michelinside.glucodatahandler.common.receiver
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
@@ -13,7 +11,7 @@ import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 
-open class AAPSReceiver: BroadcastReceiver() {
+open class AAPSReceiver: ReceiverBase() {
     private val LOG_ID = "GDH.AAPSReceiver"
     companion object {
         private const val BG_VALUE = "glucoseMgdl" // double
@@ -26,10 +24,12 @@ open class AAPSReceiver: BroadcastReceiver() {
         private const val PROFILE_NAME = "profile"         // string
     }
 
-    override fun onReceive(context: Context, intent: Intent) {
+    override fun getName(): String {
+        return LOG_ID
+    }
+
+    override fun onReceiveData(context: Context, intent: Intent) {
         try {
-            if(!GlucoDataService.isRegistered(this))
-                return
             Log.i( LOG_ID,"onReceive called for " + intent.action + ": " + Utils.dumpBundle(intent.extras))
             if (intent.extras != null) {
                 val extras = intent.extras!!

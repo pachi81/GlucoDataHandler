@@ -1,12 +1,10 @@
 package de.michelinside.glucodatahandler.common.receiver
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
-import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
@@ -15,7 +13,7 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 
-open class XDripBroadcastReceiver: BroadcastReceiver() {
+open class XDripBroadcastReceiver: ReceiverBase() {
     companion object {
         const val BG_ESTIMATE = "com.eveningoutpost.dexdrip.Extras.BgEstimate"
         const val BG_SLOPE = "com.eveningoutpost.dexdrip.Extras.BgSlope"
@@ -43,13 +41,12 @@ open class XDripBroadcastReceiver: BroadcastReceiver() {
     }
     private val LOG_ID = "GDH.XDripBroadcastReceiver"
 
-    init {
-        Log.v(LOG_ID, "init called")
+    override fun getName(): String {
+        return LOG_ID
     }
-    override fun onReceive(context: Context, intent: Intent) {
+
+    override fun onReceiveData(context: Context, intent: Intent) {
         try {
-            if(!GlucoDataService.isRegistered(this))
-                return
             Log.i(LOG_ID, "onReceive called for " + intent.action + ": " + Utils.dumpBundle(intent.extras))
             if (intent.extras != null) {
                 val extras = intent.extras!!

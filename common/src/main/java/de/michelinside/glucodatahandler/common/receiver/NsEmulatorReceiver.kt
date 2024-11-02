@@ -1,11 +1,9 @@
 package de.michelinside.glucodatahandler.common.receiver
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
@@ -15,13 +13,15 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 import org.json.JSONArray
 
 
-open class NsEmulatorReceiver: BroadcastReceiver() {
+open class NsEmulatorReceiver: ReceiverBase() {
     private val LOG_ID = "GDH.NsEmulatorReceiver"
 
-    override fun onReceive(context: Context, intent: Intent) {
+    override fun getName(): String {
+        return LOG_ID
+    }
+
+    override fun onReceiveData(context: Context, intent: Intent) {
         try {
-            if(!GlucoDataService.isRegistered(this))
-                return
             val extras = intent.extras
             Log.i(LOG_ID, "onReceive called for " + intent.action + ": " + Utils.dumpBundle(extras))
             if (extras != null) {

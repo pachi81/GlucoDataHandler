@@ -163,7 +163,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.NEW_VERSION_AVAILABLE,
                 NotifySource.TTS_STATE_CHANGED))
 
-            GlucoDataServiceAuto.startDataSync(this)
+            GlucoDataServiceAuto.startDataSync()
             versionChecker.checkVersion(1)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )

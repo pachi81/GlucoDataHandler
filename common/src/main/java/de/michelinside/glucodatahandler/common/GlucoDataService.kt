@@ -2,7 +2,6 @@ package de.michelinside.glucodatahandler.common
 
 import android.annotation.SuppressLint
 import android.app.Notification
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -26,6 +25,7 @@ import de.michelinside.glucodatahandler.common.receiver.DexcomBroadcastReceiver
 import de.michelinside.glucodatahandler.common.receiver.DiaboxReceiver
 import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
 import de.michelinside.glucodatahandler.common.receiver.NsEmulatorReceiver
+import de.michelinside.glucodatahandler.common.receiver.ReceiverBase
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
 import de.michelinside.glucodatahandler.common.tasks.BackgroundWorker
 import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
@@ -176,26 +176,36 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         private val registeredReceivers = mutableSetOf<String>()
 
         @SuppressLint("UnspecifiedRegisterReceiverFlag")
-        private fun registerReceiver(context: Context, receiver: BroadcastReceiver, filter: IntentFilter) {
-            Log.i(LOG_ID, "Register receiver ${receiver.javaClass.simpleName}")
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                context.registerReceiver(receiver, filter, RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
-            } else {
-                context.registerReceiver(receiver, filter)
+        fun registerReceiver(context: Context, receiver: ReceiverBase, filter: IntentFilter): Boolean {
+            Log.i(LOG_ID, "Register receiver ${receiver.getName()} for $receiver on $context")
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    context.registerReceiver(receiver, filter, RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
+                } else {
+                    context.registerReceiver(receiver, filter)
+                }
+                registeredReceivers.add(receiver.getName())
+                return true
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "registerReceiver exception: " + exc.toString())
             }
-            registeredReceivers.add(receiver.javaClass.simpleName)
+            return false
         }
 
-        private fun unregisterReceiver(context: Context, receiver: BroadcastReceiver?) {
-            if (receiver != null) {
-                Log.i(LOG_ID, "Unregister receiver ${receiver.javaClass.simpleName}")
-                context.unregisterReceiver(receiver)
-                registeredReceivers.remove(receiver.javaClass.simpleName)
+        fun unregisterReceiver(context: Context, receiver: ReceiverBase?) {
+            try {
+                if (receiver != null) {
+                    Log.i(LOG_ID, "Unregister receiver ${receiver.getName()} on $context")
+                    registeredReceivers.remove(receiver.getName())
+                    context.unregisterReceiver(receiver)
+                }
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "unregisterReceiver exception: " + exc.toString())
             }
         }
 
-        fun isRegistered(receiver: BroadcastReceiver): Boolean {
-            return registeredReceivers.contains(receiver.javaClass.simpleName)
+        fun isRegistered(receiver: ReceiverBase): Boolean {
+            return registeredReceivers.contains(receiver.getName())
         }
 
         fun updateSourceReceiver(context: Context, key: String? = null) {
@@ -206,7 +216,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, true)) {
                         if(glucoDataReceiver == null) {
                             glucoDataReceiver = GlucoseDataReceiver()
-                            registerReceiver(context, glucoDataReceiver!!, IntentFilter("glucodata.Minute"))
+                            if(!registerReceiver(context, glucoDataReceiver!!, IntentFilter("glucodata.Minute")))
+                                glucoDataReceiver = null
                         }
                     } else if (glucoDataReceiver != null) {
                         unregisterReceiver(context, glucoDataReceiver)
@@ -218,7 +229,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED, true)) {
                         if(xDripReceiver == null) {
                             xDripReceiver = XDripBroadcastReceiver()
-                            registerReceiver(context, xDripReceiver!!, IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"))
+                            if(!registerReceiver(context, xDripReceiver!!, IntentFilter("com.eveningoutpost.dexdrip.BgEstimate")))
+                                xDripReceiver = null
                         }
                     } else if (xDripReceiver != null) {
                         unregisterReceiver(context, xDripReceiver)
@@ -230,7 +242,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, true)) {
                         if(aapsReceiver == null) {
                             aapsReceiver = AAPSReceiver()
-                            registerReceiver(context, aapsReceiver!!, IntentFilter(Intents.AAPS_BROADCAST_ACTION))
+                            if(!registerReceiver(context, aapsReceiver!!, IntentFilter(Intents.AAPS_BROADCAST_ACTION)))
+                                aapsReceiver = null
                         }
                     } else if (aapsReceiver != null) {
                         unregisterReceiver(context, aapsReceiver)
@@ -245,7 +258,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                             dexcomFilter.addAction(Intents.DEXCOM_CGM_BROADCAST_ACTION)
                             dexcomFilter.addAction(Intents.DEXCOM_G7_BROADCAST_ACTION)
                             dexcomReceiver = DexcomBroadcastReceiver()
-                            registerReceiver(context, dexcomReceiver!!, dexcomFilter)
+                            if(!registerReceiver(context, dexcomReceiver!!, dexcomFilter))
+                                dexcomReceiver = null
                         }
                     } else if (dexcomReceiver != null) {
                         unregisterReceiver(context, dexcomReceiver)
@@ -257,7 +271,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true)) {
                         if(nsEmulatorReceiver == null) {
                             nsEmulatorReceiver = NsEmulatorReceiver()
-                            registerReceiver(context, nsEmulatorReceiver!!, IntentFilter(Intents.NS_EMULATOR_BROADCAST_ACTION))
+                            if(!registerReceiver(context, nsEmulatorReceiver!!, IntentFilter(Intents.NS_EMULATOR_BROADCAST_ACTION)))
+                                nsEmulatorReceiver = null
                         }
                     } else if (nsEmulatorReceiver != null) {
                         unregisterReceiver(context, nsEmulatorReceiver)
@@ -269,7 +284,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true)) {
                         if(diaboxReceiver == null) {
                             diaboxReceiver = DiaboxReceiver()
-                            registerReceiver(context, diaboxReceiver!!, IntentFilter(Intents.DIABOX_BROADCAST_ACTION))
+                            if(!registerReceiver(context, diaboxReceiver!!, IntentFilter(Intents.DIABOX_BROADCAST_ACTION)))
+                                diaboxReceiver = null
                         }
                     } else if (diaboxReceiver != null) {
                         unregisterReceiver(context, diaboxReceiver)
