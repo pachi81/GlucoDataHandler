@@ -220,9 +220,9 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
         if(time)
             text = appendText(text, ReceiveData.getElapsedRelativeTimeAsString(this, true))
         if(iob)
-            text = appendText(text, this.getString(CR.string.info_label_iob) + " " + ReceiveData.getIobAsString())
+            text = appendText(text, this.getString(CR.string.info_label_iob_talkback) + " " + ReceiveData.getIobAsString())
         if(cob)
-            text = appendText(text, this.getString(CR.string.info_label_cob) + " " + ReceiveData.getCobAsString())
+            text = appendText(text, this.getString(CR.string.info_label_cob_talkback) + " " + ReceiveData.getCobAsString())
         return text
     }
 

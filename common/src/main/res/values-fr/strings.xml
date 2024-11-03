@@ -297,8 +297,6 @@
     <string name="wear_foreground_notification_descr">Notification de premier plan qui empêche l\'arrêt de l\'application lorsqu\'elle s\'exécute en arrière-plan.</string>
     <string name="android_auto_notification_name">Notification pour Android Auto</string>
     <string name="android_auto_notification_descr">Notification affichée dans Android Auto</string>
-    <string name="info_label_iob">IOB</string>
-    <string name="info_label_cob">COB</string>
     <string name="src_xdrip_noise_blocking">Noise-Block actif dans les paramètres inter-applications xDrip+!\nVeuillez le remplacer par "Extrêmement bruyant"!</string>
     <string name="pref_cat_follower">Services cloud</string>
     <string name="pref_source_juggluco_info">Juggluco</string>

@@ -296,8 +296,6 @@
     <string name="wear_foreground_notification_descr">Notificação em primeiro plano que impede a interrupção do aplicativo durante a execução em segundo plano.</string>
     <string name="android_auto_notification_name">Notificação  para Android Auto</string>
     <string name="android_auto_notification_descr">Notification which is shown in Android Auto</string>
-    <string name="info_label_iob">IOB</string>
-    <string name="info_label_cob">COB</string>
     <string name="src_xdrip_noise_blocking">NNoise-Block ativo nas configurações entre aplicativos do xDrip+!\nPor favor, altere para \"Extremamente barulhento\"!</string>
     <string name="pref_cat_follower">Serviços na nuvem</string>
     <string name="pref_source_juggluco_info">Juggluco</string>

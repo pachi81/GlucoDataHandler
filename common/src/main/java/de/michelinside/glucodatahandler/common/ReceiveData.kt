@@ -165,9 +165,9 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             text += ", " + getElapsedRelativeTimeAsString(context, true)
         if(withIobCob && !isIobCobObsolete()) {
             if(!iob.isNaN())
-                text += ", " + context.getString(R.string.info_label_iob) + " " + getIobAsString()
+                text += ", " + context.getString(R.string.info_label_iob_talkback) + " " + getIobAsString()
             if(!cob.isNaN())
-                text += ", " + context.getString(R.string.info_label_cob) + " " + getCobAsString()
+                text += ", " + context.getString(R.string.info_label_cob_talkback) + " " + getCobAsString()
         }
         return text
     }

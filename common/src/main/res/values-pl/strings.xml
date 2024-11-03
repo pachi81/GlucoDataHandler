@@ -293,8 +293,6 @@
     <string name="wear_foreground_notification_descr">Powiadomienie na pierwszym planie, które zapobiega zatrzymaniu aplikacji działającej w tle.</string>
     <string name="android_auto_notification_name">Powiadomienie dla Android Auto</string>
     <string name="android_auto_notification_descr">Powiadomienie wyświetlane w Android Auto</string>
-    <string name="info_label_iob">IOB</string>
-    <string name="info_label_cob">COB</string>
     <string name="src_xdrip_noise_blocking">Włączono blokowanie szumu w ustawieniach aplikacji xDrip+! \nZmień na \"Ekstremalnie głośny\"!</string>
     <string name="pref_cat_follower">Usługi chmurowe</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
