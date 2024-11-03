@@ -36,6 +36,7 @@ object LockScreenWallpaper : NotifierInterface, SharedPreferences.OnSharedPrefer
     private var yPos = 75
     private var style = Constants.WIDGET_STYLE_GLUCOSE_TREND
     private var size = 10
+    private val MAX_SIZE = 24f
 
     fun create(context: Context) {
         try {
@@ -207,17 +208,17 @@ object LockScreenWallpaper : NotifierInterface, SharedPreferences.OnSharedPrefer
                 txtBgValue.paintFlags = 0
             }
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
-            txtDelta.text = ReceiveData.getDeltaAsString()
-            txtTime.text = ReceiveData.getElapsedTimeMinuteAsString(context)
-            txtIob.text = ReceiveData.getIobAsString()
-            txtCob.text = ReceiveData.getCobAsString()
+            txtDelta.text = "Δ ${ReceiveData.getDeltaAsString()}"
+            txtTime.text = "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(context)}"
+            txtIob.text = "💉 ${ReceiveData.getIobAsString()}"
+            txtCob.text = "🍔 ${ReceiveData.getCobAsString()}"
 
             txtBgValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+size*4f)
             viewIcon.minimumWidth = Utils.dpToPx(32f+size*4f, context)
-            txtDelta.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8f+size*2f)
-            txtTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8f+size*2f)
-            txtIob.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8f+size*2f)
-            txtCob.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8f+size*2f)
+            txtDelta.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+size*2f, MAX_SIZE))
+            txtTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+size*2f, MAX_SIZE))
+            txtIob.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+size*2f, MAX_SIZE))
+            txtCob.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+size*2f, MAX_SIZE))
 
             lockscreenView.setDrawingCacheEnabled(true)
             lockscreenView.measure(

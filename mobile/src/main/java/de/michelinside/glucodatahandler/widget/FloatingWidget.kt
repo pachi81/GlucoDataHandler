@@ -40,6 +40,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
     private lateinit var sharedPref: SharedPreferences
     private lateinit var sharedInternalPref: SharedPreferences
     private val LOG_ID = "GDH.FloatingWidget"
+    private val MAX_SIZE = 30f
 
     @SuppressLint("InflateParams")
     fun create() {
@@ -153,18 +154,18 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
         }
         viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
         viewIcon.contentDescription = ReceiveData.getRateAsText(context)
-        txtDelta.text =ReceiveData.getDeltaAsString()
-        txtTime.text = ReceiveData.getElapsedTimeMinuteAsString(context)
-        txtIob.text = ReceiveData.getIobAsString()
-        txtCob.text = ReceiveData.getCobAsString()
+        txtDelta.text = "Δ ${ReceiveData.getDeltaAsString()}"
+        txtTime.text = "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(context)}"
+        txtIob.text = "💉 ${ReceiveData.getIobAsString()}"
+        txtCob.text = "🍔 ${ReceiveData.getCobAsString()}"
 
         val resizeFactor = sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, 3).toFloat()
         txtBgValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+resizeFactor*4f)
         viewIcon.minimumWidth = Utils.dpToPx(32f+resizeFactor*4f, context)
-        txtDelta.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8f+resizeFactor*2f)
-        txtTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8f+resizeFactor*2f)
-        txtIob.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8f+resizeFactor*2f)
-        txtCob.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8f+resizeFactor*2f)
+        txtDelta.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+ resizeFactor *2f, MAX_SIZE))
+        txtTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+ resizeFactor *2f, MAX_SIZE))
+        txtIob.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+ resizeFactor *2f, MAX_SIZE))
+        txtCob.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+ resizeFactor *2f, MAX_SIZE))
     }
 
     private fun update() {
