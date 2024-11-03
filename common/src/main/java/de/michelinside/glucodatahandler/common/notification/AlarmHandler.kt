@@ -240,7 +240,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         return result
     }
 
-    private fun saveExtras(notify: Boolean = true) {
+    private fun saveExtras() {
         try {
             Log.d(LOG_ID, "Saving extras")
             if(!initialized) {
@@ -251,7 +251,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
                     " - lastAlarmTime=${DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime))}" +
                     " - lastFallingAlarmTime=${DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastFallingAlarmTime))}" +
                     " - lastRisingAlarmTime=${DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastRisingAlarmTime))}" +
-                    " - snoozeTime=${snoozeTimestamp}" + " - notify=$notify"
+                    " - snoozeTime=${snoozeTimestamp}"
             )
             with(sharedExtraPref.edit()) {
                 putLong(LAST_ALARM_TIME, lastAlarmTime)
@@ -260,13 +260,6 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
                 putInt(LAST_ALARM_INDEX, lastAlarmType.ordinal)
                 putLong(SNOOZE_TIME, snoozeTime)
                 apply()
-            }
-            if(notify && GlucoDataService.context != null) {
-                InternalNotifier.notify(
-                    GlucoDataService.context!!,
-                    NotifySource.ALARM_SETTINGS,
-                    getSettings()
-                )
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "saveExtras exception: " + exc.toString() + " " + exc.stackTraceToString() )
@@ -305,6 +298,41 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         }
     }
 
+    fun getExtras(): Bundle {
+        val bundle = Bundle()
+        bundle.putLong(LAST_ALARM_TIME, lastAlarmTime)
+        bundle.putLong(LAST_FALLING_ALARM_TIME, lastFallingAlarmTime)
+        bundle.putLong(LAST_RISING_ALARM_TIME, lastRisingAlarmTime)
+        bundle.putInt(LAST_ALARM_INDEX, lastAlarmType.ordinal)
+        return bundle
+    }
+
+    fun setExtras(context: Context, bundle: Bundle) {
+        Log.i(LOG_ID, "set extras: ${Utils.dumpBundle(bundle)}")
+        val lastType = AlarmType.fromIndex(bundle.getInt(LAST_ALARM_INDEX, lastAlarmType.ordinal))
+        var extrasChanged = false
+        if(lastType!=AlarmType.NONE && lastType!=AlarmType.OK) {
+            val lastTime = bundle.getLong(LAST_ALARM_TIME, lastAlarmTime)
+            if(lastTime > lastAlarmTime) {
+                lastAlarmType = lastType
+                lastAlarmTime = bundle.getLong(LAST_ALARM_TIME, lastAlarmTime)
+                extrasChanged = true
+            }
+            if(bundle.getLong(LAST_FALLING_ALARM_TIME, lastFallingAlarmTime) > lastFallingAlarmTime) {
+                lastFallingAlarmTime = bundle.getLong(LAST_FALLING_ALARM_TIME, lastFallingAlarmTime)
+                extrasChanged = true
+            }
+            if(bundle.getLong(LAST_RISING_ALARM_TIME, lastRisingAlarmTime) > lastRisingAlarmTime) {
+                lastRisingAlarmTime = bundle.getLong(LAST_RISING_ALARM_TIME, lastRisingAlarmTime)
+                extrasChanged = true
+            }
+        }
+        if(extrasChanged) {
+            Log.i(LOG_ID, "Newer extras received")
+            saveExtras()
+        }
+    }
+
     fun getSettings(forAndroidAuto: Boolean = false): Bundle {
         val bundle = Bundle()
         AlarmType.entries.forEach {
@@ -316,10 +344,6 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
             bundle.putAll(AlarmNotificationBase.instance!!.getSettings())
         }
         bundle.putLong(SNOOZE_TIME, snoozeTime)
-        bundle.putLong(LAST_ALARM_TIME, lastAlarmTime)
-        bundle.putLong(LAST_FALLING_ALARM_TIME, lastFallingAlarmTime)
-        bundle.putLong(LAST_RISING_ALARM_TIME, lastRisingAlarmTime)
-        bundle.putInt(LAST_ALARM_INDEX, lastAlarmType.ordinal)
         bundle.putBoolean(Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED, inactiveEnabled)
         bundle.putString(Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME, inactiveStartTime)
         bundle.putString(Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME, inactiveEndTime)
@@ -346,15 +370,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
             }
             apply()
         }
-        val lastType = AlarmType.fromIndex(bundle.getInt(LAST_ALARM_INDEX, lastAlarmType.ordinal))
-        if(lastType!=AlarmType.NONE && lastType!=AlarmType.OK) {
-            lastAlarmType = lastType
-            lastAlarmTime = bundle.getLong(LAST_ALARM_TIME, lastAlarmTime)
-            lastFallingAlarmTime = bundle.getLong(LAST_FALLING_ALARM_TIME, lastFallingAlarmTime)
-            lastRisingAlarmTime = bundle.getLong(LAST_RISING_ALARM_TIME, lastRisingAlarmTime)
-        }
         setSnoozeTime(bundle.getLong(SNOOZE_TIME, snoozeTime), true)
-        saveExtras(false)
         updateSettings(sharedPref, context)
         InternalNotifier.notify(context, NotifySource.ALARM_SETTINGS, null)
     }

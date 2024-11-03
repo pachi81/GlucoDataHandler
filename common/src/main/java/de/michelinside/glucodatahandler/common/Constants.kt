@@ -16,6 +16,7 @@ object Constants {
     const val SETTINGS_BUNDLE = "settings_bundle"
     const val SOURCE_SETTINGS_BUNDLE = "source_settings_bundle"
     const val ALARM_SETTINGS_BUNDLE = "alarm_settings_bundle"
+    const val ALARM_EXTRA_BUNDLE = "alarm_extras_bundle"
     const val COMMAND_EXTRA = "command"
     const val COMMAND_BUNDLE = "command_bundle"
     const val GLUCOSE_CONVERSION_FACTOR = 18.0182F

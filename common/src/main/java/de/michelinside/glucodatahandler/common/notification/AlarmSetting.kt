@@ -119,11 +119,11 @@ open class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
             bundle.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_DELAY), soundDelay)
             bundle.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_RETRIGGER), retriggerTime)
             //bundle.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT), repeatTime)
-            if (hasDelta()) {
-                bundle.putFloat(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_DELTA), delta)
-                bundle.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_OCCURRENCE_COUNT), deltaCount)
-                bundle.putFloat(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_BORDER), deltaBorder)
-            }
+        }
+        if (hasDelta()) {
+            bundle.putFloat(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_DELTA), delta)
+            bundle.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_OCCURRENCE_COUNT), deltaCount)
+            bundle.putFloat(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_BORDER), deltaBorder)
         }
         return bundle
     }
