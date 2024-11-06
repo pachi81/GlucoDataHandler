@@ -203,15 +203,17 @@ object CarMediaPlayer: NotifierInterface {
     }
 
     private fun checkSpeakNewValue(dataSource: NotifySource): Boolean {
-        if(!sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_VALUES, false))
+        if(!sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, false)) {
+            Log.d(LOG_ID, "Check speak new value: disabled")
             return false
-        if(!sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE, false))
-            return false
+        }
         if(ReceiveData.getAlarmType() == AlarmType.VERY_LOW) {
+            Log.d(LOG_ID, "Check speak new value: alarm == VERY_LOW")
             forceNextNotify = true
             return true
         }
         if(forceNextNotify) {
+            Log.d(LOG_ID, "Check speak new value: forceNextNotify")
             forceNextNotify = false
             return true
         }

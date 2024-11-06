@@ -275,7 +275,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                 null
             }
             if (resId != null) {
-                return " - " + context.getString(resId)
+                return context.getString(resId) + " "
             }
         }
         return ""
@@ -291,7 +291,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         if (isObsolete)
             messagingStyle.conversationTitle = context.getString(CR.string.no_new_value, ReceiveData.getElapsedTimeMinute())
         else
-            messagingStyle.conversationTitle = ReceiveData.getGlucoseAsString()  + " (Δ " + ReceiveData.getDeltaAsString() + ")" + getAlarmText(context)
+            messagingStyle.conversationTitle = getAlarmText(context) + ReceiveData.getGlucoseAsString()  + " (Δ " + ReceiveData.getDeltaAsString() + ")"
         messagingStyle.isGroupConversation = false
         messagingStyle.addMessage(DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(ReceiveData.time)), System.currentTimeMillis(), person)
         return messagingStyle
