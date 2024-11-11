@@ -171,7 +171,7 @@ open class BroadcastServiceAPI: BroadcastReceiver(), NotifierInterface,
                         if(match.groupValues.size > 1) {
                             glucoExtras.putFloat(ReceiveData.IOB, Utils.parseFloatString(match.groupValues[1]))
                             if(match.groupValues.size == 4) {
-                                glucoExtras.putFloat(ReceiveData.COB, Utils.parseFloatString(match.groupValues[3]))
+                                glucoExtras.putFloat(ReceiveData.COB, Utils.getCobValue(Utils.parseFloatString(match.groupValues[3])))
                             }
                             if(bundle.containsKey(EXTERNAL_TIMESTAMP)) {
                                 glucoExtras.putLong(ReceiveData.IOBCOB_TIME, bundle.getLong(EXTERNAL_TIMESTAMP))
@@ -256,5 +256,4 @@ open class BroadcastServiceAPI: BroadcastReceiver(), NotifierInterface,
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.message.toString() )
         }
     }
-
 }

@@ -7,7 +7,6 @@ import android.provider.Settings
 import android.util.Log
 import androidx.preference.ListPreference
 import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
@@ -16,7 +15,7 @@ import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 
-class AlarmAdvancedFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
+class AlarmAdvancedFragment : SettingsFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GDH.AlarmAdvancedFragment"
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         try {
@@ -109,7 +108,7 @@ class AlarmAdvancedFragment : PreferenceFragmentCompat(), SharedPreferences.OnSh
         Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
         try {
             updateEnableStates(sharedPreferences)
-            if(AlarmHandler.alarmPreferencesToSend.contains(key))
+            if(AlarmHandler.isAlarmSettingToShare(key))
                 AlarmFragment.settingsChanged = true
             when(key) {
                 Constants.SHARED_PREF_ALARM_FORCE_SOUND -> checkDisablePref(Constants.SHARED_PREF_ALARM_FORCE_SOUND, Constants.SHARED_PREF_ALARM_FORCE_VIBRATION)

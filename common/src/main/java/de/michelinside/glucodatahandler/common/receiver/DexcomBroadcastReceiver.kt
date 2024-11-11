@@ -1,6 +1,5 @@
 package de.michelinside.glucodatahandler.common.receiver
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -13,14 +12,19 @@ import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 
 
-open class DexcomBroadcastReceiver: BroadcastReceiver() {
+open class DexcomBroadcastReceiver: ReceiverBase() {
     private val LOG_ID = "GDH.DexcomBroadcastReceiver"
 
     private val EXTRA_GLUCOSE_VALUES = "glucoseValues"
     private val EXTRA_TIMESTAMP = "timestamp"
     private val EXTRA_GLUCOSE = "glucoseValue"
     private val EXTRA_TREND = "trendArrow"
-    override fun onReceive(context: Context, intent: Intent) {
+
+    override fun getName(): String {
+        return LOG_ID
+    }
+
+    override fun onReceiveData(context: Context, intent: Intent) {
         try {
             val extras = intent.extras
             Log.i(LOG_ID, "onReceive called for " + intent.action + ": " + Utils.dumpBundle(extras))

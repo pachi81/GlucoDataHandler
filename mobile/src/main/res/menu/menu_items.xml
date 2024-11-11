@@ -91,22 +91,11 @@
         </item>
     </group>
     <group
-        android:id="@+id/group_logs">
+        android:id="@+id/group_facebook">
         <item
-            android:id="@+id/group_log_title"
-            android:title="@string/menu_save_logs">
-            <menu>
-                <item
-                    android:id="@+id/action_save_mobile_logs"
-                    android:title="@string/menu_save_mobile_logs"
-                    app:showAsAction="never" />
-                <item
-                    android:id="@+id/action_save_wear_logs"
-                    android:title="@string/menu_save_wear_logs"
-                    android:enabled="false"
-                    app:showAsAction="never" />
-            </menu>
-        </item>
+            android:id="@+id/action_facebook"
+            android:title="@string/menu_facebook"
+            app:showAsAction="never" />
     </group>
     <group
         android:id="@+id/group_contact">

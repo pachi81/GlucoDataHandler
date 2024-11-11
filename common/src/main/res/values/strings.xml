@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="locale">en</string>
     <string name="name" translatable="false">GlucoDataHandler</string>
     <string name="source_gdh" translatable="false">GlucoDataHandler</string>
 
@@ -19,6 +20,15 @@
 
     <string name="elapsed_time">%1$d min</string>
     <string name="elapsed_time_hour">\> 1h</string>
+
+
+    <string name="unit_mgdl" translatable="false">mg/dl</string>
+    <string name="unit_mmol" translatable="false">mmol/l</string>
+
+    <string name="info_label_iob" translatable="false">IOB</string>
+    <string name="info_label_cob" translatable="false">COB</string>
+    <string name="info_label_iob_talkback" translatable="false">I.O.B.</string>
+    <string name="info_label_cob_talkback" translatable="false">C.O.B.</string>
 
     <string name="rate_double_up">rising very quickly</string>
     <string name="rate_single_up">rising quickly</string>
@@ -55,6 +65,7 @@
     <string name="menu_update">Updates</string>
     <string name="menu_support">Support</string>
     <string name="menu_help">Help</string>
+    <string name="menu_facebook" translatable="false">Facebook</string>
 
     <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
     <string name="update_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/releases</string>
@@ -62,6 +73,9 @@
     <string name="gda_support_link" translatable="false">https://github.com/pachi81/GlucoDataAuto/issues</string>
     <string name="watchdrip_link" translatable="false">https://github.com/bigdigital/watchdrip/blob/main/README.md</string>
     <string name="esel_link" translatable="false">https://github.com/BernhardRo/Esel/blob/master/README.md</string>
+    <string name="dexcom_account_non_us_url" translatable="false">https://myaccount.dexcom.eu</string>
+    <string name="dexcom_account_us_url" translatable="false">https://myaccount.dexcom.com</string>
+    <string name="facebook_gdh_group_url" translatable="false">https://www.facebook.com/groups/823964236542396</string>
 
     <!-- tasker -->
 
@@ -72,6 +86,14 @@
     <string name="tasker_android_auto_connection_state">Android Auto connection</string>
     <string name="tasker_target_range_state">Glucose range change</string>
 
+    <string name="vibrate_pattern_super_mario" translatable="false">Super Mario</string>
+    <string name="vibrate_pattern_turtles" translatable="false">Turtles</string>
+    <string name="vibrate_pattern_final_fantasy" translatable="false">Final Fantasy</string>
+    <string name="vibrate_pattern_star_wars" translatable="false">Star Wars</string>
+    <string name="vibrate_pattern_power_rangers" translatable="false">Power Rangers</string>
+    <string name="vibrate_pattern_james_bond" translatable="false">James Bond</string>
+    <string name="vibrate_pattern_mortal_kombat" translatable="false">Mortal Kombat</string>
+
     <!-- sources -->
 
     <string name="source_juggluco" translatable="false">Juggluco</string>
@@ -81,6 +103,9 @@
     <string name="source_dexcom_share" translatable="false">Dexcom Share</string>
     <string name="source_dexcom_byoda" translatable="false">Dexcom BYODA</string>
     <string name="source_ns_emulator" translatable="false">Dexcom/Eversense</string>
+    <string name="source_diabox" translatable="false">DiaBox</string>
+    <string name="pref_source_eversense_info" translatable="false">Eversense (ESEL)/Dexcom BYODA (xDrip+)</string>
+    <string name="pref_source_dexcom_byoda_info" translatable="false">Dexcom BYODA (AAPS)</string>
     <string name="source_phone">Phone</string>
     <string name="source_wear">Wear</string>
 
@@ -162,7 +187,7 @@
     <string name="pref_car_notification_interval_summary">Minimum interval for showing notifications for a new value.\nAlarms will always show a notification.</string>
     <string name="pref_switch_car_notification_alarm_only">Alarm only</string>
     <string name="pref_switch_car_notification_alarm_only_summary">Will only trigger notifications for alarms in their specific interval.\nVery low values will always show a notification.</string>
-    <string name="pref_switch_car_media">Dummy Media Player</string>
+    <string name="pref_switch_car_media">Fake Media Player</string>
     <string name="pref_switch_car_media_summary">Show the glucose value as current song for Android Auto.</string>
     <string name="pref_switch_send_to_aod">Send glucodata broadcast</string>
     <string name="pref_switch_send_to_aod_summary">Send glucodata broadcast for new values received from any source.</string>
@@ -195,9 +220,11 @@
     <string name="pref_notification_no_content">Hide content</string>
     <string name="pref_notification_no_content_summary">The will remove the content of the notification, to have only a small notification with the related icon.</string>
     <string name="pref_second_notification">2. notification</string>
-    <string name="pref_second_notification_summary">Show a second notification without content to have an additional icon in the status bar.</string>
+    <string name="pref_second_notification_summary">Show a notification without content to have an additional icon in the status bar.</string>
     <string name="pref_second_notification_icon">2. status bar icon</string>
-    <string name="pref_second_notification_icon_summary">Style of the small status bar icon of the second notification.</string>
+    <string name="pref_second_notification_icon_summary">Style of the small status bar icon of the notification.</string>
+    <string name="pref_third_notification">3. notification</string>
+    <string name="pref_third_notification_icon">3. status bar icon</string>
     <string name="pref_floating_widget">Floating widget</string>
     <string name="pref_floating_widget_summary">Show glucose, trend, delta, time and IOB/COB as floating widget.\nIf you hold and not move the widget for more than 5 seconds, it will disappear.</string>
     <string name="pref_floating_widget_size">Size</string>
@@ -252,6 +279,7 @@
     <string name="short_value_icon">Glucose with icon</string>
     <string name="short_value_arrow">Glucose and trend</string>
     <string name="short_value_arrow_image">Glucose and trend (big and colored)</string>
+    <string name="icon_value_arrow">Glucose and trend (big)</string>
     <string name="short_value_arrow_small_image">Glucose and trend (colored)</string>
     <string name="short_value_trend_range">Glucose and trend-range (if supported)</string>
     <string name="short_value_delta_trend_range">Glucose, delta and trend-range (if supported)</string>
@@ -259,12 +287,16 @@
     <string name="short_value_delta">Glucose and delta</string>
     <string name="long_value_arrow_delta">Glucose, delta and trend</string>
     <string name="long_value_arrow_delta_time">Glucose, delta, trend and timestamp</string>
+    <string name="long_value_arrow_icon_delta_time">Glucose, trend icon, delta and timestamp</string>
     <string name="short_value_rate">Glucose and trend-value</string>
     <string name="icon_delta">Delta (big)</string>
+    <string name="image_delta">Delta (big, colored)</string>
     <string name="short_delta">Delta</string>
     <string name="short_delta_arrow">Delta and trend</string>
     <string name="short_delta_icon">Delta with Icon</string>
     <string name="short_delta_time">Delta and timestamp</string>
+    <string name="image_delta_time">Delta and timestamp (colored)</string>
+    <string name="icon_delta_time">Delta and timestamp (big)</string>
     <string name="image_arrow">Trend (big, colored)</string>
     <string name="small_image_arrow">Trend (colored)</string>
     <string name="icon_arrow">Trend icon</string>
@@ -273,7 +305,12 @@
     <string name="short_rate_arrow">Trend value and arrow</string>
     <string name="short_rate_icon">Trend value with icon</string>
     <string name="timestamp">Glucose timestamp</string>
-    <string name="battery_level">Battery level (wear and phone)</string>
+    <string name="short_timestamp">Timestamp</string>
+    <string name="image_timestamp">Timestamp (colored)</string>
+    <string name="icon_timestamp">Timestamp (big)</string>
+    <string name="battery_level">Battery level (watch and phone)</string>
+    <string name="watch_battery_level">Watch battery level</string>
+    <string name="phone_battery_level">Phone battery level</string>
     <string name="iob_cob">IOB/COB</string>
 
     <!-- GlucoDataAuto -->
@@ -293,6 +330,7 @@
     <string name="mobile_foreground_notification_name">Foreground notification</string>
     <string name="mobile_foreground_notification_descr">Foreground notification which prevent stopping the app while running in background.</string>
     <string name="mobile_second_notification_name">Second notification</string>
+    <string name="mobile_third_notification_name">Third notification</string>
     <string name="mobile_second_notification_descr">Additional notification to show an extra icon in the statusbar.</string>
     <string name="worker_notification_name">Worker notification</string>
     <string name="worker_notification_descr">Worker notification shown while running tasks in the background.</string>
@@ -300,8 +338,6 @@
     <string name="wear_foreground_notification_descr">Foreground notification which prevent stopping the app while running in background.</string>
     <string name="android_auto_notification_name">Notification for Android Auto</string>
     <string name="android_auto_notification_descr">Notification which is shown in Android Auto</string>
-    <string name="info_label_iob">IOB</string>
-    <string name="info_label_cob">COB</string>
     <string name="src_xdrip_noise_blocking">Noise-Block active in xDrip+ Inter-app settings!\nPlease change it to \"Extremely noisy\"!</string>
     <string name="pref_cat_follower">Cloud services</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
@@ -337,13 +373,12 @@
     <string name="request_exact_alarm_title">Alarms &amp; reminders permission</string>
     <string name="activity_main_schedule_exact_alarm">Schedule exact alarm is disabled!!!\nGlucoDataHandler may not work correct!!!\nPress here to go direct to the permission setting.</string>
 
-    <!-- New  -->
 
     <string name="src_libre_patient">Patient</string>
     <string name="src_libre_patient_summary">If there is more then one patient connected to the libre account, please select the patient receiving the data for.</string>
     <string name="pref_cat_locksreen_wallpaper">Lockscreen Wallpaper</string>
     <string name="pref_lockscreen_enabled">Enable</string>
-    <string name="pref_lockscreen_enabled_summary">If you enable lockscreen wallpaper, the app replaces the wallpaper on lockscreen with an Image containing the value and trend.</string>
+    <string name="pref_lockscreen_enabled_summary">If you enable lockscreen wallpaper, the app replaces the wallpaper on lockscreen.</string>
     <string name="pref_lockscreen_y_pos">Vertical position</string>
     <string name="pref_lockscreen_y_pos_summary">Vertical position of the glucose-trend image on lockscreen:\n0 is the top of the display\n100 is the botton of the display</string>
     <string name="activity_main_notification_permission">Showing notifications is disabled!!!\nGlucoDataHandler may not work correct and can not show alarms!!!\nPress here to go direct to the permission setting.</string>
@@ -351,8 +386,6 @@
     <string name="src_libre_setup_librelink">Missing data! Please accept invitation in LibreLinkUp app first!</string>
     <string name="prefstatus_bar_notification_colored_icon">Colored status bar icon</string>
     <string name="pref_status_bar_notification_colored_icon_summary">If your device supports colored status bar icons, you can also deactivate it to use a white item.</string>
-
-    <!-- New  -->
 
     <string name="menu_alarms">Alarms</string>
     <string name="alarm_interval">Interval</string>
@@ -471,7 +504,7 @@
     <string name="pref_cat_transfer">Transfer values</string>
     <string name="pref_cat_visualisation">Visualisation</string>
     <string name="pref_cat_banglejs">BangleJS watches</string>
-    <string name="pref_wearos_info_summary">To use GlucoDataHandler on Wear OS watches, please install it from Google Playstore.</string>
+    <string name="pref_wearos_info_summary">To use GlucoDataHandler on Wear OS watches, please install it from Google Playstore on watch.\nThis app does not provide a watchface, it provides several complications (the small round watchface parts), which can be used for watchfaces supporting 3rd party complications.</string>
     <string name="pref_wear_os_check_connection">Check connection</string>
     <string name="pref_wear_os_check_connection_summary">Press here to re-check the connection to Wear OS.\nYou can also trigger this check while pressing on the connection info on home screen (even in the Wear OS app).</string>
     <string name="pref_watchdrip_info_summary">WatchDrip+ supports several MiBand and Amazfit devices.\nTo get a whole list of supported devices and more information about configure WatchDrip+, please press here.</string>
@@ -525,13 +558,12 @@
     <string name="src_dexcom_share_us_server_summary_off">International account is used.</string>
     <string name="src_dexcom_share_enabled_summary">Enable Dexcom Share account. You need to set username and password before.</string>
     <string name="src_username">Username</string>
-    <string name="src_dexcom_share_user_summary">Username or E-Mail for Dexcom Share account.</string>
+    <string name="src_dexcom_share_user_summary">Username, E-Mail or phone number for login to your Dexcom Share account.\nIMPORTANT: if you are using phone number, it has to include the country code (e.g. +1 for US).</string>
     <string name="src_dexcom_share_password_summary">Password for Dexcom Share account.</string>
     <string name="pref_source_dexcom_share_info">Setup Dexcom Share</string>
     <string name="pref_source_dexcom_share_info_summary">To receive data from Dexcom Share servers, you need to have:\n- sharing enabled on the Dexcom application that is connected to the sensor\n- accepted the invitation on the Dexcom Follower app (you can uninstall it afterwards)\n\nImportant: it does not work with a follower user!</string>
     <string name="permission_missing_title">Missing permission!</string>
     <string name="setting_permission_missing_message">The settings \'%1$s\' is set, but the related permission is not granted! Press \"OK\" to be forwared the permission dialog or press \"Cancel\" to disable this setting.</string>
-    <string name="pref_source_dexcom_byoda_info">Dexcom BYODA</string>
     <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
     <string name="xdrip_broadcast_service_api_enabled_summary">Use xDrip+ Broadcast Service API to receive data (also IOB) from xDrip+.\nPlease activate \"Broadcast Service API\" in \"Inter-App settings\" in xDrip+ first!</string>
     <string name="obsolete_time">Obsolete time</string>
@@ -540,10 +572,125 @@
     <string name="pref_source_offline_summary">Applications on same device providing glucose values as internal broadcast message, like Juggluco, xDrip+, AAPS and so on.</string>
     <string name="pref_cat_follower_summary">Cloud services providing glucose values over the internet, like LibreLinkUp, Dexcom Share and Nightscout.</string>
     <string name="pref_source_xdrip_broadcast">Alternative: Broadcast locally</string>
-    <string name="pref_source_dexcom_byoda_info_summary">To receive values from Dexcom BYODA you have to enable broadcast to xDrip+, AAPS or both while building the app.</string>
-    <string name="pref_source_eversense_info" translatable="false">Eversense (ESEL)</string>
+    <string name="pref_source_dexcom_byoda_info_summary">To receive values from Dexcom BYODA you have to enable broadcast to AAPS while building the app.</string>
     <string name="pref_source_eversense_info_summary">To receive values from Eversense, you have to use ESEL either in companion mode (reading notification) or connected to the patched Eversense app.\nFor more information about ESEL, press here.</string>
+    <string name="pref_source_eversense_byoda_info_summary">To receive values from Dexcom BYODA you have to enable broadcast to xDrip+ while building the app.</string>
     <string name="new_version">Version %s is available</string>
     <string name="info_label_notes">Notes</string>
     <string name="gda_notification_permission">Notifications are disabled! \nPress here to enable them.</string>
+
+    <!-- New  -->
+
+    <string name="pref_show_other_unit">Show other unit</string>
+    <string name="pref_show_other_unit_summary">Show glucose value in %s in the details.</string>
+    <string name="other_unit">Other unit</string>
+    <string name="dexcom_share_check_non_us_account">Press here to check your Dexcom Share account data for your non-US account.</string>
+    <string name="dexcom_share_check_us_account">Press here to check your Dexcom Share account data for your US account.</string>
+    <string name="pref_lockscreen_size_summary">Change size of the lockscreen data.</string>
+    <string name="pref_wear_os_reset_connection">Reset connection</string>
+    <string name="pref_wear_os_reset_connection_summary">Press here to reset the wear-phone connection if it is not working as expected.\nIf the reset does not solve the problem, please restart your watch.</string>
+    <string name="detail_reset_connection">Connection is not working as expected! Please try to restart your watch.</string>
+    <string name="pref_floating_widget_time_to_close">Time to close</string>
+    <string name="pref_floating_widget_time_to_close_summary">Time in seconds to close the floating widget while pressing on the widget without moving it.\n0 for disable this setting.</string>
+    <string name="alarm_inactive_enabled">Enable quiet hours</string>
+    <string name="alarm_inactive_enabled_summary">No alarm notifications for this alarm during quiet hours.\nConfigure your preferred times to use this feature.</string>
+    <string name="all_alarm_inactive_enabled_summary">No alarm notifications for all alarms during quiet hours.\nConfigure your preferred times to use this feature.</string>
+    <string name="alarm_inactive_start_time">Start time</string>
+    <string name="alarm_inactive_start_time_summary">Select the time you want your quiet hours to start.</string>
+    <string name="alarm_inactive_end_time">End time</string>
+    <string name="alarm_inactive_end_time_summary">Select the time you want your quiet hours to end.</string>
+    <string name="alarm_inactive_weekdays">Days for quiet hours</string>
+    <string name="alarm_inactive_weekdays_summary">Specify the days of the week on which quiet hours should start at the selected start time.</string>
+
+    <string name="app_crash_bad_notification">The app crashes because of the colored notification layout!\nIt has been disabled to prevent this crash.\nThis is an issue on Samsung phones so please create a error report in the Samsung members app. Thank you!</string>
+    <string name="auto_close_notification">Auto close notification</string>
+    <string name="auto_close_notification_summary">Auto close alarm notification after sound and vibration has finished, but only after at least 30 seconds.\nIf retrigger is active, the notification will be closed, if there is no additional trigger.</string>
+
+    <string name="settings_save_succeeded">Settings saved successfully</string>
+    <string name="settings_save_failed">Failed saving settings!</string>
+    <string name="settings_read_succeeded">Settings read successfully</string>
+    <string name="settings_read_failed">Failed reading settings!</string>
+    <string name="pref_cat_export_import">Export / Import</string>
+    <string name="pref_cat_export_import_summary">Export or import settings and save logs.</string>
+    <string name="pref_export_settings">Export</string>
+    <string name="pref_export_settings_summary">Press here to export all settings to a file. \nIMPORTANT: this will only export changed settings! Settings with default values will not be part of the export.</string>
+    <string name="pref_import_settings">Import</string>
+    <string name="pref_import_settings_summary">Press here to import settings from a file.\nIMPORTANT: this will not re-create default settings, as there are not part of the export.\nIf you want to reset to default, delete the app data first and import afterwards.</string>
+
+    <string name="menu_save_mobile_logs_summary">Save logs from the phone to file.</string>
+    <string name="menu_save_wear_logs_summary">Save logs from connected Wear OS watch to file.</string>
+    <string name="alarm_repeat">Repeat</string>
+    <string name="alarm_repeat_summary">"Repeat alarm sound and vibration. \n0: Disables the repeat functionality. \nPositive values: Set the repeat interval in minutes. \n-1: Enables unlimited repetition. "</string>
+    <string name="no_vibration">No vibration</string>
+    <string name="alarm_vibrate_mode">Vibration mode</string>
+
+    <string name="alarm_rising_fast">Rising fast</string>
+    <string name="rising_fast_alarm_notification_name">Rising fast alarm</string>
+    <string name="alarm_rising_fast_summary">Alarm if the glucose value is higher or equal to %1$s and the delta rises by at least +%2$s for %3$d consecutive readings.</string>
+    <string name="rising_fast_alarm_text">Rising fast!</string>
+
+    <string name="alarm_falling_fast">Falling fast</string>
+    <string name="falling_fast_alarm_notification_name">Falling fast alarm</string>
+    <string name="alarm_falling_fast_summary">Alarm if the glucose value is lower or equal to %1$s and the delta falls by at least -%2$s for %3$d consecutive readings.</string>
+    <string name="falling_fast_alarm_text">Falling fast!</string>
+    <string name="alarm_vibrate_amplitude">Vibration Intensity</string>
+    <string name="alarm_vibrate_amplitude_summary">Intensity of the vibration</string>
+    <string name="pref_cat_alarm_settings">Alarm settings</string>
+    <string name="pref_alarm_delta_summary">Delta value when the alarm should be triggered.</string>
+    <string name="alarm_occurrence_count">Number of occurrence</string>
+    <string name="alarm_occurrence_count_summary">Number of times the delta value must be reached consecutively.</string>
+    <string name="pref_alarm_rising_falling_border">Border</string>
+    <string name="pref_alarm_rising_falling_border_summary">Border for the rising/falling alarm.\nThe glucose value must be higher/lower to trigger the alarm.</string>
+    <string name="delta_per_minute">per minute</string>
+    <string name="delta_per_5_minute">per 5 minutes</string>
+    <string name="other_alarm_cat_categories">Other alarms</string>
+    <string name="advanced_settings_alarm">Advanced alarm settings</string>
+    <string name="src_offline_enabled_summary_on">Internal messages from this source will be handled.</string>
+    <string name="src_offline_enabled_summary_off">Internal messages from this source will be ignored.</string>
+    <string name="temp_disabled">Temporary disabled</string>
+
+    <!-- Talkback -->
+    <string name="trend">Trend</string>
+    <string name="rate_rising">%1$d degrees up</string>
+    <string name="rate_falling">%1$d degrees down</string>
+
+    <string name="alarm_toggle_state">Alarms: %1$s</string>
+    <string name="alarm_state_inactive">inactive</string>
+    <string name="alarm_state_snooze">snooze until %1$s</string>
+    <string name="alarm_state_temp_disabled">temporary disabled until %1$s</string>
+
+    <string name="enabled">enabled</string>
+    <string name="disabled">disabled</string>
+
+    <string name="not_available">not available</string>
+
+    <string name="action_read_values">Read values</string>
+
+    <plurals name="elapsed_time_full_text">
+        <item quantity="one">Time %d minute</item>
+        <item quantity="other">Time %d minutes</item>
+    </plurals>
+    <string name="pref_source_diabox_info_summary">Open Integration and enable \"Share data with GWatch\"\nRemark: the DiaBox broadcast only contains the glucose value and no more information like trend!</string>
+    <string name="pref_source_dexcom_byoda_not_working_info_summary">Remark: the AAPS broadcast from BYODA doesn\'t seem to work with other apps. \nPlease use the xDrip+ broadcast in BYODA.</string>
+
+    <!-- new for GDA -->
+
+    <string name="gda_help_aa_summary">Get started with GDA on Android Auto</string>
+    <string name="no_tts">Text-to-speech (TTS) is not enabled.\nTo use this feature, enable TTS in Android Accessibility settings.\nOnce enabled, tap here to update.</string>
+    <string name="pref_cat_android_auto_speak">Speak Value</string>
+    <string name="pref_cat_play_button">Play Button</string>
+    <string name="pref_aa_media_player_speak_values_on_summary">Speak current value when playing.\nRequires Text-to-speech to be enabled.</string>
+    <string name="pref_aa_media_player_speak_values_off_summary">Play an empty sound to bring the media player to the front of the split screen.</string>
+    <string name="pref_aa_media_player_always_speak">Speak New Value</string>
+    <string name="pref_aa_media_player_always_speak_summary">Speak new values in Android Auto, even when using another media player.</string>
+    <string name="tts_test_summary">Tap to test text-to-speech.</string>
+    <string name="pref_aa_media_player_speak_alarm_only_summary">Speak alarms only.</string>
+    <string name="pref_aa_media_player_speak_interval_summary">Set the interval for speaking new values in Android Auto.</string>
+
+    <string name="gda_media_speak_toggle_title">Speak New Value toggle</string>
+    <string name="gda_speak_on">Speak is on</string>
+    <string name="gda_speak_off">Speak is off</string>
+    <string name="enable_alarm_icon_toggle">Enable Alarm Icon</string>
+    <string name="enable_alarm_icon_toggle_summary">Enable alarm icon on main screen to toggle alarm state.</string>
+
 </resources>

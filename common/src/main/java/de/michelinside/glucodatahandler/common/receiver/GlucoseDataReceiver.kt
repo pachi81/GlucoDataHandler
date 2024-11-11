@@ -1,6 +1,5 @@
 package de.michelinside.glucodatahandler.common.receiver
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -11,9 +10,13 @@ import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 
 
-open class GlucoseDataReceiver: BroadcastReceiver() {
+open class GlucoseDataReceiver: ReceiverBase() {
     private val LOG_ID = "GDH.GlucoseDataReceiver"
-    override fun onReceive(context: Context, intent: Intent) {
+    override fun getName(): String {
+        return LOG_ID
+    }
+
+    override fun onReceiveData(context: Context, intent: Intent) {
         try {
             val action = intent.action
             if (action != Constants.GLUCODATA_BROADCAST_ACTION) {

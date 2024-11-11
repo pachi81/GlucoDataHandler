@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="glucose_label">Glukoza</string>
-    <string name="glucose_html_label">Wartość glukozy w jednostkach z ustawień Juggluco</string>
+    <string name="glucose_html_label">Wartość glukozy</string>
     <string name="sensor_id_label">Numer sensora</string>
     <string name="sensor_id_html_label">Numer aktualnie aktywnego sensora</string>
     <string name="raw_value_label">Wartość surowa</string>

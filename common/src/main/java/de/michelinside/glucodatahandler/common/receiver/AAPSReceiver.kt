@@ -1,6 +1,5 @@
 package de.michelinside.glucodatahandler.common.receiver
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -12,7 +11,7 @@ import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 
-open class AAPSReceiver: BroadcastReceiver() {
+open class AAPSReceiver: ReceiverBase() {
     private val LOG_ID = "GDH.AAPSReceiver"
     companion object {
         private const val BG_VALUE = "glucoseMgdl" // double
@@ -25,10 +24,13 @@ open class AAPSReceiver: BroadcastReceiver() {
         private const val PROFILE_NAME = "profile"         // string
     }
 
-    override fun onReceive(context: Context, intent: Intent) {
+    override fun getName(): String {
+        return LOG_ID
+    }
+
+    override fun onReceiveData(context: Context, intent: Intent) {
         try {
-            Log.i( LOG_ID,"onReceive called for " + intent.action + ": " + Utils.dumpBundle(intent.extras)
-            )
+            Log.i( LOG_ID,"onReceive called for " + intent.action + ": " + Utils.dumpBundle(intent.extras))
             if (intent.extras != null) {
                 val extras = intent.extras!!
                 if (extras.containsKey(BG_VALUE) && extras.containsKey(BG_TIMESTAMP)) {
@@ -63,7 +65,7 @@ open class AAPSReceiver: BroadcastReceiver() {
                             glucoExtras.putFloat(ReceiveData.IOB, Float.NaN)
                         }
                         if(extras.containsKey(COB_VALUE)) {
-                            glucoExtras.putFloat(ReceiveData.COB, extras.getDouble(COB_VALUE, Double.NaN).toFloat())
+                            glucoExtras.putFloat(ReceiveData.COB, Utils.getCobValue(extras.getDouble(COB_VALUE, Double.NaN).toFloat()))
                         } else {
                             glucoExtras.putFloat(ReceiveData.COB, Float.NaN)
                         }

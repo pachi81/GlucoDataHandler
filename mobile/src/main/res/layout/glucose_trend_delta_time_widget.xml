@@ -18,7 +18,6 @@
 
     <TextView
         android:id="@+id/glucose"
-        android:contentDescription="@string/glucose_html_label"
         android:layout_weight="3"
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -26,7 +25,7 @@
         android:autoSizeMinTextSize="1sp"
         android:autoSizeStepGranularity="1sp"
         android:autoSizeTextType="uniform"
-        android:text="333"
+        android:text="12.3"
         android:maxLines="1"
         tools:ignore="HardcodedText,NestedWeights" />
 
@@ -56,7 +55,7 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="23:59"
+            android:text="🕒 0 min"
             android:maxLines="1"
             android:autoSizeMinTextSize="1sp"
             android:autoSizeMaxTextSize="20sp"
@@ -71,7 +70,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="+0.06"
+            android:text="Δ +0.06"
             android:maxLines="1"
             android:autoSizeMinTextSize="1sp"
             android:autoSizeMaxTextSize="24sp"

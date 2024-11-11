@@ -32,6 +32,7 @@ object GdhUncaughtExecptionHandler : Thread.UncaughtExceptionHandler {
                     )
                     with(sharedPref.edit()) {
                         putBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, true)
+                        putLong(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_TIME, System.currentTimeMillis())
                         putString(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE, message)
                         if (message.contains("BadForegroundServiceNotificationException") || message.contains(
                                 "RemoteServiceException"

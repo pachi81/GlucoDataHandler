@@ -131,11 +131,26 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:text="@string/very_high_alarm_notification_name" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginVertical="5dp"/>
             <Button
                 android:id="@+id/btnObsoleteAlarm"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:text="@string/obsolete_alarm_notification_name" />
+            <Button
+                android:id="@+id/btnFallingFastAlarm"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="@string/falling_fast_alarm_notification_name" />
+            <Button
+                android:id="@+id/btnRisingFastAlarm"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="@string/rising_fast_alarm_notification_name" />
     </LinearLayout>
     </ScrollView>
 </androidx.wear.widget.BoxInsetLayout>

@@ -24,7 +24,8 @@ enum class Command {
     STOP_ALARM,
     SNOOZE_ALARM,
     TEST_ALARM,
-    AA_CONNECTION_STATE
+    AA_CONNECTION_STATE,
+    DISABLE_INACTIVE_TIME
 }
 
 class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener, NotifierInterface {
@@ -51,7 +52,19 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
     companion object {
         private var connectedNodes = Collections.synchronizedMap(mutableMapOf<String,Node>())
         private val nodeBatteryLevel = Collections.synchronizedMap(mutableMapOf<String,Int>())
+        private val noDataReceived = Collections.synchronizedSet(mutableSetOf<String>())
+        private val noDataSend = Collections.synchronizedSet(mutableSetOf<String>())
         val nodesConnected: Boolean get() = connectedNodes.size>0
+        private var connectRetries = 0
+        private val filter = mutableSetOf(
+            NotifySource.BROADCAST,
+            NotifySource.IOB_COB_CHANGE,
+            NotifySource.IOB_COB_TIME,
+            NotifySource.BATTERY_LEVEL) // to trigger re-start for the case of stopped by the system
+
+        private val notConnectedNodes: Set<String> get() = noDataReceived + noDataSend
+        val connectionError: Boolean get() = notConnectedNodes.isNotEmpty() && connectRetries > 3
+
         fun getBatterLevels(addMissing: Boolean = true): List<Int> {
             val batterLevels = mutableListOf<Int>()
             connectedNodes.forEach { node ->
@@ -77,45 +90,73 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             }
             return nodeBatterLevels
         }
-
-        fun getBatterLevelsAsString(): String {
-            if (nodesConnected)
-                return getBatterLevels().joinToString { if (it > 0) it.toString() + "%" else "?%"}
-            return "-"
-        }
     }
 
-    fun open(context: Context, sendSettings: Boolean) {
+    private fun openConnection() {
         Log.d(LOG_ID, "open connection")
-        this.context = context
+        connectedNodes.clear()
+        nodeBatteryLevel.clear()
+        noDataReceived.clear()
+        noDataSend.clear()
         Wearable.getMessageClient(context).addListener(this)
         Log.d(LOG_ID, "MessageClient added")
         Wearable.getCapabilityClient(context).addListener(this,
             Uri.parse("wear://"),
             CapabilityClient.FILTER_REACHABLE)
         Log.d(LOG_ID, "CapabilityClient added")
-        val filter = mutableSetOf(
-            NotifySource.BROADCAST,
-            NotifySource.IOB_COB_CHANGE,
-            NotifySource.IOB_COB_TIME,
-            NotifySource.BATTERY_LEVEL)   // to trigger re-start for the case of stopped by the system
+        checkForConnectedNodes()
+    }
+
+    private fun closeConnection() {
+        Log.d(LOG_ID, "close connection")
+        Wearable.getMessageClient(context).removeListener(this)
+        Wearable.getCapabilityClient(context).removeListener(this)
+        connectedNodes.clear()
+        nodeBatteryLevel.clear()
+        noDataReceived.clear()
+        noDataSend.clear()
+        Log.d(LOG_ID, "connection closed")
+    }
+
+    fun open(context: Context, sendSettings: Boolean) {
+        Log.v(LOG_ID, "open called")
+        this.context = context
+        openConnection()
         if (sendSettings) {
             filter.add(NotifySource.SETTINGS)   // only send setting changes from phone to wear!
             filter.add(NotifySource.SOURCE_SETTINGS)
             filter.add(NotifySource.ALARM_SETTINGS)
         }
         InternalNotifier.addNotifier(this.context, this, filter)
-        checkForConnectedNodes()
     }
 
     fun close() {
+        Log.v(LOG_ID, "close called")
         InternalNotifier.remNotifier(context, this)
-        Wearable.getMessageClient(context).removeListener(this)
-        Wearable.getCapabilityClient(context).removeListener(this)
-        Log.d(LOG_ID, "connection closed")
+        closeConnection()
     }
 
-    private suspend fun getConnectedNodes() = coroutineScope {
+    fun resetConnection() {
+        Log.w(LOG_ID, "reset connection called")
+        closeConnection()
+        openConnection()
+    }
+
+    private fun addTimer() {
+        if(!filter.contains(NotifySource.TIME_VALUE)) {
+            filter.add(NotifySource.TIME_VALUE)
+            InternalNotifier.addNotifier(context, this, filter)
+        }
+    }
+
+    private fun removeTimer() {
+        if(filter.contains(NotifySource.TIME_VALUE)) {
+            filter.remove(NotifySource.TIME_VALUE)
+            InternalNotifier.addNotifier(context, this, filter)
+        }
+    }
+
+    private suspend fun getConnectedNodes(forceSendDataRequest: Boolean = false) = coroutineScope {
         Log.d(LOG_ID, "getting connected nodes")
         supervisorScope {
             val nodes = async(Dispatchers.IO) {
@@ -129,7 +170,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             }
             withContext(Dispatchers.Main) {
                 try {
-                    setConnectedNodes(nodes.await())
+                    setConnectedNodes(nodes.await(), false, forceSendDataRequest)
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "getConnectedNodes exception: " + exc.toString())
                 }
@@ -137,11 +178,11 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         }
     }
 
-    fun checkForConnectedNodes() {
+    fun checkForConnectedNodes(forceSendDataRequest: Boolean = false) {
         Log.d(LOG_ID, "check for connected nodes")
         GlobalScope.launch {
             try {
-                getConnectedNodes()
+                getConnectedNodes(forceSendDataRequest)
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "launch getConnectedNodes exception: " + exc.toString())
             }
@@ -161,32 +202,74 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         }
     }
 
-    private fun setConnectedNodes(nodes: MutableSet<Node>) {
+    private fun setConnectedNodes(nodes: MutableSet<Node>, resetErrors: Boolean = false, forceSendDataRequest: Boolean = false) {
         val curNodes = connectedNodes.keys.toSortedSet()
         val newNodes = nodes.map { it.id }.toSortedSet()
         Log.d(LOG_ID, "Check node change, current: " + curNodes.toString() + " - new: " + newNodes.toString())
         if (curNodes.size != newNodes.size || curNodes != newNodes ) {
-            connectedNodes = nodes.associateBy({it.id}, {it})
-            Log.i(LOG_ID, "Connected nodes changed: " + connectedNodes.toString())
             if(newNodes.isEmpty()) {
-                Log.d(LOG_ID, "Clear battery levels for " + nodeBatteryLevel.keys.toString())
-                nodeBatteryLevel.clear()
-            } else if (curNodes.isNotEmpty() && nodeBatteryLevel.isNotEmpty()) {
-                curNodes.removeAll(newNodes)  // remove not change ids from curNodes
-                curNodes.forEach {
-                    if (nodeBatteryLevel.containsKey(it)) {
-                        Log.d(LOG_ID, "Remove battery level for id " + it)
-                        nodeBatteryLevel.remove(it)// remove all battery levels from not connected nodes
+                curNodes.forEach { id -> remNode(id) }
+            } else {
+                // add new nodes
+                nodes.forEach { node -> if (!connectedNodes.contains(node.id)) addNewNode(node, resetErrors) }
+                if (curNodes.isNotEmpty()) {
+                    // remove old nodes
+                    curNodes.removeAll(newNodes)  // remove not change ids from curNodes
+                    curNodes.forEach {
+                        remNode(it)
                     }
                 }
             }
+        } else if(forceSendDataRequest)
             sendDataRequest()
+    }
+
+    private fun addNewNode(node: Node, resetErrors: Boolean = false) {
+        Log.i(LOG_ID, "New node connected: " + node.toString() + " - reset errors: " + resetErrors)
+        if(resetErrors)
+            connectRetries = 0
+        connectedNodes[node.id] = node
+        noDataReceived.add(node.id)
+        noDataSend.add(node.id)
+        sendDataRequest(node.id)
+        addTimer()
+    }
+
+    private fun remNode(nodeId: String) {
+        Log.i(LOG_ID, "Node disconnected: $nodeId")
+        connectedNodes.remove(nodeId)
+        nodeBatteryLevel.remove(nodeId)// remove all battery levels from not connected nodes
+        noDataReceived.remove(nodeId)
+        noDataSend.remove(nodeId)
+        if (connectedNodes.isEmpty())
+            removeTimer()
+    }
+
+    private fun checkNodesConnected() {
+        connectRetries++
+        Log.d(LOG_ID, "${connectRetries}. check nodes connected: $notConnectedNodes")
+        if (notConnectedNodes.isNotEmpty()) {
+            if (connectRetries < 3) {
+                Log.i(LOG_ID, "re-send data request to: $notConnectedNodes")
+                notConnectedNodes.forEach { id -> sendDataRequest(id) }
+            } else if (connectRetries == 3) {
+                Log.e(LOG_ID, "Reset connection as there are still nodes not connected: $notConnectedNodes")
+                resetConnection()
+            } else if (connectRetries == 4) {
+                // stop timer and display error
+                removeTimer()
+                InternalNotifier.notify(context, NotifySource.CAPILITY_INFO, null)
+            }
+        } else {
+            connectRetries = 0
+            removeTimer()
         }
     }
 
     private fun sendDataRequest(filterReceiverId: String? = null) {
         val extras = ReceiveData.createExtras()
-        InternalNotifier.notify(context, NotifySource.CAPILITY_INFO, ReceiveData.createExtras())
+        InternalNotifier.notify(context, NotifySource.CAPILITY_INFO, extras)
+        extras?.putBundle(Constants.ALARM_EXTRA_BUNDLE, AlarmHandler.getExtras())
         sendMessage(NotifySource.CAPILITY_INFO, extras, filterReceiverId = filterReceiverId)  // send data request for new node
     }
 
@@ -235,21 +318,22 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 }
                 if (extras != null && dataSource == NotifySource.CAPILITY_INFO && GlucoDataService.appSource == AppSource.PHONE_APP) {
                     Log.d(LOG_ID, "Adding settings for sending")
-                    extras.putBundle(Constants.SETTINGS_BUNDLE, ReceiveData.getSettingsBundle())
+                    extras.putBundle(Constants.SETTINGS_BUNDLE, GlucoDataService.getSettings())
                     extras.putBundle(Constants.SOURCE_SETTINGS_BUNDLE, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)))
                     extras.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings())
                 }
                 // Send a message to all nodes in parallel
-                connectedNodes.forEach { node ->
+                val curNodes = connectedNodes.values
+                curNodes.forEach { node ->
                     Thread {
                         try {
-                            if ((ignoreReceiverId == null && filterReceiverId == null) || ignoreReceiverId != node.value.id || filterReceiverId == node.value.id) {
+                            if ((ignoreReceiverId == null && filterReceiverId == null) || ignoreReceiverId != node.id || filterReceiverId == node.id) {
                                 if (dataSource == NotifySource.CAPILITY_INFO)
                                     Thread.sleep(1000)  // wait a bit after the connection has changed
-                                sendMessage(node.value, getPath(dataSource), Utils.bundleToBytes(extras), dataSource)
+                                sendMessage(node, getPath(dataSource), Utils.bundleToBytes(extras), dataSource)
                             }
                         } catch (exc: Exception) {
-                            Log.e(LOG_ID, "sendMessage to " + node.value.toString() + " exception: " + exc.toString())
+                            Log.e(LOG_ID, "sendMessage to " + node.toString() + " exception: " + exc.toString())
                         }
                     }.start()
                 }
@@ -264,7 +348,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
     private fun sendMessage(node: Node, path: String, data: ByteArray?, dataSource: NotifySource, retryCount: Long = 0L) {
         if (retryCount > 0) {
             Log.i(LOG_ID, "Sleep " + (retryCount).toString() + " seconds, before retry sending.")
-            Thread.sleep(retryCount * 1000)
+            Thread.sleep(retryCount * 5000)
         }
         if (connectedNodes.containsKey(node.id)) {
             Wearable.getMessageClient(context).sendMessage(
@@ -277,14 +361,21 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                         LOG_ID,
                         dataSource.toString() + " data send to node " + node.toString()
                     )
+                    noDataSend.remove(node.id)
                 }
-                addOnFailureListener {
-                    Log.w(
-                        LOG_ID,
-                        "Failed " + (retryCount+1).toString() + ". time to send " + dataSource.toString() + " data to node " + node.toString()
-                    )
-                    if (retryCount < 2)
+                addOnFailureListener { error ->
+                    if (retryCount < 2) {
+                        Log.w(
+                            LOG_ID,
+                            "Failed " + (retryCount+1).toString() + ". time to send " + dataSource.toString() + " data to node " + node.toString() + ": $error"
+                        )
                         sendMessage(node, path, data, dataSource, retryCount+1)
+                    } else {
+                        Log.e(
+                            LOG_ID,
+                            "Failed " + (retryCount+1).toString() + ". time to send " + dataSource.toString() + " data to node " + node.toString() + ": $error"
+                        )
+                    }
                 }
             }
         }
@@ -299,7 +390,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             commandBundle.putBundle(Constants.COMMAND_BUNDLE, extras)
             if (GlucoDataService.appSource == AppSource.PHONE_APP) {
                 Log.d(LOG_ID, "Adding settings for sending command")
-                commandBundle.putBundle(Constants.SETTINGS_BUNDLE, ReceiveData.getSettingsBundle())
+                commandBundle.putBundle(Constants.SETTINGS_BUNDLE, GlucoDataService.getSettings())
                 commandBundle.putBundle(Constants.SOURCE_SETTINGS_BUNDLE, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)))
                 commandBundle.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings())
             }
@@ -319,13 +410,14 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         try {
             Log.i(LOG_ID, "onMessageReceived from " + p0.sourceNodeId + " with path " + p0.path)
             checkConnectedNode(p0.sourceNodeId)
+            noDataReceived.remove(p0.sourceNodeId)
             val extras = Utils.bytesToBundle(p0.data)
             //Log.v(LOG_ID, "Received extras for path ${p0.path}: ${Utils.dumpBundle(extras)}")
             if(extras!= null) {
                 if (extras.containsKey(Constants.SETTINGS_BUNDLE)) {
                     val bundle = extras.getBundle(Constants.SETTINGS_BUNDLE)
-                    Log.d(LOG_ID, "Glucose settings receceived from " + p0.sourceNodeId + ": " + bundle.toString())
-                    ReceiveData.setSettings(context, bundle!!)
+                    Log.d(LOG_ID, "Glucose settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(bundle))
+                    GlucoDataService.setSettings(context, bundle!!)
                     InternalNotifier.notify(context, NotifySource.SETTINGS, bundle)
                     extras.remove(Constants.SETTINGS_BUNDLE)
                 }
@@ -333,7 +425,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 if (extras.containsKey(Constants.SOURCE_SETTINGS_BUNDLE)) {
                     val bundle = extras.getBundle(Constants.SOURCE_SETTINGS_BUNDLE)
                     if (bundle != null) {
-                        Log.d(LOG_ID, "Glucose source settings receceived from " + p0.sourceNodeId + ": " + bundle.toString())
+                        Log.d(LOG_ID, "Glucose source settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(bundle))
                         DataSourceTask.updateSettings(context, bundle)
                     }
                     extras.remove(Constants.SOURCE_SETTINGS_BUNDLE)
@@ -342,11 +434,21 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 if (extras.containsKey(Constants.ALARM_SETTINGS_BUNDLE)) {
                     val bundle = extras.getBundle(Constants.ALARM_SETTINGS_BUNDLE)
                     if (bundle != null) {
-                        Log.d(LOG_ID, "Glucose alarm settings receceived from " + p0.sourceNodeId + ": " + bundle.toString())
+                        Log.d(LOG_ID, "Glucose alarm settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(bundle))
                         AlarmHandler.setSettings(context, bundle)
                     }
                     extras.remove(Constants.ALARM_SETTINGS_BUNDLE)
                 }
+
+                if (extras.containsKey(Constants.ALARM_EXTRA_BUNDLE)) {
+                    val bundle = extras.getBundle(Constants.ALARM_EXTRA_BUNDLE)
+                    if (bundle != null) {
+                        Log.d(LOG_ID, "Glucose alarm extras received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(bundle))
+                        AlarmHandler.setExtras(context, bundle)
+                    }
+                    extras.remove(Constants.ALARM_EXTRA_BUNDLE)
+                }
+
                 if (extras.containsKey(BatteryReceiver.LEVEL)) {
                     val level = extras.getInt(BatteryReceiver.LEVEL, -1)
                     Log.d(LOG_ID, "Battery level received for node " + p0.sourceNodeId + ": " + level + "%")
@@ -361,7 +463,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
                 var forceSend = false
                 if(p0.path == Constants.GLUCODATA_INTENT_MESSAGE_PATH || extras.containsKey(ReceiveData.SERIAL)) {
-                    Log.d(LOG_ID, "Glucodata values receceived from " + p0.sourceNodeId + ": " + extras.toString())
+                    Log.d(LOG_ID, "Glucodata values received from " + p0.sourceNodeId + ": " + extras.toString())
                     if (extras.containsKey(ReceiveData.TIME)) {
                         Log.d(LOG_ID, "Received data from: " +
                                 DateFormat.getTimeInstance(DateFormat.DEFAULT).format((extras.getLong(ReceiveData.TIME))) +
@@ -384,14 +486,14 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
                 if (p0.path == Constants.SOURCE_SETTINGS_INTENT_MESSAGE_PATH) {
                     if (!extras.isEmpty) {
-                        Log.d(LOG_ID, "Glucose source settings receceived from " + p0.sourceNodeId + ": " + extras.toString())
+                        Log.d(LOG_ID, "Glucose source settings received from " + p0.sourceNodeId + ": " + extras.toString())
                         DataSourceTask.updateSettings(context, extras)
                     }
                 }
 
                 if (p0.path == Constants.ALARM_SETTINGS_INTENT_MESSAGE_PATH) {
                     if (!extras.isEmpty) {
-                        Log.d(LOG_ID, "Glucose alarm settings receceived from " + p0.sourceNodeId + ": " + extras.toString())
+                        Log.d(LOG_ID, "Glucose alarm settings received from " + p0.sourceNodeId + ": " + extras.toString())
                         AlarmHandler.setSettings(context, extras)
                     }
                 }
@@ -433,16 +535,20 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     if (bundle != null) {
                         if (GlucoDataService.appSource == AppSource.PHONE_APP) {
                             Log.d(LOG_ID, "Adding settings for sending")
-                            bundle.putBundle(Constants.SETTINGS_BUNDLE, ReceiveData.getSettingsBundle())
+                            bundle.putBundle(Constants.SETTINGS_BUNDLE, GlucoDataService.getSettings())
                             bundle.putBundle(Constants.SOURCE_SETTINGS_BUNDLE, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)))
                             bundle.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings())
                         }
+                        bundle.putBundle(Constants.ALARM_EXTRA_BUNDLE, AlarmHandler.getExtras())
                         sendMessage(source, bundle)
                     }
                 }
             }
             if(p0.path == Constants.REQUEST_LOGCAT_MESSAGE_PATH) {
                 sendLogcat(p0.sourceNodeId)
+            }
+            if (noDataSend.contains(p0.sourceNodeId)) {
+                sendDataRequest()
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onMessageReceived exception: " + exc.message.toString() )
@@ -457,8 +563,9 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             when(command) {
                 Command.STOP_ALARM -> AlarmNotificationBase.instance!!.stopCurrentNotification(context, fromClient = true)
                 Command.SNOOZE_ALARM -> AlarmHandler.setSnoozeTime(bundle!!.getLong(AlarmHandler.SNOOZE_TIME, 0L), fromClient = true)
-                Command.TEST_ALARM -> AlarmNotificationBase.instance!!.executeTest(AlarmType.fromIndex(bundle!!.getInt(Constants.ALARM_NOTIFICATION_EXTRA_ALARM_TYPE, ReceiveData.getAlarmType().ordinal)), context, false)
+                Command.TEST_ALARM -> AlarmNotificationBase.instance!!.executeTest(AlarmType.fromIndex(bundle!!.getInt(Constants.ALARM_TYPE_EXTRA, ReceiveData.getAlarmType().ordinal)), context, false)
                 Command.AA_CONNECTION_STATE -> InternalNotifier.notify(context, NotifySource.CAR_CONNECTION, bundle)
+                Command.DISABLE_INACTIVE_TIME -> AlarmHandler.disableInactiveTime(fromClient = true)
             }
 
         } catch (exc: Exception) {
@@ -492,7 +599,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
     override fun onCapabilityChanged(capabilityInfo: CapabilityInfo) {
         try {
             Log.i(LOG_ID, "onCapabilityChanged called: " + capabilityInfo.toString())
-            setConnectedNodes(capabilityInfo.nodes)
+            setConnectedNodes(capabilityInfo.nodes, true)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCapabilityChanged exception: " + exc.toString())
         }
@@ -509,7 +616,10 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            if (extras != null || !ignoreSourceWithoutExtras(dataSource)) {
+            Log.d(LOG_ID, "OnNotifyData called for " + dataSource.toString())
+            if (dataSource == NotifySource.TIME_VALUE) {
+                checkNodesConnected()
+            } else if (extras != null || !ignoreSourceWithoutExtras(dataSource)) {
                 Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString() + " and extras " + extras.toString())
                 sendMessage(dataSource, extras)
             }

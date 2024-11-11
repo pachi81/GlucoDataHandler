@@ -18,7 +18,6 @@ import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultCondition
 import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultConditionSatisfied
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
-import java.util.*
 
 @TaskerInputRoot
 @TaskerOutputObject()

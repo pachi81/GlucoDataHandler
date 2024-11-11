@@ -70,7 +70,6 @@ class HttpRequest {
         reset()
     }
 
-
     val connected: Boolean get() = httpURLConnection != null
     val responseError: String? get() = lastError
     val responseMessage: String? get() = lastMessage
@@ -112,11 +111,11 @@ class HttpRequest {
             httpURLConnection!!.connectTimeout = 10000
             httpURLConnection!!.readTimeout = 20000
             if (postData == null) {
-                Log.d(LOG_ID, "Send GET request to ${httpURLConnection!!.url}")
+                Log.i(LOG_ID, "Send GET request to ${httpURLConnection!!.url}")
                 httpURLConnection!!.requestMethod = "GET"
                 httpURLConnection!!.doOutput = false
             } else {
-                Log.d(LOG_ID, "Send POST request to ${httpURLConnection!!.url}")
+                Log.i(LOG_ID, "Send POST request to ${httpURLConnection!!.url}")
                 httpURLConnection!!.requestMethod = "POST"
                 httpURLConnection!!.doOutput = true
                 val dataOutputStream = DataOutputStream(httpURLConnection!!.outputStream)
@@ -133,7 +132,7 @@ class HttpRequest {
         if(httpURLConnection != null) {
             lastCode = httpURLConnection!!.responseCode
             lastMessage = httpURLConnection!!.responseMessage
-            Log.d(LOG_ID, "Code $lastCode received with message $lastMessage")
+            Log.i(LOG_ID, "Code $lastCode received with message $lastMessage")
             if (httpURLConnection!!.responseCode != HttpURLConnection.HTTP_OK) {
                 if (httpURLConnection!!.errorStream != null ) {
                     lastError = httpURLConnection!!.errorStream.bufferedReader().readText()

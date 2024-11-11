@@ -6,6 +6,8 @@ import android.content.Intent
 import android.util.Log
 import de.michelinside.glucodataauto.GlucoDataServiceAuto
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.Intents
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notifier.DataSource
@@ -16,9 +18,9 @@ open class GlucoDataActionReceiver: BroadcastReceiver() {
         try {
             GlucoDataServiceAuto.init(context)
             val action = intent.action
-            Log.v(LOG_ID, intent.action + " receveived: " + intent.extras.toString())
-            if (action != Constants.GLUCODATA_ACTION) {
-                Log.e(LOG_ID, "action=" + action + " != " + Constants.GLUCODATA_ACTION)
+            Log.v(LOG_ID, intent.action + " received: " + intent.extras.toString())
+            if (action != Intents.GLUCODATA_ACTION) {
+                Log.e(LOG_ID, "action=" + action + " != " + Intents.GLUCODATA_ACTION)
                 return
             }
             val extras = intent.extras
@@ -26,7 +28,7 @@ open class GlucoDataActionReceiver: BroadcastReceiver() {
                 if (extras.containsKey(Constants.SETTINGS_BUNDLE)) {
                     val bundle = extras.getBundle(Constants.SETTINGS_BUNDLE)
                     Log.d(LOG_ID, "Glucose settings receceived")
-                    ReceiveData.setSettings(context, bundle!!)
+                    GlucoDataService.setSettings(context, bundle!!)
                     extras.remove(Constants.SETTINGS_BUNDLE)
                 }
                 if (extras.containsKey(Constants.ALARM_SETTINGS_BUNDLE)) {

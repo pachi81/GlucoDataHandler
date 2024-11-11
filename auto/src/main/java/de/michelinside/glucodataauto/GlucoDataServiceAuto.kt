@@ -4,6 +4,8 @@ import android.app.Notification
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.content.SharedPreferences
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
@@ -11,6 +13,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.car.app.connection.CarConnection
 import de.michelinside.glucodataauto.android_auto.CarMediaBrowserService
+import de.michelinside.glucodataauto.android_auto.CarMediaPlayer
 import de.michelinside.glucodataauto.android_auto.CarNotification
 import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
@@ -21,12 +24,20 @@ import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodataauto.receiver.AAPSReceiver
+import de.michelinside.glucodataauto.receiver.DexcomBroadcastReceiver
+import de.michelinside.glucodataauto.receiver.DiaboxReceiver
+import de.michelinside.glucodataauto.receiver.GlucoDataReceiver
+import de.michelinside.glucodataauto.receiver.NsEmulatorReceiver
+import de.michelinside.glucodataauto.receiver.XDripReceiver
+import de.michelinside.glucodatahandler.common.Intents
 import de.michelinside.glucodatahandler.common.tasks.BackgroundWorker
 import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 
-class GlucoDataServiceAuto: Service() {
+class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     companion object {
         private const val LOG_ID = "GDH.AA.GlucoDataServiceAuto"
@@ -36,11 +47,19 @@ class GlucoDataServiceAuto: Service() {
         private var running = false
         private var init = false
         private var dataSyncCount = 0
+
+        private var glucoDataReceiver: GlucoDataReceiver? = null
+        private var xDripReceiver: XDripReceiver?  = null
+        private var aapsReceiver: AAPSReceiver?  = null
+        private var dexcomReceiver: DexcomBroadcastReceiver? = null
+        private var nsEmulatorReceiver: NsEmulatorReceiver? = null
+        private var diaboxReceiver: DiaboxReceiver? = null
+
         val connected: Boolean get() = car_connected || CarMediaBrowserService.active
+
         fun init(context: Context) {
             Log.v(LOG_ID, "init called: init=$init")
             if(!init) {
-                GlucoDataService.context = context
                 GlucoDataService.appSource = AppSource.AUTO_APP
                 migrateSettings(context)
                 CarNotification.initNotification(context)
@@ -92,8 +111,9 @@ class GlucoDataServiceAuto: Service() {
                 if(!running) {
                     init(context)
                     Log.i(LOG_ID, "starting")
+                    CarMediaPlayer.enable(context)
                     CarNotification.enable(context)
-                    startDataSync(context)
+                    startDataSync()
                     setForeground(context, true)
                     running = true
                 }
@@ -106,6 +126,7 @@ class GlucoDataServiceAuto: Service() {
             try {
                 if(!connected && running) {
                     Log.i(LOG_ID, "stopping")
+                    CarMediaPlayer.disable(context)
                     CarNotification.disable(context)
                     stopDataSync(context)
                     setForeground(context, false)
@@ -116,17 +137,18 @@ class GlucoDataServiceAuto: Service() {
             }
         }
 
-        fun startDataSync(context: Context) {
+        fun startDataSync(force: Boolean = false) {
             try {
-                Log.i(LOG_ID, "starting datasync - count=$dataSyncCount")
-                if (dataSyncCount == 0) {
-                    GlucoDataService.registerSourceReceiver(context)
-                    TimeTaskService.run(context)
-                    SourceTaskService.run(context)
-                    sendStateBroadcast(context, true)
+                Log.i(LOG_ID, "starting datasync - count=$dataSyncCount - context: ${GlucoDataService.context} - force: $force")
+                if ((dataSyncCount == 0 || force) && GlucoDataService.context != null) {
+                    updateSourceReceiver(GlucoDataService.context!!)
+                    TimeTaskService.run(GlucoDataService.context!!)
+                    SourceTaskService.run(GlucoDataService.context!!)
+                    sendStateBroadcast(GlucoDataService.context!!, true)
                     Log.i(LOG_ID, "Datasync started")
                 }
-                dataSyncCount++
+                if(!force)
+                    dataSyncCount++
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "startDataSync exception: " + exc.message.toString() + "\n" + exc.stackTraceToString())
             }
@@ -136,8 +158,8 @@ class GlucoDataServiceAuto: Service() {
             try {
                 dataSyncCount--
                 Log.i(LOG_ID, "stopping datasync - count=$dataSyncCount")
-                if (dataSyncCount == 0) {
-                    GlucoDataService.unregisterSourceReceiver(context)
+                if (dataSyncCount == 0 && GlucoDataService.context != null) {
+                    unregisterSourceReceiver(GlucoDataService.context!!)
                     sendStateBroadcast(context, false)
                     BackgroundWorker.stopAllWork(context)
                     Log.i(LOG_ID, "Datasync stopped")
@@ -188,6 +210,128 @@ class GlucoDataServiceAuto: Service() {
                 Log.e(LOG_ID, "sendStateBroadcast exception: " + exc.toString())
             }
         }
+
+        fun updateSourceReceiver(context: Context, key: String? = null) {
+            Log.d(LOG_ID, "Register receiver")
+            try {
+                val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED) {
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, true)) {
+                        if(glucoDataReceiver == null) {
+                            glucoDataReceiver = GlucoDataReceiver()
+                            if(!GlucoDataService.registerReceiver(context, glucoDataReceiver!!, IntentFilter("glucodata.Minute")))
+                                glucoDataReceiver = null
+                        }
+                    } else if (glucoDataReceiver != null) {
+                        GlucoDataService.unregisterReceiver(context, glucoDataReceiver)
+                        glucoDataReceiver = null
+                    }
+                }
+
+                if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED) {
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED, true)) {
+                        if(xDripReceiver == null) {
+                            xDripReceiver = XDripReceiver()
+                            if(!GlucoDataService.registerReceiver(context, xDripReceiver!!, IntentFilter("com.eveningoutpost.dexdrip.BgEstimate")))
+                                xDripReceiver = null
+                        }
+                    } else if (xDripReceiver != null) {
+                        GlucoDataService.unregisterReceiver(context, xDripReceiver)
+                        xDripReceiver = null
+                    }
+                }
+
+                if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_AAPS_ENABLED) {
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, true)) {
+                        if(aapsReceiver == null) {
+                            aapsReceiver = AAPSReceiver()
+                            if(!GlucoDataService.registerReceiver(context, aapsReceiver!!, IntentFilter(Intents.AAPS_BROADCAST_ACTION)))
+                                aapsReceiver = null
+                        }
+                    } else if (aapsReceiver != null) {
+                        GlucoDataService.unregisterReceiver(context, aapsReceiver)
+                        aapsReceiver = null
+                    }
+                }
+
+                if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_BYODA_ENABLED) {
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, true)) {
+                        if(dexcomReceiver == null) {
+                            val dexcomFilter = IntentFilter()
+                            dexcomFilter.addAction(Intents.DEXCOM_CGM_BROADCAST_ACTION)
+                            dexcomFilter.addAction(Intents.DEXCOM_G7_BROADCAST_ACTION)
+                            dexcomReceiver = DexcomBroadcastReceiver()
+                            if(!GlucoDataService.registerReceiver(context, dexcomReceiver!!, dexcomFilter))
+                                dexcomReceiver = null
+                        }
+                    } else if (dexcomReceiver != null) {
+                        GlucoDataService.unregisterReceiver(context, dexcomReceiver)
+                        dexcomReceiver = null
+                    }
+                }
+
+                if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED) {
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true)) {
+                        if(nsEmulatorReceiver == null) {
+                            nsEmulatorReceiver = NsEmulatorReceiver()
+                            if(!GlucoDataService.registerReceiver(context, nsEmulatorReceiver!!, IntentFilter(Intents.NS_EMULATOR_BROADCAST_ACTION)))
+                                nsEmulatorReceiver = null
+                        }
+                    } else if (nsEmulatorReceiver != null) {
+                        GlucoDataService.unregisterReceiver(context, nsEmulatorReceiver)
+                        nsEmulatorReceiver = null
+                    }
+                }
+
+                if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED) {
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true)) {
+                        if(diaboxReceiver == null) {
+                            diaboxReceiver = DiaboxReceiver()
+                            if(!GlucoDataService.registerReceiver(context, diaboxReceiver!!, IntentFilter(Intents.DIABOX_BROADCAST_ACTION)))
+                                diaboxReceiver = null
+                        }
+                    } else if (diaboxReceiver != null) {
+                        GlucoDataService.unregisterReceiver(context, diaboxReceiver)
+                        diaboxReceiver = null
+                    }
+                }
+
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "registerSourceReceiver exception: " + exc.toString())
+            }
+        }
+
+        fun unregisterSourceReceiver(context: Context) {
+            try {
+                Log.d(LOG_ID, "Unregister receiver")
+                if (glucoDataReceiver != null) {
+                    GlucoDataService.unregisterReceiver(context, glucoDataReceiver)
+                    glucoDataReceiver = null
+                }
+                if (xDripReceiver != null) {
+                    GlucoDataService.unregisterReceiver(context, xDripReceiver)
+                    xDripReceiver = null
+                }
+                if (dexcomReceiver != null) {
+                    GlucoDataService.unregisterReceiver(context, dexcomReceiver)
+                    dexcomReceiver = null
+                }
+                if (nsEmulatorReceiver != null) {
+                    GlucoDataService.unregisterReceiver(context, nsEmulatorReceiver)
+                    nsEmulatorReceiver = null
+                }
+                if (aapsReceiver != null) {
+                    GlucoDataService.unregisterReceiver(context, aapsReceiver)
+                    aapsReceiver = null
+                }
+                if (diaboxReceiver != null) {
+                    GlucoDataService.unregisterReceiver(context, diaboxReceiver)
+                    diaboxReceiver = null
+                }
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "unregisterSourceReceiver exception: " + exc.toString())
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -199,7 +343,9 @@ class GlucoDataServiceAuto: Service() {
             GlucoDataService.context = applicationContext
             ReceiveData.initData(applicationContext)
             CarNotification.initNotification(this)
+            TextToSpeechUtils.initTextToSpeech(this)
             val sharedPref = getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            sharedPref.registerOnSharedPreferenceChangeListener(this)
             val isForeground = (if(intent != null) intent.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, false) else false) || sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
             if (isForeground && !isForegroundService) {
                 Log.i(LOG_ID, "Starting service in foreground!")
@@ -214,6 +360,8 @@ class GlucoDataServiceAuto: Service() {
                 stopForeground(STOP_FOREGROUND_REMOVE)
             }
             CarConnection(applicationContext).type.observeForever(GlucoDataServiceAuto::onConnectionStateUpdated)
+            if(dataSyncCount > 0)
+                startDataSync(true)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onStartCommand exception: " + exc.message.toString() + "\n" + exc.stackTraceToString())
         }
@@ -223,6 +371,9 @@ class GlucoDataServiceAuto: Service() {
 
     override fun onDestroy() {
         Log.v(LOG_ID, "onDestroy called")
+        val sharedPref = getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        sharedPref.unregisterOnSharedPreferenceChangeListener(this)
+        TextToSpeechUtils.destroyTextToSpeech(this)
         super.onDestroy()
     }
 
@@ -234,7 +385,7 @@ class GlucoDataServiceAuto: Service() {
     private fun getNotification(): Notification {
         Channels.createNotificationChannel(this, ChannelType.ANDROID_AUTO_FOREGROUND)
 
-        val pendingIntent = PackageUtils.getAppIntent(this, MainActivity::class.java, 11, false)
+        val pendingIntent = PackageUtils.getAppIntent(this, MainActivity::class.java, 11)
 
         return Notification.Builder(this, ChannelType.ANDROID_AUTO_FOREGROUND.channelId)
             .setContentTitle(getString(de.michelinside.glucodatahandler.common.R.string.gda_foreground_info))
@@ -246,6 +397,25 @@ class GlucoDataServiceAuto: Service() {
             .setCategory(Notification.CATEGORY_STATUS)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
             .build()
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        try {
+            Log.d(LOG_ID, "onSharedPreferenceChanged called with key $key")
+            when(key) {
+                Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED,
+                Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED,
+                Constants.SHARED_PREF_SOURCE_AAPS_ENABLED,
+                Constants.SHARED_PREF_SOURCE_BYODA_ENABLED,
+                Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED,
+                Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED -> {
+                    if(dataSyncCount>0)
+                        updateSourceReceiver(this, key)
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
+        }
     }
 
 }

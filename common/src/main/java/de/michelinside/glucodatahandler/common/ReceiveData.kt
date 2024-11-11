@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
+import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.notifier.DataSource
@@ -17,8 +18,6 @@ import de.michelinside.glucodatahandler.common.utils.WakeLockHelper
 import java.math.RoundingMode
 import java.text.DateFormat
 import java.util.*
-import kotlin.math.abs
-import kotlin.time.Duration.Companion.days
 
 object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private const val LOG_ID = "GDH.ReceiveData"
@@ -32,6 +31,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     const val IOB = "glucodata.Minute.IOB"
     const val COB = "glucodata.Minute.COB"
     const val IOBCOB_TIME = "gdh.IOB_COB_time"
+    const val DELTA_FALLING_COUNT = "gdh.delta_falling_count"
+    const val DELTA_RISING_COUNT = "gdh.delta_rising_count"
 
     var sensorID: String? = null
     var rawValue: Int = 0
@@ -42,8 +43,14 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var timeDiff: Long = 0
     var rateLabel: String? = null
     var source: DataSource = DataSource.NONE
-    val forceAlarm: Boolean get() {
+    val forceGlucoseAlarm: Boolean get() {
         return ((alarm and 8) == 8)
+    }
+    val forceDeltaAlarm: Boolean get() {
+        return ((alarm and 16) == 16)
+    }
+    val forceAlarm: Boolean get() {
+        return (forceGlucoseAlarm || forceDeltaAlarm)
     }
 
     var iob: Float = Float.NaN
@@ -53,7 +60,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     val low: Float get() {
         if(isMmol && lowValue > 0F)  // mmol/l
         {
-            return GlucoDataUtils.mgToMmol(lowValue, 1)
+            return GlucoDataUtils.mgToMmol(lowValue)
         }
         return lowValue
     }
@@ -61,7 +68,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     val high: Float get() {
         if(isMmol && highValue > 0F)  // mmol/l
         {
-            return GlucoDataUtils.mgToMmol(highValue, 1)
+            return GlucoDataUtils.mgToMmol(highValue)
         }
         return highValue
     }
@@ -69,7 +76,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     val targetMin: Float get() {
         if(isMmol)  // mmol/l
         {
-            return GlucoDataUtils.mgToMmol(targetMinValue, 1)
+            return GlucoDataUtils.mgToMmol(targetMinValue)
         }
         return targetMinValue
     }
@@ -77,7 +84,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     val targetMax: Float get() {
         if(isMmol)  // mmol/l
         {
-            return GlucoDataUtils.mgToMmol(targetMaxValue, 1)
+            return GlucoDataUtils.mgToMmol(targetMaxValue)
         }
         return targetMaxValue
     }
@@ -88,7 +95,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             return deltaValue
         if(isMmol)  // mmol/l
         {
-            return GlucoDataUtils.mgToMmol(deltaValue, if (abs(deltaValue) > 1.0F) 1 else 2)
+            return GlucoDataUtils.mgToMmol(deltaValue)
         }
         return Utils.round(deltaValue, 1)
     }
@@ -100,7 +107,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
 
     private var isMmolValue = false
     val isMmol get() = isMmolValue
-    private var use5minDelta = false
+    var use5minDelta = false
     private var colorAlarm: Int = Color.RED
     private var colorOutOfRange: Int = Color.YELLOW
     private var colorOK: Int = Color.GREEN
@@ -108,6 +115,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private var obsoleteTimeMin: Int = 6
     val obsoleteTimeInMinute get() = obsoleteTimeMin
     private var initialized = false
+    private var deltaFallingCount = 0
+    private var deltaRisingCount = 0
+
+    private var unitMgDl = "mg/dl"
+    private var unitMmol = "mmol/l"
 
     init {
         Log.v(LOG_ID, "init called")
@@ -118,6 +130,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             if (!initialized) {
                 Log.v(LOG_ID, "initData called")
                 initialized = true
+                unitMgDl = context.resources.getString(R.string.unit_mgdl)
+                unitMmol = context.resources.getString(R.string.unit_mmol)
                 AlarmHandler.initData(context)
                 readTargets(context)
                 loadExtras(context)
@@ -128,30 +142,41 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         }
     }
 
-    fun getAsString(context: Context, noDataResId: Int = R.string.no_data): String {
-        if (time == 0L)
-            return context.getString(noDataResId)
-        return (context.getString(R.string.info_label_delta) + ": " + getDeltaAsString() + " " + getUnit() + "\r\n" +
-                context.getString(R.string.info_label_rate) + ": " + rate + "\r\n" +
-                context.getString(R.string.info_label_timestamp) + ": " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(time)) + "\r\n" +
-                context.getString(R.string.info_label_alarm) + ": " + context.getString(getAlarmType().resId) + (if (forceAlarm) " ⚠" else "" ) + " (" + alarm + ")\r\n" +
-                (if (AlarmHandler.isSnoozeActive) context.getString(R.string.snooze) + ": " + AlarmHandler.snoozeTimestamp + "\r\n" else "" ) +
-                (if (isMmol) context.getString(R.string.info_label_raw) + ": " + rawValue + " mg/dl\r\n" else "") +
-                (       if (!isIobCobObsolete(1.days.inWholeSeconds.toInt())) {
-                            context.getString(R.string.info_label_iob) + ": " + getIobAsString() + " / " + context.getString(R.string.info_label_cob) + ": " + getCobAsString() + "\r\n" +
-                                    context.getString(R.string.info_label_iob_cob_timestamp) + ": " + DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(iobCobTime)) + "\r\n"
-                        }
-                        else "" ) +
-                (if (sensorID.isNullOrEmpty()) "" else context.getString(R.string.info_label_sensor_id) + ": " + (if(BuildConfig.DEBUG) "ABCDE12345" else sensorID) + "\r\n") +
-                context.getString(R.string.info_label_source) + ": " + context.getString(source.resId)
-                )
+    fun getAsText(context: Context, withIobCob: Boolean = false, withZeroTime: Boolean = true): String {
+        if(isObsoleteShort())
+            return context.getString(R.string.no_new_value, getElapsedTimeMinute())
+        var text = ""
+        val resId: Int? = if(getAlarmType() != AlarmType.OK) {
+                AlarmNotificationBase.getAlarmTextRes(getAlarmType())
+            } else if(getDeltaAlarmType() != AlarmType.NONE) {
+                AlarmNotificationBase.getAlarmTextRes(getDeltaAlarmType())
+            } else {
+                null
+            }
+        if (resId != null) {
+            text += context.getString(resId) + ", "
+        }
+        text += getGlucoseAsString()
+        if(!rate.isNaN())
+            text += ", " + getRateAsText(context)
+        if(!delta.isNaN())
+            text += ", Δ " + getDeltaAsString()
+        if(withZeroTime || getElapsedTimeMinute() > 0)
+            text += ", " + getElapsedRelativeTimeAsString(context, true)
+        if(withIobCob && !isIobCobObsolete()) {
+            if(!iob.isNaN())
+                text += ", " + context.getString(R.string.info_label_iob_talkback) + " " + getIobAsString()
+            if(!cob.isNaN())
+                text += ", " + context.getString(R.string.info_label_cob_talkback) + " " + getCobAsString()
+        }
+        return text
     }
 
     fun isObsoleteTime(timeoutSec: Int): Boolean = (System.currentTimeMillis()- time) >= (timeoutSec * 1000)
 
     fun isObsoleteShort(): Boolean = isObsoleteTime(obsoleteTimeMin*60)
     fun isObsoleteLong(): Boolean = isObsoleteTime(obsoleteTimeMin*120)
-    fun isIobCobObsolete(timeoutSec: Int = Constants.VALUE_OBSOLETE_LONG_SEC): Boolean = (System.currentTimeMillis()- iobCobTime) >= (timeoutSec * 1000)
+    fun isIobCobObsolete(timeoutSec: Int = Constants.VALUE_IOB_COBOBSOLETE_SEC): Boolean = (System.currentTimeMillis()- iobCobTime) >= (timeoutSec * 1000)
 
     fun getGlucoseAsString(): String {
         if(isObsoleteLong())
@@ -180,10 +205,53 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return (if (rate > 0) "+" else "") + rate.toString()
     }
 
+    fun getRateAsText(context: Context): String {
+        var rateText = if(rate < 2F && rate > -2F && rate != 0F) {
+            // calculate degrees
+            val degrees = GlucoDataUtils.getRateDegrees(rate)
+            if (degrees > 0) {
+                context.getString(R.string.rate_rising, degrees)
+            } else if (degrees < 0) {
+                context.getString(R.string.rate_falling, degrees)
+            } else null
+        } else null
+        if(rateText.isNullOrEmpty())
+            rateText = GlucoDataUtils.getRateLabel(context, rate)
+        return context.resources.getString(R.string.trend) + " " + rateText
+    }
+
     fun getUnit(): String {
         if (isMmol)
-            return "mmol/l"
-        return "mg/dl"
+            return unitMmol
+        return unitMgDl
+    }
+
+    fun getOtherUnit(): String {
+        if (isMmol)
+            return unitMgDl
+        return unitMmol
+    }
+
+    fun getGlucoseAsOtherUnit(): String {
+        if(isObsoleteLong())
+            return "---"
+        if (isMmol)
+            return rawValue.toString()
+        return GlucoDataUtils.mgToMmol(rawValue.toFloat()).toString()
+    }
+
+    fun getDeltaAsOtherUnit(): String {
+        if(isObsoleteShort() || deltaValue.isNaN())
+            return "--"
+        val otherDelta = if(isMmol) Utils.round(deltaValue, 1) else GlucoDataUtils.mgToMmol(deltaValue)
+        var deltaVal = ""
+        if (otherDelta > 0F)
+            deltaVal += "+"
+        deltaVal += if( isMmol && otherDelta.toDouble() == Math.floor(otherDelta.toDouble()) )
+            otherDelta.toInt().toString()
+        else
+            otherDelta.toString()
+        return deltaVal
     }
 
     fun isIobCob() : Boolean {
@@ -222,7 +290,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return cobString
     }
 
-    // alarm bits: 1111 -> first: force alarm (8), second: high or low alarm (4), last: low (1) 
+    // alarm bits: 1111 -> first: force alarm (8), second: high or low alarm (4), last: low (1)
+    // additional: 1 0000 -> force delta alarm (16)
     /* examples: 
         6 = 0110 -> very high
         2 = 0010 -> high (out of range)
@@ -260,6 +329,34 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return curAlarm
     }
 
+    fun getDeltaAlarmType(): AlarmType {
+        if(!isObsoleteLong() && !delta.isNaN()) {
+            if (deltaFallingCount>0)
+                return AlarmType.FALLING_FAST
+            else if (deltaRisingCount>0)
+                return AlarmType.RISING_FAST
+        }
+        return AlarmType.NONE
+    }
+
+    private fun calculateDeltaAlarmCount() {
+        if (delta.isNaN() || delta == 0F) {
+            deltaFallingCount = 0
+            deltaRisingCount = 0
+        } else {
+            if (deltaValue >= AlarmType.RISING_FAST.setting!!.delta) {
+                deltaFallingCount = 0
+                deltaRisingCount++
+            } else if (deltaValue <= -AlarmType.FALLING_FAST.setting!!.delta) {
+                deltaFallingCount++
+                deltaRisingCount = 0
+            } else {
+                deltaFallingCount = 0
+                deltaRisingCount = 0
+            }
+        }
+    }
+
     fun getGlucoseColor(monoChrome: Boolean = false): Int {
         if (monoChrome) {
             if (isObsoleteShort())
@@ -279,6 +376,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             AlarmType.HIGH -> colorOutOfRange
             AlarmType.VERY_HIGH -> colorAlarm
             AlarmType.OBSOLETE -> colorObsolete
+            else -> colorOK
         }
     }
 
@@ -293,10 +391,12 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return Utils.round((System.currentTimeMillis()- iobCobTime).toFloat()/60000, 0, roundingMode).toLong()
     }
 
-    fun getElapsedRelativeTimeAsString(context: Context): String {
+    fun getElapsedRelativeTimeAsString(context: Context, fullText: Boolean = false): String {
         val elapsed_time = getElapsedTimeMinute()
         if (elapsed_time > 60)
             return context.getString(R.string.elapsed_time_hour)
+        if(fullText)
+            return context.resources.getQuantityString(R.plurals.elapsed_time_full_text, elapsed_time.toInt(), elapsed_time)
         return context.getString(R.string.elapsed_time, elapsed_time)
     }
 
@@ -374,9 +474,10 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                         glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
                         changeIsMmol(rawValue!=glucose.toInt() && GlucoDataUtils.isMmolValue(glucose), context)
                     } else {
-                        glucose = rawValue.toFloat()
                         if (isMmol) {
-                            glucose = GlucoDataUtils.mgToMmol(glucose)
+                            glucose = GlucoDataUtils.mgToMmol(rawValue.toFloat())
+                        } else {
+                            glucose = rawValue.toFloat()
                         }
                     }
                     time = extras.getLong(TIME) //time in msec
@@ -393,16 +494,35 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     // check for alarm
                     if (interApp) {
                         alarm = extras.getInt(ALARM) // if bit 8 is set, then an alarm is triggered
-                        AlarmHandler.setLastAlarm(getAlarmType())
+                        if(forceGlucoseAlarm)
+                            AlarmHandler.setLastAlarm(getAlarmType())
                     } else {
                         alarm = calculateAlarm()
+                    }
+                    if(extras.containsKey(DELTA_FALLING_COUNT) && extras.containsKey(DELTA_RISING_COUNT)) {
+                        deltaFallingCount = extras.getInt(DELTA_FALLING_COUNT)
+                        deltaRisingCount = extras.getInt(DELTA_RISING_COUNT)
+                        if(interApp && forceDeltaAlarm)
+                            AlarmHandler.setLastAlarm(getDeltaAlarmType())
+                    } else {
+                        calculateDeltaAlarmCount()
+                    }
+                    if(!interApp && !forceGlucoseAlarm && !forceDeltaAlarm) {
+                        val deltaAlarmType = AlarmHandler.checkDeltaAlarmTrigger(deltaFallingCount, deltaRisingCount)
+                        if(deltaAlarmType != AlarmType.NONE) {
+                            alarm = alarm or 16
+                        }
                     }
 
                     val notifySource = if(interApp) NotifySource.MESSAGECLIENT else NotifySource.BROADCAST
 
                     InternalNotifier.notify(context, notifySource, createExtras())  // re-create extras to have all changed value inside...
-                    if(forceAlarm) {
+                    if(forceGlucoseAlarm) {
                         InternalNotifier.notify(context, NotifySource.ALARM_TRIGGER, null)
+                    } else if(forceDeltaAlarm) {
+                        val bundle = Bundle()
+                        bundle.putInt(Constants.ALARM_TYPE_EXTRA, getDeltaAlarmType().ordinal)
+                        InternalNotifier.notify(context, NotifySource.DELTA_ALARM_TRIGGER, bundle)
                     }
                     saveExtras(context)
                     result = true
@@ -475,8 +595,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         }
     }
 
-    fun setSettings(context: Context, bundle: Bundle) {
-        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+    fun setSettings(sharedPref: SharedPreferences, bundle: Bundle) {
         with(sharedPref.edit()) {
             putFloat(Constants.SHARED_PREF_TARGET_MIN, bundle.getFloat(Constants.SHARED_PREF_TARGET_MIN, targetMinValue))
             putFloat(Constants.SHARED_PREF_TARGET_MAX, bundle.getFloat(Constants.SHARED_PREF_TARGET_MAX, targetMaxValue))
@@ -510,6 +629,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         bundle.putInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm)
         bundle.putInt(Constants.SHARED_PREF_COLOR_OBSOLETE, colorObsolete)
         bundle.putInt(Constants.SHARED_PREF_OBSOLETE_TIME, obsoleteTimeMin)
+
         return bundle
     }
 
@@ -584,6 +704,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         extras.putFloat(IOB, iob)
         extras.putFloat(COB, cob)
         extras.putLong(IOBCOB_TIME, iobCobTime)
+        extras.putInt(DELTA_FALLING_COUNT, deltaFallingCount)
+        extras.putInt(DELTA_RISING_COUNT, deltaRisingCount)
         return extras
     }
 
@@ -603,6 +725,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 putFloat(IOB, iob)
                 putFloat(COB, cob)
                 putLong(IOBCOB_TIME, iobCobTime)
+                putInt(DELTA_FALLING_COUNT, deltaFallingCount)
+                putInt(DELTA_RISING_COUNT, deltaRisingCount)
                 putInt(Constants.EXTRA_SOURCE_INDEX, source.ordinal)
                 apply()
             }
@@ -628,6 +752,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     extras.putFloat(IOB, sharedGlucosePref.getFloat(IOB, iob))
                     extras.putFloat(COB, sharedGlucosePref.getFloat(COB, cob))
                     extras.putLong(IOBCOB_TIME, sharedGlucosePref.getLong(IOBCOB_TIME, iobCobTime))
+                    extras.putInt(DELTA_FALLING_COUNT, sharedGlucosePref.getInt(DELTA_FALLING_COUNT, deltaFallingCount))
+                    extras.putInt(DELTA_RISING_COUNT, sharedGlucosePref.getInt(DELTA_RISING_COUNT, deltaRisingCount))
                     val source = DataSource.fromIndex(sharedGlucosePref.getInt(Constants.EXTRA_SOURCE_INDEX,
                         DataSource.NONE.ordinal))
                     handleIntent(context, source, extras)
@@ -656,12 +782,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     Constants.SHARED_PREF_OBSOLETE_TIME -> {
                         updateSettings(sharedPreferences!!)
                         val extras = Bundle()
-                        extras.putBundle(Constants.SETTINGS_BUNDLE, getSettingsBundle())
-                        InternalNotifier.notify(
-                            GlucoDataService.context!!,
-                            NotifySource.SETTINGS,
-                            extras
-                        )
+                        extras.putBundle(Constants.SETTINGS_BUNDLE, GlucoDataService.getSettings())
+                        InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SETTINGS, extras)
                     }
                 }
             }

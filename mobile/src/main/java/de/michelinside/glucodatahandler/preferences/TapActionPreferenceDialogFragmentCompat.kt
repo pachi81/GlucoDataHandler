@@ -17,6 +17,7 @@ import de.michelinside.glucodatahandler.BuildConfig
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.R as CR
 
 
@@ -38,6 +39,8 @@ class TapActionPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat()
         private fun getActions(context: Context): HashMap<String, String> {
             val actions = HashMap<String, String>()
             actions[""] = context.resources.getString(CR.string.no_action)
+            if (TextToSpeechUtils.isAvailable())
+                actions[Constants.ACTION_SPEAK] = context.resources.getString(CR.string.action_read_values)
             if(Settings.canDrawOverlays(context)) {
                 actions[Constants.ACTION_FLOATING_WIDGET_TOGGLE] =
                     context.resources.getString(CR.string.action_floating_widget_toggle)

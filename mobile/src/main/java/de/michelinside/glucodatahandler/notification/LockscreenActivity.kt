@@ -21,12 +21,14 @@ import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
+import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.common.utils.Utils.isScreenReaderOn
 import de.michelinside.glucodatahandler.common.R as CR
 
 
@@ -39,6 +41,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtAlarm: TextView
     private lateinit var txtSnooze: TextView
     private lateinit var btnDismiss: SlideToActView
+    private lateinit var btnClose: Button
     private lateinit var btnSnooze: SlideToActView
     private lateinit var btnSnooze60: Button
     private lateinit var btnSnooze90: Button
@@ -77,8 +80,8 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             setContentView(R.layout.activity_lockscreen)
             hideSystemUI()
 
-            if(this.intent.extras?.containsKey(Constants.ALARM_NOTIFICATION_EXTRA_ALARM_TYPE) == true) {
-                alarmType = AlarmType.fromIndex(this.intent.extras!!.getInt(Constants.ALARM_NOTIFICATION_EXTRA_ALARM_TYPE, ReceiveData.getAlarmType().ordinal))
+            if(this.intent.extras?.containsKey(Constants.ALARM_TYPE_EXTRA) == true) {
+                alarmType = AlarmType.fromIndex(this.intent.extras!!.getInt(Constants.ALARM_TYPE_EXTRA, ReceiveData.getAlarmType().ordinal))
             }
 
             if(this.intent.extras?.containsKey(Constants.ALARM_SNOOZE_EXTRA_NOTIFY_ID) == true) {
@@ -91,6 +94,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             txtTime = findViewById(R.id.txtTime)
             txtAlarm = findViewById(R.id.txtAlarm)
             btnDismiss = findViewById(R.id.btnDismiss)
+            btnClose = findViewById(R.id.btnClose)
             btnSnooze = findViewById(R.id.btnSnooze)
             txtSnooze = findViewById(R.id.txtSnooze)
             btnSnooze60 = findViewById(R.id.btnSnooze60)
@@ -105,23 +109,45 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             else
                 layoutSnooze.visibility = View.GONE
 
-            btnDismiss.onSlideCompleteListener =
-                object : SlideToActView.OnSlideCompleteListener {
-                    override fun onSlideComplete(view: SlideToActView) {
-                        Log.d(LOG_ID, "Slide to stop completed!")
-                        stop()
-                    }
+            if(this.isScreenReaderOn()) {
+                Log.d(LOG_ID, "Screen reader is on!")
+                btnDismiss.visibility = View.GONE
+                btnClose.visibility = View.VISIBLE
+                btnSnooze.visibility = View.GONE
+                txtSnooze.visibility = View.GONE
+                btnSnooze60.contentDescription = resources.getString(CR.string.snooze) + " 60"
+                btnSnooze90.contentDescription = resources.getString(CR.string.snooze) + " 90"
+                btnSnooze120.contentDescription = resources.getString(CR.string.snooze) + " 120"
+                layoutSnoozeButtons.visibility = View.VISIBLE
+                btnClose.setOnClickListener{
+                    Log.d(LOG_ID, "Stop button clicked!")
+                    stop()
                 }
-            btnSnooze.onSlideCompleteListener =
-                object : SlideToActView.OnSlideCompleteListener {
-                    override fun onSlideComplete(view: SlideToActView) {
-                        Log.d(LOG_ID, "Slide to snooze completed!")
-                        AlarmNotification.stopVibrationAndSound()
-                        btnSnooze.visibility = View.GONE
-                        txtSnooze.visibility = View.VISIBLE
-                        layoutSnoozeButtons.visibility = View.VISIBLE
+            } else {
+                btnClose.visibility = View.GONE
+                btnDismiss.visibility = View.VISIBLE
+                btnSnooze.visibility = View.VISIBLE
+                txtSnooze.visibility = View.GONE
+                layoutSnoozeButtons.visibility = View.GONE
+
+                btnDismiss.onSlideCompleteListener =
+                    object : SlideToActView.OnSlideCompleteListener {
+                        override fun onSlideComplete(view: SlideToActView) {
+                            Log.d(LOG_ID, "Slide to stop completed!")
+                            stop()
+                        }
                     }
-                }
+                btnSnooze.onSlideCompleteListener =
+                    object : SlideToActView.OnSlideCompleteListener {
+                        override fun onSlideComplete(view: SlideToActView) {
+                            Log.d(LOG_ID, "Slide to snooze completed!")
+                            AlarmNotification.stopVibrationAndSound()
+                            btnSnooze.visibility = View.GONE
+                            txtSnooze.visibility = View.VISIBLE
+                            layoutSnoozeButtons.visibility = View.VISIBLE
+                        }
+                    }
+            }
             btnSnooze60.setOnClickListener{
                 AlarmHandler.setSnooze(60)
                 stop()
@@ -241,10 +267,12 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
                 txtBgValue.paintFlags = 0
             }
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(withShadow = true))
+            viewIcon.contentDescription = ReceiveData.getRateAsText(this)
             txtDelta.text = "Δ ${ReceiveData.getDeltaAsString()}"
             txtTime.text = "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(this)}"
+            txtTime.contentDescription = ReceiveData.getElapsedTimeMinuteAsString(this)
             val resId = (if(alarmType != null) alarmType else ReceiveData.getAlarmType())?.let {
-                AlarmNotification.getAlarmTextRes(
+                AlarmNotificationBase.getAlarmTextRes(
                     it
                 )
             }

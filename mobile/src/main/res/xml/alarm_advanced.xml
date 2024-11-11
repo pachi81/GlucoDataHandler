@@ -17,16 +17,16 @@
                     android:summary="@string/alarm_force_vibration_summary"
                     app:iconSpaceReserved="false" />
                 <androidx.preference.SwitchPreferenceCompat
-                    android:key="use_alarm_sound"
-                    android:defaultValue="true"
-                    android:title="@string/alarm_use_alarm_sound"
-                    android:summary="@string/alarm_use_alarm_sound_summary"
-                    app:iconSpaceReserved="false" />
-                <androidx.preference.SwitchPreferenceCompat
                     android:key="alarm_force_sound"
                     android:defaultValue="false"
                     android:title="@string/alarm_force_sound"
                     android:summary="@string/alarm_force_sound_summary"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:key="use_alarm_sound"
+                    android:defaultValue="true"
+                    android:title="@string/alarm_use_alarm_sound"
+                    android:summary="@string/alarm_use_alarm_sound_summary"
                     app:iconSpaceReserved="false" />
                 <androidx.preference.ListPreference
                     android:defaultValue="1000"
@@ -38,6 +38,12 @@
         <PreferenceCategory
             android:title="@string/alarm_advanced_cat_notifcation"
             app:iconSpaceReserved="false">
+                <androidx.preference.SwitchPreferenceCompat
+                    android:key="auto_close_notification"
+                    android:defaultValue="false"
+                    android:title="@string/auto_close_notification"
+                    android:summary="@string/auto_close_notification_summary"
+                    app:iconSpaceReserved="false" />
                 <androidx.preference.SwitchPreferenceCompat
                     android:defaultValue="false"
                     android:key="alarm_no_notification_wear_connected"
@@ -64,6 +70,16 @@
                     android:defaultValue="false"
                     android:title="@string/alarm_fullscreen_dismiss_keyguard"
                     android:summary="@string/alarm_fullscreen_dismiss_keyguard_summary"
+                    app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+        <PreferenceCategory
+            android:title="@string/advanced_settings"
+            app:iconSpaceReserved="false">
+                <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="true"
+                    android:key="enable_alarm_icon_toggle"
+                    android:title="@string/enable_alarm_icon_toggle"
+                    android:summary="@string/enable_alarm_icon_toggle_summary"
                     app:iconSpaceReserved="false" />
         </PreferenceCategory>
 </PreferenceScreen>

@@ -14,7 +14,7 @@ android {
         minSdk rootProject.minSdk
         targetSdk rootProject.targetSdk
         versionCode 1027
-        versionName "1.1"
+        versionName "1.1.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -79,10 +79,10 @@ dependencies {
     implementation 'com.joaomgcd:taskerpluginlibrary:0.4.10'
     implementation project(path: ':common')
     implementation "androidx.car.app:app:1.4.0"
-    implementation "androidx.preference:preference:1.2.1"
+    implementation "androidx.preference:preference-ktx:1.2.1"
     implementation "com.jaredrummler:colorpicker:1.1.0"
     implementation "androidx.media:media:1.7.0"
-    implementation 'androidx.work:work-runtime:2.9.0'
+    implementation 'androidx.work:work-runtime:2.9.1'
 }
 
 afterEvaluate {

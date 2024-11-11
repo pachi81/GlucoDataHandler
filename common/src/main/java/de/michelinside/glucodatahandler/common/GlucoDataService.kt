@@ -7,18 +7,35 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.content.pm.ServiceInfo
-import android.os.*
+import android.os.Build
+import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.google.android.gms.wearable.*
-import de.michelinside.glucodatahandler.common.notifier.*
-import de.michelinside.glucodatahandler.common.receiver.*
+import com.google.android.gms.wearable.WearableListenerService
+import de.michelinside.glucodatahandler.common.ReceiveData.isMmol
+import de.michelinside.glucodatahandler.common.notification.ChannelType
+import de.michelinside.glucodatahandler.common.notification.Channels
+import de.michelinside.glucodatahandler.common.notifier.DataSource
+import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.receiver.AAPSReceiver
+import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
+import de.michelinside.glucodatahandler.common.receiver.BroadcastServiceAPI
+import de.michelinside.glucodatahandler.common.receiver.DexcomBroadcastReceiver
+import de.michelinside.glucodatahandler.common.receiver.DiaboxReceiver
+import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
+import de.michelinside.glucodatahandler.common.receiver.NsEmulatorReceiver
+import de.michelinside.glucodatahandler.common.receiver.ReceiverBase
+import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
+import de.michelinside.glucodatahandler.common.tasks.BackgroundWorker
 import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
-import de.michelinside.glucodatahandler.common.notification.ChannelType
-import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
+import java.util.Locale
+
 
 enum class AppSource {
     NOT_SET,
@@ -27,8 +44,9 @@ enum class AppSource {
     AUTO_APP;
 }
 
-abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
+abstract class GlucoDataService(source: AppSource) : WearableListenerService(), SharedPreferences.OnSharedPreferenceChangeListener {
     private lateinit var batteryReceiver: BatteryReceiver
+    private lateinit var broadcastServiceAPI: BroadcastServiceAPI
 
     @SuppressLint("StaticFieldLeak")
     companion object {
@@ -42,8 +60,11 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
         var appSource = AppSource.NOT_SET
         private var isRunning = false
         val running get() = isRunning
+        private var created = false
+
         @SuppressLint("StaticFieldLeak")
         var service: GlucoDataService? = null
+
         var context: Context? get() {
             if(service != null)
                 return service!!.applicationContext
@@ -51,6 +72,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
         } set(value) {
             extContext = value
         }
+
         @SuppressLint("StaticFieldLeak")
         private var extContext: Context? = null
         val sharedPref: SharedPreferences? get() {
@@ -97,19 +119,39 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
             }
         }
 
+        fun checkServices(context: Context) {
+            try {
+                if(created)
+                    BackgroundWorker.checkServiceRunning(context)
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "checkServices exception: " + exc.message.toString())
+            }
+        }
+
         fun checkForConnectedNodes(refreshDataOnly: Boolean = false) {
             try {
                 Log.d(LOG_ID, "checkForConnectedNodes called for dataOnly=$refreshDataOnly - connection: ${connection!=null}")
                 if (connection!=null) {
                     if(!refreshDataOnly)
-                        connection!!.checkForConnectedNodes()
-                    connection!!.checkForNodesWithoutData()
+                        connection!!.checkForConnectedNodes(true)
+                    else
+                        connection!!.checkForNodesWithoutData()
                 }
             } catch (exc: Exception) {
                 Log.e(
                     LOG_ID,
                     "checkForConnectedNodes exception: " + exc.message.toString()
                 )
+            }
+        }
+
+        fun resetWearPhoneConnection() {
+            try {
+                if (connection != null) {
+                    connection!!.resetConnection()
+                }
+            } catch (exc: Exception) {
+                Log.e(LOG_ID,"resetWearPhoneConnection exception: " + exc.message.toString())
             }
         }
 
@@ -127,39 +169,130 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
 
         private var glucoDataReceiver: GlucoseDataReceiver? = null
         private var xDripReceiver: XDripBroadcastReceiver?  = null
-        //private var aapsReceiver: AAPSReceiver?  = null
+        private var aapsReceiver: AAPSReceiver?  = null
         private var dexcomReceiver: DexcomBroadcastReceiver? = null
         private var nsEmulatorReceiver: NsEmulatorReceiver? = null
-        private val broadcastServiceAPI = BroadcastServiceAPI()
+        private var diaboxReceiver: DiaboxReceiver? = null
+        private val registeredReceivers = mutableSetOf<String>()
 
         @SuppressLint("UnspecifiedRegisterReceiverFlag")
-        fun registerSourceReceiver(context: Context) {
+        fun registerReceiver(context: Context, receiver: ReceiverBase, filter: IntentFilter): Boolean {
+            Log.i(LOG_ID, "Register receiver ${receiver.getName()} for $receiver on $context")
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    context.registerReceiver(receiver, filter, RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
+                } else {
+                    context.registerReceiver(receiver, filter)
+                }
+                registeredReceivers.add(receiver.getName())
+                return true
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "registerReceiver exception: " + exc.toString())
+            }
+            return false
+        }
+
+        fun unregisterReceiver(context: Context, receiver: ReceiverBase?) {
+            try {
+                if (receiver != null) {
+                    Log.i(LOG_ID, "Unregister receiver ${receiver.getName()} on $context")
+                    registeredReceivers.remove(receiver.getName())
+                    context.unregisterReceiver(receiver)
+                }
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "unregisterReceiver exception: " + exc.toString())
+            }
+        }
+
+        fun isRegistered(receiver: ReceiverBase): Boolean {
+            return registeredReceivers.contains(receiver.getName())
+        }
+
+        fun updateSourceReceiver(context: Context, key: String? = null) {
             Log.d(LOG_ID, "Register receiver")
             try {
-                if (glucoDataReceiver == null) {
-                    glucoDataReceiver = GlucoseDataReceiver()
-                    xDripReceiver = XDripBroadcastReceiver()
-                    //aapsReceiver = AAPSReceiver()
-                    dexcomReceiver = DexcomBroadcastReceiver()
-                    nsEmulatorReceiver = NsEmulatorReceiver()
-                    val dexcomFilter = IntentFilter()
-                    dexcomFilter.addAction("com.dexcom.cgm.EXTERNAL_BROADCAST")
-                    dexcomFilter.addAction("com.dexcom.g7.EXTERNAL_BROADCAST")
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        context.registerReceiver(glucoDataReceiver, IntentFilter("glucodata.Minute"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
-                        context.registerReceiver(xDripReceiver,IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
-                        //registerReceiver(aapsReceiver,IntentFilter("info.nightscout.androidaps.status"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
-                        context.registerReceiver(dexcomReceiver,dexcomFilter, RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
-                        context.registerReceiver(nsEmulatorReceiver,IntentFilter("com.eveningoutpost.dexdrip.NS_EMULATOR"), RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
-                    } else {
-                        context.registerReceiver(glucoDataReceiver, IntentFilter("glucodata.Minute"))
-                        context.registerReceiver(xDripReceiver,IntentFilter("com.eveningoutpost.dexdrip.BgEstimate"))
-                        //registerReceiver(aapsReceiver,IntentFilter("info.nightscout.androidaps.status"))
-                        context.registerReceiver(dexcomReceiver,dexcomFilter)
-                        context.registerReceiver(nsEmulatorReceiver,IntentFilter("com.eveningoutpost.dexdrip.NS_EMULATOR"))
+                val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED) {
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, true)) {
+                        if(glucoDataReceiver == null) {
+                            glucoDataReceiver = GlucoseDataReceiver()
+                            if(!registerReceiver(context, glucoDataReceiver!!, IntentFilter("glucodata.Minute")))
+                                glucoDataReceiver = null
+                        }
+                    } else if (glucoDataReceiver != null) {
+                        unregisterReceiver(context, glucoDataReceiver)
+                        glucoDataReceiver = null
                     }
-                    broadcastServiceAPI.init()
                 }
+
+                if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED) {
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED, true)) {
+                        if(xDripReceiver == null) {
+                            xDripReceiver = XDripBroadcastReceiver()
+                            if(!registerReceiver(context, xDripReceiver!!, IntentFilter("com.eveningoutpost.dexdrip.BgEstimate")))
+                                xDripReceiver = null
+                        }
+                    } else if (xDripReceiver != null) {
+                        unregisterReceiver(context, xDripReceiver)
+                        xDripReceiver = null
+                    }
+                }
+
+                if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_AAPS_ENABLED) {
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, true)) {
+                        if(aapsReceiver == null) {
+                            aapsReceiver = AAPSReceiver()
+                            if(!registerReceiver(context, aapsReceiver!!, IntentFilter(Intents.AAPS_BROADCAST_ACTION)))
+                                aapsReceiver = null
+                        }
+                    } else if (aapsReceiver != null) {
+                        unregisterReceiver(context, aapsReceiver)
+                        aapsReceiver = null
+                    }
+                }
+
+                if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_BYODA_ENABLED) {
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, true)) {
+                        if(dexcomReceiver == null) {
+                            val dexcomFilter = IntentFilter()
+                            dexcomFilter.addAction(Intents.DEXCOM_CGM_BROADCAST_ACTION)
+                            dexcomFilter.addAction(Intents.DEXCOM_G7_BROADCAST_ACTION)
+                            dexcomReceiver = DexcomBroadcastReceiver()
+                            if(!registerReceiver(context, dexcomReceiver!!, dexcomFilter))
+                                dexcomReceiver = null
+                        }
+                    } else if (dexcomReceiver != null) {
+                        unregisterReceiver(context, dexcomReceiver)
+                        dexcomReceiver = null
+                    }
+                }
+
+                if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED) {
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true)) {
+                        if(nsEmulatorReceiver == null) {
+                            nsEmulatorReceiver = NsEmulatorReceiver()
+                            if(!registerReceiver(context, nsEmulatorReceiver!!, IntentFilter(Intents.NS_EMULATOR_BROADCAST_ACTION)))
+                                nsEmulatorReceiver = null
+                        }
+                    } else if (nsEmulatorReceiver != null) {
+                        unregisterReceiver(context, nsEmulatorReceiver)
+                        nsEmulatorReceiver = null
+                    }
+                }
+
+                if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED) {
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true)) {
+                        if(diaboxReceiver == null) {
+                            diaboxReceiver = DiaboxReceiver()
+                            if(!registerReceiver(context, diaboxReceiver!!, IntentFilter(Intents.DIABOX_BROADCAST_ACTION)))
+                                diaboxReceiver = null
+                        }
+                    } else if (diaboxReceiver != null) {
+                        unregisterReceiver(context, diaboxReceiver)
+                        diaboxReceiver = null
+                    }
+                }
+
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "registerSourceReceiver exception: " + exc.toString())
             }
@@ -169,22 +302,29 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
             try {
                 Log.d(LOG_ID, "Unregister receiver")
                 if (glucoDataReceiver != null) {
-                    context.unregisterReceiver(glucoDataReceiver)
+                    unregisterReceiver(context, glucoDataReceiver)
                     glucoDataReceiver = null
                 }
                 if (xDripReceiver != null) {
-                    context.unregisterReceiver(xDripReceiver)
+                    unregisterReceiver(context, xDripReceiver)
                     xDripReceiver = null
                 }
                 if (dexcomReceiver != null) {
-                    context.unregisterReceiver(dexcomReceiver)
+                    unregisterReceiver(context, dexcomReceiver)
                     dexcomReceiver = null
                 }
                 if (nsEmulatorReceiver != null) {
-                    context.unregisterReceiver(nsEmulatorReceiver)
+                    unregisterReceiver(context, nsEmulatorReceiver)
                     nsEmulatorReceiver = null
                 }
-                broadcastServiceAPI.close(context)
+                if (aapsReceiver != null) {
+                    unregisterReceiver(context, aapsReceiver)
+                    aapsReceiver = null
+                }
+                if (diaboxReceiver != null) {
+                    unregisterReceiver(context, diaboxReceiver)
+                    diaboxReceiver = null
+                }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "unregisterSourceReceiver exception: " + exc.toString())
             }
@@ -208,6 +348,63 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
                     apply()
                 }
             }
+
+            // show other unit should be default on for mmol/l as there was the raw value before
+            // so this is only related, if use mmol/l is already set, else set to false
+            if(!sharedPrefs.contains(Constants.SHARED_PREF_SHOW_OTHER_UNIT)) {
+                val useMmol = if(sharedPrefs.contains(Constants.SHARED_PREF_USE_MMOL))
+                    sharedPrefs.getBoolean(Constants.SHARED_PREF_USE_MMOL, false)
+                else false
+                with(sharedPrefs.edit()) {
+                    putBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, useMmol)
+                    apply()
+                }
+            }
+
+            if(!sharedPrefs.contains(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL)) {
+                // check local for US and set to true if set
+                val currentLocale = Locale.getDefault()
+                val countryCode = currentLocale.country
+                Log.i(LOG_ID, "Using country code $countryCode")
+                if(countryCode == "US") {
+                    with(sharedPrefs.edit()) {
+                        putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, true)
+                        apply()
+                    }
+                }
+            }
+        }
+
+        fun getSettings(): Bundle {
+            val bundle = ReceiveData.getSettingsBundle()
+            // other settings
+            if (sharedPref != null) {
+                bundle.putBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, sharedPref!!.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, isMmol))
+                bundle.putBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, true))
+                bundle.putBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED, true))
+                bundle.putBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, true))
+                bundle.putBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, true))
+                bundle.putBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true))
+                bundle.putBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true))
+            }
+            Log.v(LOG_ID, "getSettings called with bundle ${(Utils.dumpBundle(bundle))}")
+            return bundle
+        }
+
+        fun setSettings(context: Context, bundle: Bundle) {
+            Log.v(LOG_ID, "setSettings called with bundle ${(Utils.dumpBundle(bundle))}")
+            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            with(sharedPref!!.edit()) {
+                putBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, bundle.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, isMmol))
+                putBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, true))
+                putBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED, true))
+                putBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, true))
+                putBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, true))
+                putBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true))
+                putBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true))
+                apply()
+            }
+            ReceiveData.setSettings(sharedPref, bundle)
         }
     }
 
@@ -259,14 +456,21 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
 
             ReceiveData.initData(this)
             SourceTaskService.run(this)
-            PackageUtils.updatePackages(this, true)
+            PackageUtils.updatePackages(this)
 
             connection = WearPhoneConnection()
             connection!!.open(this, appSource == AppSource.PHONE_APP)
 
-            registerSourceReceiver(this)
+            updateSourceReceiver(this)
+            broadcastServiceAPI = BroadcastServiceAPI()
+            broadcastServiceAPI.init()
             batteryReceiver = BatteryReceiver()
             registerReceiver(batteryReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+
+            sharedPref!!.registerOnSharedPreferenceChangeListener(this)
+
+            TextToSpeechUtils.initTextToSpeech(this)
+            created = true
 
             if (BuildConfig.DEBUG && sharedPref!!.getBoolean(Constants.SHARED_PREF_DUMMY_VALUES, false)) {
                 Thread {
@@ -292,7 +496,9 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
     override fun onDestroy() {
         try {
             Log.w(LOG_ID, "onDestroy called")
+            sharedPref!!.unregisterOnSharedPreferenceChangeListener(this)
             unregisterSourceReceiver(this)
+            broadcastServiceAPI.close(this)
             unregisterReceiver(batteryReceiver)
             TimeTaskService.stop()
             SourceTaskService.stop()
@@ -300,10 +506,40 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService() {
             connection = null
             super.onDestroy()
             service = null
+            created = false
             isRunning = false
             isForegroundService = false
+            TextToSpeechUtils.destroyTextToSpeech(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.toString())
+        }
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        try {
+            Log.d(LOG_ID, "onSharedPreferenceChanged called with key $key")
+            var shareSettings = false
+            when(key) {
+                Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED,
+                Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED,
+                Constants.SHARED_PREF_SOURCE_AAPS_ENABLED,
+                Constants.SHARED_PREF_SOURCE_BYODA_ENABLED,
+                Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED,
+                Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED -> {
+                    updateSourceReceiver(this, key)
+                    shareSettings = true
+                }
+                Constants.SHARED_PREF_SHOW_OTHER_UNIT -> {
+                    shareSettings = true
+                }
+            }
+            if (shareSettings) {
+                val extras = Bundle()
+                extras.putBundle(Constants.SETTINGS_BUNDLE, getSettings())
+                InternalNotifier.notify(this, NotifySource.SETTINGS, extras)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
         }
     }
 

@@ -16,6 +16,7 @@ object Constants {
     const val SETTINGS_BUNDLE = "settings_bundle"
     const val SOURCE_SETTINGS_BUNDLE = "source_settings_bundle"
     const val ALARM_SETTINGS_BUNDLE = "alarm_settings_bundle"
+    const val ALARM_EXTRA_BUNDLE = "alarm_extras_bundle"
     const val COMMAND_EXTRA = "command"
     const val COMMAND_BUNDLE = "command_bundle"
     const val GLUCOSE_CONVERSION_FACTOR = 18.0182F
@@ -26,6 +27,7 @@ object Constants {
     const val ACTION_PREFIX = "gdh_action_"
     const val ACTION_FLOATING_WIDGET_TOGGLE = ACTION_PREFIX + "floating_widget_toggle"
     const val ACTION_DUMMY_VALUE = ACTION_PREFIX + "dummy_value"
+    const val ACTION_SPEAK = ACTION_PREFIX + "speak"
 
     const val PACKAGE_GLUCODATAAUTO = "de.michelinside.glucodataauto"
     const val PACKAGE_JUGGLUCO = "tk.glucodata"
@@ -35,15 +37,14 @@ object Constants {
     const val EXTRA_AA_CONNECTED = "gdh.aa_connected"
 
     const val XDRIP_ACTION_GLUCOSE_READING = "com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING"
-    const val XDRIP_BROADCAST_ACTION = "com.eveningoutpost.dexdrip.BgEstimate"
 
-    const val GLUCODATA_ACTION = "de.michelinside.glucodatahandler.GLUCODATA"
     const val GLUCODATAAUTO_STATE_ACTION = "de.michelinside.glucodataauto.state"
     const val GLUCODATAAUTO_STATE_EXTRA = "state"
 
 
     //const val VALUE_OBSOLETE_SHORT_SEC = 300
     const val VALUE_OBSOLETE_LONG_SEC  = 600
+    const val VALUE_IOB_COBOBSOLETE_SEC  = 1800
 
     const val SHARED_PREF_TAG = "GlucoDataHandlerPrefs"
     const val SHARED_PREF_AUTO_TAG = "GlucoDataAutoPrefs"
@@ -86,12 +87,16 @@ object Constants {
     const val SHARED_PREF_SECOND_PERMANENT_NOTIFICATION = "second_permanent_notification"
     const val SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON = "second_status_bar_notification_icon"
     const val SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_TAP_ACTION = "second_permanent_notification_tap_action"
+    const val SHARED_PREF_THIRD_PERMANENT_NOTIFICATION = "third_permanent_notification"
+    const val SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_ICON = "third_status_bar_notification_icon"
+    const val SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_TAP_ACTION = "third_permanent_notification_tap_action"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON = "status_bar_notification_big_icon"
     const val SHARED_PREF_LARGE_ARROW_ICON = "large_arrow_icon"
     const val SHARED_PREF_FLOATING_WIDGET = "floating_widget"
     const val SHARED_PREF_FLOATING_WIDGET_STYLE = "floating_widget_style"
     const val SHARED_PREF_FLOATING_WIDGET_SIZE = "floating_widget_size"
     const val SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY = "floating_widget_transparency"
+    const val SHARED_PREF_FLOATING_WIDGET_TIME_TO_CLOSE = "floating_widget_time_to_close"
     const val SHARED_PREF_FLOATING_WIDGET_TAP_ACTION = "floating_widget_tap_action"
     const val SHARED_PREF_WIDGET_TRANSPARENCY = "widget_transparency"
     const val SHARED_PREF_WIDGET_TAP_ACTION = "widget_tap_action"
@@ -100,9 +105,17 @@ object Constants {
     const val SHARED_PREF_WATCHDRIP = "watchdrip_enabled"
     const val SHARED_PREF_WATCHDRIP_RECEIVERS = "watchdrip_receivers"
     const val SHARED_PREF_CHECK_WEAR_OS_CONNECTION = "wear_os_check_connection"
+    const val SHARED_PREF_RESET_WEAR_OS_CONNECTION = "wear_os_reset_connection"
     const val SHARED_PREF_OPEN_WATCH_DRIP_LINK = "open_watchdrip_link"
     const val SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT = "uncaught_exception_detected"
+    const val SHARED_PREF_UNCAUGHT_EXCEPTION_TIME = "uncaught_exception_time"
     const val SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE = "uncaught_exception_message"
+    const val SHARED_PREF_SHOW_OTHER_UNIT = "show_other_unit"
+    const val SHARED_PREF_EXPORT_SETTINGS = "export_settings"
+    const val SHARED_PREF_IMPORT_SETTINGS = "import_settings"
+    const val SHARED_PREF_SAVE_MOBILE_LOGS = "save_mobile_logs"
+    const val SHARED_PREF_SAVE_WEAR_LOGS = "save_wear_logs"
+
 
     // internal app preferences (not changed by settings) -> use separate tag for not trigger onChanged events
     const val SHARED_PREF_INTERNAL_TAG = "GlucoDataHandlerInternalAppPrefs"
@@ -123,6 +136,16 @@ object Constants {
     const val SHARED_PREF_SOURCE_INTERVAL="source_interval"
     const val SHARED_PREF_SOURCE_DELAY="source_delay"
 
+    // offline sources
+    const val SHARED_PREF_SOURCE_GDH_ENABLED="source_gdh_enabled"
+    const val SHARED_PREF_SOURCE_JUGGLUCO_ENABLED="source_juggluco_enabled"
+    const val SHARED_PREF_SOURCE_XDRIP_ENABLED="source_xdrip_enabled"
+    const val SHARED_PREF_SOURCE_AAPS_ENABLED="source_aaps_enabled"
+    const val SHARED_PREF_SOURCE_BYODA_ENABLED="source_byoda_enabled"
+    const val SHARED_PREF_SOURCE_EVERSENSE_ENABLED="source_eversense_enabled"
+    const val SHARED_PREF_SOURCE_DIABOX_ENABLED="source_diabox_enabled"
+
+    // online sources
     const val SHARED_PREF_LIBRE_ENABLED="source_libre_enabled"
     const val SHARED_PREF_LIBRE_USER="source_libre_user"
     const val SHARED_PREF_LIBRE_PASSWORD="source_libre_password"
@@ -137,6 +160,7 @@ object Constants {
     const val SHARED_PREF_DEXCOM_SHARE_PASSWORD="source_dexcom_share_password"
     const val SHARED_PREF_DEXCOM_SHARE_USE_US_URL="source_dexcom_share_use_us_url"
     const val SHARED_PREF_DEXCOM_SHARE_RECONNECT="source_dexcom_share_reconnect"
+    const val SHARED_PREF_DEXCOM_SHARE_ACCOUNT_LINK="source_dexcom_account_link"
 
     const val SHARED_PREF_NIGHTSCOUT_ENABLED="src_ns_enabled"
     const val SHARED_PREF_NIGHTSCOUT_URL="src_ns_url"
@@ -148,6 +172,8 @@ object Constants {
 
     const val SHARED_PREF_LOCKSCREEN_WP_ENABLED = "lockscreen_enabled"
     const val SHARED_PREF_LOCKSCREEN_WP_Y_POS = "lockscreen_y_pos"
+    const val SHARED_PREF_LOCKSCREEN_WP_STYLE = "lockscreen_style"
+    const val SHARED_PREF_LOCKSCREEN_WP_SIZE = "lockscreen_size"
 
     const val SHARED_PREF_SOURCE_JUGGLUCO_SET_NS_IOB_ACTION = "source_juggluco_activate_local_nightscout_iob_action"
     const val SHARED_PREF_SOURCE_XDRIP_SET_NS_IOB_ACTION = "source_xdrip_activate_local_nightscout_iob_action"
@@ -162,7 +188,7 @@ object Constants {
     const val ALARM_SNOOZE_EXTRA_TIME = "snooze_time"
     const val ALARM_SNOOZE_EXTRA_NOTIFY_ID = "notification_id"
     const val ALARM_SNOOZE_EXTRA_START_APP = "start_application"
-    const val ALARM_NOTIFICATION_EXTRA_ALARM_TYPE = "alarm_type"
+    const val ALARM_TYPE_EXTRA = "alarm_type"
 
     const val SHARED_PREF_WEAR_LAST_ALARM_STATE = "wear_last_alarm_state"
 
@@ -170,6 +196,7 @@ object Constants {
     const val SHARED_PREF_NOTIFICATION_VIBRATE = "alarm_vibrate_only"
     const val SHARED_PREF_ALARM_START_DELAY = "alarm_start_delay"
     const val SHARED_PREF_ALARM_START_DELAY_STRING = "alarm_start_delay_string"
+    const val SHARED_PREF_NOTIFICATION_AUTO_CLOSE = "auto_close_notification"
 
     const val SHARED_PREF_ALARM_NOTIFICATION_ENABLED = "alarm_notifications_enabled"
     const val SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED = "alarm_fullscreen_notification_enabled"
@@ -177,54 +204,56 @@ object Constants {
     const val SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION = "alarm_snooze_on_notification"
     const val SHARED_PREF_ALARM_FORCE_SOUND = "alarm_force_sound"
     const val SHARED_PREF_ALARM_FORCE_VIBRATION = "alarm_force_vibration"
+    const val SHARED_PREF_ALARM_INACTIVE_ENABLED = "alarm_inactive_enabled"
+    const val SHARED_PREF_ALARM_INACTIVE_START_TIME = "alarm_inactive_start_time"
+    const val SHARED_PREF_ALARM_INACTIVE_END_TIME = "alarm_inactive_end_time"
+    const val SHARED_PREF_ALARM_INACTIVE_WEEKDAYS = "alarm_inactive_weekdays"    
+    const val SHARED_PREF_ENABLE_ALARM_ICON_TOGGLE = "enable_alarm_icon_toggle"
 
     const val SHARED_PREF_NO_ALARM_NOTIFICATION_WEAR_CONNECTED = "alarm_no_notification_wear_connected"
     const val SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED = "alarm_no_notification_auto_connected"
     const val SHARED_PREF_WEAR_NO_ALARM_POPUP_PHONE_CONNECTED = "alarm_wear_no_popup_phone_connected"
 
 
+    const val SHARED_PREF_ALARM_SUFFIX_ENABLED = "_enabled"
+    const val SHARED_PREF_ALARM_SUFFIX_INTERVAL = "_interval"
+    const val SHARED_PREF_ALARM_SUFFIX_RETRIGGER = "_retrigger"
+    const val SHARED_PREF_ALARM_SUFFIX_USE_CUSTOM_SOUND = "_use_custom_sound"
+    const val SHARED_PREF_ALARM_SUFFIX_CUSTOM_SOUND = "_custom_sound"
+    const val SHARED_PREF_ALARM_SUFFIX_VIBRATE_PATTERN = "_vibrate_pattern"
+    const val SHARED_PREF_ALARM_SUFFIX_VIBRATE_AMPLITUDE = "_vibrate_amplitude"
+    const val SHARED_PREF_ALARM_SUFFIX_SOUND_DELAY = "_sound_delay"
+    const val SHARED_PREF_ALARM_SUFFIX_SOUND_LEVEL = "_sound_level"
+    const val SHARED_PREF_ALARM_SUFFIX_INACTIVE_ENABLED = "_inactive_enabled"
+    const val SHARED_PREF_ALARM_SUFFIX_INACTIVE_START_TIME = "_inactive_start_time"
+    const val SHARED_PREF_ALARM_SUFFIX_INACTIVE_END_TIME = "_inactive_end_time"
+    const val SHARED_PREF_ALARM_SUFFIX_INACTIVE_WEEKDAYS = "_inactive_weekdays"
+    const val SHARED_PREF_ALARM_SUFFIX_TEST = "_test"
+    const val SHARED_PREF_ALARM_SUFFIX_SAVE_SOUND = "_save_sound"
+    const val SHARED_PREF_ALARM_SUFFIX_REPEAT = "_repeat"
+    const val SHARED_PREF_ALARM_SUFFIX_DELTA = "_delta"
+    const val SHARED_PREF_ALARM_SUFFIX_OCCURRENCE_COUNT = "_occurrence_count"
+    const val SHARED_PREF_ALARM_SUFFIX_BORDER = "_border"
+
     const val SHARED_PREF_ALARM_VERY_LOW = "alarm_very_low"
-    const val SHARED_PREF_ALARM_VERY_LOW_ENABLED = "alarm_very_low_enabled"
-    const val SHARED_PREF_ALARM_VERY_LOW_INTERVAL = "alarm_very_low_interval"
-    const val SHARED_PREF_ALARM_VERY_LOW_RETRIGGER = "alarm_very_low_retrigger"
-    //const val SHARED_PREF_ALARM_VERY_LOW_USE_CUSTOM_SOUND = "alarm_very_low_use_custom_sound"
-    //const val SHARED_PREF_ALARM_VERY_LOW_CUSTOM_SOUND = "alarm_very_low_custom_sound"
-    const val SHARED_PREF_ALARM_VERY_LOW_SOUND_DELAY = "alarm_very_low_sound_delay"
-
     const val SHARED_PREF_ALARM_LOW = "alarm_low"
-    const val SHARED_PREF_ALARM_LOW_ENABLED = "alarm_low_enabled"
-    const val SHARED_PREF_ALARM_LOW_INTERVAL = "alarm_low_interval"
-    const val SHARED_PREF_ALARM_LOW_RETRIGGER = "alarm_low_retrigger"
-    //const val SHARED_PREF_ALARM_LOW_USE_CUSTOM_SOUND = "alarm_low_use_custom_sound"
-    //const val SHARED_PREF_ALARM_LOW_CUSTOM_SOUND = "alarm_low_custom_sound"
-    const val SHARED_PREF_ALARM_LOW_SOUND_DELAY = "alarm_low_sound_delay"
-
     const val SHARED_PREF_ALARM_HIGH = "alarm_high"
-    const val SHARED_PREF_ALARM_HIGH_ENABLED = "alarm_high_enabled"
-    const val SHARED_PREF_ALARM_HIGH_INTERVAL = "alarm_high_interval"
-    const val SHARED_PREF_ALARM_HIGH_RETRIGGER = "alarm_high_retrigger"
-    //const val SHARED_PREF_ALARM_HIGH_USE_CUSTOM_SOUND = "alarm_high_use_custom_sound"
-    //const val SHARED_PREF_ALARM_HIGHCUSTOM_SOUND = "alarm_high_custom_sound"
-    const val SHARED_PREF_ALARM_HIGH_SOUND_DELAY = "alarm_high_sound_delay"
-
     const val SHARED_PREF_ALARM_VERY_HIGH = "alarm_very_high"
-    const val SHARED_PREF_ALARM_VERY_HIGH_ENABLED = "alarm_very_high_enabled"
-    const val SHARED_PREF_ALARM_VERY_HIGH_INTERVAL = "alarm_very_high_interval"
-    const val SHARED_PREF_ALARM_VERY_HIGH_RETRIGGER = "alarm_very_high_retrigger"
-    //const val SHARED_PREF_ALARM_VERY_HIGH_USE_CUSTOM_SOUND = "alarm_very_high_use_custom_sound"
-    //const val SHARED_PREF_ALARM_VERY_HIGH_CUSTOM_SOUND = "alarm_very_high_custom_sound"
-    const val SHARED_PREF_ALARM_VERY_HIGH_SOUND_DELAY = "alarm_very_high_sound_delay"
-
     const val SHARED_PREF_ALARM_OBSOLETE = "alarm_obsolete"
-    const val SHARED_PREF_ALARM_OBSOLETE_ENABLED = "alarm_obsolete_enabled"
-    const val SHARED_PREF_ALARM_OBSOLETE_INTERVAL = "alarm_obsolete_interval"
-    const val SHARED_PREF_ALARM_OBSOLETE_RETRIGGER = "alarm_obsolete_retrigger"
-    //const val SHARED_PREF_ALARM_OBSOLETE_USE_CUSTOM_SOUND = "alarm_obsolete_use_custom_sound"
-    //const val SHARED_PREF_ALARM_OBSOLETE_CUSTOM_SOUND = "alarm_obsolete_custom_sound"
-    const val SHARED_PREF_ALARM_OBSOLETE_SOUND_DELAY = "alarm_obsolete_sound_delay"
+    const val SHARED_PREF_ALARM_RISING_FAST = "alarm_rising_fast"
+    const val SHARED_PREF_ALARM_FALLING_FAST = "alarm_falling_fast"
+
+    const val SHARED_PREF_ALARM_TYPE_SETTINGS_CAT = "cat_alarm_settings"
 
     // Android Auto
     const val AA_MEDIA_ICON_STYLE_TREND = "trend"
     const val AA_MEDIA_ICON_STYLE_GLUCOSE_TREND = "glucose_trend"
+    const val AA_MEDIA_ICON_STYLE_GLUCOSE = "glucose"
     const val SHARED_PREF_FOREGROUND_SERVICE = "foreground_service"
+
+    const val AA_MEDIA_PLAYER_SPEAK_VALUES = "aa_media_player_speak_values"
+    const val AA_MEDIA_PLAYER_SPEAK_NEW_VALUE = "aa_media_player_speak_new_value"
+    const val AA_MEDIA_PLAYER_SPEAK_ALARM_ONLY = "aa_media_player_speak_alarm_only"
+    const val AA_MEDIA_PLAYER_SPEAK_INTERVAL = "aa_media_player_speak_interval"
+    const val AA_MEDIA_PLAYER_SPEAK_TEST = "aa_media_player_speak_test"
 }

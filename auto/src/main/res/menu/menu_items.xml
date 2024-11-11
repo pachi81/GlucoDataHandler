@@ -6,6 +6,11 @@
         android:title="@string/pref_switch_car_notification"
         android:icon="@drawable/icon_off_white"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/action_speak_toggle"
+        android:title="@string/pref_aa_media_player_always_speak"
+        android:icon="@drawable/icon_volume_off_white"
+        app:showAsAction="always" />
     <group
         android:id="@+id/group_settings">
         <item
@@ -30,13 +35,6 @@
             app:showAsAction="never" />
     </group>
     <group
-        android:id="@+id/group_help">
-        <item
-            android:id="@+id/action_gda_help"
-            android:title="@string/menu_help"
-            app:showAsAction="never" />
-    </group>
-    <group
         android:id="@+id/group_github">
         <item
             android:id="@+id/group_github_title"
@@ -54,10 +52,10 @@
         </item>
     </group>
     <group
-        android:id="@+id/group_logs">
+        android:id="@+id/group_facebook">
         <item
-            android:id="@+id/action_save_mobile_logs"
-            android:title="@string/menu_save_logs"
+            android:id="@+id/action_facebook"
+            android:title="@string/menu_facebook"
             app:showAsAction="never" />
     </group>
     <group

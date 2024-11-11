@@ -5,11 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.Intents
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 
 
@@ -33,7 +35,10 @@ class InternalActionReceiver: BroadcastReceiver() {
                 Constants.ACTION_DUMMY_VALUE -> {
                     ReceiveData.handleIntent(context, DataSource.JUGGLUCO, GlucoDataUtils.getDummyGlucodataIntent(false).extras)
                 }
-                Constants.GLUCODATA_ACTION -> {
+                Constants.ACTION_SPEAK -> {
+                    TextToSpeechUtils.speak(ReceiveData.getAsText(context, true))
+                }
+                Intents.GLUCODATA_ACTION -> {
                     val extras = intent.extras!!
                     val lastTime = ReceiveData.time
                     val lastIobCobTime = ReceiveData.iobCobTime

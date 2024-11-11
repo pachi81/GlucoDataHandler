@@ -7,21 +7,42 @@
         android:summary="@string/gda_foreground_summary"
         android:title="@string/activity_switch_foreground"
         app:iconSpaceReserved="false" />
-    <Preference
-        android:key="pref_cat_android_auto"
-        android:title="@string/pref_cat_android_auto"
-        android:summary="@string/pref_cat_android_auto_summary"
-        app:fragment="de.michelinside.glucodataauto.preferences.GDASettingsFragment"
-        app:iconSpaceReserved="false" />
     <PreferenceCategory
-        android:title="@string/pref_information"
+        android:title="@string/pref_cat_android_auto"
+        app:iconSpaceReserved="false">
+        <Preference
+            android:key="pref_cat_android_auto_help"
+            android:title="@string/gda_help_aa_title"
+            android:summary="@string/gda_help_aa_summary"
+            app:fragment="de.michelinside.glucodataauto.preferences.HelpFragment"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="pref_cat_android_auto_notification"
+            android:title="@string/pref_switch_car_notification"
+            android:summary="@string/pref_switch_car_notification_summary"
+            app:fragment="de.michelinside.glucodataauto.preferences.GDANotificationSettingsFragment"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="pref_cat_android_auto_media"
+            android:title="@string/pref_switch_car_media"
+            android:summary="@string/pref_switch_car_media_summary"
+            app:fragment="de.michelinside.glucodataauto.preferences.GDAMediaSettingsFragment"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="pref_cat_android_auto_speak"
+            android:title="@string/pref_cat_android_auto_speak"
+            android:summary="@string/pref_aa_media_player_always_speak_summary"
+            app:fragment="de.michelinside.glucodataauto.preferences.GDASpeakSettingsFragment"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/menu_settings"
         app:iconSpaceReserved="false">
     <Preference
         android:key="gda_info"
+        android:title="@string/pref_information"
         android:summary="@string/pref_gda_info_summary"
-
         app:iconSpaceReserved="false" />
-    </PreferenceCategory>
 
     <Preference
         android:key="pref_general"
@@ -35,12 +56,23 @@
         android:summary="@string/pref_target_range_summary"
         app:fragment="de.michelinside.glucodataauto.preferences.RangeSettingsFragment"
         app:iconSpaceReserved="false" />
+    </PreferenceCategory>
 
-    <androidx.preference.SwitchPreferenceCompat
-        android:defaultValue="false"
-        android:key="dummy_values"
-        android:title="@string/pref_switch_notification"
-        app:iconSpaceReserved="false"
-        app:isPreferenceVisible="false" />
+    <PreferenceCategory
+        android:title="@string/advanced_settings"
+        app:iconSpaceReserved="false">
+        <Preference
+            android:key="pref_cat_export_import"
+            android:title="@string/pref_cat_export_import"
+            android:summary="@string/pref_cat_export_import_summary"
+            app:fragment="de.michelinside.glucodataauto.preferences.ExportImportSettingsFragment"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="dummy_values"
+            android:title="@string/pref_switch_notification"
+            app:iconSpaceReserved="false"
+            app:isPreferenceVisible="false" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

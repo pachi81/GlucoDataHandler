@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/pref_aa_media_player_icon_style"
+        app:iconSpaceReserved="false">
+        <androidx.preference.ListPreference
+            android:defaultValue="glucose_trend"
+            android:entries="@array/pref_aa_media_player_icon_labels"
+            android:entryValues="@array/pref_aa_media_player_icon_values"
+            android:key="aa_media_player_icon_style"
+            android:summary="@string/pref_aa_media_player_icon_style_summary"
+            android:title="@string/pref_floating_widget_style"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_cat_play_button"
+        app:iconSpaceReserved="false">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="aa_media_player_speak_values"
+            android:title="@string/pref_cat_android_auto_speak"
+            android:summaryOn="@string/pref_aa_media_player_speak_values_on_summary"
+            android:summaryOff="@string/pref_aa_media_player_speak_values_off_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+</PreferenceScreen>

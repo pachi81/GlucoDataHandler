@@ -1,7 +1,6 @@
 package de.michelinside.glucodatahandler
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
@@ -32,7 +31,6 @@ import androidx.core.view.MenuCompat
 import androidx.core.view.setPadding
 import androidx.preference.PreferenceManager
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
-import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -46,17 +44,16 @@ import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.ui.Dialogs
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.preferences.AlarmFragment
-import de.michelinside.glucodatahandler.watch.LogcatReceiver
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
 import kotlin.time.Duration.Companion.days
 import de.michelinside.glucodatahandler.common.R as CR
 
@@ -85,6 +82,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private var floatingWidgetItem: MenuItem? = null
     private val LOG_ID = "GDH.Main"
     private var requestNotificationPermission = false
+    private var doNotUpdate = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -128,7 +126,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             if (requestPermission())
                 GlucoDataServiceMobile.start(this)
-
+            TextToSpeechUtils.initTextToSpeech(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -148,7 +146,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         try {
             super.onResume()
             Log.v(LOG_ID, "onResume called")
+            GlucoDataService.checkServices(this)
             checkUncaughtException()
+            doNotUpdate = false
             update()
             InternalNotifier.addNotifier(this, this, mutableSetOf(
                 NotifySource.BROADCAST,
@@ -301,6 +301,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     { _, _ ->
                         with(sharedPref.edit()) {
                             putBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, false)
+                            apply()
                         }
                     }
                 )
@@ -328,8 +329,16 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     }
 
     private fun updateMenuItems() {
-        if(floatingWidgetItem!=null)
+        if(floatingWidgetItem!=null) {
             floatingWidgetItem!!.isVisible = Settings.canDrawOverlays(this)
+            if(floatingWidgetItem!!.isVisible) {
+                if(sharedPref.getBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false)) {
+                    floatingWidgetItem!!.title = resources.getString(CR.string.pref_floating_widget) + " " + resources.getString(CR.string.enabled)
+                } else {
+                    floatingWidgetItem!!.title = resources.getString(CR.string.pref_floating_widget) + " " + resources.getString(CR.string.disabled)
+                }
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -380,18 +389,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     }
                     return true
                 }
-                R.id.action_save_mobile_logs -> {
-                    SaveLogs(AppSource.PHONE_APP)
+                R.id.action_facebook -> {
+                    val browserIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(resources.getText(CR.string.facebook_gdh_group_url).toString())
+                    )
+                    startActivity(browserIntent)
                     return true
-                }
-                R.id.action_save_wear_logs -> {
-                    SaveLogs(AppSource.WEAR_APP)
-                    return true
-                }
-                R.id.group_log_title -> {
-                    Log.v(LOG_ID, "log group selected")
-                    val menuIt: MenuItem = optionsMenu.findItem(R.id.action_save_wear_logs)
-                    menuIt.isEnabled = WearPhoneConnection.nodesConnected && !LogcatReceiver.isActive
                 }
                 R.id.group_snooze_title -> {
                     Log.v(LOG_ID, "snooze group selected - snoozeActive=${AlarmHandler.isSnoozeActive}")
@@ -432,6 +436,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                         putBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, !sharedPref.getBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false))
                         apply()
                     }
+                    updateMenuItems()
                 }
                 else -> return super.onOptionsItemSelected(item)
             }
@@ -443,6 +448,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun toggleAlarm() {
         try {
+            doNotUpdate = true
             val state = AlarmNotification.getAlarmState(this)
             if(AlarmNotification.channelActive(this)) {
                 Log.v(LOG_ID, "toggleAlarm called for state $state")
@@ -461,6 +467,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                             apply()
                         }
                     }
+                    AlarmState.TEMP_DISABLED -> {
+                        AlarmHandler.disableInactiveTime()
+                    }
                 }
             } else {
                 with(sharedPref.edit()) {
@@ -473,10 +482,11 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     startActivity(intent)
                 }
             }
-            //updateAlarmIcon()
+            updateAlarmIcon()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateAlarmIcon exception: " + exc.message.toString() )
         }
+        doNotUpdate = false
     }
 
     private fun updateAlarmIcon() {
@@ -490,10 +500,17 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             val state = AlarmNotification.getAlarmState(this)
             Log.v(LOG_ID, "updateAlarmIcon called for state $state")
             if(alarmIcon != null) {
+                alarmIcon!!.isEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ENABLE_ALARM_ICON_TOGGLE, true)
                 alarmIcon!!.icon = ContextCompat.getDrawable(this, state.icon)
+                alarmIcon!!.title = resources.getString(CR.string.alarm_toggle_state,
+                    when(state) {
+                        AlarmState.SNOOZE -> resources.getString(state.descr, AlarmHandler.snoozeShortTimestamp)
+                        AlarmState.TEMP_DISABLED -> resources.getString(state.descr, AlarmHandler.inactiveEndTimestamp)
+                        else -> resources.getString(state.descr)
+                    })
             }
             if(snoozeMenu != null) {
-                snoozeMenu!!.isVisible = (state != AlarmState.DISABLED)
+                snoozeMenu!!.isVisible = (state == AlarmState.ACTIVE || state == AlarmState.SNOOZE)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateAlarmIcon exception: " + exc.message.toString() )
@@ -503,7 +520,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     @SuppressLint("SetTextI18n")
     private fun update() {
         try {
-            Log.v(LOG_ID, "update values")
+            Log.v(LOG_ID, "update values - doNotUpdate=$doNotUpdate")
+            if(doNotUpdate)
+                return
             txtBgValue.text = ReceiveData.getGlucoseAsString()
             txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
             if (ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong()) {
@@ -512,11 +531,15 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 txtBgValue.paintFlags = 0
             }
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(withShadow = true))
+            viewIcon.contentDescription = ReceiveData.getRateAsText(this)
 
             timeText.text = "🕒 ${ReceiveData.getElapsedRelativeTimeAsString(this)}"
+            timeText.contentDescription = ReceiveData.getElapsedRelativeTimeAsString(this, true)
             deltaText.text = "Δ ${ReceiveData.getDeltaAsString()}"
             iobText.text = "💉 " + ReceiveData.getIobAsString()
+            iobText.contentDescription = getString(CR.string.info_label_iob) + " " + ReceiveData.getIobAsString()
             cobText.text = "🍔 " + ReceiveData.getCobAsString()
+            iobText.contentDescription = getString(CR.string.info_label_cob) + " " + ReceiveData.getCobAsString()
             iobText.visibility = if (ReceiveData.isIobCobObsolete()) View.GONE else View.VISIBLE
             cobText.visibility = iobText.visibility
 
@@ -544,54 +567,50 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         update()
     }
 
-    private fun SaveLogs(source: AppSource) {
-        try {
-            Log.v(LOG_ID, "Save logs called for " + source)
-            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-                addCategory(Intent.CATEGORY_OPENABLE)
-                type = "text/plain"
-                val currentDateandTime = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-                val fileName = "GDH_" + source + "_" + currentDateandTime + ".txt"
-                putExtra(Intent.EXTRA_TITLE, fileName)
-            }
-            startActivityForResult(intent, if (source == AppSource.WEAR_APP) CREATE_WEAR_FILE else CREATE_PHONE_FILE)
-
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "Saving mobile logs exception: " + exc.message.toString() )
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        try {
-            Log.v(LOG_ID, "onActivityResult called for requestCode: " + requestCode + " - resultCode: " + resultCode + " - data: " + Utils.dumpBundle(data?.extras))
-            super.onActivityResult(requestCode, resultCode, data)
-            if (resultCode == Activity.RESULT_OK) {
-                data?.data?.also { uri ->
-                    Log.v(LOG_ID, "Save logs to " + uri)
-                    if (requestCode == CREATE_PHONE_FILE) {
-                        Utils.saveLogs(this, uri)
-                    } else if(requestCode == CREATE_WEAR_FILE) {
-                        LogcatReceiver.requestLogs(this, uri)
-                    }
-                }
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "Saving logs exception: " + exc.message.toString() )
-        }
-    }
-
     private fun updateConnectionsTable() {
         tableConnections.removeViews(1, maxOf(0, tableConnections.childCount - 1))
-        if (SourceStateData.lastState != SourceState.NONE)
-            tableConnections.addView(createRow(SourceStateData.lastSource.resId,
-                SourceStateData.getStateMessage(this)))
+        if (SourceStateData.lastState != SourceState.NONE) {
+            val msg = SourceStateData.getStateMessage(this)
+            tableConnections.addView(
+                createRow(
+                    SourceStateData.lastSource.resId,
+                    msg
+                )
+            )
+            if(SourceStateData.lastState == SourceState.ERROR && SourceStateData.lastSource == DataSource.DEXCOM_SHARE) {
+                if (msg.contains("500:")) { // invalid password
+                    val us_account = sharedPref.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, false)
+                    val browserIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(resources.getString(if(us_account)CR.string.dexcom_account_us_url else CR.string.dexcom_account_non_us_url))
+                    )
+                    val onClickListener = OnClickListener {
+                        startActivity(browserIntent)
+                    }
+                    tableConnections.addView(
+                        createRow(
+                            SourceStateData.lastSource.resId,
+                            resources.getString(if(us_account) CR.string.dexcom_share_check_us_account else CR.string.dexcom_share_check_non_us_account),
+                            onClickListener
+                        )
+                    )
+                }
+            }
+        }
 
         if (WearPhoneConnection.nodesConnected) {
-            val onClickListener = OnClickListener {
-                GlucoDataService.checkForConnectedNodes(true)
-            }
-            WearPhoneConnection.getNodeBatterLevels().forEach { name, level ->
-                tableConnections.addView(createRow(name, if (level > 0) "$level%" else "?%", onClickListener))
+            if (WearPhoneConnection.connectionError) {
+                val onResetClickListener = OnClickListener {
+                    GlucoDataService.resetWearPhoneConnection()
+                }
+                tableConnections.addView(createRow(CR.string.source_wear, resources.getString(CR.string.detail_reset_connection), onResetClickListener))
+            } else {
+                val onCheckClickListener = OnClickListener {
+                    GlucoDataService.checkForConnectedNodes(false)
+                }
+                WearPhoneConnection.getNodeBatterLevels().forEach { (name, level) ->
+                    tableConnections.addView(createRow(name, if (level > 0) "$level%" else "?%", onCheckClickListener))
+                }
             }
         }
         if (WatchDrip.connected) {
@@ -606,10 +625,17 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateAlarmsTable() {
         tableAlarms.removeViews(1, maxOf(0, tableAlarms.childCount - 1))
-        if(ReceiveData.time > 0 && ReceiveData.getAlarmType() != AlarmType.OK) {
-            tableAlarms.addView(createRow(CR.string.info_label_alarm, resources.getString(ReceiveData.getAlarmType().resId) + (if (ReceiveData.forceAlarm) " ⚠" else "" )))
+        if(ReceiveData.time > 0) {
+            val alarmType = ReceiveData.getAlarmType()
+            if (alarmType != AlarmType.OK)
+                tableAlarms.addView(createRow(CR.string.info_label_alarm, resources.getString(alarmType.resId)))
+            val deltaAlarmType = ReceiveData.getDeltaAlarmType()
+            if (deltaAlarmType != AlarmType.NONE)
+                tableAlarms.addView(createRow(CR.string.info_label_alarm, resources.getString(deltaAlarmType.resId)))
         }
-        if (AlarmHandler.isSnoozeActive)
+        if (AlarmHandler.isTempInactive)
+            tableAlarms.addView(createRow(CR.string.temp_disabled, AlarmHandler.inactiveEndTimestamp))
+        else if (AlarmHandler.isSnoozeActive)
             tableAlarms.addView(createRow(CR.string.snooze, AlarmHandler.snoozeTimestamp))
         checkTableVisibility(tableAlarms)
     }
@@ -617,8 +643,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun updateDetailsTable() {
         tableDetails.removeViews(1, maxOf(0, tableDetails.childCount - 1))
         if(ReceiveData.time > 0) {
-            if (ReceiveData.isMmol)
-                tableDetails.addView(createRow(CR.string.info_label_raw, "${ReceiveData.rawValue} mg/dl"))
+            if (!ReceiveData.isObsoleteLong() && sharedPref.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, false)) {
+                tableDetails.addView(createRow(ReceiveData.getOtherUnit(), ReceiveData.getGlucoseAsOtherUnit() + " (Δ " + ReceiveData.getDeltaAsOtherUnit() + ")"))
+            }
             tableDetails.addView(createRow(CR.string.info_label_timestamp, DateFormat.getTimeInstance(
                 DateFormat.DEFAULT).format(Date(ReceiveData.time))))
             if (!ReceiveData.isIobCobObsolete(1.days.inWholeSeconds.toInt()))
@@ -665,21 +692,28 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         return row
     }
 
-    companion object {
-        const val CREATE_PHONE_FILE = 1
-        const val CREATE_WEAR_FILE = 2
-    }
-
     private fun checkUncaughtException() {
-        Log.d(LOG_ID, "Check uncaught exception ${sharedPref.getBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)}")
+        Log.i(LOG_ID, "Check uncaught exception exists: ${sharedPref.getBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)} - " +
+                "last occured at ${DateFormat.getDateTimeInstance().format(Date(sharedPref.getLong(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_TIME, 0)))}")
         if(sharedPref.getBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)) {
-            val excMsg = sharedPref.getString(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE, "")
-            Log.e(LOG_ID, "Uncaught exception detected last time: $excMsg")
+            val excMsg = sharedPref.getString(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE, "") ?: ""
+            val time = sharedPref.getLong(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_TIME, 0)
+            Log.e(LOG_ID, "Uncaught exception detected at ${DateFormat.getDateTimeInstance().format(Date(time))}: $excMsg")
             with(sharedPref.edit()) {
                 putBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, false)
                 apply()
             }
-            Dialogs.showOkDialog(this, CR.string.app_crash_title, CR.string.app_crash_message, null)
+
+            if(time > 0 && (System.currentTimeMillis()- ReceiveData.time) < (60*60 * 1000)) {
+                if (excMsg.contains("BadForegroundServiceNotificationException") || excMsg.contains(
+                        "RemoteServiceException"
+                    )
+                ) {
+                    Dialogs.showOkDialog(this, CR.string.app_crash_title, CR.string.app_crash_bad_notification, null)
+                } else {
+                    Dialogs.showOkDialog(this, CR.string.app_crash_title, CR.string.app_crash_message, null)
+                }
+            }
         }
     }
 }

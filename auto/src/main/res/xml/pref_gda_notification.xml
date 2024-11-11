@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.preference.SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="car_notification"
+        android:title="@string/pref_switch_car_notification"
+        android:summary="@string/pref_switch_car_notification_summary"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="car_notification_alarm_only"
+        android:title="@string/pref_switch_car_notification_alarm_only"
+        android:summary="@string/pref_switch_car_notification_alarm_only_summary"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.SeekBarPreference
+        android:defaultValue="1"
+        app:showSeekBarValue="true"
+        app:seekBarIncrement="1"
+        app:min="1"
+        android:max="30"
+        android:key="car_notification_interval_num"
+        android:title="@string/pref_car_notification_interval"
+        android:summary="@string/pref_car_notification_interval_summary"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.SeekBarPreference
+        android:defaultValue="5"
+        app:showSeekBarValue="true"
+        app:seekBarIncrement="1"
+        app:min="0"
+        android:max="15"
+        android:key="car_notification_reappear_interval"
+        android:title="@string/pref_car_notification_reappear_interval"
+        android:summary="@string/pref_car_notification_reappear_interval_summary"
+        app:iconSpaceReserved="false" />
+</PreferenceScreen>

@@ -9,6 +9,9 @@ open class TimeComplicationBase : BgValueComplicationService() {
     fun timeText(short: Boolean = false): PlainComplicationText {
         return plainText(ReceiveData.getElapsedTimeMinuteAsString(this, short))
     }
+    override fun getDescription(): String {
+        return getDescriptionForContent(time = true)
+    }
 }
 
 class LongGlucoseWithDeltaAndTrendAndTimeComplication: TimeComplicationBase() {
@@ -21,6 +24,26 @@ class LongGlucoseWithDeltaAndTrendAndTimeComplication: TimeComplicationBase() {
             .setSmallImage(getGlucoseTrendImage())
             .setTapAction(getTapAction())
             .build()
+    }
+    override fun getDescription(): String {
+        return getDescriptionForContent(glucose = true, delta = true, trend = true, time = true)
+    }
+}
+
+class LongGlucoseWithDeltaAndTrendIconAndTimeComplication: TimeComplicationBase() {
+    override fun getLongTextComplicationData(): ComplicationData {
+        return LongTextComplicationData.Builder(
+            plainText(" Δ: " + ReceiveData.getDeltaAsString()),
+            descriptionText()
+        )
+            .setTitle(timeText())
+            .setSmallImage(glucoseImage())
+            .setMonochromaticImage(arrowIcon())
+            .setTapAction(getTapAction())
+            .build()
+    }
+    override fun getDescription(): String {
+        return getDescriptionForContent(glucose = true, delta = true, trend = true, time = true)
     }
 }
 
@@ -36,15 +59,21 @@ class TimeStampComplication: TimeComplicationBase() {
             value = Utils.rangeValue(value, 0F, 3599F),
             min = 0F,
             max = 3599F,
-            contentDescription = descriptionText()
+            contentDescription = descriptionText(),
         )
             .setText(getText())
             .setMonochromaticImage(getIcon())
             .build()
+    }
+    override fun getDescription(): String {
+        return getDescriptionForContent(time = true)
     }
 }
 
 class ShortDeltaWithTimeComplication: TimeComplicationBase() {
     override fun getTitle(): PlainComplicationText = timeText(true)
     override fun getText(): PlainComplicationText = deltaText()
+    override fun getDescription(): String {
+        return getDescriptionForContent(delta = true, time = true)
+    }
 }

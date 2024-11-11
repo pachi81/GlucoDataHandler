@@ -3,10 +3,11 @@ package de.michelinside.glucodatahandler.common.notifier
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import java.util.Collections
 
 object InternalNotifier {
     private const val LOG_ID = "GDH.InternalNotifier"
-    private var notifiers = mutableMapOf<NotifierInterface, MutableSet<NotifySource>?>()
+    private var notifiers = Collections.synchronizedMap(mutableMapOf<NotifierInterface, MutableSet<NotifySource>?>())
     private var timeNotifierCount = 0
     private var obsoleteNotifierCount = 0
     val hasTimeNotifier: Boolean get() = timeNotifierCount>0
@@ -41,7 +42,8 @@ object InternalNotifier {
     fun notify(context: Context, notifySource: NotifySource, extras: Bundle?)
     {
         Log.d(LOG_ID, "Sending new data from " + notifySource.toString() + " to " + getNotifierCount(notifySource) + " notifier(s).")
-        notifiers.forEach{
+        val curNotifiers = notifiers.toMutableMap()
+        curNotifiers.forEach{
             try {
                 if (it.value == null || it.value!!.contains(notifySource)) {
                     Log.v(LOG_ID, "Sending new data from " + notifySource.toString() + " to " + it.toString())
@@ -55,8 +57,10 @@ object InternalNotifier {
 
     fun getNotifierCount(notifySource: NotifySource): Int {
         var count = 0
-        notifiers.forEach {
+        val curNotifiers = notifiers.toMutableMap()
+        curNotifiers.forEach {
             if (it.value == null || it.value!!.contains(notifySource)) {
+                Log.v(LOG_ID, "Notifier " + it.toString() + " has source " + notifySource.toString())
                 count++
             }
         }

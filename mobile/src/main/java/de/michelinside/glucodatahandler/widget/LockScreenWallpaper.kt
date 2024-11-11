@@ -9,12 +9,22 @@ import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
+import android.view.LayoutInflater
+import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.widget.ImageView
+import android.widget.TextView
+import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlin.math.max
@@ -24,7 +34,9 @@ object LockScreenWallpaper : NotifierInterface, SharedPreferences.OnSharedPrefer
     private val LOG_ID = "GDH.LockScreenWallpaper"
     private var enabled = false
     private var yPos = 75
-
+    private var style = Constants.WIDGET_STYLE_GLUCOSE_TREND
+    private var size = 10
+    private val MAX_SIZE = 24f
 
     fun create(context: Context) {
         try {
@@ -52,14 +64,31 @@ object LockScreenWallpaper : NotifierInterface, SharedPreferences.OnSharedPrefer
         if (!enabled) {
             Log.d(LOG_ID, "enable called")
             enabled = true
+            updateNotifier(context)
+            updateLockScreen(context)
+        }
+    }
+
+    private fun updateNotifier(context: Context) {
+        if (enabled) {
             val filter = mutableSetOf(
                 NotifySource.BROADCAST,
                 NotifySource.MESSAGECLIENT,
-                NotifySource.OBSOLETE_VALUE,
                 NotifySource.SETTINGS
             )
+            when (style) {
+                Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA -> {
+                    filter.add(NotifySource.TIME_VALUE)
+                }
+                Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA_IOB_COB -> {
+                    filter.add(NotifySource.TIME_VALUE)
+                    filter.add(NotifySource.IOB_COB_CHANGE)
+                }
+                else -> {
+                    filter.add(NotifySource.OBSOLETE_VALUE)
+                }
+            }
             InternalNotifier.addNotifier(context, this, filter)
-            updateLockScreen(context)
         }
     }
 
@@ -119,8 +148,96 @@ object LockScreenWallpaper : NotifierInterface, SharedPreferences.OnSharedPrefer
         return null
     }
 
+    private fun createWallpaperView(context: Context): Bitmap? {
+        try {
+            //getting the widget layout from xml using layout inflater
+            val lockscreenView = LayoutInflater.from(context).inflate(R.layout.floating_widget, null)
+            val txtBgValue: TextView = lockscreenView.findViewById(R.id.glucose)
+            val viewIcon: ImageView = lockscreenView.findViewById(R.id.trendImage)
+            val txtDelta: TextView = lockscreenView.findViewById(R.id.deltaText)
+            val txtTime: TextView = lockscreenView.findViewById(R.id.timeText)
+            val txtIob: TextView = lockscreenView.findViewById(R.id.iobText)
+            val txtCob: TextView = lockscreenView.findViewById(R.id.cobText)
+
+            var textSize = 30f
+            when(style) {
+                Constants.WIDGET_STYLE_GLUCOSE_TREND_DELTA -> {
+                    txtTime.visibility = GONE
+                    txtDelta.visibility = VISIBLE
+                    viewIcon.visibility = VISIBLE
+                    txtIob.visibility = GONE
+                    txtCob.visibility = GONE
+                }
+                Constants.WIDGET_STYLE_GLUCOSE_TREND -> {
+                    txtTime.visibility = GONE
+                    txtDelta.visibility = GONE
+                    viewIcon.visibility = VISIBLE
+                    txtIob.visibility = GONE
+                    txtCob.visibility = GONE
+                }
+                Constants.WIDGET_STYLE_GLUCOSE -> {
+                    txtTime.visibility = GONE
+                    txtDelta.visibility = GONE
+                    viewIcon.visibility = GONE
+                    txtIob.visibility = GONE
+                    txtCob.visibility = GONE
+                }
+                Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA_IOB_COB -> {
+                    textSize = 20f
+                    txtTime.visibility = VISIBLE
+                    txtDelta.visibility = VISIBLE
+                    viewIcon.visibility = VISIBLE
+                    txtIob.visibility = VISIBLE
+                    txtCob.visibility = VISIBLE
+                }
+                else -> {
+                    textSize = 20f
+                    txtTime.visibility = VISIBLE
+                    txtDelta.visibility = VISIBLE
+                    viewIcon.visibility = VISIBLE
+                    txtIob.visibility = GONE
+                    txtCob.visibility = GONE
+                }
+            }
+
+            txtBgValue.text = ReceiveData.getGlucoseAsString()
+            txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
+            if (ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong()) {
+                txtBgValue.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+            } else {
+                txtBgValue.paintFlags = 0
+            }
+            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
+            txtDelta.text = "Δ ${ReceiveData.getDeltaAsString()}"
+            txtTime.text = "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(context)}"
+            txtIob.text = "💉 ${ReceiveData.getIobAsString()}"
+            txtCob.text = "🍔 ${ReceiveData.getCobAsString()}"
+
+            txtBgValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+size*4f)
+            viewIcon.minimumWidth = Utils.dpToPx(32f+size*4f, context)
+            txtDelta.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+size*2f, MAX_SIZE))
+            txtTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+size*2f, MAX_SIZE))
+            txtIob.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+size*2f, MAX_SIZE))
+            txtCob.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+size*2f, MAX_SIZE))
+
+            lockscreenView.setDrawingCacheEnabled(true)
+            lockscreenView.measure(
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
+            lockscreenView.layout(0, 0, lockscreenView.measuredWidth, lockscreenView.measuredHeight)
+
+            val bitmap = Bitmap.createBitmap(lockscreenView.width, lockscreenView.height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+            lockscreenView.draw(canvas)
+            return bitmap
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "createWallpaperView exception: " + exc.message.toString())
+        }
+        return null
+    }
+
     private fun getBitmapForWallpaper(context: Context): Bitmap? {
-        return BitmapUtils.getGlucoseTrendBitmap(width = 400, height = 400)
+        return createWallpaperView(context)
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
@@ -139,6 +256,18 @@ object LockScreenWallpaper : NotifierInterface, SharedPreferences.OnSharedPrefer
             if (yPos != sharedPreferences.getInt(Constants.SHARED_PREF_LOCKSCREEN_WP_Y_POS, 75)) {
                 yPos = sharedPreferences.getInt(Constants.SHARED_PREF_LOCKSCREEN_WP_Y_POS, 75)
                 Log.d(LOG_ID, "New Y pos: $yPos")
+                changed = true
+            }
+            if (style != sharedPreferences.getString(Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE, style)) {
+                style = sharedPreferences.getString(Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE, style)!!
+                Log.d(LOG_ID, "New style: $style")
+                updateNotifier(GlucoDataService.context!!)
+                changed = true
+            }
+            if (size != sharedPreferences.getInt(Constants.SHARED_PREF_LOCKSCREEN_WP_SIZE, size)) {
+                size = sharedPreferences.getInt(Constants.SHARED_PREF_LOCKSCREEN_WP_SIZE, size)
+                Log.d(LOG_ID, "New size: $size")
+                updateNotifier(GlucoDataService.context!!)
                 changed = true
             }
             if (enabled != sharedPreferences.getBoolean(Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED, false)) {

@@ -107,8 +107,10 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     }
 
     open fun getRangeValueComplicationData(): ComplicationData {
-        val value = ReceiveData.glucose
-        val max = if(ReceiveData.isMmol) 16F else 280F
+        val value = ReceiveData.rawValue.toFloat()
+        val max = 280F
+        val colors = intArrayOf(ReceiveData.getGlucoseColor())
+        val colorRamp = ColorRamp(colors, false)
         return RangedValueComplicationData.Builder(
             value = Utils.rangeValue(value, 0F, max),
             min = 0F,
@@ -119,6 +121,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
             .setText(getText())
             .setMonochromaticImage(getIcon())
             .setTapAction(getTapAction())
+            .setColorRamp(colorRamp)
             .build()
     }
 
@@ -166,7 +169,7 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     open fun getImage(): SmallImage? = null
 
     open fun getTapAction(useExternalApp: Boolean = true): PendingIntent? {
-        val action = sharedPref.getString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, "")
+        val action = sharedPref.getString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, null)
         if(action != null) {
             return PackageUtils.getTapActionIntent(this, action, instanceId)
         } else if (BuildConfig.DEBUG) {
@@ -198,8 +201,35 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     fun resText(resId: Int): PlainComplicationText =
         plainText(getText(resId))
 
-    fun descriptionText(): PlainComplicationText =
-        resText(descriptionResId)
+    private fun appendText(text: String, append: String): String {
+        var textOut = text
+        if(textOut.isNotEmpty())
+            textOut += ", "
+        textOut += append
+        return textOut
+    }
+
+    fun getDescriptionForContent(glucose: Boolean = false, delta: Boolean = false, trend: Boolean = false, time: Boolean = false, iob: Boolean = false, cob: Boolean = false): String {
+        var text = ""
+        if(glucose)
+            text = ReceiveData.getGlucoseAsString()
+        if(delta)
+            text = appendText(text, this.getString(CR.string.info_label_delta) + " " + ReceiveData.getDeltaAsString())
+        if(trend)
+            text = appendText(text, ReceiveData.getRateAsText(this))
+        if(time)
+            text = appendText(text, ReceiveData.getElapsedRelativeTimeAsString(this, true))
+        if(iob)
+            text = appendText(text, this.getString(CR.string.info_label_iob_talkback) + " " + ReceiveData.getIobAsString())
+        if(cob)
+            text = appendText(text, this.getString(CR.string.info_label_cob_talkback) + " " + ReceiveData.getCobAsString())
+        return text
+    }
+
+    abstract fun getDescription(): String
+
+    open fun descriptionText(): PlainComplicationText =
+        plainText(getDescription())
 
     fun arrowIcon(): MonochromaticImage =
         MonochromaticImage.Builder(

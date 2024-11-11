@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.Intents
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.notifier.DataSource
@@ -194,7 +195,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     protected fun handleResult(extras: Bundle) {
         Log.d(LOG_ID, "handleResult for $source: ${Utils.dumpBundle(extras)}")
         val intent = Intent(GlucoDataService.context!!, InternalActionReceiver::class.java)
-        intent.action = Constants.GLUCODATA_ACTION
+        intent.action = Intents.GLUCODATA_ACTION
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
         intent.setPackage(GlucoDataService.context!!.packageName)
         extras.putInt(Constants.EXTRA_SOURCE_INDEX, source.ordinal)

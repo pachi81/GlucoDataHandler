@@ -19,15 +19,49 @@
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
+    <!-- xDrip+ integration -->
+    <uses-permission android:name="com.eveningoutpost.dexdrip.permissions.RECEIVE_BG_ESTIMATE" />
+    <!-- BYODA integration -->
+    <uses-permission android:name="com.dexcom.cgm.EXTERNAL_PERMISSION" />
 
     <queries>
+        <package android:name="com.eveningoutpost.dexdrip" />
+        <package android:name="info.nightscout.androidaps" />
+        <package android:name="com.dexcom.g6.region1.mmol" />
+        <package android:name="com.dexcom.g6.region2.mmol" />
+        <package android:name="com.dexcom.g6.region3.mmol" />
+        <package android:name="com.dexcom.g6.region4.mmol" />
+        <package android:name="com.dexcom.g6.region5.mmol" />
+        <package android:name="com.dexcom.g6.region6.mmol" />
+        <package android:name="com.dexcom.g6.region7.mmol" />
+        <package android:name="com.dexcom.g6.region1.mgdl" />
+        <package android:name="com.dexcom.g6.region2.mgdl" />
+        <package android:name="com.dexcom.g6.region3.mgdl" />
+        <package android:name="com.dexcom.g6.region4.mgdl" />
+        <package android:name="com.dexcom.g6.region5.mgdl" />
+        <package android:name="com.dexcom.g6.region6.mgdl" />
+        <package android:name="com.dexcom.g6.region7.mgdl" />
+        <package android:name="com.dexcom.follow.region1.mmol" />
+        <package android:name="com.dexcom.follow.region2.mmol" />
+        <package android:name="com.dexcom.follow.region3.mmol" />
+        <package android:name="com.dexcom.follow.region4.mmol" />
+        <package android:name="com.dexcom.follow.region5.mmol" />
+        <package android:name="com.dexcom.follow.region6.mmol" />
+        <package android:name="com.dexcom.follow.region7.mmol" />
+        <package android:name="com.dexcom.follow.region1.mgdl" />
+        <package android:name="com.dexcom.follow.region2.mgdl" />
+        <package android:name="com.dexcom.follow.region3.mgdl" />
+        <package android:name="com.dexcom.follow.region4.mgdl" />
+        <package android:name="com.dexcom.follow.region5.mgdl" />
+        <package android:name="com.dexcom.follow.region6.mgdl" />
+        <package android:name="com.dexcom.follow.region7.mgdl" />
         <package android:name="tk.glucodata" />
-    </queries>
-    <queries>
         <intent>
             <action android:name="android.intent.action.MAIN" />
-
             <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
         </intent>
     </queries>
 
@@ -102,6 +136,18 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/glucose_trend_delta_time_iob_cob_widget_info" />
+        </receiver>
+        <receiver
+            android:name=".widget.OtherUnitWidget"
+            android:label="@string/other_unit"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/other_unit_widget_info" />
         </receiver>
 
         <activity
@@ -235,6 +281,15 @@
             </intent-filter>
         </receiver>
         <receiver
+            android:name=".common.receiver.DiaboxReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="com.outshineiot.diabox.BgEstimate" />
+            </intent-filter>
+        </receiver>
+        <receiver
             android:name=".common.receiver.BroadcastServiceAPI"
             android:enabled="true"
             android:exported="true"
@@ -247,10 +302,15 @@
             android:name=".StartServiceAtBootReceiver"
             android:enabled="true"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            <intent-filter android:priority="100">
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
-                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.REBOOT"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.MY_PACKAGE_UNSUSPENDED"/>
             </intent-filter>
         </receiver>
         <receiver
@@ -276,6 +336,15 @@
         <receiver android:name=".common.notification.AlarmIntentReceiver" />
         <receiver android:name=".common.receiver.InternalActionReceiver" />
         <receiver android:name=".common.notification.AlarmSnoozeEndReceiver" />
+        <receiver
+            android:name=".common.utils.LocaleChangeNotifier"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name= "android.intent.action.LOCALE_CHANGED" />
+            </intent-filter>
+        </receiver>
 
         <service android:name="androidx.work.impl.foreground.SystemForegroundService"
             android:foregroundServiceType="dataSync"

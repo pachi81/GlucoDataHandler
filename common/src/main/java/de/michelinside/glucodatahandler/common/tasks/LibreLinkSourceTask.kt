@@ -44,7 +44,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
 
     private fun getUrl(endpoint: String): String {
         val url = (if(region.isEmpty()) server else region_server.format(region)) + endpoint
-        Log.i(LOG_ID, "Send request to " + url)
+        Log.i(LOG_ID, "Using URL: " + url)
         return url
     }
 
@@ -65,10 +65,21 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     override fun reset() {
         Log.i(LOG_ID, "reset called")
         token = ""
+        tokenExpire = 0L
         region = ""
         dataReceived = false
         patientData.clear()
-        saveRegion()
+        try {
+            Log.d(LOG_ID, "Save reset")
+            with (GlucoDataService.sharedPref!!.edit()) {
+                putString(Constants.SHARED_PREF_LIBRE_TOKEN, token)
+                putLong(Constants.SHARED_PREF_LIBRE_TOKEN_EXPIRE, tokenExpire)
+                putString(Constants.SHARED_PREF_LIBRE_REGION, region)
+                apply()
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "save reset exception: " + exc.toString() )
+        }
     }
 
     val sensitivData = mutableSetOf("id", "patientId", "firstName", "lastName", "did", "sn", "token", "deviceId", "email", "primaryValue", "secondaryValue" )

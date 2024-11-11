@@ -5,13 +5,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.preference.*
-import de.michelinside.glucodatahandler.Dialogs
+import de.michelinside.glucodatahandler.common.ui.Dialogs
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
 
 
-class SourceOfflineFragment : PreferenceFragmentCompat() {
+class SourceOfflineFragment : SettingsFragmentCompatBase() {
     private val LOG_ID = "GDH.SourceFragment"
     private var settingsChanged = false
 

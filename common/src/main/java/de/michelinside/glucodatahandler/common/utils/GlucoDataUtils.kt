@@ -5,6 +5,7 @@ import android.content.Intent
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
+import kotlin.math.abs
 import kotlin.random.Random
 
 object GlucoDataUtils {
@@ -22,8 +23,8 @@ object GlucoDataUtils {
 
     fun isMmolValue(value: Float): Boolean = value < Constants.GLUCOSE_MIN_VALUE.toFloat()
 
-    fun mgToMmol(value: Float, scale: Int = 1): Float {
-        return Utils.round(value / Constants.GLUCOSE_CONVERSION_FACTOR, scale)
+    fun mgToMmol(value: Float): Float {
+        return Utils.round(value / Constants.GLUCOSE_CONVERSION_FACTOR, if(abs(value) > 1.7F) 1 else 2)
     }
 
     fun mmolToMg(value: Float): Float {
@@ -76,7 +77,13 @@ object GlucoDataUtils {
         if (rate > -1.0f) return context.getString(R.string.rate_flat)
         if (rate > -2.0f) return context.getString(R.string.rate_forty_five_down)
         if (rate > -3.0f) return context.getString(R.string.rate_single_down)
-        return if (rate.isNaN()) "" else context.getString(R.string.rate_double_down)
+        return if (rate.isNaN()) context.getString(R.string.not_available) else context.getString(R.string.rate_double_down)
+    }
+
+    fun getRateDegrees(rate: Float): Int {
+        if (rate.isNaN())
+            return 0
+        return Utils.round(maxOf(-2F, minOf(2F, rate)) / 2F * 90F, 0).toInt()
     }
 
     private var rateDelta = 0.1F

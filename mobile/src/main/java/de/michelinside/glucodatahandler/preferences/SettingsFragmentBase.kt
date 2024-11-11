@@ -10,20 +10,31 @@ import android.provider.Settings
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.preference.*
-import de.michelinside.glucodatahandler.Dialogs
+import androidx.preference.ListPreference
+import androidx.preference.MultiSelectListPreference
+import androidx.preference.Preference
+import androidx.preference.SeekBarPreference
+import androidx.preference.SwitchPreferenceCompat
+import de.michelinside.glucodatahandler.common.ui.Dialogs
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.Intents
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import kotlin.collections.HashMap
+import kotlin.collections.List
+import kotlin.collections.mutableSetOf
+import kotlin.collections.plus
+import kotlin.collections.set
+import kotlin.collections.toTypedArray
 import de.michelinside.glucodatahandler.common.R as CR
 
 
-abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
+abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener {
     protected val LOG_ID = "GDH.SettingsFragmentBase"
     private val updateEnablePrefs = mutableSetOf<String>()
     private lateinit var activityResultOverlayLauncher: ActivityResultLauncher<Intent>
@@ -136,22 +147,6 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
         }
     }
 
-    override fun onDisplayPreferenceDialog(preference: Preference) {
-        Log.d(LOG_ID, "onDisplayPreferenceDialog called for " + preference.javaClass)
-        try {
-            if (preference is TapActionPreference) {
-                Log.d(LOG_ID, "Show SelectReceiver Dialog")
-                val dialogFragment = TapActionPreferenceDialogFragmentCompat.initial(preference.key)
-                dialogFragment.setTargetFragment(this, 0)
-                dialogFragment.show(parentFragmentManager, "androidx.preference.PreferenceFragment.DIALOG")
-            } else {
-                super.onDisplayPreferenceDialog(preference)
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "onDisplayPreferenceDialog exception: " + exc.toString())
-        }
-    }
-
     fun <T : Preference?> setEnableState(sharedPreferences: SharedPreferences, key: String, enableKey: String, secondEnableKey: String? = null, defValue: Boolean = false, invert: Boolean = false) {
         val pref = findPreference<T>(key)
         if (pref != null) {
@@ -187,17 +182,15 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
             setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_GLUCODATA_RECEIVERS, Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD)
             setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_XDRIP_RECEIVERS, Constants.SHARED_PREF_SEND_TO_XDRIP)
             setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_XDRIP_BROADCAST_RECEIVERS, Constants.SHARED_PREF_SEND_XDRIP_BROADCAST)
-            /*setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION, defValue = true)
-            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, Constants.SHARED_PREF_PERMANENT_NOTIFICATION, defValue = true)
-            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON, Constants.SHARED_PREF_PERMANENT_NOTIFICATION, defValue = true)
-            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, Constants.SHARED_PREF_PERMANENT_NOTIFICATION, defValue = true)*/
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, defValue = true, invert = true)
-            setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON, /*Constants.SHARED_PREF_PERMANENT_NOTIFICATION,*/Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, defValue = false)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_STYLE, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY, Constants.SHARED_PREF_FLOATING_WIDGET)
+            setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_TIME_TO_CLOSE, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO, Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO, defValue = true)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_Y_POS, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
+            setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
+            setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_SIZE, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
         }
@@ -239,9 +232,38 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
     }
 }
 
-class GeneralSettingsFragment: SettingsFragmentBase(R.xml.pref_general) {}
+class GeneralSettingsFragment: SettingsFragmentBase(R.xml.pref_general) {
+
+    override fun initPreferences() {
+        Log.v(LOG_ID, "initPreferences called")
+        super.initPreferences()
+        updateSummary()
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        try {
+            super.onSharedPreferenceChanged(sharedPreferences, key)
+            when (key) {
+                Constants.SHARED_PREF_USE_MMOL -> updateSummary()
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
+        }
+    }
+
+    private fun updateSummary() {
+        val useMmol = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_USE_MMOL)
+        val otherUnitPref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_SHOW_OTHER_UNIT)
+        if(otherUnitPref != null && useMmol != null) {
+            val otherUnit = if(useMmol.isChecked) "mg/dl" else "mmol/l"
+            otherUnitPref.summary = requireContext().resources.getString(CR.string.pref_show_other_unit_summary).format(otherUnit)
+        }
+    }
+}
+
 class RangeSettingsFragment: SettingsFragmentBase(R.xml.pref_target_range) {}
 class UiSettingsFragment: SettingsFragmentBase(R.xml.pref_ui) {}
+
 class WidgetSettingsFragment: SettingsFragmentBase(R.xml.pref_widgets) {
 
     override fun initPreferences() {
@@ -258,21 +280,48 @@ class WidgetSettingsFragment: SettingsFragmentBase(R.xml.pref_widgets) {
     }
 
     private fun updateStyleSummary() {
-        val stylePref = findPreference<ListPreference>(Constants.SHARED_PREF_FLOATING_WIDGET_STYLE)
-        if(stylePref != null) {
-            stylePref.summary = stylePref.entry
+        val widgetStylePref = findPreference<ListPreference>(Constants.SHARED_PREF_FLOATING_WIDGET_STYLE)
+        if(widgetStylePref != null) {
+            widgetStylePref.summary = widgetStylePref.entry
+        }
+    }
+}
+
+class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
+    override fun initPreferences() {
+        Log.v(LOG_ID, "initPreferences called")
+        super.initPreferences()
+        updateStyleSummary()
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        super.onSharedPreferenceChanged(sharedPreferences, key)
+        when (key) {
+            Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE -> updateStyleSummary()
         }
     }
 
+    private fun updateStyleSummary() {
+        val lockscreenStylePref = findPreference<ListPreference>(Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE)
+        if(lockscreenStylePref != null) {
+            lockscreenStylePref.summary = lockscreenStylePref.entry
+        }
+    }
 }
+
 class NotificaitonSettingsFragment: SettingsFragmentBase(R.xml.pref_notification) {}
-class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen) {}
 class WatchSettingsFragment: SettingsFragmentBase(R.xml.pref_watch) {
     override fun initPreferences() {
         Log.v(LOG_ID, "initPreferences called")
         val prefCheckWearOS = findPreference<Preference>(Constants.SHARED_PREF_CHECK_WEAR_OS_CONNECTION)
         prefCheckWearOS!!.setOnPreferenceClickListener {
             GlucoDataService.checkForConnectedNodes()
+            true
+        }
+
+        val prefResetWearOS = findPreference<Preference>(Constants.SHARED_PREF_RESET_WEAR_OS_CONNECTION)
+        prefResetWearOS!!.setOnPreferenceClickListener {
+            GlucoDataService.resetWearPhoneConnection()
             true
         }
 
@@ -287,13 +336,14 @@ class WatchSettingsFragment: SettingsFragmentBase(R.xml.pref_watch) {
         }
     }
 }
+
 class TransferSettingsFragment: SettingsFragmentBase(R.xml.pref_transfer) {
     override fun initPreferences() {
         Log.v(LOG_ID, "initPreferences called")
         super.initPreferences()
         setupReceivers(Constants.GLUCODATA_BROADCAST_ACTION, Constants.SHARED_PREF_GLUCODATA_RECEIVERS)
         setupReceivers(Constants.XDRIP_ACTION_GLUCOSE_READING, Constants.SHARED_PREF_XDRIP_RECEIVERS)
-        setupReceivers(Constants.XDRIP_BROADCAST_ACTION, Constants.SHARED_PREF_XDRIP_BROADCAST_RECEIVERS)
+        setupReceivers(Intents.XDRIP_BROADCAST_ACTION, Constants.SHARED_PREF_XDRIP_BROADCAST_RECEIVERS)
     }
 
 }

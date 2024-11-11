@@ -14,6 +14,7 @@ import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -166,10 +167,7 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
     }
 
     private fun getAlarmMessage(context: Context, alarmType: AlarmType): String {
-        val resId = AlarmNotification.getAlarmTextRes(alarmType)
-        if(resId == null) {
-            return "No alarm!"
-        }
+        val resId = AlarmNotificationBase.getAlarmTextRes(alarmType) ?: return "No alarm!"
         val msg = context.resources.getString(resId)
         return when(alarmType) {
             AlarmType.VERY_LOW,
@@ -228,6 +226,7 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
                     NotifySource.OBSOLETE_VALUE,
                     NotifySource.ALARM_TRIGGER,
                     NotifySource.OBSOLETE_ALARM_TRIGGER,
+                    NotifySource.DELTA_ALARM_TRIGGER,
                     NotifySource.NOTIFICATION_STOPPED))
                 active = true
                 sendBroadcastToReceiver(GlucoDataService.context!!, null, createCmdBundle(BroadcastServiceAPI.CMD_START))
@@ -325,6 +324,13 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
                 NotifySource.ALARM_TRIGGER,
                 NotifySource.OBSOLETE_ALARM_TRIGGER -> {
                     sendBroadcast(context, BroadcastServiceAPI.CMD_ALARM, alarmType = ReceiveData.getAlarmType())
+                }
+                NotifySource.DELTA_ALARM_TRIGGER -> {
+                    if(extras?.containsKey(Constants.ALARM_TYPE_EXTRA) == true) {
+                        val alarmType = AlarmType.fromIndex(extras.getInt(Constants.ALARM_TYPE_EXTRA, AlarmType.NONE.ordinal))
+                        if(alarmType != AlarmType.NONE)
+                            sendBroadcast(context, BroadcastServiceAPI.CMD_ALARM, alarmType = alarmType)
+                    }
                 }
                 else -> {
                     sendBroadcast(context, BroadcastServiceAPI.CMD_UPDATE_BG)
