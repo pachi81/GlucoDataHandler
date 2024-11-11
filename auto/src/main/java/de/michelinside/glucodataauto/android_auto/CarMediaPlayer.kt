@@ -139,17 +139,20 @@ object CarMediaPlayer: NotifierInterface {
             var uri: String? = null
             var requestAudioFocus = false
             if(!playSilent) {
-                file = TextToSpeechUtils.getAsFile(ReceiveData.getAsText(context, false, false))
+                file = TextToSpeechUtils.getAsFile(ReceiveData.getAsText(context, false, false), context)
                 if(file != null) {
                     uri = file!!.absolutePath
                     last_speak_time = ReceiveData.time
                     requestAudioFocus = true
+                } else {
+                    Log.w(LOG_ID, "TTS file could not be created!")
                 }
-            } else {  // play silent
+            }
+            if(uri.isNullOrEmpty()) {  // play silent
                 uri = "android.resource://" + context.packageName + "/" + R.raw.silence
                 requestAudioFocus = false
             }
-            if(!uri.isNullOrEmpty()) {
+            if(uri.isNotEmpty()) {
                 Log.d(LOG_ID, "onPlay uri: $uri")
                 player.reset()
                 player.setDataSource(context, Uri.parse(uri))
