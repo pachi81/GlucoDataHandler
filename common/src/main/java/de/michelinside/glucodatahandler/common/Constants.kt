@@ -256,4 +256,5 @@ object Constants {
     const val AA_MEDIA_PLAYER_SPEAK_ALARM_ONLY = "aa_media_player_speak_alarm_only"
     const val AA_MEDIA_PLAYER_SPEAK_INTERVAL = "aa_media_player_speak_interval"
     const val AA_MEDIA_PLAYER_SPEAK_TEST = "aa_media_player_speak_test"
+    const val AA_MEDIA_PLAYER_DURATION = "aa_media_player_duration"
 }

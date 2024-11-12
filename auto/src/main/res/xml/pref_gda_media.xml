@@ -23,5 +23,15 @@
             android:summaryOn="@string/pref_aa_media_player_speak_values_on_summary"
             android:summaryOff="@string/pref_aa_media_player_speak_values_off_summary"
             app:iconSpaceReserved="false" />
+        <androidx.preference.SeekBarPreference
+            android:defaultValue="0"
+            app:showSeekBarValue="true"
+            app:seekBarIncrement="1"
+            app:min="0"
+            android:max="15"
+            android:key="aa_media_player_duration"
+            android:title="@string/source_interval"
+            android:summary="@string/pref_aa_media_player_duration_summary"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 </PreferenceScreen>

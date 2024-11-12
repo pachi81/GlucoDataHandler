@@ -105,11 +105,22 @@ object CarMediaPlayer: NotifierInterface {
         this.callback = callback
     }
 
-    val currentPosition: Int get() {
-        if(enabled) {
-            return player.currentPosition
+    fun hasCallback() : Boolean {
+        return this.callback != null
+    }
+
+    val currentPosition: Long get() {
+        if(isPlaying) {
+            return player.currentPosition.toLong()
         }
-        return 0
+        return 0L
+    }
+
+    val duration: Long get() {
+        if(isPlaying) {
+            return player.duration.toLong()
+        }
+        return 0L
     }
 
     val isPlaying: Boolean get() {

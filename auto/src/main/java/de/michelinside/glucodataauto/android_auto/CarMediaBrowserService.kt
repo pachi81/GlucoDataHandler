@@ -40,6 +40,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     private lateinit var session: MediaSessionCompat
     private lateinit var mediaController: MediaControllerCompat
     private var curMediaItem = MEDIA_ROOT_ID
+    private var playBackState = PlaybackState.STATE_NONE
+    private var lastGlucoseTime = 0L
 
     companion object {
         var active = false
@@ -70,7 +72,10 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                     try {
                         if(curMediaItem == MEDIA_GLUCOSE_ID) {
                             // Current song is ready, but paused, so start playing the music.
-                            CarMediaPlayer.play(applicationContext, !sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_VALUES, false))
+                            if(sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_VALUES, false))
+                                CarMediaPlayer.play(applicationContext, !sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_VALUES, false))
+                            else
+                                session.setPlaybackState(buildState(PlaybackState.STATE_PLAYING))
                         } else if(curMediaItem == MEDIA_NOTIFICATION_TOGGLE_ID) {
                             Log.d(LOG_ID, "Toggle notification")
                             with(sharedPref.edit()) {
@@ -92,7 +97,10 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 override fun onStop() {
                     Log.i(LOG_ID, "onStop called playing")
                     try {
-                        CarMediaPlayer.stop()
+                        if(CarMediaPlayer.hasCallback())
+                            CarMediaPlayer.stop()
+                        else
+                            session.setPlaybackState(buildState(PlaybackState.STATE_STOPPED))
                     } catch (exc: Exception) {
                         Log.e(LOG_ID, "onStop exception: " + exc.message.toString() )
                     }
@@ -100,16 +108,9 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             })
 
             session.setPlaybackState(buildState(PlaybackState.STATE_STOPPED))
-            CarMediaPlayer.setCallback(object : CarMediaPlayerCallback() {
-                override fun onPlay() {
-                    Log.d(LOG_ID, "onPlay called")
-                    session.setPlaybackState(buildState(PlaybackState.STATE_PLAYING))
-                }
-                override fun onStop() {
-                    Log.d(LOG_ID, "onStop called")
-                    session.setPlaybackState(buildState(PlaybackState.STATE_STOPPED))
-                }
-            })
+
+            // set callback depending on the current speak value to prevent speaking for values in background as affect on state!
+            onSharedPreferenceChanged(sharedPref, Constants.AA_MEDIA_PLAYER_SPEAK_VALUES)
 
             sessionToken = session.sessionToken
             mediaController = MediaControllerCompat(this, session.sessionToken)
@@ -198,6 +199,31 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 Constants.SHARED_PREF_CAR_MEDIA_ICON_STYLE -> {
                     notifyChildrenChanged(MEDIA_ROOT_ID)
                 }
+                Constants.AA_MEDIA_PLAYER_SPEAK_VALUES -> {
+                    if(sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_SPEAK_VALUES, false)) {
+                        CarMediaPlayer.setCallback(object : CarMediaPlayerCallback() {
+                            override fun onPlay() {
+                                Log.d(LOG_ID, "callback play called")
+                                setGlucose()  // update duration for playing
+                                session.setPlaybackState(buildState(PlaybackState.STATE_PLAYING))
+                            }
+                            override fun onStop() {
+                                Log.d(LOG_ID, "callback onStop called")
+                                session.setPlaybackState(buildState(PlaybackState.STATE_STOPPED))
+                            }
+                        })
+                        session.setPlaybackState(buildState(PlaybackState.STATE_STOPPED))
+                    } else {
+                        CarMediaPlayer.setCallback(null)
+                    }
+                    notifyChildrenChanged(MEDIA_ROOT_ID)
+                }
+                Constants.AA_MEDIA_PLAYER_DURATION -> {
+                    notifyChildrenChanged(MEDIA_ROOT_ID)
+                    if(playBackState==PlaybackState.STATE_PLAYING) {
+                        session.setPlaybackState(buildState(PlaybackState.STATE_PLAYING))
+                    }
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.message.toString() )
@@ -260,9 +286,16 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                         MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE,
                         ReceiveData.getElapsedTimeMinuteAsString(this)
                     )
+                    .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, getDuration())
                     .putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, getIcon(400)!!)
                     .build()
             )
+            if(playBackState == PlaybackState.STATE_PLAYING && lastGlucoseTime < ReceiveData.time) {
+                // restart playing to have the current elapsed time
+                //session.setPlaybackState(buildState(PlaybackState.STATE_STOPPED))
+                session.setPlaybackState(buildState(PlaybackState.STATE_PLAYING))
+            }
+            lastGlucoseTime = ReceiveData.time
         } else {
             session.setPlaybackState(buildState(PlaybackState.STATE_NONE))
         }
@@ -334,16 +367,36 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     }
 
     private fun buildState(state: Int): PlaybackStateCompat? {
-        Log.d(LOG_ID, "buildState called for state $state - pos: ${CarMediaPlayer.currentPosition}")
+        val duration = getDuration()
+        val position = getPosition()
+        Log.d(LOG_ID, "buildState called for state $state - pos: ${position}/${duration}")
+        playBackState = state
+        val bundleWithDuration = if (duration == 0L) null else Bundle().apply {
+            putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration) // duration in Millisekunden
+        }
         return PlaybackStateCompat.Builder().setActions(
             PlaybackStateCompat.ACTION_PLAY or PlaybackStateCompat.ACTION_STOP)
             .setState(
                 state,
-                CarMediaPlayer.currentPosition.toLong(),
+                position,
                 1f,
                 SystemClock.elapsedRealtime()
-            )
+            ).setExtras(bundleWithDuration)
             .build()
+    }
+
+    private fun getPosition(): Long {
+        return if(CarMediaPlayer.hasCallback())
+            CarMediaPlayer.currentPosition
+        else
+            System.currentTimeMillis()-ReceiveData.time
+    }
+
+    private fun getDuration(): Long {
+        return if(CarMediaPlayer.hasCallback())
+            CarMediaPlayer.duration
+        else
+            sharedPref.getInt(Constants.AA_MEDIA_PLAYER_DURATION, 0) * 60000L
     }
 
 }
