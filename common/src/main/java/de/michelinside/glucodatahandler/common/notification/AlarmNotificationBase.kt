@@ -260,10 +260,9 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 else
                     AlarmType.NONE
                 Log.i(LOG_ID, "Create notification for $alarmType with ID=$curNotification - triggerTime=$retriggerTime")
-                checkCreateSound(alarmType, context)
                 if(canShowNotification())
                     showNotification(alarmType, context)
-                startVibrationAndSound(alarmType, context)
+                triggerVibrationAndSound(alarmType, context)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "triggerNotification exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
@@ -417,7 +416,29 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         return notificationBuilder.build()
     }
 
+    private fun triggerVibrationAndSound(alarmType: AlarmType, context: Context) {
+        if(startDelayThread!=null && startDelayThread!!.isAlive) {
+            Log.w(LOG_ID, "Start sound thread is already running!")
+            return
+        }
+        if(curNotification > 0) {
+            // else
+            startDelayThread = Thread {
+                val startDelay = getStartDelayMs(context)
+                Log.i(LOG_ID, "Start sound and vibration with a delay of $startDelay ms")
+                if (startDelay > 0)
+                    Thread.sleep(startDelay.toLong())
+                if (curNotification > 0) {
+                    checkCreateSound(alarmType, context)
+                    startVibrationAndSound(alarmType, context)
+                }
+            }
+            startDelayThread!!.start()
+        }
+    }
+
     private fun startVibrationAndSound(alarmType: AlarmType, context: Context, reTrigger: Boolean = false) {
+        Log.d(LOG_ID, "Start sound and vibration for $alarmType - reTrigger=$reTrigger")
         val repeat = getRepeat(alarmType)
         if(!reTrigger) {
             val soundDelay = getSoundDelay(alarmType)
@@ -438,26 +459,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             }
         }
 
-        if(startDelayThread!=null && startDelayThread!!.isAlive) {
-            Log.w(LOG_ID, "Start sound thread is already running!")
-            return
-        }
-
-        if(curNotification > 0) {
-            // else
-            startDelayThread = Thread {
-                val startDelay = getStartDelayMs(context)
-                Log.i(LOG_ID, "Start sound and vibration with a delay of $startDelay ms")
-                if (startDelay > 0)
-                    Thread.sleep(startDelay.toLong())
-                if (curNotification > 0) {
-                    Log.d(LOG_ID, "Start sound and vibration")
-                    val duration = startSound(alarmType, context, true)
-                    checkRetriggerAndAutoClose(context, duration)
-                }
-            }
-            startDelayThread!!.start()
-        }
+        val duration = startSound(alarmType, context, true)
+        checkRetriggerAndAutoClose(context, duration)
     }
 
     private fun vibrate(alarmType: AlarmType, repeat: Boolean = false, forceReturnDuration: Boolean = false) : Int {
