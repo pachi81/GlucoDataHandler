@@ -219,8 +219,9 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                     notifyChildrenChanged(MEDIA_ROOT_ID)
                 }
                 Constants.AA_MEDIA_PLAYER_DURATION -> {
-                    notifyChildrenChanged(MEDIA_ROOT_ID)
+                    setGlucose()  // update duration for playing
                     if(playBackState==PlaybackState.STATE_PLAYING) {
+                        // reset duration
                         session.setPlaybackState(buildState(PlaybackState.STATE_PLAYING))
                     }
                 }
@@ -291,9 +292,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                     .build()
             )
             if(playBackState == PlaybackState.STATE_PLAYING && lastGlucoseTime < ReceiveData.time) {
-                // restart playing to have the current elapsed time
-                //session.setPlaybackState(buildState(PlaybackState.STATE_STOPPED))
-                session.setPlaybackState(buildState(PlaybackState.STATE_PLAYING))
+                // update position
+                session.setPlaybackState(buildState(playBackState))
             }
             lastGlucoseTime = ReceiveData.time
         } else {
@@ -368,7 +368,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
 
     private fun buildState(state: Int): PlaybackStateCompat? {
         val duration = getDuration()
-        val position = getPosition()
+        val position = if(state==PlaybackState.STATE_PLAYING) getPosition() else 0L
         Log.d(LOG_ID, "buildState called for state $state - pos: ${position}/${duration}")
         playBackState = state
         val bundleWithDuration = if (duration == 0L) null else Bundle().apply {
@@ -389,7 +389,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         return if(CarMediaPlayer.hasCallback())
             CarMediaPlayer.currentPosition
         else
-            System.currentTimeMillis()-ReceiveData.time
+            System.currentTimeMillis()-ReceiveData.receiveTime
     }
 
     private fun getDuration(): Long {

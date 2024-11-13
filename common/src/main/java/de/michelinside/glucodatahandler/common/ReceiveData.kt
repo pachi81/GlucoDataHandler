@@ -40,6 +40,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var rate: Float = 0.0F
     var alarm: Int = 0
     var time: Long = 0
+    var receiveTime: Long = 0
     var timeDiff: Long = 0
     var rateLabel: String? = null
     var source: DataSource = DataSource.NONE
@@ -440,6 +441,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                                 extras.toString() +
                                 " - timestamp: " + DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(Date(extras.getLong(TIME)))
                     )
+                    receiveTime = System.currentTimeMillis()
                     source = dataSource
                     sensorID = extras.getString(SERIAL) //Name of sensor
                     rate = extras.getFloat(RATE) //Rate of change of glucose. See libre and dexcom label functions
