@@ -37,11 +37,15 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         private var region = ""
         private var patientId = ""
         private var dataReceived = false   // mark this endpoint as already received data
+        private var autoAcceptTOU = true
         val patientData = mutableMapOf<String, String>()
         const val server = "https://api.libreview.io"
         const val region_server = "https://api-%s.libreview.io"
         const val LOGIN_ENDPOINT = "/llu/auth/login"
         const val CONNECTION_ENDPOINT = "/llu/connections"
+        const val ACCEPT_ENDPOINT = "/auth/continue/"
+        const val ACCEPT_TERMS_TYPE = "tou"
+        const val ACCEPT_TOKEN_TYPE = "pp"
     }
 
     private fun getUrl(endpoint: String): String {
@@ -103,15 +107,92 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         return result
     }
 
-    private fun checkResponse(body: String?): JSONObject? {
+    /*
+    Example for error 4 for tou:
+    {
+      "status": 4,
+      "data": {
+        "step": {
+          "type": "tou",
+          "componentName": "AcceptDocument",
+          "props": {
+            "reaccept": true,
+            "titleKey": "Common.termsOfUse",
+            "type": "tou"
+          }
+        },
+        "user": {
+          "accountType": "pat",
+          "country": "CH",
+          "uiLanguage": "en-US"
+        },
+        "authTicket": {
+          "token": "the token here",
+          "expires": 1719337966,
+          "duration": 3600000
+        }
+      }
+    }
+     */
+
+    private fun getError4Message(type: String? = null): String {
+        if(type.isNullOrEmpty()) {
+            return GlucoDataService.context!!.getString(R.string.src_librelink_error4)
+        }
+        if(type == ACCEPT_TERMS_TYPE && !autoAcceptTOU) {
+            return GlucoDataService.context!!.getString(R.string.src_librelink_error4_tou)
+        }
+        return GlucoDataService.context!!.getString(R.string.src_librelink_error4_type, type)
+    }
+
+    private fun handleError4(jsonObj: JSONObject): JSONObject? {
+        // handle error 4 which contains the steps to do, like accept user terms or accept token
+        reset()
+        if (jsonObj.has("data")) {
+            val data = jsonObj.getJSONObject("data")
+            if(data.has("step")) {
+                val step = jsonObj.getJSONObject("step")
+                Log.i(LOG_ID, "Handle error 4 step: $step")
+                if(step.has("type")) {
+                    val type = step.getString("type")
+                    Log.i(LOG_ID, "Handle error 4 with type: $type")
+                    getToken(data)
+                    if(token.isEmpty()) {
+                        setLastError(getError4Message(type), 4)
+                        return null
+                    }
+                    if(type == ACCEPT_TOKEN_TYPE || (type == ACCEPT_TERMS_TYPE && autoAcceptTOU )) {
+                        // send accept request and re-login
+                        Log.i(LOG_ID, "Send accept request for type $type")
+                        return checkResponse(httpPost(getUrl(ACCEPT_ENDPOINT + type), getHeader(), null), false)
+                    } else {
+                        setLastError(getError4Message(type), 4)
+                    }
+                    return null
+                }
+            }
+        }
+        // else
+        if(jsonObj.has("error")) {
+            val error = jsonObj.optJSONObject("error")?.optString("message", "")
+            setLastError(error?: getError4Message(), 4)
+        } else {
+            setLastError(getError4Message(), 4)
+        }
+        return null
+    }
+
+    private fun checkResponse(body: String?, handleError4: Boolean = true): JSONObject? {
         if (body.isNullOrEmpty()) {
             return null
         }
-        Log.d(LOG_ID, "Handle json response: " + replaceSensitiveData(body))
+        Log.i(LOG_ID, "Handle json response: " + replaceSensitiveData(body))
         val jsonObj = JSONObject(body)
         if (jsonObj.has("status")) {
             val status = jsonObj.optInt("status", -1)
-            if(status != 0) {
+            if (status == 4 && handleError4) {
+                return handleError4(jsonObj)
+            } else if(status != 0) {
                 if(jsonObj.has("error")) {
                     val error = jsonObj.optJSONObject("error")?.optString("message", "")
                     setLastError(error?: "Error", status)
@@ -174,40 +255,45 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                         setLastError("redirect without region!!!", 500)
                     }
                 }
-                if(data.has("user")) {
-                    val user = data.optJSONObject("user")
-                    if(user != null && user.has("id")) {
-                        userId = user.optString("id")
-                        Log.i(LOG_ID, "User ID set!")
-                        with(GlucoDataService.sharedPref!!.edit()) {
-                            putString(Constants.SHARED_PREF_LIBRE_USER_ID, userId)
-                            apply()
-                        }
-                    }
+                getToken(data)
+            }
+        }
+        return token.isNotEmpty()
+    }
+
+    private fun getToken(data: JSONObject) {
+        Log.d(LOG_ID, "Check for new token token")
+        if(data.has("user")) {
+            val user = data.optJSONObject("user")
+            if(user != null && user.has("id")) {
+                userId = user.optString("id")
+                Log.i(LOG_ID, "User ID set!")
+                with(GlucoDataService.sharedPref!!.edit()) {
+                    putString(Constants.SHARED_PREF_LIBRE_USER_ID, userId)
+                    apply()
                 }
-                if (data.has("authTicket")) {
-                    val authTicket = data.optJSONObject("authTicket")
-                    if (authTicket != null) {
-                        if (authTicket.has("token")) {
-                            token = authTicket.optString("token", "")
-                            tokenExpire = authTicket.optLong("expires", 0L) * 1000
-                            if (token.isNotEmpty()) {
-                                Log.i(LOG_ID, "Login succeeded! Token expires at " + DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(
-                                    Date(tokenExpire)
-                                ))
-                            }
-                            with(GlucoDataService.sharedPref!!.edit()) {
-                                putString(Constants.SHARED_PREF_LIBRE_TOKEN, token)
-                                putLong(Constants.SHARED_PREF_LIBRE_TOKEN_EXPIRE, tokenExpire)
-                                putBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false)
-                                apply()
-                            }
-                        }
+            }
+        }
+        if (data.has("authTicket")) {
+            val authTicket = data.optJSONObject("authTicket")
+            if (authTicket != null) {
+                if (authTicket.has("token")) {
+                    token = authTicket.optString("token", "")
+                    tokenExpire = authTicket.optLong("expires", 0L) * 1000
+                    if (token.isNotEmpty()) {
+                        Log.i(LOG_ID, "Login succeeded! Token expires at " + DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(
+                            Date(tokenExpire)
+                        ))
+                    }
+                    with(GlucoDataService.sharedPref!!.edit()) {
+                        putString(Constants.SHARED_PREF_LIBRE_TOKEN, token)
+                        putLong(Constants.SHARED_PREF_LIBRE_TOKEN_EXPIRE, tokenExpire)
+                        putBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false)
+                        apply()
                     }
                 }
             }
         }
-        return token.isNotEmpty()
     }
 
     private fun saveRegion() {
@@ -420,6 +506,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             tokenExpire = sharedPreferences.getLong(Constants.SHARED_PREF_LIBRE_TOKEN_EXPIRE, 0L)
             region = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_REGION, "")!!
             patientId = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")!!
+            autoAcceptTOU = sharedPreferences.getBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true)
             InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
             trigger = true
         } else {
@@ -452,6 +539,14 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                         patientId = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")!!
                         Log.d(LOG_ID, "PatientID changed to $patientId")
                         trigger = true
+                    }
+                }
+                Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU -> {
+                    if (autoAcceptTOU != sharedPreferences.getBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true)) {
+                        autoAcceptTOU = sharedPreferences.getBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true)
+                        Log.i(LOG_ID, "Auto accept TOU changed to $autoAcceptTOU")
+                        if(autoAcceptTOU && lastErrorCode == 4)
+                            trigger = true
                     }
                 }
             }

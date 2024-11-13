@@ -155,6 +155,7 @@ object Constants {
     const val SHARED_PREF_LIBRE_REGION="source_libre_region"
     const val SHARED_PREF_LIBRE_PATIENT_ID="source_libre_patient_id"
     const val SHARED_PREF_LIBRE_USER_ID="source_libre_user_id"
+    const val SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU="source_libre_auto_accept_tou"
 
     const val SHARED_PREF_DEXCOM_SHARE_ENABLED="source_dexcom_share_enabled"
     const val SHARED_PREF_DEXCOM_SHARE_USER="source_dexcom_share_user"

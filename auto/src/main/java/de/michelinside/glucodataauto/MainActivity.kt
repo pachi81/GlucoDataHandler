@@ -165,6 +165,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             GlucoDataServiceAuto.startDataSync()
             versionChecker.checkVersion(1)
+            checkNewSettings()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
         }
@@ -212,6 +213,38 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 }
             val dialog: AlertDialog = builder.create()
             dialog.show()
+        }
+    }
+
+    private fun checkNewSettings() {
+        try {
+            if(!sharedPref.contains(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU)) {
+                if(sharedPref.getBoolean(Constants.SHARED_PREF_LIBRE_ENABLED, false)) {
+                    Dialogs.showOkCancelDialog(this,
+                        resources.getString(CR.string.src_cat_libreview),
+                        resources.getString(CR.string.src_libre_tou_message),
+                        { _, _ ->
+                            with(sharedPref.edit()) {
+                                putBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true)
+                                apply()
+                            }
+                        },
+                        { _, _ ->
+                            with(sharedPref.edit()) {
+                                putBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, false)
+                                apply()
+                            }
+                        })
+                } else {
+                    with(sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true)
+                        apply()
+                    }
+                }
+            }
+
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "checkNewSettings exception: " + exc.message.toString() )
         }
     }
 

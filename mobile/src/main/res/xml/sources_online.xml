@@ -29,6 +29,12 @@
             android:title="@string/src_enabled"
             android:summary="@string/src_libre_enabled_summary"
             app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="source_libre_auto_accept_tou"
+            android:title="@string/source_libre_auto_accept_tou"
+            android:summary="@string/source_libre_auto_accept_tou_summary"
+            app:iconSpaceReserved="false" />
         <androidx.preference.EditTextPreference
             android:defaultValue=""
             android:key="source_libre_user"

@@ -166,6 +166,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             checkBatteryOptimization()
             checkHighContrast()
             checkFullscreenPermission()
+            checkNewSettings()
 
             if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Notification permission granted")
@@ -306,6 +307,38 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     }
                 )
             }
+        }
+    }
+
+    private fun checkNewSettings() {
+        try {
+            if(!sharedPref.contains(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU)) {
+                if(sharedPref.getBoolean(Constants.SHARED_PREF_LIBRE_ENABLED, false)) {
+                    Dialogs.showOkCancelDialog(this,
+                        resources.getString(CR.string.src_cat_libreview),
+                        resources.getString(CR.string.src_libre_tou_message),
+                        { _, _ ->
+                            with(sharedPref.edit()) {
+                                putBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true)
+                                apply()
+                            }
+                        },
+                        { _, _ ->
+                            with(sharedPref.edit()) {
+                                putBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, false)
+                                apply()
+                            }
+                        })
+                } else {
+                    with(sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true)
+                        apply()
+                    }
+                }
+            }
+
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "checkNewSettings exception: " + exc.message.toString() )
         }
     }
 

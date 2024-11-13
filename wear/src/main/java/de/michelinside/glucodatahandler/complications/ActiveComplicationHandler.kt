@@ -70,33 +70,35 @@ object ActiveComplicationHandler: NotifierInterface {
                 } else if (!noComplication) {
                     noComplication = true  // disable to prevent re-updating complications, if there is none...
                     val packageInfo = getPackages(context)
-                    Log.d(LOG_ID, "Got " + packageInfo.services.size + " services.")
-                    packageInfo.services.forEach {
-                        val isComplication =
-                            if (dataSource == NotifySource.TIME_VALUE) {
-                                // only update time complications
-                                TimeComplicationBase::class.java.isAssignableFrom(
-                                    Class.forName(
-                                        it.name
+                    if(packageInfo.services != null && packageInfo.services!!.isNotEmpty()) {
+                        Log.d(LOG_ID, "Got " + packageInfo.services!!.size + " services.")
+                        packageInfo.services!!.forEach {
+                            val isComplication =
+                                if (dataSource == NotifySource.TIME_VALUE) {
+                                    // only update time complications
+                                    TimeComplicationBase::class.java.isAssignableFrom(
+                                        Class.forName(
+                                            it.name
+                                        )
                                     )
-                                )
-                            } else {
-                                BgValueComplicationService::class.java.isAssignableFrom(
-                                    Class.forName(
-                                        it.name
+                                } else {
+                                    BgValueComplicationService::class.java.isAssignableFrom(
+                                        Class.forName(
+                                            it.name
+                                        )
                                     )
-                                )
-                            }
+                                }
 
-                        if (isComplication) {
-                            if (dataSource != NotifySource.TIME_VALUE)
-                                Thread.sleep(10)
-                            ComplicationDataSourceUpdateRequester
-                                .create(
-                                    context = context,
-                                    complicationDataSourceComponent = ComponentName(context, it.name)
-                                )
-                                .requestUpdateAll()
+                            if (isComplication) {
+                                if (dataSource != NotifySource.TIME_VALUE)
+                                    Thread.sleep(10)
+                                ComplicationDataSourceUpdateRequester
+                                    .create(
+                                        context = context,
+                                        complicationDataSourceComponent = ComponentName(context, it.name)
+                                    )
+                                    .requestUpdateAll()
+                            }
                         }
                     }
                 }

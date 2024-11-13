@@ -648,5 +648,11 @@
     <string name="gda_speak_off">Funkcja odczytywania jest wyłączona</string>
     <string name="enable_alarm_icon_toggle">Włącz ikonę alarmów</string>
     <string name="enable_alarm_icon_toggle_summary">Pokaż na ekranie głównym ikonę alarmów, która umożliwia włączanie i wyłączanie alarmów.</string>
+    <string name="src_librelink_error4">Error, please re-login to LibreLinkUp App and check for any steps to be done!</string>
+    <string name="src_librelink_error4_type">Error type %1$s, please re-login to LibreLinkUp App and check for any steps to be done!</string>
+    <string name="source_libre_auto_accept_tou">Auto accept new terms</string>
+    <string name="source_libre_auto_accept_tou_summary">Automatically accept new Terms of Use to prevent stopping receiving datas.\nThere will be no further information to the new terms! If you want to read the new terms, please disable this setting and use LibreLinkUp App in case of Error 4.</string>
+    <string name="src_librelink_error4_tou">New Terms of Use have to accept. Either enable auto accept these terms in LibreLinkUp settings or re-login to LibreLinkUp app and accept the terms.</string>
+    <string name="src_libre_tou_message">GlucoDataHandler can automatically accept new Terms of Use for LibreLinkUp.\nTo enable this feature, press OK.\nTo manually accept the terms in the LibreLinkUp App, press Cancel.</string>
 
 </resources>
