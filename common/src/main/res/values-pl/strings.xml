@@ -641,7 +641,7 @@
     <string name="tts_test_summary">Stuknij, aby przetestować zamianę tekstu na mowę.</string>
     <string name="pref_aa_media_player_speak_alarm_only_summary">Odczytuj wyłącznie alarmy.</string>
     <string name="pref_aa_media_player_speak_interval_summary">Ustaw przerwę między odczytywaniem nowych wartości w Android Auto.</string>
-    <string name="pref_aa_media_player_duration_summary">The interval for receiving new glucose values is used as the duration for the progress bar in the media player.\nSetting the value to 0 disables the progress bar.</string>
+    <string name="pref_aa_media_player_duration_summary">Przerwa pomiędzy odbiorem nowych wartości glukozy określa długość paska postępu w odtwarzaczu multimediów.\nWpisanie wartości 0 wyłącza pasek postępu.</string>
 
     <string name="gda_media_speak_toggle_title">Wł./Wył. odczytywania nowej wartości</string>
     <string name="gda_speak_on">Funkcja odczytywania jest włączona</string>
