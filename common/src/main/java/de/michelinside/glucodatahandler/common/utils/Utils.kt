@@ -223,6 +223,21 @@ object Utils {
         return ""
     }
 
+
+    fun encryptSHA256(value: String): String {
+        if (value.trim().isEmpty())
+            return ""
+        try {
+            val message: ByteArray = value.trim().toByteArray(Charsets.UTF_8)
+            val md = MessageDigest.getInstance("SHA-256")
+            val digest: ByteArray = md.digest(message)
+            return toHexString(digest)
+        } catch (ex: Exception) {
+            Log.e(LOG_ID, "Exception while encrypt SHA-256: " + ex)
+        }
+        return ""
+    }
+
     fun saveLogs(context: Context, uri: Uri) {
         try {
             Thread {
