@@ -373,7 +373,7 @@
             </intent-filter>
             <meta-data
                 android:name="android.service.notification.default_filter_types"
-                android:value="conversations|alerting" />
+                android:value="alerting|ongoing|silent" />
         </service>
     </application>
 

@@ -41,6 +41,8 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     }
 
 
+    // chatgpted off of xDrip+ (under GPL)
+    // https://github.com/NightscoutFoundation/xDrip/blob/eb920d2258300966db22f1051f29468d386c0929/app/src/main/java/com/eveningoutpost/dexdrip/services/UiBasedCollector.java#L294
     private fun processRemoteViews(remoteViews: RemoteViews?): Boolean {
         if (remoteViews == null) return false
 
@@ -57,14 +59,13 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             Log.d(LOG_ID, "Found ${textViews.size} text views")
 
             var matches = 0
-            var glucoseValue = 0
+            var glucoseValue = 0.0f
 
             // Examine each TextView
             for (textView in textViews) {
                 try {
-                    val bg = textView.text?.toString()?.toIntOrNull() ?: 0
-                    if (bg > 0) {
-                        glucoseValue = bg
+                    textView.text?.toString()?.toFloatOrNull()?.let {
+                        glucoseValue = it
                         matches++
                     }
                 } catch (e: Exception) {
@@ -106,13 +107,18 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         }
     }
 
-    private fun handleGlucoseValue(glucoseValue: Int) {
+    private fun handleGlucoseValue(glucoseValue: Float) {
         Log.d(LOG_ID, "Extracted glucose value: $glucoseValue")
         // TODO: g7 notifications update weirdly often. deduplication is needed
         if (GlucoDataUtils.isGlucoseValid(glucoseValue)) {
             val glucoExtras = Bundle()
             glucoExtras.putLong(ReceiveData.TIME, System.currentTimeMillis())
-            glucoExtras.putInt(ReceiveData.MGDL,glucoseValue)
+            if (GlucoDataUtils.isMmolValue(glucoseValue)) {
+              glucoExtras.putInt(ReceiveData.MGDL, GlucoDataUtils.mmolToMg(glucoseValue).toInt())
+              glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, glucoseValue)
+            } else {
+              glucoExtras.putInt(ReceiveData.MGDL, glucoseValue.toInt())
+            }
             // getting the trendline is pretty difficult. NaN here just means no trendline
             glucoExtras.putFloat(ReceiveData.RATE, Float.NaN)
             glucoExtras.putInt(ReceiveData.ALARM, 0)
