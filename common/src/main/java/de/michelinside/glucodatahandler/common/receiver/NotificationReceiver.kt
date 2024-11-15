@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler.common.receiver
 
+import android.content.Context
 import android.os.Bundle
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
@@ -8,28 +9,35 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RemoteViews
 import android.widget.TextView
+import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 
-class NotificationReceiver : NotificationListenerService() {
+class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     private val LOG_ID = "GDH.NotificationReceiver"
 
+    override fun getName(): String {
+        return LOG_ID
+    }
+
     override fun onNotificationPosted(statusBarNotification: StatusBarNotification?) {
-        statusBarNotification?.let { sbn ->
-            if (sbn.packageName == "com.dexcom.g7") {
-                val notification = sbn.notification
-                val contentView = notification.contentView
-                val bigContentView = notification.bigContentView
+        if (isRegistered()) {
+            statusBarNotification?.let { sbn ->
+                if (sbn.packageName == "com.dexcom.g7") {
+                    val notification = sbn.notification
+                    val contentView = notification.contentView
+                    val bigContentView = notification.bigContentView
 
-                // Try processing different RemoteViews
-                if (processRemoteViews(contentView)) return
-                if (processRemoteViews(bigContentView)) return
+                    // Try processing different RemoteViews
+                    if (processRemoteViews(contentView)) return
+                    if (processRemoteViews(bigContentView)) return
 
-                // If we get here, we couldn't find the glucose value
-                Log.d(LOG_ID, "Could not find glucose value in notification")
+                    // If we get here, we couldn't find the glucose value
+                    Log.d(LOG_ID, "Could not find glucose value in notification")
+                }
             }
         }
     }
