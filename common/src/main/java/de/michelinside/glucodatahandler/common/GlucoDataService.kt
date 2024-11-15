@@ -306,13 +306,16 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
 
                 if (key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED) {
                     // default to false because reading notifications is a scary permission to give for no reason
-                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, false)) {
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
+                        Log.d(LOG_ID, "Notification source enabled")
                         val notificationListeners = Settings.Secure.getString(context.contentResolver, "enabled_notification_listeners")
+                        registerReceiver(context, NotificationReceiver(), IntentFilter())
                         if (!notificationListeners.contains(context.packageName)) {
                             // request permissions
-                            context.startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+                            val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            context.startActivity(intent)
                         }
-                        registerReceiver(context, NotificationReceiver(), IntentFilter())
                     } else {
                         unregisterReceiver(context, NotificationReceiver())
                     }
