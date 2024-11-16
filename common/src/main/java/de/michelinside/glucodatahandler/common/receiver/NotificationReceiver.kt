@@ -25,6 +25,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         if (isRegistered()) {
             statusBarNotification?.let { sbn ->
                 if (sbn.packageName == "com.dexcom.g7") {
+                    Log.i(LOG_ID, "handling dexcom g7 notification")
                     val notification = sbn.notification
                     val contentView = notification.contentView
                     val bigContentView = notification.bigContentView
@@ -35,6 +36,20 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
 
                     // If we get here, we couldn't find the glucose value
                     Log.d(LOG_ID, "Could not find glucose value in notification")
+                }
+                if (sbn.packageName == "com.insulet.myblue.pdm") {
+                    Log.i(LOG_ID, "handling omnipod 5 notification")
+                    // omnipod 5 app notificaiton
+                    sbn.notification.extras.getString("android.title")?.let {
+                        Log.i(LOG_ID, "extracted title `$it`")
+                        // format like `Automated Mode (IOB: 6.35 U)`
+                        // parses out the number and puts it into capture group 1, if it exists
+                        val regex = """Automated Mode \(IOB: (\d*\.?\d+) U\)""".toRegex()
+
+                       regex.find(it)?.groupValues?.get(1)?.toFloatOrNull()?.let {
+                           handleIobValue(it)
+                       }
+                    }
                 }
             }
         }
@@ -80,10 +95,12 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                     Log.d(LOG_ID, "Did not find any matches")
                     return false
                 }
+
                 matches > 1 -> {
                     Log.e(LOG_ID, "Found too many matches: $matches")
                     return false
                 }
+
                 else -> {
                     handleGlucoseValue(glucoseValue)
                     return true
@@ -114,10 +131,10 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             val glucoExtras = Bundle()
             glucoExtras.putLong(ReceiveData.TIME, System.currentTimeMillis())
             if (GlucoDataUtils.isMmolValue(glucoseValue)) {
-              glucoExtras.putInt(ReceiveData.MGDL, GlucoDataUtils.mmolToMg(glucoseValue).toInt())
-              glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, glucoseValue)
+                glucoExtras.putInt(ReceiveData.MGDL, GlucoDataUtils.mmolToMg(glucoseValue).toInt())
+                glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, glucoseValue)
             } else {
-              glucoExtras.putInt(ReceiveData.MGDL, glucoseValue.toInt())
+                glucoExtras.putInt(ReceiveData.MGDL, glucoseValue.toInt())
             }
             // getting the trendline is pretty difficult. NaN here just means no trendline
             glucoExtras.putFloat(ReceiveData.RATE, Float.NaN)
@@ -125,7 +142,19 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             ReceiveData.handleIntent(applicationContext, DataSource.NOTIFICATION, glucoExtras)
             SourceStateData.setState(DataSource.NOTIFICATION, SourceState.NONE)
         } else {
-            SourceStateData.setError(DataSource.NOTIFICATION, "Invalid glucose value: $glucoseValue")
+            SourceStateData.setError(
+                DataSource.NOTIFICATION,
+                "Invalid glucose value: $glucoseValue"
+            )
         }
+    }
+
+    private fun handleIobValue(iobValue: Float) {
+        Log.d(LOG_ID, "Extracted iob value: $iobValue")
+        val glucoExtras = Bundle()
+        glucoExtras.putFloat(ReceiveData.IOB, iobValue)
+
+        ReceiveData.handleIobCob(applicationContext, DataSource.NOTIFICATION, glucoExtras)
+        SourceStateData.setState(DataSource.NOTIFICATION, SourceState.NONE)
     }
 }
