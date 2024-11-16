@@ -624,7 +624,7 @@
     <string name="gda_help_aa_summary">Erste Schritte mit GDA auf Android Auto</string>
     <string name="no_tts">Die Text-to-Speech-Funktion (TTS) ist nicht aktiviert.\nUm diese Funktion zu verwenden, aktivieren Sie TTS in den Android-Einstellungen für Barrierefreiheit.\nSobald sie aktiviert ist, tippen Sie hier, um sie zu aktualisieren.</string>
     <string name="pref_cat_android_auto_speak">Wert vorlesen</string>
-    <string name="pref_cat_play_button">Wiedergabetaste</string>
+    <string name="pref_cat_play_button">Wiedergabe</string>
     <string name="pref_aa_media_player_speak_values_on_summary">Aktuellen Wert beim Abspielen vorlesen.\nErfordert, dass Text-to-Speech aktiviert ist.</string>
     <string name="pref_aa_media_player_speak_values_off_summary">Einen leeren Ton abspielen, um den Media Player in den Vordergrund des geteilten Bildschirms zu bringen.</string>
     <string name="pref_aa_media_player_always_speak">Neuen Wert vorlesen</string>
@@ -632,7 +632,7 @@
     <string name="tts_test_summary">Tippen Sie hier, um die Text-to-Speech-Funktion zu testen.</string>
     <string name="pref_aa_media_player_speak_alarm_only_summary">Nur Alarme vorlesen.</string>
     <string name="pref_aa_media_player_speak_interval_summary">Intervall für das Vorlesen neuer Werte in Android Auto festlegen.</string>
-
+    <string name="pref_aa_media_player_duration_summary">Das Intervall für den Empfang neuer Glukosewerte bestimmt die Dauer des Fortschrittsbalkens im Media Player.\nSetzen Sie den Wert auf 0, um den Fortschrittsbalken zu deaktivieren.</string>
     <string name="gda_media_speak_toggle_title">Neuen Wert vorlesen umschalten</string>
     <string name="gda_speak_on">Vorlesen ist an</string>
     <string name="gda_speak_off">Vorlesen ist aus</string>

@@ -17,7 +17,7 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 
 class InternalActionReceiver: BroadcastReceiver() {
 
-    private val LOG_ID = "GDH.GlucoDataActionReceiver"
+    private val LOG_ID = "GDH.InternalActionReceiver"
     override fun onReceive(context: Context, intent: Intent) {       
         try {
             Log.d(LOG_ID, "Action received: ${intent.action} - bundle: ${Utils.dumpBundle(intent.extras)}")

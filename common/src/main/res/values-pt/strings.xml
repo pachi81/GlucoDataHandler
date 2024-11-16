@@ -626,7 +626,7 @@
     <string name="gda_help_aa_summary">Começar com o GDA no Android Auto</string>
     <string name="no_tts">A funcionalidade de texto para fala (TTS) não está ativada.\nPara usar esta funcionalidade, ative o TTS nas definições de acessibilidade do Android.\nAssim que estiver ativada, toque aqui para atualizar.</string>
     <string name="pref_cat_android_auto_speak">Falar Valor</string>
-    <string name="pref_cat_play_button">Botão de reprodução</string>
+    <string name="pref_cat_play_button">Reprodução</string>
     <string name="pref_aa_media_player_speak_values_on_summary">Falar o valor atual durante a reprodução.\nRequer que o texto para fala esteja ativado.</string>
     <string name="pref_aa_media_player_speak_values_off_summary">Reproduzir um som vazio para trazer o reprodutor multimédia para a frente do ecrã dividido.</string>
     <string name="pref_aa_media_player_always_speak">Falar Novo Valor</string>
@@ -634,6 +634,7 @@
     <string name="tts_test_summary">Toque para testar o texto para fala.</string>
     <string name="pref_aa_media_player_speak_alarm_only_summary">Falar apenas os alarmes.</string>
     <string name="pref_aa_media_player_speak_interval_summary">Definir o intervalo para falar os novos valores no Android Auto.</string>
+    <string name="pref_aa_media_player_duration_summary">O intervalo para receber novos valores de glicose é usado como duração para a barra de progresso no media player.\nDefinir o valor como 0 desativa a barra de progresso.</string>
 
     <string name="gda_media_speak_toggle_title">Alternar Falar Novo Valor</string>
     <string name="gda_speak_on">Falar está ligado</string>

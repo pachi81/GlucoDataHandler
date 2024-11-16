@@ -22,6 +22,8 @@ object TextToSpeechUtils {
     private val LOG_ID = "GDH.TTS_Utils"
     private var textToSpeech: TextToSpeech? = null
     private var curLocal = ""
+    private var enabled = AtomicBoolean(false)
+    private var reInitOnError = false
 
     fun isAvailable(): Boolean {
         return textToSpeech != null
@@ -60,6 +62,7 @@ object TextToSpeechUtils {
                                 } else {
                                     Log.i(LOG_ID, "TextToSpeech enabled for language=${textToSpeech!!.voice?.locale}")
                                     InternalNotifier.notify(context, NotifySource.TTS_STATE_CHANGED, null)
+                                    enabled.set(true)
                                 }
                             } else {
                                 Log.w(LOG_ID, "TextToSpeech failed to init, no voices available")
@@ -84,6 +87,7 @@ object TextToSpeechUtils {
     fun destroyTextToSpeech(context: Context) {
         Log.i(LOG_ID, "destroyTextToSpeech called")
         try {
+            enabled.set(false)
             if (textToSpeech != null) {
                 textToSpeech!!.shutdown()
                 textToSpeech = null
@@ -92,6 +96,12 @@ object TextToSpeechUtils {
         } catch (exc: Exception) {
             Log.e(LOG_ID, "destroyTextToSpeech exception: " + exc.toString())
         }
+    }
+
+    private fun reInitTextToSpeech(context: Context) {
+        Log.i(LOG_ID, "reInitTextToSpeech called")
+        destroyTextToSpeech(context)
+        initTextToSpeech(context)
     }
 
     fun speak(text: String) {
@@ -107,7 +117,7 @@ object TextToSpeechUtils {
         }
     }
 
-    fun getAsFile(text: String): File? {
+    fun getAsFile(text: String, context: Context): File? {
         try {
             Log.d(LOG_ID, "getAsFile called with text='${text}'")
             if(textToSpeech != null) {
@@ -123,7 +133,7 @@ object TextToSpeechUtils {
                         created.set(true)
                     }
                     override fun onError(utteranceId: String?) {
-                        Log.d(LOG_ID, "onError called for utteranceId=$utteranceId")
+                        Log.w(LOG_ID, "onError called for utteranceId=$utteranceId")
                         error.set(true)
                         created.set(true)
                     }
@@ -136,7 +146,11 @@ object TextToSpeechUtils {
                         Thread.sleep(50)
                     }
                     if(error.get()) {
-                        Log.d(LOG_ID, "getAsFile error")
+                        Log.w(LOG_ID, "getAsFile error")
+                        if(!reInitOnError) {
+                            reInitOnError = true
+                            reInitTextToSpeech(context)
+                        }
                         tempFile.toFile().delete()
                         return null
                     }

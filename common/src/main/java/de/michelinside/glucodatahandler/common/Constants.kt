@@ -155,6 +155,7 @@ object Constants {
     const val SHARED_PREF_LIBRE_TOKEN_EXPIRE="source_libre_token_expire"
     const val SHARED_PREF_LIBRE_REGION="source_libre_region"
     const val SHARED_PREF_LIBRE_PATIENT_ID="source_libre_patient_id"
+    const val SHARED_PREF_LIBRE_USER_ID="source_libre_user_id"
 
     const val SHARED_PREF_DEXCOM_SHARE_ENABLED="source_dexcom_share_enabled"
     const val SHARED_PREF_DEXCOM_SHARE_USER="source_dexcom_share_user"
@@ -257,4 +258,5 @@ object Constants {
     const val AA_MEDIA_PLAYER_SPEAK_ALARM_ONLY = "aa_media_player_speak_alarm_only"
     const val AA_MEDIA_PLAYER_SPEAK_INTERVAL = "aa_media_player_speak_interval"
     const val AA_MEDIA_PLAYER_SPEAK_TEST = "aa_media_player_speak_test"
+    const val AA_MEDIA_PLAYER_DURATION = "aa_media_player_duration"
 }

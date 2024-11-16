@@ -10,7 +10,7 @@ import de.michelinside.glucodataauto.R
 
 abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
     protected val LOG_ID = "GDH.AA.SettingsFragmentBase"
-    private val updateEnablePrefs = mutableSetOf<String>()
+    protected val updateEnablePrefs = mutableSetOf<String>()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         Log.d(LOG_ID, "onCreatePreferences called")

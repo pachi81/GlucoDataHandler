@@ -17,7 +17,7 @@ open class TimeComplicationBase : BgValueComplicationService() {
 class LongGlucoseWithDeltaAndTrendAndTimeComplication: TimeComplicationBase() {
     override fun getLongTextComplicationData(): ComplicationData {
         return LongTextComplicationData.Builder(
-            plainText(" Δ: " + ReceiveData.getDeltaAsString()),
+            plainText("Δ: " + ReceiveData.getDeltaAsString()),
             descriptionText()
         )
             .setTitle(timeText())
@@ -33,7 +33,7 @@ class LongGlucoseWithDeltaAndTrendAndTimeComplication: TimeComplicationBase() {
 class LongGlucoseWithDeltaAndTrendIconAndTimeComplication: TimeComplicationBase() {
     override fun getLongTextComplicationData(): ComplicationData {
         return LongTextComplicationData.Builder(
-            plainText(" Δ: " + ReceiveData.getDeltaAsString()),
+            plainText("Δ: " + ReceiveData.getDeltaAsString()),
             descriptionText()
         )
             .setTitle(timeText())

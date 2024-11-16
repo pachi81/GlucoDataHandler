@@ -680,7 +680,7 @@
     <string name="gda_help_aa_summary">Get started with GDA on Android Auto</string>
     <string name="no_tts">Text-to-speech (TTS) is not enabled.\nTo use this feature, enable TTS in Android Accessibility settings.\nOnce enabled, tap here to update.</string>
     <string name="pref_cat_android_auto_speak">Speak Value</string>
-    <string name="pref_cat_play_button">Play Button</string>
+    <string name="pref_cat_play_button">Playback</string>
     <string name="pref_aa_media_player_speak_values_on_summary">Speak current value when playing.\nRequires Text-to-speech to be enabled.</string>
     <string name="pref_aa_media_player_speak_values_off_summary">Play an empty sound to bring the media player to the front of the split screen.</string>
     <string name="pref_aa_media_player_always_speak">Speak New Value</string>
@@ -688,6 +688,7 @@
     <string name="tts_test_summary">Tap to test text-to-speech.</string>
     <string name="pref_aa_media_player_speak_alarm_only_summary">Speak alarms only.</string>
     <string name="pref_aa_media_player_speak_interval_summary">Set the interval for speaking new values in Android Auto.</string>
+    <string name="pref_aa_media_player_duration_summary">The interval for receiving new glucose values is used as the duration for the progress bar in the media player.\nSetting the value to 0 disables the progress bar.</string>
 
     <string name="gda_media_speak_toggle_title">Speak New Value toggle</string>
     <string name="gda_speak_on">Speak is on</string>

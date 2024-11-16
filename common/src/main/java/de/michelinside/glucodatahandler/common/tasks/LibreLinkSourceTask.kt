@@ -13,6 +13,7 @@ import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.utils.Utils
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.DateFormat
@@ -32,6 +33,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         private var reconnect = false
         private var token = ""
         private var tokenExpire = 0L
+        private var userId = ""
         private var region = ""
         private var patientId = ""
         private var dataReceived = false   // mark this endpoint as already received data
@@ -51,13 +53,16 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     private fun getHeader(): MutableMap<String, String> {
         val result = mutableMapOf(
             "product" to "llu.android",
-            "version" to "4.7.0",
+            "version" to "4.12.0",
             "Accept" to "application/json",
             "Content-Type" to "application/json",
             "cache-control" to "no-cache"
         )
         if (token.isNotEmpty()) {
             result["Authorization"] = "Bearer " + token
+            if(userId.isNotEmpty()) {
+                result["Account-Id"] = Utils.encryptSHA256(userId)
+            }
         }
         return result
     }
@@ -65,6 +70,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     override fun reset() {
         Log.i(LOG_ID, "reset called")
         token = ""
+        userId = ""
         tokenExpire = 0L
         region = ""
         dataReceived = false
@@ -73,6 +79,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             Log.d(LOG_ID, "Save reset")
             with (GlucoDataService.sharedPref!!.edit()) {
                 putString(Constants.SHARED_PREF_LIBRE_TOKEN, token)
+                putString(Constants.SHARED_PREF_LIBRE_USER_ID, userId)
                 putLong(Constants.SHARED_PREF_LIBRE_TOKEN_EXPIRE, tokenExpire)
                 putString(Constants.SHARED_PREF_LIBRE_REGION, region)
                 apply()
@@ -137,6 +144,12 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         {
           "status": 0,
           "data": {
+          "user": {
+              "id": "***",
+              "firstName": "xxx",
+              "lastName": "yyy",
+              ...
+            },
             ...
             "authTicket": {
               "token": "***",
@@ -159,6 +172,17 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                         return authenticate()
                     } else {
                         setLastError("redirect without region!!!", 500)
+                    }
+                }
+                if(data.has("user")) {
+                    val user = data.optJSONObject("user")
+                    if(user != null && user.has("id")) {
+                        userId = user.optString("id")
+                        Log.i(LOG_ID, "User ID set!")
+                        with(GlucoDataService.sharedPref!!.edit()) {
+                            putString(Constants.SHARED_PREF_LIBRE_USER_ID, userId)
+                            apply()
+                        }
                     }
                 }
                 if (data.has("authTicket")) {
@@ -389,8 +413,10 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             user = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_USER, "")!!.trim()
             password = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, "")!!.trim()
             token = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_TOKEN, "")!!
-            if(token.isNotEmpty())
+            if(token.isNotEmpty()) {
                 dataReceived = true
+                userId = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_USER_ID, "")!!
+            }
             tokenExpire = sharedPreferences.getLong(Constants.SHARED_PREF_LIBRE_TOKEN_EXPIRE, 0L)
             region = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_REGION, "")!!
             patientId = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")!!
