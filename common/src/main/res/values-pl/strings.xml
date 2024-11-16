@@ -633,7 +633,7 @@
     <string name="gda_help_aa_summary">Zacznij korzystać z GDA w Android Auto</string>
     <string name="no_tts">Funkcja zamiany tekstu na mowę (TTS) nie jest włączona.\nAby korzystać z tej funkcji, włącz TTS w ustawieniach dostępności systemu Android.\nPo jej włączeniu dotknij tutaj, aby dokonać aktualizacji ustawień.</string>
     <string name="pref_cat_android_auto_speak">Odczytuj wartość</string>
-    <string name="pref_cat_play_button">Przycisk odtwarzania</string>
+    <string name="pref_cat_play_button">Odtwarzanie</string>
     <string name="pref_aa_media_player_speak_values_on_summary">Odczytuj aktualną wartość glukozy w czasie odtwarzania.\nWymaga włączenia funkcji zamiany tekstu na mowę.</string>
     <string name="pref_aa_media_player_speak_values_off_summary">Odtwórz pusty dźwięk, aby przenieść odtwarzacz multimediów na pierwszy plan podzielonego ekranu.</string>
     <string name="pref_aa_media_player_always_speak">Odczytuj nową wartość</string>
@@ -641,6 +641,7 @@
     <string name="tts_test_summary">Stuknij, aby przetestować zamianę tekstu na mowę.</string>
     <string name="pref_aa_media_player_speak_alarm_only_summary">Odczytuj wyłącznie alarmy.</string>
     <string name="pref_aa_media_player_speak_interval_summary">Ustaw przerwę między odczytywaniem nowych wartości w Android Auto.</string>
+    <string name="pref_aa_media_player_duration_summary">Przerwa pomiędzy odbiorem nowych wartości glukozy określa długość paska postępu w odtwarzaczu multimediów.\nWpisanie wartości 0 wyłącza pasek postępu.</string>
 
     <string name="gda_media_speak_toggle_title">Wł./Wył. odczytywania nowej wartości</string>
     <string name="gda_speak_on">Funkcja odczytywania jest włączona</string>

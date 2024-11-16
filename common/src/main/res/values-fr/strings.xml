@@ -630,7 +630,7 @@
     <string name="gda_help_aa_summary">Démarrer avec GDA sur Android Auto</string>
     <string name="no_tts">La synthèse vocale (TTS) n\'est pas activée.\nPour utiliser cette fonctionnalité, activez la synthèse vocale dans les paramètres d\'accessibilité d\'Android.\nUne fois activée, appuyez ici pour mettre à jour.</string>
     <string name="pref_cat_android_auto_speak">Lire la valeur</string>
-    <string name="pref_cat_play_button">Bouton de lecture</string>
+    <string name="pref_cat_play_button">Lecture</string>
     <string name="pref_aa_media_player_speak_values_on_summary">Lire la valeur actuelle lors de la lecture.\nNécessite que la synthèse vocale soit activée.</string>
     <string name="pref_aa_media_player_speak_values_off_summary">Lire un son vide pour amener le lecteur multimédia au premier plan de l\'écran partagé.</string>
     <string name="pref_aa_media_player_always_speak">Lire la nouvelle valeur</string>
@@ -638,6 +638,7 @@
     <string name="tts_test_summary">Appuyez pour tester la synthèse vocale.</string>
     <string name="pref_aa_media_player_speak_alarm_only_summary">Lire uniquement les alarmes.</string>
     <string name="pref_aa_media_player_speak_interval_summary">Définir l\'intervalle pour lire les nouvelles valeurs dans Android Auto.</string>
+    <string name="pref_aa_media_player_duration_summary">L\'intervalle de réception des nouvelles valeurs de glucose est utilisé comme durée pour la barre de progression du lecteur multimédia.\nDéfinir la valeur sur 0 désactive la barre de progression.</string>
 
     <string name="gda_media_speak_toggle_title">Basculer la lecture de la nouvelle valeur</string>
     <string name="gda_speak_on">La lecture est activée</string>

@@ -36,7 +36,7 @@ class ShortGlucoseWithDeltaAndTrendComplication: ShortClucoseComplication() {
     override fun getIcon(): MonochromaticImage = arrowIcon()
     override fun getLongTextComplicationData(): ComplicationData {
         return LongTextComplicationData.Builder(
-            plainText(" Δ: " + ReceiveData.getDeltaAsString()),
+            plainText("Δ: " + ReceiveData.getDeltaAsString()),
             descriptionText()
         )
             .setSmallImage(glucoseImage())

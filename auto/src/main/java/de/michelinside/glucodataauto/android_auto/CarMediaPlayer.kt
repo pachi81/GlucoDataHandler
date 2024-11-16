@@ -105,11 +105,22 @@ object CarMediaPlayer: NotifierInterface {
         this.callback = callback
     }
 
-    val currentPosition: Int get() {
-        if(enabled) {
-            return player.currentPosition
+    fun hasCallback() : Boolean {
+        return this.callback != null
+    }
+
+    val currentPosition: Long get() {
+        if(isPlaying) {
+            return player.currentPosition.toLong()
         }
-        return 0
+        return 0L
+    }
+
+    val duration: Long get() {
+        if(isPlaying) {
+            return player.duration.toLong()
+        }
+        return 0L
     }
 
     val isPlaying: Boolean get() {
@@ -139,17 +150,20 @@ object CarMediaPlayer: NotifierInterface {
             var uri: String? = null
             var requestAudioFocus = false
             if(!playSilent) {
-                file = TextToSpeechUtils.getAsFile(ReceiveData.getAsText(context, false, false))
+                file = TextToSpeechUtils.getAsFile(ReceiveData.getAsText(context, false, false), context)
                 if(file != null) {
                     uri = file!!.absolutePath
                     last_speak_time = ReceiveData.time
                     requestAudioFocus = true
+                } else {
+                    Log.w(LOG_ID, "TTS file could not be created!")
                 }
-            } else {  // play silent
+            }
+            if(uri.isNullOrEmpty()) {  // play silent
                 uri = "android.resource://" + context.packageName + "/" + R.raw.silence
                 requestAudioFocus = false
             }
-            if(!uri.isNullOrEmpty()) {
+            if(uri.isNotEmpty()) {
                 Log.d(LOG_ID, "onPlay uri: $uri")
                 player.reset()
                 player.setDataSource(context, Uri.parse(uri))
