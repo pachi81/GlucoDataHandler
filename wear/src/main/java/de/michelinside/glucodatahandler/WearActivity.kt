@@ -356,9 +356,10 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateConnectionsTable() {
         tableConnections.removeViews(1, maxOf(0, tableConnections.childCount - 1))
-        if (SourceStateData.lastState != SourceState.NONE)
-            tableConnections.addView(createRow(SourceStateData.lastSource.resId,
-                SourceStateData.getStateMessage(this)))
+        if (SourceStateData.lastState != SourceState.NONE) {
+            tableConnections.addView(createRow(SourceStateData.lastSource.resId, SourceStateData.getStateMessage(this)))
+            tableConnections.addView(createRow(CR.string.info_label_timestamp, Utils.getUiTimeStamp(SourceStateData.lastStateTime)))
+        }
 
         if (WearPhoneConnection.nodesConnected) {
             if (WearPhoneConnection.connectionError) {
@@ -408,8 +409,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 tableDetails.addView(createRow(ReceiveData.getOtherUnit(), ReceiveData.getGlucoseAsOtherUnit() + " (Δ " + ReceiveData.getDeltaAsOtherUnit() + ")"))
             }
 
-            tableDetails.addView(createRow(CR.string.info_label_timestamp, DateFormat.getTimeInstance(
-                DateFormat.DEFAULT).format(Date(ReceiveData.time))))
+            tableDetails.addView(createRow(CR.string.info_label_timestamp, Utils.getUiTimeStamp(ReceiveData.time)))
             if (!ReceiveData.isIobCobObsolete(1.days.inWholeSeconds.toInt()))
                 tableDetails.addView(createRow(CR.string.info_label_iob_cob_timestamp, DateFormat.getTimeInstance(
                     DateFormat.DEFAULT).format(Date(ReceiveData.iobCobTime))))

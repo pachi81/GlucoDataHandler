@@ -629,6 +629,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     )
                 }
             }
+            tableConnections.addView(createRow(CR.string.info_label_timestamp, Utils.getUiTimeStamp(SourceStateData.lastStateTime)))
         }
 
         if (WearPhoneConnection.nodesConnected) {
@@ -679,8 +680,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             if (!ReceiveData.isObsoleteLong() && sharedPref.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, false)) {
                 tableDetails.addView(createRow(ReceiveData.getOtherUnit(), ReceiveData.getGlucoseAsOtherUnit() + " (Δ " + ReceiveData.getDeltaAsOtherUnit() + ")"))
             }
-            tableDetails.addView(createRow(CR.string.info_label_timestamp, DateFormat.getTimeInstance(
-                DateFormat.DEFAULT).format(Date(ReceiveData.time))))
+            tableDetails.addView(createRow(CR.string.info_label_timestamp, Utils.getUiTimeStamp(ReceiveData.time)))
             if (!ReceiveData.isIobCobObsolete(1.days.inWholeSeconds.toInt()))
                 tableDetails.addView(createRow(CR.string.info_label_iob_cob_timestamp, DateFormat.getTimeInstance(
                     DateFormat.DEFAULT).format(Date(ReceiveData.iobCobTime))))

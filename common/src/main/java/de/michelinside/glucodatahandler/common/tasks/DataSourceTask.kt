@@ -8,6 +8,8 @@ import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.Intents
+import de.michelinside.glucodatahandler.common.R
+import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.notifier.DataSource
@@ -129,7 +131,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             result += error
             return result
         }
-        return ""
+        return error
     }
 
     private fun isShortInterval(): Boolean {
@@ -137,6 +139,13 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             SourceState.NO_CONNECTION,
             SourceState.NO_NEW_VALUE -> true
             SourceState.ERROR -> lastErrorCode >= 500
+            else -> false
+        }
+    }
+
+    private fun isLongInterval(): Boolean {
+        return when(lastState) {
+            SourceState.ERROR -> lastErrorCode == 429
             else -> false
         }
     }
@@ -197,6 +206,15 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
 
     protected fun handleResult(extras: Bundle) {
         Log.d(LOG_ID, "handleResult for $source: ${Utils.dumpBundle(extras)}")
+        if(!ReceiveData.hasNewValue(extras)) {
+            if(extras.containsKey(ReceiveData.TIME)) {
+                setState(SourceState.NO_NEW_VALUE, GlucoDataService.context!!.resources.getString(R.string.last_value_on_server, Utils.getUiTimeStamp(extras.getLong(ReceiveData.TIME))))
+            } else {
+                setState(SourceState.NO_NEW_VALUE)
+            }
+            return
+        }
+
         val intent = Intent(GlucoDataService.context!!, InternalActionReceiver::class.java)
         intent.action = Intents.GLUCODATA_ACTION
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
@@ -243,7 +261,15 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         Log.d(LOG_ID, "handleResult for " + source + " done!")
     }
 
+    private fun getErrorMessage(code: Int, message: String?): String {
+        when(code) {
+            429 -> return GlucoDataService.context!!.resources.getString(R.string.http_error_429)
+            else -> return message ?: "Error"
+        }
+    }
+
     open fun checkErrorResponse(code: Int, message: String?, errorResponse: String? = null) {
+        Log.d(LOG_ID, "checkErrorResponse: $code - $message - $errorResponse")
         if (code in 400..499) {
             reset() // reset token for client error -> trigger reconnect
             if(firstGetValue) {
@@ -251,7 +277,11 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                 return
             }
         }
-        setLastError(message ?: code.toString(), code)
+        var errorMessage = getErrorMessage(code, message)
+        if(errorResponse != null) {
+            errorMessage += "\n" + errorResponse
+        }
+        setLastError(errorMessage, code)
     }
 
     open fun getTrustAllCertificates(): Boolean = false
@@ -267,13 +297,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
 
     private fun checkResponse(responseCode: Int): String? {
         if (responseCode != HttpURLConnection.HTTP_OK) {
-            if(responseCode == HttpURLConnection.HTTP_INTERNAL_ERROR) {
-                if (httpRequest.responseError != null ) {
-                    checkErrorResponse(responseCode, httpRequest.responseMessage, httpRequest.responseError)
-                    return null
-                }
-            }
-            checkErrorResponse(responseCode, httpRequest.responseMessage)
+            checkErrorResponse(responseCode, httpRequest.responseMessage, httpRequest.responseError)
             return null
         }
         return httpRequest.response
@@ -288,9 +312,12 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     }
 
     override fun getIntervalMinute(): Long {
-        if (interval > 1 && isShortInterval()) {
+        if (interval > 1L && isShortInterval()) {
             Log.d(LOG_ID, "Use short interval of 1 minute.")
             return 1   // retry after a minute
+        }
+        if (interval == 1L && isLongInterval()) {
+            return 5  // increase interval for case of "429: Too many requests"
         }
         return interval
     }

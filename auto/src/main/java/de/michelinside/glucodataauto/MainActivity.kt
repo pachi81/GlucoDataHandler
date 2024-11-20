@@ -1,5 +1,6 @@
 package de.michelinside.glucodataauto
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlarmManager
 import android.content.Context
@@ -46,8 +47,6 @@ import de.michelinside.glucodatahandler.common.utils.GitHubVersionChecker
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.ui.Dialogs
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
-import java.text.DateFormat
-import java.util.Date
 import de.michelinside.glucodatahandler.common.R as CR
 
 class MainActivity : AppCompatActivity(), NotifierInterface {
@@ -388,6 +387,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         return super.onOptionsItemSelected(item)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun update() {
         try {
             Log.v(LOG_ID, "update values")
@@ -427,10 +427,35 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateConnectionsTable() {
         tableConnections.removeViews(1, maxOf(0, tableConnections.childCount - 1))
-        if (SourceStateData.lastState != SourceState.NONE)
-            tableConnections.addView(createRow(
-                SourceStateData.lastSource.resId,
-                SourceStateData.getStateMessage(this)))
+        if (SourceStateData.lastState != SourceState.NONE) {
+            val msg = SourceStateData.getStateMessage(this)
+            tableConnections.addView(
+                createRow(
+                    SourceStateData.lastSource.resId,
+                    msg
+                )
+            )
+            if(SourceStateData.lastState == SourceState.ERROR && SourceStateData.lastSource == DataSource.DEXCOM_SHARE) {
+                if (msg.contains("500:")) { // invalid password
+                    val us_account = sharedPref.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, false)
+                    val browserIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(resources.getString(if(us_account)CR.string.dexcom_account_us_url else CR.string.dexcom_account_non_us_url))
+                    )
+                    val onClickListener = View.OnClickListener {
+                        startActivity(browserIntent)
+                    }
+                    tableConnections.addView(
+                        createRow(
+                            SourceStateData.lastSource.resId,
+                            resources.getString(if(us_account) CR.string.dexcom_share_check_us_account else CR.string.dexcom_share_check_non_us_account),
+                            onClickListener
+                        )
+                    )
+                }
+            }
+            tableConnections.addView(createRow(CR.string.info_label_timestamp, Utils.getUiTimeStamp(SourceStateData.lastStateTime)))
+        }
         tableConnections.addView(createRow(CR.string.pref_cat_android_auto, if (GlucoDataServiceAuto.connected) resources.getString(CR.string.connected_label) else resources.getString(CR.string.disconnected_label)))
         checkTableVisibility(tableConnections)
     }
@@ -511,7 +536,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         if(ReceiveData.time > 0) {
             if (ReceiveData.isMmol)
                 tableDetails.addView(createRow(CR.string.info_label_raw, "${ReceiveData.rawValue} mg/dl"))
-            tableDetails.addView(createRow(CR.string.info_label_timestamp, DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(ReceiveData.time))))
+            tableDetails.addView(createRow(CR.string.info_label_timestamp, Utils.getUiTimeStamp(ReceiveData.time)))
             if (ReceiveData.sensorID?.isNotEmpty() == true) {
                 tableDetails.addView(createRow(CR.string.info_label_sensor_id, if(BuildConfig.DEBUG) "ABCDE12345" else ReceiveData.sensorID!!))
             }

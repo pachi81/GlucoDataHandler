@@ -578,9 +578,6 @@
     <string name="new_version">Version %s is available</string>
     <string name="info_label_notes">Notes</string>
     <string name="gda_notification_permission">Notifications are disabled! \nPress here to enable them.</string>
-
-    <!-- New  -->
-
     <string name="pref_show_other_unit">Show other unit</string>
     <string name="pref_show_other_unit_summary">Show glucose value in %s in the details.</string>
     <string name="other_unit">Other unit</string>
@@ -673,8 +670,6 @@
     <string name="pref_source_diabox_info_summary">Open Integration and enable \"Share data with GWatch\"\nRemark: the DiaBox broadcast only contains the glucose value and no more information like trend!</string>
     <string name="pref_source_dexcom_byoda_not_working_info_summary">Remark: the AAPS broadcast from BYODA doesn\'t seem to work with other apps. \nPlease use the xDrip+ broadcast in BYODA.</string>
 
-    <!-- new for GDA -->
-
     <string name="gda_help_aa_summary">Get started with GDA on Android Auto</string>
     <string name="no_tts">Text-to-speech (TTS) is not enabled.\nTo use this feature, enable TTS in Android Accessibility settings.\nOnce enabled, tap here to update.</string>
     <string name="pref_cat_android_auto_speak">Speak Value</string>
@@ -693,11 +688,18 @@
     <string name="gda_speak_off">Speak is off</string>
     <string name="enable_alarm_icon_toggle">Enable Alarm Icon</string>
     <string name="enable_alarm_icon_toggle_summary">Enable alarm icon on main screen to toggle alarm state.</string>
+
+    <!-- v1.3  -->
+
     <string name="src_librelink_error4">Error, please re-login to LibreLinkUp App and check for any steps to be done!</string>
     <string name="src_librelink_error4_type">Error type %1$s, please re-login to LibreLinkUp App and check for any steps to be done!</string>
     <string name="source_libre_auto_accept_tou">Auto accept new terms</string>
     <string name="source_libre_auto_accept_tou_summary">Automatically accept new Terms of Use to prevent stopping receiving datas.\nThere will be no further information to the new terms! If you want to read the new terms, please disable this setting and use LibreLinkUp App in case of Error 4.</string>
     <string name="src_librelink_error4_tou">New Terms of Use have to accept. Either enable auto accept these terms in LibreLinkUp settings or re-login to LibreLinkUp app and accept the terms.</string>
     <string name="src_libre_tou_message">GlucoDataHandler can automatically accept new Terms of Use for LibreLinkUp.\nTo enable this feature, press OK.\nTo manually accept the terms in the LibreLinkUp App, press Cancel.</string>
+    <string name="src_librelink_error2">Invalid user or password!\nPlease check your source settings or (re-)install and login to LibreLinkUp App and verify your account settings!</string>
+    <string name="last_value_on_server">Last value on server from %1$s</string>
+    <string name="no_data_in_server_response">No values found on server.</string>
+    <string name="http_error_429">Too many requests!\nPlease stop all other apps following the same account!</string>
 
 </resources>

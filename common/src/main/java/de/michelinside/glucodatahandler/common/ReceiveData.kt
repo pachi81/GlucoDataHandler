@@ -386,7 +386,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     fun getElapsedTimeMinute(roundingMode: RoundingMode = RoundingMode.DOWN): Long {
-        return Utils.round((System.currentTimeMillis()-time).toFloat()/60000, 0, roundingMode).toLong()
+        return Utils.getElapsedTimeMinute(time, roundingMode)
     }
     fun getElapsedIobCobTimeMinute(roundingMode: RoundingMode = RoundingMode.HALF_UP): Long {
         return Utils.round((System.currentTimeMillis()- iobCobTime).toFloat()/60000, 0, roundingMode).toLong()
@@ -412,6 +412,19 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(time))
     }
 
+    fun hasNewValue(extras: Bundle?): Boolean {
+        if(extras == null || extras.isEmpty)
+            return false
+        if(extras.containsKey(TIME) && isNewValueTime(extras.getLong(TIME))) {
+            return true
+        }
+        return hasNewIobCob(extras)
+    }
+
+    private fun isNewValueTime(newTime: Long): Boolean {
+        return getTimeDiffMinute(newTime) >= 1
+    }
+
     fun handleIntent(context: Context, dataSource: DataSource, extras: Bundle?, interApp: Boolean = false) : Boolean
     {
         if (extras == null || extras.isEmpty) {
@@ -434,7 +447,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     return false
                 }
 
-                if(getTimeDiffMinute(new_time) >= 1) // check for new value received (diff must around one minute at least to prevent receiving same data from different sources with similar timestamps
+                if(isNewValueTime(new_time)) // check for new value received (diff must around one minute at least to prevent receiving same data from different sources with similar timestamps
                 {
                     Log.i(
                         LOG_ID, "Glucodata received from " + dataSource.toString() + ": " +
@@ -540,12 +553,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return result
     }
 
-    fun handleIobCob(context: Context, dataSource: DataSource, extras: Bundle, interApp: Boolean = false) {
-        Log.v(LOG_ID, "handleIobCob for source " + dataSource + ": " + extras.toString())
-        if (extras.containsKey(IOB) || extras.containsKey(COB)) {
+    private fun hasNewIobCob(extras: Bundle?): Boolean {
+        if(extras != null && (extras.containsKey(IOB) || extras.containsKey(COB))) {
             if (!isIobCob() && extras.getFloat(IOB, Float.NaN).isNaN() && extras.getFloat(COB, Float.NaN).isNaN()) {
                 Log.d(LOG_ID, "Ignore NaN IOB and COB")
-                return
+                return false
             }
 
             val newTime = if(extras.containsKey(IOBCOB_TIME))
@@ -554,25 +566,36 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 System.currentTimeMillis()
 
             if(!isIobCob() || (newTime > iobCobTime && (newTime-iobCobTime) > 30000)) {
-                var iobCobChange = false
-                if(iob != extras.getFloat(IOB, Float.NaN) || cob != extras.getFloat(COB, Float.NaN)) {
-                    Log.i(LOG_ID, "Only IOB/COB changed: " + extras.getFloat(IOB, Float.NaN) + "/" +  extras.getFloat(COB, Float.NaN))
-                    iob = extras.getFloat(IOB, Float.NaN)
-                    cob = extras.getFloat(COB, Float.NaN)
-                    iobCobChange = true
-                } else {
-                    Log.d(LOG_ID, "Only IOB/COB time changed")
-                }
-                iobCobTime = newTime
-
-                // do not forward extras as interApp to prevent sending back to source...
-                val bundle: Bundle? = if(interApp) null else createExtras()  // re-create extras to have all changed value inside for sending to receiver
-                if(iobCobChange)
-                    InternalNotifier.notify(context, NotifySource.IOB_COB_CHANGE, bundle)
-                else
-                    InternalNotifier.notify(context, NotifySource.IOB_COB_TIME, bundle)
-                saveExtras(context)
+                return true
             }
+        }
+        return false
+    }
+
+    fun handleIobCob(context: Context, dataSource: DataSource, extras: Bundle, interApp: Boolean = false) {
+        Log.v(LOG_ID, "handleIobCob for source " + dataSource + ": " + extras.toString())
+        if (hasNewIobCob(extras)) {
+            var iobCobChange = false
+            if(iob != extras.getFloat(IOB, Float.NaN) || cob != extras.getFloat(COB, Float.NaN)) {
+                Log.i(LOG_ID, "Only IOB/COB changed: " + extras.getFloat(IOB, Float.NaN) + "/" +  extras.getFloat(COB, Float.NaN))
+                iob = extras.getFloat(IOB, Float.NaN)
+                cob = extras.getFloat(COB, Float.NaN)
+                iobCobChange = true
+            } else {
+                Log.d(LOG_ID, "Only IOB/COB time changed")
+            }
+            iobCobTime = if(extras.containsKey(IOBCOB_TIME))
+                extras.getLong(IOBCOB_TIME)
+            else
+                System.currentTimeMillis()
+
+            // do not forward extras as interApp to prevent sending back to source...
+            val bundle: Bundle? = if(interApp) null else createExtras()  // re-create extras to have all changed value inside for sending to receiver
+            if(iobCobChange)
+                InternalNotifier.notify(context, NotifySource.IOB_COB_CHANGE, bundle)
+            else
+                InternalNotifier.notify(context, NotifySource.IOB_COB_TIME, bundle)
+            saveExtras(context)
         }
     }
 

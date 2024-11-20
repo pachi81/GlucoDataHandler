@@ -641,10 +641,17 @@
     <string name="gda_speak_off">Falar está desligado</string>
     <string name="enable_alarm_icon_toggle">Ativar ícone de alarme</string>
     <string name="enable_alarm_icon_toggle_summary">Ativar ícone de alarme na tela principal para alternar o estado do alarme.</string>
+
+    <!-- v1.3  -->
+
     <string name="src_librelink_error4">Error, please re-login to LibreLinkUp App and check for any steps to be done!</string>
     <string name="src_librelink_error4_type">Error type %1$s, please re-login to LibreLinkUp App and check for any steps to be done!</string>
     <string name="source_libre_auto_accept_tou">Auto accept new terms</string>
     <string name="source_libre_auto_accept_tou_summary">Automatically accept new Terms of Use to prevent stopping receiving datas.\nThere will be no further information to the new terms! If you want to read the new terms, please disable this setting and use LibreLinkUp App in case of Error 4.</string>
     <string name="src_librelink_error4_tou">New Terms of Use have to accept. Either enable auto accept these terms in LibreLinkUp settings or re-login to LibreLinkUp app and accept the terms.</string>
     <string name="src_libre_tou_message">GlucoDataHandler can automatically accept new Terms of Use for LibreLinkUp.\nTo enable this feature, press OK.\nTo manually accept the terms in the LibreLinkUp App, press Cancel.</string>
+    <string name="src_librelink_error2">Invalid user or password!\nPlease check your source settings or (re-)install and login to LibreLinkUp App and verify your account settings!</string>
+    <string name="last_value_on_server">Last value on server from %1$s</string>
+    <string name="no_data_in_server_response">No values found on server.</string>
+    <string name="http_error_429">Too many requests!\nPlease stop all other apps following the same account!</string>
 </resources>

@@ -135,9 +135,17 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     }
      */
 
+    private fun getStatusMessage(status: Int, default: String? = null): String? {
+        return when(status) {
+            2 -> GlucoDataService.context!!.getString(R.string.src_librelink_error2)
+            4 -> GlucoDataService.context!!.getString(R.string.src_librelink_error4)
+            else -> default
+        }
+    }
+
     private fun getError4Message(type: String? = null): String {
         if(type.isNullOrEmpty()) {
-            return GlucoDataService.context!!.getString(R.string.src_librelink_error4)
+            return getStatusMessage(4, "")!!
         }
         if(type == ACCEPT_TERMS_TYPE && !autoAcceptTOU) {
             return GlucoDataService.context!!.getString(R.string.src_librelink_error4_tou)
@@ -182,6 +190,20 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         return null
     }
 
+    private fun getErrorMessage(jsonObj: JSONObject): String {
+        if(jsonObj.has("error")) {
+            val errorObj = jsonObj.optJSONObject("error")
+            if(errorObj?.has("message") == true)
+                return errorObj.optString("message", "Error")?: "Error"
+        }
+        if(jsonObj.has("data")) {
+            val dataObj = jsonObj.optJSONObject("data")
+            if(dataObj?.has("message") == true)
+                return dataObj.optString("message", "Error")?: "Error"
+        }
+        return "Error"
+    }
+
     private fun checkResponse(body: String?, handleError4: Boolean = true): JSONObject? {
         if (body.isNullOrEmpty()) {
             return null
@@ -194,7 +216,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                 return handleError4(jsonObj)
             } else if(status != 0) {
                 if(jsonObj.has("error")) {
-                    val error = jsonObj.optJSONObject("error")?.optString("message", "")
+                    val error = getStatusMessage(status, getErrorMessage(jsonObj))
                     setLastError(error?: "Error", status)
                     return null
                 }
@@ -403,7 +425,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                 }
                 val data = getPatientData(array)
                 if (data == null) {
-                    setState(SourceState.NO_NEW_VALUE)
+                    setState(SourceState.NO_NEW_VALUE, GlucoDataService.context!!.resources.getString(R.string.no_data_in_server_response))
                     return false
                 }
                 if(data.has("glucoseMeasurement")) {
