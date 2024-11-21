@@ -469,7 +469,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                         if (timeDiffMinute == 0L) {
                             Log.w(LOG_ID, "Time diff is less than a minute! Can not calculate delta value!")
                             deltaValue = Float.NaN
-                        } else if (timeDiffMinute > 10L) {
+                        } else if (timeDiffMinute > 20L) {
                             deltaValue = Float.NaN   // no delta calculation for too high time diffs
                         } else {
                             deltaValue = (extras.getInt(MGDL) - rawValue).toFloat()
