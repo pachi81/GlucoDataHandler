@@ -371,12 +371,13 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 val onCheckClickListener = View.OnClickListener {
                     GlucoDataService.checkForConnectedNodes(false)
                 }
-                if(WearPhoneConnection.getNodeBatterLevels().size == 1 ) {
-                    val level = WearPhoneConnection.getNodeBatterLevels().values.first()
-                    tableConnections.addView(createRow(CR.string.source_phone, if (level > 0) "$level%" else "?%", onCheckClickListener))
+                val states = WearPhoneConnection.getNodeConnectionStates(this)
+                if(states.size == 1 ) {
+                    val state = states.values.first()
+                    tableConnections.addView(createRow(CR.string.source_phone, state, onCheckClickListener))
                 } else {
-                    WearPhoneConnection.getNodeBatterLevels().forEach { (name, level) ->
-                        tableConnections.addView(createRow(name, if (level > 0) "$level%" else "?%", onCheckClickListener))
+                    states.forEach { (name, state) ->
+                        tableConnections.addView(createRow(name, state, onCheckClickListener))
                     }
                 }
             }

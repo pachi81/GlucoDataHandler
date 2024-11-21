@@ -701,5 +701,6 @@
     <string name="last_value_on_server">Last value on server from %1$s</string>
     <string name="no_data_in_server_response">No values found on server.</string>
     <string name="http_error_429">Too many requests!\nPlease stop all other apps following the same account!</string>
+    <string name="state_await_data">Awaiting data</string>
 
 </resources>

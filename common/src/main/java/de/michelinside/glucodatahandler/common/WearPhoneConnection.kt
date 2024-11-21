@@ -78,17 +78,19 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             return batterLevels
         }
 
-        fun getNodeBatterLevels(addMissing: Boolean = true): Map<String, Int> {
-            val nodeBatterLevels = mutableMapOf<String, Int>()
+        fun getNodeConnectionStates(context: Context, addMissing: Boolean = true): Map<String, String> {
+            val connectionStates = mutableMapOf<String, String>()
             connectedNodes.forEach { node ->
                 (if (nodeBatteryLevel.containsKey(node.key)) {
-                    nodeBatterLevels[node.value.displayName] = nodeBatteryLevel.getValue(node.key)
+                    val level = nodeBatteryLevel.getValue(node.key)
+                    connectionStates[node.value.displayName] = if (level > 0) "${level}%" else context.getString(R.string.state_connected)
                 }
                 else if (addMissing) {
-                    nodeBatterLevels[node.value.displayName] = -1
+                    connectionStates[node.value.displayName] = context.getString(R.string.state_await_data)
                 })
             }
-            return nodeBatterLevels
+            return connectionStates
+
         }
     }
 

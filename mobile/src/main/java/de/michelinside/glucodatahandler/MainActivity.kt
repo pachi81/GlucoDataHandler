@@ -642,8 +642,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 val onCheckClickListener = OnClickListener {
                     GlucoDataService.checkForConnectedNodes(false)
                 }
-                WearPhoneConnection.getNodeBatterLevels().forEach { (name, level) ->
-                    tableConnections.addView(createRow(name, if (level > 0) "$level%" else "?%", onCheckClickListener))
+                WearPhoneConnection.getNodeConnectionStates(this).forEach { (name, state) ->
+                    tableConnections.addView(createRow(name, state, onCheckClickListener))
                 }
             }
         }
