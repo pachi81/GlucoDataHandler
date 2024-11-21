@@ -22,6 +22,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var switchLargeTrendArrow: SwitchCompat
     private lateinit var switchForground: SwitchCompat
     private lateinit var switchRelativeTime: SwitchCompat
+    private lateinit var switchBatteryLevel: SwitchCompat
     private lateinit var btnComplicationTapAction: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -105,6 +106,20 @@ class SettingsActivity : AppCompatActivity() {
                     ActiveComplicationHandler.OnNotifyData(this, NotifySource.SETTINGS, null)
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Changing large arrow icon exception: " + exc.message.toString() )
+                }
+            }
+
+            switchBatteryLevel = findViewById(R.id.switchBatteryLevel)
+            switchBatteryLevel.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_BATTERY_RECEIVER_ENABLED, true)
+            switchBatteryLevel.setOnCheckedChangeListener { _, isChecked ->
+                Log.d(LOG_ID, "Batter level changed: " + isChecked.toString())
+                try {
+                    with (sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_BATTERY_RECEIVER_ENABLED, isChecked)
+                        apply()
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Changing battery level exception: " + exc.message.toString() )
                 }
             }
 

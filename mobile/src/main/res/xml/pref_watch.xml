@@ -9,6 +9,12 @@
                     android:title="@string/pref_information"
                     android:summary="@string/pref_wearos_info_summary"
                     app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="true"
+                    android:key="battery_receiver_enabled"
+                    android:summary="@string/pref_send_battery_level_to_watch_summary"
+                    android:title="@string/pref_send_battery_level_to_watch"
+                    app:iconSpaceReserved="false" />
                 <Preference
                     android:key="wear_os_check_connection"
                     android:title="@string/pref_wear_os_check_connection"

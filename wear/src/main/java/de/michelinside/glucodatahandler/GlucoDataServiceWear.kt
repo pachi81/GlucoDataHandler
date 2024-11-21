@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.*
-import de.michelinside.glucodatahandler.common.GlucoDataService.Companion
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.R as CR
@@ -51,7 +50,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
                     val curApp = context.packageName
                     Log.i(LOG_ID, "Setting default tap action for complications to $curApp")
                     with(sharedPref.edit()) {
-                        putString(de.michelinside.glucodatahandler.common.Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, curApp)
+                        putString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, curApp)
                         apply()
                     }
                 }

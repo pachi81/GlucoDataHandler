@@ -702,5 +702,8 @@
     <string name="no_data_in_server_response">No values found on server.</string>
     <string name="http_error_429">Too many requests!\nPlease stop all other apps following the same account!</string>
     <string name="state_await_data">Awaiting data</string>
+    <string name="pref_send_battery_level_to_watch">Send battery level</string>
+    <string name="pref_send_battery_level_to_watch_summary">Send battery level to watch to show in complication and on main screen.</string>
+    <string name="pref_battery_level">Show battery level</string>
 
 </resources>

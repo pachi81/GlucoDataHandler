@@ -45,7 +45,7 @@ enum class AppSource {
 }
 
 abstract class GlucoDataService(source: AppSource) : WearableListenerService(), SharedPreferences.OnSharedPreferenceChangeListener {
-    private lateinit var batteryReceiver: BatteryReceiver
+    private var batteryReceiver: BatteryReceiver? = null
     private lateinit var broadcastServiceAPI: BroadcastServiceAPI
 
     @SuppressLint("StaticFieldLeak")
@@ -464,8 +464,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             updateSourceReceiver(this)
             broadcastServiceAPI = BroadcastServiceAPI()
             broadcastServiceAPI.init()
-            batteryReceiver = BatteryReceiver()
-            registerReceiver(batteryReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+            updateBatteryReceiver()
 
             sharedPref!!.registerOnSharedPreferenceChangeListener(this)
 
@@ -499,7 +498,10 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             sharedPref!!.unregisterOnSharedPreferenceChangeListener(this)
             unregisterSourceReceiver(this)
             broadcastServiceAPI.close(this)
-            unregisterReceiver(batteryReceiver)
+            if(batteryReceiver != null) {
+                unregisterReceiver(batteryReceiver)
+                batteryReceiver = null
+            }
             TimeTaskService.stop()
             SourceTaskService.stop()
             connection!!.close()
@@ -514,6 +516,28 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             Log.e(LOG_ID, "onDestroy exception: " + exc.toString())
         }
     }
+
+    private fun updateBatteryReceiver() {
+        try {
+            if (sharedPref!!.getBoolean(Constants.SHARED_PREF_BATTERY_RECEIVER_ENABLED, true)) {
+                if(batteryReceiver == null) {
+                    Log.i(LOG_ID, "register batteryReceiver")
+                    batteryReceiver = BatteryReceiver()
+                    registerReceiver(batteryReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+                }
+            } else if(batteryReceiver != null) {
+                Log.i(LOG_ID, "unregister batteryReceiver")
+                unregisterReceiver(batteryReceiver)
+                batteryReceiver = null
+                // notify new battery level to update UI
+                BatteryReceiver.batteryPercentage = 0
+                InternalNotifier.notify(this, NotifySource.BATTERY_LEVEL, BatteryReceiver.batteryBundle)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "updateBatteryReceiver exception: " + exc.toString())
+        }
+    }
+
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         try {
@@ -531,6 +555,9 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 }
                 Constants.SHARED_PREF_SHOW_OTHER_UNIT -> {
                     shareSettings = true
+                }
+                Constants.SHARED_PREF_BATTERY_RECEIVER_ENABLED -> {
+                    updateBatteryReceiver()
                 }
             }
             if (shareSettings) {

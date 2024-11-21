@@ -315,7 +315,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             Log.v(LOG_ID, "sendMessage called for $dataSource filter receiver $filterReceiverId ignoring receiver $ignoreReceiverId with extras $extras")
             if( nodesConnected && dataSource != NotifySource.NODE_BATTERY_LEVEL ) {
                 Log.d(LOG_ID, connectedNodes.size.toString() + " nodes found for sending message for " + dataSource.toString())
-                if (extras != null && dataSource != NotifySource.BATTERY_LEVEL && BatteryReceiver.batteryPercentage > 0) {
+                if (extras != null && dataSource != NotifySource.BATTERY_LEVEL && BatteryReceiver.batteryPercentage >= 0) {
                     extras.putInt(BatteryReceiver.LEVEL, BatteryReceiver.batteryPercentage)
                 }
                 if (extras != null && dataSource == NotifySource.CAPILITY_INFO && GlucoDataService.appSource == AppSource.PHONE_APP) {
@@ -530,7 +530,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     Log.d(LOG_ID, "Data request received from " + p0.sourceNodeId)
                     var bundle = ReceiveData.createExtras()
                     var source = NotifySource.BROADCAST
-                    if( bundle == null && BatteryReceiver.batteryPercentage > 0) {
+                    if( bundle == null && BatteryReceiver.batteryPercentage >= 0) {
                         bundle = BatteryReceiver.batteryBundle
                         source = NotifySource.BATTERY_LEVEL
                     }
