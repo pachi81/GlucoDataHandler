@@ -9,6 +9,7 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
@@ -403,10 +404,20 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
             checkNotifier(context)
     }
 
-    private fun checkNotifier(context: Context) {
-        Log.v(LOG_ID, "checkNotifier called")
-        if(AlarmType.OBSOLETE.setting!!.isActive != InternalNotifier.hasNotifier(this)) {
-            if(AlarmType.OBSOLETE.setting.isActive) {
+    private fun isObsoleteAlarmActive(): Boolean {
+        if(GlucoDataService.appSource != AppSource.WEAR_APP)
+            return AlarmType.OBSOLETE.setting!!.isActive
+        if(AlarmType.OBSOLETE.setting!!.isActive) {  // on wear: only notification is used for alarms -> check to save battery for timer thread
+            return AlarmNotificationBase.instance?.getAlarmState(GlucoDataService.context!!) == AlarmState.ACTIVE
+        }
+        return false
+    }
+
+    fun checkNotifier(context: Context) {
+        val obsoleteActive = isObsoleteAlarmActive()
+        Log.v(LOG_ID, "checkNotifier called - obsoleteActive=$obsoleteActive")
+        if(obsoleteActive != InternalNotifier.hasNotifier(this)) {
+            if(obsoleteActive) {
                 InternalNotifier.addNotifier(context, this, mutableSetOf(NotifySource.TIME_VALUE))
             } else {
                 InternalNotifier.remNotifier(context, this)

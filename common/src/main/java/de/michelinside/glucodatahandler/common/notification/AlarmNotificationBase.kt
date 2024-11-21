@@ -149,7 +149,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         filter.add(NotifySource.OBSOLETE_ALARM_TRIGGER)
         filter.add(NotifySource.DELTA_ALARM_TRIGGER)
         filter.addAll(getNotifierFilter())
-        InternalNotifier.addNotifier(context, this, filter )
+        InternalNotifier.addNotifier(context, this, filter)
     }
 
     fun getEnabled(): Boolean = enabled

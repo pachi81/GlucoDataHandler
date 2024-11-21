@@ -2,9 +2,11 @@ package de.michelinside.glucodatahandler
 
 import android.app.Notification
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.GlucoDataService.Companion
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.R as CR
@@ -62,20 +64,28 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
     init {
         Log.d(LOG_ID, "init called")
         InternalNotifier.addNotifier( this,
-            ActiveComplicationHandler, mutableSetOf(
-                NotifySource.MESSAGECLIENT,
-                NotifySource.BROADCAST,
-                NotifySource.SETTINGS,
-                NotifySource.TIME_VALUE
-            )
-        )
-        InternalNotifier.addNotifier( this,
             BatteryLevelComplicationUpdater,
             mutableSetOf(
                 NotifySource.CAPILITY_INFO,
                 NotifySource.BATTERY_LEVEL,
                 NotifySource.NODE_BATTERY_LEVEL
             )
+        )
+    }
+
+    private fun updateComplicationNotifier() {
+        Log.d(LOG_ID, "updateComplicationNotifier called")
+        val filter = mutableSetOf(
+            NotifySource.MESSAGECLIENT,
+            NotifySource.BROADCAST,
+            NotifySource.SETTINGS
+        )
+
+        if(sharedPref == null || sharedPref!!.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, true))
+            filter.add(NotifySource.TIME_VALUE)
+
+        InternalNotifier.addNotifier( this,
+            ActiveComplicationHandler, filter
         )
     }
 
@@ -90,6 +100,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
                 NotifySource.OBSOLETE_VALUE, // to trigger re-start for the case of stopped by the system
                 NotifySource.BATTERY_LEVEL)  // used for watchdog-check
             InternalNotifier.addNotifier(this, this, filter)
+            updateComplicationNotifier()
             ActiveComplicationHandler.OnNotifyData(this, NotifySource.CAPILITY_INFO, null)
         } catch (ex: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + ex)
@@ -121,4 +132,16 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
             .setVisibility(Notification.VISIBILITY_PUBLIC)
             .build()
     }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        try {
+            Log.d(LOG_ID, "onSharedPreferenceChanged called with key $key")
+            super.onSharedPreferenceChanged(sharedPreferences, key)
+            if(key == Constants.SHARED_PREF_RELATIVE_TIME)
+                updateComplicationNotifier()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
+        }
+    }
+
 }

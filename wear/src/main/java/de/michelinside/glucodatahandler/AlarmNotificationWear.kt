@@ -6,7 +6,9 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
+import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.Utils
@@ -54,9 +56,12 @@ object AlarmNotificationWear : AlarmNotificationBase() {
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         try {
+            Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
             if (key == null) {
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_WEAR_NO_ALARM_POPUP_PHONE_CONNECTED)
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED)
+                if(GlucoDataService.context != null)
+                    AlarmHandler.checkNotifier(GlucoDataService.context!!)
             } else {
                 when(key) {
                     Constants.SHARED_PREF_WEAR_NO_ALARM_POPUP_PHONE_CONNECTED -> noAlarmOnPhoneConnected = sharedPreferences.getBoolean(
@@ -89,7 +94,9 @@ object AlarmNotificationWear : AlarmNotificationBase() {
                         isAaConnected = false  // reset for the case it will disconnect on phone
                 }
                 else -> super.OnNotifyData(context, dataSource, extras)
-
+            }
+            if(dataSource == NotifySource.ALARM_STATE_CHANGED) {
+                AlarmHandler.checkNotifier(context)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString())
