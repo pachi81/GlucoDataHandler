@@ -3,6 +3,7 @@ package de.michelinside.glucodatahandler
 import android.app.Notification
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
@@ -13,8 +14,8 @@ import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.common.notifier.*
+import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
-import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.watch.WatchDrip
@@ -236,7 +237,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             Log.e(LOG_ID, "Exception while sending broadcast for " + receiverPrefKey + ": " + ex)
         }
     }
-
+    /*
     private fun sendToBangleJS(context: Context) {
         val send2Bangle = "require(\"Storage\").writeJSON(\"widbgjs.json\", {" +
                 "'bg': " + ReceiveData.rawValue.toString() + "," +
@@ -249,7 +250,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         sendIntent.putExtra("line", send2Bangle)
         context.sendBroadcast(sendIntent)
     }
-
+*/
     private fun forwardBroadcast(context: Context, extras: Bundle) {
         Log.v(LOG_ID, "forwardBroadcast called")
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -310,6 +311,9 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 if (autoExtras != null)
                     CarModeReceiver.sendToGlucoDataAuto(context, autoExtras, true)
             }
+            if (dataSource == NotifySource.BATTERY_LEVEL) {
+                checkServices(context)
+            }
             if (extras != null) {
                 if (dataSource == NotifySource.MESSAGECLIENT || dataSource == NotifySource.BROADCAST) {
                     forwardBroadcast(context, extras)
@@ -317,6 +321,29 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() )
+        }
+    }
+
+    override fun updateBatteryReceiver() {
+        try {
+            if(batteryReceiver == null) {
+                Log.i(LOG_ID, "register batteryReceiver")
+                batteryReceiver = BatteryReceiver()
+                registerReceiver(batteryReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+            } else {
+                if (!sharedPref!!.getBoolean(Constants.SHARED_PREF_BATTERY_RECEIVER_ENABLED, true)) {
+                    Log.i(LOG_ID, "batteryReceiver disabled - keep active as watchdog")
+                    // notify new battery level to update UI
+                    BatteryReceiver.batteryPercentage = 0
+                    InternalNotifier.notify(this, NotifySource.BATTERY_LEVEL, BatteryReceiver.batteryBundle)
+                } else {
+                    Log.i(LOG_ID, "batteryReceiver enabled - re-register")
+                    unregisterReceiver(batteryReceiver)
+                    registerReceiver(batteryReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "updateBatteryReceiver exception: " + exc.toString())
         }
     }
 }

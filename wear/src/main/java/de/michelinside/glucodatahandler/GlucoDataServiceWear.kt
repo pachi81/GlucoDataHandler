@@ -110,6 +110,9 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
         try {
             Log.d(LOG_ID, "OnNotifyData called for source " + dataSource.toString())
             start(context)
+            if (dataSource == NotifySource.BATTERY_LEVEL) {
+                checkServices(context)
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString())
         }
