@@ -119,7 +119,7 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
     }
 
     private fun handleValueResponse(body: String?): Boolean {
-        Log.d(LOG_ID, "handleValueResponse called: $body")
+        Log.i(LOG_ID, "handleValueResponse called: $body")
         if (body == null) {
             return false
         }

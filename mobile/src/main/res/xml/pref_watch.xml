@@ -42,6 +42,20 @@
                     app:iconSpaceReserved="false" />
         </PreferenceCategory>
         <PreferenceCategory
+            android:title="@string/advanced_settings"
+            app:iconSpaceReserved="false">
+                <androidx.preference.SeekBarPreference
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="1"
+                    app:min="1"
+                    android:max="15"
+                    android:defaultValue="1"
+                    android:key="send_to_watch_interval"
+                    android:title="@string/alarm_interval"
+                    android:summary="@string/forward_to_watch_interval_summary"
+                    app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+        <PreferenceCategory
             android:title="@string/pref_cat_banglejs"
             app:isPreferenceVisible="false"
             app:iconSpaceReserved="false">

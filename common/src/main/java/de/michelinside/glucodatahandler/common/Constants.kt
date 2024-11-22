@@ -248,6 +248,8 @@ object Constants {
     const val SHARED_PREF_ALARM_TYPE_SETTINGS_CAT = "cat_alarm_settings"
 
     const val SHARED_PREF_BATTERY_RECEIVER_ENABLED = "battery_receiver_enabled"
+    const val SHARED_PREF_SEND_TO_WATCH_INTERVAL = "send_to_watch_interval"
+    const val SHARED_PREF_SEND_TO_RECEIVER_INTERVAL = "send_to_receiver_interval"
 
     // Android Auto
     const val AA_MEDIA_ICON_STYLE_TREND = "trend"

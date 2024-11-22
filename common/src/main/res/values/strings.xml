@@ -705,5 +705,7 @@
     <string name="pref_send_battery_level_to_watch">Send battery level</string>
     <string name="pref_send_battery_level_to_watch_summary">Send battery level to watch to show in complication and on main screen.</string>
     <string name="pref_battery_level">Show battery level</string>
+    <string name="forward_to_watch_interval_summary">Minimum interval in minutes between two glucose values to send again to the watch.\nAlarms and very low glucose values will always be sent.</string>
+    <string name="forward_to_values_summary">Minimum interval in minutes between two glucose values to send again.</string>
 
 </resources>

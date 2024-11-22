@@ -31,6 +31,7 @@ enum class Command {
 class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener, NotifierInterface {
     private val LOG_ID = "GDH.WearPhoneConnection"
     private lateinit var context: Context
+    private var lastSendValuesTime = 0L
 
     private val capabilityName: String get() {
         if(GlucoDataService.appSource == AppSource.PHONE_APP)  // phone sends to wear
@@ -339,6 +340,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                         }
                     }.start()
                 }
+                lastSendValuesTime = ReceiveData.time
             }
         } catch (cancellationException: CancellationException) {
             throw cancellationException
@@ -616,12 +618,27 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         }
     }
 
+    private fun canSendMessage(context: Context, dataSource: NotifySource): Boolean {
+        if(!nodesConnected)
+            return false
+        if(dataSource == NotifySource.BROADCAST && !ReceiveData.forceAlarm && ReceiveData.getAlarmType() != AlarmType.VERY_LOW) {
+            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            val interval = sharedPref.getInt(Constants.SHARED_PREF_SEND_TO_WATCH_INTERVAL, 1)
+            Log.v(LOG_ID, "Check sending for interval $interval - elapsed: ${Utils.getElapsedTimeMinute(lastSendValuesTime)}")
+            if (interval > 1 && Utils.getElapsedTimeMinute(lastSendValuesTime) < interval) {
+                Log.i(LOG_ID, "Ignore data because of interval $interval - elapsed: ${Utils.getElapsedTimeMinute(lastSendValuesTime)}")
+                return false
+            }
+        }
+        return true
+    }
+
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnNotifyData called for " + dataSource.toString())
             if (dataSource == NotifySource.TIME_VALUE) {
                 checkNodesConnected()
-            } else if (extras != null || !ignoreSourceWithoutExtras(dataSource)) {
+            } else if ((extras != null || !ignoreSourceWithoutExtras(dataSource)) && canSendMessage(context, dataSource)) {
                 Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString() + " and extras " + extras.toString())
                 sendMessage(dataSource, extras)
             }

@@ -15,6 +15,7 @@ import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import de.michelinside.glucodatahandler.widget.FloatingWidget
@@ -24,6 +25,7 @@ import de.michelinside.glucodatahandler.widget.LockScreenWallpaper
 
 class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInterface {
     private lateinit var floatingWidget: FloatingWidget
+    private var lastForwardTime = 0L
 
     init {
         Log.d(LOG_ID, "init called")
@@ -229,6 +231,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 }
                 context.sendBroadcast(sendIntent)
             }
+            lastForwardTime = ReceiveData.time
         } catch (ex: Exception) {
             Log.e(LOG_ID, "Exception while sending broadcast for " + receiverPrefKey + ": " + ex)
         }
@@ -251,6 +254,18 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         Log.v(LOG_ID, "forwardBroadcast called")
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         CarModeReceiver.sendToGlucoDataAuto(context, extras.clone() as Bundle)
+
+        /*
+        if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_BANGLEJS, false)) {
+            sendToBangleJS(context)
+        }*/
+
+        val interval = sharedPref.getInt(Constants.SHARED_PREF_SEND_TO_RECEIVER_INTERVAL, 1)
+        if (interval > 1 && Utils.getElapsedTimeMinute(lastForwardTime) < interval) {
+            Log.d(LOG_ID, "Ignore data because of interval $interval - elapsed: ${Utils.getElapsedTimeMinute(lastForwardTime)}")
+            return
+        }
+
         if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_XDRIP, false)) {
             val intent = Intent(Constants.XDRIP_ACTION_GLUCOSE_READING)
             // always sends time as start time, because it is only set, if the sensorId have changed!
@@ -280,10 +295,6 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             val intent = Intent(Constants.GLUCODATA_BROADCAST_ACTION)
             intent.putExtras(extras)
             sendBroadcast(intent, Constants.SHARED_PREF_GLUCODATA_RECEIVERS, context, sharedPref)
-        }
-
-        if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_BANGLEJS, false)) {
-            sendToBangleJS(context)
         }
     }
 
