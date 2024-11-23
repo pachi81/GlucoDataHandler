@@ -575,7 +575,6 @@
     <string name="menu_save_mobile_logs_summary">Salvar logs do telefone em um arquivo.</string>
     <string name="menu_save_wear_logs_summary">Salvar logs do relógio Wear OS conectado em um arquivo.</string>
     <string name="alarm_repeat">Repetir</string>
-    <string name="alarm_repeat_summary">Repetir o som e a vibração do alarme. \n0: Desativa a funcionalidade de repetição. \nValores positivos: Define o intervalo de repetição em minutos. \n-1: Ativa a repetição ilimitada.</string>
     <string name="no_vibration">Sem vibração</string>
     <string name="alarm_vibrate_mode">Modo de vibração</string>
     <string name="alarm_rising_fast">Aumento rápido</string>

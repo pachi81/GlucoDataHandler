@@ -578,7 +578,6 @@
     <string name="menu_save_mobile_logs_summary">Enregistrer les journaux du téléphone dans un fichier.</string>
     <string name="menu_save_wear_logs_summary">Enregistrer les journaux de la montre Wear OS connectée dans un fichier.</string>
     <string name="alarm_repeat">Répéter</string>
-    <string name="alarm_repeat_summary">Répéter le son et les vibrations de l\'alarme. \n0 : Désactive la fonctionnalité de répétition. \nValeurs positives : Définir l\'intervalle de répétition en minutes. \n-1 : Active la répétition illimitée.</string>
     <string name="no_vibration">Pas de vibration</string>
     <string name="alarm_vibrate_mode">Mode de vibration</string>
     <string name="alarm_rising_fast">Augmentation rapide</string>

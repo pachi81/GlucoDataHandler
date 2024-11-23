@@ -800,9 +800,12 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     }
 
     private fun getRepeat(alarmType: AlarmType): Int {
-        /*if (alarmType.setting!=null) {
-            return alarmType.setting.repeatTime
-        }*/
+        if (alarmType.setting!=null && alarmType.setting.repeatUntilClose) {
+            if (alarmType.setting.repeatTime > 0) {
+                return alarmType.setting.repeatTime
+            }
+            return -1  // unlimited
+        }
         return 0
     }
 
@@ -911,7 +914,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             return false
         }
         if(isTriggerActive()) {
-            Log.i(LOG_ID, "Retrigger sound after $retriggerTime minute(s) + $soundDuration ms")
+            Log.i(LOG_ID, "Retrigger sound after $retriggerTime minute(s) + $soundDuration ms - count $retriggerCount")
             retriggerCount++
             triggerDelay(TriggerAction.RETRIGGER_SOUND, getAlarmType(), context, (retriggerTime*60).toFloat() + (soundDuration.toFloat()/1000))
             return true

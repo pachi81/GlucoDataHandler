@@ -574,7 +574,6 @@
     <string name="menu_save_mobile_logs_summary">Zapisz logi z telefonu do pliku.</string>
     <string name="menu_save_wear_logs_summary">Zapisz logi z podłączonego zegarka Wear OS do pliku.</string>
     <string name="alarm_repeat">Powtórz</string>
-    <string name="alarm_repeat_summary">&quot;Powtórz dźwięk alarmu i wibracje. \n0: Wyłącza funkcję powtarzania. \nWartości dodatnie: Ustawienie czasu do powtórzenia w minutach. \n-1: Włącza nieograniczone powtarzanie. &quot;</string>
     <string name="no_vibration">Brak wibracji</string>
     <string name="alarm_vibrate_mode">Tryb wibracji</string>
 

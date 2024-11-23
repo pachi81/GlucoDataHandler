@@ -21,7 +21,7 @@ object Constants {
     const val COMMAND_BUNDLE = "command_bundle"
     const val GLUCOSE_CONVERSION_FACTOR = 18.0182F
     const val GLUCOSE_MIN_VALUE = 40
-    const val GLUCOSE_MAX_VALUE = 400
+    const val GLUCOSE_MAX_VALUE = 600
     const val ACTION_STOP_FOREGROUND = "stop_foreground"
 
     const val ACTION_PREFIX = "gdh_action_"
@@ -233,6 +233,7 @@ object Constants {
     const val SHARED_PREF_ALARM_SUFFIX_TEST = "_test"
     const val SHARED_PREF_ALARM_SUFFIX_SAVE_SOUND = "_save_sound"
     const val SHARED_PREF_ALARM_SUFFIX_REPEAT = "_repeat"
+    const val SHARED_PREF_ALARM_SUFFIX_REPEAT_UNTIL_CLOSE = "_repeat_until_close"
     const val SHARED_PREF_ALARM_SUFFIX_DELTA = "_delta"
     const val SHARED_PREF_ALARM_SUFFIX_OCCURRENCE_COUNT = "_occurrence_count"
     const val SHARED_PREF_ALARM_SUFFIX_BORDER = "_border"

@@ -567,7 +567,6 @@
     <string name="menu_save_mobile_logs_summary">Logs vom Telefon in eine Datei speichern.</string>
     <string name="menu_save_wear_logs_summary">Logs von einer verbundenen Wear OS Uhr in eine Datei speichern.</string>
     <string name="alarm_repeat">Wiederholung</string>
-    <string name="alarm_repeat_summary">"Ton und Vibration wiederholen.\n0: Keine Wiederholung.\nPositive Werte: Wiederholung in Minuten. \n-1: Wiederholung bis der Alarm geschlossen wird. "</string>
     <string name="no_vibration">Keine Vibration</string>
     <string name="alarm_vibrate_mode">Vibration Modus</string>
 

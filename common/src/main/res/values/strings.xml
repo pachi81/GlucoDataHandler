@@ -617,7 +617,6 @@
     <string name="menu_save_mobile_logs_summary">Save logs from the phone to file.</string>
     <string name="menu_save_wear_logs_summary">Save logs from connected Wear OS watch to file.</string>
     <string name="alarm_repeat">Repeat</string>
-    <string name="alarm_repeat_summary">"Repeat alarm sound and vibration. \n0: Disables the repeat functionality. \nPositive values: Set the repeat interval in minutes. \n-1: Enables unlimited repetition. "</string>
     <string name="no_vibration">No vibration</string>
     <string name="alarm_vibrate_mode">Vibration mode</string>
 
@@ -707,5 +706,8 @@
     <string name="pref_battery_level">Show battery level</string>
     <string name="forward_to_watch_interval_summary">Minimum interval in minutes between two glucose values to send again to the watch.\nAlarms and very low glucose values will always be sent.</string>
     <string name="forward_to_values_summary">Minimum interval in minutes between two glucose values to send again.</string>
+    <string name="alarm_repeat_summary">The alarm will sound and vibrate repeatedly until the notification is dismissed or repeat time elapsed.</string>
+    <string name="alarm_repeat_time">Max repeat time</string>
+    <string name="alarm_repeat_time_summary">Max repeat time in minutes. 0 for unlimited.</string>
 
 </resources>

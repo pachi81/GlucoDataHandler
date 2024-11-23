@@ -578,7 +578,6 @@
     <string name="menu_save_mobile_logs_summary">Guardar registros del teléfono en un archivo.</string>
     <string name="menu_save_wear_logs_summary">Guardar registros del reloj Wear OS conectado en un archivo.</string>
     <string name="alarm_repeat">Repetir</string>
-    <string name="alarm_repeat_summary">Repetir el sonido y la vibración de la alarma. \n0: Desactiva la función de repetición. \nValores positivos: Establece el intervalo de repetición en minutos. \n-1: Activa la repetición ilimitada.</string>
     <string name="no_vibration">Sin vibración</string>
     <string name="alarm_vibrate_mode">Modo de vibración</string>
     <string name="alarm_rising_fast">Aumento rápido</string>
