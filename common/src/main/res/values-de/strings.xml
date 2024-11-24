@@ -509,7 +509,6 @@
     <string name="src_dexcom_share_user_summary">Benutzername, E-Mail oder Telefonnummer für das Login zum Dexcom Share Konto.\nWICHTIG: die Telefonnummer muss die Länderkennung enthalten, z.B. +49 für Deutschland.</string>
     <string name="src_dexcom_share_password_summary">Passwort für das Dexcom Share Konto.</string>
     <string name="pref_source_dexcom_share_info">Dexcom Share einrichten</string>
-    <string name="pref_source_dexcom_share_info_summary">Um Daten von Dexcom Share zu empfangen, müssen folgende Schritte erfüllt sein:\n- in der Dexcom App, welche mit dem Sensor verbunden ist, Teilen aktivieren\n- einmalig die Einladung in der Dexcom Follower App annehmen (die App kann danach wieder deinstalliert werden)\n\nWichtig: es funktioniert nicht mit einem Follower Benutzer!</string>
     <string name="permission_missing_title">Fehlende Berechtigung!</string>
     <string name="setting_permission_missing_message">Für die gesetzt Einstellung \'%1$s\' wurde die Berechtigung entfernt!\nBitte \"OK\" drücken, um zu der entsprechenden Berechtigungseinstellung weitergeleitet zu werden, um diese zu wieder zu aktivieren.\nBeim Drücken von \"Abbrechen\" wird die Einstellung deaktiviert und kann später über das Menü wieder aktiviert werden.</string>
     <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
@@ -640,16 +639,5 @@
 
     <!-- v1.3  -->
 
-    <string name="src_librelink_error4">Error, please re-login to LibreLinkUp App and check for any steps to be done!</string>
-    <string name="src_librelink_error4_type">Error type %1$s, please re-login to LibreLinkUp App and check for any steps to be done!</string>
-    <string name="source_libre_auto_accept_tou">Auto accept new terms</string>
-    <string name="source_libre_auto_accept_tou_summary">Automatically accept new Terms of Use to prevent stopping receiving datas.\nThere will be no further information to the new terms! If you want to read the new terms, please disable this setting and use LibreLinkUp App in case of Error 4.</string>
-    <string name="src_librelink_error4_tou">New Terms of Use have to accept. Either enable auto accept these terms in LibreLinkUp settings or re-login to LibreLinkUp app and accept the terms.</string>
-    <string name="src_libre_tou_message">GlucoDataHandler can automatically accept new Terms of Use for LibreLinkUp.\nTo enable this feature, press OK.\nTo manually accept the terms in the LibreLinkUp App, press Cancel.</string>
-    <string name="src_librelink_error2">Invalid user or password!\nPlease check your source settings or (re-)install and login to LibreLinkUp App and verify your account settings!</string>
-    <string name="last_value_on_server">Last value on server from %1$s</string>
-    <string name="no_data_in_server_response">No values found on server.</string>
-    <string name="http_error_429">Too many requests!\nPlease stop all other apps following the same account!</string>
-    <string name="state_await_data">Awaiting data</string>
 
 </resources>

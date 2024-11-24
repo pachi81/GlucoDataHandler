@@ -561,7 +561,6 @@
     <string name="src_dexcom_share_user_summary">Username, E-Mail or phone number for login to your Dexcom Share account.\nIMPORTANT: if you are using phone number, it has to include the country code (e.g. +1 for US).</string>
     <string name="src_dexcom_share_password_summary">Password for Dexcom Share account.</string>
     <string name="pref_source_dexcom_share_info">Setup Dexcom Share</string>
-    <string name="pref_source_dexcom_share_info_summary">To receive data from Dexcom Share servers, you need to have:\n- sharing enabled on the Dexcom application that is connected to the sensor\n- accepted the invitation on the Dexcom Follower app (you can uninstall it afterwards)\n\nImportant: it does not work with a follower user!</string>
     <string name="permission_missing_title">Missing permission!</string>
     <string name="setting_permission_missing_message">The settings \'%1$s\' is set, but the related permission is not granted! Press \"OK\" to be forwared the permission dialog or press \"Cancel\" to disable this setting.</string>
     <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
@@ -710,5 +709,6 @@
     <string name="alarm_repeat_time">Max repeat time</string>
     <string name="alarm_repeat_time_summary">Max repeat time in minutes. 0 for unlimited.</string>
     <string name="wear_source_info">If this data source is already active on your phone, you don\'t need to activate it again on watch.</string>
+    <string name="pref_source_dexcom_share_info_summary">To receive data from Dexcom Share servers:\n - go into Dexcom app and create a follower\n - check under connections it says Share On\n - enter username and password (add country code for phone number)\n - check setting for US/Non-US\n\nImportant: it does not work with a follower user! You need to use your Dexcom clarity user</string>
 
 </resources>

@@ -515,7 +515,6 @@
     <string name="src_dexcom_share_user_summary">Nazwa użytkownika, adres e-mail lub numer telefonu do logowania do konta Dexcom Share.\nWAŻNE: numer telefonu musi zawierać prefiks kraju, np. +48 dla Polski.</string>
     <string name="src_dexcom_share_password_summary">Hasło do konta Dexcom Share.</string>
     <string name="pref_source_dexcom_share_info">Konfiguracja Dexcom Share</string>
-    <string name="pref_source_dexcom_share_info_summary">Aby odbierać dane z serwerów Dexcom Share, musisz mieć:\n- włączone udostępnianie danych w aplikacji Dexcom, która jest połączona z sensorem\n- zaakceptowane zaproszenie w aplikacji Dexcom Follower (możesz ją później odinstalować)\n\n Ważne: nie działa z użytkownikiem obserwującym!</string>
     <string name="permission_missing_title">Brak uprawnienia!</string>
     <string name="setting_permission_missing_message">Ustawienie \&quot;%1$s\&quot; jest ustawione, ale powiązane uprawnienie nie zostało przyznane! Naciśnij \&quot;OK\&quot;, aby wyświetlić okno dialogowe uprawnień lub naciśnij \&quot;Anuluj\&quot;, aby wyłączyć to ustawienie.</string>
     <string name="xdrip_broadcast_service_api_enabled">Interfejs API usługi transmisji</string>
@@ -661,5 +660,15 @@
     <string name="no_data_in_server_response">No values found on server.</string>
     <string name="http_error_429">Too many requests!\nPlease stop all other apps following the same account!</string>
     <string name="state_await_data">Awaiting data</string>
+    <string name="pref_send_battery_level_to_watch">Send battery level</string>
+    <string name="pref_send_battery_level_to_watch_summary">Send battery level to watch to show in complication and on main screen.</string>
+    <string name="pref_battery_level">Show battery level</string>
+    <string name="forward_to_watch_interval_summary">Minimum interval in minutes between two glucose values to send again to the watch.\nAlarms and very low glucose values will always be sent.</string>
+    <string name="forward_to_values_summary">Minimum interval in minutes between two glucose values to send again.</string>
+    <string name="alarm_repeat_summary">The alarm will sound and vibrate repeatedly until the notification is dismissed or repeat time elapsed.</string>
+    <string name="alarm_repeat_time">Max repeat time</string>
+    <string name="alarm_repeat_time_summary">Max repeat time in minutes. 0 for unlimited.</string>
+    <string name="wear_source_info">If this data source is already active on your phone, you don\'t need to activate it again on watch.</string>
+    <string name="pref_source_dexcom_share_info_summary">To receive data from Dexcom Share servers:\n - go into Dexcom app and create a follower\n - check under connections it says Share On\n - enter username and password (add country code for phone number)\n - check setting for US/Non-US\n\nImportant: it does not work with a follower user! You need to use your Dexcom clarity user</string>
 
 </resources>
