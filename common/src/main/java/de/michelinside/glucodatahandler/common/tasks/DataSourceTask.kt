@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.Intents
@@ -347,6 +348,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             setEnabled(sharedPreferences.getBoolean(enabledKey, false))
             interval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
             delaySec = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, 10).toLong()
+            if(GlucoDataService.appSource == AppSource.WEAR_APP)
+                delaySec += 5L  // add 5 seconds delay to receive by phone if connected
             return true
         } else {
             var result = false
@@ -363,6 +366,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                 Constants.SHARED_PREF_SOURCE_DELAY -> {
                     if (delaySec != sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, 10).toLong()) {
                         delaySec = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, 10).toLong()
+                        if(GlucoDataService.appSource == AppSource.WEAR_APP)
+                            delaySec += 5L // add 5 seconds delay to receive by phone if connected
                         result = true  // retrigger alarm after delay has changed
                     }
                 }

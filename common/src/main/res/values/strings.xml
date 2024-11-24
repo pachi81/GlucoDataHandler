@@ -709,5 +709,6 @@
     <string name="alarm_repeat_summary">The alarm will sound and vibrate repeatedly until the notification is dismissed or repeat time elapsed.</string>
     <string name="alarm_repeat_time">Max repeat time</string>
     <string name="alarm_repeat_time_summary">Max repeat time in minutes. 0 for unlimited.</string>
+    <string name="wear_source_info">If this data source is already active on your phone, you don\'t need to activate it again on watch.</string>
 
 </resources>
