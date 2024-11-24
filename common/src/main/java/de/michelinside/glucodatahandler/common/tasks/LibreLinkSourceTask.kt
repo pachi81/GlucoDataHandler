@@ -60,23 +60,22 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             "version" to "4.12.0",
             "Accept" to "application/json",
             "Content-Type" to "application/json",
-            "cache-control" to "no-cache"
+            "cache-control" to "no-cache",
+            "Account-Id" to Utils.encryptSHA256(userId)
         )
         if (token.isNotEmpty()) {
             result["Authorization"] = "Bearer " + token
-            if(userId.isNotEmpty()) {
-                result["Account-Id"] = Utils.encryptSHA256(userId)
-            }
         }
+        Log.v(LOG_ID, "Header: ${result}")
         return result
     }
 
     override fun reset() {
         Log.i(LOG_ID, "reset called")
         token = ""
-        userId = ""
         tokenExpire = 0L
         region = ""
+        userId = ""
         dataReceived = false
         patientData.clear()
         try {
@@ -108,6 +107,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     }
 
     /*
+    After tou there will be pp for re-new token!
     Example for error 4 for tou:
     {
       "status": 4,
@@ -153,26 +153,27 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         return GlucoDataService.context!!.getString(R.string.src_librelink_error4_type, type)
     }
 
-    private fun handleError4(jsonObj: JSONObject): JSONObject? {
+    private fun handleError4(jsonObj: JSONObject, lastType: String = ""): JSONObject? {
         // handle error 4 which contains the steps to do, like accept user terms or accept token
         reset()
         if (jsonObj.has("data")) {
             val data = jsonObj.getJSONObject("data")
+            checkRedirect(data)
             if(data.has("step")) {
-                val step = jsonObj.getJSONObject("step")
+                val step = data.getJSONObject("step")
                 Log.i(LOG_ID, "Handle error 4 step: $step")
                 if(step.has("type")) {
                     val type = step.getString("type")
-                    Log.i(LOG_ID, "Handle error 4 with type: $type")
+                    Log.i(LOG_ID, "Handle error 4 with type: $type - lastType: $lastType")
                     getToken(data)
                     if(token.isEmpty()) {
                         setLastError(getError4Message(type), 4)
                         return null
                     }
-                    if(type == ACCEPT_TOKEN_TYPE || (type == ACCEPT_TERMS_TYPE && autoAcceptTOU )) {
+                    if(lastType != type && type == ACCEPT_TOKEN_TYPE || (type == ACCEPT_TERMS_TYPE && autoAcceptTOU )) {
                         // send accept request and re-login
                         Log.i(LOG_ID, "Send accept request for type $type")
-                        return checkResponse(httpPost(getUrl(ACCEPT_ENDPOINT + type), getHeader(), null), false)
+                        return checkResponse(httpPost(getUrl(ACCEPT_ENDPOINT + type), getHeader(), null), type)
                     } else {
                         setLastError(getError4Message(type), 4)
                     }
@@ -204,7 +205,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         return "Error"
     }
 
-    private fun checkResponse(body: String?, handleError4: Boolean = true): JSONObject? {
+    private fun checkResponse(body: String?, lastError4Type: String = ""): JSONObject? {
         if (body.isNullOrEmpty()) {
             return null
         }
@@ -212,8 +213,8 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         val jsonObj = JSONObject(body)
         if (jsonObj.has("status")) {
             val status = jsonObj.optInt("status", -1)
-            if (status == 4 && handleError4) {
-                return handleError4(jsonObj)
+            if (status == 4) {
+                return handleError4(jsonObj, lastError4Type)
             } else if(status != 0) {
                 if(jsonObj.has("error")) {
                     val error = getStatusMessage(status, getErrorMessage(jsonObj))
@@ -267,20 +268,27 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         if (jsonObject != null) {
             val data = jsonObject.optJSONObject("data")
             if (data != null) {
-                if (data.has("redirect") && data.optBoolean("redirect")) {
-                    if (data.has("region")) {
-                        region = data.optString("region", "")
-                        Log.i(LOG_ID, "Handle redirect to region: " + region)
-                        saveRegion()
-                        return authenticate()
-                    } else {
-                        setLastError("redirect without region!!!", 500)
-                    }
-                }
+                if(checkRedirect(data))
+                    return authenticate()
                 getToken(data)
             }
         }
         return token.isNotEmpty()
+    }
+
+    private fun checkRedirect(data: JSONObject): Boolean {
+        Log.d(LOG_ID, "Check for redirect")
+        if (data.has("redirect") && data.optBoolean("redirect")) {
+            if (data.has("region")) {
+                region = data.optString("region", "")
+                Log.i(LOG_ID, "Handle redirect to region: " + region)
+                saveRegion()
+                return true
+            } else {
+                setLastError("redirect without region!!!", 500)
+            }
+        }
+        return false
     }
 
     private fun getToken(data: JSONObject) {
