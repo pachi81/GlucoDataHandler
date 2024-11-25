@@ -184,17 +184,9 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         return true
     }
 
-    private fun canScheduleExactAlarms(): Boolean {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            return alarmManager.canScheduleExactAlarms()
-        }
-        return true
-    }
-
     private fun requestExactAlarmPermission() {
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !canScheduleExactAlarms()) {
+            if (!Utils.canScheduleExactAlarms(this)) {
                 Log.i(LOG_ID, "Request exact alarm permission...")
                 startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
             }
@@ -204,7 +196,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     }
     private fun checkExactAlarmPermission() {
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !canScheduleExactAlarms()) {
+            if (!Utils.canScheduleExactAlarms(this)) {
                 Log.w(LOG_ID, "Schedule exact alarm is not active!!!")
                 txtScheduleExactAlarm.visibility = View.VISIBLE
                 txtScheduleExactAlarm.setOnClickListener {

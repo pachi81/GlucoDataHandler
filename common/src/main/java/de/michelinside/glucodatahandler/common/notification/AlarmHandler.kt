@@ -466,11 +466,9 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         if(isSnoozeActive) {
             alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             var hasExactAlarmPermission = true
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                if (!alarmManager!!.canScheduleExactAlarms()) {
-                    Log.d(LOG_ID, "Need permission to set exact alarm!")
-                    hasExactAlarmPermission = false
-                }
+            if (!Utils.canScheduleExactAlarms(context)) {
+                Log.d(LOG_ID, "Need permission to set exact alarm!")
+                hasExactAlarmPermission = false
             }
             val intent = Intent(context, AlarmSnoozeEndReceiver::class.java)
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)

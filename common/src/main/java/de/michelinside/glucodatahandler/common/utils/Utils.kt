@@ -2,6 +2,7 @@ package de.michelinside.glucodatahandler.common.utils
 
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.annotation.SuppressLint
+import android.app.AlarmManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -466,6 +467,14 @@ object Utils {
                 return true
         }
         return false
+    }
+
+    fun canScheduleExactAlarms(context: Context): Boolean {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            return alarmManager.canScheduleExactAlarms()
+        }
+        return true
     }
 
 }

@@ -213,16 +213,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         return true
     }
 
-    private fun canScheduleExactAlarms(): Boolean {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            return alarmManager.canScheduleExactAlarms()
-        }
-        return true
-    }
-
     private fun requestExactAlarmPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !canScheduleExactAlarms()) {
+        if (!Utils.canScheduleExactAlarms(this)) {
             Log.i(LOG_ID, "Request exact alarm permission...")
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
             builder
@@ -240,7 +232,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     }
     private fun checkExactAlarmPermission() {
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !canScheduleExactAlarms()) {
+            if (!Utils.canScheduleExactAlarms(this)) {
                 Log.w(LOG_ID, "Schedule exact alarm is not active!!!")
                 txtScheduleExactAlarm.visibility = View.VISIBLE
                 txtScheduleExactAlarm.setOnClickListener {

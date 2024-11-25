@@ -279,11 +279,9 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         Log.i(LOG_ID, "Trigger action $action for $alarmType in $delaySeconds seconds")
         alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         var hasExactAlarmPermission = true
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if(!alarmManager!!.canScheduleExactAlarms()) {
-                Log.d(LOG_ID, "Need permission to set exact alarm!")
-                hasExactAlarmPermission = false
-            }
+        if (!Utils.canScheduleExactAlarms(context)) {
+            Log.d(LOG_ID, "Need permission to set exact alarm!")
+            hasExactAlarmPermission = false
         }
         val intent = Intent(context, AlarmIntentReceiver::class.java)
         intent.action = action.toString()
