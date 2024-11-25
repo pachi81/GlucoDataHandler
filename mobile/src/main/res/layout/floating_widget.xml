@@ -5,8 +5,9 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@color/transparent_widget_background"
-    android:padding="2dp">
+    android:padding="1sp">
     <TableLayout
+        android:id="@+id/column1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <TableRow>
@@ -47,9 +48,11 @@
     </TableLayout>
 
     <TableLayout
+        android:id="@+id/column2"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginStart="6dp">
+        android:layout_marginStart="1sp"
+        >
         <TableRow
             android:layout_height="0dp"
             android:layout_weight="1">

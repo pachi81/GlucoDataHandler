@@ -131,6 +131,22 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                         apply()
                     }
                 }
+                if(!sharedPrefs.contains(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE_MIGRATION)) {
+                    if(sharedPrefs.contains(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE)) {
+                        val oldValue = sharedPrefs.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, 0)
+                        if(oldValue in 1..10) {
+                            Log.i(LOG_ID, "Migrating size from $oldValue")
+                            with(sharedPrefs.edit()) {
+                                putInt(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, oldValue+1)
+                                apply()
+                            }
+                        }
+                    }
+                    with(sharedPrefs.edit()) {
+                        putBoolean(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE_MIGRATION, true)
+                        apply()
+                    }
+                }
 
                 // full screen alarm notification
                 if(!sharedPrefs.contains(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED)) {

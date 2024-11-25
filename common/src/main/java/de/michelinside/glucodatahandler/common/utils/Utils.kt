@@ -108,14 +108,14 @@ object Utils {
             context.resources.displayMetrics
         ).toInt()
     }
-    /*
-    fun spToPx(sp: Float, context: Context): Float {
+
+    fun spToPx(sp: Float, context: Context): Int {
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_SP,
             sp,
             context.resources.displayMetrics
-        )
-    }*/
+        ).toInt()
+    }
 
     fun bytesToBundle(bytes: ByteArray): Bundle? {
         val parcel = Parcel.obtain()
