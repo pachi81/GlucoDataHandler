@@ -91,6 +91,13 @@
         </item>
     </group>
     <group
+        android:id="@+id/group_google_groups">
+        <item
+            android:id="@+id/action_google_groups"
+            android:title="@string/menu_google_groups"
+            app:showAsAction="never" />
+    </group>
+    <group
         android:id="@+id/group_facebook">
         <item
             android:id="@+id/action_facebook"

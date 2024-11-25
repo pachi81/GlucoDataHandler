@@ -253,6 +253,8 @@ object Constants {
     const val SHARED_PREF_SEND_TO_WATCH_INTERVAL = "send_to_watch_interval"
     const val SHARED_PREF_SEND_TO_RECEIVER_INTERVAL = "send_to_receiver_interval"
 
+    const val SHARED_PREF_DISCLAIMER_SHOWN = "gdh_disclaimer_shown"
+
     // Android Auto
     const val AA_MEDIA_ICON_STYLE_TREND = "trend"
     const val AA_MEDIA_ICON_STYLE_GLUCOSE_TREND = "glucose_trend"

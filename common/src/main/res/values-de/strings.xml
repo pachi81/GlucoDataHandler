@@ -636,6 +636,8 @@
     <string name="gda_speak_off">Vorlesen ist aus</string>
     <string name="enable_alarm_icon_toggle">Alarmsymbol aktivieren</string>
     <string name="enable_alarm_icon_toggle_summary">Alarmsymbol auf dem Hauptbildschirm aktivieren, um den Alarmstatus umzuschalten.</string>
+    <string name="gdh_disclaimer_title">Hinweis des Entwicklers</string>
+    <string name="gdh_disclaimer_message">Diese App wurde in meiner Freizeit als Hobbyprojekt entwickelt. Daher kann ich nicht garantieren, dass alle Funktionen auf jedem Gerät einwandfrei funktionieren. Ich arbeite jedoch stetig an Verbesserungen.\nBei Problemen oder Fragen kontaktieren Sie mich bitte direkt, bevor Sie eine negative Bewertung abgeben.\nUm über wichtige Updates und Fehlerbehebungen informiert zu werden, können Sie sich gerne in der Facebook-Gruppe oder bei Google Groups anmelden.</string>
 
     <!-- v1.3  -->
 

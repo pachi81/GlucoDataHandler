@@ -217,6 +217,17 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun checkNewSettings() {
         try {
+            if(!sharedPref.contains(Constants.SHARED_PREF_DISCLAIMER_SHOWN)) {
+                Dialogs.showOkDialog(this,
+                    CR.string.gdh_disclaimer_title,
+                    CR.string.gdh_disclaimer_message,
+                    null
+                )
+                with(sharedPref.edit()) {
+                    putString(Constants.SHARED_PREF_DISCLAIMER_SHOWN, BuildConfig.VERSION_NAME)
+                    apply()
+                }
+            }
             if(!sharedPref.contains(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU)) {
                 if(sharedPref.getBoolean(Constants.SHARED_PREF_LIBRE_ENABLED, false)) {
                     Dialogs.showOkCancelDialog(this,
@@ -341,6 +352,14 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                         "mailto","GlucoDataHandler@michel-inside.de", null))
                     mailIntent.putExtra(Intent.EXTRA_SUBJECT, "GlucoDataAuto v" + BuildConfig.VERSION_NAME)
                     startActivity(mailIntent)
+                    return true
+                }
+                R.id.action_google_groups -> {
+                    val browserIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(resources.getText(CR.string.google_gdh_group_url).toString())
+                    )
+                    startActivity(browserIntent)
                     return true
                 }
                 R.id.action_facebook -> {

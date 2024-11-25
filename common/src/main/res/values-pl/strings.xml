@@ -652,23 +652,23 @@
     <string name="src_librelink_error4">Error, please re-login to LibreLinkUp App and check for any steps to be done!</string>
     <string name="src_librelink_error4_type">Error type %1$s, please re-login to LibreLinkUp App and check for any steps to be done!</string>
     <string name="source_libre_auto_accept_tou">Auto accept new terms</string>
-    <string name="source_libre_auto_accept_tou_summary">Automatically accept new Terms of Use to prevent stopping receiving datas.\nThere will be no further information to the new terms! If you want to read the new terms, please disable this setting and use LibreLinkUp App in case of Error 4.</string>
-    <string name="src_librelink_error4_tou">New Terms of Use have to accept. Either enable auto accept these terms in LibreLinkUp settings or re-login to LibreLinkUp app and accept the terms.</string>
-    <string name="src_libre_tou_message">GlucoDataHandler can automatically accept new Terms of Use for LibreLinkUp.\nTo enable this feature, press OK.\nTo manually accept the terms in the LibreLinkUp App, press Cancel.</string>
-    <string name="src_librelink_error2">Invalid user or password!\nPlease check your source settings or (re-)install and login to LibreLinkUp App and verify your account settings!</string>
-    <string name="last_value_on_server">Last value on server from %1$s</string>
-    <string name="no_data_in_server_response">No values found on server.</string>
-    <string name="http_error_429">Too many requests!\nPlease stop all other apps following the same account!</string>
+    <string name="source_libre_auto_accept_tou_summary">By enabling this, you automatically accept new Terms of Use to ensure continuous data reception. You won\'t be informed about new terms separately. If you want to read them, disable this setting and refer to the LibreLinkUp app in case of error 4.</string>
+    <string name="src_librelink_error4_tou">New Terms of Use must be accepted. Enable automatic acceptance in LibreLinkUp source settings, or log in again to the LibreLinkUp app and accept the terms.</string>
+    <string name="src_libre_tou_message">GlucoDataHandler can automatically accept new Terms of Use for LibreLinkUp.\nPress OK to enable this feature, or Cancel to read and manually accept the terms in the LibreLinkUp app.</string>
+    <string name="src_librelink_error2">Incorrect username or password. Please verify your LibreLinkUp source settings. If needed, try logging in again or reinstalling the LibreLinkUp app and checking your account settings.</string>
+    <string name="last_value_on_server">Last glucose reading on server from %1$s</string>
+    <string name="no_data_in_server_response">No glucose readings found on server.</string>
+    <string name="http_error_429">Too many requests!\nPlease stop all other apps are accessing the same account!</string>
     <string name="state_await_data">Awaiting data</string>
     <string name="pref_send_battery_level_to_watch">Send battery level</string>
     <string name="pref_send_battery_level_to_watch_summary">Send battery level to watch to show in complication and on main screen.</string>
     <string name="pref_battery_level">Show battery level</string>
-    <string name="forward_to_watch_interval_summary">Minimum interval in minutes between two glucose values to send again to the watch.\nAlarms and very low glucose values will always be sent.</string>
-    <string name="forward_to_values_summary">Minimum interval in minutes between two glucose values to send again.</string>
-    <string name="alarm_repeat_summary">The alarm will sound and vibrate repeatedly until the notification is dismissed or repeat time elapsed.</string>
-    <string name="alarm_repeat_time">Max repeat time</string>
-    <string name="alarm_repeat_time_summary">Max repeat time in minutes. 0 for unlimited.</string>
-    <string name="wear_source_info">If this data source is already active on your phone, you don\'t need to activate it again on watch.</string>
+    <string name="forward_to_watch_interval_summary">Set the minimum time (in minutes) between glucose measurements before sending a new update to the watch.\nAlarms and very low measurements will always be sent.</string>
+    <string name="forward_to_values_summary">Set the minimum time (in minutes) between glucose measurements before sending a new update to the receivers.</string>
+    <string name="alarm_repeat_summary">The alarm will sound and vibrate repeatedly until you dismiss the notification or the set max alarm duration is reached.</string>
+    <string name="alarm_repeat_time">Max alarm duration</string>
+    <string name="alarm_repeat_time_summary">Specify the maximum time (in minutes) the alarm will sound and vibrate. A value of 0 means the alarm will repeat indefinitely.</string>
+    <string name="wear_source_info">To enable sources, please set them up in the phone app first. Activate sources on your watch only if you don\'t receive the data on your phone yet.</string>
     <string name="pref_source_dexcom_share_info_summary">To receive data from Dexcom Share servers:\n - go into Dexcom app and create a follower\n - check under connections it says Share On\n - enter username and password (add country code for phone number)\n - check setting for US/Non-US\n\nImportant: it does not work with a follower user! You need to use your Dexcom clarity user</string>
 
 </resources>
