@@ -16,6 +16,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.graphics.drawable.toDrawable
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
@@ -115,11 +116,16 @@ object LockScreenWallpaper : NotifierInterface, SharedPreferences.OnSharedPrefer
     private fun setWallpaper(bitmap: Bitmap?, context: Context) {
         GlobalScope.launch {
             try {
-                Log.v(LOG_ID, "updateLockScreen called for bitmap $bitmap")
                 val wallpaperManager = WallpaperManager.getInstance(context)
-                val wallpaper = if (bitmap != null) createWallpaper(bitmap, context) else null
-                wallpaperManager.setBitmap(wallpaper, null, false, WallpaperManager.FLAG_LOCK)
-                //wallpaper?.recycle()
+                if (bitmap != null) {
+                    Log.i(LOG_ID, "Update lockscreen wallpaper")
+                    val wallpaper =  createWallpaper(bitmap, context)
+                    wallpaperManager.setBitmap(wallpaper, null, false, WallpaperManager.FLAG_LOCK)
+                    wallpaper!!.recycle()
+                } else {
+                    Log.i(LOG_ID, "Remove lockscreen wallpaper")
+                    wallpaperManager.clear()
+                }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "updateLockScreen exception: " + exc.message.toString())
             }
@@ -134,7 +140,7 @@ object LockScreenWallpaper : NotifierInterface, SharedPreferences.OnSharedPrefer
             val screenDPI = BitmapUtils.getScreenDpi().toFloat()
             val wallpaper = Bitmap.createBitmap(screenWidth, screenHeigth, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(wallpaper)
-            val drawable = BitmapDrawable(context.resources, bitmap)
+            val drawable = bitmap.toDrawable(context.resources)
             drawable.setBounds(0, 0, screenWidth, screenHeigth)
             val xOffset = ((screenWidth-bitmap.width)/2F) //*1.2F-(screenDPI*0.3F)
             val yOffset = max(0F, ((screenHeigth-bitmap.height)*yPos/100F)) //-(screenDPI*0.3F))
