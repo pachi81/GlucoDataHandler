@@ -642,4 +642,28 @@
 
     <!-- v1.3  -->
 
+    <string name="src_librelink_error4">Erro, por favor, faça login novamente no aplicativo LibreLinkUp e verifique se há alguma etapa a ser realizada!</string>
+    <string name="src_librelink_error4_type">Tipo de erro %1$s, por favor, faça login novamente no aplicativo LibreLinkUp e verifique se há alguma etapa a ser realizada!</string>
+    <string name="source_libre_auto_accept_tou">Aceitar automaticamente novos termos</string>
+    <string name="source_libre_auto_accept_tou_summary">Ao habilitar isso, você aceita automaticamente os novos Termos de Uso para garantir a recepção contínua de dados. Você não será informado sobre novos termos separadamente. Se desejar lê-los, desabilite esta configuração e consulte o aplicativo LibreLinkUp em caso de erro 4.</string>
+    <string name="src_librelink_error4_tou">Novos Termos de Uso devem ser aceitos. Habilite a aceitação automática nas configurações de origem do LibreLinkUp ou faça login novamente no aplicativo LibreLinkUp e aceite os termos.</string>
+    <string name="src_libre_tou_message">GlucoDataHandler pode aceitar automaticamente os novos Termos de Uso para LibreLinkUp.\nPressione OK para habilitar este recurso ou Cancelar para ler e aceitar manualmente os termos no aplicativo LibreLinkUp.</string>
+    <string name="src_librelink_error2">Nome de usuário ou senha incorretos. Por favor, verifique suas configurações de origem do LibreLinkUp. Se necessário, tente fazer login novamente ou reinstalar o aplicativo LibreLinkUp e verificar as configurações da sua conta.</string>
+    <string name="last_value_on_server">Última leitura de glicose no servidor de %1$s</string>
+    <string name="no_data_in_server_response">Nenhuma leitura de glicose encontrada no servidor.</string>
+    <string name="http_error_429">Muitas solicitações!\nPor favor, pare todos os outros aplicativos que estão acessando a mesma conta!</string>
+    <string name="state_await_data">Aguardando dados</string>
+    <string name="pref_send_battery_level_to_watch">Enviar nível da bateria</string>
+    <string name="pref_send_battery_level_to_watch_summary">Enviar nível da bateria para o relógio para mostrar na complicação e na tela principal.</string>
+    <string name="pref_battery_level">Mostrar nível da bateria</string>
+    <string name="forward_to_watch_interval_summary">Defina o tempo mínimo (em minutos) entre as medições de glicose antes de enviar uma nova atualização para o relógio.\nAlarmes e medições muito baixas sempre serão enviados.</string>
+    <string name="forward_to_values_summary">Defina o tempo mínimo (em minutos) entre as medições de glicose antes de enviar uma nova atualização para os receptores.</string>
+    <string name="alarm_repeat_summary">O alarme tocará e vibrará repetidamente até que você descarte a notificação ou a duração máxima definida do alarme seja atingida.</string>
+    <string name="alarm_repeat_time">Duração máxima do alarme</string>
+    <string name="alarm_repeat_time_summary">Especifique o tempo máximo (em minutos) que o alarme tocará e vibrará. Um valor de 0 significa que o alarme será repetido indefinidamente.</string>
+    <string name="wear_source_info">Para habilitar as fontes, configure-as primeiro no aplicativo do telefone. Ative as fontes no seu relógio somente se você ainda não receber os dados no seu telefone.</string>
+    <string name="pref_source_dexcom_share_info_summary">Para receber dados dos servidores Dexcom Share:\n - acesse o aplicativo Dexcom e crie um seguidor\n - verifique em conexões se diz Compartilhamento Ativado\n - insira o nome de usuário e a senha (adicione o código do país para o número de telefone)\n - verifique a configuração para EUA/Fora dos EUA\n\nImportante: não funciona com um usuário seguidor! Você precisa usar seu usuário Dexcom Clarity</string>
+    <string name="gdh_disclaimer_title">Nota do Desenvolvedor</string>
+    <string name="gdh_disclaimer_message">Este aplicativo foi desenvolvido no meu tempo livre como um projeto de hobby. Portanto, não posso garantir que todos os recursos funcionarão perfeitamente em todos os dispositivos. No entanto, estou trabalhando constantemente em melhorias.\nSe você encontrar algum problema ou tiver alguma dúvida, entre em contato comigo diretamente antes de deixar uma avaliação negativa. \nPara se manter informado sobre atualizações importantes e correções de bugs, você pode participar do grupo do Facebook ou dos Grupos do Google.</string>
+
 </resources>

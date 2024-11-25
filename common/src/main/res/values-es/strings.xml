@@ -645,4 +645,28 @@
 
     <!-- v1.3  -->
 
+    <string name="src_librelink_error4">Error, por favor vuelve a iniciar sesión en la aplicación LibreLinkUp y comprueba si hay algún paso que debas realizar.</string>
+    <string name="src_librelink_error4_type">Tipo de error %1$s, por favor vuelve a iniciar sesión en la aplicación LibreLinkUp y comprueba si hay algún paso que debas realizar.</string>
+    <string name="source_libre_auto_accept_tou">Aceptar automáticamente los nuevos términos</string>
+    <string name="source_libre_auto_accept_tou_summary">Al habilitar esto, aceptas automáticamente los nuevos Términos de uso para garantizar la recepción continua de datos. No se te informará sobre los nuevos términos por separado. Si deseas leerlos, deshabilita esta configuración y consulta la aplicación LibreLinkUp en caso de error 4.</string>
+    <string name="src_librelink_error4_tou">Se deben aceptar los nuevos Términos de uso. Habilita la aceptación automática en la configuración de origen de LibreLinkUp o vuelve a iniciar sesión en la aplicación LibreLinkUp y acepta los términos.</string>
+    <string name="src_libre_tou_message">GlucoDataHandler puede aceptar automáticamente los nuevos Términos de uso para LibreLinkUp.\nPulsa Aceptar para habilitar esta función o Cancelar para leer y aceptar manualmente los términos en la aplicación LibreLinkUp.</string>
+    <string name="src_librelink_error2">Nombre de usuario o contraseña incorrectos. Por favor, verifica la configuración de origen de LibreLinkUp. Si es necesario, intenta iniciar sesión de nuevo o reinstalar la aplicación LibreLinkUp y comprobar la configuración de tu cuenta.</string>
+    <string name="last_value_on_server">Última lectura de glucosa en el servidor de %1$s</string>
+    <string name="no_data_in_server_response">No se encontraron lecturas de glucosa en el servidor.</string>
+    <string name="http_error_429">¡Demasiadas solicitudes!\nPor favor, detén todas las demás aplicaciones que acceden a la misma cuenta.</string>
+    <string name="state_await_data">Esperando datos</string>
+    <string name="pref_send_battery_level_to_watch">Enviar nivel de batería</string>
+    <string name="pref_send_battery_level_to_watch_summary">Enviar el nivel de batería al reloj para mostrarlo en la complicación y en la pantalla principal.</string>
+    <string name="pref_battery_level">Mostrar nivel de batería</string>
+    <string name="forward_to_watch_interval_summary">Establece el tiempo mínimo (en minutos) entre las mediciones de glucosa antes de enviar una nueva actualización al reloj.\nLas alarmas y las mediciones muy bajas siempre se enviarán.</string>
+    <string name="forward_to_values_summary">Establece el tiempo mínimo (en minutos) entre las mediciones de glucosa antes de enviar una nueva actualización a los receptores.</string>
+    <string name="alarm_repeat_summary">La alarma sonará y vibrará repetidamente hasta que descartes la notificación o se alcance la duración máxima de la alarma establecida.</string>
+    <string name="alarm_repeat_time">Duración máxima de la alarma</string>
+    <string name="alarm_repeat_time_summary">Especifica el tiempo máximo (en minutos) que la alarma sonará y vibrará. Un valor de 0 significa que la alarma se repetirá indefinidamente.</string>
+    <string name="wear_source_info">Para habilitar las fuentes, configúralas primero en la aplicación del teléfono. Activa las fuentes en tu reloj solo si aún no recibes los datos en tu teléfono.</string>
+    <string name="pref_source_dexcom_share_info_summary">Para recibir datos de los servidores de Dexcom Share:\n - ve a la aplicación Dexcom y crea un seguidor\n - comprueba en conexiones que diga Compartir activado\n - introduce el nombre de usuario y la contraseña (añade el código de país para el número de teléfono)\n - comprueba la configuración para EE. UU./Fuera de EE. UU.\n\nImportante: ¡no funciona con un usuario seguidor! Necesitas usar tu usuario de Dexcom Clarity</string>
+    <string name="gdh_disclaimer_title">Nota del desarrollador</string>
+    <string name="gdh_disclaimer_message">Esta aplicación fue desarrollada en mi tiempo libre como un proyecto de afición. Por lo tanto, no puedo garantizar que todas las funciones funcionen perfectamente en todos los dispositivos. Sin embargo, estoy trabajando constantemente en mejoras.\nSi encuentras algún problema o tienes alguna pregunta, por favor contáctame directamente antes de dejar una reseña negativa. \nPara mantenerte informado sobre actualizaciones importantes y correcciones de errores, puedes unirte al grupo de Facebook o a los Grupos de Google.</string>
+
 </resources>

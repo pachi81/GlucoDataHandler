@@ -646,4 +646,28 @@
 
     <!-- v1.3  -->
 
+    <string name="src_librelink_error4">Erreur, veuillez vous reconnecter à l\'application LibreLinkUp et vérifier les étapes à suivre !</string>
+    <string name="src_librelink_error4_type">Type d\'erreur %1$s, veuillez vous reconnecter à l\'application LibreLinkUp et vérifier les étapes à suivre !</string>
+    <string name="source_libre_auto_accept_tou">Accepter automatiquement les nouvelles conditions d\'utilisation</string>
+    <string name="source_libre_auto_accept_tou_summary">En activant cette option, vous acceptez automatiquement les nouvelles conditions d\'utilisation pour assurer une réception continue des données. Vous ne serez pas informé séparément des nouvelles conditions. Si vous souhaitez les lire, désactivez ce paramètre et reportez-vous à l\'application LibreLinkUp en cas d\'erreur 4.</string>
+    <string name="src_librelink_error4_tou">Les nouvelles conditions d\'utilisation doivent être acceptées. Activez l\'acceptation automatique dans les paramètres de source LibreLinkUp, ou reconnectez-vous à l\'application LibreLinkUp et acceptez les conditions.</string>
+    <string name="src_libre_tou_message">GlucoDataHandler peut accepter automatiquement les nouvelles conditions d\'utilisation de LibreLinkUp.\nAppuyez sur OK pour activer cette fonctionnalité, ou sur Annuler pour lire et accepter manuellement les conditions dans l\'application LibreLinkUp.</string>
+    <string name="src_librelink_error2">Nom d\'utilisateur ou mot de passe incorrect. Veuillez vérifier vos paramètres de source LibreLinkUp. Si nécessaire, essayez de vous reconnecter ou de réinstaller l\'application LibreLinkUp et de vérifier les paramètres de votre compte.</string>
+    <string name="last_value_on_server">Dernière lecture de glucose sur le serveur à partir de %1$s</string>
+    <string name="no_data_in_server_response">Aucune lecture de glucose trouvée sur le serveur.</string>
+    <string name="http_error_429">Trop de requêtes !\nVeuillez arrêter toutes les autres applications qui accèdent au même compte !</string>
+    <string name="state_await_data">En attente de données</string>
+    <string name="pref_send_battery_level_to_watch">Envoyer le niveau de batterie</string>
+    <string name="pref_send_battery_level_to_watch_summary">Envoyer le niveau de batterie à la montre pour l\'afficher dans la complication et sur l\'écran principal.</string>
+    <string name="pref_battery_level">Afficher le niveau de batterie</string>
+    <string name="forward_to_watch_interval_summary">Définissez le temps minimum (en minutes) entre les mesures de glucose avant d\'envoyer une nouvelle mise à jour à la montre.\nLes alarmes et les mesures très basses seront toujours envoyées.</string>
+    <string name="forward_to_values_summary">Définissez le temps minimum (en minutes) entre les mesures de glucose avant d\'envoyer une nouvelle mise à jour aux récepteurs.</string>
+    <string name="alarm_repeat_summary">L\'alarme sonnera et vibrera de manière répétée jusqu\'à ce que vous rejetiez la notification ou que la durée maximale de l\'alarme définie soit atteinte.</string>
+    <string name="alarm_repeat_time">Durée maximale de l\'alarme</string>
+    <string name="alarm_repeat_time_summary">Spécifiez la durée maximale (en minutes) pendant laquelle l\'alarme sonnera et vibrera. Une valeur de 0 signifie que l\'alarme se répétera indéfiniment.</string>
+    <string name="wear_source_info">Pour activer les sources, veuillez les configurer d\'abord dans l\'application du téléphone. Activez les sources sur votre montre uniquement si vous ne recevez pas encore les données sur votre téléphone.</string>
+    <string name="pref_source_dexcom_share_info_summary">Pour recevoir des données des serveurs Dexcom Share :\n - accédez à l\'application Dexcom et créez un abonné\n - vérifiez sous connexions qu\'il est indiqué Partager activé\n - saisissez le nom d\'utilisateur et le mot de passe (ajoutez l\'indicatif du pays pour le numéro de téléphone)\n - vérifiez le paramètre pour États-Unis/Hors États-Unis\n\nImportant : cela ne fonctionne pas avec un utilisateur abonné ! Vous devez utiliser votre utilisateur Dexcom Clarity</string>
+    <string name="gdh_disclaimer_title">Note du développeur</string>
+    <string name="gdh_disclaimer_message">Cette application a été développée pendant mon temps libre en tant que projet de loisir. Par conséquent, je ne peux pas garantir que toutes les fonctionnalités fonctionneront parfaitement sur tous les appareils. Cependant, je travaille constamment à des améliorations.\nSi vous rencontrez des problèmes ou avez des questions, veuillez me contacter directement avant de laisser un avis négatif. \nPour rester informé des mises à jour importantes et des corrections de bugs, vous pouvez rejoindre le groupe Facebook ou les Groupes Google.</string>
+
 </resources>
