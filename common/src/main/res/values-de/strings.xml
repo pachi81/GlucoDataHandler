@@ -649,11 +649,11 @@
     <string name="last_value_on_server">Letzter Glukosewert auf dem Server von %1$s</string>
     <string name="no_data_in_server_response">Keine Glukosewerte auf dem Server gefunden.</string>
     <string name="http_error_429">Zu viele Anfragen!\nBitte beende alle anderen Apps, die auf dasselbe Konto zugreifen!</string>
-    <string name="state_await_data">Warte auf Daten</string>
+    <string name="state_await_data">Verbindungsaufbau</string>
     <string name="pref_send_battery_level_to_watch">Batteriestand senden</string>
     <string name="pref_send_battery_level_to_watch_summary">Sende den Batteriestand an die Uhr, um ihn in der Komplikation und auf dem Hauptbildschirm anzuzeigen.</string>
     <string name="pref_battery_level">Batteriestand anzeigen</string>
-    <string name="forward_to_watch_interval_summary">Lege die minimale Zeit (in Minuten) zwischen Glukosemessungen fest, bevor ein neues Update an die Uhr gesendet wird.\nAlarme und sehr niedrige Messwerte werden immer gesendet.</string>
+    <string name="forward_to_watch_interval_summary">Lege die minimale Zeit (in Minuten) zwischen Glukosemessungen fest, bevor ein neues Update an die Uhr gesendet wird.\nAlarme und sehr tiefe Werte werden immer gesendet.</string>
     <string name="forward_to_values_summary">Lege die minimale Zeit (in Minuten) zwischen Glukosemessungen fest, bevor ein neues Update an die Empfänger gesendet wird.</string>
     <string name="alarm_repeat_summary">Der Alarm ertönt und vibriert wiederholt, bis du die Benachrichtigung schließt oder die eingestellte maximale Alarmdauer erreicht ist.</string>
     <string name="alarm_repeat_time">Maximale Alarmdauer</string>

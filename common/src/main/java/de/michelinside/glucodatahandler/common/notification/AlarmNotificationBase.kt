@@ -196,6 +196,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         if (curNotification > 0) {
             stopNotification(curNotification, context, fromClient = fromClient)
         } else {
+            stopVibrationAndSound()  // force stop!
             onNotificationStopped(0, context)
         }
     }
@@ -888,7 +889,9 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     }
                 }
                 NotifySource.ALARM_STATE_CHANGED -> {
-                    getAlarmState(context)
+                    if (getAlarmState(context) != AlarmState.ACTIVE) {
+                        stopCurrentNotification(context)
+                    }
                 }
                 else -> Log.w(LOG_ID, "Unsupported source $dataSource")
             }

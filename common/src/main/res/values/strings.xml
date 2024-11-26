@@ -4,7 +4,51 @@
     <string name="name" translatable="false">GlucoDataHandler</string>
     <string name="source_gdh" translatable="false">GlucoDataHandler</string>
 
-    <string name="alarm_toggle" translatable="false">Alarm toggle</string>
+    <string name="unit_mgdl" translatable="false">mg/dl</string>
+    <string name="unit_mmol" translatable="false">mmol/l</string>
+
+    <string name="info_label_iob" translatable="false">IOB</string>
+    <string name="info_label_cob" translatable="false">COB</string>
+    <string name="info_label_iob_talkback" translatable="false">I.O.B.</string>
+    <string name="info_label_cob_talkback" translatable="false">C.O.B.</string>
+
+    <string name="menu_facebook" translatable="false">Facebook</string>
+    <string name="menu_google_groups" translatable="false">Google Groups</string>
+
+    <string name="help_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
+    <string name="update_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/releases</string>
+    <string name="support_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/issues</string>
+    <string name="gda_support_link" translatable="false">https://github.com/pachi81/GlucoDataAuto/issues</string>
+    <string name="watchdrip_link" translatable="false">https://github.com/bigdigital/watchdrip/blob/main/README.md</string>
+    <string name="esel_link" translatable="false">https://github.com/BernhardRo/Esel/blob/master/README.md</string>
+    <string name="dexcom_account_non_us_url" translatable="false">https://myaccount.dexcom.eu</string>
+    <string name="dexcom_account_us_url" translatable="false">https://myaccount.dexcom.com</string>
+    <string name="facebook_gdh_group_url" translatable="false">https://www.facebook.com/groups/823964236542396</string>
+    <string name="google_gdh_group_url" translatable="false">https://groups.google.com/g/glucodatahandler</string>
+
+
+    <string name="vibrate_pattern_super_mario" translatable="false">Super Mario</string>
+    <string name="vibrate_pattern_turtles" translatable="false">Turtles</string>
+    <string name="vibrate_pattern_final_fantasy" translatable="false">Final Fantasy</string>
+    <string name="vibrate_pattern_star_wars" translatable="false">Star Wars</string>
+    <string name="vibrate_pattern_power_rangers" translatable="false">Power Rangers</string>
+    <string name="vibrate_pattern_james_bond" translatable="false">James Bond</string>
+    <string name="vibrate_pattern_mortal_kombat" translatable="false">Mortal Kombat</string>
+
+    <string name="empty_string" translatable="false" />
+    <string name="source_juggluco" translatable="false">Juggluco</string>
+    <string name="source_xdrip" translatable="false">xDrip+</string>
+    <string name="source_libreview" translatable="false">LibreLinkUp</string>
+    <string name="source_nightscout" translatable="false">Nightscout</string>
+    <string name="source_dexcom_share" translatable="false">Dexcom Share</string>
+    <string name="source_dexcom_byoda" translatable="false">Dexcom BYODA</string>
+    <string name="source_ns_emulator" translatable="false">Dexcom/Eversense</string>
+    <string name="source_diabox" translatable="false">DiaBox</string>
+    <string name="pref_source_eversense_info" translatable="false">Eversense (ESEL)/Dexcom BYODA (xDrip+)</string>
+    <string name="pref_source_dexcom_byoda_info" translatable="false">Dexcom BYODA (AAPS)</string>
+
+    <!-- start of resources -->
+
     <string name="info_label_sensor_id">Sensor</string>
     <string name="info_label_value">Value</string>
     <string name="info_label_raw">Raw</string>
@@ -21,15 +65,6 @@
     <string name="elapsed_time">%1$d min</string>
     <string name="elapsed_time_hour">\> 1h</string>
 
-
-    <string name="unit_mgdl" translatable="false">mg/dl</string>
-    <string name="unit_mmol" translatable="false">mmol/l</string>
-
-    <string name="info_label_iob" translatable="false">IOB</string>
-    <string name="info_label_cob" translatable="false">COB</string>
-    <string name="info_label_iob_talkback" translatable="false">I.O.B.</string>
-    <string name="info_label_cob_talkback" translatable="false">C.O.B.</string>
-
     <string name="rate_double_up">rising very quickly</string>
     <string name="rate_single_up">rising quickly</string>
     <string name="rate_forty_five_up">rising</string>
@@ -40,7 +75,6 @@
 
     <string name="button_ok">OK</string>
     <string name="button_cancel">Cancel</string>
-    <string name="empty_string" translatable="false" />
 
     <string name="alarm_none">-</string>
     <string name="alarm_very_low">very low</string>
@@ -65,19 +99,6 @@
     <string name="menu_update">Updates</string>
     <string name="menu_support">Support</string>
     <string name="menu_help">Help</string>
-    <string name="menu_facebook" translatable="false">Facebook</string>
-    <string name="menu_google_groups" translatable="false">Google Groups</string>
-
-    <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
-    <string name="update_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/releases</string>
-    <string name="support_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/issues</string>
-    <string name="gda_support_link" translatable="false">https://github.com/pachi81/GlucoDataAuto/issues</string>
-    <string name="watchdrip_link" translatable="false">https://github.com/bigdigital/watchdrip/blob/main/README.md</string>
-    <string name="esel_link" translatable="false">https://github.com/BernhardRo/Esel/blob/master/README.md</string>
-    <string name="dexcom_account_non_us_url" translatable="false">https://myaccount.dexcom.eu</string>
-    <string name="dexcom_account_us_url" translatable="false">https://myaccount.dexcom.com</string>
-    <string name="facebook_gdh_group_url" translatable="false">https://www.facebook.com/groups/823964236542396</string>
-    <string name="google_gdh_group_url" translatable="false">https://groups.google.com/g/glucodatahandler</string>
 
     <!-- tasker -->
 
@@ -88,26 +109,8 @@
     <string name="tasker_android_auto_connection_state">Android Auto connection</string>
     <string name="tasker_target_range_state">Glucose range change</string>
 
-    <string name="vibrate_pattern_super_mario" translatable="false">Super Mario</string>
-    <string name="vibrate_pattern_turtles" translatable="false">Turtles</string>
-    <string name="vibrate_pattern_final_fantasy" translatable="false">Final Fantasy</string>
-    <string name="vibrate_pattern_star_wars" translatable="false">Star Wars</string>
-    <string name="vibrate_pattern_power_rangers" translatable="false">Power Rangers</string>
-    <string name="vibrate_pattern_james_bond" translatable="false">James Bond</string>
-    <string name="vibrate_pattern_mortal_kombat" translatable="false">Mortal Kombat</string>
-
     <!-- sources -->
 
-    <string name="source_juggluco" translatable="false">Juggluco</string>
-    <string name="source_xdrip" translatable="false">xDrip+</string>
-    <string name="source_libreview" translatable="false">LibreLinkUp</string>
-    <string name="source_nightscout" translatable="false">Nightscout</string>
-    <string name="source_dexcom_share" translatable="false">Dexcom Share</string>
-    <string name="source_dexcom_byoda" translatable="false">Dexcom BYODA</string>
-    <string name="source_ns_emulator" translatable="false">Dexcom/Eversense</string>
-    <string name="source_diabox" translatable="false">DiaBox</string>
-    <string name="pref_source_eversense_info" translatable="false">Eversense (ESEL)/Dexcom BYODA (xDrip+)</string>
-    <string name="pref_source_dexcom_byoda_info" translatable="false">Dexcom BYODA (AAPS)</string>
     <string name="source_phone">Phone</string>
     <string name="source_wear">Wear</string>
 
