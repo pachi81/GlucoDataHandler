@@ -45,7 +45,7 @@
     <string name="activity_main_car_connected_label">Android Auto: подключено</string>
     <string name="activity_main_car_disconnected_label">Android Auto: отключено</string>
     <string name="activity_main_high_contrast_enabled">Специальные возможности с высокой контрастностью активны!\nНажмите здесь, чтобы перейти к настройкам.</string>
-    <string name="no_new_value">Нет нового значения в течение %1$d минут!</string>
+    <string name="no_new_value">Новые значения не приходят больше %1$d минут!</string>
 
     <string name="menu_settings">Настройки</string>
     <string name="menu_sources">Источники</string>
@@ -411,7 +411,7 @@
     <string name="obsolete_alarm_notification_name">Тревога: устаревшие данные</string>
     <string name="alarm_obsolete_summary">Тревога, если нет нового значения глюкозы в течение %1$s минут.</string>
     <string name="obsolete_alarm_notification_descr">Это уведомление появится, если нет нового значения в течение интервала.</string>
-    <string name="obsolete_alarm_text">Нет нового значения!</string>
+    <string name="obsolete_alarm_text">Не приходят данные!</string>
 
     <string name="permission_notification_title">Отображение уведомлений отключено!!!</string>
     <string name="permission_notification_message">GlucoDataHandler нуждается в уведомлениях для выполнения задач в фоновом режиме и для отображения тревоги.</string>
