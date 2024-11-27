@@ -16,7 +16,7 @@
     <string name="info_label_alarm">Сигнал тревоги</string>
     <string name="info_label_source">Источник</string>
     <string name="info_label_per_minute">в минуту</string>
-    <string name="no_data">Данные еще не получены!\nПожалуйста, сначала настройте источник.</string>
+    <string name="no_data">Данные еще не получены!\nСначала необходимо выбрать и настроить источник.</string>
 
     <string name="elapsed_time">%1$d мин.</string>
     <string name="elapsed_time_hour">\> 1 ч</string>
@@ -48,7 +48,7 @@
     <string name="no_new_value">Новые значения не приходят больше %1$d минут!</string>
 
     <string name="menu_settings">Настройки</string>
-    <string name="menu_sources">Источники</string>
+    <string name="menu_sources">Источники данных</string>
     <string name="menu_group_github">GitHub</string>
     <string name="menu_update">Обновления</string>
     <string name="menu_support">Поддержка</string>
@@ -71,7 +71,7 @@
     <string name="source_state_not_active">Не активен</string>
     <string name="source_state_in_progress">В процессе</string>
     <string name="source_state_ok">ОК</string>
-    <string name="source_state_no_new_value">Нет нового значения</string>
+    <string name="source_state_no_new_value">Данные не приходят</string>
     <string name="source_state_no_connection">Нет интернет-соединения</string>
     <string name="source_state_error">Ошибка</string>
 
@@ -161,8 +161,8 @@
     <string name="pref_button_select_xdrip_broadcast_target_summary">Выберите получателей, которым будет отправляться широковещательное сообщение xDrip+. Глобальное широковещательное сообщение будет отправлено каждому приложению, динамически зарегистрированному на широковещательное сообщение.</string>
     <string name="pref_switch_use_mmol">Использовать ммоль/л</string>
     <string name="pref_switch_use_mmol_summary">Использовать ммоль/л вместо мг/дл.</string>
-    <string name="pref_switch_use_5_min_delta">Дельта за 5 минут</string>
-    <string name="pref_switch_use_5_min_delta_summary">Включите это, чтобы использовать значения дельты для интервала 5 минут, в противном случае используется интервал 1 минута.</string>
+    <string name="pref_switch_use_5_min_delta">5-минутный интервал анализа</string>
+    <string name="pref_switch_use_5_min_delta_summary">Если активировано, разность показаний будет анализироваться c 5-минутным интервалом, в противном случае будет использоваться 1-минутный интервал.</string>
     <string name="pref_color_alarm">Цвет для очень высокого/низкого значения</string>
     <string name="pref_color_alarm_summary">Цвет для очень высоких и очень низких значений глюкозы.</string>
     <string name="pref_color_out_of_range">Цвет для высокого/низкого значения</string>
@@ -171,16 +171,16 @@
     <string name="pref_color_ok_summary">Цвет для значений глюкозы в целевом диапазоне.</string>
     <string name="pref_notification">Уведомление</string>
     <string name="pref_notification_summary">Показывает постоянное уведомление с текущей стрелкой тренда, значением глюкозы и дельты в строке состояния.\nЭто уведомление предотвращает остановку приложения Android.</string>
-    <string name="pref_notification_icon">Значок строки состояния</string>
-    <string name="pref_notification_icon_summary">Стиль маленького значка строки состояния уведомления.</string>
-    <string name="pref_notification_big_icon">Большой значок строки состояния</string>
+    <string name="pref_notification_icon">Значок в строке состояния</string>
+    <string name="pref_notification_icon_summary">Стиль маленького значка в строке состояния уведомления.</string>
+    <string name="pref_notification_big_icon">Большой значок в строке состояния</string>
     <string name="pref_notification_big_icon_summary">Большой значок в строке состояния. Отключите эту настройку, если значок слишком большой и обрезается.</string>
     <string name="pref_notification_no_content">Скрыть содержимое</string>
     <string name="pref_notification_no_content_summary">Это удалит содержимое уведомления, чтобы остался только маленький значок с соответствующим значком.</string>
     <string name="pref_second_notification">2-е уведомление</string>
     <string name="pref_second_notification_summary">Показать уведомление без содержимого, чтобы иметь дополнительный значок в строке состояния.</string>
     <string name="pref_second_notification_icon">Значок 2-го уведомления в строке состояния</string>
-    <string name="pref_second_notification_icon_summary">Стиль маленького значка строки состояния уведомления.</string>
+    <string name="pref_second_notification_icon_summary">Стиль маленького значка в строке состояния уведомления.</string>
     <string name="pref_third_notification">3-е уведомление</string>
     <string name="pref_third_notification_icon">Значок 3-го уведомления в строке состояния</string>
     <string name="pref_floating_widget">Плавающий виджет</string>
@@ -307,10 +307,10 @@
     <string name="pref_gda_source_xdrip_info_2_summary">- включите \"Совместимая трансляция\"\n- проверьте, чтобы поле \"Идентифицировать получателей\" было пустым или добавьте новую строку с \"de.michelinside.glucodataauto\"</string>
     <string name="pref_source_librelinkup_info">Настройка LibreLinkUp</string>
     <string name="pref_source_librelinkup_info_summary">ВАЖНО: это не учетная запись, используемая для приложения FreeStyle Libre!\nЧтобы активировать подписчика LibreLinkUp:\n- откройте приложение FreeStyle Libre и выберите в меню \"Поделиться\" или \"Подключенные приложения\"\n- активируйте подключение LibreLinkUp\n- установите LibreLinkUp из PlayStore\n- настройте свою учетную запись и дождитесь приглашения</string>
-    <string name="menu_contact">Контакт</string>
+    <string name="menu_contact">Связаться</string>
     <string name="src_ns_iob_cob">Поддержка IOB/COB</string>
     <string name="src_ns_iob_cob_summary">Получать также значения IOB и COB из конечной точки Nightscout Pebble.</string>
-    <string name="pref_permanent_notification_info_summary">Уведомление обязательно для корректной работы приложения.\nНачиная с Android 13, вы можете смахнуть это уведомление. Если вы не хотите, чтобы уведомление возвращалось, установите \"Значок строки состояния\" на \"Значок приложения\" и включите \"Скрыть содержимое\".</string>
+    <string name="pref_permanent_notification_info_summary">Уведомление обязательно для корректной работы приложения.\nНачиная с Android 13, вы можете смахнуть это уведомление. Если вы не хотите, чтобы уведомление возвращалось, установите \"Значок в строке состояния\" на \"Значок приложения\" и включите \"Скрыть содержимое\".</string>
     <string name="source_aaps">AAPS</string>
     <string name="pref_source_aaps_info">AndroidAPS</string>
     <string name="pref_source_aaps_info_summary">Для получения значений из AAPS:\n- откройте приложение AAPS\n- перейдите в \"Конструктор конфигурации\"\n- включите \"Samsung Tizen\" или \"Транслятор данных\"</string>
@@ -366,18 +366,18 @@
     <string name="alarm_notifications_enabled_summary_on">Уведомления о тревоге активны на телефоне.\nПримечание: сигналы тревоги используют громкость будильника телефона.</string>
     <string name="alarm_notifications_enabled_summary_off">Уведомления о тревоге неактивны на телефоне.</string>
     <string name="stop_snooze">Остановить</string>
-    <string name="very_low_alarm_text">Очень низкий!</string>
-    <string name="very_low_text">Низкий!</string>
-    <string name="very_high_text">Высокий!</string>
-    <string name="very_high_alarm_text">Очень высокий!</string>
+    <string name="very_low_alarm_text">Очень низкий сахар!</string>
+    <string name="very_low_text">Низкий сахар!</string>
+    <string name="very_high_text">Высокий сахар!</string>
+    <string name="very_high_alarm_text">Очень высокий сахар!</string>
     <string name="very_low_alarm_notification_name">Тревога: очень низкий уровень</string>
-    <string name="very_low_alarm_notification_descr">Уведомление о очень низком уровне.</string>
+    <string name="very_low_alarm_notification_descr">Уведомление об очень низком уровне.</string>
     <string name="low_alarm_notification_name">Тревога: низкий уровень</string>
     <string name="low_alarm_notification_descr">Уведомление о низком уровне.</string>
     <string name="high_alarm_notification_name">Тревога: высокий уровень</string>
     <string name="high_alarm_notification_descr">Уведомление о высоком уровне.</string>
     <string name="very_high_alarm_notification_name">Тревога: очень высокий уровень</string>
-    <string name="very_high_alarm_notification_descr">Уведомление о очень высоком уровне.</string>
+    <string name="very_high_alarm_notification_descr">Уведомление об очень высоком уровне.</string>
     <string name="btn_dismiss">Отключить</string>
     <string name="test_alarm">Тестовая тревога!</string>
     <string name="alarm_cat_categories">Категории тревоги</string>
@@ -449,7 +449,7 @@
     <string name="pref_gda_alarm_info_summary">Настройки тревоги относятся только к уведомлениям в Android Auto и не запускают никаких звуков.</string>
     <string name="pref_cat_general_summary">Общие настройки, такие как единицы измерения, время и настройки дельты.</string>
     <string name="pref_target_range_summary">Настройки границ глюкозы и соответствующих цветов.</string>
-    <string name="pref_cat_widgets_summary">Настройки виджетов телефона и плавающего виджета.</string>
+    <string name="pref_cat_widgets_summary">Настройки обычных виджетов и плавающего виджета.</string>
     <string name="pref_cat_notification_summary">Настройки уведомлений.</string>
     <string name="pref_cat_locksreen_wallpaper_summary">Настройки для замены обоев экрана блокировки.</string>
     <string name="pref_cat_android_auto_summary">Настройки GlucoDataAuto для использования в Android Auto.</string>
@@ -472,9 +472,9 @@
     <string name="alarm_start_delay">Задержка запуска</string>
     <string name="alarm_start_delay_wear_summary">Задержка перед первым воспроизведением вибрации и звука.\nИногда уведомление с телефона немедленно останавливает вибрацию.</string>
     <string name="pref_color_obsolete">Цвет устаревшего значения</string>
-    <string name="pref_color_obsolete_summary">Цвет для отсутствия новых значений глюкозы.</string>
-    <string name="alarm_wear_no_notification_phone_connected">Нет всплывающего окна, пока телефон подключен</string>
-    <string name="alarm_wear_no_notification_phone_connected_summary">Нет дополнительного всплывающего уведомления на часах, пока телефон подключен.\nВибрация и звук будут запускаться в соответствии с настройками.</string>
+    <string name="pref_color_obsolete_summary">Цвет для отображения устаревшего значения глюкозы.</string>
+    <string name="alarm_wear_no_notification_phone_connected">Без всплывающего окна, пока телефон подключен</string>
+    <string name="alarm_wear_no_notification_phone_connected_summary">Без дополнительного всплывающего уведомления на часах, пока телефон подключен.\nВибрация и звук будут запускаться в соответствии с настройками.</string>
     <string name="table_header_details">Сведения</string>
     <string name="table_header_connections">Подключения</string>
     <string name="disconnected_label">отключено</string>
