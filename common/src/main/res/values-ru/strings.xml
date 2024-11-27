@@ -18,7 +18,7 @@
     <string name="info_label_per_minute">в минуту</string>
     <string name="no_data">Данные еще не получены!\nПожалуйста, сначала настройте источник.</string>
 
-    <string name="elapsed_time">%1$d мин</string>
+    <string name="elapsed_time">%1$d мин.</string>
     <string name="elapsed_time_hour">\> 1 ч</string>
 
     <string name="rate_double_up">очень быстро растет</string>
@@ -38,7 +38,7 @@
     <string name="alarm_high">высокий</string>
     <string name="alarm_very_high">очень высокий</string>
 
-    <string name="activity_main_battery_optimization_disabled">Оптимизация батареи включена.</string>
+    <string name="activity_main_battery_optimization_disabled">Рекомендуется отключить оптимизацию батареи.</string>
     <string name="activity_main_no_source_label">Источник: не активен</string>
     <string name="activity_main_connected_label">Wear OS: подключено (%1$s)</string>
     <string name="activity_main_disconnected_label">Wear OS: отключено</string>
@@ -322,11 +322,11 @@
     <string name="pref_aa_media_player_icon_style">Стиль значка/изображения</string>
     <string name="menu_save_mobile_logs">Мобильный</string>
     <string name="menu_save_wear_logs">Wear OS</string>
-    <string name="menu_save_logs">Сохранить журналы</string>
-    <string name="logcat_save_succeeded">Журналы успешно сохранены</string>
-    <string name="logcat_save_failed">Ошибка при сохранении журналов!</string>
-    <string name="logcat_wear_save_succeeded">Журналы с Wear OS успешно сохранены</string>
-    <string name="logcat_wear_save_failed">Ошибка при сохранении журналов с Wear OS!</string>
+    <string name="menu_save_logs">Сохранить логи</string>
+    <string name="logcat_save_succeeded">Логи успешно сохранены</string>
+    <string name="logcat_save_failed">Ошибка при сохранении логов!</string>
+    <string name="logcat_wear_save_succeeded">Логи с Wear OS успешно сохранены</string>
+    <string name="logcat_wear_save_failed">Ошибка при сохранении логов с Wear OS!</string>
     <string name="request_exact_alarm_summary">Для всех работ, связанных со временем/интервалом, этому приложению требуется разрешение на будильники и напоминания.\nОно не будет добавлять или изменять какие-либо пользовательские напоминания, это только для внутреннего планирования.\nЕсли вы нажмете OK, вы перейдете к настройке разрешений, чтобы включить его для GlucoDataHandler.</string>
     <string name="request_exact_alarm_title">Разрешение на будильники и напоминания</string>
     <string name="activity_main_schedule_exact_alarm">Планирование точных будильников отключено!!!\nGlucoDataHandler может работать некорректно!!!\nНажмите здесь, чтобы перейти непосредственно к настройке разрешений.</string>
@@ -341,8 +341,8 @@
     <string name="activity_main_notification_permission">Отображение уведомлений отключено!!!\nGlucoDataHandler может работать некорректно и не сможет показывать уведомления!!!\nНажмите здесь, чтобы перейти непосредственно к настройке разрешений.</string>
 
     <string name="src_libre_setup_librelink">Нет данных! Сначала примите приглашение в приложении LibreLinkUp!</string>
-    <string name="prefstatus_bar_notification_colored_icon">Цветной значок строки состояния</string>
-    <string name="pref_status_bar_notification_colored_icon_summary">Если ваше устройство поддерживает цветные значки строки состояния, вы также можете отключить их, чтобы использовать белый значок.</string>
+    <string name="prefstatus_bar_notification_colored_icon">Цветной значок в строке состояния</string>
+    <string name="pref_status_bar_notification_colored_icon_summary">Если ваше устройство поддерживает цветные значки в строке состояния, здесь их можно отключить, чтобы использовать белый значок.</string>
 
     <string name="menu_alarms">Сигналы тревоги</string>
     <string name="alarm_interval">Интервал</string>
@@ -407,7 +407,7 @@
     <string name="alarm_no_notification_auto_connected_summary_off">Уведомления о тревоге будут отображаться на телефоне, даже если подключен Android Auto.</string>
     <string name="alarm_retrigger">Повторный запуск</string>
     <string name="alarm_retrigger_summary">Если уведомление о тревоге не закрыто, тревога будет запущена снова через этот интервал в минутах до 3 раз.\n0 - без повторного запуска</string>
-    <string name="alarm_obsolete">Устаревший</string>
+    <string name="alarm_obsolete">старое значение</string>
     <string name="obsolete_alarm_notification_name">Тревога: устаревшие данные</string>
     <string name="alarm_obsolete_summary">Тревога, если нет нового значения глюкозы в течение %1$s минут.</string>
     <string name="obsolete_alarm_notification_descr">Это уведомление появится, если нет нового значения в течение интервала.</string>
@@ -475,17 +475,17 @@
     <string name="pref_color_obsolete_summary">Цвет для отсутствия новых значений глюкозы.</string>
     <string name="alarm_wear_no_notification_phone_connected">Нет всплывающего окна, пока телефон подключен</string>
     <string name="alarm_wear_no_notification_phone_connected_summary">Нет дополнительного всплывающего уведомления на часах, пока телефон подключен.\nВибрация и звук будут запускаться в соответствии с настройками.</string>
-    <string name="table_header_details">Подробности</string>
+    <string name="table_header_details">Сведения</string>
     <string name="table_header_connections">Подключения</string>
     <string name="disconnected_label">отключено</string>
     <string name="connected_label">подключено</string>
-    <string name="pref_application_color_scheme">Цветовая схема приложения</string>
-    <string name="application_color_scheme_system">Использовать системную схему</string>
-    <string name="application_color_scheme_light">Светлая схема</string>
-    <string name="application_color_scheme_dark">Темная схема</string>
-    <string name="tap_action">Действие по нажатию</string>
-    <string name="tap_action_summary">Выберите действие или приложение, которое должно быть выполнено при нажатии на этот элемент.</string>
-    <string name="no_action">Нет действия</string>
+    <string name="pref_application_color_scheme">Тема приложения</string>
+    <string name="application_color_scheme_system">Системная</string>
+    <string name="application_color_scheme_light">Светлая</string>
+    <string name="application_color_scheme_dark">Темная</string>
+    <string name="tap_action">Действие при нажатии</string>
+    <string name="tap_action_summary">Выбор действия или приложения, которое будет запускаться при нажатии на виджет.</string>
+    <string name="no_action">Не реагировать</string>
     <string name="action_floating_widget_toggle">Переключить плавающий виджет</string>
     <string name="wear_complication_tap_action">Действие по нажатию на усложнение</string>
     <string name="activity_large_arrow_icon_summary">Отключите этот параметр, если стрелка тренда слишком большая или обрезана.</string>
@@ -563,13 +563,13 @@
     <string name="settings_read_succeeded">Настройки успешно прочитаны</string>
     <string name="settings_read_failed">Ошибка при чтении настроек!</string>
     <string name="pref_cat_export_import">Экспорт / Импорт</string>
-    <string name="pref_cat_export_import_summary">Экспорт или импорт настроек и сохранение журналов.</string>
+    <string name="pref_cat_export_import_summary">Экспорт или импорт настроек и сохранение логов.</string>
     <string name="pref_export_settings">Экспорт</string>
     <string name="pref_export_settings_summary">Нажмите здесь, чтобы экспортировать все настройки в файл. \nВАЖНО: будут экспортированы только измененные настройки! Настройки со значениями по умолчанию не будут включены в экспорт.</string>
     <string name="pref_import_settings">Импорт</string>
     <string name="pref_import_settings_summary">Нажмите здесь, чтобы импортировать настройки из файла.\nВАЖНО: это не воссоздаст настройки по умолчанию, так как они не являются частью экспорта.\nЕсли вы хотите сбросить настройки до значений по умолчанию, сначала удалите данные приложения, а затем импортируйте.</string>
-    <string name="menu_save_mobile_logs_summary">Сохранить журналы с телефона в файл.</string>
-    <string name="menu_save_wear_logs_summary">Сохранить журналы с подключенных часов Wear OS в файл.</string>
+    <string name="menu_save_mobile_logs_summary">Сохранить логи с устройства в файл.</string>
+    <string name="menu_save_wear_logs_summary">Сохранить логи с подключенных часов Wear OS в файл.</string>
     <string name="alarm_repeat">Повторить</string>
     <string name="no_vibration">Без вибрации</string>
     <string name="alarm_vibrate_mode">Режим вибрации</string>
