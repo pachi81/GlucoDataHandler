@@ -378,7 +378,7 @@
     <string name="high_alarm_notification_descr">Уведомление о высоком уровне.</string>
     <string name="very_high_alarm_notification_name">Тревога: очень высокий уровень</string>
     <string name="very_high_alarm_notification_descr">Уведомление о очень высоком уровне.</string>
-    <string name="btn_dismiss">Отклонить</string>
+    <string name="btn_dismiss">Отключить</string>
     <string name="test_alarm">Тестовая тревога!</string>
     <string name="alarm_cat_categories">Категории тревоги</string>
     <string name="alarm_fullscreen_notification_enabled">Полноэкранное уведомление</string>
