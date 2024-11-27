@@ -650,16 +650,16 @@
     <string name="no_data_in_server_response">Keine Glukosewerte auf dem Server gefunden.</string>
     <string name="http_error_429">Zu viele Anfragen!\nBitte beende alle anderen Apps, die auf dasselbe Konto zugreifen!</string>
     <string name="state_await_data">Verbindungsaufbau</string>
-    <string name="pref_send_battery_level_to_watch">Batteriestand senden</string>
-    <string name="pref_send_battery_level_to_watch_summary">Sende den Batteriestand an die Uhr, um ihn in der Komplikation und auf dem Hauptbildschirm anzuzeigen.</string>
-    <string name="pref_battery_level">Batteriestand anzeigen</string>
+    <string name="pref_send_battery_level_to_watch">Akkustand senden</string>
+    <string name="pref_send_battery_level_to_watch_summary">Sende den Akkustand an die Uhr, um ihn in der Komplikation und auf dem Hauptbildschirm anzuzeigen.</string>
+    <string name="pref_battery_level">Akkustand anzeigen</string>
     <string name="forward_to_watch_interval_summary">Lege die minimale Zeit (in Minuten) zwischen Glukosemessungen fest, bevor ein neues Update an die Uhr gesendet wird.\nAlarme und sehr tiefe Werte werden immer gesendet.</string>
     <string name="forward_to_values_summary">Lege die minimale Zeit (in Minuten) zwischen Glukosemessungen fest, bevor ein neues Update an die Empfänger gesendet wird.</string>
     <string name="alarm_repeat_summary">Der Alarm ertönt und vibriert wiederholt, bis du die Benachrichtigung schließt oder die eingestellte maximale Alarmdauer erreicht ist.</string>
     <string name="alarm_repeat_time">Maximale Alarmdauer</string>
     <string name="alarm_repeat_time_summary">Gib die maximale Zeit (in Minuten) an, die der Alarm ertönt und vibriert. Ein Wert von 0 bedeutet, dass der Alarm unbegrenzt wiederholt wird.</string>
     <string name="wear_source_info">Um Quellen zu aktivieren, richte sie bitte zuerst in der Telefon-App ein. Aktiviere Quellen auf deiner Uhr nur, wenn du die Daten noch nicht auf deinem Telefon empfängst.</string>
-    <string name="pref_source_dexcom_share_info_summary">Um Daten von Dexcom Share-Servern zu empfangen:\n - gehe in die Dexcom App und erstelle einen Follower\n - überprüfe unter Verbindungen, ob Share On steht\n - gib Benutzername und Passwort ein (füge die Landesvorwahl für die Telefonnummer hinzu)\n - überprüfe die Einstellung für US/Nicht-US\n\nWichtig: Es funktioniert nicht mit einem Follower-Benutzer! Du musst deinen Dexcom Clarity-Benutzer verwenden</string>
+    <string name="pref_source_dexcom_share_info_summary">Um Daten von Dexcom Share-Servern zu empfangen:\n - gehe in die Dexcom App und erstelle einen Follower\n - überprüfe unter Verbindungen, ob \"Share Ein\" steht\n - gib hier Benutzername und Passwort ein (füge die Landesvorwahl für die Telefonnummer hinzu)\n - überprüfe die Einstellung für US/Nicht-US\n\nWichtig: Es funktioniert nicht mit einem Follower-Benutzer! Du musst deinen Dexcom Clarity-Benutzer verwenden</string>
     <string name="gdh_disclaimer_title">Hinweis des Entwicklers</string>
     <string name="gdh_disclaimer_message">Diese App wurde in meiner Freizeit als Hobbyprojekt entwickelt. Daher kann ich nicht garantieren, dass alle Funktionen auf jedem Gerät einwandfrei funktionieren. Ich arbeite jedoch stetig an Verbesserungen.\nBei Problemen oder Fragen kontaktieren Sie mich bitte direkt, bevor Sie eine negative Bewertung abgeben.\nUm über wichtige Updates und Fehlerbehebungen informiert zu werden, können Sie sich gerne in der Facebook-Gruppe oder bei Google Groups anmelden.</string>
 
