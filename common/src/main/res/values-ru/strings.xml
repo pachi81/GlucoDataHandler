@@ -363,8 +363,8 @@
     <string name="alarm_cat_all">Все сигналы тревоги</string>
     <string name="alarm_notifications_enabled">Уведомления о тревоге</string>
     <string name="wear_alarm_notifications_enabled">Wear OS: Уведомления о тревоге</string>
-    <string name="alarm_notifications_enabled_summary_on">Уведомления о тревоге активны на телефоне.\nПримечание: сигналы тревоги используют громкость будильника телефона.</string>
-    <string name="alarm_notifications_enabled_summary_off">Уведомления о тревоге неактивны на телефоне.</string>
+    <string name="alarm_notifications_enabled_summary_on">Уведомления о тревоге активированы.\nПримечание: сигналы тревоги используют громкость будильника телефона.</string>
+    <string name="alarm_notifications_enabled_summary_off">Уведомления о тревоге отключены.</string>
     <string name="stop_snooze">Остановить</string>
     <string name="very_low_alarm_text">Очень низкий сахар!</string>
     <string name="very_low_text">Низкий сахар!</string>
