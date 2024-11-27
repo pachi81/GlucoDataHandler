@@ -123,7 +123,7 @@
     <string name="pref_cat_widgets">Виджеты</string>
     <string name="pref_cat_android_auto">Android Auto</string>
     <string name="pref_cat_forward_broadcast">Передача значений глюкозы</string>
-    <string name="pref_target_range">Целевой диапазон</string>
+    <string name="pref_target_range">Целевые диапазоны</string>
     <string name="pref_cat_colors">Цвета</string>
 
     <string name="pref_switch_notification">Фиктивные значения</string>
@@ -448,7 +448,7 @@
     <string name="gda_media_notification_toggle_action">Нажмите воспроизведение, чтобы переключить уведомление</string>
     <string name="pref_gda_alarm_info_summary">Настройки тревоги относятся только к уведомлениям в Android Auto и не запускают никаких звуков.</string>
     <string name="pref_cat_general_summary">Общие настройки, такие как единицы измерения, время и настройки дельты.</string>
-    <string name="pref_target_range_summary">Настройки границ глюкозы и соответствующих цветов.</string>
+    <string name="pref_target_range_summary">Настройка предельных значений глюкозы и выбор соответствующего цвета.</string>
     <string name="pref_cat_widgets_summary">Настройки обычных виджетов и плавающего виджета.</string>
     <string name="pref_cat_notification_summary">Настройки уведомлений.</string>
     <string name="pref_cat_locksreen_wallpaper_summary">Настройки для замены обоев экрана блокировки.</string>
@@ -464,7 +464,7 @@
     <string name="pref_wearos_info_summary">Чтобы использовать GlucoDataHandler на часах Wear OS, установите его из Google Play Store на часы.\nЭто приложение не предоставляет циферблат, оно предоставляет несколько усложнений (маленькие круглые части циферблата), которые можно использовать для циферблатов, поддерживающих сторонние усложнения.</string>
     <string name="pref_wear_os_check_connection">Проверить соединение</string>
     <string name="pref_wear_os_check_connection_summary">Нажмите здесь, чтобы повторно проверить соединение с Wear OS.\nВы также можете запустить эту проверку, нажав на информацию о соединении на главном экране (даже в приложении Wear OS).</string>
-    <string name="pref_watchdrip_info_summary">WatchDrip+ поддерживает несколько устройств MiBand и Amazfit.\nЧтобы получить полный список поддерживаемых устройств и дополнительную информацию о настройке WatchDrip+, нажмите здесь.</string>
+    <string name="pref_watchdrip_info_summary">WatchDrip+ поддерживает некоторые модели устройств MiBand и Amazfit.\nЧтобы получить полный список поддерживаемых устройств и дополнительную информацию о настройке WatchDrip+, нажмите здесь.</string>
     <string name="alarm_vibrate_only_wear_info">Только вибрация без уведомления работает не на всех устройствах!</string>
     <string name="alarm_use_alarm_sound">Использовать звук будильника</string>
     <string name="alarm_use_alarm_sound_summary">Использовать громкость звука будильника вместо звука мелодии звонка.\nЭто может быть независимо от режима вибрации.</string>
@@ -567,7 +567,7 @@
     <string name="pref_export_settings">Экспорт</string>
     <string name="pref_export_settings_summary">Нажмите здесь, чтобы экспортировать все настройки в файл. \nВАЖНО: будут экспортированы только измененные настройки! Настройки со значениями по умолчанию не будут включены в экспорт.</string>
     <string name="pref_import_settings">Импорт</string>
-    <string name="pref_import_settings_summary">Нажмите здесь, чтобы импортировать настройки из файла.\nВАЖНО: это не воссоздаст настройки по умолчанию, так как они не являются частью экспорта.\nЕсли вы хотите сбросить настройки до значений по умолчанию, сначала удалите данные приложения, а затем импортируйте.</string>
+    <string name="pref_import_settings_summary">Нажмите здесь, чтобы импортировать настройки из файла.\nВАЖНО: это не восстановит настройки по умолчанию, так как они не являются частью экспорта.\nЕсли вы хотите сбросить настройки до значений по умолчанию, сначала удалите данные приложения, а затем выполните импорт.</string>
     <string name="menu_save_mobile_logs_summary">Сохранить логи с устройства в файл.</string>
     <string name="menu_save_wear_logs_summary">Сохранить логи с подключенных часов Wear OS в файл.</string>
     <string name="alarm_repeat">Повторить</string>
@@ -652,7 +652,7 @@
     <string name="http_error_429">Слишком много запросов!\nПожалуйста, остановите все другие приложения, которые обращаются к той же учетной записи!</string>
     <string name="state_await_data">Ожидание данных</string>
     <string name="pref_send_battery_level_to_watch">Отправлять уровень заряда батареи</string>
-    <string name="pref_send_battery_level_to_watch_summary">Отправлять уровень заряда батареи на часы для отображения в осложнениях и на главном экране.</string>
+    <string name="pref_send_battery_level_to_watch_summary">Отправлять уровень заряда батареи на часы для отображения в усложнениях и на главном экране.</string>
     <string name="pref_battery_level">Показывать уровень заряда батареи</string>
     <string name="forward_to_watch_interval_summary">Установите минимальное время (в минутах) между измерениями глюкозы перед отправкой нового обновления на часы.\nСигналы тревоги и очень низкие измерения будут отправляться всегда.</string>
     <string name="forward_to_values_summary">Установите минимальное время (в минутах) между измерениями глюкозы перед отправкой нового обновления получателям.</string>
