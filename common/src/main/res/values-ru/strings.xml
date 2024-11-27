@@ -92,13 +92,13 @@
 
     <string name="src_cat_nightscout">Nightscout</string>
     <string name="src_ns_enabled">Включить</string>
-    <string name="src_ns_enabled_summary">Включить подписчика Nightscout.</string>
-    <string name="src_ns_url">URL-адрес Nightscout</string>
+    <string name="src_ns_enabled_summary">Включить получение данных из Nightscout.</string>
+    <string name="src_ns_url">URL-адрес для Nightscout</string>
     <string name="src_ns_url_summary">URL-адрес сервера Nightscout.</string>
-    <string name="src_ns_secret">Секрет API</string>
-    <string name="src_ns_secret_summary">Секрет API для доступа к данным (необязательно).</string>
+    <string name="src_ns_secret">Пароль для Nightscout (API)</string>
+    <string name="src_ns_secret_summary">Пароль для доступа к данным (при наличии).</string>
     <string name="src_ns_token">Токен доступа</string>
-    <string name="src_ns_token_summary">Добавьте свой токен доступа, если он вам нужен (необязательно).</string>
+    <string name="src_ns_token_summary">Добавить токен доступа, если он используется (необязательно).</string>
 
     <string name="source_request_interval_always">Всегда</string>
     <string name="source_request_interval_1">1 минута</string>
@@ -310,7 +310,7 @@
     <string name="menu_contact">Связаться</string>
     <string name="src_ns_iob_cob">Поддержка IOB/COB</string>
     <string name="src_ns_iob_cob_summary">Получать также значения IOB и COB из конечной точки Nightscout Pebble.</string>
-    <string name="pref_permanent_notification_info_summary">Уведомление обязательно для корректной работы приложения.\nНачиная с Android 13, вы можете смахнуть это уведомление. Если вы не хотите, чтобы уведомление возвращалось, установите \"Значок в строке состояния\" на \"Значок приложения\" и включите \"Скрыть содержимое\".</string>
+    <string name="pref_permanent_notification_info_summary">Уведомление необходимо для нормальной работы приложенияя.\nНачиная с Android 13, вы можете смахнуть это уведомление. Если вы вообще не хотите его видеть, установите \"Значок в строке состояния\" на \"Значок приложения\" и включите \"Скрыть содержимое\".</string>
     <string name="source_aaps">AAPS</string>
     <string name="pref_source_aaps_info">AndroidAPS</string>
     <string name="pref_source_aaps_info_summary">Для получения значений из AAPS:\n- откройте приложение AAPS\n- перейдите в \"Конструктор конфигурации\"\n- включите \"Samsung Tizen\" или \"Транслятор данных\"</string>
@@ -535,7 +535,7 @@
     <string name="info_label_notes">Примечания</string>
     <string name="gda_notification_permission">Уведомления отключены! \nНажмите здесь, чтобы включить их.</string>
     <string name="pref_show_other_unit">Показывать другую единицу измерения</string>
-    <string name="pref_show_other_unit_summary">Показывать значение глюкозы в %s в деталях.</string>
+    <string name="pref_show_other_unit_summary">Показывать значение глюкозы в %s на главном экране.</string>
     <string name="other_unit">Другая единица измерения</string>
     <string name="dexcom_share_check_non_us_account">Нажмите здесь, чтобы проверить данные вашей учетной записи Dexcom Share для вашей учетной записи, не относящейся к США.</string>
     <string name="dexcom_share_check_us_account">Нажмите здесь, чтобы проверить данные вашей учетной записи Dexcom Share для вашей учетной записи США.</string>
