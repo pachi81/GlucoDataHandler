@@ -1,7 +1,6 @@
 package de.michelinside.glucodatahandler
 
 import android.annotation.SuppressLint
-import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -350,7 +349,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         tableConnections.removeViews(1, maxOf(0, tableConnections.childCount - 1))
         if (SourceStateData.lastState != SourceState.NONE) {
             tableConnections.addView(createRow(SourceStateData.lastSource.resId, SourceStateData.getStateMessage(this)))
-            tableConnections.addView(createRow(CR.string.info_label_timestamp, Utils.getUiTimeStamp(SourceStateData.lastStateTime)))
+            tableConnections.addView(createRow(CR.string.request_timestamp, Utils.getUiTimeStamp(SourceStateData.lastStateTime)))
         }
 
         if (WearPhoneConnection.nodesConnected) {

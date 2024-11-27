@@ -2,7 +2,6 @@ package de.michelinside.glucodataauto
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -458,7 +457,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     )
                 }
             }
-            tableConnections.addView(createRow(CR.string.info_label_timestamp, Utils.getUiTimeStamp(SourceStateData.lastStateTime)))
+            tableConnections.addView(createRow(CR.string.request_timestamp, Utils.getUiTimeStamp(SourceStateData.lastStateTime)))
         }
         tableConnections.addView(createRow(CR.string.pref_cat_android_auto, if (GlucoDataServiceAuto.connected) resources.getString(CR.string.connected_label) else resources.getString(CR.string.disconnected_label)))
         checkTableVisibility(tableConnections)

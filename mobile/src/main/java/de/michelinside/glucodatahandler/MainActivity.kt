@@ -1,7 +1,6 @@
 package de.michelinside.glucodatahandler
 
 import android.annotation.SuppressLint
-import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -640,7 +639,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     )
                 }
             }
-            tableConnections.addView(createRow(CR.string.info_label_timestamp, Utils.getUiTimeStamp(SourceStateData.lastStateTime)))
+            tableConnections.addView(createRow(CR.string.request_timestamp, Utils.getUiTimeStamp(SourceStateData.lastStateTime)))
         }
 
         if (WearPhoneConnection.nodesConnected) {

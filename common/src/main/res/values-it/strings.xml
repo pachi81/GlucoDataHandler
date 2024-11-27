@@ -655,8 +655,10 @@
     <string name="alarm_repeat_time">Durata massima allarme</string>
     <string name="alarm_repeat_time_summary">Specifica il tempo massimo (in minuti) in cui l\'allarme suonerà e vibrerà. Un valore di 0 significa che l\'allarme si ripeterà indefinitamente.</string>
     <string name="wear_source_info">Per abilitare le origini, configurale prima nell\'app del telefono. Attiva le origini sull\'orologio solo se non ricevi ancora i dati sul telefono.</string>
-    <string name="pref_source_dexcom_share_info_summary">Per ricevere dati dai server Dexcom Share:\n - vai nell\'app Dexcom e crea un follower\n - controlla sotto connessioni che dica Share On\n - inserisci nome utente e password (aggiungi prefisso internazionale per il numero di telefono)\n - controlla l\'impostazione per USA/Non USA\n\nImportante: non funziona con un utente follower! Devi usare il tuo utente Dexcom Clarity</string>
     <string name="gdh_disclaimer_title">Nota dello sviluppatore</string>
     <string name="gdh_disclaimer_message">Questa app è stata sviluppata nel mio tempo libero come progetto hobby. Pertanto, non posso garantire che tutte le funzionalità funzionino perfettamente su ogni dispositivo. Tuttavia, lavoro costantemente a miglioramenti.\nSe riscontri problemi o hai domande, contattami direttamente prima di lasciare una recensione negativa. \nPer rimanere informato su importanti aggiornamenti e correzioni di bug, sei invitato a unirti al gruppo Facebook o ai Gruppi Google.</string>
 
+    <string name="request_timestamp">Aggiornato</string>
+    <string name="pref_source_dexcom_share_info_summary">Per ricevere dati dai server Dexcom Share:\n - vai all\'app Dexcom e crea un follower\n - controlla sotto connessioni che dica "Share On"\n - inserisci in GDH il tuo nome utente e password (aggiungi il prefisso internazionale per il numero di telefono)\n - controlla l\'impostazione per USA/Non USA\n\nImportante: non funziona con un utente follower! Devi usare il tuo utente Dexcom Clarity</string>
+    <string name="alarm_header">Allarmi</string>
 </resources>

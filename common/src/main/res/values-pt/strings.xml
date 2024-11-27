@@ -662,8 +662,10 @@
     <string name="alarm_repeat_time">Duração máxima do alarme</string>
     <string name="alarm_repeat_time_summary">Especifique o tempo máximo (em minutos) que o alarme tocará e vibrará. Um valor de 0 significa que o alarme será repetido indefinidamente.</string>
     <string name="wear_source_info">Para habilitar as fontes, configure-as primeiro no aplicativo do telefone. Ative as fontes no seu relógio somente se você ainda não receber os dados no seu telefone.</string>
-    <string name="pref_source_dexcom_share_info_summary">Para receber dados dos servidores Dexcom Share:\n - acesse o aplicativo Dexcom e crie um seguidor\n - verifique em conexões se diz Compartilhamento Ativado\n - insira o nome de usuário e a senha (adicione o código do país para o número de telefone)\n - verifique a configuração para EUA/Fora dos EUA\n\nImportante: não funciona com um usuário seguidor! Você precisa usar seu usuário Dexcom Clarity</string>
     <string name="gdh_disclaimer_title">Nota do Desenvolvedor</string>
     <string name="gdh_disclaimer_message">Este aplicativo foi desenvolvido no meu tempo livre como um projeto de hobby. Portanto, não posso garantir que todos os recursos funcionarão perfeitamente em todos os dispositivos. No entanto, estou trabalhando constantemente em melhorias.\nSe você encontrar algum problema ou tiver alguma dúvida, entre em contato comigo diretamente antes de deixar uma avaliação negativa. \nPara se manter informado sobre atualizações importantes e correções de bugs, você pode participar do grupo do Facebook ou dos Grupos do Google.</string>
 
+    <string name="request_timestamp">Atualizado</string>
+    <string name="pref_source_dexcom_share_info_summary">Para receber dados dos servidores Dexcom Share:\n - acesse o aplicativo Dexcom e crie um seguidor\n - verifique em conexões se diz "Share On"\n - insira em GDH seu nome de usuário e senha (adicione o código do país para o número de telefone)\n - verifique a configuração para EUA/Fora dos EUA\n\nImportante: não funciona com um usuário seguidor! Você precisa usar seu usuário Dexcom Clarity</string>
+    <string name="alarm_header">Alarmes</string>
 </resources>

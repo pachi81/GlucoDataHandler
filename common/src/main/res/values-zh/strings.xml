@@ -654,7 +654,10 @@
     <string name="alarm_repeat_time">最大警报持续时间</string>
     <string name="alarm_repeat_time_summary">指定警报发出声音和振动的最长时间（以分钟为单位）。值为 0 表示警报将无限重复。</string>
     <string name="wear_source_info">要启用来源，请先在手机应用中进行设置。仅当您尚未在手机上收到数据时，才在手表上激活来源。</string>
-    <string name="pref_source_dexcom_share_info_summary">要从 Dexcom Share 服务器接收数据：\n - 转到 Dexcom 应用并创建一个关注者\n - 检查连接下是否显示“共享已开启”\n - 输入用户名和密码（为电话号码添加国家/地区代码）\n - 检查美国/非美国设置\n\n重要提示：它不适用于关注者用户！您需要使用您的 Dexcom Clarity 用户</string>
     <string name="gdh_disclaimer_title">开发者说明</string>
     <string name="gdh_disclaimer_message">此应用是在我的空闲时间作为业余项目开发的。因此，我无法保证所有功能在每台设备上都能完美运行。但是，我一直在努力改进。\n如果您遇到任何问题或有任何疑问，请在留下负面评价之前直接与我联系。\n欢迎您加入 Facebook 群组或 Google 网上论坛，以随时了解重要的更新和错误修复。</string>
+
+    <string name="request_timestamp">已更新</string>
+    <string name="pref_source_dexcom_share_info_summary">要从 Dexcom Share 服务器接收数据：\n - 转到 Dexcom 应用并创建一个关注者\n - 检查连接下是否显示“共享已开启”\n - 在 GDH 中输入您的用户名和密码（为电话号码添加国家/地区代码）\n - 检查美国/非美国设置\n\n重要提示：它不适用于关注者用户！您需要使用您的 Dexcom Clarity 用户</string>
+    <string name="alarm_header">警报</string>
 </resources>
