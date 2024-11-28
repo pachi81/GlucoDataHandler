@@ -92,13 +92,13 @@
 
     <string name="src_cat_nightscout">Nightscout</string>
     <string name="src_ns_enabled">Включить</string>
-    <string name="src_ns_enabled_summary">Включить подписчика Nightscout.</string>
-    <string name="src_ns_url">URL-адрес Nightscout</string>
+    <string name="src_ns_enabled_summary">Включить получение данных из Nightscout.</string>
+    <string name="src_ns_url">URL-адрес для Nightscout</string>
     <string name="src_ns_url_summary">URL-адрес сервера Nightscout.</string>
-    <string name="src_ns_secret">Секрет API</string>
-    <string name="src_ns_secret_summary">Секрет API для доступа к данным (необязательно).</string>
+    <string name="src_ns_secret">Пароль для Nightscout (API)</string>
+    <string name="src_ns_secret_summary">Пароль для доступа к данным (при наличии).</string>
     <string name="src_ns_token">Токен доступа</string>
-    <string name="src_ns_token_summary">Добавьте свой токен доступа, если он вам нужен (необязательно).</string>
+    <string name="src_ns_token_summary">Добавить токен доступа, если он используется (необязательно).</string>
 
     <string name="source_request_interval_always">Всегда</string>
     <string name="source_request_interval_1">1 минута</string>
@@ -172,7 +172,7 @@
     <string name="pref_notification">Уведомление</string>
     <string name="pref_notification_summary">Показывает постоянное уведомление с текущей стрелкой тренда, значением глюкозы и дельты в строке состояния.\nЭто уведомление предотвращает остановку приложения Android.</string>
     <string name="pref_notification_icon">Значок в строке состояния</string>
-    <string name="pref_notification_icon_summary">Стиль маленького значка в строке состояния уведомления.</string>
+    <string name="pref_notification_icon_summary">Стиль маленького значка уведомления в строке состояния.</string>
     <string name="pref_notification_big_icon">Большой значок в строке состояния</string>
     <string name="pref_notification_big_icon_summary">Большой значок в строке состояния. Отключите эту настройку, если значок слишком большой и обрезается.</string>
     <string name="pref_notification_no_content">Скрыть содержимое</string>
@@ -310,7 +310,7 @@
     <string name="menu_contact">Связаться</string>
     <string name="src_ns_iob_cob">Поддержка IOB/COB</string>
     <string name="src_ns_iob_cob_summary">Получать также значения IOB и COB из конечной точки Nightscout Pebble.</string>
-    <string name="pref_permanent_notification_info_summary">Уведомление обязательно для корректной работы приложения.\nНачиная с Android 13, вы можете смахнуть это уведомление. Если вы не хотите, чтобы уведомление возвращалось, установите \"Значок в строке состояния\" на \"Значок приложения\" и включите \"Скрыть содержимое\".</string>
+    <string name="pref_permanent_notification_info_summary">Уведомление необходимо для нормальной работы приложенияя.\nНачиная с Android 13, вы можете смахнуть это уведомление. Если вы вообще не хотите его видеть, установите \"Значок в строке состояния\" на \"Значок приложения\" и включите \"Скрыть содержимое\".</string>
     <string name="source_aaps">AAPS</string>
     <string name="pref_source_aaps_info">AndroidAPS</string>
     <string name="pref_source_aaps_info_summary">Для получения значений из AAPS:\n- откройте приложение AAPS\n- перейдите в \"Конструктор конфигурации\"\n- включите \"Samsung Tizen\" или \"Транслятор данных\"</string>
@@ -492,9 +492,9 @@
     <string name="pref_cat_ui_settings">Пользовательский интерфейс</string>
     <string name="pref_cat_ui_settings_summary">Общие настройки пользовательского интерфейса этого приложения.</string>
     <string name="gda_foreground_info">GlucoDataAuto запущено</string>
-    <string name="gda_foreground_summary">Включайте это только в том случае, если вы используете источник-последователь и только уведомления Android Auto.\nЭто предотвращает закрытие приложения Android, пока оно не подключено к Android Auto, поэтому приложение не может распознать подключение Android Auto.\nВместо того, чтобы включать этот параметр, вы также можете один раз открыть приложение в Android Auto, если вы подключены.</string>
-    <string name="gda_battery_optimization_disabled">Оптимизация батареи включена!\nНажмите здесь, чтобы отключить ее.</string>
-    <string name="gda_source_follower_info_summary">Если вы используете источник-последователь, приложение может не запускаться при подключении к Android Auto, если вы используете только уведомления Android Auto.\nЧтобы приложение обнаруживало подключение Android Auto, необходимо отключить оптимизацию батареи.\nЕсли это по-прежнему не работает, вы также можете включить режим переднего плана или вам нужно один раз открыть приложение в Android Auto, если оно подключено к Android Auto.</string>
+    <string name="gda_foreground_summary">Включайте это только в том случае, если вы используете источник-фолловер и только уведомления Android Auto.\nЭто предотвращает закрытие приложения Android, пока оно не подключено к Android Auto, поэтому приложение не может распознать подключение Android Auto.\nВместо того, чтобы включать этот параметр, вы также можете один раз открыть приложение в Android Auto, если вы подключены.</string>
+    <string name="gda_battery_optimization_disabled">Включена оптимизация батареи!\nНажмите здесь, чтобы отключить ее.</string>
+    <string name="gda_source_follower_info_summary">Если вы используете источник-фолловер, приложение может не запускаться при подключении к Android Auto, если вы используете только уведомления Android Auto.\nЧтобы приложение обнаруживало подключение Android Auto, необходимо отключить оптимизацию батареи.\nЕсли это по-прежнему не работает, вы также можете включить режим переднего плана или вам нужно один раз открыть приложение в Android Auto, если оно подключено к Android Auto.</string>
     <string name="gda_help_aa_title">Настройка Android Auto</string>
     <string name="gda_help_aa_title_summary">Android Auto — это отдельное приложение или часть системы, к которому можно получить доступ через настройки Android.\nЧтобы активировать GlucoDataAuto для Android Auto, необходимо выполнить следующие действия:</string>
     <string name="gda_help_aa_dev_mode">1. Активировать режим разработчика</string>
@@ -505,15 +505,15 @@
     <string name="gda_help_aa_notification_summary">- откройте Android Auto\n- прокрутите вниз до \"Сообщения\"\n- включите \"Показывать уведомления о сообщениях\"\n- включите \"Показывать первую строку сообщений\"</string>
     <string name="gda_help_aa_enable_gda">4. Включить GlucoDataAuto</string>
     <string name="gda_help_aa_enable_gda_summary">- откройте Android Auto\n- прокрутите вниз до \"Дисплей\"\n- откройте \"Настроить панель запуска\"\n- включите \"GlucoDataAuto\"\nЕсли GlucoDataAuto недоступен, перезагрузите телефон.</string>
-    <string name="pref_notification_custom_layout">Цветной макет</string>
-    <string name="pref_notification_custom_layout_summary">Отображает значения крупным и цветным текстом.\nНа некоторых устройствах Samsung с Android 13 и выше это может привести к сбою приложения из-за ошибки на стороне Samsung.\nЕсли проблема возникает, этот параметр будет автоматически отключен, чтобы обеспечить работоспособность приложения.</string>
+    <string name="pref_notification_custom_layout">Цветная схема</string>
+    <string name="pref_notification_custom_layout_summary">Отображение значений крупным и цветным текстом.\nНа некоторых устройствах Samsung с Android 13 и выше это может привести к сбою приложения из-за ошибки на стороне Samsung.\nЕсли проблема возникает, этот параметр будет автоматически отключен, чтобы обеспечить работоспособность приложения.</string>
     <string name="app_crash_title">Обнаружен сбой!</string>
     <string name="app_crash_message">Мне очень жаль, что приложение вылетело во время выполнения!\nПожалуйста, отправьте мне логи, чтобы я мог проанализировать ошибку и попытаться исправить ее как можно скорее.\nСпасибо!</string>
     <string name="src_cat_dexcom_share">Dexcom Share</string>
     <string name="src_dexcom_share_us_server">Американский аккаунт</string>
     <string name="src_dexcom_share_us_server_summary_on">Используется американский аккаунт.</string>
     <string name="src_dexcom_share_us_server_summary_off">Используется международный аккаунт.</string>
-    <string name="src_dexcom_share_enabled_summary">Включить аккаунт Dexcom Share. Вам нужно сначала установить имя пользователя и пароль.</string>
+    <string name="src_dexcom_share_enabled_summary">Включить аккаунт Dexcom Share. Сначала вам потребуется указать имя пользователя и пароль.</string>
     <string name="src_username">Имя пользователя</string>
     <string name="src_dexcom_share_user_summary">Имя пользователя, адрес электронной почты или номер телефона для входа в вашу учетную запись Dexcom Share.\nВАЖНО: если вы используете номер телефона, он должен включать код страны (например, +1 для США).</string>
     <string name="src_dexcom_share_password_summary">Пароль для учетной записи Dexcom Share.</string>
@@ -525,7 +525,7 @@
     <string name="obsolete_time">Время устаревания</string>
     <string name="obsolete_time_summary">Время в минутах, по истечении которого значение будет считаться устаревшим.\nПо истечении двух таких периодов времени значение перестанет отображаться.</string>
     <string name="pref_source_offline">Локальные приложения</string>
-    <string name="pref_source_offline_summary">Приложения на том же устройстве, предоставляющие значения глюкозы в виде внутреннего широковещательного сообщения, такие как Juggluco, xDrip+, AAPS и т. д.</string>
+    <string name="pref_source_offline_summary">Приложения на этом устройстве, предоставляющие значения глюкозы в виде внутреннего широковещательного сообщения, такие как Juggluco, xDrip+, AAPS и т. д.</string>
     <string name="pref_cat_follower_summary">Облачные сервисы, предоставляющие значения глюкозы через Интернет, такие как LibreLinkUp, Dexcom Share и Nightscout.</string>
     <string name="pref_source_xdrip_broadcast">Альтернатива: локальная трансляция</string>
     <string name="pref_source_dexcom_byoda_info_summary">Чтобы получать значения из Dexcom BYODA, вам необходимо включить трансляцию в AAPS при сборке приложения.</string>
@@ -535,7 +535,7 @@
     <string name="info_label_notes">Примечания</string>
     <string name="gda_notification_permission">Уведомления отключены! \nНажмите здесь, чтобы включить их.</string>
     <string name="pref_show_other_unit">Показывать другую единицу измерения</string>
-    <string name="pref_show_other_unit_summary">Показывать значение глюкозы в %s в деталях.</string>
+    <string name="pref_show_other_unit_summary">Показывать значение глюкозы в %s на главном экране.</string>
     <string name="other_unit">Другая единица измерения</string>
     <string name="dexcom_share_check_non_us_account">Нажмите здесь, чтобы проверить данные вашей учетной записи Dexcom Share для вашей учетной записи, не относящейся к США.</string>
     <string name="dexcom_share_check_us_account">Нажмите здесь, чтобы проверить данные вашей учетной записи Dexcom Share для вашей учетной записи США.</string>
@@ -546,17 +546,17 @@
     <string name="pref_floating_widget_time_to_close">Время до закрытия</string>
     <string name="pref_floating_widget_time_to_close_summary">Время в секундах до закрытия плавающего виджета при нажатии на виджет без его перемещения.\n0 для отключения этой настройки.</string>
     <string name="alarm_inactive_enabled">Включить режим тишины</string>
-    <string name="alarm_inactive_enabled_summary">Нет уведомлений о тревоге для этой тревоги в режиме тишины.\nНастройте предпочтительное время для использования этой функции.</string>
-    <string name="all_alarm_inactive_enabled_summary">Нет уведомлений о тревоге для всех тревог в режиме тишины.\nНастройте предпочтительное время для использования этой функции.</string>
+    <string name="alarm_inactive_enabled_summary">Без уведомлений о тревоге для этой тревоги в режиме тишины.\nНастройте предпочтительное время для использования этой функции.</string>
+    <string name="all_alarm_inactive_enabled_summary">Без уведомлений о тревоге для всех тревог в режиме тишины.\nНастройте предпочтительное время для использования этой функции.</string>
     <string name="alarm_inactive_start_time">Время начала</string>
-    <string name="alarm_inactive_start_time_summary">Выберите время, когда вы хотите, чтобы начинался режим тишины.</string>
+    <string name="alarm_inactive_start_time_summary">Выберите время, в которое будет начинаться режим тишины.</string>
     <string name="alarm_inactive_end_time">Время окончания</string>
-    <string name="alarm_inactive_end_time_summary">Выберите время, когда вы хотите, чтобы заканчивался режим тишины.</string>
+    <string name="alarm_inactive_end_time_summary">Выберите время, в которое будет заканчиваться режим тишины.</string>
     <string name="alarm_inactive_weekdays">Дни для режима тишины</string>
-    <string name="alarm_inactive_weekdays_summary">Укажите дни недели, в которые режим тишины должен начинаться в выбранное время начала.</string>
-    <string name="app_crash_bad_notification">Приложение вылетает из-за цветного макета уведомлений!\nОн был отключен, чтобы предотвратить этот сбой.\nЭто проблема на телефонах Samsung, поэтому, пожалуйста, создайте отчет об ошибке в приложении Samsung Members. Спасибо!</string>
+    <string name="alarm_inactive_weekdays_summary">Укажите дни недели, в которые режим тишины будет включаться в выбранное время.</string>
+    <string name="app_crash_bad_notification">Приложение вылетает из-за цветной схемы уведомлений!\nОна была отключена, чтобы предотвратить этот сбой.\nЭто проблема на телефонах Samsung, поэтому, пожалуйста, создайте отчет об ошибке в приложении Samsung Members. Спасибо!</string>
     <string name="auto_close_notification">Автоматическое закрытие уведомлений</string>
-    <string name="auto_close_notification_summary">Автоматически закрывать уведомление о тревоге после завершения звука и вибрации, но только после как минимум 30 секунд.\nЕсли повторный запуск активен, уведомление будет закрыто, если нет дополнительного запуска.</string>
+    <string name="auto_close_notification_summary">Автоматически закрывать уведомление о тревоге после завершения звука и вибрации, но не раньше, чем через 30 секунд.\nЕсли активирован повторный запуск, уведомление будет закрыто при условии отсутствия дополнительных триггеров.</string>
 
     <string name="settings_save_succeeded">Настройки успешно сохранены</string>
     <string name="settings_save_failed">Ошибка при сохранении настроек!</string>
