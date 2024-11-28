@@ -649,30 +649,30 @@
 
     <!-- v1.3  -->
 
-    <string name="src_librelink_error4">Error, please re-login to LibreLinkUp App and check for any steps to be done!</string>
-    <string name="src_librelink_error4_type">Error type %1$s, please re-login to LibreLinkUp App and check for any steps to be done!</string>
-    <string name="source_libre_auto_accept_tou">Auto accept new terms</string>
-    <string name="source_libre_auto_accept_tou_summary">By enabling this, you automatically accept new Terms of Use to ensure continuous data reception. You won\'t be informed about new terms separately. If you want to read them, disable this setting and refer to the LibreLinkUp app in case of error 4.</string>
-    <string name="src_librelink_error4_tou">New Terms of Use must be accepted. Enable automatic acceptance in LibreLinkUp source settings, or log in again to the LibreLinkUp app and accept the terms.</string>
-    <string name="src_libre_tou_message">GlucoDataHandler can automatically accept new Terms of Use for LibreLinkUp.\nPress OK to enable this feature, or Cancel to read and manually accept the terms in the LibreLinkUp app.</string>
-    <string name="src_librelink_error2">Incorrect username or password. Please verify your LibreLinkUp source settings. If needed, try logging in again or reinstalling the LibreLinkUp app and checking your account settings.</string>
-    <string name="last_value_on_server">Last glucose reading on server from %1$s</string>
-    <string name="no_data_in_server_response">No glucose readings found on server.</string>
-    <string name="http_error_429">Too many requests!\nPlease stop all other apps are accessing the same account!</string>
-    <string name="state_await_data">Awaiting data</string>
-    <string name="pref_send_battery_level_to_watch">Send battery level</string>
-    <string name="pref_send_battery_level_to_watch_summary">Send battery level to watch to show in complication and on main screen.</string>
-    <string name="pref_battery_level">Show battery level</string>
-    <string name="forward_to_watch_interval_summary">Set the minimum time (in minutes) between glucose measurements before sending a new update to the watch.\nAlarms and very low measurements will always be sent.</string>
-    <string name="forward_to_values_summary">Set the minimum time (in minutes) between glucose measurements before sending a new update to the receivers.</string>
-    <string name="alarm_repeat_summary">The alarm will sound and vibrate repeatedly until you dismiss the notification or the set max alarm duration is reached.</string>
-    <string name="alarm_repeat_time">Max alarm duration</string>
-    <string name="alarm_repeat_time_summary">Specify the maximum time (in minutes) the alarm will sound and vibrate. A value of 0 means the alarm will repeat indefinitely.</string>
-    <string name="wear_source_info">To enable sources, please set them up in the phone app first. Activate sources on your watch only if you don\'t receive the data on your phone yet.</string>
-    <string name="pref_source_dexcom_share_info_summary">To receive data from Dexcom Share servers:\n - go into Dexcom app and create a follower\n - check under connections it says \"Share On\"\n - enter in GDH your username and password (add country code for phone number)\n - check setting for US/Non-US\n\nImportant: it does not work with a follower user! You need to use your Dexcom clarity user</string>
-    <string name="gdh_disclaimer_title">Developer\'s Note</string>
-    <string name="gdh_disclaimer_message">This app was developed in my free time as a hobby project. Therefore, I cannot guarantee that all features will work flawlessly on every device. However, I am constantly working on improvements.\nIf you encounter any problems or have questions, please contact me directly before leaving a negative review. \nTo stay informed about important updates and bug fixes, you are welcome to join the Facebook group or the Google Groups.</string>
+    <string name="src_librelink_error4">Błąd, zaloguj się ponownie do aplikacji LibreLinkUp i sprawdź, jakie czynności należy wykonać!</string>
+    <string name="src_librelink_error4_type">Błąd typu %1$s, zaloguj się ponownie do aplikacji LibreLinkUp i sprawdź, czy są jakieś kroki do wykonania!</string>
+    <string name="source_libre_auto_accept_tou">Automatyczna akceptacja nowych warunków</string>
+    <string name="source_libre_auto_accept_tou_summary">Włączenie tej opcji oznacza automatyczną akceptację nowych Warunków użytkowania w celu zapewnienia ciągłości odbioru danych. Nie będziesz za każdym razem informowany o nowych warunkach. Jeśli chcesz się z nimi zapoznać, wyłącz to ustawienie i przejdź do aplikacji LibreLinkUp w przypadku błędu 4.</string>
+    <string name="src_librelink_error4_tou">Należy zaakceptować nowe Warunki użytkowania. Włącz automatyczną akceptację w ustawieniach źródła LibreLinkUp lub zaloguj się ponownie do aplikacji LibreLinkUp i zaakceptuj warunki.</string>
+    <string name="src_libre_tou_message">GlucoDataHandler może automatycznie akceptować nowe warunki użytkowania LibreLinkUp.\nNaciśnij OK, aby włączyć tę funkcję, lub Anuluj, aby przeczytać i ręcznie zaakceptować warunki w aplikacji LibreLinkUp.</string>
+    <string name="src_librelink_error2">Nieprawidłowa nazwa użytkownika lub hasło. Sprawdź ustawienia źródła LibreLinkUp. W razie potrzeby spróbuj zalogować się ponownie lub ponownie zainstaluj aplikację LibreLinkUp i sprawdź ustawienia konta.</string>
+    <string name="last_value_on_server">Ostatni odczyt glukozy na serwerze sprzed %1$s</string>
+    <string name="no_data_in_server_response">Na serwerze nie znaleziono odczytów poziomu glukozy.</string>
+    <string name="http_error_429">Zbyt wiele żądań!\nZatrzymaj wszystkie inne aplikacje uzyskujące dostęp do tego samego konta!</string>
+    <string name="state_await_data">Oczekiwanie na dane</string>
+    <string name="pref_send_battery_level_to_watch">Prześlij poziom baterii</string>
+    <string name="pref_send_battery_level_to_watch_summary">Prześlij informację o poziomie naładowania baterii do zegarka, aby wyświetlić ją w komplikacjach i na ekranie głównym.</string>
+    <string name="pref_battery_level">Pokaż poziom baterii</string>
+    <string name="forward_to_watch_interval_summary">Ustaw minimalny czas (w minutach) między pomiarami poziomu glukozy przed wysłaniem nowej aktualizacji do zegarka.\nAlarmy i wartości bardzo niskie będą zawsze wysyłane.</string>
+    <string name="forward_to_values_summary">Ustaw minimalny czas (w minutach) między pomiarami poziomu glukozy przed wysłaniem nowej aktualizacji do odbiorców.</string>
+    <string name="alarm_repeat_summary">Alarm będzie emitował dźwięk i wibracje do momentu odrzucenia powiadomienia lub osiągnięcia ustawionego maksymalnego czasu trwania alarmu.</string>
+    <string name="alarm_repeat_time">Maksymalny czas trwania alarmu</string>
+    <string name="alarm_repeat_time_summary">Określ maksymalny czas (w minutach), przez jaki alarm będzie emitował dźwięk i wibracje. Wartość 0 oznacza, że alarm będzie powtarzany w nieskończoność.</string>
+    <string name="wear_source_info">Aby włączyć źródła, należy je najpierw skonfigurować w aplikacji telefonu. Aktywuj źródła na zegarku tylko wtedy, gdy nie otrzymujesz jeszcze danych na telefonie.</string>
+    <string name="pref_source_dexcom_share_info_summary">Aby odbierać dane z serwerów Dexcom Share:\n - przejdź do aplikacji Dexcom i utwórz obserwatora\n - sprawdź, czy w sekcji połączeń znajduje się napis &quot;Udostępniaj&quot;\n - wprowadź w GDH swoją nazwę użytkownika i hasło (dodaj kod kraju dla numeru telefonu)\n - sprawdź ustawienie US/Non-US\n\n Ważne: nie działa z użytkownikiem obserwującym! Musisz użyć użytkownika Dexcom clarity</string>
+    <string name="gdh_disclaimer_title">Uwaga od dewelopera</string>
+    <string name="gdh_disclaimer_message">Aplikację tę stworzyłem w wolnym czasie i jest to mój projekt hobbystyczny. W związku z tym nie mogę zagwarantować, że wszystkie funkcje będą działać bezbłędnie na każdym urządzeniu. Jeśli napotkasz jakiekolwiek problemy lub masz pytania, skontaktuj się ze mną bezpośrednio przed pozostawieniem negatywnej recenzji. \nAby być na bieżąco z ważnymi aktualizacjami i poprawkami błędów, zapraszam do dołączenia do grupy na Facebooku lub Grup Google.</string>
 
-    <string name="request_timestamp">Updated</string>
-    <string name="alarm_header">Alarms</string>
+    <string name="request_timestamp">Aktualny</string>
+    <string name="alarm_header">Alarmy</string>
 </resources>
