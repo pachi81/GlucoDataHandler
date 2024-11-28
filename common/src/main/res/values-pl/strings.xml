@@ -669,10 +669,25 @@
     <string name="alarm_repeat_time">Maksymalny czas trwania alarmu</string>
     <string name="alarm_repeat_time_summary">Określ maksymalny czas (w minutach), przez jaki alarm będzie emitował dźwięk i wibracje. Wartość 0 oznacza, że alarm będzie powtarzany w nieskończoność.</string>
     <string name="wear_source_info">Aby włączyć źródła, należy je najpierw skonfigurować w aplikacji telefonu. Aktywuj źródła na zegarku tylko wtedy, gdy nie otrzymujesz jeszcze danych na telefonie.</string>
-    <string name="pref_source_dexcom_share_info_summary">Aby odbierać dane z serwerów Dexcom Share:\n - przejdź do aplikacji Dexcom i utwórz obserwatora\n - sprawdź, czy w sekcji połączeń znajduje się napis &quot;Udostępniaj&quot;\n - wprowadź w GDH swoją nazwę użytkownika i hasło (dodaj kod kraju dla numeru telefonu)\n - sprawdź ustawienie US/Non-US\n\n Ważne: nie działa z użytkownikiem obserwującym! Musisz użyć użytkownika Dexcom clarity</string>
     <string name="gdh_disclaimer_title">Uwaga od dewelopera</string>
     <string name="gdh_disclaimer_message">Aplikację tę stworzyłem w wolnym czasie i jest to mój projekt hobbystyczny. W związku z tym nie mogę zagwarantować, że wszystkie funkcje będą działać bezbłędnie na każdym urządzeniu. Jeśli napotkasz jakiekolwiek problemy lub masz pytania, skontaktuj się ze mną bezpośrednio przed pozostawieniem negatywnej recenzji. \nAby być na bieżąco z ważnymi aktualizacjami i poprawkami błędów, zapraszam do dołączenia do grupy na Facebooku lub Grup Google.</string>
-
     <string name="request_timestamp">Aktualny</string>
     <string name="alarm_header">Alarmy</string>
+
+    <string name="pref_source_dexcom_share_info_1_summary">To receive data from Dexcom Share servers:\nIn the Dexcom App:\n - Create a follower\n - Under \"Connections,\" ensure \"Share On\" is displayed</string>
+    <string name="pref_source_dexcom_share_info_2_summary">In GlucoDataHandler:\n - Enter your Dexcom Clarity username and password \n   (if you use your phone number as your username, include your country code)\n - Check the setting for a US account\nImportant: It does not work with a follower account!</string>
+
+    <string name="wearos_watchfaces">Third-party watch faces</string>
+    <string name="wearos_watchfaces_summary">Information about Wear OS third-party watch faces.</string>
+    <string name="setup">Setup</string>
+    <string name="pref_watchfaces_info_summary">This app does not provide a watchface, it provides several complications (the small round watchface parts), which can be used for watch faces supporting 3rd party complications.</string>
+    <string name="pref_watchfaces_default">Standard</string>
+    <string name="pref_watchfaces_default_summary">Most watch manufacturers already provide watch faces that can be used with the GlucoDataHandler complication.\nFor example, most Samsung \"Info\" watch faces are compatible.</string>
+    <string name="pref_watchfaces_pujie">Pujie</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie is a watch face creator app with a cloud library.\nTo find compatible watch faces, search the library for watch faces starting with \"GDH_\".\nNote: Pujie is not compatible with Wear OS 5 devices.\nTap here to open the app in the Play Store.</string>
+    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
+    <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man creates third-party watch faces specifically designed for use with GlucoDataHandler.\nTap here to open his Play Store page.</string>
+    <string name="pref_watchfaces_gdc">GDC Watch Faces</string>
+    <string name="pref_watchfaces_gdc_summary">GDC Watch Faces are designed for use with GlucoDataHandler.\nTap here to open the Play Store page.</string>
+
 </resources>

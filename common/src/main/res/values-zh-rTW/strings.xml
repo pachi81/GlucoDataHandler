@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="locale">zh</string>
+    <string name="locale">zh-rTW</string>
 
     <string name="info_label_sensor_id">传感器</string>
     <string name="info_label_value">数值</string>
@@ -657,7 +657,23 @@
     <string name="gdh_disclaimer_title">开发者说明</string>
     <string name="gdh_disclaimer_message">此应用是在我的空闲时间作为业余项目开发的。因此，我无法保证所有功能在每台设备上都能完美运行。但是，我一直在努力改进。\n如果您遇到任何问题或有任何疑问，请在留下负面评价之前直接与我联系。\n欢迎您加入 Facebook 群组或 Google 网上论坛，以随时了解重要的更新和错误修复。</string>
 
+    <string name="pref_source_dexcom_share_info_1_summary">要從 Dexcom Share 伺服器接收數據：\n在 Dexcom 應用程式中：\n - 建立一個關注者\n - 在「連線」下方，確認有顯示「分享」</string>
+    <string name="pref_source_dexcom_share_info_2_summary">在 GlucoDataHandler 中：\n - 輸入您的 Dexcom Clarity 使用者名稱和密碼\n   (如果您使用電話號碼作為使用者名稱，請包含您的國家/地區代碼)\n - 檢查美國帳戶的設定\n重要：這不適用於關注者帳戶！</string>
+
     <string name="request_timestamp">已更新</string>
-    <string name="pref_source_dexcom_share_info_summary">要从 Dexcom Share 服务器接收数据：\n - 转到 Dexcom 应用并创建一个关注者\n - 检查连接下是否显示“共享已开启”\n - 在 GDH 中输入您的用户名和密码（为电话号码添加国家/地区代码）\n - 检查美国/非美国设置\n\n重要提示：它不适用于关注者用户！您需要使用您的 Dexcom Clarity 用户</string>
     <string name="alarm_header">警报</string>
+
+    <string name="wearos_watchfaces">第三方錶面</string>
+    <string name="wearos_watchfaces_summary">關於 Wear OS 第三方錶面的資訊。</string>
+    <string name="setup">設定</string>
+    <string name="pref_watchfaces_info_summary">此應用程式不提供錶面，它提供多種複雜功能（錶面上的小型圓形部件），可用於支援第三方複雜功能的錶面。</string>
+    <string name="pref_watchfaces_default">標準</string>
+    <string name="pref_watchfaces_default_summary">大多數手錶製造商已提供可與 GlucoDataHandler 複雜功能搭配使用的錶面。\n例如，大多數 Samsung「資訊」錶面都相容。</string>
+    <string name="pref_watchfaces_pujie">Pujie</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie 是一款具有雲端資料庫的錶面建立應用程式。\n若要尋找相容的錶面，請在資料庫中搜尋以「GDH_」開頭的錶面。\n注意：Pujie 與 Wear OS 5 裝置不相容。\n點選這裡即可在 Play 商店中開啟應用程式。</string>
+    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
+    <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man 建立專為搭配 GlucoDataHandler 使用而設計的第三方錶面。\n點選這裡即可開啟他的 Play 商店頁面。</string>
+    <string name="pref_watchfaces_gdc">GDC 錶面</string>
+    <string name="pref_watchfaces_gdc_summary">GDC 錶面專為搭配 GlucoDataHandler 使用而設計。\n點選這裡即可開啟 Play 商店頁面。</string>
+
 </resources>

@@ -669,7 +669,22 @@
     <string name="gdh_disclaimer_title">Note du développeur</string>
     <string name="gdh_disclaimer_message">Cette application a été développée pendant mon temps libre en tant que projet de loisir. Par conséquent, je ne peux pas garantir que toutes les fonctionnalités fonctionneront parfaitement sur tous les appareils. Cependant, je travaille constamment à des améliorations.\nSi vous rencontrez des problèmes ou avez des questions, veuillez me contacter directement avant de laisser un avis négatif. \nPour rester informé des mises à jour importantes et des corrections de bugs, vous pouvez rejoindre le groupe Facebook ou les Groupes Google.</string>
 
+    <string name="pref_source_dexcom_share_info_1_summary">Pour recevoir des données des serveurs Dexcom Share :\nDans l’application Dexcom :\n - Créez un abonné\n - Sous « Connexions », assurez-vous que « Partager » est affiché</string>
+    <string name="pref_source_dexcom_share_info_2_summary">Dans GlucoDataHandler :\n - Saisissez votre nom d’utilisateur et votre mot de passe Dexcom Clarity\n   (si vous utilisez votre numéro de téléphone comme nom d’utilisateur, veuillez inclure votre indicatif de pays)\n - Vérifiez le paramètre pour un compte américain\nImportant : cela ne fonctionne pas avec un compte d’abonné !</string>
+
     <string name="request_timestamp">Mis à jour</string>
-    <string name="pref_source_dexcom_share_info_summary">Pour recevoir des données des serveurs Dexcom Share :\n - accédez à l’application Dexcom et créez un abonné\n - vérifiez sous connexions qu’il est indiqué « Share On »\n - saisissez dans GDH votre nom d’utilisateur et votre mot de passe (ajoutez l’indicatif du pays pour le numéro de téléphone)\n - vérifiez le paramètre pour les États-Unis/hors États-Unis\n\nImportant : cela ne fonctionne pas avec un utilisateur abonné ! Vous devez utiliser votre utilisateur Dexcom Clarity</string>
     <string name="alarm_header">Alarmes</string>
+
+    <string name="wearos_watchfaces">Cadrans de montre tiers</string>
+    <string name="wearos_watchfaces_summary">Informations sur les cadrans de montre tiers pour Wear OS.</string>
+    <string name="setup">Configuration</string>
+    <string name="pref_watchfaces_info_summary">Cette application ne fournit pas de cadran de montre, mais plusieurs complications (les petites parties rondes du cadran de la montre), qui peuvent être utilisées pour les cadrans de montre prenant en charge les complications tierces.</string>
+    <string name="pref_watchfaces_default">Standard</string>
+    <string name="pref_watchfaces_default_summary">La plupart des fabricants de montres proposent déjà des cadrans de montre qui peuvent être utilisés avec la complication GlucoDataHandler.\nPar exemple, la plupart des cadrans de montre « Info » de Samsung sont compatibles.</string>
+    <string name="pref_watchfaces_pujie">Pujie</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie est une application de création de cadrans de montre avec une bibliothèque cloud.\nPour trouver des cadrans de montre compatibles, recherchez dans la bibliothèque les cadrans de montre commençant par « GDH_ ».\nRemarque : Pujie n’est pas compatible avec les appareils Wear OS 5.\nAppuyez ici pour ouvrir l’application dans le Play Store.</string>
+    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
+    <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man crée des cadrans de montre tiers spécialement conçus pour être utilisés avec GlucoDataHandler.\nAppuyez ici pour ouvrir sa page Play Store.</string>
+    <string name="pref_watchfaces_gdc">Cadrans de montre GDC</string>
+    <string name="pref_watchfaces_gdc_summary">Les cadrans de montre GDC sont conçus pour être utilisés avec GlucoDataHandler.\nAppuyez ici pour ouvrir la page Play Store.</string>
 </resources>

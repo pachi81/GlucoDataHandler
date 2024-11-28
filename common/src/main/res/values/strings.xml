@@ -25,6 +25,9 @@
     <string name="dexcom_account_us_url" translatable="false">https://myaccount.dexcom.com</string>
     <string name="facebook_gdh_group_url" translatable="false">https://www.facebook.com/groups/823964236542396</string>
     <string name="google_gdh_group_url" translatable="false">https://groups.google.com/g/glucodatahandler</string>
+    <string name="playstore_gdc_watchfaces" translatable="false">https://play.google.com/store/apps/dev?id=7197840107055554214</string>
+    <string name="playstore_dmm_watchfaces" translatable="false">https://play.google.com/store/apps/dev?id=6551812103351455972</string>
+    <string name="playstore_pujie_watchfaces" translatable="false">https://play.google.com/store/apps/dev?id=7780011900367662392</string>
 
 
     <string name="vibrate_pattern_super_mario" translatable="false">Super Mario</string>
@@ -353,7 +356,7 @@
     <string name="pref_source_xdrip_info_2_summary">- enable \"Compatible Broadcast\" - check \"Identify receiver\" to be empty or if an entry already exists, add \"de.michelinside.glucodatahandler\" separated by a space</string>
     <string name="pref_gda_source_xdrip_info_2_summary">- enable \"Compatible Broadcast\"\n- check \"Identify receivers\" to be empty or add a new line with \"de.michelinside.glucodataauto\"</string>
     <string name="pref_source_librelinkup_info">Setup LibreLinkUp</string>
-    <string name="pref_source_librelinkup_info_summary">IMPORTANT: this is not the account used for the FreeStyle Libre App!\nTo activate LibreLinkUp follower:\n- open your FreeStyle Libre App and select in the menu Share or Connected Apps\n- activate LibreLinkUp connection\n- install LibreLinkUp from PlayStore\n- setup your account and wait for the invitation</string>
+    <string name="pref_source_librelinkup_info_summary">IMPORTANT: this is not the account used for the FreeStyle Libre App!\nTo activate LibreLinkUp follower:\n- open your FreeStyle Libre App and select in the menu Share or Connected Apps\n- activate LibreLinkUp connection\n- install LibreLinkUp from Play Store\n- setup your account and wait for the invitation</string>
     <string name="menu_contact">Contact</string>
     <string name="src_ns_iob_cob">IOB/COB support</string>
     <string name="src_ns_iob_cob_summary">Receive also IOB and COB values from nightscout pebble endpoint.</string>
@@ -509,7 +512,7 @@
     <string name="pref_cat_transfer">Transfer values</string>
     <string name="pref_cat_visualisation">Visualisation</string>
     <string name="pref_cat_banglejs">BangleJS watches</string>
-    <string name="pref_wearos_info_summary">To use GlucoDataHandler on Wear OS watches, please install it from Google Playstore on watch.\nThis app does not provide a watchface, it provides several complications (the small round watchface parts), which can be used for watchfaces supporting 3rd party complications.</string>
+    <string name="pref_wearos_info_summary">To use GlucoDataHandler on Wear OS watches, please install it from Google Play Store on watch.</string>
     <string name="pref_wear_os_check_connection">Check connection</string>
     <string name="pref_wear_os_check_connection_summary">Press here to re-check the connection to Wear OS.\nYou can also trigger this check while pressing on the connection info on home screen (even in the Wear OS app).</string>
     <string name="pref_watchdrip_info_summary">WatchDrip+ supports several MiBand and Amazfit devices.\nTo get a whole list of supported devices and more information about configure WatchDrip+, please press here.</string>
@@ -717,8 +720,22 @@
     <string name="gdh_disclaimer_title">Developer\'s Note</string>
     <string name="gdh_disclaimer_message">This app was developed in my free time as a hobby project. Therefore, I cannot guarantee that all features will work flawlessly on every device. However, I am constantly working on improvements.\nIf you encounter any problems or have questions, please contact me directly before leaving a negative review. \nTo stay informed about important updates and bug fixes, you are welcome to join the Facebook group or the Google Groups.</string>
 
+    <string name="pref_source_dexcom_share_info_1_summary">To receive data from Dexcom Share servers:\nIn the Dexcom App:\n - Create a follower\n - Under \"Connections,\" ensure \"Share On\" is displayed</string>
+    <string name="pref_source_dexcom_share_info_2_summary">In GlucoDataHandler:\n - Enter your Dexcom Clarity username and password \n   (if you use your phone number as your username, include your country code)\n - Check the setting for a US account\nImportant: It does not work with a follower account!</string>
+
     <string name="request_timestamp">Updated</string>
-    <string name="pref_source_dexcom_share_info_summary">To receive data from Dexcom Share servers:\n - go into Dexcom app and create a follower\n - check under connections it says \"Share On\"\n - enter in GDH your username and password (add country code for phone number)\n - check setting for US/Non-US\n\nImportant: it does not work with a follower user! You need to use your Dexcom clarity user</string>
     <string name="alarm_header">Alarms</string>
+    <string name="wearos_watchfaces">Third-party watch faces</string>
+    <string name="wearos_watchfaces_summary">Information about Wear OS third-party watch faces.</string>
+    <string name="setup">Setup</string>
+    <string name="pref_watchfaces_info_summary">This app does not provide a watch face, it provides several complications (the small round watch face parts), which can be used for watch faces supporting 3rd party complications.</string>
+    <string name="pref_watchfaces_default">Standard</string>
+    <string name="pref_watchfaces_default_summary">Most watch manufacturers already provide watch faces that can be used with the GlucoDataHandler complication.\nFor example, most Samsung \"Info\" watch faces are compatible.</string>
+    <string name="pref_watchfaces_pujie">Pujie</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie is a watch face creator app with a cloud library.\nTo find compatible watch faces, search the library for watch faces starting with \"GDH_\".\nNote: Pujie is not compatible with Wear OS 5 devices.\nTap here to open the app in the Play Store.</string>
+    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
+    <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man creates third-party watch faces specifically designed for use with GlucoDataHandler.\nTap here to open his Play Store page.</string>
+    <string name="pref_watchfaces_gdc">GDC Watch Faces</string>
+    <string name="pref_watchfaces_gdc_summary">GDC Watch Faces are designed for use with GlucoDataHandler.\nTap here to open the Play Store page.</string>
 
 </resources>

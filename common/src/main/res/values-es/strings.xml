@@ -668,7 +668,22 @@
     <string name="gdh_disclaimer_title">Nota del desarrollador</string>
     <string name="gdh_disclaimer_message">Esta aplicación fue desarrollada en mi tiempo libre como un proyecto de afición. Por lo tanto, no puedo garantizar que todas las funciones funcionen perfectamente en todos los dispositivos. Sin embargo, estoy trabajando constantemente en mejoras.\nSi encuentras algún problema o tienes alguna pregunta, por favor contáctame directamente antes de dejar una reseña negativa. \nPara mantenerte informado sobre actualizaciones importantes y correcciones de errores, puedes unirte al grupo de Facebook o a los Grupos de Google.</string>
 
+    <string name="pref_source_dexcom_share_info_1_summary">Para recibir datos de los servidores Dexcom Share:\nEn la aplicación Dexcom:\n - Crea un seguidor\n - En \"Conexiones\", asegúrate de que se muestre \"Compartir\"</string>
+    <string name="pref_source_dexcom_share_info_2_summary">En GlucoDataHandler:\n - Introduce tu nombre de usuario y contraseña de Dexcom Clarity\n   (si utilizas tu número de teléfono como nombre de usuario, incluye tu código de país)\n - Comprueba la configuración para una cuenta de EE. UU.\nImportante: ¡Esto no funciona con una cuenta de seguidor!</string>
+
     <string name="request_timestamp">Actualizado</string>
-    <string name="pref_source_dexcom_share_info_summary">Para recibir datos de los servidores Dexcom Share:\n - ve a la aplicación Dexcom y crea un seguidor\n - comprueba en conexiones que diga \"Share On\"\n - introduce en GDH tu nombre de usuario y contraseña (añade el código de país para el número de teléfono)\n - comprueba la configuración para EE. UU./No EE. UU.\n\nImportante: ¡no funciona con un usuario seguidor! Necesitas usar tu usuario de Dexcom Clarity</string>
     <string name="alarm_header">Alarmas</string>
+
+    <string name="wearos_watchfaces">Watchfaces de terceros</string>
+    <string name="wearos_watchfaces_summary">Información sobre watchfaces de terceros para Wear OS.</string>
+    <string name="setup">Configuración</string>
+    <string name="pref_watchfaces_info_summary">Esta aplicación no proporciona una watchface, sino que proporciona varias complicaciones (las pequeñas partes redondas de la watchface), que se pueden utilizar para watchfaces que admiten complicaciones de terceros.</string>
+    <string name="pref_watchfaces_default">Estándar</string>
+    <string name="pref_watchfaces_default_summary">La mayoría de los fabricantes de relojes ya proporcionan watchfaces que se pueden utilizar con la complicación GlucoDataHandler.\nPor ejemplo, la mayoría de las watchfaces \"Info\" de Samsung son compatibles.</string>
+    <string name="pref_watchfaces_pujie">Pujie</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie es una aplicación de creación de watchfaces con una biblioteca en la nube.\nPara encontrar watchfaces compatibles, busca en la biblioteca watchfaces que comiencen con \"GDH_\".\nNota: Pujie no es compatible con dispositivos Wear OS 5.\nPulsa aquí para abrir la aplicación en Play Store.</string>
+    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
+    <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man crea watchfaces de terceros diseñadas específicamente para su uso con GlucoDataHandler.\nPulsa aquí para abrir su página de Play Store.</string>
+    <string name="pref_watchfaces_gdc">GDC Watch Faces</string>
+    <string name="pref_watchfaces_gdc_summary">GDC Watch Faces están diseñadas para su uso con GlucoDataHandler.\nPulsa aquí para abrir la página de Play Store.</string>
 </resources>

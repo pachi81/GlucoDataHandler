@@ -663,7 +663,23 @@
     <string name="gdh_disclaimer_title">Примечание разработчика</string>
     <string name="gdh_disclaimer_message">Это приложение было разработано в мое свободное время как любительский проект. Поэтому я не могу гарантировать, что все функции будут работать безупречно на каждом устройстве. Тем не менее, я постоянно работаю над улучшениями.\nЕсли у вас возникнут какие-либо проблемы или вопросы, пожалуйста, свяжитесь со мной напрямую, прежде чем оставлять отрицательный отзыв. \nЧтобы быть в курсе важных обновлений и исправлений ошибок, вы можете присоединиться к группе Facebook или Google Groups.</string>
 
+    <string name="pref_source_dexcom_share_info_1_summary">Чтобы получать данные с серверов Dexcom Share:\nВ приложении Dexcom:\n - Создайте подписчика\n - В разделе «Подключения» убедитесь, что отображается «Поделиться»</string>
+    <string name="pref_source_dexcom_share_info_2_summary">В GlucoDataHandler:\n - Введите имя пользователя и пароль Dexcom Clarity\n   (если вы используете номер телефона в качестве имени пользователя, укажите код страны)\n - Проверьте настройку для учетной записи США\nВажно: это не работает с учетной записью подписчика!</string>
+
     <string name="request_timestamp">Обновлено</string>
-    <string name="pref_source_dexcom_share_info_summary">Чтобы получать данные с серверов Dexcom Share:\n - зайдите в приложение Dexcom и создайте подписчика\n - убедитесь, что в разделе подключений указано «Share On»\n - введите в GDH свое имя пользователя и пароль (добавьте код страны для номера телефона)\n - проверьте настройку для США/не США\n\nВажно: это не работает с учетной записью подписчика! Вам нужно использовать свою учетную запись Dexcom Clarity</string>
     <string name="alarm_header">Сигналы тревоги</string>
+
+    <string name="wearos_watchfaces">Сторонние циферблаты</string>
+    <string name="wearos_watchfaces_summary">Информация о сторонних циферблатах для Wear OS.</string>
+    <string name="setup">Настройка</string>
+    <string name="pref_watchfaces_info_summary">Это приложение не предоставляет циферблат, оно предоставляет несколько усложнений (небольшие круглые элементы циферблата), которые можно использовать для циферблатов, поддерживающих усложнения сторонних разработчиков.</string>
+    <string name="pref_watchfaces_default">Стандартные</string>
+    <string name="pref_watchfaces_default_summary">Большинство производителей часов уже предоставляют циферблаты, которые можно использовать с усложнением GlucoDataHandler.\nНапример, большинство циферблатов Samsung "Info" совместимы.</string>
+    <string name="pref_watchfaces_pujie">Pujie</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie — это приложение для создания циферблатов с облачной библиотекой.\nЧтобы найти совместимые циферблаты, найдите в библиотеке циферблаты, начинающиеся с "GDH_".\nПримечание. Pujie несовместимо с устройствами Wear OS 5.\nНажмите здесь, чтобы открыть приложение в Play Маркете.</string>
+    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
+    <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man создает сторонние циферблаты, специально разработанные для использования с GlucoDataHandler.\nНажмите здесь, чтобы открыть его страницу в Play Маркете.</string>
+    <string name="pref_watchfaces_gdc">Циферблаты GDC</string>
+    <string name="pref_watchfaces_gdc_summary">Циферблаты GDC предназначены для использования с GlucoDataHandler.\nНажмите здесь, чтобы открыть страницу в Play Маркете.</string>
+
 </resources>

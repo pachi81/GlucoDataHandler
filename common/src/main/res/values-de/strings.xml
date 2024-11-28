@@ -659,10 +659,25 @@
     <string name="alarm_repeat_time">Maximale Alarmdauer</string>
     <string name="alarm_repeat_time_summary">Gib die maximale Zeit (in Minuten) an, die der Alarm ertönt und vibriert. Ein Wert von 0 bedeutet, dass der Alarm unbegrenzt wiederholt wird.</string>
     <string name="wear_source_info">Um Quellen zu aktivieren, richte sie bitte zuerst in der Telefon-App ein. Aktiviere Quellen auf deiner Uhr nur, wenn du die Daten noch nicht auf deinem Telefon empfängst.</string>
-    <string name="pref_source_dexcom_share_info_summary">Um Daten von Dexcom Share-Servern zu empfangen:\nIn der Dexcom App:\n - erstelle einen Follower\n - überprüfe unter Verbindungen, ob \"Share Ein\" steht\n In GlucoDataHandler:\n - Benutzername und Passwort des Dexcom Clarity-Kontos eingeben \n   (bei Verwendung der Telefonnummer, Länderkennung mit angeben!)\n - überprüfe die Einstellung für US Konto\nWichtig: Es funktioniert nicht mit einem Follower-Benutzer!</string>
     <string name="gdh_disclaimer_title">Hinweis des Entwicklers</string>
     <string name="gdh_disclaimer_message">Diese App wurde in meiner Freizeit als Hobbyprojekt entwickelt. Daher kann ich nicht garantieren, dass alle Funktionen auf jedem Gerät einwandfrei funktionieren. Ich arbeite jedoch stetig an Verbesserungen.\nBei Problemen oder Fragen kontaktieren Sie mich bitte direkt, bevor Sie eine negative Bewertung abgeben.\nUm über wichtige Updates und Fehlerbehebungen informiert zu werden, können Sie sich gerne in der Facebook-Gruppe oder bei Google Groups anmelden.</string>
 
+    <string name="pref_source_dexcom_share_info_1_summary">Um Daten von Dexcom Share-Servern zu empfangen:\nIn der Dexcom App:\n - erstelle einen Follower\n - überprüfe unter Verbindungen, ob \"Share Ein\" steht</string>
+    <string name="pref_source_dexcom_share_info_2_summary">In GlucoDataHandler:\n - Benutzername und Passwort des Dexcom Clarity-Kontos eingeben \n   (bei Verwendung der Telefonnummer, Länderkennung mit angeben!)\n - überprüfe die Einstellung für US Konto\nWichtig: Es funktioniert nicht mit einem Follower-Benutzer!</string>
+
     <string name="request_timestamp">Aktualisiert</string>
     <string name="alarm_header">Alarme</string>
+
+    <string name="wearos_watchfaces">Zifferblätter von Drittanbietern</string>
+    <string name="wearos_watchfaces_summary">Informationen zu Zifferblättern von Drittanbietern für Wear OS.</string>
+    <string name="setup">Einrichtung</string>
+    <string name="pref_watchfaces_info_summary">Diese App bietet kein eigenes Zifferblatt, sondern mehrere Komplikationen (die kleinen runden Elemente auf dem Zifferblatt), die für Zifferblätter verwendet werden können, welche Komplikationen von Drittanbietern unterstützen.</string>
+    <string name="pref_watchfaces_default">Standard</string>
+    <string name="pref_watchfaces_default_summary">Die meisten Hersteller von Smartwatches bieten bereits Zifferblätter an, die mit der GlucoDataHandler-Komplikation verwendet werden können.\nBeispielsweise sind die meisten Samsung \"Info\"-Zifferblätter kompatibel.</string>
+    <string name="pref_watchfaces_pujie">Pujie</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie ist eine App zum Erstellen von Zifferblättern mit einer Cloud-Bibliothek.\nUm kompatible Zifferblätter zu finden, suchen Sie in der Bibliothek nach Zifferblättern, die mit \"GDH_\" beginnen.\nHinweis: Pujie ist nicht mit Wear OS 5-Geräten kompatibel.\nTippen Sie hier, um die App im Play Store zu öffnen.</string>
+    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
+    <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man erstellt Zifferblätter von Drittanbietern, die speziell für die Verwendung mit GlucoDataHandler entwickelt wurden.\nTippen Sie hier, um seine Play Store-Seite zu öffnen.</string>
+    <string name="pref_watchfaces_gdc">GDC Zifferblätter</string>
+    <string name="pref_watchfaces_gdc_summary">GDC Zifferblätter wurden für die Verwendung mit GlucoDataHandler entwickelt.\nTippen Sie hier, um die Play Store-Seite zu öffnen.</string>
 </resources>

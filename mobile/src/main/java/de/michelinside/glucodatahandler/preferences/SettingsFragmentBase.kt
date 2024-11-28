@@ -230,6 +230,18 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
             selectTargets.entryValues = arrayOf<CharSequence>("") + receivers.values.toTypedArray()
         }
     }
+
+    protected fun setLinkOnClick(preference: Preference?, linkResId: Int) {
+        preference?.setOnPreferenceClickListener {
+            val browserIntent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(resources.getText(linkResId).toString())
+            )
+            startActivity(browserIntent)
+            true
+        }
+    }
+
 }
 
 class GeneralSettingsFragment: SettingsFragmentBase(R.xml.pref_general) {
@@ -310,6 +322,7 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
 }
 
 class NotificaitonSettingsFragment: SettingsFragmentBase(R.xml.pref_notification) {}
+
 class WatchSettingsFragment: SettingsFragmentBase(R.xml.pref_watch) {
     override fun initPreferences() {
         Log.v(LOG_ID, "initPreferences called")
@@ -325,15 +338,18 @@ class WatchSettingsFragment: SettingsFragmentBase(R.xml.pref_watch) {
             true
         }
 
-        val prefWatchDripLink = findPreference<Preference>(Constants.SHARED_PREF_OPEN_WATCH_DRIP_LINK)
-        prefWatchDripLink!!.setOnPreferenceClickListener {
-            val browserIntent = Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse(resources.getText(CR.string.watchdrip_link).toString())
-            )
-            startActivity(browserIntent)
-            true
-        }
+        setLinkOnClick(findPreference(Constants.SHARED_PREF_OPEN_WATCH_DRIP_LINK), CR.string.watchdrip_link)
+    }
+}
+
+class WatchFaceFragment: SettingsFragmentBase(R.xml.pref_watchfaces) {
+    override fun initPreferences() {
+        Log.v(LOG_ID, "initPreferences called")
+
+        setLinkOnClick(findPreference(Constants.SHARED_PREF_WATCHFACES_PUJIE), CR.string.playstore_pujie_watchfaces)
+        setLinkOnClick(findPreference(Constants.SHARED_PREF_WATCHFACES_DMM), CR.string.playstore_dmm_watchfaces)
+        setLinkOnClick(findPreference(Constants.SHARED_PREF_WATCHFACES_GDC), CR.string.playstore_gdc_watchfaces)
+
     }
 }
 

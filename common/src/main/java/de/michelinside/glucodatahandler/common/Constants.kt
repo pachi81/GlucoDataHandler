@@ -118,6 +118,11 @@ object Constants {
     const val SHARED_PREF_SAVE_WEAR_LOGS = "save_wear_logs"
 
 
+    const val SHARED_PREF_WATCHFACES_PUJIE = "pref_watchfaces_pujie"
+    const val SHARED_PREF_WATCHFACES_DMM = "pref_watchfaces_dmm"
+    const val SHARED_PREF_WATCHFACES_GDC = "pref_watchfaces_gdc"
+
+
     // internal app preferences (not changed by settings) -> use separate tag for not trigger onChanged events
     const val SHARED_PREF_INTERNAL_TAG = "GlucoDataHandlerInternalAppPrefs"
     const val SHARED_PREF_FLOATING_WIDGET_X = "floating_widget_x"
