@@ -22,6 +22,7 @@ import de.michelinside.glucodatahandler.common.receiver.BroadcastServiceAPI
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
+import java.math.RoundingMode
 
 object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
     private val LOG_ID = "GDH.WatchDrip"
@@ -322,8 +323,9 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
 
     private fun canSendBroadcast(dataSource: NotifySource): Boolean {
         if(sendInterval > 1 && !ReceiveData.forceAlarm && ReceiveData.getAlarmType() != AlarmType.VERY_LOW && (dataSource == NotifySource.BROADCAST || dataSource == NotifySource.MESSAGECLIENT)) {
-            if (Utils.getElapsedTimeMinute(lastSendValuesTime) < sendInterval) {
-                Log.i(LOG_ID, "Ignore data because of interval $sendInterval - elapsed: ${Utils.getElapsedTimeMinute(lastSendValuesTime)}")
+            val elapsed = Utils.getElapsedTimeMinute(lastSendValuesTime, RoundingMode.HALF_UP)
+            if ( elapsed < sendInterval) {
+                Log.i(LOG_ID, "Ignore data because of interval $sendInterval - elapsed: $elapsed")
                 return false
             }
         }

@@ -453,8 +453,12 @@ object Utils {
     }
 
     fun getUiTimeStamp(time: Long): String {
-        if(getElapsedTimeMinute(time) > (60*24))
+        if(getElapsedTimeMinute(time) >= (60*24))
             return DateFormat.getDateTimeInstance().format(Date(time))
+        return getTimeStamp(time)
+    }
+
+    fun getTimeStamp(time: Long): String {
         return DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(time))
     }
 

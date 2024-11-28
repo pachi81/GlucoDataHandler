@@ -15,6 +15,7 @@ import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
 import de.michelinside.glucodatahandler.common.utils.Utils
 import kotlinx.coroutines.*
+import java.math.RoundingMode
 import java.text.DateFormat
 import java.util.*
 import kotlin.coroutines.cancellation.CancellationException
@@ -340,7 +341,8 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                         }
                     }.start()
                 }
-                lastSendValuesTime = ReceiveData.time
+                if(dataSource == NotifySource.BROADCAST)
+                    lastSendValuesTime = ReceiveData.time
             }
         } catch (cancellationException: CancellationException) {
             throw cancellationException
@@ -624,9 +626,10 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         if(dataSource == NotifySource.BROADCAST && !ReceiveData.forceAlarm && ReceiveData.getAlarmType() != AlarmType.VERY_LOW) {
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             val interval = sharedPref.getInt(Constants.SHARED_PREF_SEND_TO_WATCH_INTERVAL, 1)
-            Log.v(LOG_ID, "Check sending for interval $interval - elapsed: ${Utils.getElapsedTimeMinute(lastSendValuesTime)}")
-            if (interval > 1 && Utils.getElapsedTimeMinute(lastSendValuesTime) < interval) {
-                Log.i(LOG_ID, "Ignore data because of interval $interval - elapsed: ${Utils.getElapsedTimeMinute(lastSendValuesTime)}")
+            val elapsedTime = Utils.getElapsedTimeMinute(lastSendValuesTime, RoundingMode.HALF_UP)
+            Log.v(LOG_ID, "Check sending for interval $interval - elapsed: ${elapsedTime}")
+            if (interval > 1 && elapsedTime < interval) {
+                Log.d(LOG_ID, "Ignore data because of interval $interval - elapsed: ${elapsedTime} - last: ${Utils.getUiTimeStamp(lastSendValuesTime)}")
                 return false
             }
         }

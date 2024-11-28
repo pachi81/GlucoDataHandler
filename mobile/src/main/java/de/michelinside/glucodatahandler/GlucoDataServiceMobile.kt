@@ -22,6 +22,7 @@ import de.michelinside.glucodatahandler.watch.WatchDrip
 import de.michelinside.glucodatahandler.widget.FloatingWidget
 import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
 import de.michelinside.glucodatahandler.widget.LockScreenWallpaper
+import java.math.RoundingMode
 
 
 class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInterface {
@@ -278,8 +279,9 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         }*/
 
         val interval = sharedPref.getInt(Constants.SHARED_PREF_SEND_TO_RECEIVER_INTERVAL, 1)
-        if (interval > 1 && Utils.getElapsedTimeMinute(lastForwardTime) < interval) {
-            Log.d(LOG_ID, "Ignore data because of interval $interval - elapsed: ${Utils.getElapsedTimeMinute(lastForwardTime)}")
+        val elapsed = Utils.getElapsedTimeMinute(lastForwardTime, RoundingMode.HALF_UP)
+        if (interval > 1 && elapsed < interval) {
+            Log.d(LOG_ID, "Ignore data because of interval $interval - elapsed: $elapsed")
             return
         }
 
