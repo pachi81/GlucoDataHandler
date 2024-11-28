@@ -13,7 +13,7 @@
     <string name="info_label_timestamp">Временная метка</string>
     <string name="info_label_iob_cob_timestamp">Время IOB/COB</string>
     <string name="info_label_timediff">Разница во времени</string>
-    <string name="info_label_alarm">Сигнал тревоги</string>
+    <string name="info_label_alarm">Тревога</string>
     <string name="info_label_source">Источник</string>
     <string name="info_label_per_minute">в минуту</string>
     <string name="no_data">Данные еще не получены!\nСначала необходимо выбрать и настроить источник.</string>
@@ -560,7 +560,7 @@
 
     <string name="settings_save_succeeded">Настройки успешно сохранены</string>
     <string name="settings_save_failed">Ошибка при сохранении настроек!</string>
-    <string name="settings_read_succeeded">Настройки успешно прочитаны</string>
+    <string name="settings_read_succeeded">Настройки успешно восстановлены</string>
     <string name="settings_read_failed">Ошибка при чтении настроек!</string>
     <string name="pref_cat_export_import">Экспорт / Импорт</string>
     <string name="pref_cat_export_import_summary">Экспорт или импорт настроек и сохранение логов.</string>
