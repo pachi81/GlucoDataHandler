@@ -13,7 +13,7 @@
     <string name="info_label_timestamp">Временная метка</string>
     <string name="info_label_iob_cob_timestamp">Время IOB/COB</string>
     <string name="info_label_timediff">Разница во времени</string>
-    <string name="info_label_alarm">Тревога</string>
+    <string name="info_label_alarm">Тревога:</string>
     <string name="info_label_source">Источник</string>
     <string name="info_label_per_minute">в минуту</string>
     <string name="no_data">Данные еще не получены!\nСначала необходимо выбрать и настроить источник.</string>
