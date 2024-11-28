@@ -307,7 +307,7 @@
     <string name="pref_source_xdrip_info_2_summary">- activez "Diffusion compatible" - vérifiez que "Identifier le récepteur" est vide ou si une entrée existe déjà, ajoutez "de.michelinside.glucodatahandler" séparé par un espace</string>
     <string name="pref_gda_source_xdrip_info_2_summary">- activez "Diffusion compatible"\n- vérifiez que "Identifier les récepteurs" est vide ou ajoutez une nouvelle ligne avec "de.michelinside.glucodataauto"</string>
     <string name="pref_source_librelinkup_info">Configurer LibreLinkUp</string>
-    <string name="pref_source_librelinkup_info_summary">IMPORTANT: ce n\'est pas le compte utilisé pour l\'application FreeStyle Libre!\nPour activer le suiveur LibreLinkUp:\n- ouvrez votre application FreeStyle Libre et sélectionnez dans le menu Partager ou Applications connectées\n- activez la connexion LibreLinkUp\n- installez LibreLinkUp depuis le PlayStore\n- configurez votre compte et attendez l\'invitation</string>
+    <string name="pref_source_librelinkup_info_summary">IMPORTANT: ce n\'est pas le compte utilisé pour l\'application FreeStyle Libre!\nPour activer le suiveur LibreLinkUp:\n- ouvrez votre application FreeStyle Libre et sélectionnez dans le menu Partager ou Applications connectées\n- activez la connexion LibreLinkUp\n- installez LibreLinkUp depuis le Play Store\n- configurez votre compte et attendez l\'invitation</string>
     <string name="menu_contact">Contact</string>
     <string name="src_ns_iob_cob">Prise en charge IOB/COB</string>
     <string name="src_ns_iob_cob_summary">Recevez également les valeurs IOB et COB du point de terminaison Nightscout Pebble.</string>
@@ -463,7 +463,7 @@
     <string name="pref_cat_transfer">Transférer les valeurs</string>
     <string name="pref_cat_visualisation">Visualisation</string>
     <string name="pref_cat_banglejs">Montres BangleJS</string>
-    <string name="pref_wearos_info_summary">Pour utiliser GlucoDataHandler sur les montres Wear OS, veuillez l\'installer depuis le Google Playstore.\nCette application ne fournit pas de cadran de montre, mais fournit plusieurs complications (les petites parties rondes du cadran de la montre), qui peuvent être utilisées pour les cadrans de montre prenant en charge les complications tierces.</string>
+    <string name="pref_wearos_info_summary">Pour utiliser GlucoDataHandler sur les montres Wear OS, veuillez l\'installer depuis le Google Play Store.</string>
     <string name="pref_wear_os_check_connection">Vérifier la connexion</string>
     <string name="pref_wear_os_check_connection_summary">Appuyez ici pour revérifier la connexion à Wear OS.\nVous pouvez également déclencher cette vérification en appuyant sur les informations de connexion sur l\'écran d\'accueil (même dans l\'application Wear OS).</string>
     <string name="pref_watchdrip_info_summary">WatchDrip+ prend en charge plusieurs appareils MiBand et Amazfit.\nPour obtenir une liste complète des appareils pris en charge et plus d\'informations sur la configuration de WatchDrip+, veuillez appuyer ici.</string>

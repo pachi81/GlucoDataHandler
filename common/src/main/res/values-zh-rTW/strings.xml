@@ -459,7 +459,7 @@
     <string name="pref_cat_transfer">传输值</string>
     <string name="pref_cat_visualisation">可视化</string>
     <string name="pref_cat_banglejs">BangleJS 手表</string>
-    <string name="pref_wearos_info_summary">要在 Wear OS 手表上使用 GlucoDataHandler，请在手表上从 Google Play 商店安装它。\n此应用程序不提供表盘，它提供多种复杂功能（表盘上的小圆形部件），可用于支持第三方复杂功能的表盘。</string>
+    <string name="pref_wearos_info_summary">要在 Wear OS 手表上使用 GlucoDataHandler，请在手表上从 Google Play 商店安装它。</string>
     <string name="pref_wear_os_check_connection">检查连接</string>
     <string name="pref_wear_os_check_connection_summary">按此处可重新检查与 Wear OS 的连接。\n您也可以通过按主屏幕上的连接信息（即使在 Wear OS 应用程序中）来触发此检查。</string>
     <string name="pref_watchdrip_info_summary">WatchDrip+ 支持多种 MiBand 和 Amazfit 设备。\n要获取支持的设备的完整列表以及有关配置 WatchDrip+ 的更多信息，请按此处。</string>
