@@ -675,9 +675,10 @@
     <string name="request_timestamp">Mis à jour</string>
     <string name="alarm_header">Alarmes</string>
 
-    <string name="wearos_watchfaces">Cadrans de montre tiers</string>
+    <string name="wearos_watchfaces">Cadrans de montre</string>
     <string name="wearos_watchfaces_summary">Informations sur les cadrans de montre tiers pour Wear OS.</string>
     <string name="setup">Configuration</string>
+    <string name="pref_watchfaces_cat">Cadrans de montre tiers</string>
     <string name="pref_watchfaces_info_summary">Cette application ne fournit pas de cadran de montre, mais plusieurs complications (les petites parties rondes du cadran de la montre), qui peuvent être utilisées pour les cadrans de montre prenant en charge les complications tierces.</string>
     <string name="pref_watchfaces_default">Standard</string>
     <string name="pref_watchfaces_default_summary">La plupart des fabricants de montres proposent déjà des cadrans de montre qui peuvent être utilisés avec la complication GlucoDataHandler.\nPar exemple, la plupart des cadrans de montre « Info » de Samsung sont compatibles.</string>

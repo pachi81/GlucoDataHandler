@@ -677,9 +677,10 @@
     <string name="pref_source_dexcom_share_info_1_summary">To receive data from Dexcom Share servers:\nIn the Dexcom App:\n - Create a follower\n - Under \"Connections,\" ensure \"Share On\" is displayed</string>
     <string name="pref_source_dexcom_share_info_2_summary">In GlucoDataHandler:\n - Enter your Dexcom Clarity username and password \n   (if you use your phone number as your username, include your country code)\n - Check the setting for a US account\nImportant: It does not work with a follower account!</string>
 
-    <string name="wearos_watchfaces">Third-party watch faces</string>
+    <string name="wearos_watchfaces">Watch Faces</string>
     <string name="wearos_watchfaces_summary">Information about Wear OS third-party watch faces.</string>
     <string name="setup">Setup</string>
+    <string name="pref_watchfaces_cat">Third-party watch faces</string>
     <string name="pref_watchfaces_info_summary">This app does not provide a watchface, it provides several complications (the small round watchface parts), which can be used for watch faces supporting 3rd party complications.</string>
     <string name="pref_watchfaces_default">Standard</string>
     <string name="pref_watchfaces_default_summary">Most watch manufacturers already provide watch faces that can be used with the GlucoDataHandler complication.\nFor example, most Samsung \"Info\" watch faces are compatible.</string>

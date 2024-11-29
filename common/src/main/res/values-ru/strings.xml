@@ -669,9 +669,10 @@
     <string name="request_timestamp">Обновлено</string>
     <string name="alarm_header">Сигналы тревоги</string>
 
-    <string name="wearos_watchfaces">Сторонние циферблаты</string>
+    <string name="wearos_watchfaces">Циферблаты</string>
     <string name="wearos_watchfaces_summary">Информация о сторонних циферблатах для Wear OS.</string>
     <string name="setup">Настройка</string>
+    <string name="pref_watchfaces_cat">Сторонние циферблаты</string>
     <string name="pref_watchfaces_info_summary">Это приложение не предоставляет циферблат, оно предоставляет несколько усложнений (небольшие круглые элементы циферблата), которые можно использовать для циферблатов, поддерживающих усложнения сторонних разработчиков.</string>
     <string name="pref_watchfaces_default">Стандартные</string>
     <string name="pref_watchfaces_default_summary">Большинство производителей часов уже предоставляют циферблаты, которые можно использовать с усложнением GlucoDataHandler.\nНапример, большинство циферблатов Samsung "Info" совместимы.</string>

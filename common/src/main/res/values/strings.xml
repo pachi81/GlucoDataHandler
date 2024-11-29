@@ -725,9 +725,10 @@
 
     <string name="request_timestamp">Updated</string>
     <string name="alarm_header">Alarms</string>
-    <string name="wearos_watchfaces">Third-party watch faces</string>
+    <string name="wearos_watchfaces">Watch Faces</string>
     <string name="wearos_watchfaces_summary">Information about Wear OS third-party watch faces.</string>
     <string name="setup">Setup</string>
+    <string name="pref_watchfaces_cat">Third-party watch faces</string>
     <string name="pref_watchfaces_info_summary">This app does not provide a watch face, it provides several complications (the small round watch face parts), which can be used for watch faces supporting 3rd party complications.</string>
     <string name="pref_watchfaces_default">Standard</string>
     <string name="pref_watchfaces_default_summary">Most watch manufacturers already provide watch faces that can be used with the GlucoDataHandler complication.\nFor example, most Samsung \"Info\" watch faces are compatible.</string>

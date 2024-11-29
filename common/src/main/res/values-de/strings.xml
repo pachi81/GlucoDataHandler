@@ -668,9 +668,10 @@
     <string name="request_timestamp">Aktualisiert</string>
     <string name="alarm_header">Alarme</string>
 
-    <string name="wearos_watchfaces">Zifferblätter von Drittanbietern</string>
+    <string name="wearos_watchfaces">Zifferblätter</string>
     <string name="wearos_watchfaces_summary">Informationen zu Zifferblättern von Drittanbietern für Wear OS.</string>
     <string name="setup">Einrichtung</string>
+    <string name="pref_watchfaces_cat">Zifferblätter von Drittanbietern</string>
     <string name="pref_watchfaces_info_summary">Diese App bietet kein eigenes Zifferblatt, sondern mehrere Komplikationen (die kleinen runden Elemente auf dem Zifferblatt), die für Zifferblätter verwendet werden können, welche Komplikationen von Drittanbietern unterstützen.</string>
     <string name="pref_watchfaces_default">Standard</string>
     <string name="pref_watchfaces_default_summary">Die meisten Hersteller von Smartwatches bieten bereits Zifferblätter an, die mit der GlucoDataHandler-Komplikation verwendet werden können.\nBeispielsweise sind die meisten Samsung \"Info\"-Zifferblätter kompatibel.</string>

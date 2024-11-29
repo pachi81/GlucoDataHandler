@@ -671,9 +671,10 @@
     <string name="request_timestamp">Atualizado</string>
     <string name="alarm_header">Alarmes</string>
 
-    <string name="wearos_watchfaces">Mostradores de terceiros</string>
+    <string name="wearos_watchfaces">Mostradores de relógio</string>
     <string name="wearos_watchfaces_summary">Informações sobre mostradores de terceiros para Wear OS.</string>
     <string name="setup">Configuração</string>
+    <string name="pref_watchfaces_cat">Mostradores de terceiros</string>
     <string name="pref_watchfaces_info_summary">Este aplicativo não fornece um mostrador, mas fornece várias complicações (as pequenas partes redondas do mostrador), que podem ser usadas para mostradores que suportam complicações de terceiros.</string>
     <string name="pref_watchfaces_default">Padrão</string>
     <string name="pref_watchfaces_default_summary">A maioria dos fabricantes de relógios já fornece mostradores que podem ser usados com a complicação GlucoDataHandler.\nPor exemplo, a maioria dos mostradores "Info" da Samsung são compatíveis.</string>

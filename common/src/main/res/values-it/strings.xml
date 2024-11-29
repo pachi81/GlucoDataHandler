@@ -664,9 +664,10 @@
     <string name="request_timestamp">Aggiornato</string>
     <string name="alarm_header">Allarmi</string>
 
-    <string name="wearos_watchfaces">Quadranti di terze parti</string>
+    <string name="wearos_watchfaces">Quadranti di orologio</string>
     <string name="wearos_watchfaces_summary">Informazioni sui quadranti di terze parti per Wear OS.</string>
     <string name="setup">Configurazione</string>
+    <string name="pref_watchfaces_cat">Quadranti di terze parti</string>
     <string name="pref_watchfaces_info_summary">Questa app non fornisce un quadrante, ma diverse complicazioni (le piccole parti rotonde del quadrante), che possono essere utilizzate per quadranti che supportano complicazioni di terze parti.</string>
     <string name="pref_watchfaces_default">Standard</string>
     <string name="pref_watchfaces_default_summary">La maggior parte dei produttori di orologi fornisce già quadranti che possono essere utilizzati con la complicazione GlucoDataHandler.\nAd esempio, la maggior parte dei quadranti "Info" di Samsung sono compatibili.</string>

@@ -7,7 +7,7 @@
         android:summary="@string/pref_watchfaces_info_summary"
         app:iconSpaceReserved="false" />
     <PreferenceCategory
-        android:title="@string/wearos_watchfaces"
+        android:title="@string/pref_watchfaces_cat"
         app:iconSpaceReserved="false">
         <Preference
             android:key="pref_watchfaces_default"
