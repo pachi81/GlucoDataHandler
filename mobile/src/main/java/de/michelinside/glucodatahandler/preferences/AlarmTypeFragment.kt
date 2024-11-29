@@ -132,10 +132,10 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
     override fun onResume() {
         Log.d(LOG_ID, "onResume called")
         try {
+            super.onResume()
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
             InternalNotifier.addNotifier(requireContext(), this, mutableSetOf(NotifySource.NOTIFICATION_STOPPED))
             update()
-            super.onResume()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.toString())
         }
@@ -144,11 +144,11 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
     override fun onPause() {
         Log.d(LOG_ID, "onPause called")
         try {
+            super.onPause()
             stopTestSound()
             Vibrator.cancel()
             preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
             InternalNotifier.remNotifier(requireContext(), this)
-            super.onPause()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.toString())
         }

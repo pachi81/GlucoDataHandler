@@ -51,8 +51,8 @@ class AlarmFragment : PreferenceFragmentCompat() {
     override fun onResume() {
         Log.d(LOG_ID, "onResume called")
         try {
-            update()
             super.onResume()
+            update()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.toString())
         }

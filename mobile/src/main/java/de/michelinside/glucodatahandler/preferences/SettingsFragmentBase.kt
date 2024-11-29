@@ -76,10 +76,10 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
     override fun onResume() {
         Log.d(LOG_ID, "onResume called")
         try {
+            super.onResume()
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
             updateEnablePrefs.clear()
             update()
-            super.onResume()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.toString())
         }
@@ -88,8 +88,8 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
     override fun onPause() {
         Log.d(LOG_ID, "onPause called")
         try {
-            preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
             super.onPause()
+            preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.toString())
         }
@@ -233,11 +233,15 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
 
     protected fun setLinkOnClick(preference: Preference?, linkResId: Int) {
         preference?.setOnPreferenceClickListener {
-            val browserIntent = Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse(resources.getText(linkResId).toString())
-            )
-            startActivity(browserIntent)
+            try {
+                val browserIntent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(resources.getText(linkResId).toString())
+                )
+                startActivity(browserIntent)
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "setLinkOnClick exception for key ${preference.key}" + exc.toString())
+            }
             true
         }
     }
@@ -376,14 +380,7 @@ class GDASettingsFragment: SettingsFragmentBase(R.xml.pref_gda) {
             val no_gda_info = findPreference<Preference>(Constants.SHARED_PREF_NO_GLUCODATAAUTO)
             if (no_gda_info != null) {
                 no_gda_info.isVisible = true
-                no_gda_info.setOnPreferenceClickListener {
-                    val browserIntent = Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(resources.getText(CR.string.glucodataauto_link).toString())
-                    )
-                    startActivity(browserIntent)
-                    true
-                }
+                setLinkOnClick(no_gda_info, CR.string.glucodataauto_link)
             }
         }
     }
