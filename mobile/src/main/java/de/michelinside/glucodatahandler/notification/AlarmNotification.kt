@@ -58,7 +58,8 @@ object AlarmNotification : AlarmNotificationBase() {
             .setUsage(AudioAttributes.USAGE_ALARM)
             .build()
         channel.setSound(null, audioAttributes)
-        channel.enableVibration(false)
+        channel.enableVibration(true)
+        channel.vibrationPattern = longArrayOf(0, 500, 100, 500)
         channel.enableLights(true)
     }
 
