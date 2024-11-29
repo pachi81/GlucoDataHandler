@@ -277,15 +277,16 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
         prefRetrigger!!.value = preferenceManager.sharedPreferences!!.getInt(prefRetrigger.key, 0)
 
         val prefRepeat = findPreference<SwitchPreferenceCompat>(repeatPref)
+        val prefRepeatTime = findPreference<SeekBarPreference>(repeatTimePref)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
             prefRepeat!!.isVisible = false  // looping is supported for API 28 and above only
             prefRepeat.isChecked = false
+            prefRepeatTime!!.isVisible = false
+            prefRepeatTime.value = 0
         } else {
             prefRepeat!!.isChecked = preferenceManager.sharedPreferences!!.getBoolean(prefRepeat.key, alarmType.setting!!.repeatUntilClose)
+            prefRepeatTime!!.value = preferenceManager.sharedPreferences!!.getInt(prefRepeatTime.key, alarmType.setting!!.repeatTime)
         }
-
-        val prefRepeatTime = findPreference<SeekBarPreference>(repeatTimePref)
-        prefRepeatTime!!.value = preferenceManager.sharedPreferences!!.getInt(prefRepeatTime.key, alarmType.setting!!.repeatTime)
 
         val prefSoundDelay = findPreference<SeekBarPreference>(soundDelayPref)
         prefSoundDelay!!.value = preferenceManager.sharedPreferences!!.getInt(prefSoundDelay.key, 0)

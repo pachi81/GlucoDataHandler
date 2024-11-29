@@ -674,7 +674,7 @@
     <string name="pref_watchfaces_cat">Zifferblätter von Drittanbietern</string>
     <string name="pref_watchfaces_info_summary">Diese App bietet kein eigenes Zifferblatt, sondern mehrere Komplikationen (die kleinen runden Elemente auf dem Zifferblatt), die für Zifferblätter verwendet werden können, welche Komplikationen von Drittanbietern unterstützen.</string>
     <string name="pref_watchfaces_default">Standard</string>
-    <string name="pref_watchfaces_default_summary">Die meisten Hersteller von Smartwatches bieten bereits Zifferblätter an, die mit der GlucoDataHandler-Komplikation verwendet werden können.\nBeispielsweise sind die meisten Samsung \"Info\"-Zifferblätter kompatibel.</string>
+    <string name="pref_watchfaces_default_summary">Die meisten Hersteller von Smartwatches bieten bereits Zifferblätter an, die mit den Komplikationen von GlucoDataHandler verwendet werden können.\nBeispielsweise sind die meisten Samsung \"Info\"-Zifferblätter kompatibel.</string>
     <string name="pref_watchfaces_pujie">Pujie</string>
     <string name="pref_watchfaces_pujie_summary">Pujie ist eine App zum Erstellen von Zifferblättern mit einer Cloud-Bibliothek.\nUm kompatible Zifferblätter zu finden, suchen Sie in der Bibliothek nach Zifferblättern, die mit \"GDH_\" beginnen.\nHinweis: Pujie ist nicht mit Wear OS 5-Geräten kompatibel.\nTippen Sie hier, um die App im Play Store zu öffnen.</string>
     <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>

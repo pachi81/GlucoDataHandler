@@ -799,11 +799,13 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     }
 
     private fun getRepeat(alarmType: AlarmType): Int {
-        if (alarmType.setting!=null && alarmType.setting.repeatUntilClose) {
-            if (alarmType.setting.repeatTime > 0) {
-                return alarmType.setting.repeatTime
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            if (alarmType.setting!=null && alarmType.setting.repeatUntilClose) {
+                if (alarmType.setting.repeatTime > 0) {
+                    return alarmType.setting.repeatTime
+                }
+                return -1  // unlimited
             }
-            return -1  // unlimited
         }
         return 0
     }
