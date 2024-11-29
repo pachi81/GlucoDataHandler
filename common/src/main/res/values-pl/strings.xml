@@ -458,7 +458,7 @@
     <string name="pref_cat_transfer">Przesyłanie wartości </string>
     <string name="pref_cat_visualisation">Wizualizacja</string>
     <string name="pref_cat_banglejs">Zegarki BangleJS</string>
-    <string name="pref_wearos_info_summary">Aby korzystać z aplikacji GlucoDataHandler na zegarkach z Wear OS, zainstaluj ją ze Sklepu Play Google.</string>
+    <string name="pref_wearos_info_summary">Aby korzystać z aplikacji GlucoDataHandler na zegarkach z Wear OS, zainstaluj ją ze Sklepu Google Play.</string>
     <string name="pref_wear_os_check_connection">Sprawdź połączenie</string>
     <string name="pref_wear_os_check_connection_summary">Naciśnij tutaj, aby ponownie sprawdzić połączenie z Wear OS.\nMożesz również uruchomić to sprawdzenie, naciskając informacje o połączeniu na ekranie głównym (nawet w aplikacji Wear OS).</string>
     <string name="pref_watchdrip_info_summary">WatchDrip+ obsługuje kilka opasek MiBand i zegarków Amazfit.\nAby uzyskać pełną listę obsługiwanych urządzeń i więcej informacji na temat konfiguracji WatchDrip+, naciśnij tutaj.</string>
@@ -674,21 +674,21 @@
     <string name="request_timestamp">Aktualny</string>
     <string name="alarm_header">Alarmy</string>
 
-    <string name="pref_source_dexcom_share_info_1_summary">To receive data from Dexcom Share servers:\nIn the Dexcom App:\n - Create a follower\n - Under \"Connections,\" ensure \"Share On\" is displayed</string>
-    <string name="pref_source_dexcom_share_info_2_summary">In GlucoDataHandler:\n - Enter your Dexcom Clarity username and password \n   (if you use your phone number as your username, include your country code)\n - Check the setting for a US account\nImportant: It does not work with a follower account!</string>
+    <string name="pref_source_dexcom_share_info_1_summary">Aby odbierać dane z serwerów Dexcom Share:\nW aplikacji Dexcom:\n - Utwórz obserwatora\n - W sekcji &quot;Połączenia&quot; upewnij się, że wyświetlana jest opcja &quot;Udostępniaj&quot;.</string>
+    <string name="pref_source_dexcom_share_info_2_summary">W GlucoDataHandler:\n - Wprowadź nazwę użytkownika i hasło Dexcom Clarity \n (jeśli używasz numeru telefonu jako nazwy użytkownika, dołącz kod kraju) \n - Sprawdź ustawienie konta US\nWażna uwaga: Opcja ta nie działa z kontem obserwatora!</string>
 
-    <string name="wearos_watchfaces">Watch Faces</string>
-    <string name="wearos_watchfaces_summary">Information about Wear OS third-party watch faces.</string>
-    <string name="setup">Setup</string>
-    <string name="pref_watchfaces_cat">Third-party watch faces</string>
-    <string name="pref_watchfaces_info_summary">This app does not provide a watchface, it provides several complications (the small round watchface parts), which can be used for watch faces supporting 3rd party complications.</string>
-    <string name="pref_watchfaces_default">Standard</string>
-    <string name="pref_watchfaces_default_summary">Most watch manufacturers already provide watch faces that can be used with the GlucoDataHandler complication.\nFor example, most Samsung \"Info\" watch faces are compatible.</string>
+    <string name="wearos_watchfaces">Tarcze zegarków</string>
+    <string name="wearos_watchfaces_summary">Informacje o oddzielnych tarczach zegarków dla Wear OS.</string>
+    <string name="setup">Konfiguracja</string>
+    <string name="pref_watchfaces_cat">Oddzielne tarcze zegarków</string>
+    <string name="pref_watchfaces_info_summary">Ta aplikacja nie zawiera w sobie tarczy zegarka. Dzięki niej można wstawić kilka komplikacji (małych okrągłych wskaźników) na tarcze, które dają możliwość wstawiania ich z innych aplikacji.</string>
+    <string name="pref_watchfaces_default">Standardowe</string>
+    <string name="pref_watchfaces_default_summary">Większość producentów zegarków dostarcza już tarcze zegarków, które mogą być używane z komplikacją z GlucoDataHandler. Na przykład większość tarcz zegarków Samsung \&quot;Info&quot;\ daje taką możliwość.</string>
     <string name="pref_watchfaces_pujie">Pujie</string>
-    <string name="pref_watchfaces_pujie_summary">Pujie is a watch face creator app with a cloud library.\nTo find compatible watch faces, search the library for watch faces starting with \"GDH_\".\nNote: Pujie is not compatible with Wear OS 5 devices.\nTap here to open the app in the Play Store.</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie to aplikacja do tworzenia tarcz zegarka z biblioteką chmurową.\nAby znaleźć kompatybilne tarcze zegarka, wyszukaj w bibliotece tarcze zegarka zaczynające się od \&quot;GDH_\&quot;.\nUwaga: Aplikacja Pujie nie jest kompatybilna z urządzeniami z systemem Wear OS 5.\nStuknij tutaj, aby otworzyć aplikację w Sklepie Play.</string>
     <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
-    <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man creates third-party watch faces specifically designed for use with GlucoDataHandler.\nTap here to open his Play Store page.</string>
-    <string name="pref_watchfaces_gdc">GDC Watch Faces</string>
-    <string name="pref_watchfaces_gdc_summary">GDC Watch Faces are designed for use with GlucoDataHandler.\nTap here to open the Play Store page.</string>
+    <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man tworzy oddzielne tarcze zegarków zaprojektowane specjalnie do użytku z GlucoDataHandler.\nStuknij tutaj, aby otworzyć jego stronę w Sklepie Play.</string>
+    <string name="pref_watchfaces_gdc">Tarcze zegarka GDC</string>
+    <string name="pref_watchfaces_gdc_summary">Tarcze zegarka GDC są przeznaczone do użytku z aplikacją GlucoDataHandler.\nStuknij tutaj, aby otworzyć stronę Sklepu Play.</string>
 
 </resources>
