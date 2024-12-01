@@ -611,7 +611,7 @@
     <string name="enabled">включено</string>
     <string name="disabled">выключено</string>
     <string name="not_available">недоступно</string>
-    <string name="action_read_values">Считать значения</string>
+    <string name="action_read_values">Озвучить данные</string>
     <plurals name="elapsed_time_full_text">
         <item quantity="one">Время %d минута</item>
         <item quantity="few">Время %d минуты</item>
