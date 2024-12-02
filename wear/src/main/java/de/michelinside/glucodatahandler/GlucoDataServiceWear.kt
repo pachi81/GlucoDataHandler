@@ -2,6 +2,8 @@ package de.michelinside.glucodatahandler
 
 import android.app.Notification
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -10,11 +12,12 @@ import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.notifier.*
+import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 
 
 class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterface {
-
+    private var sendScreenEvents = false
     companion object {
         private val LOG_ID = "GDH.GlucoDataServiceWear"
         private var starting = false
@@ -74,14 +77,18 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
 
     private fun updateComplicationNotifier() {
         Log.d(LOG_ID, "updateComplicationNotifier called")
+        ActiveComplicationHandler.checkAlwaysUpdateComplications(this)
         val filter = mutableSetOf(
             NotifySource.MESSAGECLIENT,
             NotifySource.BROADCAST,
-            NotifySource.SETTINGS
+            NotifySource.SETTINGS,
+            NotifySource.DISPLAY_STATE_CHANGED
         )
 
-        if(sharedPref == null || sharedPref!!.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, true))
+        if(ActiveComplicationHandler.canUpdateComplications(NotifySource.TIME_VALUE) && (sharedPref == null || sharedPref!!.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, true))) {
+            Log.v(LOG_ID, "add time value filter - display off: ${ScreenEventReceiver.isDisplayOff()}")
             filter.add(NotifySource.TIME_VALUE)
+        }
 
         InternalNotifier.addNotifier( this,
             ActiveComplicationHandler, filter
@@ -94,9 +101,10 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
             super.onCreate()
             AlarmNotificationWear.initNotifications(this)
             val filter = mutableSetOf(
+                NotifySource.CAPILITY_INFO,
+                NotifySource.DISPLAY_STATE_CHANGED,
                 NotifySource.BROADCAST,
                 NotifySource.MESSAGECLIENT,
-                NotifySource.OBSOLETE_VALUE, // to trigger re-start for the case of stopped by the system
                 NotifySource.BATTERY_LEVEL)  // used for watchdog-check
             InternalNotifier.addNotifier(this, this, filter)
             updateComplicationNotifier()
@@ -110,8 +118,28 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
         try {
             Log.d(LOG_ID, "OnNotifyData called for source " + dataSource.toString())
             start(context)
-            if (dataSource == NotifySource.BATTERY_LEVEL) {
-                checkServices(context)
+            when (dataSource) {
+                NotifySource.BATTERY_LEVEL -> {
+                    checkServices(context)
+                }
+                NotifySource.CAPILITY_INFO -> {
+                    if(ScreenEventReceiver.isDisplayOff()) {
+                        ScreenEventReceiver.onDisplayOff(this)
+                    }
+                }
+                NotifySource.DISPLAY_STATE_CHANGED -> {
+                    updateComplicationNotifier()
+                    checkServices(context)
+                    if(sendScreenEvents) {
+                        if(ScreenEventReceiver.isDisplayOff()) {
+                            sendCommand(Command.PAUSE_NODE)
+                        } else {
+                            sendCommand(Command.RESUME_NODE)
+                        }
+                    }
+
+                }
+                else -> {}
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString())
@@ -139,10 +167,29 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called with key $key")
             super.onSharedPreferenceChanged(sharedPreferences, key)
-            if(key == Constants.SHARED_PREF_RELATIVE_TIME)
+            if(key == Constants.SHARED_PREF_RELATIVE_TIME || key == Constants.SHARED_PREF_WEAR_ALWAYS_UPDATE_COMPLICATIONS || key == Constants.SHARED_PREF_SCREEN_EVENT_RECEIVER_ENABLED)
                 updateComplicationNotifier()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
+        }
+    }
+
+    override fun updateScreenReceiver() {
+        try {
+            sendScreenEvents = sharedPref!!.getBoolean(Constants.SHARED_PREF_SCREEN_EVENT_RECEIVER_ENABLED, false)
+            if(screenEventReceiver == null) {
+                Log.i(LOG_ID, "register screenEventReceiver")
+                screenEventReceiver = ScreenEventReceiver()
+                val filter = IntentFilter()
+                filter.addAction(Intent.ACTION_SCREEN_OFF)
+                filter.addAction(Intent.ACTION_SCREEN_ON)
+                registerReceiver(screenEventReceiver, filter)
+                ScreenEventReceiver.update(this)
+            }
+            if(!sendScreenEvents)
+                sendCommand(Command.RESUME_NODE)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "updateScreenReceiver exception: " + exc.toString())
         }
     }
 

@@ -684,5 +684,7 @@
     <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man 專門為與 GlucoDataHandler 搭配使用而建立第三方錶面。\n點選這裡以開啟他的 Play 商店頁面。</string>
     <string name="pref_watchfaces_gdc">GDC 錶面</string>
     <string name="pref_watchfaces_gdc_summary">GDC 錶面專為與 GlucoDataHandler 搭配使用而設計。\n點選這裡以開啟 Play 商店頁面。</string>
-
+    <string name="pref_screen_on_sync">僅在手錶螢幕開啟時更新</string>
+    <string name="pref_screen_on_sync_summary">僅在手錶螢幕開啟時將新的血糖數據傳送到手錶。\n啟用此選項可在手錶螢幕關閉時防止手錶上的數據更新，以節省電池電量。\n鬧鐘值將始終傳送到手錶。\n重要提示：啟用此設定時，手錶上的過時鬧鐘將會停用！</string>
+    <string name="pref_update_complication_screen_off">在螢幕關閉時更新複雜功能</string>
 </resources>

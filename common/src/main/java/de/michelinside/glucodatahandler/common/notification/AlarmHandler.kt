@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.AppSource
@@ -18,6 +17,7 @@ import de.michelinside.glucodatahandler.common.notification.AlarmSetting.Compani
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
 import de.michelinside.glucodatahandler.common.utils.Utils
 import java.text.DateFormat
 import java.time.Duration
@@ -408,7 +408,13 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         if(GlucoDataService.appSource != AppSource.WEAR_APP)
             return AlarmType.OBSOLETE.setting!!.isActive
         if(AlarmType.OBSOLETE.setting!!.isActive) {  // on wear: only notification is used for alarms -> check to save battery for timer thread
-            return AlarmNotificationBase.instance?.getAlarmState(GlucoDataService.context!!) == AlarmState.ACTIVE
+            if(AlarmNotificationBase.instance?.getAlarmState(GlucoDataService.context!!) == AlarmState.ACTIVE) {
+                if(ScreenEventReceiver.isDisplayOff()) {
+                    // if display is off and the phone does not send new data to wear, the obsolete alarm should not trigger!
+                    return GlucoDataService.sharedPref?.getBoolean(Constants.SHARED_PREF_SCREEN_EVENT_RECEIVER_ENABLED, false) == false
+                }
+                return true
+            }
         }
         return false
     }

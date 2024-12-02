@@ -681,4 +681,7 @@
     <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man erstellt Zifferblätter von Drittanbietern, die speziell für die Verwendung mit GlucoDataHandler entwickelt wurden.\nTippen Sie hier, um seine Play Store-Seite zu öffnen.</string>
     <string name="pref_watchfaces_gdc">GDC Zifferblätter</string>
     <string name="pref_watchfaces_gdc_summary">GDC Zifferblätter wurden für die Verwendung mit GlucoDataHandler entwickelt.\nTippen Sie hier, um die Play Store-Seite zu öffnen.</string>
+    <string name="pref_screen_on_sync">Nur bei eingeschaltetem Display aktualisieren</string>
+    <string name="pref_screen_on_sync_summary">Sende neue Glukosedaten nur an die Uhr, wenn das Display eingeschaltet ist.\nAktiviere dies, um Datenaktualisierungen auf der Uhr zu verhindern, während das Display ausgeschaltet ist, um Akku zu sparen.\nAlarmwerte werden immer an die Uhr gesendet.\nWICHTIG: Der veraltete Alarm ist auf der Uhr deaktiviert, wenn diese Einstellung aktiviert ist!</string>
+    <string name="pref_update_complication_screen_off">Komplikationen bei ausgeschaltetem Display aktualisieren</string>
 </resources>

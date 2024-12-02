@@ -77,7 +77,7 @@ object AlarmNotificationWear : AlarmNotificationBase() {
     }
 
     override fun getNotifierFilter(): MutableSet<NotifySource> {
-        return mutableSetOf(NotifySource.CAR_CONNECTION, NotifySource.CAPILITY_INFO)
+        return mutableSetOf(NotifySource.CAR_CONNECTION, NotifySource.CAPILITY_INFO, NotifySource.DISPLAY_STATE_CHANGED)
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
@@ -92,6 +92,9 @@ object AlarmNotificationWear : AlarmNotificationBase() {
                 NotifySource.CAPILITY_INFO -> {
                     if(!WearPhoneConnection.nodesConnected)
                         isAaConnected = false  // reset for the case it will disconnect on phone
+                }
+                NotifySource.DISPLAY_STATE_CHANGED -> {
+                    AlarmHandler.checkNotifier(context)
                 }
                 else -> super.OnNotifyData(context, dataSource, extras)
             }

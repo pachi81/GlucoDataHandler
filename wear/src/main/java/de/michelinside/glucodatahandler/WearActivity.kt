@@ -28,6 +28,7 @@ import androidx.core.view.setPadding
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmState
 import de.michelinside.glucodatahandler.common.notification.AlarmType
+import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.settings.AlarmsActivity
@@ -142,10 +143,12 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             super.onResume()
             Log.d(LOG_ID, "onResume called")
             GlucoDataService.checkServices(this)
+            ScreenEventReceiver.update(this)  // on resume can only be called, if display is on, so update screen event
             doNotUpdate = false
             update()
             InternalNotifier.addNotifier(this, this, mutableSetOf(
                 NotifySource.BROADCAST,
+                NotifySource.DISPLAY_STATE_CHANGED,
                 NotifySource.IOB_COB_CHANGE,
                 NotifySource.IOB_COB_TIME,
                 NotifySource.MESSAGECLIENT,

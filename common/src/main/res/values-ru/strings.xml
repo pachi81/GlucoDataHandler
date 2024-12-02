@@ -682,5 +682,7 @@
     <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man создает сторонние циферблаты, специально разработанные для использования с GlucoDataHandler.\nНажмите здесь, чтобы открыть его страницу в Play Маркете.</string>
     <string name="pref_watchfaces_gdc">Циферблаты GDC</string>
     <string name="pref_watchfaces_gdc_summary">Циферблаты GDC предназначены для использования с GlucoDataHandler.\nНажмите здесь, чтобы открыть страницу в Play Маркете.</string>
-
+    <string name="pref_screen_on_sync">Обновлять только при активном экране часов</string>
+    <string name="pref_screen_on_sync_summary">Отправлять новые данные о глюкозе на часы только при активном экране часов.\nВключите эту опцию, чтобы предотвратить обновление данных на часах, когда экран часов выключен, для экономии заряда батареи.\nЗначения тревоги всегда будут отправляться на часы.\nВАЖНО: Устаревшая тревога отключается на часах, когда эта настройка включена!</string>
+    <string name="pref_update_complication_screen_off">Обновлять усложнения при выключенном экране</string>
 </resources>

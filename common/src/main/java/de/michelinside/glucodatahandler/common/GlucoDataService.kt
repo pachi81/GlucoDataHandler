@@ -25,6 +25,7 @@ import de.michelinside.glucodatahandler.common.receiver.DiaboxReceiver
 import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
 import de.michelinside.glucodatahandler.common.receiver.NsEmulatorReceiver
 import de.michelinside.glucodatahandler.common.receiver.ReceiverBase
+import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
 import de.michelinside.glucodatahandler.common.tasks.BackgroundWorker
 import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
@@ -45,6 +46,7 @@ enum class AppSource {
 
 abstract class GlucoDataService(source: AppSource) : WearableListenerService(), SharedPreferences.OnSharedPreferenceChangeListener {
     protected var batteryReceiver: BatteryReceiver? = null
+    protected var screenEventReceiver: ScreenEventReceiver? = null
     private lateinit var broadcastServiceAPI: BroadcastServiceAPI
 
     @SuppressLint("StaticFieldLeak")
@@ -385,6 +387,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 bundle.putBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, true))
                 bundle.putBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true))
                 bundle.putBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true))
+                bundle.putBoolean(Constants.SHARED_PREF_SCREEN_EVENT_RECEIVER_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SCREEN_EVENT_RECEIVER_ENABLED, false))
             }
             Log.v(LOG_ID, "getSettings called with bundle ${(Utils.dumpBundle(bundle))}")
             return bundle
@@ -401,6 +404,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 putBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, true))
                 putBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true))
                 putBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true))
+                putBoolean(Constants.SHARED_PREF_SCREEN_EVENT_RECEIVER_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SCREEN_EVENT_RECEIVER_ENABLED, false))
                 apply()
             }
             ReceiveData.setSettings(sharedPref, bundle)
@@ -464,6 +468,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             broadcastServiceAPI = BroadcastServiceAPI()
             broadcastServiceAPI.init()
             updateBatteryReceiver()
+            updateScreenReceiver()
 
             sharedPref!!.registerOnSharedPreferenceChangeListener(this)
 
@@ -501,6 +506,10 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 unregisterReceiver(batteryReceiver)
                 batteryReceiver = null
             }
+            if(screenEventReceiver != null) {
+                unregisterReceiver(screenEventReceiver)
+                screenEventReceiver = null
+            }
             TimeTaskService.stop()
             SourceTaskService.stop()
             connection!!.close()
@@ -537,6 +546,10 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         }
     }
 
+    open fun updateScreenReceiver() {
+        // do nothing here, only so sub-classes
+    }
+
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         try {
@@ -557,6 +570,10 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 }
                 Constants.SHARED_PREF_BATTERY_RECEIVER_ENABLED -> {
                     updateBatteryReceiver()
+                }
+                Constants.SHARED_PREF_SCREEN_EVENT_RECEIVER_ENABLED -> {
+                    updateScreenReceiver()
+                    shareSettings = true
                 }
             }
             if (shareSettings) {

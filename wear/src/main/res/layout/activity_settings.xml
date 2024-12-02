@@ -68,6 +68,15 @@
                 android:layout_marginVertical="5dp"/>
 
             <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchUpdateComplicationScreenOff"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/pref_update_complication_screen_off"
+                android:textAlignment="viewStart"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switchBatteryLevel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

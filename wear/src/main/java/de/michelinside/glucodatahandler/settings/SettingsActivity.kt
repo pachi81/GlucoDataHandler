@@ -23,6 +23,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var switchForground: SwitchCompat
     private lateinit var switchRelativeTime: SwitchCompat
     private lateinit var switchBatteryLevel: SwitchCompat
+    private lateinit var switchUpdateComplicationScreenOff: SwitchCompat
     private lateinit var btnComplicationTapAction: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -120,6 +121,20 @@ class SettingsActivity : AppCompatActivity() {
                     }
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Changing battery level exception: " + exc.message.toString() )
+                }
+            }
+
+            switchUpdateComplicationScreenOff = findViewById(R.id.switchUpdateComplicationScreenOff)
+            switchUpdateComplicationScreenOff.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_ALWAYS_UPDATE_COMPLICATIONS, true)
+            switchUpdateComplicationScreenOff.setOnCheckedChangeListener { _, isChecked ->
+                Log.d(LOG_ID, "Always update complications changed: " + isChecked.toString())
+                try {
+                    with (sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_WEAR_ALWAYS_UPDATE_COMPLICATIONS, isChecked)
+                        apply()
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Always update complications exception: " + exc.message.toString() )
                 }
             }
 

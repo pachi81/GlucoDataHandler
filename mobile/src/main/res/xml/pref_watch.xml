@@ -22,6 +22,12 @@
                     android:summary="@string/pref_send_battery_level_to_watch_summary"
                     android:title="@string/pref_send_battery_level_to_watch"
                     app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="false"
+                    android:key="screen_event_receiver_enabled"
+                    android:summary="@string/pref_screen_on_sync_summary"
+                    android:title="@string/pref_screen_on_sync"
+                    app:iconSpaceReserved="false" />
                 <Preference
                     android:key="wear_os_check_connection"
                     android:title="@string/pref_wear_os_check_connection"

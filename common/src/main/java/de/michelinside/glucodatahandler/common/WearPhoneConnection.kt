@@ -26,7 +26,10 @@ enum class Command {
     SNOOZE_ALARM,
     TEST_ALARM,
     AA_CONNECTION_STATE,
-    DISABLE_INACTIVE_TIME
+    DISABLE_INACTIVE_TIME,
+    PAUSE_NODE,
+    RESUME_NODE,
+    FORCE_UPDATE
 }
 
 class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener, NotifierInterface {
@@ -56,6 +59,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         private val nodeBatteryLevel = Collections.synchronizedMap(mutableMapOf<String,Int>())
         private val noDataReceived = Collections.synchronizedSet(mutableSetOf<String>())
         private val noDataSend = Collections.synchronizedSet(mutableSetOf<String>())
+        private val nodesPaused = Collections.synchronizedSet(mutableSetOf<String>())
         val nodesConnected: Boolean get() = connectedNodes.size>0
         private var connectRetries = 0
         private val filter = mutableSetOf(
@@ -119,6 +123,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         nodeBatteryLevel.clear()
         noDataReceived.clear()
         noDataSend.clear()
+        nodesPaused.clear()
         Log.d(LOG_ID, "connection closed")
     }
 
@@ -148,6 +153,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
     private fun addTimer() {
         if(!filter.contains(NotifySource.TIME_VALUE)) {
+            Log.i(LOG_ID, "add timer")
             filter.add(NotifySource.TIME_VALUE)
             InternalNotifier.addNotifier(context, this, filter)
         }
@@ -155,6 +161,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
     private fun removeTimer() {
         if(filter.contains(NotifySource.TIME_VALUE)) {
+            Log.i(LOG_ID, "remove timer")
             filter.remove(NotifySource.TIME_VALUE)
             InternalNotifier.addNotifier(context, this, filter)
         }
@@ -245,6 +252,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         nodeBatteryLevel.remove(nodeId)// remove all battery levels from not connected nodes
         noDataReceived.remove(nodeId)
         noDataSend.remove(nodeId)
+        nodesPaused.remove(nodeId)
         if (connectedNodes.isEmpty())
             removeTimer()
     }
@@ -368,6 +376,8 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                         dataSource.toString() + " data send to node " + node.toString()
                     )
                     noDataSend.remove(node.id)
+                    if(notConnectedNodes.isEmpty())
+                        removeTimer()
                 }
                 addOnFailureListener { error ->
                     if (retryCount < 2) {
@@ -400,6 +410,9 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 commandBundle.putBundle(Constants.SOURCE_SETTINGS_BUNDLE, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)))
                 commandBundle.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings())
             }
+            if(BatteryReceiver.batteryPercentage >= 0) {
+                commandBundle.putInt(BatteryReceiver.LEVEL, BatteryReceiver.batteryPercentage)
+            }
         }
         connectedNodes.forEach { node ->
             Thread {
@@ -417,6 +430,8 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             Log.i(LOG_ID, "onMessageReceived from " + p0.sourceNodeId + " with path " + p0.path)
             checkConnectedNode(p0.sourceNodeId)
             noDataReceived.remove(p0.sourceNodeId)
+            if (notConnectedNodes.isEmpty())
+                removeTimer()
             val extras = Utils.bytesToBundle(p0.data)
             //Log.v(LOG_ID, "Received extras for path ${p0.path}: ${Utils.dumpBundle(extras)}")
             if(extras!= null) {
@@ -463,7 +478,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 }
 
                 if(p0.path == Constants.COMMAND_PATH) {
-                    handleCommand(extras)
+                    handleCommand(extras, p0.sourceNodeId)
                     return
                 }
 
@@ -561,9 +576,9 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         }
     }
 
-    private fun handleCommand(extras: Bundle) {
+    private fun handleCommand(extras: Bundle, nodeId: String) {
         try {
-            Log.d(LOG_ID, "Command received: ${Utils.dumpBundle(extras)}")
+            Log.d(LOG_ID, "Command received from node $nodeId: ${Utils.dumpBundle(extras)}")
             val command = Command.valueOf(extras.getString(Constants.COMMAND_EXTRA, ""))
             val bundle = extras.getBundle(Constants.COMMAND_BUNDLE)
             when(command) {
@@ -572,6 +587,25 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 Command.TEST_ALARM -> AlarmNotificationBase.instance!!.executeTest(AlarmType.fromIndex(bundle!!.getInt(Constants.ALARM_TYPE_EXTRA, ReceiveData.getAlarmType().ordinal)), context, false)
                 Command.AA_CONNECTION_STATE -> InternalNotifier.notify(context, NotifySource.CAR_CONNECTION, bundle)
                 Command.DISABLE_INACTIVE_TIME -> AlarmHandler.disableInactiveTime(fromClient = true)
+                Command.PAUSE_NODE -> nodesPaused.add(nodeId)
+                Command.RESUME_NODE -> {
+                    if(nodesPaused.contains(nodeId)) {
+                        Log.d(LOG_ID, "Resume node $nodeId")
+                        nodesPaused.remove(nodeId)
+                        if (canSendMessage(context, NotifySource.BROADCAST))
+                            sendMessage(NotifySource.BROADCAST, ReceiveData.createExtras())
+                        else
+                            sendCommand(Command.FORCE_UPDATE, ReceiveData.createExtras())
+                    }
+                }
+                Command.FORCE_UPDATE -> {
+                    if(ReceiveData.hasNewValue(bundle)) {
+                        ReceiveData.handleIntent(context, dataSource, bundle, true)
+                    } else {
+                        Log.d(LOG_ID, "Force update received from node $nodeId")
+                        InternalNotifier.notify(context, NotifySource.MESSAGECLIENT, bundle)
+                    }
+                }
             }
 
         } catch (exc: Exception) {
@@ -625,11 +659,25 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             return false
         if(dataSource == NotifySource.BROADCAST && !ReceiveData.forceAlarm && ReceiveData.getAlarmType() != AlarmType.VERY_LOW) {
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            if(sharedPref.getBoolean(Constants.SHARED_PREF_SCREEN_EVENT_RECEIVER_ENABLED, false) && nodesPaused.size == connectedNodes.size) {
+                Log.d(LOG_ID, "Ignore data because all nodes paused")
+                return false
+            }
+            if(lastSendValuesTime == ReceiveData.time) {
+                Log.d(LOG_ID, "Ignore data because of same time")
+                return false
+            }
             val interval = sharedPref.getInt(Constants.SHARED_PREF_SEND_TO_WATCH_INTERVAL, 1)
             val elapsedTime = Utils.getElapsedTimeMinute(lastSendValuesTime, RoundingMode.HALF_UP)
             Log.v(LOG_ID, "Check sending for interval $interval - elapsed: ${elapsedTime}")
             if (interval > 1 && elapsedTime < interval) {
                 Log.d(LOG_ID, "Ignore data because of interval $interval - elapsed: ${elapsedTime} - last: ${Utils.getUiTimeStamp(lastSendValuesTime)}")
+                return false
+            }
+        } else if (dataSource == NotifySource.BATTERY_LEVEL) {
+            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            if(sharedPref.getBoolean(Constants.SHARED_PREF_SCREEN_EVENT_RECEIVER_ENABLED, false) && nodesPaused.size == connectedNodes.size) {
+                Log.d(LOG_ID, "Ignore data because all nodes paused")
                 return false
             }
         }

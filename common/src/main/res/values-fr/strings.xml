@@ -688,4 +688,7 @@
     <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man crée des cadrans de montre tiers spécialement conçus pour être utilisés avec GlucoDataHandler.\nAppuyez ici pour ouvrir sa page Play Store.</string>
     <string name="pref_watchfaces_gdc">Cadrans de montre GDC</string>
     <string name="pref_watchfaces_gdc_summary">Les cadrans de montre GDC sont conçus pour être utilisés avec GlucoDataHandler.\nAppuyez ici pour ouvrir la page Play Store.</string>
+    <string name="pref_screen_on_sync">Mise à jour uniquement lorsque l\'écran de la montre est actif</string>
+    <string name="pref_screen_on_sync_summary">Envoyer les nouvelles données de glucose à la montre uniquement lorsque l\'écran de la montre est actif.\nActivez cette option pour empêcher les mises à jour de données sur la montre lorsque l\'écran de la montre est éteint, afin d\'économiser la batterie.\nLes valeurs d\'alarme seront toujours envoyées à la montre.\nIMPORTANT : l\'alarme obsolète est désactivée sur la montre lorsque ce paramètre est activé !</string>
+    <string name="pref_update_complication_screen_off">Mise à jour complications écran éteint</string>
 </resources>
