@@ -387,7 +387,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 bundle.putBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, true))
                 bundle.putBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true))
                 bundle.putBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true))
-                bundle.putBoolean(Constants.SHARED_PREF_SCREEN_EVENT_RECEIVER_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SCREEN_EVENT_RECEIVER_ENABLED, false))
+                bundle.putBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, sharedPref!!.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true))
             }
             Log.v(LOG_ID, "getSettings called with bundle ${(Utils.dumpBundle(bundle))}")
             return bundle
@@ -404,7 +404,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 putBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, true))
                 putBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true))
                 putBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true))
-                putBoolean(Constants.SHARED_PREF_SCREEN_EVENT_RECEIVER_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SCREEN_EVENT_RECEIVER_ENABLED, false))
+                putBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, bundle.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true))
                 apply()
             }
             ReceiveData.setSettings(sharedPref, bundle)
@@ -571,7 +571,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 Constants.SHARED_PREF_BATTERY_RECEIVER_ENABLED -> {
                     updateBatteryReceiver()
                 }
-                Constants.SHARED_PREF_SCREEN_EVENT_RECEIVER_ENABLED -> {
+                Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE -> {
                     updateScreenReceiver()
                     shareSettings = true
                 }

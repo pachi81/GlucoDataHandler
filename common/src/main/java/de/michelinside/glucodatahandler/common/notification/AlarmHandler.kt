@@ -411,7 +411,8 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
             if(AlarmNotificationBase.instance?.getAlarmState(GlucoDataService.context!!) == AlarmState.ACTIVE) {
                 if(ScreenEventReceiver.isDisplayOff()) {
                     // if display is off and the phone does not send new data to wear, the obsolete alarm should not trigger!
-                    return GlucoDataService.sharedPref?.getBoolean(Constants.SHARED_PREF_SCREEN_EVENT_RECEIVER_ENABLED, false) == false
+                    if(GlucoDataService.sharedPref != null)
+                        return GlucoDataService.sharedPref!!.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true)
                 }
                 return true
             }

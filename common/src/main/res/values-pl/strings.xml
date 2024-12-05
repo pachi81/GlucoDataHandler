@@ -690,7 +690,7 @@
     <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man tworzy oddzielne tarcze zegarków zaprojektowane specjalnie do użytku z GlucoDataHandler.\nStuknij tutaj, aby otworzyć jego stronę w Sklepie Play.</string>
     <string name="pref_watchfaces_gdc">Tarcze zegarka GDC</string>
     <string name="pref_watchfaces_gdc_summary">Tarcze zegarka GDC są przeznaczone do użytku z aplikacją GlucoDataHandler.\nStuknij tutaj, aby otworzyć stronę Sklepu Play.</string>
-    <string name="pref_screen_on_sync">Update on active watch screen</string>
-    <string name="pref_screen_on_sync_summary">Send new glucose data to watch only when watch screen is active.\nEnable this to prevent data updates on the watch while the watch screen is off, saving battery.\nAlarm values will always be sent to the watch.\nIMPORTANT: The obsolete alarm is disabled on the watch when this setting is enabled!</string>
+    <string name="pref_phone_wear_screen_off_update">Always update watch</string>
+    <string name="pref_phone_wear_screen_off_update_summary">Always send new glucose values to watch.\nDisable this to prevent data updates on the watch while the watch screen is off to save battery.\nAlarm values will always be sent to the watch.\nIMPORTANT: The obsolete alarm is disabled on the watch when this setting is disabled!</string>
     <string name="pref_update_complication_screen_off">Update complications on screen off</string>
 </resources>

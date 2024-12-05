@@ -687,8 +687,8 @@
     <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man crea watchfaces de terceros diseñadas específicamente para su uso con GlucoDataHandler.\nPulsa aquí para abrir su página de Play Store.</string>
     <string name="pref_watchfaces_gdc">GDC Watch Faces</string>
     <string name="pref_watchfaces_gdc_summary">GDC Watch Faces están diseñadas para su uso con GlucoDataHandler.\nPulsa aquí para abrir la página de Play Store.</string>
-    <string name="pref_screen_on_sync">Actualizar solo con pantalla del reloj activa</string>
-    <string name="pref_screen_on_sync_summary">Enviar nuevos datos de glucosa al reloj solo cuando la pantalla del reloj está activa.\nHabilita esto para evitar actualizaciones de datos en el reloj mientras la pantalla del reloj está apagada, ahorrando batería.\nLos valores de alarma siempre se enviarán al reloj.\nIMPORTANTE: ¡La alarma obsoleta se desactiva en el reloj cuando esta configuración está habilitada!</string>
+    <string name="pref_phone_wear_screen_off_update">Actualizar el reloj siempre</string>
+    <string name="pref_phone_wear_screen_off_update_summary">Enviar siempre nuevos valores de glucosa al reloj.\nDesactiva esto para evitar actualizaciones de datos en el reloj mientras la pantalla del reloj está apagada para ahorrar batería.\nLos valores de alarma siempre se enviarán al reloj.\nIMPORTANTE: ¡La alarma obsoleta se desactiva en el reloj cuando esta configuración está desactivada!</string>
     <string name="pref_update_complication_screen_off">Actualizar complicaciones con pantalla apagada</string>
 
 </resources>

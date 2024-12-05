@@ -677,7 +677,7 @@
     <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man crea quadranti di terze parti progettati specificamente per l\'uso con GlucoDataHandler.\nTocca qui per aprire la sua pagina del Play Store.</string>
     <string name="pref_watchfaces_gdc">Quadranti GDC</string>
     <string name="pref_watchfaces_gdc_summary">I quadranti GDC sono progettati per l\'uso con GlucoDataHandler.\nTocca qui per aprire la pagina del Play Store.</string>
-    <string name="pref_screen_on_sync">Aggiorna solo con schermo dell\'orologio attivo</string>
-    <string name="pref_screen_on_sync_summary">Invia nuovi dati relativi al glucosio all\'orologio solo quando lo schermo dell\'orologio è attivo.\nAbilita questa opzione per impedire gli aggiornamenti dei dati sull\'orologio quando lo schermo dell\'orologio è spento, risparmiando batteria.\nI valori di allarme verranno sempre inviati all\'orologio.\nIMPORTANTE: l\'allarme obsoleto viene disabilitato sull\'orologio quando questa impostazione è abilitata!</string>
+    <string name="pref_phone_wear_screen_off_update">Aggiorna sempre l\'orologio</string>
+    <string name="pref_phone_wear_screen_off_update_summary">Invia sempre nuovi valori di glucosio all\'orologio.\nDisabilita questa opzione per impedire gli aggiornamenti dei dati sull\'orologio quando lo schermo dell\'orologio è spento per risparmiare batteria.\nI valori di allarme verranno sempre inviati all\'orologio.\nIMPORTANTE: l\'allarme obsoleto viene disabilitato sull\'orologio quando questa impostazione è disabilitata!</string>
     <string name="pref_update_complication_screen_off">Aggiorna complicazioni con schermo spento</string>
 </resources>

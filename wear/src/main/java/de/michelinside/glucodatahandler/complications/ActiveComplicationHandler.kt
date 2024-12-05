@@ -26,7 +26,7 @@ object ActiveComplicationHandler: NotifierInterface {
     private var complicationClasses = mutableMapOf<Int, ComponentName>()
     private var noComplication = false   // check complications at least one time
     private var alwaysUpdateComplications = true
-    private var noPhoneScreenOffUpdate = false
+    private var phoneAlwaysUpdateData = true
     private var forceUpdataAll = false
     private var waitForUpdateThread: Thread? = null
 
@@ -64,9 +64,9 @@ object ActiveComplicationHandler: NotifierInterface {
     fun checkAlwaysUpdateComplications(context: Context) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         alwaysUpdateComplications = sharedPref.getBoolean(Constants.SHARED_PREF_WEAR_ALWAYS_UPDATE_COMPLICATIONS, true)
-        noPhoneScreenOffUpdate = sharedPref.getBoolean(Constants.SHARED_PREF_SCREEN_EVENT_RECEIVER_ENABLED, false)
-        Log.d(LOG_ID, "Settings changed - always update complications: $alwaysUpdateComplications - no phone screen off update: $noPhoneScreenOffUpdate - display off: ${ScreenEventReceiver.isDisplayOff()}")
-        ReceiveData.showObsoleteOnScreenOff = !alwaysUpdateComplications || noPhoneScreenOffUpdate
+        phoneAlwaysUpdateData = sharedPref.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true)
+        Log.d(LOG_ID, "Settings changed - always update complications: $alwaysUpdateComplications - phone always update: $phoneAlwaysUpdateData - display off: ${ScreenEventReceiver.isDisplayOff()}")
+        ReceiveData.showObsoleteOnScreenOff = !alwaysUpdateComplications || !phoneAlwaysUpdateData
     }
 
     private fun startWaitForUpdateThread(context: Context) {
@@ -109,15 +109,15 @@ object ActiveComplicationHandler: NotifierInterface {
     }
 
     fun canUpdateComplications(dataSource: NotifySource): Boolean {
-        Log.d(LOG_ID, "Check update complications called for $dataSource - always update: $alwaysUpdateComplications - no phone screen off update: $noPhoneScreenOffUpdate - display off: ${ScreenEventReceiver.isDisplayOff()}")
-        if(alwaysUpdateComplications)
+        Log.d(LOG_ID, "Check update complications called for $dataSource - always update: $alwaysUpdateComplications - phone always update: $phoneAlwaysUpdateData - display off: ${ScreenEventReceiver.isDisplayOff()}")
+        if(alwaysUpdateComplications && phoneAlwaysUpdateData)
             return dataSource != NotifySource.DISPLAY_STATE_CHANGED
         if(ScreenEventReceiver.isDisplayOff())
             return dataSource == NotifySource.DISPLAY_STATE_CHANGED   // after display is switched off, update once to set complications to obsolete
         if(dataSource == NotifySource.DISPLAY_STATE_CHANGED) {
             // display switched on
             forceUpdataAll = true   // force update of all complications after display is switched on
-            if(!noPhoneScreenOffUpdate || ReceiveData.getElapsedTimeMinute(RoundingMode.HALF_UP) == 0L)
+            if(phoneAlwaysUpdateData || ReceiveData.getElapsedTimeMinute(RoundingMode.HALF_UP) == 0L)
                 return true  // data is still up to date
             if(WearPhoneConnection.nodesConnected) {
                 // if phone is connected, not updating, wait for data from phone

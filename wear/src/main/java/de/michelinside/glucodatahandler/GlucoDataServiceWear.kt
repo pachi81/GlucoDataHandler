@@ -17,7 +17,7 @@ import de.michelinside.glucodatahandler.common.utils.PackageUtils
 
 
 class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterface {
-    private var sendScreenEvents = false
+    private var phoneAlwyayUpdate = true
     companion object {
         private val LOG_ID = "GDH.GlucoDataServiceWear"
         private var starting = false
@@ -88,6 +88,8 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
         if(ActiveComplicationHandler.canUpdateComplications(NotifySource.TIME_VALUE) && (sharedPref == null || sharedPref!!.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, true))) {
             Log.v(LOG_ID, "add time value filter - display off: ${ScreenEventReceiver.isDisplayOff()}")
             filter.add(NotifySource.TIME_VALUE)
+        } else if(!ReceiveData.isObsoleteLong() && ActiveComplicationHandler.canUpdateComplications(NotifySource.OBSOLETE_VALUE)) {
+            filter.add(NotifySource.OBSOLETE_VALUE)
         }
 
         InternalNotifier.addNotifier( this,
@@ -130,7 +132,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
                 NotifySource.DISPLAY_STATE_CHANGED -> {
                     updateComplicationNotifier()
                     checkServices(context)
-                    if(sendScreenEvents) {
+                    if(!phoneAlwyayUpdate) {
                         if(ScreenEventReceiver.isDisplayOff()) {
                             sendCommand(Command.PAUSE_NODE)
                         } else {
@@ -167,7 +169,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called with key $key")
             super.onSharedPreferenceChanged(sharedPreferences, key)
-            if(key == Constants.SHARED_PREF_RELATIVE_TIME || key == Constants.SHARED_PREF_WEAR_ALWAYS_UPDATE_COMPLICATIONS || key == Constants.SHARED_PREF_SCREEN_EVENT_RECEIVER_ENABLED)
+            if(key == Constants.SHARED_PREF_RELATIVE_TIME || key == Constants.SHARED_PREF_WEAR_ALWAYS_UPDATE_COMPLICATIONS || key == Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE)
                 updateComplicationNotifier()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
@@ -176,7 +178,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
 
     override fun updateScreenReceiver() {
         try {
-            sendScreenEvents = sharedPref!!.getBoolean(Constants.SHARED_PREF_SCREEN_EVENT_RECEIVER_ENABLED, false)
+            phoneAlwyayUpdate = sharedPref!!.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true)
             if(screenEventReceiver == null) {
                 Log.i(LOG_ID, "register screenEventReceiver")
                 screenEventReceiver = ScreenEventReceiver()
@@ -186,7 +188,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
                 registerReceiver(screenEventReceiver, filter)
                 ScreenEventReceiver.update(this)
             }
-            if(!sendScreenEvents)
+            if(phoneAlwyayUpdate)
                 sendCommand(Command.RESUME_NODE)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateScreenReceiver exception: " + exc.toString())

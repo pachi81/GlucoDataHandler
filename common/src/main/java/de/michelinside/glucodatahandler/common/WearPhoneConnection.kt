@@ -659,7 +659,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             return false
         if(dataSource == NotifySource.BROADCAST && !ReceiveData.forceAlarm && ReceiveData.getAlarmType() != AlarmType.VERY_LOW) {
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-            if(sharedPref.getBoolean(Constants.SHARED_PREF_SCREEN_EVENT_RECEIVER_ENABLED, false) && nodesPaused.size == connectedNodes.size) {
+            if(!sharedPref.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true) && nodesPaused.size == connectedNodes.size) {
                 Log.d(LOG_ID, "Ignore data because all nodes paused")
                 return false
             }
@@ -676,7 +676,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             }
         } else if (dataSource == NotifySource.BATTERY_LEVEL) {
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-            if(sharedPref.getBoolean(Constants.SHARED_PREF_SCREEN_EVENT_RECEIVER_ENABLED, false) && nodesPaused.size == connectedNodes.size) {
+            if(!sharedPref.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true) && nodesPaused.size == connectedNodes.size) {
                 Log.d(LOG_ID, "Ignore data because all nodes paused")
                 return false
             }
