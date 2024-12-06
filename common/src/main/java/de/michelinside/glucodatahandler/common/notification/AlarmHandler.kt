@@ -46,6 +46,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
     private var inactiveStartTime = ""
     private var inactiveEndTime = ""
     private var inactiveWeekdays = defaultWeekdays
+    private var forceVeryLow = false
     private lateinit var sharedExtraPref: SharedPreferences
 
     private var alarmManager: AlarmManager? = null
@@ -80,7 +81,9 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         return LocalTime.parse(inactiveEndTime, timeFormatter).format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
     }
 
-    private val isInactive: Boolean get() {
+    fun isInactive(alarmType: AlarmType) : Boolean {
+        if(forceVeryLow && alarmType == AlarmType.VERY_LOW)
+            return false  // force very low alarm
         return isTempInactive || isSnoozeActive
     }
 
@@ -110,6 +113,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
                     " - lastAlarmTime=" +  DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime)) +
                     " - snoozeTime=" + (if(isSnoozeActive)snoozeTimestamp else "off") +
                     " - tempInactive=" +  (if(isTempInactive) inactiveEndTime else "off") +
+                    " - forceVeryLow=" + forceVeryLow.toString() +
                     " - time=" + DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(ReceiveData.time)) +
                     " - delta=" + ReceiveData.delta.toString() +
                     " - rate=" + ReceiveData.rate.toString() +
@@ -119,7 +123,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
                     " - high=>" + (if(AlarmType.HIGH.setting!!.isActive) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+AlarmType.HIGH.setting.intervalMS)) else "off") +
                     " - veryHigh=>" + (if(AlarmType.VERY_HIGH.setting!!.isActive) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastAlarmTime+AlarmType.VERY_HIGH.setting.intervalMS)) else "off")
         )
-        if (isInactive)
+        if (isInactive(newAlarmType))
             return false
 
         val triggerAlarm = when(newAlarmType) {
@@ -222,7 +226,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
                 " - rising=>" + (if(AlarmType.RISING_FAST.setting!!.isActive) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(lastRisingAlarmTime+AlarmType.RISING_FAST.setting.intervalMS)) else "off")
         )
 
-        if(isInactive)
+        if(isInactive(AlarmType.NONE))
             return result
 
         if(AlarmType.FALLING_FAST.setting.isActive && deltaFallingCount >= AlarmType.FALLING_FAST.setting.deltaCount && ReceiveData.rawValue <= AlarmType.FALLING_FAST.setting.deltaBorder) {
@@ -288,7 +292,8 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
             Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED,
             Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME,
             Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME,
-            Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS -> return true
+            Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS,
+            Constants.SHARED_PREF_ALARM_FORCE_VERY_LOW -> return true
             else -> {
                 AlarmType.entries.forEach {
                     if (it.setting != null && it.setting.isAlarmSettingToShare(key))
@@ -349,6 +354,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
         bundle.putString(Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME, inactiveStartTime)
         bundle.putString(Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME, inactiveEndTime)
         bundle.putStringArray(Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS, inactiveWeekdays.toTypedArray())
+        bundle.putBoolean(Constants.SHARED_PREF_ALARM_FORCE_VERY_LOW, forceVeryLow)
         return bundle
     }
 
@@ -368,6 +374,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
                 putString(Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME, inactiveStartTime))
                 putString(Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME, bundle.getString(Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME, inactiveEndTime))
                 putStringSet(Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS, bundle.getStringArray(Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS)?.toMutableSet() ?: defaultWeekdays)
+                putBoolean(Constants.SHARED_PREF_ALARM_FORCE_VERY_LOW, bundle.getBoolean(Constants.SHARED_PREF_ALARM_FORCE_VERY_LOW, forceVeryLow))
             }
             apply()
         }
@@ -382,12 +389,14 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
             readSettings(sharedPref, Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME)
             readSettings(sharedPref, Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME)
             readSettings(sharedPref, Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS)
+            readSettings(sharedPref, Constants.SHARED_PREF_ALARM_FORCE_VERY_LOW)
         } else {
             when(key) {
                 Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED -> inactiveEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED, inactiveEnabled)
                 Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME -> inactiveStartTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME, inactiveStartTime) ?: ""
                 Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME -> inactiveEndTime = sharedPref.getString(Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME, inactiveEndTime) ?: ""
                 Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS -> inactiveWeekdays = sharedPref.getStringSet(Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS, defaultWeekdays) ?: defaultWeekdays
+                Constants.SHARED_PREF_ALARM_FORCE_VERY_LOW -> forceVeryLow = sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_FORCE_VERY_LOW, forceVeryLow)
             }
         }
     }

@@ -691,6 +691,6 @@
     <string name="pref_phone_wear_screen_off_update">Toujours mettre à jour les complications</string>
     <string name="pref_phone_wear_screen_off_update_summary">Toujours envoyer les nouvelles valeurs de glucose à la montre.\nDésactivez cette option pour empêcher les mises à jour de données sur la montre lorsque l\'écran de la montre est éteint afin d\'économiser la batterie.\nLes valeurs d\'alarme seront toujours envoyées à la montre.\nIMPORTANT : l\'alarme obsolète est désactivée sur la montre lorsque ce paramètre est désactivé !</string>
     <string name="alarm_ignore_snooze_for_very_low">Toujours alerter pour les valeurs très basses</string>
-    <string name="alarm_ignore_snooze_for_very_low_summary">Cette alarme sonnera même si la fonction de répétition est active, vous assurant ainsi d\'être alerté des niveaux de glucose très bas.</string>
+    <string name="alarm_ignore_snooze_for_very_low_summary">Cette alarme vous avertira même si la fonction de répétition ou les heures de silence générales pour toutes les alarmes sont activées, vous assurant ainsi d\'être alerté des niveaux de glucose très bas.</string>
 
 </resources>

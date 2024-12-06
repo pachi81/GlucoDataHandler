@@ -687,6 +687,6 @@
     <string name="pref_phone_wear_screen_off_update">始終更新複雜功能</string>
     <string name="pref_phone_wear_screen_off_update_summary">始終將新的血糖值傳送到手錶。\n停用此選項可在手錶螢幕關閉時防止手錶上的數據更新，以節省電池電量。\n鬧鐘值將始終傳送到手錶。\n重要提示：停用此設定時，手錶上的過時鬧鐘將會停用！</string>
     <string name="alarm_ignore_snooze_for_very_low">極低值時一律發出警報</string>
-    <string name="alarm_ignore_snooze_for_very_low_summary">即使貪睡功能已啟用，此警報仍會響起，確保您收到血糖值極低的警報。</string>
+    <string name="alarm_ignore_snooze_for_very_low_summary">即使貪睡功能或所有鬧鐘的一般靜音時段已啟用，此鬧鐘仍會通知您，確保您收到血糖值極低的警報。</string>
 
 </resources>

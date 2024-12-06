@@ -741,6 +741,6 @@
     <string name="pref_phone_wear_screen_off_update">Always update complications</string>
     <string name="pref_phone_wear_screen_off_update_summary">Always send new glucose values to watch.\nDisable this to prevent data updates on the watch while the watch screen is off to save battery.\nAlarm values will always be sent to the watch.\nIMPORTANT: The obsolete alarm is disabled on the watch when this setting is disabled!</string>
     <string name="alarm_ignore_snooze_for_very_low">Always alert for very low</string>
-    <string name="alarm_ignore_snooze_for_very_low_summary">This alarm will sound even if snooze is active, ensuring you are alerted to very low glucose levels.</string>
+    <string name="alarm_ignore_snooze_for_very_low_summary">This alarm will notify you even if snooze or the general quiet hours for all alarms are active, ensuring you are alerted to very low glucose levels.</string>
 
 </resources>

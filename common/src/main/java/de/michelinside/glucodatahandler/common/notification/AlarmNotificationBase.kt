@@ -103,7 +103,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         return curNotification > 0
     }
 
-    fun getAlarmState(context: Context): AlarmState {
+    fun getAlarmState(context: Context, alarmType: AlarmType = AlarmType.NONE): AlarmState {
         var state = AlarmState.currentState(context)
         if(state == AlarmState.DISABLED || !channelActive(context)) {
             state = AlarmState.DISABLED
@@ -114,6 +114,11 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     "Inactive causes by active: $active"
                 )
                 state = AlarmState.INACTIVE
+            }
+        } else if(state == AlarmState.TEMP_DISABLED || state == AlarmState.SNOOZE) {
+            if(!AlarmHandler.isInactive(alarmType)) {
+                Log.i(LOG_ID, "Force $alarmType")
+                state = AlarmState.ACTIVE  // force alarm
             }
         }
         if(currentAlarmState != state) {
@@ -249,7 +254,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     private fun triggerNotification(alarmType: AlarmType, context: Context, forTest: Boolean = false) {
         try {
             Log.d(LOG_ID, "triggerNotification called for $alarmType - active=$active - curNotification=$curNotification - forTest=$forTest")
-            if (getAlarmState(context) == AlarmState.ACTIVE || forTest) {
+            if (getAlarmState(context, alarmType) == AlarmState.ACTIVE || forTest) {
                 stopCurrentNotification(context, true)  // do not send stop to client! -> to prevent, that the client will stop the newly created notification!
                 curNotification = getNotificationId(alarmType)
                 retriggerCount = 0

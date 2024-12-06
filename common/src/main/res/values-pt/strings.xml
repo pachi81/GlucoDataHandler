@@ -687,6 +687,6 @@
     <string name="pref_phone_wear_screen_off_update">Atualizar sempre as complicações</string>
     <string name="pref_phone_wear_screen_off_update_summary">Enviar sempre novos valores de glicose para o relógio.\nDesative esta opção para evitar atualizações de dados no relógio enquanto a tela do relógio estiver desligada para economizar bateria.\nOs valores de alarme sempre serão enviados para o relógio.\nIMPORTANTE: O alarme obsoleto é desativado no relógio quando esta configuração está desativada!</string>
     <string name="alarm_ignore_snooze_for_very_low">Alertar sempre para valores muito baixos</string>
-    <string name="alarm_ignore_snooze_for_very_low_summary">Este alarme tocará mesmo que a função soneca esteja ativa, garantindo que você seja alertado sobre níveis de glicose muito baixos.</string>
+    <string name="alarm_ignore_snooze_for_very_low_summary">Este alarme irá notificá-lo mesmo que a função soneca ou o horário de silêncio geral para todos os alarmes estejam ativos, garantindo que você seja alertado sobre níveis de glicose muito baixos.</string>
 
 </resources>

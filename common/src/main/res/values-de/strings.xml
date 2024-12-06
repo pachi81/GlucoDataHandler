@@ -684,6 +684,6 @@
     <string name="pref_phone_wear_screen_off_update">Komplikations immer aktualisieren</string>
     <string name="pref_phone_wear_screen_off_update_summary">Neue Zuckerwerte immer an die Uhr senden.\nDeaktiviere diese Einstellung, um keine Daten an die Uhr zu senden, solange der Bildschirm der Uhr ausgeschaltet ist, um Akku zu sparen.\nAlarmwerte werden immer an die Uhr gesendet.\nWICHTIG: Der veraltete Alarm auf der Uhr wird deaktiviert, wenn diese Einstellung deaktiviert ist!</string>
     <string name="alarm_ignore_snooze_for_very_low">Immer bei sehr niedrigem Wert alarmieren</string>
-    <string name="alarm_ignore_snooze_for_very_low_summary">Dieser Alarm ertönt auch dann, wenn die Schlummerfunktion aktiviert ist, um sicherzustellen, dass Sie bei sehr niedrigen Zuckerwerten gewarnt werden.</string>
+    <string name="alarm_ignore_snooze_for_very_low_summary">Dieser Alarm wird Sie auch dann benachrichtigen, wenn die Schlummerfunktion oder die allgemeinen Ruhezeiten für alle Alarme aktiv sind, um sicherzustellen, dass Sie auf sehr niedrige Glukosewerte aufmerksam gemacht werden.</string>
 
 </resources>
