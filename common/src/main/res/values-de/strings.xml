@@ -682,10 +682,10 @@
     <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man erstellt Zifferblätter von Drittanbietern, die speziell für die Verwendung mit GlucoDataHandler entwickelt wurden.\nTippen Sie hier, um seine Play Store-Seite zu öffnen.</string>
     <string name="pref_watchfaces_gdc">GDC Zifferblätter</string>
     <string name="pref_watchfaces_gdc_summary">GDC Zifferblätter wurden für die Verwendung mit GlucoDataHandler entwickelt.\nTippen Sie hier, um die Play Store-Seite zu öffnen.</string>
-    <string name="pref_phone_wear_screen_off_update">Komplikations immer aktualisieren</string>
+    <string name="pref_phone_wear_screen_off_update">Komplikationen immer aktualisieren</string>
     <string name="pref_phone_wear_screen_off_update_summary">Neue Zuckerwerte immer an die Uhr senden.\nDeaktiviere diese Einstellung, um keine Daten an die Uhr zu senden, solange der Bildschirm der Uhr ausgeschaltet ist, um Akku zu sparen.\nAlarmwerte werden immer an die Uhr gesendet.\nWICHTIG: Der veraltete Alarm auf der Uhr wird deaktiviert, wenn diese Einstellung deaktiviert ist!</string>
-    <string name="alarm_ignore_snooze_for_very_low">Immer bei sehr niedrigem Wert alarmieren</string>
-    <string name="alarm_ignore_snooze_for_very_low_summary">Dieser Alarm wird Sie auch dann benachrichtigen, wenn die Schlummerfunktion oder die allgemeinen Ruhezeiten für alle Alarme aktiv sind, um sicherzustellen, dass Sie auf sehr niedrige Glukosewerte aufmerksam gemacht werden.</string>
+    <string name="alarm_ignore_snooze_for_very_low">Tiefen Alarm erzwingen</string>
+    <string name="alarm_ignore_snooze_for_very_low_summary">Den tiefen Alarm auch dann benachrichtigen, wenn die Schlummerfunktion oder die Ruhezeiten für alle Alarme aktiv sind.</string>
 
     <string name="libre_no_new_value_info">Wenn dieser Fehler weiterhin besteht, versuchen Sie, die Libre App neu zu installieren. Dies behebt das Problem normalerweise.</string>
 </resources>
