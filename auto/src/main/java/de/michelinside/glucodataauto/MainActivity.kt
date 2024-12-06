@@ -182,7 +182,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     }
 
     private fun requestExactAlarmPermission() {
-        if (!Utils.canScheduleExactAlarms(this)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !Utils.canScheduleExactAlarms(this)) {
             Log.i(LOG_ID, "Request exact alarm permission...")
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
             builder
@@ -465,7 +465,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateNotesTable() {
         tableNotes.removeViews(1, maxOf(0, tableNotes.childCount - 1))
-        if (!Utils.canScheduleExactAlarms(this)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !Utils.canScheduleExactAlarms(this)) {
             Log.w(LOG_ID, "Schedule exact alarm is not active!!!")
             val onClickListener = View.OnClickListener {
                 startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
@@ -581,12 +581,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         return row
     }
 
-    private fun createRow(key: String, onClickListener: View.OnClickListener? = null) : TableRow {
+    private fun createRow(value: String, onClickListener: View.OnClickListener? = null) : TableRow {
         val row = TableRow(this)
         row.weightSum = 1f
         //row.setBackgroundColor(resources.getColor(R.color.table_row))
         row.setPadding(Utils.dpToPx(5F, this))
-        row.addView(createColumn(key, false, onClickListener))
+        row.addView(createColumn(value, false, onClickListener))
         return row
     }
 

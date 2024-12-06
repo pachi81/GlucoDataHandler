@@ -153,29 +153,28 @@
             android:textColor="#FFFFFF"
             android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/txtScheduleExactAlarm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/activity_main_schedule_exact_alarm"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:textAlignment="center" />
-
-            <TextView
-                android:id="@+id/txtHighContrastEnabled"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/activity_main_high_contrast_enabled"
-                android:textSize="14sp"
-                android:textAlignment="center"
-                tools:ignore="HardcodedText" />
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp"/>
+
+            <TableLayout
+                android:id="@+id/tableNotes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="?android:attr/dividerHorizontal"
+                android:showDividers="middle">
+
+                <TableRow android:background="@color/table_header" android:padding="5dp"
+                    tools:ignore="UselessParent">
+                    <TextView
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/info_label_notes"/>
+                </TableRow>
+            </TableLayout>
 
             <TableLayout
                 android:id="@+id/tableAlarms"

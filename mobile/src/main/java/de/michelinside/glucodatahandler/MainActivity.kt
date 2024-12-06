@@ -39,6 +39,8 @@ import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmState
 import de.michelinside.glucodatahandler.common.notification.AlarmType
+import de.michelinside.glucodatahandler.common.notification.ChannelType
+import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
@@ -69,10 +71,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var tableDetails: TableLayout
     private lateinit var tableConnections: TableLayout
     private lateinit var tableAlarms: TableLayout
-    private lateinit var txtBatteryOptimization: TextView
-    private lateinit var txtHighContrastEnabled: TextView
-    private lateinit var txtScheduleExactAlarm: TextView
-    private lateinit var txtNotificationPermission: TextView
+    private lateinit var tableNotes: TableLayout
     private lateinit var btnSources: Button
     private lateinit var sharedPref: SharedPreferences
     private lateinit var optionsMenu: Menu
@@ -99,14 +98,11 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             iobText = findViewById(R.id.iobText)
             cobText = findViewById(R.id.cobText)
             txtLastValue = findViewById(R.id.txtLastValue)
-            txtBatteryOptimization = findViewById(R.id.txtBatteryOptimization)
-            txtHighContrastEnabled = findViewById(R.id.txtHighContrastEnabled)
-            txtScheduleExactAlarm = findViewById(R.id.txtScheduleExactAlarm)
-            txtNotificationPermission = findViewById(R.id.txtNotificationPermission)
             btnSources = findViewById(R.id.btnSources)
             tableConnections = findViewById(R.id.tableConnections)
             tableAlarms = findViewById(R.id.tableAlarms)
             tableDetails = findViewById(R.id.tableDetails)
+            tableNotes = findViewById(R.id.tableNotes)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -161,16 +157,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.TIME_VALUE,
                 NotifySource.ALARM_STATE_CHANGED,
                 NotifySource.SOURCE_STATE_CHANGE))
-            checkExactAlarmPermission()
-            checkBatteryOptimization()
-            checkHighContrast()
             checkFullscreenPermission()
             checkNewSettings()
 
             if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Notification permission granted")
                 requestNotificationPermission = false
-                txtNotificationPermission.visibility = View.GONE
                 PermanentNotification.showNotifications()
             }
             GlucoDataService.checkForConnectedNodes(true)
@@ -191,13 +183,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
             Log.i(LOG_ID, "Request notification permission...")
             requestNotificationPermission = true
-            /*
-            txtNotificationPermission.visibility = View.VISIBLE
-            txtNotificationPermission.setOnClickListener {
-                val intent: Intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
-                    .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
-                startActivity(intent)
-            }*/
             if (this.shouldShowRequestPermissionRationale(
                     android.Manifest.permission.POST_NOTIFICATIONS)) {
                 Dialogs.showOkDialog(this, CR.string.permission_notification_title, CR.string.permission_notification_message) { _, _ -> requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS) }
@@ -205,81 +190,33 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 this.requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 3)
             }
             return false
-        } else {
-            txtNotificationPermission.visibility = View.GONE
         }
         requestExactAlarmPermission()
         return true
     }
 
     private fun requestExactAlarmPermission() {
-        if (!Utils.canScheduleExactAlarms(this)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !Utils.canScheduleExactAlarms(this)) {
             Log.i(LOG_ID, "Request exact alarm permission...")
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
             builder
                 .setTitle(CR.string.request_exact_alarm_title)
                 .setMessage(CR.string.request_exact_alarm_summary)
                 .setPositiveButton(CR.string.button_ok) { dialog, which ->
-                    startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        startActivity(
+                            Intent(
+                                ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                                Uri.parse("package:$packageName")
+                            )
+                        )
+                    }
                 }
                 .setNegativeButton(CR.string.button_cancel) { dialog, which ->
                     // Do something else.
                 }
             val dialog: AlertDialog = builder.create()
             dialog.show()
-        }
-    }
-    private fun checkExactAlarmPermission() {
-        try {
-            if (!Utils.canScheduleExactAlarms(this)) {
-                Log.w(LOG_ID, "Schedule exact alarm is not active!!!")
-                txtScheduleExactAlarm.visibility = View.VISIBLE
-                txtScheduleExactAlarm.setOnClickListener {
-                    startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
-                }
-            } else {
-                txtScheduleExactAlarm.visibility = View.GONE
-                Log.i(LOG_ID, "Schedule exact alarm is active")
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
-        }
-    }
-
-    private fun checkBatteryOptimization() {
-        try {
-            val pm = getSystemService(POWER_SERVICE) as PowerManager
-            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                Log.w(LOG_ID, "Battery optimization is active")
-                txtBatteryOptimization.visibility = View.VISIBLE
-                txtBatteryOptimization.setOnClickListener {
-                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                    intent.data = Uri.parse("package:$packageName")
-                    startActivity(intent)
-                }
-            } else {
-                txtBatteryOptimization.visibility = View.GONE
-                Log.i(LOG_ID, "Battery optimization is inactive")
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
-        }
-    }
-    private fun checkHighContrast() {
-        try {
-            if (Utils.isHighContrastTextEnabled(this)) {
-                Log.w(LOG_ID, "High contrast is active")
-                txtHighContrastEnabled.visibility = View.VISIBLE
-                txtHighContrastEnabled.setOnClickListener {
-                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                    startActivity(intent)
-                }
-            } else {
-                txtHighContrastEnabled.visibility = View.GONE
-                Log.i(LOG_ID, "High contrast is inactive")
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
         }
     }
 
@@ -594,6 +531,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 btnSources.visibility = View.GONE
             }
 
+            updateNotesTable()
             updateAlarmsTable()
             updateConnectionsTable()
             updateDetailsTable()
@@ -610,6 +548,57 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         update()
     }
 
+    private fun updateNotesTable() {
+        tableNotes.removeViews(1, maxOf(0, tableNotes.childCount - 1))
+        if (!Channels.notificationChannelActive(this, ChannelType.MOBILE_FOREGROUND)) {
+            val onClickListener = OnClickListener {
+                requestNotificationPermission = true
+                val intent: Intent = if (Channels.notificationActive(this)) { // only the channel is inactive!
+                    Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+                        .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
+                        .putExtra(Settings.EXTRA_CHANNEL_ID, ChannelType.MOBILE_FOREGROUND.channelId)
+                } else {
+                    Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                        .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
+                }
+                startActivity(intent)
+            }
+            tableNotes.addView(createRow(CR.string.activity_main_notification_permission, onClickListener))
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !Utils.canScheduleExactAlarms(this)) {
+            Log.w(LOG_ID, "Schedule exact alarm is not active!!!")
+            val onClickListener = OnClickListener {
+                startActivity(
+                    Intent(
+                        ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                        Uri.parse("package:$packageName")
+                    )
+                )
+            }
+            tableNotes.addView(createRow(CR.string.activity_main_schedule_exact_alarm, onClickListener))
+        }
+        if (Utils.isHighContrastTextEnabled(this)) {
+            Log.w(LOG_ID, "High contrast is active")
+            val onClickListener = OnClickListener {
+                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                startActivity(intent)
+            }
+            tableNotes.addView(createRow(CR.string.activity_main_high_contrast_enabled, onClickListener))
+        }
+        val pm = getSystemService(POWER_SERVICE) as PowerManager
+        if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+            Log.w(LOG_ID, "Battery optimization is active")
+            val onClickListener = OnClickListener {
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                intent.data = Uri.parse("package:$packageName")
+                startActivity(intent)
+            }
+            tableNotes.addView(createRow(CR.string.activity_main_battery_optimization_disabled, onClickListener))
+        }
+        checkTableVisibility(tableNotes)
+    }
+
     private fun updateConnectionsTable() {
         tableConnections.removeViews(1, maxOf(0, tableConnections.childCount - 1))
         if (SourceStateData.lastState != SourceState.NONE) {
@@ -620,8 +609,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     msg
                 )
             )
-            if(SourceStateData.lastState == SourceState.ERROR && SourceStateData.lastSource == DataSource.DEXCOM_SHARE) {
-                if (msg.contains("500:")) { // invalid password
+            if(SourceStateData.lastState == SourceState.ERROR) {
+                if(SourceStateData.lastSource == DataSource.DEXCOM_SHARE && msg.contains("500:")) {
                     val us_account = sharedPref.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, false)
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
@@ -632,12 +621,15 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     }
                     tableConnections.addView(
                         createRow(
-                            SourceStateData.lastSource.resId,
                             resources.getString(if(us_account) CR.string.dexcom_share_check_us_account else CR.string.dexcom_share_check_non_us_account),
                             onClickListener
                         )
                     )
                 }
+            }
+            if(SourceStateData.lastErrorInfo.isNotEmpty()) {
+                // add error specific information in an own row
+                tableConnections.addView(createRow(SourceStateData.lastErrorInfo))
             }
             tableConnections.addView(createRow(CR.string.request_timestamp, Utils.getUiTimeStamp(SourceStateData.lastStateTime)))
         }
@@ -732,6 +724,19 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         row.setPadding(Utils.dpToPx(5F, this))
         row.addView(createColumn(key, false, onClickListener))
         row.addView(createColumn(value, true, onClickListener))
+        return row
+    }
+
+    private fun createRow(valueResId: Int, onClickListener: OnClickListener? = null) : TableRow {
+        return createRow(resources.getString(valueResId), onClickListener)
+    }
+
+    private fun createRow(value: String, onClickListener: OnClickListener? = null) : TableRow {
+        val row = TableRow(this)
+        row.weightSum = 1f
+        //row.setBackgroundColor(resources.getColor(R.color.table_row))
+        row.setPadding(Utils.dpToPx(5F, this))
+        row.addView(createColumn(value, false, onClickListener))
         return row
     }
 

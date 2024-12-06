@@ -184,41 +184,24 @@
                 android:orientation="vertical"
                 android:gravity="center|top">
 
-                <LinearLayout
-                    android:id="@+id/layout_info_elements_right"
+                <TableLayout
+                    android:id="@+id/tableNotes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    tools:ignore="UselessParent">
-                    <TextView
-                        android:id="@+id/txtNotificationPermission"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:text="@string/activity_main_notification_permission"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textAlignment="center"
-                        android:visibility="gone"/>
-                    <TextView
-                        android:id="@+id/txtScheduleExactAlarm"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:text="@string/activity_main_schedule_exact_alarm"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textAlignment="center" />
-                    <TextView
-                        android:id="@+id/txtHighContrastEnabled"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:text="@string/activity_main_high_contrast_enabled"
-                        android:textSize="18sp"
-                        android:textAlignment="center" />
-                </LinearLayout>
+                    android:divider="?android:attr/dividerHorizontal"
+                    android:showDividers="middle">
+
+                    <TableRow android:background="@color/table_header" android:padding="5dp"
+                        tools:ignore="UselessParent">
+                        <TextView
+                            android:textStyle="bold"
+                            android:textSize="20sp"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/info_label_notes"/>
+                    </TableRow>
+                </TableLayout>
                 <TableLayout
                     android:id="@+id/tableAlarms"
                     android:layout_width="match_parent"

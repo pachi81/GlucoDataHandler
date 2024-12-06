@@ -28,6 +28,8 @@ import androidx.core.view.setPadding
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmState
 import de.michelinside.glucodatahandler.common.notification.AlarmType
+import de.michelinside.glucodatahandler.common.notification.ChannelType
+import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
@@ -55,8 +57,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var tableDetails: TableLayout
     private lateinit var tableConnections: TableLayout
     private lateinit var tableAlarms: TableLayout
-    private lateinit var txtHighContrastEnabled: TextView
-    private lateinit var txtScheduleExactAlarm: TextView
+    private lateinit var tableNotes: TableLayout
     private lateinit var btnSettings: Button
     private lateinit var btnSources: Button
     private lateinit var btnAlarms: Button
@@ -85,8 +86,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             tableConnections = findViewById(R.id.tableConnections)
             tableAlarms = findViewById(R.id.tableAlarms)
             tableDetails = findViewById(R.id.tableDetails)
-            txtHighContrastEnabled = findViewById(R.id.txtHighContrastEnabled)
-            txtScheduleExactAlarm = findViewById(R.id.txtScheduleExactAlarm)
+            tableNotes = findViewById(R.id.tableNotes)
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
@@ -159,8 +159,6 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.TIME_VALUE,
                 NotifySource.SOURCE_STATE_CHANGE,
                 NotifySource.ALARM_STATE_CHANGED))
-            checkExactAlarmPermission()
-            checkHighContrast()
             if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Notification permission granted")
                 requestNotificationPermission = false
@@ -188,46 +186,14 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
     private fun requestExactAlarmPermission() {
         try {
-            if (!Utils.canScheduleExactAlarms(this)) {
-                Log.i(LOG_ID, "Request exact alarm permission...")
-                startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (!Utils.canScheduleExactAlarms(this)) {
+                    Log.i(LOG_ID, "Request exact alarm permission...")
+                    startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "requestExactAlarmPermission exception: " + exc.message.toString() )
-        }
-    }
-    private fun checkExactAlarmPermission() {
-        try {
-            if (!Utils.canScheduleExactAlarms(this)) {
-                Log.w(LOG_ID, "Schedule exact alarm is not active!!!")
-                txtScheduleExactAlarm.visibility = View.VISIBLE
-                txtScheduleExactAlarm.setOnClickListener {
-                    startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
-                }
-            } else {
-                txtScheduleExactAlarm.visibility = View.GONE
-                Log.i(LOG_ID, "Schedule exact alarm is active")
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
-        }
-    }
-
-    private fun checkHighContrast() {
-        try {
-            if (Utils.isHighContrastTextEnabled(this)) {
-                Log.w(LOG_ID, "High contrast is active")
-                txtHighContrastEnabled.visibility = View.VISIBLE
-                txtHighContrastEnabled.setOnClickListener {
-                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                    startActivity(intent)
-                }
-            } else {
-                txtHighContrastEnabled.visibility = View.GONE
-                Log.i(LOG_ID, "High contrast is inactive")
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
         }
     }
 
@@ -259,6 +225,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
             txtValueInfo.visibility = if(ReceiveData.time>0) View.GONE else View.VISIBLE
 
+            updateNotesTable()
             updateAlarmsTable()
             updateConnectionsTable()
             updateDetailsTable()
@@ -346,6 +313,36 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.d(LOG_ID, "new intent received from: " + dataSource.toString())
         update()
+    }
+
+
+    private fun updateNotesTable() {
+        tableNotes.removeViews(1, maxOf(0, tableNotes.childCount - 1))
+        if (!Channels.notificationChannelActive(this, ChannelType.WEAR_FOREGROUND)) {
+            val onClickListener = View.OnClickListener {
+                requestNotificationPermission = true
+                startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                    .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName))
+            }
+            tableNotes.addView(createRow(CR.string.activity_main_notification_permission, onClickListener))
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !Utils.canScheduleExactAlarms(this)) {
+            Log.w(LOG_ID, "Schedule exact alarm is not active!!!")
+            val onClickListener = View.OnClickListener {
+                startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+            }
+            tableNotes.addView(createRow(CR.string.activity_main_schedule_exact_alarm, onClickListener))
+        }
+        if (Utils.isHighContrastTextEnabled(this)) {
+            Log.w(LOG_ID, "High contrast is active")
+            val onClickListener = View.OnClickListener {
+                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                startActivity(intent)
+            }
+            tableNotes.addView(createRow(CR.string.activity_main_high_contrast_enabled, onClickListener))
+        }
+        checkTableVisibility(tableNotes)
     }
 
     private fun updateConnectionsTable() {
@@ -446,6 +443,19 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         row.setPadding(Utils.dpToPx(5F, this))
         row.addView(createColumn(key, false, onClickListener))
         row.addView(createColumn(value, true, onClickListener))
+        return row
+    }
+
+    private fun createRow(valueResId: Int, onClickListener: View.OnClickListener? = null) : TableRow {
+        return createRow(resources.getString(valueResId), onClickListener)
+    }
+
+    private fun createRow(value: String, onClickListener: View.OnClickListener? = null) : TableRow {
+        val row = TableRow(this)
+        row.weightSum = 1f
+        //row.setBackgroundColor(resources.getColor(R.color.table_row))
+        row.setPadding(Utils.dpToPx(5F, this))
+        row.addView(createColumn(value, false, onClickListener))
         return row
     }
 
