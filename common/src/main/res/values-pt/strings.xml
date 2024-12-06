@@ -684,7 +684,9 @@
     <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man cria mostradores de terceiros projetados especificamente para uso com GlucoDataHandler.\nToque aqui para abrir sua página da Play Store.</string>
     <string name="pref_watchfaces_gdc">Mostradores GDC</string>
     <string name="pref_watchfaces_gdc_summary">Os mostradores GDC são projetados para uso com GlucoDataHandler.\nToque aqui para abrir a página da Play Store.</string>
-    <string name="pref_phone_wear_screen_off_update">Atualizar o relógio sempre</string>
+    <string name="pref_phone_wear_screen_off_update">Atualizar sempre as complicações</string>
     <string name="pref_phone_wear_screen_off_update_summary">Enviar sempre novos valores de glicose para o relógio.\nDesative esta opção para evitar atualizações de dados no relógio enquanto a tela do relógio estiver desligada para economizar bateria.\nOs valores de alarme sempre serão enviados para o relógio.\nIMPORTANTE: O alarme obsoleto é desativado no relógio quando esta configuração está desativada!</string>
-    <string name="pref_update_complication_screen_off">Atualizar complicações com tela desligada</string>
+    <string name="alarm_ignore_snooze_for_very_low">Alertar sempre para valores muito baixos</string>
+    <string name="alarm_ignore_snooze_for_very_low_summary">Este alarme tocará mesmo que a função soneca esteja ativa, garantindo que você seja alertado sobre níveis de glicose muito baixos.</string>
+
 </resources>

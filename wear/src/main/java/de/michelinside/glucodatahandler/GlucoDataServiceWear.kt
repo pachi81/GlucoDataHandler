@@ -169,7 +169,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called with key $key")
             super.onSharedPreferenceChanged(sharedPreferences, key)
-            if(key == Constants.SHARED_PREF_RELATIVE_TIME || key == Constants.SHARED_PREF_WEAR_ALWAYS_UPDATE_COMPLICATIONS || key == Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE)
+            if(key == Constants.SHARED_PREF_RELATIVE_TIME || key == Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE)
                 updateComplicationNotifier()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())

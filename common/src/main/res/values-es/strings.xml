@@ -689,6 +689,7 @@
     <string name="pref_watchfaces_gdc_summary">GDC Watch Faces están diseñadas para su uso con GlucoDataHandler.\nPulsa aquí para abrir la página de Play Store.</string>
     <string name="pref_phone_wear_screen_off_update">Actualizar el reloj siempre</string>
     <string name="pref_phone_wear_screen_off_update_summary">Enviar siempre nuevos valores de glucosa al reloj.\nDesactiva esto para evitar actualizaciones de datos en el reloj mientras la pantalla del reloj está apagada para ahorrar batería.\nLos valores de alarma siempre se enviarán al reloj.\nIMPORTANTE: ¡La alarma obsoleta se desactiva en el reloj cuando esta configuración está desactivada!</string>
-    <string name="pref_update_complication_screen_off">Actualizar complicaciones con pantalla apagada</string>
+    <string name="alarm_ignore_snooze_for_very_low">Alertar siempre para valores muy bajos</string>
+    <string name="alarm_ignore_snooze_for_very_low_summary">Esta alarma sonará incluso si la función de repetición está activa, asegurando que se le avise de los niveles de glucosa muy bajos.</string>
 
 </resources>
