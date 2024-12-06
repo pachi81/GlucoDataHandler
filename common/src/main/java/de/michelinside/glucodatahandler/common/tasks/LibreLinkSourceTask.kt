@@ -135,17 +135,21 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     }
      */
 
-    private fun getStatusMessage(status: Int, default: String? = null): String? {
+    private fun getStatusMessage(status: Int): String {
         return when(status) {
             2 -> GlucoDataService.context!!.getString(R.string.src_librelink_error2)
             4 -> GlucoDataService.context!!.getString(R.string.src_librelink_error4)
-            else -> default
+            else -> ""
         }
+    }
+
+    override fun getNoNewValueInfo(): String {
+        return GlucoDataService.context!!.resources.getString(R.string.libre_no_new_value_info)
     }
 
     private fun getError4Message(type: String? = null): String {
         if(type.isNullOrEmpty()) {
-            return getStatusMessage(4, "")!!
+            return getStatusMessage(4)
         }
         if(type == ACCEPT_TERMS_TYPE && !autoAcceptTOU) {
             return GlucoDataService.context!!.getString(R.string.src_librelink_error4_tou)
@@ -167,7 +171,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                     Log.i(LOG_ID, "Handle error 4 with type: $type - lastType: $lastType")
                     getToken(data)
                     if(token.isEmpty()) {
-                        setLastError(getError4Message(type), 4)
+                        setLastError(step.optString("componentName"), 4, getError4Message(type))
                         return null
                     }
                     if(lastType != type && type == ACCEPT_TOKEN_TYPE || (type == ACCEPT_TERMS_TYPE && autoAcceptTOU )) {
@@ -175,19 +179,14 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                         Log.i(LOG_ID, "Send accept request for type $type")
                         return checkResponse(httpPost(getUrl(ACCEPT_ENDPOINT + type), getHeader(), null), type)
                     } else {
-                        setLastError(getError4Message(type), 4)
+                        setLastError(step.optString("componentName"), 4, getError4Message(type))
                     }
                     return null
                 }
             }
         }
         // else
-        if(jsonObj.has("error")) {
-            val error = jsonObj.optJSONObject("error")?.optString("message", "")
-            setLastError(error?: getError4Message(), 4)
-        } else {
-            setLastError(getError4Message(), 4)
-        }
+        setLastError(getErrorMessage(jsonObj), 4, getStatusMessage(4))
         return null
     }
 
@@ -217,8 +216,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                 return handleError4(jsonObj, lastError4Type)
             } else if(status != 0) {
                 if(jsonObj.has("error")) {
-                    val error = getStatusMessage(status, getErrorMessage(jsonObj))
-                    setLastError(error?: "Error", status)
+                    setLastError(getErrorMessage(jsonObj), status, getStatusMessage(status))
                     return null
                 }
                 setLastError("Error", status)

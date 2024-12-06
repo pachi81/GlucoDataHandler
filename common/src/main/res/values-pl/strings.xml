@@ -658,7 +658,8 @@
     <string name="src_librelink_error2">Nieprawidłowa nazwa użytkownika lub hasło. Sprawdź ustawienia źródła LibreLinkUp. W razie potrzeby spróbuj zalogować się ponownie lub ponownie zainstaluj aplikację LibreLinkUp i sprawdź ustawienia konta.</string>
     <string name="last_value_on_server">Ostatni odczyt glukozy na serwerze sprzed %1$s</string>
     <string name="no_data_in_server_response">Na serwerze nie znaleziono odczytów poziomu glukozy.</string>
-    <string name="http_error_429">Zbyt wiele żądań!\nZatrzymaj wszystkie inne aplikacje uzyskujące dostęp do tego samego konta!</string>
+    <string name="http_error_429">Zbyt wiele żądań!</string>
+    <string name="http_error_429_info">Zatrzymaj wszystkie inne aplikacje uzyskujące dostęp do tego samego konta!</string>
     <string name="state_await_data">Oczekiwanie na dane</string>
     <string name="pref_send_battery_level_to_watch">Prześlij poziom baterii</string>
     <string name="pref_send_battery_level_to_watch_summary">Prześlij informację o poziomie naładowania baterii do zegarka, aby wyświetlić ją w komplikacjach i na ekranie głównym.</string>
@@ -695,4 +696,5 @@
     <string name="alarm_ignore_snooze_for_very_low">Always alert for very low</string>
     <string name="alarm_ignore_snooze_for_very_low_summary">This alarm will notify you even if snooze or the general quiet hours for all alarms are active, ensuring you are alerted to very low glucose levels.</string>
 
+    <string name="libre_no_new_value_info">If this error persists, try reinstalling the Libre App. This often resolves the issue.</string>
 </resources>

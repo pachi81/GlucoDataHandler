@@ -655,7 +655,8 @@
     <string name="src_librelink_error2">Nom d\'utilisateur ou mot de passe incorrect. Veuillez vérifier vos paramètres de source LibreLinkUp. Si nécessaire, essayez de vous reconnecter ou de réinstaller l\'application LibreLinkUp et de vérifier les paramètres de votre compte.</string>
     <string name="last_value_on_server">Dernière lecture de glucose sur le serveur à partir de %1$s</string>
     <string name="no_data_in_server_response">Aucune lecture de glucose trouvée sur le serveur.</string>
-    <string name="http_error_429">Trop de requêtes !\nVeuillez arrêter toutes les autres applications qui accèdent au même compte !</string>
+    <string name="http_error_429">Trop de requêtes!</string>
+    <string name="http_error_429_info">Veuillez arrêter toutes les autres applications qui accèdent au même compte !</string>
     <string name="state_await_data">En attente de données</string>
     <string name="pref_send_battery_level_to_watch">Envoyer le niveau de batterie</string>
     <string name="pref_send_battery_level_to_watch_summary">Envoyer le niveau de batterie à la montre pour l\'afficher dans la complication et sur l\'écran principal.</string>
@@ -693,4 +694,5 @@
     <string name="alarm_ignore_snooze_for_very_low">Toujours alerter pour les valeurs très basses</string>
     <string name="alarm_ignore_snooze_for_very_low_summary">Cette alarme vous avertira même si la fonction de répétition ou les heures de silence générales pour toutes les alarmes sont activées, vous assurant ainsi d\'être alerté des niveaux de glucose très bas.</string>
 
+    <string name="libre_no_new_value_info">Si cette erreur persiste, essayez de réinstaller l\'application LibreLink. Cela résout souvent le problème.</string>
 </resources>

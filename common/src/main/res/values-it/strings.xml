@@ -644,7 +644,8 @@
     <string name="src_librelink_error2">Nome utente o password errati. Verifica le impostazioni di origine di LibreLinkUp. Se necessario, prova ad accedere di nuovo o reinstalla l\'app LibreLinkUp e controlla le impostazioni del tuo account.</string>
     <string name="last_value_on_server">Ultima lettura della glicemia sul server da %1$s</string>
     <string name="no_data_in_server_response">Nessuna lettura della glicemia trovata sul server.</string>
-    <string name="http_error_429">Troppe richieste!\nInterrompi tutte le altre app che accedono allo stesso account!</string>
+    <string name="http_error_429">Troppe richieste!</string>
+    <string name="http_error_429_info">Interrompi tutte le altre app che accedono allo stesso account!</string>
     <string name="state_await_data">In attesa di dati</string>
     <string name="pref_send_battery_level_to_watch">Invia livello batteria</string>
     <string name="pref_send_battery_level_to_watch_summary">Invia il livello della batteria all\'orologio per visualizzarlo nella complicazione e nella schermata principale.</string>
@@ -682,4 +683,5 @@
     <string name="alarm_ignore_snooze_for_very_low">Avvisa sempre per valori molto bassi</string>
     <string name="alarm_ignore_snooze_for_very_low_summary">Questo allarme ti avviserà anche se la funzione snooze o le ore di silenzio generali per tutti gli allarmi sono attive, assicurandoti di essere avvisato in caso di livelli di glucosio molto bassi.</string>
 
+    <string name="libre_no_new_value_info">Se questo errore persiste, prova a reinstallare l\'app Libre. Questo spesso risolve il problema.</string>
 </resources>

@@ -652,7 +652,8 @@
     <string name="src_librelink_error2">使用者名稱或密碼不正確。請確認您的 LibreLinkUp 來源設定。如有需要，請嘗試再次登入或重新安裝 LibreLinkUp 應用程式並檢查您的帳戶設定。</string>
     <string name="last_value_on_server">伺服器上的最後一次血糖讀數來自 %1$s</string>
     <string name="no_data_in_server_response">在伺服器上找不到血糖讀數。</string>
-    <string name="http_error_429">太多請求！\n請停止所有其他正在存取同一個帳戶的應用程式！</string>
+    <string name="http_error_429">太多請求！</string>
+    <string name="http_error_429_info">請停止所有其他正在存取同一個帳戶的應用程式！</string>
     <string name="state_await_data">正在等待資料</string>
     <string name="pref_send_battery_level_to_watch">傳送電池電量</string>
     <string name="pref_send_battery_level_to_watch_summary">將電池電量傳送到手錶以在複雜功能和主畫面上顯示。</string>
@@ -689,4 +690,5 @@
     <string name="alarm_ignore_snooze_for_very_low">極低值時一律發出警報</string>
     <string name="alarm_ignore_snooze_for_very_low_summary">即使貪睡功能或所有鬧鐘的一般靜音時段已啟用，此鬧鐘仍會通知您，確保您收到血糖值極低的警報。</string>
 
+    <string name="libre_no_new_value_info">如果此錯誤持續發生，請嘗試重新安裝 Libre 應用程式。這通常可以解決問題。</string>
 </resources>

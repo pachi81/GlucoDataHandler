@@ -101,26 +101,26 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     var lastState = SourceState.NONE
     var lastErrorCode: Int = -1
 
-    fun setLastError(error: String, code: Int = -1) {
-        setState( SourceState.ERROR, error, code)
+    fun setLastError(error: String, code: Int = -1, message: String = "")  {
+        setState(SourceState.ERROR, error, code, message)
     }
 
-    fun setState(state: SourceState, error: String = "", code: Int = -1) {
+    fun setState(state: SourceState, error: String = "", code: Int = -1, message: String = "") {
         when (state) {
             SourceState.NONE -> {
-                Log.v(LOG_ID,"Set state for source " + source + ": " + state + " - " + error + " (" + code + ")")
+                Log.v(LOG_ID, "Set state for source $source: $state - $error ($code) - message: $message")
             }
             SourceState.CONNECTED -> {
-                Log.i(LOG_ID,"Set connected for source " + source)
+                Log.i(LOG_ID, "Set connected for source $source")
             }
             else -> {
-                Log.w(LOG_ID,"Set state for source " + source + ": " + state + " - " + error + " (" + code + ")")
+                Log.w(LOG_ID, "Set state for source $source: $state - $error ($code) - message: $message")
             }
         }
         lastErrorCode = code
         lastState = state
 
-        SourceStateData.setState(source, state, getErrorMessage(state, error, code))
+        SourceStateData.setState(source, state, getErrorMessage(state, error, code), message)
     }
 
     private fun getErrorMessage(state: SourceState, error: String, code: Int): String {
@@ -205,11 +205,18 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         }
     }
 
+    open fun getNoNewValueInfo(): String = ""
+
     protected fun handleResult(extras: Bundle) {
         Log.d(LOG_ID, "handleResult for $source: ${Utils.dumpBundle(extras)}")
         if(!ReceiveData.hasNewValue(extras)) {
             if(extras.containsKey(ReceiveData.TIME)) {
-                setState(SourceState.NO_NEW_VALUE, GlucoDataService.context!!.resources.getString(R.string.last_value_on_server, Utils.getUiTimeStamp(extras.getLong(ReceiveData.TIME))))
+                setState(
+                    SourceState.NO_NEW_VALUE,
+                    GlucoDataService.context!!.resources.getString(R.string.last_value_on_server, Utils.getUiTimeStamp(extras.getLong(ReceiveData.TIME))),
+                    -1,
+                    getNoNewValueInfo()
+                )
             } else {
                 setState(SourceState.NO_NEW_VALUE)
             }
@@ -269,6 +276,13 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         }
     }
 
+    private fun getErrorInfo(code: Int): String {
+        when(code) {
+            429 -> return GlucoDataService.context!!.resources.getString(R.string.http_error_429_info)
+            else -> return ""
+        }
+    }
+
     open fun checkErrorResponse(code: Int, message: String?, errorResponse: String? = null) {
         Log.d(LOG_ID, "checkErrorResponse: $code - $message - $errorResponse")
         if (code in 400..499) {
@@ -282,7 +296,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         if(errorResponse != null) {
             errorMessage += "\n" + errorResponse
         }
-        setLastError(errorMessage, code)
+        setLastError(errorMessage, code, getErrorInfo(code))
     }
 
     open fun getTrustAllCertificates(): Boolean = false

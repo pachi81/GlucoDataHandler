@@ -648,7 +648,8 @@
     <string name="src_librelink_error2">Falscher Benutzername oder Passwort. Bitte überprüfe deine LibreLinkUp-Quelleinstellungen. Versuche gegebenenfalls, dich erneut anzumelden oder die LibreLinkUp App neu zu installieren und deine Kontoeinstellungen zu überprüfen.</string>
     <string name="last_value_on_server">Letzter Glukosewert auf dem Server von %1$s</string>
     <string name="no_data_in_server_response">Keine Glukosewerte auf dem Server gefunden.</string>
-    <string name="http_error_429">Zu viele Anfragen!\nBitte beende alle anderen Apps, die auf dasselbe Konto zugreifen!</string>
+    <string name="http_error_429">Zu viele Anfragen!</string>
+    <string name="http_error_429_info">Bitte beende alle anderen Apps, die auf dasselbe Konto zugreifen!</string>
     <string name="state_await_data">Verbindungsaufbau</string>
     <string name="pref_send_battery_level_to_watch">Akkustand senden</string>
     <string name="pref_send_battery_level_to_watch_summary">Sende den Akkustand an die Uhr, um ihn in der Komplikation und auf dem Hauptbildschirm anzuzeigen.</string>
@@ -686,4 +687,5 @@
     <string name="alarm_ignore_snooze_for_very_low">Immer bei sehr niedrigem Wert alarmieren</string>
     <string name="alarm_ignore_snooze_for_very_low_summary">Dieser Alarm wird Sie auch dann benachrichtigen, wenn die Schlummerfunktion oder die allgemeinen Ruhezeiten für alle Alarme aktiv sind, um sicherzustellen, dass Sie auf sehr niedrige Glukosewerte aufmerksam gemacht werden.</string>
 
+    <string name="libre_no_new_value_info">Wenn dieser Fehler weiterhin besteht, versuchen Sie, die Libre App neu zu installieren. Dies behebt das Problem normalerweise.</string>
 </resources>
