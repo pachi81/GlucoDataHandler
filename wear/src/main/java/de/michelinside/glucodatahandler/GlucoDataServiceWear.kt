@@ -17,7 +17,6 @@ import de.michelinside.glucodatahandler.common.utils.PackageUtils
 
 
 class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterface {
-    private var phoneAlwyayUpdate = true
     companion object {
         private val LOG_ID = "GDH.GlucoDataServiceWear"
         private var starting = false
@@ -132,14 +131,11 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
                 NotifySource.DISPLAY_STATE_CHANGED -> {
                     updateComplicationNotifier()
                     checkServices(context)
-                    if(!phoneAlwyayUpdate) {
-                        if(ScreenEventReceiver.isDisplayOff()) {
-                            sendCommand(Command.PAUSE_NODE)
-                        } else {
-                            sendCommand(Command.RESUME_NODE)
-                        }
+                    if(ScreenEventReceiver.isDisplayOff()) {
+                        sendCommand(Command.PAUSE_NODE)
+                    } else {
+                        sendCommand(Command.RESUME_NODE)
                     }
-
                 }
                 else -> {}
             }
@@ -178,18 +174,22 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
 
     override fun updateScreenReceiver() {
         try {
-            phoneAlwyayUpdate = sharedPref!!.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true)
-            if(screenEventReceiver == null) {
-                Log.i(LOG_ID, "register screenEventReceiver")
-                screenEventReceiver = ScreenEventReceiver()
-                val filter = IntentFilter()
-                filter.addAction(Intent.ACTION_SCREEN_OFF)
-                filter.addAction(Intent.ACTION_SCREEN_ON)
-                registerReceiver(screenEventReceiver, filter)
-                ScreenEventReceiver.update(this)
+            if(!sharedPref!!.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true)) {
+                if(screenEventReceiver == null) {
+                    Log.i(LOG_ID, "register screenEventReceiver")
+                    screenEventReceiver = ScreenEventReceiver()
+                    val filter = IntentFilter()
+                    filter.addAction(Intent.ACTION_SCREEN_OFF)
+                    filter.addAction(Intent.ACTION_SCREEN_ON)
+                    registerReceiver(screenEventReceiver, filter)
+                    ScreenEventReceiver.update(this)
+                }
+            } else if(screenEventReceiver != null) {
+                Log.i(LOG_ID, "unregister screenEventReceiver")
+                unregisterReceiver(screenEventReceiver)
+                screenEventReceiver = null
+                ScreenEventReceiver.reset(this)
             }
-            if(phoneAlwyayUpdate)
-                sendCommand(Command.RESUME_NODE)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateScreenReceiver exception: " + exc.toString())
         }
