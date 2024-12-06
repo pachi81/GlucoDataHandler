@@ -385,7 +385,13 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                             LOG_ID,
                             "Failed " + (retryCount+1).toString() + ". time to send " + dataSource.toString() + " data to node " + node.toString() + ": $error"
                         )
-                        sendMessage(node, path, data, dataSource, retryCount+1)
+                        Thread {
+                            try {
+                                sendMessage(node, path, data, dataSource, retryCount+1)
+                            } catch (exc: Exception) {
+                                Log.e(LOG_ID, "sendMessage to " + node.toString() + " exception: " + exc.toString())
+                            }
+                        }.start()
                     } else {
                         Log.e(
                             LOG_ID,
