@@ -685,5 +685,10 @@
     <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man 專門設計可與 GlucoDataHandler 搭配使用的第三方錶面\n按這裡開啟他的 Play 商店頁面</string>
     <string name="pref_watchfaces_gdc">GDC 錶面</string>
     <string name="pref_watchfaces_gdc_summary">GDC 錶面專門設計與 GlucoDataHandler 搭配使用\n按這裡開啟 Play 商店頁面</string>
+    <string name="pref_phone_wear_screen_off_update">一律更新小工具</string>
+    <string name="pref_phone_wear_screen_off_update_summary">一律傳送新血糖值到手錶\n停用此選項可在手錶螢幕關閉時防止手錶更新資料以節省電量\n警報值一律會傳送到手錶\n重要: 停用此選項會關閉手錶的過時警報！</string>
+    <string name="alarm_ignore_snooze_for_very_low">非常低血糖時一律發出警報</string>
+    <string name="alarm_ignore_snooze_for_very_low_summary">即使處於貪睡模式或所有警報的勿擾時段，此警報仍會發出通知，確保您能收到非常低血糖的警報</string>
 
+    <string name="libre_no_new_value_info">如果一直發生此錯誤，請試著重新安裝 Libre 程式，通常可以解決問題。</string>
 </resources>
