@@ -653,7 +653,8 @@
     <string name="src_librelink_error2">使用者名稱或密碼不正確。請確認 LibreLinkUp 資料來源設定。需要的話請試著再次登入或重新安裝 LibreLinkUp 程式並檢查您的帳號設定</string>
     <string name="last_value_on_server">伺服器上的最後一次血糖讀數來自 %1$s</string>
     <string name="no_data_in_server_response">伺服器找不到血糖讀數</string>
-    <string name="http_error_429">太多請求！\n請關閉其他存取同一個帳號的程式！</string>
+    <string name="http_error_429">太多請求！</string>
+    <string name="http_error_429_info">請關閉其他存取同一個帳號的程式！</string>
     <string name="state_await_data">等待資料中</string>
     <string name="pref_send_battery_level_to_watch">傳送電池電量</string>
     <string name="pref_send_battery_level_to_watch_summary">將電池電量傳送到手錶以便在小工具和主畫面上顯示</string>

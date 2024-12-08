@@ -667,7 +667,7 @@
 
     <string name="not_available">not available</string>
 
-    <string name="action_read_values">Read values</string>
+    <string name="action_read_values">Speak values</string>
 
     <plurals name="elapsed_time_full_text">
         <item quantity="one">Time %d minute</item>
