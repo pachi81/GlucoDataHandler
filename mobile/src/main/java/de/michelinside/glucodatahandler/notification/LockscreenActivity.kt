@@ -141,7 +141,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
                     object : SlideToActView.OnSlideCompleteListener {
                         override fun onSlideComplete(view: SlideToActView) {
                             Log.d(LOG_ID, "Slide to snooze completed!")
-                            AlarmNotification.stopVibrationAndSound()
+                            AlarmNotification.stopForLockscreenSnooze()
                             btnSnooze.visibility = View.GONE
                             txtSnooze.visibility = View.VISIBLE
                             layoutSnoozeButtons.visibility = View.VISIBLE

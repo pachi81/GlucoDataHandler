@@ -463,6 +463,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 }
             }
             updateAlarmIcon()
+            updateAlarmsTable()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateAlarmIcon exception: " + exc.message.toString() )
         }

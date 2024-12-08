@@ -234,6 +234,12 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
     }
 
+    fun stopForLockscreenSnooze() {
+        Log.d(LOG_ID, "stopForLockscreenSnooze called")
+        stopVibrationAndSound()
+        stopTrigger()
+        GlucoDataService.sendCommand(Command.STOP_ALARM)
+    }
 
     fun stopVibrationAndSound() {
         try {
