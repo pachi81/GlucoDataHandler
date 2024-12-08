@@ -90,9 +90,9 @@ class AlarmFragment : SettingsFragmentCompatBase(), SharedPreferences.OnSharedPr
     override fun onResume() {
         Log.d(LOG_ID, "onResume called")
         try {
+            super.onResume()
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
             update()
-            super.onResume()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.toString())
         }
@@ -101,8 +101,8 @@ class AlarmFragment : SettingsFragmentCompatBase(), SharedPreferences.OnSharedPr
     override fun onPause() {
         Log.d(LOG_ID, "onPause called")
         try {
-            preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
             super.onPause()
+            preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.toString())
         }

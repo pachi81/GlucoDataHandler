@@ -34,67 +34,79 @@ class ExportImportSettingsFragment: SettingsFragmentBase(R.xml.pref_export_impor
         const val IMPORT_PHONE_SETTINGS = 4
     }
     override fun initPreferences() {
-        Log.v(LOG_ID, "initPreferences called")
+        try {
+            Log.v(LOG_ID, "initPreferences called")
 
-        var downloadUri: Uri? = null
-        MediaScannerConnection.scanFile(requireContext(), arrayOf(
-            Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOWNLOADS
-            ).absolutePath), null
-        ) { s: String, uri: Uri ->
-            Log.v(LOG_ID, "Set URI $uri for path $s")
-            downloadUri = uri
-        }
-
-        val prefExportSettings = findPreference<Preference>(Constants.SHARED_PREF_EXPORT_SETTINGS)
-        prefExportSettings!!.setOnPreferenceClickListener {
-            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-                addCategory(Intent.CATEGORY_OPENABLE)
-                type = "text/plain"
-                val currentDateandTime = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(
-                    Date()
-                )
-                val fileName = "GDH_phone_settings_" + currentDateandTime
-                putExtra(Intent.EXTRA_TITLE, fileName)
-                putExtra(DocumentsContract.EXTRA_INITIAL_URI, downloadUri)
+            var downloadUri: Uri? = null
+            MediaScannerConnection.scanFile(requireContext(), arrayOf(
+                Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DOWNLOADS
+                ).absolutePath), null
+            ) { s: String, uri: Uri ->
+                Log.v(LOG_ID, "Set URI $uri for path $s")
+                downloadUri = uri
             }
-            startActivityForResult(intent, EXPORT_PHONE_SETTINGS)
-            true
-        }
-        val prefImportSettings = findPreference<Preference>(Constants.SHARED_PREF_IMPORT_SETTINGS)
-        prefImportSettings!!.setOnPreferenceClickListener {
-            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-                addCategory(Intent.CATEGORY_OPENABLE)
-                type = "text/plain"
-                putExtra(DocumentsContract.EXTRA_INITIAL_URI, downloadUri)
+
+            val prefExportSettings = findPreference<Preference>(Constants.SHARED_PREF_EXPORT_SETTINGS)
+            prefExportSettings!!.setOnPreferenceClickListener {
+                val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "text/plain"
+                    val currentDateandTime = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(
+                        Date()
+                    )
+                    val fileName = "GDH_phone_settings_" + currentDateandTime
+                    putExtra(Intent.EXTRA_TITLE, fileName)
+                    putExtra(DocumentsContract.EXTRA_INITIAL_URI, downloadUri)
+                }
+                startActivityForResult(intent, EXPORT_PHONE_SETTINGS)
+                true
             }
-            startActivityForResult(intent, IMPORT_PHONE_SETTINGS)
-            true
-        }
+            val prefImportSettings = findPreference<Preference>(Constants.SHARED_PREF_IMPORT_SETTINGS)
+            prefImportSettings!!.setOnPreferenceClickListener {
+                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "text/plain"
+                    putExtra(DocumentsContract.EXTRA_INITIAL_URI, downloadUri)
+                }
+                startActivityForResult(intent, IMPORT_PHONE_SETTINGS)
+                true
+            }
 
-        val prefSaveMobileLogs = findPreference<Preference>(Constants.SHARED_PREF_SAVE_MOBILE_LOGS)
-        prefSaveMobileLogs!!.setOnPreferenceClickListener {
-            SaveLogs(AppSource.PHONE_APP, downloadUri)
-            true
-        }
+            val prefSaveMobileLogs = findPreference<Preference>(Constants.SHARED_PREF_SAVE_MOBILE_LOGS)
+            prefSaveMobileLogs!!.setOnPreferenceClickListener {
+                SaveLogs(AppSource.PHONE_APP, downloadUri)
+                true
+            }
 
-        val prefSaveWearLogs = findPreference<Preference>(Constants.SHARED_PREF_SAVE_WEAR_LOGS)
-        prefSaveWearLogs!!.isEnabled = WearPhoneConnection.nodesConnected && !LogcatReceiver.isActive
-        prefSaveWearLogs.setOnPreferenceClickListener {
-            SaveLogs(AppSource.WEAR_APP, downloadUri)
-            true
+            val prefSaveWearLogs = findPreference<Preference>(Constants.SHARED_PREF_SAVE_WEAR_LOGS)
+            prefSaveWearLogs!!.isEnabled = WearPhoneConnection.nodesConnected && !LogcatReceiver.isActive
+            prefSaveWearLogs.setOnPreferenceClickListener {
+                SaveLogs(AppSource.WEAR_APP, downloadUri)
+                true
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "initPreferences exception: " + exc.message.toString() )
         }
 
     }
 
     override fun onResume() {
-        super.onResume()
-        InternalNotifier.addNotifier(requireContext(), this, mutableSetOf(NotifySource.CAPILITY_INFO))
+        try {
+            super.onResume()
+            InternalNotifier.addNotifier(requireContext(), this, mutableSetOf(NotifySource.CAPILITY_INFO))
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
+        }
     }
 
     override fun onPause() {
-        super.onPause()
-        InternalNotifier.remNotifier(requireContext(), this)
+        try {
+            super.onPause()
+            InternalNotifier.remNotifier(requireContext(), this)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onPause exception: " + exc.message.toString() )
+        }
     }
 
     private fun updateWearPrefs() {
@@ -143,8 +155,12 @@ class ExportImportSettingsFragment: SettingsFragmentBase(R.xml.pref_export_impor
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
-        if(dataSource == NotifySource.CAPILITY_INFO) {
-            updateWearPrefs()
+        try {
+            if(dataSource == NotifySource.CAPILITY_INFO) {
+                updateWearPrefs()
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() )
         }
     }
 }

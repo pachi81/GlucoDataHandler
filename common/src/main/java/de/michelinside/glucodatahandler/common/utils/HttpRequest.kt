@@ -84,14 +84,14 @@ class HttpRequest {
     }
 
     fun get(url: String, header: MutableMap<String, String>? = null, trustAllCertificates: Boolean = false): Int {
-        return request(url, header, null, trustAllCertificates)
+        return request(url, header, null, trustAllCertificates, false)
     }
 
-    fun post(url: String, postData: String, header: MutableMap<String, String>? = null, trustAllCertificates: Boolean = false): Int {
-        return request(url, header, postData, trustAllCertificates)
+    fun post(url: String, postData: String?, header: MutableMap<String, String>? = null, trustAllCertificates: Boolean = false): Int {
+        return request(url, header, postData, trustAllCertificates, true)
     }
 
-    private fun request(url: String, header: MutableMap<String, String>?, postData: String?, trustAllCertificates: Boolean): Int = runBlocking {
+    private fun request(url: String, header: MutableMap<String, String>?, postData: String?, trustAllCertificates: Boolean, postRequest: Boolean): Int = runBlocking {
        scope.async {
             reset()
             val urlConnection = URL(url).openConnection()
@@ -110,17 +110,21 @@ class HttpRequest {
             httpURLConnection!!.doInput = true
             httpURLConnection!!.connectTimeout = 10000
             httpURLConnection!!.readTimeout = 20000
-            if (postData == null) {
+            if (!postRequest) {
                 Log.i(LOG_ID, "Send GET request to ${httpURLConnection!!.url}")
                 httpURLConnection!!.requestMethod = "GET"
                 httpURLConnection!!.doOutput = false
             } else {
                 Log.i(LOG_ID, "Send POST request to ${httpURLConnection!!.url}")
                 httpURLConnection!!.requestMethod = "POST"
-                httpURLConnection!!.doOutput = true
-                val dataOutputStream = DataOutputStream(httpURLConnection!!.outputStream)
-                val bytes: ByteArray = postData.toByteArray()
-                dataOutputStream.write(bytes, 0, bytes.size)
+                if (postData != null) {
+                    httpURLConnection!!.doOutput = true
+                    val dataOutputStream = DataOutputStream(httpURLConnection!!.outputStream)
+                    val bytes: ByteArray = postData.toByteArray()
+                    dataOutputStream.write(bytes, 0, bytes.size)
+                } else {
+                    httpURLConnection!!.doOutput = false
+                }
             }
             handleResponse()
             lastCode

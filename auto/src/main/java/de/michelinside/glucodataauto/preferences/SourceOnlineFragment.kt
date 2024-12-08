@@ -60,11 +60,11 @@ class SourceOnlineFragment : PreferenceFragmentCompat(), SharedPreferences.OnSha
     override fun onResume() {
         Log.d(LOG_ID, "onResume called")
         try {
+            super.onResume()
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
             updateEnableStates(preferenceManager.sharedPreferences!!)
             InternalNotifier.addNotifier(requireContext(), this, mutableSetOf(NotifySource.PATIENT_DATA_CHANGED))
             update()
-            super.onResume()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.toString())
         }
@@ -73,9 +73,9 @@ class SourceOnlineFragment : PreferenceFragmentCompat(), SharedPreferences.OnSha
     override fun onPause() {
         Log.d(LOG_ID, "onPause called")
         try {
+            super.onPause()
             preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
             InternalNotifier.remNotifier(requireContext(), this)
-            super.onPause()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.toString())
         }

@@ -35,4 +35,18 @@
             android:summary="@string/pref_button_select_target_summary"
             android:title="@string/pref_button_select_target"
             app:iconSpaceReserved="false" />
+        <PreferenceCategory
+            android:title="@string/advanced_settings"
+            app:iconSpaceReserved="false">
+                <androidx.preference.SeekBarPreference
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="1"
+                    app:min="1"
+                    android:max="15"
+                    android:defaultValue="1"
+                    android:key="send_to_receiver_interval"
+                    android:title="@string/alarm_interval"
+                    android:summary="@string/forward_to_values_summary"
+                    app:iconSpaceReserved="false" />
+        </PreferenceCategory>
 </PreferenceScreen>

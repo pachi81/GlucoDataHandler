@@ -20,20 +20,24 @@ object SourceStateData {
     var lastSource: DataSource = DataSource.NONE
     var lastState: SourceState = SourceState.NONE
     var lastError: String = ""
+    var lastErrorInfo: String = ""
+    var lastStateTime = 0L
 
     fun setError(source: DataSource, error: String) {
         setState( source, SourceState.ERROR, error)
     }
 
-    fun setState(source: DataSource, state: SourceState, error: String = "") {
+    fun setState(source: DataSource, state: SourceState, error: String = "", errorInfo: String = "") {
         lastError = error
         lastSource = source
         lastState = state
+        lastStateTime = System.currentTimeMillis()
+        lastErrorInfo = errorInfo
 
         if(state == SourceState.ERROR) {
-            Log.e(LOG_ID, "Error state for source $source: $error" )
+            Log.e(LOG_ID, "Error state for source $source: $error - info: $errorInfo" )
         } else {
-            Log.i(LOG_ID, "Set state $state for source $source")
+            Log.i(LOG_ID, "Set state $state for source $source: $error")
         }
 
         if (GlucoDataService.context != null) {
@@ -52,15 +56,15 @@ object SourceStateData {
     }
 
     fun getStateMessage(context: Context): String {
-        if (lastState == SourceState.ERROR && lastError.isNotEmpty()) {
+        if (lastState != SourceState.NONE && lastError.isNotEmpty()) {
             return lastError
         }
         return context.getString(lastState.resId)
     }
-
+    /*
     fun getState(context: Context): String {
         if (lastState == SourceState.NONE)
             return ""
         return "%s: %s".format(context.getString(lastSource.resId), getStateMessage(context))
-    }
+    }*/
 }
