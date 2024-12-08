@@ -656,7 +656,7 @@
     <string name="pref_battery_level">Akkustand anzeigen</string>
     <string name="forward_to_watch_interval_summary">Lege die minimale Zeit (in Minuten) zwischen Glukosemessungen fest, bevor ein neues Update an die Uhr gesendet wird.\nAlarme und sehr tiefe Werte werden immer gesendet.</string>
     <string name="forward_to_values_summary">Lege die minimale Zeit (in Minuten) zwischen Glukosemessungen fest, bevor ein neues Update an die Empfänger gesendet wird.</string>
-    <string name="alarm_repeat_summary">Der Alarm ertönt und vibriert wiederholt, bis du die Benachrichtigung schließt oder die eingestellte maximale Alarmdauer erreicht ist.</string>
+    <string name="alarm_repeat_summary">Der Alarm ertönt und vibriert wiederholt, bis die Benachrichtigung geschlossen oder die eingestellte maximale Alarmdauer erreicht ist.</string>
     <string name="alarm_repeat_time">Maximale Alarmdauer</string>
     <string name="alarm_repeat_time_summary">Gib die maximale Zeit (in Minuten) an, die der Alarm ertönt und vibriert. Ein Wert von 0 bedeutet, dass der Alarm unbegrenzt wiederholt wird.</string>
     <string name="wear_source_info">Um Quellen zu aktivieren, richte sie bitte zuerst in der Telefon-App ein. Aktiviere Quellen auf deiner Uhr nur, wenn du die Daten noch nicht auf deinem Telefon empfängst.</string>
