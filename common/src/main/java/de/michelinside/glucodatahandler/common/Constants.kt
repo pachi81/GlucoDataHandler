@@ -226,7 +226,6 @@ object Constants {
 
     const val SHARED_PREF_ALARM_SUFFIX_ENABLED = "_enabled"
     const val SHARED_PREF_ALARM_SUFFIX_INTERVAL = "_interval"
-    const val SHARED_PREF_ALARM_SUFFIX_RETRIGGER = "_retrigger"
     const val SHARED_PREF_ALARM_SUFFIX_USE_CUSTOM_SOUND = "_use_custom_sound"
     const val SHARED_PREF_ALARM_SUFFIX_CUSTOM_SOUND = "_custom_sound"
     const val SHARED_PREF_ALARM_SUFFIX_VIBRATE_PATTERN = "_vibrate_pattern"

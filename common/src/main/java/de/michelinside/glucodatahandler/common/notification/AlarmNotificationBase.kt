@@ -797,9 +797,9 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     }
 
     private fun getTriggerTime(alarmType: AlarmType): Int {
-        if (alarmType.setting!=null) {
+        /*if (alarmType.setting!=null) {
             return alarmType.setting.retriggerTime
-        }
+        }*/
         return 0
     }
 

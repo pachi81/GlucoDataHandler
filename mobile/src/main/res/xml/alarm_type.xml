@@ -155,16 +155,6 @@
                     android:title="@string/alarm_repeat_time"
                     android:summary="@string/alarm_repeat_time_summary"
                     app:iconSpaceReserved="false" />
-                <androidx.preference.SeekBarPreference
-                    app:showSeekBarValue="true"
-                    app:seekBarIncrement="1"
-                    app:defaultValue="0"
-                    app:min="0"
-                    android:max="15"
-                    android:key="_retrigger"
-                    android:title="@string/alarm_retrigger"
-                    android:summary="@string/alarm_retrigger_summary"
-                    app:iconSpaceReserved="false" />
                 <Preference
                     android:key="_test"
                     android:title="@string/alarm_test"

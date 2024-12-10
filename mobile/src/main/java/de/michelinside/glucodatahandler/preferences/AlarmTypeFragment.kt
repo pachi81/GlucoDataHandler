@@ -62,9 +62,6 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
     private val repeatTimePref: String get() {
         return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT)
     }
-    private val retriggerPref: String get() {
-        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_RETRIGGER)
-    }
     private val soundDelayPref: String get() {
         return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_DELAY)
     }
@@ -194,9 +191,7 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
 
             val prefRepeat = findPreference<SwitchPreferenceCompat>(repeatPref)
             val prefRepeatTime = findPreference<SeekBarPreference>(repeatTimePref)
-            val prefRetrigger = findPreference<SeekBarPreference>(retriggerPref)
             prefRepeatTime!!.isEnabled = prefRepeat!!.isChecked
-            prefRetrigger!!.isEnabled = !(prefRepeat.isChecked && prefRepeatTime.value == 0)
 
             val prefWeekdays = findPreference<MultiSelectListPreference>(inactiveWeekdaysPref)
             prefWeekdays!!.summary = resources.getString(CR.string.alarm_inactive_weekdays_summary) + "\n" + prefWeekdays.values.joinToString(
@@ -272,9 +267,6 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
         val prefInterval = findPreference<SeekBarPreference>(intervalPref)
         prefInterval!!.value = preferenceManager.sharedPreferences!!.getInt(prefInterval.key, AlarmHandler.getDefaultIntervalMin(alarmType))
         prefInterval.summary = getIntervalSummary(alarmType)
-
-        val prefRetrigger = findPreference<SeekBarPreference>(retriggerPref)
-        prefRetrigger!!.value = preferenceManager.sharedPreferences!!.getInt(prefRetrigger.key, 0)
 
         val prefRepeat = findPreference<SwitchPreferenceCompat>(repeatPref)
         val prefRepeatTime = findPreference<SeekBarPreference>(repeatTimePref)
