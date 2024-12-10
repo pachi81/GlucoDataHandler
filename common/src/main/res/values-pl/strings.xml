@@ -655,7 +655,7 @@
     <string name="source_libre_auto_accept_tou_summary">Włączenie tej opcji oznacza automatyczną akceptację nowych Warunków użytkowania w celu zapewnienia ciągłości odbioru danych. Nie będziesz za każdym razem informowany o nowych warunkach. Jeśli chcesz się z nimi zapoznać, wyłącz to ustawienie i przejdź do aplikacji LibreLinkUp w przypadku błędu 4.</string>
     <string name="src_librelink_error4_tou">Należy zaakceptować nowe Warunki użytkowania. Włącz automatyczną akceptację w ustawieniach źródła LibreLinkUp lub zaloguj się ponownie do aplikacji LibreLinkUp i zaakceptuj warunki.</string>
     <string name="src_libre_tou_message">GlucoDataHandler może automatycznie akceptować nowe warunki użytkowania LibreLinkUp.\nNaciśnij OK, aby włączyć tę funkcję, lub Anuluj, aby przeczytać i ręcznie zaakceptować warunki w aplikacji LibreLinkUp.</string>
-    <string name="src_librelink_error2">Nieprawidłowa nazwa użytkownika lub hasło. Sprawdź ustawienia źródła LibreLinkUp. W razie potrzeby spróbuj zalogować się ponownie lub ponownie zainstaluj aplikację LibreLinkUp i sprawdź ustawienia konta.</string>
+    <string name="src_librelink_error2">Nieprawidłowa nazwa użytkownika lub hasło. Sprawdź ustawienia źródła LibreLinkUp. W razie potrzeby spróbuj zalogować się ponownie lub ponownie zainstaluj aplikację LibreLinkUp i sprawdź ustawienia konta.\nZatrzymaj wszystkie inne aplikacje uzyskujące dostęp do tego samego konta!</string>
     <string name="last_value_on_server">Ostatni odczyt glukozy na serwerze sprzed %1$s</string>
     <string name="no_data_in_server_response">Na serwerze nie znaleziono odczytów poziomu glukozy.</string>
     <string name="http_error_429">Zbyt wiele żądań!</string>
@@ -697,4 +697,8 @@
     <string name="alarm_ignore_snooze_for_very_low_summary">Ten alarm powiadomi Cię nawet wtedy, gdy aktywna jest drzemka lub trwają ogólne ciche godziny dla wszystkich alarmów, gwarantując, że zostaniesz powiadomiony o bardzo niskim poziomie glukozy.</string>
 
     <string name="libre_no_new_value_info">Jeśli ten błąd nadal występuje, spróbuj ponownie zainstalować aplikację LibreLink. To często rozwiązuje problem.</string>
+    <string name="src_libre_server">Serwer</string>
+    <string name="source_libre_server_default">Domyślny (.io)</string>
+    <string name="source_libre_server_russian">Rosyjski (.ru)</string>
+
 </resources>

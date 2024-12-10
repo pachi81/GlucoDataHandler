@@ -654,7 +654,7 @@
     <string name="src_librelink_error4">Fout, log opnieuw in op de LibreLinkUp-app en controleer op eventuele stappen die moeten worden uitgevoerd!</string>
     <string name="src_librelink_error4_type">Fouttype %1$s, log opnieuw in op de LibreLinkUp-app en controleer op eventuele stappen die moeten worden uitgevoerd!</string>
     <string name="src_librelink_error4_tou">Nieuwe gebruiksvoorwaarden moeten worden geaccepteerd. Schakel automatische acceptatie in de LibreLinkUp-broninstellingen in of log opnieuw in op de LibreLinkUp-app en accepteer de voorwaarden.</string>
-    <string name="src_librelink_error2">Onjuiste gebruikersnaam of wachtwoord. Controleer uw LibreLinkUp-broninstellingen. Probeer indien nodig opnieuw in te loggen of de LibreLinkUp-app opnieuw te installeren en uw accountinstellingen te controleren.</string>
+    <string name="src_librelink_error2">Onjuiste gebruikersnaam of wachtwoord. Controleer uw LibreLinkUp-broninstellingen. Probeer indien nodig opnieuw in te loggen of de LibreLinkUp-app opnieuw te installeren en uw accountinstellingen te controleren.\nStop alle andere apps die toegang hebben tot hetzelfde account!</string>
     <string name="last_value_on_server">Laatste glucosemeting op server van %1$s</string>
     <string name="no_data_in_server_response">Geen glucosemetingen gevonden op server.</string>
     <string name="http_error_429">Te veel verzoeken!</string>
@@ -697,5 +697,8 @@
     <string name="alarm_ignore_snooze_for_very_low_summary">Dit alarm zal u waarschuwen, zelfs als snoozen of de algemene stille uren voor alle alarmen actief zijn, zodat u zeker weet dat u wordt gewaarschuwd voor zeer lage glucosewaarden.</string>
 
     <string name="libre_no_new_value_info">Als deze fout aanhoudt, probeer dan de Libre-app opnieuw te installeren. Dit lost het probleem vaak op.</string>
+    <string name="src_libre_server">Server</string>
+    <string name="source_libre_server_default">Standaard (.io)</string>
+    <string name="source_libre_server_russian">Russisch (.ru)</string>
 
 </resources>

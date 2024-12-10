@@ -641,7 +641,7 @@
     <string name="source_libre_auto_accept_tou_summary">Abilitando questa opzione, accetti automaticamente i nuovi Termini di utilizzo per garantire la ricezione continua dei dati. Non sarai informato separatamente sui nuovi termini. Se desideri leggerli, disabilita questa impostazione e fai riferimento all\'app LibreLinkUp in caso di errore 4.</string>
     <string name="src_librelink_error4_tou">È necessario accettare i nuovi Termini di utilizzo. Abilita l\'accettazione automatica nelle impostazioni di origine di LibreLinkUp o accedi nuovamente all\'app LibreLinkUp e accetta i termini.</string>
     <string name="src_libre_tou_message">GlucoDataHandler può accettare automaticamente i nuovi Termini di utilizzo per LibreLinkUp.\nPremi OK per abilitare questa funzione o Annulla per leggere e accettare manualmente i termini nell\'app LibreLinkUp.</string>
-    <string name="src_librelink_error2">Nome utente o password errati. Verifica le impostazioni di origine di LibreLinkUp. Se necessario, prova ad accedere di nuovo o reinstalla l\'app LibreLinkUp e controlla le impostazioni del tuo account.</string>
+    <string name="src_librelink_error2">Nome utente o password errati. Verifica le impostazioni di origine di LibreLinkUp. Se necessario, prova ad accedere di nuovo o reinstalla l\'app LibreLinkUp e controlla le impostazioni del tuo account.\nInterrompi tutte le altre app che accedono allo stesso account!</string>
     <string name="last_value_on_server">Ultima lettura della glicemia sul server da %1$s</string>
     <string name="no_data_in_server_response">Nessuna lettura della glicemia trovata sul server.</string>
     <string name="http_error_429">Troppe richieste!</string>
@@ -684,4 +684,7 @@
     <string name="alarm_ignore_snooze_for_very_low_summary">Questo allarme ti avviserà anche se la funzione snooze o le ore di silenzio generali per tutti gli allarmi sono attive, assicurandoti di essere avvisato in caso di livelli di glucosio molto bassi.</string>
 
     <string name="libre_no_new_value_info">Se questo errore persiste, prova a reinstallare l\'app Libre. Questo spesso risolve il problema.</string>
+    <string name="src_libre_server">Server</string>
+    <string name="source_libre_server_default">Predefinito (.io)</string>
+    <string name="source_libre_server_russian">Russo (.ru)</string>
 </resources>

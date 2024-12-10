@@ -704,7 +704,7 @@
     <string name="src_librelink_error4">Error, please re-login to LibreLinkUp App and check for any steps to be done!</string>
     <string name="src_librelink_error4_type">Error type %1$s, please re-login to LibreLinkUp App and check for any steps to be done!</string>
     <string name="src_librelink_error4_tou">New Terms of Use must be accepted. Enable automatic acceptance in LibreLinkUp source settings, or log in again to the LibreLinkUp app and accept the terms.</string>
-    <string name="src_librelink_error2">Incorrect username or password. Please verify your LibreLinkUp source settings. If needed, try logging in again or reinstalling the LibreLinkUp app and checking your account settings.</string>
+    <string name="src_librelink_error2">Incorrect username or password. Please verify your LibreLinkUp source settings. If needed, try logging in again or reinstalling the LibreLinkUp app and checking your account settings.\nPlease stop all other apps accessing the same account!</string>
     <string name="last_value_on_server">Last glucose reading on server from %1$s</string>
     <string name="no_data_in_server_response">No glucose readings found on server.</string>
     <string name="http_error_429">Too many requests!</string>
@@ -747,4 +747,7 @@
     <string name="alarm_ignore_snooze_for_very_low_summary">This alarm will notify you even if snooze or the general quiet hours for all alarms are active, ensuring you are alerted to very low glucose levels.</string>
 
     <string name="libre_no_new_value_info">If this error persists, try reinstalling the Libre App. This often resolves the issue.</string>
+    <string name="src_libre_server">Server</string>
+    <string name="source_libre_server_default">Default (.io)</string>
+    <string name="source_libre_server_russian">Russian (.ru)</string>
 </resources>

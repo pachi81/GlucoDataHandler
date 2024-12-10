@@ -1,12 +1,13 @@
-package de.michelinside.glucodataauto.preferences
+package de.michelinside.glucodatahandler.common.preferences
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
 import androidx.preference.*
-import de.michelinside.glucodataauto.R
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
@@ -17,7 +18,7 @@ import de.michelinside.glucodatahandler.common.tasks.LibreLinkSourceTask
 
 
 class SourceOnlineFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
-    private val LOG_ID = "GDH.AA.SourceOnlineFragment"
+    private val LOG_ID = "GDH.SourceFragment"
     private var settingsChanged = false
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -25,7 +26,7 @@ class SourceOnlineFragment : PreferenceFragmentCompat(), SharedPreferences.OnSha
         try {
             settingsChanged = false
             preferenceManager.sharedPreferencesName = Constants.SHARED_PREF_TAG
-            setPreferencesFromResource(R.xml.sources_online, rootKey)
+            setPreferencesFromResource(CR.xml.sources_online, rootKey)
 
             setPasswordPref(Constants.SHARED_PREF_LIBRE_PASSWORD)
             setPasswordPref(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD)
@@ -96,8 +97,12 @@ class SourceOnlineFragment : PreferenceFragmentCompat(), SharedPreferences.OnSha
                     updateEnableStates(sharedPreferences!!)
                     update()
                 }
-                Constants.SHARED_PREF_LIBRE_PATIENT_ID -> {
+                Constants.SHARED_PREF_LIBRE_PATIENT_ID,
+                Constants.SHARED_PREF_LIBRE_SERVER -> {
                     update()
+                }
+                Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL -> {
+                    updateDexcomAccountLink()
                 }
             }
         } catch (exc: Exception) {
@@ -147,12 +152,26 @@ class SourceOnlineFragment : PreferenceFragmentCompat(), SharedPreferences.OnSha
                 value
         }
     }
-    private fun update() {
-        setSummary(Constants.SHARED_PREF_LIBRE_USER, CR.string.src_libre_user_summary)
-        setSummary(Constants.SHARED_PREF_NIGHTSCOUT_URL, CR.string.src_ns_url_summary)
-        setPatientSummary()
+
+    private fun setListSummary(key: String, defaultResId: Int) {
+        val listPref = findPreference<ListPreference>(key)
+        if(listPref != null) {
+            val value = listPref.entry
+            listPref.summary = if(value.isNullOrEmpty())
+                resources.getString(defaultResId)
+            else
+                value
+        }
     }
 
+    private fun update() {
+        setSummary(Constants.SHARED_PREF_LIBRE_USER, CR.string.src_libre_user_summary)
+        setListSummary(Constants.SHARED_PREF_LIBRE_SERVER, CR.string.source_libre_server_default)
+        setSummary(Constants.SHARED_PREF_NIGHTSCOUT_URL, CR.string.src_ns_url_summary)
+        setSummary(Constants.SHARED_PREF_DEXCOM_SHARE_USER, CR.string.src_dexcom_share_user_summary)
+        updateDexcomAccountLink()
+        setPatientSummary()
+    }
 
     private fun setPatientSummary() {
         val listPreference = findPreference<ListPreference>(Constants.SHARED_PREF_LIBRE_PATIENT_ID)
@@ -171,6 +190,7 @@ class SourceOnlineFragment : PreferenceFragmentCompat(), SharedPreferences.OnSha
             }
         }
     }
+
     private fun setupLibrePatientData() {
         try {
             val listPreference = findPreference<ListPreference>(Constants.SHARED_PREF_LIBRE_PATIENT_ID)
@@ -180,6 +200,33 @@ class SourceOnlineFragment : PreferenceFragmentCompat(), SharedPreferences.OnSha
             listPreference.isVisible = LibreLinkSourceTask.patientData.size > 1
             if(listPreference.isVisible)
                 setPatientSummary()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "setupLibrePatientData exception: $exc")
+        }
+    }
+
+    private fun updateDexcomAccountLink() {
+        try {
+            val prefUseUsAccount = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL)
+            if(prefUseUsAccount != null) {
+                val us_account = prefUseUsAccount.isChecked
+                val prefLink = findPreference<Preference>(Constants.SHARED_PREF_DEXCOM_SHARE_ACCOUNT_LINK)
+                if (prefLink != null) {
+                    prefLink.summary = resources.getString(if(us_account) CR.string.dexcom_share_check_us_account else CR.string.dexcom_share_check_non_us_account)
+                    prefLink.setOnPreferenceClickListener {
+                        try {
+                            val browserIntent = Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse(resources.getString(if(us_account)CR.string.dexcom_account_us_url else CR.string.dexcom_account_non_us_url))
+                            )
+                            startActivity(browserIntent)
+                        } catch (exc: Exception) {
+                            Log.e(LOG_ID, "setLinkOnClick exception for key ${prefLink.key}" + exc.toString())
+                        }
+                        true
+                    }
+                }
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "setupLibrePatientData exception: $exc")
         }

@@ -651,7 +651,7 @@
     <string name="source_libre_auto_accept_tou_summary">Al habilitar esto, aceptas automáticamente los nuevos Términos de uso para garantizar la recepción continua de datos. No se te informará sobre los nuevos términos por separado. Si deseas leerlos, deshabilita esta configuración y consulta la aplicación LibreLinkUp en caso de error 4.</string>
     <string name="src_librelink_error4_tou">Se deben aceptar los nuevos Términos de uso. Habilita la aceptación automática en la configuración de origen de LibreLinkUp o vuelve a iniciar sesión en la aplicación LibreLinkUp y acepta los términos.</string>
     <string name="src_libre_tou_message">GlucoDataHandler puede aceptar automáticamente los nuevos Términos de uso para LibreLinkUp.\nPulsa Aceptar para habilitar esta función o Cancelar para leer y aceptar manualmente los términos en la aplicación LibreLinkUp.</string>
-    <string name="src_librelink_error2">Nombre de usuario o contraseña incorrectos. Por favor, verifica la configuración de origen de LibreLinkUp. Si es necesario, intenta iniciar sesión de nuevo o reinstalar la aplicación LibreLinkUp y comprobar la configuración de tu cuenta.</string>
+    <string name="src_librelink_error2">Nombre de usuario o contraseña incorrectos. Por favor, verifica la configuración de origen de LibreLinkUp. Si es necesario, intenta iniciar sesión de nuevo o reinstalar la aplicación LibreLinkUp y comprobar la configuración de tu cuenta.\nPor favor, detén todas las demás aplicaciones que acceden a la misma cuenta.</string>
     <string name="last_value_on_server">Última lectura de glucosa en el servidor de %1$s</string>
     <string name="no_data_in_server_response">No se encontraron lecturas de glucosa en el servidor.</string>
     <string name="http_error_429">¡Demasiadas solicitudes!</string>
@@ -694,4 +694,8 @@
     <string name="alarm_ignore_snooze_for_very_low_summary">Esta alarma te notificará incluso si la función de repetición o el horario de silencio general para todas las alarmas están activos, lo que garantiza que se te avise de los niveles de glucosa muy bajos.</string>
 
     <string name="libre_no_new_value_info">Si este error persiste, intenta reinstalar la aplicación LibreLink. Esto suele resolver el problema.</string>
+    <string name="src_libre_server">Servidor</string>
+    <string name="source_libre_server_default">Predeterminado (.io)</string>
+    <string name="source_libre_server_russian">Ruso (.ru)</string>
+
 </resources>

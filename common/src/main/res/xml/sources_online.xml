@@ -49,6 +49,14 @@
             android:inputType="textPassword"
             app:iconSpaceReserved="false" />
         <androidx.preference.ListPreference
+            android:defaultValue="io"
+            android:entries="@array/source_libre_server_labels"
+            android:entryValues="@array/source_libre_server_values"
+            android:key="source_libre_server"
+            android:title="@string/src_libre_server"
+            android:summary="@string/source_libre_server_default"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.ListPreference
             android:key="source_libre_patient_id"
             android:title="@string/src_libre_patient"
             android:summary="@string/src_libre_patient_summary"

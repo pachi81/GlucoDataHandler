@@ -648,7 +648,7 @@
     <string name="source_libre_auto_accept_tou_summary">Ao habilitar isso, você aceita automaticamente os novos Termos de Uso para garantir a recepção contínua de dados. Você não será informado sobre novos termos separadamente. Se desejar lê-los, desabilite esta configuração e consulte o aplicativo LibreLinkUp em caso de erro 4.</string>
     <string name="src_librelink_error4_tou">Novos Termos de Uso devem ser aceitos. Habilite a aceitação automática nas configurações de origem do LibreLinkUp ou faça login novamente no aplicativo LibreLinkUp e aceite os termos.</string>
     <string name="src_libre_tou_message">GlucoDataHandler pode aceitar automaticamente os novos Termos de Uso para LibreLinkUp.\nPressione OK para habilitar este recurso ou Cancelar para ler e aceitar manualmente os termos no aplicativo LibreLinkUp.</string>
-    <string name="src_librelink_error2">Nome de usuário ou senha incorretos. Por favor, verifique suas configurações de origem do LibreLinkUp. Se necessário, tente fazer login novamente ou reinstalar o aplicativo LibreLinkUp e verificar as configurações da sua conta.</string>
+    <string name="src_librelink_error2">Nome de usuário ou senha incorretos. Por favor, verifique suas configurações de origem do LibreLinkUp. Se necessário, tente fazer login novamente ou reinstalar o aplicativo LibreLinkUp e verificar as configurações da sua conta.\nPor favor, pare todos os outros aplicativos que estão acessando a mesma conta!</string>
     <string name="last_value_on_server">Última leitura de glicose no servidor de %1$s</string>
     <string name="no_data_in_server_response">Nenhuma leitura de glicose encontrada no servidor.</string>
     <string name="http_error_429">Muitas solicitações!</string>
@@ -691,4 +691,8 @@
     <string name="alarm_ignore_snooze_for_very_low_summary">Este alarme irá notificá-lo mesmo que a função soneca ou o horário de silêncio geral para todos os alarmes estejam ativos, garantindo que você seja alertado sobre níveis de glicose muito baixos.</string>
 
     <string name="libre_no_new_value_info">Se este erro persistir, tente reinstalar o aplicativo LibreLink. Isso geralmente resolve o problema.</string>
+    <string name="src_libre_server">Servidor</string>
+    <string name="source_libre_server_default">Padrão (.io)</string>
+    <string name="source_libre_server_russian">Russo (.ru)</string>
+
 </resources>

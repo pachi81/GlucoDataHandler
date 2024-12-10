@@ -645,7 +645,7 @@
     <string name="source_libre_auto_accept_tou_summary">Wenn du dies aktivierst, akzeptierst du automatisch neue Nutzungsbedingungen, um einen kontinuierlichen Datenempfang zu gewährleisten. Du wirst nicht separat über neue Bedingungen informiert. Wenn du sie lesen möchtest, deaktiviere diese Einstellung und wende dich im Falle von Fehler 4 an die LibreLinkUp App.</string>
     <string name="src_librelink_error4_tou">Neue Nutzungsbedingungen müssen akzeptiert werden. Aktiviere die automatische Annahme in den LibreLinkUp-Quelleinstellungen oder melde dich erneut bei der LibreLinkUp App an und akzeptiere die Bedingungen.</string>
     <string name="src_libre_tou_message">GlucoDataHandler kann neue Nutzungsbedingungen für LibreLinkUp automatisch akzeptieren.\nDrücke OK, um diese Funktion zu aktivieren, oder Abbrechen, um die Bedingungen in der LibreLinkUp App zu lesen und manuell zu akzeptieren.</string>
-    <string name="src_librelink_error2">Falscher Benutzername oder Passwort. Bitte überprüfe deine LibreLinkUp-Quelleinstellungen. Versuche gegebenenfalls, dich erneut anzumelden oder die LibreLinkUp App neu zu installieren und deine Kontoeinstellungen zu überprüfen.</string>
+    <string name="src_librelink_error2">Falscher Benutzername oder Passwort. Bitte überprüfe deine LibreLinkUp-Quelleinstellungen. Versuche gegebenenfalls, dich erneut anzumelden oder die LibreLinkUp App neu zu installieren und deine Kontoeinstellungen zu überprüfen.\nBitte beende alle anderen Apps, die auf dasselbe Konto zugreifen!</string>
     <string name="last_value_on_server">Letzter Glukosewert auf dem Server von %1$s</string>
     <string name="no_data_in_server_response">Keine Glukosewerte auf dem Server gefunden.</string>
     <string name="http_error_429">Zu viele Anfragen!</string>
@@ -688,4 +688,8 @@
     <string name="alarm_ignore_snooze_for_very_low_summary">Den tiefen Alarm auch dann benachrichtigen, wenn die Schlummerfunktion oder die Ruhezeiten für alle Alarme aktiv sind.</string>
 
     <string name="libre_no_new_value_info">Wenn dieser Fehler weiterhin besteht, versuchen Sie die Libre App neu zu installieren. Dies behebt das Problem normalerweise.</string>
+
+    <string name="src_libre_server">Server</string>
+    <string name="source_libre_server_default">Standard (.io)</string>
+    <string name="source_libre_server_russian">Russisch (.ru)</string>
 </resources>

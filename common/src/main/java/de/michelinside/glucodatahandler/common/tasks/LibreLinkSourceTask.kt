@@ -35,12 +35,13 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         private var tokenExpire = 0L
         private var userId = ""
         private var region = ""
+        private var topLevelDomain = "io"
         private var patientId = ""
         private var dataReceived = false   // mark this endpoint as already received data
         private var autoAcceptTOU = true
         val patientData = mutableMapOf<String, String>()
-        const val server = "https://api.libreview.io"
-        const val region_server = "https://api-%s.libreview.io"
+        const val server = "https://api.libreview.%s"
+        const val region_server = "https://api-%s.libreview.%s"
         const val LOGIN_ENDPOINT = "/llu/auth/login"
         const val CONNECTION_ENDPOINT = "/llu/connections"
         const val ACCEPT_ENDPOINT = "/auth/continue/"
@@ -49,7 +50,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     }
 
     private fun getUrl(endpoint: String): String {
-        val url = (if(region.isEmpty()) server else region_server.format(region)) + endpoint
+        val url = (if(region.isEmpty()) server.format(topLevelDomain) else region_server.format(region, topLevelDomain)) + endpoint
         Log.i(LOG_ID, "Using URL: " + url)
         return url
     }
@@ -535,6 +536,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             region = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_REGION, "")!!
             patientId = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")!!
             autoAcceptTOU = sharedPreferences.getBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true)
+            topLevelDomain = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_SERVER, "io")?: "io"
             InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
             trigger = true
         } else {
@@ -575,6 +577,16 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                         Log.i(LOG_ID, "Auto accept TOU changed to $autoAcceptTOU")
                         if(autoAcceptTOU && lastErrorCode == 4)
                             trigger = true
+                    }
+                }
+                Constants.SHARED_PREF_LIBRE_SERVER -> {
+                    if (topLevelDomain != sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_SERVER, "io")) {
+                        topLevelDomain = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_SERVER, "io")?: "io"
+                        if(topLevelDomain.isEmpty())
+                            topLevelDomain = "io"
+                        Log.i(LOG_ID, "Top level domain changed to $topLevelDomain")
+                        reset()
+                        trigger = true
                     }
                 }
             }

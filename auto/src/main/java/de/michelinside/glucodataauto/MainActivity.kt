@@ -432,12 +432,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         tableConnections.removeViews(1, maxOf(0, tableConnections.childCount - 1))
         if (SourceStateData.lastState != SourceState.NONE) {
             val msg = SourceStateData.getStateMessage(this)
-            tableConnections.addView(
-                createRow(
-                    SourceStateData.lastSource.resId,
-                    msg
-                )
-            )
+            tableConnections.addView(createRow(SourceStateData.lastSource.resId,msg))
             if(SourceStateData.lastState == SourceState.ERROR && SourceStateData.lastSource == DataSource.DEXCOM_SHARE) {
                 if (msg.contains("500:")) { // invalid password
                     val us_account = sharedPref.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, false)
@@ -456,6 +451,10 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                         )
                     )
                 }
+            }
+            if(SourceStateData.lastErrorInfo.isNotEmpty()) {
+                // add error specific information in an own row
+                tableConnections.addView(createRow(SourceStateData.lastErrorInfo))
             }
             tableConnections.addView(createRow(CR.string.request_timestamp, Utils.getUiTimeStamp(SourceStateData.lastStateTime)))
         }

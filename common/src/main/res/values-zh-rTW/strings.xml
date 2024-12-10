@@ -650,7 +650,7 @@
     <string name="source_libre_auto_accept_tou_summary">啟用此選項後您將自動接受新使用條款，確保可以持續接收資料。您不會再收到關於新條款的通知，如果您想閱讀新使用條款請停用此設定，並在發生錯誤 4 時打開 LibreLinkUp 程式</string>
     <string name="src_librelink_error4_tou">必須接受新使用條款。在 LibreLinkUp 資料來源設定中啟用自動接受，或再次登入 LibreLinkUp 程式並接受新條款</string>
     <string name="src_libre_tou_message">GlucoDataHandler 可以自動接受 LibreLinkUp 的新使用條款。\n按「確定」啟用此功能，或按「取消」然後打開 LibreLinkUp 程式閱讀並手動接受條款</string>
-    <string name="src_librelink_error2">使用者名稱或密碼不正確。請確認 LibreLinkUp 資料來源設定。需要的話請試著再次登入或重新安裝 LibreLinkUp 程式並檢查您的帳號設定</string>
+    <string name="src_librelink_error2">使用者名稱或密碼不正確。請確認 LibreLinkUp 資料來源設定。需要的話請試著再次登入或重新安裝 LibreLinkUp 程式並檢查您的帳號設定\n請關閉其他存取同一個帳號的程式！</string>
     <string name="last_value_on_server">伺服器上的最後一次血糖讀數來自 %1$s</string>
     <string name="no_data_in_server_response">伺服器找不到血糖讀數</string>
     <string name="http_error_429">太多請求！</string>
@@ -692,4 +692,7 @@
     <string name="alarm_ignore_snooze_for_very_low_summary">即使處於貪睡模式或所有警報的勿擾時段，此警報仍會發出通知，確保您能收到非常低血糖的警報</string>
 
     <string name="libre_no_new_value_info">如果一直發生此錯誤，請試著重新安裝 Libre 程式，通常可以解決問題。</string>
+    <string name="src_libre_server">伺服器</string>
+    <string name="source_libre_server_default">預設 (.io)</string>
+    <string name="source_libre_server_russian">俄羅斯 (.ru)</string>
 </resources>

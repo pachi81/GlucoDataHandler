@@ -42,6 +42,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             Constants.SHARED_PREF_LIBRE_PASSWORD,
             Constants.SHARED_PREF_LIBRE_RECONNECT,
             Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU,
+            Constants.SHARED_PREF_LIBRE_PATIENT_ID,
+            Constants.SHARED_PREF_LIBRE_SERVER,
             Constants.SHARED_PREF_NIGHTSCOUT_URL,
             Constants.SHARED_PREF_NIGHTSCOUT_SECRET,
             Constants.SHARED_PREF_NIGHTSCOUT_TOKEN,
@@ -61,6 +63,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                 putString(Constants.SHARED_PREF_LIBRE_PASSWORD, bundle.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, ""))
                 putBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, bundle.getBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false))
                 putBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, bundle.getBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true))
+                putString(Constants.SHARED_PREF_LIBRE_SERVER, bundle.getString(Constants.SHARED_PREF_LIBRE_SERVER, "io"))
+                putString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, bundle.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, ""))
 
                 putString(Constants.SHARED_PREF_NIGHTSCOUT_URL, bundle.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, ""))
                 putString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, bundle.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, ""))
@@ -84,6 +88,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             bundle.putString(Constants.SHARED_PREF_LIBRE_PASSWORD, sharedPref.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, ""))
             bundle.putBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, sharedPref.getBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false))
             bundle.putBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, sharedPref.getBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true))
+            bundle.putString(Constants.SHARED_PREF_LIBRE_SERVER, sharedPref.getString(Constants.SHARED_PREF_LIBRE_SERVER, "io"))
+            bundle.putString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, sharedPref.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, ""))
 
             bundle.putString(Constants.SHARED_PREF_NIGHTSCOUT_URL, sharedPref.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, ""))
             bundle.putString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, sharedPref.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, ""))
