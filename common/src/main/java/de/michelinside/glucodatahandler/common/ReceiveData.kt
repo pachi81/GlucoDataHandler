@@ -55,9 +55,9 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return (forceGlucoseAlarm || forceDeltaAlarm)
     }
 
-    var showObsoleteOnScreenOff: Boolean = false
+    var forceObsoleteOnScreenOff: Boolean = false
     private val forceObsolete: Boolean get() {
-        return showObsoleteOnScreenOff && ScreenEventReceiver.isDisplayOff()
+        return forceObsoleteOnScreenOff && ScreenEventReceiver.isDisplayOff()
     }
 
     var iob: Float = Float.NaN
@@ -438,6 +438,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         if (extras == null || extras.isEmpty) {
             return false
         }
+        forceObsoleteOnScreenOff = false
         var result = false
         WakeLockHelper(context).use {
             initData(context)

@@ -26,15 +26,14 @@ class ScreenEventReceiver: BroadcastReceiver() {
         private var displayState = Display.STATE_ON
         private var displayManager: DisplayManager? = null
         fun isDisplayOff() : Boolean {
-            if(displayState == Display.STATE_OFF)
-                return !ReceiveData.forceAlarm  // no screen of handling for alarms
-            return false
+            return displayState == Display.STATE_OFF
         }
         fun isDisplayOn() : Boolean {
             return displayState == Display.STATE_ON
         }
         fun onDisplayOn(context: Context) {
             Log.i(LOG_ID, "onDisplayOn called")
+            ReceiveData.forceObsoleteOnScreenOff = false
             InternalNotifier.notify(context, NotifySource.DISPLAY_STATE_CHANGED, null)
         }
         fun onDisplayOff(context: Context) {

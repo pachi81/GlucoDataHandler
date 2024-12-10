@@ -64,7 +64,7 @@ object ActiveComplicationHandler: NotifierInterface {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         alwaysUpdateComplications = sharedPref.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true)
         Log.d(LOG_ID, "Settings changed - always update complications: $alwaysUpdateComplications - display off: ${ScreenEventReceiver.isDisplayOff()}")
-        ReceiveData.showObsoleteOnScreenOff = !alwaysUpdateComplications
+        ReceiveData.forceObsoleteOnScreenOff = false
     }
 
     private fun startWaitForUpdateThread(context: Context) {
@@ -111,10 +111,16 @@ object ActiveComplicationHandler: NotifierInterface {
         if(alwaysUpdateComplications)
             return dataSource != NotifySource.DISPLAY_STATE_CHANGED
         // else only update if screen is on or switched off
-        if(ScreenEventReceiver.isDisplayOff())
-            return dataSource == NotifySource.DISPLAY_STATE_CHANGED   // after display is switched off, update once to set complications to obsolete
+        if(ScreenEventReceiver.isDisplayOff()) {
+            if(dataSource == NotifySource.DISPLAY_STATE_CHANGED) {   // after display is switched off, update once to set complications to obsolete
+                ReceiveData.forceObsoleteOnScreenOff = true
+                return true
+            }
+            return false
+        }
         if(dataSource == NotifySource.DISPLAY_STATE_CHANGED) {
             // display switched on
+            ReceiveData.forceObsoleteOnScreenOff = false
             forceUpdataAll = true   // force update of all complications after display is switched on
             if(alwaysUpdateComplications || ReceiveData.getElapsedTimeMinute(RoundingMode.HALF_UP) == 0L)
                 return true  // data is still up to date
