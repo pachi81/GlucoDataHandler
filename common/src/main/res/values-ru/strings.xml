@@ -71,7 +71,7 @@
     <string name="source_state_not_active">Не активен</string>
     <string name="source_state_in_progress">В процессе</string>
     <string name="source_state_ok">ОК</string>
-    <string name="source_state_no_new_value">Данные не приходят</string>
+    <string name="source_state_no_new_value">Не приходят данные</string>
     <string name="source_state_no_connection">Нет интернет-соединения</string>
     <string name="source_state_error">Ошибка</string>
 
