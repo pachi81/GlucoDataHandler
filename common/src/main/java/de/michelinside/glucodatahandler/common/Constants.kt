@@ -21,7 +21,7 @@ object Constants {
     const val COMMAND_BUNDLE = "command_bundle"
     const val GLUCOSE_CONVERSION_FACTOR = 18.0182F
     const val GLUCOSE_MIN_VALUE = 40
-    const val GLUCOSE_MAX_VALUE = 400
+    const val GLUCOSE_MAX_VALUE = 600
     const val ACTION_STOP_FOREGROUND = "stop_foreground"
 
     const val ACTION_PREFIX = "gdh_action_"
@@ -95,6 +95,7 @@ object Constants {
     const val SHARED_PREF_FLOATING_WIDGET = "floating_widget"
     const val SHARED_PREF_FLOATING_WIDGET_STYLE = "floating_widget_style"
     const val SHARED_PREF_FLOATING_WIDGET_SIZE = "floating_widget_size"
+    const val SHARED_PREF_FLOATING_WIDGET_SIZE_MIGRATION = "floating_widget_size_migration"
     const val SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY = "floating_widget_transparency"
     const val SHARED_PREF_FLOATING_WIDGET_TIME_TO_CLOSE = "floating_widget_time_to_close"
     const val SHARED_PREF_FLOATING_WIDGET_TAP_ACTION = "floating_widget_tap_action"
@@ -115,6 +116,11 @@ object Constants {
     const val SHARED_PREF_IMPORT_SETTINGS = "import_settings"
     const val SHARED_PREF_SAVE_MOBILE_LOGS = "save_mobile_logs"
     const val SHARED_PREF_SAVE_WEAR_LOGS = "save_wear_logs"
+
+
+    const val SHARED_PREF_WATCHFACES_PUJIE = "pref_watchfaces_pujie"
+    const val SHARED_PREF_WATCHFACES_DMM = "pref_watchfaces_dmm"
+    const val SHARED_PREF_WATCHFACES_GDC = "pref_watchfaces_gdc"
 
 
     // internal app preferences (not changed by settings) -> use separate tag for not trigger onChanged events
@@ -155,6 +161,8 @@ object Constants {
     const val SHARED_PREF_LIBRE_REGION="source_libre_region"
     const val SHARED_PREF_LIBRE_PATIENT_ID="source_libre_patient_id"
     const val SHARED_PREF_LIBRE_USER_ID="source_libre_user_id"
+    const val SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU="source_libre_auto_accept_tou"
+    const val SHARED_PREF_LIBRE_SERVER="source_libre_server"
 
     const val SHARED_PREF_DEXCOM_SHARE_ENABLED="source_dexcom_share_enabled"
     const val SHARED_PREF_DEXCOM_SHARE_USER="source_dexcom_share_user"
@@ -198,6 +206,7 @@ object Constants {
     const val SHARED_PREF_ALARM_START_DELAY = "alarm_start_delay"
     const val SHARED_PREF_ALARM_START_DELAY_STRING = "alarm_start_delay_string"
     const val SHARED_PREF_NOTIFICATION_AUTO_CLOSE = "auto_close_notification"
+    const val SHARED_PREF_ALARM_FORCE_VERY_LOW = "alarm_force_very_low"
 
     const val SHARED_PREF_ALARM_NOTIFICATION_ENABLED = "alarm_notifications_enabled"
     const val SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED = "alarm_fullscreen_notification_enabled"
@@ -218,7 +227,6 @@ object Constants {
 
     const val SHARED_PREF_ALARM_SUFFIX_ENABLED = "_enabled"
     const val SHARED_PREF_ALARM_SUFFIX_INTERVAL = "_interval"
-    const val SHARED_PREF_ALARM_SUFFIX_RETRIGGER = "_retrigger"
     const val SHARED_PREF_ALARM_SUFFIX_USE_CUSTOM_SOUND = "_use_custom_sound"
     const val SHARED_PREF_ALARM_SUFFIX_CUSTOM_SOUND = "_custom_sound"
     const val SHARED_PREF_ALARM_SUFFIX_VIBRATE_PATTERN = "_vibrate_pattern"
@@ -232,6 +240,7 @@ object Constants {
     const val SHARED_PREF_ALARM_SUFFIX_TEST = "_test"
     const val SHARED_PREF_ALARM_SUFFIX_SAVE_SOUND = "_save_sound"
     const val SHARED_PREF_ALARM_SUFFIX_REPEAT = "_repeat"
+    const val SHARED_PREF_ALARM_SUFFIX_REPEAT_UNTIL_CLOSE = "_repeat_until_close"
     const val SHARED_PREF_ALARM_SUFFIX_DELTA = "_delta"
     const val SHARED_PREF_ALARM_SUFFIX_OCCURRENCE_COUNT = "_occurrence_count"
     const val SHARED_PREF_ALARM_SUFFIX_BORDER = "_border"
@@ -245,6 +254,14 @@ object Constants {
     const val SHARED_PREF_ALARM_FALLING_FAST = "alarm_falling_fast"
 
     const val SHARED_PREF_ALARM_TYPE_SETTINGS_CAT = "cat_alarm_settings"
+
+    const val SHARED_PREF_BATTERY_RECEIVER_ENABLED = "battery_receiver_enabled"
+    const val SHARED_PREF_SEND_TO_WATCH_INTERVAL = "send_to_watch_interval"
+    const val SHARED_PREF_SEND_TO_RECEIVER_INTERVAL = "send_to_receiver_interval"
+
+    const val SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE = "phone_wear_screen_off_update"
+
+    const val SHARED_PREF_DISCLAIMER_SHOWN = "gdh_disclaimer_shown"
 
     // Android Auto
     const val AA_MEDIA_ICON_STYLE_TREND = "trend"

@@ -105,4 +105,12 @@
         <item>"30"</item>
         <item>"-1"</item>
     </array>
+    <array name="source_libre_server_labels">
+        <item>@string/source_libre_server_default</item>
+        <item>@string/source_libre_server_russian</item>
+    </array>
+    <array name="source_libre_server_values">
+        <item>"io"</item>
+        <item>"ru"</item>
+    </array>
 </resources>

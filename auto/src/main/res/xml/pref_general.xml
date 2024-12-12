@@ -24,7 +24,7 @@
             app:showSeekBarValue="true"
             app:seekBarIncrement="1"
             app:min="2"
-            android:max="12"
+            android:max="16"
             android:key="obsolete_time"
             android:title="@string/obsolete_time"
             android:summary="@string/obsolete_time_summary"

@@ -50,20 +50,21 @@
         android:textColor="@color/text_color"
         tools:ignore="HardcodedText,SpUsage" />
     </LinearLayout>
+    <TextView
+        android:id="@+id/snoozeText"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:text="Snooze"
+        android:textSize="18dp"
+        android:layout_marginStart="6dp"
+        android:textColor="@color/text_color"
+        tools:ignore="HardcodedText,SpUsage" />
     <LinearLayout
         android:id="@+id/snoozeLayout"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:orientation="horizontal">
-        <TextView
-            android:id="@+id/snooze"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="Snooze"
-            android:textSize="18dp"
-            android:textColor="@color/text_color"
-            tools:ignore="HardcodedText,SpUsage" />
         <Button
             android:id="@+id/snooze_60"
             android:layout_marginStart="6dp"
@@ -71,6 +72,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="60"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMaxTextSize="14sp"
+            android:maxLines="1"
             tools:ignore="HardcodedText,SpUsage" />
         <Button
             android:id="@+id/snooze_90"
@@ -79,6 +85,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="90"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMaxTextSize="14sp"
+            android:maxLines="1"
             tools:ignore="HardcodedText,SpUsage" />
         <Button
             android:id="@+id/snooze_120"
@@ -88,6 +99,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="120"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMaxTextSize="14sp"
+            android:maxLines="1"
             tools:ignore="HardcodedText,SpUsage" />
     </LinearLayout>
 </LinearLayout>

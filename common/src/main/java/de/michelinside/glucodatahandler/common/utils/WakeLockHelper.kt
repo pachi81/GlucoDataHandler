@@ -7,37 +7,59 @@ import java.io.Closeable
 
 class WakeLockHelper(val context: Context) : Closeable {
     private val WAKE_LOCK_TIMEOUT = 10000L // 10 seconds
-
     private val LOG_ID = "GDH.Utils.WakeLockHelper"
-    private var wakeLock: PowerManager.WakeLock? = null
-    init {
-        Log.v(LOG_ID, "init called")
-        wakeLock =
-        (context.getSystemService(Context.POWER_SERVICE) as PowerManager).run {
-            newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "GlucoDataHandler::WakeLockHelperTag").apply {
-                acquire(WAKE_LOCK_TIMEOUT)
-            }
-        }
-        Log.d(LOG_ID, "wakelock acquired: " + active())
+
+    companion object {
+        private var wakeLock: PowerManager.WakeLock? = null
+        private var wackLockCount = 0
+        private val lock = Object()
     }
 
-    fun active(): Boolean {
+    init {
+        try {
+            synchronized(lock) {
+                Log.v(LOG_ID, "init called - count: $wackLockCount")
+                wackLockCount++
+                if(wackLockCount == 1 && wakeLock == null) {
+                    wakeLock =
+                    (context.getSystemService(Context.POWER_SERVICE) as PowerManager).run {
+                        newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "GlucoDataHandler::WakeLockHelperTag").apply {
+                            acquire(WAKE_LOCK_TIMEOUT)
+                        }
+                    }
+                    Log.d(LOG_ID, "wakelock acquired: " + active())
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "init exception: " + exc.toString())
+        }
+    }
+
+    private fun active(): Boolean {
         if (wakeLock != null) {
             return wakeLock!!.isHeld
         }
         return false
     }
 
-    fun release() {
-        Log.v(LOG_ID, "release called - active: " + active())
-        if(active()) {
-            Log.d(LOG_ID, "wakelock release")
-            wakeLock?.release()
-            wakeLock = null
+    private fun release() {
+        synchronized(lock) {
+            Log.v(LOG_ID, "release called - active: " + active() + " count: $wackLockCount")
+            wackLockCount--
+            if(wackLockCount == 0 && active()) {
+                Log.d(LOG_ID, "wakelock release")
+                wakeLock?.release()
+                wakeLock = null
+            }
         }
     }
+
     override fun close() {
-        Log.v(LOG_ID, "close called")
-        release()
+        try {
+            Log.v(LOG_ID, "close called")
+            release()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "init exception: " + exc.toString())
+        }
     }
 }
