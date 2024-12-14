@@ -320,7 +320,7 @@
     <string name="pref_car_notification_reappear_interval_summary">Интервал, через который уведомление должно появляться снова, если нет нового значения. (0 для никогда).</string>
     <string name="pref_aa_media_player_icon_style_summary">Стиль значка/изображения фиктивного медиаплеера.</string>
     <string name="pref_aa_media_player_icon_style">Стиль значка/изображения</string>
-    <string name="menu_save_mobile_logs">Мобильный</string>
+    <string name="menu_save_mobile_logs">Устройство</string>
     <string name="menu_save_wear_logs">Wear OS</string>
     <string name="menu_save_logs">Сохранить логи</string>
     <string name="logcat_save_succeeded">Логи успешно сохранены</string>
