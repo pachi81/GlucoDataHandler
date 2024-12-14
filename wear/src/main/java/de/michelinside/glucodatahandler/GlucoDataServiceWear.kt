@@ -151,7 +151,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
 
         return Notification.Builder(this, ChannelType.WEAR_FOREGROUND.channelId)
             .setContentTitle(getString(CR.string.forground_notification_descr))
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(CR.mipmap.ic_launcher)
             .setContentIntent(pendingIntent)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
