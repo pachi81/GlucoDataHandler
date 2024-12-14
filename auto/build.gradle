@@ -37,6 +37,14 @@ android {
             minifyEnabled false
             resValue "string", "app_name", "GlucoDataAuto Debug"
         }
+        second {
+            applicationIdSuffix '.second'
+            versionNameSuffix '_SECOND'
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            resValue "string", "app_name", "GDA Second"
+            signingConfig signingConfigs.debug
+        }
         applicationVariants.all {
                 // this method is use to rename your all apk weather
                 // it may be signed or unsigned(debug apk)
@@ -105,4 +113,14 @@ afterEvaluate {
         into rootProject.releasePath
     }
     assembleDevRelease.finalizedBy(copyAndroidDevApksPostBuild)
+
+    //noinspection ConfigurationAvoidance
+    def assembleSecond = tasks.getByPath(':auto:assembleSecond')
+    def copyAndroidSecondApksPostBuild = tasks.register('copyAndroidSecondApksPostBuild', Copy) {
+        dependsOn assembleSecond
+        from "${projectDir}/second"
+        include '**/*.apk'
+        into rootProject.releasePath
+    }
+    assembleSecond.finalizedBy(copyAndroidSecondApksPostBuild)
 }
