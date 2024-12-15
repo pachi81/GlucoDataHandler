@@ -601,6 +601,8 @@
     <string name="src_offline_enabled_summary_on">Interne berichten van deze bron zullen worden verwerkt.</string>
     <string name="src_offline_enabled_summary_off">Interne berichten van deze bron zullen worden genegeerd.</string>
     <string name="temp_disabled">Tijdelijk uitgeschakeld</string>
+    <string name="snooze_until">Snoozen tot</string>
+    <string name="temp_disabled_until">Tijdelijk uitgeschakeld tot</string>
 
     <!-- Talkback -->
     <string name="trend">Trend</string>

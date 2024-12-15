@@ -529,7 +529,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 tableAlarms.addView(createRow(CR.string.info_label_alarm, resources.getString(deltaAlarmType.resId)))
         }
         if (AlarmHandler.isSnoozeActive)
-            tableAlarms.addView(createRow(CR.string.snooze, AlarmHandler.snoozeTimestamp))
+            tableAlarms.addView(createRow(CR.string.snooze_until, AlarmHandler.snoozeTimestamp))
         checkTableVisibility(tableAlarms)
     }
 

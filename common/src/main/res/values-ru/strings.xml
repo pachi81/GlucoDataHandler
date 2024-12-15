@@ -597,6 +597,8 @@
     <string name="src_offline_enabled_summary_on">Внутренние сообщения из этого источника будут обрабатываться.</string>
     <string name="src_offline_enabled_summary_off">Внутренние сообщения из этого источника будут игнорироваться.</string>
     <string name="temp_disabled">Временно отключено</string>
+    <string name="snooze_until">Отложен до</string>
+    <string name="temp_disabled_until">Временно отключен до</string>
 
     <!-- Talkback -->
     <string name="trend">Тренд</string>

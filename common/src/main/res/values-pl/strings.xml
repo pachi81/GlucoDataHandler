@@ -600,6 +600,8 @@
     <string name="src_offline_enabled_summary_on">Wewnętrzne wiadomości z tego źródła będą obsługiwane.</string>
     <string name="src_offline_enabled_summary_off">Wewnętrzne wiadomości z tego źródła będą ignorowane.</string>
     <string name="temp_disabled">Tymczasowo wyłączony</string>
+    <string name="snooze_until">Drzemka do</string>
+    <string name="temp_disabled_until">Tymczasowo wyłączone do</string>
 
     <!-- Talkback -->
     <string name="trend">Trend</string>

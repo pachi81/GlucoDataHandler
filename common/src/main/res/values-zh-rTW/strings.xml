@@ -600,6 +600,8 @@
     <string name="src_offline_enabled_summary_on">將處理此資料來源的內部訊息</string>
     <string name="src_offline_enabled_summary_off">將忽略此資料來源的內部訊息</string>
     <string name="temp_disabled">暫時停用</string>
+    <string name="snooze_until">貪睡至</string>
+    <string name="temp_disabled_until">暫時停用至</string>
 
     <string name="trend">趨勢箭頭</string>
     <string name="rate_rising">上升 %1$d 度</string>

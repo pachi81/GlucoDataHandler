@@ -593,6 +593,8 @@
     <string name="src_offline_enabled_summary_on">Interne Nachrichten von dieser App werden verarbeitet.</string>
     <string name="src_offline_enabled_summary_off">Interne Nachrichten von dieser App werden ignoriert.</string>
     <string name="temp_disabled">Temporär deaktiviert</string>
+    <string name="temp_disabled_until">Temporär deaktiviert bis</string>
+    <string name="snooze_until">Schlummern bis</string>
 
     <!-- Talkback -->
     <string name="trend">Trend</string>

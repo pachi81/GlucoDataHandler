@@ -602,6 +602,8 @@
     <string name="src_offline_enabled_summary_on">Se gestionarán los mensajes internos de esta fuente.</string>
     <string name="src_offline_enabled_summary_off">Se ignorarán los mensajes internos de esta fuente.</string>
     <string name="temp_disabled">Desactivado temporalmente</string>
+    <string name="temp_disabled_until">Desactivadas temporalmente hasta</string>
+    <string name="snooze_until">Pospuestas hasta</string>
 
     <!-- Talkback -->
     <string name="trend">Tendencia</string>
