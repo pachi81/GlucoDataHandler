@@ -597,8 +597,8 @@
     <string name="src_offline_enabled_summary_on">Внутренние сообщения из этого источника будут обрабатываться.</string>
     <string name="src_offline_enabled_summary_off">Внутренние сообщения из этого источника будут игнорироваться.</string>
     <string name="temp_disabled">Временно отключено</string>
-    <string name="snooze_until">Отложен до</string>
-    <string name="temp_disabled_until">Временно отключен до</string>
+    <string name="snooze_until">Отложено до:</string>
+    <string name="temp_disabled_until">Временно отключено до:</string>
 
     <!-- Talkback -->
     <string name="trend">Тренд</string>
@@ -607,8 +607,8 @@
 
     <string name="alarm_toggle_state">Сигналы тревоги: %1$s</string>
     <string name="alarm_state_inactive">неактивен</string>
-    <string name="alarm_state_snooze">отложен до %1$s</string>
-    <string name="alarm_state_temp_disabled">временно отключен до %1$s</string>
+    <string name="alarm_state_snooze">отложено до %1$s</string>
+    <string name="alarm_state_temp_disabled">временно отключено до %1$s</string>
 
     <string name="enabled">включено</string>
     <string name="disabled">выключено</string>
