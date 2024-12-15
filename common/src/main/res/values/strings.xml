@@ -3,6 +3,7 @@
     <string name="locale">en</string>
     <string name="name" translatable="false">GlucoDataHandler</string>
     <string name="source_gdh" translatable="false">GlucoDataHandler</string>
+    <string name="source_gdh_second" translatable="false">GDH Second</string>
 
     <string name="unit_mgdl" translatable="false">mg/dl</string>
     <string name="unit_mmol" translatable="false">mmol/l</string>

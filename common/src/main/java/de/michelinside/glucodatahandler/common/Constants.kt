@@ -29,7 +29,10 @@ object Constants {
     const val ACTION_DUMMY_VALUE = ACTION_PREFIX + "dummy_value"
     const val ACTION_SPEAK = ACTION_PREFIX + "speak"
 
-    const val PACKAGE_GLUCODATAAUTO = "de.michelinside.glucodataauto"
+    const val IS_SECOND = BuildConfig.BUILD_TYPE == "second"
+
+    val PACKAGE_GLUCODATAHANDLER = if (IS_SECOND) "de.michelinside.glucodatahandler.second" else "de.michelinside.glucodatahandler"
+    val PACKAGE_GLUCODATAAUTO = if (IS_SECOND) "de.michelinside.glucodataauto.second" else "de.michelinside.glucodataauto"
     const val PACKAGE_JUGGLUCO = "tk.glucodata"
 
     const val EXTRA_SOURCE_PACKAGE = "gdh.source_package"

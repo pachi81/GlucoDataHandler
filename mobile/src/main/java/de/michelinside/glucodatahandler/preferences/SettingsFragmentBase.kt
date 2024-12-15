@@ -24,6 +24,7 @@ import de.michelinside.glucodatahandler.common.Intents
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.preferences.PreferenceHelper
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import kotlin.collections.HashMap
 import kotlin.collections.List
@@ -373,12 +374,17 @@ class GDASettingsFragment: SettingsFragmentBase(R.xml.pref_gda) {
         super.initPreferences()
         if (PackageUtils.isGlucoDataAutoAvailable(requireContext())) {
             val sendToGDA = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO)
+            PreferenceHelper.replaceSecondTitle(sendToGDA)
+            PreferenceHelper.replaceSecondSummary(sendToGDA)
             sendToGDA!!.isVisible = true
             val sendPrefToGDA = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO)
+            PreferenceHelper.replaceSecondSummary(sendPrefToGDA)
             sendPrefToGDA!!.isVisible = true
         } else {
             val no_gda_info = findPreference<Preference>(Constants.SHARED_PREF_NO_GLUCODATAAUTO)
             if (no_gda_info != null) {
+                PreferenceHelper.replaceSecondTitle(no_gda_info)
+                PreferenceHelper.replaceSecondSummary(no_gda_info)
                 no_gda_info.isVisible = true
                 setLinkOnClick(no_gda_info, CR.string.glucodataauto_link)
             }

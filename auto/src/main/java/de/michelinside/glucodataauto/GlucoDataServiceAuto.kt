@@ -201,8 +201,9 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
 
         private fun sendStateBroadcast(context: Context, enabled: Boolean) {
             try {
-                Log.d(LOG_ID, "Sending state broadcast for state: " + enabled)
+                Log.i(LOG_ID, "Sending state broadcast for state: $enabled - to ${Constants.PACKAGE_GLUCODATAHANDLER}")
                 val intent = Intent(Constants.GLUCODATAAUTO_STATE_ACTION)
+                intent.setPackage(Constants.PACKAGE_GLUCODATAHANDLER)
                 intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
                 intent.putExtra(Constants.GLUCODATAAUTO_STATE_EXTRA, enabled)
                 context.sendBroadcast(intent)
