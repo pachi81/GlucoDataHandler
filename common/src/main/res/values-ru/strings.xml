@@ -384,7 +384,7 @@
     <string name="alarm_fullscreen_notification_enabled">Полноэкранное уведомление</string>
     <string name="alarm_fullscreen_notification_enabled_summary">Включает полноэкранное уведомление на экране блокировки.\nДля этого может потребоваться дополнительное разрешение.</string>
     <string name="alarm_snooze_on_notification_enabled">Отложить в уведомлении</string>
-    <string name="alarm_snooze_on_notification_summary">Если этот параметр включен, уведомления также будут содержать кнопки для активации отложенного режима.</string>
+    <string name="alarm_snooze_on_notification_summary">Если этот параметр включен, в уведомлениях будут отображаться кнопки для активации отложенного режима.</string>
     <string name="alarm_fullscreen_dismiss_keyguard">Отключить защиту клавиатуры</string>
     <string name="alarm_fullscreen_dismiss_keyguard_summary">Включите этот параметр, если у вас возникли проблемы с полноэкранным уведомлением.\nНа некоторых устройствах это приведет к разблокировке экрана при срабатывании полноэкранного уведомления.\nПоэтому не включайте его, если у вас нет проблем.</string>
     <string name="alarm_force_sound">Принудительный звук тревоги</string>
@@ -399,10 +399,10 @@
     <string name="alarm_advanced_cat_notifcation">Уведомление</string>
     <string name="alarm_advanced_cat_sound">Звук</string>
     <string name="alarm_type_summary">Настройки тревоги для значений глюкозы, начиная с %1$s.</string>
-    <string name="alarm_no_notification_wear_connected">Нет тревоги, пока подключены часы</string>
+    <string name="alarm_no_notification_wear_connected">Без тревоги при подключ. часах</string>
     <string name="alarm_no_notification_wear_connected_summary_on">Уведомления о тревоге не будут отображаться на телефоне, если телефон подключен к GlucoDataHandler на часах.</string>
     <string name="alarm_no_notification_wear_connected_summary_off">Уведомления о тревоге будут отображаться на телефоне, даже если телефон подключен к GlucoDataHandler на часах.</string>
-    <string name="alarm_no_notification_auto_connected">Нет тревоги, пока подключен Android Auto</string>
+    <string name="alarm_no_notification_auto_connected">Без тревоги при подключ. Android Auto</string>
     <string name="alarm_no_notification_auto_connected_summary_on">Уведомления о тревоге не будут отображаться на телефоне, если подключен Android Auto.</string>
     <string name="alarm_no_notification_auto_connected_summary_off">Уведомления о тревоге будут отображаться на телефоне, даже если подключен Android Auto.</string>
     <string name="alarm_retrigger">Повторный запуск</string>
@@ -433,7 +433,7 @@
     <string name="pref_send_pref_to_glucodataauto">Включить настройки</string>
     <string name="pref_send_pref_to_glucodataauto_summary">Включить настройки в сообщение для GlucoDataAuto.\nЭто перезапишет настройки в GlucoDataAuto.</string>
     <string name="pref_source_gdh_info_summary">Чтобы получать значения из GlucoDataHandler:\n- откройте GlucoDataHandler\n- перейдите в настройки\n- включите \"Переслать в GlucoDataAuto\"\n- чтобы использовать те же настройки, включите \"Включить настройки\"</string>
-    <string name="very_low_alarm_summary">Если вы используете уведомления Android Auto, сигналы тревоги о очень низком уровне всегда будут запускать уведомление, и это нельзя отключить или изменить.</string>
+    <string name="very_low_alarm_summary">Если вы используете уведомления Android Auto, сигналы тревоги об очень низком уровне всегда будут запускать уведомление, и это нельзя отключить или изменить.</string>
     <string name="pref_source_juggluco_iob_info">IOB из Juggluco</string>
     <string name="pref_source_juggluco_iob_info_summary">Чтобы получать IOB из Juggluco:\n- откройте Juggluco\n- перейдите в \"Настройки\"\n- включите \"IOB\"\n- перейдите в \"Веб-сервер\"\n- включите \"Активный\"\n- необязательно: включите \"Только локально\"</string>
     <string name="pref_source_xdrip_iob_info">IOB из xDrip+</string>
@@ -687,8 +687,8 @@
     <string name="pref_watchfaces_gdc_summary">Циферблаты GDC предназначены для использования с GlucoDataHandler.\nНажмите здесь, чтобы открыть страницу в Play Маркете.</string>
     <string name="pref_phone_wear_screen_off_update">Всегда обновлять усложнения</string>
     <string name="pref_phone_wear_screen_off_update_summary">Всегда отправлять новые значения глюкозы на часы.\nОтключите эту опцию, чтобы предотвратить обновление данных на часах, когда экран часов выключен, для экономии заряда батареи.\nЗначения тревоги всегда будут отправляться на часы.\nВАЖНО: Устаревшая тревога отключается на часах, когда эта настройка отключена!</string>
-    <string name="alarm_ignore_snooze_for_very_low">Всегда оповещать о очень низком значении</string>
-    <string name="alarm_ignore_snooze_for_very_low_summary">Эта тревога уведомит вас, даже если функция повтора или общий режим тишины для всех тревог активны, гарантируя, что вы будете предупреждены о очень низких уровнях глюкозы.</string>
+    <string name="alarm_ignore_snooze_for_very_low">Всегда оповещать об очень низком</string>
+    <string name="alarm_ignore_snooze_for_very_low_summary">Эта тревога уведомит вас, даже если функция повтора или общий режим тишины для всех тревог активны, гарантируя, что вы будете предупреждены об очень низких уровнях глюкозы.</string>
 
     <string name="libre_no_new_value_info">Если эта ошибка повторяется, попробуйте переустановить приложение LibreLink. Это часто решает проблему.</string>
     <string name="src_libre_server">Сервер</string>
