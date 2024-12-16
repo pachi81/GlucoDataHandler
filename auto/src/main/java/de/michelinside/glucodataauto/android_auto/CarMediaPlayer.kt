@@ -150,7 +150,12 @@ object CarMediaPlayer: NotifierInterface {
             var uri: String? = null
             var requestAudioFocus = false
             if(!playSilent) {
-                file = TextToSpeechUtils.getAsFile(ReceiveData.getAsText(context, false, false), context)
+                var text = ReceiveData.getAsText(context, false, false)
+                val patientName = sharedPref.getString(Constants.PATIENT_NAME, "")
+                if(!patientName.isNullOrEmpty()) {
+                    text = "$patientName, $text"
+                }
+                file = TextToSpeechUtils.getAsFile(text, context)
                 if(file != null) {
                     uri = file!!.absolutePath
                     last_speak_time = ReceiveData.time

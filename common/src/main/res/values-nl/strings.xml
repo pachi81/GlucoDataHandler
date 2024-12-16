@@ -703,4 +703,7 @@
     <string name="source_libre_server_default">Standaard (.io)</string>
     <string name="source_libre_server_russian">Russisch (.ru)</string>
 
+    <string name="patient_name">Naam</string>
+    <string name="patient_name_summary">Naam van de gebruiker/patiënt, die moet worden weergegeven in de melding en tijdens het spreken.\nDit moet worden gebruikt als u meerdere varianten van GlucoDataAuto gebruikt, anders kan het leeg zijn.</string>
+
 </resources>

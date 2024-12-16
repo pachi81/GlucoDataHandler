@@ -700,4 +700,7 @@
     <string name="source_libre_server_default">Predeterminado (.io)</string>
     <string name="source_libre_server_russian">Ruso (.ru)</string>
 
+    <string name="patient_name">Nombre</string>
+    <string name="patient_name_summary">Nombre del usuario/paciente, que debe mostrarse en la notificación y durante el habla.\nEsto debe usarse si está utilizando múltiples variantes de GlucoDataAuto, de lo contrario, podría estar vacío.</string>
+
 </resources>

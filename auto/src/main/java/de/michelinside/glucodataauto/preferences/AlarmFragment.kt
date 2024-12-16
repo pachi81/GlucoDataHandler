@@ -14,6 +14,7 @@ import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.preferences.PreferenceHelper
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 
@@ -29,6 +30,7 @@ class AlarmFragment : PreferenceFragmentCompat() {
             settingsChanged = false
             preferenceManager.sharedPreferencesName = Constants.SHARED_PREF_TAG
             setPreferencesFromResource(R.xml.alarms, rootKey)
+            PreferenceHelper.replaceSecondSummary(findPreference("gda_info"))
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
         }

@@ -29,4 +29,14 @@
             android:title="@string/obsolete_time"
             android:summary="@string/obsolete_time_summary"
             app:iconSpaceReserved="false" />
+        <PreferenceCategory
+            android:title="@string/pref_cat_android_auto"
+            app:iconSpaceReserved="false">
+                <EditTextPreference
+                    android:defaultValue=""
+                    android:key="patient_name"
+                    android:title="@string/patient_name"
+                    android:summary="@string/patient_name_summary"
+                    app:iconSpaceReserved="false"/>
+        </PreferenceCategory>
 </PreferenceScreen>

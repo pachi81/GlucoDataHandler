@@ -78,6 +78,13 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                     apply()
                 }
             }
+
+            if(Constants.IS_SECOND && !sharedPref.contains(Constants.PATIENT_NAME)) {
+                with(sharedPref.edit()) {
+                    putString(Constants.PATIENT_NAME, "SECOND")
+                    apply()
+                }
+            }
         }
 
         private fun startService(context: Context, foreground: Boolean) {

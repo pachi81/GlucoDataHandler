@@ -535,6 +535,11 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateDetailsTable() {
         tableDetails.removeViews(1, maxOf(0, tableDetails.childCount - 1))
+        val name = sharedPref.getString(Constants.PATIENT_NAME, "")
+        if(!name.isNullOrEmpty()) {
+            tableDetails.addView(createRow(CR.string.patient_name, name))
+        }
+
         if(ReceiveData.time > 0) {
             if (ReceiveData.isMmol)
                 tableDetails.addView(createRow(CR.string.info_label_raw, "${ReceiveData.rawValue} mg/dl"))

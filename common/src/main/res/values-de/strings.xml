@@ -686,12 +686,15 @@
     <string name="pref_watchfaces_gdc_summary">GDC Zifferblätter wurden für die Verwendung mit GlucoDataHandler entwickelt.\nTippen Sie hier, um die Play Store-Seite zu öffnen.</string>
     <string name="pref_phone_wear_screen_off_update">Komplikationen immer aktualisieren</string>
     <string name="pref_phone_wear_screen_off_update_summary">Neue Zuckerwerte immer an die Uhr senden.\nDeaktiviere diese Einstellung, um keine Daten an die Uhr zu senden, solange der Bildschirm der Uhr ausgeschaltet ist, um Akku zu sparen.\nAlarmwerte werden immer an die Uhr gesendet.\nWICHTIG: Der veraltete Alarm auf der Uhr wird deaktiviert, wenn diese Einstellung deaktiviert ist!</string>
-    <string name="alarm_ignore_snooze_for_very_low">Tiefen Alarm erzwingen</string>
-    <string name="alarm_ignore_snooze_for_very_low_summary">Den tiefen Alarm auch dann benachrichtigen, wenn die Schlummerfunktion oder die Ruhezeiten für alle Alarme aktiv sind.</string>
+    <string name="alarm_ignore_snooze_for_very_low">Sehr tiefen Alarm erzwingen</string>
+    <string name="alarm_ignore_snooze_for_very_low_summary">Den sehr tiefen Alarm auch dann benachrichtigen, wenn die Schlummerfunktion oder die Ruhezeiten für alle Alarme aktiv sind.</string>
 
     <string name="libre_no_new_value_info">Wenn dieser Fehler weiterhin besteht, versuchen Sie die Libre App neu zu installieren. Dies behebt das Problem normalerweise.</string>
 
     <string name="src_libre_server">Server</string>
     <string name="source_libre_server_default">Standard (.io)</string>
     <string name="source_libre_server_russian">Russisch (.ru)</string>
+    <string name="patient_name">Name</string>
+    <string name="patient_name_summary">Name des Benutzers/Patienten, der in der Benachrichtigung angezeigt und beim Vorlesen angesagt werden soll.\nDies sollte verwendet werden, wenn mehrere Varianten von GlucoDataAuto verwendet werden, andernfalls kann es leer bleiben.</string>
+
 </resources>

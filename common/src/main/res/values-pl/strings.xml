@@ -703,4 +703,7 @@
     <string name="source_libre_server_default">Domyślny (.io)</string>
     <string name="source_libre_server_russian">Rosyjski (.ru)</string>
 
+    <string name="patient_name">Name</string>
+    <string name="patient_name_summary">Name of the user/patient, which should be shown in notification and during speaking.\nThis should be used, if you are using multiple variants of GlucoDataAuto, otherwise it could be empty.</string>
+
 </resources>

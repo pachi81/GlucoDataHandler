@@ -689,4 +689,8 @@
     <string name="src_libre_server">Server</string>
     <string name="source_libre_server_default">Predefinito (.io)</string>
     <string name="source_libre_server_russian">Russo (.ru)</string>
+
+    <string name="patient_name">Nome</string>
+    <string name="patient_name_summary">Nome dell\'utente/paziente, che dovrebbe essere mostrato nella notificazione e durante la lettura.\nQuesto dovrebbe essere usato se si utilizzano più varianti di GlucoDataAuto, altrimenti potrebbe essere vuoto.</string>
+
 </resources>

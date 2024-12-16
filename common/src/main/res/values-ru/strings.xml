@@ -694,4 +694,8 @@
     <string name="src_libre_server">Сервер</string>
     <string name="source_libre_server_default">По умолчанию (.io)</string>
     <string name="source_libre_server_russian">Российский (.ru)</string>
+
+    <string name="patient_name">Имя</string>
+    <string name="patient_name_summary">Имя пользователя/пациента, которое должно отображаться в уведомлении и во время озвучивания.\nЭто следует использовать, если вы используете несколько вариантов GlucoDataAuto, в противном случае оно может быть пустым.</string>
+
 </resources>
