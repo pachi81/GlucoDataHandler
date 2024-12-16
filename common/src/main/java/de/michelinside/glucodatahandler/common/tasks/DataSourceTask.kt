@@ -211,7 +211,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         }
     }
 
-    open fun getNoNewValueInfo(): String = ""
+    open fun getNoNewValueInfo(time: Long): String = ""
 
     protected fun handleResult(extras: Bundle) {
         Log.d(LOG_ID, "handleResult for $source: ${Utils.dumpBundle(extras)}")
@@ -221,7 +221,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                     SourceState.NO_NEW_VALUE,
                     GlucoDataService.context!!.resources.getString(R.string.last_value_on_server, Utils.getUiTimeStamp(extras.getLong(ReceiveData.TIME))),
                     -1,
-                    getNoNewValueInfo()
+                    getNoNewValueInfo(extras.getLong(ReceiveData.TIME))
                 )
             } else {
                 setState(SourceState.NO_NEW_VALUE)

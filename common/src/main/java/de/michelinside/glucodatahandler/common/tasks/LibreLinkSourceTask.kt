@@ -93,7 +93,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         }
     }
 
-    val sensitivData = mutableSetOf("id", "patientId", "firstName", "lastName", "did", "sn", "token", "deviceId", "email", "primaryValue", "secondaryValue" )
+    val sensitivData = mutableSetOf("id", "patientId", "firstName", "lastName", "did", "token", "deviceId", "email", "primaryValue", "secondaryValue" )
 
     private fun replaceSensitiveData(body: String): String {
         var result = body
@@ -144,8 +144,10 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         }
     }
 
-    override fun getNoNewValueInfo(): String {
-        return GlucoDataService.context!!.resources.getString(R.string.libre_no_new_value_info)
+    override fun getNoNewValueInfo(time: Long): String {
+        if(Utils.getElapsedTimeMinute(time) > 5)
+            return GlucoDataService.context!!.resources.getString(R.string.libre_no_new_value_info)
+        return ""
     }
 
     private fun getError4Message(type: String? = null): String {
