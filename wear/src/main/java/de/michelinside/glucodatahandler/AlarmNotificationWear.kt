@@ -46,7 +46,7 @@ object AlarmNotificationWear : AlarmNotificationBase() {
 
     override fun adjustNoticiationChannel(context: Context, channel: NotificationChannel) {
         channel.enableVibration(true)
-        channel.vibrationPattern = longArrayOf(0, 500, 100, 500)
+        channel.vibrationPattern = longArrayOf(0)
     }
 
     override fun getStartDelayMs(context: Context): Int {
