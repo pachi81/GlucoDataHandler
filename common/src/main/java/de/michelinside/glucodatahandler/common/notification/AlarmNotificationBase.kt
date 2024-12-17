@@ -701,6 +701,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             if(lastRingerMode >= 0 ) {
                 Log.i(LOG_ID, "Reset ringer mode to $lastRingerMode")
                 audioManager.ringerMode = lastRingerMode
+                Channels.getNotificationManager().setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL)
                 lastRingerMode = -1
             }
             if(lastDndMode != NotificationManager.INTERRUPTION_FILTER_UNKNOWN) {
