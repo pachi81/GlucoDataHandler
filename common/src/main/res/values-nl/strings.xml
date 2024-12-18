@@ -706,4 +706,7 @@
     <string name="patient_name">Naam</string>
     <string name="patient_name_summary">Naam van de gebruiker/patiënt, die moet worden weergegeven in de melding en tijdens het spreken.\nDit moet worden gebruikt als u meerdere varianten van GlucoDataAuto gebruikt, anders kan het leeg zijn.</string>
 
+    <string name="video_introduction">Video-tutorial</string>
+    <string name="video_introduction_summary">Klik hier om naar de YouTube-video te gaan die de installatie van deze bron illustreert. Veel dank aan Diabetic Masked Man voor het maken van de video\'s.</string>
+
 </resources>

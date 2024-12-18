@@ -698,4 +698,7 @@
     <string name="patient_name">Имя</string>
     <string name="patient_name_summary">Имя пользователя/пациента, которое должно отображаться в уведомлении и во время озвучивания.\nЭто следует использовать, если вы используете несколько вариантов GlucoDataAuto, в противном случае оно может быть пустым.</string>
 
+    <string name="video_introduction">Видеоинструкция</string>
+    <string name="video_introduction_summary">Нажмите здесь, чтобы перейти к видео на YouTube, которое иллюстрирует настройку этого источника. Большая благодарность Diabetic Masked Man за создание видео.</string>
+
 </resources>

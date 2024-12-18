@@ -701,4 +701,7 @@
     <string name="patient_name">姓名</string>
     <string name="patient_name_summary">使用者/病患的姓名，將會顯示在通知和語音播報中。\n如果您正在使用多個 GlucoDataAuto 變體，則應使用此選項，否則可以留空。</string>
 
+    <string name="video_introduction">影片教學</string>
+    <string name="video_introduction_summary">點擊此處前往 YouTube 影片，其中說明了此來源的設定。非常感謝 Diabetic Masked Man 製作這些影片。</string>
+
 </resources>

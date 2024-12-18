@@ -703,4 +703,7 @@
     <string name="patient_name">Nombre</string>
     <string name="patient_name_summary">Nombre del usuario/paciente, que debe mostrarse en la notificación y durante el habla.\nEsto debe usarse si está utilizando múltiples variantes de GlucoDataAuto, de lo contrario, podría estar vacío.</string>
 
+    <string name="video_introduction">Videotutorial</string>
+    <string name="video_introduction_summary">Haga clic aquí para ir al video de YouTube que ilustra la configuración de esta fuente. Muchas gracias a Diabetic Masked Man por crear los videos.</string>
+
 </resources>
