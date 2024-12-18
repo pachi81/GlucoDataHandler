@@ -701,7 +701,13 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             }
             if(lastRingerMode >= 0 ) {
                 Log.i(LOG_ID, "Reset ringer mode to $lastRingerMode")
+                if(Build.VERSION.SDK_INT > Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    // fix for Android 15 to recreate silent mode after vibrate mode
+                    if(audioManager.ringerMode == AudioManager.RINGER_MODE_VIBRATE && lastRingerMode == AudioManager.RINGER_MODE_SILENT)
+                        audioManager.ringerMode = AudioManager.RINGER_MODE_NORMAL
+                }
                 audioManager.ringerMode = lastRingerMode
+                // fix for Android 15 to not activate DnD for silent mode
                 Channels.getNotificationManager().setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL)
                 lastRingerMode = -1
             }
