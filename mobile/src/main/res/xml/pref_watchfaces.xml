@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:key="pref_watchface_info"
+        android:title="@string/pref_information"
+        android:summary="@string/pref_watchfaces_info_summary"
+        app:iconSpaceReserved="false" />
+    <PreferenceCategory
+        android:title="@string/pref_watchfaces_cat"
+        app:iconSpaceReserved="false">
+        <Preference
+            android:key="pref_watchfaces_default"
+            android:title="@string/pref_watchfaces_default"
+            android:summary="@string/pref_watchfaces_default_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="pref_watchfaces_pujie"
+            android:title="@string/pref_watchfaces_pujie"
+            android:summary="@string/pref_watchfaces_pujie_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="pref_watchfaces_dmm"
+            android:title="@string/pref_watchfaces_dmm"
+            android:summary="@string/pref_watchfaces_dmm_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="pref_watchfaces_gdc"
+            android:title="@string/pref_watchfaces_gdc"
+            android:summary="@string/pref_watchfaces_gdc_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+</PreferenceScreen>

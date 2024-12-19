@@ -35,7 +35,7 @@ object CarModeReceiver {
 
     class GDAReceiver: BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            Log.d(LOG_ID, "onReceive called for intent " + intent + ": " + Utils.dumpBundle(intent.extras))
+            Log.i(LOG_ID, "onReceive called for intent " + intent + ": " + Utils.dumpBundle(intent.extras))
             if(!PackageUtils.isGlucoDataAutoAvailable(context)) {
                 Log.i(LOG_ID, "GlucoDataAuto not available, but package received -> update packages")
                 PackageUtils.updatePackages(context)
@@ -112,7 +112,7 @@ object CarModeReceiver {
     fun sendToGlucoDataAuto(context: Context, extras: Bundle, withSettings: Boolean = false) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         if (connected && sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO, true) && PackageUtils.isGlucoDataAutoAvailable(context)) {
-            Log.d(LOG_ID, "sendToGlucoDataAuto")
+            Log.i(LOG_ID, "send to ${Constants.PACKAGE_GLUCODATAAUTO}")
             val intent = Intent(Intents.GLUCODATA_ACTION)
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
             if(withSettings && sharedPref.getBoolean(Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO, true)) {

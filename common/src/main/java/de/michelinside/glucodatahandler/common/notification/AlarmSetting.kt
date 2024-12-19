@@ -28,8 +28,8 @@ open class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
     var vibratePatternKey = alarmPrefix
     private var vibrateAmplitudePref = 15
     var soundDelay = 0
-    var retriggerTime = 0
-    //var repeatTime = 0
+    var repeatUntilClose = false
+    var repeatTime = 0
     // not for sharing with watch!
     var soundLevel = -1
     var useCustomSound = false
@@ -78,12 +78,12 @@ open class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_ENABLED),
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INTERVAL),
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_DELAY),
-        getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_RETRIGGER),
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_ENABLED),
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_START_TIME),
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_END_TIME),
         getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_WEEKDAYS),
-        getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT)
+        getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT),
+        getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT_UNTIL_CLOSE)
     )
 
     open fun getPreferencesToShare(): MutableSet<String> {
@@ -117,8 +117,8 @@ open class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
             bundle.putString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_END_TIME), inactiveEndTime)
             bundle.putStringArray(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_WEEKDAYS), inactiveWeekdays.toTypedArray())
             bundle.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_DELAY), soundDelay)
-            bundle.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_RETRIGGER), retriggerTime)
-            //bundle.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT), repeatTime)
+            bundle.putBoolean(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT_UNTIL_CLOSE), repeatUntilClose)
+            bundle.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT), repeatTime)
         }
         if (hasDelta()) {
             bundle.putFloat(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_DELTA), delta)
@@ -138,8 +138,8 @@ open class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
             editor.putString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_END_TIME), bundle.getString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_END_TIME), inactiveEndTime))
             editor.putStringSet(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_WEEKDAYS), bundle.getStringArray(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_WEEKDAYS))?.toMutableSet() ?: defaultWeekdays)
             editor.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_DELAY), bundle.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_DELAY), soundDelay))
-            editor.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_RETRIGGER), bundle.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_RETRIGGER), retriggerTime))
-            //editor.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT), bundle.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT), repeatTime))
+            editor.putBoolean(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT_UNTIL_CLOSE), bundle.getBoolean(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT_UNTIL_CLOSE), repeatUntilClose))
+            editor.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT), bundle.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT), repeatTime))
             if (hasDelta()) {
                 editor.putFloat(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_DELTA), bundle.getFloat(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_DELTA), 5F))
                 editor.putInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_OCCURRENCE_COUNT), bundle.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_OCCURRENCE_COUNT), 1))
@@ -160,11 +160,11 @@ open class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
             inactiveEndTime = sharedPref.getString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_END_TIME), null) ?: ""
             inactiveWeekdays = sharedPref.getStringSet(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_INACTIVE_WEEKDAYS), defaultWeekdays) ?: defaultWeekdays
             soundDelay = sharedPref.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_DELAY), soundDelay)
-            retriggerTime = sharedPref.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_RETRIGGER), retriggerTime)
             soundLevel = sharedPref.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_LEVEL), soundLevel)
             useCustomSound = sharedPref.getBoolean(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_USE_CUSTOM_SOUND), useCustomSound)
             customSoundPath = sharedPref.getString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_CUSTOM_SOUND), null) ?: ""
-            //repeatTime = sharedPref.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT), repeatTime)
+            repeatUntilClose = sharedPref.getBoolean(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT_UNTIL_CLOSE), repeatUntilClose)
+            repeatTime = sharedPref.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT), repeatTime)
             vibratePatternKey = sharedPref.getString(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_VIBRATE_PATTERN), alarmPrefix) ?: alarmPrefix
             vibrateAmplitudePref = sharedPref.getInt(getSettingName(Constants.SHARED_PREF_ALARM_SUFFIX_VIBRATE_AMPLITUDE), vibrateAmplitudePref)
             if(hasDelta()) {
@@ -179,8 +179,8 @@ open class AlarmSetting(val alarmPrefix: String, var intervalMin: Int) {
                     "inactiveStartTime=$inactiveStartTime, " +
                     "inactiveEndTime=$inactiveEndTime, " +
                     "soundDelay=$soundDelay, " +
-                    //"repeatTime=$repeatTime, " +
-                    "retriggerTime=$retriggerTime, " +
+                    "repeatUntilClose=$repeatUntilClose, " +
+                    "repeatTime=$repeatTime, " +
                     "soundLevel=$soundLevel, " +
                     "useCustomSound=$useCustomSound, " +
                     "customSoundPath=$customSoundPath, " +

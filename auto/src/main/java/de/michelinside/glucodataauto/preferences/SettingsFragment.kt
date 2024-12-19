@@ -8,6 +8,7 @@ import de.michelinside.glucodataauto.BuildConfig
 import de.michelinside.glucodataauto.GlucoDataServiceAuto
 import de.michelinside.glucodataauto.R
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.preferences.PreferenceHelper
 
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -18,6 +19,8 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         try {
             preferenceManager.sharedPreferencesName = Constants.SHARED_PREF_TAG
             setPreferencesFromResource(R.xml.preferences, rootKey)
+
+            PreferenceHelper.replaceSecondSummary(findPreference("gda_info"))
 
             if (BuildConfig.DEBUG) {
                 val notifySwitch =

@@ -61,6 +61,21 @@
                 android:textAlignment="viewStart"
                 tools:ignore="TouchTargetSizeCheck" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginVertical="5dp"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchBatteryLevel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/pref_battery_level"
+                android:textAlignment="viewStart"
+                tools:ignore="TouchTargetSizeCheck" />
+
             <Button
                 android:id="@+id/btnComplicationTapAction"
                 android:layout_height="wrap_content"

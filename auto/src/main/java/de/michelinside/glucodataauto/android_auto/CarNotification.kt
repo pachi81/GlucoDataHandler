@@ -44,6 +44,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     private var last_notification_time = 0L
     const val FORCE_NEXT_NOTIFY = "force_next_notify"
     private var forceNextNotify = false
+    private var patient_name: String? = null
     @SuppressLint("StaticFieldLeak")
     private lateinit var notificationCompat: NotificationCompat.Builder
 
@@ -91,6 +92,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         notification_interval = if (alarmOnly) -1 else sharedPref.getInt(Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM, 1).toLong()
         val reappear_active = notification_reappear_interval > 0
         notification_reappear_interval = if (alarmOnly) 0L else sharedPref.getInt(Constants.SHARED_PREF_CAR_NOTIFICATION_REAPPEAR_INTERVAL, 5).toLong()
+        patient_name = sharedPref.getString(Constants.PATIENT_NAME, "")
         Log.i(LOG_ID, "notification settings changed: active: " + enable_notification + " - interval: " + notification_interval + " - reappear:" + notification_reappear_interval)
         if(init && GlucoDataServiceAuto.connected) {
             if (enable_notification)
@@ -293,7 +295,11 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         else
             messagingStyle.conversationTitle = getAlarmText(context) + ReceiveData.getGlucoseAsString()  + " (Δ " + ReceiveData.getDeltaAsString() + ")"
         messagingStyle.isGroupConversation = false
-        messagingStyle.addMessage(DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(ReceiveData.time)), System.currentTimeMillis(), person)
+        var message = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(ReceiveData.time))
+        if(!patient_name.isNullOrEmpty()) {
+            message = "$patient_name - $message"
+        }
+        messagingStyle.addMessage(message, System.currentTimeMillis(), person)
         return messagingStyle
     }
 
@@ -341,7 +347,8 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                 Constants.SHARED_PREF_CAR_NOTIFICATION,
                 Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY,
                 Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM,
-                Constants.SHARED_PREF_CAR_NOTIFICATION_REAPPEAR_INTERVAL -> {
+                Constants.SHARED_PREF_CAR_NOTIFICATION_REAPPEAR_INTERVAL,
+                Constants.PATIENT_NAME -> {
                     updateSettings(sharedPreferences!!)
                 }
             }

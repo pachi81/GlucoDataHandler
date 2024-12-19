@@ -103,7 +103,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         return curNotification > 0
     }
 
-    fun getAlarmState(context: Context): AlarmState {
+    fun getAlarmState(context: Context, alarmType: AlarmType = AlarmType.NONE): AlarmState {
         var state = AlarmState.currentState(context)
         if(state == AlarmState.DISABLED || !channelActive(context)) {
             state = AlarmState.DISABLED
@@ -114,6 +114,11 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     "Inactive causes by active: $active"
                 )
                 state = AlarmState.INACTIVE
+            }
+        } else if(state == AlarmState.TEMP_DISABLED || state == AlarmState.SNOOZE) {
+            if(!AlarmHandler.isInactive(alarmType)) {
+                Log.i(LOG_ID, "Force $alarmType")
+                state = AlarmState.ACTIVE  // force alarm
             }
         }
         if(currentAlarmState != state) {
@@ -149,7 +154,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         filter.add(NotifySource.OBSOLETE_ALARM_TRIGGER)
         filter.add(NotifySource.DELTA_ALARM_TRIGGER)
         filter.addAll(getNotifierFilter())
-        InternalNotifier.addNotifier(context, this, filter )
+        InternalNotifier.addNotifier(context, this, filter)
     }
 
     fun getEnabled(): Boolean = enabled
@@ -196,6 +201,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         if (curNotification > 0) {
             stopNotification(curNotification, context, fromClient = fromClient)
         } else {
+            stopVibrationAndSound()  // force stop!
             onNotificationStopped(0, context)
         }
     }
@@ -228,6 +234,12 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
     }
 
+    fun stopForLockscreenSnooze() {
+        Log.d(LOG_ID, "stopForLockscreenSnooze called")
+        stopVibrationAndSound()
+        stopTrigger()
+        GlucoDataService.sendCommand(Command.STOP_ALARM)
+    }
 
     fun stopVibrationAndSound() {
         try {
@@ -248,7 +260,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     private fun triggerNotification(alarmType: AlarmType, context: Context, forTest: Boolean = false) {
         try {
             Log.d(LOG_ID, "triggerNotification called for $alarmType - active=$active - curNotification=$curNotification - forTest=$forTest")
-            if (getAlarmState(context) == AlarmState.ACTIVE || forTest) {
+            if (getAlarmState(context, alarmType) == AlarmState.ACTIVE || forTest) {
                 stopCurrentNotification(context, true)  // do not send stop to client! -> to prevent, that the client will stop the newly created notification!
                 curNotification = getNotificationId(alarmType)
                 retriggerCount = 0
@@ -260,10 +272,9 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 else
                     AlarmType.NONE
                 Log.i(LOG_ID, "Create notification for $alarmType with ID=$curNotification - triggerTime=$retriggerTime")
-                checkCreateSound(alarmType, context)
                 if(canShowNotification())
                     showNotification(alarmType, context)
-                startVibrationAndSound(alarmType, context)
+                triggerVibrationAndSound(alarmType, context)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "triggerNotification exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
@@ -280,11 +291,9 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         Log.i(LOG_ID, "Trigger action $action for $alarmType in $delaySeconds seconds")
         alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         var hasExactAlarmPermission = true
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if(!alarmManager!!.canScheduleExactAlarms()) {
-                Log.d(LOG_ID, "Need permission to set exact alarm!")
-                hasExactAlarmPermission = false
-            }
+        if (!Utils.canScheduleExactAlarms(context)) {
+            Log.d(LOG_ID, "Need permission to set exact alarm!")
+            hasExactAlarmPermission = false
         }
         val intent = Intent(context, AlarmIntentReceiver::class.java)
         intent.action = action.toString()
@@ -348,6 +357,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         Channels.getNotificationManager(context).deleteNotificationChannel("gdh_alarm_notification_silence_channel")
         Channels.getNotificationManager(context).deleteNotificationChannel("gdh_alarm_notification_channel")
         Channels.getNotificationManager(context).deleteNotificationChannel("gdh_alarm_notification_sound")
+        Channels.getNotificationManager(context).deleteNotificationChannel("gdh_alarm_notification_channel_66")
+        Channels.getNotificationManager(context).deleteNotificationChannel("gdh_alarm_notification_channel_67")
     }
 
     protected fun createSnoozeIntent(context: Context, snoozeTime: Long, noticationId: Int): PendingIntent {
@@ -417,7 +428,29 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         return notificationBuilder.build()
     }
 
+    private fun triggerVibrationAndSound(alarmType: AlarmType, context: Context) {
+        if(startDelayThread!=null && startDelayThread!!.isAlive) {
+            Log.w(LOG_ID, "Start sound thread is already running!")
+            return
+        }
+        if(curNotification > 0) {
+            // else
+            startDelayThread = Thread {
+                val startDelay = getStartDelayMs(context)
+                Log.i(LOG_ID, "Start sound and vibration with a delay of $startDelay ms")
+                if (startDelay > 0)
+                    Thread.sleep(startDelay.toLong())
+                if (curNotification > 0) {
+                    checkCreateSound(alarmType, context)
+                    startVibrationAndSound(alarmType, context)
+                }
+            }
+            startDelayThread!!.start()
+        }
+    }
+
     private fun startVibrationAndSound(alarmType: AlarmType, context: Context, reTrigger: Boolean = false) {
+        Log.d(LOG_ID, "Start sound and vibration for $alarmType - reTrigger=$reTrigger")
         val repeat = getRepeat(alarmType)
         if(!reTrigger) {
             val soundDelay = getSoundDelay(alarmType)
@@ -438,26 +471,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             }
         }
 
-        if(startDelayThread!=null && startDelayThread!!.isAlive) {
-            Log.w(LOG_ID, "Start sound thread is already running!")
-            return
-        }
-
-        if(curNotification > 0) {
-            // else
-            startDelayThread = Thread {
-                val startDelay = getStartDelayMs(context)
-                Log.i(LOG_ID, "Start sound and vibration with a delay of $startDelay ms")
-                if (startDelay > 0)
-                    Thread.sleep(startDelay.toLong())
-                if (curNotification > 0) {
-                    Log.d(LOG_ID, "Start sound and vibration")
-                    val duration = startSound(alarmType, context, true)
-                    checkRetriggerAndAutoClose(context, duration)
-                }
-            }
-            startDelayThread!!.start()
-        }
+        val duration = startSound(alarmType, context, true)
+        checkRetriggerAndAutoClose(context, duration)
     }
 
     private fun vibrate(alarmType: AlarmType, repeat: Boolean = false, forceReturnDuration: Boolean = false) : Int {
@@ -686,7 +701,14 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             }
             if(lastRingerMode >= 0 ) {
                 Log.i(LOG_ID, "Reset ringer mode to $lastRingerMode")
+                if(Build.VERSION.SDK_INT > Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    // fix for Android 15 to recreate silent mode after vibrate mode
+                    if(audioManager.ringerMode == AudioManager.RINGER_MODE_VIBRATE && lastRingerMode == AudioManager.RINGER_MODE_SILENT)
+                        audioManager.ringerMode = AudioManager.RINGER_MODE_NORMAL
+                }
                 audioManager.ringerMode = lastRingerMode
+                // fix for Android 15 to not activate DnD for silent mode
+                Channels.getNotificationManager().setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL)
                 lastRingerMode = -1
             }
             if(lastDndMode != NotificationManager.INTERRUPTION_FILTER_UNKNOWN) {
@@ -783,9 +805,9 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     }
 
     private fun getTriggerTime(alarmType: AlarmType): Int {
-        if (alarmType.setting!=null) {
+        /*if (alarmType.setting!=null) {
             return alarmType.setting.retriggerTime
-        }
+        }*/
         return 0
     }
 
@@ -797,9 +819,14 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     }
 
     private fun getRepeat(alarmType: AlarmType): Int {
-        /*if (alarmType.setting!=null) {
-            return alarmType.setting.repeatTime
-        }*/
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            if (alarmType.setting!=null && alarmType.setting.repeatUntilClose) {
+                if (alarmType.setting.repeatTime > 0) {
+                    return alarmType.setting.repeatTime
+                }
+                return -1  // unlimited
+            }
+        }
         return 0
     }
 
@@ -884,7 +911,9 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     }
                 }
                 NotifySource.ALARM_STATE_CHANGED -> {
-                    getAlarmState(context)
+                    if (getAlarmState(context) != AlarmState.ACTIVE) {
+                        stopCurrentNotification(context)
+                    }
                 }
                 else -> Log.w(LOG_ID, "Unsupported source $dataSource")
             }
@@ -908,7 +937,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             return false
         }
         if(isTriggerActive()) {
-            Log.i(LOG_ID, "Retrigger sound after $retriggerTime minute(s) + $soundDuration ms")
+            Log.i(LOG_ID, "Retrigger sound after $retriggerTime minute(s) + $soundDuration ms - count $retriggerCount")
             retriggerCount++
             triggerDelay(TriggerAction.RETRIGGER_SOUND, getAlarmType(), context, (retriggerTime*60).toFloat() + (soundDuration.toFloat()/1000))
             return true

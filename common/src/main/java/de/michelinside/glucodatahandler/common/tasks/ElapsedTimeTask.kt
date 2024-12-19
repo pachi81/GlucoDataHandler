@@ -22,7 +22,7 @@ class ElapsedTimeTask : BackgroundTask() {
 
         val isActive: Boolean get() {
             Log.v(LOG_ID, "Check active: - has notifier: ${InternalNotifier.hasTimeNotifier} - relativeTime: $relativeTime - interval: $interval")
-            return (relativeTime || interval > 0 || InternalNotifier.hasTimeNotifier)
+            return (InternalNotifier.hasTimeNotifier && (relativeTime || interval > 0))
         }
     }
 

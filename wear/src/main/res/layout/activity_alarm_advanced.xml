@@ -39,7 +39,7 @@
                 android:id="@+id/txtVibrateOnlyInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/alarm_vibrate_only_wear_info"
+                android:text="@string/alarm_vibrate_only_summary"
                 android:textAlignment="textStart"
                 android:textSize="16sp" />
 
