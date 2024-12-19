@@ -646,8 +646,8 @@
     <string name="gda_media_speak_toggle_title">Wł./Wył. odczytywania nowej wartości</string>
     <string name="gda_speak_on">Funkcja odczytywania jest włączona</string>
     <string name="gda_speak_off">Funkcja odczytywania jest wyłączona</string>
-    <string name="enable_alarm_icon_toggle">Włącz ikonę alarmów</string>
-    <string name="enable_alarm_icon_toggle_summary">Pokaż na ekranie głównym ikonę alarmów, która umożliwia włączanie i wyłączanie alarmów.</string>
+    <string name="enable_alarm_icon_toggle">Aktywuj ikonę alarmów</string>
+    <string name="enable_alarm_icon_toggle_summary">Aktywuj na ekranie głównym ikonę alarmów, która umożliwia ich włączanie i wyłączanie.</string>
 
     <!-- v1.3  -->
 
@@ -674,7 +674,7 @@
     <string name="wear_source_info">Aby włączyć źródła, należy je najpierw skonfigurować w aplikacji telefonu. Aktywuj źródła na zegarku tylko wtedy, gdy nie otrzymujesz jeszcze danych na telefonie.</string>
     <string name="gdh_disclaimer_title">Uwaga od dewelopera</string>
     <string name="gdh_disclaimer_message">Aplikację tę stworzyłem w wolnym czasie i jest to mój projekt hobbystyczny. W związku z tym nie mogę zagwarantować, że wszystkie funkcje będą działać bezbłędnie na każdym urządzeniu. Jeśli napotkasz jakiekolwiek problemy lub masz pytania, skontaktuj się ze mną bezpośrednio przed pozostawieniem negatywnej recenzji. \nAby być na bieżąco z ważnymi aktualizacjami i poprawkami błędów, zapraszam do dołączenia do grupy na Facebooku lub Grup Google.</string>
-    <string name="request_timestamp">Aktualny</string>
+    <string name="request_timestamp">Wartość odebrano</string>
     <string name="alarm_header">Alarmy</string>
 
     <string name="pref_source_dexcom_share_info_1_summary">Aby odbierać dane z serwerów Dexcom Share:\nW aplikacji Dexcom:\n - Utwórz obserwatora\n - W sekcji &quot;Połączenia&quot; upewnij się, że wyświetlana jest opcja &quot;Udostępniaj&quot;.</string>
@@ -703,10 +703,10 @@
     <string name="source_libre_server_default">Domyślny (.io)</string>
     <string name="source_libre_server_russian">Rosyjski (.ru)</string>
 
-    <string name="patient_name">Name</string>
-    <string name="patient_name_summary">Name of the user/patient, which should be shown in notification and during speaking.\nThis should be used, if you are using multiple variants of GlucoDataAuto, otherwise it could be empty.</string>
+    <string name="patient_name">Nazwa</string>
+    <string name="patient_name_summary">Nazwa użytkownika/pacjenta, która ma być widoczna w powiadomieniach i w odczytach na głos.\nZ nazwy tej należy korzystać, jeżeli używa się wielu wariantów GlucoDataAuto, ponieważ w przeciwnym razie pole to może być puste.</string>
 
-    <string name="video_introduction">Video Tutorial</string>
-    <string name="video_introduction_summary">Click here to go to the YouTube video that illustrates the setup of this source. Many thanks to Diabetic Masked Man for creating the videos.</string>
+    <string name="video_introduction">Przewodnik wideo</string>
+    <string name="video_introduction_summary">Naciśnij tutaj, by przejść do filmu na kanale YouTube, który pokazuje, jak ustawić to źródło. Wielkie dzięki dla Diabetic Masked Mana za przygotowanie tych filmów.</string>
 
 </resources>
