@@ -11,6 +11,6 @@
         android:key="pref_source_online"
         android:title="@string/pref_cat_follower"
         android:summary="@string/pref_cat_follower_summary"
-        app:fragment="de.michelinside.glucodataauto.preferences.SourceOnlineFragment"
+        app:fragment="de.michelinside.glucodatahandler.common.preferences.SourceOnlineFragment"
         app:iconSpaceReserved="false" />
 </PreferenceScreen>

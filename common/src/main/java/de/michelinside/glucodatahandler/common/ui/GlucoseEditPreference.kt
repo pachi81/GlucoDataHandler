@@ -50,31 +50,41 @@ class GlucoseEditPreference : EditTextPreference, OnBindEditTextListener {
     }
 
     private fun getPersistValue(value: String): Float {
-        var result = value.toFloat()
-        if (fromDialog) {
-            if ((isDelta && ReceiveData.isMmol) || (!isDelta && GlucoDataUtils.isMmolValue(value.toFloat()))) {
-                result = GlucoDataUtils.mmolToMg(result)
+        try {
+            var result = value.toFloat()
+            if (fromDialog) {
+                if ((isDelta && ReceiveData.isMmol) || (!isDelta && GlucoDataUtils.isMmolValue(value.toFloat()))) {
+                    result = GlucoDataUtils.mmolToMg(result)
+                }
             }
+            Log.v(LOG_ID, "$value -> persistValue = $result - fromDialog: $fromDialog")
+            return result
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "getPersistValue exception: " + exc.toString())
         }
-        Log.v(LOG_ID, "$value -> persistValue = $result - fromDialog: $fromDialog")
-        return result
+        Log.v(LOG_ID, "Returning default value $defaultValue")
+        return defaultValue
     }
 
     private fun getDisplayValue(curText: String): String {
-        val curDisplayValue: String
-        var value = curText.toFloat()
-        if (isNegative && value > 0)
-            value = -value
-        if (!ReceiveData.isMmol && !isDelta) {
-            if(GlucoDataUtils.isMmolValue(value))
-                value = GlucoDataUtils.mmolToMg(value)
-            curDisplayValue = value.toInt().toString()
-        } else if (ReceiveData.isMmol && (!GlucoDataUtils.isMmolValue(value) || isDelta)) {
-            curDisplayValue = GlucoDataUtils.mgToMmol(value).toString()
-        } else {
-            curDisplayValue = value.toString()
+        var curDisplayValue = ""
+        try {
+            var value = curText.toFloat()
+            if (isNegative && value > 0)
+                value = -value
+            if (!ReceiveData.isMmol && !isDelta) {
+                if(GlucoDataUtils.isMmolValue(value))
+                    value = GlucoDataUtils.mmolToMg(value)
+                curDisplayValue = value.toInt().toString()
+            } else if (ReceiveData.isMmol && (!GlucoDataUtils.isMmolValue(value) || isDelta)) {
+                curDisplayValue = GlucoDataUtils.mgToMmol(value).toString()
+            } else {
+                curDisplayValue = value.toString()
+            }
+            Log.v(LOG_ID, "$curText -> display value = $curDisplayValue")
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "getDisplayValue exception: " + exc.toString())
         }
-        Log.v(LOG_ID, "$curText -> display value = $curDisplayValue")
         return curDisplayValue
     }
 

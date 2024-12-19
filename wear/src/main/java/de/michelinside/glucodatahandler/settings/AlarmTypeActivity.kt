@@ -159,8 +159,8 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
     override fun onPause() {
         try {
             Log.v(LOG_ID, "onPause called")
-            Vibrator.cancel()
             super.onPause()
+            Vibrator.cancel()
             InternalNotifier.remNotifier(this, this)
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())

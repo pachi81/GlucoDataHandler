@@ -7,7 +7,7 @@ import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
 import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResult
 import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultError
 import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultSucess
-import de.michelinside.glucodatahandler.R
+import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -20,7 +20,7 @@ class WriteSettingRunner : TaskerPluginRunnerActionNoOutput<TaskerWriteSettingDa
         val value = input.regular.value
 
         val supportedValues = context.resources
-            .getStringArray(R.array.tasker_supported_settings_values)
+            .getStringArray(CR.array.tasker_supported_settings_values)
 
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         return runBlocking {

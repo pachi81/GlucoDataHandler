@@ -58,7 +58,8 @@ object AlarmNotification : AlarmNotificationBase() {
             .setUsage(AudioAttributes.USAGE_ALARM)
             .build()
         channel.setSound(null, audioAttributes)
-        channel.enableVibration(false)
+        channel.enableVibration(true)
+        channel.vibrationPattern = longArrayOf(0)
         channel.enableLights(true)
     }
 
@@ -86,7 +87,7 @@ object AlarmNotification : AlarmNotificationBase() {
             val resId = getAlarmTextRes(alarmType)
             val contentView = RemoteViews(GlucoDataService.context!!.packageName, R.layout.alarm_notification)
             contentView.setTextViewText(R.id.alarm, context.getString(resId!!))
-            contentView.setTextViewText(R.id.snooze, context.getString(CR.string.snooze))
+            contentView.setTextViewText(R.id.snoozeText, context.getString(CR.string.snooze))
             if(alarmType == AlarmType.OBSOLETE) {
                 contentView.setTextViewText(R.id.deltaText, "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(context)}")
                 contentView.setContentDescription(R.id.deltaText, ReceiveData.getElapsedTimeMinuteAsString(context))
@@ -122,6 +123,7 @@ object AlarmNotification : AlarmNotificationBase() {
                 notificationBuilder.setCustomBigContentView(null)
             }
             contentView.setViewVisibility(R.id.snoozeLayout, View.GONE)
+            contentView.setViewVisibility(R.id.snoozeText, View.GONE)
             notificationBuilder.setCustomContentView(contentView)
         } else if (getAddSnooze()) {
             notificationBuilder.addAction(createSnoozeAction(context, context.getString(CR.string.snooze) + ": 60", 60L, getNotificationId(alarmType)))

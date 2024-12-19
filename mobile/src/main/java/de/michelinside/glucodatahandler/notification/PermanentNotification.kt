@@ -27,6 +27,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import de.michelinside.glucodatahandler.common.R as CR
 
 
 object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -92,7 +93,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         Channels.getNotificationManager().cancel(THIRD_NOTIFICATION_ID)
 
         secondNotificationCompat = Notification.Builder(context, ChannelType.MOBILE_SECOND.channelId)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(CR.mipmap.ic_launcher)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setAutoCancel(false)
@@ -103,7 +104,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setVisibility(Notification.VISIBILITY_PUBLIC)
 
         thirdNotificationCompat = Notification.Builder(context, ChannelType.MOBILE_THIRD.channelId)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(CR.mipmap.ic_launcher)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setAutoCancel(false)
@@ -114,7 +115,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setVisibility(Notification.VISIBILITY_PUBLIC)
 
         foregroundNotificationCompat = Notification.Builder(context, ChannelType.MOBILE_FOREGROUND.channelId)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(CR.mipmap.ic_launcher)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setAutoCancel(false)
@@ -143,7 +144,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
                 withShadow = if(coloredIcon) true else false
             )
             StatusBarIcon.DELTA.pref -> BitmapUtils.getDeltaAsIcon(roundTarget=!bigIcon, color = if(coloredIcon) ReceiveData.getGlucoseColor(true) else Color.WHITE)
-            else -> Icon.createWithResource(GlucoDataService.context, R.mipmap.ic_launcher)
+            else -> Icon.createWithResource(GlucoDataService.context, CR.mipmap.ic_launcher)
         }
     }
 
