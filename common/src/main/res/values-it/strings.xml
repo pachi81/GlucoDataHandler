@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingQuantity">
     <string name="locale">it</string>
 
-    <string name="info_label_sensor_id">Sensore</string>
+    <string name="info_label_sensor_id">Sensore numero seriale</string>
     <string name="info_label_value">Valore</string>
     <string name="info_label_raw">Raw</string>
     <string name="info_label_delta">Delta</string>
@@ -11,7 +11,7 @@
     <string name="info_label_iob_cob_timestamp">Orario IOB/COB</string>
     <string name="info_label_timediff">Differenza di tempo</string>
     <string name="info_label_alarm">Allarme</string>
-    <string name="info_label_source">Fonte</string>
+    <string name="info_label_source">Sorgente</string>
     <string name="info_label_per_minute">al minuto</string>
     <string name="no_data">Nessun dato ricevuto ancora!\nSi prega di configurare prima una fonte.</string>
 
@@ -45,11 +45,11 @@
     <string name="no_new_value">Nessun nuovo valore da %1$d minuti!</string>
 
     <string name="menu_settings">Impostazioni</string>
-    <string name="menu_sources">Fonti</string>
+    <string name="menu_sources">Sorgenti</string>
     <string name="menu_group_github">GitHub</string>
     <string name="menu_update">Aggiornamenti</string>
-    <string name="menu_support">Supporto</string>
-    <string name="menu_help">Aiuto</string>
+    <string name="menu_support">Segnala un problema</string>
+    <string name="menu_help">Guida</string>
 
     <!-- tasker -->
 
@@ -317,8 +317,8 @@
     <string name="pref_car_notification_reappear_interval_summary">Intervallo in cui la notifica deve riapparire se non ci sono nuovi valori. (0 per mai).</string>
     <string name="pref_aa_media_player_icon_style_summary">Stile dell\'icona/immagine del lettore multimediale fittizio.</string>
     <string name="pref_aa_media_player_icon_style">Stile icona/immagine</string>
-    <string name="menu_save_mobile_logs">Mobile</string>
-    <string name="menu_save_wear_logs">Wear</string>
+    <string name="menu_save_mobile_logs">Telefono</string>
+    <string name="menu_save_wear_logs">Orologio</string>
     <string name="menu_save_logs">Salva log</string>
     <string name="logcat_save_succeeded">Log salvati correttamente</string>
     <string name="logcat_save_failed">Errore durante il salvataggio dei log!</string>
@@ -473,7 +473,7 @@
     <string name="alarm_wear_no_notification_phone_connected">Nessun popup mentre il telefono è connesso</string>
     <string name="alarm_wear_no_notification_phone_connected_summary">Nessun popup di notifica aggiuntivo su Wear, mentre il telefono è connesso.\nLa vibrazione e il suono verranno attivati come configurato.</string>
     <string name="table_header_details">Dettagli</string>
-    <string name="table_header_connections">Connessioni</string>
+    <string name="table_header_connections">Dispositivi</string>
     <string name="disconnected_label">disconnesso</string>
     <string name="connected_label">connesso</string>
     <string name="pref_application_color_scheme">Schema colori applicazione</string>
