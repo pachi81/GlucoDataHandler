@@ -73,7 +73,7 @@
     <string name="source_state_error">Errore</string>
 
     <string name="source_interval">Intervallo</string>
-    <string name="source_interval_summary">Intervallo di richiesta dati dalla fonte.</string>
+    <string name="source_interval_summary">Intervallo di richiesta dati dalla sorgente selezionata.</string>
     <string name="source_delay">Ritardo</string>
     <string name="source_delay_summary">Ritardo in secondi prima di richiedere i dati dal cloud, perché ci vuole del tempo prima che i dati siano presenti lì.</string>
 
@@ -81,9 +81,9 @@
     <string name="src_enabled">Abilita</string>
     <string name="src_libre_enabled_summary">Abilita il follower LibreLinkUp, se sono impostati utente e password.</string>
     <string name="src_libre_user">E-mail</string>
-    <string name="src_libre_user_summary">E-mail per l\'accesso a LibreLinkUp</string>
+    <string name="src_libre_user_summary">E-mail account LibreLinkUp</string>
     <string name="src_password">Password</string>
-    <string name="src_libre_password_summary">Password per LibreLinkUp</string>
+    <string name="src_libre_password_summary">Password account LibreLinkUp</string>
     <string name="src_libre_reconnect">Riconnetti</string>
     <string name="src_libre_reconnect_summary">Al prossimo intervallo verrà eseguito un nuovo accesso.</string>
 
@@ -92,8 +92,8 @@
     <string name="src_ns_enabled_summary">Abilita il follower Nightscout.</string>
     <string name="src_ns_url">URL di Nightscout</string>
     <string name="src_ns_url_summary">URL del server Nightscout.</string>
-    <string name="src_ns_secret">Segreto API</string>
-    <string name="src_ns_secret_summary">Segreto API per accedere ai dati (facoltativo).</string>
+    <string name="src_ns_secret">API_SECRET</string>
+    <string name="src_ns_secret_summary">API_SECRET per accedere ai dati (facoltativo).</string>
     <string name="src_ns_token">Token di accesso</string>
     <string name="src_ns_token_summary">Aggiungi il tuo token di accesso, se ne hai bisogno (facoltativo).</string>
 
@@ -116,7 +116,7 @@
     <!-- settings -->
 
     <string name="pref_cat_general">Generale</string>
-    <string name="pref_cat_notification">Notifica</string>
+    <string name="pref_cat_notification">Notifiche</string>
     <string name="pref_cat_widgets">Widget</string>
     <string name="pref_cat_android_auto">Android Auto</string>
     <string name="pref_cat_forward_broadcast">Inoltra valori della glicemia</string>
