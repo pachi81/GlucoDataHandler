@@ -72,6 +72,11 @@
             android:title="@string/pref_source_librelinkup_info"
             android:summary="@string/pref_source_librelinkup_info_summary"
             app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_librelinkup_video"
+            android:title="@string/video_tutorial"
+            android:summary="@string/video_tutorial_summary"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <PreferenceCategory

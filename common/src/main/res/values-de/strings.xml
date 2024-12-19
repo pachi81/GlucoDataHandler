@@ -697,7 +697,7 @@
     <string name="patient_name">Name</string>
     <string name="patient_name_summary">Name des Benutzers/Patienten, der in der Benachrichtigung angezeigt und beim Vorlesen angesagt werden soll.\nDies sollte verwendet werden, wenn mehrere Varianten von GlucoDataAuto verwendet werden, andernfalls kann es leer bleiben.</string>
 
-    <string name="video_introduction">Video-Anleitung</string>
-    <string name="video_introduction_summary">Klicken Sie hier, um zum YouTube-Video zu gelangen, das die Einrichtung dieser Quelle veranschaulicht. Vielen Dank an Diabetic Masked Man für die Erstellung der Videos.</string>
+    <string name="video_tutorial">Video-Anleitung</string>
+    <string name="video_tutorial_summary">Klicken Sie hier, um zum YouTube-Video zu gelangen, das die Einrichtung dieser Quelle veranschaulicht. Vielen Dank an Diabetic Masked Man für die Erstellung der Videos.</string>
 
 </resources>

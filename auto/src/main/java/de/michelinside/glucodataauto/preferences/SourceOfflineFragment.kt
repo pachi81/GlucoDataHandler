@@ -25,22 +25,8 @@ class SourceOfflineFragment : PreferenceFragmentCompat() {
             PreferenceHelper.replaceSecondTitle(findPreference("cat_gdh_info"))
             PreferenceHelper.replaceSecondSummary(findPreference("source_gdh_info"))
 
-            val prefEselLink = findPreference<Preference>(Constants.SHARED_PREF_EVERSENSE_ESEL_INFO)
-            if(prefEselLink != null) {
-                prefEselLink.setOnPreferenceClickListener {
-                    try {
-                        val browserIntent = Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse(resources.getText(CR.string.esel_link).toString())
-                        )
-                        startActivity(browserIntent)
-                    } catch (exc: Exception) {
-                        Log.e(LOG_ID, "setLinkOnClick exception for key ${prefEselLink.key}" + exc.toString())
-                    }
-                    true
-                }
-            }
-
+            PreferenceHelper.setLinkOnClick(findPreference<Preference>(Constants.SHARED_PREF_EVERSENSE_ESEL_INFO), CR.string.esel_link, requireContext())
+            PreferenceHelper.setLinkOnClick(findPreference("source_juggluco_video"), CR.string.video_tutorial_juggluco, requireContext())
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
         }

@@ -30,6 +30,10 @@
     <string name="playstore_dmm_watchfaces" translatable="false">https://play.google.com/store/apps/dev?id=6551812103351455972</string>
     <string name="playstore_pujie_watchfaces" translatable="false">https://play.google.com/store/apps/dev?id=7780011900367662392</string>
 
+    <string name="video_tutorial_librelinkup" translatable="false">https://youtu.be/YRs9nY4DgnA?si=v108UhnBNfQSeK2I</string>
+    <string name="video_tutorial_juggluco" translatable="false">https://youtu.be/evS5rXDiciY?si=DTxlGYhYm-nNboHl</string>
+
+
 
     <string name="vibrate_pattern_super_mario" translatable="false">Super Mario</string>
     <string name="vibrate_pattern_turtles" translatable="false">Turtles</string>
@@ -757,7 +761,7 @@
     <string name="patient_name">Name</string>
     <string name="patient_name_summary">Name of the user/patient, which should be shown in notification and during speaking.\nThis should be used, if you are using multiple variants of GlucoDataAuto, otherwise it could be empty.</string>
 
-    <string name="video_introduction">Video Tutorial</string>
-    <string name="video_introduction_summary">Click here to go to the YouTube video that illustrates the setup of this source. Many thanks to Diabetic Masked Man for creating the videos.</string>
+    <string name="video_tutorial">Video Tutorial</string>
+    <string name="video_tutorial_summary">Click here to go to the YouTube video that illustrates the setup of this source. Many thanks to Diabetic Masked Man for creating the videos.</string>
 
 </resources>

@@ -231,22 +231,6 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
             selectTargets.entryValues = arrayOf<CharSequence>("") + receivers.values.toTypedArray()
         }
     }
-
-    protected fun setLinkOnClick(preference: Preference?, linkResId: Int) {
-        preference?.setOnPreferenceClickListener {
-            try {
-                val browserIntent = Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse(resources.getText(linkResId).toString())
-                )
-                startActivity(browserIntent)
-            } catch (exc: Exception) {
-                Log.e(LOG_ID, "setLinkOnClick exception for key ${preference.key}" + exc.toString())
-            }
-            true
-        }
-    }
-
 }
 
 class GeneralSettingsFragment: SettingsFragmentBase(R.xml.pref_general) {
@@ -343,7 +327,7 @@ class WatchSettingsFragment: SettingsFragmentBase(R.xml.pref_watch) {
             true
         }
 
-        setLinkOnClick(findPreference(Constants.SHARED_PREF_OPEN_WATCH_DRIP_LINK), CR.string.watchdrip_link)
+        PreferenceHelper.setLinkOnClick(findPreference(Constants.SHARED_PREF_OPEN_WATCH_DRIP_LINK), CR.string.watchdrip_link, requireContext())
     }
 }
 
@@ -351,9 +335,9 @@ class WatchFaceFragment: SettingsFragmentBase(R.xml.pref_watchfaces) {
     override fun initPreferences() {
         Log.v(LOG_ID, "initPreferences called")
 
-        setLinkOnClick(findPreference(Constants.SHARED_PREF_WATCHFACES_PUJIE), CR.string.playstore_pujie_watchfaces)
-        setLinkOnClick(findPreference(Constants.SHARED_PREF_WATCHFACES_DMM), CR.string.playstore_dmm_watchfaces)
-        setLinkOnClick(findPreference(Constants.SHARED_PREF_WATCHFACES_GDC), CR.string.playstore_gdc_watchfaces)
+        PreferenceHelper.setLinkOnClick(findPreference(Constants.SHARED_PREF_WATCHFACES_PUJIE), CR.string.playstore_pujie_watchfaces, requireContext())
+        PreferenceHelper.setLinkOnClick(findPreference(Constants.SHARED_PREF_WATCHFACES_DMM), CR.string.playstore_dmm_watchfaces, requireContext())
+        PreferenceHelper.setLinkOnClick(findPreference(Constants.SHARED_PREF_WATCHFACES_GDC), CR.string.playstore_gdc_watchfaces, requireContext())
 
     }
 }
@@ -386,7 +370,7 @@ class GDASettingsFragment: SettingsFragmentBase(R.xml.pref_gda) {
                 PreferenceHelper.replaceSecondTitle(no_gda_info)
                 PreferenceHelper.replaceSecondSummary(no_gda_info)
                 no_gda_info.isVisible = true
-                setLinkOnClick(no_gda_info, CR.string.glucodataauto_link)
+                PreferenceHelper.setLinkOnClick(no_gda_info, CR.string.glucodataauto_link, requireContext())
             }
         }
     }

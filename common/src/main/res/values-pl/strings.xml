@@ -706,7 +706,7 @@
     <string name="patient_name">Name</string>
     <string name="patient_name_summary">Name of the user/patient, which should be shown in notification and during speaking.\nThis should be used, if you are using multiple variants of GlucoDataAuto, otherwise it could be empty.</string>
 
-    <string name="video_introduction">Video Tutorial</string>
-    <string name="video_introduction_summary">Click here to go to the YouTube video that illustrates the setup of this source. Many thanks to Diabetic Masked Man for creating the videos.</string>
+    <string name="video_tutorial">Video Tutorial</string>
+    <string name="video_tutorial_summary">Click here to go to the YouTube video that illustrates the setup of this source. Many thanks to Diabetic Masked Man for creating the videos.</string>
 
 </resources>

@@ -32,6 +32,9 @@ class SourceOnlineFragment : PreferenceFragmentCompat(), SharedPreferences.OnSha
             setPasswordPref(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD)
             setPasswordPref(Constants.SHARED_PREF_NIGHTSCOUT_SECRET)
 
+
+            PreferenceHelper.setLinkOnClick(findPreference("source_librelinkup_video"), CR.string.video_tutorial_librelinkup, requireContext())
+
             setupLibrePatientData()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
@@ -213,18 +216,7 @@ class SourceOnlineFragment : PreferenceFragmentCompat(), SharedPreferences.OnSha
                 val prefLink = findPreference<Preference>(Constants.SHARED_PREF_DEXCOM_SHARE_ACCOUNT_LINK)
                 if (prefLink != null) {
                     prefLink.summary = resources.getString(if(us_account) CR.string.dexcom_share_check_us_account else CR.string.dexcom_share_check_non_us_account)
-                    prefLink.setOnPreferenceClickListener {
-                        try {
-                            val browserIntent = Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse(resources.getString(if(us_account)CR.string.dexcom_account_us_url else CR.string.dexcom_account_non_us_url))
-                            )
-                            startActivity(browserIntent)
-                        } catch (exc: Exception) {
-                            Log.e(LOG_ID, "setLinkOnClick exception for key ${prefLink.key}" + exc.toString())
-                        }
-                        true
-                    }
+                    PreferenceHelper.setLinkOnClick(prefLink, if(us_account)CR.string.dexcom_account_us_url else CR.string.dexcom_account_non_us_url, requireContext())
                 }
             }
         } catch (exc: Exception) {
