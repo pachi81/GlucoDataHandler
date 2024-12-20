@@ -142,7 +142,7 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
             }
 
             val vibatrionAmbituteLayout = findViewById<RelativeLayout>(R.id.vibrationAmplitudeHead)
-            vibatrionAmbituteLayout.visibility = if(Vibrator.vibrator.hasAmplitudeControl()) View.VISIBLE else View.GONE
+            vibatrionAmbituteLayout.visibility = if(Vibrator.hasAmplitudeControl()) View.VISIBLE else View.GONE
             seekBarVibrationAmplitude.visibility = vibatrionAmbituteLayout.visibility
 
             if (seekBarVibrationAmplitude.visibility == View.VISIBLE) {

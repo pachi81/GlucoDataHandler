@@ -109,6 +109,8 @@ class VibratePatternPreferenceDialogFragmentCompat : PreferenceDialogFragmentCom
                         val pattern = VibratePattern.getByKey(currentPattern).pattern
                         if(pattern != null) {
                             Vibrator.vibrate(pattern, -1, curAmplitude)
+                        } else {
+                            Vibrator.cancel()
                         }
                     }
                 } catch (exc: Exception) {
