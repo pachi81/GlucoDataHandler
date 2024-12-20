@@ -64,6 +64,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var cob: Float = Float.NaN
     var iobCobTime: Long = 0
     private var lowValue: Float = 70F
+    val lowRaw: Float get() = lowValue
     val low: Float get() {
         if(isMmol && lowValue > 0F)  // mmol/l
         {
@@ -72,6 +73,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return lowValue
     }
     private var highValue: Float = 240F
+    val highRaw: Float get() = highValue
     val high: Float get() {
         if(isMmol && highValue > 0F)  // mmol/l
         {
@@ -80,6 +82,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return highValue
     }
     private var targetMinValue = 90F
+    val targetMinRaw: Float get() = targetMinValue
     val targetMin: Float get() {
         if(isMmol)  // mmol/l
         {
@@ -88,6 +91,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return targetMinValue
     }
     private var targetMaxValue = 165F
+    val targetMaxRaw: Float get() = targetMaxValue
     val targetMax: Float get() {
         if(isMmol)  // mmol/l
         {
@@ -317,6 +321,18 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         if(((alarm and 3) == 2) || (targetMax > 0 && glucose > targetMax ))
             return AlarmType.HIGH
         return AlarmType.OK
+    }
+
+    fun getValueColor(rawValue: Int): Int {
+        if(highValue>0F && rawValue >= highValue)
+            return getAlarmTypeColor(AlarmType.VERY_HIGH)
+        if(lowValue>0F && rawValue <= lowValue)
+            return getAlarmTypeColor(AlarmType.VERY_LOW)
+        if(targetMinValue>0F && rawValue < targetMinValue)
+            return getAlarmTypeColor(AlarmType.LOW)
+        if(targetMaxValue>0F && rawValue > targetMaxValue)
+            return getAlarmTypeColor(AlarmType.HIGH)
+        return getAlarmTypeColor(AlarmType.OK)
     }
 
     private fun calculateAlarm(): Int {

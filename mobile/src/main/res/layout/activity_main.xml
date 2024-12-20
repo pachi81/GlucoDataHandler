@@ -133,8 +133,15 @@
         android:text="@string/menu_sources"
         />
 
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        />
+
     <LinearLayout
-        android:id="@+id/space_table"
+        android:id="@+id/space_table2"
         android:layout_height="20dp"
         android:layout_width="0dp"
         android:orientation="horizontal">
