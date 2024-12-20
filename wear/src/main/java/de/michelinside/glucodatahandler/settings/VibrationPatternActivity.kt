@@ -128,6 +128,8 @@ class VibrationPatternActivity : AppCompatActivity() {
                         val currentPattern = VibratePattern.getByKey(currentPattern).pattern
                         if(currentPattern != null) {
                             Vibrator.vibrate(currentPattern, -1, alarmType.setting!!.vibrateAmplitude)
+                        } else {
+                            Vibrator.cancel()
                         }
                     }
                 } catch (exc: Exception) {
