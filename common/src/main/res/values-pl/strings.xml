@@ -380,8 +380,6 @@
     <string name="alarm_cat_categories">Kategorie alarmów</string>
     <string name="alarm_fullscreen_notification_enabled">Powiadomienie pełnoekranowe</string>
     <string name="alarm_fullscreen_notification_enabled_summary">Włącza powiadomienie pełnoekranowe na ekranie blokady.\nMoże to wymagać dodatkowych uprawnień.</string>
-    <string name="alarm_snooze_on_notification_enabled">Przycisk „Odłóż” w powiadomieniu</string>
-    <string name="alarm_snooze_on_notification_summary">Jeśli opcja zostanie włączona, powiadomienia będą również zawierać przyciski do odłożenia alarmów.</string>
     <string name="alarm_fullscreen_dismiss_keyguard">Odrzuć blokadę klawiszy</string>
     <string name="alarm_fullscreen_dismiss_keyguard_summary">Włącz to ustawienie, jeśli masz problemy z powiadomieniem pełnoekranowym.\nNa niektórych urządzeniach spowoduje to odblokowanie ekranu, gdy uruchomione zostanie powiadomienie pełnoekranowe.\nNie włączaj tego ustawienia, jeśli nie masz żadnych problemów.</string>
     <string name="alarm_force_sound">Wymuś dźwięk alarmu</string>
@@ -708,5 +706,12 @@
 
     <string name="video_tutorial">Przewodnik wideo</string>
     <string name="video_tutorial_summary">Naciśnij tutaj, by przejść do filmu na kanale YouTube, który pokazuje, jak ustawić to źródło. Wielkie dzięki dla Diabetic Masked Mana za przygotowanie tych filmów.</string>
+
+    <string name="snooze_30">30 minut</string>
+    <string name="snooze_60">60 minut</string>
+    <string name="snooze_90">90 minut</string>
+    <string name="snooze_120">120 minut</string>
+    <string name="alarm_snooze_on_notification_enabled">Przycisk „Odłóż” w powiadomieniu</string>
+    <string name="alarm_snooze_on_notification_summary">Choose up to 3 snooze durations to display as buttons on the alarm notification.</string>
 
 </resources>

@@ -384,8 +384,6 @@
     <string name="alarm_cat_categories">Alarmcategorieën</string>
     <string name="alarm_fullscreen_notification_enabled">Volledig schermmelding</string>
     <string name="alarm_fullscreen_notification_enabled_summary">Schakelt volledig schermmelding op vergrendelscherm in.\nDit kan om een extra toestemming vragen.</string>
-    <string name="alarm_snooze_on_notification_enabled">Snoozen op melding</string>
-    <string name="alarm_snooze_on_notification_summary">Indien ingeschakeld, zullen de meldingen ook knoppen bevatten om snoozen te activeren.</string>
     <string name="alarm_fullscreen_dismiss_keyguard">Vergrendelingsscherm sluiten</string>
     <string name="alarm_fullscreen_dismiss_keyguard_summary">Schakel deze instelling in als u problemen ondervindt met de volledig schermmelding.\nOp sommige apparaten zal dit ervoor zorgen dat het ontgrendelingsscherm wordt weergegeven terwijl de volledig schermmelding wordt geactiveerd.\nSchakel het dus niet in als u geen problemen ondervindt.</string>
     <string name="alarm_force_sound">Alarmgeluid forceren</string>
@@ -708,5 +706,12 @@
 
     <string name="video_tutorial">Video-tutorial</string>
     <string name="video_tutorial_summary">Klik hier om naar de YouTube-video te gaan die de installatie van deze bron illustreert. Veel dank aan Diabetic Masked Man voor het maken van de video\'s.</string>
+
+    <string name="snooze_30">30 minuten</string>
+    <string name="snooze_60">60 minuten</string>
+    <string name="snooze_90">90 minuten</string>
+    <string name="snooze_120">120 minuten</string>
+    <string name="alarm_snooze_on_notification_enabled">Snoozen op melding</string>
+    <string name="alarm_snooze_on_notification_summary">Kies maximaal 3 sluimertijden om weer te geven als knoppen op de alarmmelding.</string>
 
 </resources>

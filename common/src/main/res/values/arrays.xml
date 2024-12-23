@@ -115,4 +115,16 @@
         <item>"io"</item>
         <item>"ru"</item>
     </array>
+    <array name="snooze_values">
+        <item>"30"</item>
+        <item>"60"</item>
+        <item>"90"</item>
+        <item>"120"</item>
+    </array>
+    <array name="snooze_labels">
+        <item>@string/snooze_30</item>
+        <item>@string/snooze_60</item>
+        <item>@string/snooze_90</item>
+        <item>@string/snooze_120</item>
+    </array>
 </resources>

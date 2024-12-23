@@ -383,8 +383,6 @@
     <string name="alarm_cat_categories">警報類別</string>
     <string name="alarm_fullscreen_notification_enabled">全螢幕通知</string>
     <string name="alarm_fullscreen_notification_enabled_summary">啟用鎖定螢幕的全螢幕通知\n可能需要額外權限</string>
-    <string name="alarm_snooze_on_notification_enabled">通知貪睡</string>
-    <string name="alarm_snooze_on_notification_summary">若啟用此選項，通知將會顯示貪睡按鈕</string>
     <string name="alarm_fullscreen_dismiss_keyguard">關閉鍵盤防護</string>
     <string name="alarm_fullscreen_dismiss_keyguard_summary">如果全螢幕通知運作時出現問題可以嘗試啟用此選項\n但某些裝置啟用此選項時，觸發全螢幕通知時會自動解鎖螢幕\n所以若您沒有遇到問題請不要啟用此選項</string>
     <string name="alarm_force_sound">強制警報聲音</string>
@@ -703,5 +701,12 @@
 
     <string name="video_tutorial">影片教學</string>
     <string name="video_tutorial_summary">點擊此處前往 YouTube 影片，其中說明了此來源的設定。非常感謝 Diabetic Masked Man 製作這些影片。</string>
+
+    <string name="snooze_30">30 分鐘</string>
+    <string name="snooze_60">60 分鐘</string>
+    <string name="snooze_90">90 分鐘</string>
+    <string name="snooze_120">120 分鐘</string>
+    <string name="alarm_snooze_on_notification_enabled">通知貪睡</string>
+    <string name="alarm_snooze_on_notification_summary">選擇最多 3 個貪睡持續時間，以便在鬧鐘通知上顯示為按鈕。</string>
 
 </resources>

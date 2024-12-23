@@ -383,8 +383,6 @@
     <string name="alarm_cat_categories">Categoria de alarme</string>
     <string name="alarm_fullscreen_notification_enabled">Notificação em tela cheia</string>
     <string name="alarm_fullscreen_notification_enabled_summary">Ativa notificação em tela cheia na tela de bloqueio.\nPermissão adicional pode ser requerida.</string>
-    <string name="alarm_snooze_on_notification_enabled">Adiar a notificação</string>
-    <string name="alarm_snooze_on_notification_summary">Se ativado, as notificações também incluirão botões para ativar o adiamento do alarme.</string>
     <string name="alarm_fullscreen_dismiss_keyguard">Dispensar keyguard</string>
     <string name="alarm_fullscreen_dismiss_keyguard_summary">Ative esta configuração se tiver problemas com a notificação de tela cheia.\nEm alguns dispositivos, isso fará com que a tela seja desbloqueada, enquanto a notificação de tela cheia é acionada.\nPortanto, não ative-a se não tiver problemas.</string>
     <string name="alarm_force_sound">Forçar som de alarme</string>
@@ -702,5 +700,12 @@
 
     <string name="video_tutorial">Vídeo tutorial</string>
     <string name="video_tutorial_summary">Clique aqui para ir ao vídeo do YouTube que ilustra a configuração desta fonte. Muito obrigado ao Diabetic Masked Man por criar os vídeos.</string>
+
+    <string name="snooze_30">30 minutos</string>
+    <string name="snooze_60">60 minutos</string>
+    <string name="snooze_90">90 minutos</string>
+    <string name="snooze_120">120 minutos</string>
+    <string name="alarm_snooze_on_notification_enabled">Adiar a notificação</string>
+    <string name="alarm_snooze_on_notification_summary">Escolha até 3 durações de soneca para exibir como botões na notificação de alarme.</string>
 
 </resources>

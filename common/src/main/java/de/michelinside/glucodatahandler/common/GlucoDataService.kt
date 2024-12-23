@@ -374,6 +374,15 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     }
                 }
             }
+
+            if(sharedPrefs.contains(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION)) {
+                with(sharedPrefs.edit()) {
+                    remove(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION)
+                    putStringSet(Constants.SHARED_PREF_ALARM_SNOOZE_NOTIFICATION_BUTTONS, mutableSetOf("60", "90", "120"))
+                    apply()
+                }
+            }
+
         }
 
         fun getSettings(): Bundle {

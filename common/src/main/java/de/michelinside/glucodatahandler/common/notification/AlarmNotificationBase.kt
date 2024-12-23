@@ -37,7 +37,6 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     protected val LOG_ID = "GDH.AlarmNotification"
     private val MIN_AUTO_CLOSE_DELAY = 30F
     private var enabled: Boolean = false
-    private var addSnooze: Boolean = false
     private val VERY_LOW_NOTIFICATION_ID = 801
     private val LOW_NOTIFICATION_ID = 802
     private val HIGH_NOTIFICATION_ID = 803
@@ -67,6 +66,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     private var startDelayThread: Thread? = null
     private var checkSoundThread: Thread? = null
     private var checkNotificationThread: Thread? = null
+    private var snoozeNotificationButtons: MutableSet<String> = mutableSetOf()
 
     enum class TriggerAction {
         TEST_ALARM,
@@ -174,15 +174,19 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         }
     }
 
-    fun getAddSnooze(): Boolean = addSnooze
+    fun getAddSnooze(): Boolean = !snoozeNotificationButtons.isEmpty()
 
-    private fun setAddSnooze(snooze: Boolean) {
-        try {
-            Log.v(LOG_ID, "setAddSnooze called: current=$addSnooze - new=$snooze")
-            addSnooze = snooze
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "setAddSnooze exception: " + exc.toString() )
-        }
+    private fun setSnoozeNotificationButtons(buttons: MutableSet<String>) {
+        snoozeNotificationButtons = buttons.toMutableSet()
+        Log.d(LOG_ID, "Snooze Buttons: $snoozeNotificationButtons")
+    }
+
+    private fun getSnoozeNotificationButtons(): Set<String> {
+        return snoozeNotificationButtons.toSet()
+    }
+
+    fun getSnoozeValues(): List<Long> {
+        return getSnoozeNotificationButtons().map { it.toLong() }.sorted().take(3)
     }
 
     fun destroy(context: Context) {
@@ -417,10 +421,10 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         val extender = Notification.WearableExtender()
         extender.addAction(createStopAction(context, context.resources.getString(CR.string.btn_dismiss), getNotificationId(alarmType)))
         if (getAddSnooze()) {
-            extender
-                .addAction(createSnoozeAction(context, context.getString(CR.string.snooze) + ": 60", 60L, getNotificationId(alarmType)))
-                .addAction(createSnoozeAction(context, context.getString(CR.string.snooze) + ": 90", 90L, getNotificationId(alarmType)))
-                .addAction(createSnoozeAction(context, context.getString(CR.string.snooze) + ": 120", 120L, getNotificationId(alarmType)))
+            getSnoozeValues().forEach {
+                extender.addAction(createSnoozeAction(context, context.getString(CR.string.snooze) + ": $it", it, getNotificationId(alarmType)))
+
+            }
         }
         notificationBuilder.extend(extender)
 
@@ -848,7 +852,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
             if (key == null) {
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED)
-                onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION)
+                onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_SNOOZE_NOTIFICATION_BUTTONS)
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_FORCE_SOUND)
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_ALARM_FORCE_VIBRATION)
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_NOTIFICATION_VIBRATE)
@@ -857,7 +861,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             } else {
                 when(key) {
                     Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED -> setEnabled(sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, enabled))
-                    Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION -> setAddSnooze(sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, addSnooze))
+                    Constants.SHARED_PREF_ALARM_SNOOZE_NOTIFICATION_BUTTONS -> setSnoozeNotificationButtons(sharedPreferences.getStringSet(Constants.SHARED_PREF_ALARM_SNOOZE_NOTIFICATION_BUTTONS, snoozeNotificationButtons) as MutableSet<String>)
                     Constants.SHARED_PREF_ALARM_FORCE_SOUND -> forceSound = sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_FORCE_SOUND, forceSound)
                     Constants.SHARED_PREF_ALARM_FORCE_VIBRATION -> forceVibration = sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_FORCE_VIBRATION, forceVibration)
                     Constants.SHARED_PREF_NOTIFICATION_VIBRATE -> vibrateOnly = sharedPreferences.getBoolean(Constants.SHARED_PREF_NOTIFICATION_VIBRATE, vibrateOnly)
@@ -874,7 +878,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     fun getSettings(): Bundle {
         val bundle = Bundle()
-        bundle.putBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, getAddSnooze())
+        bundle.putStringArray(Constants.SHARED_PREF_ALARM_SNOOZE_NOTIFICATION_BUTTONS, getSnoozeNotificationButtons().toTypedArray())
         if(GlucoDataService.sharedPref != null) {
             bundle.putBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED,  GlucoDataService.sharedPref!!.getBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED, false))
         }
@@ -882,8 +886,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     }
 
     fun saveSettings(bundle: Bundle, editor: Editor) {
-        if(bundle.containsKey(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION)) {
-            editor.putBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, bundle.getBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, getAddSnooze()))
+        if(bundle.containsKey(Constants.SHARED_PREF_ALARM_SNOOZE_NOTIFICATION_BUTTONS)) {
+            editor.putStringSet(Constants.SHARED_PREF_ALARM_SNOOZE_NOTIFICATION_BUTTONS, bundle.getStringArray(Constants.SHARED_PREF_ALARM_SNOOZE_NOTIFICATION_BUTTONS)?.toMutableSet()?:  getSnoozeNotificationButtons())
             if(bundle.containsKey(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED)) {
                 editor.putBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED, bundle.getBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED))
             }

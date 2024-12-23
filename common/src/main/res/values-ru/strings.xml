@@ -383,8 +383,6 @@
     <string name="alarm_cat_categories">Категории тревоги</string>
     <string name="alarm_fullscreen_notification_enabled">Полноэкранное уведомление</string>
     <string name="alarm_fullscreen_notification_enabled_summary">Включает полноэкранное уведомление на экране блокировки.\nДля этого может потребоваться дополнительное разрешение.</string>
-    <string name="alarm_snooze_on_notification_enabled">Отложить в уведомлении</string>
-    <string name="alarm_snooze_on_notification_summary">Если этот параметр включен, в уведомлениях будут отображаться кнопки для активации отложенного режима.</string>
     <string name="alarm_fullscreen_dismiss_keyguard">Отключить защиту клавиатуры</string>
     <string name="alarm_fullscreen_dismiss_keyguard_summary">Включите этот параметр, если у вас возникли проблемы с полноэкранным уведомлением.\nНа некоторых устройствах это приведет к разблокировке экрана при срабатывании полноэкранного уведомления.\nПоэтому не включайте его, если у вас нет проблем.</string>
     <string name="alarm_force_sound">Принудительный звук тревоги</string>
@@ -700,5 +698,12 @@
 
     <string name="video_tutorial">Видеоинструкция</string>
     <string name="video_tutorial_summary">Нажмите здесь, чтобы перейти к видео на YouTube, которое иллюстрирует настройку этого источника. Большая благодарность Diabetic Masked Man за создание видео.</string>
+
+    <string name="snooze_30">30 минут</string>
+    <string name="snooze_60">60 минут</string>
+    <string name="snooze_90">90 минут</string>
+    <string name="snooze_120">120 минут</string>
+    <string name="alarm_snooze_on_notification_enabled">Отложить в уведомлении</string>
+    <string name="alarm_snooze_on_notification_summary">Выберите до 3 продолжительностей повтора для отображения в виде кнопок в уведомлении будильника.</string>
 
 </resources>

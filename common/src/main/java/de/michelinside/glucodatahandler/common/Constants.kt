@@ -215,6 +215,7 @@ object Constants {
     const val SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED = "alarm_fullscreen_notification_enabled"
     const val SHARED_PREF_ALARM_FULLSCREEN_DISMISS_KEYGUARD = "alarm_fullscreen_dismiss_keyguard"
     const val SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION = "alarm_snooze_on_notification"
+    const val SHARED_PREF_ALARM_SNOOZE_NOTIFICATION_BUTTONS = "alarm_snooze_notification_buttons"
     const val SHARED_PREF_ALARM_FORCE_SOUND = "alarm_force_sound"
     const val SHARED_PREF_ALARM_FORCE_VIBRATION = "alarm_force_vibration"
     const val SHARED_PREF_ALARM_INACTIVE_ENABLED = "alarm_inactive_enabled"

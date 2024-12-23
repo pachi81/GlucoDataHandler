@@ -439,8 +439,6 @@
     <string name="alarm_cat_categories">Alarm categories</string>
     <string name="alarm_fullscreen_notification_enabled">Full screen notification</string>
     <string name="alarm_fullscreen_notification_enabled_summary">Enables full screen notification on lockscreen.\nThis may request an additional permission.</string>
-    <string name="alarm_snooze_on_notification_enabled">Snooze on notification</string>
-    <string name="alarm_snooze_on_notification_summary">If enabled, the notifications will also include buttons to activate snooze.</string>
     <string name="alarm_fullscreen_dismiss_keyguard">Dismiss keyguard</string>
     <string name="alarm_fullscreen_dismiss_keyguard_summary">Please enable this setting, if you have problems with the fullscreen notification.\nOn some devices, this will cause the unlock screen, while the fullscreen notification is triggered.\nSo please do not enable it, if you do not have any problems.</string>
     <string name="alarm_force_sound">Force alarm sound</string>
@@ -763,5 +761,12 @@
 
     <string name="video_tutorial">Video Tutorial</string>
     <string name="video_tutorial_summary">Click here to go to the YouTube video that illustrates the setup of this source. Many thanks to Diabetic Masked Man for creating the videos.</string>
+
+    <string name="snooze_30">30 minutes</string>
+    <string name="snooze_60">60 minutes</string>
+    <string name="snooze_90">90 minutes</string>
+    <string name="snooze_120">120 minutes</string>
+    <string name="alarm_snooze_on_notification_enabled">Snooze on notification</string>
+    <string name="alarm_snooze_on_notification_summary">Choose up to 3 snooze durations to display as buttons on the alarm notification.</string>
 
 </resources>

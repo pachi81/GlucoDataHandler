@@ -52,22 +52,22 @@
                 </group>
                 <item
                     android:id="@+id/action_snooze_30"
-                    android:title="30"
+                    android:title="@string/snooze_30"
                     app:showAsAction="never"
                     tools:ignore="HardcodedText" />
                 <item
                     android:id="@+id/action_snooze_60"
-                    android:title="60"
+                    android:title="@string/snooze_60"
                     app:showAsAction="never"
                     tools:ignore="HardcodedText" />
                 <item
                     android:id="@+id/action_snooze_90"
-                    android:title="90"
+                    android:title="@string/snooze_90"
                     app:showAsAction="never"
                     tools:ignore="HardcodedText" />
                 <item
                     android:id="@+id/action_snooze_120"
-                    android:title="120"
+                    android:title="@string/snooze_120"
                     app:showAsAction="never"
                     tools:ignore="HardcodedText" />
             </menu>

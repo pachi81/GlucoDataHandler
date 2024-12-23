@@ -375,8 +375,6 @@
     <string name="alarm_cat_categories">Alarm Kategorien</string>
     <string name="alarm_fullscreen_notification_enabled">Vollbildbenachrichtigung</string>
     <string name="alarm_fullscreen_notification_enabled_summary">Aktiviert die Vollbildbenachrichtigung auf dem Sperrbildschirm.\nBeim Aktivieren wird gegebenenfalls nach der entsprechenden Berechtigung gefragt.</string>
-    <string name="alarm_snooze_on_notification_enabled">Schlummern</string>
-    <string name="alarm_snooze_on_notification_summary">Wenn aktiviert, enthalten die Benachrichtigungen Buttons um Schlummern zu aktivieren.</string>
     <string name="alarm_fullscreen_dismiss_keyguard">Dismiss keyguard</string>
     <string name="alarm_fullscreen_dismiss_keyguard_summary">Bitte diese Einstellung nur aktivieren, wenn es Probleme mit der Anzeige der Vollbildbenachrichtigung auf dem Speerbildschirm gibt.\nBei einigen Geräte verursacht diese Einstellung dass immer die PIN-Abfrage vor der Benachrichtigung erscheint.</string>
     <string name="alarm_force_sound">Alarm Ton erzwingen</string>
@@ -699,5 +697,12 @@
 
     <string name="video_tutorial">Video-Anleitung</string>
     <string name="video_tutorial_summary">Klicken Sie hier, um zum YouTube-Video zu gelangen, das die Einrichtung dieser Quelle veranschaulicht. Vielen Dank an Diabetic Masked Man für die Erstellung der Videos.</string>
+
+    <string name="snooze_30">30 Minuten</string>
+    <string name="snooze_60">60 Minuten</string>
+    <string name="snooze_90">90 Minuten</string>
+    <string name="snooze_120">120 Minuten</string>
+    <string name="alarm_snooze_on_notification_enabled">Schlummern</string>
+    <string name="alarm_snooze_on_notification_summary">Wähle bis zu 3 Zeiten für Schlummern aus, die als Schaltflächen in der Alarmbenachrichtigung angezeigt werden sollen.</string>
 
 </resources>

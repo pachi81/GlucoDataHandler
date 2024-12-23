@@ -283,7 +283,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
     fun isAlarmSettingToShare(key: String?): Boolean {
         when(key) {
             null -> return false
-            Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION,
+            Constants.SHARED_PREF_ALARM_SNOOZE_NOTIFICATION_BUTTONS,
             Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED,
             Constants.SHARED_PREF_ALARM_INACTIVE_ENABLED,
             Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME,

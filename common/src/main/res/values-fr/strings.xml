@@ -385,8 +385,6 @@
     <string name="alarm_cat_categories">Catégories d\'alarmes</string>
     <string name="alarm_fullscreen_notification_enabled">Notification plein écran</string>
     <string name="alarm_fullscreen_notification_enabled_summary">Active la notification plein écran sur l\'écran de verrouillage.\nCela peut nécessiter une autorisation supplémentaire.</string>
-    <string name="alarm_snooze_on_notification_enabled">Snoozer à partir de la notification</string>
-    <string name="alarm_snooze_on_notification_summary">Si cette option est activée, les notifications incluront également des boutons pour activer la répétition.</string>
     <string name="alarm_fullscreen_dismiss_keyguard">Rejeter le verrouillage du clavier</string>
     <string name="alarm_fullscreen_dismiss_keyguard_summary">Veuillez activer ce paramètre si vous rencontrez des problèmes avec la notification plein écran.\nSur certains appareils, cela provoquera le déverrouillage de l\'écran lorsque la notification plein écran est déclenchée.\nVeuillez donc ne pas l\'activer si vous n\'avez aucun problème.</string>
     <string name="alarm_force_sound">Forcer le son de l\'alarme</string>
@@ -706,5 +704,12 @@
 
     <string name="video_tutorial">Tutoriel vidéo</string>
     <string name="video_tutorial_summary">Cliquez ici pour accéder à la vidéo YouTube qui illustre la configuration de cette source. Un grand merci à Diabetic Masked Man pour la création des vidéos.</string>
+
+    <string name="snooze_30">30 minutes</string>
+    <string name="snooze_60">60 minutes</string>
+    <string name="snooze_90">90 minutes</string>
+    <string name="snooze_120">120 minutes</string>
+    <string name="alarm_snooze_on_notification_enabled">Snoozer à partir de la notification</string>
+    <string name="alarm_snooze_on_notification_summary">Choisissez jusqu\'à 3 durées de répétition à afficher sous forme de boutons sur la notification d\'alarme.</string>
 
 </resources>

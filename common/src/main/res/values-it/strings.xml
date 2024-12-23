@@ -380,8 +380,6 @@
     <string name="alarm_cat_categories">Categorie di allarme</string>
     <string name="alarm_fullscreen_notification_enabled">Notifica a schermo intero</string>
     <string name="alarm_fullscreen_notification_enabled_summary">Abilita la notifica a schermo intero sulla schermata di blocco.\nQuesto potrebbe richiedere un\'autorizzazione aggiuntiva.</string>
-    <string name="alarm_snooze_on_notification_enabled">Posponi sulla notifica</string>
-    <string name="alarm_snooze_on_notification_summary">Se abilitato, le notifiche includeranno anche pulsanti per attivare la funzione di posticipazione.</string>
     <string name="alarm_fullscreen_dismiss_keyguard">Ignora la protezione tastiera</string>
     <string name="alarm_fullscreen_dismiss_keyguard_summary">Abilita questa impostazione se hai problemi con la notifica a schermo intero.\nSu alcuni dispositivi, questo causerà la visualizzazione della schermata di sblocco mentre viene attivata la notifica a schermo intero.\nQuindi non abilitarla se non hai problemi.</string>
     <string name="alarm_force_sound">Forza suono di allarme</string>
@@ -695,5 +693,12 @@
 
     <string name="video_tutorial">Video tutorial</string>
     <string name="video_tutorial_summary">Fai clic qui per andare al video di YouTube che illustra la configurazione di questa fonte. Mille grazie a Diabetic Masked Man per aver creato i video.</string>
+
+    <string name="snooze_30">30 minuti</string>
+    <string name="snooze_60">60 minuti</string>
+    <string name="snooze_90">90 minuti</string>
+    <string name="snooze_120">120 minuti</string>
+    <string name="alarm_snooze_on_notification_enabled">Posponi sulla notifica</string>
+    <string name="alarm_snooze_on_notification_summary">Scegli fino a 3 durate di snooze da visualizzare come pulsanti sulla notifica di allarme.</string>
 
 </resources>
