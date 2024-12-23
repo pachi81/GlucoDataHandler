@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,7 @@ import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -28,7 +30,8 @@ enum class WidgetType(val cls: Class<*>) {
     GLUCOSE_TREND_DELTA(GlucoseTrendDeltaWidget::class.java),
     GLUCOSE_TREND_DELTA_TIME(GlucoseTrendDeltaTimeWidget::class.java),
     GLUCOSE_TREND_DELTA_TIME_IOB_COB(GlucoseTrendDeltaTimeIobCobWidget::class.java),
-    OTHER_UNIT(OtherUnitWidget::class.java);
+    OTHER_UNIT(OtherUnitWidget::class.java),
+    BATTERY_LEVEL(BatteryLevelWidget::class.java);
 }
 
 abstract class GlucoseBaseWidget(private val type: WidgetType,
@@ -36,7 +39,8 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
                                  private val hasDelta: Boolean = false,
                                  private val hasTime: Boolean = false,
                                  private val hasIobCob: Boolean = false,
-                                 private val hasOtherUnit: Boolean = false): AppWidgetProvider(), NotifierInterface {
+                                 private val hasOtherUnit: Boolean = false,
+                                 private val hasBatteryLevel: Boolean = false): AppWidgetProvider(), NotifierInterface {
     init {
         Log.d(LOG_ID, "init called for "+ this.toString())
     }
@@ -241,6 +245,37 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
             else
                 remoteViews.setViewVisibility(R.id.cobText, View.VISIBLE)
         }
+
+
+        if (hasBatteryLevel) {
+            var deviceNameStr = "No WearOS Device"
+            var levelStr = "?%"
+            var levelColour = Color.RED;
+
+            if (WearPhoneConnection.nodesConnected) {
+                if (WearPhoneConnection.connectionError) {
+                    deviceNameStr = "Connection error"
+                }
+                else {
+                    WearPhoneConnection.getNodeBatterLevels().firstNotNullOf { (name, level) ->
+                        if (level > 0)
+                            levelStr = "$level%"
+                        deviceNameStr = name
+                        if (level < 25)
+                            levelColour = Color.RED;
+                        else if (level < 45)
+                            levelColour = Color.YELLOW
+                        else
+                            levelColour = Color.GREEN;
+                    }
+                }
+            }
+            remoteViews.setTextViewText(R.id.battery_level, levelStr)
+            remoteViews.setTextViewText(R.id.device_name, deviceNameStr)
+            remoteViews.setTextColor(R.id.battery_level, levelColour)
+        }
+
+
         return remoteViews
     }
 
