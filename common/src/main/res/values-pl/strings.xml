@@ -712,6 +712,6 @@
     <string name="snooze_90">90 minut</string>
     <string name="snooze_120">120 minut</string>
     <string name="alarm_snooze_on_notification_enabled">Przycisk „Odłóż” w powiadomieniu</string>
-    <string name="alarm_snooze_on_notification_summary">Choose up to 3 snooze durations to display as buttons on the alarm notification.</string>
+    <string name="alarm_snooze_on_notification_summary">Wybierz do 3 długości, na jakie można odłożyć alarm, które będą wyświetlane jako przyciski na powiadomieniu o alarmie.</string>
 
 </resources>
