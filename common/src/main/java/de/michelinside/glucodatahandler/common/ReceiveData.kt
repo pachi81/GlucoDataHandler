@@ -463,6 +463,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                                 extras.toString() +
                                 " - timestamp: " + DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(Date(extras.getLong(TIME)))
                     )
+                    if(time == 0L)
+                        handleFirstValue(context, dataSource, extras)
                     receiveTime = System.currentTimeMillis()
                     source = dataSource
                     sensorID = extras.getString(SERIAL) //Name of sensor
@@ -494,15 +496,13 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     }
 
                     rawValue = extras.getInt(MGDL)
-                    if (extras.containsKey(GLUCOSECUSTOM)) {
-                        glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
-                        changeIsMmol(rawValue!=glucose.toInt() && GlucoDataUtils.isMmolValue(glucose), context)
-                    } else {
-                        if (isMmol) {
+                    if (isMmol) {
+                        if (extras.containsKey(GLUCOSECUSTOM))
+                            glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1)
+                        if(!GlucoDataUtils.isMmolValue(glucose))
                             glucose = GlucoDataUtils.mgToMmol(rawValue.toFloat())
-                        } else {
-                            glucose = rawValue.toFloat()
-                        }
+                    } else {
+                        glucose = rawValue.toFloat()
                     }
                     time = extras.getLong(TIME) //time in msec
 
@@ -608,19 +608,37 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         }
     }
 
+    private fun handleFirstValue(context: Context, dataSource: DataSource, extras: Bundle) {
+        // check unit and delta for first value, only!
+        Log.i(LOG_ID, "Handle first value")
+        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        if (extras.containsKey(GLUCOSECUSTOM)) {
+            val raw = extras.getInt(MGDL)
+            val glucoseCustom = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
+            changeIsMmol(raw!=glucoseCustom.toInt() && GlucoDataUtils.isMmolValue(glucoseCustom), context)
+        }
+        if(!sharedPref.contains(Constants.SHARED_PREF_FIVE_MINUTE_DELTA) && dataSource.interval5Min) {
+            Log.i(LOG_ID, "Change delta to 5 min")
+            use5minDelta = true
+            with(sharedPref.edit()) {
+                putBoolean(Constants.SHARED_PREF_FIVE_MINUTE_DELTA, true)
+                apply()
+            }
+        }
+    }
+
     fun changeIsMmol(newValue: Boolean, context: Context? = null) {
         if (isMmol != newValue) {
             isMmolValue = newValue
-            if (isMmolValue != GlucoDataUtils.isMmolValue(glucose)) {
+            if (time > 0 && isMmolValue != GlucoDataUtils.isMmolValue(glucose)) {
                 glucose = if (isMmolValue)
                     GlucoDataUtils.mgToMmol(glucose)
                 else
                     GlucoDataUtils.mmolToMg(glucose)
             }
-            Log.i(LOG_ID, "Unit changed to " + glucose + if(isMmolValue) "mmol/l" else "mg/dl")
+            Log.i(LOG_ID, "Unit changed to " + glucose + if(isMmolValue) " mmol/l" else " mg/dl")
             if (context != null) {
-                val sharedPref =
-                    context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 with(sharedPref.edit()) {
                     putBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
                     apply()
@@ -690,7 +708,9 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private fun readTargets(context: Context) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         sharedPref.registerOnSharedPreferenceChangeListener(this)
-        if(!sharedPref.contains(Constants.SHARED_PREF_USE_MMOL)) {
+        if(!sharedPref.contains(Constants.SHARED_PREF_USE_MMOL) && (sharedPref.contains(Constants.SHARED_PREF_TARGET_MIN) || sharedPref.contains(Constants.SHARED_PREF_TARGET_MAX))) {
+            targetMinValue = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MIN, targetMinValue)
+            targetMaxValue = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, targetMaxValue)
             isMmolValue = GlucoDataUtils.isMmolValue(targetMinValue)
             if (isMmol) {
                 Log.i(LOG_ID, "Upgrade to new mmol handling!")
