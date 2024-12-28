@@ -594,12 +594,16 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         return false
     }
 
-    fun forceDnd(): Boolean {
-        if(!Channels.getNotificationManager().isNotificationPolicyAccessGranted &&
-            ( Channels.getNotificationManager().currentInterruptionFilter > NotificationManager.INTERRUPTION_FILTER_ALL ||
-                    audioManager.ringerMode == AudioManager.RINGER_MODE_SILENT) ) {
-            Log.d(LOG_ID, "Force DnD is active")
-            return true
+    private fun forceDnd(): Boolean {  // return true, if DnD is enabled and should not be overwritten
+        if(Channels.getNotificationManager().currentInterruptionFilter > NotificationManager.INTERRUPTION_FILTER_ALL ||
+            audioManager.ringerMode == AudioManager.RINGER_MODE_SILENT) {
+            if(!forceSound && !forceVibration) {
+                return true
+            }
+            if(!Channels.getNotificationManager().isNotificationPolicyAccessGranted) {
+                Log.i(LOG_ID, "Access DnD not granted!")
+                return true
+            }
         }
         return false
     }
