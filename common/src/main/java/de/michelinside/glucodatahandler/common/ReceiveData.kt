@@ -124,7 +124,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private var initialized = false
     private var deltaFallingCount = 0
     private var deltaRisingCount = 0
-    private lateinit var sharedPref: SharedPreferences
 
     private var unitMgDl = "mg/dl"
     private var unitMmol = "mmol/l"
@@ -138,7 +137,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             if (!initialized) {
                 Log.v(LOG_ID, "initData called")
                 initialized = true
-                sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 unitMgDl = context.resources.getString(R.string.unit_mgdl)
                 unitMmol = context.resources.getString(R.string.unit_mmol)
                 AlarmHandler.initData(context)
@@ -496,16 +494,9 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     }
 
                     rawValue = extras.getInt(MGDL)
-                    if (!sharedPref.contains(Constants.SHARED_PREF_USE_MMOL) && extras.containsKey(GLUCOSECUSTOM)) {
+                    if (extras.containsKey(GLUCOSECUSTOM)) {
                         glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
                         changeIsMmol(rawValue!=glucose.toInt() && GlucoDataUtils.isMmolValue(glucose), context)
-                        if (initialized && !sharedPref.contains(Constants.SHARED_PREF_USE_MMOL)) {
-                            // save unit at the first time...
-                            with(sharedPref.edit()) {
-                                putBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
-                                apply()
-                            }
-                        }
                     } else {
                         if (isMmol) {
                             glucose = GlucoDataUtils.mgToMmol(rawValue.toFloat())
@@ -626,8 +617,10 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 else
                     GlucoDataUtils.mmolToMg(glucose)
             }
-            Log.i(LOG_ID, "Unit changed to " + glucose + if(isMmolValue) " mmol/l" else " mg/dl")
-            if (initialized) {
+            Log.i(LOG_ID, "Unit changed to " + glucose + if(isMmolValue) "mmol/l" else "mg/dl")
+            if (context != null) {
+                val sharedPref =
+                    context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 with(sharedPref.edit()) {
                     putBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
                     apply()
@@ -695,6 +688,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     private fun readTargets(context: Context) {
+        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         sharedPref.registerOnSharedPreferenceChangeListener(this)
         if(!sharedPref.contains(Constants.SHARED_PREF_USE_MMOL)) {
             isMmolValue = GlucoDataUtils.isMmolValue(targetMinValue)
@@ -712,6 +706,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     private fun writeTarget(context: Context, min: Boolean, value: Float) {
+        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         var mgdlValue = value
         if (GlucoDataUtils.isMmolValue(mgdlValue)) {
             mgdlValue = GlucoDataUtils.mmolToMg(value)
