@@ -499,19 +499,18 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     if (!sharedPref.contains(Constants.SHARED_PREF_USE_MMOL) && extras.containsKey(GLUCOSECUSTOM)) {
                         glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
                         changeIsMmol(rawValue!=glucose.toInt() && GlucoDataUtils.isMmolValue(glucose), context)
+                        if (initialized && !sharedPref.contains(Constants.SHARED_PREF_USE_MMOL)) {
+                            // save unit at the first time...
+                            with(sharedPref.edit()) {
+                                putBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
+                                apply()
+                            }
+                        }
                     } else {
                         if (isMmol) {
                             glucose = GlucoDataUtils.mgToMmol(rawValue.toFloat())
                         } else {
                             glucose = rawValue.toFloat()
-                        }
-                    }
-                    // check, if the unit is saved for not change it again...
-                    if (initialized && !sharedPref.contains(Constants.SHARED_PREF_USE_MMOL)) {
-                        // save unit at the first time...
-                        with(sharedPref.edit()) {
-                            putBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
-                            apply()
                         }
                     }
                     time = extras.getLong(TIME) //time in msec
