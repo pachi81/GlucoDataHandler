@@ -10,6 +10,7 @@ import androidx.preference.PreferenceDialogFragmentCompat
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.notification.VibratePattern
 import de.michelinside.glucodatahandler.common.notification.Vibrator
+import de.michelinside.glucodatahandler.notification.AlarmNotification
 
 
 class VibratePatternPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat() {
@@ -108,7 +109,7 @@ class VibratePatternPreferenceDialogFragmentCompat : PreferenceDialogFragmentCom
                         Log.v(LOG_ID, "Set currentPattern: $currentPattern")
                         val pattern = VibratePattern.getByKey(currentPattern).pattern
                         if(pattern != null) {
-                            Vibrator.vibrate(pattern, -1, curAmplitude)
+                            Vibrator.vibrate(pattern, -1, curAmplitude, AlarmNotification.useAlarmStream)
                         } else {
                             Vibrator.cancel()
                         }

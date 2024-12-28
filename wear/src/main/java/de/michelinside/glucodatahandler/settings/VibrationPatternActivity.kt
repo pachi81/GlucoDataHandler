@@ -8,6 +8,7 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
+import de.michelinside.glucodatahandler.AlarmNotificationWear
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notification.AlarmType
@@ -127,7 +128,7 @@ class VibrationPatternActivity : AppCompatActivity() {
                         hasChanged = true
                         val currentPattern = VibratePattern.getByKey(currentPattern).pattern
                         if(currentPattern != null) {
-                            Vibrator.vibrate(currentPattern, -1, alarmType.setting!!.vibrateAmplitude)
+                            Vibrator.vibrate(currentPattern, -1, alarmType.setting!!.vibrateAmplitude, AlarmNotificationWear.useAlarmStream)
                         } else {
                             Vibrator.cancel()
                         }

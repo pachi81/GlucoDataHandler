@@ -286,7 +286,7 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
                     if(isSoundLevel)
                         setSoundLevel(curProgress)
                     else if (alarmType.setting!!.vibratePattern != null)
-                        Vibrator.vibrate(alarmType.setting!!.vibratePattern!!, -1, curProgress*17)
+                        Vibrator.vibrate(alarmType.setting!!.vibratePattern!!, -1, curProgress*17, AlarmNotificationWear.useAlarmStream)
                 }
             } catch( exc: Exception ) {
                 Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())

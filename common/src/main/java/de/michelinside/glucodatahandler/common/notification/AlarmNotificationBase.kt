@@ -61,6 +61,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     private var alarmManager: AlarmManager? = null
     private var alarmPendingIntent: PendingIntent? = null
     private var useAlarmSound: Boolean = true
+    val useAlarmStream: Boolean get() = useAlarmSound
     private var autoCloseNotification: Boolean = false
     private var currentAlarmState: AlarmState = AlarmState.DISABLED
     private var startDelayThread: Thread? = null
@@ -486,7 +487,8 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 val duration = if(repeat && !forceReturnDuration) -1 else vibratePattern.sum().toInt()
                 Log.i(LOG_ID, "start vibration for $alarmType - repeat: $repeat - duration: $duration ms")
                 Vibrator.vibrate(vibratePattern, if(repeat) 1 else -1,
-                    alarmType.setting?.vibrateAmplitude ?: -1
+                    alarmType.setting?.vibrateAmplitude ?: -1,
+                    useAlarmSound
                 )
                 return duration
             }

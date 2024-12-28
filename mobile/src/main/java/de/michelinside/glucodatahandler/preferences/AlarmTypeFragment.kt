@@ -170,7 +170,7 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
                 startTestSound()
             } else if( key == vibrateAmplitudePref) {
                 alarmType.setting!!.updateSettings(sharedPreferences)
-                Vibrator.vibrate(alarmType.setting!!.vibratePattern!!, -1, alarmType.setting!!.vibrateAmplitude)
+                Vibrator.vibrate(alarmType.setting!!.vibratePattern!!, -1, alarmType.setting!!.vibrateAmplitude, AlarmNotification.useAlarmStream)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())

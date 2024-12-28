@@ -1,8 +1,10 @@
 package de.michelinside.glucodatahandler.common.notification
 
 import android.content.Context
+import android.media.AudioAttributes
 import android.os.Build
 import android.os.CombinedVibration
+import android.os.VibrationAttributes
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -49,14 +51,22 @@ object Vibrator {
         return VibrationEffect.createWaveform(pattern, repeat)
     }
 
-    fun vibrate(pattern: LongArray, repeat: Int = -1, amplitude: Int = -1): Int {
+    @Suppress("DEPRECATION")
+    fun vibrate(pattern: LongArray, repeat: Int = -1, amplitude: Int = -1, useAlarm: Boolean = true): Int {
         cancel()
         val duration = if(repeat == -1) pattern.sum().toInt() else -1
-        Log.d(LOG_ID, "Vibrate for $duration ms")
+        Log.d(LOG_ID, "Vibrate for $duration ms - useAlarm: $useAlarm")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            vibratorManager.vibrate(CombinedVibration.createParallel(getEffect(pattern, repeat, amplitude)))
+            val attributes = VibrationAttributes.Builder()
+                .setUsage(if(useAlarm)VibrationAttributes.USAGE_ALARM else VibrationAttributes.USAGE_NOTIFICATION)
+                .build()
+            vibratorManager.vibrate(CombinedVibration.createParallel(getEffect(pattern, repeat, amplitude)),attributes)
         } else {
-            vibrator.vibrate(getEffect(pattern, repeat, amplitude))
+            val aa = AudioAttributes.Builder()
+                .setUsage(if (useAlarm) AudioAttributes.USAGE_ALARM else AudioAttributes.USAGE_VOICE_COMMUNICATION_SIGNALLING)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build()
+            vibrator.vibrate(getEffect(pattern, repeat, amplitude), aa)
         }
         return duration
     }
