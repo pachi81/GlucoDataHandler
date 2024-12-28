@@ -84,15 +84,24 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             return batterLevels
         }
 
+        private fun getDisplayName(node: Node): String {
+            val result = node.displayName.replace("_", " ")
+            if(result.contains("(")) {
+                return result.substring(0, result.indexOf("(")).trim()
+            } else {
+                return result.trim()
+            }
+        }
+
         fun getNodeConnectionStates(context: Context, addMissing: Boolean = true): Map<String, String> {
             val connectionStates = mutableMapOf<String, String>()
             connectedNodes.forEach { node ->
                 (if (nodeBatteryLevel.containsKey(node.key)) {
                     val level = nodeBatteryLevel.getValue(node.key)
-                    connectionStates[node.value.displayName] = if (level > 0) "${level}%" else context.getString(R.string.state_connected)
+                    connectionStates[getDisplayName(node.value)] = if (level > 0) "${level}%" else context.getString(R.string.state_connected)
                 }
                 else if (addMissing) {
-                    connectionStates[node.value.displayName] = context.getString(R.string.state_await_data)
+                    connectionStates[getDisplayName(node.value)] = context.getString(R.string.state_await_data)
                 })
             }
             return connectionStates
