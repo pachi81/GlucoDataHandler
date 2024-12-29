@@ -625,6 +625,12 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 apply()
             }
         }
+        if(dataSource == DataSource.DEXCOM_SHARE && !sharedPref.contains(Constants.SHARED_PREF_SOURCE_INTERVAL)) {
+            with(sharedPref.edit()) {
+                putString(Constants.SHARED_PREF_SOURCE_INTERVAL, "5")  // use 5 min interval for dexcom share
+                apply()
+            }
+        }
     }
 
     fun changeIsMmol(newValue: Boolean, context: Context? = null) {
