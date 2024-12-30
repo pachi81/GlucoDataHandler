@@ -55,7 +55,7 @@ class ExportImportSettingsFragment: SettingsFragmentBase(R.xml.pref_export_impor
                     val currentDateandTime = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(
                         Date()
                     )
-                    val fileName = "GDH_phone_settings_" + currentDateandTime
+                    val fileName = (if(Constants.IS_SECOND) "GDH_SECOND_" else "GDH_") + "phone_settings_" + currentDateandTime
                     putExtra(Intent.EXTRA_TITLE, fileName)
                     putExtra(DocumentsContract.EXTRA_INITIAL_URI, downloadUri)
                 }
