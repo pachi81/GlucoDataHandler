@@ -44,6 +44,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         const val region_server = "https://api-%s.libreview.%s"
         const val LOGIN_ENDPOINT = "/llu/auth/login"
         const val CONNECTION_ENDPOINT = "/llu/connections"
+        const val GRAPH_ENDPOINT = "/llu/connections/%s/graph"
         const val ACCEPT_ENDPOINT = "/auth/continue/"
         const val ACCEPT_TERMS_TYPE = "tou"
         const val ACCEPT_TOKEN_TYPE = "pp"
@@ -79,6 +80,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         userId = ""
         dataReceived = false
         patientData.clear()
+        patientId = GlucoDataService.sharedPref!!.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")!!
         try {
             Log.d(LOG_ID, "Save reset")
             with (GlucoDataService.sharedPref!!.edit()) {
@@ -104,7 +106,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                 result = result.replace(groups[0], replaceValue)
             }
         }
-        return result
+        return result.substring(0, 1000)
     }
 
     /*
@@ -362,6 +364,9 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     }
 
     override fun getValue(): Boolean {
+        if(patientId.isNotEmpty()) {
+            return handleGraphResponse(httpGet(getUrl(GRAPH_ENDPOINT.format(patientId)), getHeader()))
+        }
         return handleGlucoseResponse(httpGet(getUrl(CONNECTION_ENDPOINT), getHeader()))
     }
 
@@ -388,6 +393,23 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     private fun parseLocalTimestamp(time: String): Long {
         val format = SimpleDateFormat("M/d/y h:m:s a", Locale.ENGLISH)
         return format.parse(time)!!.time
+    }
+
+    private fun handleGraphResponse(body: String?): Boolean {
+        val jsonObject = checkResponse(body)
+        if (jsonObject != null && jsonObject.has("data")) {
+            val data = jsonObject.optJSONObject("data")
+            if(data != null && data.has("connection")) {
+                val connection = data.optJSONObject("connection")
+                if(connection!=null)
+                    return parseConnectionData(connection)
+            }
+        }
+        Log.e(LOG_ID, "No data found in response: ${replaceSensitiveData(body!!)}")
+        setLastError("Invalid response! Please send logs to developer.")
+        reset()
+        retry = true
+        return false
     }
 
     private fun handleGlucoseResponse(body: String?): Boolean {
@@ -437,44 +459,51 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                     setState(SourceState.NO_NEW_VALUE, GlucoDataService.context!!.resources.getString(R.string.no_data_in_server_response))
                     return false
                 }
-                if(data.has("glucoseMeasurement")) {
-                    val glucoseData = data.optJSONObject("glucoseMeasurement")
-                    if (glucoseData != null) {
-                        val glucoExtras = Bundle()
-                        val parsedUtc = parseUtcTimestamp(glucoseData.optString("FactoryTimestamp"))
-                        val parsedLocal = parseLocalTimestamp(glucoseData.optString("Timestamp"))
-                        Log.d(LOG_ID, "UTC->local: " + parsedUtc + " - local: " + parsedLocal)
-                        if (parsedUtc > 0)
-                            glucoExtras.putLong(ReceiveData.TIME, parsedUtc)
-                        else
-                            glucoExtras.putLong(ReceiveData.TIME, parsedLocal)
-                        glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, glucoseData.optDouble("Value").toFloat())
-                        glucoExtras.putInt(ReceiveData.MGDL, glucoseData.optInt("ValueInMgPerDl"))
-                        glucoExtras.putFloat(ReceiveData.RATE, getRateFromTrend(glucoseData.optInt("TrendArrow")))
-                        if (glucoseData.optBoolean("isHigh"))
-                            glucoExtras.putInt(ReceiveData.ALARM, 6)
-                        else if (glucoseData.optBoolean("isLow"))
-                            glucoExtras.putInt(ReceiveData.ALARM, 7)
-                        else
-                            glucoExtras.putInt(ReceiveData.ALARM, 0)
-
-                        glucoExtras.putString(ReceiveData.SERIAL, "LibreLink")
-                        if (data.has("sensor")) {
-                            val sensor = data.optJSONObject("sensor")
-                            if (sensor != null && sensor.has("sn"))
-                                glucoExtras.putString(ReceiveData.SERIAL, sensor.optString("sn"))
-                        }
-                        dataReceived = true
-                        handleResult(glucoExtras)
-                        return true
-                    }
-                }
+                return parseConnectionData(data)
             } else {
                 Log.e(LOG_ID, "No data array found in response: ${replaceSensitiveData(body!!)}")
                 setLastError("Invalid response! Please send logs to developer.")
                 reset()
                 retry = true
             }
+        }
+        return false
+    }
+
+    private fun parseConnectionData(data: JSONObject): Boolean {
+        if(data.has("glucoseMeasurement")) {
+            val glucoseData = data.optJSONObject("glucoseMeasurement")
+            if (glucoseData != null) {
+                val glucoExtras = Bundle()
+                val parsedUtc = parseUtcTimestamp(glucoseData.optString("FactoryTimestamp"))
+                val parsedLocal = parseLocalTimestamp(glucoseData.optString("Timestamp"))
+                Log.d(LOG_ID, "UTC->local: " + parsedUtc + " - local: " + parsedLocal)
+                if (parsedUtc > 0)
+                    glucoExtras.putLong(ReceiveData.TIME, parsedUtc)
+                else
+                    glucoExtras.putLong(ReceiveData.TIME, parsedLocal)
+                glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, glucoseData.optDouble("Value").toFloat())
+                glucoExtras.putInt(ReceiveData.MGDL, glucoseData.optInt("ValueInMgPerDl"))
+                glucoExtras.putFloat(ReceiveData.RATE, getRateFromTrend(glucoseData.optInt("TrendArrow")))
+                if (glucoseData.optBoolean("isHigh"))
+                    glucoExtras.putInt(ReceiveData.ALARM, 6)
+                else if (glucoseData.optBoolean("isLow"))
+                    glucoExtras.putInt(ReceiveData.ALARM, 7)
+                else
+                    glucoExtras.putInt(ReceiveData.ALARM, 0)
+
+                glucoExtras.putString(ReceiveData.SERIAL, "LibreLink")
+                if (data.has("sensor")) {
+                    val sensor = data.optJSONObject("sensor")
+                    if (sensor != null && sensor.has("sn"))
+                        glucoExtras.putString(ReceiveData.SERIAL, sensor.optString("sn"))
+                }
+                dataReceived = true
+                handleResult(glucoExtras)
+                return true
+            }
+        } else {
+            Log.e(LOG_ID, "No glucoseMeasurement found in response: ${replaceSensitiveData(data.toString())}")
         }
         return false
     }
@@ -512,6 +541,9 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                 }
             }
             return null
+        } else if (patientData.isNotEmpty()) {
+            patientId = patientData.keys.first()
+            Log.d(LOG_ID, "Using patient ID $patientId")
         }
         // default: use first one
         return dataArray.optJSONObject(0)
