@@ -364,7 +364,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     }
 
     override fun getValue(): Boolean {
-        if(patientId.isNotEmpty()) {
+        if(patientId.isNotEmpty() && patientData.isNotEmpty()) {
             return handleGraphResponse(httpGet(getUrl(GRAPH_ENDPOINT.format(patientId)), getHeader()))
         }
         return handleGlucoseResponse(httpGet(getUrl(CONNECTION_ENDPOINT), getHeader()))
@@ -511,7 +511,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     private fun getPatientData(dataArray: JSONArray): JSONObject? {
         if(dataArray.length() > patientData.size) {
             // create patientData map
-            val checkPatienId = patientData.isEmpty() && patientId.isEmpty()
+            val checkPatienId = patientData.isEmpty() && patientId.isNotEmpty()
             patientData.clear()
             for (i in 0 until dataArray.length()) {
                 val data = dataArray.getJSONObject(i)
@@ -523,6 +523,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                 }
             }
             if (checkPatienId && !patientData.keys.contains(patientId)) {
+                Log.i(LOG_ID, "Reset patient ID as it is not in the list")
                 patientId = ""
                 with (GlucoDataService.sharedPref!!.edit()) {
                     putString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")
@@ -534,6 +535,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             }
         }
         if(patientId.isNotEmpty()) {
+            Log.d(LOG_ID, "Using patient ID $patientId")
             for (i in 0 until dataArray.length()) {
                 val data = dataArray.getJSONObject(i)
                 if (data.has("patientId") && data.getString("patientId") == patientId) {
