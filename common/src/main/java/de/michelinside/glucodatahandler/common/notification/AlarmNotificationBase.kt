@@ -249,6 +249,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     fun stopVibrationAndSound() {
         try {
             Log.d(LOG_ID, "stopVibrationAndSound called")
+            stopDelayThread()
             stopSoundThread()
             Vibrator.cancel()
             ringtoneRWLock.write {
@@ -441,16 +442,35 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
         if(curNotification > 0) {
             // else
             startDelayThread = Thread {
-                val startDelay = getStartDelayMs(context)
-                Log.i(LOG_ID, "Start sound and vibration with a delay of $startDelay ms")
-                if (startDelay > 0)
-                    Thread.sleep(startDelay.toLong())
-                if (curNotification > 0) {
-                    checkCreateSound(alarmType, context)
-                    startVibrationAndSound(alarmType, context)
+                try {
+                    val startDelay = getStartDelayMs(context)
+                    Log.i(LOG_ID, "Start sound and vibration with a delay of $startDelay ms")
+                    if (startDelay > 0)
+                        Thread.sleep(startDelay.toLong())
+                    if (curNotification > 0) {
+                        checkCreateSound(alarmType, context)
+                        startVibrationAndSound(alarmType, context)
+                    }
+                } catch (exc: InterruptedException) {
+                    Log.d(LOG_ID, "Delay thread interrupted")
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Exception in delay thread: " + exc.toString())
                 }
             }
             startDelayThread!!.start()
+        }
+    }
+
+    private fun stopDelayThread() {
+        Log.v(LOG_ID, "Stop delay thread for $startDelayThread")
+        if (startDelayThread != null && startDelayThread!!.isAlive && startDelayThread!!.id != Thread.currentThread().id )
+        {
+            Log.i(LOG_ID, "Stop running delay thread!")
+            startDelayThread!!.interrupt()
+            while(startDelayThread!!.isAlive)
+                Thread.sleep(1)
+            Log.i(LOG_ID, "Delay thread stopped!")
+            startDelayThread = null
         }
     }
 

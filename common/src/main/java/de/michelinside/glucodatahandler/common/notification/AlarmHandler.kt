@@ -164,17 +164,19 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
     }
 
     fun setSnoozeTime(time: Long, fromClient: Boolean = false) {
-        snoozeTime = time
-        Log.i(LOG_ID, "New snooze-time: $snoozeTimestamp")
-        saveExtras()
-        if(GlucoDataService.context != null) {
-            InternalNotifier.notify(GlucoDataService.context!!, NotifySource.ALARM_STATE_CHANGED, null)
-            triggerSnoozeEnd(GlucoDataService.context!!)
-        }
-        if(!fromClient) {
-            val bundle = Bundle()
-            bundle.putLong(SNOOZE_TIME, snoozeTime)
-            GlucoDataService.sendCommand(Command.SNOOZE_ALARM, bundle)
+        if(snoozeTime != time) {
+            snoozeTime = time
+            Log.i(LOG_ID, "New snooze-time: $snoozeTimestamp")
+            saveExtras()
+            if(GlucoDataService.context != null) {
+                InternalNotifier.notify(GlucoDataService.context!!, NotifySource.ALARM_STATE_CHANGED, null)
+                triggerSnoozeEnd(GlucoDataService.context!!)
+            }
+            if(!fromClient) {
+                val bundle = Bundle()
+                bundle.putLong(SNOOZE_TIME, snoozeTime)
+                GlucoDataService.sendCommand(Command.SNOOZE_ALARM, bundle)
+            }
         }
     }
 
