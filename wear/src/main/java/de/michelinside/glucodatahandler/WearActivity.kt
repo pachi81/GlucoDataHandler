@@ -319,24 +319,24 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private fun updateNotesTable() {
         tableNotes.removeViews(1, maxOf(0, tableNotes.childCount - 1))
         if (!Channels.notificationChannelActive(this, ChannelType.WEAR_FOREGROUND)) {
-            if(requestPermission()) {
-                GlucoDataServiceWear.start(this)
-            } else {
-                val onClickListener = View.OnClickListener {
-                    try {
+            val onClickListener = View.OnClickListener {
+                try {
+                    if (!Channels.notificationChannelActive(this, ChannelType.WEAR_FOREGROUND)) {
                         requestNotificationPermission = true
                         startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
                             .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName))
-                    } catch (exc: Exception) {
-                        Log.e(LOG_ID, "updateNotesTable exception: " + exc.message.toString() )
-                        if(requestPermission()) {
-                            GlucoDataServiceWear.start(this)
-                            updateNotesTable()
-                        }
+                    } else {
+                        updateNotesTable()
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "updateNotesTable exception: " + exc.message.toString() )
+                    if(requestPermission()) {
+                        GlucoDataServiceWear.start(this)
+                        updateNotesTable()
                     }
                 }
-                tableNotes.addView(createRow(CR.string.activity_main_notification_permission, onClickListener))
             }
+            tableNotes.addView(createRow(CR.string.activity_main_notification_permission, onClickListener))
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !Utils.canScheduleExactAlarms(this)) {

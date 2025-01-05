@@ -560,11 +560,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun updateNotesTable() {
         tableNotes.removeViews(1, maxOf(0, tableNotes.childCount - 1))
         if (!Channels.notificationChannelActive(this, ChannelType.MOBILE_FOREGROUND)) {
-            if(requestPermission()) {
-                GlucoDataServiceMobile.start(this)
-            } else {
-                val onClickListener = OnClickListener {
-                    try {
+            val onClickListener = OnClickListener {
+                try {
+                    if (!Channels.notificationChannelActive(this, ChannelType.MOBILE_FOREGROUND)) {
                         requestNotificationPermission = true
                         val intent: Intent = if (Channels.notificationActive(this)) { // only the channel is inactive!
                             Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
@@ -575,16 +573,18 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                                 .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
                         }
                         startActivity(intent)
-                    } catch (exc: Exception) {
-                        Log.e(LOG_ID, "updateNotesTable exception: " + exc.message.toString() )
-                        if(requestPermission()) {
-                            GlucoDataServiceMobile.start(this)
-                            updateNotesTable()
-                        }
+                    } else {
+                        updateNotesTable()
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "updateNotesTable exception: " + exc.message.toString() )
+                    if(requestPermission()) {
+                        GlucoDataServiceMobile.start(this)
+                        updateNotesTable()
                     }
                 }
-                tableNotes.addView(createRow(CR.string.activity_main_notification_permission, onClickListener))
             }
+            tableNotes.addView(createRow(CR.string.activity_main_notification_permission, onClickListener))
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !Utils.canScheduleExactAlarms(this)) {
