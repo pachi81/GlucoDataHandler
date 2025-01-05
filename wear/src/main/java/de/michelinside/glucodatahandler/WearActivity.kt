@@ -319,26 +319,46 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private fun updateNotesTable() {
         tableNotes.removeViews(1, maxOf(0, tableNotes.childCount - 1))
         if (!Channels.notificationChannelActive(this, ChannelType.WEAR_FOREGROUND)) {
-            val onClickListener = View.OnClickListener {
-                requestNotificationPermission = true
-                startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
-                    .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName))
+            if(requestPermission()) {
+                GlucoDataServiceWear.start(this)
+            } else {
+                val onClickListener = View.OnClickListener {
+                    try {
+                        requestNotificationPermission = true
+                        startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                            .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName))
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "updateNotesTable exception: " + exc.message.toString() )
+                        if(requestPermission()) {
+                            GlucoDataServiceWear.start(this)
+                            updateNotesTable()
+                        }
+                    }
+                }
+                tableNotes.addView(createRow(CR.string.activity_main_notification_permission, onClickListener))
             }
-            tableNotes.addView(createRow(CR.string.activity_main_notification_permission, onClickListener))
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !Utils.canScheduleExactAlarms(this)) {
             Log.w(LOG_ID, "Schedule exact alarm is not active!!!")
             val onClickListener = View.OnClickListener {
-                startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+                try {
+                    startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Schedule exact alarm exception: " + exc.message.toString() )
+                }
             }
             tableNotes.addView(createRow(CR.string.activity_main_schedule_exact_alarm, onClickListener))
         }
         if (Utils.isHighContrastTextEnabled(this)) {
             Log.w(LOG_ID, "High contrast is active")
             val onClickListener = View.OnClickListener {
-                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                startActivity(intent)
+                try {
+                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                    startActivity(intent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "High contrast exception: " + exc.message.toString() )
+                }
             }
             tableNotes.addView(createRow(CR.string.activity_main_high_contrast_enabled, onClickListener))
         }

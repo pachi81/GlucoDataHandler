@@ -113,9 +113,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             txtVersion.text = BuildConfig.VERSION_NAME
 
             btnSources.setOnClickListener{
-                val intent = Intent(this, SettingsActivity::class.java)
-                intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.SORUCE_FRAGMENT.value)
-                startActivity(intent)
+                try {
+                    val intent = Intent(this, SettingsActivity::class.java)
+                    intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.SORUCE_FRAGMENT.value)
+                    startActivity(intent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "btn source exception: " + exc.message.toString() )
+                }
             }
             Dialogs.updateColorScheme(this)
 
@@ -204,12 +208,16 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 .setMessage(CR.string.request_exact_alarm_summary)
                 .setPositiveButton(CR.string.button_ok) { dialog, which ->
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        startActivity(
-                            Intent(
-                                ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
-                                Uri.parse("package:$packageName")
+                        try {
+                            startActivity(
+                                Intent(
+                                    ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                                    Uri.parse("package:$packageName")
+                                )
                             )
-                        )
+                        } catch (exc: Exception) {
+                            Log.e(LOG_ID, "requestExactAlarmPermission exception: " + exc.message.toString() )
+                        }
                     }
                 }
                 .setNegativeButton(CR.string.button_cancel) { dialog, which ->
@@ -552,38 +560,58 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun updateNotesTable() {
         tableNotes.removeViews(1, maxOf(0, tableNotes.childCount - 1))
         if (!Channels.notificationChannelActive(this, ChannelType.MOBILE_FOREGROUND)) {
-            val onClickListener = OnClickListener {
-                requestNotificationPermission = true
-                val intent: Intent = if (Channels.notificationActive(this)) { // only the channel is inactive!
-                    Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
-                        .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
-                        .putExtra(Settings.EXTRA_CHANNEL_ID, ChannelType.MOBILE_FOREGROUND.channelId)
-                } else {
-                    Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
-                        .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
+            if(requestPermission()) {
+                GlucoDataServiceMobile.start(this)
+            } else {
+                val onClickListener = OnClickListener {
+                    try {
+                        requestNotificationPermission = true
+                        val intent: Intent = if (Channels.notificationActive(this)) { // only the channel is inactive!
+                            Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+                                .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
+                                .putExtra(Settings.EXTRA_CHANNEL_ID, ChannelType.MOBILE_FOREGROUND.channelId)
+                        } else {
+                            Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                                .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName)
+                        }
+                        startActivity(intent)
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "updateNotesTable exception: " + exc.message.toString() )
+                        if(requestPermission()) {
+                            GlucoDataServiceMobile.start(this)
+                            updateNotesTable()
+                        }
+                    }
                 }
-                startActivity(intent)
+                tableNotes.addView(createRow(CR.string.activity_main_notification_permission, onClickListener))
             }
-            tableNotes.addView(createRow(CR.string.activity_main_notification_permission, onClickListener))
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !Utils.canScheduleExactAlarms(this)) {
             Log.w(LOG_ID, "Schedule exact alarm is not active!!!")
             val onClickListener = OnClickListener {
-                startActivity(
-                    Intent(
-                        ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
-                        Uri.parse("package:$packageName")
+                try {
+                    startActivity(
+                        Intent(
+                            ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                            Uri.parse("package:$packageName")
+                        )
                     )
-                )
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Schedule exact alarm exception: " + exc.message.toString() )
+                }
             }
             tableNotes.addView(createRow(CR.string.activity_main_schedule_exact_alarm, onClickListener))
         }
         if (Utils.isHighContrastTextEnabled(this)) {
             Log.w(LOG_ID, "High contrast is active")
             val onClickListener = OnClickListener {
-                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                startActivity(intent)
+                try {
+                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                    startActivity(intent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "High contrast alarm exception: " + exc.message.toString() )
+                }
             }
             tableNotes.addView(createRow(CR.string.activity_main_high_contrast_enabled, onClickListener))
         }
@@ -591,9 +619,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         if (!pm.isIgnoringBatteryOptimizations(packageName)) {
             Log.w(LOG_ID, "Battery optimization is active")
             val onClickListener = OnClickListener {
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                intent.data = Uri.parse("package:$packageName")
-                startActivity(intent)
+                try {
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    intent.data = Uri.parse("package:$packageName")
+                    startActivity(intent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Battery optimization exception: " + exc.message.toString() )
+                }
             }
             tableNotes.addView(createRow(CR.string.activity_main_battery_optimization_disabled, onClickListener))
         }
@@ -618,7 +650,11 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                         Uri.parse(resources.getString(if(us_account)CR.string.dexcom_account_us_url else CR.string.dexcom_account_non_us_url))
                     )
                     val onClickListener = OnClickListener {
-                        startActivity(browserIntent)
+                        try {
+                            startActivity(browserIntent)
+                        } catch (exc: Exception) {
+                            Log.e(LOG_ID, "Dexcom browse exception: " + exc.message.toString() )
+                        }
                     }
                     tableConnections.addView(
                         createRow(

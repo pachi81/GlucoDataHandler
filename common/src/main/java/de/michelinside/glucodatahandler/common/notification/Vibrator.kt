@@ -16,24 +16,29 @@ object Vibrator {
     private val LOG_ID = "GDH.Vibrator"
     private var vibratorInstance: Vibrator? = null
 
-    @RequiresApi(Build.VERSION_CODES.S)
-    private val vibratorManager: VibratorManager = GlucoDataService.context!!.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-
-    private val vibrator: Vibrator
+    @get:RequiresApi(Build.VERSION_CODES.S)
+    private val vibratorManager: VibratorManager?
         get() {
-            if(vibratorInstance == null) {
+            if(GlucoDataService.context != null)
+                return GlucoDataService.context!!.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            return null
+        }
+
+    private val vibrator: Vibrator?
+        get() {
+            if(vibratorInstance == null && GlucoDataService.context != null) {
                 vibratorInstance = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    vibratorManager.defaultVibrator
+                    vibratorManager?.defaultVibrator
                 } else {
                     @Suppress("DEPRECATION")
                     GlucoDataService.context!!.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
                 }
             }
-            return vibratorInstance!!
+            return vibratorInstance
         }
 
     fun hasAmplitudeControl(): Boolean {
-        return vibrator.hasAmplitudeControl()
+        return vibrator?.hasAmplitudeControl() == true
     }
 
     private fun getEffect(pattern: LongArray, repeat: Int = -1, amplitude: Int = -1): VibrationEffect {
@@ -60,13 +65,13 @@ object Vibrator {
             val attributes = VibrationAttributes.Builder()
                 .setUsage(if(useAlarm)VibrationAttributes.USAGE_ALARM else VibrationAttributes.USAGE_NOTIFICATION)
                 .build()
-            vibratorManager.vibrate(CombinedVibration.createParallel(getEffect(pattern, repeat, amplitude)),attributes)
+            vibratorManager?.vibrate(CombinedVibration.createParallel(getEffect(pattern, repeat, amplitude)),attributes)
         } else {
             val aa = AudioAttributes.Builder()
                 .setUsage(if (useAlarm) AudioAttributes.USAGE_ALARM else AudioAttributes.USAGE_VOICE_COMMUNICATION_SIGNALLING)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                 .build()
-            vibrator.vibrate(getEffect(pattern, repeat, amplitude), aa)
+            vibrator?.vibrate(getEffect(pattern, repeat, amplitude), aa)
         }
         return duration
     }
@@ -74,9 +79,9 @@ object Vibrator {
     fun cancel() {
         Log.d(LOG_ID, "Stop vibration")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            vibratorManager.cancel()
+            vibratorManager?.cancel()
         } else {
-            vibrator.cancel()
+            vibrator?.cancel()
         }
     }
 }
