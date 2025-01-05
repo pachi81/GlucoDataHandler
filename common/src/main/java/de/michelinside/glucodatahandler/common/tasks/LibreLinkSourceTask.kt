@@ -98,15 +98,20 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     val sensitivData = mutableSetOf("id", "patientId", "firstName", "lastName", "did", "token", "deviceId", "email", "primaryValue", "secondaryValue" )
 
     private fun replaceSensitiveData(body: String): String {
-        var result = body
-        sensitivData.forEach {
-            val groups = Regex("\"$it\":\"(.*?)\"").find(result)?.groupValues
-            if(!groups.isNullOrEmpty() && groups.size > 1 && groups[1].isNotEmpty()) {
-                val replaceValue = groups[0].replace(groups[1], "---")
-                result = result.replace(groups[0], replaceValue)
+        try {
+            var result = body
+            sensitivData.forEach {
+                val groups = Regex("\"$it\":\"(.*?)\"").find(result)?.groupValues
+                if(!groups.isNullOrEmpty() && groups.size > 1 && groups[1].isNotEmpty()) {
+                    val replaceValue = groups[0].replace(groups[1], "---")
+                    result = result.replace(groups[0], replaceValue)
+                }
             }
+            return result.take(1000)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "replaceSensitiveData exception: " + exc.toString() )
+            return body
         }
-        return result.substring(0, 1000)
     }
 
     /*
