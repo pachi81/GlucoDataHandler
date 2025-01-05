@@ -497,9 +497,12 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
 
                     rawValue = extras.getInt(MGDL)
                     if (isMmol) {
-                        if (extras.containsKey(GLUCOSECUSTOM))
+                        if (extras.containsKey(GLUCOSECUSTOM)) {
                             glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1)
-                        if(!GlucoDataUtils.isMmolValue(glucose))
+                            if(!GlucoDataUtils.isMmolValue(glucose))
+                                glucose = GlucoDataUtils.mgToMmol(rawValue.toFloat())
+                        }
+                        else
                             glucose = GlucoDataUtils.mgToMmol(rawValue.toFloat())
                     } else {
                         glucose = rawValue.toFloat()
