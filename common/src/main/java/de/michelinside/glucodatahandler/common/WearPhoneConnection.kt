@@ -87,7 +87,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         private fun getDisplayName(node: Node): String {
             val result = node.displayName.replace("_", " ")
             if(result.contains("(")) {
-                return result.substring(0, result.indexOf("(")).trim()
+                return result.take(result.indexOf("(")).trim()
             } else {
                 return result.trim()
             }
