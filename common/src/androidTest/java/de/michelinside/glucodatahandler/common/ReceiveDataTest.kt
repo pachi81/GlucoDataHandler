@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import de.michelinside.glucodatahandler.common.notifier.DataSource
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -56,6 +57,7 @@ class ReceiveDataTest {
     fun testChangeToMmol() {
         // Context of the app under test.
         ReceiveData.changeIsMmol(false, appContext)
+        ReceiveData.time = 0L // force first value handling
         assertFalse(ReceiveData.isMmol)
         val glucoExtras = Bundle()
         glucoExtras.putLong(ReceiveData.TIME, ReceiveData.time + 60000)
@@ -70,9 +72,29 @@ class ReceiveDataTest {
         assertTrue(ReceiveData.isMmol)
     }
 
+
+    @Test
+    fun testMmolCalculation() {
+        ReceiveData.changeIsMmol(true, appContext)
+        if(ReceiveData.time == 0L)
+            ReceiveData.time = 1L   // prevent changing unit!
+        ReceiveData.glucose = 0F    // set to 0 to check, if it gets overwritten
+        val glucoExtras = Bundle()
+        glucoExtras.putLong(ReceiveData.TIME, ReceiveData.time + 60000)
+        glucoExtras.putInt(ReceiveData.MGDL,180)
+        glucoExtras.putFloat(ReceiveData.RATE, -2F)
+        assertTrue(ReceiveData.handleIntent(appContext, DataSource.NONE, glucoExtras))
+        assertEquals(180, ReceiveData.rawValue)
+        assertEquals(GlucoDataUtils.mgToMmol(180F), ReceiveData.glucose)
+        assertEquals(-2F, ReceiveData.rate)
+        assertTrue(ReceiveData.isMmol)
+    }
+
+
     @Test
     fun testReceiveInternalGlucoseAlarm() {
         // Context of the app under test.
+        ReceiveData.changeIsMmol(false, appContext)
         val glucoExtras = Bundle()
         glucoExtras.putLong(ReceiveData.TIME, ReceiveData.time + 60000)
         glucoExtras.putInt(ReceiveData.MGDL,280)
