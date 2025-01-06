@@ -37,7 +37,7 @@ object BitmapUtils {
 
     private fun isShortText(text: String): Boolean = text.length <= (if (text.contains(".")) 3 else 2)
 
-    fun calcMaxTextSizeForBitmap(bitmap: Bitmap, text: String, roundTarget: Boolean, maxTextSize: Float, top: Boolean, bold: Boolean): Float {
+    fun calcMaxTextSizeForBitmap(bitmap: Bitmap, text: String, roundTarget: Boolean, maxTextSize: Float, top: Boolean, bold: Boolean, useTallFont: Boolean = false): Float {
         var result: Float = maxTextSize
         if(roundTarget) {
             if (!top || !isShortText(text) ) {
@@ -65,7 +65,9 @@ object BitmapUtils {
             val paint = Paint(Paint.ANTI_ALIAS_FLAG)
             paint.textSize = maxTextSize
             paint.textAlign = Paint.Align.CENTER
-            if (bold)
+            if (useTallFont)
+                paint.typeface = Typeface.create(GlucoDataService.context!!.resources.getFont(R.font.opensans), Typeface.BOLD)
+            else if (bold)
                 paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             val boundsText = Rect()
             paint.getTextBounds(fullText, 0, fullText.length, boundsText)
@@ -77,7 +79,7 @@ object BitmapUtils {
     fun textToBitmap(text: String, color: Int, roundTarget: Boolean = false, strikeThrough: Boolean = false, width: Int = 100, height: Int = 100, top: Boolean = false, bold: Boolean = false, resizeFactor: Float = 1F, withShadow: Boolean = false, bottom: Boolean = false, useTallFont: Boolean = false): Bitmap? {
         try {
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888 )
-            val maxTextSize = calcMaxTextSizeForBitmap(bitmap, text, roundTarget, minOf(width,height).toFloat(), top, bold) * resizeFactor
+            val maxTextSize = calcMaxTextSizeForBitmap(bitmap, text, roundTarget, minOf(width,height).toFloat(), top, bold, useTallFont) * resizeFactor
             val canvas = Canvas(bitmap)
             bitmap.eraseColor(Color.TRANSPARENT)
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
@@ -87,14 +89,16 @@ object BitmapUtils {
             paint.textAlign = Paint.Align.CENTER
             paint.isStrikeThruText = strikeThrough
             if (useTallFont)
-                paint.setTypeface(Typeface.create(GlucoDataService.context!!.resources.getFont(R.font.opensans), Typeface.BOLD))
+                paint.typeface = Typeface.create(GlucoDataService.context!!.resources.getFont(R.font.opensans), Typeface.BOLD)
+            else if (bold)
+                paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             if(withShadow)
                 paint.setShadowLayer(2F, 0F,0F, Color.BLACK)
-            if (bold)
-                paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             val boundsText = Rect()
             paint.getTextBounds(text, 0, text.length, boundsText)
             paint.textSize = minOf( maxTextSize, (maxTextSize - 1) * bitmap.width / boundsText.width() )
+            if(useTallFont && !roundTarget)
+                paint.textSize *= if(text.length<=2) 0.8F else 0.95F
             if(paint.textSize < maxTextSize) {
                 // re-calculate size depending on the bound width -> use minOf for preventing oversize signs
                 paint.getTextBounds(text, 0, text.length, boundsText)
@@ -132,7 +136,7 @@ object BitmapUtils {
             newW = h
             newH = w
         }
-        val rotatedBitmap = Bitmap.createBitmap(newW, newH, bitmap.config!!)
+        val rotatedBitmap = Bitmap.createBitmap(newW, newH, bitmap.config)
         val canvas = Canvas(rotatedBitmap)
         val rect = Rect(0, 0, newW, newH)
         val matrix = Matrix()
