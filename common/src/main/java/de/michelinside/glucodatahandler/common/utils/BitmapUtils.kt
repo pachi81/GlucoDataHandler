@@ -98,7 +98,7 @@ object BitmapUtils {
             paint.getTextBounds(text, 0, text.length, boundsText)
             paint.textSize = minOf( maxTextSize, (maxTextSize - 1) * bitmap.width / boundsText.width() )
             if(useTallFont && !roundTarget)
-                paint.textSize *= if(text.length<=2) 0.8F else 0.95F
+                paint.textSize *= if(text.length<=2) 0.8F else if(text.length==3) 0.9F else 0.95F
             if(paint.textSize < maxTextSize) {
                 // re-calculate size depending on the bound width -> use minOf for preventing oversize signs
                 paint.getTextBounds(text, 0, text.length, boundsText)
