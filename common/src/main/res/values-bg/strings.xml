@@ -18,22 +18,22 @@
     <string name="elapsed_time">%1$d мин</string>
     <string name="elapsed_time_hour">\> 1ч</string>
 
-    <string name="rate_double_up">нараства много бързо</string>
-    <string name="rate_single_up">нараства бързо</string>
-    <string name="rate_forty_five_up">нараства</string>
+    <string name="rate_double_up">Нараства много бързо</string>
+    <string name="rate_single_up">Нараства бързо</string>
+    <string name="rate_forty_five_up">Нараства</string>
     <string name="rate_flat">постоянен</string>
-    <string name="rate_forty_five_down">пада</string>
-    <string name="rate_single_down">пада бързо</string>
-    <string name="rate_double_down">пада много бързо</string>
+    <string name="rate_forty_five_down">Пада</string>
+    <string name="rate_single_down">Пада бързо</string>
+    <string name="rate_double_down">Пада много бързо</string>
 
     <string name="button_ok">ОК</string>
     <string name="button_cancel">Отказ</string>
 
     <string name="alarm_none">-</string>
-    <string name="alarm_very_low">много ниско</string>
-    <string name="alarm_low">ниско</string>
-    <string name="alarm_high">високо</string>
-    <string name="alarm_very_high">много високо</string>
+    <string name="alarm_very_low">Много ниска</string>
+    <string name="alarm_low">Ниска</string>
+    <string name="alarm_high">Висока</string>
+    <string name="alarm_very_high">Много висока</string>
 
     <!-- mobile -->
 
@@ -365,10 +365,10 @@
     <string name="alarm_notifications_enabled_summary_on">Известията за аларма са активни на телефона.\nЗабележка: алармите използват силата на звука за аларма на телефона.</string>
     <string name="alarm_notifications_enabled_summary_off">Известията за аларма са неактивни на телефона.</string>
     <string name="stop_snooze">Спиране</string>
-    <string name="very_low_alarm_text">Много ниско!</string>
-    <string name="very_low_text">Ниско!</string>
-    <string name="very_high_text">Високо!</string>
-    <string name="very_high_alarm_text">Много високо!</string>
+    <string name="very_low_alarm_text">Много ниска!</string>
+    <string name="very_low_text">Ниска!</string>
+    <string name="very_high_text">Висока!</string>
+    <string name="very_high_alarm_text">Много висока!</string>
     <string name="very_low_alarm_notification_name">Аларма за много ниска стойност</string>
     <string name="very_low_alarm_notification_descr">Известие за аларми за много ниска стойност.</string>
     <string name="low_alarm_notification_name">Аларма за ниска стойност</string>
