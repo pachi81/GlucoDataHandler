@@ -478,8 +478,8 @@
     <string name="connected_label">свързан</string>
     <string name="pref_application_color_scheme">Цветова схема на приложението</string>
     <string name="application_color_scheme_system">Използване на системната схема</string>
-    <string name="application_color_scheme_light">Светла схема</string>
-    <string name="application_color_scheme_dark">Тъмна схема</string>
+    <string name="application_color_scheme_light">Светла тема</string>
+    <string name="application_color_scheme_dark">Тъмна тема</string>
     <string name="tap_action">Действие при докосване</string>
     <string name="tap_action_summary">Изберете действие или приложение, което да се изпълни при докосване на този елемент.</string>
     <string name="no_action">Без действие</string>
