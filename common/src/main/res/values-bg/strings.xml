@@ -7,7 +7,7 @@
     <string name="info_label_raw">Суров</string>
     <string name="info_label_delta">Делта</string>
     <string name="info_label_rate">Скорост</string>
-    <string name="info_label_timestamp">Времева марка</string>
+    <string name="info_label_timestamp">Време на измерване</string>
     <string name="info_label_iob_cob_timestamp">IOB/COB време</string>
     <string name="info_label_timediff">Разлика във времето</string>
     <string name="info_label_alarm">Алармa</string>
