@@ -558,7 +558,7 @@
     <string name="alarm_inactive_end_time_summary">Sélectionnez l\'heure à laquelle vous souhaitez que vos heures calmes se terminent.</string>
     <string name="alarm_inactive_weekdays">Jours pour les heures calmes</string>
     <string name="alarm_inactive_weekdays_summary">Spécifiez les jours de la semaine où les heures calmes doivent commencer à l\'heure de début sélectionnée.</string>
-    <string name="app_crash_bad_notification">L\'application se bloque à cause de la mise en page des notifications colorées !\nElle a été désactivée pour éviter ce plantage.\nIl s\'agit d\'un problème sur les téléphones Samsung, veuillez donc créer un rapport d\'erreur dans l\'application Samsung Members. Merci!</string>
+    <string name="app_crash_bad_notification">L\'application se bloque à cause de la mise en page des notifications colorées !\nElle a été désactivée pour éviter ce plantage.\nUn redémarrage du téléphone corrige généralement ce problème.</string>
     <string name="auto_close_notification">Fermer automatiquement la notification</string>
     <string name="auto_close_notification_summary">Fermer automatiquement la notification d\'alarme une fois que le son et les vibrations ont cessé, mais seulement après au moins 30 secondes.\nSi le redéclenchement est actif, la notification sera fermée s\'il n\'y a pas de déclencheur supplémentaire.</string>
     <string name="settings_save_succeeded">Paramètres enregistrés avec succès</string>

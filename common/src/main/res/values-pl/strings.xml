@@ -555,7 +555,7 @@
     <string name="alarm_inactive_weekdays">Dni godzin ciszy</string>
     <string name="alarm_inactive_weekdays_summary">Określ dni tygodnia, w których godziny ciszy powinny rozpoczynać się o wybranej godzinie rozpoczęcia.</string>
 
-    <string name="app_crash_bad_notification">Aplikacja zawiesza się z powodu układu kolorowych powiadomień! Został on wyłączony, aby zapobiec tej awarii. Jest to problem dotyczący telefonów Samsung, więc utwórz raport o błędzie w aplikacji Samsung Members. Dziękuję!</string>
+    <string name="app_crash_bad_notification">Aplikacja zawiesza się z powodu układu kolorowych powiadomień! Został on wyłączony, aby zapobiec tej awarii. Zazwyczaj ponowne uruchomienie telefonu to naprawia.</string>
     <string name="auto_close_notification">Automatyczne zamknięcie powiadomienia</string>
     <string name="auto_close_notification_summary">Automatyczne zamknięcie powiadomienia alarmowego po zakończeniu odtwarzania dźwięku i wibracji, ale dopiero po upływie co najmniej 30 sekund.\nJeśli aktywna jest opcja ponownego włączenia, powiadomienie zostanie zamknięte, jeśli nie będzie dodatkowego wyzwalacza alarmu.</string>
     <string name="settings_save_succeeded">Ustawienia zapisane pomyślnie</string>

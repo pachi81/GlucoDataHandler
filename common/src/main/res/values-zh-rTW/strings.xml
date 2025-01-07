@@ -553,7 +553,7 @@
     <string name="alarm_inactive_weekdays">每週天數</string>
     <string name="alarm_inactive_weekdays_summary">設定每週幾勿擾時段會於開始時間生效</string>
 
-    <string name="app_crash_bad_notification">程式因彩色佈局當機！\n為防止再次當機已停用此功能\n這是 Samsung 手機的問題，請在 Samsung Members 程式中送出錯誤報告，謝謝！</string>
+    <string name="app_crash_bad_notification">程式因彩色佈局當機！\n為防止再次當機已停用此功能\n重新啟動手機通常可以解決這個問題。</string>
     <string name="auto_close_notification">自動關閉通知</string>
     <string name="auto_close_notification_summary">在聲音和震動結束後自動關閉警報通知，但通知至少會顯示 30 秒。\n如果已啟用重新觸發功能，則會在重新觸發結束後才會自動關閉</string>
 

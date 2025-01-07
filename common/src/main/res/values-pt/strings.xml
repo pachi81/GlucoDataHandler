@@ -555,7 +555,7 @@
     <string name="alarm_inactive_end_time_summary">Selecione a hora em que você deseja que suas horas de silêncio terminem.</string>
     <string name="alarm_inactive_weekdays">Dias para horas de silêncio</string>
     <string name="alarm_inactive_weekdays_summary">Especifique os dias da semana em que as horas de silêncio devem começar na hora de início selecionada.</string>
-    <string name="app_crash_bad_notification">O aplicativo trava devido ao layout de notificação colorida!\nEle foi desativado para evitar essa falha.\nEste é um problema em telefones Samsung, então crie um relatório de erro no aplicativo Samsung Members. Obrigado!</string>
+    <string name="app_crash_bad_notification">O aplicativo trava devido ao layout de notificação colorida!\nEle foi desativado para evitar essa falha.\nUm reinício do telefone geralmente resolve isso.</string>
     <string name="auto_close_notification">Fechar notificação automaticamente</string>
     <string name="auto_close_notification_summary">Fechar automaticamente a notificação de alarme após o som e a vibração terem terminado, mas somente após pelo menos 30 segundos.\nSe a reativação estiver ativa, a notificação será fechada se não houver outro gatilho.</string>
     <string name="settings_save_succeeded">Configurações salvas com sucesso</string>

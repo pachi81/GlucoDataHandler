@@ -548,7 +548,7 @@
     <string name="alarm_inactive_weekdays">Tage für Ruhezeit</string>
     <string name="alarm_inactive_weekdays_summary">Legen Sie fest, an welchen Wochentagen die Ruhezeit zur gewählten Startzeit aktiviert werden soll.</string>
 
-    <string name="app_crash_bad_notification">Die App ist aufgrund des farbigen Layouts in den Benachrichtigungen abegstürzt!\nDie Einstellung wurde daher deaktiviert.\nDas Problem tritt bisher nur bei Samsung auf und scheint ein Problem auf Seite von Samsung zu sein.\nBitte senden Sie daher einen Fehlerbericht an Samsung. Vielen Dank!</string>
+    <string name="app_crash_bad_notification">Die App ist aufgrund des farbigen Layouts in den Benachrichtigungen abegstürzt!\nDie Einstellung wurde daher deaktiviert.\nEin Neustart des Telefons behebt das normalerweise.</string>
     <string name="auto_close_notification">Benachrichtigung automatisch schließen</string>
     <string name="auto_close_notification_summary">Alarm Benachrichtigung automatisch schließen, nachdem der Ton und die Vibration gestoppt haben, frühestens aber nach 30 Sekunden.\nWenn \"Erneut auslösen\" aktiv ist, wird die Benachrichtigung erst geschlossen, wenn der Alarm nicht mehr erneut ausgelöst wird.</string>
     <string name="settings_save_succeeded">Einstellungen erfolgreich gespeichert.</string>

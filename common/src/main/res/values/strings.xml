@@ -609,7 +609,7 @@
     <string name="alarm_inactive_weekdays">Days for quiet hours</string>
     <string name="alarm_inactive_weekdays_summary">Specify the days of the week on which quiet hours should start at the selected start time.</string>
 
-    <string name="app_crash_bad_notification">The app crashes because of the colored notification layout!\nIt has been disabled to prevent this crash.\nThis is an issue on Samsung phones so please create a error report in the Samsung members app. Thank you!</string>
+    <string name="app_crash_bad_notification">The app crashes because of the colored notification layout!\nIt has been disabled to prevent this crash.\nA phone restart usually fixes this.</string>
     <string name="auto_close_notification">Auto close notification</string>
     <string name="auto_close_notification_summary">Auto close alarm notification after sound and vibration has finished, but only after at least 30 seconds.\nIf retrigger is active, the notification will be closed, if there is no additional trigger.</string>
 

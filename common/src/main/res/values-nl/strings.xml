@@ -554,7 +554,7 @@
     <string name="alarm_inactive_weekdays">Dagen voor stille uren</string>
     <string name="alarm_inactive_weekdays_summary">Geef de dagen van de week op waarop stille uren moeten beginnen op de geselecteerde starttijd.</string>
 
-    <string name="app_crash_bad_notification">De app crasht vanwege de gekleurde meldingslay-out!\nDeze is uitgeschakeld om deze crash te voorkomen.\nDit is een probleem op Samsung-telefoons, dus maak een foutenrapport in de Samsung Members-app. Bedankt!</string>
+    <string name="app_crash_bad_notification">De app crasht vanwege de gekleurde meldingslay-out!\nDeze is uitgeschakeld om deze crash te voorkomen.\nEen telefoon herstart lost dit meestal op.</string>
     <string name="auto_close_notification">Melding automatisch sluiten</string>
     <string name="auto_close_notification_summary">Sluit de alarmmelding automatisch nadat het geluid en de trilling zijn voltooid, maar pas na minimaal 30 seconden.\nAls opnieuw activeren actief is, wordt de melding gesloten als er geen extra trigger is.</string>
 

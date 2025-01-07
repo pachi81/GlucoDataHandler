@@ -549,7 +549,7 @@
     <string name="alarm_inactive_end_time_summary">Seleziona l\'ora in cui desideri che finiscano le ore di silenzio.</string>
     <string name="alarm_inactive_weekdays">Giorni per le ore di silenzio</string>
     <string name="alarm_inactive_weekdays_summary">Specifica i giorni della settimana in cui le ore di silenzio dovrebbero iniziare all\'ora di inizio selezionata.</string>
-    <string name="app_crash_bad_notification">L\'app si arresta in modo anomalo a causa del layout di notifica colorato!\nÈ stato disabilitato per evitare questo arresto anomalo.\nQuesto è un problema sui telefoni Samsung, quindi crea un rapporto di errore nell\'app Samsung Members. Grazie!</string>
+    <string name="app_crash_bad_notification">L\'app si arresta in modo anomalo a causa del layout di notifica colorato!\nÈ stato disabilitato per evitare questo arresto anomalo.\nUn riavvio del telefono di solito risolve questo problema.</string>
     <string name="auto_close_notification">Chiusura automatica notifica</string>
     <string name="auto_close_notification_summary">Chiudi automaticamente la notifica di allarme dopo che il suono e la vibrazione sono terminati, ma solo dopo almeno 30 secondi.\nSe la riattivazione è attiva, la notifica verrà chiusa se non ci sono trigger aggiuntivi.</string>
 
