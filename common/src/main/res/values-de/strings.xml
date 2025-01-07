@@ -705,4 +705,7 @@
     <string name="alarm_snooze_on_notification_enabled">Schlummern</string>
     <string name="alarm_snooze_on_notification_summary">Wähle bis zu 3 Zeiten für Schlummern aus, die als Schaltflächen in der Alarmbenachrichtigung angezeigt werden sollen.</string>
 
+    <string name="pref_show_iob_cob">IOB/COB-Werte anzeigen</string>
+    <string name="pref_show_iob_cob_summary">IOB- und COB-Werte anzeigen, falls verfügbar.</string>
+
 </resources>

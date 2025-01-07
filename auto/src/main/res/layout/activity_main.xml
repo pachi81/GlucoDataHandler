@@ -82,6 +82,38 @@
                 android:autoSizeTextType="uniform"
                 tools:ignore="HardcodedText" />
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layout_iob_cob"
+            android:layout_width="250dp"
+            android:layout_height="30dp"
+            android:gravity="center|top"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+            <TextView
+                android:id="@+id/iobText"
+                android:text="💉 1.30U"
+                android:layout_width="0dp"
+                android:layout_weight="4"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|end"
+                android:maxLines="1"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:paddingEnd="10dp"
+                tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/cobText"
+                android:text="🍔 31.2g"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:maxLines="1"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
         <TextView
             android:id="@+id/txtLastValue"
             android:layout_width="350dp"

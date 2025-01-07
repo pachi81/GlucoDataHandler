@@ -712,4 +712,7 @@
     <string name="alarm_snooze_on_notification_enabled">Отлагане на известието</string>
     <string name="alarm_snooze_on_notification_summary">Изберете до 3 продължителности на отлагане, за да се показват като бутони в известието за аларма.</string>
 
+    <string name="pref_show_iob_cob">Показване на IOB/COB стойности</string>
+    <string name="pref_show_iob_cob_summary">Показване на IOB и COB стойности, ако са налични.</string>
+
 </resources>

@@ -64,13 +64,6 @@ object Constants {
     const val SHARED_PREF_XDRIP_BROADCAST_SERVICE_API = "xdrip_broadcast_service_api"
     const val SHARED_PREF_TARGET_MIN = "target_min_value"
     const val SHARED_PREF_TARGET_MAX = "target_max_value"
-    const val SHARED_PREF_CAR_NOTIFICATION = "car_notification"
-    const val SHARED_PREF_CAR_NOTIFICATION_INTERVAL = "car_notification_interval"   // deprecated as changed to seekbar
-    const val SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY = "car_notification_alarm_only"
-    const val SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM = "car_notification_interval_num"
-    const val SHARED_PREF_CAR_NOTIFICATION_REAPPEAR_INTERVAL = "car_notification_reappear_interval"
-    const val SHARED_PREF_CAR_MEDIA = "car_media"
-    const val SHARED_PREF_CAR_MEDIA_ICON_STYLE = "aa_media_player_icon_style"
     const val SHARED_PREF_USE_MMOL = "use_mmol"
     const val SHARED_PREF_GLUCODATA_RECEIVER_SHOW_ALL = "show_all_glucodata_receivers"
     const val SHARED_PREF_LOW_GLUCOSE = "low_glucose"
@@ -273,6 +266,16 @@ object Constants {
     const val AA_MEDIA_ICON_STYLE_GLUCOSE = "glucose"
     const val SHARED_PREF_FOREGROUND_SERVICE = "foreground_service"
 
+    const val SHARED_PREF_CAR_NOTIFICATION = "car_notification"
+    const val SHARED_PREF_CAR_NOTIFICATION_INTERVAL = "car_notification_interval"   // deprecated as changed to seekbar
+    const val SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY = "car_notification_alarm_only"
+    const val SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM = "car_notification_interval_num"
+    const val SHARED_PREF_CAR_NOTIFICATION_REAPPEAR_INTERVAL = "car_notification_reappear_interval"
+    const val SHARED_PREF_CAR_NOTIFICATION_SHOW_IOB_COB = "car_notification_show_iob_cob"
+
+    const val SHARED_PREF_CAR_MEDIA = "car_media"
+    const val AA_MEDIA_ICON_STYLE = "aa_media_player_icon_style"
+    const val AA_MEDIA_SHOW_IOB_COB = "aa_media_player_show_iob_cob"
     const val AA_MEDIA_PLAYER_SPEAK_VALUES = "aa_media_player_speak_values"
     const val AA_MEDIA_PLAYER_SPEAK_NEW_VALUE = "aa_media_player_speak_new_value"
     const val AA_MEDIA_PLAYER_SPEAK_ALARM_ONLY = "aa_media_player_speak_alarm_only"

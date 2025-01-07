@@ -706,4 +706,7 @@
     <string name="alarm_snooze_on_notification_enabled">Отложить в уведомлении</string>
     <string name="alarm_snooze_on_notification_summary">Выберите до 3 продолжительностей повтора для отображения в виде кнопок в уведомлении будильника.</string>
 
+    <string name="pref_show_iob_cob">Показывать значения IOB/COB</string>
+    <string name="pref_show_iob_cob_summary">Показывать значения IOB и COB, если они доступны.</string>
+
 </resources>

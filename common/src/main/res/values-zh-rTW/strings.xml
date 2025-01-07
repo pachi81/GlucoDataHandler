@@ -709,4 +709,7 @@
     <string name="alarm_snooze_on_notification_enabled">通知貪睡</string>
     <string name="alarm_snooze_on_notification_summary">選擇最多 3 個貪睡持續時間，以便在鬧鐘通知上顯示為按鈕。</string>
 
+    <string name="pref_show_iob_cob">顯示 IOB/COB 值</string>
+    <string name="pref_show_iob_cob_summary">顯示 IOB 和 COB 值（如果有的話）。</string>
+
 </resources>

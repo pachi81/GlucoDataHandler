@@ -701,4 +701,7 @@
     <string name="alarm_snooze_on_notification_enabled">Posponi sulla notifica</string>
     <string name="alarm_snooze_on_notification_summary">Scegli fino a 3 durate di snooze da visualizzare come pulsanti sulla notifica di allarme.</string>
 
+    <string name="pref_show_iob_cob">Mostra valori IOB/COB</string>
+    <string name="pref_show_iob_cob_summary">Mostra i valori IOB e COB, se disponibili.</string>
+
 </resources>

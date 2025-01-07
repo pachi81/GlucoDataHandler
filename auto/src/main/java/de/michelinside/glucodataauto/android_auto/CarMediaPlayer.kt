@@ -9,6 +9,7 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodataauto.GlucoDataServiceAuto
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -150,10 +151,9 @@ object CarMediaPlayer: NotifierInterface {
             var uri: String? = null
             var requestAudioFocus = false
             if(!playSilent) {
-                var text = ReceiveData.getAsText(context, false, false)
-                val patientName = sharedPref.getString(Constants.PATIENT_NAME, "")
-                if(!patientName.isNullOrEmpty()) {
-                    text = "$patientName, $text"
+                var text = ReceiveData.getAsText(context, true, false)
+                if(!GlucoDataServiceAuto.patientName.isNullOrEmpty()) {
+                    text = "${GlucoDataServiceAuto.patientName}, $text"
                 }
                 file = TextToSpeechUtils.getAsFile(text, context)
                 if(file != null) {

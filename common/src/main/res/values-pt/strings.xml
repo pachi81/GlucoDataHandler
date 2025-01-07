@@ -708,4 +708,7 @@
     <string name="alarm_snooze_on_notification_enabled">Adiar a notificação</string>
     <string name="alarm_snooze_on_notification_summary">Escolha até 3 durações de soneca para exibir como botões na notificação de alarme.</string>
 
+    <string name="pref_show_iob_cob">Mostrar valores de IOB/COB</string>
+    <string name="pref_show_iob_cob_summary">Mostrar valores de IOB e COB, se disponíveis.</string>
+
 </resources>

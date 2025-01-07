@@ -24,11 +24,9 @@ class GDASpeakSettingsFragment: SettingsFragmentBase(R.xml.pref_gda_speak) {
             if(GlucoDataServiceAuto.connected) {
                 CarMediaPlayer.play(requireContext())
             } else {
-                var text = ReceiveData.getAsText(requireContext(), false, false)
-                val sharedPref = requireContext().getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-                val patientName = sharedPref.getString(Constants.PATIENT_NAME, "")
-                if(!patientName.isNullOrEmpty()) {
-                    text = "$patientName, $text"
+                var text = ReceiveData.getAsText(requireContext(), true, false)
+                if(!GlucoDataServiceAuto.patientName.isNullOrEmpty()) {
+                    text = "${GlucoDataServiceAuto.patientName}, $text"
                 }
                 TextToSpeechUtils.speak(text)
             }

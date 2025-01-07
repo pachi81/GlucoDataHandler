@@ -53,6 +53,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var viewIcon: ImageView
     private lateinit var timeText: TextView
     private lateinit var deltaText: TextView
+    private lateinit var iobText: TextView
+    private lateinit var cobText: TextView
     private lateinit var txtLastValue: TextView
     private lateinit var txtVersion: TextView
     private lateinit var tableDetails: TableLayout
@@ -77,6 +79,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             viewIcon = findViewById(R.id.viewIcon)
             timeText = findViewById(R.id.timeText)
             deltaText = findViewById(R.id.deltaText)
+            iobText = findViewById(R.id.iobText)
+            cobText = findViewById(R.id.cobText)
             txtLastValue = findViewById(R.id.txtLastValue)
             btnSources = findViewById(R.id.btnSources)
             tableConnections = findViewById(R.id.tableConnections)
@@ -406,6 +410,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             timeText.text = "🕒 ${ReceiveData.getElapsedRelativeTimeAsString(this)}"
             timeText.contentDescription = ReceiveData.getElapsedRelativeTimeAsString(this, true)
             deltaText.text = "Δ ${ReceiveData.getDeltaAsString()}"
+            iobText.text = "💉 " + ReceiveData.getIobAsString()
+            iobText.contentDescription = getString(CR.string.info_label_iob) + " " + ReceiveData.getIobAsString()
+            iobText.visibility = if (ReceiveData.isIobCobObsolete()) View.GONE else View.VISIBLE
+            cobText.text = "🍔 " + ReceiveData.getCobAsString()
+            cobText.contentDescription = getString(CR.string.info_label_cob) + " " + ReceiveData.getCobAsString()
+            cobText.visibility = iobText.visibility
 
             if(ReceiveData.time == 0L) {
                 txtLastValue.visibility = View.VISIBLE
@@ -535,9 +545,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateDetailsTable() {
         tableDetails.removeViews(1, maxOf(0, tableDetails.childCount - 1))
-        val name = sharedPref.getString(Constants.PATIENT_NAME, "")
-        if(!name.isNullOrEmpty()) {
-            tableDetails.addView(createRow(CR.string.patient_name, name))
+        if(!GlucoDataServiceAuto.patientName.isNullOrEmpty()) {
+            tableDetails.addView(createRow(CR.string.patient_name, GlucoDataServiceAuto.patientName!!))
         }
 
         if(ReceiveData.time > 0) {

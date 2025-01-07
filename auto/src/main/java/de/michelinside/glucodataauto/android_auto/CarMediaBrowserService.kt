@@ -196,7 +196,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 Constants.SHARED_PREF_CAR_NOTIFICATION,
                 Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE,
                 Constants.SHARED_PREF_CAR_MEDIA,
-                Constants.SHARED_PREF_CAR_MEDIA_ICON_STYLE -> {
+                Constants.AA_MEDIA_ICON_STYLE,
+                Constants.AA_MEDIA_SHOW_IOB_COB -> {
                     notifyChildrenChanged(MEDIA_ROOT_ID)
                 }
                 Constants.AA_MEDIA_PLAYER_SPEAK_VALUES -> {
@@ -232,7 +233,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     }
 
     private fun getIcon(size: Int = 100): Bitmap? {
-        return when(sharedPref.getString(Constants.SHARED_PREF_CAR_MEDIA_ICON_STYLE, Constants.AA_MEDIA_ICON_STYLE_GLUCOSE_TREND)) {
+        return when(sharedPref.getString(Constants.AA_MEDIA_ICON_STYLE, Constants.AA_MEDIA_ICON_STYLE_GLUCOSE_TREND)) {
             Constants.AA_MEDIA_ICON_STYLE_TREND -> {
                 BitmapUtils.getRateAsBitmap(width = size, height = size)
             }
@@ -277,15 +278,31 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     private fun setGlucose() {
         if (sharedPref.getBoolean(Constants.SHARED_PREF_CAR_MEDIA,true)) {
             Log.i(LOG_ID, "setGlucose called")
+            var title = ReceiveData.getGlucoseAsString() + " (Δ " + ReceiveData.getDeltaAsString() + ")"
+            if (sharedPref.getBoolean(Constants.AA_MEDIA_SHOW_IOB_COB, false) && !ReceiveData.isIobCobObsolete()) {
+                title += "\n"
+                if(!ReceiveData.iob.isNaN()) {
+                    title += "💉 " + ReceiveData.getIobAsString(true) + " "
+                }
+                if(!ReceiveData.cob.isNaN()) {
+                    title += "🍔 " + ReceiveData.getCobAsString(true)
+                }
+                title = title.trim()
+            }
+            var subtitle = ""
+            if(!GlucoDataServiceAuto.patientName.isNullOrEmpty())
+                subtitle += GlucoDataServiceAuto.patientName + " - "
+            subtitle += "🕒 " + ReceiveData.getElapsedTimeMinuteAsString(this)
+
             session.setMetadata(
                 MediaMetadataCompat.Builder()
                     .putString(
                         MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE,
-                        ReceiveData.getGlucoseAsString() + " (Δ " + ReceiveData.getDeltaAsString() + ")"
+                        title
                     )
                     .putString(
                         MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE,
-                        ReceiveData.getElapsedTimeMinuteAsString(this)
+                        subtitle
                     )
                     .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, getDuration())
                     .putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, getIcon(400)!!)
