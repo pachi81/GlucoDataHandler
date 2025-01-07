@@ -527,9 +527,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             deltaText.text = "Δ ${ReceiveData.getDeltaAsString()}"
             iobText.text = "💉 " + ReceiveData.getIobAsString()
             iobText.contentDescription = getString(CR.string.info_label_iob) + " " + ReceiveData.getIobAsString()
-            cobText.text = "🍔 " + ReceiveData.getCobAsString()
-            iobText.contentDescription = getString(CR.string.info_label_cob) + " " + ReceiveData.getCobAsString()
             iobText.visibility = if (ReceiveData.isIobCobObsolete()) View.GONE else View.VISIBLE
+            cobText.text = "🍔 " + ReceiveData.getCobAsString()
+            cobText.contentDescription = getString(CR.string.info_label_cob) + " " + ReceiveData.getCobAsString()
             cobText.visibility = iobText.visibility
 
             txtLastValue.visibility = if(ReceiveData.time>0) View.GONE else View.VISIBLE
