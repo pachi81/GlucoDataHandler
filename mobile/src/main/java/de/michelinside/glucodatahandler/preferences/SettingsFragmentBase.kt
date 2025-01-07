@@ -21,7 +21,6 @@ import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.Intents
-import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.preferences.PreferenceHelper
@@ -381,9 +380,7 @@ class GDASettingsFragment: SettingsFragmentBase(R.xml.pref_gda) {
             Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO,
             Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO -> {
                 if(CarModeReceiver.AA_connected) {
-                    val extras = ReceiveData.createExtras()
-                    if (extras != null)
-                        CarModeReceiver.sendToGlucoDataAuto(requireContext(), extras, true)
+                    CarModeReceiver.sendToGlucoDataAuto(requireContext(), true)
                 }
             }
         }

@@ -270,9 +270,9 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
 */
     private fun forwardBroadcast(context: Context, extras: Bundle) {
         Log.v(LOG_ID, "forwardBroadcast called")
-        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-        CarModeReceiver.sendToGlucoDataAuto(context, extras.clone() as Bundle)
+        CarModeReceiver.sendToGlucoDataAuto(context)
 
+        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         /*
         if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_BANGLEJS, false)) {
             sendToBangleJS(context)
@@ -325,9 +325,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 context.setWearConnectionState(WearPhoneConnection.nodesConnected)
             }
             if (dataSource == NotifySource.CAR_CONNECTION && CarModeReceiver.connected) {
-                val autoExtras = ReceiveData.createExtras()
-                if (autoExtras != null)
-                    CarModeReceiver.sendToGlucoDataAuto(context, autoExtras, true)
+                CarModeReceiver.sendToGlucoDataAuto(context, true)
             }
             if (dataSource == NotifySource.BATTERY_LEVEL) {
                 checkServices(context)

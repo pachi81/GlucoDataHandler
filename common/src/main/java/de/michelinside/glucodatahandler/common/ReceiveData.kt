@@ -753,7 +753,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         }
     }
 
-    fun createExtras(): Bundle? {
+    fun createExtras(includeObsoleteIobCob: Boolean = true): Bundle? {
         if(time == 0L)
             return null
         val extras = Bundle()
@@ -764,9 +764,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         extras.putFloat(RATE, rate)
         extras.putInt(ALARM, alarm)
         extras.putFloat(DELTA, deltaValue)
-        extras.putFloat(IOB, iob)
-        extras.putFloat(COB, cob)
-        extras.putLong(IOBCOB_TIME, iobCobTime)
+        if(includeObsoleteIobCob || !isIobCobObsolete()) {
+            extras.putFloat(IOB, iob)
+            extras.putFloat(COB, cob)
+            extras.putLong(IOBCOB_TIME, iobCobTime)
+        }
         extras.putInt(DELTA_FALLING_COUNT, deltaFallingCount)
         extras.putInt(DELTA_RISING_COUNT, deltaRisingCount)
         return extras
