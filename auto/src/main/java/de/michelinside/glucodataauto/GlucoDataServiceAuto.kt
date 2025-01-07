@@ -74,6 +74,12 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
             Log.v(LOG_ID, "migrateSettings called")
             GlucoDataService.migrateSettings(context)
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            if(!sharedPref.contains(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB)) {
+                with(sharedPref.edit()) {
+                    putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, false)
+                    apply()
+                }
+            }
             if(Constants.IS_SECOND && !sharedPref.contains(Constants.PATIENT_NAME)) {
                 with(sharedPref.edit()) {
                     putString(Constants.PATIENT_NAME, "SECOND")
@@ -417,7 +423,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                         updateSourceReceiver(this, key)
                 }
                 Constants.PATIENT_NAME -> {
-                    patient_name = sharedPreferences?.getString(Constants.PATIENT_NAME, "")
+                    patient_name = sharedPreferences.getString(Constants.PATIENT_NAME, "")
                 }
             }
         } catch (exc: Exception) {
