@@ -30,8 +30,7 @@ enum class WidgetType(val cls: Class<*>) {
     GLUCOSE_TREND_DELTA(GlucoseTrendDeltaWidget::class.java),
     GLUCOSE_TREND_DELTA_TIME(GlucoseTrendDeltaTimeWidget::class.java),
     GLUCOSE_TREND_DELTA_TIME_IOB_COB(GlucoseTrendDeltaTimeIobCobWidget::class.java),
-    OTHER_UNIT(OtherUnitWidget::class.java),
-    BATTERY_LEVEL(BatteryLevelWidget::class.java);
+    OTHER_UNIT(OtherUnitWidget::class.java);
 }
 
 abstract class GlucoseBaseWidget(private val type: WidgetType,

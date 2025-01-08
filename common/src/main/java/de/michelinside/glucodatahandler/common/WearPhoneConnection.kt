@@ -315,13 +315,6 @@ class WearPhoneConnection : WearableListenerService(), MessageClient.OnMessageRe
             nodeBatteryLevel[nodeId] = level
             val extra = Bundle()
             extra.putInt(BatteryReceiver.LEVEL, level)
-
-            var deviceName = ""
-            val node = connectedNodes[nodeId]
-            if (node != null)
-                deviceName = node.displayName
-
-            extra.putString(BatteryReceiver.DEVICENAME, deviceName);
             InternalNotifier.notify(context, NotifySource.NODE_BATTERY_LEVEL, extra)
         }
     }

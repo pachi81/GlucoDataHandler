@@ -18,7 +18,6 @@ class BatteryReceiver: BroadcastReceiver() {
             }
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             val enabled = sharedPref!!.getBoolean(Constants.SHARED_PREF_BATTERY_RECEIVER_ENABLED, true)
-            deviceName = intent.extras!!.getString(DEVICENAME, "Empty")
             val curValue = intent.extras!!.getInt(LEVEL, -1)
             Log.i(LOG_ID, "Received batter level: " + curValue.toString() + "% - enabled: $enabled")
             if (enabled) {
@@ -39,13 +38,10 @@ class BatteryReceiver: BroadcastReceiver() {
 
     companion object {
         const val LEVEL = "level"
-        const val DEVICENAME = "device"
         var batteryPercentage: Int = 0
-        var deviceName = ""
         val batteryBundle: Bundle get() {
             val extra = Bundle()
             extra.putInt(LEVEL, batteryPercentage)
-            extra.putString(DEVICENAME, deviceName)
             return extra
         }
     }

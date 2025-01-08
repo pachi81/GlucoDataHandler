@@ -3,6 +3,7 @@ package de.michelinside.glucodatahandler.widget
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.GlucoDataService.Companion.context
@@ -11,6 +12,8 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
+import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget.Companion
+import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget.Companion.getCurrentWidgetIds
 
 // Single notifier for battery level widgets as context changes in widget objects leading to memory leaks
 
@@ -28,6 +31,9 @@ object BatteryLevelWidgetNotifier: NotifierInterface {
                 )
                 InternalNotifier.addNotifier(context!!, this, filter)
             }
+            else {
+                Log.d(LOG_ID, "AddNotifier already have notifier for " +  this.toString())
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "RemoveNotifier exception: $exc")
         }
@@ -41,7 +47,6 @@ object BatteryLevelWidgetNotifier: NotifierInterface {
         } catch (exc: Exception) {
             Log.e(LOG_ID, "RemoveNotifier exception: $exc")
         }
-
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
@@ -53,12 +58,15 @@ object BatteryLevelWidgetNotifier: NotifierInterface {
                 val componentName = ComponentName(context.packageName, BatteryLevelWidget::class.java.name)
                 val appWidgetIds = appWidgetManager.getAppWidgetIds(componentName)
 
-                appWidgetIds.forEach { appWidgetId ->
-                    BatteryLevelWidget.updateWidget(context, appWidgetManager, appWidgetId,
-                        extras?.getInt(BatteryReceiver.LEVEL) ?: 0,
-                        extras?.getString(BatteryReceiver.DEVICENAME) ?: context.getString(R.string.activity_main_disconnected_label)
-                    )
+
+                if (appWidgetIds.isNotEmpty()) {
+                    Log.i(LOG_ID, "Trigger update of " + appWidgetIds.size + " widget(s) " + appWidgetIds.contentToString())
+                    val intent = Intent(context, BatteryLevelWidget::class.java)
+                    intent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds)
+                    context.sendBroadcast(intent)
                 }
+
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: $exc")
