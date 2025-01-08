@@ -14,8 +14,9 @@ class BatteryReceiver: BroadcastReceiver() {
             if (intent.extras == null || intent.extras!!.isEmpty) {
                 return
             }
+            deviceName = intent.extras!!.getString(DEVICENAME, "Empty")
             val curValue = intent.extras!!.getInt(LEVEL, -1)
-            Log.i(LOG_ID, "Received batter level: " + curValue.toString() + "%")
+            Log.i(LOG_ID, "Received batter level: " + curValue.toString() + "%" + " " + deviceName)
             if (curValue >= 0 && curValue != batteryPercentage) {
                 batteryPercentage = curValue
                 InternalNotifier.notify(context, NotifySource.BATTERY_LEVEL, batteryBundle)
@@ -27,10 +28,13 @@ class BatteryReceiver: BroadcastReceiver() {
 
     companion object {
         const val LEVEL = "level"
+        const val DEVICENAME = "device"
         var batteryPercentage: Int = 0
+        var deviceName = ""
         val batteryBundle: Bundle get() {
             val extra = Bundle()
             extra.putInt(LEVEL, batteryPercentage)
+            extra.putString(DEVICENAME, deviceName)
             return extra
         }
     }
