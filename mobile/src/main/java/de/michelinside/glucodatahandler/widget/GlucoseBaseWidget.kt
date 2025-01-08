@@ -39,8 +39,7 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
                                  private val hasDelta: Boolean = false,
                                  private val hasTime: Boolean = false,
                                  private val hasIobCob: Boolean = false,
-                                 private val hasOtherUnit: Boolean = false,
-                                 private val hasBatteryLevel: Boolean = false): AppWidgetProvider(), NotifierInterface {
+                                 private val hasOtherUnit: Boolean = false): AppWidgetProvider(), NotifierInterface {
     init {
         Log.d(LOG_ID, "init called for "+ this.toString())
     }
@@ -247,33 +246,6 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
         }
 
 
-        if (hasBatteryLevel) {
-            var deviceNameStr = "No WearOS Device"
-            var levelStr = "?%"
-            var levelColour = Color.RED;
-
-            if (WearPhoneConnection.nodesConnected) {
-                if (WearPhoneConnection.connectionError) {
-                    deviceNameStr = "Connection error"
-                }
-                else {
-                    WearPhoneConnection.getNodeBatterLevels().firstNotNullOf { (name, level) ->
-                        if (level > 0)
-                            levelStr = "$level%"
-                        deviceNameStr = name
-                        if (level < 25)
-                            levelColour = Color.RED;
-                        else if (level < 45)
-                            levelColour = Color.YELLOW
-                        else
-                            levelColour = Color.GREEN;
-                    }
-                }
-            }
-            remoteViews.setTextViewText(R.id.battery_level, levelStr)
-            remoteViews.setTextViewText(R.id.device_name, deviceNameStr)
-            remoteViews.setTextColor(R.id.battery_level, levelColour)
-        }
 
 
         return remoteViews
