@@ -184,6 +184,10 @@ abstract class GlucoDataService(source: AppSource) : Service(), SharedPreference
             }
         }
 
+        fun getWearPhoneConnection(): WearPhoneConnection? {
+            return connection
+        }
+
         private var glucoDataReceiver: GlucoseDataReceiver? = null
         private var xDripReceiver: XDripBroadcastReceiver?  = null
         private var aapsReceiver: AAPSReceiver?  = null

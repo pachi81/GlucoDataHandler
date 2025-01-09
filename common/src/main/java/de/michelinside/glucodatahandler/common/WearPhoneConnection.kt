@@ -109,6 +109,21 @@ class WearPhoneConnection : WearableListenerService(), MessageClient.OnMessageRe
             return connectionStates
 
         }
+
+        fun getNodeBatteryLevel(nodeId: String, addMissing: Boolean = true): Map<String, Int> {
+            val nodeBatterLevels = mutableMapOf<String, Int>()
+            val node = connectedNodes[nodeId]
+            if (node != null) {
+                if (nodeBatteryLevel.containsKey(nodeId)) {
+                    nodeBatterLevels[node.displayName] = nodeBatteryLevel.getValue(nodeId)
+                }
+                else if (addMissing) {
+                    nodeBatterLevels[node.displayName] = -1
+                }
+            }
+            return nodeBatterLevels
+        }
+
     }
 
     private fun openConnection() {
