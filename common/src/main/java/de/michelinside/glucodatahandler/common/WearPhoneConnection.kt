@@ -240,6 +240,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     }
                 }
             }
+            InternalNotifier.notify(context, NotifySource.CAPILITY_INFO, null)
         } else if(forceSendDataRequest)
             sendDataRequest()
     }
@@ -289,7 +290,6 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
     private fun sendDataRequest(filterReceiverId: String? = null) {
         val extras = ReceiveData.createExtras()
-        InternalNotifier.notify(context, NotifySource.CAPILITY_INFO, extras)
         extras?.putBundle(Constants.ALARM_EXTRA_BUNDLE, AlarmHandler.getExtras())
         sendMessage(NotifySource.CAPILITY_INFO, extras, filterReceiverId = filterReceiverId)  // send data request for new node
     }
