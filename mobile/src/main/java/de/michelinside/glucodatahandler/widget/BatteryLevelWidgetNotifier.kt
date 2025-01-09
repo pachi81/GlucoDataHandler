@@ -21,45 +21,44 @@ object BatteryLevelWidgetNotifier: NotifierInterface {
 
     private const val LOG_ID = "GDH.widget.BatteryLevelWidgetNotifier"
 
-    fun init() {
-        Log.d(LOG_ID, "init called")
-        AddNotifier()
-    }
 
-    fun AddNotifier() {
+    fun addNotifier() {
         try {
             Log.d(LOG_ID, "AddNotifier called for " +  this.toString())
 
-            val appWidgetManager = AppWidgetManager.getInstance(context)
-            val componentName =
-                ComponentName(context!!.packageName, BatteryLevelWidget::class.java.name)
-            val appWidgetIds = appWidgetManager.getAppWidgetIds(componentName)
+            context?.let {
+                val appWidgetManager = AppWidgetManager.getInstance(it)
+                val componentName =
+                    ComponentName(it.packageName, BatteryLevelWidget::class.java.name)
+                val appWidgetIds = appWidgetManager.getAppWidgetIds(componentName)
 
-            if (appWidgetIds.isEmpty()) {
-                Log.d(LOG_ID, "AddNotifier - Not adding notifier, no battery widgets")
-                return
+                if (appWidgetIds.isEmpty()) {
+                    Log.d(LOG_ID, "AddNotifier - Not adding notifier, no battery widgets")
+                    return
+                }
+
+                if (!InternalNotifier.hasNotifier(this)) {
+                    val filter = mutableSetOf(
+                        NotifySource.CAPILITY_INFO,
+                        NotifySource.NODE_BATTERY_LEVEL
+                    )
+                    InternalNotifier.addNotifier(it, this, filter)
+                } else {
+                    Log.d(LOG_ID, "AddNotifier already have notifier for " + this.toString())
+                }
             }
-
-            if (!InternalNotifier.hasNotifier(this)) {
-            val filter = mutableSetOf(
-                NotifySource.CAPILITY_INFO,
-                NotifySource.NODE_BATTERY_LEVEL
-            )
-            InternalNotifier.addNotifier(context!!, this, filter)
-        }
-        else {
-            Log.d(LOG_ID, "AddNotifier already have notifier for " +  this.toString())
-        }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "RemoveNotifier exception: $exc")
         }
     }
 
 
-    fun RemoveNotifier() {
+    fun removeNotifier() {
         try {
             Log.d(LOG_ID, "RemoveNotifier called for " +  this.toString())
-            InternalNotifier.remNotifier(context!!, this)
+            context?.let {
+                InternalNotifier.remNotifier(it, this)
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "RemoveNotifier exception: $exc")
         }
