@@ -14,8 +14,7 @@ import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.R as CR
 
 class BatteryLevelWidget : AppWidgetProvider() {
-    companion object {
-        const val LOG_ID = "GDH.widget.BatteryLevelWidget"
+        private val LOG_ID = "GDH.widget.BatteryLevelWidget"
 
         fun updateWidget(
             context: Context,
@@ -51,10 +50,9 @@ class BatteryLevelWidget : AppWidgetProvider() {
                 )
                 appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
             } catch (exc: Exception) {
-                Log.e(BatteryLevelWidget.LOG_ID, "updateWidget exception: $exc")
+                Log.e(LOG_ID, "updateWidget exception: $exc")
             }
         }
-    }
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         try {

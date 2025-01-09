@@ -18,6 +18,7 @@ import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import de.michelinside.glucodatahandler.widget.BatteryLevelWidget
+import de.michelinside.glucodatahandler.widget.BatteryLevelWidgetNotifier
 import de.michelinside.glucodatahandler.widget.FloatingWidget
 import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
 import de.michelinside.glucodatahandler.widget.LockScreenWallpaper
@@ -168,6 +169,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             WatchDrip.init(applicationContext)
             floatingWidget.create()
             batteryLevelWidget = BatteryLevelWidget()
+            BatteryLevelWidgetNotifier.init()
             LockScreenWallpaper.create(this)
             AlarmNotification.initNotifications(this)
         } catch (exc: Exception) {
