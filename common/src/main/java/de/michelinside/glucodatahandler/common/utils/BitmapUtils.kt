@@ -37,8 +37,8 @@ object BitmapUtils {
 
     private fun isShortText(text: String): Boolean = text.length <= (if (text.contains(".")) 3 else 2)
 
-    fun calcMaxTextSizeForBitmap(bitmap: Bitmap, text: String, roundTarget: Boolean, maxTextSize: Float, top: Boolean, bold: Boolean, resizeFactor: Float = 1F, useTallFont: Boolean = false): Float {
-        var result: Float = maxTextSize * resizeFactor
+    fun calcMaxTextSizeForBitmap(bitmap: Bitmap, text: String, roundTarget: Boolean, maxTextSize: Float, top: Boolean, bold: Boolean, useTallFont: Boolean = false): Float {
+        var result: Float = maxTextSize
         if(roundTarget) {
             if (!top || !isShortText(text) ) {
                 result *= if (text.contains("."))
@@ -83,7 +83,7 @@ object BitmapUtils {
     fun textToBitmap(text: String, color: Int, roundTarget: Boolean = false, strikeThrough: Boolean = false, width: Int = 100, height: Int = 100, top: Boolean = false, bold: Boolean = false, resizeFactor: Float = 1F, withShadow: Boolean = false, bottom: Boolean = false, useTallFont: Boolean = false): Bitmap? {
         try {
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888 )
-            val maxTextSize = calcMaxTextSizeForBitmap(bitmap, text, roundTarget, minOf(width,height).toFloat(), top, bold, resizeFactor, useTallFont)
+            val maxTextSize = calcMaxTextSizeForBitmap(bitmap, text, roundTarget, minOf(width,height).toFloat(), top, bold, useTallFont) * minOf(1F, resizeFactor)
             val canvas = Canvas(bitmap)
             bitmap.eraseColor(Color.TRANSPARENT)
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)

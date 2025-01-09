@@ -140,7 +140,6 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             StatusBarIcon.GLUCOSE.pref -> BitmapUtils.getGlucoseAsIcon(
                 roundTarget=!bigIcon,
                 color = if(coloredIcon) ReceiveData.getGlucoseColor() else Color.WHITE,
-                resizeFactor = if (bigIcon) 1.5F else 1F,
                 withShadow = coloredIcon,
                 useTallFont = true
             )
@@ -152,7 +151,6 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             StatusBarIcon.DELTA.pref -> BitmapUtils.getDeltaAsIcon(
                 roundTarget=!bigIcon,
                 color = if(coloredIcon) ReceiveData.getGlucoseColor(true) else Color.WHITE,
-                resizeFactor = if(bigIcon) (if(ReceiveData.getDeltaAsString().length >= 3) 1.5F else 1.2F) else 1F,
                 useTallFont = true)
             else -> Icon.createWithResource(GlucoDataService.context, CR.mipmap.ic_launcher)
         }
