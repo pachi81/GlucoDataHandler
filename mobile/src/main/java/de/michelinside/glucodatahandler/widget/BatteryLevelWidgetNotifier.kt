@@ -21,19 +21,35 @@ object BatteryLevelWidgetNotifier: NotifierInterface {
 
     private const val LOG_ID = "GDH.widget.BatteryLevelWidgetNotifier"
 
+    fun init() {
+        Log.d(LOG_ID, "init called")
+        AddNotifier()
+    }
+
     fun AddNotifier() {
         try {
             Log.d(LOG_ID, "AddNotifier called for " +  this.toString())
+
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            val componentName =
+                ComponentName(context!!.packageName, BatteryLevelWidget::class.java.name)
+            val appWidgetIds = appWidgetManager.getAppWidgetIds(componentName)
+
+            if (appWidgetIds.isEmpty()) {
+                Log.d(LOG_ID, "AddNotifier - Not adding notifier, no battery widgets")
+                return
+            }
+
             if (!InternalNotifier.hasNotifier(this)) {
-                val filter = mutableSetOf(
-                    NotifySource.CAPILITY_INFO,
-                    NotifySource.NODE_BATTERY_LEVEL
-                )
-                InternalNotifier.addNotifier(context!!, this, filter)
-            }
-            else {
-                Log.d(LOG_ID, "AddNotifier already have notifier for " +  this.toString())
-            }
+            val filter = mutableSetOf(
+                NotifySource.CAPILITY_INFO,
+                NotifySource.NODE_BATTERY_LEVEL
+            )
+            InternalNotifier.addNotifier(context!!, this, filter)
+        }
+        else {
+            Log.d(LOG_ID, "AddNotifier already have notifier for " +  this.toString())
+        }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "RemoveNotifier exception: $exc")
         }
@@ -53,20 +69,22 @@ object BatteryLevelWidgetNotifier: NotifierInterface {
         try {
             Log.d(LOG_ID, "OnNotifyData called for source $dataSource ${extras?.toString()}")
 
-            if (dataSource == NotifySource.NODE_BATTERY_LEVEL) {
+            if (dataSource == NotifySource.NODE_BATTERY_LEVEL || dataSource == NotifySource.CAPILITY_INFO) {
                 val appWidgetManager = AppWidgetManager.getInstance(context)
-                val componentName = ComponentName(context.packageName, BatteryLevelWidget::class.java.name)
+                val componentName =
+                    ComponentName(context.packageName, BatteryLevelWidget::class.java.name)
                 val appWidgetIds = appWidgetManager.getAppWidgetIds(componentName)
 
-
                 if (appWidgetIds.isNotEmpty()) {
-                    Log.i(LOG_ID, "Trigger update of " + appWidgetIds.size + " widget(s) " + appWidgetIds.contentToString())
+                    Log.i(
+                        LOG_ID,
+                        "Trigger update of " + appWidgetIds.size + " widget(s) " + appWidgetIds.contentToString()
+                    )
                     val intent = Intent(context, BatteryLevelWidget::class.java)
                     intent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
                     intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds)
                     context.sendBroadcast(intent)
                 }
-
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: $exc")
