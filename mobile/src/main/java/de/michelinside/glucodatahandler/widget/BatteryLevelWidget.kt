@@ -58,13 +58,12 @@ class BatteryLevelWidget : AppWidgetProvider() {
         try {
             Log.d(LOG_ID, "onUpdate called for " + this.toString() + " - ids: " + appWidgetIds.contentToString())
 
-            BatteryLevelWidgetNotifier.AddNotifier()
+            BatteryLevelWidgetNotifier.addNotifier()
 
             for (appWidgetId in appWidgetIds) {
                 var defaultBattery = 0
                 var defaultDevice = context.getString(CR.string.activity_main_disconnected_label)
 
-                // Use values from current connection if we have one as it might take a while to get a NODE_BATTERY_LEVEL message to update widget
                 if (WearPhoneConnection.nodesConnected && !WearPhoneConnection.connectionError) {
                     WearPhoneConnection.getNodeBatterLevels().firstNotNullOf { (name, level) ->
                         if (level > 0)
@@ -75,7 +74,6 @@ class BatteryLevelWidget : AppWidgetProvider() {
 
                 updateWidget(context, appWidgetManager, appWidgetId, defaultBattery, defaultDevice)
             }
-
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Exception in onUpdate: " + exc.message.toString())
         }
@@ -113,7 +111,7 @@ class BatteryLevelWidget : AppWidgetProvider() {
         try {
             // Enter relevant functionality for when the last widget is disabled
             Log.d(LOG_ID, "onDisabled called for " + this.toString())
-            BatteryLevelWidgetNotifier.RemoveNotifier()
+            BatteryLevelWidgetNotifier.removeNotifier()
             super.onDisabled(context)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Exception in onDisabled: " + exc.message.toString())
