@@ -9,6 +9,7 @@ import android.util.Log
 import android.widget.RemoteViews
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.R as CR
@@ -61,18 +62,25 @@ class BatteryLevelWidget : AppWidgetProvider() {
             BatteryLevelWidgetNotifier.addNotifier()
 
             for (appWidgetId in appWidgetIds) {
-                var defaultBattery = 0
-                var defaultDevice = context.getString(CR.string.activity_main_disconnected_label)
+                var batteryLevel = 0
+                var deviceName = context.getString(CR.string.activity_main_disconnected_label)
+
 
                 if (WearPhoneConnection.nodesConnected && !WearPhoneConnection.connectionError) {
-                    WearPhoneConnection.getNodeBatterLevels().firstNotNullOf { (name, level) ->
-                        if (level > 0)
-                            defaultBattery = level
-                        defaultDevice = name
+                    val connection = GlucoDataService.getWearPhoneConnection()
+                    if (connection != null) {
+                        val nodeId = connection.pickBestNodeId()
+                        if (nodeId != null) {
+                            WearPhoneConnection.getNodeBatteryLevel(nodeId).firstNotNullOf { (name, level) ->
+                                if (level > 0)
+                                    batteryLevel = level
+                                deviceName = name
+                            }
+                        }
                     }
                 }
 
-                updateWidget(context, appWidgetManager, appWidgetId, defaultBattery, defaultDevice)
+                updateWidget(context, appWidgetManager, appWidgetId, batteryLevel, deviceName)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Exception in onUpdate: " + exc.message.toString())
