@@ -91,7 +91,7 @@
 
     <string name="src_cat_nightscout">Nightscout</string>
     <string name="src_ns_enabled">Inschakelen</string>
-    <string name="src_ns_enabled_summary">Schakel Nightscout-volger in.</string>
+    <string name="src_ns_enabled_summary">Schakelt Nightscout-volger in.</string>
     <string name="src_ns_url">Nightscout URL</string>
     <string name="src_ns_url_summary">URL van de Nightscout-server.</string>
     <string name="src_ns_secret">API-geheim</string>
