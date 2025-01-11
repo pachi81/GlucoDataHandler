@@ -37,7 +37,7 @@
 
     <!-- mobile -->
 
-    <string name="activity_main_battery_optimization_disabled">Batterij-optimalisatie is ingeschakeld.</string>
+    <string name="activity_main_battery_optimization_disabled">Batterijoptimalisatie is uitgeschakeld</string>
     <string name="activity_main_no_source_label">Bron: niet actief</string>
     <string name="activity_main_connected_label">Wear: verbonden (%1$s)</string>
     <string name="activity_main_disconnected_label">Wear: niet verbonden</string>
