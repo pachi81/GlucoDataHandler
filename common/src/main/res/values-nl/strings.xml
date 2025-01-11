@@ -7,7 +7,7 @@
     <string name="info_label_raw">Ruw</string>
     <string name="info_label_delta">Delta</string>
     <string name="info_label_rate">Snelheid</string>
-    <string name="info_label_timestamp">Tijdstempel</string>
+    <string name="info_label_timestamp">Tijdstip</string>
     <string name="info_label_iob_cob_timestamp">IOB/COB tijd</string>
     <string name="info_label_timediff">Tijdsverschil</string>
     <string name="info_label_alarm">Alarm</string>
