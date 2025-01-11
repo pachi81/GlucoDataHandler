@@ -57,7 +57,7 @@
 
     <string name="tasker_event_glucodata">Nieuwe glucosewaarde</string>
     <string name="tasker_event_glucodata_obsolete">Verouderde waarde</string>
-    <string name="tasker_event_glucodata_alarm">Glucose alarm</string>
+    <string name="tasker_event_glucodata_alarm">Glucosealarm</string>
     <string name="tasker_wear_connection_state">Wear-verbindingsstatus</string>
     <string name="tasker_android_auto_connection_state">Android Auto-verbindingsstatus</string>
     <string name="tasker_target_range_state">Wijziging glucosebereik</string>
