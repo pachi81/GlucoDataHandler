@@ -81,9 +81,9 @@
 
     <string name="src_cat_libreview">LibreLinkUp</string>
     <string name="src_enabled">Inschakelen</string>
-    <string name="src_libre_enabled_summary">Schakel LibreLinkUp-volger in als gebruikersnaam en wachtwoord zijn ingesteld.</string>
+    <string name="src_libre_enabled_summary">Schakelt LibreLinkUp-volger in als gebruikersnaam en wachtwoord zijn ingesteld.</string>
     <string name="src_libre_user">E-mailadres</string>
-    <string name="src_libre_user_summary">E-mailadres voor LibreLinkUp-login</string>
+    <string name="src_libre_user_summary">E-mailadres voor LibreLinkUp login</string>
     <string name="src_password">Wachtwoord</string>
     <string name="src_libre_password_summary">Wachtwoord voor LibreLinkUp</string>
     <string name="src_libre_reconnect">Opnieuw verbinden</string>
