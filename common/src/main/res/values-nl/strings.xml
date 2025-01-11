@@ -15,7 +15,7 @@
     <string name="info_label_per_minute">per minuut</string>
     <string name="no_data">Geen gegevens ontvangen!\Selecteer eerst een bron</string>
 
-    <string name="elapsed_time">%1$d min</string>
+    <string name="elapsed_time">verstreken tijd</string>
     <string name="elapsed_time_hour">\> 1 uur</string>
 
     <string name="rate_double_up">stijgt zeer snel</string>
