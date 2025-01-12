@@ -81,7 +81,7 @@
 
     <string name="src_cat_libreview">LibreLinkUp</string>
     <string name="src_enabled">Inschakelen</string>
-    <string name="src_libre_enabled_summary">Schakelt LibreLinkUp-volger in als gebruikersnaam en wachtwoord zijn ingesteld.</string>
+    <string name="src_libre_enabled_summary">Schakel LibreLinkUp-volger in als gebruikersnaam en wachtwoord zijn ingesteld.</string>
     <string name="src_libre_user">E-mailadres</string>
     <string name="src_libre_user_summary">E-mailadres voor LibreLinkUp login</string>
     <string name="src_password">Wachtwoord</string>
@@ -91,7 +91,7 @@
 
     <string name="src_cat_nightscout">Nightscout</string>
     <string name="src_ns_enabled">Inschakelen</string>
-    <string name="src_ns_enabled_summary">Schakelt Nightscout-volger in.</string>
+    <string name="src_ns_enabled_summary">Schakel Nightscout-volger in.</string>
     <string name="src_ns_url">Nightscout URL</string>
     <string name="src_ns_url_summary">URL van de Nightscout-server.</string>
     <string name="src_ns_secret">API-geheim</string>
@@ -194,14 +194,14 @@
     <string name="pref_widget_transparency">Widgettransparantie</string>
     <string name="pref_widget_transparency_summary">Achtergrondtransparantie voor widgets.</string>
     <string name="pref_relative_time">Relatieve tijd</string>
-    <string name="pref_relative_time_summary">Gebruik relatieve tijd in plaats van glucosetijdstempel voor widgets.\nRelatieve tijd is afhankelijk van de batterij-instellingen op uw apparaat en werkt mogelijk niet correct.</string>
+    <string name="pref_relative_time_summary">Gebruik relatieve tijd in plaats van glucosetijdstip voor widgets.\nRelatieve tijd is afhankelijk van de batterij-instellingen op uw apparaat en werkt mogelijk niet correct.</string>
 
     <string name="pref_status_bar_icon_app">App-pictogram</string>
     <string name="pref_status_bar_icon_glucose">Glucosewaarde</string>
     <string name="pref_status_bar_icon_trend">Trendpijl</string>
     <string name="pref_status_bar_icon_delta">Delta</string>
 
-    <string name="pref_wear_notification">Wear: trilling</string>
+    <string name="pref_wear_notification">Wear: trillen</string>
 
     <string name="pref_global_broadcast">Globale broadcast</string>
 
@@ -211,7 +211,7 @@
     <string name="widget_glucose">Glucose</string>
     <string name="widget_glucose_trend">Glucose en trend</string>
     <string name="widget_glucose_trend_delta">Glucose, trend en delta</string>
-    <string name="widget_glucose_trend_delta_timestamp">Glucose, trend, delta en tijdstempel</string>
+    <string name="widget_glucose_trend_delta_timestamp">Glucose, trend, delta en tijd</string>
     <string name="widget_glucose_trend_delta_timestamp_iob_cob">Glucose, trend, delta, tijd en IOB/COB</string>
 
     <string name="pref_send_to_bangleJS">BangleJS-ondersteuning</string>
@@ -239,22 +239,22 @@
     <string name="short_value_arrow_image">Glucose en trend (groot en gekleurd)</string>
     <string name="icon_value_arrow">Glucose en trend (groot)</string>
     <string name="short_value_arrow_small_image">Glucose en trend (gekleurd)</string>
-    <string name="short_value_trend_range">Glucose en trendbereik (indien ondersteund)</string>
+    <string name="short_value_trend_range">Glucose- en trendbereik (indien ondersteund)</string>
     <string name="short_value_delta_trend_range">Glucose, delta en trendbereik (indien ondersteund)</string>
     <string name="short_delta_trend_arrow_range">Delta, trendpijl en trendbereik (indien ondersteund)</string>
     <string name="short_value_delta">Glucose en delta</string>
     <string name="long_value_arrow_delta">Glucose, delta en trend</string>
-    <string name="long_value_arrow_delta_time">Glucose, delta, trend en tijdstempel</string>
-    <string name="long_value_arrow_icon_delta_time">Glucose, trendpictogram, delta en tijdstempel</string>
+    <string name="long_value_arrow_delta_time">Glucose, delta, trend en tijd</string>
+    <string name="long_value_arrow_icon_delta_time">Glucose, trendpictogram, delta en tijd</string>
     <string name="short_value_rate">Glucose en trendwaarde</string>
     <string name="icon_delta">Delta (groot)</string>
     <string name="image_delta">Delta (groot, gekleurd)</string>
     <string name="short_delta">Delta</string>
     <string name="short_delta_arrow">Delta en trend</string>
     <string name="short_delta_icon">Delta met pictogram</string>
-    <string name="short_delta_time">Delta en tijdstempel</string>
-    <string name="image_delta_time">Delta en tijdstempel (gekleurd)</string>
-    <string name="icon_delta_time">Delta en tijdstempel (groot)</string>
+    <string name="short_delta_time">Delta en tijd</string>
+    <string name="image_delta_time">Delta en tijd (gekleurd)</string>
+    <string name="icon_delta_time">Delta en tijd (groot)</string>
     <string name="image_arrow">Trend (groot, gekleurd)</string>
     <string name="small_image_arrow">Trend (gekleurd)</string>
     <string name="icon_arrow">Trendpictogram</string>
@@ -262,10 +262,10 @@
     <string name="short_rate">Trendwaarde</string>
     <string name="short_rate_arrow">Trendwaarde en pijl</string>
     <string name="short_rate_icon">Trendwaarde met pictogram</string>
-    <string name="timestamp">Glucosetijdstempel</string>
-    <string name="short_timestamp">Tijdstempel</string>
-    <string name="image_timestamp">Tijdstempel (gekleurd)</string>
-    <string name="icon_timestamp">Tijdstempel (groot)</string>
+    <string name="timestamp">Glucosetijd</string>
+    <string name="short_timestamp">Tijd</string>
+    <string name="image_timestamp">Tijd (gekleurd)</string>
+    <string name="icon_timestamp">Tijd (groot)</string>
     <string name="battery_level">Batterijniveau (horloge en telefoon)</string>
     <string name="watch_battery_level">Batterijniveau horloge</string>
     <string name="phone_battery_level">Batterijniveau telefoon</string>
