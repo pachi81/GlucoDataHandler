@@ -37,7 +37,7 @@
 
     <!-- mobile -->
 
-    <string name="activity_main_battery_optimization_disabled">Batterijoptimalisatie is uitgeschakeld</string>
+    <string name="activity_main_battery_optimization_disabled">Batterijoptimalisatie is ingeschakeld</string>
     <string name="activity_main_no_source_label">Bron: niet actief</string>
     <string name="activity_main_connected_label">Wear: verbonden (%1$s)</string>
     <string name="activity_main_disconnected_label">Wear: niet verbonden</string>
@@ -131,10 +131,10 @@
     <string name="pref_very_high_value_summary">Grens voor zeer hoge glucosewaarden.</string>
     <string name="pref_high_value">Hoge glucose</string>
     <string name="pref_high_value_summary">Grens voor hoge glucosewaarden.</string>
-    <string name="pref_target_max_value">Doel bovenste glucose</string>
-    <string name="pref_target_max_value_summary">Bovenwaarde voor het doelbereik.</string>
-    <string name="pref_target_min_value">Doel onderste glucose</string>
-    <string name="pref_target_min_value_summary">Onderwaarde voor het doelbereik.</string>
+    <string name="pref_target_max_value">Doel bovengrens glucose</string>
+    <string name="pref_target_max_value_summary">Bovengrens voor het doelbereik.</string>
+    <string name="pref_target_min_value">Doel ondergrens glucose</string>
+    <string name="pref_target_min_value_summary">Ondergrens voor het doelbereik.</string>
     <string name="pref_very_low_value">Zeer lage glucose</string>
     <string name="pref_very_low_value_summary">Grens voor zeer lage glucosewaarde.</string>
     <string name="pref_low_value">Lage glucose</string>
@@ -384,7 +384,7 @@
     <string name="alarm_cat_categories">Alarmcategorieën</string>
     <string name="alarm_fullscreen_notification_enabled">Volledig schermmelding</string>
     <string name="alarm_fullscreen_notification_enabled_summary">Schakelt volledig schermmelding op vergrendelscherm in.\nDit kan om een extra toestemming vragen.</string>
-    <string name="alarm_fullscreen_dismiss_keyguard">Vergrendelingsscherm sluiten</string>
+    <string name="alarm_fullscreen_dismiss_keyguard">Vergrendelscherm sluiten</string>
     <string name="alarm_fullscreen_dismiss_keyguard_summary">Schakel deze instelling in als u problemen ondervindt met de volledig schermmelding.\nOp sommige apparaten zal dit ervoor zorgen dat het ontgrendelingsscherm wordt weergegeven terwijl de volledig schermmelding wordt geactiveerd.\nSchakel het dus niet in als u geen problemen ondervindt.</string>
     <string name="alarm_force_sound">Alarmgeluid forceren</string>
     <string name="alarm_force_sound_summary">Dit zal een alarmgeluid en trilling forceren, zelfs als de telefoon in stille of trilmodus staat. Het zal altijd de modus Niet storen stoppen!\nOm deze instelling in te schakelen, wordt u mogelijk gevraagd om deze app toe te staan de modus Niet storen te wijzigen.</string>
@@ -399,11 +399,11 @@
     <string name="alarm_advanced_cat_sound">Geluid</string>
     <string name="alarm_type_summary">Alarminstellingen voor glucosewaarden vanaf %1$s.</string>
     <string name="alarm_no_notification_wear_connected">Geen alarm terwijl Wear is verbonden</string>
-    <string name="alarm_no_notification_wear_connected_summary_on">Er zal geen alarmmelding op de telefoon zijn als de telefoon is verbonden met GlucoDataHandler op het horloge.</string>
-    <string name="alarm_no_notification_wear_connected_summary_off">Er zal een alarmmelding op de telefoon zijn, zelfs als de telefoon is verbonden met GlucoDataHandler op het horloge.</string>
+    <string name="alarm_no_notification_wear_connected_summary_on">Er zal geen alarmmelding op de telefoon verschijnen als de telefoon is verbonden met GlucoDataHandler op het horloge.</string>
+    <string name="alarm_no_notification_wear_connected_summary_off">Er zal een alarmmelding op de telefoon verschijnen, zelfs als de telefoon is verbonden met GlucoDataHandler op het horloge.</string>
     <string name="alarm_no_notification_auto_connected">Geen alarm terwijl Android Auto is verbonden</string>
-    <string name="alarm_no_notification_auto_connected_summary_on">Er zal geen alarmmelding op de telefoon zijn als Android Auto is verbonden.</string>
-    <string name="alarm_no_notification_auto_connected_summary_off">Er zal een alarmmelding op de telefoon zijn, zelfs als Android Auto is verbonden.</string>
+    <string name="alarm_no_notification_auto_connected_summary_on">Er zal geen alarmmelding op de telefoon verschijnen als Android Auto is verbonden.</string>
+    <string name="alarm_no_notification_auto_connected_summary_off">Er zal een alarmmelding op de telefoon verschijnen, zelfs als Android Auto is verbonden.</string>
     <string name="alarm_retrigger">Opnieuw activeren</string>
     <string name="alarm_retrigger_summary">Als de alarmmelding niet wordt gesloten, wordt het alarm na dit interval in minuten maximaal 3 keer opnieuw geactiveerd.\n0 - niet opnieuw activeren</string>
     <string name="alarm_obsolete">Verouderd</string>
@@ -444,7 +444,7 @@
     <string name="gda_media_notification_toggle_title">Meldingsschakelaar</string>
     <string name="gda_notifications_on">Meldingen staan aan</string>
     <string name="gda_notifications_off">Meldingen staan uit</string>
-    <string name="gda_media_notification_toggle_action">Druk op afspelen om de melding te schakelen</string>
+    <string name="gda_media_notification_toggle_action">Druk op afspelen om de melding in te schakelen</string>
     <string name="pref_gda_alarm_info_summary">Alarminstellingen zijn alleen gerelateerd aan meldingen op Android Auto en activeren geen geluid.</string>
     <string name="pref_cat_general_summary">Algemene instellingen, zoals de eenheid, tijd en delta-instellingen.</string>
     <string name="pref_target_range_summary">Instellingen voor glucosegrenzen en de bijbehorende kleuren.</string>
@@ -460,10 +460,10 @@
     <string name="pref_cat_transfer">Waarden overdragen</string>
     <string name="pref_cat_visualisation">Visualisatie</string>
     <string name="pref_cat_banglejs">BangleJS horloges</string>
-    <string name="pref_wearos_info_summary">Om GlucoDataHandler op Wear OS-horloges te gebruiken, installeert u deze vanuit de Google Play Store op het horloge.</string>
+    <string name="pref_wearos_info_summary">Om GlucoDataHandler op Wear OS horloges te gebruiken, installeert u deze vanuit de Google Play Store op het horloge.</string>
     <string name="pref_wear_os_check_connection">Verbinding controleren</string>
-    <string name="pref_wear_os_check_connection_summary">Druk hier om de verbinding met Wear OS opnieuw te controleren.\nU kunt deze controle ook activeren door op de verbindingsinfo op het startscherm te drukken (zelfs in de Wear OS-app).</string>
-    <string name="pref_watchdrip_info_summary">WatchDrip+ ondersteunt verschillende MiBand- en Amazfit-apparaten.\nOm een volledige lijst met ondersteunde apparaten en meer informatie over het configureren van WatchDrip+ te krijgen, drukt u hier.</string>
+    <string name="pref_wear_os_check_connection_summary">Druk hier om de verbinding met Wear OS opnieuw te controleren.\nU kunt deze controle ook activeren door op de verbindingsinfo op het startscherm te drukken (zelfs in de Wear OS app).</string>
+    <string name="pref_watchdrip_info_summary">WatchDrip+ ondersteunt verschillende MiBand en Amazfit apparaten.\nOm een volledige lijst met ondersteunde apparaten en meer informatie over het configureren van WatchDrip+ te krijgen, drukt u hier.</string>
     <string name="alarm_vibrate_only_wear_info">Alleen trillen zonder melding werkt niet op elk apparaat!</string>
     <string name="alarm_use_alarm_sound">Gebruik alarmgeluid</string>
     <string name="alarm_use_alarm_sound_summary">Gebruik het volume van het alarmgeluid in plaats van het beltoon geluid.\nDit kan onafhankelijk zijn van de trilmodus.</string>
@@ -473,7 +473,7 @@
     <string name="pref_color_obsolete">Kleur verouderde waarde</string>
     <string name="pref_color_obsolete_summary">Kleur voor geen nieuwe glucosewaarden.</string>
     <string name="alarm_wear_no_notification_phone_connected">Geen pop-up terwijl telefoon is verbonden</string>
-    <string name="alarm_wear_no_notification_phone_connected_summary">Geen extra Wear-meldingspop-up terwijl de telefoon is verbonden.\nDe trilling en het geluid worden geactiveerd zoals geconfigureerd.</string>
+    <string name="alarm_wear_no_notification_phone_connected_summary">Geen extra Wear meldingspop-up terwijl de telefoon is verbonden.\nDe trilling en het geluid worden geactiveerd zoals geconfigureerd.</string>
     <string name="table_header_details">Details</string>
     <string name="table_header_connections">Verbindingen</string>
     <string name="disconnected_label">verbroken</string>
