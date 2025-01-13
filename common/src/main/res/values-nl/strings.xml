@@ -544,15 +544,15 @@
     <string name="detail_reset_connection">De verbinding werkt niet naar verwachting! Probeer uw horloge opnieuw op te starten.</string>
     <string name="pref_floating_widget_time_to_close">Tijd tot sluiten</string>
     <string name="pref_floating_widget_time_to_close_summary">Tijd in seconden om de zwevende widget te sluiten terwijl u op de widget drukt zonder deze te verplaatsen.\n0 om deze instelling uit te schakelen.</string>
-    <string name="alarm_inactive_enabled">Stille uren inschakelen</string>
-    <string name="alarm_inactive_enabled_summary">Geen alarmmeldingen voor dit alarm tijdens stille uren.\nConfigureer uw gewenste tijden om deze functie te gebruiken.</string>
-    <string name="all_alarm_inactive_enabled_summary">Geen alarmmeldingen voor alle alarmen tijdens stille uren.\nConfigureer uw gewenste tijden om deze functie te gebruiken.</string>
+    <string name="alarm_inactive_enabled">Stille modus inschakelen</string>
+    <string name="alarm_inactive_enabled_summary">Geen alarmmeldingen voor dit alarm tijdens stille modus.\nConfigureer uw gewenste tijden om deze functie te gebruiken.</string>
+    <string name="all_alarm_inactive_enabled_summary">Geen alarmmeldingen voor alle alarmen tijdens stille modus.\nConfigureer uw gewenste tijden om deze functie te gebruiken.</string>
     <string name="alarm_inactive_start_time">Starttijd</string>
-    <string name="alarm_inactive_start_time_summary">Selecteer de tijd waarop u wilt dat uw stille uren beginnen.</string>
+    <string name="alarm_inactive_start_time_summary">Selecteer de tijd waarop u wilt dat uw stille modus begint.</string>
     <string name="alarm_inactive_end_time">Eindtijd</string>
-    <string name="alarm_inactive_end_time_summary">Selecteer de tijd waarop u wilt dat uw stille uren eindigen.</string>
-    <string name="alarm_inactive_weekdays">Dagen voor stille uren</string>
-    <string name="alarm_inactive_weekdays_summary">Geef de dagen van de week op waarop stille uren moeten beginnen op de geselecteerde starttijd.</string>
+    <string name="alarm_inactive_end_time_summary">Selecteer de tijd waarop u wilt dat uw stille modus eindigt.</string>
+    <string name="alarm_inactive_weekdays">Dagen voor stille modus</string>
+    <string name="alarm_inactive_weekdays_summary">Geef de dagen van de week op waarop stille modus moet beginnen op de geselecteerde starttijd.</string>
 
     <string name="app_crash_bad_notification">De app crasht vanwege de gekleurde meldingslay-out!\nDeze is uitgeschakeld om deze crash te voorkomen.\nEen telefoon herstart lost dit meestal op.</string>
     <string name="auto_close_notification">Melding automatisch sluiten</string>
@@ -570,28 +570,28 @@
     <string name="pref_import_settings_summary">Druk hier om instellingen uit een bestand te importeren.\nBELANGRIJK: hiermee worden geen standaardinstellingen opnieuw aangemaakt, omdat deze geen deel uitmaken van de export.\nAls u de standaardwaarden wilt herstellen, verwijdert u eerst de app-gegevens en importeert u daarna.</string>
 
     <string name="menu_save_mobile_logs_summary">Logboeken van de telefoon opslaan naar bestand.</string>
-    <string name="menu_save_wear_logs_summary">Logboeken van verbonden Wear OS-horloge opslaan naar bestand.</string>
+    <string name="menu_save_wear_logs_summary">Logboeken van verbonden Wear OS horloge opslaan naar bestand.</string>
     <string name="alarm_repeat">Herhalen</string>
     <string name="no_vibration">Geen trilling</string>
     <string name="alarm_vibrate_mode">Trilmodus</string>
 
     <string name="alarm_rising_fast">Snel stijgend</string>
-    <string name="rising_fast_alarm_notification_name">Snel stijgend alarm</string>
+    <string name="rising_fast_alarm_notification_name">Snel stijgen alarm</string>
     <string name="alarm_rising_fast_summary">Alarm als de glucosewaarde hoger is dan of gelijk is aan %1$s en de delta met ten minste +%2$s stijgt voor %3$d opeenvolgende metingen.</string>
     <string name="rising_fast_alarm_text">Snel stijgend!</string>
 
     <string name="alarm_falling_fast">Snel dalend</string>
-    <string name="falling_fast_alarm_notification_name">Snel dalend alarm</string>
+    <string name="falling_fast_alarm_notification_name">Snel dalen alarm</string>
     <string name="alarm_falling_fast_summary">Alarm als de glucosewaarde lager is dan of gelijk is aan %1$s en de delta met ten minste -%2$s daalt voor %3$d opeenvolgende metingen.</string>
     <string name="falling_fast_alarm_text">Snel dalend!</string>
     <string name="alarm_vibrate_amplitude">Trilintensiteit</string>
-    <string name="alarm_vibrate_amplitude_summary">Intensiteit van de trilling</string>
+    <string name="alarm_vibrate_amplitude_summary">Intensiteit van het trillen</string>
     <string name="pref_cat_alarm_settings">Alarminstellingen</string>
     <string name="pref_alarm_delta_summary">Deltawaarde wanneer het alarm moet worden geactiveerd.</string>
     <string name="alarm_occurrence_count">Aantal keren voorkomen</string>
     <string name="alarm_occurrence_count_summary">Aantal keren dat de deltawaarde achter elkaar moet worden bereikt.</string>
     <string name="pref_alarm_rising_falling_border">Grens</string>
-    <string name="pref_alarm_rising_falling_border_summary">Grens voor het stijgende/dalende alarm.\nDe glucosewaarde moet hoger/lager zijn om het alarm te activeren.</string>
+    <string name="pref_alarm_rising_falling_border_summary">Grens voor het stijgen/dalen alarm.\nDe glucosewaarde moet hoger/lager zijn om het alarm te activeren.</string>
     <string name="delta_per_minute">per minuut</string>
     <string name="delta_per_5_minute">per 5 minuten</string>
     <string name="other_alarm_cat_categories">Andere alarmen</string>
@@ -648,16 +648,16 @@
     <!-- v1.3  -->
 
     <string name="source_libre_auto_accept_tou">Nieuwe voorwaarden automatisch accepteren</string>
-    <string name="source_libre_auto_accept_tou_summary">Door dit in te schakelen, accepteert u automatisch nieuwe gebruiksvoorwaarden om continue gegevensontvangst te garanderen. U wordt niet apart op de hoogte gebracht van nieuwe voorwaarden. Als u ze wilt lezen, schakelt u deze instelling uit en raadpleegt u de LibreLinkUp-app in geval van fout 4.</string>
-    <string name="src_libre_tou_message">GlucoDataHandler kan automatisch nieuwe gebruiksvoorwaarden voor LibreLinkUp accepteren.\nDruk op OK om deze functie in te schakelen of op Annuleren om de voorwaarden in de LibreLinkUp-app te lezen en handmatig te accepteren.</string>
+    <string name="source_libre_auto_accept_tou_summary">Door dit in te schakelen, accepteert u automatisch nieuwe gebruiksvoorwaarden om continue gegevensontvangst te garanderen. U wordt niet apart op de hoogte gebracht van nieuwe voorwaarden. Als u ze wilt lezen, schakelt u deze instelling uit en raadpleegt u de LibreLinkUp app in geval van fout 4.</string>
+    <string name="src_libre_tou_message">GlucoDataHandler kan automatisch nieuwe gebruiksvoorwaarden voor LibreLinkUp accepteren.\nDruk op OK om deze functie in te schakelen of op Annuleren om de voorwaarden in de LibreLinkUp app te lezen en handmatig te accepteren.</string>
 
-    <string name="src_librelink_error4">Fout, log opnieuw in op de LibreLinkUp-app en controleer op eventuele stappen die moeten worden uitgevoerd!</string>
-    <string name="src_librelink_error4_type">Fouttype %1$s, log opnieuw in op de LibreLinkUp-app en controleer op eventuele stappen die moeten worden uitgevoerd!</string>
-    <string name="src_librelink_error4_tou">Nieuwe gebruiksvoorwaarden moeten worden geaccepteerd. Schakel automatische acceptatie in de LibreLinkUp-broninstellingen in of log opnieuw in op de LibreLinkUp-app en accepteer de voorwaarden.</string>
-    <string name="src_librelink_error2">Onjuiste gebruikersnaam of wachtwoord. Controleer uw LibreLinkUp-broninstellingen. Probeer indien nodig opnieuw in te loggen of de LibreLinkUp-app opnieuw te installeren en uw accountinstellingen te controleren.\nStop alle andere apps die toegang hebben tot hetzelfde account!</string>
+    <string name="src_librelink_error4">Fout, log opnieuw in op de LibreLinkUp app en controleer op eventuele stappen die moeten worden uitgevoerd!</string>
+    <string name="src_librelink_error4_type">Fouttype %1$s, log opnieuw in op de LibreLinkUp app en controleer op eventuele stappen die moeten worden uitgevoerd!</string>
+    <string name="src_librelink_error4_tou">Nieuwe gebruiksvoorwaarden moeten worden geaccepteerd. Schakel automatische acceptatie in de LibreLinkUp-broninstellingen in of log opnieuw in op de LibreLinkUp app en accepteer de voorwaarden.</string>
+    <string name="src_librelink_error2">Onjuiste gebruikersnaam of wachtwoord. Controleer uw LibreLinkUp-broninstellingen. Probeer indien nodig opnieuw in te loggen of de LibreLinkUp app opnieuw te installeren en uw accountinstellingen te controleren.\nStop alle andere apps die toegang hebben tot hetzelfde account!</string>
     <string name="last_value_on_server">Laatste glucosemeting op server van %1$s</string>
     <string name="no_data_in_server_response">Geen glucosemetingen gevonden op server.</string>
-    <string name="http_error_429">Te veel verzoeken!</string>
+    <string name="http_error_429">Teveel verzoeken!</string>
     <string name="http_error_429_info">Stop alle andere apps die toegang hebben tot hetzelfde account!</string>
 
     <string name="state_await_data">Wachten op gegevens</string>
@@ -669,12 +669,12 @@
     <string name="alarm_repeat_summary">Het alarm zal herhaaldelijk klinken en trillen totdat u de melding sluit of de ingestelde maximale alarmduur is bereikt.</string>
     <string name="alarm_repeat_time">Maximale alarmduur</string>
     <string name="alarm_repeat_time_summary">Geef de maximale tijd (in minuten) op dat het alarm zal klinken en trillen. Een waarde van 0 betekent dat het alarm oneindig zal herhalen.</string>
-    <string name="wear_source_info">Om bronnen in te schakelen, stelt u ze eerst in de telefoon-app in. Activeer bronnen op uw horloge alleen als u de gegevens nog niet op uw telefoon ontvangt.</string>
+    <string name="wear_source_info">Om bronnen in te schakelen, stelt u ze eerst in de telefoonapp in. Activeer bronnen op uw horloge alleen als u de gegevens nog niet op uw telefoon ontvangt.</string>
     <string name="gdh_disclaimer_title">Opmerking van de ontwikkelaar</string>
     <string name="gdh_disclaimer_message">Deze app is in mijn vrije tijd ontwikkeld als hobbyproject. Daarom kan ik niet garanderen dat alle functies feilloos werken op elk apparaat. Ik werk echter constant aan verbeteringen.\nAls u problemen ondervindt of vragen heeft, neem dan rechtstreeks contact met mij op voordat u een negatieve recensie achterlaat. \nOm op de hoogte te blijven van belangrijke updates en bugfixes, bent u welkom om lid te worden van de Facebook-groep of de Google Groups.</string>
     <!-- v1.3  -->
-    <string name="pref_source_dexcom_share_info_1_summary">Om gegevens van Dexcom Share-servers te ontvangen:\nIn de Dexcom-app:\n - Maak een volger aan\n - Zorg ervoor dat onder \"Verbindingen\" \"Delen aan\" wordt weergegeven</string>
-    <string name="pref_source_dexcom_share_info_2_summary">In GlucoDataHandler:\n - Voer uw Dexcom Clarity-gebruikersnaam en -wachtwoord in \n   (als u uw telefoonnummer als gebruikersnaam gebruikt, voeg dan uw landcode toe)\n - Controleer de instelling voor een Amerikaans account\nBelangrijk: het werkt niet met een volgersaccount!</string>
+    <string name="pref_source_dexcom_share_info_1_summary">Om gegevens van Dexcom Share-servers te ontvangen:\nIn de Dexcom app:\n - Maak een volger aan\n - Zorg ervoor dat onder \"Verbindingen\" \"Delen aan\" wordt weergegeven</string>
+    <string name="pref_source_dexcom_share_info_2_summary">In GlucoDataHandler:\n - Voer uw Dexcom Clarity gebruikersnaam en wachtwoord in \n   (als u uw telefoonnummer als gebruikersnaam gebruikt, voeg dan uw landcode toe)\n - Controleer de instelling voor een Amerikaans account\nBelangrijk: het werkt niet met een volgersaccount!</string>
 
     <string name="request_timestamp">Bijgewerkt</string>
     <string name="alarm_header">Alarmen</string>
@@ -684,9 +684,9 @@
     <string name="pref_watchfaces_cat">Wijzerplaten van derden</string>
     <string name="pref_watchfaces_info_summary">Deze app biedt geen wijzerplaat, maar biedt verschillende complicaties (de kleine ronde onderdelen van de wijzerplaat), die kunnen worden gebruikt voor wijzerplaten die complicaties van derden ondersteunen.</string>
     <string name="pref_watchfaces_default">Standaard</string>
-    <string name="pref_watchfaces_default_summary">De meeste horlogefabrikanten bieden al wijzerplaten die kunnen worden gebruikt met de GlucoDataHandler-complicatie.\nDe meeste Samsung \"Info\"-wijzerplaten zijn bijvoorbeeld compatibel.</string>
+    <string name="pref_watchfaces_default_summary">De meeste horlogefabrikanten bieden al wijzerplaten die kunnen worden gebruikt met de GlucoDataHandler complicatie.\nDe meeste Samsung \"Info\"-wijzerplaten zijn bijvoorbeeld compatibel.</string>
     <string name="pref_watchfaces_pujie">Pujie</string>
-    <string name="pref_watchfaces_pujie_summary">Pujie is een app voor het maken van wijzerplaten met een cloudbibliotheek.\nOm compatibele wijzerplaten te vinden, zoekt u in de bibliotheek naar wijzerplaten die beginnen met \"GDH_\".\nOpmerking: Pujie is niet compatibel met Wear OS 5-apparaten.\nTik hier om de app in de Play Store te openen.</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie is een app voor het maken van wijzerplaten met een cloudbibliotheek.\nOm compatibele wijzerplaten te vinden, zoekt u in de bibliotheek naar wijzerplaten die beginnen met \"GDH_\".\nOpmerking: Pujie is niet compatibel met Wear OS 5 apparaten.\nTik hier om de app in de Play Store te openen.</string>
     <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
     <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man maakt wijzerplaten van derden die speciaal zijn ontworpen voor gebruik met GlucoDataHandler.\nTik hier om zijn Play Store-pagina te openen.</string>
     <string name="pref_watchfaces_gdc">GDC Watch Faces</string>
@@ -694,9 +694,9 @@
     <string name="pref_phone_wear_screen_off_update">Complicaties altijd bijwerken</string>
     <string name="pref_phone_wear_screen_off_update_summary">Stuur altijd nieuwe glucosewaarden naar het horloge.\nSchakel dit uit om te voorkomen dat gegevens op het horloge worden bijgewerkt terwijl het horlogescherm is uitgeschakeld om de batterij te sparen.\nAlarmwaarden worden altijd naar het horloge verzonden.\nBELANGRIJK: het verouderde alarm is uitgeschakeld op het horloge wanneer deze instelling is uitgeschakeld!</string>
     <string name="alarm_ignore_snooze_for_very_low">Altijd waarschuwen voor zeer laag</string>
-    <string name="alarm_ignore_snooze_for_very_low_summary">Dit alarm zal u waarschuwen, zelfs als snoozen of de algemene stille uren voor alle alarmen actief zijn, zodat u zeker weet dat u wordt gewaarschuwd voor zeer lage glucosewaarden.</string>
+    <string name="alarm_ignore_snooze_for_very_low_summary">Dit alarm zal u waarschuwen, zelfs als snoozen of de algemene stille modus voor alle alarmen actief zijn, zodat u zeker weet dat u wordt gewaarschuwd voor zeer lage glucosewaarden.</string>
 
-    <string name="libre_no_new_value_info">Als deze fout aanhoudt, probeer dan de Libre-app opnieuw te installeren. Dit lost het probleem vaak op.</string>
+    <string name="libre_no_new_value_info">Als deze fout aanhoudt, probeer dan de Libre app opnieuw te installeren. Dit lost het probleem vaak op.</string>
     <string name="src_libre_server">Server</string>
     <string name="source_libre_server_default">Standaard (.io)</string>
     <string name="source_libre_server_russian">Russisch (.ru)</string>
@@ -714,7 +714,7 @@
     <string name="alarm_snooze_on_notification_enabled">Snoozen op melding</string>
     <string name="alarm_snooze_on_notification_summary">Kies maximaal 3 sluimertijden om weer te geven als knoppen op de alarmmelding.</string>
 
-    <string name="pref_show_iob_cob">IOB/COB-waarden weergeven</string>
-    <string name="pref_show_iob_cob_summary">IOB- en COB-waarden weergeven, indien beschikbaar.</string>
+    <string name="pref_show_iob_cob">IOB/COB waarden weergeven</string>
+    <string name="pref_show_iob_cob_summary">IOB en COB waarden weergeven, indien beschikbaar.</string>
 
 </resources>
