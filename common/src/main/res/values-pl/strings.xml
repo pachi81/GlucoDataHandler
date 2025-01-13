@@ -714,7 +714,7 @@
     <string name="alarm_snooze_on_notification_enabled">Przycisk „Odłóż” w powiadomieniu</string>
     <string name="alarm_snooze_on_notification_summary">Wybierz do 3 długości, na jakie można odłożyć alarm, które będą wyświetlane jako przyciski na powiadomieniu o alarmie.</string>
 
-    <string name="pref_show_iob_cob">Show IOB/COB values</string>
-    <string name="pref_show_iob_cob_summary">Show IOB and COB values, if available.</string>
+    <string name="pref_show_iob_cob">Pokaż wartości IOB/COB</string>
+    <string name="pref_show_iob_cob_summary">Pokaż wartości IOB i COB, jeśli są dostępne.</string>
 
 </resources>
