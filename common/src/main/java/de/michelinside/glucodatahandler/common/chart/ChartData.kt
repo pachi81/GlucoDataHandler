@@ -1,23 +1,23 @@
 package de.michelinside.glucodatahandler.common.chart
 
 import com.github.mikephil.charting.data.Entry
+import de.michelinside.glucodatahandler.common.utils.DummyGraphData
 
 object ChartData {
-    fun getData(count: Int): ArrayList<Entry> {
+    private var graphData = DummyGraphData.create(48, min = 40, max = 260, stepMinute = 5).toMutableMap()
+
+    fun getData(minTime: Long = 0L): ArrayList<Entry> {
         val entries = ArrayList<Entry>()
-        val min = 50F
-        val max = 300F
-        var value = min
-        var delta = 10F
-        for (i in 0 until count) {
-            entries.add(Entry(i.toFloat(), value))
-            value += delta
-            if(value >= max)
-                delta = -10F
-            if(value <= min)
-                delta = +10F
+        graphData.forEach { (t, u) ->
+            if(t >= minTime) {
+                entries.add(Entry(TimeValueFormatter.to_chart_x(t), u.toFloat()))
+            }
         }
         return entries
+    }
+
+    fun addData(time: Long, value: Int) {
+        graphData[time] = value
     }
 
 }

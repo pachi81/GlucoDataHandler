@@ -284,4 +284,8 @@ object Constants {
     const val AA_MEDIA_PLAYER_DURATION = "aa_media_player_duration"
 
     const val PATIENT_NAME = "patient_name"
+
+    // graph
+    const val GRAPH_ID = "graph_id"
+
 }

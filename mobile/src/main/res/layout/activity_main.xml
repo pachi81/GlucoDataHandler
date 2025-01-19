@@ -140,6 +140,11 @@
         android:layout_height="200dp"
         />
 
+    <ImageView
+        android:id="@+id/graphImage"
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
+
     <LinearLayout
         android:id="@+id/space_table2"
         android:layout_height="20dp"

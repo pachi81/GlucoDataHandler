@@ -37,6 +37,7 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
+import de.michelinside.glucodatahandler.common.chart.ChartBitmap
 import de.michelinside.glucodatahandler.common.chart.ChartViewer
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmState
@@ -49,8 +50,6 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.ui.Dialogs
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
-import de.michelinside.glucodatahandler.common.utils.DummyGraphData
-import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
@@ -80,13 +79,15 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var sharedPref: SharedPreferences
     private lateinit var optionsMenu: Menu
     private lateinit var chart: LineChart
+    private lateinit var chartImage: ImageView
     private var alarmIcon: MenuItem? = null
     private var snoozeMenu: MenuItem? = null
     private var floatingWidgetItem: MenuItem? = null
     private val LOG_ID = "GDH.Main"
     private var requestNotificationPermission = false
     private var doNotUpdate = false
-    private lateinit var chartHandler: ChartViewer
+    private lateinit var chartViewer: ChartViewer
+    private lateinit var chartBitmap: ChartBitmap
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -110,6 +111,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableDetails = findViewById(R.id.tableDetails)
             tableNotes = findViewById(R.id.tableNotes)
             chart = findViewById(R.id.chart)
+            chartImage = findViewById(R.id.graphImage)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -133,9 +135,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             if (requestPermission())
                 GlucoDataServiceMobile.start(this)
             TextToSpeechUtils.initTextToSpeech(this)
-            //createChart()
-            chartHandler = ChartViewer(chart, this)
-            chartHandler.create()
+            chartViewer = ChartViewer(chart, this)
+            chartViewer.create()
+            chartBitmap = ChartBitmap(chartImage, this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -188,7 +190,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     override fun onDestroy() {
         Log.v(LOG_ID, "onDestroy called")
         super.onDestroy()
-        chartHandler.close()
+        chartViewer.close()
+        chartBitmap.close()
     }
 
     private val requestPermissionLauncher =
@@ -224,17 +227,15 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 .setTitle(CR.string.request_exact_alarm_title)
                 .setMessage(CR.string.request_exact_alarm_summary)
                 .setPositiveButton(CR.string.button_ok) { dialog, which ->
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        try {
-                            startActivity(
-                                Intent(
-                                    ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
-                                    Uri.parse("package:$packageName")
-                                )
+                    try {
+                        startActivity(
+                            Intent(
+                                ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                                Uri.parse("package:$packageName")
                             )
-                        } catch (exc: Exception) {
-                            Log.e(LOG_ID, "requestExactAlarmPermission exception: " + exc.message.toString() )
-                        }
+                        )
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "requestExactAlarmPermission exception: " + exc.message.toString() )
                     }
                 }
                 .setNegativeButton(CR.string.button_cancel) { dialog, which ->
@@ -564,7 +565,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             updateAlarmIcon()
             updateMenuItems()
-
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
         }
