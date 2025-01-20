@@ -25,9 +25,9 @@ import de.michelinside.glucodatahandler.common.utils.DummyGraphData
 import java.util.concurrent.TimeUnit
 
 
-open class ChartViewer(protected val chart: LineChart, protected val context: Context): NotifierInterface,
+open class ChartCreator(protected val chart: LineChart, protected val context: Context): NotifierInterface,
     SharedPreferences.OnSharedPreferenceChangeListener {
-    private val LOG_ID = "GDH.Chart.Viewer"
+    private val LOG_ID = "GDH.Chart.Creator"
     protected var created = false
     protected val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
     protected var init = false

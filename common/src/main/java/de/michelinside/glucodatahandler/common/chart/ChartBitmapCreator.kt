@@ -7,7 +7,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import de.michelinside.glucodatahandler.common.ReceiveData
 
-class ChartBitmapCreator(chart: LineChart, context: Context): ChartViewer(chart, context) {
+class ChartBitmapCreator(chart: LineChart, context: Context): ChartCreator(chart, context) {
     private val LOG_ID = "GDH.Chart.BitmapCreator"
 
     override fun initXaxis() {

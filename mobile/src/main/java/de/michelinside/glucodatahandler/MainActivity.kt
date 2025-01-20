@@ -38,7 +38,7 @@ import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.chart.ChartBitmap
-import de.michelinside.glucodatahandler.common.chart.ChartViewer
+import de.michelinside.glucodatahandler.common.chart.ChartCreator
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmState
 import de.michelinside.glucodatahandler.common.notification.AlarmType
@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private val LOG_ID = "GDH.Main"
     private var requestNotificationPermission = false
     private var doNotUpdate = false
-    private lateinit var chartViewer: ChartViewer
+    private lateinit var chartCreator: ChartCreator
     private lateinit var chartBitmap: ChartBitmap
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -135,8 +135,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             if (requestPermission())
                 GlucoDataServiceMobile.start(this)
             TextToSpeechUtils.initTextToSpeech(this)
-            chartViewer = ChartViewer(chart, this)
-            chartViewer.create()
+            chartCreator = ChartCreator(chart, this)
+            chartCreator.create()
             chartBitmap = ChartBitmap(chartImage, this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
@@ -190,7 +190,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     override fun onDestroy() {
         Log.v(LOG_ID, "onDestroy called")
         super.onDestroy()
-        chartViewer.close()
+        chartCreator.close()
         chartBitmap.close()
     }
 
