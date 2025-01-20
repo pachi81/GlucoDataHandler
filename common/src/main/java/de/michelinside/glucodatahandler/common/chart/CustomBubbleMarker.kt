@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.util.Log
 import android.widget.TextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.Entry
@@ -18,14 +19,26 @@ class CustomBubbleMarker(context: Context) : MarkerView(context, R.layout.marker
     private val LOG_ID = "GDH.Chart.MarkerView"
     private val arrowSize = 35
     private val arrowCircleOffset = 0f
+    private var isGlucose = true
 
-    override fun refreshContent(e: Entry?, highlight: Highlight?) {
+    override fun refreshContent(e: Entry?, highlight: Highlight) {
+        Log.v(LOG_ID, "refreshContent - index ${highlight.dataSetIndex}")
         try {
+            isGlucose = highlight.dataSetIndex == 0
             e?.let {
                 val time: TextView = this.findViewById(R.id.time)
                 val glucose: TextView = this.findViewById(R.id.glucose)
-                time.text = DateFormat.getTimeInstance(DateFormat.DEFAULT).format(TimeValueFormatter.from_chart_x(e.x))
-                glucose.text = GlucoseFormatter.getValueAsString(e.y)
+                val layout: LinearLayoutCompat = this.findViewById(R.id.marker_layout)
+                if(isGlucose) {
+                    time.text = DateFormat.getTimeInstance(DateFormat.DEFAULT)
+                        .format(TimeValueFormatter.from_chart_x(e.x))
+                    glucose.text = GlucoseFormatter.getValueAsString(e.y)
+                    layout.visibility = VISIBLE
+                } else {
+                    time.text = ""
+                    glucose.text = ""
+                    layout.visibility = GONE
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Exception in refreshContent", exc)
@@ -34,6 +47,7 @@ class CustomBubbleMarker(context: Context) : MarkerView(context, R.layout.marker
     }
 
     override fun getOffsetForDrawingAtPoint(posX: Float, posY: Float): MPPointF {
+        Log.v(LOG_ID, "getOffsetForDrawingAtPoint - isGlucose: $isGlucose")
         val offset = offset
         try {
             val chart = chartView
@@ -62,11 +76,12 @@ class CustomBubbleMarker(context: Context) : MarkerView(context, R.layout.marker
     }
 
     override fun draw(canvas: Canvas, posX: Float, posY: Float) {
+        Log.v(LOG_ID, "draw - isGlucose: $isGlucose")
         try {
             val paint = Paint().apply {
                 style = Paint.Style.FILL
                 strokeJoin = Paint.Join.ROUND
-                color = ContextCompat.getColor(context, R.color.transparent_widget_background)
+                color = if(isGlucose) ContextCompat.getColor(context, R.color.transparent_widget_background) else 0
             }
 
             val chart = chartView

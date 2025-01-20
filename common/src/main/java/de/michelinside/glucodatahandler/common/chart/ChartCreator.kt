@@ -14,7 +14,9 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.utils.Utils
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import com.github.mikephil.charting.utils.Utils as ChartUtils
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -22,6 +24,7 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.DummyGraphData
+import de.michelinside.glucodatahandler.common.utils.Utils
 import java.util.concurrent.TimeUnit
 
 
@@ -31,6 +34,7 @@ open class ChartCreator(protected val chart: LineChart, protected val context: C
     protected var created = false
     protected val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
     protected var init = false
+    protected var hasTimeNotifier = false
 
     private val demoMode = false
 
@@ -48,10 +52,21 @@ open class ChartCreator(protected val chart: LineChart, protected val context: C
     private fun init() {
         if(!init) {
             Log.d(LOG_ID, "init")
-            Utils.init(context)
+            ChartUtils.init(context)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
             if(!demoMode)
-                InternalNotifier.addNotifier(context, this, mutableSetOf(NotifySource.MESSAGECLIENT, NotifySource.BROADCAST))
+                updateNotifier()
+        }
+    }
+
+    protected fun updateNotifier() {
+        Log.d(LOG_ID, "updateNotifier - has data: ${ChartData.hasData(getMinTime())} - xAxisEnabled: ${chart.xAxis.isEnabled}")
+        if(ChartData.hasData(getMinTime()) || chart.xAxis.isEnabled) {
+            InternalNotifier.addNotifier(context, this, mutableSetOf(NotifySource.MESSAGECLIENT, NotifySource.BROADCAST, NotifySource.TIME_VALUE))
+            hasTimeNotifier = true
+        } else {
+            InternalNotifier.addNotifier(context, this, mutableSetOf(NotifySource.MESSAGECLIENT, NotifySource.BROADCAST))
+            hasTimeNotifier = false
         }
     }
 
@@ -93,6 +108,7 @@ open class ChartCreator(protected val chart: LineChart, protected val context: C
 
     private fun resetChart() {
         Log.v(LOG_ID, "resetChart")
+        //chart.highlightValue(null)
         chart.fitScreen()
         chart.data?.clearValues()
         chart.axisRight.removeAllLimitLines()
@@ -168,6 +184,18 @@ open class ChartCreator(protected val chart: LineChart, protected val context: C
             val mMarker = CustomBubbleMarker(context)
             mMarker.chartView = chart
             chart.marker = mMarker
+            chart.setOnChartValueSelectedListener(object: OnChartValueSelectedListener {
+                override fun onValueSelected(e: Entry?, h: Highlight?) {
+                    Log.v(LOG_ID, "onValueSelected: ${e?.x} - ${e?.y} - index: ${h?.dataSetIndex}")
+                    if(h?.dataSetIndex == 1) {
+                        // do not select time line
+                        chart.highlightValue(null)
+                    }
+                }
+                override fun onNothingSelected() {
+                    Log.v(LOG_ID, "onNothingSelected")
+                }
+            })
         }
         chart.axisRight.removeAllLimitLines()
 
@@ -202,34 +230,91 @@ open class ChartCreator(protected val chart: LineChart, protected val context: C
 
     protected open fun addEntries(values: ArrayList<Entry>) {
         Log.d(LOG_ID, "Add ${values.size} entries")
-        if(values.isEmpty())
-            return
-
         val dataSet = chart.data.getDataSetByIndex(0) as LineDataSet
         var added = false
-        for (i in 0 until values.size) {
-            val entry = values[i]
-            if(dataSet.values.isEmpty() || dataSet.values.last().x < entry.x) {
-                added = true
-                dataSet.addEntry(entry)
-                val color = ReceiveData.getValueColor(entry.y.toInt())
-                //dataSet.addColor(color)
-                dataSet.circleColors.add(color)
-                dataSet.notifyDataSetChanged()
+        if(values.isNotEmpty()) {
+            for (i in 0 until values.size) {
+                val entry = values[i]
+                if (dataSet.values.isEmpty() || dataSet.values.last().x < entry.x) {
+                    added = true
+                    dataSet.addEntry(entry)
+                    val color = ReceiveData.getValueColor(entry.y.toInt())
+                    //dataSet.addColor(color)
+                    dataSet.circleColors.add(color)
+                    dataSet.notifyDataSetChanged()
 
-                if(chart.axisRight.axisMinimum > (entry.y-10F)) {
-                    chart.axisRight.axisMinimum = entry.y-10F
-                    chart.axisLeft.axisMinimum = chart.axisRight.axisMinimum
-                }
-                if(chart.axisRight.axisMaximum < (entry.y+10F)) {
-                    chart.axisRight.axisMaximum = entry.y+10F
-                    chart.axisLeft.axisMaximum = chart.axisRight.axisMaximum
+                    if (chart.axisRight.axisMinimum > (entry.y - 10F)) {
+                        chart.axisRight.axisMinimum = entry.y - 10F
+                        chart.axisLeft.axisMinimum = chart.axisRight.axisMinimum
+                    }
+                    if (chart.axisRight.axisMaximum < (entry.y + 10F)) {
+                        chart.axisRight.axisMaximum = entry.y + 10F
+                        chart.axisLeft.axisMaximum = chart.axisRight.axisMaximum
+                    }
                 }
             }
         }
 
         if(added) {
             updateChart(dataSet)
+        } else {
+            addEmptyTimeData()
+        }
+    }
+
+    protected fun addEmptyTimeData() {
+        Log.v(LOG_ID, "addEmptyTimeData - entries: ${chart.data?.entryCount}")
+        if(chart.data?.entryCount == 0 && !chart.xAxis.isEnabled) {
+            if(hasTimeNotifier)
+                updateNotifier()
+            return // no data and not xAxis, do not add the time line, as it is not needed
+        }
+        if(!hasTimeNotifier)
+            updateNotifier()
+        var minTime = getMinTime()
+        if (minTime == 0L) // at least one hour should be shown
+            minTime = System.currentTimeMillis() - (60 * 60 * 1000L)
+
+        var minValue = 0L
+        var maxValue = 0L
+
+        if(chart.data != null && chart.data.dataSetCount > 0) {
+            val dataSet = chart.data.getDataSetByIndex(0) as LineDataSet
+            if (dataSet.values.isEmpty()) {
+                Log.v(LOG_ID, "No values, set min and max")
+                minValue = minTime
+                maxValue = System.currentTimeMillis()
+            } else {
+                Log.v(
+                    LOG_ID,
+                    "Min time: ${Utils.getUiTimeStamp(minTime)} - first value: ${
+                        Utils.getUiTimeStamp(TimeValueFormatter.from_chart_x(dataSet.values.first().x).time)
+                    } - last value: ${Utils.getUiTimeStamp(TimeValueFormatter.from_chart_x(dataSet.values.last().x).time)}"
+                )
+                if (TimeValueFormatter.from_chart_x(dataSet.values.first().x).time > minTime) {
+                    minValue = minTime
+                }
+                if (Utils.getElapsedTimeMinute(TimeValueFormatter.from_chart_x(dataSet.values.last().x).time) >= 1) {
+                    maxValue = System.currentTimeMillis()
+                }
+            }
+        }
+        if(minValue > 0 || maxValue > 0) {
+            Log.w(LOG_ID, "Creating extra data set from ${Utils.getUiTimeStamp(minValue)} - ${Utils.getUiTimeStamp(maxValue)}")
+            val entries = ArrayList<Entry>()
+            if(minValue > 0)
+                entries.add(Entry(TimeValueFormatter.to_chart_x(minValue), 120F))
+            if(maxValue > 0)
+                entries.add(Entry(TimeValueFormatter.to_chart_x(maxValue), 120F))
+
+            val timeSet = LineDataSet(entries, "Time line")
+            timeSet.lineWidth = 1F
+            timeSet.circleRadius = 1F
+            timeSet.setDrawValues(false)
+            timeSet.setDrawCircleHole(false)
+            timeSet.setCircleColors(0)
+            timeSet.setColors(0)
+            chart.data.addDataSet(timeSet)
         }
     }
 
@@ -239,11 +324,15 @@ open class ChartCreator(protected val chart: LineChart, protected val context: C
         val left = isLeft()
         Log.v(LOG_ID, "Min: ${chart.xAxis.axisMinimum} - visible: ${chart.lowestVisibleX} - Max: ${chart.xAxis.axisMaximum} - visible: ${chart.highestVisibleX} - isLeft: ${left} - isRight: ${right}" )
         var diffTimeMin = TimeUnit.MILLISECONDS.toMinutes(TimeValueFormatter.from_chart_x(chart.highestVisibleX).time - TimeValueFormatter.from_chart_x(chart.lowestVisibleX).time)
-        Log.d(LOG_ID, "Diff-Time: ${diffTimeMin} minutes")
+        if(!chart.highlighted.isNullOrEmpty() && chart.highlighted[0].dataSetIndex != 0) {
+            Log.v(LOG_ID, "Unset current highlighter")
+            chart.highlightValue(null)
+        }
         chart.data = LineData(dataSet)
+        addEmptyTimeData()
         chart.notifyDataSetChanged()
-        val newDiffTime = TimeUnit.MILLISECONDS.toMinutes( TimeValueFormatter.from_chart_x(dataSet.values.last().x).time - TimeValueFormatter.from_chart_x(chart.lowestVisibleX).time)
-
+        val newDiffTime = TimeUnit.MILLISECONDS.toMinutes( TimeValueFormatter.from_chart_x(chart.xChartMax).time - TimeValueFormatter.from_chart_x(chart.lowestVisibleX).time)
+        Log.d(LOG_ID, "Diff-Time: ${diffTimeMin} minutes - newDiffTime: ${newDiffTime} minutes")
         var setXRange = false
         if(!chart.isScaleXEnabled && newDiffTime >= 90) {
             Log.d(LOG_ID, "Enable X scale")
@@ -262,8 +351,8 @@ open class ChartCreator(protected val chart: LineChart, protected val context: C
                 chart.setVisibleXRangeMaximum(diffTimeMin.toFloat())
                 setXRange = true
             }
-            Log.v(LOG_ID, "moveViewToX ${dataSet.values.last().x}")
-            chart.moveViewToX(dataSet.values.last().x)
+            Log.v(LOG_ID, "moveViewToX ${chart.xChartMax}")
+            chart.moveViewToX(chart.xChartMax)
         } else {
             Log.v(LOG_ID, "Invalidate chart")
             chart.setVisibleXRangeMaximum(diffTimeMin.toFloat())
@@ -280,16 +369,26 @@ open class ChartCreator(protected val chart: LineChart, protected val context: C
     protected open fun update() {
         // update limit lines
         if(ReceiveData.time > 0) {
-            ChartData.addData(ReceiveData.time, ReceiveData.rawValue)
             val entry = Entry(TimeValueFormatter.to_chart_x(ReceiveData.time), ReceiveData.rawValue.toFloat())
             addEntries(arrayListOf(entry))
         }
     }
 
+    protected open fun updateTimeElapsed() {
+        Log.v(LOG_ID, "update time elapsed")
+        updateChart(chart.data.getDataSetByIndex(0) as LineDataSet)
+    }
+
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnNotifyData: $dataSource")
-            update()
+            if(dataSource == NotifySource.TIME_VALUE) {
+                Log.d(LOG_ID, "time elapsed: ${ReceiveData.getElapsedTimeMinute()}")
+                if(ReceiveData.getElapsedTimeMinute().mod(2) == 0)
+                    updateTimeElapsed()
+            } else {
+                update()
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() + " - " + exc.stackTraceToString() )
         }

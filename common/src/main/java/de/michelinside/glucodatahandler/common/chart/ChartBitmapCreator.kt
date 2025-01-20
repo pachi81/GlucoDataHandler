@@ -30,16 +30,20 @@ class ChartBitmapCreator(chart: LineChart, context: Context): ChartCreator(chart
     }
 
     override fun getDefaultRange(): Long {
-        return 120L
+        return 60L
     }
 
     override fun getMinTime(): Long {
-        return System.currentTimeMillis() - getDefaultRange()*60*1000L
+        return System.currentTimeMillis() - (getDefaultRange()*60*1000L)
     }
 
     override fun updateChart(dataSet: LineDataSet) {
         Log.v(LOG_ID, "Update chart for ${dataSet.values.size} entries and ${dataSet.circleColors.size} colors")
-        chart.data = LineData(dataSet)
+        if(dataSet.values.isNotEmpty())
+            chart.data = LineData(dataSet)
+        else
+            chart.data = LineData()
+        addEmptyTimeData()
         chart.notifyDataSetChanged()
         chart.invalidate()
     }
@@ -51,18 +55,23 @@ class ChartBitmapCreator(chart: LineChart, context: Context): ChartCreator(chart
         chart.data?.clearValues()
         chart.data?.notifyDataChanged()
         chart.notifyDataSetChanged()
-        //chart.clear()
-        initData()
+        if(ChartData.hasData(getMinTime())) {
+            initData()
+        } else {
+            Log.d(LOG_ID, "no data available for bitmap - reset chart")
+            create()
+            updateNotifier()
+        }
     }
 
     override fun update() {
         // update limit lines
-        if(ReceiveData.time > 0) {
-            ChartData.addData(ReceiveData.time, ReceiveData.rawValue)
-            createBitmap()
-        }
+        createBitmap()
     }
 
+    override fun updateTimeElapsed() {
+        update()
+    }
 
 
 }
