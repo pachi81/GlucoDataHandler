@@ -2,12 +2,10 @@ package de.michelinside.glucodatahandler.common.chart
 
 import android.content.Context
 import android.util.Log
-import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import de.michelinside.glucodatahandler.common.ReceiveData
 
-class ChartBitmapCreator(chart: LineChart, context: Context): ChartCreator(chart, context) {
+class ChartBitmapCreator(chart: GlucoseChart, context: Context): ChartCreator(chart, context) {
     private val LOG_ID = "GDH.Chart.BitmapCreator"
 
     override fun initXaxis() {
@@ -30,7 +28,7 @@ class ChartBitmapCreator(chart: LineChart, context: Context): ChartCreator(chart
     }
 
     override fun getDefaultRange(): Long {
-        return 60L
+        return 120L
     }
 
     override fun getMinTime(): Long {
@@ -51,17 +49,11 @@ class ChartBitmapCreator(chart: LineChart, context: Context): ChartCreator(chart
     private fun createBitmap() {
         Log.d(LOG_ID, "createBitmap")
         // reset bitmap and create it
-        chart.fitScreen()
+        /*chart.fitScreen()
         chart.data?.clearValues()
         chart.data?.notifyDataChanged()
-        chart.notifyDataSetChanged()
-        if(ChartData.hasData(getMinTime())) {
-            initData()
-        } else {
-            Log.d(LOG_ID, "no data available for bitmap - reset chart")
-            create()
-            updateNotifier()
-        }
+        chart.notifyDataSetChanged()*/
+        resetData()
     }
 
     override fun update() {

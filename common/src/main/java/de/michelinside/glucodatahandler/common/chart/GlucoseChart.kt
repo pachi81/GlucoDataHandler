@@ -1,6 +1,7 @@
 package de.michelinside.glucodatahandler.common.chart
 
 import android.content.Context
+import android.graphics.Canvas
 import android.os.Bundle
 import android.util.AttributeSet
 import android.util.Log
@@ -23,18 +24,46 @@ class GlucoseChart: LineChart {
         defStyle
     )
 
+    private var processing = false
+
     override fun invalidate() {
-        if(id == View.NO_ID) {
-            id = generateViewId()
+        processing = true
+        try {
+            if(id == View.NO_ID) {
+                id = generateViewId()
+            }
+            //Log.v(LOG_ID, "start invalidate - notify ID: $id")
+            super.invalidate()
+            //Log.i(LOG_ID, "invalidate finished - notify ID: $id")
+            InternalNotifier.notify(context, NotifySource.GRAPH_CHANGED, Bundle().apply { putInt(Constants.GRAPH_ID, id) })
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "invalidate exception: ${exc.message}\n${exc.stackTraceToString()}")
         }
-        Log.v(LOG_ID, "start invalidate - notify ID: $id")
-        super.invalidate()
-        Log.i(LOG_ID, "invalidate finished - notify ID: $id")
-        InternalNotifier.notify(context, NotifySource.GRAPH_CHANGED, Bundle().apply { putInt(Constants.GRAPH_ID, id) })
+        processing = false
+    }
+
+
+    fun waitForInvalidate() {
+        while(processing) {
+            Thread.sleep(10)
+        }
     }
 
     override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
+        try {
+            super.onDetachedFromWindow()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onDetachedFromWindow exception: ${exc.message}\n${exc.stackTraceToString()}")
+        }
         Log.d(LOG_ID, "onDetachedFromWindow for ID: $id")
     }
+
+    override fun onDraw(canvas: Canvas) {
+        try {
+            super.onDraw(canvas)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onDraw exception: ${exc.message}\n${exc.stackTraceToString()}")
+        }
+    }
+
 }

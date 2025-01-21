@@ -29,7 +29,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.MenuCompat
 import androidx.core.view.setPadding
 import androidx.preference.PreferenceManager
-import com.github.mikephil.charting.charts.LineChart
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
@@ -39,6 +38,7 @@ import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.chart.ChartBitmap
 import de.michelinside.glucodatahandler.common.chart.ChartCreator
+import de.michelinside.glucodatahandler.common.chart.GlucoseChart
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmState
 import de.michelinside.glucodatahandler.common.notification.AlarmType
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var btnSources: Button
     private lateinit var sharedPref: SharedPreferences
     private lateinit var optionsMenu: Menu
-    private lateinit var chart: LineChart
+    private lateinit var chart: GlucoseChart
     private lateinit var chartImage: ImageView
     private var alarmIcon: MenuItem? = null
     private var snoozeMenu: MenuItem? = null

@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.core.view.drawToBitmap
-import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -28,9 +27,9 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 import java.util.concurrent.TimeUnit
 
 
-open class ChartCreator(protected val chart: LineChart, protected val context: Context): NotifierInterface,
+open class ChartCreator(protected val chart: GlucoseChart, protected val context: Context): NotifierInterface,
     SharedPreferences.OnSharedPreferenceChangeListener {
-    private val LOG_ID = "GDH.Chart.Creator"
+    private var LOG_ID = "GDH.Chart.Creator"
     protected var created = false
     protected val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
     protected var init = false
@@ -51,6 +50,7 @@ open class ChartCreator(protected val chart: LineChart, protected val context: C
 
     private fun init() {
         if(!init) {
+            LOG_ID = "GDH.Chart.Creator." + chart.id.toString()
             Log.d(LOG_ID, "init")
             ChartUtils.init(context)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
@@ -62,10 +62,10 @@ open class ChartCreator(protected val chart: LineChart, protected val context: C
     protected fun updateNotifier() {
         Log.d(LOG_ID, "updateNotifier - has data: ${ChartData.hasData(getMinTime())} - xAxisEnabled: ${chart.xAxis.isEnabled}")
         if(ChartData.hasData(getMinTime()) || chart.xAxis.isEnabled) {
-            InternalNotifier.addNotifier(context, this, mutableSetOf(NotifySource.MESSAGECLIENT, NotifySource.BROADCAST, NotifySource.TIME_VALUE))
+            InternalNotifier.addNotifier(context, this, mutableSetOf(NotifySource.MESSAGECLIENT, NotifySource.BROADCAST, NotifySource.GRAPH_DATA_CHANGED, NotifySource.TIME_VALUE))
             hasTimeNotifier = true
         } else {
-            InternalNotifier.addNotifier(context, this, mutableSetOf(NotifySource.MESSAGECLIENT, NotifySource.BROADCAST))
+            InternalNotifier.addNotifier(context, this, mutableSetOf(NotifySource.MESSAGECLIENT, NotifySource.BROADCAST, NotifySource.GRAPH_DATA_CHANGED))
             hasTimeNotifier = false
         }
     }
@@ -111,6 +111,7 @@ open class ChartCreator(protected val chart: LineChart, protected val context: C
         //chart.highlightValue(null)
         chart.fitScreen()
         chart.data?.clearValues()
+        chart.data?.notifyDataChanged()
         chart.axisRight.removeAllLimitLines()
         chart.xAxis.valueFormatter = null
         chart.axisRight.valueFormatter = null
@@ -119,6 +120,7 @@ open class ChartCreator(protected val chart: LineChart, protected val context: C
         chart.notifyDataSetChanged()
         chart.clear()
         chart.invalidate()
+        chart.waitForInvalidate()
     }
 
     protected open fun initXaxis() {
@@ -155,7 +157,7 @@ open class ChartCreator(protected val chart: LineChart, protected val context: C
     }
 
     protected fun initDataSet() {
-        if(chart.data == null || chart.data.entryCount == 0) {
+        if(chart.data == null || chart.data.dataSetCount == 0) {
             Log.v(LOG_ID, "initDataSet")
             val dataSet = LineDataSet(ArrayList(), "Glucose Values")
             //dataSet.valueFormatter = GlucoseFormatter()
@@ -168,6 +170,8 @@ open class ChartCreator(protected val chart: LineChart, protected val context: C
             dataSet.axisDependency = YAxis.AxisDependency.RIGHT
             dataSet.enableDashedLine(0F, 1F, 0F)
             chart.data = LineData(dataSet)
+            chart.notifyDataSetChanged()
+            Log.v(LOG_ID, "Min: ${chart.xAxis.axisMinimum} - visible: ${chart.lowestVisibleX} - Max: ${chart.xAxis.axisMaximum} - visible: ${chart.highestVisibleX}")
         }
     }
 
@@ -213,6 +217,7 @@ open class ChartCreator(protected val chart: LineChart, protected val context: C
         chart.axisLeft.axisMaximum = chart.axisRight.axisMaximum
         chart.isScaleXEnabled = false
         chart.invalidate()
+        chart.waitForInvalidate()
     }
 
     protected fun initData() {
@@ -233,6 +238,10 @@ open class ChartCreator(protected val chart: LineChart, protected val context: C
         val dataSet = chart.data.getDataSetByIndex(0) as LineDataSet
         var added = false
         if(values.isNotEmpty()) {
+            if(dataSet.values.isEmpty()) {
+                Log.v(LOG_ID, "Reset colors")
+                dataSet.resetCircleColors()
+            }
             for (i in 0 until values.size) {
                 val entry = values[i]
                 if (dataSet.values.isEmpty() || dataSet.values.last().x < entry.x) {
@@ -241,7 +250,6 @@ open class ChartCreator(protected val chart: LineChart, protected val context: C
                     val color = ReceiveData.getValueColor(entry.y.toInt())
                     //dataSet.addColor(color)
                     dataSet.circleColors.add(color)
-                    dataSet.notifyDataSetChanged()
 
                     if (chart.axisRight.axisMinimum > (entry.y - 10F)) {
                         chart.axisRight.axisMinimum = entry.y - 10F
@@ -256,6 +264,7 @@ open class ChartCreator(protected val chart: LineChart, protected val context: C
         }
 
         if(added) {
+            dataSet.notifyDataSetChanged()
             updateChart(dataSet)
         } else {
             addEmptyTimeData()
@@ -379,6 +388,19 @@ open class ChartCreator(protected val chart: LineChart, protected val context: C
         updateChart(chart.data.getDataSetByIndex(0) as LineDataSet)
     }
 
+    fun resetData() {
+        if(chart.data != null) {
+            Log.w(LOG_ID, "Reset data")
+            val dataSet = chart.data.getDataSetByIndex(0) as LineDataSet
+            dataSet.clear()
+            dataSet.setColors(0)
+            dataSet.setCircleColor(0)
+            chart.data.notifyDataChanged()
+            chart.notifyDataSetChanged()
+        }
+        initData()
+    }
+
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
             Log.d(LOG_ID, "OnNotifyData: $dataSource")
@@ -386,6 +408,9 @@ open class ChartCreator(protected val chart: LineChart, protected val context: C
                 Log.d(LOG_ID, "time elapsed: ${ReceiveData.getElapsedTimeMinute()}")
                 if(ReceiveData.getElapsedTimeMinute().mod(2) == 0)
                     updateTimeElapsed()
+            } else if(dataSource == NotifySource.GRAPH_DATA_CHANGED) {
+                Log.d(LOG_ID, "graph data changed")
+                resetData() // recreate chart with new graph data
             } else {
                 update()
             }
@@ -405,7 +430,7 @@ open class ChartCreator(protected val chart: LineChart, protected val context: C
                     Thread.sleep(1000)
                 }
                 Log.w(LOG_ID, "Demo finished")
-                create()
+                resetData()
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "demo exception: " + exc.message.toString() + " - " + exc.stackTraceToString() )
             }
@@ -432,7 +457,8 @@ open class ChartCreator(protected val chart: LineChart, protected val context: C
             if (graphPrefList.contains(key)) {
                 Log.i(LOG_ID, "re create graph after settings changed for key: $key")
                 ReceiveData.updateSettings(sharedPref)
-                create()
+                if(chart.data != null && chart.data.getDataSetByIndex(0).entryCount > 0)
+                    create() // recreate chart with new graph data
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.message.toString() )
