@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.chart.ChartData
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notification.AlarmType
@@ -324,13 +325,14 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     fun getValueColor(rawValue: Int): Int {
-        if(highValue>0F && rawValue >= highValue)
+        val customValue = if(isMmol) GlucoDataUtils.mgToMmol(rawValue.toFloat()) else rawValue.toFloat()
+        if(high>0F && customValue >= high)
             return getAlarmTypeColor(AlarmType.VERY_HIGH)
-        if(lowValue>0F && rawValue <= lowValue)
+        if(low>0F && customValue <= low)
             return getAlarmTypeColor(AlarmType.VERY_LOW)
-        if(targetMinValue>0F && rawValue < targetMinValue)
+        if(targetMin>0F && customValue < targetMin)
             return getAlarmTypeColor(AlarmType.LOW)
-        if(targetMaxValue>0F && rawValue > targetMaxValue)
+        if(targetMax>0F && customValue > targetMax)
             return getAlarmTypeColor(AlarmType.HIGH)
         return getAlarmTypeColor(AlarmType.OK)
     }
@@ -556,6 +558,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                             alarm = alarm or 16
                         }
                     }
+
+                    ChartData.addData(time, rawValue)
 
                     val notifySource = if(interApp) NotifySource.MESSAGECLIENT else NotifySource.BROADCAST
 

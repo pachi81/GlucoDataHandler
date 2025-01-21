@@ -10,6 +10,7 @@ import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
+import de.michelinside.glucodatahandler.common.chart.ChartData
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -404,17 +405,45 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         val jsonObject = checkResponse(body)
         if (jsonObject != null && jsonObject.has("data")) {
             val data = jsonObject.optJSONObject("data")
-            if(data != null && data.has("connection")) {
-                val connection = data.optJSONObject("connection")
-                if(connection!=null)
-                    return parseConnectionData(connection)
+            if(data != null) {
+                if(ChartData.needsData() && data.has("graphData")) {
+                    parseGraphData(data.optJSONArray("graphData"))
+                }
+                if(data.has("connection")) {
+                    val connection = data.optJSONObject("connection")
+                    if(connection!=null)
+                        return parseConnectionData(connection)
+                }
             }
         }
+
         Log.e(LOG_ID, "No data found in response: ${replaceSensitiveData(body!!)}")
         setLastError("Invalid response! Please send logs to developer.")
         reset()
         retry = true
         return false
+    }
+
+    private fun parseGraphData(graphData: JSONArray?) {
+        try {
+            if(graphData != null && graphData.length() > 0) {
+                Log.d(LOG_ID, "Parse graph data for ${graphData.length()} entries")
+                for (i in 0 until graphData.length()) {
+                    val glucoseData = graphData.optJSONObject(i)
+                    if(glucoseData != null) {
+                        val parsedUtc = parseUtcTimestamp(glucoseData.optString("FactoryTimestamp"))
+                        val parsedLocal = parseLocalTimestamp(glucoseData.optString("Timestamp"))
+                        val time = if (parsedUtc > 0) parsedUtc else parsedLocal
+                        val value = glucoseData.optInt("ValueInMgPerDl")
+                        if(value > 0 && time > 0)
+                            ChartData.addData(time, value)
+                    }
+                }
+                InternalNotifier.notify(GlucoDataService.context!!, NotifySource.GRAPH_DATA_CHANGED, null)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "parseGraphData exception: " + exc.toString() )
+        }
     }
 
     private fun handleGlucoseResponse(body: String?): Boolean {
@@ -464,6 +493,9 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                     setState(SourceState.NO_NEW_VALUE, GlucoDataService.context!!.resources.getString(R.string.no_data_in_server_response))
                     return false
                 }
+                if(ChartData.needsData() && patientId.isNotEmpty() && patientData.isNotEmpty()) {
+                    return handleGraphResponse(httpGet(getUrl(GRAPH_ENDPOINT.format(patientId)), getHeader()))
+                }
                 return parseConnectionData(data)
             } else {
                 Log.e(LOG_ID, "No data array found in response: ${replaceSensitiveData(body!!)}")
@@ -490,13 +522,6 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                 glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, glucoseData.optDouble("Value").toFloat())
                 glucoExtras.putInt(ReceiveData.MGDL, glucoseData.optInt("ValueInMgPerDl"))
                 glucoExtras.putFloat(ReceiveData.RATE, getRateFromTrend(glucoseData.optInt("TrendArrow")))
-                if (glucoseData.optBoolean("isHigh"))
-                    glucoExtras.putInt(ReceiveData.ALARM, 6)
-                else if (glucoseData.optBoolean("isLow"))
-                    glucoExtras.putInt(ReceiveData.ALARM, 7)
-                else
-                    glucoExtras.putInt(ReceiveData.ALARM, 0)
-
                 glucoExtras.putString(ReceiveData.SERIAL, "LibreLink")
                 if (data.has("sensor")) {
                     val sensor = data.optJSONObject("sensor")
