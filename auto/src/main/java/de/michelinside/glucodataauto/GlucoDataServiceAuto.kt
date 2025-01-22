@@ -54,6 +54,8 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
         private var dexcomReceiver: DexcomBroadcastReceiver? = null
         private var nsEmulatorReceiver: NsEmulatorReceiver? = null
         private var diaboxReceiver: DiaboxReceiver? = null
+        private var patient_name: String? = null
+        val patientName: String? get() = patient_name
 
         val connected: Boolean get() = car_connected || CarMediaBrowserService.active
 
@@ -72,9 +74,15 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
             Log.v(LOG_ID, "migrateSettings called")
             GlucoDataService.migrateSettings(context)
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-            if(sharedPref.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, true)) {
+            if(!sharedPref.contains(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB)) {
                 with(sharedPref.edit()) {
                     putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, false)
+                    apply()
+                }
+            }
+            if(Constants.IS_SECOND && !sharedPref.contains(Constants.PATIENT_NAME)) {
+                with(sharedPref.edit()) {
+                    putString(Constants.PATIENT_NAME, "SECOND")
                     apply()
                 }
             }
@@ -201,8 +209,9 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
 
         private fun sendStateBroadcast(context: Context, enabled: Boolean) {
             try {
-                Log.d(LOG_ID, "Sending state broadcast for state: " + enabled)
+                Log.i(LOG_ID, "Sending state broadcast for state: $enabled - to ${Constants.PACKAGE_GLUCODATAHANDLER}")
                 val intent = Intent(Constants.GLUCODATAAUTO_STATE_ACTION)
+                intent.setPackage(Constants.PACKAGE_GLUCODATAHANDLER)
                 intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
                 intent.putExtra(Constants.GLUCODATAAUTO_STATE_EXTRA, enabled)
                 context.sendBroadcast(intent)
@@ -346,6 +355,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
             TextToSpeechUtils.initTextToSpeech(this)
             val sharedPref = getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
+            patient_name = sharedPref.getString(Constants.PATIENT_NAME, "")
             val isForeground = (if(intent != null) intent.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, false) else false) || sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
             if (isForeground && !isForegroundService) {
                 Log.i(LOG_ID, "Starting service in foreground!")
@@ -399,7 +409,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
             .build()
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called with key $key")
             when(key) {
@@ -411,6 +421,9 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                 Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED -> {
                     if(dataSyncCount>0)
                         updateSourceReceiver(this, key)
+                }
+                Constants.PATIENT_NAME -> {
+                    patient_name = sharedPreferences.getString(Constants.PATIENT_NAME, "")
                 }
             }
         } catch (exc: Exception) {

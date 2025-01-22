@@ -44,6 +44,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
     private var last_notification_time = 0L
     const val FORCE_NEXT_NOTIFY = "force_next_notify"
     private var forceNextNotify = false
+    private var show_iob_cob = false
     @SuppressLint("StaticFieldLeak")
     private lateinit var notificationCompat: NotificationCompat.Builder
 
@@ -91,7 +92,8 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         notification_interval = if (alarmOnly) -1 else sharedPref.getInt(Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM, 1).toLong()
         val reappear_active = notification_reappear_interval > 0
         notification_reappear_interval = if (alarmOnly) 0L else sharedPref.getInt(Constants.SHARED_PREF_CAR_NOTIFICATION_REAPPEAR_INTERVAL, 5).toLong()
-        Log.i(LOG_ID, "notification settings changed: active: " + enable_notification + " - interval: " + notification_interval + " - reappear:" + notification_reappear_interval)
+        show_iob_cob = sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION_SHOW_IOB_COB, show_iob_cob)
+        Log.i(LOG_ID, "notification settings changed: active: " + enable_notification + " - interval: " + notification_interval + " - reappear:" + notification_reappear_interval + " - show_iob_cob: " + show_iob_cob)
         if(init && GlucoDataServiceAuto.connected) {
             if (enable_notification)
                 ElapsedTimeTask.setInterval(notification_reappear_interval)
@@ -288,12 +290,29 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
             .setImportant(true)
             .build()
         val messagingStyle = NotificationCompat.MessagingStyle(person)
+        var title = ""
         if (isObsolete)
-            messagingStyle.conversationTitle = context.getString(CR.string.no_new_value, ReceiveData.getElapsedTimeMinute())
+            title = context.getString(CR.string.no_new_value, ReceiveData.getElapsedTimeMinute())
         else
-            messagingStyle.conversationTitle = getAlarmText(context) + ReceiveData.getGlucoseAsString()  + " (Δ " + ReceiveData.getDeltaAsString() + ")"
+            title = getAlarmText(context) + ReceiveData.getGlucoseAsString()  + " (Δ " + ReceiveData.getDeltaAsString()
+
+        if (show_iob_cob && !ReceiveData.isIobCobObsolete()) {
+            if(!ReceiveData.iob.isNaN()) {
+                title += " 💉 " + ReceiveData.getIobAsString(true)
+            }
+            if(!ReceiveData.cob.isNaN()) {
+                title += " 🍔 " + ReceiveData.getCobAsString(true)
+            }
+        }
+        title += ")"
+        messagingStyle.conversationTitle = title
         messagingStyle.isGroupConversation = false
-        messagingStyle.addMessage(DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(ReceiveData.time)), System.currentTimeMillis(), person)
+        var message = ""
+        if(!GlucoDataServiceAuto.patientName.isNullOrEmpty()) {
+            message += GlucoDataServiceAuto.patientName + " - "
+        }
+        message += "🕒 " + DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(ReceiveData.time))
+        messagingStyle.addMessage(message, System.currentTimeMillis(), person)
         return messagingStyle
     }
 
@@ -341,7 +360,8 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                 Constants.SHARED_PREF_CAR_NOTIFICATION,
                 Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY,
                 Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM,
-                Constants.SHARED_PREF_CAR_NOTIFICATION_REAPPEAR_INTERVAL -> {
+                Constants.SHARED_PREF_CAR_NOTIFICATION_REAPPEAR_INTERVAL,
+                Constants.SHARED_PREF_CAR_NOTIFICATION_SHOW_IOB_COB -> {
                     updateSettings(sharedPreferences!!)
                 }
             }

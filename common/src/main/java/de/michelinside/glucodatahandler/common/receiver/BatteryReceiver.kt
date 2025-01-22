@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.notifier.*
 
 class BatteryReceiver: BroadcastReceiver() {
@@ -14,11 +16,20 @@ class BatteryReceiver: BroadcastReceiver() {
             if (intent.extras == null || intent.extras!!.isEmpty) {
                 return
             }
+            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            val enabled = sharedPref!!.getBoolean(Constants.SHARED_PREF_BATTERY_RECEIVER_ENABLED, true)
             val curValue = intent.extras!!.getInt(LEVEL, -1)
-            Log.i(LOG_ID, "Received batter level: " + curValue.toString() + "%")
-            if (curValue >= 0 && curValue != batteryPercentage) {
-                batteryPercentage = curValue
-                InternalNotifier.notify(context, NotifySource.BATTERY_LEVEL, batteryBundle)
+            Log.i(LOG_ID, "Received batter level: " + curValue.toString() + "% - enabled: $enabled")
+            if (enabled) {
+                if (curValue >= 0 && curValue != batteryPercentage) {
+                    batteryPercentage = curValue
+                    InternalNotifier.notify(context, NotifySource.BATTERY_LEVEL, batteryBundle)
+                }
+            } else {
+                // used as watchdog only!
+                GlucoDataService.checkServices(context)
+                if(batteryPercentage != 0)
+                    batteryPercentage = 0
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "BatteryReceiver exception: " + exc.message.toString() )

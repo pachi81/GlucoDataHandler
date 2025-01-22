@@ -14,6 +14,8 @@ import android.util.TypedValue
 import android.view.*
 import android.view.View.*
 import android.widget.ImageView
+import android.widget.TableLayout
+import android.widget.TableRow
 import android.widget.TextView
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
@@ -37,6 +39,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
     private lateinit var txtTime: TextView
     private lateinit var txtIob: TextView
     private lateinit var txtCob: TextView
+    private lateinit var column2: TableLayout
     private lateinit var sharedPref: SharedPreferences
     private lateinit var sharedInternalPref: SharedPreferences
     private val LOG_ID = "GDH.FloatingWidget"
@@ -59,6 +62,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
             txtTime = floatingView.findViewById(R.id.timeText)
             txtIob = floatingView.findViewById(R.id.iobText)
             txtCob = floatingView.findViewById(R.id.cobText)
+            column2 = floatingView.findViewById(R.id.column2)
             //setting the layout parameters
             update()
         } catch (exc: Exception) {
@@ -99,7 +103,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
     }
 
     private fun applyStyle() : Float {
-        var bgTextSize = 30f
+        var bgTextSize = 10f
         when(sharedPref.getString(Constants.SHARED_PREF_FLOATING_WIDGET_STYLE, Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA)) {
             Constants.WIDGET_STYLE_GLUCOSE_TREND_DELTA -> {
                 txtTime.visibility = GONE
@@ -123,7 +127,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
                 txtCob.visibility = GONE
             }
             Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA_IOB_COB -> {
-                bgTextSize = 20f
+                bgTextSize = 10f
                 txtTime.visibility = VISIBLE
                 txtDelta.visibility = VISIBLE
                 viewIcon.visibility = VISIBLE
@@ -131,7 +135,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
                 txtCob.visibility = VISIBLE
             }
             else -> {
-                bgTextSize = 20f
+                bgTextSize = 10f
                 txtTime.visibility = VISIBLE
                 txtDelta.visibility = VISIBLE
                 viewIcon.visibility = VISIBLE
@@ -152,20 +156,27 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
         } else {
             txtBgValue.paintFlags = 0
         }
-        viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
+        val resizeFactor = sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, 5).toFloat()
+        val size = minOf(resizeFactor.toInt()*20, 200)
+        viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(width = size, height = size))
         viewIcon.contentDescription = ReceiveData.getRateAsText(context)
         txtDelta.text = "Δ ${ReceiveData.getDeltaAsString()}"
         txtTime.text = "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(context)}"
         txtIob.text = "💉 ${ReceiveData.getIobAsString()}"
         txtCob.text = "🍔 ${ReceiveData.getCobAsString()}"
 
-        val resizeFactor = sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, 3).toFloat()
-        txtBgValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+resizeFactor*4f)
-        viewIcon.minimumWidth = Utils.dpToPx(32f+resizeFactor*4f, context)
-        txtDelta.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+ resizeFactor *2f, MAX_SIZE))
-        txtTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+ resizeFactor *2f, MAX_SIZE))
-        txtIob.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+ resizeFactor *2f, MAX_SIZE))
-        txtCob.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+ resizeFactor *2f, MAX_SIZE))
+        txtBgValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+resizeFactor*5f)
+        viewIcon.minimumWidth = Utils.dpToPx(20f+resizeFactor*4f, context)
+        txtDelta.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(6f+ resizeFactor *2f, MAX_SIZE))
+        txtTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(6f+ resizeFactor *2f, MAX_SIZE))
+        txtIob.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(6f+ resizeFactor *2f, MAX_SIZE))
+        txtCob.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(6f+ resizeFactor *2f, MAX_SIZE))
+
+        if(txtDelta.visibility == VISIBLE) {
+            val layout = TableRow.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.MATCH_PARENT)
+            layout.marginStart = Utils.spToPx(minOf(resizeFactor*3F, 15F), context)
+            column2.layoutParams = layout
+        }
     }
 
     private fun update() {

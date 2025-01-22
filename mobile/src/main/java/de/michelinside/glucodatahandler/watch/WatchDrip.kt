@@ -22,11 +22,14 @@ import de.michelinside.glucodatahandler.common.receiver.BroadcastServiceAPI
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
+import java.math.RoundingMode
 
 object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
     private val LOG_ID = "GDH.WatchDrip"
     private var init = false
     private var active = false
+    private var sendInterval = 1
+    private var lastSendValuesTime = 0L
     val receivers = mutableSetOf<String>()
     class WatchDripReceiver: BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -199,6 +202,7 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
                         sendBroadcastToReceiver(context, it, bundle)
                     }
                 }
+                lastSendValuesTime = ReceiveData.time
             } else {
                 Log.i(LOG_ID, "No receiver found for sending broadcast")
             }
@@ -308,10 +312,24 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
                 Constants.SHARED_PREF_WATCHDRIP -> {
                     updateSettings(sharedPreferences!!, true)
                 }
+                Constants.SHARED_PREF_SEND_TO_WATCH_INTERVAL -> {
+                    sendInterval = sharedPreferences!!.getInt(Constants.SHARED_PREF_SEND_TO_WATCH_INTERVAL, 1)
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
         }
+    }
+
+    private fun canSendBroadcast(dataSource: NotifySource): Boolean {
+        if(sendInterval > 1 && !ReceiveData.forceAlarm && ReceiveData.getAlarmType() != AlarmType.VERY_LOW && (dataSource == NotifySource.BROADCAST || dataSource == NotifySource.MESSAGECLIENT)) {
+            val elapsed = Utils.getElapsedTimeMinute(lastSendValuesTime, RoundingMode.HALF_UP)
+            if ( elapsed < sendInterval) {
+                Log.i(LOG_ID, "Ignore data because of interval $sendInterval - elapsed: $elapsed")
+                return false
+            }
+        }
+        return true
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
@@ -333,7 +351,8 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
                     }
                 }
                 else -> {
-                    sendBroadcast(context, BroadcastServiceAPI.CMD_UPDATE_BG)
+                    if(canSendBroadcast(dataSource))
+                        sendBroadcast(context, BroadcastServiceAPI.CMD_UPDATE_BG)
                 }
             }
         } catch (exc: Exception) {

@@ -21,9 +21,9 @@ import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.Intents
-import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.preferences.PreferenceHelper
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import kotlin.collections.HashMap
 import kotlin.collections.List
@@ -76,10 +76,10 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
     override fun onResume() {
         Log.d(LOG_ID, "onResume called")
         try {
+            super.onResume()
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
             updateEnablePrefs.clear()
             update()
-            super.onResume()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.toString())
         }
@@ -88,8 +88,8 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
     override fun onPause() {
         Log.d(LOG_ID, "onPause called")
         try {
-            preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
             super.onPause()
+            preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.toString())
         }
@@ -310,6 +310,7 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
 }
 
 class NotificaitonSettingsFragment: SettingsFragmentBase(R.xml.pref_notification) {}
+
 class WatchSettingsFragment: SettingsFragmentBase(R.xml.pref_watch) {
     override fun initPreferences() {
         Log.v(LOG_ID, "initPreferences called")
@@ -325,15 +326,18 @@ class WatchSettingsFragment: SettingsFragmentBase(R.xml.pref_watch) {
             true
         }
 
-        val prefWatchDripLink = findPreference<Preference>(Constants.SHARED_PREF_OPEN_WATCH_DRIP_LINK)
-        prefWatchDripLink!!.setOnPreferenceClickListener {
-            val browserIntent = Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse(resources.getText(CR.string.watchdrip_link).toString())
-            )
-            startActivity(browserIntent)
-            true
-        }
+        PreferenceHelper.setLinkOnClick(findPreference(Constants.SHARED_PREF_OPEN_WATCH_DRIP_LINK), CR.string.watchdrip_link, requireContext())
+    }
+}
+
+class WatchFaceFragment: SettingsFragmentBase(R.xml.pref_watchfaces) {
+    override fun initPreferences() {
+        Log.v(LOG_ID, "initPreferences called")
+
+        PreferenceHelper.setLinkOnClick(findPreference(Constants.SHARED_PREF_WATCHFACES_PUJIE), CR.string.playstore_pujie_watchfaces, requireContext())
+        PreferenceHelper.setLinkOnClick(findPreference(Constants.SHARED_PREF_WATCHFACES_DMM), CR.string.playstore_dmm_watchfaces, requireContext())
+        PreferenceHelper.setLinkOnClick(findPreference(Constants.SHARED_PREF_WATCHFACES_GDC), CR.string.playstore_gdc_watchfaces, requireContext())
+
     }
 }
 
@@ -353,21 +357,19 @@ class GDASettingsFragment: SettingsFragmentBase(R.xml.pref_gda) {
         super.initPreferences()
         if (PackageUtils.isGlucoDataAutoAvailable(requireContext())) {
             val sendToGDA = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO)
+            PreferenceHelper.replaceSecondTitle(sendToGDA)
+            PreferenceHelper.replaceSecondSummary(sendToGDA)
             sendToGDA!!.isVisible = true
             val sendPrefToGDA = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO)
+            PreferenceHelper.replaceSecondSummary(sendPrefToGDA)
             sendPrefToGDA!!.isVisible = true
         } else {
             val no_gda_info = findPreference<Preference>(Constants.SHARED_PREF_NO_GLUCODATAAUTO)
             if (no_gda_info != null) {
+                PreferenceHelper.replaceSecondTitle(no_gda_info)
+                PreferenceHelper.replaceSecondSummary(no_gda_info)
                 no_gda_info.isVisible = true
-                no_gda_info.setOnPreferenceClickListener {
-                    val browserIntent = Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(resources.getText(CR.string.glucodataauto_link).toString())
-                    )
-                    startActivity(browserIntent)
-                    true
-                }
+                PreferenceHelper.setLinkOnClick(no_gda_info, CR.string.glucodataauto_link, requireContext())
             }
         }
     }
@@ -378,9 +380,7 @@ class GDASettingsFragment: SettingsFragmentBase(R.xml.pref_gda) {
             Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO,
             Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO -> {
                 if(CarModeReceiver.AA_connected) {
-                    val extras = ReceiveData.createExtras()
-                    if (extras != null)
-                        CarModeReceiver.sendToGlucoDataAuto(requireContext(), extras, true)
+                    CarModeReceiver.sendToGlucoDataAuto(requireContext(), true)
                 }
             }
         }

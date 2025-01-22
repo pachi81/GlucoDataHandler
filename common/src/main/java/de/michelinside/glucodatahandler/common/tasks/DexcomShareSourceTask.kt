@@ -7,6 +7,7 @@ import android.util.Log
 import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.notifier.DataSource
@@ -118,7 +119,7 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
     }
 
     private fun handleValueResponse(body: String?): Boolean {
-        Log.d(LOG_ID, "handleValueResponse called: $body")
+        Log.i(LOG_ID, "handleValueResponse called: $body")
         if (body == null) {
             return false
         }
@@ -174,7 +175,7 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
 
         val dataArray = JSONArray(body)
         if(dataArray.length() == 0) {
-            setState(SourceState.NO_NEW_VALUE)
+            setState(SourceState.NO_NEW_VALUE, GlucoDataService.context!!.resources.getString(R.string.no_data_in_server_response))
             return false
         }
         val data = dataArray.getJSONObject(dataArray.length()-1)

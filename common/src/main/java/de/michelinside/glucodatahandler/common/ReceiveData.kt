@@ -10,6 +10,7 @@ import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBas
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.notifier.DataSource
+import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
 import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
@@ -52,6 +53,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     }
     val forceAlarm: Boolean get() {
         return (forceGlucoseAlarm || forceDeltaAlarm)
+    }
+
+    var forceObsoleteOnScreenOff: Boolean = false
+    private val forceObsolete: Boolean get() {
+        return forceObsoleteOnScreenOff && ScreenEventReceiver.isDisplayOff()
     }
 
     var iob: Float = Float.NaN
@@ -175,8 +181,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
 
     fun isObsoleteTime(timeoutSec: Int): Boolean = (System.currentTimeMillis()- time) >= (timeoutSec * 1000)
 
-    fun isObsoleteShort(): Boolean = isObsoleteTime(obsoleteTimeMin*60)
-    fun isObsoleteLong(): Boolean = isObsoleteTime(obsoleteTimeMin*120)
+    fun isObsoleteShort(): Boolean = forceObsolete || isObsoleteTime(obsoleteTimeMin*60)
+    fun isObsoleteLong(): Boolean = forceObsolete || isObsoleteTime(obsoleteTimeMin*120)
     fun isIobCobObsolete(timeoutSec: Int = Constants.VALUE_IOB_COBOBSOLETE_SEC): Boolean = (System.currentTimeMillis()- iobCobTime) >= (timeoutSec * 1000)
 
     fun getGlucoseAsString(): String {
@@ -386,7 +392,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     fun getElapsedTimeMinute(roundingMode: RoundingMode = RoundingMode.DOWN): Long {
-        return Utils.round((System.currentTimeMillis()-time).toFloat()/60000, 0, roundingMode).toLong()
+        return Utils.getElapsedTimeMinute(time, roundingMode)
     }
     fun getElapsedIobCobTimeMinute(roundingMode: RoundingMode = RoundingMode.HALF_UP): Long {
         return Utils.round((System.currentTimeMillis()- iobCobTime).toFloat()/60000, 0, roundingMode).toLong()
@@ -402,7 +408,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     fun getElapsedTimeMinuteAsString(context: Context, short: Boolean = true): String {
-        if (time == 0L)
+        if (time == 0L || forceObsolete)
             return "--"
         return if (ElapsedTimeTask.relativeTime) {
             getElapsedRelativeTimeAsString(context)
@@ -412,11 +418,27 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(time))
     }
 
+    fun hasNewValue(extras: Bundle?, checkIobCob: Boolean = true): Boolean {
+        if(extras == null || extras.isEmpty)
+            return false
+        if(extras.containsKey(TIME) && isNewValueTime(extras.getLong(TIME))) {
+            return true
+        }
+        if(!checkIobCob)
+            return false
+        return hasNewIobCob(extras)
+    }
+
+    private fun isNewValueTime(newTime: Long): Boolean {
+        return getTimeDiffMinute(newTime) >= 1
+    }
+
     fun handleIntent(context: Context, dataSource: DataSource, extras: Bundle?, interApp: Boolean = false) : Boolean
     {
         if (extras == null || extras.isEmpty) {
             return false
         }
+        forceObsoleteOnScreenOff = false
         var result = false
         WakeLockHelper(context).use {
             initData(context)
@@ -434,13 +456,15 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     return false
                 }
 
-                if(getTimeDiffMinute(new_time) >= 1) // check for new value received (diff must around one minute at least to prevent receiving same data from different sources with similar timestamps
+                if(isNewValueTime(new_time)) // check for new value received (diff must around one minute at least to prevent receiving same data from different sources with similar timestamps
                 {
                     Log.i(
                         LOG_ID, "Glucodata received from " + dataSource.toString() + ": " +
                                 extras.toString() +
                                 " - timestamp: " + DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(Date(extras.getLong(TIME)))
                     )
+                    if(time == 0L)
+                        handleFirstValue(context, dataSource, extras)
                     receiveTime = System.currentTimeMillis()
                     source = dataSource
                     sensorID = extras.getString(SERIAL) //Name of sensor
@@ -456,7 +480,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                         if (timeDiffMinute == 0L) {
                             Log.w(LOG_ID, "Time diff is less than a minute! Can not calculate delta value!")
                             deltaValue = Float.NaN
-                        } else if (timeDiffMinute > 10L) {
+                        } else if (timeDiffMinute > 20L) {
                             deltaValue = Float.NaN   // no delta calculation for too high time diffs
                         } else {
                             deltaValue = (extras.getInt(MGDL) - rawValue).toFloat()
@@ -472,15 +496,16 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     }
 
                     rawValue = extras.getInt(MGDL)
-                    if (extras.containsKey(GLUCOSECUSTOM)) {
-                        glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
-                        changeIsMmol(rawValue!=glucose.toInt() && GlucoDataUtils.isMmolValue(glucose), context)
-                    } else {
-                        if (isMmol) {
-                            glucose = GlucoDataUtils.mgToMmol(rawValue.toFloat())
-                        } else {
-                            glucose = rawValue.toFloat()
+                    if (isMmol) {
+                        if (extras.containsKey(GLUCOSECUSTOM)) {
+                            glucose = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1)
+                            if(!GlucoDataUtils.isMmolValue(glucose))
+                                glucose = GlucoDataUtils.mgToMmol(rawValue.toFloat())
                         }
+                        else
+                            glucose = GlucoDataUtils.mgToMmol(rawValue.toFloat())
+                    } else {
+                        glucose = rawValue.toFloat()
                     }
                     time = extras.getLong(TIME) //time in msec
 
@@ -540,12 +565,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return result
     }
 
-    fun handleIobCob(context: Context, dataSource: DataSource, extras: Bundle, interApp: Boolean = false) {
-        Log.v(LOG_ID, "handleIobCob for source " + dataSource + ": " + extras.toString())
-        if (extras.containsKey(IOB) || extras.containsKey(COB)) {
+    private fun hasNewIobCob(extras: Bundle?): Boolean {
+        if(extras != null && (extras.containsKey(IOB) || extras.containsKey(COB))) {
             if (!isIobCob() && extras.getFloat(IOB, Float.NaN).isNaN() && extras.getFloat(COB, Float.NaN).isNaN()) {
                 Log.d(LOG_ID, "Ignore NaN IOB and COB")
-                return
+                return false
             }
 
             val newTime = if(extras.containsKey(IOBCOB_TIME))
@@ -554,24 +578,60 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 System.currentTimeMillis()
 
             if(!isIobCob() || (newTime > iobCobTime && (newTime-iobCobTime) > 30000)) {
-                var iobCobChange = false
-                if(iob != extras.getFloat(IOB, Float.NaN) || cob != extras.getFloat(COB, Float.NaN)) {
-                    Log.i(LOG_ID, "Only IOB/COB changed: " + extras.getFloat(IOB, Float.NaN) + "/" +  extras.getFloat(COB, Float.NaN))
-                    iob = extras.getFloat(IOB, Float.NaN)
-                    cob = extras.getFloat(COB, Float.NaN)
-                    iobCobChange = true
-                } else {
-                    Log.d(LOG_ID, "Only IOB/COB time changed")
-                }
-                iobCobTime = newTime
+                return true
+            }
+        }
+        return false
+    }
 
-                // do not forward extras as interApp to prevent sending back to source...
-                val bundle: Bundle? = if(interApp) null else createExtras()  // re-create extras to have all changed value inside for sending to receiver
-                if(iobCobChange)
-                    InternalNotifier.notify(context, NotifySource.IOB_COB_CHANGE, bundle)
-                else
-                    InternalNotifier.notify(context, NotifySource.IOB_COB_TIME, bundle)
-                saveExtras(context)
+    fun handleIobCob(context: Context, dataSource: DataSource, extras: Bundle, interApp: Boolean = false) {
+        Log.v(LOG_ID, "handleIobCob for source " + dataSource + ": " + extras.toString())
+        if (hasNewIobCob(extras)) {
+            var iobCobChange = false
+            if(iob != extras.getFloat(IOB, Float.NaN) || cob != extras.getFloat(COB, Float.NaN)) {
+                Log.i(LOG_ID, "Only IOB/COB changed: " + extras.getFloat(IOB, Float.NaN) + "/" +  extras.getFloat(COB, Float.NaN))
+                iob = extras.getFloat(IOB, Float.NaN)
+                cob = extras.getFloat(COB, Float.NaN)
+                iobCobChange = true
+            } else {
+                Log.d(LOG_ID, "Only IOB/COB time changed")
+            }
+            iobCobTime = if(extras.containsKey(IOBCOB_TIME))
+                extras.getLong(IOBCOB_TIME)
+            else
+                System.currentTimeMillis()
+
+            // do not forward extras as interApp to prevent sending back to source...
+            val bundle: Bundle? = if(interApp) null else createExtras()  // re-create extras to have all changed value inside for sending to receiver
+            if(iobCobChange)
+                InternalNotifier.notify(context, NotifySource.IOB_COB_CHANGE, bundle)
+            else
+                InternalNotifier.notify(context, NotifySource.IOB_COB_TIME, bundle)
+            saveExtras(context)
+        }
+    }
+
+    private fun handleFirstValue(context: Context, dataSource: DataSource, extras: Bundle) {
+        // check unit and delta for first value, only!
+        Log.i(LOG_ID, "Handle first value")
+        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        if (extras.containsKey(GLUCOSECUSTOM)) {
+            val raw = extras.getInt(MGDL)
+            val glucoseCustom = Utils.round(extras.getFloat(GLUCOSECUSTOM), 1) //Glucose value in unit in setting
+            changeIsMmol(raw!=glucoseCustom.toInt() && GlucoDataUtils.isMmolValue(glucoseCustom), context)
+        }
+        if(!sharedPref.contains(Constants.SHARED_PREF_FIVE_MINUTE_DELTA) && dataSource.interval5Min) {
+            Log.i(LOG_ID, "Change delta to 5 min")
+            use5minDelta = true
+            with(sharedPref.edit()) {
+                putBoolean(Constants.SHARED_PREF_FIVE_MINUTE_DELTA, true)
+                apply()
+            }
+        }
+        if(dataSource == DataSource.DEXCOM_SHARE && !sharedPref.contains(Constants.SHARED_PREF_SOURCE_INTERVAL)) {
+            with(sharedPref.edit()) {
+                putString(Constants.SHARED_PREF_SOURCE_INTERVAL, "5")  // use 5 min interval for dexcom share
+                apply()
             }
         }
     }
@@ -579,16 +639,15 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     fun changeIsMmol(newValue: Boolean, context: Context? = null) {
         if (isMmol != newValue) {
             isMmolValue = newValue
-            if (isMmolValue != GlucoDataUtils.isMmolValue(glucose)) {
+            if (time > 0 && isMmolValue != GlucoDataUtils.isMmolValue(glucose)) {
                 glucose = if (isMmolValue)
                     GlucoDataUtils.mgToMmol(glucose)
                 else
                     GlucoDataUtils.mmolToMg(glucose)
             }
-            Log.i(LOG_ID, "Unit changed to " + glucose + if(isMmolValue) "mmol/l" else "mg/dl")
+            Log.i(LOG_ID, "Unit changed to " + glucose + if(isMmolValue) " mmol/l" else " mg/dl")
             if (context != null) {
-                val sharedPref =
-                    context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 with(sharedPref.edit()) {
                     putBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
                     apply()
@@ -658,16 +717,18 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     private fun readTargets(context: Context) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
         sharedPref.registerOnSharedPreferenceChangeListener(this)
-        if(!sharedPref.contains(Constants.SHARED_PREF_USE_MMOL)) {
-            Log.i(LOG_ID, "Upgrade to new mmol handling!")
+        if(!sharedPref.contains(Constants.SHARED_PREF_USE_MMOL) && (sharedPref.contains(Constants.SHARED_PREF_TARGET_MIN) || sharedPref.contains(Constants.SHARED_PREF_TARGET_MAX))) {
+            targetMinValue = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MIN, targetMinValue)
+            targetMaxValue = sharedPref.getFloat(Constants.SHARED_PREF_TARGET_MAX, targetMaxValue)
             isMmolValue = GlucoDataUtils.isMmolValue(targetMinValue)
             if (isMmol) {
+                Log.i(LOG_ID, "Upgrade to new mmol handling!")
                 writeTarget(context, true, targetMinValue)
                 writeTarget(context, false, targetMaxValue)
-            }
-            with(sharedPref.edit()) {
-                putBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
-                apply()
+                with(sharedPref.edit()) {
+                    putBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol)
+                    apply()
+                }
             }
         }
         updateSettings(sharedPref)
@@ -692,7 +753,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         }
     }
 
-    fun createExtras(): Bundle? {
+    fun createExtras(includeObsoleteIobCob: Boolean = true): Bundle? {
         if(time == 0L)
             return null
         val extras = Bundle()
@@ -703,9 +764,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         extras.putFloat(RATE, rate)
         extras.putInt(ALARM, alarm)
         extras.putFloat(DELTA, deltaValue)
-        extras.putFloat(IOB, iob)
-        extras.putFloat(COB, cob)
-        extras.putLong(IOBCOB_TIME, iobCobTime)
+        if(includeObsoleteIobCob || !isIobCobObsolete()) {
+            extras.putFloat(IOB, iob)
+            extras.putFloat(COB, cob)
+            extras.putLong(IOBCOB_TIME, iobCobTime)
+        }
         extras.putInt(DELTA_FALLING_COUNT, deltaFallingCount)
         extras.putInt(DELTA_RISING_COUNT, deltaRisingCount)
         return extras
