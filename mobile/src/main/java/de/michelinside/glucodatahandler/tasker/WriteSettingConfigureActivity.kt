@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.joaomgcd.taskerpluginlibrary.config.TaskerPluginConfig
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
-import de.michelinside.glucodatahandler.R
+import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.databinding.TaskerWriteSettingBinding
 
 
@@ -39,7 +39,7 @@ class WriteSettingConfigureActivity : AppCompatActivity(),
             setContentView(binding.root)
 
             val supportedValues = resources
-                .getStringArray(R.array.tasker_supported_settings_values)
+                .getStringArray(CR.array.tasker_supported_settings_values)
 
             if (supportedValues.contains(key)) {
                 binding.spinnerSetting.setSelection(supportedValues.asList().indexOf(key))

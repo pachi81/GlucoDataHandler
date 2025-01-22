@@ -1,5 +1,6 @@
 package de.michelinside.glucodataauto.preferences
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.core.content.ContextCompat
@@ -23,7 +24,11 @@ class GDASpeakSettingsFragment: SettingsFragmentBase(R.xml.pref_gda_speak) {
             if(GlucoDataServiceAuto.connected) {
                 CarMediaPlayer.play(requireContext())
             } else {
-                TextToSpeechUtils.speak(ReceiveData.getAsText(requireContext(), false, false))
+                var text = ReceiveData.getAsText(requireContext(), true, false)
+                if(!GlucoDataServiceAuto.patientName.isNullOrEmpty()) {
+                    text = "${GlucoDataServiceAuto.patientName}, $text"
+                }
+                TextToSpeechUtils.speak(text)
             }
             true
         }

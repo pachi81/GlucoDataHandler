@@ -9,6 +9,7 @@ import de.michelinside.glucodatahandler.common.ui.Dialogs
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.preferences.PreferenceHelper
 
 
 class SourceOfflineFragment : SettingsFragmentCompatBase() {
@@ -25,18 +26,8 @@ class SourceOfflineFragment : SettingsFragmentCompatBase() {
             setupLocalIobAction(findPreference(Constants.SHARED_PREF_SOURCE_JUGGLUCO_SET_NS_IOB_ACTION))
             setupLocalIobAction(findPreference(Constants.SHARED_PREF_SOURCE_XDRIP_SET_NS_IOB_ACTION))
 
-            val prefEselLink = findPreference<Preference>(Constants.SHARED_PREF_EVERSENSE_ESEL_INFO)
-            if(prefEselLink != null) {
-                prefEselLink.setOnPreferenceClickListener {
-                    val browserIntent = Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(resources.getText(CR.string.esel_link).toString())
-                    )
-                    startActivity(browserIntent)
-                    true
-                }
-            }
-
+            PreferenceHelper.setLinkOnClick(findPreference(Constants.SHARED_PREF_EVERSENSE_ESEL_INFO), CR.string.esel_link, requireContext())
+            PreferenceHelper.setLinkOnClick(findPreference("source_juggluco_video"), CR.string.video_tutorial_juggluco, requireContext())
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
         }

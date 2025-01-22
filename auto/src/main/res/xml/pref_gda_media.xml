@@ -12,6 +12,12 @@
             android:summary="@string/pref_aa_media_player_icon_style_summary"
             android:title="@string/pref_floating_widget_style"
             app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="aa_media_player_show_iob_cob"
+            android:title="@string/pref_show_iob_cob"
+            android:summary="@string/pref_show_iob_cob_summary"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_cat_play_button"

@@ -21,7 +21,7 @@
                     android:title="@string/pref_floating_widget_style"
                     app:iconSpaceReserved="false" />
                 <androidx.preference.SeekBarPreference
-                    android:defaultValue="3"
+                    android:defaultValue="5"
                     app:showSeekBarValue="true"
                     app:seekBarIncrement="1"
                     app:min="1"

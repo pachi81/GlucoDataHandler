@@ -174,6 +174,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
                 } else {
                     glucoExtras.putFloat(ReceiveData.IOB, Float.NaN)
                     glucoExtras.putFloat(ReceiveData.COB, Float.NaN)
+                    glucoExtras.putLong(ReceiveData.IOBCOB_TIME, 0L)
                 }
 
                 handleResult(glucoExtras)

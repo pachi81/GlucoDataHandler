@@ -206,7 +206,7 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
                 remoteViews.setImageViewBitmap(R.id.glucose_trend, BitmapUtils.getGlucoseTrendBitmap(width = width, height = width))
                 remoteViews.setContentDescription(R.id.glucose_trend, ReceiveData.getAsText(context))
             } else {
-                val size = maxOf(width, height)
+                val size = minOf(500, maxOf(width, height))
                 remoteViews.setImageViewBitmap(
                     R.id.trendImage, BitmapUtils.getRateAsBitmap(
                         width = size,

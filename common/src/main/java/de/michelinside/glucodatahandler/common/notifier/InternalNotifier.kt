@@ -18,7 +18,7 @@ object InternalNotifier {
         val timeChanged = hasSource(notifier, NotifySource.TIME_VALUE) != sourceFilter.contains(NotifySource.TIME_VALUE) ||
                 hasSource(notifier, NotifySource.OBSOLETE_VALUE) != sourceFilter.contains(NotifySource.OBSOLETE_VALUE)
         Log.i(LOG_ID, "add notifier $notifier - filter: $sourceFilter - timechanged: $timeChanged")
-        notifiers[notifier] = sourceFilter
+        notifiers[notifier] = sourceFilter.toMutableSet()
         Log.d(LOG_ID, "notifier size: " + notifiers.size.toString() )
         if(timeChanged)
             checkTimeNotifierChanged(context)
@@ -92,6 +92,7 @@ object InternalNotifier {
 
     private fun hasSource(notifier: NotifierInterface, notifySource: NotifySource): Boolean {
         if(hasNotifier(notifier)) {
+            Log.v(LOG_ID, "Check notifier ${notifier} has source $notifySource: ${notifiers[notifier]}")
             return notifiers[notifier]!!.contains(notifySource)
         }
         return false

@@ -56,11 +56,11 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
     private val intervalPref: String get() {
         return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_INTERVAL)
     }
-    /*private val repeatPref: String get() {
+    private val repeatPref: String get() {
+        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT_UNTIL_CLOSE)
+    }
+    private val repeatTimePref: String get() {
         return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_REPEAT)
-    }*/
-    private val retriggerPref: String get() {
-        return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_RETRIGGER)
     }
     private val soundDelayPref: String get() {
         return getPrefKey(Constants.SHARED_PREF_ALARM_SUFFIX_SOUND_DELAY)
@@ -129,10 +129,10 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
     override fun onResume() {
         Log.d(LOG_ID, "onResume called")
         try {
+            super.onResume()
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
             InternalNotifier.addNotifier(requireContext(), this, mutableSetOf(NotifySource.NOTIFICATION_STOPPED))
             update()
-            super.onResume()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.toString())
         }
@@ -141,11 +141,11 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
     override fun onPause() {
         Log.d(LOG_ID, "onPause called")
         try {
+            super.onPause()
             stopTestSound()
             Vibrator.cancel()
             preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
             InternalNotifier.remNotifier(requireContext(), this)
-            super.onPause()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.toString())
         }
@@ -170,7 +170,7 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
                 startTestSound()
             } else if( key == vibrateAmplitudePref) {
                 alarmType.setting!!.updateSettings(sharedPreferences)
-                Vibrator.vibrate(alarmType.setting!!.vibratePattern!!, -1, alarmType.setting!!.vibrateAmplitude)
+                Vibrator.vibrate(alarmType.setting!!.vibratePattern!!, -1, alarmType.setting!!.vibrateAmplitude, AlarmNotification.useAlarmStream)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
@@ -188,11 +188,11 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
             val prefUseCustomRingtone = findPreference<SwitchPreferenceCompat>(useCustomSoundPref)
             prefSelectRingtone!!.isEnabled = prefUseCustomRingtone!!.isChecked
             updateRingtoneSelectSummary()
-            /*
-            val prefRepeat = findPreference<SeekBarPreference>(repeatPref)
-            val prefRetrigger = findPreference<SeekBarPreference>(retriggerPref)
-            prefRetrigger!!.isEnabled = prefRepeat!!.value >= 0
-            */
+
+            val prefRepeat = findPreference<SwitchPreferenceCompat>(repeatPref)
+            val prefRepeatTime = findPreference<SeekBarPreference>(repeatTimePref)
+            prefRepeatTime!!.isEnabled = prefRepeat!!.isChecked
+
             val prefWeekdays = findPreference<MultiSelectListPreference>(inactiveWeekdaysPref)
             prefWeekdays!!.summary = resources.getString(CR.string.alarm_inactive_weekdays_summary) + "\n" + prefWeekdays.values.joinToString(
                 ", "
@@ -268,15 +268,17 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
         prefInterval!!.value = preferenceManager.sharedPreferences!!.getInt(prefInterval.key, AlarmHandler.getDefaultIntervalMin(alarmType))
         prefInterval.summary = getIntervalSummary(alarmType)
 
-        val prefRetrigger = findPreference<SeekBarPreference>(retriggerPref)
-        prefRetrigger!!.value = preferenceManager.sharedPreferences!!.getInt(prefRetrigger.key, 0)
-
-        /*
-        val prefRepeat = findPreference<SeekBarPreference>(repeatPref)
-        prefRepeat!!.value = preferenceManager.sharedPreferences!!.getInt(prefRepeat.key, 0)
+        val prefRepeat = findPreference<SwitchPreferenceCompat>(repeatPref)
+        val prefRepeatTime = findPreference<SeekBarPreference>(repeatTimePref)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-            prefRepeat.isVisible = false  // looping is supported for API 28 and above only
-        }*/
+            prefRepeat!!.isVisible = false  // looping is supported for API 28 and above only
+            prefRepeat.isChecked = false
+            prefRepeatTime!!.isVisible = false
+            prefRepeatTime.value = 0
+        } else {
+            prefRepeat!!.isChecked = preferenceManager.sharedPreferences!!.getBoolean(prefRepeat.key, alarmType.setting!!.repeatUntilClose)
+            prefRepeatTime!!.value = preferenceManager.sharedPreferences!!.getInt(prefRepeatTime.key, alarmType.setting!!.repeatTime)
+        }
 
         val prefSoundDelay = findPreference<SeekBarPreference>(soundDelayPref)
         prefSoundDelay!!.value = preferenceManager.sharedPreferences!!.getInt(prefSoundDelay.key, 0)
@@ -289,7 +291,7 @@ class AlarmTypeFragment : SettingsFragmentCompatBase(), SharedPreferences.OnShar
 
         val prefVibrateAmplitude = findPreference<SeekBarPreference>(vibrateAmplitudePref)
         prefVibrateAmplitude!!.value = preferenceManager.sharedPreferences!!.getInt(prefVibrateAmplitude.key, 15)
-        prefVibrateAmplitude.isVisible = Vibrator.vibrator.hasAmplitudeControl()
+        prefVibrateAmplitude.isVisible = Vibrator.hasAmplitudeControl()
 
 
         val levelPref = findPreference<SeekBarPreference>(soundLevelPref)

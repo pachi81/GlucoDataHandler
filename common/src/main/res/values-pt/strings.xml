@@ -307,7 +307,7 @@
     <string name="pref_source_xdrip_info_2_summary">- habilite \"Broadcast Compatível\"\n- marque \"Identificar receptores\" preencha com \"de.michelinside.glucodatahandler\" (sem aspas), use espaço como separador caso já tenha algo preenchido</string>
     <string name="pref_gda_source_xdrip_info_2_summary">- habilite \"Broadcast Compatível\"\n- marque \"Identificar receptores\" preencha com \"de.michelinside.glucodataauto\" (sem aspas), use espaço como separador caso já tenha algo preenchido</string>
     <string name="pref_source_librelinkup_info">Configurar LibreLinkUp</string>
-    <string name="pref_source_librelinkup_info_summary">IMPORTANTE: esta não é a conta LibreView!\nPara ativar o LibreLinkUp:\n- abra seu aplicativo FreeStyle Libre e selecione no menu Compartilhar ou Aplicativos conectados\n- ative a conexão LibreLinkUp\n- instale o LibreLinkUp da PlayStore\n- configure seu conta e aguarde o convite</string>
+    <string name="pref_source_librelinkup_info_summary">IMPORTANTE: esta não é a conta LibreView!\nPara ativar o LibreLinkUp:\n- abra seu aplicativo FreeStyle Libre e selecione no menu Compartilhar ou Aplicativos conectados\n- ative a conexão LibreLinkUp\n- instale o LibreLinkUp da Play Store\n- configure seu conta e aguarde o convite</string>
     <string name="menu_contact">Contato</string>
     <string name="src_ns_iob_cob">IOB/COB support</string>
     <string name="src_ns_iob_cob_summary">Receba também valores IOB e COB do endpoint de seixo Nightscout.</string>
@@ -384,8 +384,6 @@
     <string name="alarm_cat_categories">Categoria de alarme</string>
     <string name="alarm_fullscreen_notification_enabled">Notificação em tela cheia</string>
     <string name="alarm_fullscreen_notification_enabled_summary">Ativa notificação em tela cheia na tela de bloqueio.\nPermissão adicional pode ser requerida.</string>
-    <string name="alarm_snooze_on_notification_enabled">Adiar a notificação</string>
-    <string name="alarm_snooze_on_notification_summary">Se ativado, as notificações também incluirão botões para ativar o adiamento do alarme.</string>
     <string name="alarm_fullscreen_dismiss_keyguard">Dispensar keyguard</string>
     <string name="alarm_fullscreen_dismiss_keyguard_summary">Ative esta configuração se tiver problemas com a notificação de tela cheia.\nEm alguns dispositivos, isso fará com que a tela seja desbloqueada, enquanto a notificação de tela cheia é acionada.\nPortanto, não ative-a se não tiver problemas.</string>
     <string name="alarm_force_sound">Forçar som de alarme</string>
@@ -462,7 +460,7 @@
     <string name="pref_cat_transfer">Transferir valores</string>
     <string name="pref_cat_visualisation">Visualização</string>
     <string name="pref_cat_banglejs">Relógios BangleJS</string>
-    <string name="pref_wearos_info_summary">Para usar GlucoDataHandler em relógios Wear OS, instale-o via Google Playstore.\nEste aplicativo não fornece um mostrador de relógio, mas fornece várias complicações (as pequenas partes redondas do mostrador do relógio), que podem ser usadas em mostradores de relógio que suportam complicações de terceiros.</string>
+    <string name="pref_wearos_info_summary">Para usar GlucoDataHandler em relógios Wear OS, instale-o via Google Play Store.</string>
     <string name="pref_wear_os_check_connection">Verifique a conexão</string>
     <string name="pref_wear_os_check_connection_summary">Pressione aqui para verificar novamente a conexão com o Wear OS.\nVocê também pode acionar essa verificação pressionando as informações de conexão na tela inicial (mesmo no app Wear OS).</string>
     <string name="pref_watchdrip_info_summary">WatchDrip+ suporta vários dispositivos MiBand e Amazfit.\nPara obter uma lista completa de dispositivos suportados e mais informações sobre como configurar o WatchDrip+, clique aqui.</string>
@@ -519,7 +517,6 @@
     <string name="src_dexcom_share_user_summary">Nome de utilizador, e-mail ou número de telefone para iniciar sessão na conta Dexcom Share.\nIMPORTANTE: o número de telefone deve incluir o código do país, por exemplo, +351 para Portugal.</string>
     <string name="src_dexcom_share_password_summary">Senha para a conta Dexcom Share.</string>
     <string name="pref_source_dexcom_share_info">Configurar Dexcom Share</string>
-    <string name="pref_source_dexcom_share_info_summary">Para receber dados dos servidores Dexcom Share, você precisa ter:\n- compartilhamento habilitado no aplicativo Dexcom que está conectado ao sensor\n- aceita a solicitação no aplicativo Dexcom Follower (você pode desinstalá-lo depois)\n\nImportante: não funciona com um usuário seguidor!</string>
     <string name="permission_missing_title">Missing permission!</string>
     <string name="setting_permission_missing_message">A configuração \'%1$s\' está ativada, mas a permissão relacionada não foi concedida! \nPressione \"OK\" para ser direcionado ao diálogo de permissões ou pressione \"Cancelar\" para desativar esta configuração.</string>
     <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
@@ -559,7 +556,7 @@
     <string name="alarm_inactive_end_time_summary">Selecione a hora em que você deseja que suas horas de silêncio terminem.</string>
     <string name="alarm_inactive_weekdays">Dias para horas de silêncio</string>
     <string name="alarm_inactive_weekdays_summary">Especifique os dias da semana em que as horas de silêncio devem começar na hora de início selecionada.</string>
-    <string name="app_crash_bad_notification">O aplicativo trava devido ao layout de notificação colorida!\nEle foi desativado para evitar essa falha.\nEste é um problema em telefones Samsung, então crie um relatório de erro no aplicativo Samsung Members. Obrigado!</string>
+    <string name="app_crash_bad_notification">O aplicativo trava devido ao layout de notificação colorida!\nEle foi desativado para evitar essa falha.\nUm reinício do telefone geralmente resolve isso.</string>
     <string name="auto_close_notification">Fechar notificação automaticamente</string>
     <string name="auto_close_notification_summary">Fechar automaticamente a notificação de alarme após o som e a vibração terem terminado, mas somente após pelo menos 30 segundos.\nSe a reativação estiver ativa, a notificação será fechada se não houver outro gatilho.</string>
     <string name="settings_save_succeeded">Configurações salvas com sucesso</string>
@@ -576,7 +573,6 @@
     <string name="menu_save_mobile_logs_summary">Salvar logs do telefone em um arquivo.</string>
     <string name="menu_save_wear_logs_summary">Salvar logs do relógio Wear OS conectado em um arquivo.</string>
     <string name="alarm_repeat">Repetir</string>
-    <string name="alarm_repeat_summary">Repetir o som e a vibração do alarme. \n0: Desativa a funcionalidade de repetição. \nValores positivos: Define o intervalo de repetição em minutos. \n-1: Ativa a repetição ilimitada.</string>
     <string name="no_vibration">Sem vibração</string>
     <string name="alarm_vibrate_mode">Modo de vibração</string>
     <string name="alarm_rising_fast">Aumento rápido</string>
@@ -602,6 +598,8 @@
     <string name="src_offline_enabled_summary_on">Mensagens internas desta fonte serão tratadas.</string>
     <string name="src_offline_enabled_summary_off">Mensagens internas desta fonte serão ignoradas.</string>
     <string name="temp_disabled">Desativado temporariamente</string>
+    <string name="snooze_until">Em soneca até %1$s</string>
+    <string name="temp_disabled_until">Desativados temporariamente até %1$s</string>
 
     <!-- Talkback -->
     <string name="trend">Tendência</string>
@@ -642,4 +640,76 @@
     <string name="gda_speak_off">Falar está desligado</string>
     <string name="enable_alarm_icon_toggle">Ativar ícone de alarme</string>
     <string name="enable_alarm_icon_toggle_summary">Ativar ícone de alarme na tela principal para alternar o estado do alarme.</string>
+
+    <!-- v1.3  -->
+
+    <string name="src_librelink_error4">Erro, por favor, faça login novamente no aplicativo LibreLinkUp e verifique se há alguma etapa a ser realizada!</string>
+    <string name="src_librelink_error4_type">Tipo de erro %1$s, por favor, faça login novamente no aplicativo LibreLinkUp e verifique se há alguma etapa a ser realizada!</string>
+    <string name="source_libre_auto_accept_tou">Aceitar automaticamente novos termos</string>
+    <string name="source_libre_auto_accept_tou_summary">Ao habilitar isso, você aceita automaticamente os novos Termos de Uso para garantir a recepção contínua de dados. Você não será informado sobre novos termos separadamente. Se desejar lê-los, desabilite esta configuração e consulte o aplicativo LibreLinkUp em caso de erro 4.</string>
+    <string name="src_librelink_error4_tou">Novos Termos de Uso devem ser aceitos. Habilite a aceitação automática nas configurações de origem do LibreLinkUp ou faça login novamente no aplicativo LibreLinkUp e aceite os termos.</string>
+    <string name="src_libre_tou_message">GlucoDataHandler pode aceitar automaticamente os novos Termos de Uso para LibreLinkUp.\nPressione OK para habilitar este recurso ou Cancelar para ler e aceitar manualmente os termos no aplicativo LibreLinkUp.</string>
+    <string name="src_librelink_error2">Nome de usuário ou senha incorretos. Por favor, verifique suas configurações de origem do LibreLinkUp. Se necessário, tente fazer login novamente ou reinstalar o aplicativo LibreLinkUp e verificar as configurações da sua conta.\nPor favor, pare todos os outros aplicativos que estão acessando a mesma conta!</string>
+    <string name="last_value_on_server">Última leitura de glicose no servidor de %1$s</string>
+    <string name="no_data_in_server_response">Nenhuma leitura de glicose encontrada no servidor.</string>
+    <string name="http_error_429">Muitas solicitações!</string>
+    <string name="http_error_429_info">Por favor, pare todos os outros aplicativos que estão acessando a mesma conta!</string>
+    <string name="state_await_data">Aguardando dados</string>
+    <string name="pref_send_battery_level_to_watch">Enviar nível da bateria</string>
+    <string name="pref_send_battery_level_to_watch_summary">Enviar nível da bateria para o relógio para mostrar na complicação e na tela principal.</string>
+    <string name="pref_battery_level">Mostrar nível da bateria</string>
+    <string name="forward_to_watch_interval_summary">Defina o tempo mínimo (em minutos) entre as medições de glicose antes de enviar uma nova atualização para o relógio.\nAlarmes e medições muito baixas sempre serão enviados.</string>
+    <string name="forward_to_values_summary">Defina o tempo mínimo (em minutos) entre as medições de glicose antes de enviar uma nova atualização para os receptores.</string>
+    <string name="alarm_repeat_summary">O alarme tocará e vibrará repetidamente até que você descarte a notificação ou a duração máxima definida do alarme seja atingida.</string>
+    <string name="alarm_repeat_time">Duração máxima do alarme</string>
+    <string name="alarm_repeat_time_summary">Especifique o tempo máximo (em minutos) que o alarme tocará e vibrará. Um valor de 0 significa que o alarme será repetido indefinidamente.</string>
+    <string name="wear_source_info">Para habilitar as fontes, configure-as primeiro no aplicativo do telefone. Ative as fontes no seu relógio somente se você ainda não receber os dados no seu telefone.</string>
+    <string name="gdh_disclaimer_title">Nota do Desenvolvedor</string>
+    <string name="gdh_disclaimer_message">Este aplicativo foi desenvolvido no meu tempo livre como um projeto de hobby. Portanto, não posso garantir que todos os recursos funcionarão perfeitamente em todos os dispositivos. No entanto, estou trabalhando constantemente em melhorias.\nSe você encontrar algum problema ou tiver alguma dúvida, entre em contato comigo diretamente antes de deixar uma avaliação negativa. \nPara se manter informado sobre atualizações importantes e correções de bugs, você pode participar do grupo do Facebook ou dos Grupos do Google.</string>
+
+    <string name="pref_source_dexcom_share_info_1_summary">Para receber dados dos servidores Dexcom Share:\nNo aplicativo Dexcom:\n - Crie um seguidor\n - Em "Conexões", verifique se "Compartilhar" está exibido</string>
+    <string name="pref_source_dexcom_share_info_2_summary">No GlucoDataHandler:\n - Insira seu nome de usuário e senha do Dexcom Clarity\n   (se você usar seu número de telefone como nome de usuário, inclua o código do país)\n - Verifique a configuração para uma conta dos EUA\nImportante: isso não funciona com uma conta de seguidor!</string>
+
+    <string name="request_timestamp">Atualizado</string>
+    <string name="alarm_header">Alarmes</string>
+
+    <string name="wearos_watchfaces">Mostradores de relógio</string>
+    <string name="wearos_watchfaces_summary">Informações sobre mostradores de terceiros para Wear OS.</string>
+    <string name="setup">Configuração</string>
+    <string name="pref_watchfaces_cat">Mostradores de terceiros</string>
+    <string name="pref_watchfaces_info_summary">Este aplicativo não fornece um mostrador, mas fornece várias complicações (as pequenas partes redondas do mostrador), que podem ser usadas para mostradores que suportam complicações de terceiros.</string>
+    <string name="pref_watchfaces_default">Padrão</string>
+    <string name="pref_watchfaces_default_summary">A maioria dos fabricantes de relógios já fornece mostradores que podem ser usados com a complicação GlucoDataHandler.\nPor exemplo, a maioria dos mostradores "Info" da Samsung são compatíveis.</string>
+    <string name="pref_watchfaces_pujie">Pujie</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie é um aplicativo criador de mostradores com uma biblioteca na nuvem.\nPara encontrar mostradores compatíveis, pesquise na biblioteca por mostradores que começam com "GDH_".\nObservação: Pujie não é compatível com dispositivos Wear OS 5.\nToque aqui para abrir o aplicativo na Play Store.</string>
+    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
+    <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man cria mostradores de terceiros projetados especificamente para uso com GlucoDataHandler.\nToque aqui para abrir sua página da Play Store.</string>
+    <string name="pref_watchfaces_gdc">Mostradores GDC</string>
+    <string name="pref_watchfaces_gdc_summary">Os mostradores GDC são projetados para uso com GlucoDataHandler.\nToque aqui para abrir a página da Play Store.</string>
+    <string name="pref_phone_wear_screen_off_update">Atualizar sempre as complicações</string>
+    <string name="pref_phone_wear_screen_off_update_summary">Enviar sempre novos valores de glicose para o relógio.\nDesative esta opção para evitar atualizações de dados no relógio enquanto a tela do relógio estiver desligada para economizar bateria.\nOs valores de alarme sempre serão enviados para o relógio.\nIMPORTANTE: O alarme obsoleto é desativado no relógio quando esta configuração está desativada!</string>
+    <string name="alarm_ignore_snooze_for_very_low">Alertar sempre para valores muito baixos</string>
+    <string name="alarm_ignore_snooze_for_very_low_summary">Este alarme irá notificá-lo mesmo que a função soneca ou o horário de silêncio geral para todos os alarmes estejam ativos, garantindo que você seja alertado sobre níveis de glicose muito baixos.</string>
+
+    <string name="libre_no_new_value_info">Se este erro persistir, tente reinstalar o aplicativo LibreLink. Isso geralmente resolve o problema.</string>
+    <string name="src_libre_server">Servidor</string>
+    <string name="source_libre_server_default">Padrão (.io)</string>
+    <string name="source_libre_server_russian">Russo (.ru)</string>
+
+    <string name="patient_name">Nome</string>
+    <string name="patient_name_summary">Nome do usuário/paciente, que deve ser mostrado na notificação e durante a fala.\nIsso deve ser usado se você estiver usando várias variantes do GlucoDataAuto, caso contrário, poderá estar vazio.</string>
+
+    <string name="video_tutorial">Vídeo tutorial</string>
+    <string name="video_tutorial_summary">Clique aqui para ir ao vídeo do YouTube que ilustra a configuração desta fonte. Muito obrigado ao Diabetic Masked Man por criar os vídeos.</string>
+
+    <string name="snooze_30">30 minutos</string>
+    <string name="snooze_60">60 minutos</string>
+    <string name="snooze_90">90 minutos</string>
+    <string name="snooze_120">120 minutos</string>
+    <string name="alarm_snooze_on_notification_enabled">Adiar a notificação</string>
+    <string name="alarm_snooze_on_notification_summary">Escolha até 3 durações de soneca para exibir como botões na notificação de alarme.</string>
+
+    <string name="pref_show_iob_cob">Mostrar valores de IOB/COB</string>
+    <string name="pref_show_iob_cob_summary">Mostrar valores de IOB e COB, se disponíveis.</string>
+
 </resources>

@@ -3,8 +3,60 @@
     <string name="locale">en</string>
     <string name="name" translatable="false">GlucoDataHandler</string>
     <string name="source_gdh" translatable="false">GlucoDataHandler</string>
+    <string name="source_gdh_second" translatable="false">GDH Second</string>
 
-    <string name="alarm_toggle" translatable="false">Alarm toggle</string>
+    <string name="unit_mgdl" translatable="false">mg/dl</string>
+    <string name="unit_mmol" translatable="false">mmol/l</string>
+
+    <string name="info_label_iob" translatable="false">IOB</string>
+    <string name="info_label_cob" translatable="false">COB</string>
+    <string name="info_label_iob_talkback" translatable="false">I.O.B.</string>
+    <string name="info_label_cob_talkback" translatable="false">C.O.B.</string>
+
+    <string name="menu_facebook" translatable="false">Facebook</string>
+    <string name="menu_google_groups" translatable="false">Google Groups</string>
+
+    <string name="help_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
+    <string name="update_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/releases</string>
+    <string name="support_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/issues</string>
+    <string name="gda_support_link" translatable="false">https://github.com/pachi81/GlucoDataAuto/issues</string>
+    <string name="watchdrip_link" translatable="false">https://github.com/bigdigital/watchdrip/blob/main/README.md</string>
+    <string name="esel_link" translatable="false">https://github.com/BernhardRo/Esel/blob/master/README.md</string>
+    <string name="dexcom_account_non_us_url" translatable="false">https://myaccount.dexcom.eu</string>
+    <string name="dexcom_account_us_url" translatable="false">https://myaccount.dexcom.com</string>
+    <string name="facebook_gdh_group_url" translatable="false">https://www.facebook.com/groups/823964236542396</string>
+    <string name="google_gdh_group_url" translatable="false">https://groups.google.com/g/glucodatahandler</string>
+    <string name="playstore_gdc_watchfaces" translatable="false">https://play.google.com/store/apps/dev?id=7197840107055554214</string>
+    <string name="playstore_dmm_watchfaces" translatable="false">https://play.google.com/store/apps/dev?id=6551812103351455972</string>
+    <string name="playstore_pujie_watchfaces" translatable="false">https://play.google.com/store/apps/dev?id=7780011900367662392</string>
+
+    <string name="video_tutorial_librelinkup" translatable="false">https://youtu.be/YRs9nY4DgnA?si=v108UhnBNfQSeK2I</string>
+    <string name="video_tutorial_juggluco" translatable="false">https://youtu.be/evS5rXDiciY?si=DTxlGYhYm-nNboHl</string>
+
+
+
+    <string name="vibrate_pattern_super_mario" translatable="false">Super Mario</string>
+    <string name="vibrate_pattern_turtles" translatable="false">Turtles</string>
+    <string name="vibrate_pattern_final_fantasy" translatable="false">Final Fantasy</string>
+    <string name="vibrate_pattern_star_wars" translatable="false">Star Wars</string>
+    <string name="vibrate_pattern_power_rangers" translatable="false">Power Rangers</string>
+    <string name="vibrate_pattern_james_bond" translatable="false">James Bond</string>
+    <string name="vibrate_pattern_mortal_kombat" translatable="false">Mortal Kombat</string>
+
+    <string name="empty_string" translatable="false" />
+    <string name="source_juggluco" translatable="false">Juggluco</string>
+    <string name="source_xdrip" translatable="false">xDrip+</string>
+    <string name="source_libreview" translatable="false">LibreLinkUp</string>
+    <string name="source_nightscout" translatable="false">Nightscout</string>
+    <string name="source_dexcom_share" translatable="false">Dexcom Share</string>
+    <string name="source_dexcom_byoda" translatable="false">Dexcom BYODA</string>
+    <string name="source_ns_emulator" translatable="false">Dexcom/Eversense</string>
+    <string name="source_diabox" translatable="false">DiaBox</string>
+    <string name="pref_source_eversense_info" translatable="false">Eversense (ESEL)/Dexcom BYODA (xDrip+)</string>
+    <string name="pref_source_dexcom_byoda_info" translatable="false">Dexcom BYODA (AAPS)</string>
+
+    <!-- start of resources -->
+
     <string name="info_label_sensor_id">Sensor</string>
     <string name="info_label_value">Value</string>
     <string name="info_label_raw">Raw</string>
@@ -21,15 +73,6 @@
     <string name="elapsed_time">%1$d min</string>
     <string name="elapsed_time_hour">\> 1h</string>
 
-
-    <string name="unit_mgdl" translatable="false">mg/dl</string>
-    <string name="unit_mmol" translatable="false">mmol/l</string>
-
-    <string name="info_label_iob" translatable="false">IOB</string>
-    <string name="info_label_cob" translatable="false">COB</string>
-    <string name="info_label_iob_talkback" translatable="false">I.O.B.</string>
-    <string name="info_label_cob_talkback" translatable="false">C.O.B.</string>
-
     <string name="rate_double_up">rising very quickly</string>
     <string name="rate_single_up">rising quickly</string>
     <string name="rate_forty_five_up">rising</string>
@@ -40,7 +83,6 @@
 
     <string name="button_ok">OK</string>
     <string name="button_cancel">Cancel</string>
-    <string name="empty_string" translatable="false" />
 
     <string name="alarm_none">-</string>
     <string name="alarm_very_low">very low</string>
@@ -65,17 +107,6 @@
     <string name="menu_update">Updates</string>
     <string name="menu_support">Support</string>
     <string name="menu_help">Help</string>
-    <string name="menu_facebook" translatable="false">Facebook</string>
-
-    <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
-    <string name="update_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/releases</string>
-    <string name="support_link" translatable="false">https://github.com/pachi81/GlucoDataHandler/issues</string>
-    <string name="gda_support_link" translatable="false">https://github.com/pachi81/GlucoDataAuto/issues</string>
-    <string name="watchdrip_link" translatable="false">https://github.com/bigdigital/watchdrip/blob/main/README.md</string>
-    <string name="esel_link" translatable="false">https://github.com/BernhardRo/Esel/blob/master/README.md</string>
-    <string name="dexcom_account_non_us_url" translatable="false">https://myaccount.dexcom.eu</string>
-    <string name="dexcom_account_us_url" translatable="false">https://myaccount.dexcom.com</string>
-    <string name="facebook_gdh_group_url" translatable="false">https://www.facebook.com/groups/823964236542396</string>
 
     <!-- tasker -->
 
@@ -86,26 +117,8 @@
     <string name="tasker_android_auto_connection_state">Android Auto connection</string>
     <string name="tasker_target_range_state">Glucose range change</string>
 
-    <string name="vibrate_pattern_super_mario" translatable="false">Super Mario</string>
-    <string name="vibrate_pattern_turtles" translatable="false">Turtles</string>
-    <string name="vibrate_pattern_final_fantasy" translatable="false">Final Fantasy</string>
-    <string name="vibrate_pattern_star_wars" translatable="false">Star Wars</string>
-    <string name="vibrate_pattern_power_rangers" translatable="false">Power Rangers</string>
-    <string name="vibrate_pattern_james_bond" translatable="false">James Bond</string>
-    <string name="vibrate_pattern_mortal_kombat" translatable="false">Mortal Kombat</string>
-
     <!-- sources -->
 
-    <string name="source_juggluco" translatable="false">Juggluco</string>
-    <string name="source_xdrip" translatable="false">xDrip+</string>
-    <string name="source_libreview" translatable="false">LibreLinkUp</string>
-    <string name="source_nightscout" translatable="false">Nightscout</string>
-    <string name="source_dexcom_share" translatable="false">Dexcom Share</string>
-    <string name="source_dexcom_byoda" translatable="false">Dexcom BYODA</string>
-    <string name="source_ns_emulator" translatable="false">Dexcom/Eversense</string>
-    <string name="source_diabox" translatable="false">DiaBox</string>
-    <string name="pref_source_eversense_info" translatable="false">Eversense (ESEL)/Dexcom BYODA (xDrip+)</string>
-    <string name="pref_source_dexcom_byoda_info" translatable="false">Dexcom BYODA (AAPS)</string>
     <string name="source_phone">Phone</string>
     <string name="source_wear">Wear</string>
 
@@ -349,7 +362,7 @@
     <string name="pref_source_xdrip_info_2_summary">- enable \"Compatible Broadcast\" - check \"Identify receiver\" to be empty or if an entry already exists, add \"de.michelinside.glucodatahandler\" separated by a space</string>
     <string name="pref_gda_source_xdrip_info_2_summary">- enable \"Compatible Broadcast\"\n- check \"Identify receivers\" to be empty or add a new line with \"de.michelinside.glucodataauto\"</string>
     <string name="pref_source_librelinkup_info">Setup LibreLinkUp</string>
-    <string name="pref_source_librelinkup_info_summary">IMPORTANT: this is not the account used for the FreeStyle Libre App!\nTo activate LibreLinkUp follower:\n- open your FreeStyle Libre App and select in the menu Share or Connected Apps\n- activate LibreLinkUp connection\n- install LibreLinkUp from PlayStore\n- setup your account and wait for the invitation</string>
+    <string name="pref_source_librelinkup_info_summary">IMPORTANT: this is not the account used for the FreeStyle Libre App!\nTo activate LibreLinkUp follower:\n- open your FreeStyle Libre App and select in the menu Share or Connected Apps\n- activate LibreLinkUp connection\n- install LibreLinkUp from Play Store\n- setup your account and wait for the invitation</string>
     <string name="menu_contact">Contact</string>
     <string name="src_ns_iob_cob">IOB/COB support</string>
     <string name="src_ns_iob_cob_summary">Receive also IOB and COB values from nightscout pebble endpoint.</string>
@@ -427,8 +440,6 @@
     <string name="alarm_cat_categories">Alarm categories</string>
     <string name="alarm_fullscreen_notification_enabled">Full screen notification</string>
     <string name="alarm_fullscreen_notification_enabled_summary">Enables full screen notification on lockscreen.\nThis may request an additional permission.</string>
-    <string name="alarm_snooze_on_notification_enabled">Snooze on notification</string>
-    <string name="alarm_snooze_on_notification_summary">If enabled, the notifications will also include buttons to activate snooze.</string>
     <string name="alarm_fullscreen_dismiss_keyguard">Dismiss keyguard</string>
     <string name="alarm_fullscreen_dismiss_keyguard_summary">Please enable this setting, if you have problems with the fullscreen notification.\nOn some devices, this will cause the unlock screen, while the fullscreen notification is triggered.\nSo please do not enable it, if you do not have any problems.</string>
     <string name="alarm_force_sound">Force alarm sound</string>
@@ -505,7 +516,7 @@
     <string name="pref_cat_transfer">Transfer values</string>
     <string name="pref_cat_visualisation">Visualisation</string>
     <string name="pref_cat_banglejs">BangleJS watches</string>
-    <string name="pref_wearos_info_summary">To use GlucoDataHandler on Wear OS watches, please install it from Google Playstore on watch.\nThis app does not provide a watchface, it provides several complications (the small round watchface parts), which can be used for watchfaces supporting 3rd party complications.</string>
+    <string name="pref_wearos_info_summary">To use GlucoDataHandler on Wear OS watches, please install it from Google Play Store on watch.</string>
     <string name="pref_wear_os_check_connection">Check connection</string>
     <string name="pref_wear_os_check_connection_summary">Press here to re-check the connection to Wear OS.\nYou can also trigger this check while pressing on the connection info on home screen (even in the Wear OS app).</string>
     <string name="pref_watchdrip_info_summary">WatchDrip+ supports several MiBand and Amazfit devices.\nTo get a whole list of supported devices and more information about configure WatchDrip+, please press here.</string>
@@ -562,7 +573,6 @@
     <string name="src_dexcom_share_user_summary">Username, E-Mail or phone number for login to your Dexcom Share account.\nIMPORTANT: if you are using phone number, it has to include the country code (e.g. +1 for US).</string>
     <string name="src_dexcom_share_password_summary">Password for Dexcom Share account.</string>
     <string name="pref_source_dexcom_share_info">Setup Dexcom Share</string>
-    <string name="pref_source_dexcom_share_info_summary">To receive data from Dexcom Share servers, you need to have:\n- sharing enabled on the Dexcom application that is connected to the sensor\n- accepted the invitation on the Dexcom Follower app (you can uninstall it afterwards)\n\nImportant: it does not work with a follower user!</string>
     <string name="permission_missing_title">Missing permission!</string>
     <string name="setting_permission_missing_message">The settings \'%1$s\' is set, but the related permission is not granted! Press \"OK\" to be forwared the permission dialog or press \"Cancel\" to disable this setting.</string>
     <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
@@ -579,9 +589,6 @@
     <string name="new_version">Version %s is available</string>
     <string name="info_label_notes">Notes</string>
     <string name="gda_notification_permission">Notifications are disabled! \nPress here to enable them.</string>
-
-    <!-- New  -->
-
     <string name="pref_show_other_unit">Show other unit</string>
     <string name="pref_show_other_unit_summary">Show glucose value in %s in the details.</string>
     <string name="other_unit">Other unit</string>
@@ -603,7 +610,7 @@
     <string name="alarm_inactive_weekdays">Days for quiet hours</string>
     <string name="alarm_inactive_weekdays_summary">Specify the days of the week on which quiet hours should start at the selected start time.</string>
 
-    <string name="app_crash_bad_notification">The app crashes because of the colored notification layout!\nIt has been disabled to prevent this crash.\nThis is an issue on Samsung phones so please create a error report in the Samsung members app. Thank you!</string>
+    <string name="app_crash_bad_notification">The app crashes because of the colored notification layout!\nIt has been disabled to prevent this crash.\nA phone restart usually fixes this.</string>
     <string name="auto_close_notification">Auto close notification</string>
     <string name="auto_close_notification_summary">Auto close alarm notification after sound and vibration has finished, but only after at least 30 seconds.\nIf retrigger is active, the notification will be closed, if there is no additional trigger.</string>
 
@@ -621,7 +628,6 @@
     <string name="menu_save_mobile_logs_summary">Save logs from the phone to file.</string>
     <string name="menu_save_wear_logs_summary">Save logs from connected Wear OS watch to file.</string>
     <string name="alarm_repeat">Repeat</string>
-    <string name="alarm_repeat_summary">"Repeat alarm sound and vibration. \n0: Disables the repeat functionality. \nPositive values: Set the repeat interval in minutes. \n-1: Enables unlimited repetition. "</string>
     <string name="no_vibration">No vibration</string>
     <string name="alarm_vibrate_mode">Vibration mode</string>
 
@@ -649,6 +655,8 @@
     <string name="src_offline_enabled_summary_on">Internal messages from this source will be handled.</string>
     <string name="src_offline_enabled_summary_off">Internal messages from this source will be ignored.</string>
     <string name="temp_disabled">Temporary disabled</string>
+    <string name="temp_disabled_until">Temporary disabled until</string>
+    <string name="snooze_until">Snooze until</string>
 
     <!-- Talkback -->
     <string name="trend">Trend</string>
@@ -665,7 +673,7 @@
 
     <string name="not_available">not available</string>
 
-    <string name="action_read_values">Read values</string>
+    <string name="action_read_values">Speak values</string>
 
     <plurals name="elapsed_time_full_text">
         <item quantity="one">Time %d minute</item>
@@ -673,8 +681,6 @@
     </plurals>
     <string name="pref_source_diabox_info_summary">Open Integration and enable \"Share data with GWatch\"\nRemark: the DiaBox broadcast only contains the glucose value and no more information like trend!</string>
     <string name="pref_source_dexcom_byoda_not_working_info_summary">Remark: the AAPS broadcast from BYODA doesn\'t seem to work with other apps. \nPlease use the xDrip+ broadcast in BYODA.</string>
-
-    <!-- new for GDA -->
 
     <string name="gda_help_aa_summary">Get started with GDA on Android Auto</string>
     <string name="no_tts">Text-to-speech (TTS) is not enabled.\nTo use this feature, enable TTS in Android Accessibility settings.\nOnce enabled, tap here to update.</string>
@@ -694,5 +700,76 @@
     <string name="gda_speak_off">Speak is off</string>
     <string name="enable_alarm_icon_toggle">Enable Alarm Icon</string>
     <string name="enable_alarm_icon_toggle_summary">Enable alarm icon on main screen to toggle alarm state.</string>
+
+    <!-- v1.3  -->
+
+    <string name="source_libre_auto_accept_tou">Auto accept new terms</string>
+    <string name="source_libre_auto_accept_tou_summary">By enabling this, you automatically accept new Terms of Use to ensure continuous data reception. You won\'t be informed about new terms separately. If you want to read them, disable this setting and refer to the LibreLinkUp app in case of error 4.</string>
+    <string name="src_libre_tou_message">GlucoDataHandler can automatically accept new Terms of Use for LibreLinkUp.\nPress OK to enable this feature, or Cancel to read and manually accept the terms in the LibreLinkUp app.</string>
+
+    <string name="src_librelink_error4">Error, please re-login to LibreLinkUp App and check for any steps to be done!</string>
+    <string name="src_librelink_error4_type">Error type %1$s, please re-login to LibreLinkUp App and check for any steps to be done!</string>
+    <string name="src_librelink_error4_tou">New Terms of Use must be accepted. Enable automatic acceptance in LibreLinkUp source settings, or log in again to the LibreLinkUp app and accept the terms.</string>
+    <string name="src_librelink_error2">Incorrect username or password. Please verify your LibreLinkUp source settings. If needed, try logging in again or reinstalling the LibreLinkUp app and checking your account settings.\nPlease stop all other apps accessing the same account!</string>
+    <string name="last_value_on_server">Last glucose reading on server from %1$s</string>
+    <string name="no_data_in_server_response">No glucose readings found on server.</string>
+    <string name="http_error_429">Too many requests!</string>
+    <string name="http_error_429_info">Please stop all other apps accessing the same account!</string>
+
+    <string name="state_await_data">Awaiting data</string>
+    <string name="pref_send_battery_level_to_watch">Send battery level</string>
+    <string name="pref_send_battery_level_to_watch_summary">Send battery level to watch to show in complication and on main screen.</string>
+    <string name="pref_battery_level">Show battery level</string>
+    <string name="forward_to_watch_interval_summary">Set the minimum time (in minutes) between glucose measurements before sending a new update to the watch.\nAlarms and very low measurements will always be sent.</string>
+    <string name="forward_to_values_summary">Set the minimum time (in minutes) between glucose measurements before sending a new update to the receivers.</string>
+    <string name="alarm_repeat_summary">The alarm will sound and vibrate repeatedly until you dismiss the notification or the set max alarm duration is reached.</string>
+    <string name="alarm_repeat_time">Max alarm duration</string>
+    <string name="alarm_repeat_time_summary">Specify the maximum time (in minutes) the alarm will sound and vibrate. A value of 0 means the alarm will repeat indefinitely.</string>
+    <string name="wear_source_info">To enable sources, please set them up in the phone app first. Activate sources on your watch only if you don\'t receive the data on your phone yet.</string>
+    <string name="gdh_disclaimer_title">Developer\'s Note</string>
+    <string name="gdh_disclaimer_message">This app was developed in my free time as a hobby project. Therefore, I cannot guarantee that all features will work flawlessly on every device. However, I am constantly working on improvements.\nIf you encounter any problems or have questions, please contact me directly before leaving a negative review. \nTo stay informed about important updates and bug fixes, you are welcome to join the Facebook group or the Google Groups.</string>
+
+    <string name="pref_source_dexcom_share_info_1_summary">To receive data from Dexcom Share servers:\nIn the Dexcom App:\n - Create a follower\n - Under \"Connections,\" ensure \"Share On\" is displayed</string>
+    <string name="pref_source_dexcom_share_info_2_summary">In GlucoDataHandler:\n - Enter your Dexcom Clarity username and password \n   (if you use your phone number as your username, include your country code)\n - Check the setting for a US account\nImportant: It does not work with a follower account!</string>
+
+    <string name="request_timestamp">Updated</string>
+    <string name="alarm_header">Alarms</string>
+    <string name="wearos_watchfaces">Watch Faces</string>
+    <string name="wearos_watchfaces_summary">Information about Wear OS third-party watch faces.</string>
+    <string name="setup">Setup</string>
+    <string name="pref_watchfaces_cat">Third-party watch faces</string>
+    <string name="pref_watchfaces_info_summary">This app does not provide a watch face, it provides several complications (the small round watch face parts), which can be used for watch faces supporting 3rd party complications.</string>
+    <string name="pref_watchfaces_default">Standard</string>
+    <string name="pref_watchfaces_default_summary">Most watch manufacturers already provide watch faces that can be used with the GlucoDataHandler complication.\nFor example, most Samsung \"Info\" watch faces are compatible.</string>
+    <string name="pref_watchfaces_pujie">Pujie</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie is a watch face creator app with a cloud library.\nTo find compatible watch faces, search the library for watch faces starting with \"GDH_\".\nNote: Pujie is not compatible with Wear OS 5 devices.\nTap here to open the app in the Play Store.</string>
+    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
+    <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man creates third-party watch faces specifically designed for use with GlucoDataHandler.\nTap here to open his Play Store page.</string>
+    <string name="pref_watchfaces_gdc">GDC Watch Faces</string>
+    <string name="pref_watchfaces_gdc_summary">GDC Watch Faces are designed for use with GlucoDataHandler.\nTap here to open the Play Store page.</string>
+    <string name="pref_phone_wear_screen_off_update">Always update complications</string>
+    <string name="pref_phone_wear_screen_off_update_summary">Always send new glucose values to watch.\nDisable this to prevent data updates on the watch while the watch screen is off to save battery.\nAlarm values will always be sent to the watch.\nIMPORTANT: The obsolete alarm is disabled on the watch when this setting is disabled!</string>
+    <string name="alarm_ignore_snooze_for_very_low">Always alert for very low</string>
+    <string name="alarm_ignore_snooze_for_very_low_summary">This alarm will notify you even if snooze or the general quiet hours for all alarms are active, ensuring you are alerted to very low glucose levels.</string>
+
+    <string name="libre_no_new_value_info">If this error persists, try reinstalling the Libre App. This often resolves the issue.</string>
+    <string name="src_libre_server">Server</string>
+    <string name="source_libre_server_default">Default (.io)</string>
+    <string name="source_libre_server_russian">Russian (.ru)</string>
+
+    <string name="patient_name">Name</string>
+    <string name="patient_name_summary">Name of the user/patient, which should be shown in notification and during speaking.\nThis should be used, if you are using multiple variants of GlucoDataAuto, otherwise it could be empty.</string>
+
+    <string name="video_tutorial">Video Tutorial</string>
+    <string name="video_tutorial_summary">Click here to go to the YouTube video that illustrates the setup of this source. Many thanks to Diabetic Masked Man for creating the videos.</string>
+
+    <string name="snooze_30">30 minutes</string>
+    <string name="snooze_60">60 minutes</string>
+    <string name="snooze_90">90 minutes</string>
+    <string name="snooze_120">120 minutes</string>
+    <string name="alarm_snooze_on_notification_enabled">Snooze on notification</string>
+    <string name="alarm_snooze_on_notification_summary">Choose up to 3 snooze durations to display as buttons on the alarm notification.</string>
+    <string name="pref_show_iob_cob">Show IOB/COB values</string>
+    <string name="pref_show_iob_cob_summary">Show IOB and COB values, if available.</string>
 
 </resources>

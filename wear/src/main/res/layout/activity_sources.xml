@@ -28,6 +28,14 @@
             android:paddingBottom="80dp"
             app:layout_boxedEdges="all">
 
+            <TextView
+                android:id="@+id/txtWearSourceInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/wear_source_info"
+                android:textAlignment="textStart"
+                android:textSize="18sp" />
+
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switchLibreSource"
                 android:layout_width="match_parent"

@@ -1,0 +1,720 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="locale">nl</string>
+
+    <string name="info_label_sensor_id">Sensor</string>
+    <string name="info_label_value">Waarde</string>
+    <string name="info_label_raw">Ruw</string>
+    <string name="info_label_delta">Delta</string>
+    <string name="info_label_rate">Snelheid</string>
+    <string name="info_label_timestamp">Tijd</string>
+    <string name="info_label_iob_cob_timestamp">IOB/COB tijd</string>
+    <string name="info_label_timediff">Tijdsverschil</string>
+    <string name="info_label_alarm">Alarm</string>
+    <string name="info_label_source">Bron</string>
+    <string name="info_label_per_minute">per minuut</string>
+    <string name="no_data">Geen gegevens ontvangen!\nSelecteer eerst een bron</string>
+
+    <string name="elapsed_time">%1$d min</string>
+    <string name="elapsed_time_hour">\> 1 uur</string>
+
+    <string name="rate_double_up">stijgt zeer snel</string>
+    <string name="rate_single_up">stijgt snel</string>
+    <string name="rate_forty_five_up">stijgt</string>
+    <string name="rate_flat">stabiel</string>
+    <string name="rate_forty_five_down">daalt</string>
+    <string name="rate_single_down">daalt snel</string>
+    <string name="rate_double_down">daalt zeer snel</string>
+
+    <string name="button_ok">OK</string>
+    <string name="button_cancel">Annuleren</string>
+
+    <string name="alarm_none">-</string>
+    <string name="alarm_very_low">zeer laag</string>
+    <string name="alarm_low">laag</string>
+    <string name="alarm_high">hoog</string>
+    <string name="alarm_very_high">zeer hoog</string>
+
+    <!-- mobile -->
+
+    <string name="activity_main_battery_optimization_disabled">Batterijoptimalisatie is ingeschakeld</string>
+    <string name="activity_main_no_source_label">Bron: niet actief</string>
+    <string name="activity_main_connected_label">Wear: verbonden (%1$s)</string>
+    <string name="activity_main_disconnected_label">Wear: niet verbonden</string>
+    <string name="activity_main_car_connected_label">Android Auto: verbonden</string>
+    <string name="activity_main_car_disconnected_label">Android Auto: niet verbonden</string>
+    <string name="activity_main_high_contrast_enabled">Hoog contrast toegankelijkheid is actief!\nDruk hier om naar instellingen te gaan.</string>
+    <string name="no_new_value">Geen nieuwe waarde sinds %1$d minuten!</string>
+
+    <string name="menu_settings">Instellingen</string>
+    <string name="menu_sources">Bronnen</string>
+    <string name="menu_group_github">GitHub</string>
+    <string name="menu_update">Updates</string>
+    <string name="menu_support">Ondersteuning</string>
+    <string name="menu_help">Help</string>
+
+    <!-- tasker -->
+
+    <string name="tasker_event_glucodata">Nieuwe glucosewaarde</string>
+    <string name="tasker_event_glucodata_obsolete">Verouderde waarde</string>
+    <string name="tasker_event_glucodata_alarm">Glucosealarm</string>
+    <string name="tasker_wear_connection_state">Wear-verbindingsstatus</string>
+    <string name="tasker_android_auto_connection_state">Android Auto-verbindingsstatus</string>
+    <string name="tasker_target_range_state">Wijziging glucosebereik</string>
+
+    <!-- sources -->
+
+    <string name="source_phone">Telefoon</string>
+    <string name="source_wear">Wear</string>
+
+    <string name="source_state_not_active">Niet actief</string>
+    <string name="source_state_in_progress">Bezig</string>
+    <string name="source_state_ok">OK</string>
+    <string name="source_state_no_new_value">Geen nieuwe waarde</string>
+    <string name="source_state_no_connection">Geen internetverbinding</string>
+    <string name="source_state_error">Fout</string>
+
+    <string name="source_interval">Interval</string>
+    <string name="source_interval_summary">Interval voor het opvragen van gegevens van de bron.</string>
+    <string name="source_delay">Vertraging</string>
+    <string name="source_delay_summary">Vertraging in seconden voordat de gegevens uit de cloud worden opgevraagd, omdat het enige tijd duurt voordat de gegevens daar aanwezig zijn.</string>
+
+    <string name="src_cat_libreview">LibreLinkUp</string>
+    <string name="src_enabled">Inschakelen</string>
+    <string name="src_libre_enabled_summary">Schakel LibreLinkUp-volger in als gebruikersnaam en wachtwoord zijn ingesteld.</string>
+    <string name="src_libre_user">E-mailadres</string>
+    <string name="src_libre_user_summary">E-mailadres voor LibreLinkUp login</string>
+    <string name="src_password">Wachtwoord</string>
+    <string name="src_libre_password_summary">Wachtwoord voor LibreLinkUp</string>
+    <string name="src_libre_reconnect">Opnieuw verbinden</string>
+    <string name="src_libre_reconnect_summary">Bij het volgende interval wordt een nieuwe login uitgevoerd.</string>
+
+    <string name="src_cat_nightscout">Nightscout</string>
+    <string name="src_ns_enabled">Inschakelen</string>
+    <string name="src_ns_enabled_summary">Schakel Nightscout-volger in.</string>
+    <string name="src_ns_url">Nightscout URL</string>
+    <string name="src_ns_url_summary">URL van de Nightscout-server.</string>
+    <string name="src_ns_secret">API-geheim</string>
+    <string name="src_ns_secret_summary">API-geheim voor toegang tot de gegevens (optioneel).</string>
+    <string name="src_ns_token">Toegangstoken</string>
+    <string name="src_ns_token_summary">Voeg uw toegangstoken toe, indien nodig (optioneel).</string>
+
+    <string name="source_request_interval_always">Altijd</string>
+    <string name="source_request_interval_1">1 minuut</string>
+    <string name="source_request_interval_5">5 minuten</string>
+    <string name="source_request_interval_10">10 minuten</string>
+    <string name="source_request_interval_15">15 minuten</string>
+    <string name="source_request_interval_20">20 minuten</string>
+    <string name="source_request_interval_30">30 minuten</string>
+    <string name="source_request_interval_alarm">Alleen alarm</string>
+
+
+    <!-- LibreLink source -->
+    <string name="state_disabled">uitgeschakeld</string>
+    <string name="state_not_connected">niet verbonden</string>
+    <string name="state_connected">verbonden</string>
+    <string name="state_error">fout: %s</string>
+
+
+    <!-- settings -->
+
+    <string name="pref_cat_general">Algemeen</string>
+    <string name="pref_cat_notification">Melding</string>
+    <string name="pref_cat_widgets">Widgets</string>
+    <string name="pref_cat_android_auto">Android Auto</string>
+    <string name="pref_cat_forward_broadcast">Glucosewaarden doorsturen</string>
+    <string name="pref_target_range">Doelbereik</string>
+    <string name="pref_cat_colors">Kleuren</string>
+
+    <string name="pref_switch_notification">Dummy waarden</string>
+    <string name="pref_very_high_value">Zeer hoge glucose</string>
+    <string name="pref_very_high_value_summary">Grens voor zeer hoge glucosewaarden.</string>
+    <string name="pref_high_value">Hoge glucose</string>
+    <string name="pref_high_value_summary">Grens voor hoge glucosewaarden.</string>
+    <string name="pref_target_max_value">Doel bovengrens glucose</string>
+    <string name="pref_target_max_value_summary">Bovengrens voor het doelbereik.</string>
+    <string name="pref_target_min_value">Doel ondergrens glucose</string>
+    <string name="pref_target_min_value_summary">Ondergrens voor het doelbereik.</string>
+    <string name="pref_very_low_value">Zeer lage glucose</string>
+    <string name="pref_very_low_value_summary">Grens voor zeer lage glucosewaarde.</string>
+    <string name="pref_low_value">Lage glucose</string>
+    <string name="pref_low_value_summary">Grens voor lage glucosewaarde.</string>
+    <string name="pref_switch_car_notification">Android Auto-meldingen</string>
+    <string name="pref_switch_car_notification_summary">Melding voor Android Auto.</string>
+    <string name="pref_car_notification_interval">Meldingsinterval</string>
+    <string name="pref_car_notification_interval_summary">Minimuminterval voor het weergeven van meldingen voor een nieuwe waarde.\nAlarmen zullen altijd een melding weergeven.</string>
+    <string name="pref_switch_car_notification_alarm_only">Alleen alarm</string>
+    <string name="pref_switch_car_notification_alarm_only_summary">Zal alleen meldingen activeren voor alarmen in hun specifieke interval.\nZeer lage waarden zullen altijd een melding weergeven.</string>
+    <string name="pref_switch_car_media">Nep-mediaspeler</string>
+    <string name="pref_switch_car_media_summary">Toon de glucosewaarde als huidig nummer voor Android Auto.</string>
+    <string name="pref_switch_send_to_aod">Glucodata-broadcast verzenden</string>
+    <string name="pref_switch_send_to_aod_summary">Glucodata-broadcast verzenden voor nieuwe waarden die van een bron zijn ontvangen.</string>
+    <string name="pref_button_select_target">Glucodata-ontvangers identificeren</string>
+    <string name="pref_button_select_target_summary">Kies ontvangers waarnaar de glucodata-broadcast moet worden verzonden. Een globale broadcast wordt verzonden naar elke app die zich dynamisch registreert op de broadcast.</string>
+    <string name="pref_switch_send_to_xdrip">Gepatchte libre-broadcast verzenden</string>
+    <string name="pref_switch_send_to_xdrip_summary">Stuur glucosewaarden door naar xDrip+. Selecteer \'Libre (gepatchte app)\' als bron in xDrip+.</string>
+    <string name="pref_button_select_xdrip_target">Gepatchte libre-ontvangers identificeren</string>
+    <string name="pref_button_select_xdrip_target_summary">Kies ontvangers waarnaar de gepatchte libre-broadcast moet worden verzonden. Een globale broadcast wordt verzonden naar elke app die zich dynamisch registreert op de broadcast.</string>
+    <string name="pref_switch_send_xdrip_broadcast">xDrip+-broadcast verzenden</string>
+    <string name="pref_switch_send_xdrip_broadcast_summary">Verzend broadcast zoals xDrip+ verzendt. Bijvoorbeeld naar AAPS.</string>
+    <string name="pref_button_select_xdrip_broadcast_target">xDrip+-broadcastontvangers identificeren</string>
+    <string name="pref_button_select_xdrip_broadcast_target_summary">Kies ontvangers waarnaar de xDrip+-broadcast moet worden verzonden. Een globale broadcast wordt verzonden naar elke app die zich dynamisch registreert op de broadcast.</string>
+    <string name="pref_switch_use_mmol">Gebruik mmol/l</string>
+    <string name="pref_switch_use_mmol_summary">Gebruik mmol/l in plaats van mg/dl.</string>
+    <string name="pref_switch_use_5_min_delta">5 minuten delta</string>
+    <string name="pref_switch_use_5_min_delta_summary">Schakel dit in om deltawaarden te gebruiken voor een interval van 5 minuten, anders wordt een interval van 1 minuut gebruikt.</string>
+    <string name="pref_color_alarm">Kleur zeer hoog/laag</string>
+    <string name="pref_color_alarm_summary">Kleur voor zeer hoge en zeer lage glucosewaarden.</string>
+    <string name="pref_color_out_of_range">Kleur hoog/laag</string>
+    <string name="pref_color_out_of_range_summary">Kleur voor hoge en lage glucosewaarden.</string>
+    <string name="pref_color_ok">Doelkleur</string>
+    <string name="pref_color_ok_summary">Kleur voor glucosewaarden binnen het doelbereik.</string>
+    <string name="pref_notification">Melding</string>
+    <string name="pref_notification_summary">Toont een permanente melding met de huidige trendpijl, glucose- en deltawaarde in de statusbalk.\nDeze melding voorkomt dat Android deze app stopt.</string>
+    <string name="pref_notification_icon">Statusbalkpictogram</string>
+    <string name="pref_notification_icon_summary">Stijl van het kleine statusbalkpictogram van de melding.</string>
+    <string name="pref_notification_big_icon">Groot statusbalkpictogram</string>
+    <string name="pref_notification_big_icon_summary">Groter pictogram in de statusbalk. Schakel deze instelling uit als het pictogram te groot is en wordt afgesneden.</string>
+    <string name="pref_notification_no_content">Inhoud verbergen</string>
+    <string name="pref_notification_no_content_summary">Dit verwijdert de inhoud van de melding, zodat er alleen een kleine melding met het bijbehorende pictogram is.</string>
+    <string name="pref_second_notification">2e melding</string>
+    <string name="pref_second_notification_summary">Toon een melding zonder inhoud om een extra pictogram in de statusbalk te hebben.</string>
+    <string name="pref_second_notification_icon">2e statusbalkpictogram</string>
+    <string name="pref_second_notification_icon_summary">Stijl van het kleine statusbalkpictogram van de melding.</string>
+    <string name="pref_third_notification">3e melding</string>
+    <string name="pref_third_notification_icon">3e statusbalkpictogram</string>
+    <string name="pref_floating_widget">Zwevende widget</string>
+    <string name="pref_floating_widget_summary">Toon glucose, trend, delta, tijd en IOB/COB als zwevende widget.\nAls u de widget langer dan 5 seconden vasthoudt en niet beweegt, verdwijnt deze.</string>
+    <string name="pref_floating_widget_size">Grootte</string>
+    <string name="pref_floating_widget_size_summary">Wijzig de grootte van de zwevende widget</string>
+    <string name="pref_floating_widget_style">Stijl</string>
+    <string name="pref_floating_widget_style_summary">Stijl van de zwevende widget.</string>
+    <string name="pref_floating_widget_transparency">Transparantie</string>
+    <string name="pref_floating_widget_transparency_summary">Achtergrondtransparantie voor zwevende widget.</string>
+    <string name="pref_widget_transparency">Widgettransparantie</string>
+    <string name="pref_widget_transparency_summary">Achtergrondtransparantie voor widgets.</string>
+    <string name="pref_relative_time">Relatieve tijd</string>
+    <string name="pref_relative_time_summary">Gebruik relatieve tijd in plaats van glucosetijdstip voor widgets.\nRelatieve tijd is afhankelijk van de batterij-instellingen op uw apparaat en werkt mogelijk niet correct.</string>
+
+    <string name="pref_status_bar_icon_app">App-pictogram</string>
+    <string name="pref_status_bar_icon_glucose">Glucosewaarde</string>
+    <string name="pref_status_bar_icon_trend">Trendpijl</string>
+    <string name="pref_status_bar_icon_delta">Delta</string>
+
+    <string name="pref_wear_notification">Wear: trillen</string>
+
+    <string name="pref_global_broadcast">Globale broadcast</string>
+
+    <string name="select_receiver_show_all">Alles tonen</string>
+    <string name="select_receiver_no_glucodata_receiver">Geen ontvanger gevonden!</string>
+
+    <string name="widget_glucose">Glucose</string>
+    <string name="widget_glucose_trend">Glucose en trend</string>
+    <string name="widget_glucose_trend_delta">Glucose, trend en delta</string>
+    <string name="widget_glucose_trend_delta_timestamp">Glucose, trend, delta en tijd</string>
+    <string name="widget_glucose_trend_delta_timestamp_iob_cob">Glucose, trend, delta, tijd en IOB/COB</string>
+
+    <string name="pref_send_to_bangleJS">BangleJS-ondersteuning</string>
+    <string name="pref_send_to_bangleJS_summary">Stuur waarden door naar widbgjs-widget voor BangleJS.</string>
+
+    <!-- wear -->
+
+    <string name="forground_notification_descr">Gegevens ontvangen voor complicaties</string>
+
+    <string name="activity_connected_label">Telefoon: verbonden (%1$s)</string>
+    <string name="activity_disconnected_label">Telefoon: niet verbonden</string>
+
+    <string name="activity_switch_foreground">Voorgrond</string>
+    <string name="activity_large_arrow_icon">Grote trendpijl</string>
+    <string name="activity_switch_colored_aod">Gekleurde AOD</string>
+
+    <!-- complications -->
+
+    <string name="short_value">Glucose</string>
+    <string name="image_value">Glucose (zeer groot en gekleurd)</string>
+    <string name="small_image_value">Glucose (gekleurd)</string>
+    <string name="icon_value">Glucose (groot)</string>
+    <string name="short_value_icon">Glucose met pictogram</string>
+    <string name="short_value_arrow">Glucose en trend</string>
+    <string name="short_value_arrow_image">Glucose en trend (groot en gekleurd)</string>
+    <string name="icon_value_arrow">Glucose en trend (groot)</string>
+    <string name="short_value_arrow_small_image">Glucose en trend (gekleurd)</string>
+    <string name="short_value_trend_range">Glucose- en trendbereik (indien ondersteund)</string>
+    <string name="short_value_delta_trend_range">Glucose, delta en trendbereik (indien ondersteund)</string>
+    <string name="short_delta_trend_arrow_range">Delta, trendpijl en trendbereik (indien ondersteund)</string>
+    <string name="short_value_delta">Glucose en delta</string>
+    <string name="long_value_arrow_delta">Glucose, delta en trend</string>
+    <string name="long_value_arrow_delta_time">Glucose, delta, trend en tijd</string>
+    <string name="long_value_arrow_icon_delta_time">Glucose, trendpictogram, delta en tijd</string>
+    <string name="short_value_rate">Glucose en trendwaarde</string>
+    <string name="icon_delta">Delta (groot)</string>
+    <string name="image_delta">Delta (groot, gekleurd)</string>
+    <string name="short_delta">Delta</string>
+    <string name="short_delta_arrow">Delta en trend</string>
+    <string name="short_delta_icon">Delta met pictogram</string>
+    <string name="short_delta_time">Delta en tijd</string>
+    <string name="image_delta_time">Delta en tijd (gekleurd)</string>
+    <string name="icon_delta_time">Delta en tijd (groot)</string>
+    <string name="image_arrow">Trend (groot, gekleurd)</string>
+    <string name="small_image_arrow">Trend (gekleurd)</string>
+    <string name="icon_arrow">Trendpictogram</string>
+    <string name="test_neg_range">Testbereikcomplicatie met negatieve waarden (voor ondersteuning van trendbereik)</string>
+    <string name="short_rate">Trendwaarde</string>
+    <string name="short_rate_arrow">Trendwaarde en pijl</string>
+    <string name="short_rate_icon">Trendwaarde met pictogram</string>
+    <string name="timestamp">Glucosetijd</string>
+    <string name="short_timestamp">Tijd</string>
+    <string name="image_timestamp">Tijd (gekleurd)</string>
+    <string name="icon_timestamp">Tijd (groot)</string>
+    <string name="battery_level">Batterijniveau (horloge en telefoon)</string>
+    <string name="watch_battery_level">Batterijniveau horloge</string>
+    <string name="phone_battery_level">Batterijniveau telefoon</string>
+    <string name="iob_cob">IOB/COB</string>
+
+    <!-- GlucoDataAuto -->
+
+    <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataAuto/blob/main/README.md</string>
+    <string name="gda_no_data">Om deze app in Android Auto te gebruiken, moet u de ontwikkelaarsinstellingen in Android Auto activeren door meerdere keren op de versie te klikken. Vervolgens moet u \"Onbekende bronnen\" inschakelen in het menu met ontwikkelaarsinstellingen.</string>
+    <string name="pref_information">Informatie</string>
+    <string name="pref_gda_info_summary">Als u GlucoDataHandler als bron gebruikt, worden deze instellingen overschreven vanuit GlucoDataHandler, dus u hoeft ze hier niet te wijzigen.</string>
+    <string name="pref_no_gda_info">GlucoDataAuto ontbreekt</string>
+    <string name="pref_no_gda_info_summary">Om GlucoDataHandler voor Android Auto te gebruiken, moet u GlucoDataAuto van GitHub installeren.\nKlik hier voor meer informatie en om GlucoDataAuto te downloaden.</string>
+    <string name="pref_send_to_glucodataauto">Doorsturen naar GlucoDataAuto</string>
+    <string name="pref_send_to_glucodataauto_summary">Verzend glucosewaarden en instellingen naar GlucoDataAuto als de telefoon is verbonden met Android Auto.</string>
+
+
+    <!-- Notifications -->
+
+    <string name="mobile_foreground_notification_name">Voorgrondmelding</string>
+    <string name="mobile_foreground_notification_descr">Voorgrondmelding die voorkomt dat de app wordt gestopt terwijl deze op de achtergrond wordt uitgevoerd.</string>
+    <string name="mobile_second_notification_name">Tweede melding</string>
+    <string name="mobile_third_notification_name">Derde melding</string>
+    <string name="mobile_second_notification_descr">Extra melding om een extra pictogram in de statusbalk weer te geven.</string>
+    <string name="worker_notification_name">Werkermelding</string>
+    <string name="worker_notification_descr">Werkermelding die wordt weergegeven tijdens het uitvoeren van taken op de achtergrond.</string>
+    <string name="wear_foreground_notification_name">Voorgrondmelding</string>
+    <string name="wear_foreground_notification_descr">Voorgrondmelding die voorkomt dat de app wordt gestopt terwijl deze op de achtergrond wordt uitgevoerd.</string>
+    <string name="android_auto_notification_name">Melding voor Android Auto</string>
+    <string name="android_auto_notification_descr">Melding die wordt weergegeven in Android Auto</string>
+    <string name="src_xdrip_noise_blocking">Noise-Block actief in xDrip+ Inter-app-instellingen!\nWijzig dit in \"Extreem luid\"!</string>
+    <string name="pref_cat_follower">Cloudservices</string>
+    <string name="pref_source_juggluco_info">Juggluco</string>
+    <string name="pref_source_juggluco_info_summary">Om waarden van Juggluco te ontvangen:\n- open Juggluco\n- ga naar \"Instellingen\"\n- schakel \"Glucodata-broadcast\" in\n- schakel \"de.michelinside.glucodatahandler\" in</string>
+    <string name="pref_gda_source_juggluco_info_summary">Om waarden van Juggluco te ontvangen:\n- open Juggluco\n- ga naar \"Instellingen\"\n- schakel \"Glucodata-broadcast\" in\n- schakel \"de.michelinside.glucodataauto\" in</string>
+    <string name="pref_source_xdrip_info">xDrip+</string>
+    <string name="pref_source_xdrip_info_1_summary">Om waarden van xDrip+ te ontvangen:\n- open xDrip+\n- ga naar instellingen\n- ga naar Inter-app-instellingen\n- schakel \"Lokaal uitzenden\" in\n- stel \"Ruisblokkering\" in op \"Verzend zelfs extreem luide signalen\"</string>
+    <string name="pref_source_xdrip_info_2_summary">- schakel \"Compatibele broadcast\" in - controleer of \"Ontvanger identificeren\" leeg is of als er al een item bestaat, voeg \"de.michelinside.glucodatahandler\" toe, gescheiden door een spatie</string>
+    <string name="pref_gda_source_xdrip_info_2_summary">- schakel \"Compatibele broadcast\" in\n- controleer of \"Ontvangers identificeren\" leeg is of voeg een nieuwe regel toe met \"de.michelinside.glucodataauto\"</string>
+    <string name="pref_source_librelinkup_info">LibreLinkUp instellen</string>
+    <string name="pref_source_librelinkup_info_summary">BELANGRIJK: dit is niet het account dat wordt gebruikt voor de FreeStyle Libre app!\nOm LibreLinkUp-volger te activeren:\n- open uw FreeStyle Libre app en selecteer in het menu Delen of Verbonden apps\n- activeer LibreLinkUp-verbinding\n- installeer LibreLinkUp vanuit de Play Store\n- stel uw account in en wacht op de uitnodiging</string>
+    <string name="menu_contact">Contact</string>
+    <string name="src_ns_iob_cob">IOB/COB ondersteuning</string>
+    <string name="src_ns_iob_cob_summary">Ontvang ook IOB en COB waarden van het Nightscout Pebble-eindpunt.</string>
+    <string name="pref_permanent_notification_info_summary">De melding is verplicht voor een correcte werking van de applicatie.\nVanaf Android 13 kunt u deze melding wegvegen. Als u de melding niet terug wilt, stelt u het \"Statusbalkpictogram\" in op \"App-pictogram\" en schakelt u \"Inhoud verbergen\" in.</string>
+    <string name="source_aaps">AAPS</string>
+    <string name="pref_source_aaps_info">AndroidAPS</string>
+    <string name="pref_source_aaps_info_summary">Om waarden van AAPS te ontvangen:\n- open de AAPS-app\n- ga naar \"Config Builder\"\n- schakel \"Samsung Tizen\" of \"Data Broadcaster\" in</string>
+    <string name="pref_switch_watchdrip_enabled">WatchDrip+</string>
+    <string name="pref_switch_watchdrip_enabled_summary">"Schakel WatchDrip+ communicatie in (zonder grafiek).\nBELANGRIJK: schakel \"Service inschakelen\" in WatchDrip+ in nadat u deze instelling hier hebt ingeschakeld!"</string>
+    <string name="pref_car_notification_reappear_interval">Opnieuw verschijnen</string>
+    <string name="pref_car_notification_reappear_interval_summary">Interval wanneer de melding opnieuw moet verschijnen als er geen nieuwe waarde is. (0 voor nooit).</string>
+    <string name="pref_aa_media_player_icon_style_summary">Stijl van het dummy mediaspelerpictogram/afbeelding.</string>
+    <string name="pref_aa_media_player_icon_style">Pictogram/afbeeldingsstijl</string>
+    <string name="menu_save_mobile_logs">Mobiel</string>
+    <string name="menu_save_wear_logs">Wear</string>
+    <string name="menu_save_logs">Logboeken opslaan</string>
+    <string name="logcat_save_succeeded">Logboeken succesvol opgeslagen</string>
+    <string name="logcat_save_failed">Logboeken opslaan mislukt!</string>
+    <string name="logcat_wear_save_succeeded">Logboeken van Wear succesvol opgeslagen</string>
+    <string name="logcat_wear_save_failed">Logboeken van Wear opslaan mislukt!</string>
+    <string name="request_exact_alarm_summary">Voor alle tijd/interval gerelateerde taken heeft deze app de toestemming voor alarmen en herinneringen nodig.\nHet zal geen gebruikersherinneringen toevoegen of wijzigen, het is alleen voor interne planning.\nAls u op OK drukt, wordt u doorgestuurd naar de toestemmingsinstelling om deze in te schakelen voor GlucoDataHandler.</string>
+    <string name="request_exact_alarm_title">Toestemming voor alarmen en herinneringen</string>
+    <string name="activity_main_schedule_exact_alarm">Planning van exacte alarmen is uitgeschakeld!!!\nGlucoDataHandler werkt mogelijk niet correct!!!\nDruk hier om direct naar de toestemmingsinstelling te gaan.</string>
+
+
+    <string name="src_libre_patient">Patiënt</string>
+    <string name="src_libre_patient_summary">Als er meer dan één patiënt is verbonden met het Libre-account, selecteer dan de patiënt waarvoor de gegevens worden ontvangen.</string>
+    <string name="pref_cat_locksreen_wallpaper">Vergrendelschermachtergrond</string>
+    <string name="pref_lockscreen_enabled">Inschakelen</string>
+    <string name="pref_lockscreen_enabled_summary">Als u de vergrendelschermachtergrond inschakelt, vervangt de app de achtergrond op het vergrendelscherm.</string>
+    <string name="pref_lockscreen_y_pos">Verticale positie</string>
+    <string name="pref_lockscreen_y_pos_summary">Verticale positie van de glucose-trendafbeelding op het vergrendelscherm:\n0 is de bovenkant van het scherm\n100 is de onderkant van het scherm</string>
+    <string name="activity_main_notification_permission">Het weergeven van meldingen is uitgeschakeld!!!\nGlucoDataHandler werkt mogelijk niet correct en kan geen alarmen weergeven!!!\nDruk hier om direct naar de toestemmingsinstelling te gaan.</string>
+
+    <string name="src_libre_setup_librelink">Ontbrekende gegevens! Accepteer eerst de uitnodiging in de LibreLinkUp app!</string>
+    <string name="prefstatus_bar_notification_colored_icon">Gekleurd statusbalkpictogram</string>
+    <string name="pref_status_bar_notification_colored_icon_summary">Als uw apparaat gekleurde statusbalkpictogrammen ondersteunt, kunt u deze ook deactiveren om een wit item te gebruiken.</string>
+
+    <string name="menu_alarms">Alarmen</string>
+    <string name="alarm_interval">Interval</string>
+    <string name="alarm_interval_summary_low">Minimale interval in minuten tussen meldingen voor dit alarmtype.\nInformatie: er zal alleen een nieuwe melding zijn nadat de tijd is verstreken, als de delta negatief is.</string>
+    <string name="alarm_interval_summary_high">Minimale interval in minuten tussen meldingen voor dit alarmtype.\nInformatie: er zal alleen een nieuwe melding zijn nadat de tijd is verstreken, als de delta positief is.</string>
+    <string name="alarm_interval_summary_obsolete">Tijd in minuten sinds de laatste glucosewaarde is ontvangen om deze melding te activeren. Het zal ook opnieuw verschijnen in dit interval.</string>
+    <string name="alarm_enabled">Ingeschakeld</string>
+    <string name="alarm_enabled_summary_on">Meldingen zijn ingeschakeld voor dit alarmtype.</string>
+    <string name="alarm_enabled_summary_off">Meldingen zijn uitgeschakeld voor dit alarmtype.</string>
+    <string name="alarm_test">Test het</string>
+    <string name="alarm_test_summary">Druk hier om na 3 seconden een melding voor dit alarmtype te activeren.</string>
+    <string name="alarm_settings">Instellingen</string>
+    <string name="alarm_settings_summary">Druk hier om naar de instellingen voor het meldingskanaal voor dit alarm te gaan.\nDaar kunt u alle gerelateerde instellingen wijzigen.</string>
+    <string name="alarm_save_sound">Geluid opslaan</string>
+    <string name="alarm_save_sound_summary">Druk hier als u het standaard alarmgeluid wilt opslaan in een bestand op uw telefoon.</string>
+    <string name="alarm_saved">Alarm opgeslagen!</string>
+    <string name="snooze">Snoozen</string>
+    <string name="alarm_cat_all">Alle alarmen</string>
+    <string name="alarm_notifications_enabled">Alarmmeldingen</string>
+    <string name="wear_alarm_notifications_enabled">Wear: Alarmmeldingen</string>
+    <string name="alarm_notifications_enabled_summary_on">Alarmmeldingen zijn actief op de telefoon.\nOpmerking: alarmen gebruiken het alarmvolume van de telefoon.</string>
+    <string name="alarm_notifications_enabled_summary_off">Alarmmeldingen zijn inactief op de telefoon.</string>
+    <string name="stop_snooze">Stoppen</string>
+    <string name="very_low_alarm_text">Zeer laag!</string>
+    <string name="very_low_text">Laag!</string>
+    <string name="very_high_text">Hoog!</string>
+    <string name="very_high_alarm_text">Zeer hoog!</string>
+    <string name="very_low_alarm_notification_name">Zeer laag alarm</string>
+    <string name="very_low_alarm_notification_descr">Melding voor zeer lage alarmen.</string>
+    <string name="low_alarm_notification_name">Laag alarm</string>
+    <string name="low_alarm_notification_descr">Melding voor lage alarmen.</string>
+    <string name="high_alarm_notification_name">Hoog alarm</string>
+    <string name="high_alarm_notification_descr">Melding voor hoge alarmen.</string>
+    <string name="very_high_alarm_notification_name">Zeer hoog alarm</string>
+    <string name="very_high_alarm_notification_descr">Melding voor zeer hoge alarmen.</string>
+    <string name="btn_dismiss">Sluiten</string>
+    <string name="test_alarm">Testalarm!</string>
+    <string name="alarm_cat_categories">Alarmcategorieën</string>
+    <string name="alarm_fullscreen_notification_enabled">Volledig schermmelding</string>
+    <string name="alarm_fullscreen_notification_enabled_summary">Schakelt volledig schermmelding op vergrendelscherm in.\nDit kan om een extra toestemming vragen.</string>
+    <string name="alarm_fullscreen_dismiss_keyguard">Vergrendelscherm sluiten</string>
+    <string name="alarm_fullscreen_dismiss_keyguard_summary">Schakel deze instelling in als u problemen ondervindt met de volledig schermmelding.\nOp sommige apparaten zal dit ervoor zorgen dat het ontgrendelingsscherm wordt weergegeven terwijl de volledig schermmelding wordt geactiveerd.\nSchakel het dus niet in als u geen problemen ondervindt.</string>
+    <string name="alarm_force_sound">Alarmgeluid forceren</string>
+    <string name="alarm_force_sound_summary">Dit zal een alarmgeluid en trilling forceren, zelfs als de telefoon in stille of trilmodus staat. Het zal altijd de modus Niet storen stoppen!\nOm deze instelling in te schakelen, wordt u mogelijk gevraagd om deze app toe te staan de modus Niet storen te wijzigen.</string>
+    <string name="wear_alarm_force_sound">Wear: Alarmgeluid forceren</string>
+    <string name="alarm_force_vibration">Trilling forceren</string>
+    <string name="alarm_force_vibration_summary">Forceer trilling, zelfs als de telefoon in stille modus staat. Het zal altijd de modus Niet storen stoppen!\nOm deze instelling in te schakelen, wordt u mogelijk gevraagd om deze app toe te staan de modus Niet storen te wijzigen.</string>
+    <string name="alarm_sound_level">Geluidsniveau</string>
+    <string name="alarm_sound_level_summary">Forceer het instellen van het geluidsniveau voor het alarmgeluid.\n-1 voor het gebruik van de standaardinstellingen van de telefoon.</string>
+    <string name="advanced_settings">Geavanceerd</string>
+    <string name="advanced_settings_alarm_summary">Geavanceerde alarminstellingen voor volledig schermmelding en geluiden.</string>
+    <string name="alarm_advanced_cat_notifcation">Melding</string>
+    <string name="alarm_advanced_cat_sound">Geluid</string>
+    <string name="alarm_type_summary">Alarminstellingen voor glucosewaarden vanaf %1$s.</string>
+    <string name="alarm_no_notification_wear_connected">Geen alarm terwijl Wear is verbonden</string>
+    <string name="alarm_no_notification_wear_connected_summary_on">Er zal geen alarmmelding op de telefoon verschijnen als de telefoon is verbonden met GlucoDataHandler op het horloge.</string>
+    <string name="alarm_no_notification_wear_connected_summary_off">Er zal een alarmmelding op de telefoon verschijnen, zelfs als de telefoon is verbonden met GlucoDataHandler op het horloge.</string>
+    <string name="alarm_no_notification_auto_connected">Geen alarm terwijl Android Auto is verbonden</string>
+    <string name="alarm_no_notification_auto_connected_summary_on">Er zal geen alarmmelding op de telefoon verschijnen als Android Auto is verbonden.</string>
+    <string name="alarm_no_notification_auto_connected_summary_off">Er zal een alarmmelding op de telefoon verschijnen, zelfs als Android Auto is verbonden.</string>
+    <string name="alarm_retrigger">Opnieuw activeren</string>
+    <string name="alarm_retrigger_summary">Als de alarmmelding niet wordt gesloten, wordt het alarm na dit interval in minuten maximaal 3 keer opnieuw geactiveerd.\n0 - niet opnieuw activeren</string>
+    <string name="alarm_obsolete">Verouderd</string>
+    <string name="obsolete_alarm_notification_name">Verouderd alarm</string>
+    <string name="alarm_obsolete_summary">Alarm als er gedurende %1$s minuten geen nieuwe glucosewaarde is.</string>
+    <string name="obsolete_alarm_notification_descr">Deze melding verschijnt als er gedurende een interval geen nieuwe waarde is.</string>
+    <string name="obsolete_alarm_text">Geen nieuwe waarde!</string>
+
+    <string name="permission_notification_title">Het weergeven van meldingen is uitgeschakeld!!!</string>
+    <string name="permission_notification_message">GlucoDataHandler heeft meldingen nodig om taken op de achtergrond uit te voeren en om alarmen weer te geven.</string>
+    <string name="alarm_notification_name">Alarmmelding</string>
+    <string name="alarm_notification_descr">Alarmmeldingen. Wijzig de instellingen niet, aangezien de app intern geluid en trillingen voor meldingen biedt.</string>
+    <string name="alarm_sound">Selecteer aangepast geluid</string>
+    <string name="alarm_sound_summary">Stil - geen geluid</string>
+    <string name="alarm_use_custom_sound">Gebruik aangepast geluid</string>
+    <string name="alarm_use_custom_sound_summary_on">Gebruik aangepast geselecteerd geluid.</string>
+    <string name="alarm_use_custom_sound_summary_off">Gebruik door de app geleverd geluid.</string>
+    <string name="alarm_sound_delay">Geluidsvertraging</string>
+    <string name="alarm_sound_delay_summary">Tijd in seconden voordat het geluid wordt afgespeeld.\nHet zal de hele tijd trillen, zelfs als er geen geluid is geselecteerd.</string>
+    <string name="pref_cat_alarm_vibration_sound">Geluid en trillingen</string>
+    <string name="alarm_vibrate_only">Alleen trillen</string>
+    <string name="wear_alarm_vibrate_only">Wear: Alleen trillen</string>
+    <string name="permission_alarm_notification_title">Melding uitgeschakeld!</string>
+    <string name="permission_alarm_notification_message">Om alarmen weer te geven, moet GlucoDataHandler ten minste het alarmmeldingskanaal ingeschakeld hebben.\nU wordt doorgestuurd naar de meldingsinstelling voor deze app.\nSchakel daar het alarmmeldingskanaal in.</string>
+    <string name="alarm_app_sound">Intern app-geluid</string>
+    <string name="pref_send_pref_to_glucodataauto">Instellingen opnemen</string>
+    <string name="pref_send_pref_to_glucodataauto_summary">Neem instellingen op in bericht naar GlucoDataAuto.\nDit zal de instellingen in GlucoDataAuto overschrijven.</string>
+    <string name="pref_source_gdh_info_summary">Om waarden van GlucoDataHandler te ontvangen:\n- open GlucoDataHandler\n- ga naar instellingen\n- schakel \"Doorsturen naar GlucoDataAuto\" in\n- om dezelfde instellingen te gebruiken, schakel \"Instellingen opnemen\" in</string>
+    <string name="very_low_alarm_summary">Als u Android Auto-meldingen gebruikt, zullen zeer lage alarmen altijd een melding activeren en dit kan niet worden gedeactiveerd of gewijzigd.</string>
+    <string name="pref_source_juggluco_iob_info">IOB van Juggluco</string>
+    <string name="pref_source_juggluco_iob_info_summary">Om IOB van Juggluco te ontvangen:\n- open Juggluco\n- ga naar \"Instellingen\"\n- schakel \"IOB\" in\n- ga naar \"Webserver\"\n- schakel \"Actief\" in\n- optioneel: schakel \"Alleen lokaal\" in</string>
+    <string name="pref_source_xdrip_iob_info">IOB van xDrip+</string>
+    <string name="pref_source_xdrip_iob_info_summary">Om waarden van xDrip+ te ontvangen:\n- open xDrip+\n- ga naar instellingen\n- ga naar Inter-app-instellingen\n- schakel \"xDrip-webservice\" in</string>
+    <string name="pref_source_activate_local_nightscout_iob">IOB-gebruik activeren</string>
+    <string name="pref_source_activate_local_nightscout_iob_summary">Druk hier om Nightscout-instellingen in te stellen om de lokale webserver te gebruiken om extra IOB-waarden te ontvangen.</string>
+    <string name="activate_local_nightscout_iob_title">Nightscout overschrijven</string>
+    <string name="activate_local_nightscout_iob_message">Dit zal uw huidige Nightscout-broninstellingen overschrijven om lokale webservice op poort 17580 te gebruiken om IOB-waarden te ontvangen.\nWeet u het zeker?</string>
+    <string name="gda_media_notification_toggle_title">Meldingsschakelaar</string>
+    <string name="gda_notifications_on">Meldingen staan aan</string>
+    <string name="gda_notifications_off">Meldingen staan uit</string>
+    <string name="gda_media_notification_toggle_action">Druk op afspelen om de melding in te schakelen</string>
+    <string name="pref_gda_alarm_info_summary">Alarminstellingen zijn alleen gerelateerd aan meldingen op Android Auto en activeren geen geluid.</string>
+    <string name="pref_cat_general_summary">Algemene instellingen, zoals de eenheid, tijd en delta-instellingen.</string>
+    <string name="pref_target_range_summary">Instellingen voor glucosegrenzen en de bijbehorende kleuren.</string>
+    <string name="pref_cat_widgets_summary">Instellingen voor telefoonwidgets en zwevende widget.</string>
+    <string name="pref_cat_notification_summary">Meldingsinstellingen.</string>
+    <string name="pref_cat_locksreen_wallpaper_summary">Instellingen om de vergrendelschermachtergrond te vervangen.</string>
+    <string name="pref_cat_android_auto_summary">Instelling voor GlucoDataAuto voor gebruik met Android Auto.</string>
+    <string name="pref_cat_watchdrip">MiBand en Amazfit horloges</string>
+    <string name="pref_cat_wear_os">Wear OS horloges</string>
+    <string name="pref_cat_watch">Horloge</string>
+    <string name="pref_cat_watch_summary">Instellingen voor verbonden smartwatches.</string>
+    <string name="pref_cat_transfer_summary">Instellingen om glucosewaarden over te dragen naar andere applicaties.</string>
+    <string name="pref_cat_transfer">Waarden overdragen</string>
+    <string name="pref_cat_visualisation">Visualisatie</string>
+    <string name="pref_cat_banglejs">BangleJS horloges</string>
+    <string name="pref_wearos_info_summary">Om GlucoDataHandler op Wear OS horloges te gebruiken, installeert u deze vanuit de Google Play Store op het horloge.</string>
+    <string name="pref_wear_os_check_connection">Verbinding controleren</string>
+    <string name="pref_wear_os_check_connection_summary">Druk hier om de verbinding met Wear OS opnieuw te controleren.\nU kunt deze controle ook activeren door op de verbindingsinfo op het startscherm te drukken (zelfs in de Wear OS app).</string>
+    <string name="pref_watchdrip_info_summary">WatchDrip+ ondersteunt verschillende MiBand en Amazfit apparaten.\nOm een volledige lijst met ondersteunde apparaten en meer informatie over het configureren van WatchDrip+ te krijgen, drukt u hier.</string>
+    <string name="alarm_vibrate_only_wear_info">Alleen trillen zonder melding werkt niet op elk apparaat!</string>
+    <string name="alarm_use_alarm_sound">Gebruik alarmgeluid</string>
+    <string name="alarm_use_alarm_sound_summary">Gebruik het volume van het alarmgeluid in plaats van het beltoon geluid.\nDit kan onafhankelijk zijn van de trilmodus.</string>
+    <string name="alarm_vibrate_only_summary">Activeer dit om te forceren dat er geen alarmgeluid wordt afgespeeld, onafhankelijk van andere alarmgeluidsinstellingen.</string>
+    <string name="alarm_start_delay">Startvertraging</string>
+    <string name="alarm_start_delay_wear_summary">Vertraging voordat trilling en geluid voor het eerst worden afgespeeld.\nSoms stopt de melding van de telefoon de trilling onmiddellijk.</string>
+    <string name="pref_color_obsolete">Kleur verouderde waarde</string>
+    <string name="pref_color_obsolete_summary">Kleur voor geen nieuwe glucosewaarden.</string>
+    <string name="alarm_wear_no_notification_phone_connected">Geen pop-up terwijl telefoon is verbonden</string>
+    <string name="alarm_wear_no_notification_phone_connected_summary">Geen extra Wear meldingspop-up terwijl de telefoon is verbonden.\nDe trilling en het geluid worden geactiveerd zoals geconfigureerd.</string>
+    <string name="table_header_details">Details</string>
+    <string name="table_header_connections">Verbindingen</string>
+    <string name="disconnected_label">verbroken</string>
+    <string name="connected_label">verbonden</string>
+    <string name="pref_application_color_scheme">Kleurenschema van de applicatie</string>
+    <string name="application_color_scheme_system">Gebruik systeemschema</string>
+    <string name="application_color_scheme_light">Licht schema</string>
+    <string name="application_color_scheme_dark">Donker schema</string>
+    <string name="tap_action">Tikactie</string>
+    <string name="tap_action_summary">Selecteer een actie of applicatie die moet worden uitgevoerd wanneer u op dit item tikt.</string>
+    <string name="no_action">Geen actie</string>
+    <string name="action_floating_widget_toggle">Zwevende widget in-/uitschakelen</string>
+    <string name="wear_complication_tap_action">Tikactie voor complicatie</string>
+    <string name="activity_large_arrow_icon_summary">Schakel deze instelling uit als de trendpijl te groot of bijgesneden is.</string>
+    <string name="pref_cat_ui_settings">Gebruikersinterface</string>
+    <string name="pref_cat_ui_settings_summary">Algemene instellingen voor de gebruikersinterface van deze applicatie.</string>
+    <string name="gda_foreground_info">GlucoDataAuto is actief</string>
+    <string name="gda_foreground_summary">Schakel dit alleen in als u een volgerbron en alleen Android Auto-meldingen gebruikt.\nDit voorkomt dat Android deze app sluit terwijl deze niet is verbonden met Android Auto, zodat de app de Android Auto-verbinding niet kan herkennen.\nIn plaats van deze instelling in te schakelen, kunt u de app ook eenmaal openen in Android Auto als u verbonden bent.</string>
+    <string name="gda_battery_optimization_disabled">Batterijoptimalisatie is ingeschakeld!\nDruk hier om het uit te schakelen.</string>
+    <string name="gda_source_follower_info_summary">Als u een volgerbron gebruikt, wordt de app mogelijk niet gestart terwijl deze is verbonden met Android Auto, als u alleen Android Auto-meldingen gebruikt.\nOm ervoor te zorgen dat de app de Android Auto-verbinding detecteert, moet u batterijoptimalisatie uitschakelen.\nAls het nog steeds niet werkt, kunt u ook de voorgrondmodus inschakelen of moet u de app eenmaal openen in Android Auto als deze is verbonden met Android Auto.</string>
+    <string name="gda_help_aa_title">Android Auto instellen</string>
+    <string name="gda_help_aa_title_summary">Android Auto is een aparte app of onderdeel van het systeem en is toegankelijk via de Android-instellingen.\nOm GlucoDataAuto voor Android Auto te activeren, moet u de volgende stappen uitvoeren:</string>
+    <string name="gda_help_aa_dev_mode">1. Ontwikkelaarsmodus activeren</string>
+    <string name="gda_help_aa_dev_mode_summary">- open Android Auto\n- scroll naar beneden naar de versie\n- tik meerdere keren op de versie totdat er een pop-up verschijnt om \"Ontwikkelaarsinstellingen toestaan\"\n- druk op \"OK\"</string>
+    <string name="gda_help_aa_sources">2. \"Onbekende bronnen\" activeren</string>
+    <string name="gda_help_aa_sources_summary">- open Android Auto\n- open in het 3-puntsmenu de \"Ontwikkelaarsinstellingen\"\n- scroll naar beneden naar \"Onbekende bron\"\n- schakel het in</string>
+    <string name="gda_help_aa_notification">3. Meldingsinstellingen instellen</string>
+    <string name="gda_help_aa_notification_summary">- open Android Auto\n- scroll naar beneden naar \"Berichten\"\n- schakel \"Berichtmeldingen weergeven\" in\n- schakel \"Eerste regel van berichten weergeven\" in</string>
+    <string name="gda_help_aa_enable_gda">4. GlucoDataAuto inschakelen</string>
+    <string name="gda_help_aa_enable_gda_summary">- open Android Auto\n- scroll naar beneden naar \"Weergave\"\n- open \"Launcher aanpassen\"\n- schakel \"GlucoDataAuto\" in\nAls GlucoDataAuto niet beschikbaar is, start u uw telefoon opnieuw op.</string>
+    <string name="pref_notification_custom_layout">Gekleurde lay-out</string>
+    <string name="pref_notification_custom_layout_summary">Geeft de waarden weer in grote en gekleurde tekst.\nOp sommige Samsung-apparaten met Android 13 en hoger kan dit ertoe leiden dat de app crasht vanwege een bug aan de kant van Samsung.\nAls het probleem zich voordoet, wordt deze instelling automatisch uitgeschakeld om ervoor te zorgen dat de app functioneel blijft.</string>
+    <string name="app_crash_title">Crash gedetecteerd!</string>
+    <string name="app_crash_message">Het spijt me dat de app is gecrasht tijdens de uitvoering!\nStuur me de logboeken zodat ik de fout kan analyseren en zo snel mogelijk kan proberen op te lossen.\nBedankt!</string>
+    <string name="src_cat_dexcom_share">Dexcom Share</string>
+    <string name="src_dexcom_share_us_server">Amerikaans account</string>
+    <string name="src_dexcom_share_us_server_summary_on">Amerikaans account wordt gebruikt.</string>
+    <string name="src_dexcom_share_us_server_summary_off">Internationaal account wordt gebruikt.</string>
+    <string name="src_dexcom_share_enabled_summary">Dexcom Share-account inschakelen. U moet eerst de gebruikersnaam en het wachtwoord instellen.</string>
+    <string name="src_username">Gebruikersnaam</string>
+    <string name="src_dexcom_share_user_summary">Gebruikersnaam, e-mailadres of telefoonnummer om in te loggen op uw Dexcom Share-account.\nBELANGRIJK: als u een telefoonnummer gebruikt, moet dit de landcode bevatten (bijv. +1 voor de VS).</string>
+    <string name="src_dexcom_share_password_summary">Wachtwoord voor Dexcom Share-account.</string>
+    <string name="pref_source_dexcom_share_info">Dexcom Share instellen</string>
+    <string name="permission_missing_title">Ontbrekende toestemming!</string>
+    <string name="setting_permission_missing_message">De instelling \'%1$s\' is ingesteld, maar de bijbehorende toestemming is niet verleend! Druk op \"OK\" om door te gaan naar het toestemmingsdialoogvenster of druk op \"Annuleren\" om deze instelling uit te schakelen.</string>
+    <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
+    <string name="xdrip_broadcast_service_api_enabled_summary">Gebruik xDrip+ Broadcast Service API om gegevens (ook IOB) van xDrip+ te ontvangen.\nActiveer eerst \"Broadcast Service API\" in \"Inter-app-instellingen\" in xDrip+!</string>
+    <string name="obsolete_time">Verouderde tijd</string>
+    <string name="obsolete_time_summary">Tijd in minuten waarna de waarde als verouderd wordt behandeld.\nNa tweemaal deze tijd wordt de waarde verwijderd.</string>
+    <string name="pref_source_offline">Lokale applicaties</string>
+    <string name="pref_source_offline_summary">Applicaties op hetzelfde apparaat die glucosewaarden leveren als intern broadcastbericht, zoals Juggluco, xDrip+, AAPS, enzovoort.</string>
+    <string name="pref_cat_follower_summary">Cloudservices die glucosewaarden leveren via internet, zoals LibreLinkUp, Dexcom Share en Nightscout.</string>
+    <string name="pref_source_xdrip_broadcast">Alternatief: Lokaal uitzenden</string>
+    <string name="pref_source_dexcom_byoda_info_summary">Om waarden van Dexcom BYODA te ontvangen, moet u uitzenden naar AAPS inschakelen tijdens het bouwen van de app.</string>
+    <string name="pref_source_eversense_info_summary">Om waarden van Eversense te ontvangen, moet u ESEL gebruiken in de companion-modus (melding lezen) of verbonden met de gepatchte Eversense-app.\nVoor meer informatie over ESEL, drukt u hier.</string>
+    <string name="pref_source_eversense_byoda_info_summary">Om waarden van Dexcom BYODA te ontvangen, moet u uitzenden naar xDrip+ inschakelen tijdens het bouwen van de app.</string>
+    <string name="new_version">Versie %s is beschikbaar</string>
+    <string name="info_label_notes">Notities</string>
+    <string name="gda_notification_permission">Meldingen zijn uitgeschakeld! \nDruk hier om ze in te schakelen.</string>
+    <string name="pref_show_other_unit">Andere eenheid weergeven</string>
+    <string name="pref_show_other_unit_summary">Toon glucosewaarde in %s in de details.</string>
+    <string name="other_unit">Andere eenheid</string>
+    <string name="dexcom_share_check_non_us_account">Druk hier om uw Dexcom Share-accountgegevens voor uw niet-Amerikaanse account te controleren.</string>
+    <string name="dexcom_share_check_us_account">Druk hier om uw Dexcom Share-accountgegevens voor uw Amerikaanse account te controleren.</string>
+    <string name="pref_lockscreen_size_summary">Wijzig de grootte van de vergrendelschermgegevens.</string>
+    <string name="pref_wear_os_reset_connection">Verbinding resetten</string>
+    <string name="pref_wear_os_reset_connection_summary">Druk hier om de verbinding tussen het horloge en de telefoon te resetten als deze niet naar verwachting werkt.\nAls het resetten het probleem niet oplost, start u uw horloge opnieuw op.</string>
+    <string name="detail_reset_connection">De verbinding werkt niet naar verwachting! Probeer uw horloge opnieuw op te starten.</string>
+    <string name="pref_floating_widget_time_to_close">Tijd tot sluiten</string>
+    <string name="pref_floating_widget_time_to_close_summary">Tijd in seconden om de zwevende widget te sluiten terwijl u op de widget drukt zonder deze te verplaatsen.\n0 om deze instelling uit te schakelen.</string>
+    <string name="alarm_inactive_enabled">Stille modus inschakelen</string>
+    <string name="alarm_inactive_enabled_summary">Geen alarmmeldingen voor dit alarm tijdens stille modus.\nConfigureer uw gewenste tijden om deze functie te gebruiken.</string>
+    <string name="all_alarm_inactive_enabled_summary">Geen alarmmeldingen voor alle alarmen tijdens stille modus.\nConfigureer uw gewenste tijden om deze functie te gebruiken.</string>
+    <string name="alarm_inactive_start_time">Starttijd</string>
+    <string name="alarm_inactive_start_time_summary">Selecteer de tijd waarop u wilt dat uw stille modus begint.</string>
+    <string name="alarm_inactive_end_time">Eindtijd</string>
+    <string name="alarm_inactive_end_time_summary">Selecteer de tijd waarop u wilt dat uw stille modus eindigt.</string>
+    <string name="alarm_inactive_weekdays">Dagen voor stille modus</string>
+    <string name="alarm_inactive_weekdays_summary">Geef de dagen van de week op waarop stille modus moet beginnen op de geselecteerde starttijd.</string>
+
+    <string name="app_crash_bad_notification">De app crasht vanwege de gekleurde meldingslay-out!\nDeze is uitgeschakeld om deze crash te voorkomen.\nEen telefoon herstart lost dit meestal op.</string>
+    <string name="auto_close_notification">Melding automatisch sluiten</string>
+    <string name="auto_close_notification_summary">Sluit de alarmmelding automatisch nadat het geluid en de trilling zijn voltooid, maar pas na minimaal 30 seconden.\nAls opnieuw activeren actief is, wordt de melding gesloten als er geen extra trigger is.</string>
+
+    <string name="settings_save_succeeded">Instellingen succesvol opgeslagen</string>
+    <string name="settings_save_failed">Instellingen opslaan mislukt!</string>
+    <string name="settings_read_succeeded">Instellingen succesvol gelezen</string>
+    <string name="settings_read_failed">Instellingen lezen mislukt!</string>
+    <string name="pref_cat_export_import">Exporteren / Importeren</string>
+    <string name="pref_cat_export_import_summary">Instellingen exporteren of importeren en logboeken opslaan.</string>
+    <string name="pref_export_settings">Exporteren</string>
+    <string name="pref_export_settings_summary">Druk hier om alle instellingen naar een bestand te exporteren. \nBELANGRIJK: hiermee worden alleen gewijzigde instellingen geëxporteerd! Instellingen met standaardwaarden maken geen deel uit van de export.</string>
+    <string name="pref_import_settings">Importeren</string>
+    <string name="pref_import_settings_summary">Druk hier om instellingen uit een bestand te importeren.\nBELANGRIJK: hiermee worden geen standaardinstellingen opnieuw aangemaakt, omdat deze geen deel uitmaken van de export.\nAls u de standaardwaarden wilt herstellen, verwijdert u eerst de app-gegevens en importeert u daarna.</string>
+
+    <string name="menu_save_mobile_logs_summary">Logboeken van de telefoon opslaan naar bestand.</string>
+    <string name="menu_save_wear_logs_summary">Logboeken van verbonden Wear OS horloge opslaan naar bestand.</string>
+    <string name="alarm_repeat">Herhalen</string>
+    <string name="no_vibration">Geen trilling</string>
+    <string name="alarm_vibrate_mode">Trilmodus</string>
+
+    <string name="alarm_rising_fast">Snel stijgend</string>
+    <string name="rising_fast_alarm_notification_name">Snel stijgen alarm</string>
+    <string name="alarm_rising_fast_summary">Alarm als de glucosewaarde hoger is dan of gelijk is aan %1$s en de delta met ten minste +%2$s stijgt voor %3$d opeenvolgende metingen.</string>
+    <string name="rising_fast_alarm_text">Snel stijgend!</string>
+
+    <string name="alarm_falling_fast">Snel dalend</string>
+    <string name="falling_fast_alarm_notification_name">Snel dalen alarm</string>
+    <string name="alarm_falling_fast_summary">Alarm als de glucosewaarde lager is dan of gelijk is aan %1$s en de delta met ten minste -%2$s daalt voor %3$d opeenvolgende metingen.</string>
+    <string name="falling_fast_alarm_text">Snel dalend!</string>
+    <string name="alarm_vibrate_amplitude">Trilintensiteit</string>
+    <string name="alarm_vibrate_amplitude_summary">Intensiteit van het trillen</string>
+    <string name="pref_cat_alarm_settings">Alarminstellingen</string>
+    <string name="pref_alarm_delta_summary">Deltawaarde wanneer het alarm moet worden geactiveerd.</string>
+    <string name="alarm_occurrence_count">Aantal keren voorkomen</string>
+    <string name="alarm_occurrence_count_summary">Aantal keren dat de deltawaarde achter elkaar moet worden bereikt.</string>
+    <string name="pref_alarm_rising_falling_border">Grens</string>
+    <string name="pref_alarm_rising_falling_border_summary">Grens voor het stijgen/dalen alarm.\nDe glucosewaarde moet hoger/lager zijn om het alarm te activeren.</string>
+    <string name="delta_per_minute">per minuut</string>
+    <string name="delta_per_5_minute">per 5 minuten</string>
+    <string name="other_alarm_cat_categories">Andere alarmen</string>
+    <string name="advanced_settings_alarm">Geavanceerde alarminstellingen</string>
+    <string name="src_offline_enabled_summary_on">Interne berichten van deze bron zullen worden verwerkt.</string>
+    <string name="src_offline_enabled_summary_off">Interne berichten van deze bron zullen worden genegeerd.</string>
+    <string name="temp_disabled">Tijdelijk uitgeschakeld</string>
+    <string name="snooze_until">Snoozen tot</string>
+    <string name="temp_disabled_until">Tijdelijk uitgeschakeld tot</string>
+
+    <!-- Talkback -->
+    <string name="trend">Trend</string>
+    <string name="rate_rising">%1$d graden omhoog</string>
+    <string name="rate_falling">%1$d graden omlaag</string>
+
+    <string name="alarm_toggle_state">Alarmen: %1$s</string>
+    <string name="alarm_state_inactive">inactief</string>
+    <string name="alarm_state_snooze">snoozen tot %1$s</string>
+    <string name="alarm_state_temp_disabled">tijdelijk uitgeschakeld tot %1$s</string>
+
+    <string name="enabled">ingeschakeld</string>
+    <string name="disabled">uitgeschakeld</string>
+
+    <string name="not_available">niet beschikbaar</string>
+
+    <string name="action_read_values">Waarden uitspreken</string>
+
+    <plurals name="elapsed_time_full_text">
+        <item quantity="one">Tijd %d minuut</item>
+        <item quantity="other">Tijd %d minuten</item>
+    </plurals>
+    <string name="pref_source_diabox_info_summary">Open Integratie en schakel \"Gegevens delen met GWatch\" in\nOpmerking: de DiaBox-uitzending bevat alleen de glucosewaarde en geen verdere informatie zoals trend!</string>
+    <string name="pref_source_dexcom_byoda_not_working_info_summary">Opmerking: de AAPS-uitzending van BYODA lijkt niet te werken met andere apps. \nGebruik de xDrip+-uitzending in BYODA.</string>
+
+    <string name="gda_help_aa_summary">Aan de slag met GDA op Android Auto</string>
+    <string name="no_tts">Tekst-naar-spraak (TTS) is niet ingeschakeld.\nOm deze functie te gebruiken, schakelt u TTS in de Android-toegankelijkheidsinstellingen in.\nTik hier om te updaten nadat u deze hebt ingeschakeld.</string>
+    <string name="pref_cat_android_auto_speak">Waarde uitspreken</string>
+    <string name="pref_cat_play_button">Afspelen</string>
+    <string name="pref_aa_media_player_speak_values_on_summary">Spreek de huidige waarde uit tijdens het afspelen.\nVereist dat Tekst-naar-spraak is ingeschakeld.</string>
+    <string name="pref_aa_media_player_speak_values_off_summary">Speel een leeg geluid af om de mediaspeler naar de voorgrond van het gesplitste scherm te brengen.</string>
+    <string name="pref_aa_media_player_always_speak">Nieuwe waarde uitspreken</string>
+    <string name="pref_aa_media_player_always_speak_summary">Spreek nieuwe waarden uit in Android Auto, zelfs wanneer u een andere mediaspeler gebruikt.</string>
+    <string name="tts_test_summary">Tik om tekst-naar-spraak te testen.</string>
+    <string name="pref_aa_media_player_speak_alarm_only_summary">Spreek alleen alarmen uit.</string>
+    <string name="pref_aa_media_player_speak_interval_summary">Stel het interval in voor het uitspreken van nieuwe waarden in Android Auto.</string>
+    <string name="pref_aa_media_player_duration_summary">Het interval voor het ontvangen van nieuwe glucosewaarden wordt gebruikt als de duur voor de voortgangsbalk in de mediaspeler.\nAls u de waarde op 0 instelt, wordt de voortgangsbalk uitgeschakeld.</string>
+
+    <string name="gda_media_speak_toggle_title">Schakelaar voor nieuwe waarde uitspreken</string>
+    <string name="gda_speak_on">Uitspreken is aan</string>
+    <string name="gda_speak_off">Uitspreken is uit</string>
+    <string name="enable_alarm_icon_toggle">Alarmpictogram inschakelen</string>
+    <string name="enable_alarm_icon_toggle_summary">Schakel het alarmpictogram op het hoofdscherm in om de alarmstatus te wijzigen.</string>
+
+    <!-- v1.3  -->
+
+    <string name="source_libre_auto_accept_tou">Nieuwe voorwaarden automatisch accepteren</string>
+    <string name="source_libre_auto_accept_tou_summary">Door dit in te schakelen, accepteert u automatisch nieuwe gebruiksvoorwaarden om continue gegevensontvangst te garanderen. U wordt niet apart op de hoogte gebracht van nieuwe voorwaarden. Als u ze wilt lezen, schakelt u deze instelling uit en raadpleegt u de LibreLinkUp app in geval van fout 4.</string>
+    <string name="src_libre_tou_message">GlucoDataHandler kan automatisch nieuwe gebruiksvoorwaarden voor LibreLinkUp accepteren.\nDruk op OK om deze functie in te schakelen of op Annuleren om de voorwaarden in de LibreLinkUp app te lezen en handmatig te accepteren.</string>
+
+    <string name="src_librelink_error4">Fout, log opnieuw in op de LibreLinkUp app en controleer op eventuele stappen die moeten worden uitgevoerd!</string>
+    <string name="src_librelink_error4_type">Fouttype %1$s, log opnieuw in op de LibreLinkUp app en controleer op eventuele stappen die moeten worden uitgevoerd!</string>
+    <string name="src_librelink_error4_tou">Nieuwe gebruiksvoorwaarden moeten worden geaccepteerd. Schakel automatische acceptatie in de LibreLinkUp-broninstellingen in of log opnieuw in op de LibreLinkUp app en accepteer de voorwaarden.</string>
+    <string name="src_librelink_error2">Onjuiste gebruikersnaam of wachtwoord. Controleer uw LibreLinkUp-broninstellingen. Probeer indien nodig opnieuw in te loggen of de LibreLinkUp app opnieuw te installeren en uw accountinstellingen te controleren.\nStop alle andere apps die toegang hebben tot hetzelfde account!</string>
+    <string name="last_value_on_server">Laatste glucosemeting op server van %1$s</string>
+    <string name="no_data_in_server_response">Geen glucosemetingen gevonden op server.</string>
+    <string name="http_error_429">Teveel verzoeken!</string>
+    <string name="http_error_429_info">Stop alle andere apps die toegang hebben tot hetzelfde account!</string>
+
+    <string name="state_await_data">Wachten op gegevens</string>
+    <string name="pref_send_battery_level_to_watch">Batterijniveau verzenden</string>
+    <string name="pref_send_battery_level_to_watch_summary">Verzend batterijniveau naar horloge om weer te geven in complicatie en op hoofdscherm.</string>
+    <string name="pref_battery_level">Batterijniveau weergeven</string>
+    <string name="forward_to_watch_interval_summary">Stel de minimale tijd (in minuten) in tussen glucosemetingen voordat een nieuwe update naar het horloge wordt verzonden.\nAlarmen en zeer lage metingen worden altijd verzonden.</string>
+    <string name="forward_to_values_summary">Stel de minimale tijd (in minuten) in tussen glucosemetingen voordat een nieuwe update naar de ontvangers wordt verzonden.</string>
+    <string name="alarm_repeat_summary">Het alarm zal herhaaldelijk klinken en trillen totdat u de melding sluit of de ingestelde maximale alarmduur is bereikt.</string>
+    <string name="alarm_repeat_time">Maximale alarmduur</string>
+    <string name="alarm_repeat_time_summary">Geef de maximale tijd (in minuten) op dat het alarm zal klinken en trillen. Een waarde van 0 betekent dat het alarm oneindig zal herhalen.</string>
+    <string name="wear_source_info">Om bronnen in te schakelen, stelt u ze eerst in de telefoonapp in. Activeer bronnen op uw horloge alleen als u de gegevens nog niet op uw telefoon ontvangt.</string>
+    <string name="gdh_disclaimer_title">Opmerking van de ontwikkelaar</string>
+    <string name="gdh_disclaimer_message">Deze app is in mijn vrije tijd ontwikkeld als hobbyproject. Daarom kan ik niet garanderen dat alle functies feilloos werken op elk apparaat. Ik werk echter constant aan verbeteringen.\nAls u problemen ondervindt of vragen heeft, neem dan rechtstreeks contact met mij op voordat u een negatieve recensie achterlaat. \nOm op de hoogte te blijven van belangrijke updates en bugfixes, bent u welkom om lid te worden van de Facebook-groep of de Google Groups.</string>
+    <!-- v1.3  -->
+    <string name="pref_source_dexcom_share_info_1_summary">Om gegevens van Dexcom Share-servers te ontvangen:\nIn de Dexcom app:\n - Maak een volger aan\n - Zorg ervoor dat onder \"Verbindingen\" \"Delen aan\" wordt weergegeven</string>
+    <string name="pref_source_dexcom_share_info_2_summary">In GlucoDataHandler:\n - Voer uw Dexcom Clarity gebruikersnaam en wachtwoord in \n   (als u uw telefoonnummer als gebruikersnaam gebruikt, voeg dan uw landcode toe)\n - Controleer de instelling voor een Amerikaans account\nBelangrijk: het werkt niet met een volgersaccount!</string>
+
+    <string name="request_timestamp">Bijgewerkt</string>
+    <string name="alarm_header">Alarmen</string>
+    <string name="wearos_watchfaces">Wijzerplaten</string>
+    <string name="wearos_watchfaces_summary">Informatie over wijzerplaten van derden voor Wear OS.</string>
+    <string name="setup">Instellen</string>
+    <string name="pref_watchfaces_cat">Wijzerplaten van derden</string>
+    <string name="pref_watchfaces_info_summary">Deze app biedt geen wijzerplaat, maar biedt verschillende complicaties (de kleine ronde onderdelen van de wijzerplaat), die kunnen worden gebruikt voor wijzerplaten die complicaties van derden ondersteunen.</string>
+    <string name="pref_watchfaces_default">Standaard</string>
+    <string name="pref_watchfaces_default_summary">De meeste horlogefabrikanten bieden al wijzerplaten die kunnen worden gebruikt met de GlucoDataHandler complicatie.\nDe meeste Samsung \"Info\"-wijzerplaten zijn bijvoorbeeld compatibel.</string>
+    <string name="pref_watchfaces_pujie">Pujie</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie is een app voor het maken van wijzerplaten met een cloudbibliotheek.\nOm compatibele wijzerplaten te vinden, zoekt u in de bibliotheek naar wijzerplaten die beginnen met \"GDH_\".\nOpmerking: Pujie is niet compatibel met Wear OS 5 apparaten.\nTik hier om de app in de Play Store te openen.</string>
+    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
+    <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man maakt wijzerplaten van derden die speciaal zijn ontworpen voor gebruik met GlucoDataHandler.\nTik hier om zijn Play Store-pagina te openen.</string>
+    <string name="pref_watchfaces_gdc">GDC Watch Faces</string>
+    <string name="pref_watchfaces_gdc_summary">GDC Watch Faces zijn ontworpen voor gebruik met GlucoDataHandler.\nTik hier om de Play Store-pagina te openen.</string>
+    <string name="pref_phone_wear_screen_off_update">Complicaties altijd bijwerken</string>
+    <string name="pref_phone_wear_screen_off_update_summary">Stuur altijd nieuwe glucosewaarden naar het horloge.\nSchakel dit uit om te voorkomen dat gegevens op het horloge worden bijgewerkt terwijl het horlogescherm is uitgeschakeld om de batterij te sparen.\nAlarmwaarden worden altijd naar het horloge verzonden.\nBELANGRIJK: het verouderde alarm is uitgeschakeld op het horloge wanneer deze instelling is uitgeschakeld!</string>
+    <string name="alarm_ignore_snooze_for_very_low">Altijd waarschuwen voor zeer laag</string>
+    <string name="alarm_ignore_snooze_for_very_low_summary">Dit alarm zal u waarschuwen, zelfs als snoozen of de algemene stille modus voor alle alarmen actief zijn, zodat u zeker weet dat u wordt gewaarschuwd voor zeer lage glucosewaarden.</string>
+
+    <string name="libre_no_new_value_info">Als deze fout aanhoudt, probeer dan de Libre app opnieuw te installeren. Dit lost het probleem vaak op.</string>
+    <string name="src_libre_server">Server</string>
+    <string name="source_libre_server_default">Standaard (.io)</string>
+    <string name="source_libre_server_russian">Russisch (.ru)</string>
+
+    <string name="patient_name">Naam</string>
+    <string name="patient_name_summary">Naam van de gebruiker/patiënt, die moet worden weergegeven in de melding en tijdens het spreken.\nDit moet worden gebruikt als u meerdere varianten van GlucoDataAuto gebruikt, anders kan het leeg zijn.</string>
+
+    <string name="video_tutorial">Video-tutorial</string>
+    <string name="video_tutorial_summary">Klik hier om naar de YouTube-video te gaan die de installatie van deze bron illustreert. Veel dank aan Diabetic Masked Man voor het maken van de video\'s.</string>
+
+    <string name="snooze_30">30 minuten</string>
+    <string name="snooze_60">60 minuten</string>
+    <string name="snooze_90">90 minuten</string>
+    <string name="snooze_120">120 minuten</string>
+    <string name="alarm_snooze_on_notification_enabled">Snoozen op melding</string>
+    <string name="alarm_snooze_on_notification_summary">Kies maximaal 3 sluimertijden om weer te geven als knoppen op de alarmmelding.</string>
+
+    <string name="pref_show_iob_cob">IOB/COB waarden weergeven</string>
+    <string name="pref_show_iob_cob_summary">IOB en COB waarden weergeven, indien beschikbaar.</string>
+
+</resources>

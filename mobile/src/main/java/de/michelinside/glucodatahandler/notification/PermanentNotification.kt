@@ -27,6 +27,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import de.michelinside.glucodatahandler.common.R as CR
 
 
 object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -92,7 +93,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         Channels.getNotificationManager().cancel(THIRD_NOTIFICATION_ID)
 
         secondNotificationCompat = Notification.Builder(context, ChannelType.MOBILE_SECOND.channelId)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(CR.mipmap.ic_launcher)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setAutoCancel(false)
@@ -103,7 +104,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setVisibility(Notification.VISIBILITY_PUBLIC)
 
         thirdNotificationCompat = Notification.Builder(context, ChannelType.MOBILE_THIRD.channelId)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(CR.mipmap.ic_launcher)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setAutoCancel(false)
@@ -114,7 +115,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setVisibility(Notification.VISIBILITY_PUBLIC)
 
         foregroundNotificationCompat = Notification.Builder(context, ChannelType.MOBILE_FOREGROUND.channelId)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(CR.mipmap.ic_launcher)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setAutoCancel(false)
@@ -136,14 +137,22 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         val bigIcon = sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON, false)
         val coloredIcon = sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_COLORED_ICON, true)
         return when(sharedPref.getString(iconKey, StatusBarIcon.APP.pref)) {
-            StatusBarIcon.GLUCOSE.pref -> BitmapUtils.getGlucoseAsIcon(roundTarget=!bigIcon, color = if(coloredIcon) ReceiveData.getGlucoseColor() else Color.WHITE, withShadow = if(coloredIcon) true else false)
+            StatusBarIcon.GLUCOSE.pref -> BitmapUtils.getGlucoseAsIcon(
+                roundTarget=!bigIcon,
+                color = if(coloredIcon) ReceiveData.getGlucoseColor() else Color.WHITE,
+                withShadow = coloredIcon,
+                useTallFont = true
+            )
             StatusBarIcon.TREND.pref -> BitmapUtils.getRateAsIcon(
                 color = if(coloredIcon) ReceiveData.getGlucoseColor() else Color.WHITE,
                 resizeFactor = if (bigIcon) 1.5F else 1F,
-                withShadow = if(coloredIcon) true else false
+                withShadow = coloredIcon
             )
-            StatusBarIcon.DELTA.pref -> BitmapUtils.getDeltaAsIcon(roundTarget=!bigIcon, color = if(coloredIcon) ReceiveData.getGlucoseColor(true) else Color.WHITE)
-            else -> Icon.createWithResource(GlucoDataService.context, R.mipmap.ic_launcher)
+            StatusBarIcon.DELTA.pref -> BitmapUtils.getDeltaAsIcon(
+                roundTarget=!bigIcon,
+                color = if(coloredIcon) ReceiveData.getGlucoseColor(true) else Color.WHITE,
+                useTallFont = true)
+            else -> Icon.createWithResource(GlucoDataService.context, CR.mipmap.ic_launcher)
         }
     }
 

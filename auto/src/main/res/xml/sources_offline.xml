@@ -2,11 +2,12 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
+        android:key="cat_gdh_info"
         android:title="@string/source_gdh"
         app:iconSpaceReserved="false"
         app:initialExpandedChildrenCount="0">
         <Preference
-            android:key="source_ghd_info"
+            android:key="source_gdh_info"
             android:summary="@string/pref_source_gdh_info_summary"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
@@ -34,6 +35,11 @@
             android:key="source_juggluco_activate_local_nightscout_iob_action"
             android:title="@string/pref_source_activate_local_nightscout_iob"
             android:summary="@string/pref_source_activate_local_nightscout_iob_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_juggluco_video"
+            android:title="@string/video_tutorial"
+            android:summary="@string/video_tutorial_summary"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory

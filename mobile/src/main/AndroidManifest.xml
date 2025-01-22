@@ -356,6 +356,15 @@
                 <action android:name= "android.intent.action.LOCALE_CHANGED" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".android_auto.CarModeReceiver$GDAReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name= "de.michelinside.glucodataauto.state" />
+            </intent-filter>
+        </receiver>
 
         <service android:name="androidx.work.impl.foreground.SystemForegroundService"
             android:foregroundServiceType="dataSync"

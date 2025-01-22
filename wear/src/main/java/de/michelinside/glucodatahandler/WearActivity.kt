@@ -1,7 +1,6 @@
 package de.michelinside.glucodatahandler
 
 import android.annotation.SuppressLint
-import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -29,6 +28,9 @@ import androidx.core.view.setPadding
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmState
 import de.michelinside.glucodatahandler.common.notification.AlarmType
+import de.michelinside.glucodatahandler.common.notification.ChannelType
+import de.michelinside.glucodatahandler.common.notification.Channels
+import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.settings.AlarmsActivity
@@ -55,8 +57,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var tableDetails: TableLayout
     private lateinit var tableConnections: TableLayout
     private lateinit var tableAlarms: TableLayout
-    private lateinit var txtHighContrastEnabled: TextView
-    private lateinit var txtScheduleExactAlarm: TextView
+    private lateinit var tableNotes: TableLayout
     private lateinit var btnSettings: Button
     private lateinit var btnSources: Button
     private lateinit var btnAlarms: Button
@@ -85,8 +86,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             tableConnections = findViewById(R.id.tableConnections)
             tableAlarms = findViewById(R.id.tableAlarms)
             tableDetails = findViewById(R.id.tableDetails)
-            txtHighContrastEnabled = findViewById(R.id.txtHighContrastEnabled)
-            txtScheduleExactAlarm = findViewById(R.id.txtScheduleExactAlarm)
+            tableNotes = findViewById(R.id.tableNotes)
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
@@ -143,10 +143,12 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             super.onResume()
             Log.d(LOG_ID, "onResume called")
             GlucoDataService.checkServices(this)
+            ScreenEventReceiver.update(this)  // on resume can only be called, if display is on, so update screen event
             doNotUpdate = false
             update()
             InternalNotifier.addNotifier(this, this, mutableSetOf(
                 NotifySource.BROADCAST,
+                NotifySource.DISPLAY_STATE_CHANGED,
                 NotifySource.IOB_COB_CHANGE,
                 NotifySource.IOB_COB_TIME,
                 NotifySource.MESSAGECLIENT,
@@ -157,8 +159,6 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.TIME_VALUE,
                 NotifySource.SOURCE_STATE_CHANGE,
                 NotifySource.ALARM_STATE_CHANGED))
-            checkExactAlarmPermission()
-            checkHighContrast()
             if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Notification permission granted")
                 requestNotificationPermission = false
@@ -184,56 +184,16 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         return true
     }
 
-    private fun canScheduleExactAlarms(): Boolean {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            return alarmManager.canScheduleExactAlarms()
-        }
-        return true
-    }
-
     private fun requestExactAlarmPermission() {
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !canScheduleExactAlarms()) {
-                Log.i(LOG_ID, "Request exact alarm permission...")
-                startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (!Utils.canScheduleExactAlarms(this)) {
+                    Log.i(LOG_ID, "Request exact alarm permission...")
+                    startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "requestExactAlarmPermission exception: " + exc.message.toString() )
-        }
-    }
-    private fun checkExactAlarmPermission() {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !canScheduleExactAlarms()) {
-                Log.w(LOG_ID, "Schedule exact alarm is not active!!!")
-                txtScheduleExactAlarm.visibility = View.VISIBLE
-                txtScheduleExactAlarm.setOnClickListener {
-                    startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
-                }
-            } else {
-                txtScheduleExactAlarm.visibility = View.GONE
-                Log.i(LOG_ID, "Schedule exact alarm is active")
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
-        }
-    }
-
-    private fun checkHighContrast() {
-        try {
-            if (Utils.isHighContrastTextEnabled(this)) {
-                Log.w(LOG_ID, "High contrast is active")
-                txtHighContrastEnabled.visibility = View.VISIBLE
-                txtHighContrastEnabled.setOnClickListener {
-                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                    startActivity(intent)
-                }
-            } else {
-                txtHighContrastEnabled.visibility = View.GONE
-                Log.i(LOG_ID, "High contrast is inactive")
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "checkBatteryOptimization exception: " + exc.message.toString() )
         }
     }
 
@@ -265,6 +225,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
             txtValueInfo.visibility = if(ReceiveData.time>0) View.GONE else View.VISIBLE
 
+            updateNotesTable()
             updateAlarmsTable()
             updateConnectionsTable()
             updateDetailsTable()
@@ -354,11 +315,66 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         update()
     }
 
+
+    private fun updateNotesTable() {
+        tableNotes.removeViews(1, maxOf(0, tableNotes.childCount - 1))
+        if (!Channels.notificationChannelActive(this, ChannelType.WEAR_FOREGROUND)) {
+            val onClickListener = View.OnClickListener {
+                try {
+                    if (!Channels.notificationChannelActive(this, ChannelType.WEAR_FOREGROUND)) {
+                        requestNotificationPermission = true
+                        startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                            .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName))
+                    } else {
+                        updateNotesTable()
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "updateNotesTable exception: " + exc.message.toString() )
+                    if(requestPermission()) {
+                        GlucoDataServiceWear.start(this)
+                        updateNotesTable()
+                    }
+                }
+            }
+            tableNotes.addView(createRow(CR.string.activity_main_notification_permission, onClickListener))
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !Utils.canScheduleExactAlarms(this)) {
+            Log.w(LOG_ID, "Schedule exact alarm is not active!!!")
+            val onClickListener = View.OnClickListener {
+                try {
+                    startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Schedule exact alarm exception: " + exc.message.toString() )
+                }
+            }
+            tableNotes.addView(createRow(CR.string.activity_main_schedule_exact_alarm, onClickListener))
+        }
+        if (Utils.isHighContrastTextEnabled(this)) {
+            Log.w(LOG_ID, "High contrast is active")
+            val onClickListener = View.OnClickListener {
+                try {
+                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                    startActivity(intent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "High contrast exception: " + exc.message.toString() )
+                }
+            }
+            tableNotes.addView(createRow(CR.string.activity_main_high_contrast_enabled, onClickListener))
+        }
+        checkTableVisibility(tableNotes)
+    }
+
     private fun updateConnectionsTable() {
         tableConnections.removeViews(1, maxOf(0, tableConnections.childCount - 1))
-        if (SourceStateData.lastState != SourceState.NONE)
-            tableConnections.addView(createRow(SourceStateData.lastSource.resId,
-                SourceStateData.getStateMessage(this)))
+        if (SourceStateData.lastState != SourceState.NONE) {
+            tableConnections.addView(createRow(SourceStateData.lastSource.resId, SourceStateData.getStateMessage(this)))
+            if(SourceStateData.lastErrorInfo.isNotEmpty()) {
+                // add error specific information in an own row
+                tableConnections.addView(createRow(SourceStateData.lastErrorInfo))
+            }
+            tableConnections.addView(createRow(CR.string.request_timestamp, Utils.getUiTimeStamp(SourceStateData.lastStateTime)))
+        }
 
         if (WearPhoneConnection.nodesConnected) {
             if (WearPhoneConnection.connectionError) {
@@ -370,12 +386,13 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 val onCheckClickListener = View.OnClickListener {
                     GlucoDataService.checkForConnectedNodes(false)
                 }
-                if(WearPhoneConnection.getNodeBatterLevels().size == 1 ) {
-                    val level = WearPhoneConnection.getNodeBatterLevels().values.first()
-                    tableConnections.addView(createRow(CR.string.source_phone, if (level > 0) "$level%" else "?%", onCheckClickListener))
+                val states = WearPhoneConnection.getNodeConnectionStates(this)
+                if(states.size == 1 ) {
+                    val state = states.values.first()
+                    tableConnections.addView(createRow(CR.string.source_phone, state, onCheckClickListener))
                 } else {
-                    WearPhoneConnection.getNodeBatterLevels().forEach { (name, level) ->
-                        tableConnections.addView(createRow(name, if (level > 0) "$level%" else "?%", onCheckClickListener))
+                    states.forEach { (name, state) ->
+                        tableConnections.addView(createRow(name, state, onCheckClickListener))
                     }
                 }
             }
@@ -396,8 +413,10 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             if (deltaAlarmType != AlarmType.NONE)
                 tableAlarms.addView(createRow(CR.string.info_label_alarm, resources.getString(deltaAlarmType.resId)))
         }
-        if (AlarmHandler.isSnoozeActive)
-            tableAlarms.addView(createRow(CR.string.snooze, AlarmHandler.snoozeTimestamp))
+        if (AlarmHandler.isTempInactive)
+            tableAlarms.addView(createRow(CR.string.temp_disabled_until, AlarmHandler.inactiveEndTimestamp))
+        else if (AlarmHandler.isSnoozeActive)
+            tableAlarms.addView(createRow(CR.string.snooze_until, AlarmHandler.snoozeTimestamp))
         checkTableVisibility(tableAlarms)
     }
 
@@ -408,8 +427,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 tableDetails.addView(createRow(ReceiveData.getOtherUnit(), ReceiveData.getGlucoseAsOtherUnit() + " (Δ " + ReceiveData.getDeltaAsOtherUnit() + ")"))
             }
 
-            tableDetails.addView(createRow(CR.string.info_label_timestamp, DateFormat.getTimeInstance(
-                DateFormat.DEFAULT).format(Date(ReceiveData.time))))
+            tableDetails.addView(createRow(CR.string.info_label_timestamp, Utils.getUiTimeStamp(ReceiveData.time)))
             if (!ReceiveData.isIobCobObsolete(1.days.inWholeSeconds.toInt()))
                 tableDetails.addView(createRow(CR.string.info_label_iob_cob_timestamp, DateFormat.getTimeInstance(
                     DateFormat.DEFAULT).format(Date(ReceiveData.iobCobTime))))
@@ -451,6 +469,19 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         row.setPadding(Utils.dpToPx(5F, this))
         row.addView(createColumn(key, false, onClickListener))
         row.addView(createColumn(value, true, onClickListener))
+        return row
+    }
+
+    private fun createRow(valueResId: Int, onClickListener: View.OnClickListener? = null) : TableRow {
+        return createRow(resources.getString(valueResId), onClickListener)
+    }
+
+    private fun createRow(value: String, onClickListener: View.OnClickListener? = null) : TableRow {
+        val row = TableRow(this)
+        row.weightSum = 1f
+        //row.setBackgroundColor(resources.getColor(R.color.table_row))
+        row.setPadding(Utils.dpToPx(5F, this))
+        row.addView(createColumn(value, false, onClickListener))
         return row
     }
 

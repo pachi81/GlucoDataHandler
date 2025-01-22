@@ -58,7 +58,8 @@ object AlarmNotification : AlarmNotificationBase() {
             .setUsage(AudioAttributes.USAGE_ALARM)
             .build()
         channel.setSound(null, audioAttributes)
-        channel.enableVibration(false)
+        channel.enableVibration(true)
+        channel.vibrationPattern = longArrayOf(0)
         channel.enableLights(true)
     }
 
@@ -86,7 +87,7 @@ object AlarmNotification : AlarmNotificationBase() {
             val resId = getAlarmTextRes(alarmType)
             val contentView = RemoteViews(GlucoDataService.context!!.packageName, R.layout.alarm_notification)
             contentView.setTextViewText(R.id.alarm, context.getString(resId!!))
-            contentView.setTextViewText(R.id.snooze, context.getString(CR.string.snooze))
+            contentView.setTextViewText(R.id.snoozeText, context.getString(CR.string.snooze))
             if(alarmType == AlarmType.OBSOLETE) {
                 contentView.setTextViewText(R.id.deltaText, "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(context)}")
                 contentView.setContentDescription(R.id.deltaText, ReceiveData.getElapsedTimeMinuteAsString(context))
@@ -101,9 +102,6 @@ object AlarmNotification : AlarmNotificationBase() {
                 contentView.setContentDescription(R.id.trendImage, ReceiveData.getRateAsText(context))
                 contentView.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
             }
-            contentView.setOnClickPendingIntent(R.id.snooze_60, createSnoozeIntent(context, 60L, getNotificationId(alarmType)))
-            contentView.setOnClickPendingIntent(R.id.snooze_90, createSnoozeIntent(context, 90L, getNotificationId(alarmType)))
-            contentView.setOnClickPendingIntent(R.id.snooze_120, createSnoozeIntent(context, 120L, getNotificationId(alarmType)))
             if (ReceiveData.isObsoleteShort()) {
                 if (!ReceiveData.isObsoleteLong())
                     contentView.setInt(R.id.glucose, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
@@ -111,6 +109,24 @@ object AlarmNotification : AlarmNotificationBase() {
             }
 
             if (getAddSnooze()) {
+                val snoozeButtons = getSnoozeValues()
+
+                if(snoozeButtons.size>0) {
+                    createSnoozeButton(contentView, context, R.id.snooze_60, snoozeButtons.elementAt(0), getNotificationId(alarmType))
+                } else {
+                    contentView.setViewVisibility(R.id.snooze_60, View.GONE)
+                }
+                if(snoozeButtons.size>1) {
+                    createSnoozeButton(contentView, context, R.id.snooze_90, snoozeButtons.elementAt(1), getNotificationId(alarmType))
+                } else {
+                    contentView.setViewVisibility(R.id.snooze_90, View.GONE)
+                }
+                if(snoozeButtons.size>2) {
+                    createSnoozeButton(contentView, context, R.id.snooze_120, snoozeButtons.elementAt(2), getNotificationId(alarmType))
+                } else {
+                    contentView.setViewVisibility(R.id.snooze_120, View.GONE)
+                }
+
                 val bigContentView = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     RemoteViews(contentView)
                 } else {
@@ -122,11 +138,18 @@ object AlarmNotification : AlarmNotificationBase() {
                 notificationBuilder.setCustomBigContentView(null)
             }
             contentView.setViewVisibility(R.id.snoozeLayout, View.GONE)
+            contentView.setViewVisibility(R.id.snoozeText, View.GONE)
             notificationBuilder.setCustomContentView(contentView)
         } else if (getAddSnooze()) {
-            notificationBuilder.addAction(createSnoozeAction(context, context.getString(CR.string.snooze) + ": 60", 60L, getNotificationId(alarmType)))
-            notificationBuilder.addAction(createSnoozeAction(context, "90", 90L, getNotificationId(alarmType)))
-            notificationBuilder.addAction(createSnoozeAction(context, "120", 120L, getNotificationId(alarmType)))
+            var first = true
+            getSnoozeValues().forEach {
+                if(first) {
+                    notificationBuilder.addAction(createSnoozeAction(context, context.getString(CR.string.snooze) + ": $it", it, getNotificationId(alarmType)))
+                    first = false
+                } else {
+                    notificationBuilder.addAction(createSnoozeAction(context, it.toString(), it, getNotificationId(alarmType)))
+                }
+            }
         }
 
         if (fullscreenEnabled && hasFullscreenPermission()) {
@@ -139,6 +162,13 @@ object AlarmNotification : AlarmNotificationBase() {
             val fullScreenPendingIntent = PendingIntent.getActivity(context, 800, fullScreenIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
             notificationBuilder.setFullScreenIntent(fullScreenPendingIntent, true)
         }
+    }
+
+
+    private fun createSnoozeButton(contentView: RemoteViews, context: Context, resId: Int, snooze: Long, noticationId: Int) {
+        contentView.setOnClickPendingIntent(resId, createSnoozeIntent(context, snooze, noticationId))
+        contentView.setContentDescription(resId, context.resources.getString(CR.string.snooze) + " " + snooze)
+        contentView.setTextViewText(resId, snooze.toString())
     }
 
     override fun stopNotificationForRetrigger(): Boolean {

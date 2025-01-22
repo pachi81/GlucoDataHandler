@@ -34,6 +34,7 @@ class GDANotificationSettingsFragment: SettingsFragmentBase(R.xml.pref_gda_notif
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY, Constants.SHARED_PREF_CAR_NOTIFICATION)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM, Constants.SHARED_PREF_CAR_NOTIFICATION, Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_CAR_NOTIFICATION_REAPPEAR_INTERVAL, Constants.SHARED_PREF_CAR_NOTIFICATION, Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY)
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_CAR_NOTIFICATION_SHOW_IOB_COB, Constants.SHARED_PREF_CAR_NOTIFICATION)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
         }

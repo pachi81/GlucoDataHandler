@@ -84,8 +84,8 @@ class SourcesActivity : AppCompatActivity() {
     override fun onResume() {
         try {
             Log.v(LOG_ID, "onResume called")
-            update()
             super.onResume()
+            update()
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }

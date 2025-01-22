@@ -26,6 +26,11 @@
             android:title="@string/pref_source_activate_local_nightscout_iob"
             android:summary="@string/pref_source_activate_local_nightscout_iob_summary"
             app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_juggluco_video"
+            android:title="@string/video_tutorial"
+            android:summary="@string/video_tutorial_summary"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_source_xdrip_info"
