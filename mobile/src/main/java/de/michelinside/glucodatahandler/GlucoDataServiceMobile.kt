@@ -19,6 +19,8 @@ import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.watch.WatchDrip
+import de.michelinside.glucodatahandler.widget.BatteryLevelWidget
+import de.michelinside.glucodatahandler.widget.BatteryLevelWidgetNotifier
 import de.michelinside.glucodatahandler.widget.FloatingWidget
 import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
 import de.michelinside.glucodatahandler.widget.LockScreenWallpaper
@@ -27,6 +29,7 @@ import java.math.RoundingMode
 
 class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInterface {
     private lateinit var floatingWidget: FloatingWidget
+    private lateinit var batteryLevelWidget: BatteryLevelWidget
     private var lastForwardTime = 0L
 
     init {
@@ -185,6 +188,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             GlucoseBaseWidget.updateWidgets(applicationContext)
             WatchDrip.init(applicationContext)
             floatingWidget.create()
+            batteryLevelWidget = BatteryLevelWidget()
             LockScreenWallpaper.create(this)
             AlarmNotification.initNotifications(this)
         } catch (exc: Exception) {

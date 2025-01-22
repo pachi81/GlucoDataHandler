@@ -212,6 +212,7 @@
     <string name="widget_glucose_trend_delta">Zuckerwert, Trendpfeil und Delta</string>
     <string name="widget_glucose_trend_delta_timestamp">Zuckerwert, Trendpfeil, Delta und Zeitpunkt</string>
     <string name="widget_glucose_trend_delta_timestamp_iob_cob">Zuckerwert, Trendpfeil, Delta, Zeit und IOB/COB</string>
+    <string name="widget_wearos_battery_level">WearOS battery level</string>
 
     <string name="pref_send_to_bangleJS">BangleJS Unterstützung</string>
     <string name="pref_send_to_bangleJS_summary">Werte an das widbgjs Widget auf BangleJS Uhren senden.</string>

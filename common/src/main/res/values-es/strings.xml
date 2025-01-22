@@ -216,6 +216,7 @@
     <string name="widget_glucose_trend_delta">Glucosa, tendencia y delta</string>
     <string name="widget_glucose_trend_delta_timestamp">Glucosa, tendencia, delta y marca de tiempo</string>
     <string name="widget_glucose_trend_delta_timestamp_iob_cob">Glucosa, tendencia, delta, hora y IOB/COB</string>
+    <string name="widget_wearos_battery_level">WearOS battery level</string>
 
     <string name="pref_send_to_bangleJS">Soporte para BangleJS</string>
     <string name="pref_send_to_bangleJS_summary">Reenviar valores al widget widbgjs para BangleJS.</string>
