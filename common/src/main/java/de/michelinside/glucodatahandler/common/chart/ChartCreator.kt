@@ -24,6 +24,12 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.DummyGraphData
 import de.michelinside.glucodatahandler.common.utils.Utils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 
 
@@ -34,6 +40,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     protected val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
     protected var init = false
     protected var hasTimeNotifier = false
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    private var currentJob: Job? = null
 
     private val demoMode = false
 
@@ -71,20 +79,28 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     }
 
     fun create() {
-        Log.d(LOG_ID, "create")
-        try {
-            init()
-            resetChart()
-            initXaxis()
-            initYaxis()
-            initChart()
-            if(!demoMode)
-                initData()
-            created = true
-            if(demoMode)
-                demo()
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "create exception: " + exc.message.toString() )
+        if(currentJob?.isActive == true) {
+            runBlocking {
+                Log.d(LOG_ID, "create - wait for current execution")
+                currentJob!!.join()
+            }
+        }
+        currentJob = scope.launch {
+            Log.d(LOG_ID, "create")
+            try {
+                init()
+                resetChart()
+                initXaxis()
+                initYaxis()
+                initChart()
+                if(!demoMode)
+                    initData()
+                created = true
+                //if(demoMode)
+                //    demo()
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "create exception: " + exc.message.toString() )
+            }
         }
     }
 
@@ -94,6 +110,12 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             InternalNotifier.remNotifier(context, this)
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
             init = false
+            if(currentJob?.isActive == true) {
+                runBlocking {
+                    Log.d(LOG_ID, "close - wait for current execution")
+                    currentJob!!.join()
+                }
+            }
         }
 
     }
@@ -391,6 +413,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     fun resetData() {
         if(chart.data != null) {
             Log.w(LOG_ID, "Reset data")
+            chart.highlightValue(null)
             val dataSet = chart.data.getDataSetByIndex(0) as LineDataSet
             dataSet.clear()
             dataSet.setColors(0)
@@ -402,21 +425,30 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
-        try {
-            Log.d(LOG_ID, "OnNotifyData: $dataSource")
-            if(dataSource == NotifySource.TIME_VALUE) {
-                Log.d(LOG_ID, "time elapsed: ${ReceiveData.getElapsedTimeMinute()}")
-                if(ReceiveData.getElapsedTimeMinute().mod(2) == 0)
-                    updateTimeElapsed()
-            } else if(dataSource == NotifySource.GRAPH_DATA_CHANGED) {
-                Log.d(LOG_ID, "graph data changed")
-                resetData() // recreate chart with new graph data
-            } else {
-                update()
+        if(currentJob?.isActive == true) {
+            runBlocking {
+                Log.d(LOG_ID, "OnNotifyData - wait for current execution")
+                currentJob!!.join()
             }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() + " - " + exc.stackTraceToString() )
         }
+        currentJob = scope.launch {
+            try {
+                Log.d(LOG_ID, "OnNotifyData: $dataSource")
+                if(dataSource == NotifySource.TIME_VALUE) {
+                    Log.d(LOG_ID, "time elapsed: ${ReceiveData.getElapsedTimeMinute()}")
+                    if(ReceiveData.getElapsedTimeMinute().mod(2) == 0)
+                        updateTimeElapsed()
+                } else if(dataSource == NotifySource.GRAPH_DATA_CHANGED) {
+                    Log.d(LOG_ID, "graph data changed")
+                    resetData() // recreate chart with new graph data
+                } else {
+                    update()
+                }
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() + " - " + exc.stackTraceToString() )
+            }
+        }
+        //currentJob!!.start()
     }
 
     private fun demo() {
