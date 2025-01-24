@@ -30,6 +30,7 @@ class ChartBitmap(val imageView: ImageView, val context: Context): NotifierInter
     fun close() {
         Log.v(LOG_ID, "close")
         InternalNotifier.remNotifier(context, this)
+        chartViewer.close()
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {

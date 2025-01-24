@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import de.michelinside.glucodatahandler.common.database.dbAccess
 
 class ChartBitmapCreator(chart: GlucoseChart, context: Context): ChartCreator(chart, context) {
     private val LOG_ID = "GDH.Chart.BitmapCreator"
@@ -31,8 +32,8 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context): ChartCreator(ch
         return 120L
     }
 
-    override fun getMinTime(): Long {
-        return System.currentTimeMillis() - (getDefaultRange()*60*1000L)
+    override fun getMaxRange(): Long {
+        return getDefaultRange()
     }
 
     override fun updateChart(dataSet: LineDataSet) {
@@ -46,24 +47,7 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context): ChartCreator(ch
         chart.invalidate()
     }
 
-    private fun createBitmap() {
-        Log.d(LOG_ID, "createBitmap")
-        // reset bitmap and create it
-        /*chart.fitScreen()
-        chart.data?.clearValues()
-        chart.data?.notifyDataChanged()
-        chart.notifyDataSetChanged()*/
-        resetData()
-    }
-
-    override fun update() {
-        // update limit lines
-        createBitmap()
-    }
-
     override fun updateTimeElapsed() {
-        update()
+        update(dbAccess.getGlucoseValues(getMinTime()))
     }
-
-
 }

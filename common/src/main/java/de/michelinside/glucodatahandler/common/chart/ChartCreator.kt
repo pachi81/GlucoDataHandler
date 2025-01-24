@@ -19,15 +19,17 @@ import com.github.mikephil.charting.utils.Utils as ChartUtils
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.database.GlucoseValue
+import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
-import de.michelinside.glucodatahandler.common.utils.DummyGraphData
 import de.michelinside.glucodatahandler.common.utils.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
@@ -42,8 +44,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     protected var hasTimeNotifier = false
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private var currentJob: Job? = null
-
-    private val demoMode = false
+    private var dataSyncJob: Job? = null
 
     private var graphPrefList = mutableSetOf(
         Constants.SHARED_PREF_LOW_GLUCOSE,
@@ -62,18 +63,19 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             Log.d(LOG_ID, "init")
             ChartUtils.init(context)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
-            if(!demoMode)
-                updateNotifier()
+            updateNotifier()
+            init = true
         }
     }
 
     protected fun updateNotifier() {
-        Log.d(LOG_ID, "updateNotifier - has data: ${ChartData.hasData(getMinTime())} - xAxisEnabled: ${chart.xAxis.isEnabled}")
-        if(ChartData.hasData(getMinTime()) || chart.xAxis.isEnabled) {
-            InternalNotifier.addNotifier(context, this, mutableSetOf(NotifySource.MESSAGECLIENT, NotifySource.BROADCAST, NotifySource.GRAPH_DATA_CHANGED, NotifySource.TIME_VALUE))
+        val hasData = dbAccess.hasGlucoseValues(getMinTime())
+        Log.d(LOG_ID, "updateNotifier - has data: $hasData - xAxisEnabled: ${chart.xAxis.isEnabled}")
+        if(hasData || chart.xAxis.isEnabled) {
+            InternalNotifier.addNotifier(context, this, mutableSetOf(NotifySource.TIME_VALUE))
             hasTimeNotifier = true
         } else {
-            InternalNotifier.addNotifier(context, this, mutableSetOf(NotifySource.MESSAGECLIENT, NotifySource.BROADCAST, NotifySource.GRAPH_DATA_CHANGED))
+            InternalNotifier.remNotifier(context, this)
             hasTimeNotifier = false
         }
     }
@@ -93,11 +95,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                 initXaxis()
                 initYaxis()
                 initChart()
-                if(!demoMode)
-                    initData()
+                initData()
                 created = true
-                //if(demoMode)
-                //    demo()
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "create exception: " + exc.message.toString() )
             }
@@ -105,19 +104,28 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     }
 
     fun close() {
-        Log.d(LOG_ID, "close")
-        if(init) {
-            InternalNotifier.remNotifier(context, this)
-            sharedPref.unregisterOnSharedPreferenceChangeListener(this)
-            init = false
-            if(currentJob?.isActive == true) {
-                runBlocking {
-                    Log.d(LOG_ID, "close - wait for current execution")
-                    currentJob!!.join()
+        Log.d(LOG_ID, "close init: $init")
+        try {
+            if(init) {
+                InternalNotifier.remNotifier(context, this)
+                sharedPref.unregisterOnSharedPreferenceChangeListener(this)
+                if(dataSyncJob != null) {
+                    runBlocking {
+                        Log.d(LOG_ID, "stop data sync - wait for current execution")
+                        dataSyncJob!!.cancelAndJoin()
+                    }
                 }
+                if(currentJob?.isActive == true) {
+                    runBlocking {
+                        Log.d(LOG_ID, "close current job - wait for current execution")
+                        currentJob!!.join()
+                    }
+                }
+                init = false
             }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "close exception: " + exc.message.toString() )
         }
-
     }
 
     fun isRight(): Boolean {
@@ -242,12 +250,32 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         chart.waitForInvalidate()
     }
 
-    protected fun initData() {
+    private fun initData() {
         initDataSet()
-        addEntries(ChartData.getData(getMinTime()))
+        dataSyncJob = scope.launch {
+            dataSync()
+        }
     }
 
-    protected open fun getMinTime(): Long {
+    private suspend fun dataSync() {
+        Log.d(LOG_ID, "dataSync running")
+        try {
+            dbAccess.getLiveValuesByTimeSpan(getMaxRange().toInt()/60).collect{ values ->
+                update(values)
+            }
+            Log.d(LOG_ID, "dataSync done")
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "dataSync exception: " + exc.message.toString() )
+        }
+    }
+
+    protected open fun getMaxRange(): Long {
+        return 0L
+    }
+
+    protected fun getMinTime(): Long {
+        if(getMaxRange() > 0L)
+            return System.currentTimeMillis() - (getMaxRange()*60*1000L)
         return 0L
     }
 
@@ -255,7 +283,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         return 240L
     }
 
-    protected open fun addEntries(values: ArrayList<Entry>) {
+    protected open fun addEntries(values: List<GlucoseValue>) {
         Log.d(LOG_ID, "Add ${values.size} entries")
         val dataSet = chart.data.getDataSetByIndex(0) as LineDataSet
         var added = false
@@ -264,8 +292,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                 Log.v(LOG_ID, "Reset colors")
                 dataSet.resetCircleColors()
             }
-            for (i in 0 until values.size) {
-                val entry = values[i]
+            for (element in values) {
+                val entry = Entry(TimeValueFormatter.to_chart_x(element.timestamp), element.value.toFloat())
                 if (dataSet.values.isEmpty() || dataSet.values.last().x < entry.x) {
                     added = true
                     dataSet.addEntry(entry)
@@ -331,7 +359,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             }
         }
         if(minValue > 0 || maxValue > 0) {
-            Log.w(LOG_ID, "Creating extra data set from ${Utils.getUiTimeStamp(minValue)} - ${Utils.getUiTimeStamp(maxValue)}")
+            Log.d(LOG_ID, "Creating extra data set from ${Utils.getUiTimeStamp(minValue)} - ${Utils.getUiTimeStamp(maxValue)}")
             val entries = ArrayList<Entry>()
             if(minValue > 0)
                 entries.add(Entry(TimeValueFormatter.to_chart_x(minValue), 120F))
@@ -397,11 +425,35 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         }
     }
 
-    protected open fun update() {
-        // update limit lines
-        if(ReceiveData.time > 0) {
-            val entry = Entry(TimeValueFormatter.to_chart_x(ReceiveData.time), ReceiveData.rawValue.toFloat())
-            addEntries(arrayListOf(entry))
+    private fun getFirstTimestamp(): Long {
+        if(chart.data != null && chart.data.dataSetCount > 0) {
+            val dataSet = chart.data.getDataSetByIndex(0) as LineDataSet
+            if (dataSet.values.isNotEmpty()) {
+                return TimeValueFormatter.from_chart_x(dataSet.values.first().x).time
+            }
+        }
+        return 0L
+    }
+
+    private fun getLastTimestamp(): Long {
+        if(chart.data != null && chart.data.dataSetCount > 0) {
+            val dataSet = chart.data.getDataSetByIndex(0) as LineDataSet
+            if (dataSet.values.isNotEmpty()) {
+                return TimeValueFormatter.from_chart_x(dataSet.values.last().x).time
+            }
+        }
+        return 0L
+    }
+
+    protected fun update(values: List<GlucoseValue>) {
+        Log.d(LOG_ID, "update called for ${values.size} value")
+        if(values.isNotEmpty()) {
+            if(values.first().timestamp != getFirstTimestamp()) {
+                resetData(values)
+                return
+            }
+            val newValues = values.filter { data -> data.timestamp > getLastTimestamp() }
+            addEntries(newValues)
         }
     }
 
@@ -410,9 +462,9 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         updateChart(chart.data.getDataSetByIndex(0) as LineDataSet)
     }
 
-    fun resetData() {
+    protected fun resetData(values: List<GlucoseValue>) {
+        Log.d(LOG_ID, "Reset data")
         if(chart.data != null) {
-            Log.w(LOG_ID, "Reset data")
             chart.highlightValue(null)
             val dataSet = chart.data.getDataSetByIndex(0) as LineDataSet
             dataSet.clear()
@@ -421,7 +473,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             chart.data.notifyDataChanged()
             chart.notifyDataSetChanged()
         }
-        initData()
+        initDataSet()
+        addEntries(values)
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
@@ -438,35 +491,12 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                     Log.d(LOG_ID, "time elapsed: ${ReceiveData.getElapsedTimeMinute()}")
                     if(ReceiveData.getElapsedTimeMinute().mod(2) == 0)
                         updateTimeElapsed()
-                } else if(dataSource == NotifySource.GRAPH_DATA_CHANGED) {
-                    Log.d(LOG_ID, "graph data changed")
-                    resetData() // recreate chart with new graph data
-                } else {
-                    update()
                 }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() + " - " + exc.stackTraceToString() )
             }
         }
         //currentJob!!.start()
-    }
-
-    private fun demo() {
-        Log.w(LOG_ID, "Start demo")
-        Thread {
-            try {
-                val demoData = DummyGraphData.create(5, min = 40, max = 260, stepMinute = 5)
-                Log.w(LOG_ID, "Running demo for ${demoData.size} entries")
-                demoData.forEach { (t, u) ->
-                    addEntries(arrayListOf(Entry(TimeValueFormatter.to_chart_x(t), u.toFloat())))
-                    Thread.sleep(1000)
-                }
-                Log.w(LOG_ID, "Demo finished")
-                resetData()
-            } catch (exc: Exception) {
-                Log.e(LOG_ID, "demo exception: " + exc.message.toString() + " - " + exc.stackTraceToString() )
-            }
-        }.start()
     }
 
     fun getBitmap(): Bitmap? {

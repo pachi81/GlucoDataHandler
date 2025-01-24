@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import de.michelinside.glucodatahandler.common.chart.ChartData
+import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notification.AlarmType
@@ -144,6 +144,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 initialized = true
                 unitMgDl = context.resources.getString(R.string.unit_mgdl)
                 unitMmol = context.resources.getString(R.string.unit_mmol)
+                dbAccess.init(context)
                 AlarmHandler.initData(context)
                 readTargets(context)
                 loadExtras(context)
@@ -559,7 +560,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                         }
                     }
 
-                    ChartData.addData(time, rawValue)
+                    dbAccess.addGlucoseValue(time, rawValue)
 
                     val notifySource = if(interApp) NotifySource.MESSAGECLIENT else NotifySource.BROADCAST
 

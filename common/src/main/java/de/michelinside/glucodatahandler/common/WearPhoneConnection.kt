@@ -79,7 +79,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 }
                 else if (addMissing) {
                     batterLevels.add(-1)
-                })
+                } else {})
             }
             return batterLevels
         }
@@ -102,7 +102,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 }
                 else if (addMissing) {
                     connectionStates[getDisplayName(node.value)] = context.getString(R.string.state_await_data)
-                })
+                } else {})
             }
             return connectionStates
 
