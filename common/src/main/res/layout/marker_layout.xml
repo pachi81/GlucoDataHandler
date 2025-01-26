@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/transparent_widget_background"
+    android:background="@color/transparent_marker_background"
     android:paddingHorizontal="12dp"
     android:paddingVertical="8dp">
 

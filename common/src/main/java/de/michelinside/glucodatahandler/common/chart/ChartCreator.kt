@@ -25,6 +25,7 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.Utils
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -33,6 +34,7 @@ import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 
 open class ChartCreator(protected val chart: GlucoseChart, protected val context: Context): NotifierInterface,
@@ -43,8 +45,9 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     protected var init = false
     protected var hasTimeNotifier = false
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-    private var currentJob: Job? = null
+    private var createJob: Job? = null
     private var dataSyncJob: Job? = null
+    protected open val resetChart = false
 
     private var graphPrefList = mutableSetOf(
         Constants.SHARED_PREF_LOW_GLUCOSE,
@@ -80,14 +83,18 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         }
     }
 
-    fun create() {
-        if(currentJob?.isActive == true) {
+    private fun waitForCreation() {
+        if(createJob?.isActive == true) {
+            Log.d(LOG_ID, "waitForCreation - wait for current execution")
             runBlocking {
-                Log.d(LOG_ID, "create - wait for current execution")
-                currentJob!!.join()
+                createJob!!.join()
             }
         }
-        currentJob = scope.launch {
+    }
+
+    fun create() {
+        waitForCreation()
+        createJob = scope.launch {
             Log.d(LOG_ID, "create")
             try {
                 init()
@@ -98,7 +105,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                 initData()
                 created = true
             } catch (exc: Exception) {
-                Log.e(LOG_ID, "create exception: " + exc.message.toString() )
+                Log.e(LOG_ID, "create exception: " + exc.message + " - " + exc.stackTraceToString())
             }
         }
     }
@@ -115,12 +122,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                         dataSyncJob!!.cancelAndJoin()
                     }
                 }
-                if(currentJob?.isActive == true) {
-                    runBlocking {
-                        Log.d(LOG_ID, "close current job - wait for current execution")
-                        currentJob!!.join()
-                    }
-                }
+                waitForCreation()
                 init = false
             }
         } catch (exc: Exception) {
@@ -264,6 +266,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                 update(values)
             }
             Log.d(LOG_ID, "dataSync done")
+        } catch (exc: CancellationException) {
+            Log.d(LOG_ID, "dataSync cancelled")
         } catch (exc: Exception) {
             Log.e(LOG_ID, "dataSync exception: " + exc.message.toString() )
         }
@@ -435,6 +439,14 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         return 0L
     }
 
+    private fun getEntryCount(): Int {
+        if(chart.data != null && chart.data.dataSetCount > 0) {
+            val dataSet = chart.data.getDataSetByIndex(0) as LineDataSet
+            return dataSet.entryCount
+        }
+        return 0
+    }
+
     private fun getLastTimestamp(): Long {
         if(chart.data != null && chart.data.dataSetCount > 0) {
             val dataSet = chart.data.getDataSetByIndex(0) as LineDataSet
@@ -448,7 +460,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     protected fun update(values: List<GlucoseValue>) {
         Log.d(LOG_ID, "update called for ${values.size} value")
         if(values.isNotEmpty()) {
-            if(values.first().timestamp != getFirstTimestamp()) {
+            if(resetChart || values.first().timestamp != getFirstTimestamp() || (abs(values.size-getEntryCount()) > 5)) {
                 resetData(values)
                 return
             }
@@ -470,6 +482,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             dataSet.clear()
             dataSet.setColors(0)
             dataSet.setCircleColor(0)
+            chart.data.clearValues()
             chart.data.notifyDataChanged()
             chart.notifyDataSetChanged()
         }
@@ -478,28 +491,27 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
-        if(currentJob?.isActive == true) {
-            runBlocking {
-                Log.d(LOG_ID, "OnNotifyData - wait for current execution")
-                currentJob!!.join()
-            }
+        Log.d(LOG_ID, "OnNotifyData: $dataSource")
+        if(!init) {
+            Log.w(LOG_ID, "Chart still not init - create!")
+            create()
         }
-        currentJob = scope.launch {
-            try {
-                Log.d(LOG_ID, "OnNotifyData: $dataSource")
-                if(dataSource == NotifySource.TIME_VALUE) {
-                    Log.d(LOG_ID, "time elapsed: ${ReceiveData.getElapsedTimeMinute()}")
-                    if(ReceiveData.getElapsedTimeMinute().mod(2) == 0)
+        if(dataSource == NotifySource.TIME_VALUE) {
+            Log.d(LOG_ID, "time elapsed: ${ReceiveData.getElapsedTimeMinute()}")
+            if(ReceiveData.getElapsedTimeMinute().mod(2) == 0) {
+                waitForCreation()
+                createJob = scope.launch {
+                    try {
                         updateTimeElapsed()
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() + " - " + exc.stackTraceToString() )
+                    }
                 }
-            } catch (exc: Exception) {
-                Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() + " - " + exc.stackTraceToString() )
             }
         }
-        //currentJob!!.start()
     }
 
-    fun getBitmap(): Bitmap? {
+    protected fun createBitmap(): Bitmap? {
         try {
             if(chart.width > 0 && chart.height > 0)
                 return chart.drawToBitmap()

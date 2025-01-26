@@ -81,7 +81,7 @@ class CustomBubbleMarker(context: Context) : MarkerView(context, R.layout.marker
             val paint = Paint().apply {
                 style = Paint.Style.FILL
                 strokeJoin = Paint.Join.ROUND
-                color = if(isGlucose) ContextCompat.getColor(context, R.color.transparent_widget_background) else 0
+                color = if(isGlucose) ContextCompat.getColor(context, R.color.transparent_marker_background) else 0
             }
 
             val chart = chartView
