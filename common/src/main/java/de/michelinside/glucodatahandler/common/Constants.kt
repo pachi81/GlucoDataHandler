@@ -11,6 +11,7 @@ object Constants {
     const val REQUEST_DATA_MESSAGE_PATH = "/request_data_intent"
     const val REQUEST_LOGCAT_MESSAGE_PATH = "/request_logcat_intent"
     const val LOGCAT_CHANNEL_PATH = "/logcat_intent"
+    const val DB_SYNC_CHANNEL_PATH = "/db_sync_intent"
     const val COMMAND_PATH = "/command_intent"
     const val GLUCODATA_BROADCAST_ACTION = "glucodata.Minute"
     const val SETTINGS_BUNDLE = "settings_bundle"
