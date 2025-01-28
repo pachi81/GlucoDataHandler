@@ -84,29 +84,27 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     }
 
     private fun waitForCreation() {
-        if(createJob?.isActive == true) {
+        /*if(createJob?.isActive == true) {
             Log.d(LOG_ID, "waitForCreation - wait for current execution")
             runBlocking {
                 createJob!!.join()
             }
-        }
+        }*/
     }
 
     fun create() {
         waitForCreation()
-        createJob = scope.launch {
-            Log.d(LOG_ID, "create")
-            try {
-                init()
-                resetChart()
-                initXaxis()
-                initYaxis()
-                initChart()
-                initData()
-                created = true
-            } catch (exc: Exception) {
-                Log.e(LOG_ID, "create exception: " + exc.message + " - " + exc.stackTraceToString())
-            }
+        Log.d(LOG_ID, "create")
+        try {
+            init()
+            resetChart()
+            initXaxis()
+            initYaxis()
+            initChart()
+            initData()
+            created = true
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "create exception: " + exc.message + " - " + exc.stackTraceToString())
         }
     }
 
@@ -171,6 +169,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         chart.axisRight.setDrawZeroLine(false)
         chart.axisRight.setDrawAxisLine(false)
         chart.axisRight.setDrawGridLines(false)
+        chart.axisRight.xOffset = -15F
         chart.axisRight.textColor = context.resources.getColor(R.color.text_color)
         chart.axisLeft.isEnabled = showOtherUnit()
         if(chart.axisLeft.isEnabled) {
@@ -178,6 +177,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             chart.axisLeft.setDrawZeroLine(false)
             chart.axisLeft.setDrawAxisLine(false)
             chart.axisLeft.setDrawGridLines(false)
+            chart.axisLeft.xOffset = -15F
             chart.axisLeft.textColor = context.resources.getColor(R.color.text_color)
         }
     }
@@ -216,6 +216,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         chart.legend.isEnabled = false
         chart.description.isEnabled = false
         chart.isScaleYEnabled = false
+        chart.minOffset = 0F
+        chart.setExtraOffsets(4F, 4F, 4F, 4F)
         if(touchEnabled) {
             val mMarker = CustomBubbleMarker(context)
             mMarker.chartView = chart
@@ -232,6 +234,10 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                     Log.v(LOG_ID, "onNothingSelected")
                 }
             })
+            chart.setOnLongClickListener {
+                chart.highlightValue(null)
+                true
+            }
         }
         chart.axisRight.removeAllLimitLines()
 
@@ -500,13 +506,13 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             Log.d(LOG_ID, "time elapsed: ${ReceiveData.getElapsedTimeMinute()}")
             if(ReceiveData.getElapsedTimeMinute().mod(2) == 0) {
                 waitForCreation()
-                createJob = scope.launch {
+                //createJob = scope.launch {
                     try {
                         updateTimeElapsed()
                     } catch (exc: Exception) {
                         Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() + " - " + exc.stackTraceToString() )
                     }
-                }
+                //}
             }
         }
     }
@@ -521,7 +527,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         return null
     }
 
-    private fun showOtherUnit(): Boolean {
+    protected open fun showOtherUnit(): Boolean {
         return sharedPref.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, false)
     }
 

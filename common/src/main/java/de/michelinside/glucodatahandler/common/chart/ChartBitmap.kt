@@ -10,6 +10,10 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.Utils
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class ChartBitmap(val imageView: ImageView, val context: Context): NotifierInterface {
 
@@ -33,11 +37,18 @@ class ChartBitmap(val imageView: ImageView, val context: Context): NotifierInter
         chartViewer.close()
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.d(LOG_ID, "OnNotifyData for $dataSource - id ${chart.id} - extras: ${Utils.dumpBundle(extras)}")
         if(dataSource == NotifySource.GRAPH_CHANGED && extras?.getInt(Constants.GRAPH_ID) == chart.id) {
-            Log.i(LOG_ID, "Update bitmap")
-            imageView.setImageBitmap(chartViewer.getBitmap())
+            GlobalScope.launch(Dispatchers.Main) {
+                try {
+                    Log.i(LOG_ID, "Update bitmap")
+                    imageView.setImageBitmap(chartViewer.getBitmap())
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Update bitmap exception: " + exc.toString())
+                }
+            }
         }
     }
 }

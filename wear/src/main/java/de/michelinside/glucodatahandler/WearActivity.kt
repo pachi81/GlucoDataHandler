@@ -25,6 +25,7 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.databinding.ActivityWearBinding
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.setPadding
+import de.michelinside.glucodatahandler.common.chart.GlucoseChart
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmState
 import de.michelinside.glucodatahandler.common.notification.AlarmType
@@ -61,8 +62,10 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var btnSettings: Button
     private lateinit var btnSources: Button
     private lateinit var btnAlarms: Button
+    private lateinit var chart: GlucoseChart
     private var doNotUpdate = false
     private var requestNotificationPermission = false
+    private lateinit var chartCreator: WearChartCreator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -87,6 +90,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             tableAlarms = findViewById(R.id.tableAlarms)
             tableDetails = findViewById(R.id.tableDetails)
             tableNotes = findViewById(R.id.tableNotes)
+            chart = findViewById(R.id.chart)
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
@@ -118,6 +122,8 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 val intent = Intent(this, AlarmsActivity::class.java)
                 startActivity(intent)
             }
+            chartCreator = WearChartCreator(chart, this)
+            chartCreator.create()
             if(requestPermission())
                 GlucoDataServiceWear.start(this)
             PackageUtils.updatePackages(this)
@@ -168,6 +174,12 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
+    }
+
+    override fun onDestroy() {
+        Log.v(LOG_ID, "onDestroy called")
+        super.onDestroy()
+        chartCreator.close()
     }
 
     fun requestPermission() : Boolean {
