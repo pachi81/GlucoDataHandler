@@ -25,7 +25,7 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.databinding.ActivityWearBinding
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.setPadding
-import de.michelinside.glucodatahandler.common.chart.GlucoseChart
+import de.michelinside.glucodatahandler.common.chart.ChartBitmapView
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmState
 import de.michelinside.glucodatahandler.common.notification.AlarmType
@@ -62,10 +62,10 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var btnSettings: Button
     private lateinit var btnSources: Button
     private lateinit var btnAlarms: Button
-    private lateinit var chart: GlucoseChart
+    private lateinit var chartImage: ImageView
     private var doNotUpdate = false
     private var requestNotificationPermission = false
-    private lateinit var chartCreator: WearChartCreator
+    private lateinit var chartBitmap: ChartBitmapView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -90,7 +90,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             tableAlarms = findViewById(R.id.tableAlarms)
             tableDetails = findViewById(R.id.tableDetails)
             tableNotes = findViewById(R.id.tableNotes)
-            chart = findViewById(R.id.chart)
+            chartImage = findViewById(R.id.graphImage)
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
@@ -122,8 +122,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 val intent = Intent(this, AlarmsActivity::class.java)
                 startActivity(intent)
             }
-            chartCreator = WearChartCreator(chart, this)
-            chartCreator.create()
+            chartBitmap = ChartBitmapView(chartImage, this)
             if(requestPermission())
                 GlucoDataServiceWear.start(this)
             PackageUtils.updatePackages(this)
@@ -179,7 +178,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     override fun onDestroy() {
         Log.v(LOG_ID, "onDestroy called")
         super.onDestroy()
-        chartCreator.close()
+        chartBitmap.close()
     }
 
     fun requestPermission() : Boolean {

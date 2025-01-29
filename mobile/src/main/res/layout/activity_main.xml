@@ -140,6 +140,13 @@
         android:layout_height="200dp"
         />
 
+    <SeekBar
+        android:id="@+id/chartDuration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="12"
+        android:min="0"
+        android:progress="4" />
     <ImageView
         android:id="@+id/graphImage"
         android:layout_width="match_parent"

@@ -33,11 +33,12 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.math.RoundingMode
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
 
-open class ChartCreator(protected val chart: GlucoseChart, protected val context: Context): NotifierInterface,
+open class ChartCreator(protected val chart: GlucoseChart, protected val context: Context, protected val durationPref: String = ""): NotifierInterface,
     SharedPreferences.OnSharedPreferenceChangeListener {
     private var LOG_ID = "GDH.Chart.Creator"
     protected var created = false
@@ -45,9 +46,10 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     protected var init = false
     protected var hasTimeNotifier = false
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-    private var createJob: Job? = null
+    //private var createJob: Job? = null
     private var dataSyncJob: Job? = null
     protected open val resetChart = false
+    protected var durationHours = 4
 
     private var graphPrefList = mutableSetOf(
         Constants.SHARED_PREF_LOW_GLUCOSE,
@@ -65,6 +67,9 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             LOG_ID = "GDH.Chart.Creator." + chart.id.toString()
             Log.d(LOG_ID, "init")
             ChartUtils.init(context)
+            if(durationPref.isNotEmpty()) {
+                durationHours = sharedPref.getInt(durationPref, 4)
+            }
             sharedPref.registerOnSharedPreferenceChangeListener(this)
             updateNotifier()
             init = true
@@ -114,12 +119,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             if(init) {
                 InternalNotifier.remNotifier(context, this)
                 sharedPref.unregisterOnSharedPreferenceChangeListener(this)
-                if(dataSyncJob != null) {
-                    runBlocking {
-                        Log.d(LOG_ID, "stop data sync - wait for current execution")
-                        dataSyncJob!!.cancelAndJoin()
-                    }
-                }
+                stopDataSync()
                 waitForCreation()
                 init = false
             }
@@ -171,6 +171,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         chart.axisRight.setDrawGridLines(false)
         chart.axisRight.xOffset = -15F
         chart.axisRight.textColor = context.resources.getColor(R.color.text_color)
+
         chart.axisLeft.isEnabled = showOtherUnit()
         if(chart.axisLeft.isEnabled) {
             chart.axisLeft.valueFormatter = GlucoseFormatter(true)
@@ -196,7 +197,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             //dataSet.colors = mutableListOf<Int>()
             dataSet.circleColors = mutableListOf<Int>()
             //dataSet.lineWidth = 1F
-            dataSet.circleRadius = 3F
+            dataSet.circleRadius = 2F
             dataSet.setDrawValues(false)
             dataSet.setDrawCircleHole(false)
             dataSet.axisDependency = YAxis.AxisDependency.RIGHT
@@ -204,6 +205,22 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             chart.data = LineData(dataSet)
             chart.notifyDataSetChanged()
             Log.v(LOG_ID, "Min: ${chart.xAxis.axisMinimum} - visible: ${chart.lowestVisibleX} - Max: ${chart.xAxis.axisMaximum} - visible: ${chart.highestVisibleX}")
+        }
+    }
+
+    protected open fun getYAxisInterval(): Float {
+        return 50F
+    }
+
+    protected fun updateYAxisLabelCount() {
+        if(chart.axisRight.isDrawLabelsEnabled && getYAxisInterval() > 0F) {
+            val count = Utils.round(chart.axisRight.axisMaximum / getYAxisInterval(), 0, RoundingMode.DOWN).toInt()
+            if(count != chart.axisRight.labelCount) {
+                Log.v(LOG_ID, "update y-axis label count: $count for ${chart.axisRight.axisMaximum}")
+                chart.axisRight.setLabelCount(count)
+                if(chart.axisLeft.isEnabled)
+                    chart.axisLeft.setLabelCount(count)
+            }
         }
     }
 
@@ -219,7 +236,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         chart.minOffset = 0F
         chart.setExtraOffsets(4F, 4F, 4F, 4F)
         if(touchEnabled) {
-            val mMarker = CustomBubbleMarker(context)
+            val mMarker = CustomBubbleMarker(context, true)
             mMarker.chartView = chart
             chart.marker = mMarker
             chart.setOnChartValueSelectedListener(object: OnChartValueSelectedListener {
@@ -253,13 +270,24 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         chart.axisRight.axisMaximum = ReceiveData.highRaw+10
         chart.axisLeft.axisMinimum = chart.axisRight.axisMinimum
         chart.axisLeft.axisMaximum = chart.axisRight.axisMaximum
+        updateYAxisLabelCount()
         chart.isScaleXEnabled = false
         chart.invalidate()
         chart.waitForInvalidate()
     }
 
+    protected fun stopDataSync() {
+        if(dataSyncJob != null) {
+            runBlocking {
+                Log.d(LOG_ID, "stop data sync - wait for current execution")
+                dataSyncJob!!.cancelAndJoin()
+            }
+        }
+    }
+
     private fun initData() {
         initDataSet()
+        stopDataSync()
         dataSyncJob = scope.launch {
             dataSync()
         }
@@ -290,7 +318,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     }
 
     protected open fun getDefaultRange(): Long {
-        return 240L
+        return durationHours * 60L
     }
 
     protected open fun addEntries(values: List<GlucoseValue>) {
@@ -314,10 +342,12 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                     if (chart.axisRight.axisMinimum > (entry.y - 10F)) {
                         chart.axisRight.axisMinimum = entry.y - 10F
                         chart.axisLeft.axisMinimum = chart.axisRight.axisMinimum
+                        updateYAxisLabelCount()
                     }
                     if (chart.axisRight.axisMaximum < (entry.y + 10F)) {
                         chart.axisRight.axisMaximum = entry.y + 10F
                         chart.axisLeft.axisMaximum = chart.axisRight.axisMaximum
+                        updateYAxisLabelCount()
                     }
                 }
             }
@@ -388,7 +418,6 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     }
 
     protected open fun updateChart(dataSet: LineDataSet) {
-        val defaultRange = getDefaultRange()
         val right = isRight()
         val left = isLeft()
         Log.v(LOG_ID, "Min: ${chart.xAxis.axisMinimum} - visible: ${chart.lowestVisibleX} - Max: ${chart.xAxis.axisMaximum} - visible: ${chart.highestVisibleX} - isLeft: ${left} - isRight: ${right}" )
@@ -400,16 +429,22 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         chart.data = LineData(dataSet)
         addEmptyTimeData()
         chart.notifyDataSetChanged()
+        invalidateChart(diffTimeMin, right, left)
+    }
+
+    protected open fun invalidateChart(diffTime: Long, right: Boolean, left: Boolean) {
+        val defaultRange = getDefaultRange()
+        var diffTimeMin = diffTime
         val newDiffTime = TimeUnit.MILLISECONDS.toMinutes( TimeValueFormatter.from_chart_x(chart.xChartMax).time - TimeValueFormatter.from_chart_x(chart.lowestVisibleX).time)
         Log.d(LOG_ID, "Diff-Time: ${diffTimeMin} minutes - newDiffTime: ${newDiffTime} minutes")
         var setXRange = false
-        if(!chart.isScaleXEnabled && newDiffTime >= 90) {
+        if(!chart.isScaleXEnabled && newDiffTime >= minOf(defaultRange, 90)) {
             Log.d(LOG_ID, "Enable X scale")
             chart.isScaleXEnabled = true
             setXRange = true
         }
 
-        if((right && left && diffTimeMin < getDefaultRange() && newDiffTime >= defaultRange)) {
+        if((right && left && diffTimeMin < defaultRange && newDiffTime >= defaultRange)) {
             Log.v(LOG_ID, "Set ${defaultRange/60} hours diff time")
             diffTimeMin = defaultRange
         }
@@ -433,6 +468,10 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             chart.setVisibleXRangeMinimum(60F)
             chart.setVisibleXRangeMaximum(60F*24F)
         }
+    }
+
+    protected open fun durationChanged() {
+        invalidateChart(getDefaultRange(), true, true)
     }
 
     private fun getFirstTimestamp(): Long {
@@ -480,9 +519,9 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         updateChart(chart.data.getDataSetByIndex(0) as LineDataSet)
     }
 
-    protected fun resetData(values: List<GlucoseValue>) {
-        Log.d(LOG_ID, "Reset data")
+    protected fun resetChartData() {
         if(chart.data != null) {
+            Log.d(LOG_ID, "Reset chart data")
             chart.highlightValue(null)
             val dataSet = chart.data.getDataSetByIndex(0) as LineDataSet
             dataSet.clear()
@@ -492,6 +531,11 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             chart.data.notifyDataChanged()
             chart.notifyDataSetChanged()
         }
+    }
+
+    protected fun resetData(values: List<GlucoseValue>) {
+        Log.d(LOG_ID, "Reset data")
+        resetChartData()
         initDataSet()
         addEntries(values)
     }
@@ -534,7 +578,12 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         Log.d(LOG_ID, "onSharedPreferenceChanged: $key")
         try {
-            if (graphPrefList.contains(key)) {
+            if(key == durationPref) {
+                durationHours = sharedPref.getInt(durationPref, durationHours)
+                resetChartData()
+                chart.fitScreen()
+                initData()
+            } else if (graphPrefList.contains(key)) {
                 Log.i(LOG_ID, "re create graph after settings changed for key: $key")
                 ReceiveData.updateSettings(sharedPref)
                 if(chart.data != null && chart.data.getDataSetByIndex(0).entryCount > 0)

@@ -18,4 +18,5 @@
     <color name="transparent_widget_background">#55000000</color>
     <color name="transparent_widget_textcolor">@color/white</color>
     <color name="transparent_marker_background">#AA000000</color>
+    <color name="chart_label_color">@color/white</color>
 </resources>

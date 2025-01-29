@@ -19,6 +19,8 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
@@ -36,7 +38,7 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
-import de.michelinside.glucodatahandler.common.chart.ChartBitmap
+import de.michelinside.glucodatahandler.common.chart.ChartBitmapView
 import de.michelinside.glucodatahandler.common.chart.ChartCreator
 import de.michelinside.glucodatahandler.common.chart.GlucoseChart
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
@@ -80,6 +82,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var optionsMenu: Menu
     private lateinit var chart: GlucoseChart
     private lateinit var chartImage: ImageView
+    private var chartDuration: SeekBar? = null
     private var alarmIcon: MenuItem? = null
     private var snoozeMenu: MenuItem? = null
     private var floatingWidgetItem: MenuItem? = null
@@ -87,7 +90,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private var requestNotificationPermission = false
     private var doNotUpdate = false
     private lateinit var chartCreator: ChartCreator
-    private lateinit var chartBitmap: ChartBitmap
+    private lateinit var chartBitmap: ChartBitmapView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -112,6 +115,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableNotes = findViewById(R.id.tableNotes)
             chart = findViewById(R.id.chart)
             chartImage = findViewById(R.id.graphImage)
+            chartDuration = findViewById(R.id.chartDuration)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -132,12 +136,24 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }
             Dialogs.updateColorScheme(this)
 
+            if(chartDuration != null) {
+                chartDuration!!.progress = sharedPref.getInt("test_chart_duration", 4)
+                chartDuration!!.setOnSeekBarChangeListener(object: OnSeekBarChangeListener {
+                    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                        Log.i(LOG_ID, "Chart duration changed to $progress")
+                        sharedPref.edit().putInt("test_chart_duration", progress).apply()
+                    }
+                    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+                    override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+                })
+            }
+
             if (requestPermission())
                 GlucoDataServiceMobile.start(this)
             TextToSpeechUtils.initTextToSpeech(this)
-            chartCreator = ChartCreator(chart, this)
+            chartCreator = ChartCreator(chart, this, "test_chart_duration")
             chartCreator.create()
-            chartBitmap = ChartBitmap(chartImage, this)
+            chartBitmap = ChartBitmapView(chartImage, this, "test_chart_duration")
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }

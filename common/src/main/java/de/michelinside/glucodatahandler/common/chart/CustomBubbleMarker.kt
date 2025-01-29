@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
+import android.text.format.DateUtils
 import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -15,7 +16,7 @@ import com.github.mikephil.charting.utils.MPPointF
 import de.michelinside.glucodatahandler.common.R
 import java.text.DateFormat
 
-class CustomBubbleMarker(context: Context) : MarkerView(context, R.layout.marker_layout) {
+class CustomBubbleMarker(context: Context, private val showDate: Boolean = false) : MarkerView(context, R.layout.marker_layout) {
     private val LOG_ID = "GDH.Chart.MarkerView"
     private val arrowSize = 35
     private val arrowCircleOffset = 0f
@@ -26,15 +27,19 @@ class CustomBubbleMarker(context: Context) : MarkerView(context, R.layout.marker
         try {
             isGlucose = highlight.dataSetIndex == 0
             e?.let {
+                val dateValue = TimeValueFormatter.from_chart_x(e.x)
+                val date: TextView = this.findViewById(R.id.date)
+                date.visibility = if(showDate && !DateUtils.isToday(dateValue.time)) VISIBLE else GONE
                 val time: TextView = this.findViewById(R.id.time)
                 val glucose: TextView = this.findViewById(R.id.glucose)
                 val layout: LinearLayoutCompat = this.findViewById(R.id.marker_layout)
                 if(isGlucose) {
-                    time.text = DateFormat.getTimeInstance(DateFormat.DEFAULT)
-                        .format(TimeValueFormatter.from_chart_x(e.x))
+                    date.text = DateFormat.getDateInstance(DateFormat.SHORT).format(dateValue)
+                    time.text = DateFormat.getTimeInstance(DateFormat.DEFAULT).format(dateValue)
                     glucose.text = GlucoseFormatter.getValueAsString(e.y)
                     layout.visibility = VISIBLE
                 } else {
+                    date.text = ""
                     time.text = ""
                     glucose.text = ""
                     layout.visibility = GONE

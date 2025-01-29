@@ -153,11 +153,10 @@
             android:textColor="#FFFFFF"
             android:textSize="14sp" />
 
-            <de.michelinside.glucodatahandler.common.chart.GlucoseChart
-                android:id="@+id/chart"
+            <ImageView
+                android:id="@+id/graphImage"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                />
+                android:layout_height="100dp" />
 
             <View
                 android:layout_width="match_parent"
