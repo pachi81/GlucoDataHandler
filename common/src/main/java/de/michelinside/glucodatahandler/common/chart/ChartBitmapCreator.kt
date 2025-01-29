@@ -11,7 +11,7 @@ import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 
-class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: String = ""): ChartCreator(chart, context, durationPref) {
+class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: String = "", val forComplication: Boolean = false): ChartCreator(chart, context, durationPref) {
     private val LOG_ID = "GDH.Chart.BitmapCreator"
     private var bitmap: Bitmap? = null
     override val resetChart = true
@@ -43,6 +43,12 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
 
     override fun getMaxRange(): Long {
         return getDefaultRange()
+    }
+
+    override fun getDefaultMaxValue(): Float {
+        if(forComplication)
+            return maxOf(super.getDefaultMaxValue(), 310F)
+        return super.getDefaultMaxValue()
     }
 
     override fun updateChart(dataSet: LineDataSet) {

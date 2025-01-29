@@ -197,7 +197,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             //dataSet.colors = mutableListOf<Int>()
             dataSet.circleColors = mutableListOf<Int>()
             //dataSet.lineWidth = 1F
-            dataSet.circleRadius = 2F
+            dataSet.circleRadius = 3F
             dataSet.setDrawValues(false)
             dataSet.setDrawCircleHole(false)
             dataSet.axisDependency = YAxis.AxisDependency.RIGHT
@@ -267,13 +267,17 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         if(ReceiveData.targetMaxRaw > 0F)
             chart.axisRight.addLimitLine(createLimitLine(ReceiveData.targetMaxRaw))
         chart.axisRight.axisMinimum = Constants.GLUCOSE_MIN_VALUE.toFloat()-10F
-        chart.axisRight.axisMaximum = ReceiveData.highRaw+10
+        chart.axisRight.axisMaximum = getDefaultMaxValue()
         chart.axisLeft.axisMinimum = chart.axisRight.axisMinimum
         chart.axisLeft.axisMaximum = chart.axisRight.axisMaximum
         updateYAxisLabelCount()
         chart.isScaleXEnabled = false
         chart.invalidate()
         chart.waitForInvalidate()
+    }
+
+    protected open fun getDefaultMaxValue() : Float {
+        return ReceiveData.highRaw + 10
     }
 
     protected fun stopDataSync() {
@@ -421,7 +425,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         val right = isRight()
         val left = isLeft()
         Log.v(LOG_ID, "Min: ${chart.xAxis.axisMinimum} - visible: ${chart.lowestVisibleX} - Max: ${chart.xAxis.axisMaximum} - visible: ${chart.highestVisibleX} - isLeft: ${left} - isRight: ${right}" )
-        var diffTimeMin = TimeUnit.MILLISECONDS.toMinutes(TimeValueFormatter.from_chart_x(chart.highestVisibleX).time - TimeValueFormatter.from_chart_x(chart.lowestVisibleX).time)
+        val diffTimeMin = TimeUnit.MILLISECONDS.toMinutes(TimeValueFormatter.from_chart_x(chart.highestVisibleX).time - TimeValueFormatter.from_chart_x(chart.lowestVisibleX).time)
         if(!chart.highlighted.isNullOrEmpty() && chart.highlighted[0].dataSetIndex != 0) {
             Log.v(LOG_ID, "Unset current highlighter")
             chart.highlightValue(null)
@@ -468,10 +472,6 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             chart.setVisibleXRangeMinimum(60F)
             chart.setVisibleXRangeMaximum(60F*24F)
         }
-    }
-
-    protected open fun durationChanged() {
-        invalidateChart(getDefaultRange(), true, true)
     }
 
     private fun getFirstTimestamp(): Long {
