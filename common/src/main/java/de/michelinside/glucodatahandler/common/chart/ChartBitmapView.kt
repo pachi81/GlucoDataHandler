@@ -3,7 +3,6 @@ package de.michelinside.glucodatahandler.common.chart
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.ImageView
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
@@ -38,7 +37,7 @@ class ChartBitmapView(val imageView: ImageView, val context: Context, durationPr
         if(dataSource == NotifySource.GRAPH_CHANGED && extras?.getInt(Constants.GRAPH_ID) == chartBitmap.chartId) {
             GlobalScope.launch(Dispatchers.Main) {
                 try {
-                    Log.i(LOG_ID, "Update bitmap")
+                    Log.i(LOG_ID, "Update bitmap for id ${chartBitmap.chartId}")
                     imageView.setImageBitmap(chartBitmap.getBitmap())
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Update bitmap exception: " + exc.toString())

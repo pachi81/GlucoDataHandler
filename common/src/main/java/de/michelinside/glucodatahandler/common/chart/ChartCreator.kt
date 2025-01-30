@@ -30,7 +30,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.math.RoundingMode
@@ -149,8 +148,6 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         chart.marker = null
         chart.notifyDataSetChanged()
         chart.clear()
-        chart.invalidate()
-        chart.waitForInvalidate()
     }
 
     protected open fun initXaxis() {
@@ -185,7 +182,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
 
     private fun createLimitLine(limit: Float): LimitLine {
         val line = LimitLine(limit)
-        line.lineColor = context.resources.getColor(R.color.gray)
+        line.lineColor = context.resources.getColor(R.color.chart_limit_line_color)
         return line
     }
 
@@ -272,8 +269,6 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         chart.axisLeft.axisMaximum = chart.axisRight.axisMaximum
         updateYAxisLabelCount()
         chart.isScaleXEnabled = false
-        chart.invalidate()
-        chart.waitForInvalidate()
     }
 
     protected open fun getDefaultMaxValue() : Float {
@@ -281,10 +276,13 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     }
 
     protected fun stopDataSync() {
-        if(dataSyncJob != null) {
-            runBlocking {
-                Log.d(LOG_ID, "stop data sync - wait for current execution")
-                dataSyncJob!!.cancelAndJoin()
+        if(dataSyncJob != null && dataSyncJob!!.isActive) {
+            dataSyncJob!!.cancel()
+            if(dataSyncJob!!.isActive) {
+                runBlocking {
+                    Log.d(LOG_ID, "stop data sync - wait for current execution")
+                    dataSyncJob!!.join()
+                }
             }
         }
     }
@@ -465,7 +463,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             Log.v(LOG_ID, "Invalidate chart")
             chart.setVisibleXRangeMaximum(diffTimeMin.toFloat())
             setXRange = true
-            chart.invalidate()
+            chart.postInvalidate()
         }
 
         if(setXRange) {
@@ -505,7 +503,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     protected fun update(values: List<GlucoseValue>) {
         Log.d(LOG_ID, "update called for ${values.size} value")
         if(values.isNotEmpty()) {
-            if(resetChart || values.first().timestamp != getFirstTimestamp() || (abs(values.size-getEntryCount()) > 5)) {
+            if(resetChart || values.first().timestamp != getFirstTimestamp() || (getEntryCount() > 0 && abs(values.size-getEntryCount()) > 5)) {
                 resetData(values)
                 return
             }
@@ -522,7 +520,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     protected fun resetChartData() {
         if(chart.data != null) {
             Log.d(LOG_ID, "Reset chart data")
-            chart.highlightValue(null)
+            //chart.highlightValue(null)
             val dataSet = chart.data.getDataSetByIndex(0) as LineDataSet
             dataSet.clear()
             dataSet.setColors(0)
@@ -563,8 +561,11 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
 
     protected fun createBitmap(): Bitmap? {
         try {
-            if(chart.width > 0 && chart.height > 0)
+            chart.waitForInvalidate()
+            if(chart.width > 0 && chart.height > 0) {
+                Log.d(LOG_ID, "Draw bitmap")
                 return chart.drawToBitmap()
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "getBitmap exception: " + exc.message.toString() )
         }

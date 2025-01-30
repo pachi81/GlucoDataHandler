@@ -20,4 +20,5 @@
     <color name="transparent_widget_textcolor">@color/white</color>
     <color name="transparent_marker_background">#77000000</color>
     <color name="chart_label_color">@color/black</color>
+    <color name="chart_limit_line_color">#FF444444</color>
 </resources>

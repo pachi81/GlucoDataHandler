@@ -156,7 +156,7 @@
             <ImageView
                 android:id="@+id/graphImage"
                 android:layout_width="match_parent"
-                android:layout_height="100dp" />
+                android:layout_height="70dp" />
 
             <View
                 android:layout_width="match_parent"

@@ -59,9 +59,8 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
             chart.data = LineData()
         addEmptyTimeData()
         chart.notifyDataSetChanged()
-        chart.invalidate()
-        chart.waitForInvalidate()
-        bitmap = createBitmap()
+        bitmap = null  // reset
+        chart.postInvalidate()
         InternalNotifier.notify(context, NotifySource.GRAPH_CHANGED, Bundle().apply { putInt(Constants.GRAPH_ID, chart.id) })
     }
 

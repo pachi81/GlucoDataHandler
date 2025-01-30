@@ -2,13 +2,14 @@ package de.michelinside.glucodatahandler.common.chart
 
 import android.content.Context
 import android.graphics.Canvas
+import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import com.github.mikephil.charting.charts.LineChart
 
 class GlucoseChart: LineChart {
-    private val LOG_ID = "GDH.Chart.GlucoseChart"
+    private var LOG_ID = "GDH.Chart.GlucoseChart"
 
     constructor(context: Context?) : super(context)
 
@@ -20,7 +21,10 @@ class GlucoseChart: LineChart {
         defStyle
     )
 
-    private var processing = false
+    private var isInvalidating = false
+    init {
+        LOG_ID = "GDH.Chart.GlucoseChart." + id.toString()
+    }
 
     override fun getId(): Int {
         if(super.getId() == View.NO_ID) {
@@ -29,20 +33,30 @@ class GlucoseChart: LineChart {
         return super.getId()
     }
 
+    override fun postInvalidate() {
+        Log.v(LOG_ID, "postInvalidate")
+        isInvalidating = true
+        super.postInvalidate()
+        Log.v(LOG_ID, "postInvalidate done")
+    }
+
     override fun invalidate() {
-        processing = true
+        isInvalidating = true
         try {
+            Log.v(LOG_ID, "invalidate - shown: $isShown")
             super.invalidate()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "invalidate exception: ${exc.message}\n${exc.stackTraceToString()}")
         }
-        processing = false
+        isInvalidating = false
     }
 
-
     fun waitForInvalidate() {
-        while(processing) {
-            Thread.sleep(10)
+        if(isInvalidating && Looper.myLooper() != Looper.getMainLooper()) {
+            Log.d(LOG_ID, "waitForDrawing")
+            while(isInvalidating) {
+                Thread.sleep(10)
+            }
         }
     }
 
@@ -57,9 +71,19 @@ class GlucoseChart: LineChart {
 
     override fun onDraw(canvas: Canvas) {
         try {
+            Log.v(LOG_ID, "onDraw - min: ${xAxis.axisMinimum} - max: ${xAxis.axisMaximum}")
+            if(xAxis.axisMinimum > xAxis.axisMaximum) {
+                Log.w(LOG_ID, "Skip drawing as min: ${xAxis.axisMinimum} > max: ${xAxis.axisMaximum}")
+                return
+            }
             super.onDraw(canvas)
+            Log.v(LOG_ID, "drawn")
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "onDraw exception: ${exc.message}\n${exc.stackTraceToString()}")
+            if(xAxis.axisMinimum > xAxis.axisMaximum) {  // ignore this, as it is caused during reset and draw...
+                Log.w(LOG_ID, "onDraw exception: ${exc.message}")
+            } else {
+                Log.e(LOG_ID, "onDraw exception: ${exc.message}\n${exc.stackTraceToString()}")
+            }
         }
     }
 

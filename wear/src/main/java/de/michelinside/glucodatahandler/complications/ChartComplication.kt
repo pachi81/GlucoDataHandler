@@ -57,7 +57,7 @@ open class ChartComplication(): SuspendingComplicationDataSourceService() {
         private fun createBitmap() {
             if(chartBitmap == null) {
                 Log.i(LOG_ID, "Create bitmap")
-                chartBitmap = ChartBitmap(GlucoDataService.context!!, "", size, 275, true)
+                chartBitmap = ChartBitmap(GlucoDataService.context!!, "", size, 250, true)
                 InternalNotifier.addNotifier(GlucoDataService.context!!, ChartComplicationUpdater, mutableSetOf(NotifySource.GRAPH_CHANGED))
             }
         }
@@ -136,7 +136,7 @@ open class ChartComplication(): SuspendingComplicationDataSourceService() {
         val scale = size / originalWidth
 
         val xTranslation = 0.0f
-        val yTranslation = (size - originalHeight * scale) / 1.9f
+        val yTranslation = (size - originalHeight * scale) / 2f
 
         Log.v(LOG_ID, "scale: $scale, xTranslation: $xTranslation, yTranslation: $yTranslation")
 
