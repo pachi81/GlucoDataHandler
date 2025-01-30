@@ -133,8 +133,27 @@
         android:text="@string/menu_sources"
         />
 
+
+    <de.michelinside.glucodatahandler.common.chart.GlucoseChart
+        android:id="@+id/chart"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        />
+
+    <SeekBar
+        android:id="@+id/chartDuration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="12"
+        android:min="0"
+        android:progress="4" />
+    <ImageView
+        android:id="@+id/graphImage"
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
+
     <LinearLayout
-        android:id="@+id/space_table"
+        android:id="@+id/space_table2"
         android:layout_height="20dp"
         android:layout_width="0dp"
         android:orientation="horizontal">

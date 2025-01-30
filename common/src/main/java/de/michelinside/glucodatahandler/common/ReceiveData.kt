@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notification.AlarmType
@@ -64,6 +65,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var cob: Float = Float.NaN
     var iobCobTime: Long = 0
     private var lowValue: Float = 70F
+    val lowRaw: Float get() = lowValue
     val low: Float get() {
         if(isMmol && lowValue > 0F)  // mmol/l
         {
@@ -72,6 +74,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return lowValue
     }
     private var highValue: Float = 240F
+    val highRaw: Float get() = highValue
     val high: Float get() {
         if(isMmol && highValue > 0F)  // mmol/l
         {
@@ -80,6 +83,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return highValue
     }
     private var targetMinValue = 90F
+    val targetMinRaw: Float get() = targetMinValue
     val targetMin: Float get() {
         if(isMmol)  // mmol/l
         {
@@ -88,6 +92,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return targetMinValue
     }
     private var targetMaxValue = 165F
+    val targetMaxRaw: Float get() = targetMaxValue
     val targetMax: Float get() {
         if(isMmol)  // mmol/l
         {
@@ -139,6 +144,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 initialized = true
                 unitMgDl = context.resources.getString(R.string.unit_mgdl)
                 unitMmol = context.resources.getString(R.string.unit_mmol)
+                dbAccess.init(context)
                 AlarmHandler.initData(context)
                 readTargets(context)
                 loadExtras(context)
@@ -317,6 +323,19 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         if(((alarm and 3) == 2) || (targetMax > 0 && glucose > targetMax ))
             return AlarmType.HIGH
         return AlarmType.OK
+    }
+
+    fun getValueColor(rawValue: Int): Int {
+        val customValue = if(isMmol) GlucoDataUtils.mgToMmol(rawValue.toFloat()) else rawValue.toFloat()
+        if(high>0F && customValue >= high)
+            return getAlarmTypeColor(AlarmType.VERY_HIGH)
+        if(low>0F && customValue <= low)
+            return getAlarmTypeColor(AlarmType.VERY_LOW)
+        if(targetMin>0F && customValue < targetMin)
+            return getAlarmTypeColor(AlarmType.LOW)
+        if(targetMax>0F && customValue > targetMax)
+            return getAlarmTypeColor(AlarmType.HIGH)
+        return getAlarmTypeColor(AlarmType.OK)
     }
 
     private fun calculateAlarm(): Int {
@@ -540,6 +559,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                             alarm = alarm or 16
                         }
                     }
+
+                    dbAccess.addGlucoseValue(time, rawValue)
 
                     val notifySource = if(interApp) NotifySource.MESSAGECLIENT else NotifySource.BROADCAST
 

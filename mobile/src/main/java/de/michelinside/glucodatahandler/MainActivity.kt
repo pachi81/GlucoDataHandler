@@ -19,6 +19,8 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
@@ -36,6 +38,9 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
+import de.michelinside.glucodatahandler.common.chart.ChartBitmapView
+import de.michelinside.glucodatahandler.common.chart.ChartCreator
+import de.michelinside.glucodatahandler.common.chart.GlucoseChart
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmState
 import de.michelinside.glucodatahandler.common.notification.AlarmType
@@ -75,12 +80,17 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var btnSources: Button
     private lateinit var sharedPref: SharedPreferences
     private lateinit var optionsMenu: Menu
+    private lateinit var chart: GlucoseChart
+    private lateinit var chartImage: ImageView
+    private var chartDuration: SeekBar? = null
     private var alarmIcon: MenuItem? = null
     private var snoozeMenu: MenuItem? = null
     private var floatingWidgetItem: MenuItem? = null
     private val LOG_ID = "GDH.Main"
     private var requestNotificationPermission = false
     private var doNotUpdate = false
+    private lateinit var chartCreator: ChartCreator
+    private lateinit var chartBitmap: ChartBitmapView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -103,6 +113,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableAlarms = findViewById(R.id.tableAlarms)
             tableDetails = findViewById(R.id.tableDetails)
             tableNotes = findViewById(R.id.tableNotes)
+            chart = findViewById(R.id.chart)
+            chartImage = findViewById(R.id.graphImage)
+            chartDuration = findViewById(R.id.chartDuration)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -123,9 +136,24 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }
             Dialogs.updateColorScheme(this)
 
+            if(chartDuration != null) {
+                chartDuration!!.progress = sharedPref.getInt("test_chart_duration", 4)
+                chartDuration!!.setOnSeekBarChangeListener(object: OnSeekBarChangeListener {
+                    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                        Log.i(LOG_ID, "Chart duration changed to $progress")
+                        sharedPref.edit().putInt("test_chart_duration", progress).apply()
+                    }
+                    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+                    override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+                })
+            }
+
             if (requestPermission())
                 GlucoDataServiceMobile.start(this)
             TextToSpeechUtils.initTextToSpeech(this)
+            chartCreator = ChartCreator(chart, this, "test_chart_duration")
+            chartCreator.create()
+            chartBitmap = ChartBitmapView(chartImage, this, "test_chart_duration")
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -174,6 +202,14 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
         }
     }
+
+    override fun onDestroy() {
+        Log.v(LOG_ID, "onDestroy called")
+        super.onDestroy()
+        chartCreator.close()
+        chartBitmap.close()
+    }
+
     private val requestPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -207,17 +243,15 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 .setTitle(CR.string.request_exact_alarm_title)
                 .setMessage(CR.string.request_exact_alarm_summary)
                 .setPositiveButton(CR.string.button_ok) { dialog, which ->
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        try {
-                            startActivity(
-                                Intent(
-                                    ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
-                                    Uri.parse("package:$packageName")
-                                )
+                    try {
+                        startActivity(
+                            Intent(
+                                ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                                Uri.parse("package:$packageName")
                             )
-                        } catch (exc: Exception) {
-                            Log.e(LOG_ID, "requestExactAlarmPermission exception: " + exc.message.toString() )
-                        }
+                        )
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "requestExactAlarmPermission exception: " + exc.message.toString() )
                     }
                 }
                 .setNegativeButton(CR.string.button_cancel) { dialog, which ->
@@ -539,7 +573,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             } else {
                 btnSources.visibility = View.GONE
             }
-
+            //chartHandler.update()
             updateNotesTable()
             updateAlarmsTable()
             updateConnectionsTable()
