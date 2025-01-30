@@ -49,6 +49,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     private var dataSyncJob: Job? = null
     protected open val resetChart = false
     protected var durationHours = 4
+    protected open val yAxisOffset = -15F
+    protected open val circleRadius = 2F
 
     private var graphPrefList = mutableSetOf(
         Constants.SHARED_PREF_LOW_GLUCOSE,
@@ -166,7 +168,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         chart.axisRight.setDrawZeroLine(false)
         chart.axisRight.setDrawAxisLine(false)
         chart.axisRight.setDrawGridLines(false)
-        chart.axisRight.xOffset = -15F
+        chart.axisRight.xOffset = yAxisOffset
         chart.axisRight.textColor = context.resources.getColor(R.color.text_color)
 
         chart.axisLeft.isEnabled = showOtherUnit()
@@ -175,7 +177,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             chart.axisLeft.setDrawZeroLine(false)
             chart.axisLeft.setDrawAxisLine(false)
             chart.axisLeft.setDrawGridLines(false)
-            chart.axisLeft.xOffset = -15F
+            chart.axisLeft.xOffset = yAxisOffset
             chart.axisLeft.textColor = context.resources.getColor(R.color.text_color)
         }
     }
@@ -194,7 +196,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             //dataSet.colors = mutableListOf<Int>()
             dataSet.circleColors = mutableListOf<Int>()
             //dataSet.lineWidth = 1F
-            dataSet.circleRadius = 3F
+            dataSet.circleRadius = circleRadius
             dataSet.setDrawValues(false)
             dataSet.setDrawCircleHole(false)
             dataSet.axisDependency = YAxis.AxisDependency.RIGHT
@@ -269,6 +271,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         chart.axisLeft.axisMaximum = chart.axisRight.axisMaximum
         updateYAxisLabelCount()
         chart.isScaleXEnabled = false
+        chart.postInvalidate()
+        chart.waitForInvalidate()
     }
 
     protected open fun getDefaultMaxValue() : Float {

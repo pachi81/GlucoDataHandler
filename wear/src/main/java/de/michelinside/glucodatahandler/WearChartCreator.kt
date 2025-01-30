@@ -5,8 +5,10 @@ import android.util.Log
 import de.michelinside.glucodatahandler.common.chart.ChartCreator
 import de.michelinside.glucodatahandler.common.chart.GlucoseChart
 
-class WearChartCreator(chart: GlucoseChart, context: Context) : ChartCreator(chart, context) {
+class WearChartCreator(chart: GlucoseChart, context: Context, durationPref: String) : ChartCreator(chart, context, durationPref) {
     private val LOG_ID = "GDH.Chart.WearCreator"
+
+    override val yAxisOffset = -150F
 
     override fun initXaxis() {
         Log.v(LOG_ID, "initXaxis")
@@ -15,7 +17,7 @@ class WearChartCreator(chart: GlucoseChart, context: Context) : ChartCreator(cha
     }
 
     override fun getYAxisInterval(): Float {
-        return 80F
+        return 50F
     }
 
     override fun showOtherUnit(): Boolean = false
@@ -31,4 +33,5 @@ class WearChartCreator(chart: GlucoseChart, context: Context) : ChartCreator(cha
         chart.axisLeft.isEnabled = false
         */
     }
+
 }

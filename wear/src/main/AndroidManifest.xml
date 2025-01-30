@@ -51,6 +51,17 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".GraphActivity"
+            android:label="@string/graph"
+            android:launchMode="singleTop"
+            android:parentActivityName=".WearActivity"
+            android:theme="@style/Theme.NoSwipe"
+            android:taskAffinity="">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".WearActivity" />
+        </activity>
+        <activity
             android:name=".settings.SourcesActivity"
             android:label="@string/menu_sources"
             android:launchMode="singleTop"

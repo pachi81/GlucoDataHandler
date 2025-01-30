@@ -123,6 +123,12 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 startActivity(intent)
             }
             chartBitmap = ChartBitmapView(chartImage, this, Constants.SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION)
+            chartImage.setOnClickListener {
+                Log.v(LOG_ID, "Chart Image clicked!")
+                val intent = Intent(this, GraphActivity::class.java)
+                startActivity(intent)
+            }
+
             if(requestPermission())
                 GlucoDataServiceWear.start(this)
             PackageUtils.updatePackages(this)

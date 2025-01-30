@@ -172,7 +172,7 @@ open class ChartComplication(): SuspendingComplicationDataSourceService() {
     ): PendingIntent {
         return PackageUtils.getAppIntent(
             applicationContext,
-            WearActivity::class.java,
+            GraphActivity::class.java,
             complicationInstanceId
         )
     }

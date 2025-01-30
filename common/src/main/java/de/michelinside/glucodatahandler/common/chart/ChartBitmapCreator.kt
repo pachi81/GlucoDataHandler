@@ -15,6 +15,7 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
     private val LOG_ID = "GDH.Chart.BitmapCreator"
     private var bitmap: Bitmap? = null
     override val resetChart = true
+    override val circleRadius = 3F
 
     override fun initXaxis() {
         Log.v(LOG_ID, "initXaxis")
