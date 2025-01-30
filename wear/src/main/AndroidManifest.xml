@@ -808,7 +808,7 @@
             android:name=".ChartComplication"
             android:exported="true"
             android:icon="@drawable/icon_rate"
-            android:label="@string/chart"
+            android:label="@string/graph"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />

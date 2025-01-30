@@ -6,7 +6,10 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.SeekBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatSeekBar
 import androidx.appcompat.widget.SwitchCompat
 import de.michelinside.glucodatahandler.ActiveComplicationHandler
 import de.michelinside.glucodatahandler.GlucoDataServiceWear
@@ -24,6 +27,8 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var switchRelativeTime: SwitchCompat
     private lateinit var switchBatteryLevel: SwitchCompat
     private lateinit var btnComplicationTapAction: Button
+    private lateinit var seekGraphDuration: AppCompatSeekBar
+    private lateinit var txtGraphDurationLevel: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
             Log.v(LOG_ID, "onCreate called")
@@ -122,6 +127,15 @@ class SettingsActivity : AppCompatActivity() {
                     Log.e(LOG_ID, "Changing battery level exception: " + exc.message.toString() )
                 }
             }
+
+
+            seekGraphDuration = findViewById(R.id.seekGraphDuration)
+            txtGraphDurationLevel = findViewById(R.id.txtGraphDurationLevel)
+
+            seekGraphDuration.progress = sharedPref.getInt(Constants.SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION, 2)
+            txtGraphDurationLevel.text = getGraphDurationString()
+            seekGraphDuration.setOnSeekBarChangeListener(SeekBarChangeListener(Constants.SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION, txtGraphDurationLevel))
+
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
@@ -153,4 +167,50 @@ class SettingsActivity : AppCompatActivity() {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
     }
+
+
+    private fun getGraphDurationString(): String {
+        return "${seekGraphDuration.progress}h"
+    }
+
+    inner class SeekBarChangeListener(val preference: String, val txtLevel: TextView) : SeekBar.OnSeekBarChangeListener {
+        private val LOG_ID = "GDH.Main.Settings.SeekBar"
+        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+            try {
+                Log.v(LOG_ID, "onProgressChanged called for $preference with progress=$progress - fromUser=$fromUser")
+                if(fromUser) {
+                    txtLevel.text = getGraphDurationString()
+                    with(sharedPref.edit()) {
+                        putInt(preference, progress)
+                        apply()
+                    }
+                }
+            } catch( exc: Exception ) {
+                Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
+            }
+        }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            try {
+                Log.v(LOG_ID, "onStartTrackingTouch called")
+            } catch( exc: Exception ) {
+                Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
+            }
+        }
+
+        override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            try {
+                if(seekBar != null) {
+                    Log.v(LOG_ID, "onStopTrackingTouch called with current progress: ${seekBar.progress}")
+                    with(sharedPref.edit()) {
+                        putInt(preference, seekBar.progress)
+                        apply()
+                    }
+                }
+            } catch( exc: Exception ) {
+                Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
+            }
+        }
+    }
+
 }

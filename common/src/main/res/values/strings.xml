@@ -770,6 +770,8 @@
     <string name="alarm_snooze_on_notification_summary">Choose up to 3 snooze durations to display as buttons on the alarm notification.</string>
     <string name="pref_show_iob_cob">Show IOB/COB values</string>
     <string name="pref_show_iob_cob_summary">Show IOB and COB values, if available.</string>
-    <string name="chart">Graph</string>
+    <string name="graph">Graph</string>
+    <string name="graph_duration">Graph duration</string>
+    <string name="graph_duration_wear_summary">Number of hours shown in graph in complication and on main screen.</string>
 
 </resources>

@@ -122,7 +122,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 val intent = Intent(this, AlarmsActivity::class.java)
                 startActivity(intent)
             }
-            chartBitmap = ChartBitmapView(chartImage, this)
+            chartBitmap = ChartBitmapView(chartImage, this, Constants.SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION)
             if(requestPermission())
                 GlucoDataServiceWear.start(this)
             PackageUtils.updatePackages(this)
