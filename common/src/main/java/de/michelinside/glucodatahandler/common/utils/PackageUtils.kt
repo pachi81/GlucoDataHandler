@@ -87,7 +87,7 @@ object PackageUtils {
     fun getTapAction(
         context: Context,
         tapAction: String?
-    ): Pair<Intent?, Boolean> {  // Boolean: true = Broadcase - false = Activity
+    ): Pair<Intent?, Boolean> {  // Boolean: true = Broadcast - false = Activity
         Log.d(LOG_ID, "Get tap action $tapAction")
         if (tapAction == null && context.packageName != null) {
             return getTapAction(context, context.packageName)

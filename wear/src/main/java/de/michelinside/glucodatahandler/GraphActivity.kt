@@ -31,6 +31,7 @@ class GraphActivity : AppCompatActivity() {
         try {
             Log.v(LOG_ID, "onPause called")
             super.onPause()
+            chartCreator.pause()
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
@@ -40,6 +41,7 @@ class GraphActivity : AppCompatActivity() {
         try {
             Log.v(LOG_ID, "onResume called")
             super.onResume()
+            chartCreator.resume()
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }

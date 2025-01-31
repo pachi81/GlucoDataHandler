@@ -29,6 +29,7 @@ object Constants {
     const val ACTION_FLOATING_WIDGET_TOGGLE = ACTION_PREFIX + "floating_widget_toggle"
     const val ACTION_DUMMY_VALUE = ACTION_PREFIX + "dummy_value"
     const val ACTION_SPEAK = ACTION_PREFIX + "speak"
+    const val ACTION_GRAPH = ACTION_PREFIX + "show_graph"
 
     const val IS_SECOND = BuildConfig.BUILD_TYPE == "second"
 

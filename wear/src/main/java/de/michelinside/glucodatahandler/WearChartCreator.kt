@@ -8,7 +8,8 @@ import de.michelinside.glucodatahandler.common.chart.GlucoseChart
 class WearChartCreator(chart: GlucoseChart, context: Context, durationPref: String) : ChartCreator(chart, context, durationPref) {
     private val LOG_ID = "GDH.Chart.WearCreator"
 
-    override val yAxisOffset = -150F
+    override val yAxisOffset = -100F
+    override var durationHours = 2
 
     override fun initXaxis() {
         Log.v(LOG_ID, "initXaxis")
@@ -25,13 +26,6 @@ class WearChartCreator(chart: GlucoseChart, context: Context, durationPref: Stri
     override fun initYaxis() {
         Log.v(LOG_ID, "initYaxis")
         super.initYaxis()
-        /*
-        chart.axisRight.setDrawAxisLine(false)
-        chart.axisRight.setDrawLabels(false)
-        chart.axisRight.setDrawZeroLine(false)
-        chart.axisRight.setDrawGridLines(false)
-        chart.axisLeft.isEnabled = false
-        */
     }
 
 }
