@@ -38,6 +38,12 @@ interface GlucoseValueDao {
     @Query("SELECT COUNT(*) from glucose_values WHERE timestamp >= :minTime")
     fun getCountByTime(minTime: Long): Int
 
+    @Query("DELETE FROM glucose_values WHERE timestamp = :timestamp")
+    fun deleteValue(timestamp: Long)
+
+    @Query("DELETE FROM glucose_values WHERE timestamp IN (:timestamps)")
+    fun deleteValues(timestamps: List<Long>)
+
     @Query("DELETE FROM glucose_values WHERE timestamp < :minTime")
     fun deleteOldValues(minTime: Long)
 

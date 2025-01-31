@@ -96,6 +96,17 @@ object dbAccess {
         }.await()
     }
 
+    fun deleteValues(timestamps: List<Long>) = runBlocking {
+        if(database != null) {
+            scope.async {
+                scope.launch {
+                    Log.d(LOG_ID, "delete - ${timestamps.size} values")
+                    database!!.glucoseValuesDao().deleteValues(timestamps)
+                }
+            }
+        }
+    }
+
     fun deleteAllValues() = runBlocking {
         scope.async {
             scope.launch {

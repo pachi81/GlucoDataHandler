@@ -271,8 +271,6 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         chart.axisLeft.axisMaximum = chart.axisRight.axisMaximum
         updateYAxisLabelCount()
         chart.isScaleXEnabled = false
-        chart.postInvalidate()
-        chart.waitForInvalidate()
     }
 
     protected open fun getDefaultMaxValue() : Float {
@@ -463,12 +461,12 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             }
             Log.v(LOG_ID, "moveViewToX ${chart.xChartMax}")
             chart.moveViewToX(chart.xChartMax)
-        } else {
+        } /*else {
             Log.v(LOG_ID, "Invalidate chart")
             chart.setVisibleXRangeMaximum(diffTimeMin.toFloat())
             setXRange = true
             chart.postInvalidate()
-        }
+        }*/
 
         if(setXRange) {
             chart.setVisibleXRangeMinimum(60F)
@@ -504,10 +502,29 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         return 0L
     }
 
+    private fun checkValues(values: List<GlucoseValue>): Boolean {
+        var lastTime = 0L
+        val deleteValues = mutableListOf<Long>()
+        values.forEach {
+            if(Utils.getTimeDiffMinute(it.timestamp, lastTime, RoundingMode.HALF_UP) == 0L) {
+                deleteValues.add(it.timestamp)
+            }
+            lastTime = it.timestamp
+        }
+        if(deleteValues.isNotEmpty()) {
+            Log.i(LOG_ID, "Delete ${deleteValues.size} duplicate values")
+            dbAccess.deleteValues(deleteValues)
+            return false
+        }
+        return true
+    }
+
     protected fun update(values: List<GlucoseValue>) {
-        Log.d(LOG_ID, "update called for ${values.size} value")
+        if(!checkValues(values))
+            return
+        Log.d(LOG_ID, "update called for ${values.size} values - resetChart: $resetChart - entries: ${getEntryCount()} - first value: ${values.first().timestamp} - first: ${getFirstTimestamp()}")
         if(values.isNotEmpty()) {
-            if(resetChart || values.first().timestamp != getFirstTimestamp() || (getEntryCount() > 0 && abs(values.size-getEntryCount()) > 5)) {
+            if(resetChart || values.first().timestamp != getFirstTimestamp() || (getEntryCount() > 0 && abs(values.size-getEntryCount()) > 1)) {
                 resetData(values)
                 return
             }

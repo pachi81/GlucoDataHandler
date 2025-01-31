@@ -452,6 +452,10 @@ object Utils {
         return round((System.currentTimeMillis()-time).toFloat()/60000, 0, roundingMode).toLong()
     }
 
+    fun getTimeDiffMinute(time1: Long, time2: Long, roundingMode: RoundingMode = RoundingMode.DOWN): Long {
+        return round((time1-time2).toFloat()/60000, 0, roundingMode).toLong()
+    }
+
     fun getUiTimeStamp(time: Long): String {
         if(getElapsedTimeMinute(time) >= (60*24))
             return DateFormat.getDateTimeInstance().format(Date(time))
