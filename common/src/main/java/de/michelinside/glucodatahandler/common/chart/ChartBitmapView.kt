@@ -14,7 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class ChartBitmapView(val imageView: ImageView, val context: Context, durationPref: String = ""): NotifierInterface {
+class ChartBitmapView(val imageView: ImageView, val context: Context, durationPref: String = "", showAxis: Boolean = false): NotifierInterface {
 
     private val LOG_ID = "GDH.Chart.BitmapView"
 
@@ -22,7 +22,8 @@ class ChartBitmapView(val imageView: ImageView, val context: Context, durationPr
     init {
         Log.v(LOG_ID, "init")
         InternalNotifier.addNotifier(context, this, mutableSetOf(NotifySource.GRAPH_CHANGED))
-        chartBitmap = ChartBitmap(context, durationPref)
+        chartBitmap = ChartBitmap(context, durationPref, showAxis = showAxis)
+        imageView.setImageBitmap(chartBitmap.getBitmap())
     }
 
     fun close() {

@@ -11,35 +11,36 @@ import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 
-class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: String = "", val forComplication: Boolean = false): ChartCreator(chart, context, durationPref) {
+class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: String = "", private val forComplication: Boolean = false, private val showAxis: Boolean = false): ChartCreator(chart, context, durationPref) {
     private val LOG_ID = "GDH.Chart.BitmapCreator"
     private var bitmap: Bitmap? = null
     override val resetChart = true
     override val circleRadius = 3F
+    override var durationHours = 2
 
     override fun initXaxis() {
         Log.v(LOG_ID, "initXaxis")
-        chart.xAxis.isEnabled = false
+        chart.xAxis.isEnabled = showAxis
+        if(chart.xAxis.isEnabled)
+            super.initXaxis()
     }
 
     override fun initYaxis() {
         Log.v(LOG_ID, "initYaxis")
-        chart.axisRight.setDrawAxisLine(false)
-        chart.axisRight.setDrawLabels(false)
-        chart.axisRight.setDrawZeroLine(false)
-        chart.axisRight.setDrawGridLines(false)
-        chart.axisLeft.isEnabled = false
+        if(showAxis) {
+            super.initYaxis()
+        } else {
+            chart.axisRight.setDrawAxisLine(false)
+            chart.axisRight.setDrawLabels(false)
+            chart.axisRight.setDrawZeroLine(false)
+            chart.axisRight.setDrawGridLines(false)
+            chart.axisLeft.isEnabled = false
+        }
     }
 
     override fun initChart(touchEnabled: Boolean) {
         super.initChart(false)
         chart.isDrawingCacheEnabled = false
-    }
-
-    override fun getDefaultRange(): Long {
-        if(durationPref.isNotEmpty())
-            return super.getDefaultRange()
-        return 120L
     }
 
     override fun getMaxRange(): Long {

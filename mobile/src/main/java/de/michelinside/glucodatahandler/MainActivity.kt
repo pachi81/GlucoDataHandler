@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             TextToSpeechUtils.initTextToSpeech(this)
             chartCreator = ChartCreator(chart, this, "test_chart_duration")
             chartCreator.create()
-            chartBitmap = ChartBitmapView(chartImage, this, "test_chart_duration")
+            chartBitmap = ChartBitmapView(chartImage, this, "test_chart_duration", true)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -177,6 +177,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             checkUncaughtException()
             doNotUpdate = false
             update()
+            chartCreator.resume()
             InternalNotifier.addNotifier(this, this, mutableSetOf(
                 NotifySource.BROADCAST,
                 NotifySource.IOB_COB_CHANGE,

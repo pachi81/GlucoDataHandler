@@ -72,10 +72,6 @@ class GlucoseChart: LineChart {
     override fun onDraw(canvas: Canvas) {
         try {
             Log.v(LOG_ID, "onDraw - min: ${xAxis.axisMinimum} - max: ${xAxis.axisMaximum}")
-            if(xAxis.axisMinimum > xAxis.axisMaximum) {
-                Log.w(LOG_ID, "Skip drawing as min: ${xAxis.axisMinimum} > max: ${xAxis.axisMaximum}")
-                return
-            }
             super.onDraw(canvas)
             Log.v(LOG_ID, "drawn")
         } catch (exc: Exception) {

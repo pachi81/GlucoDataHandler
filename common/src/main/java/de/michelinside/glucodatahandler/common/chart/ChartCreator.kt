@@ -48,7 +48,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     //private var createJob: Job? = null
     private var dataSyncJob: Job? = null
     protected open val resetChart = false
-    protected var durationHours = 4
+    protected open var durationHours = 4
     protected open val yAxisOffset = -15F
     protected open val circleRadius = 2F
 
@@ -69,7 +69,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             Log.d(LOG_ID, "init")
             ChartUtils.init(context)
             if(durationPref.isNotEmpty()) {
-                durationHours = sharedPref.getInt(durationPref, 4)
+                durationHours = sharedPref.getInt(durationPref, durationHours)
             }
             sharedPref.registerOnSharedPreferenceChangeListener(this)
             updateNotifier()
@@ -98,19 +98,40 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         }*/
     }
 
-    fun create() {
+    fun create(initData: Boolean = false) {
         waitForCreation()
-        Log.d(LOG_ID, "create")
         try {
+            Log.d(LOG_ID, "create")
             init()
             resetChart()
             initXaxis()
             initYaxis()
             initChart()
-            initData()
+            if(initData) {
+                initData()
+            } else {
+                initDataSet()
+            }
             created = true
+            Log.d(LOG_ID, "create done")
         } catch (exc: Exception) {
             Log.e(LOG_ID, "create exception: " + exc.message + " - " + exc.stackTraceToString())
+        }
+    }
+
+    fun pause() {
+        try {
+            stopDataSync()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "pause exception: " + exc.message.toString() )
+        }
+    }
+
+    fun resume() {
+        try {
+            startDataSync()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "resume exception: " + exc.message.toString() )
         }
     }
 
@@ -183,6 +204,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     }
 
     private fun createLimitLine(limit: Float): LimitLine {
+        Log.v(LOG_ID, "Create limit line for limit: $limit")
         val line = LimitLine(limit)
         line.lineColor = context.resources.getColor(R.color.chart_limit_line_color)
         return line
@@ -291,9 +313,15 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
 
     private fun initData() {
         initDataSet()
-        stopDataSync()
-        dataSyncJob = scope.launch {
-            dataSync()
+        startDataSync()
+    }
+
+    private fun startDataSync() {
+        if(dataSyncJob?.isActive != true) {
+            Log.v(LOG_ID, "startDataSync")
+            dataSyncJob = scope.launch {
+                dataSync()
+            }
         }
     }
 
@@ -307,7 +335,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         } catch (exc: CancellationException) {
             Log.d(LOG_ID, "dataSync cancelled")
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "dataSync exception: " + exc.message.toString() )
+            Log.e(LOG_ID, "dataSync exception: " + exc.message.toString() + "\n" + exc.stackTraceToString())
         }
     }
 
@@ -383,7 +411,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
 
         if(chart.data != null && chart.data.dataSetCount > 0) {
             val dataSet = chart.data.getDataSetByIndex(0) as LineDataSet
-            if (dataSet.values.isEmpty()) {
+            val values = dataSet.values.toList()
+            if (values.isEmpty()) {
                 Log.v(LOG_ID, "No values, set min and max")
                 minValue = minTime
                 maxValue = System.currentTimeMillis()
@@ -391,13 +420,13 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                 Log.v(
                     LOG_ID,
                     "Min time: ${Utils.getUiTimeStamp(minTime)} - first value: ${
-                        Utils.getUiTimeStamp(TimeValueFormatter.from_chart_x(dataSet.values.first().x).time)
-                    } - last value: ${Utils.getUiTimeStamp(TimeValueFormatter.from_chart_x(dataSet.values.last().x).time)}"
+                        Utils.getUiTimeStamp(TimeValueFormatter.from_chart_x(values.first().x).time)
+                    } - last value: ${Utils.getUiTimeStamp(TimeValueFormatter.from_chart_x(values.last().x).time)}"
                 )
-                if (TimeValueFormatter.from_chart_x(dataSet.values.first().x).time > minTime) {
+                if (TimeValueFormatter.from_chart_x(values.first().x).time > minTime) {
                     minValue = minTime
                 }
-                if (Utils.getElapsedTimeMinute(TimeValueFormatter.from_chart_x(dataSet.values.last().x).time) >= 1) {
+                if (Utils.getElapsedTimeMinute(TimeValueFormatter.from_chart_x(values.last().x).time) >= 1) {
                     maxValue = System.currentTimeMillis()
                 }
             }
@@ -520,16 +549,22 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     }
 
     protected fun update(values: List<GlucoseValue>) {
-        if(!checkValues(values))
-            return
-        Log.d(LOG_ID, "update called for ${values.size} values - resetChart: $resetChart - entries: ${getEntryCount()} - first value: ${values.first().timestamp} - first: ${getFirstTimestamp()}")
-        if(values.isNotEmpty()) {
-            if(resetChart || values.first().timestamp != getFirstTimestamp() || (getEntryCount() > 0 && abs(values.size-getEntryCount()) > 1)) {
-                resetData(values)
+        try {
+            if(!checkValues(values))
                 return
+            if(values.isNotEmpty()) {
+                Log.d(LOG_ID, "update called for ${values.size} values - resetChart: $resetChart - entries: ${getEntryCount()} - first value: ${values.first().timestamp} - first: ${getFirstTimestamp()}")
+                if(resetChart || values.first().timestamp != getFirstTimestamp() || (getEntryCount() > 0 && abs(values.size-getEntryCount()) > 1)) {
+                    resetData(values)
+                    return
+                }
+                val newValues = values.filter { data -> data.timestamp > getLastTimestamp() }
+                addEntries(newValues)
+            } else {
+                addEntries(values)
             }
-            val newValues = values.filter { data -> data.timestamp > getLastTimestamp() }
-            addEntries(newValues)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "update exception: " + exc.message.toString() + " - " + exc.stackTraceToString() )
         }
     }
 
@@ -539,7 +574,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     }
 
     protected fun resetChartData() {
-        if(chart.data != null) {
+        if(chart.data != null && chart.data.dataSetCount > 0) {
             Log.d(LOG_ID, "Reset chart data")
             //chart.highlightValue(null)
             val dataSet = chart.data.getDataSetByIndex(0) as LineDataSet
@@ -563,7 +598,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         Log.d(LOG_ID, "OnNotifyData: $dataSource")
         if(!init) {
             Log.w(LOG_ID, "Chart still not init - create!")
-            create()
+            create(true)
         }
         if(dataSource == NotifySource.TIME_VALUE) {
             Log.d(LOG_ID, "time elapsed: ${ReceiveData.getElapsedTimeMinute()}")
@@ -602,6 +637,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         try {
             if(key == durationPref) {
                 durationHours = sharedPref.getInt(durationPref, durationHours)
+                stopDataSync()
                 resetChartData()
                 chart.fitScreen()
                 initData()
@@ -609,7 +645,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                 Log.i(LOG_ID, "re create graph after settings changed for key: $key")
                 ReceiveData.updateSettings(sharedPref)
                 if(chart.data != null && chart.data.getDataSetByIndex(0).entryCount > 0)
-                    create() // recreate chart with new graph data
+                    create(true) // recreate chart with new graph data
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.message.toString() )
