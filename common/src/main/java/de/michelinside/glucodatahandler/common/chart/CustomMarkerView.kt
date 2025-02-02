@@ -11,6 +11,7 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
 import de.michelinside.glucodatahandler.common.R
 import java.text.DateFormat
+import java.util.Date
 
 
 @SuppressLint("ViewConstructor")
@@ -25,7 +26,7 @@ class CustomMarkerView(context: Context): MarkerView(context, R.layout.custom_ma
     override fun refreshContent(e: Entry?, highlight: Highlight?) {
         Log.v(LOG_ID, "refreshContent for $e")
         super.refreshContent(e, highlight)
-        time.text = DateFormat.getTimeInstance(DateFormat.DEFAULT).format(TimeValueFormatter.from_chart_x(e!!.x))
+        time.text = DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(TimeValueFormatter.from_chart_x(e!!.x)))
         glucose.text = GlucoseFormatter.getValueAsString(e.y)
     }
 

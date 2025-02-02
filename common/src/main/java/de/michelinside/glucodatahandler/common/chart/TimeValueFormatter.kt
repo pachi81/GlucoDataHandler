@@ -47,9 +47,9 @@ class TimeValueFormatter(private val mChart: LineChart) : ValueFormatter() {
             return (dt / 1000).toFloat() / 60f
         }
 
-        fun from_chart_x(x: Float): Date {
+        fun from_chart_x(x: Float): Long {
             val t = (x * 60).toLong() * 1000 + baseTime
-            return Date(t)
+            return t
         }
 
         val baseTime = base_time(System.currentTimeMillis())
@@ -79,7 +79,7 @@ class TimeValueFormatter(private val mChart: LineChart) : ValueFormatter() {
         // Values are formatted in order, lowest to highest.
         // Use this to determine if it's the first value
 
-        val date: Date = from_chart_x(value)
+        val date = Date(from_chart_x(value))
         c.setTime(date)
         val hour: Float = c.get(Calendar.HOUR_OF_DAY).toFloat()
         val minute: Float = c.get(Calendar.MINUTE).toFloat()

@@ -15,6 +15,7 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
 import de.michelinside.glucodatahandler.common.R
 import java.text.DateFormat
+import java.util.Date
 
 class CustomBubbleMarker(context: Context, private val showDate: Boolean = false) : MarkerView(context, R.layout.marker_layout) {
     private val LOG_ID = "GDH.Chart.MarkerView"
@@ -27,9 +28,10 @@ class CustomBubbleMarker(context: Context, private val showDate: Boolean = false
         try {
             isGlucose = highlight.dataSetIndex == 0
             e?.let {
-                val dateValue = TimeValueFormatter.from_chart_x(e.x)
+                val timeValue = TimeValueFormatter.from_chart_x(e.x)
+                val dateValue = Date(timeValue)
                 val date: TextView = this.findViewById(R.id.date)
-                date.visibility = if(showDate && !DateUtils.isToday(dateValue.time)) VISIBLE else GONE
+                date.visibility = if(showDate && !DateUtils.isToday(timeValue)) VISIBLE else GONE
                 val time: TextView = this.findViewById(R.id.time)
                 val glucose: TextView = this.findViewById(R.id.glucose)
                 val layout: LinearLayoutCompat = this.findViewById(R.id.marker_layout)

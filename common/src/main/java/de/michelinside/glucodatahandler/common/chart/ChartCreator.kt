@@ -427,13 +427,13 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                 Log.v(
                     LOG_ID,
                     "Min time: ${Utils.getUiTimeStamp(minTime)} - first value: ${
-                        Utils.getUiTimeStamp(TimeValueFormatter.from_chart_x(values.first().x).time)
-                    } - last value: ${Utils.getUiTimeStamp(TimeValueFormatter.from_chart_x(values.last().x).time)}"
+                        Utils.getUiTimeStamp(TimeValueFormatter.from_chart_x(values.first().x))
+                    } - last value: ${Utils.getUiTimeStamp(TimeValueFormatter.from_chart_x(values.last().x))}"
                 )
-                if (TimeValueFormatter.from_chart_x(values.first().x).time > minTime) {
+                if (TimeValueFormatter.from_chart_x(values.first().x) > minTime) {
                     minValue = minTime
                 }
-                if (Utils.getElapsedTimeMinute(TimeValueFormatter.from_chart_x(values.last().x).time) >= 1) {
+                if (Utils.getElapsedTimeMinute(TimeValueFormatter.from_chart_x(values.last().x)) >= 1) {
                     maxValue = System.currentTimeMillis()
                 }
             }
@@ -461,7 +461,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         val right = isRight()
         val left = isLeft()
         Log.v(LOG_ID, "Min: ${chart.xAxis.axisMinimum} - visible: ${chart.lowestVisibleX} - Max: ${chart.xAxis.axisMaximum} - visible: ${chart.highestVisibleX} - isLeft: ${left} - isRight: ${right}" )
-        val diffTimeMin = TimeUnit.MILLISECONDS.toMinutes(TimeValueFormatter.from_chart_x(chart.highestVisibleX).time - TimeValueFormatter.from_chart_x(chart.lowestVisibleX).time)
+        val diffTimeMin = TimeUnit.MILLISECONDS.toMinutes(TimeValueFormatter.from_chart_x(chart.highestVisibleX) - TimeValueFormatter.from_chart_x(chart.lowestVisibleX))
         if(!chart.highlighted.isNullOrEmpty() && chart.highlighted[0].dataSetIndex != 0) {
             Log.v(LOG_ID, "Unset current highlighter")
             chart.highlightValue(null)
@@ -475,7 +475,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     protected open fun invalidateChart(diffTime: Long, right: Boolean, left: Boolean) {
         val defaultRange = getDefaultRange()
         var diffTimeMin = diffTime
-        val newDiffTime = TimeUnit.MILLISECONDS.toMinutes( TimeValueFormatter.from_chart_x(chart.xChartMax).time - TimeValueFormatter.from_chart_x(chart.lowestVisibleX).time)
+        val newDiffTime = TimeUnit.MILLISECONDS.toMinutes( TimeValueFormatter.from_chart_x(chart.xChartMax) - TimeValueFormatter.from_chart_x(chart.lowestVisibleX))
         Log.d(LOG_ID, "Diff-Time: ${diffTimeMin} minutes - newDiffTime: ${newDiffTime} minutes")
         var setXRange = false
         if(!chart.isScaleXEnabled && newDiffTime >= minOf(defaultRange, 90)) {
@@ -510,14 +510,14 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         }
     }
 
-    private fun getFirstTimestamp(): Long {
+    private fun getFirstTimestamp(): Float {
         if(chart.data != null && chart.data.dataSetCount > 0) {
             val dataSet = chart.data.getDataSetByIndex(0) as LineDataSet
             if (dataSet.values.isNotEmpty()) {
-                return TimeValueFormatter.from_chart_x(dataSet.values.first().x).time
+                return dataSet.values.first().x
             }
         }
-        return 0L
+        return 0F
     }
 
     private fun getEntryCount(): Int {
@@ -532,7 +532,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         if(chart.data != null && chart.data.dataSetCount > 0) {
             val dataSet = chart.data.getDataSetByIndex(0) as LineDataSet
             if (dataSet.values.isNotEmpty()) {
-                return TimeValueFormatter.from_chart_x(dataSet.values.last().x).time
+                return TimeValueFormatter.from_chart_x(dataSet.values.last().x)
             }
         }
         return 0L
@@ -560,8 +560,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             if(!checkValues(values))
                 return
             if(values.isNotEmpty()) {
-                Log.d(LOG_ID, "update called for ${values.size} values - resetChart: $resetChart - entries: ${getEntryCount()} - first value: ${values.first().timestamp} - first: ${getFirstTimestamp()}")
-                if(resetChart || values.first().timestamp != getFirstTimestamp() || (getEntryCount() > 0 && abs(values.size-getEntryCount()) > 1)) {
+                Log.d(LOG_ID, "update called for ${values.size} values - resetChart: $resetChart - entries: ${getEntryCount()} - first value: ${TimeValueFormatter.to_chart_x(values.first().timestamp)} - first: ${getFirstTimestamp()}")
+                if(resetChart || TimeValueFormatter.to_chart_x(values.first().timestamp) != getFirstTimestamp() || (getEntryCount() > 0 && abs(values.size-getEntryCount()) > 1)) {
                     resetData(values)
                     return
                 }
