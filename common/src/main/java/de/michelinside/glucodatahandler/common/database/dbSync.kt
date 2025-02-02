@@ -6,6 +6,7 @@ import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.ChannelClient
 import com.google.android.gms.wearable.Wearable
 import com.google.gson.Gson
+import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
@@ -30,7 +31,7 @@ object dbSync : ChannelClient.ChannelCallback() {
     }
 
     private fun getStringFromInputStream(stream: InputStream?): String {
-        var n = 0
+        var n: Int
         val buffer = CharArray(1024 * 4)
         val reader = InputStreamReader(stream, "UTF8")
         val writer = StringWriter()
@@ -99,7 +100,8 @@ object dbSync : ChannelClient.ChannelCallback() {
                 Thread {
                     try {
                         val outputStream = Tasks.await(channelClient.getOutputStream(channel))
-                        val data = dbAccess.getGlucoseValues()
+                        val minTime = if(GlucoDataService.appSource == AppSource.WEAR_APP) 0L else (System.currentTimeMillis()-Constants.DB_MAX_DATA_WEAR_TIME_MS)  // from phone to wear, only send the last 24h
+                        val data = dbAccess.getGlucoseValues(minTime)
                         Log.i(LOG_ID, "sending ${data.size} values")
                         val gson = Gson()
                         val string = gson.toJson(data)
@@ -144,7 +146,7 @@ object dbSync : ChannelClient.ChannelCallback() {
                     Thread.sleep(1000)
                     count++
                 }
-                var success: Boolean
+                val success: Boolean
                 if (!finished) {
                     Log.w(LOG_ID, "Receiving still not finished!")
                     success = false

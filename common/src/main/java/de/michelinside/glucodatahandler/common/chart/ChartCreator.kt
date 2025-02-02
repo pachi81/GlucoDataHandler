@@ -53,6 +53,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     protected open val yAxisInterval = 50F
     protected open val circleRadius = 2F
     protected open val touchEnabled = true
+    protected open val graphStartTime = 0L
 
     private var graphPrefList = mutableSetOf(
         Constants.SHARED_PREF_LOW_GLUCOSE,
@@ -326,8 +327,14 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     private suspend fun dataSync() {
         Log.d(LOG_ID, "dataSync running")
         try {
-            dbAccess.getLiveValuesByTimeSpan(getMaxRange().toInt()/60).collect{ values ->
-                update(values)
+            if(graphStartTime > 0L) {
+                dbAccess.getLiveValuesByStartTime(graphStartTime).collect{ values ->
+                    update(values)
+                }
+            } else {
+                dbAccess.getLiveValuesByTimeSpan(getMaxRange().toInt()/60).collect{ values ->
+                    update(values)
+                }
             }
             Log.d(LOG_ID, "dataSync done")
         } catch (exc: CancellationException) {
@@ -344,7 +351,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     protected fun getMinTime(): Long {
         if(getMaxRange() > 0L)
             return System.currentTimeMillis() - (getMaxRange()*60*1000L)
-        return 0L
+        return graphStartTime
     }
 
     protected open fun getDefaultRange(): Long {

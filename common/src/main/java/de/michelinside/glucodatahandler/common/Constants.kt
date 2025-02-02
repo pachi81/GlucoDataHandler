@@ -287,6 +287,9 @@ object Constants {
 
     const val PATIENT_NAME = "patient_name"
 
+    // database
+    const val DB_MAX_DATA_WEAR_TIME_MS = (24*60*60*1000)  // 24h
+
     // graph
     const val GRAPH_ID = "graph_id"
     const val SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION = "graph_duration_wear_complication"

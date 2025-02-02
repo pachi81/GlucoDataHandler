@@ -26,6 +26,9 @@ interface GlucoseValueDao {
     @Query("SELECT * FROM glucose_values WHERE timestamp >= strftime('%s', 'now', '-' || :hours || ' hours') * 1000")
     fun getLiveValuesByTimeSpan(hours: Int): Flow<List<GlucoseValue>>
 
+    @Query("SELECT * FROM glucose_values WHERE timestamp >= :minTime ORDER BY timestamp")
+    fun getLiveValuesByStartTime(minTime: Long): Flow<List<GlucoseValue>>
+
     @Query("SELECT timestamp from glucose_values ORDER BY timestamp DESC LIMIT 1")
     fun getLastTimestamp(): Long
 

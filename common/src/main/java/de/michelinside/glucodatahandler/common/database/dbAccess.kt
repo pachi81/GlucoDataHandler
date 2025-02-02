@@ -44,8 +44,8 @@ object dbAccess {
         }.await()
     }
 
-    fun getLiveGlucoseValues(): Flow<List<GlucoseValue>> {
-            return database!!.glucoseValuesDao().getLiveValues()
+    fun getLiveValuesByStartTime(minTime: Long): Flow<List<GlucoseValue>> {
+            return database!!.glucoseValuesDao().getLiveValuesByStartTime(minTime)
     }
 
     fun getLiveValuesByTimeSpan(hours: Int): Flow<List<GlucoseValue>> {
