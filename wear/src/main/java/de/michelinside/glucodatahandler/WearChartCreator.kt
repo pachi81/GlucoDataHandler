@@ -17,10 +17,6 @@ class WearChartCreator(chart: GlucoseChart, context: Context, durationPref: Stri
         chart.xAxis.setLabelCount(4)
     }
 
-    override fun getYAxisInterval(): Float {
-        return 50F
-    }
-
     override fun showOtherUnit(): Boolean = false
 
     override fun initYaxis() {

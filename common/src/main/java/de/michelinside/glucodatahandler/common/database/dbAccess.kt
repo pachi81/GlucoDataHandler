@@ -96,23 +96,31 @@ object dbAccess {
         }.await()
     }
 
+    fun getMaxValue(minTime: Long = 0L): Int = runBlocking {
+        scope.async {
+            if(database != null) {
+                Log.v(LOG_ID, "getMaxValue - minTime: ${Utils.getUiTimeStamp(minTime)}")
+                if(minTime == 0L)
+                    database!!.glucoseValuesDao().getMaxValue()
+                else
+                    database!!.glucoseValuesDao().getMaxValueByTime(minTime)
+            } else 0
+        }.await()
+    }
+
     fun deleteValues(timestamps: List<Long>) = runBlocking {
         if(database != null) {
-            scope.async {
-                scope.launch {
-                    Log.d(LOG_ID, "delete - ${timestamps.size} values")
-                    database!!.glucoseValuesDao().deleteValues(timestamps)
-                }
+            scope.launch {
+                Log.d(LOG_ID, "delete - ${timestamps.size} values")
+                database!!.glucoseValuesDao().deleteValues(timestamps)
             }
         }
     }
 
     fun deleteAllValues() = runBlocking {
-        scope.async {
-            scope.launch {
-                Log.v(LOG_ID, "deleteAllValues")
-                database!!.glucoseValuesDao().deleteAllValues()
-            }
+        scope.launch {
+            Log.v(LOG_ID, "deleteAllValues")
+            database!!.glucoseValuesDao().deleteAllValues()
         }
     }
 }

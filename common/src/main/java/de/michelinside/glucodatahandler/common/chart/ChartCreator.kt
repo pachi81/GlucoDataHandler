@@ -50,7 +50,9 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     protected open val resetChart = false
     protected open var durationHours = 4
     protected open val yAxisOffset = -15F
+    protected open val yAxisInterval = 50F
     protected open val circleRadius = 2F
+    protected open val touchEnabled = true
 
     private var graphPrefList = mutableSetOf(
         Constants.SHARED_PREF_LOW_GLUCOSE,
@@ -229,13 +231,9 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         }
     }
 
-    protected open fun getYAxisInterval(): Float {
-        return 50F
-    }
-
     protected fun updateYAxisLabelCount() {
-        if(chart.axisRight.isDrawLabelsEnabled && getYAxisInterval() > 0F) {
-            val count = Utils.round(chart.axisRight.axisMaximum / getYAxisInterval(), 0, RoundingMode.DOWN).toInt()
+        if(chart.axisRight.isDrawLabelsEnabled && yAxisInterval > 0F) {
+            val count = Utils.round(chart.axisRight.axisMaximum / yAxisInterval, 0, RoundingMode.DOWN).toInt()
             if(count != chart.axisRight.labelCount) {
                 Log.v(LOG_ID, "update y-axis label count: $count for ${chart.axisRight.axisMaximum}")
                 chart.axisRight.setLabelCount(count)
@@ -245,9 +243,9 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         }
     }
 
-    protected open fun initChart(touchEnabled: Boolean = true) {
+    protected open fun initChart() {
         Log.v(LOG_ID, "initChart - touchEnabled: $touchEnabled")
-        chart.setTouchEnabled(touchEnabled)
+        chart.setTouchEnabled(false)
         initDataSet()
         chart.setBackgroundColor(Color.TRANSPARENT)
         chart.isAutoScaleMinMaxEnabled = false
@@ -296,7 +294,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     }
 
     protected open fun getDefaultMaxValue() : Float {
-        return ReceiveData.highRaw + 10
+        return maxOf(ReceiveData.highRaw, dbAccess.getMaxValue(getMinTime()).toFloat()) + 10F
     }
 
     protected fun stopDataSync() {
@@ -353,7 +351,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         return durationHours * 60L
     }
 
-    protected open fun addEntries(values: List<GlucoseValue>) {
+    private fun addEntries(values: List<GlucoseValue>) {
         Log.d(LOG_ID, "Add ${values.size} entries")
         val dataSet = chart.data.getDataSetByIndex(0) as LineDataSet
         var added = false
@@ -388,6 +386,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         if(added) {
             dataSet.notifyDataSetChanged()
             updateChart(dataSet)
+            if(touchEnabled)
+                chart.enableTouch()
         } else {
             addEmptyTimeData()
         }

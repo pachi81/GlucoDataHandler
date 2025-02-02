@@ -17,6 +17,7 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
     override val resetChart = true
     override val circleRadius = 3F
     override var durationHours = 2
+    override val touchEnabled = false
 
     override fun initXaxis() {
         Log.v(LOG_ID, "initXaxis")
@@ -38,8 +39,8 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
         }
     }
 
-    override fun initChart(touchEnabled: Boolean) {
-        super.initChart(false)
+    override fun initChart() {
+        super.initChart()
         chart.isDrawingCacheEnabled = false
     }
 

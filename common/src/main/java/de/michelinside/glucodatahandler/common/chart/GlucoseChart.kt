@@ -22,6 +22,7 @@ class GlucoseChart: LineChart {
     )
 
     private var isInvalidating = false
+    private var isDrawing = false
     init {
         LOG_ID = "GDH.Chart.GlucoseChart." + id.toString()
     }
@@ -36,12 +37,14 @@ class GlucoseChart: LineChart {
     override fun postInvalidate() {
         Log.v(LOG_ID, "postInvalidate")
         isInvalidating = true
+        isDrawing = isShown
         super.postInvalidate()
         Log.v(LOG_ID, "postInvalidate done")
     }
 
     override fun invalidate() {
         isInvalidating = true
+        isDrawing = isShown
         try {
             Log.v(LOG_ID, "invalidate - shown: $isShown")
             super.invalidate()
@@ -53,10 +56,27 @@ class GlucoseChart: LineChart {
 
     fun waitForInvalidate() {
         if(isInvalidating && Looper.myLooper() != Looper.getMainLooper()) {
-            Log.d(LOG_ID, "waitForDrawing")
+            Log.d(LOG_ID, "waitForInvalidate")
             while(isInvalidating) {
                 Thread.sleep(10)
             }
+        }
+    }
+
+    fun waitForDrawing() {
+        if(isDrawing && Looper.myLooper() != Looper.getMainLooper()) {
+            Log.d(LOG_ID, "waitForDrawing")
+            while(isDrawing) {
+                Thread.sleep(10)
+            }
+        }
+    }
+
+    fun enableTouch() {
+        if(!mTouchEnabled) {
+            Log.d(LOG_ID, "enable touch")
+            waitForDrawing()
+            setTouchEnabled(true)
         }
     }
 
@@ -71,6 +91,7 @@ class GlucoseChart: LineChart {
 
     override fun onDraw(canvas: Canvas) {
         try {
+            isDrawing = true
             Log.v(LOG_ID, "onDraw - min: ${xAxis.axisMinimum} - max: ${xAxis.axisMaximum}")
             super.onDraw(canvas)
             Log.v(LOG_ID, "drawn")
@@ -81,6 +102,7 @@ class GlucoseChart: LineChart {
                 Log.e(LOG_ID, "onDraw exception: ${exc.message}\n${exc.stackTraceToString()}")
             }
         }
+        isDrawing = false
     }
 
 }
