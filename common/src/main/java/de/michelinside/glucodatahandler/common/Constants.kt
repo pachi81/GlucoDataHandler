@@ -289,6 +289,7 @@ object Constants {
 
     // database
     const val DB_MAX_DATA_WEAR_TIME_MS = (24*60*60*1000)  // 24h
+    const val DB_MAX_DATA_TIME_MS = (7*24*60*60*1000)  // 7 days
 
     // graph
     const val GRAPH_ID = "graph_id"

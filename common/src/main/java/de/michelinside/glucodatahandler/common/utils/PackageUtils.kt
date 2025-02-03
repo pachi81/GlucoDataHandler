@@ -1,11 +1,17 @@
 package de.michelinside.glucodatahandler.common.utils
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
+import android.os.Build
 import android.util.Log
+import com.google.android.gms.wearable.WearableListenerService.RECEIVER_EXPORTED
+import com.google.android.gms.wearable.WearableListenerService.RECEIVER_VISIBLE_TO_INSTANT_APPS
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver
 import kotlinx.coroutines.*
@@ -183,5 +189,20 @@ object PackageUtils {
             gdaAvailable = isPackageAvailable(context, Constants.PACKAGE_GLUCODATAAUTO)
         }
         return gdaAvailable
+    }
+
+
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    fun registerReceiver(context: Context, receiver: BroadcastReceiver, filter: IntentFilter) {
+        Log.d(LOG_ID, "Register receiver ${receiver.javaClass.name} on ${context.applicationContext}")
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                context.applicationContext.registerReceiver(receiver, filter, RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
+            } else {
+                context.applicationContext.registerReceiver(receiver, filter)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "registerReceiver exception: " + exc.toString())
+        }
     }
 }

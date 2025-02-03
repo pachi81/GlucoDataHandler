@@ -180,11 +180,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         fun registerReceiver(context: Context, receiver: ReceiverBase, filter: IntentFilter): Boolean {
             Log.i(LOG_ID, "Register receiver ${receiver.getName()} for $receiver on $context")
             try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    context.registerReceiver(receiver, filter, RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
-                } else {
-                    context.registerReceiver(receiver, filter)
-                }
+                PackageUtils.registerReceiver(context, receiver, filter)
                 registeredReceivers.add(receiver.getName())
                 return true
             } catch (exc: Exception) {

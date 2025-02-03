@@ -100,7 +100,7 @@ object dbSync : ChannelClient.ChannelCallback() {
                 Thread {
                     try {
                         val outputStream = Tasks.await(channelClient.getOutputStream(channel))
-                        val minTime = if(GlucoDataService.appSource == AppSource.WEAR_APP) 0L else (System.currentTimeMillis()-Constants.DB_MAX_DATA_WEAR_TIME_MS)  // from phone to wear, only send the last 24h
+                        val minTime = System.currentTimeMillis() - (if(GlucoDataService.appSource == AppSource.WEAR_APP) Constants.DB_MAX_DATA_TIME_MS else Constants.DB_MAX_DATA_WEAR_TIME_MS)  // from phone to wear, only send the last 24h
                         val data = dbAccess.getGlucoseValues(minTime)
                         Log.i(LOG_ID, "sending ${data.size} values")
                         val gson = Gson()
@@ -111,6 +111,10 @@ object dbSync : ChannelClient.ChannelCallback() {
                         outputStream.close()
                         channelClient.close(channel)
                         Log.d(LOG_ID, "db data sent")
+                        if(GlucoDataService.appSource == AppSource.WEAR_APP) {
+                            Log.i(LOG_ID, "Clear old data after sync")
+                            dbAccess.deleteOldValues(System.currentTimeMillis()-Constants.DB_MAX_DATA_WEAR_TIME_MS)
+                        }
                     } catch (exc: Exception) {
                         Log.e(LOG_ID, "sendData exception: " + exc.toString())
                     }

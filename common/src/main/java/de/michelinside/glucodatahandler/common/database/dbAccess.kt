@@ -1,11 +1,15 @@
 package de.michelinside.glucodatahandler.common.database
 
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.util.Log
 import androidx.room.Room
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver
+import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,6 +31,7 @@ object dbAccess {
                 Database::class.java,
                 "gdh_database"
             ).build()
+            PackageUtils.registerReceiver(context, InternalActionReceiver(), IntentFilter(Intent.ACTION_DATE_CHANGED))
         } catch (exc: Exception) {
             Log.e(LOG_ID, "init exception: " + exc.toString() + ": " + exc.stackTraceToString() )
         }
@@ -121,6 +126,13 @@ object dbAccess {
         scope.launch {
             Log.v(LOG_ID, "deleteAllValues")
             database!!.glucoseValuesDao().deleteAllValues()
+        }
+    }
+
+    fun deleteOldValues(minTime: Long) {
+        scope.launch {
+            Log.v(LOG_ID, "deleteOldValues - minTime: ${Utils.getUiTimeStamp(minTime)}")
+            database!!.glucoseValuesDao().deleteOldValues(minTime)
         }
     }
 }
