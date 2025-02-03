@@ -49,7 +49,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     private var dataSyncJob: Job? = null
     protected open val resetChart = false
     protected open var durationHours = 4
-    protected open val yAxisOffset = -15F
+    protected open val yAxisOffset = 0F
+    protected open val yAxisLeftOffset = -15F
     protected open val yAxisInterval = 50F
     protected open val circleRadius = 2F
     protected open val touchEnabled = true
@@ -201,7 +202,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             chart.axisLeft.setDrawZeroLine(false)
             chart.axisLeft.setDrawAxisLine(false)
             chart.axisLeft.setDrawGridLines(false)
-            chart.axisLeft.xOffset = yAxisOffset
+            chart.axisLeft.xOffset = yAxisLeftOffset
             chart.axisLeft.textColor = context.resources.getColor(R.color.text_color)
         }
     }

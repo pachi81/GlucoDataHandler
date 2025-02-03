@@ -294,5 +294,6 @@ object Constants {
     // graph
     const val GRAPH_ID = "graph_id"
     const val SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION = "graph_duration_wear_complication"
+    const val SHARED_PREF_GRAPH_DURATION_PHONE_MAIN = "graph_duration_phone_main"
 
 }

@@ -772,7 +772,8 @@
     <string name="pref_show_iob_cob_summary">Show IOB and COB values, if available.</string>
     <string name="graph">Graph</string>
     <string name="graph_duration">Graph duration</string>
-    <string name="graph_duration_wear_summary">Number of hours shown in graph in complication and on main screen.</string>
+    <string name="graph_duration_wear_summary">Number of hours shown in the graph in complication and on main screen.</string>
+    <string name="graph_duration_phone_summary">Number of hours shown as default in the graph on main screen.</string>
     <string name="show_graph">Show graph</string>
 
 </resources>

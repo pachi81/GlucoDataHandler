@@ -12,28 +12,24 @@
         android:layout_height="match_parent"
         tools:ignore="UselessLeaf" />
 
-        <ScrollView
-            android:layout_weight="10"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:paddingVertical="10dp">
             <LinearLayout
                 android:id="@+id/main_layout_left"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_weight="20"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 tools:context=".MainActivity"
                 android:orientation="vertical"
                 android:gravity="center|top">
 
                 <LinearLayout
                     android:id="@+id/layout_glucose_trend"
-                    android:layout_width="250dp"
-                    android:layout_height="80dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_weight="2"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="0dp"
                     android:gravity="center|top"
                     android:orientation="horizontal"
-                    tools:ignore="UselessParent">
+                    tools:ignore="NestedWeights,UselessParent">
 
                     <TextView
                         android:id="@+id/txtBgValue"
@@ -60,22 +56,22 @@
                         android:src="@drawable/icon_question"
                         tools:ignore="ContentDescription" />
 
-                </LinearLayout>
                 <LinearLayout
                     android:id="@+id/layout_delta_time"
-                    android:layout_width="250dp"
-                    android:layout_height="30dp"
-                    android:gravity="center|top"
-                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center|start"
+                    android:orientation="vertical"
                     tools:ignore="UselessParent">
 
                     <TextView
                         android:id="@+id/timeText"
                         android:text="🕒 0 min"
-                        android:layout_width="0dp"
-                        android:layout_weight="4"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|end"
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_height="0dp"
+                        android:gravity="center_vertical|start"
                         android:maxLines="1"
                         android:autoSizeStepGranularity="1sp"
                         android:autoSizeTextType="uniform"
@@ -84,10 +80,10 @@
                     <TextView
                         android:id="@+id/deltaText"
                         android:text="Δ +0.06"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="3"
-                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical|start"
                         android:maxLines="1"
                         android:autoSizeStepGranularity="1sp"
                         android:autoSizeTextType="uniform"
@@ -95,17 +91,18 @@
                 </LinearLayout>
                 <LinearLayout
                     android:id="@+id/layout_iob_cob"
-                    android:layout_width="250dp"
-                    android:layout_height="30dp"
-                    android:gravity="center|top"
-                    android:orientation="horizontal"
+                    android:layout_weight="2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center|start"
+                    android:orientation="vertical"
                     tools:ignore="UselessParent">
                     <TextView
                         android:id="@+id/iobText"
                         android:text="💉 1.30U"
-                        android:layout_width="0dp"
-                        android:layout_weight="4"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_height="0dp"
                         android:gravity="center_vertical|end"
                         android:maxLines="1"
                         android:autoSizeStepGranularity="1sp"
@@ -116,15 +113,45 @@
                     <TextView
                         android:id="@+id/cobText"
                         android:text="🍔 31.2g"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
                         android:gravity="center"
                         android:maxLines="1"
                         android:autoSizeStepGranularity="1sp"
                         android:autoSizeTextType="uniform"
                         tools:ignore="HardcodedText" />
                 </LinearLayout>
+                </LinearLayout>
+                <de.michelinside.glucodatahandler.common.chart.GlucoseChart
+                    android:id="@+id/chart"
+                    android:layout_width="match_parent"
+                    android:layout_weight="9"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="10dp"
+                    />
+            </LinearLayout>
+
+    <RelativeLayout
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        tools:ignore="UselessLeaf" />
+
+
+        <ScrollView
+            android:layout_weight="15"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:paddingVertical="10dp">
+            <LinearLayout
+                android:id="@+id/main_layout_right"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                tools:context=".MainActivity"
+                android:orientation="vertical"
+                android:gravity="center|top">
                 <TextView
                     android:id="@+id/txtLastValue"
                     android:layout_width="350dp"
@@ -143,39 +170,6 @@
                     android:layout_marginTop="20dp"
                     android:text="@string/menu_sources"
                     />
-                <de.michelinside.glucodatahandler.common.chart.GlucoseChart
-                    android:id="@+id/chart"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    />
-
-                <ImageView
-                    android:id="@+id/graphImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp" />
-            </LinearLayout>
-        </ScrollView>
-
-    <RelativeLayout
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        tools:ignore="UselessLeaf" />
-
-
-        <ScrollView
-            android:layout_weight="10"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:paddingVertical="10dp">
-            <LinearLayout
-                android:id="@+id/main_layout_right"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                tools:context=".MainActivity"
-                android:orientation="vertical"
-                android:gravity="center|top">
 
                 <TableLayout
                     android:id="@+id/tableNotes"
@@ -265,6 +259,7 @@
                     android:id="@+id/txtVersion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
                     android:layout_marginBottom="25dp"
                     android:text="1.0"
                     android:textSize="16sp"

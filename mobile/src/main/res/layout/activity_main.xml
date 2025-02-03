@@ -140,18 +140,6 @@
         android:layout_height="200dp"
         />
 
-    <SeekBar
-        android:id="@+id/chartDuration"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="12"
-        android:min="0"
-        android:progress="4" />
-    <ImageView
-        android:id="@+id/graphImage"
-        android:layout_width="match_parent"
-        android:layout_height="200dp" />
-
     <LinearLayout
         android:id="@+id/space_table2"
         android:layout_height="20dp"
@@ -249,6 +237,7 @@
         android:id="@+id/txtVersion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
         android:layout_marginBottom="25dp"
         android:text="1.0"
         android:textSize="16sp"
