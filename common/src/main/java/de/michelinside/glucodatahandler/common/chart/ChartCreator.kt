@@ -106,6 +106,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         waitForCreation()
         try {
             Log.d(LOG_ID, "create")
+            stopDataSync()
             init()
             resetChart()
             initXaxis()
@@ -133,7 +134,10 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
 
     fun resume() {
         try {
-            startDataSync()
+            if(!startDataSync()) {
+                if(chart.xAxis.axisMinimum > chart.xAxis.axisMaximum)
+                    chart.postInvalidate()   // need to redraw the chart
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "resume exception: " + exc.message.toString() )
         }
@@ -316,24 +320,31 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         startDataSync()
     }
 
-    private fun startDataSync() {
+    private fun startDataSync(): Boolean {
         if(dataSyncJob?.isActive != true) {
             Log.v(LOG_ID, "startDataSync")
             dataSyncJob = scope.launch {
                 dataSync()
             }
+            return true
         }
+        return false
     }
 
     private suspend fun dataSync() {
         Log.d(LOG_ID, "dataSync running")
         try {
-            if(graphStartTime > 0L) {
+            if(getMaxRange() > 0L) {
+                dbAccess.getLiveValuesByTimeSpan(getMaxRange().toInt()/60).collect{ values ->
+                    update(values)
+                }
+            }
+            else if(graphStartTime > 0L) {
                 dbAccess.getLiveValuesByStartTime(graphStartTime).collect{ values ->
                     update(values)
                 }
             } else {
-                dbAccess.getLiveValuesByTimeSpan(getMaxRange().toInt()/60).collect{ values ->
+                dbAccess.getLiveValues().collect{ values ->
                     update(values)
                 }
             }
@@ -397,7 +408,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             if(touchEnabled)
                 chart.enableTouch()
         } else {
-            addEmptyTimeData()
+            updateChart(null)   // update chart for time data-change
         }
     }
 
@@ -458,7 +469,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         }
     }
 
-    protected open fun updateChart(dataSet: LineDataSet) {
+    protected open fun updateChart(dataSet: LineDataSet?) {
         val right = isRight()
         val left = isLeft()
         Log.v(LOG_ID, "Min: ${chart.xAxis.axisMinimum} - visible: ${chart.lowestVisibleX} - Max: ${chart.xAxis.axisMaximum} - visible: ${chart.highestVisibleX} - isLeft: ${left} - isRight: ${right}" )
@@ -467,7 +478,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             Log.v(LOG_ID, "Unset current highlighter")
             chart.highlightValue(null)
         }
-        chart.data = LineData(dataSet)
+        if(dataSet != null)
+            chart.data = LineData(dataSet)
         addEmptyTimeData()
         chart.notifyDataSetChanged()
         invalidateChart(diffTimeMin, right, left)
@@ -568,6 +580,9 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                 }
                 val newValues = values.filter { data -> data.timestamp > getLastTimestamp() }
                 addEntries(newValues)
+            } else if(getEntryCount() > 0)  {
+                Log.d(LOG_ID, "Reset chart after db clean up")
+                create(true)
             } else {
                 addEntries(values)
             }
@@ -578,7 +593,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
 
     protected open fun updateTimeElapsed() {
         Log.v(LOG_ID, "update time elapsed")
-        updateChart(chart.data.getDataSetByIndex(0) as LineDataSet)
+        updateChart(null)
     }
 
     protected fun resetChartData() {

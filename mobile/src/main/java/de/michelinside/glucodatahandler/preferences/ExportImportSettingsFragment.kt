@@ -11,12 +11,15 @@ import android.provider.DocumentsContract
 import android.util.Log
 import androidx.preference.Preference
 import de.michelinside.glucodatahandler.R
+import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
+import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.ui.Dialogs
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.watch.LogcatReceiver
 import java.text.SimpleDateFormat
@@ -85,6 +88,17 @@ class ExportImportSettingsFragment: SettingsFragmentBase(R.xml.pref_export_impor
                 SaveLogs(AppSource.WEAR_APP, downloadUri)
                 true
             }
+
+            val prefResetDb = findPreference<Preference>(Constants.SHARED_PREF_RESET_DATABASE)
+            prefResetDb!!.setOnPreferenceClickListener {
+                Dialogs.showOkCancelDialog(requireContext(), resources.getString(CR.string.reset_db), resources.getString(CR.string.reset_db_warning),
+                    { _, _ ->
+                        dbAccess.deleteAllValues()
+                    }
+                )
+                true
+            }
+
         } catch (exc: Exception) {
             Log.e(LOG_ID, "initPreferences exception: " + exc.message.toString() )
         }

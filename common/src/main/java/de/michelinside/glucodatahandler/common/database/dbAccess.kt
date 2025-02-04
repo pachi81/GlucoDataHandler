@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
 import androidx.room.Room
+import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -31,6 +32,7 @@ object dbAccess {
                 Database::class.java,
                 "gdh_database"
             ).build()
+            cleanUpOldData()
             PackageUtils.registerReceiver(context, InternalActionReceiver(), IntentFilter(Intent.ACTION_DATE_CHANGED))
         } catch (exc: Exception) {
             Log.e(LOG_ID, "init exception: " + exc.toString() + ": " + exc.stackTraceToString() )
@@ -47,6 +49,10 @@ object dbAccess {
                 emptyList()
             }
         }.await()
+    }
+
+    fun getLiveValues(): Flow<List<GlucoseValue>> {
+        return database!!.glucoseValuesDao().getLiveValues()
     }
 
     fun getLiveValuesByStartTime(minTime: Long): Flow<List<GlucoseValue>> {
@@ -134,5 +140,9 @@ object dbAccess {
             Log.v(LOG_ID, "deleteOldValues - minTime: ${Utils.getUiTimeStamp(minTime)}")
             database!!.glucoseValuesDao().deleteOldValues(minTime)
         }
+    }
+
+    fun cleanUpOldData() {
+        deleteOldValues(System.currentTimeMillis()-Constants.DB_MAX_DATA_TIME_MS)
     }
 }

@@ -25,7 +25,7 @@ class InternalActionReceiver: BroadcastReceiver() {
             when(intent.action) {
                 Intent.ACTION_DATE_CHANGED -> {
                     Log.i(LOG_ID, "Action: date changed received - trigger db cleanup")
-                    dbAccess.deleteOldValues(System.currentTimeMillis()-Constants.DB_MAX_DATA_TIME_MS)
+                    dbAccess.cleanUpOldData()
                 }
                 Constants.ACTION_FLOATING_WIDGET_TOGGLE -> {
                     Log.d(LOG_ID, "Action: floating widget toggle")

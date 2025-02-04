@@ -199,6 +199,13 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return rawValue.toString()
     }
 
+    fun getDbValue(): Int {
+        if(isMmol) {
+            return GlucoDataUtils.mmolToMg(glucose).toInt()
+        }
+        return rawValue
+    }
+
     fun getDeltaAsString(): String {
         if(isObsoleteShort() || deltaValue.isNaN())
             return "--"
@@ -560,7 +567,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                         }
                     }
 
-                    dbAccess.addGlucoseValue(time, rawValue)
+                    dbAccess.addGlucoseValue(time, getDbValue())
 
                     val notifySource = if(interApp) NotifySource.MESSAGECLIENT else NotifySource.BROADCAST
 

@@ -54,12 +54,14 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
         return super.getDefaultMaxValue()
     }
 
-    override fun updateChart(dataSet: LineDataSet) {
-        Log.v(LOG_ID, "Update chart for ${dataSet.values.size} entries and ${dataSet.circleColors.size} colors")
-        if(dataSet.values.isNotEmpty())
-            chart.data = LineData(dataSet)
-        else
-            chart.data = LineData()
+    override fun updateChart(dataSet: LineDataSet?) {
+        if(dataSet != null) {
+            Log.v(LOG_ID, "Update chart for ${dataSet.values.size} entries and ${dataSet.circleColors.size} colors")
+            if(dataSet.values.isNotEmpty())
+                chart.data = LineData(dataSet)
+            else
+                chart.data = LineData()
+        }
         addEmptyTimeData()
         chart.notifyDataSetChanged()
         bitmap = null  // reset
