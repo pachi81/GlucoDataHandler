@@ -27,7 +27,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
                 starting = true
                 Log.v(LOG_ID, "start called")
                 migrateSettings(context)
-                start(AppSource.WEAR_APP, context, GlucoDataServiceWear::class.java)
+                start(AppSource.WEAR_APP, context, GlucoDataServiceWear::class.java, StartServiceReceiver::class.java)
                 starting = false
             }
         }

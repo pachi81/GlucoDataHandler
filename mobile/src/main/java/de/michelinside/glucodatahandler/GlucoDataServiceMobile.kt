@@ -54,7 +54,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 starting = true
                 Log.v(LOG_ID, "start called")
                 migrateSettings(context)
-                start(AppSource.PHONE_APP, context, GlucoDataServiceMobile::class.java)
+                start(AppSource.PHONE_APP, context, GlucoDataServiceMobile::class.java, StartServiceReceiver::class.java)
                 starting = false
             }
         }

@@ -1,7 +1,10 @@
 package de.michelinside.glucodatahandler.common
 
 import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.ForegroundServiceStartNotAllowedException
 import android.app.Notification
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -83,11 +86,10 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             return null
         }
 
-        fun start(source: AppSource, context: Context, cls: Class<*>) {
+        fun start(source: AppSource, context: Context, cls: Class<*>, startServiceReceiver: Class<*>? = null) {
             Log.v(LOG_ID, "start called (running: $running - foreground: $foreground)")
-            if (!running) {
+            if (!running || !foreground) {
                 try {
-                    isRunning = true
                     appSource = source
                     migrateSettings(context)
                     val serviceIntent = Intent(
@@ -108,15 +110,77 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                         context.startService(serviceIntent)
                     } else {
                         Log.v(LOG_ID, "start foreground service")
-                        context.startForegroundService(serviceIntent)
+                        context.applicationContext.startForegroundService(serviceIntent)
+                        stopTrigger()
                     }
+                    isRunning = true
                 } catch (exc: Exception) {
-                    Log.e(
-                        LOG_ID,
-                        "start exception: " + exc.message.toString()
-                    )
-                    isRunning = false
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && exc is ForegroundServiceStartNotAllowedException) {
+                        Log.w(LOG_ID,"start foreground exception: " + exc.message.toString())
+                        // try to start service for the case that the alarm can not start it...
+                        if(!isRunning) {
+                            val serviceIntent = Intent(
+                                context,
+                                cls
+                            )
+                            context.startService(serviceIntent)
+                        }
+                        if(startServiceReceiver != null) {
+                            triggerStartService(context, startServiceReceiver)
+                        }
+                    } else {
+                        Log.e(LOG_ID,"start exception: " + exc.message.toString())
+                        isRunning = false
+                    }
                 }
+            }
+        }
+
+        private var alarmManager: AlarmManager? = null
+        private var alarmPendingIntent: PendingIntent? = null
+
+        private fun stopTrigger() {
+            if(alarmManager != null && alarmPendingIntent != null) {
+                Log.d(LOG_ID, "Stop trigger")
+                alarmManager!!.cancel(alarmPendingIntent!!)
+                alarmManager = null
+                alarmPendingIntent = null
+            }
+        }
+
+        private fun triggerStartService(context: Context, receiver: Class<*>) {
+            Log.d(LOG_ID, "Trigger start service - foreground: $foreground - alarm active: ${alarmManager != null && alarmPendingIntent != null}")
+            if(foreground || (alarmManager != null && alarmPendingIntent != null))
+                return
+            alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            var hasExactAlarmPermission = true
+            if (!Utils.canScheduleExactAlarms(context)) {
+                Log.d(LOG_ID, "Need permission to set exact alarm!")
+                hasExactAlarmPermission = false
+            }
+            val intent = Intent(context, receiver)
+            intent.action = "dummy"
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+            alarmPendingIntent = PendingIntent.getBroadcast(
+                context,
+                911,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
+            )
+            val alarmTime = System.currentTimeMillis() + 1000
+            Log.i(LOG_ID, "Trigger alarm at ${Utils.getUiTimeStamp(alarmTime)} - exactAlarm: $hasExactAlarmPermission")
+            if (hasExactAlarmPermission) {
+                alarmManager!!.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    alarmTime,
+                    alarmPendingIntent!!
+                )
+            } else {
+                alarmManager!!.setAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    alarmTime,
+                    alarmPendingIntent!!
+                )
             }
         }
 
