@@ -140,47 +140,56 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         private var alarmPendingIntent: PendingIntent? = null
 
         private fun stopTrigger() {
-            if(alarmManager != null && alarmPendingIntent != null) {
-                Log.d(LOG_ID, "Stop trigger")
-                alarmManager!!.cancel(alarmPendingIntent!!)
-                alarmManager = null
-                alarmPendingIntent = null
+            try {
+                if(alarmManager != null && alarmPendingIntent != null) {
+                    Log.d(LOG_ID, "Stop trigger")
+                    alarmManager!!.cancel(alarmPendingIntent!!)
+                    alarmManager = null
+                    alarmPendingIntent = null
+                }
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "stopTrigger exception: " + exc.message.toString())
             }
         }
 
         private fun triggerStartService(context: Context, receiver: Class<*>) {
-            Log.d(LOG_ID, "Trigger start service - foreground: $foreground - alarm active: ${alarmManager != null && alarmPendingIntent != null}")
-            if(foreground || (alarmManager != null && alarmPendingIntent != null))
-                return
-            alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            var hasExactAlarmPermission = true
-            if (!Utils.canScheduleExactAlarms(context)) {
-                Log.d(LOG_ID, "Need permission to set exact alarm!")
-                hasExactAlarmPermission = false
-            }
-            val intent = Intent(context, receiver)
-            intent.action = "dummy"
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-            alarmPendingIntent = PendingIntent.getBroadcast(
-                context,
-                911,
-                intent,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
-            )
-            val alarmTime = System.currentTimeMillis() + 1000
-            Log.i(LOG_ID, "Trigger alarm at ${Utils.getUiTimeStamp(alarmTime)} - exactAlarm: $hasExactAlarmPermission")
-            if (hasExactAlarmPermission) {
-                alarmManager!!.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    alarmTime,
-                    alarmPendingIntent!!
+            try {
+                Log.d(LOG_ID, "Trigger start service - foreground: $foreground - alarm active: ${alarmManager != null && alarmPendingIntent != null}")
+                if(foreground || (alarmManager != null && alarmPendingIntent != null))
+                    return
+                alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                var hasExactAlarmPermission = true
+                if (!Utils.canScheduleExactAlarms(context)) {
+                    Log.d(LOG_ID, "Need permission to set exact alarm!")
+                    hasExactAlarmPermission = false
+                }
+                val intent = Intent(context, receiver)
+                intent.action = "dummy"
+                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                alarmPendingIntent = PendingIntent.getBroadcast(
+                    context,
+                    911,
+                    intent,
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
                 )
-            } else {
-                alarmManager!!.setAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    alarmTime,
-                    alarmPendingIntent!!
-                )
+                val alarmTime = System.currentTimeMillis() + 1000
+                Log.i(LOG_ID, "Trigger alarm at ${Utils.getUiTimeStamp(alarmTime)} - exactAlarm: $hasExactAlarmPermission")
+                if (hasExactAlarmPermission) {
+                    alarmManager!!.setExactAndAllowWhileIdle(
+                        AlarmManager.RTC_WAKEUP,
+                        alarmTime,
+                        alarmPendingIntent!!
+                    )
+                } else {
+                    alarmManager!!.setAndAllowWhileIdle(
+                        AlarmManager.RTC_WAKEUP,
+                        alarmTime,
+                        alarmPendingIntent!!
+                    )
+                }
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "triggerStartService exception: " + exc.message.toString())
+                stopTrigger()
             }
         }
 
