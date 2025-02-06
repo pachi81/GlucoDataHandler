@@ -13,6 +13,7 @@ import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
+import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -30,6 +31,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     private var httpRequest = HttpRequest()
     protected var retry = false
     protected var firstGetValue = false
+    private var isFirstRequest = true  // first request after startup
 
 
     companion object {
@@ -118,6 +120,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             }
             SourceState.CONNECTED -> {
                 Log.i(LOG_ID, "Set connected for source $source")
+                isFirstRequest = false
             }
             else -> {
                 Log.w(LOG_ID, "Set state for source $source: $state - $error ($code) - message: $message")
@@ -394,5 +397,19 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             }
             return result
         }
+    }
+
+    protected fun getFirstNeedGraphValueTime(): Long {
+        val firstLastPair = dbAccess.getFirstLastTimestamp()
+        val minTime = System.currentTimeMillis() - Constants.DB_MAX_DATA_WEAR_TIME_MS    // 24h for init the first time
+        if(firstLastPair.first == 0L || (isFirstRequest && firstLastPair.first < minTime)) {
+            Log.i(LOG_ID, "First value is ${Utils.getElapsedTimeMinute(firstLastPair.first)} minutes old - try get older data on first request")
+            return minTime
+        }
+        if(firstLastPair.second > 0L && Utils.getElapsedTimeMinute(firstLastPair.second) > interval) {
+            Log.i(LOG_ID, "Last value is ${Utils.getElapsedTimeMinute(firstLastPair.second)} minutes old - try get newer data")
+            return maxOf(firstLastPair.second + 30000, minTime)
+        }
+        return 0L
     }
 }
