@@ -20,6 +20,9 @@ interface GlucoseValueDao {
     @Query("SELECT * FROM glucose_values WHERE timestamp >= :minTime ORDER BY timestamp")
     fun getValuesByTime(minTime: Long): List<GlucoseValue>
 
+    @Query("SELECT * FROM glucose_values WHERE timestamp >= :minTime AND timestamp < :maxTime ORDER BY timestamp")
+    fun getValuesInRange(minTime: Long, maxTime: Long): List<GlucoseValue>
+
     @Query("SELECT * FROM glucose_values ORDER BY timestamp")
     fun getLiveValues(): Flow<List<GlucoseValue>>
 

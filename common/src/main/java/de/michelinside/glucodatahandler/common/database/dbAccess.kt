@@ -24,6 +24,11 @@ object dbAccess {
     private val LOG_ID = "GDH.dbAccess"
     private var database: Database? = null
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    val active: Boolean get() {
+        return database != null
+    }
+
     fun init(context: Context) {
         Log.v(LOG_ID, "init")
         try {
@@ -40,15 +45,35 @@ object dbAccess {
     }
 
     fun getGlucoseValues(minTime: Long = 0L): List<GlucoseValue> = runBlocking {
-        scope.async {
-            if(database != null) {
-                Log.v(LOG_ID, "getGlucoseValues - minTime: ${Utils.getUiTimeStamp(minTime)}")
-                database!!.glucoseValuesDao().getValuesByTime(minTime)
-            } else {
-                Log.e(LOG_ID, "getGlucoseValues - database is null")
-                emptyList()
-            }
-        }.await()
+        if(active) {
+            scope.async {
+                try {
+                    Log.v(LOG_ID, "getGlucoseValues - minTime: ${Utils.getUiTimeStamp(minTime)}")
+                    database!!.glucoseValuesDao().getValuesByTime(minTime)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "getGlucoseValues exception: $exc")
+                    emptyList()
+                }
+            }.await()
+        } else {
+            emptyList()
+        }
+    }
+
+    fun getGlucoseValuesInRange(minTime: Long, maxTime: Long): List<GlucoseValue> = runBlocking {
+        if(active) {
+            scope.async {
+                try {
+                    Log.v(LOG_ID, "getGlucoseValuesInRange - minTime: ${Utils.getUiTimeStamp(minTime)}, maxTime: ${Utils.getUiTimeStamp(maxTime)}")
+                    database!!.glucoseValuesDao().getValuesInRange(minTime, maxTime)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "getGlucoseValuesInRange exception: $exc")
+                    emptyList()
+                }
+            }.await()
+        } else {
+            emptyList()
+        }
     }
 
     fun getLiveValues(): Flow<List<GlucoseValue>> {
@@ -66,79 +91,118 @@ object dbAccess {
     }
 
     fun hasGlucoseValues(minTime: Long = 0L): Boolean = runBlocking {
-        scope.async {
-            if(database != null) {
-                Log.v(LOG_ID, "hasGlucoseValues - minTime: ${Utils.getUiTimeStamp(minTime)}")
-                database!!.glucoseValuesDao().getCountByTime(minTime) > 0
-            } else {
-                false
-            }
-        }.await()
+        if(active) {
+            scope.async {
+                try {
+                    Log.v(LOG_ID, "hasGlucoseValues - minTime: ${Utils.getUiTimeStamp(minTime)}")
+                    database!!.glucoseValuesDao().getCountByTime(minTime) > 0
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "hasGlucoseValues exception: $exc")
+                    false
+                }
+            }.await()
+        } else {
+            false
+        }
     }
 
     fun addGlucoseValue(time: Long, value: Int) {
-        if(database != null) {
+        if(active) {
             scope.launch {
-                Log.v(LOG_ID, "Add new value $value at ${Utils.getUiTimeStamp(time)}")
-                database!!.glucoseValuesDao().insertValue(GlucoseValue(time, value))
+                try {
+                    Log.v(LOG_ID, "Add new value $value at ${Utils.getUiTimeStamp(time)}")
+                    database!!.glucoseValuesDao().insertValue(GlucoseValue(time, value))
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "addGlucoseValue exception: $exc")
+                }
             }
         }
     }
 
     fun addGlucoseValues(values: List<GlucoseValue>) {
-        if(database != null && values.isNotEmpty()) {
+        if(active && values.isNotEmpty()) {
             scope.launch {
-                Log.v(LOG_ID, "Add ${values.size} values")
-                database!!.glucoseValuesDao().insertValues(values)
-                InternalNotifier.notify(GlucoDataService.context!!, NotifySource.GRAPH_DATA_CHANGED, null)
+                try {
+                    Log.v(LOG_ID, "Add ${values.size} values")
+                    database!!.glucoseValuesDao().insertValues(values)
+                    InternalNotifier.notify(GlucoDataService.context!!, NotifySource.GRAPH_DATA_CHANGED, null)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "addGlucoseValues exception: $exc")
+                }
             }
         }
     }
 
     fun getFirstLastTimestamp(): Pair<Long, Long> = runBlocking {
-        scope.async {
-            if(database != null) {
-                val first = database!!.glucoseValuesDao().getFirstTimestamp()
-                val last = database!!.glucoseValuesDao().getLastTimestamp()
-                Pair(first, last)
-            } else {
-                Pair(0L, 0L)
-            }
-        }.await()
+        if(active) {
+            scope.async {
+                try {
+                    val first = database!!.glucoseValuesDao().getFirstTimestamp()
+                    val last = database!!.glucoseValuesDao().getLastTimestamp()
+                    Pair(first, last)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "getFirstLastTimestamp exception: $exc")
+                    Pair(0L, 0L)
+                }
+            }.await()
+        } else {
+            Pair(0L, 0L)
+        }
     }
 
     fun getMaxValue(minTime: Long = 0L): Int = runBlocking {
-        scope.async {
-            if(database != null) {
-                Log.v(LOG_ID, "getMaxValue - minTime: ${Utils.getUiTimeStamp(minTime)}")
-                if(minTime == 0L)
-                    database!!.glucoseValuesDao().getMaxValue()
-                else
-                    database!!.glucoseValuesDao().getMaxValueByTime(minTime)
-            } else 0
-        }.await()
+        if(active) {
+            scope.async {
+                try {
+                    Log.v(LOG_ID, "getMaxValue - minTime: ${Utils.getUiTimeStamp(minTime)}")
+                    if(minTime == 0L)
+                        database!!.glucoseValuesDao().getMaxValue()
+                    else
+                        database!!.glucoseValuesDao().getMaxValueByTime(minTime)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "getMaxValue exception: $exc")
+                    0
+                }
+            }.await()
+        } else 0
     }
 
     fun deleteValues(timestamps: List<Long>) = runBlocking {
-        if(database != null) {
+        if(active) {
             scope.launch {
-                Log.d(LOG_ID, "delete - ${timestamps.size} values")
-                database!!.glucoseValuesDao().deleteValues(timestamps)
+                try {
+                    Log.d(LOG_ID, "delete - ${timestamps.size} values")
+                    database!!.glucoseValuesDao().deleteValues(timestamps)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "deleteValues exception: $exc")
+                }
             }
         }
     }
 
     fun deleteAllValues() = runBlocking {
-        scope.launch {
-            Log.v(LOG_ID, "deleteAllValues")
-            database!!.glucoseValuesDao().deleteAllValues()
+        if(active) {
+            scope.launch {
+                try {
+                    Log.v(LOG_ID, "deleteAllValues")
+                    database!!.glucoseValuesDao().deleteAllValues()
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "deleteAllValues exception: $exc")
+                }
+            }
         }
     }
 
     fun deleteOldValues(minTime: Long) {
-        scope.launch {
-            Log.v(LOG_ID, "deleteOldValues - minTime: ${Utils.getUiTimeStamp(minTime)}")
-            database!!.glucoseValuesDao().deleteOldValues(minTime)
+        if(active) {
+            scope.launch {
+                try {
+                    Log.v(LOG_ID, "deleteOldValues - minTime: ${Utils.getUiTimeStamp(minTime)}")
+                    database!!.glucoseValuesDao().deleteOldValues(minTime)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "deleteOldValues exception: $exc")
+                }
+            }
         }
     }
 

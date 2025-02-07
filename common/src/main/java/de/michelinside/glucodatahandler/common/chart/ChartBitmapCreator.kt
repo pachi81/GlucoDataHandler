@@ -12,11 +12,14 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 
 class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: String = "", private val forComplication: Boolean = false, private val showAxis: Boolean = false): ChartCreator(chart, context, durationPref) {
+    companion object {
+        const val defaultDurationHours = 2
+    }
     private val LOG_ID = "GDH.Chart.BitmapCreator"
     private var bitmap: Bitmap? = null
     override val resetChart = true
     override val circleRadius = 3F
-    override var durationHours = 2
+    override var durationHours = defaultDurationHours
     override val touchEnabled = false
 
     override fun initXaxis() {
@@ -55,6 +58,7 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
     }
 
     override fun updateChart(dataSet: LineDataSet?) {
+        Log.v(LOG_ID, "updateChart for dataSet: $dataSet")
         if(dataSet != null) {
             Log.v(LOG_ID, "Update chart for ${dataSet.values.size} entries and ${dataSet.circleColors.size} colors")
             if(dataSet.values.isNotEmpty())
@@ -70,7 +74,17 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
     }
 
     override fun updateTimeElapsed() {
+        Log.v(LOG_ID, "updateTimeElapsed")
         update(dbAccess.getGlucoseValues(getMinTime()))
+    }
+
+    override fun disable(): Boolean {
+        if(super.disable()) {
+            bitmap = null  // reset
+            InternalNotifier.notify(context, NotifySource.GRAPH_CHANGED, Bundle().apply { putInt(Constants.GRAPH_ID, chart.id) })
+            return true
+        }
+        return false
     }
 
     fun getBitmap(): Bitmap? {

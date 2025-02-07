@@ -8,12 +8,14 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import de.michelinside.glucodatahandler.common.utils.Utils.isScreenReaderOn
 
 
 class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterface {
@@ -53,6 +55,16 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
                     Log.i(LOG_ID, "Setting default tap action for complications to $curApp")
                     with(sharedPref.edit()) {
                         putString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, curApp)
+                        apply()
+                    }
+                }
+
+                // graph settings
+                if(!sharedPref.contains(Constants.SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION)) {
+                    val isScreenReader = context.isScreenReaderOn()
+                    Log.i(LOG_ID, "Setting default duration for graph - screenReader: $isScreenReader")
+                    with(sharedPref.edit()) {
+                        putInt(Constants.SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION, if(isScreenReader) 0 else ChartBitmapCreator.defaultDurationHours)
                         apply()
                     }
                 }

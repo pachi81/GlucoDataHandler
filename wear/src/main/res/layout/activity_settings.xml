@@ -116,7 +116,7 @@
 
             <androidx.appcompat.widget.AppCompatSeekBar
                 android:id="@+id/seekGraphDuration"
-                android:min="1"
+                android:min="0"
                 android:max="12"
                 android:progress="2"
                 android:layout_marginTop="5dp"

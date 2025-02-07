@@ -172,7 +172,7 @@ open class ChartComplication(): SuspendingComplicationDataSourceService() {
     ): PendingIntent {
         return PackageUtils.getAppIntent(
             applicationContext,
-            GraphActivity::class.java,
+            if(chartBitmap != null && chartBitmap!!.enabled) GraphActivity::class.java else GraphActivity::class.java,
             complicationInstanceId
         )
     }

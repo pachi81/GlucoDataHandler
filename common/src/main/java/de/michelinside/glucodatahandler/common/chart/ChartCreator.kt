@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.core.view.drawToBitmap
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
@@ -39,6 +40,9 @@ import kotlin.math.abs
 
 open class ChartCreator(protected val chart: GlucoseChart, protected val context: Context, protected val durationPref: String = ""): NotifierInterface,
     SharedPreferences.OnSharedPreferenceChangeListener {
+    companion object {
+        const val defaultDurationHours = 4
+    }
     private var LOG_ID = "GDH.Chart.Creator"
     protected var created = false
     protected val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -48,13 +52,17 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     //private var createJob: Job? = null
     private var dataSyncJob: Job? = null
     protected open val resetChart = false
-    protected open var durationHours = 4
+    protected open var durationHours = defaultDurationHours
     protected open val yAxisOffset = 0F
     protected open val yAxisLeftOffset = -15F
     protected open val yAxisInterval = 50F
     protected open val circleRadius = 2F
     protected open val touchEnabled = true
     protected open val graphStartTime = 0L
+
+    val enabled: Boolean get() {
+        return chart.visibility == View.VISIBLE
+    }
 
     private var graphPrefList = mutableSetOf(
         Constants.SHARED_PREF_LOW_GLUCOSE,
@@ -74,6 +82,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             ChartUtils.init(context)
             if(durationPref.isNotEmpty()) {
                 durationHours = sharedPref.getInt(durationPref, durationHours)
+                if(durationHours == 0)
+                    disable()
             }
             sharedPref.registerOnSharedPreferenceChangeListener(this)
             updateNotifier()
@@ -83,14 +93,15 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
 
     protected fun updateNotifier() {
         val hasData = dbAccess.hasGlucoseValues(getMinTime())
-        Log.d(LOG_ID, "updateNotifier - has data: $hasData - xAxisEnabled: ${chart.xAxis.isEnabled}")
-        if(hasData || chart.xAxis.isEnabled) {
+        Log.d(LOG_ID, "updateNotifier -enabled: $enabled - has data: $hasData - xAxisEnabled: ${chart.xAxis.isEnabled}")
+        if(enabled && (hasData || chart.xAxis.isEnabled)) {
             InternalNotifier.addNotifier(context, this, mutableSetOf(NotifySource.TIME_VALUE))
             hasTimeNotifier = true
         } else {
             InternalNotifier.remNotifier(context, this)
             hasTimeNotifier = false
         }
+        Log.v(LOG_ID, "updateNotifier - has notifier: $hasTimeNotifier")
     }
 
     private fun waitForCreation() {
@@ -108,17 +119,19 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             Log.d(LOG_ID, "create")
             stopDataSync()
             init()
-            resetChart()
-            initXaxis()
-            initYaxis()
-            initChart()
-            if(initData) {
-                initData()
-            } else {
-                initDataSet()
+            if(enabled) {
+                resetChart()
+                initXaxis()
+                initYaxis()
+                initChart()
+                if(initData) {
+                    initData()
+                } else {
+                    initDataSet()
+                }
+                created = true
+                Log.d(LOG_ID, "create done")
             }
-            created = true
-            Log.d(LOG_ID, "create done")
         } catch (exc: Exception) {
             Log.e(LOG_ID, "create exception: " + exc.message + " - " + exc.stackTraceToString())
         }
@@ -134,7 +147,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
 
     fun resume() {
         try {
-            if(!startDataSync()) {
+            if(enabled && !startDataSync()) {
                 if(chart.xAxis.axisMinimum > chart.xAxis.axisMaximum)
                     chart.postInvalidate()   // need to redraw the chart
             }
@@ -300,7 +313,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     }
 
     protected open fun getDefaultMaxValue() : Float {
-        return maxOf(ReceiveData.highRaw, dbAccess.getMaxValue(getMinTime()).toFloat()) + 10F
+        return listOf(200F, ReceiveData.highRaw, ReceiveData.targetMaxRaw, dbAccess.getMaxValue(getMinTime()).toFloat()).max() + 10F
     }
 
     protected fun stopDataSync() {
@@ -321,7 +334,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     }
 
     private fun startDataSync(): Boolean {
-        if(dataSyncJob?.isActive != true) {
+        if(enabled && dataSyncJob?.isActive != true) {
             Log.v(LOG_ID, "startDataSync")
             dataSyncJob = scope.launch {
                 dataSync()
@@ -472,7 +485,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     protected open fun updateChart(dataSet: LineDataSet?) {
         val right = isRight()
         val left = isLeft()
-        Log.v(LOG_ID, "Min: ${chart.xAxis.axisMinimum} - visible: ${chart.lowestVisibleX} - Max: ${chart.xAxis.axisMaximum} - visible: ${chart.highestVisibleX} - isLeft: ${left} - isRight: ${right}" )
+        Log.v(LOG_ID, "updateChart - Min: ${chart.xAxis.axisMinimum} - visible: ${chart.lowestVisibleX} - Max: ${chart.xAxis.axisMaximum} - visible: ${chart.highestVisibleX} - isLeft: ${left} - isRight: ${right}" )
         val diffTimeMin = TimeUnit.MILLISECONDS.toMinutes(TimeValueFormatter.from_chart_x(chart.highestVisibleX) - TimeValueFormatter.from_chart_x(chart.lowestVisibleX))
         if(!chart.highlighted.isNullOrEmpty() && chart.highlighted[0].dataSetIndex != 0) {
             Log.v(LOG_ID, "Unset current highlighter")
@@ -655,19 +668,52 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         return sharedPref.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, false)
     }
 
+    protected open fun disable(): Boolean {
+        if(enabled && durationHours == 0) {
+            Log.i(LOG_ID, "disable graph")
+            stopDataSync()
+            resetChart()
+            chart.visibility = View.GONE
+            chart.setNoDataText(context.resources.getString(R.string.graph_disabled))
+            updateNotifier()
+            return true
+        }
+        return false
+    }
+
+    private fun enable(): Boolean {
+        if(!enabled && durationHours > 0) {
+            Log.i(LOG_ID, "enable graph")
+            chart.visibility = View.VISIBLE
+            chart.setNoDataText(context.resources.getString(R.string.no_graph_data))
+            updateNotifier()
+            create(true)
+        }
+        return false
+    }
+
+    private fun OnDurationChanged() {
+        Log.v(LOG_ID, "OnDurationChanged: $durationHours")
+        if(durationHours == 0)
+            disable()
+        else if(!enable()) {
+            stopDataSync()
+            resetChartData()
+            chart.fitScreen()
+            initData()
+        }
+    }
+
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         Log.d(LOG_ID, "onSharedPreferenceChanged: $key")
         try {
             if(key == durationPref) {
                 durationHours = sharedPref.getInt(durationPref, durationHours)
-                stopDataSync()
-                resetChartData()
-                chart.fitScreen()
-                initData()
+                OnDurationChanged()
             } else if (graphPrefList.contains(key)) {
                 Log.i(LOG_ID, "re create graph after settings changed for key: $key")
                 ReceiveData.updateSettings(sharedPref)
-                if(chart.data != null && chart.data.getDataSetByIndex(0).entryCount > 0)
+                if(chart.data != null)
                     create(true) // recreate chart with new graph data
             }
         } catch (exc: Exception) {

@@ -11,6 +11,10 @@ class ChartBitmap(val context: Context, durationPref: String = "", width: Int = 
 
     private var chartViewer: ChartBitmapCreator
     private var chart: GlucoseChart = GlucoseChart(context)
+    val enabled: Boolean get() {
+        return chartViewer.enabled
+    }
+
     init {
         val viewHeight = if(height > 0) height else width/3
         Log.v(LOG_ID, "init - width: $width - durationPref: $durationPref")
