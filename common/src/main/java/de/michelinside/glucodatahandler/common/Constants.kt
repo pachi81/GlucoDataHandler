@@ -291,6 +291,7 @@ object Constants {
     const val DB_MAX_DATA_WEAR_TIME_MS = (24*60*60*1000)  // 24h
     const val DB_MAX_DATA_TIME_MS = (7*24*60*60*1000)  // 7 days
     const val SHARED_PREF_RESET_DATABASE = "reset_db"
+    const val SHARED_PREF_USE_RATE_CALCULATION = "rate_calculation"
 
     // graph
     const val GRAPH_ID = "graph_id"

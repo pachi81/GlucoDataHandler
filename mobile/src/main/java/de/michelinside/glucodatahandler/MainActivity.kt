@@ -33,6 +33,7 @@ import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.ReceiveData.isObsoleteShort
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
@@ -49,6 +50,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.ui.Dialogs
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
@@ -71,6 +73,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtLastValue: TextView
     private lateinit var txtVersion: TextView
     private lateinit var tableDetails: TableLayout
+    private lateinit var tableDelta: TableLayout
     private lateinit var tableConnections: TableLayout
     private lateinit var tableAlarms: TableLayout
     private lateinit var tableNotes: TableLayout
@@ -106,6 +109,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableConnections = findViewById(R.id.tableConnections)
             tableAlarms = findViewById(R.id.tableAlarms)
             tableDetails = findViewById(R.id.tableDetails)
+            tableDelta = findViewById(R.id.tableDelta)
             tableNotes = findViewById(R.id.tableNotes)
             chart = findViewById(R.id.chart)
 
@@ -556,6 +560,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             updateNotesTable()
             updateAlarmsTable()
             updateConnectionsTable()
+            updateDeltaTable()
             updateDetailsTable()
 
             updateAlarmIcon()
@@ -724,6 +729,27 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         else if (AlarmHandler.isSnoozeActive)
             tableAlarms.addView(createRow(CR.string.snooze_until, AlarmHandler.snoozeTimestamp))
         checkTableVisibility(tableAlarms)
+    }
+
+    private fun updateDeltaTable() {
+        tableDelta.removeViews(1, maxOf(0, tableDelta.childCount - 1))
+        if(!isObsoleteShort()) {
+            if(!ReceiveData.delta1Min.isNaN())
+                tableDelta.addView(createRow(CR.string.delta_per_minute, GlucoDataUtils.deltaToString(ReceiveData.delta1Min, true)))
+            if(!ReceiveData.delta5Min.isNaN())
+                tableDelta.addView(createRow(CR.string.delta_per_5_minute, GlucoDataUtils.deltaToString(ReceiveData.delta5Min, true)))
+            if(!ReceiveData.delta10Min.isNaN())
+                tableDelta.addView(createRow(CR.string.delta_per_10_minute, GlucoDataUtils.deltaToString(ReceiveData.delta10Min, true)))
+            if(!ReceiveData.delta15Min.isNaN())
+                tableDelta.addView(createRow(CR.string.delta_per_15_minute, GlucoDataUtils.deltaToString(ReceiveData.delta15Min, true)))
+            if(!ReceiveData.rate.isNaN()) {
+                tableDelta.addView(createRow("Rate", ReceiveData.getRateAsString() + " (" + GlucoDataUtils.getRateDegrees(ReceiveData.rate) + "°)"))
+                if(!ReceiveData.sourceRate.isNaN()) {
+                    tableDelta.addView(createRow("Source rate", ReceiveData.sourceRate.toString() + " (" + GlucoDataUtils.getRateDegrees(ReceiveData.sourceRate) + "°)"))
+                }
+            }
+        }
+        checkTableVisibility(tableDelta)
     }
 
     private fun updateDetailsTable() {

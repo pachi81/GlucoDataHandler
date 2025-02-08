@@ -53,8 +53,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     private var dataSyncJob: Job? = null
     protected open val resetChart = false
     protected open var durationHours = defaultDurationHours
-    protected open val yAxisOffset = 0F
-    protected open val yAxisLeftOffset = -15F
+    protected open val yAxisOffset = 2F
+    protected open val yAxisLeftOffset = -17F
     protected open val yAxisInterval = 50F
     protected open val circleRadius = 2F
     protected open val touchEnabled = true

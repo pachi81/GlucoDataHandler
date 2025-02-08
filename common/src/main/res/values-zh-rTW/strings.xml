@@ -712,4 +712,6 @@
     <string name="pref_show_iob_cob">顯示 IOB/COB 值</string>
     <string name="pref_show_iob_cob_summary">顯示 IOB 和 COB 值（如果有的話）。</string>
 
+    <string name="delta_per_10_minute">每 10 分鐘</string>
+    <string name="delta_per_15_minute">每 15 分鐘</string>
 </resources>
