@@ -32,11 +32,14 @@ class BatteryLevelWidget : AppWidgetProvider() {
                 val batteryLevelStr = if (batteryLevel == 0) "?%" else "$batteryLevel%"
                 remoteViews.setTextViewText(R.id.battery_level, batteryLevelStr)
                 remoteViews.setTextViewText(R.id.device_name, deviceName)
-                var levelColour = Color.GREEN
-                if (batteryLevel < 25)
-                    levelColour = Color.RED
-                else if (batteryLevel < 45)
-                    levelColour = Color.YELLOW
+                val levelColour = if(batteryLevel == 0)
+                        Color.GRAY
+                    else if (batteryLevel < 25)
+                        Color.RED
+                    else if (batteryLevel < 45)
+                        Color.YELLOW
+                    else
+                        Color.GREEN
                 remoteViews.setTextColor(R.id.battery_level, levelColour)
 
                 val sharedPref =

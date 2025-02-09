@@ -268,7 +268,6 @@
     <string name="widget_glucose_trend_delta">Glucose, trend and delta</string>
     <string name="widget_glucose_trend_delta_timestamp">Glucose, trend, delta and timestamp</string>
     <string name="widget_glucose_trend_delta_timestamp_iob_cob">Glucose, trend, delta, time and IOB/COB</string>
-    <string name="widget_wearos_battery_level">WearOS battery level</string>
 
     <string name="pref_send_to_bangleJS">BangleJS support</string>
     <string name="pref_send_to_bangleJS_summary">Forward values to widbgjs widget for BangleJS.</string>
@@ -771,9 +770,14 @@
     <string name="alarm_snooze_on_notification_summary">Choose up to 3 snooze durations to display as buttons on the alarm notification.</string>
     <string name="pref_show_iob_cob">Show IOB/COB values</string>
     <string name="pref_show_iob_cob_summary">Show IOB and COB values, if available.</string>
+
+    <!-- v2.0 -->
+
     <string name="delta_per_10_minute">per 10 minutes</string>
     <string name="delta_per_15_minute">per 15 minutes</string>
-    
+
+    <string name="widget_wearos_battery_level">WearOS battery level</string>
+
     <string name="graph">Graph</string>
     <string name="graph_duration">Graph duration</string>
     <string name="graph_duration_wear_summary">Number of hours shown in the graph in complication and on main screen.\nUse 0 to disable graph.</string>

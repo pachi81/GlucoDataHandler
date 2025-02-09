@@ -115,10 +115,10 @@ class WearPhoneConnection : WearableListenerService(), MessageClient.OnMessageRe
             val node = connectedNodes[nodeId]
             if (node != null) {
                 if (nodeBatteryLevel.containsKey(nodeId)) {
-                    nodeBatterLevels[node.displayName] = nodeBatteryLevel.getValue(nodeId)
+                    nodeBatterLevels[getDisplayName(node)] = nodeBatteryLevel.getValue(nodeId)
                 }
                 else if (addMissing) {
-                    nodeBatterLevels[node.displayName] = -1
+                    nodeBatterLevels[getDisplayName(node)] = -1
                 }
             }
             return nodeBatterLevels
