@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.IBinder
 import android.util.Log
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator
@@ -158,6 +159,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
     }
 
     override fun getNotification(): Notification {
+        Log.d(LOG_ID, "create foreground notification")
         Channels.createNotificationChannel(this, ChannelType.WEAR_FOREGROUND)
 
         val pendingIntent = PackageUtils.getAppIntent(this, WearActivity::class.java, 11)
@@ -183,6 +185,10 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
         }
+    }
+
+    override fun onBind(intent: Intent?): IBinder? {
+        return null
     }
 
     override fun updateScreenReceiver() {

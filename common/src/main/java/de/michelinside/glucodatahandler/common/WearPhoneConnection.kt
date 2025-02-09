@@ -34,7 +34,7 @@ enum class Command {
     DB_SYNC
 }
 
-class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener, NotifierInterface {
+class WearPhoneConnection : WearableListenerService(), MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener, NotifierInterface {
     private val LOG_ID = "GDH.WearPhoneConnection"
     private lateinit var context: Context
     private var lastSendValuesTime = 0L
