@@ -184,6 +184,7 @@
         <receiver android:name=".common.notification.AlarmIntentReceiver" />
         <receiver android:name=".common.receiver.InternalActionReceiver" />
         <receiver android:name=".common.notification.AlarmSnoozeEndReceiver" />
+        <receiver android:name=".StartServiceReceiver" />
         <receiver
             android:name=".StartServiceAtBootReceiver"
             android:enabled="true"
