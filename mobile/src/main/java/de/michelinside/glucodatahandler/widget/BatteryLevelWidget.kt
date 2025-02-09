@@ -3,14 +3,15 @@ package de.michelinside.glucodatahandler.widget
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.RemoteViews
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
+import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.R as CR
 
@@ -33,13 +34,13 @@ class BatteryLevelWidget : AppWidgetProvider() {
                 remoteViews.setTextViewText(R.id.battery_level, batteryLevelStr)
                 remoteViews.setTextViewText(R.id.device_name, deviceName)
                 val levelColour = if(batteryLevel == 0)
-                        Color.GRAY
+                        ReceiveData.getAlarmTypeColor(AlarmType.NONE)
                     else if (batteryLevel < 25)
-                        Color.RED
+                        ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW)
                     else if (batteryLevel < 45)
-                        Color.YELLOW
+                        ReceiveData.getAlarmTypeColor(AlarmType.LOW)
                     else
-                        Color.GREEN
+                        ReceiveData.getAlarmTypeColor(AlarmType.OK)
                 remoteViews.setTextColor(R.id.battery_level, levelColour)
 
                 val sharedPref =
