@@ -59,6 +59,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         @JvmStatic
         @SuppressLint("StaticFieldLeak")
         protected var connection: WearPhoneConnection? = null
+        var startServiceReceiver: Class<*>? = null
         val foreground get() = isForegroundService
         const val NOTIFICATION_ID = 1234
         var appSource = AppSource.NOT_SET
@@ -86,7 +87,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             return null
         }
 
-        fun start(source: AppSource, context: Context, cls: Class<*>, startServiceReceiver: Class<*>? = null) {
+        fun start(source: AppSource, context: Context, cls: Class<*>) {
             Log.v(LOG_ID, "start called (running: $running - foreground: $foreground)")
             if (!running || !foreground) {
                 try {
@@ -126,7 +127,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                             context.startService(serviceIntent)
                         }
                         if(startServiceReceiver != null) {
-                            triggerStartService(context, startServiceReceiver)
+                            triggerStartService(context, startServiceReceiver!!)
                         }
                     } else {
                         Log.e(LOG_ID,"start exception: " + exc.message.toString())
@@ -502,11 +503,9 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         try {
-            Log.v(LOG_ID, "onStartCommand called")
+            Log.i(LOG_ID, "onStartCommand called foregroundService: $isForegroundService")
             GdhUncaughtExecptionHandler.init()
-            super.onStartCommand(intent, flags, startId)
-            val isForeground = true // intent?.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)    --> always use foreground!!!
-            if (isForeground && !isForegroundService) {
+            if (!isForegroundService) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                     Log.i(LOG_ID, "Starting service in foreground with type ${ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC}!")
                     startForeground(
@@ -519,13 +518,15 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     startForeground(NOTIFICATION_ID, getNotification())
                 }
                 isForegroundService = true
-            } else if ( isForegroundService && intent?.getBooleanExtra(Constants.ACTION_STOP_FOREGROUND, false) == true ) {
-                isForegroundService = false
-                Log.i(LOG_ID, "Stopping service in foreground!")
-                stopForeground(STOP_FOREGROUND_REMOVE)
+                stopTrigger()
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onStartCommand exception: " + exc.toString())
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && exc is ForegroundServiceStartNotAllowedException) {
+                if(startServiceReceiver != null) {
+                    triggerStartService(this, startServiceReceiver!!)
+                }
+            }
         }
         return START_STICKY  // keep alive
     }
@@ -535,7 +536,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
     override fun onCreate() {
         try {
             super.onCreate()
-            Log.i(LOG_ID, "onCreate called")
+            Log.i(LOG_ID, "onCreate called foreground: $foreground")
             service = this
             isRunning = true
 
