@@ -98,7 +98,7 @@ object GlucoDataUtils {
     fun getRateDegrees(rate: Float): Int {
         if (rate.isNaN())
             return 0
-        return Utils.round(maxOf(-2F, minOf(2F, rate)) / 2F * 90F, 0).toInt()
+        return (Utils.round(maxOf(-2F, minOf(2F, rate)) / 2F * 90F, 0).toInt()/5)*5  // series of 5
     }
 
     private var rateDelta = 0.1F

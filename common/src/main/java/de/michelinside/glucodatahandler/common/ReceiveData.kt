@@ -260,7 +260,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     fun getRateAsString(): String {
         if(isObsoleteShort())
             return "--"
-        return (if (rate > 0) "+" else "") + rate.toString()
+        return (if (rate > 0) "+" else "") + Utils.round(rate, 2).toString()
     }
 
     fun getRateAsText(context: Context): String {
