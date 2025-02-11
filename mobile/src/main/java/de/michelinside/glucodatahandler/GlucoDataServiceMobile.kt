@@ -7,7 +7,6 @@ import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
-import android.os.IBinder
 import android.util.Log
 import androidx.annotation.RequiresApi
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
@@ -223,7 +222,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
     }
 
     override fun getNotification(): Notification {
-        Log.d(LOG_ID, "create foreground notification")
+        Log.v(LOG_ID, "getNotification called")
         return PermanentNotification.getNotification(
             !sharedPref!!.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false),
             Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON,
@@ -378,9 +377,5 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateBatteryReceiver exception: " + exc.toString())
         }
-    }
-
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
     }
 }
