@@ -132,6 +132,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }
             Dialogs.updateColorScheme(this)
 
+            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+
             if (requestPermission())
                 GlucoDataServiceMobile.start(this)
             TextToSpeechUtils.initTextToSpeech(this)

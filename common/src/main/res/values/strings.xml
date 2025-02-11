@@ -793,5 +793,8 @@
     <string name="pref_switch_use_rate_calculation">Trend calculation</string>
     <string name="pref_switch_use_rate_calculation_summary_on">Use internal trend calculation related to the last values.</string>
     <string name="pref_switch_use_rate_calculation_summary_off">Use trend provided by the source.\nIf no trend is available, the internal calculation is used.</string>
+    
+   <string name="accessibility_service_description">Display glucose values on the Always-on Display</string>
+
 
 </resources>
