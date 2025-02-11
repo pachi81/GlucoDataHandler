@@ -110,14 +110,14 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     if (foreground) {
                         context.startService(serviceIntent)
                     } else {
-                        Log.v(LOG_ID, "start foreground service")
+                        Log.i(LOG_ID, "start foreground service")
                         context.applicationContext.startForegroundService(serviceIntent)
                         stopTrigger()
                     }
                     isRunning = true
                 } catch (exc: Exception) {
                     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && exc is ForegroundServiceStartNotAllowedException) {
-                        Log.w(LOG_ID,"start foreground exception: " + exc.message.toString())
+                        Log.e(LOG_ID,"start foreground exception: " + exc.message.toString())
                         // try to start service for the case that the alarm can not start it...
                         if(!isRunning) {
                             val serviceIntent = Intent(
@@ -143,7 +143,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         private fun stopTrigger() {
             try {
                 if(alarmManager != null && alarmPendingIntent != null) {
-                    Log.d(LOG_ID, "Stop trigger")
+                    Log.i(LOG_ID, "Stop trigger")
                     alarmManager!!.cancel(alarmPendingIntent!!)
                     alarmManager = null
                     alarmPendingIntent = null

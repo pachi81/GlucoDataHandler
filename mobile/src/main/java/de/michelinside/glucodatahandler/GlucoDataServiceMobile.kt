@@ -52,7 +52,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         fun start(context: Context) {
             if(!starting) {
                 starting = true
-                Log.v(LOG_ID, "start called")
+                Log.i(LOG_ID, "start called")
                 startServiceReceiver = StartServiceReceiver::class.java
                 migrateSettings(context)
                 start(AppSource.PHONE_APP, context, GlucoDataServiceMobile::class.java)
@@ -170,7 +170,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
 
     override fun onCreate() {
         try {
-            Log.d(LOG_ID, "onCreate called")
+            Log.i(LOG_ID, "onCreate called")
             super.onCreate()
             val filter = mutableSetOf(
                 NotifySource.BROADCAST,
@@ -196,7 +196,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         try {
-            Log.d(LOG_ID, "onStartCommand called")
+            Log.i(LOG_ID, "onStartCommand called")
             val start = super.onStartCommand(intent, flags, startId)
             PermanentNotification.showNotifications(true)
             return start
@@ -207,7 +207,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
     }
 
     override fun getNotification(): Notification {
-        Log.v(LOG_ID, "getNotification called")
+        Log.i(LOG_ID, "getNotification called")
         return PermanentNotification.getNotification(
             !sharedPref!!.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false),
             Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON,
@@ -218,7 +218,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
 
     override fun onDestroy() {
         try {
-            Log.d(LOG_ID, "onDestroy called")
+            Log.w(LOG_ID, "onDestroy called")
             PermanentNotification.destroy()
             AlarmNotification.destroy(this)
             CarModeReceiver.cleanup(applicationContext)
