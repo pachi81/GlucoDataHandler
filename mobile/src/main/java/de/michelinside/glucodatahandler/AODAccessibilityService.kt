@@ -46,6 +46,7 @@ class AODAccessibilityService : AccessibilityService(), NotifierInterface {
                 }
                 Intent.ACTION_SCREEN_ON -> {
                     Log.d(LOG_ID, "Screen turned on")
+                    removeNotifier()
                     removeOverlay()
                 }
             }
@@ -71,7 +72,12 @@ class AODAccessibilityService : AccessibilityService(), NotifierInterface {
     private fun checkAndCreateOverlay() {
         handler.postDelayed({
             if (!powerManager.isInteractive && overlayView == null) {
-                createOverlay()
+                try {
+                    createOverlay()
+                    addNotifier(this)
+                } catch (e: Exception) {
+                    Log.e(LOG_ID, "Error adding overlay", e)
+                }
             }
         }, 1000)
     }
@@ -100,12 +106,9 @@ class AODAccessibilityService : AccessibilityService(), NotifierInterface {
 
         updateOverlay()
 
-        Log.d(LOG_ID, "layout:" + layoutParams.width + " " + layoutParams.height)
-
         try {
             windowManager.addView(overlayView, layoutParams)
             Log.d(LOG_ID, "Overlay added successfully")
-            addNotifier(this)
         } catch (e: Exception) {
             Log.e(LOG_ID, "Error adding overlay", e)
         }
@@ -135,7 +138,7 @@ class AODAccessibilityService : AccessibilityService(), NotifierInterface {
 
     private fun removeOverlay() {
         Log.d(LOG_ID, "Removing overlay")
-        removeNotifier()
+
         overlayView?.let {
             try {
                 windowManager.removeView(it)
@@ -164,7 +167,6 @@ class AODAccessibilityService : AccessibilityService(), NotifierInterface {
             txtTime.text = "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(this)}"
             txtIob.text = "💉 ${ReceiveData.getIobAsString()}"
             txtCob.text = "🍔 ${ReceiveData.getCobAsString()}"
-
         }
     }
 
@@ -201,7 +203,8 @@ class AODAccessibilityService : AccessibilityService(), NotifierInterface {
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.d(LOG_ID, "OnNotifyData called for source $dataSource : " + extras)
 
-        updateOverlay()
+        removeOverlay()
+        createOverlay()
 
 //        TODO("Not yet implemented")
     }
