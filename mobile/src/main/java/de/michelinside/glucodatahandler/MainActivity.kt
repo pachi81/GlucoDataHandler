@@ -230,7 +230,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun checkFullscreenPermission() {
         if(sharedPref.contains(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED) && sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, true)) {
-            if (!AlarmNotification.hasFullscreenPermission()) {
+            if (!AlarmNotification.hasFullscreenPermission(this)) {
                 Dialogs.showOkCancelDialog(this,
                     resources.getString(CR.string.permission_missing_title),
                     resources.getString(CR.string.setting_permission_missing_message, resources.getString(CR.string.alarm_fullscreen_notification_enabled)),

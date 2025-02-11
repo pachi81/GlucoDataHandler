@@ -214,6 +214,8 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                     lastElapsedMinute = 0L
                     startTimer()
                 }
+            } else if(!checkRunning()) {
+                startTimer()
             }
         } catch (ex: Exception) {
             Log.e(LOG_ID, "calculateInterval: " + ex)
@@ -314,7 +316,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
 
     fun stopTimer() {
         if (alarmManager != null && pendingIntent != null) {
-            Log.v(LOG_ID, "stopTimer called")
+            Log.i(LOG_ID, "stopTimer called")
             alarmManager!!.cancel(pendingIntent!!)
             alarmManager = null
             currentAlarmTime = 0L
@@ -370,7 +372,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                 filter
             )
             initBackgroundTasks()
-            checkTimer()  // this will start the time
+            checkTimer()  // this will start the timer
         } catch (ex: Exception) {
             Log.e(LOG_ID, "run: " + ex)
         }
