@@ -107,13 +107,13 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                         // default on wear and phone
                         true//sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
                     )
-                    if (foreground) {
+                    //if (foreground) {
                         context.startService(serviceIntent)
-                    } else {
+                    /*} else {
                         Log.i(LOG_ID, "start foreground service")
                         context.applicationContext.startForegroundService(serviceIntent)
                         stopTrigger()
-                    }
+                    }*/
                     isRunning = true
                 } catch (exc: Exception) {
                     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && exc is ForegroundServiceStartNotAllowedException) {
@@ -155,7 +155,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
 
         private fun triggerStartService(context: Context, receiver: Class<*>) {
             try {
-                Log.d(LOG_ID, "Trigger start service - foreground: $foreground - alarm active: ${alarmManager != null && alarmPendingIntent != null}")
+                Log.i(LOG_ID, "Trigger start service - foreground: $foreground - alarm active: ${alarmManager != null && alarmPendingIntent != null}")
                 if(foreground || (alarmManager != null && alarmPendingIntent != null))
                     return
                 alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
