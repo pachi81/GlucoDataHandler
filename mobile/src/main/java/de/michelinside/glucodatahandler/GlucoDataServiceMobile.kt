@@ -52,7 +52,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         fun start(context: Context) {
             if(!starting) {
                 starting = true
-                Log.i(LOG_ID, "start called")
+                Log.d(LOG_ID, "start called")
                 startServiceReceiver = StartServiceReceiver::class.java
                 migrateSettings(context)
                 start(AppSource.PHONE_APP, context, GlucoDataServiceMobile::class.java)

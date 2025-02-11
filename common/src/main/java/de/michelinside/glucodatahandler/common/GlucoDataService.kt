@@ -101,12 +101,12 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     val sharedPref = context.getSharedPreferences(
                         Constants.SHARED_PREF_TAG,
                         Context.MODE_PRIVATE
-                    )*/
+                    )
                     serviceIntent.putExtra(
                         Constants.SHARED_PREF_FOREGROUND_SERVICE,
                         // default on wear and phone
                         true//sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
-                    )
+                    )*/
                     //if (foreground) {
                         context.startService(serviceIntent)
                     /*} else {
@@ -115,6 +115,10 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                         stopTrigger()
                     }*/
                     isRunning = true
+                    if(!foreground && startServiceReceiver != null) {
+                        // trigger also foreground alarm
+                        triggerStartService(context, startServiceReceiver!!)
+                    }
                 } catch (exc: Exception) {
                     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && exc is ForegroundServiceStartNotAllowedException) {
                         Log.e(LOG_ID,"start foreground exception: " + exc.message.toString())
@@ -165,7 +169,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     hasExactAlarmPermission = false
                 }
                 val intent = Intent(context, receiver)
-                intent.action = "dummy"
+                intent.action = Constants.ACTION_START_FOREGROUND
                 intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
                 alarmPendingIntent = PendingIntent.getBroadcast(
                     context,
