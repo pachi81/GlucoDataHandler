@@ -715,4 +715,6 @@
     <string name="pref_show_iob_cob">Показване на IOB/COB стойности</string>
     <string name="pref_show_iob_cob_summary">Показване на IOB и COB стойности, ако са налични.</string>
 
+    <string name="delta_per_10_minute">на 10 минути</string>
+    <string name="delta_per_15_minute">на 15 минути</string>
 </resources>

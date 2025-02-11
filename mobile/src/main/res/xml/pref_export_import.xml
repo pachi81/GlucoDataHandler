@@ -29,4 +29,13 @@
                     android:summary="@string/menu_save_wear_logs_summary"
                     app:iconSpaceReserved="false" />
         </PreferenceCategory>
+        <PreferenceCategory
+            android:title="@string/menu_database"
+            app:iconSpaceReserved="false">
+                <Preference
+                    android:key="reset_db"
+                    android:title="@string/reset_db"
+                    android:summary="@string/reset_db_summary"
+                    app:iconSpaceReserved="false" />
+        </PreferenceCategory>
 </PreferenceScreen>

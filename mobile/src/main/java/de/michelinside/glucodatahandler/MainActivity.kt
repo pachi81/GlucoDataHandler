@@ -33,9 +33,12 @@ import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.ReceiveData.isObsoleteShort
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
+import de.michelinside.glucodatahandler.common.chart.ChartCreator
+import de.michelinside.glucodatahandler.common.chart.GlucoseChart
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmState
 import de.michelinside.glucodatahandler.common.notification.AlarmType
@@ -47,6 +50,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.ui.Dialogs
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
@@ -69,18 +73,21 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtLastValue: TextView
     private lateinit var txtVersion: TextView
     private lateinit var tableDetails: TableLayout
+    private lateinit var tableDelta: TableLayout
     private lateinit var tableConnections: TableLayout
     private lateinit var tableAlarms: TableLayout
     private lateinit var tableNotes: TableLayout
     private lateinit var btnSources: Button
     private lateinit var sharedPref: SharedPreferences
     private lateinit var optionsMenu: Menu
+    private lateinit var chart: GlucoseChart
     private var alarmIcon: MenuItem? = null
     private var snoozeMenu: MenuItem? = null
     private var floatingWidgetItem: MenuItem? = null
     private val LOG_ID = "GDH.Main"
     private var requestNotificationPermission = false
     private var doNotUpdate = false
+    private lateinit var chartCreator: ChartCreator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -102,7 +109,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableConnections = findViewById(R.id.tableConnections)
             tableAlarms = findViewById(R.id.tableAlarms)
             tableDetails = findViewById(R.id.tableDetails)
+            tableDelta = findViewById(R.id.tableDelta)
             tableNotes = findViewById(R.id.tableNotes)
+            chart = findViewById(R.id.chart)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -126,6 +135,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             if (requestPermission())
                 GlucoDataServiceMobile.start(this)
             TextToSpeechUtils.initTextToSpeech(this)
+            chartCreator = ChartCreator(chart, this, Constants.SHARED_PREF_GRAPH_DURATION_PHONE_MAIN)
+            chartCreator.create()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -149,6 +160,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             checkUncaughtException()
             doNotUpdate = false
             update()
+            chartCreator.resume()
             InternalNotifier.addNotifier(this, this, mutableSetOf(
                 NotifySource.BROADCAST,
                 NotifySource.IOB_COB_CHANGE,
@@ -174,6 +186,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
         }
     }
+
+    override fun onDestroy() {
+        Log.v(LOG_ID, "onDestroy called")
+        super.onDestroy()
+        chartCreator.close()
+    }
+
     private val requestPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -207,17 +226,15 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 .setTitle(CR.string.request_exact_alarm_title)
                 .setMessage(CR.string.request_exact_alarm_summary)
                 .setPositiveButton(CR.string.button_ok) { dialog, which ->
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        try {
-                            startActivity(
-                                Intent(
-                                    ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
-                                    Uri.parse("package:$packageName")
-                                )
+                    try {
+                        startActivity(
+                            Intent(
+                                ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                                Uri.parse("package:$packageName")
                             )
-                        } catch (exc: Exception) {
-                            Log.e(LOG_ID, "requestExactAlarmPermission exception: " + exc.message.toString() )
-                        }
+                        )
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "requestExactAlarmPermission exception: " + exc.message.toString() )
                     }
                 }
                 .setNegativeButton(CR.string.button_cancel) { dialog, which ->
@@ -539,10 +556,11 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             } else {
                 btnSources.visibility = View.GONE
             }
-
+            //chartHandler.update()
             updateNotesTable()
             updateAlarmsTable()
             updateConnectionsTable()
+            updateDeltaTable()
             updateDetailsTable()
 
             updateAlarmIcon()
@@ -711,6 +729,27 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         else if (AlarmHandler.isSnoozeActive)
             tableAlarms.addView(createRow(CR.string.snooze_until, AlarmHandler.snoozeTimestamp))
         checkTableVisibility(tableAlarms)
+    }
+
+    private fun updateDeltaTable() {
+        tableDelta.removeViews(1, maxOf(0, tableDelta.childCount - 1))
+        if(!isObsoleteShort()) {
+            if(!ReceiveData.delta1Min.isNaN())
+                tableDelta.addView(createRow(CR.string.delta_per_minute, GlucoDataUtils.deltaToString(ReceiveData.delta1Min, true)))
+            if(!ReceiveData.delta5Min.isNaN())
+                tableDelta.addView(createRow(CR.string.delta_per_5_minute, GlucoDataUtils.deltaToString(ReceiveData.delta5Min, true)))
+            if(!ReceiveData.delta10Min.isNaN())
+                tableDelta.addView(createRow(CR.string.delta_per_10_minute, GlucoDataUtils.deltaToString(ReceiveData.delta10Min, true)))
+            if(!ReceiveData.delta15Min.isNaN())
+                tableDelta.addView(createRow(CR.string.delta_per_15_minute, GlucoDataUtils.deltaToString(ReceiveData.delta15Min, true)))
+            if(!ReceiveData.rate.isNaN()) {
+                tableDelta.addView(createRow("Rate", ReceiveData.getRateAsString() + " (" + GlucoDataUtils.getRateDegrees(ReceiveData.rate) + "°)"))
+                if(!ReceiveData.sourceRate.isNaN()) {
+                    tableDelta.addView(createRow("Source rate", ReceiveData.sourceRate.toString() + " (" + GlucoDataUtils.getRateDegrees(ReceiveData.sourceRate) + "°)"))
+                }
+            }
+        }
+        checkTableVisibility(tableDelta)
     }
 
     private fun updateDetailsTable() {

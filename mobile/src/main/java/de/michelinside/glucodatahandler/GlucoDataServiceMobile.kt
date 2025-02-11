@@ -11,14 +11,18 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.chart.ChartCreator
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
 import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.common.utils.Utils.isScreenReaderOn
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.watch.WatchDrip
+import de.michelinside.glucodatahandler.widget.BatteryLevelWidget
+import de.michelinside.glucodatahandler.widget.BatteryLevelWidgetNotifier
 import de.michelinside.glucodatahandler.widget.FloatingWidget
 import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
 import de.michelinside.glucodatahandler.widget.LockScreenWallpaper
@@ -28,6 +32,7 @@ import java.math.RoundingMode
 class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInterface {
     private lateinit var floatingWidget: FloatingWidget
     private var lastForwardTime = 0L
+    private lateinit var batteryLevelWidget: BatteryLevelWidget
 
     init {
         Log.d(LOG_ID, "init called")
@@ -160,6 +165,16 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                     }
                 }
 
+                // graph settings
+                if(!sharedPrefs.contains(Constants.SHARED_PREF_GRAPH_DURATION_PHONE_MAIN)) {
+                    val isScreenReader = context.isScreenReaderOn()
+                    Log.i(LOG_ID, "Setting default duration for graph - screenReader: $isScreenReader")
+                    with(sharedPrefs.edit()) {
+                        putInt(Constants.SHARED_PREF_GRAPH_DURATION_PHONE_MAIN, if(isScreenReader) 0 else ChartCreator.defaultDurationHours)
+                        apply()
+                    }
+                }
+
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "migrateSettings exception: " + exc.message.toString() )
             }
@@ -185,6 +200,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             GlucoseBaseWidget.updateWidgets(applicationContext)
             WatchDrip.init(applicationContext)
             floatingWidget.create()
+            batteryLevelWidget = BatteryLevelWidget()
             LockScreenWallpaper.create(this)
             AlarmNotification.initNotifications(this)
         } catch (exc: Exception) {

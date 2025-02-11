@@ -133,8 +133,16 @@
         android:text="@string/menu_sources"
         />
 
+
+    <de.michelinside.glucodatahandler.common.chart.GlucoseChart
+        android:id="@+id/chart"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:contentDescription="@string/graph"
+        />
+
     <LinearLayout
-        android:id="@+id/space_table"
+        android:id="@+id/space_table2"
         android:layout_height="20dp"
         android:layout_width="0dp"
         android:orientation="horizontal">
@@ -176,6 +184,25 @@
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/alarm_header"/>
+        </TableRow>
+    </TableLayout>
+
+    <TableLayout
+        android:id="@+id/tableDelta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="?android:attr/dividerHorizontal"
+        android:showDividers="middle">
+
+        <TableRow android:background="@color/table_header" android:padding="5dp"
+            tools:ignore="UselessParent">
+            <TextView
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/delta_label"/>
         </TableRow>
     </TableLayout>
 
@@ -230,6 +257,7 @@
         android:id="@+id/txtVersion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
         android:layout_marginBottom="25dp"
         android:text="1.0"
         android:textSize="16sp"
