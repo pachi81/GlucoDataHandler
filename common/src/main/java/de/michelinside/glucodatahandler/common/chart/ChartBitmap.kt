@@ -17,7 +17,7 @@ class ChartBitmap(val context: Context, durationPref: String = "", width: Int = 
 
     init {
         val viewHeight = if(height > 0) height else width/3
-        Log.v(LOG_ID, "init - width: $width - durationPref: $durationPref")
+        Log.v(LOG_ID, "init - width: $width - height: $viewHeight - durationPref: $durationPref")
         chart.measure (View.MeasureSpec.makeMeasureSpec (width, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec (viewHeight, View.MeasureSpec.EXACTLY))
         chart.layout (0, 0, chart.getMeasuredWidth(), chart.getMeasuredHeight())
 
