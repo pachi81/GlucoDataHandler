@@ -1,6 +1,7 @@
 package de.michelinside.glucodatahandler.common.chart
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
@@ -11,7 +12,7 @@ import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 
-class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: String = "", private val forComplication: Boolean = false, private val showAxis: Boolean = false): ChartCreator(chart, context, durationPref) {
+class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: String = "", private val forComplication: Boolean = false, private val showAxisPref: String? = null): ChartCreator(chart, context, durationPref) {
     companion object {
         const val defaultDurationHours = 2
     }
@@ -22,23 +23,29 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
     override var durationHours = defaultDurationHours
     override val touchEnabled = false
 
+    private val showAxis: Boolean get() {
+        if(showAxisPref.isNullOrEmpty())
+            return false
+        return sharedPref.getBoolean(showAxisPref, false)
+    }
+
     override fun initXaxis() {
-        Log.v(LOG_ID, "initXaxis")
+        Log.v(LOG_ID, "initXaxis - showAxis: $showAxis")
         chart.xAxis.isEnabled = showAxis
         if(chart.xAxis.isEnabled)
             super.initXaxis()
     }
 
     override fun initYaxis() {
-        Log.v(LOG_ID, "initYaxis")
-        if(showAxis) {
+        val showXAxis = showAxis
+        Log.v(LOG_ID, "initYaxis - showAxis: $showXAxis")
+        chart.axisRight.setDrawAxisLine(showXAxis)
+        chart.axisRight.setDrawLabels(showXAxis)
+        chart.axisRight.setDrawZeroLine(showXAxis)
+        chart.axisRight.setDrawGridLines(showXAxis)
+        chart.axisLeft.isEnabled = false
+        if(showXAxis) {
             super.initYaxis()
-        } else {
-            chart.axisRight.setDrawAxisLine(false)
-            chart.axisRight.setDrawLabels(false)
-            chart.axisRight.setDrawZeroLine(false)
-            chart.axisRight.setDrawGridLines(false)
-            chart.axisLeft.isEnabled = false
         }
     }
 
@@ -91,5 +98,20 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
         if(bitmap == null)
             bitmap = createBitmap()
         return bitmap
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        Log.v(LOG_ID, "onSharedPreferenceChanged: $key")
+
+        try {
+            if(key == showAxisPref) {
+                if(chart.data != null)
+                    create(true) // recreate chart with new graph data
+            } else {
+                super.onSharedPreferenceChanged(sharedPreferences, key)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.message.toString() )
+        }
     }
 }

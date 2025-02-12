@@ -19,6 +19,7 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
@@ -33,7 +34,6 @@ import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.ReceiveData.isObsoleteShort
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var deltaText: TextView
     private lateinit var iobText: TextView
     private lateinit var cobText: TextView
+    private lateinit var iobCobLayout: LinearLayout
     private lateinit var txtLastValue: TextView
     private lateinit var txtVersion: TextView
     private lateinit var tableDetails: TableLayout
@@ -104,6 +105,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             deltaText = findViewById(R.id.deltaText)
             iobText = findViewById(R.id.iobText)
             cobText = findViewById(R.id.cobText)
+            iobCobLayout = findViewById(R.id.layout_iob_cob)
             txtLastValue = findViewById(R.id.txtLastValue)
             btnSources = findViewById(R.id.btnSources)
             tableConnections = findViewById(R.id.tableConnections)
@@ -548,6 +550,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             cobText.text = "🍔 " + ReceiveData.getCobAsString()
             cobText.contentDescription = getString(CR.string.info_label_cob) + " " + ReceiveData.getCobAsString()
             cobText.visibility = iobText.visibility
+            iobCobLayout.visibility = iobText.visibility
 
             txtLastValue.visibility = if(ReceiveData.time>0) View.GONE else View.VISIBLE
 
@@ -733,7 +736,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateDeltaTable() {
         tableDelta.removeViews(1, maxOf(0, tableDelta.childCount - 1))
-        if(!isObsoleteShort()) {
+        if(!ReceiveData.isObsoleteShort()) {
             if(!ReceiveData.delta1Min.isNaN())
                 tableDelta.addView(createRow(CR.string.delta_per_minute, GlucoDataUtils.deltaToString(ReceiveData.delta1Min, true)))
             if(!ReceiveData.delta5Min.isNaN())

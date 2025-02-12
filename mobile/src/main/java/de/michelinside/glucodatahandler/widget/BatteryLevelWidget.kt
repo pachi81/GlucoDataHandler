@@ -13,12 +13,13 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.R as CR
 
 class BatteryLevelWidget : AppWidgetProvider() {
         private val LOG_ID = "GDH.widget.BatteryLevelWidget"
 
-        fun updateWidget(
+        private fun updateWidget(
             context: Context,
             appWidgetManager: AppWidgetManager,
             appWidgetId: Int,
@@ -43,8 +44,8 @@ class BatteryLevelWidget : AppWidgetProvider() {
                         ReceiveData.getAlarmTypeColor(AlarmType.OK)
                 remoteViews.setTextColor(R.id.battery_level, levelColour)
 
-                val sharedPref =
-                    context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                remoteViews.setInt(R.id.widget, "setBackgroundColor", Utils.getBackgroundColor(sharedPref.getInt(Constants.SHARED_PREF_WIDGET_TRANSPARENCY, 3)))
                 remoteViews.setOnClickPendingIntent(
                     R.id.widget,
                     PackageUtils.getTapActionIntent(
@@ -61,7 +62,7 @@ class BatteryLevelWidget : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         try {
-            Log.d(LOG_ID, "onUpdate called for " + this.toString() + " - ids: " + appWidgetIds.contentToString())
+            Log.i(LOG_ID, "onUpdate called for " + this.toString() + " - ids: " + appWidgetIds.contentToString())
 
             BatteryLevelWidgetNotifier.addNotifier()
 

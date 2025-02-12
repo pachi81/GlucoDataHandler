@@ -205,7 +205,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     }
 
     protected open fun initYaxis() {
-        Log.v(LOG_ID, "initYaxis")
+        Log.v(LOG_ID, "initYaxis right-offset: $yAxisOffset - left-offset: $yAxisLeftOffset")
+        chart.axisRight.isEnabled = true
         chart.axisRight.valueFormatter = GlucoseFormatter()
         chart.axisRight.setDrawZeroLine(false)
         chart.axisRight.setDrawAxisLine(false)
