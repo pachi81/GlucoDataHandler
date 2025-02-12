@@ -10,14 +10,13 @@ import android.graphics.PorterDuff
 import android.os.Bundle
 import android.os.PowerManager
 import android.util.Log
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import de.michelinside.glucodatahandler.common.Constants
@@ -26,7 +25,6 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
-import de.michelinside.glucodatahandler.R
 
 
 class AODAccessibilityService : AccessibilityService(), NotifierInterface {
@@ -36,6 +34,9 @@ class AODAccessibilityService : AccessibilityService(), NotifierInterface {
     private val LOG_ID = "GDH.Aod"
 
     private var style = Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA_IOB_COB
+
+    private var laidoutWidth = 0
+    private var laidoutHeight = 0
 
     private val screenStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -89,7 +90,7 @@ class AODAccessibilityService : AccessibilityService(), NotifierInterface {
 
         if (overlayView != null) return
 
-        val layoutParams = WindowManager.LayoutParams().apply {
+        var layoutParams = WindowManager.LayoutParams().apply {
             type = WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY
             format = PixelFormat.TRANSLUCENT
             flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
@@ -99,15 +100,40 @@ class AODAccessibilityService : AccessibilityService(), NotifierInterface {
             gravity = Gravity.CENTER
         }
 
+        if (laidoutWidth != 0) {
+            val desired = BitmapUtils.getScreenWidth().toFloat() * 0.6f
+            val scaleFactor = desired / laidoutWidth.toFloat()
+            Log.d(LOG_ID, "scaleFactor: $scaleFactor")
+            layoutParams.width = (laidoutWidth * scaleFactor).toInt()
+            layoutParams.height = (laidoutHeight * scaleFactor).toInt()
+            Log.d(LOG_ID, "Scaled dimensions: $layoutParams.width * $layoutParams.height")
+        }
+
         overlayView = LayoutInflater.from(this).inflate(R.layout.wallpaper, null)
-//        overlayView = LayoutInflater.from(this).inflate(R.layout.overlay_layout, null)
-//        val textView = overlayView?.findViewById<TextView>(R.id.overlayText)
-//        textView?.text = "AOD Active"
+
 
         updateOverlay()
 
         try {
+
             windowManager.addView(overlayView, layoutParams)
+
+            overlayView?.post {
+                if (laidoutWidth == 0) {
+                    laidoutWidth = overlayView!!.measuredWidth
+                    laidoutHeight = overlayView!!.measuredHeight
+                    Log.d(LOG_ID, "View dimensions: $laidoutWidth * $laidoutHeight")
+
+                    // Now we know the size of the overlay, recreate and apply scaling to desired size
+                    removeOverlay()
+                    createOverlay()
+                }
+                else {
+                    Log.d(LOG_ID, "View dimensions cached: $laidoutWidth * $laidoutHeight")
+                }
+            }
+
+
             Log.d(LOG_ID, "Overlay added successfully")
         } catch (e: Exception) {
             Log.e(LOG_ID, "Error adding overlay", e)
@@ -162,6 +188,7 @@ class AODAccessibilityService : AccessibilityService(), NotifierInterface {
             viewIcon.setColorFilter(ContextCompat.getColor(this, de.michelinside.glucodatahandler.common.R.color.white), PorterDuff.Mode.SRC_ATOP)
 
             txtBgValue.text = ReceiveData.getGlucoseAsString()
+
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
             txtDelta.text = "Δ ${ReceiveData.getDeltaAsString()}"
             txtTime.text = "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(this)}"
@@ -208,4 +235,5 @@ class AODAccessibilityService : AccessibilityService(), NotifierInterface {
 
 //        TODO("Not yet implemented")
     }
+
 }
