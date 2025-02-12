@@ -654,10 +654,12 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
 
     protected fun createBitmap(): Bitmap? {
         try {
-            chart.waitForInvalidate()
-            if(chart.width > 0 && chart.height > 0) {
-                Log.d(LOG_ID, "Draw bitmap")
-                return chart.drawToBitmap()
+            if(durationHours > 0) {
+                chart.waitForInvalidate()
+                if(chart.width > 0 && chart.height > 0) {
+                    Log.d(LOG_ID, "Draw bitmap")
+                    return chart.drawToBitmap()
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "getBitmap exception: " + exc.message.toString() )

@@ -14,11 +14,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RemoteViews
 import android.widget.TextView
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.chart.ChartBitmap
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
@@ -38,6 +40,8 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     private lateinit var thirdNotificationCompat: Notification.Builder
     private lateinit var foregroundNotificationCompat: Notification.Builder
     private lateinit var sharedPref: SharedPreferences
+    @SuppressLint("StaticFieldLeak")
+    private var chartBitmap: ChartBitmap? = null
 
     enum class StatusBarIcon(val pref: String) {
         APP("app"),
@@ -64,6 +68,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             InternalNotifier.remNotifier(GlucoDataService.context!!, this)
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
             removeNotifications()
+            removeBitmap()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "destroy exception: " + exc.toString() )
         }
@@ -179,7 +184,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     }
 
     @SuppressLint("SetTextI18n")
-    fun createNotificationView(context: Context): Bitmap? {
+    fun createNotificationView(context: Context, withGraph: Boolean = false): Bitmap? {
         try {
             val notificationView = View.inflate(context, R.layout.notification_layout, null)
             val textGlucose: TextView = notificationView.findViewById(R.id.glucose)
@@ -187,6 +192,8 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             val textDelta: TextView = notificationView.findViewById(R.id.deltaText)
             val textIob: TextView = notificationView.findViewById(R.id.iobText)
             val textCob: TextView = notificationView.findViewById(R.id.cobText)
+            val graphImage: ImageView = notificationView.findViewById(R.id.graphImage)
+            val graphImageLayout: LinearLayout = notificationView.findViewById(R.id.graphImageLayout)
 
 
             textGlucose.text = ReceiveData.getGlucoseAsString()
@@ -210,6 +217,19 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             textCob.text = "🍔 ${ReceiveData.getCobAsString()}"
             textIob.visibility = if (ReceiveData.isIobCobObsolete()) View.GONE else View.VISIBLE
             textCob.visibility = textIob.visibility
+
+            if(withGraph) {
+                val chart = getChartBitmap()
+                if(chart!=null) {
+                    graphImageLayout.visibility = View.VISIBLE
+                    graphImage.setImageBitmap(chart)
+                } else {
+                    graphImageLayout.visibility = View.GONE
+                }
+            } else {
+                graphImageLayout.visibility = View.GONE
+            }
+
 
             notificationView.setDrawingCacheEnabled(true)
             notificationView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
@@ -238,18 +258,28 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
         if (customLayout) {
             Log.v(LOG_ID, "Use custom layout")
-            var remoteViews: RemoteViews? = null
+            var remoteView: RemoteViews? = null
+            var remoteBigView: RemoteViews? = null
             if (withContent) {
                 val bitmap = createNotificationView(GlucoDataService.context!!)
+                val bigBitmap = createNotificationView(GlucoDataService.context!!, true)
                 if (bitmap != null) {
-                    remoteViews =
+                    remoteView =
                         RemoteViews(GlucoDataService.context!!.packageName, R.layout.image_view)
-                    remoteViews.setImageViewBitmap(R.id.imageLayout, bitmap)
-                    remoteViews.setContentDescription(R.id.imageLayout, ReceiveData.getAsText(GlucoDataService.context!!, true))
+                    remoteView.setImageViewBitmap(R.id.imageLayout, bitmap)
+                    remoteView.setContentDescription(R.id.imageLayout, ReceiveData.getAsText(GlucoDataService.context!!, true))
+                }
+                if(bigBitmap != null) {
+                    remoteBigView =
+                        RemoteViews(GlucoDataService.context!!.packageName, R.layout.image_view)
+                    remoteBigView.setImageViewBitmap(R.id.imageLayout, bigBitmap)
+                    remoteBigView.setContentDescription(R.id.imageLayout, ReceiveData.getAsText(GlucoDataService.context!!, true))
+                } else {
+                    remoteBigView = remoteView
                 }
             }
-            notificationBuild.setCustomContentView(remoteViews)
-            notificationBuild.setCustomBigContentView(remoteViews)
+            notificationBuild.setCustomContentView(remoteView)
+            notificationBuild.setCustomBigContentView(remoteBigView)
             notificationBuild.setStyle(Notification.DecoratedCustomViewStyle())
         } else {
             Log.v(LOG_ID, "Use default layout")
@@ -376,6 +406,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
                 InternalNotifier.remNotifier(GlucoDataService.context!!, this)
                 removeNotifications()
             }*/
+            createBitmap()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updatePreferences exception: " + exc.toString() )
         }
@@ -395,7 +426,8 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
                 Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_TAP_ACTION,
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON,
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_COLORED_ICON,
-                Constants.SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION -> {
+                Constants.SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION,
+                Constants.SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION -> {
                     updatePreferences()
                 }
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY -> {
@@ -413,4 +445,22 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         }
     }
 
+    private fun getChartBitmap(): Bitmap? {
+        return chartBitmap?.getBitmap()
+    }
+
+    private fun createBitmap() {
+        if(chartBitmap == null && GlucoDataService.isServiceRunning) {
+            Log.i(LOG_ID, "Create bitmap")
+            chartBitmap = ChartBitmap(GlucoDataService.context!!, Constants.SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION, 1000)
+        }
+    }
+
+    private fun removeBitmap() {
+        if(chartBitmap != null) {
+            Log.i(LOG_ID, "Remove bitmap")
+            chartBitmap!!.close()
+            chartBitmap = null
+        }
+    }
 }
