@@ -132,6 +132,14 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         }
         return Utils.round(deltaValue5Min, 1)
     }
+    private var deltaValue10Min: Float = Float.NaN
+    val delta10Min: Float get() {
+        if(isMmol)  // mmol/l
+        {
+            return GlucoDataUtils.mgToMmol(deltaValue10Min)
+        }
+        return Utils.round(deltaValue10Min, 1)
+    }
     private var deltaValue15Min: Float = Float.NaN
     val delta15Min: Float get() {
         if(isMmol)  // mmol/l
@@ -383,18 +391,19 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     private fun calculateRate(glucoseValues: List<GlucoseValue>, new_time: Long, new_value: Int) {
-        var count = 0
+        var count = 0F
         var sum = 0F
         glucoseValues.forEach {
             val diffTime = Utils.getTimeDiffMinute(new_time, it.timestamp, RoundingMode.HALF_UP)
             if(diffTime > 25)
                 return@forEach
-            val factor = if(diffTime <= 10) 2 else 1
+            val factor = if(diffTime <= 5) 2F else if(diffTime <= 10) 1.5F else if(diffTime <= 15) 1F else 0.5F
             sum += (new_value-it.value)*factor/diffTime
             count += factor
         }
         if(count > 0) {
             calculatedRate = (sum*10/count)/Constants.GLUCOSE_CONVERSION_FACTOR
+            Log.d(LOG_ID, "Calculated rate for $count values - sum $sum: $calculatedRate")
         } else if(!sourceRate.isNaN()) {
             calculatedRate = sourceRate
         }
@@ -404,6 +413,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         // reset old deltas
         deltaValue1Min = Float.NaN
         deltaValue5Min = Float.NaN
+        deltaValue10Min = Float.NaN
         deltaValue15Min = Float.NaN
         if(dbAccess.active) {
             val glucoseValues = dbAccess.getGlucoseValuesInRange(new_time-(25*60*1000), new_time) // max 20 minutes to calculate the delta
@@ -414,12 +424,19 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     val diffTime = Utils.getTimeDiffMinute(new_time, it.timestamp, RoundingMode.HALF_UP)
                     if(deltaValue1Min.isNaN() && diffTime >= 1) {
                         deltaValue1Min = (new_value-it.value).toFloat()/diffTime
+                        Log.d(LOG_ID, "1 Calculate $diffTime min delta - new_value $new_value, old_value ${it.value}, delta $deltaValue1Min ")
                     }
                     if(deltaValue5Min.isNaN() && diffTime >= 5) {
                         deltaValue5Min = (new_value-it.value).toFloat()/(diffTime/5)
+                        Log.d(LOG_ID, "5 Calculate $diffTime min delta - new_value $new_value, old_value ${it.value}, delta $deltaValue5Min ")
+                    }
+                    if(deltaValue10Min.isNaN() && diffTime >= 10) {
+                        deltaValue10Min = (new_value-it.value).toFloat()/(diffTime/10)
+                        Log.d(LOG_ID, "10 Calculate $diffTime min delta - new_value $new_value, old_value ${it.value}, delta $deltaValue10Min ")
                     }
                     if(deltaValue15Min.isNaN() && diffTime >= 15) {
                         deltaValue15Min = (new_value-it.value).toFloat()/(diffTime/15)
+                        Log.d(LOG_ID, "15 Calculate $diffTime min delta - new_value $new_value, old_value ${it.value}, delta $deltaValue15Min ")
                         return@forEach
                     }
                 }
