@@ -59,6 +59,12 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     protected open val circleRadius = 2F
     protected open val touchEnabled = true
     protected open val graphStartTime = 0L
+    var labelColor: Int = 0
+    protected open val textColor: Int get() {
+        if(labelColor != 0)
+            return labelColor
+        return context.resources.getColor(R.color.text_color)
+    }
 
     val enabled: Boolean get() {
         return chart.visibility == View.VISIBLE
@@ -201,7 +207,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         chart.xAxis.enableGridDashedLine(10F, 10F, 0F)
         chart.xAxis.valueFormatter = TimeValueFormatter(chart)
         chart.setXAxisRenderer(TimeAxisRenderer(chart))
-        chart.xAxis.textColor = context.resources.getColor(R.color.text_color)
+        chart.xAxis.textColor = textColor
     }
 
     protected open fun initYaxis() {
@@ -212,7 +218,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         chart.axisRight.setDrawAxisLine(false)
         chart.axisRight.setDrawGridLines(false)
         chart.axisRight.xOffset = yAxisOffset
-        chart.axisRight.textColor = context.resources.getColor(R.color.text_color)
+        chart.axisRight.textColor = textColor
 
         chart.axisLeft.isEnabled = showOtherUnit()
         if(chart.axisLeft.isEnabled) {
@@ -221,7 +227,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             chart.axisLeft.setDrawAxisLine(false)
             chart.axisLeft.setDrawGridLines(false)
             chart.axisLeft.xOffset = yAxisLeftOffset
-            chart.axisLeft.textColor = context.resources.getColor(R.color.text_color)
+            chart.axisLeft.textColor = textColor
         }
     }
 
@@ -696,7 +702,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         return false
     }
 
-    private fun OnDurationChanged() {
+    protected open fun OnDurationChanged() {
         Log.v(LOG_ID, "OnDurationChanged: $durationHours")
         if(durationHours == 0)
             disable()

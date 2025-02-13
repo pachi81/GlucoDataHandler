@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Context.WINDOW_SERVICE
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PixelFormat
 import android.os.Bundle
@@ -14,12 +15,15 @@ import android.util.TypedValue
 import android.view.*
 import android.view.View.*
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.chart.ChartBitmapView
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
@@ -39,11 +43,15 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
     private lateinit var txtTime: TextView
     private lateinit var txtIob: TextView
     private lateinit var txtCob: TextView
-    private lateinit var column2: TableLayout
+    private var column2: TableLayout? = null
+    private var layout_iob_cob: LinearLayout? = null
+    private var graphImage: ImageView? = null
     private lateinit var sharedPref: SharedPreferences
     private lateinit var sharedInternalPref: SharedPreferences
     private val LOG_ID = "GDH.FloatingWidget"
     private val MAX_SIZE = 30f
+    @SuppressLint("StaticFieldLeak")
+    private var chartBitmap: ChartBitmapView? = null
 
     @SuppressLint("InflateParams")
     fun create() {
@@ -54,16 +62,8 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
 
             sharedInternalPref = context.getSharedPreferences(Constants.SHARED_PREF_INTERNAL_TAG, Context.MODE_PRIVATE)
 
-            //getting the widget layout from xml using layout inflater
-            floatingView = LayoutInflater.from(context).inflate(R.layout.floating_widget, null)
-            txtBgValue = floatingView.findViewById(R.id.glucose)
-            viewIcon = floatingView.findViewById(R.id.trendImage)
-            txtDelta = floatingView.findViewById(R.id.deltaText)
-            txtTime = floatingView.findViewById(R.id.timeText)
-            txtIob = floatingView.findViewById(R.id.iobText)
-            txtCob = floatingView.findViewById(R.id.cobText)
-            column2 = floatingView.findViewById(R.id.column2)
             //setting the layout parameters
+            initLayout()
             update()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "create exception: " + exc.message.toString() )
@@ -75,9 +75,31 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
             Log.d(LOG_ID, "destroy called")
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
             remove()
+            removeBitmap()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "destroy exception: " + exc.message.toString() )
         }
+    }
+
+    private fun initLayout() {
+        //getting the widget layout from xml using layout inflater
+        val layout = if(sharedPref.getString(Constants.SHARED_PREF_FLOATING_WIDGET_STYLE, Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA) == Constants.WIDGET_STYLE_CHART_GLUCOSE_TREND_TIME_DELTA_IOB_COB)
+            R.layout.floating_widget_chart
+        else
+            R.layout.floating_widget
+        Log.d(LOG_ID, "init layout with $layout")
+        floatingView = LayoutInflater.from(context).inflate(layout, null)
+        txtBgValue = floatingView.findViewById(R.id.glucose)
+        viewIcon = floatingView.findViewById(R.id.trendImage)
+        txtDelta = floatingView.findViewById(R.id.deltaText)
+        txtTime = floatingView.findViewById(R.id.timeText)
+        txtIob = floatingView.findViewById(R.id.iobText)
+        txtCob = floatingView.findViewById(R.id.cobText)
+        column2 = floatingView.findViewById(R.id.column2)
+        layout_iob_cob = floatingView.findViewById(R.id.layout_iob_cob)
+        graphImage = floatingView.findViewById(R.id.graphImage)
+        if(graphImage == null)
+            removeBitmap()
     }
 
     private fun remove() {
@@ -126,6 +148,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
                 txtIob.visibility = GONE
                 txtCob.visibility = GONE
             }
+            Constants.WIDGET_STYLE_CHART_GLUCOSE_TREND_TIME_DELTA_IOB_COB,
             Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA_IOB_COB -> {
                 bgTextSize = 10f
                 txtTime.visibility = VISIBLE
@@ -156,14 +179,23 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
         } else {
             txtBgValue.paintFlags = 0
         }
-        val resizeFactor = sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, 5).toFloat()
+        var resizeFactor = sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, 5).toFloat()
         val size = minOf(resizeFactor.toInt()*20, 200)
         viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(width = size, height = size))
         viewIcon.contentDescription = ReceiveData.getRateAsText(context)
         txtDelta.text = "Δ ${ReceiveData.getDeltaAsString()}"
         txtTime.text = "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(context)}"
-        txtIob.text = "💉 ${ReceiveData.getIobAsString()}"
-        txtCob.text = "🍔 ${ReceiveData.getCobAsString()}"
+        if(ReceiveData.iob.isNaN())
+            txtIob.visibility = GONE
+        else
+            txtIob.text = "💉 ${ReceiveData.getIobAsString()}"
+        if(ReceiveData.cob.isNaN())
+            txtCob.visibility = GONE
+        else
+            txtCob.text = "🍔 ${ReceiveData.getCobAsString()}"
+
+        if(graphImage != null && (txtIob.visibility == VISIBLE || txtCob.visibility == VISIBLE))
+            resizeFactor /= 2
 
         txtBgValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+resizeFactor*5f)
         viewIcon.minimumWidth = Utils.dpToPx(20f+resizeFactor*4f, context)
@@ -172,10 +204,30 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
         txtIob.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(6f+ resizeFactor *2f, MAX_SIZE))
         txtCob.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(6f+ resizeFactor *2f, MAX_SIZE))
 
-        if(txtDelta.visibility == VISIBLE) {
+        if(txtDelta.visibility == VISIBLE && column2 != null) {
             val layout = TableRow.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.MATCH_PARENT)
             layout.marginStart = Utils.spToPx(minOf(resizeFactor*3F, 15F), context)
-            column2.layoutParams = layout
+            column2!!.layoutParams = layout
+        } else if (layout_iob_cob != null) {
+            // graph layout
+            var factor = resizeFactor
+            if(txtIob.visibility == GONE && txtCob.visibility == GONE) {
+                Log.v(LOG_ID, "hide layout_iob_cob")
+                layout_iob_cob!!.visibility = GONE
+            } else {
+                layout_iob_cob!!.visibility = VISIBLE
+                factor *= 2F
+            }
+            if(graphImage != null) {
+                createBitmap()
+                floatingView.measure(
+                    MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+                    MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
+                Log.d(LOG_ID, "Mesasured width ${floatingView.measuredWidth} and height ${floatingView.measuredHeight} for chart")
+
+                graphImage!!.layoutParams.height = floatingView.measuredWidth/3 // Utils.dpToPx(10f * minOf(factor, 15F), context)
+                graphImage!!.requestLayout()
+            }
         }
     }
 
@@ -211,6 +263,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
                 }
             } else {
                 remove()
+                removeBitmap()
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
@@ -322,9 +375,13 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
             when(key) {
                 Constants.SHARED_PREF_FLOATING_WIDGET,
                 Constants.SHARED_PREF_FLOATING_WIDGET_SIZE,
-                Constants.SHARED_PREF_FLOATING_WIDGET_STYLE,
                 Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY -> {
                     remove()
+                    update()
+                }
+                Constants.SHARED_PREF_FLOATING_WIDGET_STYLE -> {
+                    remove()
+                    initLayout()
                     update()
                 }
             }
@@ -339,6 +396,21 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
             update()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString() )
+        }
+    }
+
+    private fun createBitmap() {
+        if(chartBitmap == null && graphImage != null && GlucoDataService.isServiceRunning) {
+            Log.i(LOG_ID, "Create bitmap")
+            chartBitmap = ChartBitmapView(graphImage!!, context, labelColor = Color.WHITE)
+        }
+    }
+
+    private fun removeBitmap() {
+        if(chartBitmap != null) {
+            Log.i(LOG_ID, "Remove bitmap")
+            chartBitmap!!.close()
+            chartBitmap = null
         }
     }
 }

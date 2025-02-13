@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
@@ -121,7 +122,7 @@ object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPrefere
     private fun createBitmap(context: Context) {
         if(chartBitmap == null && GlucoDataService.isServiceRunning) {
             Log.i(LOG_ID, "Create bitmap")
-            chartBitmap = ChartBitmap(context, Constants.SHARED_PREF_GRAPH_DURATION_PHONE_WIDGET, showAxisPref = Constants.SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_WIDGET)
+            chartBitmap = ChartBitmap(context, Constants.SHARED_PREF_GRAPH_DURATION_PHONE_WIDGET, showAxisPref = Constants.SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_WIDGET, labelColor = Color.WHITE)
         }
     }
 

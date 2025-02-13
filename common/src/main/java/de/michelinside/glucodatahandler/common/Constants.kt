@@ -131,6 +131,7 @@ object Constants {
     const val WIDGET_STYLE_GLUCOSE_TREND_DELTA = "glucose_trend_delta"
     const val WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA = "glucose_trend_delta_time"
     const val WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA_IOB_COB = "glucose_trend_delta_time_iob_cob"
+    const val WIDGET_STYLE_CHART_GLUCOSE_TREND_TIME_DELTA_IOB_COB = "chart_glucose_trend_delta_time_iob_cob"
 
     // Wear only preferences
     const val SHARED_PREF_WEAR_COLORED_AOD = "colored_aod"

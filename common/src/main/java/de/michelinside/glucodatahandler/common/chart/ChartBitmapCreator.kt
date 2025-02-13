@@ -12,6 +12,7 @@ import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.utils.Utils
 
 class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: String = "", private val forComplication: Boolean = false, private val showAxisPref: String? = null): ChartCreator(chart, context, durationPref) {
     companion object {
@@ -56,7 +57,23 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
 
     override fun initChart() {
         super.initChart()
-        chart.isDrawingCacheEnabled = false
+        updateDescription()
+    }
+
+    override fun OnDurationChanged() {
+        super.OnDurationChanged()
+        updateDescription()
+    }
+
+    private fun updateDescription() {
+        if(!showAxis) {
+            chart.description.isEnabled = true
+            chart.description.text = durationHours.toString() + "h"
+            chart.description.textSize = Utils.dpToPx(4F, context).toFloat()
+            chart.description.textColor = textColor
+        } else {
+            chart.description.isEnabled = false
+        }
     }
 
     override fun getMaxRange(): Long {

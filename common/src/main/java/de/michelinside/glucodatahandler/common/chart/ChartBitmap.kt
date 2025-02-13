@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.util.Log
 import android.view.View
 
-class ChartBitmap(val context: Context, durationPref: String = "", width: Int = 1000, height: Int = 0, forComplication: Boolean = false, showAxisPref: String? = null) {
+class ChartBitmap(val context: Context, durationPref: String = "", width: Int = 1000, height: Int = 0, forComplication: Boolean = false, showAxisPref: String? = null, labelColor: Int = 0) {
 
     private val LOG_ID = "GDH.Chart.Bitmap"
 
@@ -22,6 +22,7 @@ class ChartBitmap(val context: Context, durationPref: String = "", width: Int = 
         chart.layout (0, 0, chart.getMeasuredWidth(), chart.getMeasuredHeight())
 
         chartViewer = ChartBitmapCreator(chart, context, durationPref, forComplication, showAxisPref)
+        chartViewer.labelColor = labelColor
         chartViewer.create(true)
     }
 
