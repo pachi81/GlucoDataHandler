@@ -340,13 +340,22 @@ class AodSettingsFragment: SettingsFragmentBase(R.xml.pref_aod)  {
         }
     }
 
+    private val accessibilitySettingsLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            context?.let {
+                val enabled = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_AOD_WP_ENABLED)
+                if (enabled != null) {
+                    enabled.isChecked = AODAccessibilityService.isAccessibilitySettingsEnabled(it)
+                }
+            }
+        }
+
     private fun checkAccesibilityService() {
         context?.let {
             val enabled = AODAccessibilityService.isAccessibilitySettingsEnabled(it)
-//            Log.e(LOG_ID, "isAccessibilitySettingsEnabled: $enabled")
             if (!enabled) {
-                AODAccessibilityService.requestAccessibilityService(it)
-//                Log.e(LOG_ID, "isAccessibilitySettingsEnabled: $enabled")
+                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                accessibilitySettingsLauncher.launch(intent)
             }
         }
     }
