@@ -11,6 +11,7 @@ object Constants {
     const val REQUEST_DATA_MESSAGE_PATH = "/request_data_intent"
     const val REQUEST_LOGCAT_MESSAGE_PATH = "/request_logcat_intent"
     const val LOGCAT_CHANNEL_PATH = "/logcat_intent"
+    const val DB_SYNC_CHANNEL_PATH = "/db_sync_intent"
     const val COMMAND_PATH = "/command_intent"
     const val GLUCODATA_BROADCAST_ACTION = "glucodata.Minute"
     const val SETTINGS_BUNDLE = "settings_bundle"
@@ -28,6 +29,7 @@ object Constants {
     const val ACTION_FLOATING_WIDGET_TOGGLE = ACTION_PREFIX + "floating_widget_toggle"
     const val ACTION_DUMMY_VALUE = ACTION_PREFIX + "dummy_value"
     const val ACTION_SPEAK = ACTION_PREFIX + "speak"
+    const val ACTION_GRAPH = ACTION_PREFIX + "show_graph"
 
     const val IS_SECOND = BuildConfig.BUILD_TYPE == "second"
 
@@ -129,6 +131,7 @@ object Constants {
     const val WIDGET_STYLE_GLUCOSE_TREND_DELTA = "glucose_trend_delta"
     const val WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA = "glucose_trend_delta_time"
     const val WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA_IOB_COB = "glucose_trend_delta_time_iob_cob"
+    const val WIDGET_STYLE_CHART_GLUCOSE_TREND_TIME_DELTA_IOB_COB = "chart_glucose_trend_delta_time_iob_cob"
 
     // Wear only preferences
     const val SHARED_PREF_WEAR_COLORED_AOD = "colored_aod"
@@ -284,4 +287,19 @@ object Constants {
     const val AA_MEDIA_PLAYER_DURATION = "aa_media_player_duration"
 
     const val PATIENT_NAME = "patient_name"
+
+    // database
+    const val DB_MAX_DATA_WEAR_TIME_MS = (24*60*60*1000)  // 24h
+    const val DB_MAX_DATA_TIME_MS = (7*24*60*60*1000)  // 7 days
+    const val SHARED_PREF_RESET_DATABASE = "reset_db"
+    const val SHARED_PREF_USE_RATE_CALCULATION = "rate_calculation"
+
+    // graph
+    const val GRAPH_ID = "graph_id"
+    const val SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION = "graph_duration_wear_complication"
+    const val SHARED_PREF_GRAPH_DURATION_PHONE_MAIN = "graph_duration_phone_main"
+    const val SHARED_PREF_GRAPH_DURATION_PHONE_WIDGET = "graph_duration_phone_widget"
+    const val SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_WIDGET = "graph_show_axis_phone_widget"
+    const val SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION = "graph_duration_phone_notification"
+
 }

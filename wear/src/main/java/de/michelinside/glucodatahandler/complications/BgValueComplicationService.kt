@@ -171,6 +171,13 @@ abstract class BgValueComplicationService : SuspendingComplicationDataSourceServ
     open fun getTapAction(useExternalApp: Boolean = true): PendingIntent? {
         val action = sharedPref.getString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, null)
         if(action != null) {
+            if(action == Constants.ACTION_GRAPH) {
+                return PackageUtils.getAppIntent(
+                    applicationContext,
+                    GraphActivity::class.java,
+                    instanceId
+                )
+            }
             return PackageUtils.getTapActionIntent(this, action, instanceId)
         } else if (BuildConfig.DEBUG) {
             // for debug create dummy broadcast (to check in emulator)

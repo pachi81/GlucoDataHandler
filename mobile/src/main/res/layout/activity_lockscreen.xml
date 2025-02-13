@@ -168,6 +168,15 @@
                     tools:ignore="HardcodedText,SpUsage" />
             </RelativeLayout>
 
+            <ImageView
+                android:id="@+id/graphImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/graph"
+                android:src="@drawable/icon_graph"/>
+
             <RelativeLayout
                 android:layout_weight="10"
                 android:layout_width="match_parent"

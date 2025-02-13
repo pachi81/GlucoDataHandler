@@ -708,4 +708,6 @@
     <string name="pref_show_iob_cob">IOB/COB-Werte anzeigen</string>
     <string name="pref_show_iob_cob_summary">IOB- und COB-Werte anzeigen, falls verfügbar.</string>
 
+    <string name="delta_per_10_minute">pro 10 Minuten</string>
+    <string name="delta_per_15_minute">pro 15 Minuten</string>
 </resources>

@@ -771,4 +771,30 @@
     <string name="pref_show_iob_cob">Show IOB/COB values</string>
     <string name="pref_show_iob_cob_summary">Show IOB and COB values, if available.</string>
 
+    <!-- v2.0 -->
+
+    <string name="delta_per_10_minute">per 10 minutes</string>
+    <string name="delta_per_15_minute">per 15 minutes</string>
+
+    <string name="widget_wearos_battery_level">WearOS battery level</string>
+
+    <string name="graph">Graph</string>
+    <string name="graph_duration">Graph duration</string>
+    <string name="graph_duration_wear_summary">Number of hours shown in the graph in complication and on main screen.\nUse 0 to disable graph.</string>
+    <string name="graph_duration_phone_summary">Number of hours shown in the graph.\nUse 0 to disable graph.</string>
+    <string name="graph_duration_phone_widget_summary">Number of hours shown in the graph on widget.</string>
+    <string name="show_graph">Show graph</string>
+    <string name="menu_database">Database</string>
+    <string name="reset_db">Reset database</string>
+    <string name="reset_db_summary">Press here to remove all data from database.</string>
+    <string name="reset_db_warning">If you press OK, all data from database will be removed!\nAre you sure?</string>
+    <string name="graph_disabled">Graph disabled!</string>
+    <string name="no_graph_data">Graph creation failed!</string>
+
+    <string name="pref_switch_use_rate_calculation">Trend calculation</string>
+    <string name="pref_switch_use_rate_calculation_summary_on">Use internal trend calculation related to the last values.</string>
+    <string name="pref_switch_use_rate_calculation_summary_off">Use trend provided by the source.\nIf no trend is available, the internal calculation is used.</string>
+    <string name="graph_show_axis">Show axis</string>
+    <string name="graph_show_axis_summary">Show y- and x-Axis in the widget.</string>
+
 </resources>

@@ -3,76 +3,98 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/glucose"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:text="No data!"
-        android:textSize="30dp"
-        android:textColor="@color/text_color"
-        android:shadowColor="@color/black"
-        android:shadowRadius="3"
-        tools:ignore="HardcodedText,SpUsage" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/trendImage"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginStart="6dp"
-        app:srcCompat="@drawable/icon_question"
-        android:contentDescription="@string/info_label_rate"
-        android:translationZ="2dp" />
-
-    <TextView
-        android:id="@+id/deltaText"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginStart="10dp"
-        android:gravity="center_vertical"
-        android:textSize="18dp"
-        android:text="Please restart phone"
-        android:textColor="@color/text_color"
-        tools:ignore="HardcodedText,SpUsage" />
-    <LinearLayout android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="10dp"
-        android:orientation="vertical">
         <TextView
-            android:id="@+id/iobText"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginStart="10dp"
+            android:id="@+id/glucose"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:visibility="gone"
-            android:text="IOB: 1.10U"
-            android:autoSizeMinTextSize="1sp"
-            android:autoSizeStepGranularity="1sp"
-            android:autoSizeTextType="uniform"
-            android:autoSizeMaxTextSize="14sp"
-            android:maxLines="1"
+            android:text="No data!"
+            android:textSize="30dp"
             android:textColor="@color/text_color"
-            tools:ignore="HardcodedText,SpUsage" />
-        <TextView
-            android:id="@+id/cobText"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:visibility="gone"
-            android:layout_marginStart="10dp"
-            android:gravity="center_vertical"
-            android:text="COB: 21.12g"
-            android:autoSizeMinTextSize="1sp"
-            android:autoSizeStepGranularity="1sp"
-            android:autoSizeMaxTextSize="14sp"
-            android:autoSizeTextType="uniform"
-            android:maxLines="1"
-            android:textColor="@color/text_color"
+            android:shadowColor="@color/black"
+            android:shadowRadius="3"
             tools:ignore="HardcodedText,SpUsage" />
 
+        <ImageView
+            android:id="@+id/trendImage"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="6dp"
+            app:srcCompat="@drawable/icon_question"
+            android:contentDescription="@string/info_label_rate"
+            android:translationZ="2dp" />
+
+        <TextView
+            android:id="@+id/deltaText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:gravity="center_vertical"
+            android:textSize="18dp"
+            android:text="Please restart phone"
+            android:textColor="@color/text_color"
+            tools:ignore="HardcodedText,SpUsage" />
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/iobText"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginStart="10dp"
+                android:gravity="center_vertical"
+                android:visibility="gone"
+                android:text="IOB: 1.10U"
+                android:autoSizeMinTextSize="1sp"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMaxTextSize="14sp"
+                android:maxLines="1"
+                android:textColor="@color/text_color"
+                tools:ignore="HardcodedText,SpUsage" />
+            <TextView
+                android:id="@+id/cobText"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:layout_marginStart="10dp"
+                android:gravity="center_vertical"
+                android:text="COB: 21.12g"
+                android:autoSizeMinTextSize="1sp"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeMaxTextSize="14sp"
+                android:autoSizeTextType="uniform"
+                android:maxLines="1"
+                android:textColor="@color/text_color"
+                tools:ignore="HardcodedText,SpUsage" />
+
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/graphImageLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:paddingTop="5dp"
+        android:visibility="gone"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/graphImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitStart"
+            android:src="@drawable/icon_graph"
+            tools:ignore="ContentDescription" />
     </LinearLayout>
 </LinearLayout>

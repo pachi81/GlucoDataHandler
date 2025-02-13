@@ -704,4 +704,6 @@
     <string name="pref_show_iob_cob">Mostra valori IOB/COB</string>
     <string name="pref_show_iob_cob_summary">Mostra i valori IOB e COB, se disponibili.</string>
 
+    <string name="delta_per_10_minute">ogni 10 minuti</string>
+    <string name="delta_per_15_minute">ogni 15 minuti</string>
 </resources>

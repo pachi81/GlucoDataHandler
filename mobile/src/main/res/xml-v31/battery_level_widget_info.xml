@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialKeyguardLayout="@layout/battery_level_widget"
+    android:initialLayout="@layout/battery_level_widget"
+    android:minWidth="40dp"
+    android:minHeight="40dp"
+    android:previewImage="@drawable/battery_level_widget_preview"
+    android:previewLayout="@layout/battery_level_widget"
+    android:resizeMode="horizontal|vertical"
+    android:targetCellWidth="1"
+    android:targetCellHeight="1"
+    android:updatePeriodMillis="86400000"
+    android:widgetCategory="home_screen" />

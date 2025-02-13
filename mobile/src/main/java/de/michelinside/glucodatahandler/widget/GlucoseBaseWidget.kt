@@ -28,6 +28,7 @@ enum class WidgetType(val cls: Class<*>) {
     GLUCOSE_TREND_DELTA(GlucoseTrendDeltaWidget::class.java),
     GLUCOSE_TREND_DELTA_TIME(GlucoseTrendDeltaTimeWidget::class.java),
     GLUCOSE_TREND_DELTA_TIME_IOB_COB(GlucoseTrendDeltaTimeIobCobWidget::class.java),
+    CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB(ChartWidget::class.java),
     OTHER_UNIT(OtherUnitWidget::class.java);
 }
 
@@ -36,7 +37,8 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
                                  private val hasDelta: Boolean = false,
                                  private val hasTime: Boolean = false,
                                  private val hasIobCob: Boolean = false,
-                                 private val hasOtherUnit: Boolean = false): AppWidgetProvider(), NotifierInterface {
+                                 private val hasOtherUnit: Boolean = false,
+                                 private val hasGraph: Boolean = false): AppWidgetProvider(), NotifierInterface {
     init {
         Log.d(LOG_ID, "init called for "+ this.toString())
     }
@@ -173,11 +175,21 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
         return getLayout()
     }
 
+    protected open fun isShortWidget(width: Int, height: Int): Boolean {
+        val ratio = width.toFloat() / height.toFloat()
+        return (width <= 110 || ratio < 0.5F)
+    }
+
+    protected open fun isLongWidget(width: Int, height: Int): Boolean {
+        val ratio = width.toFloat() / height.toFloat()
+        return ratio > 2.8F
+    }
+
     private fun getRemoteViews(context: Context, width: Int, height: Int): RemoteViews {
         val ratio = width.toFloat() / height.toFloat()
         Log.d(LOG_ID, "Create remote views for " + type.toString() + " with width/height=" + width + "/" + height + " and ratio=" + ratio)
-        val shortWidget = (width <= 110 || ratio < 0.5F)
-        val longWidget = ratio > 2.8F
+        val shortWidget = isShortWidget(width, height)
+        val longWidget = isLongWidget(width, height)
 
         val layout = if (shortWidget) getShortLayout() else if (longWidget) getLongLayout() else getLayout()
         val remoteViews = RemoteViews(context.packageName, layout)
@@ -240,7 +252,22 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
                 remoteViews.setViewVisibility(R.id.cobText, View.GONE)
             else
                 remoteViews.setViewVisibility(R.id.cobText, View.VISIBLE)
+            if(hasGraph) {  // special case for graph widget
+                if(ReceiveData.iob.isNaN())
+                    remoteViews.setViewVisibility(R.id.iobText, View.GONE)
+                else
+                    remoteViews.setViewVisibility(R.id.iobText, View.VISIBLE)
+                if(ReceiveData.cob.isNaN() && ReceiveData.iob.isNaN())
+                    remoteViews.setViewVisibility(R.id.layout_iob_cob, View.GONE)
+                else
+                    remoteViews.setViewVisibility(R.id.layout_iob_cob, View.VISIBLE)
+            }
         }
+        if(hasGraph) {
+            // update graph
+            remoteViews.setImageViewBitmap(R.id.graphImage, ActiveWidgetHandler.chart)
+        }
+
         return remoteViews
     }
 
