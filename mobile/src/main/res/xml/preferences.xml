@@ -44,6 +44,12 @@
             android:summary="@string/pref_cat_locksreen_wallpaper_summary"
             app:fragment="de.michelinside.glucodatahandler.preferences.LockscreenSettingsFragment"
             app:iconSpaceReserved="false" />
+        <Preference
+            android:key="pref_cat_aod"
+            android:title="@string/pref_cat_aod"
+            android:summary="@string/pref_cat_aod_summary"
+            app:fragment="de.michelinside.glucodatahandler.preferences.AodSettingsFragment"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/table_header_connections"

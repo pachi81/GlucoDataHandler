@@ -26,6 +26,19 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 
+import android.accessibilityservice.AccessibilityServiceInfo
+import android.app.Activity
+import android.provider.DocumentsContract
+import android.provider.Settings
+import android.view.accessibility.AccessibilityManager
+//import androidx.core.app.ActivityCompat.startActivityForResult
+import androidx.core.content.ContextCompat.startActivity
+import de.michelinside.glucodatahandler.common.GlucoDataService.Companion.context
+import de.michelinside.glucodatahandler.preferences.ExportImportSettingsFragment.Companion.IMPORT_PHONE_SETTINGS
+
+
+import androidx.appcompat.app.AppCompatActivity
+
 
 class AODAccessibilityService : AccessibilityService(), NotifierInterface {
     private var overlayView: View? = null
@@ -37,6 +50,43 @@ class AODAccessibilityService : AccessibilityService(), NotifierInterface {
 
     private var laidoutWidth = 0
     private var laidoutHeight = 0
+
+    companion object {
+        val LOG_ID = "GDH.Aod"
+
+//        fun checkAndEnableAccessibilityService()
+//        {
+//            context?.let {
+//            }
+//
+//        }
+
+        fun isAccessibilitySettingsEnabled(context: Context): Boolean {
+            val am = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+            val enabledServices = am.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK)
+            return enabledServices.isNotEmpty()
+        }
+
+        fun requestAccessibilityService(context: Context) {
+//            Log.d(LOG_ID, "Requesting Accessibility Service")
+//            context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+//            Log.d(LOG_ID, "Requested Accessibility Service " + isAccessibilitySettingsEnabled(context!!))
+
+
+//            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+//            startActivityForResult(intent, IMPORT_PHONE_SETTINGS)
+
+        }
+
+
+    }
+
+//    fun isAccessServiceEnabled(context: Context): Boolean {
+//        val prefString =
+//            Settings.Secure.getString(context.contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES)
+//        return prefString.contains("${context.packageName}/${context.packageName}.${context.getString(R.string.access_service_name)}")
+//    }
+
 
     private val screenStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {

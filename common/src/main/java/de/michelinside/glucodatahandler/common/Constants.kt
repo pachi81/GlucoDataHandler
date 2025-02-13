@@ -189,6 +189,14 @@ object Constants {
 
     const val SHARED_PREF_EVERSENSE_ESEL_INFO = "source_eversense_info"
 
+    // aod
+    const val SHARED_PREF_AOD_WP_ENABLED = "aod_enabled"
+    const val SHARED_PREF_AOD_WP_Y_POS = "aod_y_pos"
+    const val SHARED_PREF_AOD_WP_STYLE = "aod_style"
+    const val SHARED_PREF_AOD_WP_SIZE = "aod_size"
+    const val SHARED_PREF_AOD_WP_COLOURED = "aod_coloured"
+
+
     // Alarm
     const val ALARM_SNOOZE_ACTION = "de.michelinside.glucodatahandler.SNOOZE"
     const val ALARM_STOP_NOTIFICATION_ACTION = "de.michelinside.glucodatahandler.STOP_NOTIFICATION"

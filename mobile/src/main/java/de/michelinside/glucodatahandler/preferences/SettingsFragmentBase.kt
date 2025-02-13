@@ -15,11 +15,13 @@ import androidx.preference.MultiSelectListPreference
 import androidx.preference.Preference
 import androidx.preference.SeekBarPreference
 import androidx.preference.SwitchPreferenceCompat
+import de.michelinside.glucodatahandler.AODAccessibilityService
 import de.michelinside.glucodatahandler.common.ui.Dialogs
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.GlucoDataService.Companion
 import de.michelinside.glucodatahandler.common.Intents
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -191,6 +193,12 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_Y_POS, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_SIZE, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
+
+            setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_Y_POS, Constants.SHARED_PREF_AOD_WP_ENABLED)
+            setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_STYLE, Constants.SHARED_PREF_AOD_WP_ENABLED)
+            setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_SIZE, Constants.SHARED_PREF_AOD_WP_ENABLED)
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_COLOURED, Constants.SHARED_PREF_AOD_WP_ENABLED)
+
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
         }
@@ -302,12 +310,50 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
     }
 
     private fun updateStyleSummary() {
-        val lockscreenStylePref = findPreference<ListPreference>(Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE)
+        val aodStylePref = findPreference<ListPreference>(Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE)
+        if(aodStylePref != null) {
+            aodStylePref.summary = aodStylePref.entry
+        }
+    }
+}
+
+
+class AodSettingsFragment: SettingsFragmentBase(R.xml.pref_aod)  {
+    override fun initPreferences() {
+        Log.v(LOG_ID, "initPreferences called")
+        super.initPreferences()
+        updateStyleSummary()
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        super.onSharedPreferenceChanged(sharedPreferences, key)
+        when (key) {
+            Constants.SHARED_PREF_AOD_WP_STYLE -> updateStyleSummary()
+            Constants.SHARED_PREF_AOD_WP_ENABLED -> checkAccesibilityService()
+        }
+    }
+
+    private fun updateStyleSummary() {
+        val lockscreenStylePref = findPreference<ListPreference>(Constants.SHARED_PREF_AOD_WP_STYLE)
         if(lockscreenStylePref != null) {
             lockscreenStylePref.summary = lockscreenStylePref.entry
         }
     }
+
+    private fun checkAccesibilityService() {
+        context?.let {
+            val enabled = AODAccessibilityService.isAccessibilitySettingsEnabled(it)
+//            Log.e(LOG_ID, "isAccessibilitySettingsEnabled: $enabled")
+            if (!enabled) {
+                AODAccessibilityService.requestAccessibilityService(it)
+//                Log.e(LOG_ID, "isAccessibilitySettingsEnabled: $enabled")
+            }
+        }
+    }
+
 }
+
+
 
 class NotificaitonSettingsFragment: SettingsFragmentBase(R.xml.pref_notification) {}
 
