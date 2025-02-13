@@ -17,9 +17,13 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.ncorti.slidetoact.SlideToActView
+import de.michelinside.glucodatahandler.PermanentNotification
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.chart.ChartBitmap
+import de.michelinside.glucodatahandler.common.chart.ChartBitmapView
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notification.AlarmType
@@ -48,6 +52,8 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var btnSnooze3: Button
     private lateinit var layoutSnooze: LinearLayout
     private lateinit var layoutSnoozeButtons: LinearLayout
+    private lateinit var graphImage: ImageView
+    private var chartBitmap: ChartBitmapView? = null
     private var alarmType: AlarmType? = null
     private var notificationId: Int = -1
     private var createTime = 0L
@@ -102,6 +108,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             btnSnooze3 = findViewById(R.id.btnSnooze120)
             layoutSnooze = findViewById(R.id.layoutSnooze)
             layoutSnoozeButtons = findViewById(R.id.layoutSnoozeButtons)
+            graphImage = findViewById(R.id.graphImage)
 
             val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             val snoozeValues = AlarmNotification.getSnoozeValues()
@@ -117,6 +124,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
                 btnSnooze.visibility = View.GONE
                 txtSnooze.visibility = View.GONE
                 layoutSnoozeButtons.visibility = View.VISIBLE
+                graphImage.visibility = View.GONE
                 btnClose.setOnClickListener{
                     Log.d(LOG_ID, "Stop button clicked!")
                     stop()
@@ -145,6 +153,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
                             layoutSnoozeButtons.visibility = View.VISIBLE
                         }
                     }
+                chartBitmap = ChartBitmapView(graphImage, this, "")
             }
             btnSnooze1.visibility = View.GONE
             btnSnooze2.visibility = View.GONE
@@ -183,6 +192,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
         try {
             Log.v(LOG_ID, "onDestroy called")
             super.onDestroy()
+            chartBitmap?.close()
             activity = null
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )

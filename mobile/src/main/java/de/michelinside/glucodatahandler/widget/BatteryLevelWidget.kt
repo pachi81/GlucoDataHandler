@@ -3,21 +3,23 @@ package de.michelinside.glucodatahandler.widget
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.RemoteViews
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
+import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.R as CR
 
 class BatteryLevelWidget : AppWidgetProvider() {
         private val LOG_ID = "GDH.widget.BatteryLevelWidget"
 
-        fun updateWidget(
+        private fun updateWidget(
             context: Context,
             appWidgetManager: AppWidgetManager,
             appWidgetId: Int,
@@ -33,17 +35,17 @@ class BatteryLevelWidget : AppWidgetProvider() {
                 remoteViews.setTextViewText(R.id.battery_level, batteryLevelStr)
                 remoteViews.setTextViewText(R.id.device_name, deviceName)
                 val levelColour = if(batteryLevel == 0)
-                        Color.GRAY
+                        ReceiveData.getAlarmTypeColor(AlarmType.NONE)
                     else if (batteryLevel < 25)
-                        Color.RED
+                        ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW)
                     else if (batteryLevel < 45)
-                        Color.YELLOW
+                        ReceiveData.getAlarmTypeColor(AlarmType.LOW)
                     else
-                        Color.GREEN
+                        ReceiveData.getAlarmTypeColor(AlarmType.OK)
                 remoteViews.setTextColor(R.id.battery_level, levelColour)
 
-                val sharedPref =
-                    context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                remoteViews.setInt(R.id.widget, "setBackgroundColor", Utils.getBackgroundColor(sharedPref.getInt(Constants.SHARED_PREF_WIDGET_TRANSPARENCY, 3)))
                 remoteViews.setOnClickPendingIntent(
                     R.id.widget,
                     PackageUtils.getTapActionIntent(
@@ -60,7 +62,7 @@ class BatteryLevelWidget : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         try {
-            Log.d(LOG_ID, "onUpdate called for " + this.toString() + " - ids: " + appWidgetIds.contentToString())
+            Log.i(LOG_ID, "onUpdate called for " + this.toString() + " - ids: " + appWidgetIds.contentToString())
 
             BatteryLevelWidgetNotifier.addNotifier()
 

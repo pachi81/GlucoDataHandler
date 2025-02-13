@@ -35,7 +35,7 @@ class GlucoseChart: LineChart {
     }
 
     override fun postInvalidate() {
-        Log.v(LOG_ID, "postInvalidate")
+        Log.v(LOG_ID, "postInvalidate - shown: $isShown")
         isInvalidating = true
         isDrawing = isShown
         super.postInvalidate()
@@ -57,8 +57,13 @@ class GlucoseChart: LineChart {
     fun waitForInvalidate() {
         if(isInvalidating && Looper.myLooper() != Looper.getMainLooper()) {
             Log.d(LOG_ID, "waitForInvalidate")
-            while(isInvalidating) {
+            var sleepCount = 0
+            while(isInvalidating && sleepCount < 1000) {
                 Thread.sleep(10)
+                sleepCount += 10
+            }
+            if(isInvalidating) {
+                Log.e(LOG_ID, "waitForInvalidate timeout")
             }
         }
     }
@@ -66,8 +71,13 @@ class GlucoseChart: LineChart {
     fun waitForDrawing() {
         if(isDrawing && Looper.myLooper() != Looper.getMainLooper()) {
             Log.d(LOG_ID, "waitForDrawing")
-            while(isDrawing) {
+            var sleepCount = 0
+            while(isDrawing && sleepCount < 1000) {
                 Thread.sleep(10)
+                sleepCount += 10
+            }
+            if(isDrawing) {
+                Log.e(LOG_ID, "waitForDrawing timeout")
             }
         }
     }

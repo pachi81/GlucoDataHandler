@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialKeyguardLayout="@layout/chart_widget"
+    android:initialLayout="@layout/chart_widget"
+    android:previewImage="@drawable/icon_graph"
+    android:minWidth="60dp"
+    android:minHeight="50dp"
+    android:minResizeWidth="60dp"
+    android:minResizeHeight="50dp"
+    android:resizeMode="vertical|horizontal"
+    android:updatePeriodMillis="86400000"
+    android:widgetCategory="home_screen" />

@@ -781,7 +781,8 @@
     <string name="graph">Graph</string>
     <string name="graph_duration">Graph duration</string>
     <string name="graph_duration_wear_summary">Number of hours shown in the graph in complication and on main screen.\nUse 0 to disable graph.</string>
-    <string name="graph_duration_phone_summary">Number of hours shown as default in the graph on main screen.\nUse 0 to disable graph.</string>
+    <string name="graph_duration_phone_summary">Number of hours shown in the graph.\nUse 0 to disable graph.</string>
+    <string name="graph_duration_phone_widget_summary">Number of hours shown in the graph on widget.</string>
     <string name="show_graph">Show graph</string>
     <string name="menu_database">Database</string>
     <string name="reset_db">Reset database</string>
@@ -806,5 +807,8 @@
     <string name="pref_aod_y_pos_summary">Vertical position of the glucose-trend image on AOD display:\n0 is the top of the display\n100 is the botton of the display</string>
     <string name="pref_aod_coloured">Coloured</string>
     <string name="pref_aod_coloured_summary">Show AOD in colour.</string>
+
+    <string name="graph_show_axis">Show axis</string>
+    <string name="graph_show_axis_summary">Show y- and x-Axis in the widget.</string>
 
 </resources>

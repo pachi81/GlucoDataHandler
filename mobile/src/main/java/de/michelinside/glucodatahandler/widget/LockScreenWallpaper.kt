@@ -1,10 +1,12 @@
 package de.michelinside.glucodatahandler.widget
 
+import android.annotation.SuppressLint
 import android.app.WallpaperManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
@@ -14,12 +16,16 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.graphics.drawable.toDrawable
+import de.michelinside.glucodatahandler.PermanentNotification
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.chart.ChartBitmap
+import de.michelinside.glucodatahandler.common.chart.ChartBitmapView
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -37,6 +43,9 @@ object LockScreenWallpaper : NotifierInterface, SharedPreferences.OnSharedPrefer
     private var style = Constants.WIDGET_STYLE_GLUCOSE_TREND
     private var size = 10
     private val MAX_SIZE = 24f
+    @SuppressLint("StaticFieldLeak")
+    private var chartBitmap: ChartBitmap? = null
+
 
     fun create(context: Context) {
         try {
@@ -72,10 +81,14 @@ object LockScreenWallpaper : NotifierInterface, SharedPreferences.OnSharedPrefer
     private fun updateNotifier(context: Context) {
         if (enabled) {
             val filter = mutableSetOf(
-                NotifySource.BROADCAST,
-                NotifySource.MESSAGECLIENT,
                 NotifySource.SETTINGS
             )
+            if(style == Constants.WIDGET_STYLE_CHART_GLUCOSE_TREND_TIME_DELTA_IOB_COB) {
+                filter.add(NotifySource.GRAPH_CHANGED)
+            } else {
+                filter.add(NotifySource.BROADCAST)
+                filter.add(NotifySource.MESSAGECLIENT)
+            }
             when (style) {
                 Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA -> {
                     filter.add(NotifySource.TIME_VALUE)
@@ -153,101 +166,36 @@ object LockScreenWallpaper : NotifierInterface, SharedPreferences.OnSharedPrefer
         return null
     }
 
-    private fun createWallpaperView(context: Context): Bitmap? {
-        try {
-            //getting the widget layout from xml using layout inflater
-            val lockscreenView = LayoutInflater.from(context).inflate(R.layout.floating_widget, null)
-            val txtBgValue: TextView = lockscreenView.findViewById(R.id.glucose)
-            val viewIcon: ImageView = lockscreenView.findViewById(R.id.trendImage)
-            val txtDelta: TextView = lockscreenView.findViewById(R.id.deltaText)
-            val txtTime: TextView = lockscreenView.findViewById(R.id.timeText)
-            val txtIob: TextView = lockscreenView.findViewById(R.id.iobText)
-            val txtCob: TextView = lockscreenView.findViewById(R.id.cobText)
+    private fun getChart(): Bitmap? {
+        return chartBitmap?.getBitmap()
+    }
 
-            var textSize = 30f
-            when(style) {
-                Constants.WIDGET_STYLE_GLUCOSE_TREND_DELTA -> {
-                    txtTime.visibility = GONE
-                    txtDelta.visibility = VISIBLE
-                    viewIcon.visibility = VISIBLE
-                    txtIob.visibility = GONE
-                    txtCob.visibility = GONE
-                }
-                Constants.WIDGET_STYLE_GLUCOSE_TREND -> {
-                    txtTime.visibility = GONE
-                    txtDelta.visibility = GONE
-                    viewIcon.visibility = VISIBLE
-                    txtIob.visibility = GONE
-                    txtCob.visibility = GONE
-                }
-                Constants.WIDGET_STYLE_GLUCOSE -> {
-                    txtTime.visibility = GONE
-                    txtDelta.visibility = GONE
-                    viewIcon.visibility = GONE
-                    txtIob.visibility = GONE
-                    txtCob.visibility = GONE
-                }
-                Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA_IOB_COB -> {
-                    textSize = 20f
-                    txtTime.visibility = VISIBLE
-                    txtDelta.visibility = VISIBLE
-                    viewIcon.visibility = VISIBLE
-                    txtIob.visibility = VISIBLE
-                    txtCob.visibility = VISIBLE
-                }
-                else -> {
-                    textSize = 20f
-                    txtTime.visibility = VISIBLE
-                    txtDelta.visibility = VISIBLE
-                    viewIcon.visibility = VISIBLE
-                    txtIob.visibility = GONE
-                    txtCob.visibility = GONE
-                }
-            }
-
-            txtBgValue.text = ReceiveData.getGlucoseAsString()
-            txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
-            if (ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong()) {
-                txtBgValue.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-            } else {
-                txtBgValue.paintFlags = 0
-            }
-            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
-            txtDelta.text = "Δ ${ReceiveData.getDeltaAsString()}"
-            txtTime.text = "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(context)}"
-            txtIob.text = "💉 ${ReceiveData.getIobAsString()}"
-            txtCob.text = "🍔 ${ReceiveData.getCobAsString()}"
-
-            txtBgValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+size*4f)
-            viewIcon.minimumWidth = Utils.dpToPx(32f+size*4f, context)
-            txtDelta.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+size*2f, MAX_SIZE))
-            txtTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+size*2f, MAX_SIZE))
-            txtIob.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+size*2f, MAX_SIZE))
-            txtCob.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+size*2f, MAX_SIZE))
-
-            lockscreenView.setDrawingCacheEnabled(true)
-            lockscreenView.measure(
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
-            lockscreenView.layout(0, 0, lockscreenView.measuredWidth, lockscreenView.measuredHeight)
-
-            val bitmap = Bitmap.createBitmap(lockscreenView.width, lockscreenView.height, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(bitmap)
-            lockscreenView.draw(canvas)
-            return bitmap
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "createWallpaperView exception: " + exc.message.toString())
+    private fun createBitmap(context: Context) {
+        if(chartBitmap == null && GlucoDataService.isServiceRunning) {
+            Log.i(LOG_ID, "Create bitmap")
+            chartBitmap = ChartBitmap(context, labelColor = Color.WHITE)
         }
-        return null
+    }
+
+    private fun removeBitmap() {
+        if(chartBitmap != null) {
+            Log.i(LOG_ID, "Remove bitmap")
+            chartBitmap!!.close()
+            chartBitmap = null
+        }
     }
 
     private fun getBitmapForWallpaper(context: Context): Bitmap? {
-        return createWallpaperView(context)
+        return WidgetHelper.createWallpaperView(context, size, style, getChart())
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            Log.v(LOG_ID, "OnNotifyData called for source $dataSource")
+            Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - graph-id ${chartBitmap?.chartId}")
+            if (dataSource == NotifySource.GRAPH_CHANGED && chartBitmap != null && extras?.getInt(Constants.GRAPH_ID) != chartBitmap!!.chartId) {
+                Log.v(LOG_ID, "Ignore graph changed as it is not for this chart")
+                return  // ignore as it is not for this graph
+            }
             updateLockScreen(context)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() )
@@ -266,6 +214,10 @@ object LockScreenWallpaper : NotifierInterface, SharedPreferences.OnSharedPrefer
             if (style != sharedPreferences.getString(Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE, style)) {
                 style = sharedPreferences.getString(Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE, style)!!
                 Log.d(LOG_ID, "New style: $style")
+                if(style == Constants.WIDGET_STYLE_CHART_GLUCOSE_TREND_TIME_DELTA_IOB_COB)
+                    createBitmap(GlucoDataService.context!!)
+                else
+                    removeBitmap()
                 updateNotifier(GlucoDataService.context!!)
                 changed = true
             }

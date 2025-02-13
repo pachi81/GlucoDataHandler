@@ -2,7 +2,6 @@ package de.michelinside.glucodatahandler.common
 
 import android.annotation.SuppressLint
 import android.app.Notification
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -12,6 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.google.android.gms.wearable.WearableListenerService
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.notifier.DataSource
@@ -44,7 +44,7 @@ enum class AppSource {
     AUTO_APP;
 }
 
-abstract class GlucoDataService(source: AppSource) : Service(), SharedPreferences.OnSharedPreferenceChangeListener {
+abstract class GlucoDataService(source: AppSource) : WearableListenerService(), SharedPreferences.OnSharedPreferenceChangeListener {
     protected var batteryReceiver: BatteryReceiver? = null
     protected var screenEventReceiver: ScreenEventReceiver? = null
     private lateinit var broadcastServiceAPI: BroadcastServiceAPI
@@ -60,7 +60,6 @@ abstract class GlucoDataService(source: AppSource) : Service(), SharedPreference
         const val NOTIFICATION_ID = 1234
         var appSource = AppSource.NOT_SET
         private var isRunning = false
-        private var started = false
         val running get() = isRunning
         private var created = false
 
@@ -75,6 +74,10 @@ abstract class GlucoDataService(source: AppSource) : Service(), SharedPreference
             extContext = value
         }
 
+        val isServiceRunning: Boolean get() {
+            return service != null
+        }
+
         @SuppressLint("StaticFieldLeak")
         private var extContext: Context? = null
         val sharedPref: SharedPreferences? get() {
@@ -85,46 +88,31 @@ abstract class GlucoDataService(source: AppSource) : Service(), SharedPreference
         }
 
         fun start(source: AppSource, context: Context, cls: Class<*>) {
-            Log.v(LOG_ID, "start called (running: $running - foreground: $foreground - started: $started)")
-            if (!running||!foreground||!started) {
+            Log.v(LOG_ID, "start called (running: $running - foreground: $foreground)")
+            if (!running) {
                 try {
-                    if(!started || !running || service == null) {
-                        isRunning = true
-                        appSource = source
-                        migrateSettings(context)
-                        val serviceIntent = Intent(
-                            context,
-                            cls
-                        )
-                        /*
-                        val sharedPref = context.getSharedPreferences(
-                            Constants.SHARED_PREF_TAG,
-                            Context.MODE_PRIVATE
-                        )*/
-                        serviceIntent.putExtra(
-                            Constants.SHARED_PREF_FOREGROUND_SERVICE,
-                            // default on wear and phone
-                            true//sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
-                        )
-                        //if (foreground) {
-                            context.startService(serviceIntent)
-                        /*} else {
-                            Log.v(LOG_ID, "start foreground service")
-                            context.startForegroundService(serviceIntent)
-                        }*/
-                    } else if(!foreground && service != null) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                            Log.i(LOG_ID, "Starting service in foreground with type ${ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC}!")
-                            service!!.startForeground(
-                                NOTIFICATION_ID,
-                                service!!.getNotification(),
-                                ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
-                            )
-                        } else {
-                            Log.i(LOG_ID, "Starting service in foreground!")
-                            service!!.startForeground(NOTIFICATION_ID, service!!.getNotification())
-                        }
-                        isForegroundService = true
+                    isRunning = true
+                    appSource = source
+                    migrateSettings(context)
+                    val serviceIntent = Intent(
+                        context,
+                        cls
+                    )
+                    /*
+                    val sharedPref = context.getSharedPreferences(
+                        Constants.SHARED_PREF_TAG,
+                        Context.MODE_PRIVATE
+                    )*/
+                    serviceIntent.putExtra(
+                        Constants.SHARED_PREF_FOREGROUND_SERVICE,
+                        // default on wear and phone
+                        true//sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)
+                    )
+                    if (foreground) {
+                        context.startService(serviceIntent)
+                    } else {
+                        Log.v(LOG_ID, "start foreground service")
+                        context.startForegroundService(serviceIntent)
                     }
                 } catch (exc: Exception) {
                     Log.e(
@@ -445,13 +433,11 @@ abstract class GlucoDataService(source: AppSource) : Service(), SharedPreference
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         try {
-            if(started && isForegroundService)
-                return START_STICKY
-            Log.v(LOG_ID, "onStartCommand called - running: $running - foreground: $foreground")
-            started = true
+            Log.v(LOG_ID, "onStartCommand called")
             GdhUncaughtExecptionHandler.init()
-            //super.onStartCommand(intent, flags, startId)
-            if (!isForegroundService) {
+            super.onStartCommand(intent, flags, startId)
+            val isForeground = true // intent?.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, true)    --> always use foreground!!!
+            if (isForeground && !isForegroundService) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                     Log.i(LOG_ID, "Starting service in foreground with type ${ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC}!")
                     startForeground(
@@ -464,11 +450,11 @@ abstract class GlucoDataService(source: AppSource) : Service(), SharedPreference
                     startForeground(NOTIFICATION_ID, getNotification())
                 }
                 isForegroundService = true
-            } /*else if ( isForegroundService && intent?.getBooleanExtra(Constants.ACTION_STOP_FOREGROUND, false) == true ) {
+            } else if ( isForegroundService && intent?.getBooleanExtra(Constants.ACTION_STOP_FOREGROUND, false) == true ) {
                 isForegroundService = false
                 Log.i(LOG_ID, "Stopping service in foreground!")
                 stopForeground(STOP_FOREGROUND_REMOVE)
-            }*/
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onStartCommand exception: " + exc.toString())
         }

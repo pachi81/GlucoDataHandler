@@ -7,7 +7,6 @@ import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
-import android.os.IBinder
 import android.util.Log
 import androidx.annotation.RequiresApi
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
@@ -22,7 +21,6 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.utils.Utils.isScreenReaderOn
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.watch.WatchDrip
-import de.michelinside.glucodatahandler.widget.BatteryLevelWidget
 import de.michelinside.glucodatahandler.widget.BatteryLevelWidgetNotifier
 import de.michelinside.glucodatahandler.widget.FloatingWidget
 import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
@@ -33,7 +31,6 @@ import java.math.RoundingMode
 class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInterface {
     private lateinit var floatingWidget: FloatingWidget
     private var lastForwardTime = 0L
-    private lateinit var batteryLevelWidget: BatteryLevelWidget
 
     init {
         Log.d(LOG_ID, "init called")
@@ -199,9 +196,9 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             PermanentNotification.create(applicationContext)
             CarModeReceiver.init(applicationContext)
             GlucoseBaseWidget.updateWidgets(applicationContext)
+            BatteryLevelWidgetNotifier.OnNotifyData(applicationContext, NotifySource.CAPILITY_INFO, null)
             WatchDrip.init(applicationContext)
             floatingWidget.create()
-            batteryLevelWidget = BatteryLevelWidget()
             LockScreenWallpaper.create(this)
             AlarmNotification.initNotifications(this)
         } catch (exc: Exception) {
@@ -223,7 +220,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
     }
 
     override fun getNotification(): Notification {
-        Log.d(LOG_ID, "create foreground notification")
+        Log.v(LOG_ID, "getNotification called")
         return PermanentNotification.getNotification(
             !sharedPref!!.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false),
             Constants.SHARED_PREF_PERMANENT_NOTIFICATION_ICON,
@@ -378,9 +375,5 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateBatteryReceiver exception: " + exc.toString())
         }
-    }
-
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
     }
 }
