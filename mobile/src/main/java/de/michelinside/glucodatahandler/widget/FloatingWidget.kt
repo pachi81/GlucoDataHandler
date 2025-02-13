@@ -6,29 +6,21 @@ import android.content.Context.WINDOW_SERVICE
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.PixelFormat
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
-import android.util.TypedValue
 import android.view.*
 import android.view.View.*
 import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TableLayout
-import android.widget.TableRow
-import android.widget.TextView
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
-import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.chart.ChartBitmapView
+import de.michelinside.glucodatahandler.common.chart.ChartBitmap
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
-import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import java.util.*
 
@@ -37,21 +29,12 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
     private var windowManager: WindowManager? = null
     private lateinit var floatingView: View
     private lateinit var params: WindowManager.LayoutParams
-    private lateinit var txtBgValue: TextView
-    private lateinit var viewIcon: ImageView
-    private lateinit var txtDelta: TextView
-    private lateinit var txtTime: TextView
-    private lateinit var txtIob: TextView
-    private lateinit var txtCob: TextView
-    private var column2: TableLayout? = null
-    private var layout_iob_cob: LinearLayout? = null
-    private var graphImage: ImageView? = null
+    private lateinit var imageView: ImageView
     private lateinit var sharedPref: SharedPreferences
     private lateinit var sharedInternalPref: SharedPreferences
     private val LOG_ID = "GDH.FloatingWidget"
-    private val MAX_SIZE = 30f
     @SuppressLint("StaticFieldLeak")
-    private var chartBitmap: ChartBitmapView? = null
+    private var chartBitmap: ChartBitmap? = null
 
     @SuppressLint("InflateParams")
     fun create() {
@@ -88,18 +71,9 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
         else
             R.layout.floating_widget
         Log.d(LOG_ID, "init layout with $layout")
-        floatingView = LayoutInflater.from(context).inflate(layout, null)
-        txtBgValue = floatingView.findViewById(R.id.glucose)
-        viewIcon = floatingView.findViewById(R.id.trendImage)
-        txtDelta = floatingView.findViewById(R.id.deltaText)
-        txtTime = floatingView.findViewById(R.id.timeText)
-        txtIob = floatingView.findViewById(R.id.iobText)
-        txtCob = floatingView.findViewById(R.id.cobText)
-        column2 = floatingView.findViewById(R.id.column2)
-        layout_iob_cob = floatingView.findViewById(R.id.layout_iob_cob)
-        graphImage = floatingView.findViewById(R.id.graphImage)
-        if(graphImage == null)
-            removeBitmap()
+        floatingView = LayoutInflater.from(context).inflate(R.layout.image_view, null)
+        imageView = floatingView.findViewById(R.id.imageLayout)
+        updateChartCreation()
     }
 
     private fun remove() {
@@ -124,111 +98,16 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
         windowManager = null
     }
 
-    private fun applyStyle() : Float {
-        var bgTextSize = 10f
-        when(sharedPref.getString(Constants.SHARED_PREF_FLOATING_WIDGET_STYLE, Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA)) {
-            Constants.WIDGET_STYLE_GLUCOSE_TREND_DELTA -> {
-                txtTime.visibility = GONE
-                txtDelta.visibility = VISIBLE
-                viewIcon.visibility = VISIBLE
-                txtIob.visibility = GONE
-                txtCob.visibility = GONE
-            }
-            Constants.WIDGET_STYLE_GLUCOSE_TREND -> {
-                txtTime.visibility = GONE
-                txtDelta.visibility = GONE
-                viewIcon.visibility = VISIBLE
-                txtIob.visibility = GONE
-                txtCob.visibility = GONE
-            }
-            Constants.WIDGET_STYLE_GLUCOSE -> {
-                txtTime.visibility = GONE
-                txtDelta.visibility = GONE
-                viewIcon.visibility = GONE
-                txtIob.visibility = GONE
-                txtCob.visibility = GONE
-            }
-            Constants.WIDGET_STYLE_CHART_GLUCOSE_TREND_TIME_DELTA_IOB_COB,
-            Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA_IOB_COB -> {
-                bgTextSize = 10f
-                txtTime.visibility = VISIBLE
-                txtDelta.visibility = VISIBLE
-                viewIcon.visibility = VISIBLE
-                txtIob.visibility = VISIBLE
-                txtCob.visibility = VISIBLE
-            }
-            else -> {
-                bgTextSize = 10f
-                txtTime.visibility = VISIBLE
-                txtDelta.visibility = VISIBLE
-                viewIcon.visibility = VISIBLE
-                txtIob.visibility = GONE
-                txtCob.visibility = GONE
-            }
-        }
-        return bgTextSize
-    }
-
     @SuppressLint("SetTextI18n")
     private fun setContent() {
-        val textSize = applyStyle()
-        txtBgValue.text = ReceiveData.getGlucoseAsString()
-        txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
-        if (ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong()) {
-            txtBgValue.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-        } else {
-            txtBgValue.paintFlags = 0
-        }
-        var resizeFactor = sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, 5).toFloat()
-        val size = minOf(resizeFactor.toInt()*20, 200)
-        viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(width = size, height = size))
-        viewIcon.contentDescription = ReceiveData.getRateAsText(context)
-        txtDelta.text = "Δ ${ReceiveData.getDeltaAsString()}"
-        txtTime.text = "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(context)}"
-        if(ReceiveData.iob.isNaN())
-            txtIob.visibility = GONE
-        else
-            txtIob.text = "💉 ${ReceiveData.getIobAsString()}"
-        if(ReceiveData.cob.isNaN())
-            txtCob.visibility = GONE
-        else
-            txtCob.text = "🍔 ${ReceiveData.getCobAsString()}"
+        updateChartCreation()
+        val size = sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, 5)
+        val style = getStyle()
+        imageView.setImageBitmap(WidgetHelper.createWallpaperView(context, size, style, chartBitmap?.getBitmap()))
+    }
 
-        if(graphImage != null && (txtIob.visibility == VISIBLE || txtCob.visibility == VISIBLE))
-            resizeFactor /= 2
-
-        txtBgValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+resizeFactor*5f)
-        viewIcon.minimumWidth = Utils.dpToPx(20f+resizeFactor*4f, context)
-        txtDelta.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(6f+ resizeFactor *2f, MAX_SIZE))
-        txtTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(6f+ resizeFactor *2f, MAX_SIZE))
-        txtIob.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(6f+ resizeFactor *2f, MAX_SIZE))
-        txtCob.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(6f+ resizeFactor *2f, MAX_SIZE))
-
-        if(txtDelta.visibility == VISIBLE && column2 != null) {
-            val layout = TableRow.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.MATCH_PARENT)
-            layout.marginStart = Utils.spToPx(minOf(resizeFactor*3F, 15F), context)
-            column2!!.layoutParams = layout
-        } else if (layout_iob_cob != null) {
-            // graph layout
-            var factor = resizeFactor
-            if(txtIob.visibility == GONE && txtCob.visibility == GONE) {
-                Log.v(LOG_ID, "hide layout_iob_cob")
-                layout_iob_cob!!.visibility = GONE
-            } else {
-                layout_iob_cob!!.visibility = VISIBLE
-                factor *= 2F
-            }
-            if(graphImage != null) {
-                createBitmap()
-                floatingView.measure(
-                    MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
-                    MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
-                Log.d(LOG_ID, "Mesasured width ${floatingView.measuredWidth} and height ${floatingView.measuredHeight} for chart")
-
-                graphImage!!.layoutParams.height = floatingView.measuredWidth/3 // Utils.dpToPx(10f * minOf(factor, 15F), context)
-                graphImage!!.requestLayout()
-            }
-        }
+    private fun getStyle(): String {
+        return sharedPref.getString(Constants.SHARED_PREF_FLOATING_WIDGET_STYLE, Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA)?: Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA
     }
 
     private fun update() {
@@ -241,16 +120,26 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
                     //getting windows services and adding the floating view to it
                     if (windowManager == null) {
                         val filter = mutableSetOf(
-                            NotifySource.BROADCAST,
-                            NotifySource.MESSAGECLIENT,
-                            NotifySource.SETTINGS)
-                        if(txtTime.visibility == VISIBLE) {
-                            filter.add(NotifySource.TIME_VALUE)
+                            NotifySource.SETTINGS
+                        )
+                        val style = getStyle()
+                        if(style == Constants.WIDGET_STYLE_CHART_GLUCOSE_TREND_TIME_DELTA_IOB_COB) {
+                            filter.add(NotifySource.GRAPH_CHANGED)
                         } else {
-                            filter.add(NotifySource.OBSOLETE_VALUE)
+                            filter.add(NotifySource.BROADCAST)
+                            filter.add(NotifySource.MESSAGECLIENT)
                         }
-                        if(txtIob.visibility == VISIBLE) {
-                            filter.add(NotifySource.IOB_COB_CHANGE)
+                        when (style) {
+                            Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA -> {
+                                filter.add(NotifySource.TIME_VALUE)
+                            }
+                            Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA_IOB_COB -> {
+                                filter.add(NotifySource.TIME_VALUE)
+                                filter.add(NotifySource.IOB_COB_CHANGE)
+                            }
+                            else -> {
+                                filter.add(NotifySource.OBSOLETE_VALUE)
+                            }
                         }
                         InternalNotifier.addNotifier(context, this, filter)
                         createWindow()
@@ -270,6 +159,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun createWindow() {
         try {
             Log.d(LOG_ID, "create window")
@@ -287,9 +177,9 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
             windowManager = context.getSystemService(WINDOW_SERVICE) as WindowManager?
             windowManager!!.addView(floatingView, params)
 
-            val widget = floatingView.findViewById<View>(R.id.widget)
-            widget.setBackgroundColor(Utils.getBackgroundColor(sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY, 3)))
-            widget.setOnClickListener {
+            //val widget = floatingView.findViewById<View>(R.id.widget)
+            imageView.setBackgroundColor(Utils.getBackgroundColor(sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY, 3)))
+            imageView.setOnClickListener {
                 Log.d(LOG_ID, "onClick called")
                 val action = PackageUtils.getTapAction(context, sharedPref.getString(Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION, null))
                 if(action.first != null) {
@@ -301,7 +191,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
                     }
                 }
             }
-            widget.setOnLongClickListener {
+            imageView.setOnLongClickListener {
                 Log.d(LOG_ID, "onLongClick called")
                 with(sharedPref.edit()) {
                     putBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false)
@@ -310,7 +200,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
                 remove()
                 true
             }
-            widget.setOnTouchListener(object : OnTouchListener {
+            imageView.setOnTouchListener(object : OnTouchListener {
                 private var initialX = 0
                 private var initialY = 0
                 private var initialTouchX = 0f
@@ -339,12 +229,12 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
                                     Log.d(LOG_ID, "Duration: " + duration.toString() + " - x=" + Math.abs(params.x - initialX) + " y=" + Math.abs(params.y - initialY) )
                                     if (duration < 200) {
                                         Log.d(LOG_ID, "Call onClick after " + duration.toString() + "ms")
-                                        widget.performClick()
+                                        imageView.performClick()
                                     } else {
                                         val longClickTime = sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_TIME_TO_CLOSE, 4) * 1000
                                         if (longClickTime > 0 && duration > longClickTime) {
                                             Log.d(LOG_ID, "Call onLongClick after " + duration.toString() + "ms")
-                                            widget.performLongClick()
+                                            imageView.performLongClick()
                                         }
                                     }
                                 }
@@ -380,6 +270,7 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
                     update()
                 }
                 Constants.SHARED_PREF_FLOATING_WIDGET_STYLE -> {
+                    updateChartCreation()
                     remove()
                     initLayout()
                     update()
@@ -392,17 +283,29 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            Log.d(LOG_ID, "OnNotifyData called for source " + dataSource.toString())
+            Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - graph-id ${chartBitmap?.chartId}")
+            if (dataSource == NotifySource.GRAPH_CHANGED && chartBitmap != null && extras?.getInt(Constants.GRAPH_ID) != chartBitmap!!.chartId) {
+                Log.v(LOG_ID, "Ignore graph changed as it is not for this chart")
+                return  // ignore as it is not for this graph
+            }
             update()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString() )
         }
     }
 
+    private fun updateChartCreation() {
+        val style = getStyle()
+        if(style == Constants.WIDGET_STYLE_CHART_GLUCOSE_TREND_TIME_DELTA_IOB_COB)
+            createBitmap()
+        else
+            removeBitmap()
+    }
+
     private fun createBitmap() {
-        if(chartBitmap == null && graphImage != null && GlucoDataService.isServiceRunning) {
+        if(chartBitmap == null && GlucoDataService.isServiceRunning) {
             Log.i(LOG_ID, "Create bitmap")
-            chartBitmap = ChartBitmapView(graphImage!!, context, labelColor = Color.WHITE)
+            chartBitmap = ChartBitmap(context, labelColor = Color.WHITE)
         }
     }
 
