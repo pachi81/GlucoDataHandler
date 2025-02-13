@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
@@ -16,12 +17,16 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
     companion object {
         const val defaultDurationHours = 2
     }
-    private val LOG_ID = "GDH.Chart.BitmapCreator"
+    private var LOG_ID = "GDH.Chart.BitmapCreator"
     private var bitmap: Bitmap? = null
     override val resetChart = true
     override val circleRadius = 3F
     override var durationHours = defaultDurationHours
     override val touchEnabled = false
+
+    init {
+        LOG_ID = "GDH.Chart.BitmapCreator." + chart.id.toString()
+    }
 
     private val showAxis: Boolean get() {
         if(showAxisPref.isNullOrEmpty())
@@ -77,7 +82,10 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
         chart.notifyDataSetChanged()
         bitmap = null  // reset
         chart.postInvalidate()
-        InternalNotifier.notify(context, NotifySource.GRAPH_CHANGED, Bundle().apply { putInt(Constants.GRAPH_ID, chart.id) })
+        Handler(context.mainLooper).post {
+            Log.d(LOG_ID, "notify graph changed")
+            InternalNotifier.notify(context, NotifySource.GRAPH_CHANGED, Bundle().apply { putInt(Constants.GRAPH_ID, chart.id) })
+        }
     }
 
     override fun updateTimeElapsed() {

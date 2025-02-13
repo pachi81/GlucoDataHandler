@@ -29,6 +29,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.R as CR
 
 
@@ -76,7 +77,11 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            Log.v(LOG_ID, "OnNotifyData called")
+            Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - graph-id ${chartBitmap?.chartId}")
+            if (dataSource == NotifySource.GRAPH_CHANGED && chartBitmap != null && extras?.getInt(Constants.GRAPH_ID) != chartBitmap!!.chartId) {
+                Log.v(LOG_ID, "Ignore graph changed as it is not for this chart")
+                return  // ignore as it is not for this graph
+            }
             showNotifications()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString() )
@@ -388,11 +393,18 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
                 Log.i(LOG_ID, "update permanent notifications having content: " + content)
                 if (content) {
                     val filter = mutableSetOf(
-                        NotifySource.BROADCAST,
-                        NotifySource.MESSAGECLIENT,
                         NotifySource.SETTINGS,
                         NotifySource.OBSOLETE_VALUE
                     )   // to trigger re-start for the case of stopped by the system
+                    if(sharedPref.getInt(Constants.SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION, 2) > 0) {
+                        filter.add(NotifySource.GRAPH_CHANGED)
+                        createBitmap()
+                    } else {
+                        filter.add(NotifySource.BROADCAST)
+                        filter.add(NotifySource.MESSAGECLIENT)
+                        removeBitmap()
+                    }
+
                     if (!sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, false))
                         filter.add(NotifySource.IOB_COB_CHANGE)
                     InternalNotifier.addNotifier(GlucoDataService.context!!, this, filter)
@@ -406,7 +418,6 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
                 InternalNotifier.remNotifier(GlucoDataService.context!!, this)
                 removeNotifications()
             }*/
-            createBitmap()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updatePreferences exception: " + exc.toString() )
         }

@@ -27,6 +27,7 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
 
 
 open class ChartComplication(): SuspendingComplicationDataSourceService() {
@@ -37,6 +38,12 @@ open class ChartComplication(): SuspendingComplicationDataSourceService() {
         private var chartBitmap: ChartBitmap? = null
         private var complications = mutableSetOf<Int>()
         private val size = 600
+
+        fun getChartId(): Int {
+            if(chartBitmap != null)
+                return chartBitmap!!.chartId
+            return -1
+        }
 
         private fun addComplication(id: Int) {
             if(!complications.contains(id)) {
@@ -183,7 +190,11 @@ object ChartComplicationUpdater: NotifierInterface {
     private var complicationClasses = mutableListOf(ChartComplication::class.java)
     val LOG_ID = "GDH.Chart.ComplicationUpdater"
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
-        Log.d(LOG_ID, "OnNotifyData called for source " + dataSource.toString() )
+        Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - graph-id ${ChartComplication.getChartId()}" )
+        if (dataSource == NotifySource.GRAPH_CHANGED && extras?.getInt(Constants.GRAPH_ID) != ChartComplication.getChartId()) {
+            Log.v(LOG_ID, "Ignore graph changed as it is not for this chart")
+            return  // ignore as it is not for this graph
+        }
         complicationClasses.forEach {
             ComplicationDataSourceUpdateRequester
                 .create(

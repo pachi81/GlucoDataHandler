@@ -12,6 +12,7 @@ import de.michelinside.glucodatahandler.common.chart.ChartBitmap
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.utils.Utils
 
 object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
     private const val LOG_ID = "GDH.widget.ActiveWidgetHandler"
@@ -84,11 +85,14 @@ object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPrefere
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
-        Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString())
+        Log.d(LOG_ID, "OnNotifyData for source $dataSource with extras ${Utils.dumpBundle(extras)} - graph-id ${chartBitmap?.chartId}")
         activeWidgets.forEach {
             if(it == WidgetType.CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB) {
-                if(dataSource == NotifySource.GRAPH_CHANGED || dataSource == NotifySource.TIME_VALUE || dataSource == NotifySource.IOB_COB_CHANGE || dataSource == NotifySource.SETTINGS)
-                    GlucoseBaseWidget.updateWidgets(context, it)   // do not update for glucose values, wait for graph has changed!
+                // do not update for glucose values, wait for graph has changed!
+                if(dataSource == NotifySource.TIME_VALUE || dataSource == NotifySource.IOB_COB_CHANGE || dataSource == NotifySource.SETTINGS)
+                    GlucoseBaseWidget.updateWidgets(context, it)
+                else if(dataSource == NotifySource.GRAPH_CHANGED && chartBitmap != null && extras?.getInt(Constants.GRAPH_ID) == chartBitmap!!.chartId)
+                    GlucoseBaseWidget.updateWidgets(context, it)
             } else if (it == WidgetType.GLUCOSE_TREND_DELTA_TIME || it == WidgetType.GLUCOSE_TREND_DELTA_TIME_IOB_COB) {
                 if(dataSource != NotifySource.OBSOLETE_VALUE)  // do not update again, as there are already updated by TIME_VALUE
                     GlucoseBaseWidget.updateWidgets(context, it)
@@ -113,7 +117,6 @@ object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPrefere
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString() )
         }
     }
-
 
     private fun createBitmap(context: Context) {
         if(chartBitmap == null && GlucoDataService.isServiceRunning) {

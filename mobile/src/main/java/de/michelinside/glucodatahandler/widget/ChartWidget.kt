@@ -11,7 +11,7 @@ class ChartWidget : GlucoseBaseWidget(WidgetType.CHART_GLUCOSE_TREND_DELTA_TIME_
     override fun getLongLayout(): Int = R.layout.chart_widget_long
 
     override fun isShortWidget(width: Int, height: Int): Boolean {
-        return (width < 110 || height < 200)
+        return (width < 110 || height < 120)
     }
 
     override fun isLongWidget(width: Int, height: Int): Boolean {
