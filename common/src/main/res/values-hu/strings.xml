@@ -9,16 +9,16 @@ Biztos benne?"</string>
     <string name="activity_disconnected_label">Telefon: leválasztva</string>
     <string name="activity_large_arrow_icon">Nagy trendnyíl</string>
     <string name="activity_large_arrow_icon_summary">Kérjük, kapcsolja ki, ha a trendnyíl túl nagy és emiatt levágásra kerül.</string>
-    <string name="activity_main_battery_optimization_disabled">Akkumulátor optimalizálások aktívak.</string>
+    <string name="activity_main_battery_optimization_disabled">Akkumulátor optimalizálás aktív.</string>
     <string name="activity_main_car_connected_label">Android Auto: csatlakozva</string>
     <string name="activity_main_car_disconnected_label">Android Auto: leválasztva</string>
     <string name="activity_main_connected_label">Óra: csatlakozva (%1$s)</string>
     <string name="activity_main_disconnected_label">Óra: leválasztva</string>
-    <string name="activity_main_high_contrast_enabled">"A nagy kontraszt aktív!
+    <string name="activity_main_high_contrast_enabled">"Nagy kontraszt aktív!
 Kattintson ide a beállításokhoz."</string>
     <string name="activity_main_no_source_label">Forrás: nem aktív</string>
     <string name="activity_main_notification_permission">"!!!Az értesítések megjelenítése ki van kapcsolva!!!
-A GlucoDataHandler helyes működése nem garantált, és nem jeleníthetők meg riasztások!!!
+A GlucoDataHandler helyes működése nem garantált és nem jeleníthetők meg riasztások!!!
 Kattintson ide a megfelelő engedélybeállításhoz."</string>
     <string name="activity_main_schedule_exact_alarm">"Az intervallumok pontos szerkesztése letiltva!!!
 A GlucoDataHandler helyes működése nem garantált!!!
@@ -38,7 +38,7 @@ Kattintson ide a megfelelő engedélybeállításhoz."</string>
     <string name="alarm_enabled_summary_on">Az értesítések be vannak kapcsolva ehhez a riasztáshoz.</string>
     <string name="alarm_falling_fast">Gyorsan esik</string>
     <string name="alarm_falling_fast_summary">Riasztás, ha a vércukorszint kisebb vagy egyenlő, mint %1$s, és a delta %3$d alkalommal egymás után legalább -%2$s értékkel csökken.</string>
-    <string name="alarm_force_sound">Riasztás hang kényszerítése</string>
+    <string name="alarm_force_sound">Riasztási hang kényszerítése</string>
     <string name="alarm_force_sound_summary">"A hang és a rezgés kényszerítése riasztási értesítés közben, még akkor is, ha a telefon néma vagy rezgő üzemmódban van. A Ne zavarjanak üzemmód addig ki lesz kapcsolva.
 Ehhez a beállításhoz szükséges a Ne zavarjanak üzemmód módosításának engedélye."</string>
     <string name="alarm_force_vibration">Rezgés kényszerítése</string>
@@ -56,19 +56,19 @@ Az engedélyezéskor szükség lehet a megfelelő engedélyre."</string>
     <string name="alarm_ignore_snooze_for_very_low_summary">A nagyon alacsony riasztás értesítése akkor is, ha a szundi funkció vagy a pihenőidő aktív minden riasztásra.</string>
     <string name="alarm_inactive_enabled">Pihenőidő engedélyezése</string>
     <string name="alarm_inactive_enabled_summary">"A beállított pihenőidő alatt nem kap értesítést erről a riasztásról.
-Állítsa be a kezdő- és befejező időt a funkció használatához."</string>
+Állítsa be a kezdő és befejező időt a funkció használatához."</string>
     <string name="alarm_inactive_end_time">Befejezési idő</string>
-    <string name="alarm_inactive_end_time_summary">Állítsa be az időt, amikor a pihenőidő véget ér.</string>
+    <string name="alarm_inactive_end_time_summary">Állítsa be a pihenőidő végét!</string>
     <string name="alarm_inactive_start_time">Kezdési idő</string>
-    <string name="alarm_inactive_start_time_summary">Állítsa be az időt, amikor a pihenőidő elindul.</string>
+    <string name="alarm_inactive_start_time_summary">Állítsa be a pihenőidő kezdetét!</string>
     <string name="alarm_inactive_weekdays">Pihenőidő napjai</string>
-    <string name="alarm_inactive_weekdays_summary">Határozza meg, hogy a pihenőidő mely napokon legyen aktív a kiválasztott kezdési időpontban.</string>
+    <string name="alarm_inactive_weekdays_summary">Állítsa be, hogy a pihenőidő mely napokon legyen aktív a kiválasztott kezdési időpontban!</string>
     <string name="alarm_interval">Intervallum</string>
     <string name="alarm_interval_summary_high">"A riasztási értesítések közötti minimális idő percben.
 Információ: csak akkor jelenik meg új értesítés ezen intervallum után, ha a delta pozitív."</string>
     <string name="alarm_interval_summary_low">"A riasztási értesítések közötti minimális idő percben.
 Információ: csak akkor jelenik meg új értesítés ezen intervallum után, ha a delta negatív."</string>
-    <string name="alarm_interval_summary_obsolete">Az értesítés létrehozásához szükséges idő percekben az utolsó vércukorérték beérkezése után. Az értesítés ugyanazon időközönként ismét megjelenik, ha nem áll rendelkezésre új érték.</string>
+    <string name="alarm_interval_summary_obsolete">Az értesítés létrehozásához szükséges idő percben az utolsó vércukorérték beérkezése után. Az értesítés ugyanazon időközönként ismét megjelenik, ha nem áll rendelkezésre új érték.</string>
     <string name="alarm_low">alacsony</string>
     <string name="alarm_no_notification_auto_connected">Nincs riasztás, ha az Android Auto csatlakozva van</string>
     <string name="alarm_no_notification_auto_connected_summary_off">A riasztási értesítés a telfonon is megjelenik, ha az Android Auto csatlakozva van.</string>
