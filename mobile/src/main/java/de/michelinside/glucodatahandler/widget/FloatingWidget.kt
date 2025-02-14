@@ -5,9 +5,7 @@ import android.content.Context
 import android.content.Context.WINDOW_SERVICE
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Color
 import android.graphics.PixelFormat
-import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.*
@@ -15,66 +13,44 @@ import android.view.View.*
 import android.widget.ImageView
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
-import de.michelinside.glucodatahandler.common.GlucoDataService
-import de.michelinside.glucodatahandler.common.chart.ChartBitmap
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
-import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
-import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import java.util.*
 
 
-class FloatingWidget(val context: Context) : NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
+class FloatingWidget(context: Context): WallpaperBase(context, "GDH.FloatingWidget") {
     private var windowManager: WindowManager? = null
     private lateinit var floatingView: View
     private lateinit var params: WindowManager.LayoutParams
     private lateinit var imageView: ImageView
-    private lateinit var sharedPref: SharedPreferences
     private lateinit var sharedInternalPref: SharedPreferences
-    private val LOG_ID = "GDH.FloatingWidget"
-    @SuppressLint("StaticFieldLeak")
-    private var chartBitmap: ChartBitmap? = null
+    override val enabledPref = Constants.SHARED_PREF_FLOATING_WIDGET
+    override val stylePref = Constants.SHARED_PREF_FLOATING_WIDGET_STYLE
+    override val sizePref = Constants.SHARED_PREF_FLOATING_WIDGET_SIZE
 
-    @SuppressLint("InflateParams")
-    fun create() {
+    override fun enable() {
         try {
-            Log.d(LOG_ID, "create called")
-            sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-            sharedPref.registerOnSharedPreferenceChangeListener(this)
-
+            Log.d(LOG_ID, "enable called")
             sharedInternalPref = context.getSharedPreferences(Constants.SHARED_PREF_INTERNAL_TAG, Context.MODE_PRIVATE)
-
             //setting the layout parameters
-            initLayout()
+            floatingView = LayoutInflater.from(context).inflate(R.layout.image_view, null)
+            imageView = floatingView.findViewById(R.id.imageLayout)
             update()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "create exception: " + exc.message.toString() )
         }
     }
 
-    fun destroy() {
+    override fun disable() {
         try {
-            Log.d(LOG_ID, "destroy called")
-            sharedPref.unregisterOnSharedPreferenceChangeListener(this)
+            Log.d(LOG_ID, "disable called")
             remove()
-            removeBitmap()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "destroy exception: " + exc.message.toString() )
         }
     }
 
-    private fun initLayout() {
-        //getting the widget layout from xml using layout inflater
-        val layout = if(sharedPref.getString(Constants.SHARED_PREF_FLOATING_WIDGET_STYLE, Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA) == Constants.WIDGET_STYLE_CHART_GLUCOSE_TREND_TIME_DELTA_IOB_COB)
-            R.layout.floating_widget_chart
-        else
-            R.layout.floating_widget
-        Log.d(LOG_ID, "init layout with $layout")
-        floatingView = LayoutInflater.from(context).inflate(R.layout.image_view, null)
-        imageView = floatingView.findViewById(R.id.imageLayout)
-        updateChartCreation()
-    }
 
     private fun remove() {
         Log.d(LOG_ID, "remove called")
@@ -100,48 +76,18 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
 
     @SuppressLint("SetTextI18n")
     private fun setContent() {
-        updateChartCreation()
-        val size = sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, 5)
-        val style = getStyle()
-        imageView.setImageBitmap(WidgetHelper.createWallpaperView(context, size, style, chartBitmap?.getBitmap()))
+        imageView.setImageBitmap(createWallpaperView())
     }
 
-    private fun getStyle(): String {
-        return sharedPref.getString(Constants.SHARED_PREF_FLOATING_WIDGET_STYLE, Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA)?: Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA
-    }
-
-    private fun update() {
+    override fun update() {
         Log.d(LOG_ID, "update called")
         try {
-            if (sharedPref.getBoolean(Constants.SHARED_PREF_FLOATING_WIDGET, false)) {
+            if (enabled) {
                 if (Settings.canDrawOverlays(context)) {
                     // to trigger re-start for the case of stopped by the system
                     setContent()
                     //getting windows services and adding the floating view to it
                     if (windowManager == null) {
-                        val filter = mutableSetOf(
-                            NotifySource.SETTINGS
-                        )
-                        val style = getStyle()
-                        if(style == Constants.WIDGET_STYLE_CHART_GLUCOSE_TREND_TIME_DELTA_IOB_COB) {
-                            filter.add(NotifySource.GRAPH_CHANGED)
-                        } else {
-                            filter.add(NotifySource.BROADCAST)
-                            filter.add(NotifySource.MESSAGECLIENT)
-                        }
-                        when (style) {
-                            Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA -> {
-                                filter.add(NotifySource.TIME_VALUE)
-                            }
-                            Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA_IOB_COB -> {
-                                filter.add(NotifySource.TIME_VALUE)
-                                filter.add(NotifySource.IOB_COB_CHANGE)
-                            }
-                            else -> {
-                                filter.add(NotifySource.OBSOLETE_VALUE)
-                            }
-                        }
-                        InternalNotifier.addNotifier(context, this, filter)
                         createWindow()
                     } else {
                         Log.d(LOG_ID, "update window")
@@ -152,7 +98,6 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
                 }
             } else {
                 remove()
-                removeBitmap()
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
@@ -259,61 +204,25 @@ class FloatingWidget(val context: Context) : NotifierInterface, SharedPreference
         }
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called for key " + key)
             when(key) {
                 Constants.SHARED_PREF_FLOATING_WIDGET,
                 Constants.SHARED_PREF_FLOATING_WIDGET_SIZE,
+                Constants.SHARED_PREF_FLOATING_WIDGET_STYLE -> {
+                    remove()
+                }
+                Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION,
                 Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY -> {
                     remove()
                     update()
                 }
-                Constants.SHARED_PREF_FLOATING_WIDGET_STYLE -> {
-                    updateChartCreation()
-                    remove()
-                    initLayout()
-                    update()
-                }
             }
+            super.onSharedPreferenceChanged(sharedPreferences, key)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString() )
         }
     }
 
-    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
-        try {
-            Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - graph-id ${chartBitmap?.chartId}")
-            if (dataSource == NotifySource.GRAPH_CHANGED && chartBitmap != null && extras?.getInt(Constants.GRAPH_ID) != chartBitmap!!.chartId) {
-                Log.v(LOG_ID, "Ignore graph changed as it is not for this chart")
-                return  // ignore as it is not for this graph
-            }
-            update()
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString() )
-        }
-    }
-
-    private fun updateChartCreation() {
-        val style = getStyle()
-        if(style == Constants.WIDGET_STYLE_CHART_GLUCOSE_TREND_TIME_DELTA_IOB_COB)
-            createBitmap()
-        else
-            removeBitmap()
-    }
-
-    private fun createBitmap() {
-        if(chartBitmap == null && GlucoDataService.isServiceRunning) {
-            Log.i(LOG_ID, "Create bitmap")
-            chartBitmap = ChartBitmap(context, labelColor = Color.WHITE)
-        }
-    }
-
-    private fun removeBitmap() {
-        if(chartBitmap != null) {
-            Log.i(LOG_ID, "Remove bitmap")
-            chartBitmap!!.close()
-            chartBitmap = null
-        }
-    }
 }

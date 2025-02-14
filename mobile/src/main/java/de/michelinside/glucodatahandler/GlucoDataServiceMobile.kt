@@ -30,6 +30,7 @@ import java.math.RoundingMode
 
 class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInterface {
     private lateinit var floatingWidget: FloatingWidget
+    private lateinit var lockScreenWallpaper: LockScreenWallpaper
     private var lastForwardTime = 0L
 
     init {
@@ -193,13 +194,14 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 NotifySource.BATTERY_LEVEL)  // used for watchdog-check
             InternalNotifier.addNotifier(this, this, filter)
             floatingWidget = FloatingWidget(this)
+            lockScreenWallpaper = LockScreenWallpaper(this)
             PermanentNotification.create(applicationContext)
             CarModeReceiver.init(applicationContext)
             GlucoseBaseWidget.updateWidgets(applicationContext)
             BatteryLevelWidgetNotifier.OnNotifyData(applicationContext, NotifySource.CAPILITY_INFO, null)
             WatchDrip.init(applicationContext)
             floatingWidget.create()
-            LockScreenWallpaper.create(this)
+            lockScreenWallpaper.create()
             AlarmNotification.initNotifications(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
@@ -237,7 +239,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             CarModeReceiver.cleanup(applicationContext)
             WatchDrip.close(applicationContext)
             floatingWidget.destroy()
-            LockScreenWallpaper.destroy(this)
+            lockScreenWallpaper.destroy()
             super.onDestroy()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )
