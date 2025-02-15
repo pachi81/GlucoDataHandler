@@ -192,15 +192,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             Log.i(LOG_ID, "Register receiver ${receiver.getName()} for $receiver on $context")
             try {
                 if (receiver is NamedBroadcastReceiver) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        PackageUtils.registerReceiver(
-                            context,
-                            receiver,
-                            filter,
-                        )
-                    } else {
-                        PackageUtils.registerReceiver(context, receiver, filter)
-                    }
+                    PackageUtils.registerReceiver(context, receiver, filter)
                 }
                 registeredReceivers.add(receiver.getName())
                 return true
