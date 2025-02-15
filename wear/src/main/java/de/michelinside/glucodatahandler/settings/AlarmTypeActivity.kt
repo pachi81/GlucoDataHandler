@@ -142,7 +142,7 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
             }
 
             val vibatrionAmbituteLayout = findViewById<RelativeLayout>(R.id.vibrationAmplitudeHead)
-            vibatrionAmbituteLayout.visibility = if(Vibrator.vibrator.hasAmplitudeControl()) View.VISIBLE else View.GONE
+            vibatrionAmbituteLayout.visibility = if(Vibrator.hasAmplitudeControl()) View.VISIBLE else View.GONE
             seekBarVibrationAmplitude.visibility = vibatrionAmbituteLayout.visibility
 
             if (seekBarVibrationAmplitude.visibility == View.VISIBLE) {
@@ -159,8 +159,8 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
     override fun onPause() {
         try {
             Log.v(LOG_ID, "onPause called")
-            Vibrator.cancel()
             super.onPause()
+            Vibrator.cancel()
             InternalNotifier.remNotifier(this, this)
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
@@ -286,7 +286,7 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
                     if(isSoundLevel)
                         setSoundLevel(curProgress)
                     else if (alarmType.setting!!.vibratePattern != null)
-                        Vibrator.vibrate(alarmType.setting!!.vibratePattern!!, -1, curProgress*17)
+                        Vibrator.vibrate(alarmType.setting!!.vibratePattern!!, -1, curProgress*17, AlarmNotificationWear.useAlarmStream)
                 }
             } catch( exc: Exception ) {
                 Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())

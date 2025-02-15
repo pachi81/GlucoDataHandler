@@ -138,6 +138,18 @@
                 android:resource="@xml/glucose_trend_delta_time_iob_cob_widget_info" />
         </receiver>
         <receiver
+            android:name=".widget.ChartWidget"
+            android:label="@string/graph"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/chart_widget_info" />
+        </receiver>
+        <receiver
             android:name=".widget.OtherUnitWidget"
             android:label="@string/other_unit"
             android:exported="false">
@@ -149,7 +161,18 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/other_unit_widget_info" />
         </receiver>
+        <receiver
+            android:name=".widget.BatteryLevelWidget"
+            android:exported="false"
+            android:label="@string/widget_wearos_battery_level">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
 
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/battery_level_widget_info" />
+        </receiver>
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -343,6 +366,15 @@
             tools:ignore="ExportedReceiver">
             <intent-filter>
                 <action android:name= "android.intent.action.LOCALE_CHANGED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".android_auto.CarModeReceiver$GDAReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name= "de.michelinside.glucodataauto.state" />
             </intent-filter>
         </receiver>
 

@@ -1,7 +1,7 @@
 package de.michelinside.glucodataauto
 
+import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -46,8 +46,6 @@ import de.michelinside.glucodatahandler.common.utils.GitHubVersionChecker
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.ui.Dialogs
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
-import java.text.DateFormat
-import java.util.Date
 import de.michelinside.glucodatahandler.common.R as CR
 
 class MainActivity : AppCompatActivity(), NotifierInterface {
@@ -55,6 +53,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var viewIcon: ImageView
     private lateinit var timeText: TextView
     private lateinit var deltaText: TextView
+    private lateinit var iobText: TextView
+    private lateinit var cobText: TextView
     private lateinit var txtLastValue: TextView
     private lateinit var txtVersion: TextView
     private lateinit var tableDetails: TableLayout
@@ -79,6 +79,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             viewIcon = findViewById(R.id.viewIcon)
             timeText = findViewById(R.id.timeText)
             deltaText = findViewById(R.id.deltaText)
+            iobText = findViewById(R.id.iobText)
+            cobText = findViewById(R.id.cobText)
             txtLastValue = findViewById(R.id.txtLastValue)
             btnSources = findViewById(R.id.btnSources)
             tableConnections = findViewById(R.id.tableConnections)
@@ -165,6 +167,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             GlucoDataServiceAuto.startDataSync()
             versionChecker.checkVersion(1)
+            checkNewSettings()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
         }
@@ -178,27 +181,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 return false
             }
         }
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            if (!alarmManager.canScheduleExactAlarms()) {
-                Log.i(LOG_ID, "Request exact alarm permission...")
-                startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
-            }
-        }
         requestExactAlarmPermission()
         return true
     }
 
-    private fun canScheduleExactAlarms(): Boolean {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            return alarmManager.canScheduleExactAlarms()
-        }
-        return true
-    }
-
     private fun requestExactAlarmPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !canScheduleExactAlarms()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !Utils.canScheduleExactAlarms(this)) {
             Log.i(LOG_ID, "Request exact alarm permission...")
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
             builder
@@ -212,6 +200,49 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 }
             val dialog: AlertDialog = builder.create()
             dialog.show()
+        }
+    }
+
+    private fun checkNewSettings() {
+        try {
+            if(!sharedPref.contains(Constants.SHARED_PREF_DISCLAIMER_SHOWN)) {
+                Dialogs.showOkDialog(this,
+                    CR.string.gdh_disclaimer_title,
+                    CR.string.gdh_disclaimer_message,
+                    null
+                )
+                with(sharedPref.edit()) {
+                    putString(Constants.SHARED_PREF_DISCLAIMER_SHOWN, BuildConfig.VERSION_NAME)
+                    apply()
+                }
+            }
+            if(!sharedPref.contains(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU)) {
+                if(sharedPref.getBoolean(Constants.SHARED_PREF_LIBRE_ENABLED, false)) {
+                    Dialogs.showOkCancelDialog(this,
+                        resources.getString(CR.string.src_cat_libreview),
+                        resources.getString(CR.string.src_libre_tou_message),
+                        { _, _ ->
+                            with(sharedPref.edit()) {
+                                putBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true)
+                                apply()
+                            }
+                        },
+                        { _, _ ->
+                            with(sharedPref.edit()) {
+                                putBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, false)
+                                apply()
+                            }
+                        })
+                } else {
+                    with(sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true)
+                        apply()
+                    }
+                }
+            }
+
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "checkNewSettings exception: " + exc.message.toString() )
         }
     }
 
@@ -311,6 +342,14 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     startActivity(mailIntent)
                     return true
                 }
+                R.id.action_google_groups -> {
+                    val browserIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(resources.getText(CR.string.google_gdh_group_url).toString())
+                    )
+                    startActivity(browserIntent)
+                    return true
+                }
                 R.id.action_facebook -> {
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
@@ -355,6 +394,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         return super.onOptionsItemSelected(item)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun update() {
         try {
             Log.v(LOG_ID, "update values")
@@ -370,6 +410,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             timeText.text = "🕒 ${ReceiveData.getElapsedRelativeTimeAsString(this)}"
             timeText.contentDescription = ReceiveData.getElapsedRelativeTimeAsString(this, true)
             deltaText.text = "Δ ${ReceiveData.getDeltaAsString()}"
+            iobText.text = "💉 " + ReceiveData.getIobAsString()
+            iobText.contentDescription = getString(CR.string.info_label_iob) + " " + ReceiveData.getIobAsString()
+            iobText.visibility = if (ReceiveData.isIobCobObsolete()) View.GONE else View.VISIBLE
+            cobText.text = "🍔 " + ReceiveData.getCobAsString()
+            cobText.contentDescription = getString(CR.string.info_label_cob) + " " + ReceiveData.getCobAsString()
+            cobText.visibility = iobText.visibility
 
             if(ReceiveData.time == 0L) {
                 txtLastValue.visibility = View.VISIBLE
@@ -394,17 +440,41 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateConnectionsTable() {
         tableConnections.removeViews(1, maxOf(0, tableConnections.childCount - 1))
-        if (SourceStateData.lastState != SourceState.NONE)
-            tableConnections.addView(createRow(
-                SourceStateData.lastSource.resId,
-                SourceStateData.getStateMessage(this)))
+        if (SourceStateData.lastState != SourceState.NONE) {
+            val msg = SourceStateData.getStateMessage(this)
+            tableConnections.addView(createRow(SourceStateData.lastSource.resId,msg))
+            if(SourceStateData.lastState == SourceState.ERROR && SourceStateData.lastSource == DataSource.DEXCOM_SHARE) {
+                if (msg.contains("500:")) { // invalid password
+                    val us_account = sharedPref.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, false)
+                    val browserIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(resources.getString(if(us_account)CR.string.dexcom_account_us_url else CR.string.dexcom_account_non_us_url))
+                    )
+                    val onClickListener = View.OnClickListener {
+                        startActivity(browserIntent)
+                    }
+                    tableConnections.addView(
+                        createRow(
+                            SourceStateData.lastSource.resId,
+                            resources.getString(if(us_account) CR.string.dexcom_share_check_us_account else CR.string.dexcom_share_check_non_us_account),
+                            onClickListener
+                        )
+                    )
+                }
+            }
+            if(SourceStateData.lastErrorInfo.isNotEmpty()) {
+                // add error specific information in an own row
+                tableConnections.addView(createRow(SourceStateData.lastErrorInfo))
+            }
+            tableConnections.addView(createRow(CR.string.request_timestamp, Utils.getUiTimeStamp(SourceStateData.lastStateTime)))
+        }
         tableConnections.addView(createRow(CR.string.pref_cat_android_auto, if (GlucoDataServiceAuto.connected) resources.getString(CR.string.connected_label) else resources.getString(CR.string.disconnected_label)))
         checkTableVisibility(tableConnections)
     }
 
     private fun updateNotesTable() {
         tableNotes.removeViews(1, maxOf(0, tableNotes.childCount - 1))
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !canScheduleExactAlarms()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !Utils.canScheduleExactAlarms(this)) {
             Log.w(LOG_ID, "Schedule exact alarm is not active!!!")
             val onClickListener = View.OnClickListener {
                 startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
@@ -469,16 +539,20 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 tableAlarms.addView(createRow(CR.string.info_label_alarm, resources.getString(deltaAlarmType.resId)))
         }
         if (AlarmHandler.isSnoozeActive)
-            tableAlarms.addView(createRow(CR.string.snooze, AlarmHandler.snoozeTimestamp))
+            tableAlarms.addView(createRow(CR.string.snooze_until, AlarmHandler.snoozeTimestamp))
         checkTableVisibility(tableAlarms)
     }
 
     private fun updateDetailsTable() {
         tableDetails.removeViews(1, maxOf(0, tableDetails.childCount - 1))
+        if(!GlucoDataServiceAuto.patientName.isNullOrEmpty()) {
+            tableDetails.addView(createRow(CR.string.patient_name, GlucoDataServiceAuto.patientName!!))
+        }
+
         if(ReceiveData.time > 0) {
             if (ReceiveData.isMmol)
                 tableDetails.addView(createRow(CR.string.info_label_raw, "${ReceiveData.rawValue} mg/dl"))
-            tableDetails.addView(createRow(CR.string.info_label_timestamp, DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(ReceiveData.time))))
+            tableDetails.addView(createRow(CR.string.info_label_timestamp, Utils.getUiTimeStamp(ReceiveData.time)))
             if (ReceiveData.sensorID?.isNotEmpty() == true) {
                 tableDetails.addView(createRow(CR.string.info_label_sensor_id, if(BuildConfig.DEBUG) "ABCDE12345" else ReceiveData.sensorID!!))
             }
@@ -520,12 +594,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         return row
     }
 
-    private fun createRow(key: String, onClickListener: View.OnClickListener? = null) : TableRow {
+    private fun createRow(value: String, onClickListener: View.OnClickListener? = null) : TableRow {
         val row = TableRow(this)
         row.weightSum = 1f
         //row.setBackgroundColor(resources.getColor(R.color.table_row))
         row.setPadding(Utils.dpToPx(5F, this))
-        row.addView(createColumn(key, false, onClickListener))
+        row.addView(createColumn(value, false, onClickListener))
         return row
     }
 

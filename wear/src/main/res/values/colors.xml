@@ -16,4 +16,7 @@
     <color name="table_row">#FF666666</color>
     <color name="transparent_widget_background">#55000000</color>
     <color name="transparent_widget_textcolor">@color/white</color>
+    <color name="transparent_marker_background">#BB000000</color>
+    <color name="chart_label_color">@color/white</color>
+    <color name="chart_limit_line_color">#FFCCCCCC</color>
 </resources>

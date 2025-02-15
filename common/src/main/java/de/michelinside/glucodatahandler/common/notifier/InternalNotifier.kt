@@ -18,7 +18,7 @@ object InternalNotifier {
         val timeChanged = hasSource(notifier, NotifySource.TIME_VALUE) != sourceFilter.contains(NotifySource.TIME_VALUE) ||
                 hasSource(notifier, NotifySource.OBSOLETE_VALUE) != sourceFilter.contains(NotifySource.OBSOLETE_VALUE)
         Log.i(LOG_ID, "add notifier $notifier - filter: $sourceFilter - timechanged: $timeChanged")
-        notifiers[notifier] = sourceFilter
+        notifiers[notifier] = sourceFilter.toMutableSet()
         Log.d(LOG_ID, "notifier size: " + notifiers.size.toString() )
         if(timeChanged)
             checkTimeNotifierChanged(context)
@@ -39,10 +39,18 @@ object InternalNotifier {
         return notifiers.contains(notifier)
     }
 
+    private fun getNotifiers(): MutableMap<NotifierInterface, MutableSet<NotifySource>?> {
+        Log.d(LOG_ID, "getNotifiers")
+        synchronized(notifiers) {
+            Log.d(LOG_ID, "getNotifiers synchronized")
+            return notifiers.toMutableMap()
+        }
+    }
+
     fun notify(context: Context, notifySource: NotifySource, extras: Bundle?)
     {
         Log.d(LOG_ID, "Sending new data from " + notifySource.toString() + " to " + getNotifierCount(notifySource) + " notifier(s).")
-        val curNotifiers = notifiers.toMutableMap()
+        val curNotifiers = getNotifiers()
         curNotifiers.forEach{
             try {
                 if (it.value == null || it.value!!.contains(notifySource)) {
@@ -57,8 +65,8 @@ object InternalNotifier {
 
     fun getNotifierCount(notifySource: NotifySource): Int {
         var count = 0
-        val curNotifiers = notifiers.toMutableMap()
-        curNotifiers.forEach {
+        val curNotifiers = getNotifiers()
+        curNotifiers.forEach{
             if (it.value == null || it.value!!.contains(notifySource)) {
                 Log.v(LOG_ID, "Notifier " + it.toString() + " has source " + notifySource.toString())
                 count++
@@ -92,7 +100,12 @@ object InternalNotifier {
 
     private fun hasSource(notifier: NotifierInterface, notifySource: NotifySource): Boolean {
         if(hasNotifier(notifier)) {
-            return notifiers[notifier]!!.contains(notifySource)
+            synchronized(notifiers) {
+                if(notifiers.contains(notifier) && notifiers[notifier] != null) {
+                    Log.v(LOG_ID, "Check notifier ${notifier} has source $notifySource: ${notifiers[notifier]}")
+                    return notifiers[notifier]!!.contains(notifySource)
+                }
+            }
         }
         return false
     }

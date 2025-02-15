@@ -13,7 +13,6 @@ import android.provider.Settings
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.android.gms.wearable.WearableListenerService
-import de.michelinside.glucodatahandler.common.ReceiveData.isMmol
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.notifier.DataSource
@@ -29,6 +28,7 @@ import de.michelinside.glucodatahandler.common.receiver.NamedBroadcastReceiver
 import de.michelinside.glucodatahandler.common.receiver.NamedReceiver
 import de.michelinside.glucodatahandler.common.receiver.NotificationReceiver
 import de.michelinside.glucodatahandler.common.receiver.NsEmulatorReceiver
+import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
 import de.michelinside.glucodatahandler.common.tasks.BackgroundWorker
 import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
@@ -48,7 +48,8 @@ enum class AppSource {
 }
 
 abstract class GlucoDataService(source: AppSource) : WearableListenerService(), SharedPreferences.OnSharedPreferenceChangeListener {
-    private lateinit var batteryReceiver: BatteryReceiver
+    protected var batteryReceiver: BatteryReceiver? = null
+    protected var screenEventReceiver: ScreenEventReceiver? = null
     private lateinit var broadcastServiceAPI: BroadcastServiceAPI
 
     @SuppressLint("StaticFieldLeak")
@@ -74,6 +75,10 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             return extContext
         } set(value) {
             extContext = value
+        }
+
+        val isServiceRunning: Boolean get() {
+            return service != null
         }
 
         @SuppressLint("StaticFieldLeak")
@@ -170,6 +175,10 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             }
         }
 
+        fun getWearPhoneConnection(): WearPhoneConnection? {
+            return connection
+        }
+
         private var glucoDataReceiver: GlucoseDataReceiver? = null
         private var xDripReceiver: XDripBroadcastReceiver?  = null
         private var aapsReceiver: AAPSReceiver?  = null
@@ -184,13 +193,13 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             try {
                 if (receiver is NamedBroadcastReceiver) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        context.registerReceiver(
+                        PackageUtils.registerReceiver(
+                            context,
                             receiver,
                             filter,
-                            RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS
                         )
                     } else {
-                        context.registerReceiver(receiver, filter)
+                        PackageUtils.registerReceiver(context, receiver, filter)
                     }
                 }
                 registeredReceivers.add(receiver.getName())
@@ -403,13 +412,22 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     }
                 }
             }
+
+            if(sharedPrefs.contains(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION)) {
+                with(sharedPrefs.edit()) {
+                    remove(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION)
+                    putStringSet(Constants.SHARED_PREF_ALARM_SNOOZE_NOTIFICATION_BUTTONS, mutableSetOf("60", "90", "120"))
+                    apply()
+                }
+            }
+
         }
 
         fun getSettings(): Bundle {
             val bundle = ReceiveData.getSettingsBundle()
             // other settings
             if (sharedPref != null) {
-                bundle.putBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, sharedPref!!.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, isMmol))
+                bundle.putBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, sharedPref!!.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, ReceiveData.isMmol))
                 bundle.putBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, true))
                 bundle.putBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED, true))
                 bundle.putBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, true))
@@ -417,6 +435,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 bundle.putBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true))
                 bundle.putBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true))
                 bundle.putBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false))
+                bundle.putBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, sharedPref!!.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true))
             }
             Log.v(LOG_ID, "getSettings called with bundle ${(Utils.dumpBundle(bundle))}")
             return bundle
@@ -426,13 +445,14 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             Log.v(LOG_ID, "setSettings called with bundle ${(Utils.dumpBundle(bundle))}")
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
             with(sharedPref!!.edit()) {
-                putBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, bundle.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, isMmol))
+                putBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, bundle.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, ReceiveData.isMmol))
                 putBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, true))
                 putBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED, true))
                 putBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_AAPS_ENABLED, true))
                 putBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, true))
                 putBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true))
                 putBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true))
+                putBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, bundle.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true))
                 putBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false))
                 apply()
             }
@@ -496,8 +516,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             updateSourceReceiver(this)
             broadcastServiceAPI = BroadcastServiceAPI()
             broadcastServiceAPI.init()
-            batteryReceiver = BatteryReceiver()
-            registerReceiver(batteryReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+            updateBatteryReceiver()
+            updateScreenReceiver()
 
             sharedPref!!.registerOnSharedPreferenceChangeListener(this)
 
@@ -531,7 +551,14 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             sharedPref!!.unregisterOnSharedPreferenceChangeListener(this)
             unregisterSourceReceiver(this)
             broadcastServiceAPI.close(this)
-            unregisterReceiver(batteryReceiver)
+            if(batteryReceiver != null) {
+                unregisterReceiver(batteryReceiver)
+                batteryReceiver = null
+            }
+            if(screenEventReceiver != null) {
+                unregisterReceiver(screenEventReceiver)
+                screenEventReceiver = null
+            }
             TimeTaskService.stop()
             SourceTaskService.stop()
             connection!!.close()
@@ -546,6 +573,32 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             Log.e(LOG_ID, "onDestroy exception: " + exc.toString())
         }
     }
+
+    open fun updateBatteryReceiver() {
+        try {
+            if (sharedPref!!.getBoolean(Constants.SHARED_PREF_BATTERY_RECEIVER_ENABLED, true)) {
+                if(batteryReceiver == null) {
+                    Log.i(LOG_ID, "register batteryReceiver")
+                    batteryReceiver = BatteryReceiver()
+                    registerReceiver(batteryReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+                }
+            } else if(batteryReceiver != null) {
+                Log.i(LOG_ID, "unregister batteryReceiver")
+                unregisterReceiver(batteryReceiver)
+                batteryReceiver = null
+                // notify new battery level to update UI
+                BatteryReceiver.batteryPercentage = 0
+                InternalNotifier.notify(this, NotifySource.BATTERY_LEVEL, BatteryReceiver.batteryBundle)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "updateBatteryReceiver exception: " + exc.toString())
+        }
+    }
+
+    open fun updateScreenReceiver() {
+        // do nothing here, only so sub-classes
+    }
+
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         try {
@@ -563,6 +616,13 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     shareSettings = true
                 }
                 Constants.SHARED_PREF_SHOW_OTHER_UNIT -> {
+                    shareSettings = true
+                }
+                Constants.SHARED_PREF_BATTERY_RECEIVER_ENABLED -> {
+                    updateBatteryReceiver()
+                }
+                Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE -> {
+                    updateScreenReceiver()
                     shareSettings = true
                 }
             }

@@ -6,7 +6,9 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.WearPhoneConnection
+import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.Utils
@@ -44,7 +46,7 @@ object AlarmNotificationWear : AlarmNotificationBase() {
 
     override fun adjustNoticiationChannel(context: Context, channel: NotificationChannel) {
         channel.enableVibration(true)
-        channel.vibrationPattern = longArrayOf(0, 500, 100, 500)
+        channel.vibrationPattern = longArrayOf(0)
     }
 
     override fun getStartDelayMs(context: Context): Int {
@@ -54,9 +56,12 @@ object AlarmNotificationWear : AlarmNotificationBase() {
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         try {
+            Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
             if (key == null) {
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_WEAR_NO_ALARM_POPUP_PHONE_CONNECTED)
                 onSharedPreferenceChanged(sharedPreferences, Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED)
+                if(GlucoDataService.context != null)
+                    AlarmHandler.checkNotifier(GlucoDataService.context!!)
             } else {
                 when(key) {
                     Constants.SHARED_PREF_WEAR_NO_ALARM_POPUP_PHONE_CONNECTED -> noAlarmOnPhoneConnected = sharedPreferences.getBoolean(
@@ -72,7 +77,7 @@ object AlarmNotificationWear : AlarmNotificationBase() {
     }
 
     override fun getNotifierFilter(): MutableSet<NotifySource> {
-        return mutableSetOf(NotifySource.CAR_CONNECTION, NotifySource.CAPILITY_INFO)
+        return mutableSetOf(NotifySource.CAR_CONNECTION, NotifySource.CAPILITY_INFO, NotifySource.DISPLAY_STATE_CHANGED)
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
@@ -88,8 +93,13 @@ object AlarmNotificationWear : AlarmNotificationBase() {
                     if(!WearPhoneConnection.nodesConnected)
                         isAaConnected = false  // reset for the case it will disconnect on phone
                 }
+                NotifySource.DISPLAY_STATE_CHANGED -> {
+                    AlarmHandler.checkNotifier(context)
+                }
                 else -> super.OnNotifyData(context, dataSource, extras)
-
+            }
+            if(dataSource == NotifySource.ALARM_STATE_CHANGED) {
+                AlarmHandler.checkNotifier(context)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString())

@@ -3,6 +3,7 @@ package de.michelinside.glucodatahandler
 import android.app.Notification
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
@@ -10,20 +11,27 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.chart.ChartCreator
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.common.notifier.*
+import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
-import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.common.utils.Utils.isScreenReaderOn
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.watch.WatchDrip
+import de.michelinside.glucodatahandler.widget.BatteryLevelWidgetNotifier
 import de.michelinside.glucodatahandler.widget.FloatingWidget
 import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
 import de.michelinside.glucodatahandler.widget.LockScreenWallpaper
+import java.math.RoundingMode
 
 
 class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInterface {
     private lateinit var floatingWidget: FloatingWidget
+    private lateinit var lockScreenWallpaper: LockScreenWallpaper
+    private var lastForwardTime = 0L
 
     init {
         Log.d(LOG_ID, "init called")
@@ -128,6 +136,22 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                         apply()
                     }
                 }
+                if(!sharedPrefs.contains(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE_MIGRATION)) {
+                    if(sharedPrefs.contains(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE)) {
+                        val oldValue = sharedPrefs.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, 0)
+                        if(oldValue in 1..10) {
+                            Log.i(LOG_ID, "Migrating size from $oldValue")
+                            with(sharedPrefs.edit()) {
+                                putInt(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, oldValue+1)
+                                apply()
+                            }
+                        }
+                    }
+                    with(sharedPrefs.edit()) {
+                        putBoolean(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE_MIGRATION, true)
+                        apply()
+                    }
+                }
 
                 // full screen alarm notification
                 if(!sharedPrefs.contains(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED)) {
@@ -137,6 +161,16 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                             putBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, true)
                             apply()
                         }
+                    }
+                }
+
+                // graph settings
+                if(!sharedPrefs.contains(Constants.SHARED_PREF_GRAPH_DURATION_PHONE_MAIN)) {
+                    val isScreenReader = context.isScreenReaderOn()
+                    Log.i(LOG_ID, "Setting default duration for graph - screenReader: $isScreenReader")
+                    with(sharedPrefs.edit()) {
+                        putInt(Constants.SHARED_PREF_GRAPH_DURATION_PHONE_MAIN, if(isScreenReader) 0 else ChartCreator.defaultDurationHours)
+                        apply()
                     }
                 }
 
@@ -160,12 +194,14 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 NotifySource.BATTERY_LEVEL)  // used for watchdog-check
             InternalNotifier.addNotifier(this, this, filter)
             floatingWidget = FloatingWidget(this)
+            lockScreenWallpaper = LockScreenWallpaper(this)
             PermanentNotification.create(applicationContext)
             CarModeReceiver.init(applicationContext)
             GlucoseBaseWidget.updateWidgets(applicationContext)
+            BatteryLevelWidgetNotifier.OnNotifyData(applicationContext, NotifySource.CAPILITY_INFO, null)
             WatchDrip.init(applicationContext)
             floatingWidget.create()
-            LockScreenWallpaper.create(this)
+            lockScreenWallpaper.create()
             AlarmNotification.initNotifications(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
@@ -203,7 +239,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             CarModeReceiver.cleanup(applicationContext)
             WatchDrip.close(applicationContext)
             floatingWidget.destroy()
-            LockScreenWallpaper.destroy(this)
+            lockScreenWallpaper.destroy()
             super.onDestroy()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )
@@ -229,11 +265,12 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 }
                 context.sendBroadcast(sendIntent)
             }
+            lastForwardTime = ReceiveData.time
         } catch (ex: Exception) {
             Log.e(LOG_ID, "Exception while sending broadcast for " + receiverPrefKey + ": " + ex)
         }
     }
-
+    /*
     private fun sendToBangleJS(context: Context) {
         val send2Bangle = "require(\"Storage\").writeJSON(\"widbgjs.json\", {" +
                 "'bg': " + ReceiveData.rawValue.toString() + "," +
@@ -246,11 +283,24 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         sendIntent.putExtra("line", send2Bangle)
         context.sendBroadcast(sendIntent)
     }
-
+*/
     private fun forwardBroadcast(context: Context, extras: Bundle) {
         Log.v(LOG_ID, "forwardBroadcast called")
+        CarModeReceiver.sendToGlucoDataAuto(context)
+
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-        CarModeReceiver.sendToGlucoDataAuto(context, extras.clone() as Bundle)
+        /*
+        if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_BANGLEJS, false)) {
+            sendToBangleJS(context)
+        }*/
+
+        val interval = sharedPref.getInt(Constants.SHARED_PREF_SEND_TO_RECEIVER_INTERVAL, 1)
+        val elapsed = Utils.getElapsedTimeMinute(lastForwardTime, RoundingMode.HALF_UP)
+        if (interval > 1 && elapsed < interval) {
+            Log.d(LOG_ID, "Ignore data because of interval $interval - elapsed: $elapsed")
+            return
+        }
+
         if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_XDRIP, false)) {
             val intent = Intent(Constants.XDRIP_ACTION_GLUCOSE_READING)
             // always sends time as start time, because it is only set, if the sensorId have changed!
@@ -281,10 +331,6 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             intent.putExtras(extras)
             sendBroadcast(intent, Constants.SHARED_PREF_GLUCODATA_RECEIVERS, context, sharedPref)
         }
-
-        if (sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_BANGLEJS, false)) {
-            sendToBangleJS(context)
-        }
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
@@ -295,9 +341,10 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 context.setWearConnectionState(WearPhoneConnection.nodesConnected)
             }
             if (dataSource == NotifySource.CAR_CONNECTION && CarModeReceiver.connected) {
-                val autoExtras = ReceiveData.createExtras()
-                if (autoExtras != null)
-                    CarModeReceiver.sendToGlucoDataAuto(context, autoExtras, true)
+                CarModeReceiver.sendToGlucoDataAuto(context, true)
+            }
+            if (dataSource == NotifySource.BATTERY_LEVEL) {
+                checkServices(context)
             }
             if (extras != null) {
                 if (dataSource == NotifySource.MESSAGECLIENT || dataSource == NotifySource.BROADCAST) {
@@ -306,6 +353,29 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() )
+        }
+    }
+
+    override fun updateBatteryReceiver() {
+        try {
+            if(batteryReceiver == null) {
+                Log.i(LOG_ID, "register batteryReceiver")
+                batteryReceiver = BatteryReceiver()
+                registerReceiver(batteryReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+            } else {
+                if (!sharedPref!!.getBoolean(Constants.SHARED_PREF_BATTERY_RECEIVER_ENABLED, true)) {
+                    Log.i(LOG_ID, "batteryReceiver disabled - keep active as watchdog")
+                    // notify new battery level to update UI
+                    BatteryReceiver.batteryPercentage = 0
+                    InternalNotifier.notify(this, NotifySource.BATTERY_LEVEL, BatteryReceiver.batteryBundle)
+                } else {
+                    Log.i(LOG_ID, "batteryReceiver enabled - re-register")
+                    unregisterReceiver(batteryReceiver)
+                    registerReceiver(batteryReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "updateBatteryReceiver exception: " + exc.toString())
         }
     }
 }

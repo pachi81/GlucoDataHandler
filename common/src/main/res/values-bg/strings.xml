@@ -1,0 +1,720 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="locale">bg</string>
+
+    <string name="info_label_sensor_id">Сензор</string>
+    <string name="info_label_value">Стойност</string>
+    <string name="info_label_raw">Суров</string>
+    <string name="info_label_delta">Делта</string>
+    <string name="info_label_rate">Скорост</string>
+    <string name="info_label_timestamp">Време на измерване</string>
+    <string name="info_label_iob_cob_timestamp">IOB/COB време</string>
+    <string name="info_label_timediff">Разлика във времето</string>
+    <string name="info_label_alarm">Алармa</string>
+    <string name="info_label_source">Източник</string>
+    <string name="info_label_per_minute">на минута</string>
+    <string name="no_data">Все още не са получени данни!\nМоля, първо конфигурирайте източник.</string>
+
+    <string name="elapsed_time">%1$d мин</string>
+    <string name="elapsed_time_hour">\> 1ч</string>
+
+    <string name="rate_double_up">Нараства много бързо</string>
+    <string name="rate_single_up">Нараства бързо</string>
+    <string name="rate_forty_five_up">Нараства</string>
+    <string name="rate_flat">постоянен</string>
+    <string name="rate_forty_five_down">Пада</string>
+    <string name="rate_single_down">Пада бързо</string>
+    <string name="rate_double_down">Пада много бързо</string>
+
+    <string name="button_ok">ОК</string>
+    <string name="button_cancel">Отказ</string>
+
+    <string name="alarm_none">-</string>
+    <string name="alarm_very_low">Много ниска</string>
+    <string name="alarm_low">Ниска</string>
+    <string name="alarm_high">Висока</string>
+    <string name="alarm_very_high">Много висока</string>
+
+    <!-- mobile -->
+
+    <string name="activity_main_battery_optimization_disabled">Оптимизацията на батерията е активирана.</string>
+    <string name="activity_main_no_source_label">Източник: не е активен</string>
+    <string name="activity_main_connected_label">Носимо: свързано (%1$s)</string>
+    <string name="activity_main_disconnected_label">Носимо: изключено</string>
+    <string name="activity_main_car_connected_label">Android Auto: свързано</string>
+    <string name="activity_main_car_disconnected_label">Android Auto: изключено</string>
+    <string name="activity_main_high_contrast_enabled">Достъпността с висок контраст е активна!\nНатиснете тук, за да отидете на настройки.</string>
+    <string name="no_new_value">Няма нова стойност от %1$d минути!</string>
+
+    <string name="menu_settings">Настройки</string>
+    <string name="menu_sources">Източници</string>
+    <string name="menu_group_github">GitHub</string>
+    <string name="menu_update">Актуализации</string>
+    <string name="menu_support">Поддръжка</string>
+    <string name="menu_help">Помощ</string>
+
+    <!-- tasker -->
+
+    <string name="tasker_event_glucodata">Нова стойност на глюкозата</string>
+    <string name="tasker_event_glucodata_obsolete">Остаряла стойност</string>
+    <string name="tasker_event_glucodata_alarm">Алармa за глюкоза</string>
+    <string name="tasker_wear_connection_state">Състояние на връзката с носимото</string>
+    <string name="tasker_android_auto_connection_state">Състояние на връзката с Android Auto</string>
+    <string name="tasker_target_range_state">Промяна в диапазона на глюкозата</string>
+
+    <!-- sources -->
+
+    <string name="source_phone">Телефон</string>
+    <string name="source_wear">Носимо</string>
+
+    <string name="source_state_not_active">Не е активен</string>
+    <string name="source_state_in_progress">В процес</string>
+    <string name="source_state_ok">ОК</string>
+    <string name="source_state_no_new_value">Няма нова стойност</string>
+    <string name="source_state_no_connection">Няма интернет връзка</string>
+    <string name="source_state_error">Грешка</string>
+
+    <string name="source_interval">Интервал</string>
+    <string name="source_interval_summary">Интервал за заявка на данни от източника.</string>
+    <string name="source_delay">Забавяне</string>
+    <string name="source_delay_summary">Забавяне в секунди преди заявка на данни от облака, защото е необходимо известно време, докато данните се появят там.</string>
+
+    <string name="src_cat_libreview">LibreLinkUp</string>
+    <string name="src_enabled">Активиране</string>
+    <string name="src_libre_enabled_summary">Активирайте LibreLinkUp follower, ако потребителското име и паролата са зададени.</string>
+    <string name="src_libre_user">Имейл</string>
+    <string name="src_libre_user_summary">Имейл за вход в LibreLinkUp</string>
+    <string name="src_password">Парола</string>
+    <string name="src_libre_password_summary">Парола за LibreLinkUp</string>
+    <string name="src_libre_reconnect">Повторно свързване</string>
+    <string name="src_libre_reconnect_summary">При следващия интервал ще се извърши ново влизане.</string>
+
+    <string name="src_cat_nightscout">Nightscout</string>
+    <string name="src_ns_enabled">Активиране</string>
+    <string name="src_ns_enabled_summary">Активирайте Nightscout follower.</string>
+    <string name="src_ns_url">URL адрес на Nightscout</string>
+    <string name="src_ns_url_summary">URL адрес на Nightscout сървъра.</string>
+    <string name="src_ns_secret">API тайна</string>
+    <string name="src_ns_secret_summary">API тайна за достъп до данните (по избор).</string>
+    <string name="src_ns_token">Токен за достъп</string>
+    <string name="src_ns_token_summary">Добавете вашия токен за достъп, ако е необходим (по избор).</string>
+
+    <string name="source_request_interval_always">Винаги</string>
+    <string name="source_request_interval_1">1 минута</string>
+    <string name="source_request_interval_5">5 минути</string>
+    <string name="source_request_interval_10">10 минути</string>
+    <string name="source_request_interval_15">15 минути</string>
+    <string name="source_request_interval_20">20 минути</string>
+    <string name="source_request_interval_30">30 минути</string>
+    <string name="source_request_interval_alarm">Само при аларма</string>
+
+    <!-- LibreLink source -->
+    <string name="state_disabled">деактивиран</string>
+    <string name="state_not_connected">не е свързан</string>
+    <string name="state_connected">свързан</string>
+    <string name="state_error">грешка: %s</string>
+
+
+    <!-- settings -->
+
+    <string name="pref_cat_general">Общи</string>
+    <string name="pref_cat_notification">Известия</string>
+    <string name="pref_cat_widgets">Джаджи</string>
+    <string name="pref_cat_android_auto">Android Auto</string>
+    <string name="pref_cat_forward_broadcast">Препращане на стойности на глюкозата</string>
+    <string name="pref_target_range">Целеви диапазон</string>
+    <string name="pref_cat_colors">Цветове</string>
+
+    <string name="pref_switch_notification">Фиктивни стойности</string>
+    <string name="pref_very_high_value">Много висока глюкоза</string>
+    <string name="pref_very_high_value_summary">Граница за много високи стойности на глюкозата.</string>
+    <string name="pref_high_value">Висока глюкоза</string>
+    <string name="pref_high_value_summary">Граница за високи стойности на глюкозата.</string>
+    <string name="pref_target_max_value">Горна граница на целевия диапазон</string>
+    <string name="pref_target_max_value_summary">Горна стойност за целевия диапазон.</string>
+    <string name="pref_target_min_value">Долна граница на целевия диапазон</string>
+    <string name="pref_target_min_value_summary">Долна стойност за целевия диапазон.</string>
+    <string name="pref_very_low_value">Много ниска глюкоза</string>
+    <string name="pref_very_low_value_summary">Граница за много ниски стойности на глюкозата.</string>
+    <string name="pref_low_value">Ниска глюкоза</string>
+    <string name="pref_low_value_summary">Граница за ниски стойности на глюкозата.</string>
+    <string name="pref_switch_car_notification">Известия за Android Auto</string>
+    <string name="pref_switch_car_notification_summary">Известия за Android Auto.</string>
+    <string name="pref_car_notification_interval">Интервал на известията</string>
+    <string name="pref_car_notification_interval_summary">Минимален интервал за показване на известия за нова стойност.\nАлармите винаги ще показват известие.</string>
+    <string name="pref_switch_car_notification_alarm_only">Само аларма</string>
+    <string name="pref_switch_car_notification_alarm_only_summary">Ще задейства известия само за аларми в техния специфичен интервал.\nМного ниските стойности винаги ще показват известие.</string>
+    <string name="pref_switch_car_media">Фалшив медиен плейър</string>
+    <string name="pref_switch_car_media_summary">Показване на стойността на глюкозата като текуща песен за Android Auto.</string>
+    <string name="pref_switch_send_to_aod">Изпращане на GlucoData broadcast</string>
+    <string name="pref_switch_send_to_aod_summary">Изпращане на GlucoData broadcast за нови стойности, получени от който и да е източник.</string>
+    <string name="pref_button_select_target">Идентифициране на GlucoData приемници</string>
+    <string name="pref_button_select_target_summary">Изберете приемници, към които да се изпраща GlucoData broadcast. Глобалният broadcast ще се изпраща до всяко приложение, което се регистрира динамично за broadcast.</string>
+    <string name="pref_switch_send_to_xdrip">Изпращане на patched libre broadcast</string>
+    <string name="pref_switch_send_to_xdrip_summary">Препращане на стойности на глюкозата към xDrip+. Изберете \'Libre (patched app)\' като източник в xDrip+.</string>
+    <string name="pref_button_select_xdrip_target">Идентифициране на patched libre приемници</string>
+    <string name="pref_button_select_xdrip_target_summary">Изберете приемници, към които да се изпраща patched libre broadcast. Глобалният broadcast ще се изпраща до всяко приложение, което се регистрира динамично за broadcast.</string>
+    <string name="pref_switch_send_xdrip_broadcast">Изпращане на xDrip+ broadcast</string>
+    <string name="pref_switch_send_xdrip_broadcast_summary">Изпращане на broadcast, както го изпраща xDrip+. Например към AAPS.</string>
+    <string name="pref_button_select_xdrip_broadcast_target">Идентифициране на xDrip+ broadcast приемници</string>
+    <string name="pref_button_select_xdrip_broadcast_target_summary">Изберете приемници, към които да се изпраща xDrip+ broadcast. Глобалният broadcast ще се изпраща до всяко приложение, което се регистрира динамично за broadcast.</string>
+    <string name="pref_switch_use_mmol">Използване на mmol/l</string>
+    <string name="pref_switch_use_mmol_summary">Използване на mmol/l вместо mg/dl.</string>
+    <string name="pref_switch_use_5_min_delta">Делта за 5 минути</string>
+    <string name="pref_switch_use_5_min_delta_summary">Включете това, за да използвате делта стойности за интервал от 5 минути, в противен случай се използва интервал от 1 минута.</string>
+    <string name="pref_color_alarm">Цвят за много висока/ниска стойност</string>
+    <string name="pref_color_alarm_summary">Цвят за много високи и много ниски стойности на глюкозата.</string>
+    <string name="pref_color_out_of_range">Цвят за висока/ниска стойност</string>
+    <string name="pref_color_out_of_range_summary">Цвят за високи и ниски стойности на глюкозата.</string>
+    <string name="pref_color_ok">Цвят за целевия диапазон</string>
+    <string name="pref_color_ok_summary">Цвят за стойности на глюкозата в целевия диапазон.</string>
+    <string name="pref_notification">Известие</string>
+    <string name="pref_notification_summary">Показва постоянно известие с текущата стрелка за тенденция, стойност на глюкозата и делта в лентата на състоянието.\nТова известие предотвратява спирането на това приложение от Android.</string>
+    <string name="pref_notification_icon">Икона в лентата на състоянието</string>
+    <string name="pref_notification_icon_summary">Стил на малката икона в лентата на състоянието на известието.</string>
+    <string name="pref_notification_big_icon">Голяма икона в лентата на състоянието</string>
+    <string name="pref_notification_big_icon_summary">По-голяма икона в лентата на състоянието. Моля, деактивирайте тази настройка, ако иконата е твърде голяма и е отрязана.</string>
+    <string name="pref_notification_no_content">Скриване на съдържанието</string>
+    <string name="pref_notification_no_content_summary">Това ще премахне съдържанието на известието, за да има само малка икона с него.</string>
+    <string name="pref_second_notification">2. известие</string>
+    <string name="pref_second_notification_summary">Показване на известие без съдържание, за да има допълнителна икона в лентата на състоянието.</string>
+    <string name="pref_second_notification_icon">2. икона в лентата на състоянието</string>
+    <string name="pref_second_notification_icon_summary">Стил на малката икона в лентата на състоянието на известието.</string>
+    <string name="pref_third_notification">3. известие</string>
+    <string name="pref_third_notification_icon">3. икона в лентата на състоянието</string>
+    <string name="pref_floating_widget">Плаващ джаджа</string>
+    <string name="pref_floating_widget_summary">Показване на глюкоза, тенденция, делта, време и IOB/COB като плаващ джаджа.\nАко задържите и не местите джаджата за повече от 5 секунди, тя ще изчезне.</string>
+    <string name="pref_floating_widget_size">Размер</string>
+    <string name="pref_floating_widget_size_summary">Промяна на размера на плаващия джаджа</string>
+    <string name="pref_floating_widget_style">Стил</string>
+    <string name="pref_floating_widget_style_summary">Стил на плаващия джаджа.</string>
+    <string name="pref_floating_widget_transparency">Прозрачност</string>
+    <string name="pref_floating_widget_transparency_summary">Прозрачност на фона за плаващия джаджа.</string>
+    <string name="pref_widget_transparency">Прозрачност на джаджата</string>
+    <string name="pref_widget_transparency_summary">Прозрачност на фона за джаджи.</string>
+    <string name="pref_relative_time">Относително време</string>
+    <string name="pref_relative_time_summary">Използване на относително време вместо времева марка на глюкозата за джаджи.\nОтносителното време зависи от настройките на батерията на вашето устройство и може да не работи правилно.</string>
+
+    <string name="pref_status_bar_icon_app">Икона на приложението</string>
+    <string name="pref_status_bar_icon_glucose">Стойност на глюкозата</string>
+    <string name="pref_status_bar_icon_trend">Стрелка за тенденция</string>
+    <string name="pref_status_bar_icon_delta">Делта</string>
+
+    <string name="pref_wear_notification">Носимо: вибрация</string>
+
+    <string name="pref_global_broadcast">Глобален broadcast</string>
+
+    <string name="select_receiver_show_all">Показване на всички</string>
+    <string name="select_receiver_no_glucodata_receiver">Не е намерен приемник!</string>
+
+    <string name="widget_glucose">Глюкоза</string>
+    <string name="widget_glucose_trend">Глюкоза и тенденция</string>
+    <string name="widget_glucose_trend_delta">Глюкоза, тенденция и делта</string>
+    <string name="widget_glucose_trend_delta_timestamp">Глюкоза, тенденция, делта и времева марка</string>
+    <string name="widget_glucose_trend_delta_timestamp_iob_cob">Глюкоза, тенденция, делта, време и IOB/COB</string>
+
+    <string name="pref_send_to_bangleJS">Поддръжка на BangleJS</string>
+    <string name="pref_send_to_bangleJS_summary">Препращане на стойности към widbgjs джаджа за BangleJS.</string>
+
+    <!-- wear -->
+
+    <string name="forground_notification_descr">Получаване на данни за усложнения</string>
+
+    <string name="activity_connected_label">Телефон: свързан (%1$s)</string>
+    <string name="activity_disconnected_label">Телефон: изключен</string>
+
+    <string name="activity_switch_foreground">На преден план</string>
+    <string name="activity_large_arrow_icon">Голяма стрелка за тенденция</string>
+    <string name="activity_switch_colored_aod">Цветен AOD</string>
+
+    <!-- complications -->
+
+    <string name="short_value">Глюкоза</string>
+    <string name="image_value">Глюкоза (много голяма и цветна)</string>
+    <string name="small_image_value">Глюкоза (цветна)</string>
+    <string name="icon_value">Глюкоза (голяма)</string>
+    <string name="short_value_icon">Глюкоза с икона</string>
+    <string name="short_value_arrow">Глюкоза и тенденция</string>
+    <string name="short_value_arrow_image">Глюкоза и тенденция (голяма и цветна)</string>
+    <string name="icon_value_arrow">Глюкоза и тенденция (голяма)</string>
+    <string name="short_value_arrow_small_image">Глюкоза и тенденция (цветна)</string>
+    <string name="short_value_trend_range">Глюкоза и диапазон на тенденцията (ако се поддържа)</string>
+    <string name="short_value_delta_trend_range">Глюкоза, делта и диапазон на тенденцията (ако се поддържа)</string>
+    <string name="short_delta_trend_arrow_range">Делта, стрелка за тенденция и диапазон на тенденцията (ако се поддържа)</string>
+    <string name="short_value_delta">Глюкоза и делта</string>
+    <string name="long_value_arrow_delta">Глюкоза, делта и тенденция</string>
+    <string name="long_value_arrow_delta_time">Глюкоза, делта, тенденция и времева марка</string>
+    <string name="long_value_arrow_icon_delta_time">Глюкоза, икона за тенденция, делта и времева марка</string>
+    <string name="short_value_rate">Глюкоза и стойност на тенденцията</string>
+    <string name="icon_delta">Делта (голяма)</string>
+    <string name="image_delta">Делта (голяма, цветна)</string>
+    <string name="short_delta">Делта</string>
+    <string name="short_delta_arrow">Делта и тенденция</string>
+    <string name="short_delta_icon">Делта с икона</string>
+    <string name="short_delta_time">Делта и времева марка</string>
+    <string name="image_delta_time">Делта и времева марка (цветна)</string>
+    <string name="icon_delta_time">Делта и времева марка (голяма)</string>
+    <string name="image_arrow">Тенденция (голяма, цветна)</string>
+    <string name="small_image_arrow">Тенденция (цветна)</string>
+    <string name="icon_arrow">Икона за тенденция</string>
+    <string name="test_neg_range">Тестов диапазон на усложнения с отрицателни стойности (за поддръжка на диапазон на тенденцията)</string>
+    <string name="short_rate">Стойност на тенденцията</string>
+    <string name="short_rate_arrow">Стойност на тенденцията и стрелка</string>
+    <string name="short_rate_icon">Стойност на тенденцията с икона</string>
+    <string name="timestamp">Времева марка на глюкозата</string>
+    <string name="short_timestamp">Времева марка</string>
+    <string name="image_timestamp">Времева марка (цветна)</string>
+    <string name="icon_timestamp">Времева марка (голяма)</string>
+    <string name="battery_level">Ниво на батерията (часовник и телефон)</string>
+    <string name="watch_battery_level">Ниво на батерията на часовника</string>
+    <string name="phone_battery_level">Ниво на батерията на телефона</string>
+    <string name="iob_cob">IOB/COB</string>
+
+    <!-- GlucoDataAuto -->
+
+    <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataAuto/blob/main/README.md</string>
+    <string name="gda_no_data">За да използвате това приложение в Android Auto, трябва да активирате настройките за разработчици в Android Auto, като щракнете няколко пъти върху версията. След това трябва да активирате \"Неизвестни източници\" в менюто с настройки за разработчици.</string>
+    <string name="pref_information">Информация</string>
+    <string name="pref_gda_info_summary">Ако използвате GlucoDataHandler като източник, тези настройки ще бъдат презаписани от GlucoDataHandler, така че не е нужно да ги променяте тук.</string>
+    <string name="pref_no_gda_info">GlucoDataAuto липсва</string>
+    <string name="pref_no_gda_info_summary">За да използвате GlucoDataHandler за Android Auto, трябва да инсталирате GlucoDataAuto от GitHub.\nМоля, щракнете тук за повече информация и за да изтеглите GlucoDataAuto.</string>
+    <string name="pref_send_to_glucodataauto">Препращане към GlucoDataAuto</string>
+    <string name="pref_send_to_glucodataauto_summary">Изпращане на стойности на глюкозата и настройки към GlucoDataAuto, ако телефонът е свързан с Android Auto.</string>
+
+
+    <!-- Notifications -->
+
+    <string name="mobile_foreground_notification_name">Известие на преден план</string>
+    <string name="mobile_foreground_notification_descr">Известие на преден план, което предотвратява спирането на приложението, докато работи във фонов режим.</string>
+    <string name="mobile_second_notification_name">Второ известие</string>
+    <string name="mobile_third_notification_name">Трето известие</string>
+    <string name="mobile_second_notification_descr">Допълнително известие за показване на допълнителна икона в лентата на състоянието.</string>
+    <string name="worker_notification_name">Известие за работник</string>
+    <string name="worker_notification_descr">Известие за работник, показано по време на изпълнение на задачи във фонов режим.</string>
+    <string name="wear_foreground_notification_name">Известие на преден план</string>
+    <string name="wear_foreground_notification_descr">Известие на преден план, което предотвратява спирането на приложението, докато работи във фонов режим.</string>
+    <string name="android_auto_notification_name">Известие за Android Auto</string>
+    <string name="android_auto_notification_descr">Известие, което се показва в Android Auto</string>
+    <string name="src_xdrip_noise_blocking">Noise-Block е активен в настройките за между приложения на xDrip+!\nМоля, променете го на \"Изключително шумно\"!</string>
+    <string name="pref_cat_follower">Облачни услуги</string>
+    <string name="pref_source_juggluco_info">Juggluco</string>
+    <string name="pref_source_juggluco_info_summary">За да получавате стойности от Juggluco:\n- отворете Juggluco\n- отидете на \"Настройки\"\n- активирайте \"Glucodata broadcast\"\n- активирайте \"de.michelinside.glucodatahandler\"</string>
+    <string name="pref_gda_source_juggluco_info_summary">За да получавате стойности от Juggluco:\n- отворете Juggluco\n- отидете на \"Настройки\"\n- активирайте \"Glucodata broadcast\"\n- активирайте \"de.michelinside.glucodataauto\"</string>
+    <string name="pref_source_xdrip_info">xDrip+</string>
+    <string name="pref_source_xdrip_info_1_summary">За да получавате стойности от xDrip+:\n- отворете xDrip+\n- отидете на настройки\n- отидете на настройки за между приложения\n- активирайте \"Broadcast locally\"\n- задайте \"Noise Blocking\" на \"Send even Extremely noisy signals\"</string>
+    <string name="pref_source_xdrip_info_2_summary">- активирайте \"Compatible Broadcast\" - проверете дали \"Identify receiver\" е празно или ако вече съществува запис, добавете \"de.michelinside.glucodatahandler\", разделено с интервал</string>
+    <string name="pref_gda_source_xdrip_info_2_summary">- активирайте \"Compatible Broadcast\"\n- проверете дали \"Identify receivers\" е празно или добавете нов ред с \"de.michelinside.glucodataauto\"</string>
+    <string name="pref_source_librelinkup_info">Настройка на LibreLinkUp</string>
+    <string name="pref_source_librelinkup_info_summary">ВАЖНО: това не е акаунтът, използван за приложението FreeStyle Libre!\nЗа да активирате LibreLinkUp follower:\n- отворете приложението FreeStyle Libre и изберете в менюто Споделяне или Свързани приложения\n- активирайте LibreLinkUp връзката\n- инсталирайте LibreLinkUp от Play Store\n- настройте акаунта си и изчакайте поканата</string>
+    <string name="menu_contact">Контакт</string>
+    <string name="src_ns_iob_cob">Поддръжка на IOB/COB</string>
+    <string name="src_ns_iob_cob_summary">Получаване и на IOB и COB стойности от nightscout pebble endpoint.</string>
+    <string name="pref_permanent_notification_info_summary">Известието е задължително за правилното функциониране на приложението.\nЗапочвайки с Android 13, можете да плъзнете това известие, за да го премахнете. Ако не искате известието да се връща, задайте \"Икона в лентата на състоянието\" на \"Икона на приложението\" и активирайте \"Скриване на съдържанието\".</string>
+    <string name="source_aaps">AAPS</string>
+    <string name="pref_source_aaps_info">AndroidAPS</string>
+    <string name="pref_source_aaps_info_summary">За да получавате стойности от AAPS:\n- отворете приложението AAPS\n- отидете на \"Config Builder\"\n- активирайте \"Samsung Tizen\" или \"Data Broadcaster\"</string>
+    <string name="pref_switch_watchdrip_enabled">WatchDrip+</string>
+    <string name="pref_switch_watchdrip_enabled_summary">"Активиране на комуникацията с WatchDrip+ (без графика).\nВАЖНО: активирайте \"Enable service\" в WatchDrip+ след активиране на тази настройка тук!"</string>
+    <string name="pref_car_notification_reappear_interval">Повторно появяване</string>
+    <string name="pref_car_notification_reappear_interval_summary">Интервал, през който известието ще се появява отново, ако няма нова стойност. (0 за никога).</string>
+    <string name="pref_aa_media_player_icon_style_summary">Стил на иконата/изображението на фиктивния медиен плейър.</string>
+    <string name="pref_aa_media_player_icon_style">Стил на иконата/изображението</string>
+    <string name="menu_save_mobile_logs">Мобилен</string>
+    <string name="menu_save_wear_logs">Носимо</string>
+    <string name="menu_save_logs">Запазване на логове</string>
+    <string name="logcat_save_succeeded">Логовете са запазени успешно</string>
+    <string name="logcat_save_failed">Неуспешно запазване на логове!</string>
+    <string name="logcat_wear_save_succeeded">Логовете от носимото са запазени успешно</string>
+    <string name="logcat_wear_save_failed">Неуспешно запазване на логове от носимото!</string>
+    <string name="request_exact_alarm_summary">За всички задачи, свързани с време/интервал, това приложение изисква разрешение за аларми и напомняния.\nТо няма да добавя или променя никакви напомняния на потребителя, а е само за вътрешно планиране.\nАко натиснете OK, ще бъдете пренасочени към настройката за разрешение, за да го активирате за GlucoDataHandler.</string>
+    <string name="request_exact_alarm_title">Разрешение за аларми и напомняния</string>
+    <string name="activity_main_schedule_exact_alarm">Планирането на точна аларма е деактивирано!!!\nGlucoDataHandler може да не работи правилно!!!\nНатиснете тук, за да отидете директно на настройката за разрешение.</string>
+
+    <string name="src_libre_patient">Пациент</string>
+    <string name="src_libre_patient_summary">Ако има повече от един пациент, свързан с акаунта на libre, моля, изберете пациента, за когото се получават данните.</string>
+    <string name="pref_cat_locksreen_wallpaper">Тапет на заключения екран</string>
+    <string name="pref_lockscreen_enabled">Активиране</string>
+    <string name="pref_lockscreen_enabled_summary">Ако активирате тапета на заключения екран, приложението ще замени тапета на заключения екран.</string>
+    <string name="pref_lockscreen_y_pos">Вертикална позиция</string>
+    <string name="pref_lockscreen_y_pos_summary">Вертикална позиция на изображението на глюкозата и тенденцията на заключения екран:\n0 е горната част на дисплея\n100 е долната част на дисплея</string>
+    <string name="activity_main_notification_permission">Показването на известия е деактивирано!!!\nGlucoDataHandler може да не работи правилно и не може да показва аларми!!!\nНатиснете тук, за да отидете директно на настройката за разрешение.</string>
+
+    <string name="src_libre_setup_librelink">Липсват данни! Моля, първо приемете поканата в приложението LibreLinkUp!</string>
+    <string name="prefstatus_bar_notification_colored_icon">Цветна икона в лентата на състоянието</string>
+    <string name="pref_status_bar_notification_colored_icon_summary">Ако вашето устройство поддържа цветни икони в лентата на състоянието, можете също да го деактивирате, за да използвате бял елемент.</string>
+
+    <string name="menu_alarms">Аларми</string>
+    <string name="alarm_interval">Интервал</string>
+    <string name="alarm_interval_summary_low">Минимален интервал в минути между известията за този тип аларма.\nИнформация: ще има ново известие след изтичане на времето само ако делтата е отрицателна.</string>
+    <string name="alarm_interval_summary_high">Минимален интервал в минути между известията за този тип аларма.\nИнформация: ще има ново известие след изтичане на времето само ако делтата е положителна.</string>
+    <string name="alarm_interval_summary_obsolete">Време в минути от получаването на последната стойност на глюкозата, за да се задейства това известие. То ще се появява отново през този интервал.</string>
+    <string name="alarm_enabled">Активирано</string>
+    <string name="alarm_enabled_summary_on">Известията са активирани за този тип аларма.</string>
+    <string name="alarm_enabled_summary_off">Известията са деактивирани за този тип аларма.</string>
+    <string name="alarm_test">Тестване</string>
+    <string name="alarm_test_summary">Натиснете тук, за да задействате известие след 3 секунди за този тип аларма.</string>
+    <string name="alarm_settings">Настройки</string>
+    <string name="alarm_settings_summary">Натиснете тук, за да отидете на настройките за канала за известия за тази аларма.\nТам можете да промените всички свързани настройки.</string>
+    <string name="alarm_save_sound">Запазване на звука</string>
+    <string name="alarm_save_sound_summary">Натиснете тук, ако искате да запазите звука по подразбиране за алармата във файл на телефона си.</string>
+    <string name="alarm_saved">Алармата е запазена!</string>
+    <string name="snooze">Отлагане</string>
+    <string name="alarm_cat_all">Всички аларми</string>
+    <string name="alarm_notifications_enabled">Известия за аларма</string>
+    <string name="wear_alarm_notifications_enabled">Носимо: Известия за аларма</string>
+    <string name="alarm_notifications_enabled_summary_on">Известията за аларма са активни на телефона.\nЗабележка: алармите използват силата на звука за аларма на телефона.</string>
+    <string name="alarm_notifications_enabled_summary_off">Известията за аларма са неактивни на телефона.</string>
+    <string name="stop_snooze">Спиране</string>
+    <string name="very_low_alarm_text">Много ниска!</string>
+    <string name="very_low_text">Ниска!</string>
+    <string name="very_high_text">Висока!</string>
+    <string name="very_high_alarm_text">Много висока!</string>
+    <string name="very_low_alarm_notification_name">Аларма за много ниска стойност</string>
+    <string name="very_low_alarm_notification_descr">Известие за аларми за много ниска стойност.</string>
+    <string name="low_alarm_notification_name">Аларма за ниска стойност</string>
+    <string name="low_alarm_notification_descr">Известие за аларми за ниска стойност.</string>
+    <string name="high_alarm_notification_name">Аларма за висока стойност</string>
+    <string name="high_alarm_notification_descr">Известие за аларми за висока стойност.</string>
+    <string name="very_high_alarm_notification_name">Аларма за много висока стойност</string>
+    <string name="very_high_alarm_notification_descr">Известие за аларми за много висока стойност.</string>
+    <string name="btn_dismiss">Отхвърляне</string>
+    <string name="test_alarm">Тестова аларма!</string>
+    <string name="alarm_cat_categories">Категории на алармите</string>
+    <string name="alarm_fullscreen_notification_enabled">Известие на цял екран</string>
+    <string name="alarm_fullscreen_notification_enabled_summary">Активира известие на цял екран на заключения екран.\nТова може да изисква допълнително разрешение.</string>
+    <string name="alarm_fullscreen_dismiss_keyguard">Отхвърляне на заключване</string>
+    <string name="alarm_fullscreen_dismiss_keyguard_summary">Моля, активирайте тази настройка, ако имате проблеми с известието на цял екран.\nНа някои устройства това ще доведе до отключване на екрана, докато се задейства известието на цял екран.\nТака че, моля, не го активирайте, ако нямате проблеми.</string>
+    <string name="alarm_force_sound">Принудително възпроизвеждане на звук за аларма</string>
+    <string name="alarm_force_sound_summary">Това ще принуди възпроизвеждане на звук и вибрация за аларма, дори ако телефонът е в безшумен режим или режим на вибрация. Винаги ще спира режима \"Не ме безпокойте\"!\nЗа да активирате тази настройка, може да бъдете помолени да разрешите на това приложение да променя режима \"Не ме безпокойте\".</string>
+    <string name="wear_alarm_force_sound">Носимо: Принудително възпроизвеждане на звук за аларма</string>
+    <string name="alarm_force_vibration">Принудителна вибрация</string>
+    <string name="alarm_force_vibration_summary">Принудителна вибрация, дори ако телефонът е в безшумен режим. Винаги ще спира режима \"Не ме безпокойте\"!\nЗа да активирате тази настройка, може да бъдете помолени да разрешите на това приложение да променя режима \"Не ме безпокойте\".</string>
+    <string name="alarm_sound_level">Ниво на звука</string>
+    <string name="alarm_sound_level_summary">Принудително задаване на ниво на звука за алармата.\n-1 за използване на настройките по подразбиране на телефона.</string>
+    <string name="advanced_settings">Разширени</string>
+    <string name="advanced_settings_alarm_summary">Разширени настройки за аларма за известие на цял екран и звуци.</string>
+    <string name="alarm_advanced_cat_notifcation">Известие</string>
+    <string name="alarm_advanced_cat_sound">Звук</string>
+    <string name="alarm_type_summary">Настройки за аларма за стойности на глюкозата, започващи от %1$s.</string>
+    <string name="alarm_no_notification_wear_connected">Без аларма, докато носимото е свързано</string>
+    <string name="alarm_no_notification_wear_connected_summary_on">Няма да има известие за аларма на телефона, ако телефонът е свързан с GlucoDataHandler на часовника.</string>
+    <string name="alarm_no_notification_wear_connected_summary_off">Ще има известие за аларма на телефона, дори ако телефонът е свързан с GlucoDataHandler на часовника.</string>
+    <string name="alarm_no_notification_auto_connected">Без аларма, докато Android Auto е свързан</string>
+    <string name="alarm_no_notification_auto_connected_summary_on">Няма да има известие за аларма на телефона, ако Android Auto е свързан.</string>
+    <string name="alarm_no_notification_auto_connected_summary_off">Ще има известие за аларма на телефона, дори ако Android Auto е свързан.</string>
+    <string name="alarm_retrigger">Повторно задействане</string>
+    <string name="alarm_retrigger_summary">Ако известието за аларма не е затворено, алармата ще се задейства отново след този интервал в минути до 3 пъти.\n0 - без повторно задействане</string>
+    <string name="alarm_obsolete">Остаряла</string>
+    <string name="obsolete_alarm_notification_name">Аларма за остаряла стойност</string>
+    <string name="alarm_obsolete_summary">Аларма, ако няма нова стойност на глюкозата за %1$s минути.</string>
+    <string name="obsolete_alarm_notification_descr">Това известие ще се появи, ако няма нова стойност в рамките на интервал.</string>
+    <string name="obsolete_alarm_text">Няма нова стойност!</string>
+
+    <string name="permission_notification_title">Показването на известия е деактивирано!!!</string>
+    <string name="permission_notification_message">GlucoDataHandler се нуждае от известия, за да изпълнява задачи във фонов режим и да показва аларми.</string>
+    <string name="alarm_notification_name">Известие за аларма</string>
+    <string name="alarm_notification_descr">Известия за аларма. Моля, не променяйте настройките, тъй като приложението осигурява звук и вибрация за известията вътрешно.</string>
+    <string name="alarm_sound">Избор на персонализиран звук</string>
+    <string name="alarm_sound_summary">Безшумно - без звук</string>
+    <string name="alarm_use_custom_sound">Използване на персонализиран звук</string>
+    <string name="alarm_use_custom_sound_summary_on">Използване на персонализирано избран звук.</string>
+    <string name="alarm_use_custom_sound_summary_off">Използване на звук, предоставен от приложението.</string>
+    <string name="alarm_sound_delay">Забавяне на звука</string>
+    <string name="alarm_sound_delay_summary">Време в секунди преди възпроизвеждане на звука.\nЩе вибрира през цялото време, дори ако не е избран звук.</string>
+    <string name="pref_cat_alarm_vibration_sound">Звук и вибрация</string>
+    <string name="alarm_vibrate_only">Само вибрация</string>
+    <string name="wear_alarm_vibrate_only">Носимо: Само вибрация</string>
+    <string name="permission_alarm_notification_title">Известието е деактивирано!</string>
+    <string name="permission_alarm_notification_message">За да показва аларми, GlucoDataHandler се нуждае от активиран канал за известия за аларма.\nЩе бъдете пренасочени към настройката за известия за това приложение.\nМоля, активирайте канала за известия за аларма там.</string>
+    <string name="alarm_app_sound">Вътрешен звук на приложението</string>
+    <string name="pref_send_pref_to_glucodataauto">Включване на настройки</string>
+    <string name="pref_send_pref_to_glucodataauto_summary">Включване на настройки в съобщението до GlucoDataAuto.\nТова ще презапише настройките в GlucoDataAuto.</string>
+    <string name="pref_source_gdh_info_summary">За да получавате стойности от GlucoDataHandler:\n- отворете GlucoDataHandler\n- отидете на настройки\n- активирайте \"Препращане към GlucoDataAuto\"\n- за да използвате същите настройки, активирайте \"Включване на настройки\"</string>
+    <string name="very_low_alarm_summary">Ако използвате известия за Android Auto, алармите за много ниска стойност винаги ще задействат известие и това не може да бъде деактивирано или променено.</string>
+    <string name="pref_source_juggluco_iob_info">IOB от Juggluco</string>
+    <string name="pref_source_juggluco_iob_info_summary">За да получавате IOB от Juggluco:\n- отворете Juggluco\n- отидете на \"Настройки\"\n- активирайте \"IOB\"\n- отидете на \"Web server\"\n- активирайте \"Active\"\n- по избор: активирайте \"Local only\"</string>
+    <string name="pref_source_xdrip_iob_info">IOB от xDrip+</string>
+    <string name="pref_source_xdrip_iob_info_summary">За да получавате стойности от xDrip+:\n- отворете xDrip+\n- отидете на настройки\n- отидете на настройки за между приложения\n- активирайте \"xDrip Web Service\"</string>
+    <string name="pref_source_activate_local_nightscout_iob">Активиране на използването на IOB</string>
+    <string name="pref_source_activate_local_nightscout_iob_summary">Натиснете тук, за да зададете настройките на nightscout да използват локалния уеб сървър за получаване на допълнителни IOB стойности.</string>
+    <string name="activate_local_nightscout_iob_title">Презаписване на nightscout</string>
+    <string name="activate_local_nightscout_iob_message">Това ще презапише текущите ви настройки за източник на nightscout, за да използвате локален уеб сървър на порт 17580 за получаване на IOB стойности.\nСигурни ли сте?</string>
+    <string name="gda_media_notification_toggle_title">Превключване на известия</string>
+    <string name="gda_notifications_on">Известията са включени</string>
+    <string name="gda_notifications_off">Известията са изключени</string>
+    <string name="gda_media_notification_toggle_action">Натиснете play, за да превключите известието</string>
+    <string name="pref_gda_alarm_info_summary">Настройките за аларма са свързани само с известията на Android Auto и не задействат никакъв звук.</string>
+    <string name="pref_cat_general_summary">Общи настройки, като например единица, време и настройки за делта.</string>
+    <string name="pref_target_range_summary">Настройки за границите на глюкозата и съответните цветове.</string>
+    <string name="pref_cat_widgets_summary">Настройки за джаджи на телефона и плаваща джаджа.</string>
+    <string name="pref_cat_notification_summary">Настройки за известия.</string>
+    <string name="pref_cat_locksreen_wallpaper_summary">Настройки за замяна на тапета на заключения екран.</string>
+    <string name="pref_cat_android_auto_summary">Настройка за GlucoDataAuto за използване с Android Auto.</string>
+    <string name="pref_cat_watchdrip">Часовници MiBand и Amazfit</string>
+    <string name="pref_cat_wear_os">Часовници Wear OS</string>
+    <string name="pref_cat_watch">Часовник</string>
+    <string name="pref_cat_watch_summary">Настройки за свързани смарт часовници.</string>
+    <string name="pref_cat_transfer_summary">Настройки за прехвърляне на стойности на глюкозата към други приложения.</string>
+    <string name="pref_cat_transfer">Прехвърляне на стойности</string>
+    <string name="pref_cat_visualisation">Визуализация</string>
+    <string name="pref_cat_banglejs">Часовници BangleJS</string>
+    <string name="pref_wearos_info_summary">За да използвате GlucoDataHandler на часовници Wear OS, моля, инсталирайте го от Google Play Store на часовника.</string>
+    <string name="pref_wear_os_check_connection">Проверка на връзката</string>
+    <string name="pref_wear_os_check_connection_summary">Натиснете тук, за да проверите отново връзката с Wear OS.\nМожете също да задействате тази проверка, като натиснете информацията за връзката на началния екран (дори в приложението Wear OS).</string>
+    <string name="pref_watchdrip_info_summary">WatchDrip+ поддържа няколко устройства MiBand и Amazfit.\nЗа да получите пълен списък с поддържаните устройства и повече информация за конфигуриране на WatchDrip+, моля, натиснете тук.</string>
+    <string name="alarm_vibrate_only_wear_info">Само вибрация без известие не работи на всяко устройство!</string>
+    <string name="alarm_use_alarm_sound">Използване на звук за аларма</string>
+    <string name="alarm_use_alarm_sound_summary">Използване на силата на звука за аларма вместо звука за звънене.\nТова може да е независимо от режима на вибрация.</string>
+    <string name="alarm_vibrate_only_summary">Активирайте това, за да принудите да не се възпроизвежда звук за аларма, независимо от други настройки за звук на алармата.</string>
+    <string name="alarm_start_delay">Забавяне на стартирането</string>
+    <string name="alarm_start_delay_wear_summary">Забавяне преди първото възпроизвеждане на вибрация и звук.\nПонякога известието от телефона спира вибрацията веднага.</string>
+    <string name="pref_color_obsolete">Цвят за остаряла стойност</string>
+    <string name="pref_color_obsolete_summary">Цвят за липса на нови стойности на глюкозата.</string>
+    <string name="alarm_wear_no_notification_phone_connected">Без изскачащ прозорец, докато телефонът е свързан</string>
+    <string name="alarm_wear_no_notification_phone_connected_summary">Без допълнителен изскачащ прозорец за известие на часовника, докато телефонът е свързан.\nВибрацията и звукът ще се задействат, както е конфигурирано.</string>
+    <string name="table_header_details">Подробности</string>
+    <string name="table_header_connections">Връзки</string>
+    <string name="disconnected_label">изключен</string>
+    <string name="connected_label">свързан</string>
+    <string name="pref_application_color_scheme">Цветова схема на приложението</string>
+    <string name="application_color_scheme_system">Използване на системната тема</string>
+    <string name="application_color_scheme_light">Светла тема</string>
+    <string name="application_color_scheme_dark">Тъмна тема</string>
+    <string name="tap_action">Действие при докосване</string>
+    <string name="tap_action_summary">Изберете действие или приложение, което да се изпълни при докосване на този елемент.</string>
+    <string name="no_action">Без действие</string>
+    <string name="action_floating_widget_toggle">Превключване на плаващата джаджа</string>
+    <string name="wear_complication_tap_action">Действие при докосване на усложнение</string>
+    <string name="activity_large_arrow_icon_summary">Моля, деактивирайте тази настройка, ако стрелката за тенденция е твърде голяма или е отрязана.</string>
+    <string name="pref_cat_ui_settings">Потребителски интерфейс</string>
+    <string name="pref_cat_ui_settings_summary">Общи настройки за потребителския интерфейс на това приложение.</string>
+    <string name="gda_foreground_info">GlucoDataAuto работи</string>
+    <string name="gda_foreground_summary">Активирайте го само ако използвате източник на последовател и само известия за Android Auto.\nТова предотвратява затварянето на това приложение от Android, докато не е свързано с Android Auto, така че приложението не може да разпознае връзката с Android Auto.\nВместо да активирате тази настройка, можете също да отворите приложението в Android Auto веднъж, ако сте свързани.</string>
+    <string name="gda_battery_optimization_disabled">Оптимизацията на батерията е активирана!\nНатиснете тук, за да я деактивирате.</string>
+    <string name="gda_source_follower_info_summary">Ако използвате източник на последовател, приложението може да не се стартира, докато е свързано с Android Auto, ако използвате само известия за Android Auto.\nЗа да сте сигурни, че приложението открива връзката с Android Auto, трябва да деактивирате оптимизацията на батерията.\nАко все още не работи, можете също да активирате режима на преден план или трябва да отворите приложението в Android Auto веднъж, ако е свързано с Android Auto.</string>
+    <string name="gda_help_aa_title">Настройка на Android Auto</string>
+    <string name="gda_help_aa_title_summary">Android Auto е или отделно приложение, или част от системата и може да бъде достъпно чрез настройките на Android.\nЗа да активирате GlucoDataAuto за Android Auto, трябва да изпълните следните стъпки:</string>
+    <string name="gda_help_aa_dev_mode">1. Активиране на режим за разработчици</string>
+    <string name="gda_help_aa_dev_mode_summary">- отворете Android Auto\n- превъртете надолу до Версия\n- докоснете няколко пъти Версията, докато се появи изскачащ прозорец, за да \"Разрешите настройките за разработчици\"\n- натиснете \"OK\"</string>
+    <string name="gda_help_aa_sources">2. Активиране на \"Неизвестни източници\"</string>
+    <string name="gda_help_aa_sources_summary">- отворете Android Auto\n- отворете в менюто с 3 точки \"Настройки за разработчици\"\n- превъртете надолу до \"Неизвестен източник\"\n- активирайте го</string>
+    <string name="gda_help_aa_notification">3. Задаване на настройки за известия</string>
+    <string name="gda_help_aa_notification_summary">- отворете Android Auto\n- превъртете надолу до \"Съобщения\"\n- активирайте \"Показване на известия за съобщения\"\n- активирайте \"Показване на първия ред на съобщенията\"</string>
+    <string name="gda_help_aa_enable_gda">4. Активиране на GlucoDataAuto</string>
+    <string name="gda_help_aa_enable_gda_summary">- отворете Android Auto\n- превъртете надолу до \"Дисплей\"\n- отворете \"Персонализиране на стартера\"\n- активирайте \"GlucoDataAuto\"\nАко GlucoDataAuto не е наличен, моля, рестартирайте телефона си.</string>
+    <string name="pref_notification_custom_layout">Цветен оформление</string>
+    <string name="pref_notification_custom_layout_summary">Показва стойностите с голям и цветен текст.\nНа някои устройства на Samsung с Android 13 и по-нова версия това може да доведе до срив на приложението поради грешка от страна на Samsung.\nАко проблемът възникне, тази настройка ще бъде автоматично деактивирана, за да се гарантира, че приложението остава функционално.</string>
+    <string name="app_crash_title">Открит е срив!</string>
+    <string name="app_crash_message">Съжалявам, че приложението се срина по време на изпълнение!\nМоля, изпратете ми логовете, за да мога да анализирам грешката и да се опитам да я поправя възможно най-скоро.\nБлагодаря ви!</string>
+    <string name="src_cat_dexcom_share">Dexcom Share</string>
+    <string name="src_dexcom_share_us_server">Акаунт в САЩ</string>
+    <string name="src_dexcom_share_us_server_summary_on">Използва се акаунт в САЩ.</string>
+    <string name="src_dexcom_share_us_server_summary_off">Използва се международен акаунт.</string>
+    <string name="src_dexcom_share_enabled_summary">Активиране на акаунт в Dexcom Share. Трябва да зададете потребителско име и парола преди това.</string>
+    <string name="src_username">Потребителско име</string>
+    <string name="src_dexcom_share_user_summary">Потребителско име, имейл или телефонен номер за вход в акаунта ви в Dexcom Share.\nВАЖНО: ако използвате телефонен номер, той трябва да включва кода на държавата (напр. +1 за САЩ).</string>
+    <string name="src_dexcom_share_password_summary">Парола за акаунт в Dexcom Share.</string>
+    <string name="pref_source_dexcom_share_info">Настройка на Dexcom Share</string>
+    <string name="permission_missing_title">Липсва разрешение!</string>
+    <string name="setting_permission_missing_message">Настройката \'%1$s\' е зададена, но съответното разрешение не е предоставено! Натиснете \"OK\", за да бъдете пренасочени към диалоговия прозорец за разрешения, или натиснете \"Отказ\", за да деактивирате тази настройка.</string>
+    <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
+    <string name="xdrip_broadcast_service_api_enabled_summary">Използвайте xDrip+ Broadcast Service API, за да получавате данни (също IOB) от xDrip+.\nМоля, първо активирайте \"Broadcast Service API\" в \"Настройки за между приложения\" в xDrip+!</string>
+    <string name="obsolete_time">Време за остаряване</string>
+    <string name="obsolete_time_summary">Време в минути, след което стойността се третира като остаряла.\nСлед два пъти това време стойността се премахва.</string>
+    <string name="pref_source_offline">Локални приложения</string>
+    <string name="pref_source_offline_summary">Приложения на същото устройство, предоставящи стойности на глюкозата като вътрешно broadcast съобщение, като Juggluco, xDrip+, AAPS и т.н.</string>
+    <string name="pref_cat_follower_summary">Облачни услуги, предоставящи стойности на глюкозата през интернет, като LibreLinkUp, Dexcom Share и Nightscout.</string>
+    <string name="pref_source_xdrip_broadcast">Алтернатива: Broadcast локално</string>
+    <string name="pref_source_dexcom_byoda_info_summary">За да получавате стойности от Dexcom BYODA, трябва да активирате broadcast към AAPS, докато изграждате приложението.</string>
+    <string name="pref_source_eversense_info_summary">За да получавате стойности от Eversense, трябва да използвате ESEL или в режим на компаньон (четене на известия), или свързан с patched приложението Eversense.\nЗа повече информация относно ESEL, натиснете тук.</string>
+    <string name="pref_source_eversense_byoda_info_summary">За да получавате стойности от Dexcom BYODA, трябва да активирате broadcast към xDrip+, докато изграждате приложението.</string>
+    <string name="new_version">Версия %s е налична</string>
+    <string name="info_label_notes">Бележки</string>
+    <string name="gda_notification_permission">Известията са деактивирани! \nНатиснете тук, за да ги активирате.</string>
+    <string name="pref_show_other_unit">Показване на друга единица</string>
+    <string name="pref_show_other_unit_summary">Показване на стойността на глюкозата в %s в детайлите.</string>
+    <string name="other_unit">Друга единица</string>
+    <string name="dexcom_share_check_non_us_account">Натиснете тук, за да проверите данните за вашия акаунт в Dexcom Share за вашия акаунт извън САЩ.</string>
+    <string name="dexcom_share_check_us_account">Натиснете тук, за да проверите данните за вашия акаунт в Dexcom Share за вашия акаунт в САЩ.</string>
+    <string name="pref_lockscreen_size_summary">Промяна на размера на данните на заключения екран.</string>
+    <string name="pref_wear_os_reset_connection">Нулиране на връзката</string>
+    <string name="pref_wear_os_reset_connection_summary">Натиснете тук, за да нулирате връзката между часовника и телефона, ако не работи както се очаква.\nАко нулирането не реши проблема, моля, рестартирайте часовника си.</string>
+    <string name="detail_reset_connection">Връзката не работи както се очаква! Моля, опитайте да рестартирате часовника си.</string>
+    <string name="pref_floating_widget_time_to_close">Време за затваряне</string>
+    <string name="pref_floating_widget_time_to_close_summary">Време в секунди за затваряне на плаващата джаджа, докато натискате джаджата, без да я местите.\n0 за деактивиране на тази настройка.</string>
+    <string name="alarm_inactive_enabled">Активиране на тихи часове</string>
+    <string name="alarm_inactive_enabled_summary">Няма известия за аларма за тази аларма по време на тихи часове.\nКонфигурирайте предпочитаните от вас времена, за да използвате тази функция.</string>
+    <string name="all_alarm_inactive_enabled_summary">Няма известия за аларма за всички аларми по време на тихи часове.\nКонфигурирайте предпочитаните от вас времена, за да използвате тази функция.</string>
+    <string name="alarm_inactive_start_time">Начален час</string>
+    <string name="alarm_inactive_start_time_summary">Изберете часа, в който искате да започнат вашите тихи часове.</string>
+    <string name="alarm_inactive_end_time">Краен час</string>
+    <string name="alarm_inactive_end_time_summary">Изберете часа, в който искате да завършат вашите тихи часове.</string>
+    <string name="alarm_inactive_weekdays">Дни за тихи часове</string>
+    <string name="alarm_inactive_weekdays_summary">Посочете дните от седмицата, в които тихите часове трябва да започнат в избрания начален час.</string>
+
+    <string name="app_crash_bad_notification">Приложението се срива поради цветното оформление на известията!\nТо е деактивирано, за да се предотврати този срив.\nРестартирането на телефона обикновено оправя това.</string>
+    <string name="auto_close_notification">Автоматично затваряне на известието</string>
+    <string name="auto_close_notification_summary">Автоматично затваряне на известието за аларма след приключване на звука и вибрацията, но само след поне 30 секунди.\nАко повторното задействане е активно, известието ще бъде затворено, ако няма допълнително задействане.</string>
+
+    <string name="settings_save_succeeded">Настройките са запазени успешно</string>
+    <string name="settings_save_failed">Неуспешно запазване на настройките!</string>
+    <string name="settings_read_succeeded">Настройките са прочетени успешно</string>
+    <string name="settings_read_failed">Неуспешно четене на настройките!</string>
+    <string name="pref_cat_export_import">Експортиране / Импортиране</string>
+    <string name="pref_cat_export_import_summary">Експортиране или импортиране на настройки и запазване на логове.</string>
+    <string name="pref_export_settings">Експортиране</string>
+    <string name="pref_export_settings_summary">Натиснете тук, за да експортирате всички настройки във файл. \nВАЖНО: това ще експортира само променените настройки! Настройките със стойности по подразбиране няма да бъдат част от експорта.</string>
+    <string name="pref_import_settings">Импортиране</string>
+    <string name="pref_import_settings_summary">Натиснете тук, за да импортирате настройки от файл.\nВАЖНО: това няма да пресъздаде настройките по подразбиране, тъй като те не са част от експорта.\nАко искате да нулирате до настройките по подразбиране, първо изтрийте данните на приложението и след това импортирайте.</string>
+
+    <string name="menu_save_mobile_logs_summary">Запазване на логове от телефона във файл.</string>
+    <string name="menu_save_wear_logs_summary">Запазване на логове от свързания часовник Wear OS във файл.</string>
+    <string name="alarm_repeat">Повторение</string>
+    <string name="no_vibration">Без вибрация</string>
+    <string name="alarm_vibrate_mode">Режим на вибрация</string>
+
+    <string name="alarm_rising_fast">Бързо покачване</string>
+    <string name="rising_fast_alarm_notification_name">Аларма за бързо покачване</string>
+    <string name="alarm_rising_fast_summary">Аларма, ако стойността на глюкозата е по-висока или равна на %1$s и делтата се покачва с поне +%2$s за %3$d последователни показания.</string>
+    <string name="rising_fast_alarm_text">Бързо покачване!</string>
+
+    <string name="alarm_falling_fast">Бързо падане</string>
+    <string name="falling_fast_alarm_notification_name">Аларма за бързо падане</string>
+    <string name="alarm_falling_fast_summary">Аларма, ако стойността на глюкозата е по-ниска или равна на %1$s и делтата пада с поне -%2$s за %3$d последователни показания.</string>
+    <string name="falling_fast_alarm_text">Бързо падане!</string>
+    <string name="alarm_vibrate_amplitude">Интензитет на вибрацията</string>
+    <string name="alarm_vibrate_amplitude_summary">Интензитет на вибрацията</string>
+    <string name="pref_cat_alarm_settings">Настройки за аларма</string>
+    <string name="pref_alarm_delta_summary">Стойност на делтата, когато алармата трябва да се задейства.</string>
+    <string name="alarm_occurrence_count">Брой на появяванията</string>
+    <string name="alarm_occurrence_count_summary">Брой пъти, в които стойността на делтата трябва да бъде достигната последователно.</string>
+    <string name="pref_alarm_rising_falling_border">Граница</string>
+    <string name="pref_alarm_rising_falling_border_summary">Граница за алармата за покачване/падане.\nСтойността на глюкозата трябва да е по-висока/по-ниска, за да се задейства алармата.</string>
+    <string name="delta_per_minute">на минута</string>
+    <string name="delta_per_5_minute">на 5 минути</string>
+    <string name="other_alarm_cat_categories">Други аларми</string>
+    <string name="advanced_settings_alarm">Разширени настройки за аларма</string>
+    <string name="src_offline_enabled_summary_on">Вътрешните съобщения от този източник ще бъдат обработени.</string>
+    <string name="src_offline_enabled_summary_off">Вътрешните съобщения от този източник ще бъдат игнорирани.</string>
+    <string name="temp_disabled">Временно деактивирано</string>
+    <string name="temp_disabled_until">Временно деактивирано до</string>
+    <string name="snooze_until">Отложено до</string>
+
+    <!-- Talkback -->
+    <string name="trend">Тенденция</string>
+    <string name="rate_rising">%1$d градуса нагоре</string>
+    <string name="rate_falling">%1$d градуса надолу</string>
+
+    <string name="alarm_toggle_state">Аларми: %1$s</string>
+    <string name="alarm_state_inactive">неактивни</string>
+    <string name="alarm_state_snooze">отложени до %1$s</string>
+    <string name="alarm_state_temp_disabled">временно деактивирани до %1$s</string>
+
+    <string name="enabled">активирано</string>
+    <string name="disabled">деактивирано</string>
+
+    <string name="not_available">не е налично</string>
+
+    <string name="action_read_values">Произнасяне на стойностите</string>
+
+    <plurals name="elapsed_time_full_text">
+        <item quantity="one">Време %d минута</item>
+        <item quantity="other">Време %d минути</item>
+    </plurals>
+    <string name="pref_source_diabox_info_summary">Отворете Интеграция и активирайте \"Споделяне на данни с GWatch\"\nЗабележка: broadcast-ът на DiaBox съдържа само стойността на глюкозата и не съдържа повече информация, като например тенденция!</string>
+    <string name="pref_source_dexcom_byoda_not_working_info_summary">Забележка: broadcast-ът на AAPS от BYODA изглежда не работи с други приложения. \nМоля, използвайте broadcast-а на xDrip+ в BYODA.</string>
+
+    <string name="gda_help_aa_summary">Започнете с GDA на Android Auto</string>
+    <string name="no_tts">Преобразуването на текст в реч (TTS) не е активирано.\nЗа да използвате тази функция, активирайте TTS в настройките за достъпност на Android.\nСлед като е активирано, докоснете тук, за да актуализирате.</string>
+    <string name="pref_cat_android_auto_speak">Произнасяне на стойност</string>
+    <string name="pref_cat_play_button">Възпроизвеждане</string>
+    <string name="pref_aa_media_player_speak_values_on_summary">Произнасяне на текущата стойност при възпроизвеждане.\nИзисква активиране на преобразуване на текст в реч.</string>
+    <string name="pref_aa_media_player_speak_values_off_summary">Възпроизвеждане на празен звук, за да се изведе медийният плейър на преден план на разделения екран.</string>
+    <string name="pref_aa_media_player_always_speak">Произнасяне на нова стойност</string>
+    <string name="pref_aa_media_player_always_speak_summary">Произнасяне на нови стойности в Android Auto, дори когато използвате друг медиен плейър.</string>
+    <string name="tts_test_summary">Докоснете, за да тествате преобразуването на текст в реч.</string>
+    <string name="pref_aa_media_player_speak_alarm_only_summary">Произнасяне само на аларми.</string>
+    <string name="pref_aa_media_player_speak_interval_summary">Задайте интервала за произнасяне на нови стойности в Android Auto.</string>
+    <string name="pref_aa_media_player_duration_summary">Интервалът за получаване на нови стойности на глюкозата се използва като продължителност за лентата за напредък в медийния плейър.\nЗадаването на стойността на 0 деактивира лентата за напредък.</string>
+
+    <string name="gda_media_speak_toggle_title">Превключване на произнасяне на нова стойност</string>
+    <string name="gda_speak_on">Произнасянето е включено</string>
+    <string name="gda_speak_off">Произнасянето е изключено</string>
+    <string name="enable_alarm_icon_toggle">Активиране на икона за аларма</string>
+    <string name="enable_alarm_icon_toggle_summary">Активиране на икона за аларма на главния екран за превключване на състоянието на алармата.</string>
+
+    <!-- v1.3  -->
+
+    <string name="source_libre_auto_accept_tou">Автоматично приемане на нови условия</string>
+    <string name="source_libre_auto_accept_tou_summary">Като активирате това, вие автоматично приемате новите Условия за ползване, за да осигурите непрекъснато получаване на данни. Няма да бъдете информирани отделно за новите условия. Ако искате да ги прочетете, деактивирайте тази настройка и вижте приложението LibreLinkUp в случай на грешка 4.</string>
+    <string name="src_libre_tou_message">GlucoDataHandler може автоматично да приема нови Условия за ползване за LibreLinkUp.\nНатиснете OK, за да активирате тази функция, или Отказ, за да прочетете и ръчно да приемете условията в приложението LibreLinkUp.</string>
+
+    <string name="src_librelink_error4">Грешка, моля, влезте отново в приложението LibreLinkUp и проверете за евентуални стъпки, които трябва да се предприемат!</string>
+    <string name="src_librelink_error4_type">Тип грешка %1$s, моля, влезте отново в приложението LibreLinkUp и проверете за евентуални стъпки, които трябва да се предприемат!</string>
+    <string name="src_librelink_error4_tou">Трябва да се приемат нови Условия за ползване. Активирайте автоматичното приемане в настройките на източника LibreLinkUp или влезте отново в приложението LibreLinkUp и приемете условията.</string>
+    <string name="src_librelink_error2">Неправилно потребителско име или парола. Моля, проверете настройките на източника LibreLinkUp. Ако е необходимо, опитайте да влезете отново или да преинсталирате приложението LibreLinkUp и да проверите настройките на акаунта си.\nМоля, спрете всички други приложения, които имат достъп до същия акаунт!</string>
+    <string name="last_value_on_server">Последно отчитане на глюкозата на сървъра от %1$s</string>
+    <string name="no_data_in_server_response">Не са намерени отчитания на глюкозата на сървъра.</string>
+    <string name="http_error_429">Твърде много заявки!</string>
+    <string name="http_error_429_info">Моля, спрете всички други приложения, които имат достъп до същия акаунт!</string>
+
+    <string name="state_await_data">Очаква се данни</string>
+    <string name="pref_send_battery_level_to_watch">Изпращане на ниво на батерията</string>
+    <string name="pref_send_battery_level_to_watch_summary">Изпращане на ниво на батерията до часовника, за да се показва в усложнението и на главния екран.</string>
+    <string name="pref_battery_level">Показване на ниво на батерията</string>
+    <string name="forward_to_watch_interval_summary">Задайте минималното време (в минути) между измерванията на глюкозата, преди да изпратите нова актуализация до часовника.\nАлармите и много ниските измервания винаги ще бъдат изпращани.</string>
+    <string name="forward_to_values_summary">Задайте минималното време (в минути) между измерванията на глюкозата, преди да изпратите нова актуализация до приемниците.</string>
+    <string name="alarm_repeat_summary">Алармата ще звучи и ще вибрира многократно, докато не отхвърлите известието или не се достигне зададената максимална продължителност на алармата.</string>
+    <string name="alarm_repeat_time">Максимална продължителност на алармата</string>
+    <string name="alarm_repeat_time_summary">Посочете максималното време (в минути), през което алармата ще звучи и ще вибрира. Стойност 0 означава, че алармата ще се повтаря безкрайно.</string>
+    <string name="wear_source_info">За да активирате източници, моля, първо ги настройте в приложението за телефона. Активирайте източници на вашия часовник само ако все още не получавате данните на телефона си.</string>
+    <string name="gdh_disclaimer_title">Забележка от разработчика</string>
+    <string name="gdh_disclaimer_message">Това приложение е разработено в свободното ми време като хоби проект. Поради това не мога да гарантирам, че всички функции ще работят безупречно на всяко устройство. Въпреки това, аз постоянно работя по подобрения.\nАко срещнете проблеми или имате въпроси, моля, свържете се с мен директно, преди да оставите отрицателна оценка. \nЗа да сте в течение с важни актуализации и корекции на грешки, можете да се присъедините към групата във Facebook или Google Groups.</string>
+
+    <string name="pref_source_dexcom_share_info_1_summary">За да получавате данни от сървърите на Dexcom Share:\nВ приложението Dexcom:\n - Създайте последовател\n - Под \"Връзки\" се уверете, че се показва \"Споделяне е включено\"</string>
+    <string name="pref_source_dexcom_share_info_2_summary">В GlucoDataHandler:\n - Въведете вашето потребителско име и парола за Dexcom Clarity \n   (ако използвате телефонния си номер като потребителско име, включете кода на държавата си)\n - Проверете настройката за акаунт в САЩ\nВажно: Не работи с акаунт на последовател!</string>
+
+    <string name="request_timestamp">Актуализирано</string>
+    <string name="alarm_header">Аларми</string>
+    <string name="wearos_watchfaces">Циферблати за часовници</string>
+    <string name="wearos_watchfaces_summary">Информация за циферблати за часовници на трети страни за Wear OS.</string>
+    <string name="setup">Настройка</string>
+    <string name="pref_watchfaces_cat">Циферблати за часовници на трети страни</string>
+    <string name="pref_watchfaces_info_summary">Това приложение не предоставя циферблат за часовник, а предоставя няколко усложнения (малките кръгли части на циферблата на часовника), които могат да се използват за циферблати за часовници, поддържащи усложнения на трети страни.</string>
+    <string name="pref_watchfaces_default">Стандартни</string>
+    <string name="pref_watchfaces_default_summary">Повечето производители на часовници вече предоставят циферблати за часовници, които могат да се използват с усложнението GlucoDataHandler.\nНапример, повечето циферблати за часовници \"Info\" на Samsung са съвместими.</string>
+    <string name="pref_watchfaces_pujie">Pujie</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie е приложение за създаване на циферблати за часовници с облачна библиотека.\nЗа да намерите съвместими циферблати за часовници, потърсете в библиотеката циферблати за часовници, започващи с \"GDH_\".\nЗабележка: Pujie не е съвместимо с устройства с Wear OS 5.\nДокоснете тук, за да отворите приложението в Play Store.</string>
+    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
+    <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man създава циферблати за часовници на трети страни, специално проектирани за използване с GlucoDataHandler.\nДокоснете тук, за да отворите неговата страница в Play Store.</string>
+    <string name="pref_watchfaces_gdc">GDC Watch Faces</string>
+    <string name="pref_watchfaces_gdc_summary">GDC Watch Faces са проектирани за използване с GlucoDataHandler.\nДокоснете тук, за да отворите страницата в Play Store.</string>
+    <string name="pref_phone_wear_screen_off_update">Винаги актуализиране на усложненията</string>
+    <string name="pref_phone_wear_screen_off_update_summary">Винаги изпращайте нови стойности на глюкозата до часовника.\nДеактивирайте това, за да предотвратите актуализации на данни на часовника, докато екранът на часовника е изключен, за да пестите батерия.\nСтойностите на алармата винаги ще се изпращат до часовника.\nВАЖНО: Алармата за остаряване е деактивирана на часовника, когато тази настройка е деактивирана!</string>
+    <string name="alarm_ignore_snooze_for_very_low">Винаги предупреждавайте за много ниска стойност</string>
+    <string name="alarm_ignore_snooze_for_very_low_summary">Тази аларма ще ви уведоми, дори ако отлагането или общите тихи часове за всички аларми са активни, като гарантира, че сте предупредени за много ниски нива на глюкозата.</string>
+
+    <string name="libre_no_new_value_info">Ако тази грешка продължава, опитайте да преинсталирате приложението Libre. Това често решава проблема.</string>
+    <string name="src_libre_server">Сървър</string>
+    <string name="source_libre_server_default">По подразбиране (.io)</string>
+    <string name="source_libre_server_russian">Руски (.ru)</string>
+
+    <string name="patient_name">Име</string>
+    <string name="patient_name_summary">Име на потребителя/пациента, което трябва да се показва в известието и по време на говорене.\nТова трябва да се използва, ако използвате множество варианти на GlucoDataAuto, в противен случай може да е празно.</string>
+
+    <string name="video_tutorial">Видео урок</string>
+    <string name="video_tutorial_summary">Щракнете тук, за да отидете на видеоклипа в YouTube, който илюстрира настройката на този източник. Много благодаря на Diabetic Masked Man за създаването на видеоклиповете.</string>
+
+    <string name="snooze_30">30 минути</string>
+    <string name="snooze_60">60 минути</string>
+    <string name="snooze_90">90 минути</string>
+    <string name="snooze_120">120 минути</string>
+    <string name="alarm_snooze_on_notification_enabled">Отлагане на известието</string>
+    <string name="alarm_snooze_on_notification_summary">Изберете до 3 продължителности на отлагане, за да се показват като бутони в известието за аларма.</string>
+
+    <string name="pref_show_iob_cob">Показване на IOB/COB стойности</string>
+    <string name="pref_show_iob_cob_summary">Показване на IOB и COB стойности, ако са налични.</string>
+
+    <string name="delta_per_10_minute">на 10 минути</string>
+    <string name="delta_per_15_minute">на 15 минути</string>
+</resources>

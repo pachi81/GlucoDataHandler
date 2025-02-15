@@ -7,12 +7,16 @@ import android.util.Log
 import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
+import de.michelinside.glucodatahandler.common.database.GlucoseValue
+import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.Utils
 import org.json.JSONArray
 import org.json.JSONObject
 import java.net.HttpURLConnection
@@ -76,7 +80,13 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
         Log.v(LOG_ID, "getValue called")
         if(sessionId.isNullOrEmpty())
             return false
-        val query = "sessionId=${sessionId}&minutes=30&maxCount=1"
+        var query = "sessionId=${sessionId}"
+        val firstValueTime = getFirstNeedGraphValueTime()
+        val count = if(firstValueTime > 0) Utils.getElapsedTimeMinute(firstValueTime) else 1
+        if(count > 5)   // Dexcom has 5 minute interval
+            query += "&minutes=${count}&maxCount=${count}"
+        else
+            query += "&minutes=30&maxCount=1"
         return handleValueResponse(httpPost(getUrl(DEXCOM_PATH_GET_VALUE, query), getHeader(false), ""))
     }
 
@@ -118,7 +128,7 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
     }
 
     private fun handleValueResponse(body: String?): Boolean {
-        Log.d(LOG_ID, "handleValueResponse called: $body")
+        Log.i(LOG_ID, "handleValueResponse called: $body")
         if (body == null) {
             return false
         }
@@ -174,10 +184,33 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
 
         val dataArray = JSONArray(body)
         if(dataArray.length() == 0) {
-            setState(SourceState.NO_NEW_VALUE)
+            setState(SourceState.NO_NEW_VALUE, GlucoDataService.context!!.resources.getString(R.string.no_data_in_server_response))
             return false
         }
-        val data = dataArray.getJSONObject(dataArray.length()-1)
+        var lastValueIndex = 0
+        if(dataArray.length() > 1) {
+            val lastTime = 0L
+            Log.d(LOG_ID, "Handle ${dataArray.length()} entries in response as graph data - ${body.take(1000)}")
+            val values = mutableListOf<GlucoseValue>()
+            for(i in 0 until dataArray.length()) {
+                try {
+                    val data = dataArray.getJSONObject(i)
+                    if(data.has("Value") && data.has("WT")) {
+                        val value = data.getInt("Value")
+                        val re = Regex("[^0-9]")
+                        val worldTime = re.replace(data.getString("WT"), "").toLong()
+                        values.add(GlucoseValue(worldTime, value))
+                        if(worldTime > lastTime)
+                            lastValueIndex = i
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Exception while parsing entry response: " + exc.message)
+                }
+            }
+            Log.i(LOG_ID, "Add ${values.size} values to database")
+            dbAccess.addGlucoseValues(values)
+        }
+        val data = dataArray.getJSONObject(lastValueIndex)
         if(data.has("Value") && data.has("Trend") && data.has("WT")) {
             val glucoExtras = Bundle()
             glucoExtras.putInt(ReceiveData.MGDL, data.getInt("Value"))

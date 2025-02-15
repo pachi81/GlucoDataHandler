@@ -17,9 +17,13 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.ncorti.slidetoact.SlideToActView
+import de.michelinside.glucodatahandler.PermanentNotification
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.chart.ChartBitmap
+import de.michelinside.glucodatahandler.common.chart.ChartBitmapView
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notification.AlarmType
@@ -43,11 +47,13 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var btnDismiss: SlideToActView
     private lateinit var btnClose: Button
     private lateinit var btnSnooze: SlideToActView
-    private lateinit var btnSnooze60: Button
-    private lateinit var btnSnooze90: Button
-    private lateinit var btnSnooze120: Button
+    private lateinit var btnSnooze1: Button
+    private lateinit var btnSnooze2: Button
+    private lateinit var btnSnooze3: Button
     private lateinit var layoutSnooze: LinearLayout
     private lateinit var layoutSnoozeButtons: LinearLayout
+    private lateinit var graphImage: ImageView
+    private var chartBitmap: ChartBitmapView? = null
     private var alarmType: AlarmType? = null
     private var notificationId: Int = -1
     private var createTime = 0L
@@ -97,17 +103,19 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             btnClose = findViewById(R.id.btnClose)
             btnSnooze = findViewById(R.id.btnSnooze)
             txtSnooze = findViewById(R.id.txtSnooze)
-            btnSnooze60 = findViewById(R.id.btnSnooze60)
-            btnSnooze90 = findViewById(R.id.btnSnooze90)
-            btnSnooze120 = findViewById(R.id.btnSnooze120)
+            btnSnooze1 = findViewById(R.id.btnSnooze60)
+            btnSnooze2 = findViewById(R.id.btnSnooze90)
+            btnSnooze3 = findViewById(R.id.btnSnooze120)
             layoutSnooze = findViewById(R.id.layoutSnooze)
             layoutSnoozeButtons = findViewById(R.id.layoutSnoozeButtons)
+            graphImage = findViewById(R.id.graphImage)
 
             val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-            if (sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION, false))
-                layoutSnooze.visibility = View.VISIBLE
-            else
+            val snoozeValues = AlarmNotification.getSnoozeValues()
+            if (snoozeValues.isEmpty())
                 layoutSnooze.visibility = View.GONE
+            else
+                layoutSnooze.visibility = View.VISIBLE
 
             if(this.isScreenReaderOn()) {
                 Log.d(LOG_ID, "Screen reader is on!")
@@ -115,10 +123,8 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
                 btnClose.visibility = View.VISIBLE
                 btnSnooze.visibility = View.GONE
                 txtSnooze.visibility = View.GONE
-                btnSnooze60.contentDescription = resources.getString(CR.string.snooze) + " 60"
-                btnSnooze90.contentDescription = resources.getString(CR.string.snooze) + " 90"
-                btnSnooze120.contentDescription = resources.getString(CR.string.snooze) + " 120"
                 layoutSnoozeButtons.visibility = View.VISIBLE
+                graphImage.visibility = View.GONE
                 btnClose.setOnClickListener{
                     Log.d(LOG_ID, "Stop button clicked!")
                     stop()
@@ -141,24 +147,25 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
                     object : SlideToActView.OnSlideCompleteListener {
                         override fun onSlideComplete(view: SlideToActView) {
                             Log.d(LOG_ID, "Slide to snooze completed!")
-                            AlarmNotification.stopVibrationAndSound()
+                            AlarmNotification.stopForLockscreenSnooze()
                             btnSnooze.visibility = View.GONE
                             txtSnooze.visibility = View.VISIBLE
                             layoutSnoozeButtons.visibility = View.VISIBLE
                         }
                     }
+                chartBitmap = ChartBitmapView(graphImage, this, "")
             }
-            btnSnooze60.setOnClickListener{
-                AlarmHandler.setSnooze(60)
-                stop()
+            btnSnooze1.visibility = View.GONE
+            btnSnooze2.visibility = View.GONE
+            btnSnooze3.visibility = View.GONE
+            if(snoozeValues.size>0) {
+                createSnoozeButton(btnSnooze1, snoozeValues.elementAt(0))
             }
-            btnSnooze90.setOnClickListener{
-                AlarmHandler.setSnooze(90)
-                stop()
+            if(snoozeValues.size>1) {
+                createSnoozeButton(btnSnooze2, snoozeValues.elementAt(1))
             }
-            btnSnooze120.setOnClickListener{
-                AlarmHandler.setSnooze(120)
-                stop()
+            if(snoozeValues.size>2) {
+                createSnoozeButton(btnSnooze3, snoozeValues.elementAt(2))
             }
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
 
@@ -171,10 +178,21 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
         }
     }
 
+    private fun createSnoozeButton(button: Button, snooze: Long) {
+        button.visibility = View.VISIBLE
+        button.text = snooze.toString()
+        button.contentDescription = resources.getString(CR.string.snooze) + " " + snooze.toString()
+        button.setOnClickListener{
+            AlarmHandler.setSnooze(snooze)
+            stop()
+        }
+    }
+
     override fun onDestroy() {
         try {
             Log.v(LOG_ID, "onDestroy called")
             super.onDestroy()
+            chartBitmap?.close()
             activity = null
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )

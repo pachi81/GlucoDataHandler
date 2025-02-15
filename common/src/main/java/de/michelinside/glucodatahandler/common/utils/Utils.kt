@@ -2,6 +2,7 @@ package de.michelinside.glucodatahandler.common.utils
 
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.annotation.SuppressLint
+import android.app.AlarmManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -25,10 +26,12 @@ import java.io.ObjectOutputStream
 import java.io.OutputStream
 import java.math.RoundingMode
 import java.security.MessageDigest
+import java.text.DateFormat
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.util.Date
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
@@ -107,12 +110,12 @@ object Utils {
         ).toInt()
     }
 
-    fun spToPx(sp: Float, context: Context): Float {
+    fun spToPx(sp: Float, context: Context): Int {
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_SP,
             sp,
             context.resources.displayMetrics
-        )
+        ).toInt()
     }
 
     fun bytesToBundle(bytes: ByteArray): Bundle? {
@@ -134,6 +137,7 @@ object Utils {
         return bytes
     }
 
+    @Suppress("DEPRECATION")
     fun dumpBundle(bundle: Bundle?): String {
         try {
             if (bundle == null) {
@@ -444,15 +448,41 @@ object Utils {
         return false
     }
 
+    fun getElapsedTimeMinute(time: Long, roundingMode: RoundingMode = RoundingMode.DOWN): Long {
+        return round((System.currentTimeMillis()-time).toFloat()/60000, 0, roundingMode).toLong()
+    }
+
+    fun getTimeDiffMinute(time1: Long, time2: Long, roundingMode: RoundingMode = RoundingMode.DOWN): Long {
+        return round((time1-time2).toFloat()/60000, 0, roundingMode).toLong()
+    }
+
+    fun getUiTimeStamp(time: Long): String {
+        if(getElapsedTimeMinute(time) >= (60*24))
+            return DateFormat.getDateTimeInstance().format(Date(time))
+        return getTimeStamp(time)
+    }
+
+    fun getTimeStamp(time: Long): String {
+        return DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(time))
+    }
+
     fun Context.isScreenReaderOn():Boolean{
         val am = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
-        if (am != null && am.isEnabled) {
+        if (am.isEnabled) {
             val serviceInfoList =
                 am.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_SPOKEN)
             if (serviceInfoList.isNotEmpty())
                 return true
         }
         return false
+    }
+
+    fun canScheduleExactAlarms(context: Context): Boolean {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            return alarmManager.canScheduleExactAlarms()
+        }
+        return true
     }
 
 }

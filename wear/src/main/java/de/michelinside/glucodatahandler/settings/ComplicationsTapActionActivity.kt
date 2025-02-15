@@ -89,6 +89,7 @@ class ComplicationsTapActionActivity : AppCompatActivity() {
     private fun getActions(context: Context): HashMap<String, String> {
         val actions = HashMap<String, String>()
         actions[""] = context.resources.getString(CR.string.no_action)
+        actions[Constants.ACTION_GRAPH] = context.resources.getString(CR.string.show_graph)
         if (TextToSpeechUtils.isAvailable())
             actions[Constants.ACTION_SPEAK] = context.resources.getString(CR.string.action_read_values)
         if(BuildConfig.DEBUG) {

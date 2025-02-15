@@ -139,25 +139,21 @@
             android:title="@string/advanced_settings"
             app:iconSpaceReserved="false"
             app:initialExpandedChildrenCount="0">
-                <!--<androidx.preference.SeekBarPreference
-                    app:showSeekBarValue="true"
-                    app:seekBarIncrement="1"
-                    app:defaultValue="0"
-                    app:min="-1"
-                    android:max="5"
-                    android:key="_repeat"
+                <androidx.preference.SwitchPreferenceCompat
+                    app:defaultValue="false"
+                    android:key="_repeat_until_close"
                     android:title="@string/alarm_repeat"
                     android:summary="@string/alarm_repeat_summary"
-                    app:iconSpaceReserved="false" />-->
+                    app:iconSpaceReserved="false" />
                 <androidx.preference.SeekBarPreference
                     app:showSeekBarValue="true"
                     app:seekBarIncrement="1"
                     app:defaultValue="0"
                     app:min="0"
-                    android:max="15"
-                    android:key="_retrigger"
-                    android:title="@string/alarm_retrigger"
-                    android:summary="@string/alarm_retrigger_summary"
+                    android:max="10"
+                    android:key="_repeat"
+                    android:title="@string/alarm_repeat_time"
+                    android:summary="@string/alarm_repeat_time_summary"
                     app:iconSpaceReserved="false" />
                 <Preference
                     android:key="_test"

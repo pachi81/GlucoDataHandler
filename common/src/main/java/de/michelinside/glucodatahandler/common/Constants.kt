@@ -11,6 +11,7 @@ object Constants {
     const val REQUEST_DATA_MESSAGE_PATH = "/request_data_intent"
     const val REQUEST_LOGCAT_MESSAGE_PATH = "/request_logcat_intent"
     const val LOGCAT_CHANNEL_PATH = "/logcat_intent"
+    const val DB_SYNC_CHANNEL_PATH = "/db_sync_intent"
     const val COMMAND_PATH = "/command_intent"
     const val GLUCODATA_BROADCAST_ACTION = "glucodata.Minute"
     const val SETTINGS_BUNDLE = "settings_bundle"
@@ -21,15 +22,19 @@ object Constants {
     const val COMMAND_BUNDLE = "command_bundle"
     const val GLUCOSE_CONVERSION_FACTOR = 18.0182F
     const val GLUCOSE_MIN_VALUE = 40
-    const val GLUCOSE_MAX_VALUE = 400
+    const val GLUCOSE_MAX_VALUE = 600
     const val ACTION_STOP_FOREGROUND = "stop_foreground"
 
     const val ACTION_PREFIX = "gdh_action_"
     const val ACTION_FLOATING_WIDGET_TOGGLE = ACTION_PREFIX + "floating_widget_toggle"
     const val ACTION_DUMMY_VALUE = ACTION_PREFIX + "dummy_value"
     const val ACTION_SPEAK = ACTION_PREFIX + "speak"
+    const val ACTION_GRAPH = ACTION_PREFIX + "show_graph"
 
-    const val PACKAGE_GLUCODATAAUTO = "de.michelinside.glucodataauto"
+    const val IS_SECOND = BuildConfig.BUILD_TYPE == "second"
+
+    val PACKAGE_GLUCODATAHANDLER = if (IS_SECOND) "de.michelinside.glucodatahandler.second" else "de.michelinside.glucodatahandler"
+    val PACKAGE_GLUCODATAAUTO = if (IS_SECOND) "de.michelinside.glucodataauto.second" else "de.michelinside.glucodataauto"
     const val PACKAGE_JUGGLUCO = "tk.glucodata"
 
     const val EXTRA_SOURCE_PACKAGE = "gdh.source_package"
@@ -61,13 +66,6 @@ object Constants {
     const val SHARED_PREF_XDRIP_BROADCAST_SERVICE_API = "xdrip_broadcast_service_api"
     const val SHARED_PREF_TARGET_MIN = "target_min_value"
     const val SHARED_PREF_TARGET_MAX = "target_max_value"
-    const val SHARED_PREF_CAR_NOTIFICATION = "car_notification"
-    const val SHARED_PREF_CAR_NOTIFICATION_INTERVAL = "car_notification_interval"   // deprecated as changed to seekbar
-    const val SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY = "car_notification_alarm_only"
-    const val SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM = "car_notification_interval_num"
-    const val SHARED_PREF_CAR_NOTIFICATION_REAPPEAR_INTERVAL = "car_notification_reappear_interval"
-    const val SHARED_PREF_CAR_MEDIA = "car_media"
-    const val SHARED_PREF_CAR_MEDIA_ICON_STYLE = "aa_media_player_icon_style"
     const val SHARED_PREF_USE_MMOL = "use_mmol"
     const val SHARED_PREF_GLUCODATA_RECEIVER_SHOW_ALL = "show_all_glucodata_receivers"
     const val SHARED_PREF_LOW_GLUCOSE = "low_glucose"
@@ -95,6 +93,7 @@ object Constants {
     const val SHARED_PREF_FLOATING_WIDGET = "floating_widget"
     const val SHARED_PREF_FLOATING_WIDGET_STYLE = "floating_widget_style"
     const val SHARED_PREF_FLOATING_WIDGET_SIZE = "floating_widget_size"
+    const val SHARED_PREF_FLOATING_WIDGET_SIZE_MIGRATION = "floating_widget_size_migration"
     const val SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY = "floating_widget_transparency"
     const val SHARED_PREF_FLOATING_WIDGET_TIME_TO_CLOSE = "floating_widget_time_to_close"
     const val SHARED_PREF_FLOATING_WIDGET_TAP_ACTION = "floating_widget_tap_action"
@@ -117,6 +116,11 @@ object Constants {
     const val SHARED_PREF_SAVE_WEAR_LOGS = "save_wear_logs"
 
 
+    const val SHARED_PREF_WATCHFACES_PUJIE = "pref_watchfaces_pujie"
+    const val SHARED_PREF_WATCHFACES_DMM = "pref_watchfaces_dmm"
+    const val SHARED_PREF_WATCHFACES_GDC = "pref_watchfaces_gdc"
+
+
     // internal app preferences (not changed by settings) -> use separate tag for not trigger onChanged events
     const val SHARED_PREF_INTERNAL_TAG = "GlucoDataHandlerInternalAppPrefs"
     const val SHARED_PREF_FLOATING_WIDGET_X = "floating_widget_x"
@@ -127,6 +131,7 @@ object Constants {
     const val WIDGET_STYLE_GLUCOSE_TREND_DELTA = "glucose_trend_delta"
     const val WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA = "glucose_trend_delta_time"
     const val WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA_IOB_COB = "glucose_trend_delta_time_iob_cob"
+    const val WIDGET_STYLE_CHART_GLUCOSE_TREND_TIME_DELTA_IOB_COB = "chart_glucose_trend_delta_time_iob_cob"
 
     // Wear only preferences
     const val SHARED_PREF_WEAR_COLORED_AOD = "colored_aod"
@@ -156,6 +161,8 @@ object Constants {
     const val SHARED_PREF_LIBRE_REGION="source_libre_region"
     const val SHARED_PREF_LIBRE_PATIENT_ID="source_libre_patient_id"
     const val SHARED_PREF_LIBRE_USER_ID="source_libre_user_id"
+    const val SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU="source_libre_auto_accept_tou"
+    const val SHARED_PREF_LIBRE_SERVER="source_libre_server"
 
     const val SHARED_PREF_DEXCOM_SHARE_ENABLED="source_dexcom_share_enabled"
     const val SHARED_PREF_DEXCOM_SHARE_USER="source_dexcom_share_user"
@@ -199,11 +206,13 @@ object Constants {
     const val SHARED_PREF_ALARM_START_DELAY = "alarm_start_delay"
     const val SHARED_PREF_ALARM_START_DELAY_STRING = "alarm_start_delay_string"
     const val SHARED_PREF_NOTIFICATION_AUTO_CLOSE = "auto_close_notification"
+    const val SHARED_PREF_ALARM_FORCE_VERY_LOW = "alarm_force_very_low"
 
     const val SHARED_PREF_ALARM_NOTIFICATION_ENABLED = "alarm_notifications_enabled"
     const val SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED = "alarm_fullscreen_notification_enabled"
     const val SHARED_PREF_ALARM_FULLSCREEN_DISMISS_KEYGUARD = "alarm_fullscreen_dismiss_keyguard"
     const val SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION = "alarm_snooze_on_notification"
+    const val SHARED_PREF_ALARM_SNOOZE_NOTIFICATION_BUTTONS = "alarm_snooze_notification_buttons"
     const val SHARED_PREF_ALARM_FORCE_SOUND = "alarm_force_sound"
     const val SHARED_PREF_ALARM_FORCE_VIBRATION = "alarm_force_vibration"
     const val SHARED_PREF_ALARM_INACTIVE_ENABLED = "alarm_inactive_enabled"
@@ -219,7 +228,6 @@ object Constants {
 
     const val SHARED_PREF_ALARM_SUFFIX_ENABLED = "_enabled"
     const val SHARED_PREF_ALARM_SUFFIX_INTERVAL = "_interval"
-    const val SHARED_PREF_ALARM_SUFFIX_RETRIGGER = "_retrigger"
     const val SHARED_PREF_ALARM_SUFFIX_USE_CUSTOM_SOUND = "_use_custom_sound"
     const val SHARED_PREF_ALARM_SUFFIX_CUSTOM_SOUND = "_custom_sound"
     const val SHARED_PREF_ALARM_SUFFIX_VIBRATE_PATTERN = "_vibrate_pattern"
@@ -233,6 +241,7 @@ object Constants {
     const val SHARED_PREF_ALARM_SUFFIX_TEST = "_test"
     const val SHARED_PREF_ALARM_SUFFIX_SAVE_SOUND = "_save_sound"
     const val SHARED_PREF_ALARM_SUFFIX_REPEAT = "_repeat"
+    const val SHARED_PREF_ALARM_SUFFIX_REPEAT_UNTIL_CLOSE = "_repeat_until_close"
     const val SHARED_PREF_ALARM_SUFFIX_DELTA = "_delta"
     const val SHARED_PREF_ALARM_SUFFIX_OCCURRENCE_COUNT = "_occurrence_count"
     const val SHARED_PREF_ALARM_SUFFIX_BORDER = "_border"
@@ -247,16 +256,51 @@ object Constants {
 
     const val SHARED_PREF_ALARM_TYPE_SETTINGS_CAT = "cat_alarm_settings"
 
+    const val SHARED_PREF_BATTERY_RECEIVER_ENABLED = "battery_receiver_enabled"
+    const val SHARED_PREF_SEND_TO_WATCH_INTERVAL = "send_to_watch_interval"
+    const val SHARED_PREF_SEND_TO_RECEIVER_INTERVAL = "send_to_receiver_interval"
+
+    const val SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE = "phone_wear_screen_off_update"
+
+    const val SHARED_PREF_DISCLAIMER_SHOWN = "gdh_disclaimer_shown"
+
     // Android Auto
     const val AA_MEDIA_ICON_STYLE_TREND = "trend"
     const val AA_MEDIA_ICON_STYLE_GLUCOSE_TREND = "glucose_trend"
     const val AA_MEDIA_ICON_STYLE_GLUCOSE = "glucose"
     const val SHARED_PREF_FOREGROUND_SERVICE = "foreground_service"
 
+    const val SHARED_PREF_CAR_NOTIFICATION = "car_notification"
+    const val SHARED_PREF_CAR_NOTIFICATION_INTERVAL = "car_notification_interval"   // deprecated as changed to seekbar
+    const val SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY = "car_notification_alarm_only"
+    const val SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM = "car_notification_interval_num"
+    const val SHARED_PREF_CAR_NOTIFICATION_REAPPEAR_INTERVAL = "car_notification_reappear_interval"
+    const val SHARED_PREF_CAR_NOTIFICATION_SHOW_IOB_COB = "car_notification_show_iob_cob"
+
+    const val SHARED_PREF_CAR_MEDIA = "car_media"
+    const val AA_MEDIA_ICON_STYLE = "aa_media_player_icon_style"
+    const val AA_MEDIA_SHOW_IOB_COB = "aa_media_player_show_iob_cob"
     const val AA_MEDIA_PLAYER_SPEAK_VALUES = "aa_media_player_speak_values"
     const val AA_MEDIA_PLAYER_SPEAK_NEW_VALUE = "aa_media_player_speak_new_value"
     const val AA_MEDIA_PLAYER_SPEAK_ALARM_ONLY = "aa_media_player_speak_alarm_only"
     const val AA_MEDIA_PLAYER_SPEAK_INTERVAL = "aa_media_player_speak_interval"
     const val AA_MEDIA_PLAYER_SPEAK_TEST = "aa_media_player_speak_test"
     const val AA_MEDIA_PLAYER_DURATION = "aa_media_player_duration"
+
+    const val PATIENT_NAME = "patient_name"
+
+    // database
+    const val DB_MAX_DATA_WEAR_TIME_MS = (24*60*60*1000)  // 24h
+    const val DB_MAX_DATA_TIME_MS = (7*24*60*60*1000)  // 7 days
+    const val SHARED_PREF_RESET_DATABASE = "reset_db"
+    const val SHARED_PREF_USE_RATE_CALCULATION = "rate_calculation"
+
+    // graph
+    const val GRAPH_ID = "graph_id"
+    const val SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION = "graph_duration_wear_complication"
+    const val SHARED_PREF_GRAPH_DURATION_PHONE_MAIN = "graph_duration_phone_main"
+    const val SHARED_PREF_GRAPH_DURATION_PHONE_WIDGET = "graph_duration_phone_widget"
+    const val SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_WIDGET = "graph_show_axis_phone_widget"
+    const val SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION = "graph_duration_phone_notification"
+
 }

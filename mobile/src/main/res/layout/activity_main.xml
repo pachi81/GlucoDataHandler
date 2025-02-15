@@ -132,50 +132,42 @@
         android:layout_marginTop="20dp"
         android:text="@string/menu_sources"
         />
+
+
+    <de.michelinside.glucodatahandler.common.chart.GlucoseChart
+        android:id="@+id/chart"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:contentDescription="@string/graph"
+        />
+
     <LinearLayout
-        android:id="@+id/layout_info_elements"
+        android:id="@+id/space_table2"
+        android:layout_height="20dp"
+        android:layout_width="0dp"
+        android:orientation="horizontal">
+        <!-- this expands to fill the empty space if needed -->
+    </LinearLayout>
+
+    <TableLayout
+        android:id="@+id/tableNotes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        tools:ignore="UselessParent">
-        <TextView
-            android:id="@+id/txtNotificationPermission"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/activity_main_notification_permission"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            android:visibility="gone"/>
-        <TextView
-            android:id="@+id/txtScheduleExactAlarm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/activity_main_schedule_exact_alarm"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textAlignment="center" />
-        <TextView
-            android:id="@+id/txtHighContrastEnabled"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/activity_main_high_contrast_enabled"
-            android:textSize="18sp"
-            android:textAlignment="center" />
-        <TextView
-            android:id="@+id/txtBatteryOptimization"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/activity_main_battery_optimization_disabled"
-            android:textSize="16sp"
-            android:textAlignment="center" />
-        </LinearLayout>
+        android:divider="?android:attr/dividerHorizontal"
+        android:showDividers="middle">
+
+        <TableRow android:background="@color/table_header" android:padding="5dp"
+            tools:ignore="UselessParent">
+            <TextView
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/info_label_notes"/>
+        </TableRow>
+    </TableLayout>
 
     <TableLayout
         android:id="@+id/tableAlarms"
@@ -192,7 +184,26 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/info_label_alarm"/>
+                android:text="@string/alarm_header"/>
+        </TableRow>
+    </TableLayout>
+
+    <TableLayout
+        android:id="@+id/tableDelta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="?android:attr/dividerHorizontal"
+        android:showDividers="middle">
+
+        <TableRow android:background="@color/table_header" android:padding="5dp"
+            tools:ignore="UselessParent">
+            <TextView
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/delta_label"/>
         </TableRow>
     </TableLayout>
 
@@ -247,6 +258,7 @@
         android:id="@+id/txtVersion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
         android:layout_marginBottom="25dp"
         android:text="1.0"
         android:textSize="16sp"

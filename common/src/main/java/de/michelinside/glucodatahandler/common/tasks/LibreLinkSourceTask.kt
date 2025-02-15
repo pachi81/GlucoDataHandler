@@ -9,7 +9,8 @@ import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.SourceState
+import de.michelinside.glucodatahandler.common.database.GlucoseValue
+import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -35,17 +36,23 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         private var tokenExpire = 0L
         private var userId = ""
         private var region = ""
+        private var topLevelDomain = "io"
         private var patientId = ""
         private var dataReceived = false   // mark this endpoint as already received data
+        private var autoAcceptTOU = true
         val patientData = mutableMapOf<String, String>()
-        const val server = "https://api.libreview.io"
-        const val region_server = "https://api-%s.libreview.io"
+        const val server = "https://api.libreview.%s"
+        const val region_server = "https://api-%s.libreview.%s"
         const val LOGIN_ENDPOINT = "/llu/auth/login"
         const val CONNECTION_ENDPOINT = "/llu/connections"
+        const val GRAPH_ENDPOINT = "/llu/connections/%s/graph"
+        const val ACCEPT_ENDPOINT = "/auth/continue/"
+        const val ACCEPT_TERMS_TYPE = "tou"
+        const val ACCEPT_TOKEN_TYPE = "pp"
     }
 
     private fun getUrl(endpoint: String): String {
-        val url = (if(region.isEmpty()) server else region_server.format(region)) + endpoint
+        val url = (if(region.isEmpty()) server.format(topLevelDomain) else region_server.format(region, topLevelDomain)) + endpoint
         Log.i(LOG_ID, "Using URL: " + url)
         return url
     }
@@ -53,28 +60,28 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     private fun getHeader(): MutableMap<String, String> {
         val result = mutableMapOf(
             "product" to "llu.android",
-            "version" to "4.12.0",
+            "version" to "4.13.0",
             "Accept" to "application/json",
             "Content-Type" to "application/json",
-            "cache-control" to "no-cache"
+            "cache-control" to "no-cache",
+            "Account-Id" to Utils.encryptSHA256(userId)
         )
         if (token.isNotEmpty()) {
             result["Authorization"] = "Bearer " + token
-            if(userId.isNotEmpty()) {
-                result["Account-Id"] = Utils.encryptSHA256(userId)
-            }
         }
+        Log.v(LOG_ID, "Header: ${result}")
         return result
     }
 
     override fun reset() {
         Log.i(LOG_ID, "reset called")
         token = ""
-        userId = ""
         tokenExpire = 0L
         region = ""
+        userId = ""
         dataReceived = false
         patientData.clear()
+        patientId = GlucoDataService.sharedPref!!.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")!!
         try {
             Log.d(LOG_ID, "Save reset")
             with (GlucoDataService.sharedPref!!.edit()) {
@@ -89,32 +96,138 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         }
     }
 
-    val sensitivData = mutableSetOf("id", "patientId", "firstName", "lastName", "did", "sn", "token", "deviceId", "email", "primaryValue", "secondaryValue" )
+    val sensitivData = mutableSetOf("id", "patientId", "firstName", "lastName", "did", "token", "deviceId", "email", "primaryValue", "secondaryValue" )
 
     private fun replaceSensitiveData(body: String): String {
-        var result = body
-        sensitivData.forEach {
-            val groups = Regex("\"$it\":\"(.*?)\"").find(result)?.groupValues
-            if(!groups.isNullOrEmpty() && groups.size > 1 && groups[1].isNotEmpty()) {
-                val replaceValue = groups[0].replace(groups[1], "---")
-                result = result.replace(groups[0], replaceValue)
+        try {
+            var result = body
+            sensitivData.forEach {
+                val groups = Regex("\"$it\":\"(.*?)\"").find(result)?.groupValues
+                if(!groups.isNullOrEmpty() && groups.size > 1 && groups[1].isNotEmpty()) {
+                    val replaceValue = groups[0].replace(groups[1], "---")
+                    result = result.replace(groups[0], replaceValue)
+                }
             }
+            return result.take(1000)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "replaceSensitiveData exception: " + exc.toString() )
+            return body
         }
-        return result
     }
 
-    private fun checkResponse(body: String?): JSONObject? {
+    /*
+    After tou there will be pp for re-new token!
+    Example for error 4 for tou:
+    {
+      "status": 4,
+      "data": {
+        "step": {
+          "type": "tou",
+          "componentName": "AcceptDocument",
+          "props": {
+            "reaccept": true,
+            "titleKey": "Common.termsOfUse",
+            "type": "tou"
+          }
+        },
+        "user": {
+          "accountType": "pat",
+          "country": "CH",
+          "uiLanguage": "en-US"
+        },
+        "authTicket": {
+          "token": "the token here",
+          "expires": 1719337966,
+          "duration": 3600000
+        }
+      }
+    }
+     */
+
+    private fun getStatusMessage(status: Int): String {
+        return when(status) {
+            2 -> GlucoDataService.context!!.getString(R.string.src_librelink_error2)
+            4 -> GlucoDataService.context!!.getString(R.string.src_librelink_error4)
+            else -> ""
+        }
+    }
+
+    override fun getNoNewValueInfo(time: Long): String {
+        if(Utils.getElapsedTimeMinute(time) > 5)
+            return GlucoDataService.context!!.resources.getString(R.string.libre_no_new_value_info)
+        return ""
+    }
+
+    private fun getError4Message(type: String? = null): String {
+        if(type.isNullOrEmpty()) {
+            return getStatusMessage(4)
+        }
+        if(type == ACCEPT_TERMS_TYPE && !autoAcceptTOU) {
+            return GlucoDataService.context!!.getString(R.string.src_librelink_error4_tou)
+        }
+        return GlucoDataService.context!!.getString(R.string.src_librelink_error4_type, type)
+    }
+
+    private fun handleError4(jsonObj: JSONObject, lastType: String = ""): JSONObject? {
+        // handle error 4 which contains the steps to do, like accept user terms or accept token
+        reset()
+        if (jsonObj.has("data")) {
+            val data = jsonObj.getJSONObject("data")
+            checkRedirect(data)
+            if(data.has("step")) {
+                val step = data.getJSONObject("step")
+                Log.i(LOG_ID, "Handle error 4 step: $step")
+                if(step.has("type")) {
+                    val type = step.getString("type")
+                    Log.i(LOG_ID, "Handle error 4 with type: $type - lastType: $lastType")
+                    getToken(data)
+                    if(token.isEmpty()) {
+                        setLastError(step.optString("componentName"), 4, getError4Message(type))
+                        return null
+                    }
+                    if(lastType != type && type == ACCEPT_TOKEN_TYPE || (type == ACCEPT_TERMS_TYPE && autoAcceptTOU )) {
+                        // send accept request and re-login
+                        Log.i(LOG_ID, "Send accept request for type $type")
+                        return checkResponse(httpPost(getUrl(ACCEPT_ENDPOINT + type), getHeader(), null), type)
+                    } else {
+                        setLastError(step.optString("componentName"), 4, getError4Message(type))
+                    }
+                    return null
+                }
+            }
+        }
+        // else
+        setLastError(getErrorMessage(jsonObj), 4, getStatusMessage(4))
+        return null
+    }
+
+    private fun getErrorMessage(jsonObj: JSONObject): String {
+        if(jsonObj.has("error")) {
+            val errorObj = jsonObj.optJSONObject("error")
+            if(errorObj?.has("message") == true)
+                return errorObj.optString("message", "Error")?: "Error"
+        }
+        if(jsonObj.has("data")) {
+            val dataObj = jsonObj.optJSONObject("data")
+            if(dataObj?.has("message") == true)
+                return dataObj.optString("message", "Error")?: "Error"
+        }
+        return "Error"
+    }
+
+    private fun checkResponse(body: String?, lastError4Type: String = ""): JSONObject? {
         if (body.isNullOrEmpty()) {
             return null
         }
-        Log.d(LOG_ID, "Handle json response: " + replaceSensitiveData(body))
+        Log.i(LOG_ID, "Handle json response: " + replaceSensitiveData(body))
         val jsonObj = JSONObject(body)
         if (jsonObj.has("status")) {
             val status = jsonObj.optInt("status", -1)
-            if(status != 0) {
+            if (status == 4) {
+                return handleError4(jsonObj, lastError4Type)
+            } else if(status != 0) {
                 if(jsonObj.has("error")) {
-                    val error = jsonObj.optJSONObject("error")?.optString("message", "")
-                    setLastError(error?: "Error", status)
+                    setLastError(getErrorMessage(jsonObj), status, getStatusMessage(status))
                     return null
                 }
                 setLastError("Error", status)
@@ -164,50 +277,62 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         if (jsonObject != null) {
             val data = jsonObject.optJSONObject("data")
             if (data != null) {
-                if (data.has("redirect") && data.optBoolean("redirect")) {
-                    if (data.has("region")) {
-                        region = data.optString("region", "")
-                        Log.i(LOG_ID, "Handle redirect to region: " + region)
-                        saveRegion()
-                        return authenticate()
-                    } else {
-                        setLastError("redirect without region!!!", 500)
-                    }
+                if(checkRedirect(data))
+                    return authenticate()
+                getToken(data)
+            }
+        }
+        return token.isNotEmpty()
+    }
+
+    private fun checkRedirect(data: JSONObject): Boolean {
+        Log.d(LOG_ID, "Check for redirect")
+        if (data.has("redirect") && data.optBoolean("redirect")) {
+            if (data.has("region")) {
+                region = data.optString("region", "")
+                Log.i(LOG_ID, "Handle redirect to region: " + region)
+                saveRegion()
+                return true
+            } else {
+                setLastError("redirect without region!!!", 500)
+            }
+        }
+        return false
+    }
+
+    private fun getToken(data: JSONObject) {
+        Log.d(LOG_ID, "Check for new token token")
+        if(data.has("user")) {
+            val user = data.optJSONObject("user")
+            if(user != null && user.has("id")) {
+                userId = user.optString("id")
+                Log.i(LOG_ID, "User ID set!")
+                with(GlucoDataService.sharedPref!!.edit()) {
+                    putString(Constants.SHARED_PREF_LIBRE_USER_ID, userId)
+                    apply()
                 }
-                if(data.has("user")) {
-                    val user = data.optJSONObject("user")
-                    if(user != null && user.has("id")) {
-                        userId = user.optString("id")
-                        Log.i(LOG_ID, "User ID set!")
-                        with(GlucoDataService.sharedPref!!.edit()) {
-                            putString(Constants.SHARED_PREF_LIBRE_USER_ID, userId)
-                            apply()
-                        }
+            }
+        }
+        if (data.has("authTicket")) {
+            val authTicket = data.optJSONObject("authTicket")
+            if (authTicket != null) {
+                if (authTicket.has("token")) {
+                    token = authTicket.optString("token", "")
+                    tokenExpire = authTicket.optLong("expires", 0L) * 1000
+                    if (token.isNotEmpty()) {
+                        Log.i(LOG_ID, "Login succeeded! Token expires at " + DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(
+                            Date(tokenExpire)
+                        ))
                     }
-                }
-                if (data.has("authTicket")) {
-                    val authTicket = data.optJSONObject("authTicket")
-                    if (authTicket != null) {
-                        if (authTicket.has("token")) {
-                            token = authTicket.optString("token", "")
-                            tokenExpire = authTicket.optLong("expires", 0L) * 1000
-                            if (token.isNotEmpty()) {
-                                Log.i(LOG_ID, "Login succeeded! Token expires at " + DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(
-                                    Date(tokenExpire)
-                                ))
-                            }
-                            with(GlucoDataService.sharedPref!!.edit()) {
-                                putString(Constants.SHARED_PREF_LIBRE_TOKEN, token)
-                                putLong(Constants.SHARED_PREF_LIBRE_TOKEN_EXPIRE, tokenExpire)
-                                putBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false)
-                                apply()
-                            }
-                        }
+                    with(GlucoDataService.sharedPref!!.edit()) {
+                        putString(Constants.SHARED_PREF_LIBRE_TOKEN, token)
+                        putLong(Constants.SHARED_PREF_LIBRE_TOKEN_EXPIRE, tokenExpire)
+                        putBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false)
+                        apply()
                     }
                 }
             }
         }
-        return token.isNotEmpty()
     }
 
     private fun saveRegion() {
@@ -245,7 +370,10 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     }
 
     override fun getValue(): Boolean {
-        return handleGlucoseResponse(httpGet(getUrl(CONNECTION_ENDPOINT), getHeader()))
+        if((patientId.isNotEmpty() && patientData.isNotEmpty()) || handleConnectionResponse(httpGet(getUrl(CONNECTION_ENDPOINT), getHeader()))) {
+            return handleGraphResponse(httpGet(getUrl(GRAPH_ENDPOINT.format(patientId)), getHeader()))
+        }
+        return false
     }
 
     private fun getRateFromTrend(trend: Int): Float {
@@ -273,8 +401,59 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         return format.parse(time)!!.time
     }
 
-    private fun handleGlucoseResponse(body: String?): Boolean {
-        /*
+    private fun handleGraphResponse(body: String?): Boolean {
+        val jsonObject = checkResponse(body)
+        if (jsonObject != null && jsonObject.has("data")) {
+            val data = jsonObject.optJSONObject("data")
+            if(data != null) {
+                if(data.has("graphData")) {
+                    parseGraphData(data.optJSONArray("graphData"))
+                }
+                if(data.has("connection")) {
+                    val connection = data.optJSONObject("connection")
+                    if(connection!=null)
+                        return parseGlucoseData(connection)
+                }
+            }
+        }
+
+        Log.e(LOG_ID, "No data found in response: ${replaceSensitiveData(body!!)}")
+        setLastError("Invalid response! Please send logs to developer.")
+        reset()
+        retry = true
+        return false
+    }
+
+    private fun parseGraphData(graphData: JSONArray?) {
+        try {
+            if(graphData != null && graphData.length() > 0) {
+                Log.d(LOG_ID, "Parse graph data for ${graphData.length()} entries")
+                val firstLastPair = dbAccess.getFirstLastTimestamp()
+                if(Utils.getElapsedTimeMinute(firstLastPair.first) < (8*60) || Utils.getElapsedTimeMinute(firstLastPair.second) > (30)) {
+                    val values = mutableListOf<GlucoseValue>()
+                    for (i in 0 until graphData.length()) {
+                        val glucoseData = graphData.optJSONObject(i)
+                        if(glucoseData != null) {
+                            val parsedUtc = parseUtcTimestamp(glucoseData.optString("FactoryTimestamp"))
+                            val parsedLocal = parseLocalTimestamp(glucoseData.optString("Timestamp"))
+                            val time = if (parsedUtc > 0) parsedUtc else parsedLocal
+                            if(time < firstLastPair.first || time > firstLastPair.second) {
+                                val value = glucoseData.optInt("ValueInMgPerDl")
+                                if(value > 0 && time > 0)
+                                    values.add(GlucoseValue(time, value))
+                            }
+                        }
+                    }
+                    dbAccess.addGlucoseValues(values)
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "parseGraphData exception: " + exc.toString() )
+        }
+    }
+
+    private fun handleConnectionResponse(body: String?): Boolean {
+        /*  used for getting patient id
             {
               "status": 0,
               "data": [
@@ -315,43 +494,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                     }
                     return false
                 }
-                val data = getPatientData(array)
-                if (data == null) {
-                    setState(SourceState.NO_NEW_VALUE)
-                    return false
-                }
-                if(data.has("glucoseMeasurement")) {
-                    val glucoseData = data.optJSONObject("glucoseMeasurement")
-                    if (glucoseData != null) {
-                        val glucoExtras = Bundle()
-                        val parsedUtc = parseUtcTimestamp(glucoseData.optString("FactoryTimestamp"))
-                        val parsedLocal = parseLocalTimestamp(glucoseData.optString("Timestamp"))
-                        Log.d(LOG_ID, "UTC->local: " + parsedUtc + " - local: " + parsedLocal)
-                        if (parsedUtc > 0)
-                            glucoExtras.putLong(ReceiveData.TIME, parsedUtc)
-                        else
-                            glucoExtras.putLong(ReceiveData.TIME, parsedLocal)
-                        glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, glucoseData.optDouble("Value").toFloat())
-                        glucoExtras.putInt(ReceiveData.MGDL, glucoseData.optInt("ValueInMgPerDl"))
-                        glucoExtras.putFloat(ReceiveData.RATE, getRateFromTrend(glucoseData.optInt("TrendArrow")))
-                        if (glucoseData.optBoolean("isHigh"))
-                            glucoExtras.putInt(ReceiveData.ALARM, 6)
-                        else if (glucoseData.optBoolean("isLow"))
-                            glucoExtras.putInt(ReceiveData.ALARM, 7)
-                        else
-                            glucoExtras.putInt(ReceiveData.ALARM, 0)
-
-                        glucoExtras.putString(ReceiveData.SERIAL, "LibreLink")
-                        if (data.has("sensor")) {
-                            val sensor = data.optJSONObject("sensor")
-                            if (sensor != null && sensor.has("sn"))
-                                glucoExtras.putString(ReceiveData.SERIAL, sensor.optString("sn"))
-                        }
-                        dataReceived = true
-                        handleResult(glucoExtras)
-                        return true
-                    }
-                }
+                return getPatientData(array)
             } else {
                 Log.e(LOG_ID, "No data array found in response: ${replaceSensitiveData(body!!)}")
                 setLastError("Invalid response! Please send logs to developer.")
@@ -362,10 +505,41 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         return false
     }
 
-    private fun getPatientData(dataArray: JSONArray): JSONObject? {
+    private fun parseGlucoseData(data: JSONObject): Boolean {
+        if(data.has("glucoseMeasurement")) {
+            val glucoseData = data.optJSONObject("glucoseMeasurement")
+            if (glucoseData != null) {
+                val glucoExtras = Bundle()
+                val parsedUtc = parseUtcTimestamp(glucoseData.optString("FactoryTimestamp"))
+                val parsedLocal = parseLocalTimestamp(glucoseData.optString("Timestamp"))
+                Log.d(LOG_ID, "UTC->local: " + parsedUtc + " - local: " + parsedLocal)
+                if (parsedUtc > 0)
+                    glucoExtras.putLong(ReceiveData.TIME, parsedUtc)
+                else
+                    glucoExtras.putLong(ReceiveData.TIME, parsedLocal)
+                glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, glucoseData.optDouble("Value").toFloat())
+                glucoExtras.putInt(ReceiveData.MGDL, glucoseData.optInt("ValueInMgPerDl"))
+                glucoExtras.putFloat(ReceiveData.RATE, getRateFromTrend(glucoseData.optInt("TrendArrow")))
+                glucoExtras.putString(ReceiveData.SERIAL, "LibreLink")
+                if (data.has("sensor")) {
+                    val sensor = data.optJSONObject("sensor")
+                    if (sensor != null && sensor.has("sn"))
+                        glucoExtras.putString(ReceiveData.SERIAL, sensor.optString("sn"))
+                }
+                dataReceived = true
+                handleResult(glucoExtras)
+                return true
+            }
+        } else {
+            Log.e(LOG_ID, "No glucoseMeasurement found in response: ${replaceSensitiveData(data.toString())}")
+        }
+        return false
+    }
+
+    private fun getPatientData(dataArray: JSONArray): Boolean {
         if(dataArray.length() > patientData.size) {
             // create patientData map
-            val checkPatienId = patientData.isEmpty() && patientId.isEmpty()
+            val checkPatienId = patientData.isEmpty() && patientId.isNotEmpty()
             patientData.clear()
             for (i in 0 until dataArray.length()) {
                 val data = dataArray.getJSONObject(i)
@@ -377,6 +551,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                 }
             }
             if (checkPatienId && !patientData.keys.contains(patientId)) {
+                Log.i(LOG_ID, "Reset patient ID as it is not in the list")
                 patientId = ""
                 with (GlucoDataService.sharedPref!!.edit()) {
                     putString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")
@@ -388,16 +563,20 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             }
         }
         if(patientId.isNotEmpty()) {
+            Log.d(LOG_ID, "Using patient ID $patientId")
             for (i in 0 until dataArray.length()) {
                 val data = dataArray.getJSONObject(i)
                 if (data.has("patientId") && data.getString("patientId") == patientId) {
-                    return data
+                    return true
                 }
             }
-            return null
+            return false
+        } else if (patientData.isNotEmpty()) {
+            patientId = patientData.keys.first()
+            Log.d(LOG_ID, "Using patient ID $patientId")
+            return true
         }
-        // default: use first one
-        return dataArray.optJSONObject(0)
+        return false  // no patient found
     }
 
     override fun interrupt() {
@@ -420,6 +599,8 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             tokenExpire = sharedPreferences.getLong(Constants.SHARED_PREF_LIBRE_TOKEN_EXPIRE, 0L)
             region = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_REGION, "")!!
             patientId = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")!!
+            autoAcceptTOU = sharedPreferences.getBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true)
+            topLevelDomain = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_SERVER, "io")?: "io"
             InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
             trigger = true
         } else {
@@ -451,6 +632,24 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                     if (patientId != sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")) {
                         patientId = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")!!
                         Log.d(LOG_ID, "PatientID changed to $patientId")
+                        trigger = true
+                    }
+                }
+                Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU -> {
+                    if (autoAcceptTOU != sharedPreferences.getBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true)) {
+                        autoAcceptTOU = sharedPreferences.getBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true)
+                        Log.i(LOG_ID, "Auto accept TOU changed to $autoAcceptTOU")
+                        if(autoAcceptTOU && lastErrorCode == 4)
+                            trigger = true
+                    }
+                }
+                Constants.SHARED_PREF_LIBRE_SERVER -> {
+                    if (topLevelDomain != sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_SERVER, "io")) {
+                        topLevelDomain = sharedPreferences.getString(Constants.SHARED_PREF_LIBRE_SERVER, "io")?: "io"
+                        if(topLevelDomain.isEmpty())
+                            topLevelDomain = "io"
+                        Log.i(LOG_ID, "Top level domain changed to $topLevelDomain")
+                        reset()
                         trigger = true
                     }
                 }

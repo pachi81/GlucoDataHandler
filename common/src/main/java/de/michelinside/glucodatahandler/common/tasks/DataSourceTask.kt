@@ -5,11 +5,15 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.Intents
+import de.michelinside.glucodatahandler.common.R
+import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
+import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -27,6 +31,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     private var httpRequest = HttpRequest()
     protected var retry = false
     protected var firstGetValue = false
+    private var isFirstRequest = true  // first request after startup
 
 
     companion object {
@@ -38,6 +43,9 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             Constants.SHARED_PREF_LIBRE_USER,
             Constants.SHARED_PREF_LIBRE_PASSWORD,
             Constants.SHARED_PREF_LIBRE_RECONNECT,
+            Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU,
+            Constants.SHARED_PREF_LIBRE_PATIENT_ID,
+            Constants.SHARED_PREF_LIBRE_SERVER,
             Constants.SHARED_PREF_NIGHTSCOUT_URL,
             Constants.SHARED_PREF_NIGHTSCOUT_SECRET,
             Constants.SHARED_PREF_NIGHTSCOUT_TOKEN,
@@ -56,6 +64,9 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                 putString(Constants.SHARED_PREF_LIBRE_USER, bundle.getString(Constants.SHARED_PREF_LIBRE_USER, ""))
                 putString(Constants.SHARED_PREF_LIBRE_PASSWORD, bundle.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, ""))
                 putBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, bundle.getBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false))
+                putBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, bundle.getBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true))
+                putString(Constants.SHARED_PREF_LIBRE_SERVER, bundle.getString(Constants.SHARED_PREF_LIBRE_SERVER, "io"))
+                putString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, bundle.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, ""))
 
                 putString(Constants.SHARED_PREF_NIGHTSCOUT_URL, bundle.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, ""))
                 putString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, bundle.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, ""))
@@ -78,6 +89,9 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             bundle.putString(Constants.SHARED_PREF_LIBRE_USER, sharedPref.getString(Constants.SHARED_PREF_LIBRE_USER, ""))
             bundle.putString(Constants.SHARED_PREF_LIBRE_PASSWORD, sharedPref.getString(Constants.SHARED_PREF_LIBRE_PASSWORD, ""))
             bundle.putBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, sharedPref.getBoolean(Constants.SHARED_PREF_LIBRE_RECONNECT, false))
+            bundle.putBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, sharedPref.getBoolean(Constants.SHARED_PREF_LIBRE_AUTO_ACCEPT_TOU, true))
+            bundle.putString(Constants.SHARED_PREF_LIBRE_SERVER, sharedPref.getString(Constants.SHARED_PREF_LIBRE_SERVER, "io"))
+            bundle.putString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, sharedPref.getString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, ""))
 
             bundle.putString(Constants.SHARED_PREF_NIGHTSCOUT_URL, sharedPref.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, ""))
             bundle.putString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, sharedPref.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, ""))
@@ -95,26 +109,27 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     var lastState = SourceState.NONE
     var lastErrorCode: Int = -1
 
-    fun setLastError(error: String, code: Int = -1) {
-        setState( SourceState.ERROR, error, code)
+    fun setLastError(error: String, code: Int = -1, message: String = "")  {
+        setState(SourceState.ERROR, error, code, message)
     }
 
-    fun setState(state: SourceState, error: String = "", code: Int = -1) {
+    fun setState(state: SourceState, error: String = "", code: Int = -1, message: String = "") {
         when (state) {
             SourceState.NONE -> {
-                Log.v(LOG_ID,"Set state for source " + source + ": " + state + " - " + error + " (" + code + ")")
+                Log.v(LOG_ID, "Set state for source $source: $state - $error ($code) - message: $message")
             }
             SourceState.CONNECTED -> {
-                Log.i(LOG_ID,"Set connected for source " + source)
+                Log.i(LOG_ID, "Set connected for source $source")
+                isFirstRequest = false
             }
             else -> {
-                Log.w(LOG_ID,"Set state for source " + source + ": " + state + " - " + error + " (" + code + ")")
+                Log.w(LOG_ID, "Set state for source $source: $state - $error ($code) - message: $message")
             }
         }
         lastErrorCode = code
         lastState = state
 
-        SourceStateData.setState(source, state, getErrorMessage(state, error, code))
+        SourceStateData.setState(source, state, getErrorMessage(state, error, code), message)
     }
 
     private fun getErrorMessage(state: SourceState, error: String, code: Int): String {
@@ -126,7 +141,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             result += error
             return result
         }
-        return ""
+        return error
     }
 
     private fun isShortInterval(): Boolean {
@@ -134,6 +149,13 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             SourceState.NO_CONNECTION,
             SourceState.NO_NEW_VALUE -> true
             SourceState.ERROR -> lastErrorCode >= 500
+            else -> false
+        }
+    }
+
+    private fun isLongInterval(): Boolean {
+        return when(lastState) {
+            SourceState.ERROR -> lastErrorCode == 429
             else -> false
         }
     }
@@ -192,8 +214,24 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         }
     }
 
+    open fun getNoNewValueInfo(time: Long): String = ""
+
     protected fun handleResult(extras: Bundle) {
         Log.d(LOG_ID, "handleResult for $source: ${Utils.dumpBundle(extras)}")
+        if(!ReceiveData.hasNewValue(extras)) {
+            if(extras.containsKey(ReceiveData.TIME)) {
+                setState(
+                    SourceState.NO_NEW_VALUE,
+                    GlucoDataService.context!!.resources.getString(R.string.last_value_on_server, Utils.getUiTimeStamp(extras.getLong(ReceiveData.TIME))),
+                    -1,
+                    getNoNewValueInfo(extras.getLong(ReceiveData.TIME))
+                )
+            } else {
+                setState(SourceState.NO_NEW_VALUE)
+            }
+            return
+        }
+
         val intent = Intent(GlucoDataService.context!!, InternalActionReceiver::class.java)
         intent.action = Intents.GLUCODATA_ACTION
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
@@ -240,7 +278,22 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         Log.d(LOG_ID, "handleResult for " + source + " done!")
     }
 
+    private fun getErrorMessage(code: Int, message: String?): String {
+        when(code) {
+            429 -> return GlucoDataService.context!!.resources.getString(R.string.http_error_429)
+            else -> return message ?: "Error"
+        }
+    }
+
+    private fun getErrorInfo(code: Int): String {
+        when(code) {
+            429 -> return GlucoDataService.context!!.resources.getString(R.string.http_error_429_info)
+            else -> return ""
+        }
+    }
+
     open fun checkErrorResponse(code: Int, message: String?, errorResponse: String? = null) {
+        Log.d(LOG_ID, "checkErrorResponse: $code - $message - $errorResponse")
         if (code in 400..499) {
             reset() // reset token for client error -> trigger reconnect
             if(firstGetValue) {
@@ -248,7 +301,11 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                 return
             }
         }
-        setLastError(message ?: code.toString(), code)
+        var errorMessage = getErrorMessage(code, message)
+        if(errorResponse != null) {
+            errorMessage += "\n" + errorResponse
+        }
+        setLastError(errorMessage, code, getErrorInfo(code))
     }
 
     open fun getTrustAllCertificates(): Boolean = false
@@ -264,13 +321,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
 
     private fun checkResponse(responseCode: Int): String? {
         if (responseCode != HttpURLConnection.HTTP_OK) {
-            if(responseCode == HttpURLConnection.HTTP_INTERNAL_ERROR) {
-                if (httpRequest.responseError != null ) {
-                    checkErrorResponse(responseCode, httpRequest.responseMessage, httpRequest.responseError)
-                    return null
-                }
-            }
-            checkErrorResponse(responseCode, httpRequest.responseMessage)
+            checkErrorResponse(responseCode, httpRequest.responseMessage, httpRequest.responseError)
             return null
         }
         return httpRequest.response
@@ -280,14 +331,17 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         return checkResponse(httpRequest.get(url, header, getTrustAllCertificates()))
     }
 
-    protected fun httpPost(url: String, header: MutableMap<String, String>, postData: String): String? {
+    protected fun httpPost(url: String, header: MutableMap<String, String>, postData: String?): String? {
         return checkResponse(httpRequest.post(url, postData, header, getTrustAllCertificates()))
     }
 
     override fun getIntervalMinute(): Long {
-        if (interval > 1 && isShortInterval()) {
+        if (interval > 1L && isShortInterval()) {
             Log.d(LOG_ID, "Use short interval of 1 minute.")
             return 1   // retry after a minute
+        }
+        if (interval == 1L && isLongInterval()) {
+            return 5  // increase interval for case of "429: Too many requests"
         }
         return interval
     }
@@ -317,6 +371,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             setEnabled(sharedPreferences.getBoolean(enabledKey, false))
             interval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
             delaySec = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, 10).toLong()
+            if(GlucoDataService.appSource == AppSource.WEAR_APP)
+                delaySec += 5L  // add 5 seconds delay to receive by phone if connected
             return true
         } else {
             var result = false
@@ -333,11 +389,27 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                 Constants.SHARED_PREF_SOURCE_DELAY -> {
                     if (delaySec != sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, 10).toLong()) {
                         delaySec = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, 10).toLong()
+                        if(GlucoDataService.appSource == AppSource.WEAR_APP)
+                            delaySec += 5L // add 5 seconds delay to receive by phone if connected
                         result = true  // retrigger alarm after delay has changed
                     }
                 }
             }
             return result
         }
+    }
+
+    protected fun getFirstNeedGraphValueTime(): Long {
+        val firstLastPair = dbAccess.getFirstLastTimestamp()
+        val minTime = System.currentTimeMillis() - Constants.DB_MAX_DATA_WEAR_TIME_MS    // 24h for init the first time
+        if(firstLastPair.first == 0L || (isFirstRequest && firstLastPair.first < minTime)) {
+            Log.i(LOG_ID, "First value is ${Utils.getElapsedTimeMinute(firstLastPair.first)} minutes old - try get older data on first request")
+            return minTime
+        }
+        if(firstLastPair.second > 0L && Utils.getElapsedTimeMinute(firstLastPair.second) > interval) {
+            Log.i(LOG_ID, "Last value is ${Utils.getElapsedTimeMinute(firstLastPair.second)} minutes old - try get newer data")
+            return maxOf(firstLastPair.second + 30000, minTime)
+        }
+        return 0L
     }
 }

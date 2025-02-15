@@ -1,0 +1,717 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="locale">zh-rTW</string>
+
+    <string name="info_label_sensor_id">感測器</string>
+    <string name="info_label_value">血糖值</string>
+    <string name="info_label_raw">原始值</string>
+    <string name="info_label_delta">變化量</string>
+    <string name="info_label_rate">速率</string>
+    <string name="info_label_timestamp">時間戳記</string>
+    <string name="info_label_iob_cob_timestamp">IOB/COB 時間</string>
+    <string name="info_label_timediff">時間差</string>
+    <string name="info_label_alarm">警報</string>
+    <string name="info_label_source">來源</string>
+    <string name="info_label_per_minute">每分鐘</string>
+    <string name="no_data">尚未收到任何資料！\n請先設定資料來源</string>
+
+    <string name="elapsed_time">%1$d 分</string>
+    <string name="elapsed_time_hour">\> 1 時</string>
+
+    <string name="rate_double_up">迅速上升</string>
+    <string name="rate_single_up">正在上升</string>
+    <string name="rate_forty_five_up">緩慢上升</string>
+    <string name="rate_flat">穩定</string>
+    <string name="rate_forty_five_down">緩慢下降</string>
+    <string name="rate_single_down">正在下降</string>
+    <string name="rate_double_down">迅速下降</string>
+
+    <string name="button_ok">確定</string>
+    <string name="button_cancel">取消</string>
+
+    <string name="alarm_none">-</string>
+    <string name="alarm_very_low">非常低</string>
+    <string name="alarm_low">低</string>
+    <string name="alarm_high">高</string>
+    <string name="alarm_very_high">非常高</string>
+
+    <!-- mobile -->
+
+    <string name="activity_main_battery_optimization_disabled">已啟用電池最佳化</string>
+    <string name="activity_main_no_source_label">來源: 未啟用</string>
+    <string name="activity_main_connected_label">Wear: 已連線 (%1$s)</string>
+    <string name="activity_main_disconnected_label">Wear: 已斷線</string>
+    <string name="activity_main_car_connected_label">Android Auto: 已連線</string>
+    <string name="activity_main_car_disconnected_label">Android Auto: 已斷線</string>
+    <string name="activity_main_high_contrast_enabled">已啟用協助工具-高對比顯示模式！\n按這裡設定</string>
+    <string name="no_new_value">%1$d 分鐘內沒有新血糖值！</string>
+
+    <string name="menu_settings">設定</string>
+    <string name="menu_sources">資料來源</string>
+    <string name="menu_group_github">GitHub</string>
+    <string name="menu_update">更新</string>
+    <string name="menu_support">支援</string>
+    <string name="menu_help">說明</string>
+
+    <!-- tasker -->
+
+    <string name="tasker_event_glucodata">新血糖值</string>
+    <string name="tasker_event_glucodata_obsolete">過時血糖值</string>
+    <string name="tasker_event_glucodata_alarm">血糖警報</string>
+    <string name="tasker_wear_connection_state">Wear 連線</string>
+    <string name="tasker_android_auto_connection_state">Android Auto 連線</string>
+    <string name="tasker_target_range_state">血糖範圍變更</string>
+
+    <!-- sources -->
+
+    <string name="source_phone">手機</string>
+    <string name="source_wear">Wear</string>
+
+    <string name="source_state_not_active">未啟用</string>
+    <string name="source_state_in_progress">處理中</string>
+    <string name="source_state_ok">正常</string>
+    <string name="source_state_no_new_value">無新血糖值</string>
+    <string name="source_state_no_connection">無網路連線</string>
+    <string name="source_state_error">錯誤</string>
+
+    <string name="source_interval">間隔</string>
+    <string name="source_interval_summary">每隔多久就從資料來源請求資料</string>
+    <string name="source_delay">延遲</string>
+    <string name="source_delay_summary">從雲端請求資料前的延遲秒數，因為有時候需要一些時間資料才會傳送到雲端</string>
+
+    <string name="src_cat_libreview">LibreLinkUp</string>
+    <string name="src_enabled">啟用</string>
+    <string name="src_libre_enabled_summary">如果已設定使用者和密碼，則啟用 LibreLinkUp 追蹤器</string>
+    <string name="src_libre_user">電子郵件</string>
+    <string name="src_libre_user_summary">LibreLinkUp 登入用電子郵件</string>
+    <string name="src_password">密碼</string>
+    <string name="src_libre_password_summary">LibreLinkUp 密碼</string>
+    <string name="src_libre_reconnect">重新連線</string>
+    <string name="src_libre_reconnect_summary">下一次請求資料時會重新登入</string>
+
+    <string name="src_cat_nightscout">Nightscout</string>
+    <string name="src_ns_enabled">啟用</string>
+    <string name="src_ns_enabled_summary">啟用 Nightscout 追蹤器</string>
+    <string name="src_ns_url">Nightscout 網址</string>
+    <string name="src_ns_url_summary">Nightscout 伺服器網址</string>
+    <string name="src_ns_secret">API 密鑰</string>
+    <string name="src_ns_secret_summary">存取資料的 API 密鑰（選填）</string>
+    <string name="src_ns_token">存取代符</string>
+    <string name="src_ns_token_summary">如果需要的話加入您的存取代符 (Access Token)（選填）</string>
+
+    <string name="source_request_interval_always">不間斷</string>
+    <string name="source_request_interval_1">1 分鐘</string>
+    <string name="source_request_interval_5">5 分鐘</string>
+    <string name="source_request_interval_10">10 分鐘</string>
+    <string name="source_request_interval_15">15 分鐘</string>
+    <string name="source_request_interval_20">20 分鐘</string>
+    <string name="source_request_interval_30">30 分鐘</string>
+    <string name="source_request_interval_alarm">僅限警報</string>
+
+    <!-- LibreLink source -->
+    <string name="state_disabled">已停用</string>
+    <string name="state_not_connected">未連線</string>
+    <string name="state_connected">已連線</string>
+    <string name="state_error">錯誤: %s</string>
+
+
+    <!-- settings -->
+
+    <string name="pref_cat_general">一般</string>
+    <string name="pref_cat_notification">通知</string>
+    <string name="pref_cat_widgets">小工具</string>
+    <string name="pref_cat_android_auto">Android Auto</string>
+    <string name="pref_cat_forward_broadcast">轉發血糖值</string>
+    <string name="pref_target_range">目標範圍</string>
+    <string name="pref_cat_colors">顏色</string>
+
+    <string name="pref_switch_notification">虛擬血糖值</string>
+    <string name="pref_very_high_value">非常高血糖</string>
+    <string name="pref_very_high_value_summary">非常高血糖值的上限</string>
+    <string name="pref_high_value">高血糖</string>
+    <string name="pref_high_value_summary">高血糖值的上限</string>
+    <string name="pref_target_max_value">目標血糖上限</string>
+    <string name="pref_target_max_value_summary">目標範圍的上限</string>
+    <string name="pref_target_min_value">目標血糖下限</string>
+    <string name="pref_target_min_value_summary">目標範圍的下限</string>
+    <string name="pref_very_low_value">非常低血糖</string>
+    <string name="pref_very_low_value_summary">非常低血糖值的下限</string>
+    <string name="pref_low_value">低血糖</string>
+    <string name="pref_low_value_summary">低血糖值的下限</string>
+    <string name="pref_switch_car_notification">Android Auto 通知</string>
+    <string name="pref_switch_car_notification_summary">Android Auto 的通知</string>
+    <string name="pref_car_notification_interval">通知間隔</string>
+    <string name="pref_car_notification_interval_summary">每隔多久顯示一次新血糖值通知\n警報會立刻顯示通知</string>
+    <string name="pref_switch_car_notification_alarm_only">僅限警報</string>
+    <string name="pref_switch_car_notification_alarm_only_summary">僅限警報設定的時間間隔顯示通知\n非常低血糖警報會立刻顯示通知</string>
+    <string name="pref_switch_car_media">偽裝為媒體播放器</string>
+    <string name="pref_switch_car_media_summary">於 Android Auto 的目前歌曲欄位顯示血糖值</string>
+    <string name="pref_switch_send_to_aod">傳送血糖資料廣播</string>
+    <string name="pref_switch_send_to_aod_summary">從任何資料來源收到新血糖值時傳送血糖資料廣播</string>
+    <string name="pref_button_select_target">選擇血糖資料接收程式</string>
+    <string name="pref_button_select_target_summary">選擇傳送血糖資料廣播的接收程式，若選擇全域廣播則會傳送資料到所有動態註冊的程式</string>
+    <string name="pref_switch_send_to_xdrip">傳送已修改 Libre 程式廣播</string>
+    <string name="pref_switch_send_to_xdrip_summary">轉發血糖值到 xDrip+，在 xDrip+ 中選擇「Libre（已修改的程式）」作為資料來源</string>
+    <string name="pref_button_select_xdrip_target">選擇已修改 Libre 程式廣播的接收程式</string>
+    <string name="pref_button_select_xdrip_target_summary">選擇傳送已修改 Libre 程式廣播的接收程式，若選擇全域廣播則會傳送資料到所有動態註冊的程式</string>
+    <string name="pref_switch_send_xdrip_broadcast">傳送 xDrip+ 廣播</string>
+    <string name="pref_switch_send_xdrip_broadcast_summary">傳送類似 xDrip+ 傳送的廣播，例如傳送到 AAPS</string>
+    <string name="pref_button_select_xdrip_broadcast_target">選擇 xDrip+ 廣播接收程式</string>
+    <string name="pref_button_select_xdrip_broadcast_target_summary">選擇傳送 xDrip+ 廣播的接收程式，若選擇全域廣播則會傳送資料到所有動態註冊的程式</string>
+    <string name="pref_switch_use_mmol">使用 mmol/l</string>
+    <string name="pref_switch_use_mmol_summary">使用 mmol/l 取代 mg/dl</string>
+    <string name="pref_switch_use_5_min_delta">5 分鐘變化量</string>
+    <string name="pref_switch_use_5_min_delta_summary">開啟此選項會使用 5 分鐘變化量，如未開啟則使用 1 分鐘變化量</string>
+    <string name="pref_color_alarm">非常高/低警報顏色</string>
+    <string name="pref_color_alarm_summary">非常高血糖值和非常低血糖值的顏色</string>
+    <string name="pref_color_out_of_range">高/低警報顏色</string>
+    <string name="pref_color_out_of_range_summary">高血糖值和低血糖值的顏色</string>
+    <string name="pref_color_ok">目標範圍顏色</string>
+    <string name="pref_color_ok_summary">在目標範圍內血糖值的顏色</string>
+    <string name="pref_notification">通知</string>
+    <string name="pref_notification_summary">在狀態列顯示含目前血糖趨勢箭頭、血糖值和變化量的常駐通知\n顯示通知可避免 Android 將程式關閉</string>
+    <string name="pref_notification_icon">狀態列圖示</string>
+    <string name="pref_notification_icon_summary">通知顯示於狀態列的圖示樣式</string>
+    <string name="pref_notification_big_icon">放大狀態列圖示</string>
+    <string name="pref_notification_big_icon_summary">將狀態列圖示放大顯示，如果圖示太大導致被裁切請停用此設定</string>
+    <string name="pref_notification_no_content">隱藏內容</string>
+    <string name="pref_notification_no_content_summary">移除通知內容，只顯示含有圖示的小型通知</string>
+    <string name="pref_second_notification">第二通知</string>
+    <string name="pref_second_notification_summary">顯示無內容通知以便於狀態列顯示更多圖示</string>
+    <string name="pref_second_notification_icon">第二狀態列圖示</string>
+    <string name="pref_second_notification_icon_summary">通知顯示於狀態列的圖示樣式</string>
+    <string name="pref_third_notification">第三通知</string>
+    <string name="pref_third_notification_icon">第三狀態列圖示</string>
+    <string name="pref_floating_widget">浮動小工具</string>
+    <string name="pref_floating_widget_summary">顯示含血糖值、趨勢箭頭、變化量、時間和 IOB/COB 的浮動小工具\n如果您按住不移動 5 秒以上可關閉浮動小工具</string>
+    <string name="pref_floating_widget_size">大小</string>
+    <string name="pref_floating_widget_size_summary">變更浮動小工具大小</string>
+    <string name="pref_floating_widget_style">樣式</string>
+    <string name="pref_floating_widget_style_summary">浮動小工具樣式</string>
+    <string name="pref_floating_widget_transparency">透明度</string>
+    <string name="pref_floating_widget_transparency_summary">浮動小工具背景透明度</string>
+    <string name="pref_widget_transparency">小工具透明度</string>
+    <string name="pref_widget_transparency_summary">小工具背景透明度</string>
+    <string name="pref_relative_time">相對時間</string>
+    <string name="pref_relative_time_summary">小工具使用相對時間取代時間戳記\n相對時間可能因裝置的電池最佳化設定而無法正常運作</string>
+
+    <string name="pref_status_bar_icon_app">程式圖示</string>
+    <string name="pref_status_bar_icon_glucose">血糖值</string>
+    <string name="pref_status_bar_icon_trend">趨勢箭頭</string>
+    <string name="pref_status_bar_icon_delta">變化量</string>
+
+    <string name="pref_wear_notification">Wear: 震動</string>
+
+    <string name="pref_global_broadcast">全域廣播</string>
+
+    <string name="select_receiver_show_all">全部顯示</string>
+    <string name="select_receiver_no_glucodata_receiver">找不到接收程式！</string>
+
+    <string name="widget_glucose">血糖值</string>
+    <string name="widget_glucose_trend">血糖值、趨勢箭頭</string>
+    <string name="widget_glucose_trend_delta">血糖值、趨勢箭頭、變化量</string>
+    <string name="widget_glucose_trend_delta_timestamp">血糖值、趨勢箭頭、變化量、時間戳記</string>
+    <string name="widget_glucose_trend_delta_timestamp_iob_cob">血糖值、趨勢箭頭、變化量、時間、IOB/COB</string>
+
+    <string name="pref_send_to_bangleJS">BangleJS 支援</string>
+    <string name="pref_send_to_bangleJS_summary">轉發血糖值到 BangleJS 的 widbgjs 小工具</string>
+
+    <!-- wear -->
+
+    <string name="forground_notification_descr">小工具接收資料中</string>
+
+    <string name="activity_connected_label">手機: 已連線 (%1$s)</string>
+    <string name="activity_disconnected_label">手機: 已斷線</string>
+
+    <string name="activity_switch_foreground">前景</string>
+    <string name="activity_large_arrow_icon">放大趨勢箭頭</string>
+    <string name="activity_switch_colored_aod">彩色 AOD</string>
+
+    <!-- complications -->
+
+    <string name="short_value">血糖值</string>
+    <string name="image_value">血糖值 (非常大、彩色)</string>
+    <string name="small_image_value">血糖值 (彩色)</string>
+    <string name="icon_value">血糖值 (大)</string>
+    <string name="short_value_icon">血糖值含圖示</string>
+    <string name="short_value_arrow">血糖值、趨勢箭頭</string>
+    <string name="short_value_arrow_image">血糖值、趨勢箭頭 (大、彩色)</string>
+    <string name="icon_value_arrow">血糖值、趨勢箭頭 (大)</string>
+    <string name="short_value_arrow_small_image">血糖值、趨勢箭頭 (彩色)</string>
+    <string name="short_value_trend_range">血糖值、趨勢範圍 (若支援)</string>
+    <string name="short_value_delta_trend_range">血糖值、變化量、趨勢範圍 (若支援)</string>
+    <string name="short_delta_trend_arrow_range">變化量、趨勢箭頭、趨勢範圍 (若支援)</string>
+    <string name="short_value_delta">血糖值、變化量</string>
+    <string name="long_value_arrow_delta">血糖值、變化量、趨勢箭頭</string>
+    <string name="long_value_arrow_delta_time">血糖值、變化量、趨勢箭頭、時間戳記</string>
+    <string name="long_value_arrow_icon_delta_time">血糖值、趨勢圖示、變化量、時間戳記</string>
+    <string name="short_value_rate">血糖值、趨勢值</string>
+    <string name="icon_delta">變化量 (大)</string>
+    <string name="image_delta">變化量 (大、彩色)</string>
+    <string name="short_delta">變化量</string>
+    <string name="short_delta_arrow">變化量、趨勢箭頭</string>
+    <string name="short_delta_icon">變化量含圖示</string>
+    <string name="short_delta_time">變化量、時間戳記</string>
+    <string name="image_delta_time">變化量、時間戳記 (彩色)</string>
+    <string name="icon_delta_time">變化量、時間戳記 (大)</string>
+    <string name="image_arrow">趨勢箭頭 (大、彩色)</string>
+    <string name="small_image_arrow">趨勢箭頭 (彩色)</string>
+    <string name="icon_arrow">趨勢圖示</string>
+    <string name="test_neg_range">測試含負值趨勢範圍小工具 (若支援趨勢範圍)</string>
+    <string name="short_rate">趨勢值</string>
+    <string name="short_rate_arrow">趨勢值、趨勢箭頭</string>
+    <string name="short_rate_icon">趨勢值含圖示</string>
+    <string name="timestamp">血糖時間戳記</string>
+    <string name="short_timestamp">時間戳記</string>
+    <string name="image_timestamp">時間戳記 (彩色)</string>
+    <string name="icon_timestamp">時間戳記 (大)</string>
+    <string name="battery_level">電量 (手錶和手機)</string>
+    <string name="watch_battery_level">手錶電量</string>
+    <string name="phone_battery_level">手機電量</string>
+    <string name="iob_cob">IOB/COB</string>
+
+    <!-- GlucoDataAuto -->
+
+    <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataAuto/blob/main/README.md</string>
+    <string name="gda_no_data">若要在 Android Auto 中使用，您必須多次點選「版本」以啟用 Android Auto 的開發人員選項，並於開發人員選項中啟用「未知來源」</string>
+    <string name="pref_information">資訊</string>
+    <string name="pref_gda_info_summary">若您使用 GlucoDataHandler 作為資料來源，下列設定會被 GlucoDataHandler 的設定覆蓋，所以不需要再次變更設定</string>
+    <string name="pref_no_gda_info">缺少 GlucoDataAuto</string>
+    <string name="pref_no_gda_info_summary">若要將 GlucoDataHandler 用於 Android Auto，您必須從 GitHub 安裝 GlucoDataAuto\n按這裡查看更多資訊並下載 GlucoDataAuto</string>
+    <string name="pref_send_to_glucodataauto">轉發到 GlucoDataAuto</string>
+    <string name="pref_send_to_glucodataauto_summary">如果手機已連線到 Android Auto，則將血糖值和設定傳送到 GlucoDataAuto</string>
+
+
+    <!-- Notifications -->
+
+    <string name="mobile_foreground_notification_name">前景通知</string>
+    <string name="mobile_foreground_notification_descr">前景通知可避免程式在背景執行時被關閉</string>
+    <string name="mobile_second_notification_name">第二通知</string>
+    <string name="mobile_third_notification_name">第三通知</string>
+    <string name="mobile_second_notification_descr">更多通知以便於狀態列顯示更多圖示</string>
+    <string name="worker_notification_name">工作通知</string>
+    <string name="worker_notification_descr">在背景執行任務時顯示工作通知</string>
+    <string name="wear_foreground_notification_name">前景通知</string>
+    <string name="wear_foreground_notification_descr">前景通知可避免程式在背景執行時被關閉</string>
+    <string name="android_auto_notification_name">Android Auto 通知</string>
+    <string name="android_auto_notification_descr">Android Auto 顯示的通知</string>
+    <string name="src_xdrip_noise_blocking">xDrip+ Inter-app Settings 中已啟用 Noise-Block！\n請變更為「Extremely noisy」！</string>
+    <string name="pref_cat_follower">雲端服務</string>
+    <string name="pref_source_juggluco_info">Juggluco</string>
+    <string name="pref_source_juggluco_info_summary">若要從 Juggluco 接收血糖值:\n- 開啟 Juggluco\n- 點選「Settings」\n- 啟用「Glucodata broadcast」\n- 啟用「de.michelinside.glucodatahandler」</string>
+    <string name="pref_gda_source_juggluco_info_summary">若要從 Juggluco 接收血糖值:\n- 開啟 Juggluco\n- 點選「Settings」\n- 啟用「Glucodata broadcast」\n- 啟用「de.michelinside.glucodataauto」</string>
+    <string name="pref_source_xdrip_info">xDrip+</string>
+    <string name="pref_source_xdrip_info_1_summary">若要從 xDrip+ 接收血糖值:\n- 開啟 xDrip+\n- 點選 Settings\n- 前往 Inter-app Settings\n- 啟用「Broadcast locally」\n- 將「Noise Blocking」設為「Send even Extremely noisy signals」</string>
+    <string name="pref_source_xdrip_info_2_summary">- 啟用「Compatible Broadcast」- 檢查「Identify receiver」是否為空或已存在內容，然後加入「de.michelinside.glucodatahandler」並以空白分隔</string>
+    <string name="pref_gda_source_xdrip_info_2_summary">- 啟用「Compatible Broadcast」\n- 檢查「Identify receiver」是否為空，然後新增一行「de.michelinside.glucodataauto」</string>
+    <string name="pref_source_librelinkup_info">設定 LibreLinkUp</string>
+    <string name="pref_source_librelinkup_info_summary">重要提示: 這不是登入 FreeStyle Libre 程式的帳號！\n若要啟用 LibreLinkUp 追蹤器：\n- 開啟 FreeStyle Libre 程式，並在選單中選擇「分享」或「已連結的應用程式」\n- 啟用 LibreLinkUp 連線\n- 從 Play 商店安裝 LibreLinkUp\n- 設定帳號並等候邀請</string>
+    <string name="menu_contact">聯絡作者</string>
+    <string name="src_ns_iob_cob">IOB/COB 支援</string>
+    <string name="src_ns_iob_cob_summary">也從 Nightscout Pebble 端點接收 IOB 和 COB 值</string>
+    <string name="pref_permanent_notification_info_summary">程式需要顯示通知才能正常運作\nAndroid 13 以後可以滑動移除通知，如果您再次顯示通知，請將「狀態列圖示」設為「程式圖示」並啟用「隱藏內容」</string>
+    <string name="source_aaps">AAPS</string>
+    <string name="pref_source_aaps_info">AndroidAPS</string>
+    <string name="pref_source_aaps_info_summary">若要從 AAPS 接收血糖值:\n- 開啟 AAPS 程式\n- 點選「Config Builder」\n- 啟用「Samsung Tizen」或「Data Broadcaster」</string>
+    <string name="pref_switch_watchdrip_enabled">WatchDrip+</string>
+    <string name="pref_switch_watchdrip_enabled_summary">啟用 WatchDrip+ 通訊 (無圖表)\n重要提示: 在此啟用設定後，請在 WatchDrip+ 中啟用「Enable service」！</string>
+    <string name="pref_car_notification_reappear_interval">重新顯示間隔</string>
+    <string name="pref_car_notification_reappear_interval_summary">沒有新血糖值時每隔多久重新顯示通知 (0 代表永不顯示)</string>
+    <string name="pref_aa_media_player_icon_style_summary">虛擬媒體播放器圖示/圖片樣式</string>
+    <string name="pref_aa_media_player_icon_style">圖示/圖片樣式</string>
+    <string name="menu_save_mobile_logs">手機</string>
+    <string name="menu_save_wear_logs">Wear</string>
+    <string name="menu_save_logs">儲存記錄檔</string>
+    <string name="logcat_save_succeeded">記錄檔儲存成功</string>
+    <string name="logcat_save_failed">記錄檔儲存失敗！</string>
+    <string name="logcat_wear_save_succeeded">Wear 記錄檔儲存成功</string>
+    <string name="logcat_wear_save_failed">Wear 記錄檔儲存失敗！</string>
+    <string name="request_exact_alarm_summary">需要鬧鐘和提醒權限以便處理所有與時間/間隔有關的工作\n僅用於程式內部排程，而不會新增或修改任何使用者設定的提醒\n按下「確定」將會打開權限設定，請手動將 GlucoDataHandler 設為啟用</string>
+    <string name="request_exact_alarm_title">鬧鐘和提醒權限</string>
+    <string name="activity_main_schedule_exact_alarm">排程精確鬧鐘已停用！！！\nGlucoDataHandler 可能無法正常運作！！！\n按這裡前往權限設定</string>
+
+
+    <string name="src_libre_patient">患者</string>
+    <string name="src_libre_patient_summary">如果有多個病患連線到 Libre 帳戶，請選擇要接收資料的患者</string>
+    <string name="pref_cat_locksreen_wallpaper">鎖定螢幕桌布</string>
+    <string name="pref_lockscreen_enabled">啟用</string>
+    <string name="pref_lockscreen_enabled_summary">如果您啟用鎖定螢幕桌布，程式將會取代原本鎖定螢幕設定的桌布</string>
+    <string name="pref_lockscreen_y_pos">垂直位置</string>
+    <string name="pref_lockscreen_y_pos_summary">鎖定螢幕上血糖趨勢箭頭的垂直位置：\n0 是螢幕的最上方\n100 是螢幕的最下方</string>
+    <string name="activity_main_notification_permission">顯示通知已停用！！！\nGlucoDataHandler 可能無法正常運作並無法顯示警報！！！\n按這裡前往權限設定</string>
+
+    <string name="src_libre_setup_librelink">缺少資料！請先在 LibreLinkUp 程式中接受邀請！</string>
+    <string name="prefstatus_bar_notification_colored_icon">彩色狀態列圖示</string>
+    <string name="pref_status_bar_notification_colored_icon_summary">若您的裝置支援彩色狀態列圖示則可以啟用，如停用則會顯示白色圖示</string>
+    
+    <string name="menu_alarms">警報</string>
+    <string name="alarm_interval">間隔</string>
+    <string name="alarm_interval_summary_low">此警報類型顯示通知的最小間隔 (分鐘)\n資訊: 只會在間隔時間已到且變化量為負時，才會顯示新通知</string>
+    <string name="alarm_interval_summary_high">此警報類型顯示通知的最小間隔 (分鐘)\n資訊: 只會在間隔時間已到且變化量為正時，才會顯示新通知</string>
+    <string name="alarm_interval_summary_obsolete">自上次收到血糖值多久以後觸發此通知 (分鐘)，間隔時間已到時會再次顯示</string>
+    <string name="alarm_enabled">已啟用</string>
+    <string name="alarm_enabled_summary_on">此警報類型通知已啟用</string>
+    <string name="alarm_enabled_summary_off">此警報類型通知已停用</string>
+    <string name="alarm_test">測試</string>
+    <string name="alarm_test_summary">按這裡 3 秒後會觸發此警報類型通知</string>
+    <string name="alarm_settings">設定</string>
+    <string name="alarm_settings_summary">按這裡前往此警報的通知頻道設定\n可以在那裡變更所有相關設定</string>
+    <string name="alarm_save_sound">儲存聲音</string>
+    <string name="alarm_save_sound_summary">按這裡可以將預設的警報聲音儲存到手機上</string>
+    <string name="alarm_saved">警報已儲存！</string>
+    <string name="snooze">貪睡</string>
+    <string name="alarm_cat_all">所有警報</string>
+    <string name="alarm_notifications_enabled">警報通知</string>
+    <string name="wear_alarm_notifications_enabled">Wear: 警報通知</string>
+    <string name="alarm_notifications_enabled_summary_on">手機上的警報通知已啟用\n提示: 警報會使用手機的鬧鐘音量</string>
+    <string name="alarm_notifications_enabled_summary_off">手機上的警報通知已停用</string>
+    <string name="stop_snooze">停止</string>
+    <string name="very_low_alarm_text">非常低血糖！</string>
+    <string name="very_low_text">低血糖！</string>
+    <string name="very_high_text">高血糖！</string>
+    <string name="very_high_alarm_text">非常高血糖！</string>
+    <string name="very_low_alarm_notification_name">非常低血糖警報</string>
+    <string name="very_low_alarm_notification_descr">非常低血糖警報的通知</string>
+    <string name="low_alarm_notification_name">低血糖警報</string>
+    <string name="low_alarm_notification_descr">低血糖警報的通知</string>
+    <string name="high_alarm_notification_name">高血糖警報</string>
+    <string name="high_alarm_notification_descr">高血糖警報的通知</string>
+    <string name="very_high_alarm_notification_name">非常高血糖警報</string>
+    <string name="very_high_alarm_notification_descr">非常高血糖警報的通知</string>
+    <string name="btn_dismiss">關閉</string>
+    <string name="test_alarm">測試警報！</string>
+    <string name="alarm_cat_categories">警報類別</string>
+    <string name="alarm_fullscreen_notification_enabled">全螢幕通知</string>
+    <string name="alarm_fullscreen_notification_enabled_summary">啟用鎖定螢幕的全螢幕通知\n可能需要額外權限</string>
+    <string name="alarm_fullscreen_dismiss_keyguard">關閉鍵盤防護</string>
+    <string name="alarm_fullscreen_dismiss_keyguard_summary">如果全螢幕通知運作時出現問題可以嘗試啟用此選項\n但某些裝置啟用此選項時，觸發全螢幕通知時會自動解鎖螢幕\n所以若您沒有遇到問題請不要啟用此選項</string>
+    <string name="alarm_force_sound">強制警報聲音</string>
+    <string name="alarm_force_sound_summary">即使手機為靜音或震動模式，也會強制發出警報聲音和震動，還會強制停止勿擾模式！\n若要啟用此選項，系統可能需要允許變更勿擾模式的權限</string>
+    <string name="wear_alarm_force_sound">Waer: 強制警報聲音</string>
+    <string name="alarm_force_vibration">強制震動</string>
+    <string name="alarm_force_vibration_summary">即使手機為靜音或震動模式，也會強制手機震動，還會強制停止勿擾模式！\n若要啟用此選項，系統可能需要允許變更勿擾模式的權限</string>
+    <string name="alarm_sound_level">音量大小</string>
+    <string name="alarm_sound_level_summary">強制設定警報聲音的音量大小\n-1 表示使用預設設定</string>
+    <string name="advanced_settings">進階設定</string>
+    <string name="advanced_settings_alarm_summary">全螢幕通知與聲音的進階警報設定</string>
+    <string name="alarm_advanced_cat_notifcation">通知</string>
+    <string name="alarm_advanced_cat_sound">聲音</string>
+    <string name="alarm_type_summary">從 %1$s 開始的血糖值警報設定</string>
+    <string name="alarm_no_notification_wear_connected">Wear 裝置連線時不顯示警報</string>
+    <string name="alarm_no_notification_wear_connected_summary_on">如果手機已與手錶的 GlucoDataHandler 連線，則手機不顯示警報通知</string>
+    <string name="alarm_no_notification_wear_connected_summary_off">即使手機已與手錶的 GlucoDataHandler 連線，手機也會顯示警報通知</string>
+    <string name="alarm_no_notification_auto_connected">Android Auto 連線時不顯示警報</string>
+    <string name="alarm_no_notification_auto_connected_summary_on">如果 Android Auto 已連線，則手機不顯示警報通知</string>
+    <string name="alarm_no_notification_auto_connected_summary_off">即使 Android Auto 已連線，手機也會顯示警報通知</string>
+    <string name="alarm_retrigger">重新觸發</string>
+    <string name="alarm_retrigger_summary">如果警報通知未關閉，則警報將在設定的間隔 (分鐘) 後再次觸發 (最多 3 次)\n0 - 不重新觸發</string>
+    <string name="alarm_obsolete">血糖值過時</string>
+    <string name="obsolete_alarm_notification_name">過時警報</string>
+    <string name="alarm_obsolete_summary">如果 %1$s 分內沒有收到新血糖值則會顯示警報</string>
+    <string name="obsolete_alarm_notification_descr">如果在間隔時間後沒有收到新血糖值則會顯示此通知</string>
+    <string name="obsolete_alarm_text">沒有新血糖值！</string>
+
+    <string name="permission_notification_title">顯示通知已停用！！！</string>
+    <string name="permission_notification_message">GlucoDataHandler 需要啟用通知才能在背景執行工作並顯示警報</string>
+    <string name="alarm_notification_name">警報通知</string>
+    <string name="alarm_notification_descr">警報通知。請勿變更設定，此為程式發出通知聲音和震動之用</string>
+    <string name="alarm_sound">選擇自訂聲音</string>
+    <string name="alarm_sound_summary">靜音 - 沒有聲音</string>
+    <string name="alarm_use_custom_sound">使用自訂聲音</string>
+    <string name="alarm_use_custom_sound_summary_on">使用選擇的自訂聲音</string>
+    <string name="alarm_use_custom_sound_summary_off">使用程式內建聲音</string>
+    <string name="alarm_sound_delay">聲音延遲</string>
+    <string name="alarm_sound_delay_summary">播放聲音前的等待時間 (秒)\n即使未選擇聲音也會持續震動</string>
+    <string name="pref_cat_alarm_vibration_sound">聲音和震動</string>
+    <string name="alarm_vibrate_only">只有震動</string>
+    <string name="wear_alarm_vibrate_only">Wear: 只有震動</string>
+    <string name="permission_alarm_notification_title">通知已停用！</string>
+    <string name="permission_alarm_notification_message">若要顯示警報 GlucoDataHandler 至少需要啟用警報通知頻道\n接下來會打開程式的通知設定\n請在那裡啟用警報通知頻道</string>
+    <string name="alarm_app_sound">內部程式聲音</string>
+    <string name="pref_send_pref_to_glucodataauto">包含設定</string>
+    <string name="pref_send_pref_to_glucodataauto_summary">傳送到 GlucoDataAuto 的訊息中包含設定\n這會覆蓋 GlucoDataAuto 的設定</string>
+    <string name="pref_source_gdh_info_summary">若要從 GlucoDataHandler 接收血糖值:\n- 開啟 GlucoDataHandler\n- 點選設定\n- 啟用「轉發到 GlucoDataAuto」\n- 若要使用同樣的設定，請啟用「包含設定」</string>
+    <string name="very_low_alarm_summary">如果您使用 Android Auto 通知，非常低血糖警報會強制啟用且無法停用或變更</string>
+    <string name="pref_source_juggluco_iob_info">Juggluco 的 IOB</string>
+    <string name="pref_source_juggluco_iob_info_summary">若要從 Juggluco 接收 IOB:\n- 開啟 Juggluco\n- 點選「Settings」\n- 啟用「IOB」\n- 點選「Web server」\n- 啟用「Active」\n- 選用: 啟用「Local only」</string>
+    <string name="pref_source_xdrip_iob_info">xDrip+ 的 IOB</string>
+    <string name="pref_source_xdrip_iob_info_summary">若要從 xDrip+ 接收血糖值:\n- 開啟 xDrip+\n- 前往 Settings\n- 點選 Inter-app settings\n- 啟用「xDrip Web Service」</string>
+    <string name="pref_source_activate_local_nightscout_iob">啟用 IOB 使用</string>
+    <string name="pref_source_activate_local_nightscout_iob_summary">按這裡設定 Nightscout 設定，以使用本機網頁伺服器接收額外 IOB 值</string>
+    <string name="activate_local_nightscout_iob_title">覆寫 Nightscout</string>
+    <string name="activate_local_nightscout_iob_message">覆寫目前的 Nightscout 資料來源設定，而使用連接埠 17580 的本機網頁服務接收 IOB 值\n您確定嗎？</string>
+    <string name="gda_media_notification_toggle_title">通知開關</string>
+    <string name="gda_notifications_on">通知已開啟</string>
+    <string name="gda_notifications_off">通知已關閉</string>
+    <string name="gda_media_notification_toggle_action">按一下播放可開關通知</string>
+    <string name="pref_gda_alarm_info_summary">警報設定只會影響 Android Auto 相關的通知，不會發出任何聲音</string>
+    <string name="pref_cat_general_summary">一般設定，例如單位、時間和變化量設定</string>
+    <string name="pref_target_range_summary">血糖上下限和對應顏色設定</string>
+    <string name="pref_cat_widgets_summary">手機小工具和浮動小工具設定</string>
+    <string name="pref_cat_notification_summary">通知設定</string>
+    <string name="pref_cat_locksreen_wallpaper_summary">取代鎖定螢幕桌布設定</string>
+    <string name="pref_cat_android_auto_summary">用於 Android Auto 的 GlucoDataAuto 設定</string>
+    <string name="pref_cat_watchdrip">小米手環和 Amazfit 手錶</string>
+    <string name="pref_cat_wear_os">Wear OS 手錶</string>
+    <string name="pref_cat_watch">手錶</string>
+    <string name="pref_cat_watch_summary">智慧手錶連線設定</string>
+    <string name="pref_cat_transfer_summary">傳輸血糖值到其他程式的設定</string>
+    <string name="pref_cat_transfer">傳輸血糖值</string>
+    <string name="pref_cat_visualisation">視覺化</string>
+    <string name="pref_cat_banglejs">BangleJS 手錶</string>
+    <string name="pref_wearos_info_summary">若要在 Wear OS 手錶使用 GlucoDataHandler，請從手錶的 Google Play 商店安裝</string>
+    <string name="pref_wear_os_check_connection">檢查連線</string>
+    <string name="pref_wear_os_check_connection_summary">按這裡重新檢查 Wear OS 連線\n在主畫面按一下連線資訊也可以檢查連線 (Wear OS 程式也適用)</string>!
+    <string name="pref_watchdrip_info_summary">WatchDrip+ 支援多款小米手環和 Amazfit 裝置\n若要取得完整的支援裝置清單及更多關於設定 WatchDrip+ 的資訊，請按這裡</string>
+    <string name="alarm_vibrate_only_wear_info">只震動而不顯示通知的功能並非在所有裝置都能正確運作！</string>
+    <string name="alarm_use_alarm_sound">使用鬧鐘音量</string>
+    <string name="alarm_use_alarm_sound_summary">使用鬧鐘的音量大小而不是鈴聲的音量大小\n此選項不受震動模式的影響</string>
+    <string name="alarm_vibrate_only_summary">啟用此選項會強制不發出任何聲音，且不受其他警報聲音設定的影響</string>
+    <string name="alarm_start_delay">開始延遲</string>
+    <string name="alarm_start_delay_wear_summary">第一次播放震動和聲音前要延遲多久\n有時候手機通知會立即打斷震動</string>
+    <string name="pref_color_obsolete">過時數值顏色</string>
+    <string name="pref_color_obsolete_summary">無新血糖值的顏色</string>
+    <string name="alarm_wear_no_notification_phone_connected">手機連線時無彈出通知</string>
+    <string name="alarm_wear_no_notification_phone_connected_summary">手機連線時無額外 Wear 彈出通知\n震動和聲音會依照設定觸發</string>
+    <string name="table_header_details">詳細資訊</string>
+    <string name="table_header_connections">連線</string>
+    <string name="disconnected_label">已斷線</string>
+    <string name="connected_label">已連線</string>
+    <string name="pref_application_color_scheme">程式配色</string>
+    <string name="application_color_scheme_system">使用系統配色</string>
+    <string name="application_color_scheme_light">淺色配色</string>
+    <string name="application_color_scheme_dark">深色配色</string>
+    <string name="tap_action">點選動作</string>
+    <string name="tap_action_summary">選擇點選此項目時要執行的動作或程式</string>
+    <string name="no_action">無動作</string>
+    <string name="action_floating_widget_toggle">切換浮動小工具</string>
+    <string name="wear_complication_tap_action">小工具點選動作</string>
+    <string name="activity_large_arrow_icon_summary">如趨勢箭頭太大導致被裁切請停用此設定</string>
+    <string name="pref_cat_ui_settings">使用者介面</string>
+    <string name="pref_cat_ui_settings_summary">程式使用者介面一般設定</string>
+    <string name="gda_foreground_info">GlucoDataAuto 執行中</string>
+    <string name="gda_foreground_summary">僅在您使用追蹤器資料來源且只使用 Android Auto 通知時才啟用\n這可以避免 Android 未連線到 Android Auto 時就將程式關閉，導致程式無法偵測 Android Auto 連線\n除了啟用此選項外，也可以在連線時於 Android Auto 中手動開啟程式一次</string>
+    <string name="gda_battery_optimization_disabled">已啟用電池最佳化！\n按這裡停用</string>
+    <string name="gda_source_follower_info_summary">如果您使用追蹤器資料來源且只使用 Android Auto 通知時，程式可能無法在連線 Android Auto 時自動啟動\n若要確保程式能偵測 Android Auto 連線，必須停用電池最佳化\n如果仍然無法運作，也可以啟用前景模式，或在連線時於 Android Auto 中手動開啟程式一次</string>
+    <string name="gda_help_aa_title">設定 Android Auto</string>
+    <string name="gda_help_aa_title_summary">Android Auto 可能是獨立的程式或整合於系統中且可從 Android 設定中存取\n若要於 Android Auto 啟用 GlucoDataAuto，您必須依照下列步驟: </string>
+    <string name="gda_help_aa_dev_mode">1. 啟用開發人員模式</string>
+    <string name="gda_help_aa_dev_mode_summary">- 開啟 Android Auto\n- 向下找到「版本」\n- 多次點選版本直到出現「允許開發者設定」的彈出視窗\n- 按「確定」</string>
+    <string name="gda_help_aa_sources">2. 啟用「未知的來源」</string>
+    <string name="gda_help_aa_sources_summary">- 開啟 Android Auto\n- 在 3 點選單中點選「開發人員設定」\n- 向下找到「未知的來源」\n- 啟用該選項</string>
+    <string name="gda_help_aa_notification">3. 設定通知設定</string>
+    <string name="gda_help_aa_notification_summary">- 開啟 Android Auto\n- 向下找到「簡訊」\n- 啟用「顯示訊息通知」\n- 啟用「顯示訊息的第一行文字」</string>
+    <string name="gda_help_aa_enable_gda">4. 啟用 GlucoDataAuto</string>
+    <string name="gda_help_aa_enable_gda_summary">- 開啟 Android Auto\n- 向下找到「螢幕」\n- 開啟「自訂啟動器」\n- 啟用「GlucoDataAuto」\n如果找不到 GlucoDataAuto，請重新啟動手機</string>
+    <string name="pref_notification_custom_layout">彩色佈局</string>
+    <string name="pref_notification_custom_layout_summary">以放大彩色文字顯示血糖值\n某些搭載 Android 13 以上版本的 Samsung 裝置可能會使程式因 Samsung 系統的問題而當機\n如果發生問題此設定將自動停用，以確保程式功能正常</string>
+    <string name="app_crash_title">偵測到當機！</string>
+    <string name="app_crash_message">很抱歉程式在執行時當機！\n請將記錄檔傳送給我，以便我能分析錯誤並盡快修復\n謝謝！</string>
+    <string name="src_cat_dexcom_share">Dexcom Share</string>
+    <string name="src_dexcom_share_us_server">美國帳號</string>
+    <string name="src_dexcom_share_us_server_summary_on">已使用美國帳號</string>
+    <string name="src_dexcom_share_us_server_summary_off">已使用國際帳號</string>
+    <string name="src_dexcom_share_enabled_summary">啟用 Dexcom Share 帳號，您需要先設定使用者名稱和密碼</string>
+    <string name="src_username">使用者名稱</string>
+    <string name="src_dexcom_share_user_summary">用於登入 Dexcom Share 帳號的使用者名稱、電子郵件或電話號碼\n重要: 如果您使用電話號碼必須包含國家/地區代碼 (例如美國為 +1)</string>
+    <string name="src_dexcom_share_password_summary">Dexcom Share 帳號密碼</string>
+    <string name="pref_source_dexcom_share_info">設定 Dexcom Share</string>
+    <string name="permission_missing_title">缺少權限！</string>
+    <string name="setting_permission_missing_message">「%1$s」已設定，但未授予相關權限！按「確定」會打開權限畫面，或是按「取消」停用此選項</string>
+    <string name="xdrip_broadcast_service_api_enabled">廣播服務 API</string>
+    <string name="xdrip_broadcast_service_api_enabled_summary">使用 xDrip+ 廣播服務 API 從 xDrip+ 接收資料 (包括 IOB)\n請先在 xDrip+ 的「Inter-App settings」中啟用「Broadcast Service API」！</string>
+    <string name="obsolete_time">過時時間</string>
+    <string name="obsolete_time_summary">設定幾分鐘後的血糖值視為過時血糖值\n兩倍的過時時間後，過時血糖值會被刪除</string>
+    <string name="pref_source_offline">本機程式</string>
+    <string name="pref_source_offline_summary">在同裝置中以內部廣播訊息提供血糖值的程式，如 Juggluco、xDrip+、AAPS 等</string>
+    <string name="pref_cat_follower_summary">透過網路的雲端服務提供血糖值，如 LibreLinkUp、Dexcom Share 和 Nightscout</string>
+    <string name="pref_source_xdrip_broadcast">替代來源: 本機廣播</string>
+    <string name="pref_source_dexcom_byoda_info_summary">若要從 Dexcom BYODA 接收血糖值，您必須在建置程式時啟用對 AAPS 的廣播功能</string>
+    <string name="pref_source_eversense_info_summary">若要從 Eversense 接收數值，您必須使用 ESEL，無論是在夥伴模式（讀取通知）還是連線到修補的 Eversense 應用程式。\n若要取得更多關於 ESEL 的資訊，請按這裡。</string>
+    <string name="pref_source_eversense_byoda_info_summary">若要從 Dexcom BYODA 接收數值，您必須在建置應用程式時啟用對 xDrip+ 的廣播。</string>
+    <string name="new_version">已有新版 %s 可用</string>
+    <string name="info_label_notes">備註</string>
+    <string name="gda_notification_permission">通知已停用！\n按這裡啟用</string>
+    <string name="pref_show_other_unit">顯示其他單位</string>
+    <string name="pref_show_other_unit_summary">在詳細資訊中顯示 %s 為單位的血糖值</string>
+    <string name="other_unit">其他單位</string>
+    <string name="dexcom_share_check_non_us_account">按這裡檢查非美國帳號的 Dexcom Share 帳號資料</string>
+    <string name="dexcom_share_check_us_account">按這裡檢查美國帳號的 Dexcom Share 帳號資料</string>
+    <string name="pref_lockscreen_size_summary">變更鎖定螢幕資料大小</string>
+    <string name="pref_wear_os_reset_connection">重設連線</string>
+    <string name="pref_wear_os_reset_connection_summary">如果 Wear 和手機無法正常連線，請按這裡重設連線\n如果重設連線無法解決問題，請重新啟動手錶</string>
+    <string name="detail_reset_connection">連線不正常！請試著重新啟動手錶</string>
+    <string name="pref_floating_widget_time_to_close">關閉時間</string>
+    <string name="pref_floating_widget_time_to_close_summary">按住小工具不移動幾秒後關閉浮動小工具\n0 表示停用</string>
+    <string name="alarm_inactive_enabled">啟用勿擾時段</string>
+    <string name="alarm_inactive_enabled_summary">於勿擾時段期間，此警報不會發出通知\n設定您想要的時段以啟用此功能</string>
+    <string name="all_alarm_inactive_enabled_summary">於勿擾時段期間，所有警報都不會發出通知\n設定您想要的時段以啟用此功能</string>
+    <string name="alarm_inactive_start_time">開始時間</string>
+    <string name="alarm_inactive_start_time_summary">選擇勿擾時段開始時間</string>
+    <string name="alarm_inactive_end_time">結束時間</string>
+    <string name="alarm_inactive_end_time_summary">選擇勿擾時段結束時間</string>
+    <string name="alarm_inactive_weekdays">每週天數</string>
+    <string name="alarm_inactive_weekdays_summary">設定每週幾勿擾時段會於開始時間生效</string>
+
+    <string name="app_crash_bad_notification">程式因彩色佈局當機！\n為防止再次當機已停用此功能\n重新啟動手機通常可以解決這個問題。</string>
+    <string name="auto_close_notification">自動關閉通知</string>
+    <string name="auto_close_notification_summary">在聲音和震動結束後自動關閉警報通知，但通知至少會顯示 30 秒。\n如果已啟用重新觸發功能，則會在重新觸發結束後才會自動關閉</string>
+
+    <string name="settings_save_succeeded">儲存設定成功</string>
+    <string name="settings_save_failed">儲存設定失敗！</string>
+    <string name="settings_read_succeeded">讀取設定成功</string>
+    <string name="settings_read_failed">讀取設定失敗！</string>
+    <string name="pref_cat_export_import">匯出 / 匯入</string>
+    <string name="pref_cat_export_import_summary">匯出或匯入設定並儲存記錄</string>
+    <string name="pref_export_settings">匯出</string>
+    <string name="pref_export_settings_summary">按這裡會將所有設定匯出為檔案\n重要: 只有修改過的設定才會儲存！與預設值相同的設定不會匯出</string>
+    <string name="pref_import_settings">匯入</string>
+    <string name="pref_import_settings_summary">按這裡會從檔案匯入所有設定\n重要: 預設設定不會重新建立，因為與預設值相同的設定不會匯出\n如果您想將所有設定重設為預設值，請先刪除應用程式資料再匯入</string>
+
+    <string name="menu_save_mobile_logs_summary">將手機記錄存到記錄檔</string>
+    <string name="menu_save_wear_logs_summary">將已連線 Wear OS 手錶的記錄存到記錄檔</string>
+    <string name="alarm_repeat">重複</string>
+    <string name="no_vibration">不要震動</string>
+    <string name="alarm_vibrate_mode">震動模式</string>
+
+    <string name="alarm_rising_fast">快速上升</string>
+    <string name="rising_fast_alarm_notification_name">快速上升警報</string>
+    <string name="alarm_rising_fast_summary">如果血糖值大於等於 %1$s，且變化量連續 %3$d 次至少上升 +%2$s 就會發出警報</string>
+    <string name="rising_fast_alarm_text">快速上升！</string>
+
+    <string name="alarm_falling_fast">快速下降</string>
+    <string name="falling_fast_alarm_notification_name">快速下降警報</string>
+    <string name="alarm_falling_fast_summary">如果血糖值小於等於 %1$s，且變化量連續 %3$d 次至少下降 -%2$s 就會發出警報</string>
+    <string name="falling_fast_alarm_text">快速下降！</string>
+    <string name="alarm_vibrate_amplitude">震動強度</string>
+    <string name="alarm_vibrate_amplitude_summary">震動強度</string>
+    <string name="pref_cat_alarm_settings">警報設定</string>
+    <string name="pref_alarm_delta_summary">要觸發警報的變化量</string>
+    <string name="alarm_occurrence_count">達成次數</string>
+    <string name="alarm_occurrence_count_summary">變化量必須連續達成次數</string>
+    <string name="pref_alarm_rising_falling_border">上下限</string>
+    <string name="pref_alarm_rising_falling_border_summary">上升/下降警報的上下限\n血糖值必須大於/小於此值才會發出警報</string>
+    <string name="delta_per_minute">每分鐘</string>
+    <string name="delta_per_5_minute">每 5 分鐘</string>
+    <string name="other_alarm_cat_categories">其他警報</string>
+    <string name="advanced_settings_alarm">進階警報設定</string>
+    <string name="src_offline_enabled_summary_on">將處理此資料來源的內部訊息</string>
+    <string name="src_offline_enabled_summary_off">將忽略此資料來源的內部訊息</string>
+    <string name="temp_disabled">暫時停用</string>
+    <string name="snooze_until">貪睡至</string>
+    <string name="temp_disabled_until">暫時停用至</string>
+
+    <string name="trend">趨勢箭頭</string>
+    <string name="rate_rising">上升 %1$d 度</string>
+    <string name="rate_falling">下降 %1$d 度</string>
+
+    <string name="alarm_toggle_state">警報: %1$s</string>
+    <string name="alarm_state_inactive">未使用</string>
+    <string name="alarm_state_snooze">貪睡至 %1$s</string>
+    <string name="alarm_state_temp_disabled">暫時停用至 %1$s</string>
+
+    <string name="enabled">已啟用</string>
+    <string name="disabled">已停用</string>
+
+    <string name="not_available">無法使用</string>
+
+    <string name="action_read_values">讀數</string>
+
+    <plurals name="elapsed_time_full_text">
+        <item quantity="other">時間 %d 分鐘</item>
+    </plurals>
+    <string name="pref_source_diabox_info_summary">開啟整合並啟用「與 GWatch 分享資料」\n備註: DiaBox 廣播只有血糖值，沒有趨勢箭頭等更多資訊！</string>
+    <string name="pref_source_dexcom_byoda_not_working_info_summary">備註: 來自 BYODA 的 AAPS 廣播似乎無法與其他程式一起使用\n請在 BYODA 中使用 xDrip+ 廣播</string>
+
+    <string name="gda_help_aa_summary">在 Android Auto 上開始使用 GDA</string>
+    <string name="no_tts">未啟用文字轉語音 (TTS)\n若要使用此功能請在 Android 協助工具設定中啟用 TTS\n啟用後按這裡以更新狀態</string>
+    <string name="pref_cat_android_auto_speak">朗讀血糖值</string>
+    <string name="pref_cat_play_button">播放</string>
+    <string name="pref_aa_media_player_speak_values_on_summary">播放時朗讀目前血糖值\n需要啟用文字轉語音</string>
+    <string name="pref_aa_media_player_speak_values_off_summary">播放一段空白聲音，使媒體播放器顯示於分割畫面的前面</string>
+    <string name="pref_aa_media_player_always_speak">朗讀新血糖值</string>
+    <string name="pref_aa_media_player_always_speak_summary">在 Android Auto 中朗讀新血糖值，即使使用其他媒體播放器時也會朗讀</string>
+    <string name="tts_test_summary">按這裡測試文字轉語音</string>
+    <string name="pref_aa_media_player_speak_alarm_only_summary">只朗讀警報</string>
+    <string name="pref_aa_media_player_speak_interval_summary">設定 Android Auto 中間隔多久朗讀新血糖值</string>
+    <string name="pref_aa_media_player_duration_summary">於媒體播放器中進度列的顯示收到新血糖值的間隔時間\n設為 0 會停用進度列</string>
+
+    <string name="gda_media_speak_toggle_title">朗讀新數值開關</string>
+    <string name="gda_speak_on">朗讀已開啟</string>
+    <string name="gda_speak_off">朗讀已關閉</string>
+    <string name="enable_alarm_icon_toggle">啟用警報圖示</string>
+    <string name="enable_alarm_icon_toggle_summary">在主畫面上啟用警報圖示以切換警報狀態</string>
+
+    <!-- v1.3  -->
+
+    <string name="src_librelink_error4">錯誤，請重新登入 LibreLinkUp 程式並檢查是否有任何步驟未完成！</string>
+    <string name="src_librelink_error4_type">錯誤類型 %1$s，請重新登入 LibreLinkUp 程式並檢查是否有任何步驟未完成！</string>
+    <string name="source_libre_auto_accept_tou">自動接受新條款</string>
+    <string name="source_libre_auto_accept_tou_summary">啟用此選項後您將自動接受新使用條款，確保可以持續接收資料。您不會再收到關於新條款的通知，如果您想閱讀新使用條款請停用此設定，並在發生錯誤 4 時打開 LibreLinkUp 程式</string>
+    <string name="src_librelink_error4_tou">必須接受新使用條款。在 LibreLinkUp 資料來源設定中啟用自動接受，或再次登入 LibreLinkUp 程式並接受新條款</string>
+    <string name="src_libre_tou_message">GlucoDataHandler 可以自動接受 LibreLinkUp 的新使用條款。\n按「確定」啟用此功能，或按「取消」然後打開 LibreLinkUp 程式閱讀並手動接受條款</string>
+    <string name="src_librelink_error2">使用者名稱或密碼不正確。請確認 LibreLinkUp 資料來源設定。需要的話請試著再次登入或重新安裝 LibreLinkUp 程式並檢查您的帳號設定\n請關閉其他存取同一個帳號的程式！</string>
+    <string name="last_value_on_server">伺服器上的最後一次血糖讀數來自 %1$s</string>
+    <string name="no_data_in_server_response">伺服器找不到血糖讀數</string>
+    <string name="http_error_429">太多請求！</string>
+    <string name="http_error_429_info">請關閉其他存取同一個帳號的程式！</string>
+    <string name="state_await_data">等待資料中</string>
+    <string name="pref_send_battery_level_to_watch">傳送電池電量</string>
+    <string name="pref_send_battery_level_to_watch_summary">將電池電量傳送到手錶以便在小工具和主畫面上顯示</string>
+    <string name="pref_battery_level">顯示電池電量</string>
+    <string name="forward_to_watch_interval_summary">設定血糖測量最小間隔多久 (分鐘) 會傳送更新到手錶\n警報和非常低的血糖值會立即傳送</string>
+    <string name="forward_to_values_summary">設定血糖測量最小間隔多久 (分鐘) 會傳送更新到接收程式</string>
+    <string name="alarm_repeat_summary">警報會重複發出聲音和震動，直到您關閉通知或達到所設定的最大警報持續時間為止</string>
+    <string name="alarm_repeat_time">最大警報持續時間</string>
+    <string name="alarm_repeat_time_summary">設定警報發出聲音和震動的最大持續時間 (分鐘)。設為 0 表示警報會一直重複</string>
+    <string name="wear_source_info">要啟用資料來源，請優先在手機中設定。只有當您的手機收不到資料時，才從手錶啟用資料來源</string>
+    <string name="gdh_disclaimer_title">開發者說明</string>
+    <string name="gdh_disclaimer_message">本程式是我利用空閒時間所開發的專案，故無法保證所有功能都能在不同裝置上完美運作，但我會持續更新修正。\n如果您遇到任何問題或有任何疑問，請在留下負評之前與我聯繫。\n若要隨時掌握重大更新和錯誤修復，歡迎您加入 Facebook 社團或 Google 群組。</string>
+
+    <string name="pref_source_dexcom_share_info_1_summary">若要從 Dexcom Share 伺服器接收資料:\n在 Dexcom 程式中:\n - 建立一個追蹤者\n - 在「Connections」中檢查是否有顯示「Share On」</string>
+    <string name="pref_source_dexcom_share_info_2_summary">在 GlucoDataHandler 中:\n - 輸入您的 Dexcom Clarity 使用者名稱和密碼\n   (如果您使用手機號碼作為使用者名稱，請輸入國家/地區代碼)\n - 檢查美國帳號設定\n重要: 不可以使用追蹤者帳號！</string>
+
+    <string name="request_timestamp">已更新</string>
+    <string name="alarm_header">警報</string>
+    <string name="wearos_watchfaces">錶面</string>
+    <string name="wearos_watchfaces_summary">關於 Wear OS 第三方錶面資訊</string>
+    <string name="setup">設定</string>
+    <string name="pref_watchfaces_cat">第三方錶面</string>
+    <string name="pref_watchfaces_info_summary">本程式不提供錶面，但提供多種小工具 (錶面上的圓形部分)，可用於支援第三方小工具的錶面</string>
+    <string name="pref_watchfaces_default">標準</string>
+    <string name="pref_watchfaces_default_summary">多數手錶製造商都提供可以與 GlucoDataHandler 小工具一起使用的錶面\n如大多數 Samsung 的「資訊」錶面都可相容</string>
+    <string name="pref_watchfaces_pujie">Pujie</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie 是一個有雲端資料庫的錶面設計程式\n若要尋找相容錶面，請在資料庫中搜尋以「GDH_」開頭的錶面\n注意: Pujie 與 Wear OS 5 裝置不相容\n按這裡開啟 Play 商店的程式</string>
+    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
+    <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man 專門設計可與 GlucoDataHandler 搭配使用的第三方錶面\n按這裡開啟他的 Play 商店頁面</string>
+    <string name="pref_watchfaces_gdc">GDC 錶面</string>
+    <string name="pref_watchfaces_gdc_summary">GDC 錶面專門設計與 GlucoDataHandler 搭配使用\n按這裡開啟 Play 商店頁面</string>
+    <string name="pref_phone_wear_screen_off_update">一律更新小工具</string>
+    <string name="pref_phone_wear_screen_off_update_summary">一律傳送新血糖值到手錶\n停用此選項可在手錶螢幕關閉時防止手錶更新資料以節省電量\n警報值一律會傳送到手錶\n重要: 停用此選項會關閉手錶的過時警報！</string>
+    <string name="alarm_ignore_snooze_for_very_low">非常低血糖時一律發出警報</string>
+    <string name="alarm_ignore_snooze_for_very_low_summary">即使處於貪睡模式或所有警報的勿擾時段，此警報仍會發出通知，確保您能收到非常低血糖的警報</string>
+
+    <string name="libre_no_new_value_info">如果一直發生此錯誤，請試著重新安裝 Libre 程式，通常可以解決問題。</string>
+    <string name="src_libre_server">伺服器</string>
+    <string name="source_libre_server_default">預設 (.io)</string>
+    <string name="source_libre_server_russian">俄羅斯 (.ru)</string>
+
+    <string name="patient_name">姓名</string>
+    <string name="patient_name_summary">使用者/病患的姓名，將會顯示在通知和語音播報中。\n如果您正在使用多個 GlucoDataAuto 變體，則應使用此選項，否則可以留空。</string>
+
+    <string name="video_tutorial">影片教學</string>
+    <string name="video_tutorial_summary">點擊此處前往 YouTube 影片，其中說明了此來源的設定。非常感謝 Diabetic Masked Man 製作這些影片。</string>
+
+    <string name="snooze_30">30 分鐘</string>
+    <string name="snooze_60">60 分鐘</string>
+    <string name="snooze_90">90 分鐘</string>
+    <string name="snooze_120">120 分鐘</string>
+    <string name="alarm_snooze_on_notification_enabled">通知貪睡</string>
+    <string name="alarm_snooze_on_notification_summary">選擇最多 3 個貪睡持續時間，以便在鬧鐘通知上顯示為按鈕。</string>
+
+    <string name="pref_show_iob_cob">顯示 IOB/COB 值</string>
+    <string name="pref_show_iob_cob_summary">顯示 IOB 和 COB 值（如果有的話）。</string>
+
+    <string name="delta_per_10_minute">每 10 分鐘</string>
+    <string name="delta_per_15_minute">每 15 分鐘</string>
+</resources>
