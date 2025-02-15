@@ -93,7 +93,14 @@ class AODAccessibilityService : AccessibilityService(), NotifierInterface {
             when (intent?.action) {
                 Intent.ACTION_SCREEN_OFF -> {
                     Log.d(LOG_ID, "Screen turned off")
-                    checkAndCreateOverlay()
+
+                    if (context != null) {
+                        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                        val enabled = sharedPref.getBoolean(Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED, false)
+                        if (enabled) {
+                            checkAndCreateOverlay()
+                        }
+                    }
                 }
                 Intent.ACTION_SCREEN_ON -> {
                     Log.d(LOG_ID, "Screen turned on")
@@ -120,7 +127,11 @@ class AODAccessibilityService : AccessibilityService(), NotifierInterface {
         registerReceiver(screenStateReceiver, filter)
     }
 
+    //    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
+
     private fun checkAndCreateOverlay() {
+        val handler = android.os.Handler(android.os.Looper.getMainLooper())
+
         handler.postDelayed({
             if (!powerManager.isInteractive && overlayView == null) {
                 try {
@@ -133,12 +144,12 @@ class AODAccessibilityService : AccessibilityService(), NotifierInterface {
         }, 1000)
     }
 
-    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
 
     private fun createOverlay() {
         Log.d(LOG_ID, "Creating overlay")
 
-        if (overlayView != null) return
+        if (overlayView != null)
+            return
 
         var layoutParams = WindowManager.LayoutParams().apply {
             type = WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY
