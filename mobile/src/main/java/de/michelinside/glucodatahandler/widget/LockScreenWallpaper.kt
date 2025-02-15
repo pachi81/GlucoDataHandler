@@ -22,26 +22,6 @@ class LockScreenWallpaper(context: Context): WallpaperBase(context, "GDH.LockScr
     override val stylePref = Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE
     override val sizePref = Constants.SHARED_PREF_LOCKSCREEN_WP_SIZE
 
-    override fun enable() {
-        Log.d(LOG_ID, "enable called")
-        update()
-    }
-
-    override fun disable() {
-        setWallpaper(null, context)
-    }
-
-    override fun update() {
-        try {
-            Log.v(LOG_ID, "updateLockScreen called - enabled=$enabled")
-            if (enabled) {
-                setWallpaper(getBitmapForWallpaper(), context)
-            }
-        } catch (exc: Exception) {
-            Log.e(LOG_ID, "updateLockScreen exception: " + exc.message.toString() )
-        }
-    }
-
     @OptIn(DelicateCoroutinesApi::class)
     private fun setWallpaper(bitmap: Bitmap?, context: Context) {
         GlobalScope.launch {
@@ -86,6 +66,26 @@ class LockScreenWallpaper(context: Context): WallpaperBase(context, "GDH.LockScr
 
     private fun getBitmapForWallpaper(): Bitmap? {
         return createWallpaperView()
+    }
+
+    override fun enable() {
+        Log.d(LOG_ID, "enable called")
+        update()
+    }
+
+    override fun disable() {
+        setWallpaper(null, context)
+    }
+
+    override fun update() {
+        try {
+            Log.v(LOG_ID, "updateLockScreen called - enabled=$enabled")
+            if (enabled) {
+                setWallpaper(getBitmapForWallpaper(), context)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "updateLockScreen exception: " + exc.message.toString() )
+        }
     }
 
     override fun initSettings(sharedPreferences: SharedPreferences) {

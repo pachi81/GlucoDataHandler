@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler.preferences
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -27,6 +28,7 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.preferences.PreferenceHelper
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import de.michelinside.glucodatahandler.widget.AodWidget
 import kotlin.collections.HashMap
 import kotlin.collections.List
 import kotlin.collections.mutableSetOf
@@ -323,6 +325,7 @@ class AodSettingsFragment: SettingsFragmentBase(R.xml.pref_aod)  {
         Log.v(LOG_ID, "initPreferences called")
         super.initPreferences()
         updateStyleSummary()
+        updateEnabled()
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
@@ -342,13 +345,19 @@ class AodSettingsFragment: SettingsFragmentBase(R.xml.pref_aod)  {
 
     private val accessibilitySettingsLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            context?.let {
-                val enabled = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_AOD_WP_ENABLED)
-                if (enabled != null) {
-                    enabled.isChecked = AODAccessibilityService.isAccessibilitySettingsEnabled(it)
-                }
+            updateEnabled()
+        }
+
+    private fun updateEnabled() {
+        if (context != null) {
+
+            val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_AOD_WP_ENABLED)
+            if (pref != null) {
+                val settingEnabled = AODAccessibilityService.isAccessibilitySettingsEnabled(context!!)
+                pref.isChecked = settingEnabled
             }
         }
+    }
 
     private fun checkAccesibilityService() {
         context?.let {
