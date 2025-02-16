@@ -181,7 +181,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
         }
     }
 
-    protected fun createWallpaperView(): Bitmap? {
+    protected fun createWallpaperView(color: Int? = null): Bitmap? {
         try {
             Log.d(LOG_ID, "Create wallpaper view for size $size and style $style")
             //getting the widget layout from xml using layout inflater
@@ -293,6 +293,18 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             lockscreenView.layout(0, 0, lockscreenView.measuredWidth, lockscreenView.measuredHeight)
 
             Log.d(LOG_ID, "Mesasured width ${lockscreenView.measuredWidth} and height ${lockscreenView.measuredHeight}")
+
+
+            color?.let { col ->
+                txtBgValue.setTextColor(col)
+                viewIcon.setColorFilter(col)
+                txtDelta.setTextColor(col)
+                txtTime.setTextColor(col)
+                txtIob.setTextColor(col)
+                txtCob.setTextColor(col)
+                graphImage?.setColorFilter(col)
+            }
+
 
             val bitmap = Bitmap.createBitmap(lockscreenView.width, lockscreenView.height, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(bitmap)

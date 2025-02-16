@@ -3,6 +3,7 @@ package de.michelinside.glucodatahandler.widget
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.util.Log
 import de.michelinside.glucodatahandler.AODAccessibilityService
 import de.michelinside.glucodatahandler.common.Constants
@@ -10,6 +11,7 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 
 class AodWidget(context: Context): WallpaperBase(context, "GDH.AodWidget") {
     private var yPos = 75
+    private var widgetColoured = false
     override val enabledPref = Constants.SHARED_PREF_AOD_WP_ENABLED
     override val stylePref = Constants.SHARED_PREF_AOD_WP_STYLE
     override val sizePref = Constants.SHARED_PREF_AOD_WP_SIZE
@@ -53,11 +55,13 @@ class AodWidget(context: Context): WallpaperBase(context, "GDH.AodWidget") {
 
     override fun initSettings(sharedPreferences: SharedPreferences) {
         yPos = sharedPreferences.getInt(Constants.SHARED_PREF_AOD_WP_Y_POS, 75)
+        widgetColoured = sharedPreferences.getBoolean(Constants.SHARED_PREF_AOD_WP_COLOURED, false)
+        Log.d(LOG_ID, "Widget coloured : $widgetColoured")
         super.initSettings(sharedPreferences)
     }
 
     fun getBitmap() : Bitmap? {
-        return createWallpaperView()
+        return createWallpaperView(if (widgetColoured) null else Constants.AOD_COLOUR)
     }
 
     fun getYPos() : Int {

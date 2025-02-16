@@ -1,5 +1,7 @@
 package de.michelinside.glucodatahandler.common
 
+import android.graphics.Color
+
 object Constants {
     const val CAPABILITY_PHONE = "glucodata_intent_mobile"
     const val CAPABILITY_WEAR = "glucodata_intent_wear"
@@ -196,7 +198,7 @@ object Constants {
     const val SHARED_PREF_AOD_WP_STYLE = "aod_style"
     const val SHARED_PREF_AOD_WP_SIZE = "aod_size"
     const val SHARED_PREF_AOD_WP_COLOURED = "aod_coloured"
-
+    const val AOD_COLOUR = Color.LTGRAY
 
     // Alarm
     const val ALARM_SNOOZE_ACTION = "de.michelinside.glucodatahandler.SNOOZE"
