@@ -64,32 +64,36 @@ class AODAccessibilityService : AccessibilityService() {
             Log.d(LOG_ID, "Checking ACCESSIBILITY_SERVICES : ${enabled}")
             return enabled
         }
-
     }
 
 
     private val screenStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            when (intent?.action) {
-                Intent.ACTION_SCREEN_OFF -> {
-                    Log.d(LOG_ID, "Screen turned off")
+            try {
+                when (intent?.action) {
+                    Intent.ACTION_SCREEN_OFF -> {
+                        Log.d(LOG_ID, "Screen turned off")
 
-                    if (context != null) {
-                        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-                        val enabled = sharedPref.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
-                        if (enabled) {
-                            checkAndCreateOverlay()
-                        }
-                        else {
-                            Log.d(LOG_ID, "Aod disabled in settings")
+                        if (context != null) {
+                            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                            val enabled = sharedPref.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
+                            if (enabled) {
+                                checkAndCreateOverlay()
+                            }
+                            else {
+                                Log.d(LOG_ID, "Aod disabled in settings")
+                            }
                         }
                     }
+                    Intent.ACTION_SCREEN_ON -> {
+                        Log.d(LOG_ID, "Screen turned on")
+                        removeOverlay()
+                        aodWidget.disable()
+                        aodWidget.destroy()
+                    }
                 }
-                Intent.ACTION_SCREEN_ON -> {
-                    Log.d(LOG_ID, "Screen turned on")
-                    aodWidget.destroy()
-                    removeOverlay()
-                }
+            } catch (e: Exception) {
+                Log.e(LOG_ID, "Error in screenStateReceiver")
             }
         }
     }
@@ -98,16 +102,20 @@ class AODAccessibilityService : AccessibilityService() {
     override fun onCreate() {
         super.onCreate()
 
-        windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        try {
+            windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
 
-        Log.d(LOG_ID, "Service created")
+            Log.d(LOG_ID, "Service created")
 
-        val filter = IntentFilter().apply {
-            addAction(Intent.ACTION_SCREEN_ON)
-            addAction(Intent.ACTION_SCREEN_OFF)
+            val filter = IntentFilter().apply {
+                addAction(Intent.ACTION_SCREEN_ON)
+                addAction(Intent.ACTION_SCREEN_OFF)
+            }
+            registerReceiver(screenStateReceiver, filter)
+        } catch (e: Exception) {
+            Log.e(LOG_ID, "Error in onCreate", e)
         }
-        registerReceiver(screenStateReceiver, filter)
     }
 
     //    private val handler = android.os.Handler(android.os.Looper.getMainLooper())

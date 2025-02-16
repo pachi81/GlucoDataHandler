@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.util.Log
 import de.michelinside.glucodatahandler.AODAccessibilityService
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 
 class AodWidget(context: Context): WallpaperBase(context, "GDH.AodWidget") {
     private var yPos = 75
@@ -24,10 +25,11 @@ class AodWidget(context: Context): WallpaperBase(context, "GDH.AodWidget") {
 
     override fun enable() {
         Log.d(LOG_ID, "enable called")
-//        update()
     }
 
     override fun disable() {
+        Log.d(LOG_ID, "disable called")
+        remove()
     }
 
     override fun update() {
@@ -39,6 +41,15 @@ class AodWidget(context: Context): WallpaperBase(context, "GDH.AodWidget") {
         }
     }
 
+    private fun remove() {
+        Log.d(LOG_ID, "remove called")
+        try {
+            Log.d(LOG_ID, "removing notifier")
+            InternalNotifier.remNotifier(context, this)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "remove exception: " + exc.message.toString() )
+        }
+    }
 
     override fun initSettings(sharedPreferences: SharedPreferences) {
         yPos = sharedPreferences.getInt(Constants.SHARED_PREF_AOD_WP_Y_POS, 75)
@@ -52,6 +63,9 @@ class AodWidget(context: Context): WallpaperBase(context, "GDH.AodWidget") {
     fun getYPos() : Int {
         return yPos
     }
+
+
+
 
 }
 
