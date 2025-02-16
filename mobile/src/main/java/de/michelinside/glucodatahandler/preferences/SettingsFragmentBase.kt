@@ -325,7 +325,7 @@ class AodSettingsFragment: SettingsFragmentBase(R.xml.pref_aod)  {
         Log.v(LOG_ID, "initPreferences called")
         super.initPreferences()
         updateStyleSummary()
-        updateEnabled()
+        updateEnabledInitial()
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
@@ -345,16 +345,24 @@ class AodSettingsFragment: SettingsFragmentBase(R.xml.pref_aod)  {
 
     private val accessibilitySettingsLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            updateEnabled()
+            context?.let {
+                    val enabled = (AODAccessibilityService.isAccessibilitySettingsEnabled(it))
+                    preferenceManager.sharedPreferences?.edit()?.putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, enabled)?.apply()
+                    val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_AOD_WP_ENABLED)
+                    if (pref != null)
+                        pref.isChecked = enabled
+            }
         }
 
-    private fun updateEnabled() {
-        if (context != null) {
-
+    private fun updateEnabledInitial() {
+        context?.let {
             val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_AOD_WP_ENABLED)
-            if (pref != null) {
-                val settingEnabled = AODAccessibilityService.isAccessibilitySettingsEnabled(context!!)
-                pref.isChecked = settingEnabled
+            if (pref != null && pref.isChecked) {
+                if (!AODAccessibilityService.isAccessibilitySettingsEnabled(it)) {
+                    preferenceManager.sharedPreferences?.edit()
+                        ?.putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)?.apply()
+                    pref.isChecked = false
+                }
             }
         }
     }
