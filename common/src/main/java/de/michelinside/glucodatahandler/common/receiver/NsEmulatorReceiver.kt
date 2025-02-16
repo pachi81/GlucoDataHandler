@@ -13,7 +13,7 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 import org.json.JSONArray
 
 
-open class NsEmulatorReceiver: ReceiverBase() {
+open class NsEmulatorReceiver: NamedBroadcastReceiver() {
     private val LOG_ID = "GDH.NsEmulatorReceiver"
 
     override fun getName(): String {

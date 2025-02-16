@@ -121,6 +121,24 @@
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="@string/source_notification"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="1">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="source_notification_enabled"
+            android:summaryOff="@string/src_offline_enabled_summary_off"
+            android:summaryOn="@string/src_offline_enabled_summary_on"
+            android:title="@string/src_enabled"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_notification_info"
+            android:summary="@string/pref_source_notification_info_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
         android:title="@string/pref_source_dexcom_byoda_info"
         app:iconSpaceReserved="false"
         app:initialExpandedChildrenCount="0">

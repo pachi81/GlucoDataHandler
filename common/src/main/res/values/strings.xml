@@ -53,6 +53,7 @@
     <string name="source_ns_emulator" translatable="false">Dexcom/Eversense</string>
     <string name="source_diabox" translatable="false">DiaBox</string>
     <string name="pref_source_eversense_info" translatable="false">Eversense (ESEL)/Dexcom BYODA (xDrip+)</string>
+    <string name="source_notification" translatable="false">Notification</string>
     <string name="pref_source_dexcom_byoda_info" translatable="false">Dexcom BYODA (AAPS)</string>
 
     <!-- start of resources -->
@@ -118,7 +119,6 @@
     <string name="tasker_target_range_state">Glucose range change</string>
 
     <!-- sources -->
-
     <string name="source_phone">Phone</string>
     <string name="source_wear">Wear</string>
 
@@ -679,6 +679,7 @@
         <item quantity="other">Time %d minutes</item>
     </plurals>
     <string name="pref_source_diabox_info_summary">Open Integration and enable \"Share data with GWatch\"\nRemark: the DiaBox broadcast only contains the glucose value and no more information like trend!</string>
+    <string name="pref_source_notification_info_summary">Reads notifications from the Dexcom G7 app and the Omnipod 5 app to pull in Blood Sugar and IOB data</string>
     <string name="pref_source_dexcom_byoda_not_working_info_summary">Remark: the AAPS broadcast from BYODA doesn\'t seem to work with other apps. \nPlease use the xDrip+ broadcast in BYODA.</string>
 
     <string name="gda_help_aa_summary">Get started with GDA on Android Auto</string>
