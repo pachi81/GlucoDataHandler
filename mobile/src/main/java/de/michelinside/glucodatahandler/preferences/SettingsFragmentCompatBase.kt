@@ -7,6 +7,8 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.takisoft.preferencex.TimePickerPreference
 import com.takisoft.preferencex.TimePickerPreferenceDialogFragmentCompat
+import de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
+import de.michelinside.glucodatahandler.common.ui.SelectReceiverPreferenceDialogFragmentCompat
 
 abstract class SettingsFragmentCompatBase: PreferenceFragmentCompat() {
     private val LOG_ID = "GDH.SettingsFragmentCompatBase"
@@ -18,9 +20,9 @@ abstract class SettingsFragmentCompatBase: PreferenceFragmentCompat() {
             val bundle = Bundle(1)
             bundle.putString("key", preference.key)
             dialogFragment.arguments = bundle
-        } else if (preference is TapActionPreference) {
+        } else if (preference is SelectReceiverPreference) {
             Log.d(LOG_ID, "Show SelectReceiver Dialog")
-            dialogFragment = TapActionPreferenceDialogFragmentCompat.initial(preference.key)
+            dialogFragment = SelectReceiverPreferenceDialogFragmentCompat.initial(preference.key)
         }
         return dialogFragment
     }

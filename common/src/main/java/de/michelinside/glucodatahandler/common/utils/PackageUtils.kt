@@ -138,13 +138,10 @@ object PackageUtils {
         return null
     }
 
-
-    private val tapActionFilter = mutableSetOf<String>()
-    private fun getTapActionFilter(context: Context): MutableSet<String> {
-        if (tapActionFilter.isEmpty()) {
-            tapActionFilter.add(context.packageName)
-            tapActionFilter.add(Constants.PACKAGE_JUGGLUCO)
-            tapActionFilter.add(Constants.PACKAGE_GLUCODATAAUTO)
+    private val receiverFilter = mutableSetOf<String>()
+    fun getReceiverFilter(): MutableSet<String> {
+        if (receiverFilter.isEmpty()) {
+            receiverFilter.add(Constants.PACKAGE_JUGGLUCO)
             tapActionFilter.add("info.nightscout")  // AAPS
             tapActionFilter.add("com.eveningoutpost.dexdrip")
             tapActionFilter.add("jamorham.xdrip.plus")
@@ -154,15 +151,30 @@ object PackageUtils {
             tapActionFilter.add("com.senseonics.")  // Eversense CGM
             tapActionFilter.add("esel.esel.")   // ESEL for Eversense
         }
+        return receiverFilter
+    }
+
+    private val tapActionFilter = mutableSetOf<String>()
+    fun getTapActionFilter(context: Context): MutableSet<String> {
+        if (tapActionFilter.isEmpty()) {
+            tapActionFilter.add(context.packageName)
+            tapActionFilter.add(Constants.PACKAGE_JUGGLUCO)
+            tapActionFilter.add(Constants.PACKAGE_GLUCODATAAUTO)
+            getReceiverFilter().forEach { tapActionFilter.add(it) }
+        }
         return tapActionFilter
     }
 
-    fun tapActionFilterContains(context: Context, value: String): Boolean {
-        getTapActionFilter(context).forEach {
+    fun filterContains(filter: MutableSet<String>, value: String): Boolean {
+        filter.forEach {
             if(value.lowercase().startsWith(it.lowercase()))
                 return true
         }
         return false
+    }
+
+    fun tapActionFilterContains(context: Context, value: String): Boolean {
+        return filterContains(getTapActionFilter(context), value)
     }
 
     /*

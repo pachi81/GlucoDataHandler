@@ -50,9 +50,12 @@
                     android:summary="@string/pref_floating_widget_time_to_close_summary"
                     android:title="@string/pref_floating_widget_time_to_close"
                     app:iconSpaceReserved="false" />
-                <de.michelinside.glucodatahandler.preferences.TapActionPreference
+                <de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
                     android:key="floating_widget_tap_action"
                     android:title="@string/tap_action"
+                    android:summary="@string/no_action"
+                    app:isTapAction="true"
+                    app:description="@string/tap_action_summary"
                     app:iconSpaceReserved="false" />
         </PreferenceCategory>
         <PreferenceCategory
@@ -68,9 +71,12 @@
                     android:summary="@string/pref_widget_transparency_summary"
                     android:title="@string/pref_widget_transparency"
                     app:iconSpaceReserved="false" />
-                <de.michelinside.glucodatahandler.preferences.TapActionPreference
+                <de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
                     android:key="widget_tap_action"
                     android:title="@string/tap_action"
+                    android:summary="@string/no_action"
+                    app:isTapAction="true"
+                    app:description="@string/tap_action_summary"
                     app:iconSpaceReserved="false" />
                 <androidx.preference.SeekBarPreference
                     app:showSeekBarValue="true"

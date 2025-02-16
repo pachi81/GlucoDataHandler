@@ -3,4 +3,8 @@
     <declare-styleable name="GlucoseEditPreference">
         <attr name="isDelta" format="boolean" />
     </declare-styleable>
+    <declare-styleable name="SelectReceiverPreference">
+        <attr name="isTapAction" format="boolean" />
+        <attr name="description" format="string" />
+    </declare-styleable>
 </resources>
