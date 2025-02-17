@@ -53,7 +53,6 @@
     <string name="source_ns_emulator" translatable="false">Dexcom/Eversense</string>
     <string name="source_diabox" translatable="false">DiaBox</string>
     <string name="pref_source_eversense_info" translatable="false">Eversense (ESEL)/Dexcom BYODA (xDrip+)</string>
-    <string name="source_notification" translatable="false">Notification</string>
     <string name="pref_source_dexcom_byoda_info" translatable="false">Dexcom BYODA (AAPS)</string>
 
     <!-- start of resources -->
@@ -679,7 +678,6 @@
         <item quantity="other">Time %d minutes</item>
     </plurals>
     <string name="pref_source_diabox_info_summary">Open Integration and enable \"Share data with GWatch\"\nRemark: the DiaBox broadcast only contains the glucose value and no more information like trend!</string>
-    <string name="pref_source_notification_info_summary">Reads notifications from the Dexcom G7 app and the Omnipod 5 app to pull in Blood Sugar and IOB data</string>
     <string name="pref_source_dexcom_byoda_not_working_info_summary">Remark: the AAPS broadcast from BYODA doesn\'t seem to work with other apps. \nPlease use the xDrip+ broadcast in BYODA.</string>
 
     <string name="gda_help_aa_summary">Get started with GDA on Android Auto</string>
@@ -798,4 +796,17 @@
     <string name="graph_show_axis">Show axis</string>
     <string name="graph_show_axis_summary">Show y- and x-Axis in the widget.</string>
 
+    <string name="source_notification">Notification</string>
+    <string name="pref_source_notification">Notification Reader</string>
+    <string name="pref_source_notification_summary">To receive the date from notifications other apps, which containing the glucose or IOB value.</string>
+    <string name="notification_reader_app">Application</string>
+    <string name="notification_reader_app_summary">Select an application, from which the notification should be read.</string>
+    <string name="notification_reader_enabled_summary_on">Notification reader is enabled to parse values from notifications for specific applications.</string>
+    <string name="notification_reader_enabled_summary_off">Notification reader is disabled and no notification will be parsed.\nPlease specify at least one application first.</string>
+    <string name="notification_cat_glucose">Read glucose value</string>
+    <string name="notification_cat_iob">Read IOB value</string>
+    <string name="notification_reader_enabled">Enable notification reader</string>
+    <string name="no_receiver">No application</string>
+    <string name="notification_reader_app_regex">Regex value filter</string>
+    <string name="notification_reader_app_regex_summary">Regex to parse the value from text in notification.\nIn case of problems with the notification reader, please contact me with a screenshot of the notification and the logs, so I will provide you a regex.</string>
 </resources>

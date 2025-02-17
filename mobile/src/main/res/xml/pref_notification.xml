@@ -49,6 +49,7 @@
                 <de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
                     android:key="permanent_notification_tap_action"
                     android:title="@string/tap_action"
+                    android:summary="@string/no_action"
                     app:isTapAction="true"
                     app:description="@string/tap_action_summary"
                     app:iconSpaceReserved="false" />
@@ -73,6 +74,7 @@
                 <de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
                     android:key="second_permanent_notification_tap_action"
                     android:title="@string/tap_action"
+                    android:summary="@string/no_action"
                     app:isTapAction="true"
                     app:description="@string/tap_action_summary"
                     app:iconSpaceReserved="false" />
@@ -97,6 +99,7 @@
                 <de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
                     android:key="third_permanent_notification_tap_action"
                     android:title="@string/tap_action"
+                    android:summary="@string/no_action"
                     app:isTapAction="true"
                     app:description="@string/tap_action_summary"
                     app:iconSpaceReserved="false" />

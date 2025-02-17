@@ -142,14 +142,16 @@ object PackageUtils {
     fun getReceiverFilter(): MutableSet<String> {
         if (receiverFilter.isEmpty()) {
             receiverFilter.add(Constants.PACKAGE_JUGGLUCO)
-            tapActionFilter.add("info.nightscout")  // AAPS
-            tapActionFilter.add("com.eveningoutpost.dexdrip")
-            tapActionFilter.add("jamorham.xdrip.plus")
-            tapActionFilter.add("com.freestylelibre")
-            tapActionFilter.add("org.nativescript.librelinkup")
-            tapActionFilter.add("com.dexcom.")
-            tapActionFilter.add("com.senseonics.")  // Eversense CGM
-            tapActionFilter.add("esel.esel.")   // ESEL for Eversense
+            receiverFilter.add("info.nightscout")  // AAPS
+            receiverFilter.add("com.eveningoutpost.dexdrip")
+            receiverFilter.add("jamorham.xdrip.plus")
+            receiverFilter.add("com.freestylelibre")
+            receiverFilter.add("org.nativescript.librelinkup")
+            receiverFilter.add("com.dexcom.")
+            receiverFilter.add("com.insulet.myblue.pdm")   // Omnipod 5 app
+            receiverFilter.add("com.senseonics.")  // Eversense CGM
+            receiverFilter.add("esel.esel.")   // ESEL for Eversense
+            receiverFilter.add("com.camdiab.")   // Cam APS FX
         }
         return receiverFilter
     }

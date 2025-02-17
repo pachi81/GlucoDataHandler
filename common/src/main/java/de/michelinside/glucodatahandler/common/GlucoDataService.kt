@@ -185,6 +185,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         private var dexcomReceiver: DexcomBroadcastReceiver? = null
         private var nsEmulatorReceiver: NsEmulatorReceiver? = null
         private var diaboxReceiver: DiaboxReceiver? = null
+        private var notificationReceiver: NotificationReceiver? = null
         private val registeredReceivers = mutableSetOf<String>()
 
         @SuppressLint("UnspecifiedRegisterReceiverFlag")
@@ -310,15 +311,23 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
                         Log.d(LOG_ID, "Notification source enabled")
                         val notificationListeners = Settings.Secure.getString(context.contentResolver, "enabled_notification_listeners")
-                        registerReceiver(context, NotificationReceiver(), IntentFilter())
                         if (!notificationListeners.contains(context.packageName)) {
+                            // disable until permission is granted:
+                            with(sharedPref.edit()) {
+                                putBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)
+                                apply()
+                            }
                             // request permissions
                             val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                             context.startActivity(intent)
+                        } else {
+                            notificationReceiver = NotificationReceiver()
+                            registerReceiver(context, notificationReceiver!!, IntentFilter())
                         }
-                    } else {
-                        unregisterReceiver(context, NotificationReceiver())
+                    } else if(notificationReceiver!=null) {
+                        unregisterReceiver(context, notificationReceiver)
+                        notificationReceiver = null
                     }
                     // notification listeners can not be unregistered
                 }
@@ -355,6 +364,10 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 if (diaboxReceiver != null) {
                     unregisterReceiver(context, diaboxReceiver)
                     diaboxReceiver = null
+                }
+                if(notificationReceiver != null) {
+                    unregisterReceiver(context, notificationReceiver)
+                    notificationReceiver = null
                 }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "unregisterSourceReceiver exception: " + exc.toString())
