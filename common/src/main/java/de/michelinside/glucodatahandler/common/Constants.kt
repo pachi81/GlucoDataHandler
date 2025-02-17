@@ -153,6 +153,7 @@ object Constants {
     // notification reader
     const val SHARED_PREF_SOURCE_NOTIFICATION_ENABLED="source_notification_enabled"
     const val SHARED_PREF_SOURCE_NOTIFICATION_READER_APP="notification_reader_app"
+    const val SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl="notification_reader_five_minute_interval"
     const val SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX="notification_reader_app_regex"
     const val SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP="notification_reader_iob_app"
     const val SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX="notification_reader_iob_app_regex"

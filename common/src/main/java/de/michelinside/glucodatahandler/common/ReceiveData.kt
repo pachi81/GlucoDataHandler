@@ -584,7 +584,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     private fun isNewValueTime(newTime: Long): Boolean {
-        return getTimeDiffMinute(newTime) >= 1
+        return (newTime-time) >= 45000  // at least 45 seconds should be passed to be considered a new value
     }
 
     fun handleIntent(context: Context, dataSource: DataSource, extras: Bundle?, interApp: Boolean = false) : Boolean

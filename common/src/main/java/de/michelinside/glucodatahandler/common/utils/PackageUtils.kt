@@ -179,6 +179,10 @@ object PackageUtils {
         return filterContains(getTapActionFilter(context), value)
     }
 
+    fun isDexcomApp(packageName: String): Boolean {
+        return packageName.lowercase().startsWith("com.dexcom.")
+    }
+
     /*
     fun getAppIntent(context: Context, packageName: String, requestCode: Int): PendingIntent? {
         val launchIntent = context.packageManager.getLaunchIntentForPackage(packageName)

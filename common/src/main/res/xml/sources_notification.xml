@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:key="source_notification_info"
+        android:title="@string/pref_information"
+        android:summary="@string/pref_source_notification_info_summary"
+        app:iconSpaceReserved="false" />
     <androidx.preference.SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="source_notification_enabled"
@@ -20,6 +25,14 @@
             android:summary="@string/notification_reader_app_summary"
             app:description="@string/notification_reader_app_summary"
             app:iconSpaceReserved="false" />
+        <!--
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="notification_reader_five_minute_interval"
+            android:summary="@string/notification_reader_five_minute_interval_summary"
+            android:title="@string/notification_reader_five_minute_interval"
+            app:iconSpaceReserved="false" />
+            -->
         <androidx.preference.EditTextPreference
             android:defaultValue="(\\d*\\.?\\d+)"
             android:key="notification_reader_app_regex"

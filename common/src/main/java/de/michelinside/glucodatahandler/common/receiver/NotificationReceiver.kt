@@ -1,6 +1,7 @@
 package de.michelinside.glucodatahandler.common.receiver
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
@@ -15,35 +16,75 @@ import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 
 class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     private val LOG_ID = "GDH.NotificationReceiver"
     private var parsedTextViews = mutableListOf<String>()
+    private var newDexcomValue = false
 
     override fun getName(): String {
         return LOG_ID
     }
 
+    private fun validGlucoseNotification(sbn: StatusBarNotification, sharedPref: SharedPreferences): Boolean {
+        if (sbn.packageName == sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP, "")) {
+            Log.d(LOG_ID, "New notification from ${sbn.packageName} - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`})")
+            if(PackageUtils.isDexcomApp(sbn.packageName)) {
+                // special Dexcom handling (only for G7?)
+                // value notification is updated quite often and all must be ignored, until the "Dexcom app is running" notification is received
+                // this can be detected using the title of the notification -> null: value -> not null: foreground
+                val extras = sbn.notification?.extras
+                val title = extras?.getCharSequence("android.title")?.toString()
+                if(title != null) {
+                    Log.d(LOG_ID, "Dexcom foreground notification updated -> ignore and wait for next value notification")
+                    newDexcomValue = true
+                    return false
+                } else if(!newDexcomValue) {
+                    Log.d(LOG_ID, "Ignoring Dexcom value notification -> wait for foreground notification")
+                    return false
+                }
+                newDexcomValue = false
+                return true
+                /* not working as expected:
+                val diffNotificationTime = (sbn.postTime - lastNotificationTime) // in milliseconds
+                lastNotificationTime = sbn.postTime
+                // special dexcom handling as Dexcom provides a new
+                if((diffNotificationTime/100).toInt() == 300) {
+                    Log.d(LOG_ID, "Ignoring 30s Dexcom update (${diffNotificationTime}ms)")
+                    return false
+                }*/
+            }
+            val minDiff = 50 //if(sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl, true)) 250 else 50
+            val diffTime = (sbn.postTime - ReceiveData.time)/1000 // in seconds
+            if(diffTime < minDiff) {
+                Log.d(LOG_ID, "Ignoring notification out of interval - diff: $diffTime < $minDiff")
+                return false
+            }
+            return true
+        }
+        return false
+    }
 
     override fun onNotificationPosted(statusBarNotification: StatusBarNotification?) {
         if (isRegistered()) {
             statusBarNotification?.let { sbn ->
                 val sharedPref = applicationContext.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-                Log.v(LOG_ID, "handling notification for ${sbn.packageName}")
-                if (sbn.packageName == sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP, "")) {
+                if (validGlucoseNotification(sbn, sharedPref)) {
                     val regex = sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, "(\\d*\\.?\\d+)")!!.toRegex()
                     Log.d(LOG_ID, "using regex $regex")
                     val value = parseValueFromNotification(sbn, false, regex)
-                    if(!value.isNaN())
+                    if(!value.isNaN()) {
                         handleGlucoseValue(value, sbn.postTime)
-                    else if(parsedTextViews.size > 0) {
+                    } else if(parsedTextViews.size > 0) {
                         SourceStateData.setError(DataSource.NOTIFICATION, "Could not parse from $parsedTextViews")
                     } else {
                         SourceStateData.setError(DataSource.NOTIFICATION, "No text found for parsing!")
                     }
                 }
                 if (sbn.packageName == sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP, "")) {
+                    Log.d(LOG_ID, "New IOB notification from ${sbn.packageName} - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`})")
                     val regex = sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, "IOB: (\\d*\\.?\\d+) U")!!.toRegex()
                     Log.d(LOG_ID, "using regex $regex")
                     val value = parseValueFromNotification(sbn, true, regex)
@@ -110,21 +151,21 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                 var found = false
                 if(!textView.text.isNullOrEmpty()) {
                     val text = textView.text.toString().replace(",", ".").trim()
-                    regex.find(text)?.groupValues?.get(1)?.toFloatOrNull()?.let {
+                    text.toFloatOrNull()?.let {
                         if(isValidValue(it, isIobCob)) {
                             value = it
                             matches++
                             found = true
-                            Log.d(LOG_ID, "Found value: $value using regex")
+                            Log.d(LOG_ID, "Found value: $value")
                         }
                     }
                     if(!found) {
-                        text.toString()?.toFloatOrNull()?.let {
+                        regex.find(text)?.groupValues?.get(1)?.toFloatOrNull()?.let {
                             if(isValidValue(it, isIobCob)) {
                                 value = it
                                 matches++
                                 found = true
-                                Log.d(LOG_ID, "Found value: $value")
+                                Log.d(LOG_ID, "Found value: $value using regex")
                             }
                         }
                     }
