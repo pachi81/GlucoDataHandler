@@ -6,7 +6,11 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.text.style.ImageSpan
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -15,6 +19,8 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
@@ -296,15 +302,32 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
 
 
             color?.let { col ->
+                if (txtDelta.visibility != GONE) {
+                    // For some reason this string doesn't render correctly if I replace the emoji *shrug*
+//                    txtDelta.text =
+                        replaceEmoji(context, txtDelta.text, "Δ", R.drawable.icon_delta, col)
+                    txtDelta.setTextColor(col)
+                }
+                if (txtTime.visibility != GONE) {
+                    txtTime.text =
+                        replaceEmoji(context, txtTime.text, "🕒", R.drawable.icon_clock, col)
+                    txtTime.setTextColor(col)
+                }
+                if (txtIob.visibility != GONE) {
+                    txtIob.text =
+                        replaceEmoji(context, txtIob.text, "💉", R.drawable.icon_injection, col)
+                        txtIob.setTextColor(col)
+                }
+                if (txtCob.visibility != GONE) {
+                    txtCob.text =
+                        replaceEmoji(context, txtCob.text, "🍔", R.drawable.icon_burger, col)
+                    txtCob.setTextColor(col)
+                }
+
                 txtBgValue.setTextColor(col)
                 viewIcon.setColorFilter(col)
-                txtDelta.setTextColor(col)
-                txtTime.setTextColor(col)
-                txtIob.setTextColor(col)
-                txtCob.setTextColor(col)
                 graphImage?.setColorFilter(col)
             }
-
 
             val bitmap = Bitmap.createBitmap(lockscreenView.width, lockscreenView.height, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(bitmap)
@@ -315,5 +338,27 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
         }
         return null
     }
-    
+
+
+
+    fun replaceEmoji(context: Context, text: CharSequence, emoji: String, drawableResId: Int, colour: Int): SpannableString {
+        val spannable = SpannableString(text)
+
+        val emojiIndex = text.indexOf(emoji)
+        if (emojiIndex != -1) {
+            val drawable: Drawable? = ContextCompat.getDrawable(context, drawableResId)
+
+            if (drawable != null) {
+                DrawableCompat.setTint(drawable, colour)
+                drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+
+                val imageSpan = ImageSpan(drawable, ImageSpan.ALIGN_BASELINE)
+                spannable.setSpan(imageSpan, emojiIndex, emojiIndex + emoji.length, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+//                spannable.setSpan(ForegroundColorSpan(colour), emojiIndex + emoji.length, spannable.length, SpannableString.SPAN_INCLUSIVE_INCLUSIVE)
+            }
+        }
+
+        return spannable
+    }
 }
