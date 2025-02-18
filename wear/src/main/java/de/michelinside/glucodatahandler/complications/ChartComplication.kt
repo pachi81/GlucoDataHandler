@@ -45,12 +45,17 @@ open class ChartComplication(): SuspendingComplicationDataSourceService() {
             return -1
         }
 
+        fun init() {
+            complications.clear()
+            removeBitmap()
+        }
+
         private fun addComplication(id: Int) {
-            if(!complications.contains(id)) {
+            if(GlucoDataService.isServiceRunning && !complications.contains(id)) {
                 Log.d(LOG_ID, "Add complication $id")
                 complications.add(id)
-                createBitmap()
             }
+            createBitmap()
         }
 
         private fun remComplication(id: Int) {
@@ -63,7 +68,7 @@ open class ChartComplication(): SuspendingComplicationDataSourceService() {
         }
 
         private fun createBitmap() {
-            if(chartBitmap == null) {
+            if(chartBitmap == null && GlucoDataService.isServiceRunning) {
                 Log.i(LOG_ID, "Create bitmap")
                 chartBitmap = ChartBitmap(GlucoDataService.context!!, Constants.SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION, size, 250, true)
                 InternalNotifier.addNotifier(GlucoDataService.context!!, ChartComplicationUpdater, mutableSetOf(NotifySource.GRAPH_CHANGED))
@@ -183,12 +188,18 @@ open class ChartComplication(): SuspendingComplicationDataSourceService() {
             complicationInstanceId
         )
     }
-
 }
 
 object ChartComplicationUpdater: NotifierInterface {
     private var complicationClasses = mutableListOf(ChartComplication::class.java)
     val LOG_ID = "GDH.Chart.ComplicationUpdater"
+
+    fun init(context: Context) {
+        Log.i(LOG_ID, "init chart complications")
+        ChartComplication.init()
+        OnNotifyData(context, NotifySource.CAPILITY_INFO, null)
+    }
+
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - graph-id ${ChartComplication.getChartId()}" )
         if (dataSource == NotifySource.GRAPH_CHANGED && extras?.getInt(Constants.GRAPH_ID) != ChartComplication.getChartId()) {
@@ -196,6 +207,7 @@ object ChartComplicationUpdater: NotifierInterface {
             return  // ignore as it is not for this graph
         }
         complicationClasses.forEach {
+            Log.d(LOG_ID, "Trigger complication update for ${it.name}")
             ComplicationDataSourceUpdateRequester
                 .create(
                     context = context,
