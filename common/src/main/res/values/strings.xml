@@ -812,4 +812,6 @@
     <string name="notification_reader_five_minute_interval">5 minute interval</string>
     <string name="notification_reader_five_minute_interval_summary">Some apps, like Dexcom updates their notifications quite often. To ignore these updates with the same value, enable the 5 minute interval.\nIf enabled, there will be only a new value every 5 minutes or if the value in the notification has changed.</string>
     <string name="pref_source_notification_info_summary">To receive values from notifications of other apps, a permission to access the notifications is needed!\nThe notifcation must include either the glucose value or IOB as string.\nAs each notification has a different layout, it may not work with every app. In case of problems, please contact me with a screenshot of the notification and the logs.</string>
+    <string name="notification_dexcom_info">Important</string>
+    <string name="notification_dexcom_info_summary">Because of special behaviour of Dexcom notificiations, you must also enable the foreground notification of Dexcom.</string>
 </resources>

@@ -14,6 +14,7 @@
         android:title="@string/notification_reader_enabled"
         app:iconSpaceReserved="false" />
     <PreferenceCategory
+        android:key="notification_cat_glucose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:title="@string/notification_cat_glucose"
@@ -25,14 +26,12 @@
             android:summary="@string/notification_reader_app_summary"
             app:description="@string/notification_reader_app_summary"
             app:iconSpaceReserved="false" />
-        <!--
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="notification_reader_five_minute_interval"
-            android:summary="@string/notification_reader_five_minute_interval_summary"
-            android:title="@string/notification_reader_five_minute_interval"
+        <Preference
+            android:key="notification_dexcom_info"
+            android:title="@string/notification_dexcom_info"
+            android:summary="@string/notification_dexcom_info_summary"
+            app:isPreferenceVisible="false"
             app:iconSpaceReserved="false" />
-            -->
         <androidx.preference.EditTextPreference
             android:defaultValue="(\\d*\\.?\\d+)"
             android:key="notification_reader_app_regex"
