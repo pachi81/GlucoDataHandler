@@ -66,7 +66,7 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
     }
 
     private fun updateDescription() {
-        if(!showAxis) {
+        if(!showAxis && !forComplication) {
             chart.description.isEnabled = true
             chart.description.text = durationHours.toString() + "h"
             chart.description.textSize = Utils.dpToPx(4F, context).toFloat()

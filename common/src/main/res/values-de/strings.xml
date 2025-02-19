@@ -514,7 +514,7 @@
     <string name="obsolete_time">Zeit für veralteten Wert</string>
     <string name="obsolete_time_summary">Zeit in Minuten nachdem der Wert als alt angesehen wird.\nNach der doppelten Zeit, verschwindet er komplett.</string>
     <string name="pref_source_offline">Lokale Apps</string>
-    <string name="pref_source_offline_summary">Apps, welche auf dem gleichen Gerät laufen und interne Nachrichten (Broadcasts) verschicken, wie etwas Juggluco, xDrip+, AAPS usw..</string>
+    <string name="pref_source_offline_summary">Apps, welche auf dem gleichen Gerät laufen und interne Nachrichten (Broadcasts) verschicken, wie etwa Juggluco, xDrip+, AAPS usw..</string>
     <string name="pref_cat_follower_summary">Cloud Dienste, welche die Daten über das Internet zur Verfügung stellen, wie LibreLinkUp, Dexcom Share und Nightscout.</string>
     <string name="pref_source_xdrip_broadcast">Alternative: Lokaler Broadcast</string>
     <string name="pref_source_dexcom_byoda_info_summary">Um Werte von Dexcom BYODA zu erhalten, muss bei der Erstellung der App, die Übertragung an AAPS aktiviert werden.</string>

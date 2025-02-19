@@ -13,7 +13,7 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 
-open class XDripBroadcastReceiver: ReceiverBase() {
+open class XDripBroadcastReceiver: NamedBroadcastReceiver() {
     companion object {
         const val BG_ESTIMATE = "com.eveningoutpost.dexdrip.Extras.BgEstimate"
         const val BG_SLOPE = "com.eveningoutpost.dexdrip.Extras.BgSlope"

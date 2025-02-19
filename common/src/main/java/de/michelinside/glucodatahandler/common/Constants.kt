@@ -152,6 +152,14 @@ object Constants {
     const val SHARED_PREF_SOURCE_EVERSENSE_ENABLED="source_eversense_enabled"
     const val SHARED_PREF_SOURCE_DIABOX_ENABLED="source_diabox_enabled"
 
+    // notification reader
+    const val SHARED_PREF_SOURCE_NOTIFICATION_ENABLED="source_notification_enabled"
+    const val SHARED_PREF_SOURCE_NOTIFICATION_READER_APP="notification_reader_app"
+    const val SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl="notification_reader_five_minute_interval"
+    const val SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX="notification_reader_app_regex"
+    const val SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP="notification_reader_iob_app"
+    const val SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX="notification_reader_iob_app_regex"
+
     // online sources
     const val SHARED_PREF_LIBRE_ENABLED="source_libre_enabled"
     const val SHARED_PREF_LIBRE_USER="source_libre_user"

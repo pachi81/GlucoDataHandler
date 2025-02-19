@@ -408,6 +408,18 @@
             </intent-filter>
         </service>
 
+        <service
+            android:name=".common.receiver.NotificationReceiver"
+            android:label="Notification Listener"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.notification.default_filter_types"
+                android:value="alerting|ongoing|silent" />
+        </service>
     </application>
 
 </manifest>

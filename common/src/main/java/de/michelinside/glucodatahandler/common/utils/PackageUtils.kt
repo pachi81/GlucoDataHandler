@@ -138,31 +138,49 @@ object PackageUtils {
         return null
     }
 
+    private val receiverFilter = mutableSetOf<String>()
+    fun getReceiverFilter(): MutableSet<String> {
+        if (receiverFilter.isEmpty()) {
+            receiverFilter.add(Constants.PACKAGE_JUGGLUCO)
+            receiverFilter.add("info.nightscout")  // AAPS
+            receiverFilter.add("com.eveningoutpost.dexdrip")
+            receiverFilter.add("jamorham.xdrip.plus")
+            receiverFilter.add("com.freestylelibre")
+            receiverFilter.add("org.nativescript.librelinkup")
+            receiverFilter.add("com.dexcom.")
+            receiverFilter.add("com.insulet.myblue.pdm")   // Omnipod 5 app
+            receiverFilter.add("com.senseonics.")  // Eversense CGM
+            receiverFilter.add("esel.esel.")   // ESEL for Eversense
+            receiverFilter.add("com.camdiab.")   // Cam APS FX
+        }
+        return receiverFilter
+    }
 
     private val tapActionFilter = mutableSetOf<String>()
-    private fun getTapActionFilter(context: Context): MutableSet<String> {
+    fun getTapActionFilter(context: Context): MutableSet<String> {
         if (tapActionFilter.isEmpty()) {
             tapActionFilter.add(context.packageName)
             tapActionFilter.add(Constants.PACKAGE_JUGGLUCO)
             tapActionFilter.add(Constants.PACKAGE_GLUCODATAAUTO)
-            tapActionFilter.add("info.nightscout")  // AAPS
-            tapActionFilter.add("com.eveningoutpost.dexdrip")
-            tapActionFilter.add("jamorham.xdrip.plus")
-            tapActionFilter.add("com.freestylelibre")
-            tapActionFilter.add("org.nativescript.librelinkup")
-            tapActionFilter.add("com.dexcom.")
-            tapActionFilter.add("com.senseonics.")  // Eversense CGM
-            tapActionFilter.add("esel.esel.")   // ESEL for Eversense
+            getReceiverFilter().forEach { tapActionFilter.add(it) }
         }
         return tapActionFilter
     }
 
-    fun tapActionFilterContains(context: Context, value: String): Boolean {
-        getTapActionFilter(context).forEach {
+    fun filterContains(filter: MutableSet<String>, value: String): Boolean {
+        filter.forEach {
             if(value.lowercase().startsWith(it.lowercase()))
                 return true
         }
         return false
+    }
+
+    fun tapActionFilterContains(context: Context, value: String): Boolean {
+        return filterContains(getTapActionFilter(context), value)
+    }
+
+    fun isDexcomApp(packageName: String): Boolean {
+        return packageName.lowercase().startsWith("com.dexcom.")
     }
 
     /*

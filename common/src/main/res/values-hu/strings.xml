@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="action_floating_widget_toggle">Lebegő widget váltása</string>
+    <string name="action_floating_widget_toggle">Lebegő widget be/ki kapcsolása</string>
     <string name="action_read_values">Értékek felolvasása</string>
-    <string name="activate_local_nightscout_iob_message">"A Nightscout forrás felülírásra kerül a helyi webszerver konfigurációjával, hogy adatokat fogadjon a 17580-as porton!
+    <string name="activate_local_nightscout_iob_message">"Ez felül fogja írni a jelenlegi nightscout forrás beállításait, hogy a helyi webszolgáltatást használja az IOB értékek fogadásához a 17580-as porton!
 Biztos benne?"</string>
-    <string name="activate_local_nightscout_iob_title">Nightscout módosítása</string>
+    <string name="activate_local_nightscout_iob_title">Nightscout felülírása</string>
     <string name="activity_connected_label">Telefon: csatlakozva (%1$s)</string>
     <string name="activity_disconnected_label">Telefon: leválasztva</string>
     <string name="activity_large_arrow_icon">Nagy trendnyíl</string>
-    <string name="activity_large_arrow_icon_summary">Kérjük, kapcsolja ki, ha a trendnyíl túl nagy és emiatt levágásra kerül.</string>
-    <string name="activity_main_battery_optimization_disabled">Akkumulátor optimalizálás aktív.</string>
+    <string name="activity_large_arrow_icon_summary">Kérjük ezt kapcsolja ki, ha a trendnyíl túl nagy és emiatt levágásra kerül!</string>
+    <string name="activity_main_battery_optimization_disabled">Akkumulátor optimalizálás aktív!</string>
     <string name="activity_main_car_connected_label">Android Auto: csatlakozva</string>
     <string name="activity_main_car_disconnected_label">Android Auto: leválasztva</string>
     <string name="activity_main_connected_label">Óra: csatlakozva (%1$s)</string>
@@ -234,13 +234,13 @@ Ha szeretne értesülni a fontos frissítésekről és hibajavításokról, kér
     <string name="icon_arrow">Trendnyíl</string>
     <string name="icon_delta">Delta (nagy)</string>
     <string name="icon_delta_time">Delta és időpont (nagy)</string>
-    <string name="icon_timestamp">Időpont (nagy)</string>
+    <string name="icon_timestamp">IdőBélyeg (nagy)</string>
     <string name="icon_value">Vércukorérték (nagy)</string>
     <string name="icon_value_arrow">Vérukorérték és trendnyíl (nagy)</string>
     <string name="image_arrow">Trendnyíl (nagy, színes)</string>
     <string name="image_delta">Delta (nagy, színes)</string>
     <string name="image_delta_time">Delta és időpont (színes)</string>
-    <string name="image_timestamp">Időpont (színes)</string>
+    <string name="image_timestamp">Időbélyeg (színes)</string>
     <string name="image_value">Vércukorérték (nagyon nagy és színes)</string>
     <string name="info_label_alarm">Riasztás</string>
     <string name="info_label_delta">Delta</string>
@@ -252,7 +252,7 @@ Ha szeretne értesülni a fontos frissítésekről és hibajavításokról, kér
     <string name="info_label_sensor_id">Szenzor</string>
     <string name="info_label_source">Forrás</string>
     <string name="info_label_timediff">Időkülönbség</string>
-    <string name="info_label_timestamp">Időpont</string>
+    <string name="info_label_timestamp">Időbélyeg</string>
     <string name="info_label_value">Érték</string>
     <string name="iob_cob">IOB/COB</string>
     <string name="last_value_on_server">Utolsó vércukorérték a szerveren %1$s-től</string>
@@ -439,7 +439,7 @@ Ha a probléma felmerül, ez a beállítás automatikusan ki lesz kapcsolva, hog
     <string name="pref_notification_no_content_summary">Ha csak az állapotsori ikon érdekes, az értesítés tartalma eltávolítható.</string>
     <string name="pref_notification_summary">"Egy állandó értesítést jelenít meg az aktuális trendnyíl, a vércukor és deltaértékkel az állapotsorban.
 Ez az értesítés megakadályozza, hogy az Android bezárja az alkalmazást a háttérben."</string>
-    <string name="pref_permanent_notification_info_summary">"Az értesítés szükséges az alkalmazás működéséhez.
+    <string name="pref_permanent_notification_info_summary">"Az értesítés szükséges az alkalmazás helyes működéséhez.
 Android 13-tól kezdve ez az értesítés eltávolítható egy húzással. Annak érdekében, hogy az értesítés ezután ne jelenjen meg újra, az \"Alkalmazás ikon\" lehetőséget kell kiválasztani az \"Állapotsor ikon\" részben, és emellett aktiválni kell az \"Üres tartalom\" lehetőséget."</string>
     <string name="pref_phone_wear_screen_off_update">Komplikációk folyamatos frissítése</string>
     <string name="pref_phone_wear_screen_off_update_summary">"Új vércukorértékek folyamatos elküldése az okosórára.
@@ -447,7 +447,7 @@ Tiltsa le ezt a beállítást, hogy ne küldjön adatokat az okosórára, amíg 
 A riasztási értékek mindig elküldésre kerülnek az okosórára.
 FONTOS: Az elavult riasztás az okosórán letiltásra kerül, ha ez a beállítás ki van kapcsolva!"</string>
     <string name="pref_relative_time">Relatív idő</string>
-    <string name="pref_relative_time_summary">"Relatív idő használata a rögzített vércukor időpont helyett.
+    <string name="pref_relative_time_summary">"Relatív idő használata a rögzített vércukor időbélyeg helyett.
 Az eszköz akkumulátor optimalizálásától függően előfordulhat, hogy ez nem működik megfelelően."</string>
     <string name="pref_second_notification">2. értesítés</string>
     <string name="pref_second_notification_icon">2. állapotsori ikon</string>
@@ -637,7 +637,7 @@ A \"Mégse\" gomb megnyomásával a beállítás letiltásra kerül és később
     <string name="short_rate">Trendérték</string>
     <string name="short_rate_arrow">Trendérték és trendnyíl</string>
     <string name="short_rate_icon">Trendérték ikonnal</string>
-    <string name="short_timestamp">Időpont</string>
+    <string name="short_timestamp">Időbélyeg</string>
     <string name="short_value">Vércukorérték</string>
     <string name="short_value_arrow">Vércukorérték és trendnyíl</string>
     <string name="short_value_arrow_image">Vércukorérték és trendnyíl (nagy és színes)</string>
@@ -745,7 +745,7 @@ Kérjük, állítsa a beállítást \"Extrém zajos\" értékre!"</string>
     <string name="temp_disabled_until">Ideiglenesen letiltva %1$s-ig</string>
     <string name="test_alarm">Teszt riasztás!</string>
     <string name="test_neg_range">Teszt Range komplikáció negatív értékekkel (trendkör támogatáshoz)</string>
-    <string name="timestamp">A vércukorérték időpontja</string>
+    <string name="timestamp">A vércukorérték időbélyege</string>
     <string name="trend">Trend</string>
     <string name="tts_test_summary">Kattintson ide a szövegfelolvasás funkció teszteléséhez.</string>
     <string name="very_high_alarm_notification_descr">Értesítés a nagyon magas riasztásokhoz.</string>
@@ -772,8 +772,8 @@ Kérjük, állítsa a beállítást \"Extrém zajos\" értékre!"</string>
     <string name="widget_glucose">Vércukorérték</string>
     <string name="widget_glucose_trend">Vércukorérték és trendnyíl</string>
     <string name="widget_glucose_trend_delta">Vércukorérték, trendnyíl és delta</string>
-    <string name="widget_glucose_trend_delta_timestamp">Vércukorérték, trendnyíl, delta és időpont</string>
-    <string name="widget_glucose_trend_delta_timestamp_iob_cob">Vércukorérték, trendnyíl, delta, idő és IOB/COB</string>
+    <string name="widget_glucose_trend_delta_timestamp">Vércukorérték, trendnyíl, delta és időbélyeg</string>
+    <string name="widget_glucose_trend_delta_timestamp_iob_cob">Vércukorérték, trendnyíl, delta, időbélyeg és IOB/COB</string>
     <string name="worker_notification_descr">Háttér értesítés, amely akkor jelenik meg, amíg háttérben fut egy tevékenység.</string>
     <string name="worker_notification_name">Háttér értesítés</string>
     <string name="xdrip_broadcast_service_api_enabled">Adás szolgáltatás API</string>

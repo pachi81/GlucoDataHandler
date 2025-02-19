@@ -1,4 +1,4 @@
-package de.michelinside.glucodatahandler.preferences
+package de.michelinside.glucodatahandler.common.ui
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -11,22 +11,22 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.ScrollView
+import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.preference.PreferenceDialogFragmentCompat
-import de.michelinside.glucodatahandler.BuildConfig
-import de.michelinside.glucodatahandler.R
+import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
-import de.michelinside.glucodatahandler.common.R as CR
+import de.michelinside.glucodatahandler.common.R
 
 
-class TapActionPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat() {
+class SelectReceiverPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat() {
     companion object {
-        private val LOG_ID = "GDH.TapActionPreferenceDialog"
-        fun initial(key: String) : TapActionPreferenceDialogFragmentCompat {
+        private val LOG_ID = "GDH.SelectReceiverPreferenceDialog"
+        fun initial(key: String) : SelectReceiverPreferenceDialogFragmentCompat {
             Log.d(LOG_ID, "initial called for key: " +  key )
-            val dialog = TapActionPreferenceDialogFragmentCompat()
+            val dialog = SelectReceiverPreferenceDialogFragmentCompat()
             val bundle = Bundle(1)
             bundle.putString(ARG_KEY, key)
             dialog.arguments = bundle
@@ -38,12 +38,12 @@ class TapActionPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat()
         }
         private fun getActions(context: Context): HashMap<String, String> {
             val actions = HashMap<String, String>()
-            actions[""] = context.resources.getString(CR.string.no_action)
+            actions[""] = context.resources.getString(R.string.no_action)
             if (TextToSpeechUtils.isAvailable())
-                actions[Constants.ACTION_SPEAK] = context.resources.getString(CR.string.action_read_values)
+                actions[Constants.ACTION_SPEAK] = context.resources.getString(R.string.action_read_values)
             if(Settings.canDrawOverlays(context)) {
                 actions[Constants.ACTION_FLOATING_WIDGET_TOGGLE] =
-                    context.resources.getString(CR.string.action_floating_widget_toggle)
+                    context.resources.getString(R.string.action_floating_widget_toggle)
             }
             if(BuildConfig.DEBUG /*|| BuildConfig.BUILD_TYPE == "second"*/) {
                 actions[Constants.ACTION_DUMMY_VALUE] = "Dummy value"
@@ -51,27 +51,32 @@ class TapActionPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat()
             return actions
         }
 
-        fun getSummary(context: Context, value: String): String {
-            val actions = getActions(context)
-            if(actions.containsKey(value))
-                return actions[value].toString()
+        fun getSummary(context: Context, value: String, default: String, isTapAction: Boolean = false): String {
+            if(isTapAction) {
+                val actions = getActions(context)
+                if(actions.containsKey(value))
+                    return actions[value].toString()
+            }
             val receivers = getReceivers(context)
             if(receivers.containsKey(value))
                 return receivers[value].toString()
-            return context.resources.getString(CR.string.no_action)
+            return default
         }
 
     }
     private var receiver = ""
     private lateinit var showAllSwitch: SwitchCompat
     private lateinit var sharedPref: SharedPreferences
-    private var tapActionPreference: TapActionPreference? = null
+    private var selectReceiverPreference: SelectReceiverPreference? = null
+    private val showAllKey: String get() {
+        return selectReceiverPreference!!.key + "_show_all"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(LOG_ID, "onCreate called with bundle: " +  savedInstanceState?.toString() )
         try {
-            tapActionPreference = preference as TapActionPreference
+            selectReceiverPreference = preference as SelectReceiverPreference
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Setting preference exception: " + exc.toString())
         }
@@ -81,14 +86,19 @@ class TapActionPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat()
         super.onBindDialogView(view)
         Log.d(LOG_ID, "onBindDialogView called for view: " +  view.transitionName.toString() + " preference " + preference.javaClass )
         try {
-            receiver = tapActionPreference!!.getReceiver()
+            receiver = selectReceiverPreference!!.getReceiver()
             Log.d(LOG_ID, "Receiver loaded: " + receiver)
-
+            
             sharedPref = requireContext().getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             showAllSwitch = view.findViewById(R.id.showAllSwitch)
-            showAllSwitch.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_GLUCODATA_RECEIVER_SHOW_ALL, false)
+            showAllSwitch.isChecked = sharedPref.getBoolean(showAllKey, false)
             showAllSwitch.setOnCheckedChangeListener { _, isChecked ->
                 updateReceiver(view, isChecked)
+            }
+
+            if(selectReceiverPreference!!.description.isNotEmpty()) {
+                val summary = view.findViewById<TextView>(R.id.txtSummary)
+                summary.text = selectReceiverPreference!!.description
             }
 
             updateReceiver(view, showAllSwitch.isChecked)
@@ -102,10 +112,10 @@ class TapActionPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat()
         try {
             if(positiveResult) {
                 with(sharedPref.edit()) {
-                    putBoolean(Constants.SHARED_PREF_GLUCODATA_RECEIVER_SHOW_ALL, showAllSwitch.isChecked)
+                    putBoolean(showAllKey, showAllSwitch.isChecked)
                     apply()
                 }
-                tapActionPreference!!.setReceiver(receiver)
+                selectReceiverPreference!!.setReceiver(receiver)
             }
         } catch (exc: Exception) {
 
@@ -123,8 +133,10 @@ class TapActionPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat()
             list.toMap()
         }
 
+        val filter = if(selectReceiverPreference!!.isTapAction) PackageUtils.getTapActionFilter(requireContext()) else PackageUtils.getReceiverFilter()
+
         for (item in map) {
-            if (all || PackageUtils.tapActionFilterContains(requireContext(), item.key)) {
+            if (all || PackageUtils.filterContains(filter, item.key)) {
                 val ch = RadioButton(requireContext())
                 ch.text = item.value
                 ch.hint = item.key
@@ -151,9 +163,16 @@ class TapActionPreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat()
             val receiverScrollView = view.findViewById<ScrollView>(R.id.receiverScrollView)
             receiverLayout.removeAllViews()
 
-            var current: RadioButton?
+            var current: RadioButton? = null
             val group = RadioGroup(requireContext())
-            current = createRadioButtons(group, getActions(requireContext()), true, false)
+            if(selectReceiverPreference!!.isTapAction)
+                current = createRadioButtons(group, getActions(requireContext()), true, false)
+            else {
+                // add empty receiver
+                val emptyReceiver = HashMap<String, String>()
+                emptyReceiver[""] = requireContext().resources.getString(R.string.no_receiver)
+                current = createRadioButtons(group, emptyReceiver, true, false)
+            }
             val curApp = createRadioButtons(group, receivers, all, true)
             if(current == null && curApp != null)
                 current = curApp

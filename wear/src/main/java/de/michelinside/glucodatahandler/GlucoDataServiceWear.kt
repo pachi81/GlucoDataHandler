@@ -122,7 +122,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
             InternalNotifier.addNotifier(this, this, filter)
             updateComplicationNotifier()
             ActiveComplicationHandler.OnNotifyData(this, NotifySource.CAPILITY_INFO, null)
-            ChartComplicationUpdater.OnNotifyData(this, NotifySource.GRAPH_CHANGED, null)
+            ChartComplicationUpdater.init(this)
         } catch (ex: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + ex)
         }

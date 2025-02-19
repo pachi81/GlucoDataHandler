@@ -46,9 +46,12 @@
                     android:summary="@string/graph_duration_phone_summary"
                     android:title="@string/graph_duration"
                     app:iconSpaceReserved="false" />
-                <de.michelinside.glucodatahandler.preferences.TapActionPreference
+                <de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
                     android:key="permanent_notification_tap_action"
                     android:title="@string/tap_action"
+                    android:summary="@string/no_action"
+                    app:isTapAction="true"
+                    app:description="@string/tap_action_summary"
                     app:iconSpaceReserved="false" />
         </PreferenceCategory>
         <PreferenceCategory
@@ -68,9 +71,12 @@
                     android:summary="@string/pref_second_notification_icon_summary"
                     android:title="@string/pref_second_notification_icon"
                     app:iconSpaceReserved="false" />
-                <de.michelinside.glucodatahandler.preferences.TapActionPreference
+                <de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
                     android:key="second_permanent_notification_tap_action"
                     android:title="@string/tap_action"
+                    android:summary="@string/no_action"
+                    app:isTapAction="true"
+                    app:description="@string/tap_action_summary"
                     app:iconSpaceReserved="false" />
         </PreferenceCategory>
         <PreferenceCategory
@@ -90,9 +96,12 @@
                     android:summary="@string/pref_second_notification_icon_summary"
                     android:title="@string/pref_third_notification_icon"
                     app:iconSpaceReserved="false" />
-                <de.michelinside.glucodatahandler.preferences.TapActionPreference
+                <de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
                     android:key="third_permanent_notification_tap_action"
                     android:title="@string/tap_action"
+                    android:summary="@string/no_action"
+                    app:isTapAction="true"
+                    app:description="@string/tap_action_summary"
                     app:iconSpaceReserved="false" />
         </PreferenceCategory>
         <PreferenceCategory
