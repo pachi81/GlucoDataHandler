@@ -31,6 +31,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     private fun validGlucoseNotification(sbn: StatusBarNotification, sharedPref: SharedPreferences): Boolean {
         if (sbn.packageName == sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP, "")) {
             Log.d(LOG_ID, "New notification from ${sbn.packageName} - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`})")
+            var minDiff = 50
             if(PackageUtils.isDexcomApp(sbn.packageName)) {
                 // special Dexcom handling (only for G7?)
                 // value notification is updated quite often and all must be ignored, until the "Dexcom app is running" notification is received
@@ -46,17 +47,8 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                     return false
                 }
                 newDexcomValue = false
-                return true
-                /* not working as expected:
-                val diffNotificationTime = (sbn.postTime - lastNotificationTime) // in milliseconds
-                lastNotificationTime = sbn.postTime
-                // special dexcom handling as Dexcom provides a new
-                if((diffNotificationTime/100).toInt() == 300) {
-                    Log.d(LOG_ID, "Ignoring 30s Dexcom update (${diffNotificationTime}ms)")
-                    return false
-                }*/
+                minDiff = 250  // ignore other updates of the foreground notification -> wait for the next one for value (~300s)
             }
-            val minDiff = 50 //if(sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl, true)) 250 else 50
             val diffTime = (sbn.postTime - ReceiveData.time)/1000 // in seconds
             if(diffTime < minDiff) {
                 Log.d(LOG_ID, "Ignoring notification out of interval - diff: $diffTime < $minDiff")
@@ -73,7 +65,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                 val sharedPref = applicationContext.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 if (validGlucoseNotification(sbn, sharedPref)) {
                     val regex = sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, "(\\d*\\.?\\d+)")!!.toRegex()
-                    Log.d(LOG_ID, "using regex $regex")
+                    Log.i(LOG_ID, "using regex $regex")
                     val value = parseValueFromNotification(sbn, false, regex)
                     if(!value.isNaN()) {
                         handleGlucoseValue(value, sbn.postTime)
@@ -86,12 +78,12 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                 if (sbn.packageName == sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP, "")) {
                     Log.d(LOG_ID, "New IOB notification from ${sbn.packageName} - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`})")
                     val regex = sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, "IOB: (\\d*\\.?\\d+) U")!!.toRegex()
-                    Log.d(LOG_ID, "using regex $regex")
+                    Log.i(LOG_ID, "using IOB regex $regex")
                     val value = parseValueFromNotification(sbn, true, regex)
                     if(!value.isNaN())
                         handleIobValue(value, sbn.postTime)
                     else if(parsedTextViews.size > 0) {
-                        SourceStateData.setError(DataSource.NOTIFICATION, "Could not parse IOB from $parsedTextViews")
+                        SourceStateData.setError(DataSource.NOTIFICATION, "Could not parse IOB from ${parsedTextViews.distinct()}")
                     } else {
                         SourceStateData.setError(DataSource.NOTIFICATION, "No text found for parsing IOB!")
                     }
@@ -140,44 +132,49 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         return processRemoteViews(sbn.notification.bigContentView, isIobCob, regex)
     }
 
-    private fun parseTextViews(textViews: ArrayList<TextView>, isIobCob: Boolean, regex: Regex): Pair<Int, Float> {
-        var matches = 0
-        var value = Float.NaN
+    private fun parseTextView(textView: TextView, isIobCob: Boolean, regex: Regex?): Float {
+        try {
+            Log.v(LOG_ID, "Processing TextView: ${textView.text} - isIobCob: $isIobCob")
+            if(!textView.text.isNullOrEmpty()) {
+                val text = textView.text.toString().replace(",", ".").trim()
+                if(regex!=null) {
+                    regex.find(text)?.groupValues?.get(1)?.toFloatOrNull()?.let {
+                        if(isValidValue(it, isIobCob)) {
+                            Log.i(LOG_ID, "Found value: $it using regex")
+                            return it
+                        }
+                    }
+                } else {
+                    text.toFloatOrNull()?.let {
+                        if(isValidValue(it, isIobCob)) {
+                            Log.i(LOG_ID, "Found value: $it")
+                            return it
+                        }
+                    }
+                }
+                parsedTextViews.add(text)
+            }
+        } catch (e: Exception) {
+            Log.e(LOG_ID, "Error parsing TextView: ${e.message}")
+        }
+        return Float.NaN
+    }
 
+    private fun parseTextViews(textViews: ArrayList<TextView>, isIobCob: Boolean): Float {
         // Examine each TextView
         for (textView in textViews) {
             try {
                 Log.v(LOG_ID, "Processing TextView: ${textView.text} - isIobCob: $isIobCob")
-                var found = false
                 if(!textView.text.isNullOrEmpty()) {
-                    val text = textView.text.toString().replace(",", ".").trim()
-                    text.toFloatOrNull()?.let {
-                        if(isValidValue(it, isIobCob)) {
-                            value = it
-                            matches++
-                            found = true
-                            Log.d(LOG_ID, "Found value: $value")
-                        }
-                    }
-                    if(!found) {
-                        regex.find(text)?.groupValues?.get(1)?.toFloatOrNull()?.let {
-                            if(isValidValue(it, isIobCob)) {
-                                value = it
-                                matches++
-                                found = true
-                                Log.d(LOG_ID, "Found value: $value using regex")
-                            }
-                        }
-                    }
-                    if(!found) {
-                        parsedTextViews.add(text)
-                    }
+                    val value = parseTextView(textView, isIobCob, null)  // check everything without regex
+                    if(!value.isNaN())
+                        return value
                 }
             } catch (e: Exception) {
                 Log.e(LOG_ID, "Error processing TextView: ${e.message}")
             }
         }
-        return Pair(matches, value)
+        return Float.NaN
     }
 
     private fun processRemoteViews(remoteViews: RemoteViews?, isIobCob: Boolean, regex: Regex): Float {
@@ -192,33 +189,17 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             // Collect all TextViews
             val textViews = ArrayList<TextView>()
             val derivedTextViews = ArrayList<TextView>()
-            findTextViews(root, textViews, derivedTextViews)
+            var glucoseValue = findTextViews(root, textViews, derivedTextViews, isIobCob, regex)
+            if(!glucoseValue.isNaN())
+                return glucoseValue
 
             Log.d(LOG_ID, "Found ${textViews.size} text views and ${derivedTextViews.size} derived text views")
 
-            var (matches, glucoseValue) = parseTextViews(textViews, isIobCob, regex)
-            if(matches==0) {
-                parseTextViews(derivedTextViews, isIobCob, regex).apply {
-                    matches = first
-                    glucoseValue = second
-                }
+            glucoseValue = parseTextViews(textViews, isIobCob)
+            if(glucoseValue.isNaN()) {
+                glucoseValue = parseTextViews(derivedTextViews, isIobCob)
             }
-
-            when {
-                matches == 0 -> {
-                    Log.d(LOG_ID, "Did not find any matches")
-                    return Float.NaN
-                }
-
-                matches > 1 -> {
-                    Log.e(LOG_ID, "Found too many matches: $matches")
-                    return Float.NaN
-                }
-
-                else -> {
-                    return glucoseValue
-                }
-            }
+            return glucoseValue
 
         } catch (e: Exception) {
             Log.e(LOG_ID, "Error processing RemoteViews: ${e.message}")
@@ -226,24 +207,33 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         return Float.NaN
     }
 
-    private fun findTextViews(view: View, textViews: MutableList<TextView>, derivedTextViews: MutableList<TextView>) {
+    private fun findTextViews(view: View, textViews: MutableList<TextView>, derivedTextViews: MutableList<TextView>, isIobCob: Boolean, regex: Regex): Float {
         Log.v(LOG_ID, "findTextViews in view $view")
         when (view) {
             is TextView -> {
                 if(view.javaClass.name == TextView::class.java.name) {
-                    Log.d(LOG_ID, "Found TextView: $view: ${view.text}")
+                    Log.d(LOG_ID, "Found TextView: $view: '${view.text}'")
+                    val value = parseTextView(view, isIobCob, regex)
+                    if(!value.isNaN())  // found
+                        return value
                     textViews.add(view)
                 } else {
-                    Log.d(LOG_ID, "Found derived TextView: ${view.javaClass.name} with value ${view.text}")
+                    Log.d(LOG_ID, "Found derived TextView: ${view.javaClass.name} with value '${view.text}'")
+                    val value = parseTextView(view, isIobCob, regex)
+                    if(!value.isNaN())  // found
+                        return value
                     derivedTextViews.add(view)
                 }
             }
             is ViewGroup -> {
                 for (i in 0 until view.childCount) {
-                    findTextViews(view.getChildAt(i), textViews, derivedTextViews)
+                    val value = findTextViews(view.getChildAt(i), textViews, derivedTextViews, isIobCob, regex)
+                    if(!value.isNaN())  // found
+                        return value
                 }
             }
         }
+        return Float.NaN
     }
 
     private fun handleGlucoseValue(glucoseValue: Float, time: Long) {
