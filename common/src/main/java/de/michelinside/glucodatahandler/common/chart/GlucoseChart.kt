@@ -42,6 +42,14 @@ class GlucoseChart: LineChart {
         Log.v(LOG_ID, "postInvalidate done")
     }
 
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        try {
+            super.onSizeChanged(w, h, oldw, oldh)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onSizeChanged exception: ${exc.message}:\n${exc.stackTraceToString()}")
+        }
+    }
+
     override fun invalidate() {
         isInvalidating = true
         isDrawing = isShown

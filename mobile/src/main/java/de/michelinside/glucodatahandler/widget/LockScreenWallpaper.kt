@@ -47,36 +47,33 @@ class LockScreenWallpaper(context: Context): WallpaperBase(context, "GDH.LockScr
         GlobalScope.launch {
             try {
                 val wallpaperManager = WallpaperManager.getInstance(context)
-                if (bitmap != null) {
-                    Log.i(LOG_ID, "Update lockscreen wallpaper")
-                    val wallpaper =  createWallpaper(bitmap, context)
-                    wallpaperManager.setBitmap(wallpaper, null, false, WallpaperManager.FLAG_LOCK)
-                    wallpaper!!.recycle()
-                } else {
-                    Log.i(LOG_ID, "Remove lockscreen wallpaper")
-                    wallpaperManager.clear()
-                }
+                Log.i(LOG_ID, "Update lockscreen wallpaper for bitmap $bitmap")
+                val wallpaper =  createWallpaper(bitmap, context)
+                wallpaperManager.setBitmap(wallpaper, null, false, WallpaperManager.FLAG_LOCK)
+                wallpaper!!.recycle()
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "updateLockScreen exception: " + exc.message.toString())
             }
         }
     }
 
-    private fun createWallpaper(bitmap: Bitmap, context: Context): Bitmap? {
+    private fun createWallpaper(bitmap: Bitmap?, context: Context): Bitmap? {
         try {
             Log.v(LOG_ID, "creatWallpaper called")
             val screenWidth = BitmapUtils.getScreenWidth()
             val screenHeigth = BitmapUtils.getScreenHeight()
-            val screenDPI = BitmapUtils.getScreenDpi().toFloat()
             val wallpaper = Bitmap.createBitmap(screenWidth, screenHeigth, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(wallpaper)
-            val drawable = bitmap.toDrawable(context.resources)
-            drawable.setBounds(0, 0, screenWidth, screenHeigth)
-            val xOffset = ((screenWidth-bitmap.width)/2F) //*1.2F-(screenDPI*0.3F)
-            val yOffset = max(0F, ((screenHeigth-bitmap.height)*yPos/100F)) //-(screenDPI*0.3F))
-            Log.d(LOG_ID, "Create wallpaper at x=$xOffset/$screenWidth and y=$yOffset/$screenHeigth DPI=$screenDPI")
-            canvas.drawBitmap(bitmap, xOffset, yOffset, Paint(Paint.ANTI_ALIAS_FLAG))
-            bitmap.recycle()
+            if(bitmap != null) {
+                val screenDPI = BitmapUtils.getScreenDpi().toFloat()
+                val canvas = Canvas(wallpaper)
+                val drawable = bitmap.toDrawable(context.resources)
+                drawable.setBounds(0, 0, screenWidth, screenHeigth)
+                val xOffset = ((screenWidth-bitmap.width)/2F) //*1.2F-(screenDPI*0.3F)
+                val yOffset = max(0F, ((screenHeigth-bitmap.height)*yPos/100F)) //-(screenDPI*0.3F))
+                Log.d(LOG_ID, "Create wallpaper at x=$xOffset/$screenWidth and y=$yOffset/$screenHeigth DPI=$screenDPI")
+                canvas.drawBitmap(bitmap, xOffset, yOffset, Paint(Paint.ANTI_ALIAS_FLAG))
+                bitmap.recycle()
+            }
             return wallpaper
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateLockScreen exception: " + exc.message.toString() )
