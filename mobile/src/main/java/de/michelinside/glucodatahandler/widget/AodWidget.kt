@@ -56,20 +56,17 @@ class AodWidget(context: Context): WallpaperBase(context, "GDH.AodWidget") {
     override fun initSettings(sharedPreferences: SharedPreferences) {
         yPos = sharedPreferences.getInt(Constants.SHARED_PREF_AOD_WP_Y_POS, 75)
         widgetColoured = sharedPreferences.getBoolean(Constants.SHARED_PREF_AOD_WP_COLOURED, false)
-        Log.d(LOG_ID, "Widget coloured : $widgetColoured")
+        Log.d(LOG_ID, "Widget is coloured : $widgetColoured")
         super.initSettings(sharedPreferences)
     }
 
     fun getBitmap() : Bitmap? {
-        return createWallpaperView(if (widgetColoured) null else Constants.AOD_COLOUR)
+        return createWallpaperView(if (widgetColoured) null else Constants.AOD_COLOUR, true)
     }
 
     fun getYPos() : Int {
         return yPos
     }
-
-
-
 
 }
 

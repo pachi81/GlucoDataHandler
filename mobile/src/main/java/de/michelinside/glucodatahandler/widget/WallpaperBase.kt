@@ -189,7 +189,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
         }
     }
 
-    protected fun createWallpaperView(colour: Int? = null): Bitmap? {
+    protected fun createWallpaperView(colour: Int? = null, isAod: Boolean = false): Bitmap? {
         try {
             Log.d(LOG_ID, "Create wallpaper view for size $size and style $style")
             //getting the widget layout from xml using layout inflater
@@ -205,6 +205,9 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             val txtIob: TextView = lockscreenView.findViewById(R.id.iobText)
             val txtCob: TextView = lockscreenView.findViewById(R.id.cobText)
             val graphImage: ImageView? = lockscreenView.findViewById(R.id.graphImage)
+
+            if (isAod)
+                lockscreenView.setBackgroundColor(Color.TRANSPARENT)
 
             var textSize = 30f
             when(style) {
