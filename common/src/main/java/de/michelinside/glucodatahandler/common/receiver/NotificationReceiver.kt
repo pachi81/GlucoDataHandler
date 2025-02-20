@@ -22,7 +22,8 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     private val LOG_ID = "GDH.NotificationReceiver"
     private var parsedTextViews = mutableListOf<String>()
-    private var newDexcomValue = false
+    private var lastDexcomForegroundTime = 0L
+    private var lastDexcomValueTime = 0L
 
     override fun getName(): String {
         return LOG_ID
@@ -32,6 +33,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         if (sbn.packageName == sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP, "")) {
             Log.d(LOG_ID, "New notification from ${sbn.packageName} - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`})")
             var minDiff = 50
+            val diffTime = (sbn.postTime - ReceiveData.time)/1000 // in seconds
             if(PackageUtils.isDexcomApp(sbn.packageName)) {
                 // special Dexcom handling (only for G7?)
                 // value notification is updated quite often and all must be ignored, until the "Dexcom app is running" notification is received
@@ -39,17 +41,21 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                 val extras = sbn.notification?.extras
                 val title = extras?.getCharSequence("android.title")?.toString()
                 if(title != null) {
-                    Log.d(LOG_ID, "Dexcom foreground notification updated -> ignore and wait for next value notification")
-                    newDexcomValue = true
+                    Log.d(LOG_ID, "Dexcom foreground notification updated at ${Utils.getUiTimeStamp(sbn.postTime)} -> ignore and wait for next value notification")
+                    lastDexcomForegroundTime = sbn.postTime
                     return false
-                } else if(!newDexcomValue) {
-                    Log.d(LOG_ID, "Ignoring Dexcom value notification -> wait for foreground notification")
-                    return false
+                } else {
+                    val diffForegroundTime = (sbn.postTime - lastDexcomForegroundTime)/1000 // in seconds
+                    val diffValueTime = (sbn.postTime - lastDexcomValueTime)/1000 // in seconds
+                    lastDexcomValueTime = sbn.postTime
+                    Log.d(LOG_ID, "Dexcom value notification updated at ${Utils.getUiTimeStamp(sbn.postTime)} - diff foreground: $diffForegroundTime, diff value notify: $diffValueTime, diff recv value: $diffTime ")
+                    if(diffForegroundTime > 5) {
+                        Log.d(LOG_ID, "Ignoring Dexcom value notification -> wait for foreground notification")
+                        return false
+                    }
                 }
-                newDexcomValue = false
                 minDiff = 250  // ignore other updates of the foreground notification -> wait for the next one for value (~300s)
             }
-            val diffTime = (sbn.postTime - ReceiveData.time)/1000 // in seconds
             if(diffTime < minDiff) {
                 Log.d(LOG_ID, "Ignoring notification out of interval - diff: $diffTime < $minDiff")
                 return false
