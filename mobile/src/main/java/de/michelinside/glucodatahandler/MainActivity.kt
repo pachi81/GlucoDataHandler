@@ -56,6 +56,7 @@ import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.preferences.AlarmFragment
+import de.michelinside.glucodatahandler.preferences.LockscreenSettingsFragment
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import java.text.DateFormat
 import java.util.Date
@@ -175,7 +176,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.TIME_VALUE,
                 NotifySource.ALARM_STATE_CHANGED,
                 NotifySource.SOURCE_STATE_CHANGE))
-            checkFullscreenPermission()
+            checkMissingPermissions()
             checkNewSettings()
 
             if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
@@ -247,7 +248,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         }
     }
 
-    private fun checkFullscreenPermission() {
+    private fun checkMissingPermissions() {
         if(sharedPref.contains(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED) && sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, true)) {
             if (!AlarmNotification.hasFullscreenPermission()) {
                 Dialogs.showOkCancelDialog(this,
@@ -257,6 +258,22 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     { _, _ ->
                         with(sharedPref.edit()) {
                             putBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, false)
+                            apply()
+                        }
+                    }
+                )
+            }
+        }
+
+        if(sharedPref.contains(Constants.SHARED_PREF_AOD_WP_ENABLED) && sharedPref.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, true)) {
+            if (!AODAccessibilityService.isAccessibilitySettingsEnabled(this)) {
+                Dialogs.showOkCancelDialog(this,
+                    resources.getString(CR.string.permission_missing_title),
+                    resources.getString(CR.string.setting_permission_missing_message, resources.getString(CR.string.pref_cat_aod)),
+                    { _, _ -> LockscreenSettingsFragment.requestAccessibilitySettings(this) },
+                    { _, _ ->
+                        with(sharedPref.edit()) {
+                            putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
                             apply()
                         }
                     }

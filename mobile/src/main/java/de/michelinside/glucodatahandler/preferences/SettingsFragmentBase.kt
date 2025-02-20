@@ -1,10 +1,12 @@
 package de.michelinside.glucodatahandler.preferences
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -295,29 +297,16 @@ class WidgetSettingsFragment: SettingsFragmentBase(R.xml.pref_widgets) {
 }
 
 class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
-    override fun initPreferences() {
-        Log.v(LOG_ID, "initPreferences called")
-        super.initPreferences()
-        updateStyleSummary()
-    }
-
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        super.onSharedPreferenceChanged(sharedPreferences, key)
-        when (key) {
-            Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE -> updateStyleSummary()
+    companion object {
+        fun requestAccessibilitySettings(context: Context) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                intent.putExtra(Settings.EXTRA_APP_PACKAGE,context.packageName)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(intent)
+            }
         }
     }
-
-    private fun updateStyleSummary() {
-        val aodStylePref = findPreference<ListPreference>(Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE)
-        if(aodStylePref != null) {
-            aodStylePref.summary = aodStylePref.entry
-        }
-    }
-}
-
-
-class AodSettingsFragment: SettingsFragmentBase(R.xml.pref_aod)  {
     override fun initPreferences() {
         Log.v(LOG_ID, "initPreferences called")
         super.initPreferences()
@@ -328,55 +317,50 @@ class AodSettingsFragment: SettingsFragmentBase(R.xml.pref_aod)  {
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         super.onSharedPreferenceChanged(sharedPreferences, key)
         when (key) {
+            Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE -> updateStyleSummary()
             Constants.SHARED_PREF_AOD_WP_STYLE -> updateStyleSummary()
             Constants.SHARED_PREF_AOD_WP_ENABLED -> checkAccesibilityService()
         }
     }
 
     private fun updateStyleSummary() {
-        val lockscreenStylePref = findPreference<ListPreference>(Constants.SHARED_PREF_AOD_WP_STYLE)
+        val lockscreenStylePref = findPreference<ListPreference>(Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE)
         if(lockscreenStylePref != null) {
             lockscreenStylePref.summary = lockscreenStylePref.entry
         }
+        val aodStylePref = findPreference<ListPreference>(Constants.SHARED_PREF_AOD_WP_STYLE)
+        if(aodStylePref != null) {
+            aodStylePref.summary = aodStylePref.entry
+        }
     }
-
     private val accessibilitySettingsLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            context?.let {
-                    val enabled = (AODAccessibilityService.isAccessibilitySettingsEnabled(it))
-                    preferenceManager.sharedPreferences?.edit()?.putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, enabled)?.apply()
-                    val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_AOD_WP_ENABLED)
-                    if (pref != null)
-                        pref.isChecked = enabled
-            }
+            val enabled = (AODAccessibilityService.isAccessibilitySettingsEnabled(requireContext()))
+            preferenceManager.sharedPreferences?.edit()?.putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, enabled)?.apply()
+            val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_AOD_WP_ENABLED)
+            if (pref != null)
+                pref.isChecked = enabled
         }
 
     private fun updateEnabledInitial() {
-        context?.let {
-            val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_AOD_WP_ENABLED)
-            if (pref != null && pref.isChecked) {
-                if (!AODAccessibilityService.isAccessibilitySettingsEnabled(it)) {
-                    preferenceManager.sharedPreferences?.edit()
-                        ?.putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)?.apply()
-                    pref.isChecked = false
-                }
+        val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_AOD_WP_ENABLED)
+        if (pref != null && pref.isChecked) {
+            if (!AODAccessibilityService.isAccessibilitySettingsEnabled(requireContext())) {
+                preferenceManager.sharedPreferences?.edit()
+                    ?.putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)?.apply()
+                pref.isChecked = false
             }
         }
     }
 
     private fun checkAccesibilityService() {
-        context?.let {
-            val enabled = AODAccessibilityService.isAccessibilitySettingsEnabled(it)
-            if (!enabled) {
-                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                accessibilitySettingsLauncher.launch(intent)
-            }
+        val enabled = AODAccessibilityService.isAccessibilitySettingsEnabled(requireContext())
+        if (!enabled) {
+            val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+            accessibilitySettingsLauncher.launch(intent)
         }
     }
-
 }
-
-
 
 class NotificaitonSettingsFragment: SettingsFragmentBase(R.xml.pref_notification) {}
 

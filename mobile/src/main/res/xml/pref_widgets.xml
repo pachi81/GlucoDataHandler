@@ -57,6 +57,16 @@
                     app:isTapAction="true"
                     app:description="@string/tap_action_summary"
                     app:iconSpaceReserved="false" />
+                <androidx.preference.SeekBarPreference
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="1"
+                    app:min="1"
+                    android:max="12"
+                    android:defaultValue="2"
+                    android:key="graph_duration_floating_widget"
+                    android:summary="@string/graph_duration_phone_widget_summary"
+                    android:title="@string/graph_duration"
+                    app:iconSpaceReserved="false" />
         </PreferenceCategory>
         <PreferenceCategory
             android:title="@string/pref_cat_widgets"

@@ -99,6 +99,7 @@ object Constants {
     const val SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY = "floating_widget_transparency"
     const val SHARED_PREF_FLOATING_WIDGET_TIME_TO_CLOSE = "floating_widget_time_to_close"
     const val SHARED_PREF_FLOATING_WIDGET_TAP_ACTION = "floating_widget_tap_action"
+    const val SHARED_PREF_FLOATING_WIDGET_GRAPH_DURATION = "graph_duration_floating_widget"
     const val SHARED_PREF_WIDGET_TRANSPARENCY = "widget_transparency"
     const val SHARED_PREF_WIDGET_TAP_ACTION = "widget_tap_action"
     const val SHARED_PREF_RELATIVE_TIME = "relative_time"
@@ -192,6 +193,7 @@ object Constants {
     const val SHARED_PREF_LOCKSCREEN_WP_Y_POS = "lockscreen_y_pos"
     const val SHARED_PREF_LOCKSCREEN_WP_STYLE = "lockscreen_style"
     const val SHARED_PREF_LOCKSCREEN_WP_SIZE = "lockscreen_size"
+    const val SHARED_PREF_LOCKSCREEN_WP_GRAPH_DURATION = "lockscreen_graph_duration"
 
     const val SHARED_PREF_SOURCE_JUGGLUCO_SET_NS_IOB_ACTION = "source_juggluco_activate_local_nightscout_iob_action"
     const val SHARED_PREF_SOURCE_XDRIP_SET_NS_IOB_ACTION = "source_xdrip_activate_local_nightscout_iob_action"
@@ -206,6 +208,7 @@ object Constants {
     const val SHARED_PREF_AOD_WP_STYLE = "aod_style"
     const val SHARED_PREF_AOD_WP_SIZE = "aod_size"
     const val SHARED_PREF_AOD_WP_COLOURED = "aod_coloured"
+    const val SHARED_PREF_AOD_WP_GRAPH_DURATION = "aod_graph_duration"
     const val AOD_COLOUR = Color.LTGRAY
 
     // Alarm

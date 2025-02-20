@@ -781,7 +781,7 @@
     <string name="graph_duration">Graph duration</string>
     <string name="graph_duration_wear_summary">Number of hours shown in the graph in complication and on main screen.\nUse 0 to disable graph.</string>
     <string name="graph_duration_phone_summary">Number of hours shown in the graph.\nUse 0 to disable graph.</string>
-    <string name="graph_duration_phone_widget_summary">Number of hours shown in the graph on widget.</string>
+    <string name="graph_duration_phone_widget_summary">Number of hours shown in the graph.</string>
     <string name="show_graph">Show graph</string>
     <string name="menu_database">Database</string>
     <string name="reset_db">Reset database</string>
