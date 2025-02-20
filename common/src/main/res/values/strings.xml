@@ -793,6 +793,20 @@
     <string name="pref_switch_use_rate_calculation">Trend calculation</string>
     <string name="pref_switch_use_rate_calculation_summary_on">Use internal trend calculation related to the last values.</string>
     <string name="pref_switch_use_rate_calculation_summary_off">Use trend provided by the source.\nIf no trend is available, the internal calculation is used.</string>
+    
+   <string name="accessibility_service_description">Display glucose values on the Always-on Display</string>
+
+    <string name="pref_cat_aod">Always on Display</string>
+    <string name="pref_cat_aod_summary">Settings for Always on Display.</string>
+
+    <string name="pref_aod_enabled">Enable</string>
+    <string name="pref_aod_enabled_summary">Show values on the AOD display.</string>
+    <string name="pref_aod_size_summary">Change size of the AOD data.</string>
+    <string name="pref_aod_y_pos">Vertical position</string>
+    <string name="pref_aod_y_pos_summary">Vertical position of the glucose-trend image on AOD display:\n0 is the top of the display\n100 is the botton of the display</string>
+    <string name="pref_aod_coloured">Coloured</string>
+    <string name="pref_aod_coloured_summary">Show AOD in colour.</string>
+
     <string name="graph_show_axis">Show axis</string>
     <string name="graph_show_axis_summary">Show y- and x-Axis in the widget.</string>
 
