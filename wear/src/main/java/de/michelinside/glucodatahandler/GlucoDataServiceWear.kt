@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler
 
+import ScreenEventReceiverWear
 import android.app.Notification
 import android.content.Context
 import android.content.Intent
@@ -138,7 +139,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
                 }
                 NotifySource.CAPILITY_INFO -> {
                     if(ScreenEventReceiver.isDisplayOff()) {
-                        ScreenEventReceiver.onDisplayOff(this)
+                        ScreenEventReceiver.triggerNotify(this)
                     }
                 }
                 NotifySource.DISPLAY_STATE_CHANGED -> {
@@ -190,18 +191,18 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
             if(!sharedPref!!.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true)) {
                 if(screenEventReceiver == null) {
                     Log.i(LOG_ID, "register screenEventReceiver")
-                    screenEventReceiver = ScreenEventReceiver()
+                    screenEventReceiver = ScreenEventReceiverWear()
                     val filter = IntentFilter()
                     filter.addAction(Intent.ACTION_SCREEN_OFF)
                     filter.addAction(Intent.ACTION_SCREEN_ON)
                     registerReceiver(screenEventReceiver, filter)
-                    ScreenEventReceiver.update(this)
+                    screenEventReceiver!!.update(this)
                 }
             } else if(screenEventReceiver != null) {
                 Log.i(LOG_ID, "unregister screenEventReceiver")
                 unregisterReceiver(screenEventReceiver)
+                screenEventReceiver!!.reset(this)
                 screenEventReceiver = null
-                ScreenEventReceiver.reset(this)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateScreenReceiver exception: " + exc.toString())
