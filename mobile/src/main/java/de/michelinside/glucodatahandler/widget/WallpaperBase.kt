@@ -6,7 +6,12 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
+import android.text.style.ImageSpan
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -15,6 +20,8 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
@@ -25,6 +32,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
+import android.text.Spanned
 
 abstract class WallpaperBase(protected val context: Context, protected val LOG_ID: String): NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
     protected abstract val enabledPref: String
@@ -181,7 +189,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
         }
     }
 
-    protected fun createWallpaperView(): Bitmap? {
+    protected fun createWallpaperView(colour: Int? = null, isAod: Boolean = false): Bitmap? {
         try {
             Log.d(LOG_ID, "Create wallpaper view for size $size and style $style")
             //getting the widget layout from xml using layout inflater
@@ -197,6 +205,9 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             val txtIob: TextView = lockscreenView.findViewById(R.id.iobText)
             val txtCob: TextView = lockscreenView.findViewById(R.id.cobText)
             val graphImage: ImageView? = lockscreenView.findViewById(R.id.graphImage)
+
+            if (isAod)
+                lockscreenView.setBackgroundColor(Color.TRANSPARENT)
 
             var textSize = 30f
             when(style) {
@@ -248,16 +259,18 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
                 txtBgValue.paintFlags = 0
             }
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
-            txtDelta.text = "Δ ${ReceiveData.getDeltaAsString()}"
-            txtTime.text = "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(context)}"
+
+            txtDelta.text = buildImageString(context, R.drawable.icon_delta, "Δ", "   ${ReceiveData.getDeltaAsString()}", colour)
+            txtTime.text = buildImageString(context, R.drawable.icon_clock, "🕒", "   ${ReceiveData.getElapsedTimeMinuteAsString(context)}", colour)
+
             if(ReceiveData.iob.isNaN())
                 txtIob.visibility = GONE
             else
-                txtIob.text = "💉 ${ReceiveData.getIobAsString()}"
+                txtIob.text = buildImageString(context, R.drawable.icon_injection, "💉", " ${ReceiveData.getIobAsString()}", colour)
             if(ReceiveData.cob.isNaN())
                 txtCob.visibility = GONE
             else
-                txtCob.text = "🍔 ${ReceiveData.getCobAsString()}"
+                txtCob.text = buildImageString(context, R.drawable.icon_burger, "🍔", " ${ReceiveData.getCobAsString()}", colour)
 
             val usedSize = if(graphImage != null && (txtIob.visibility == VISIBLE || txtCob.visibility == VISIBLE)) size /2 else size
 
@@ -294,6 +307,13 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
 
             Log.d(LOG_ID, "Mesasured width ${lockscreenView.measuredWidth} and height ${lockscreenView.measuredHeight}")
 
+
+            colour?.let { col ->
+                txtBgValue.setTextColor(col)
+                viewIcon.setColorFilter(col)
+                graphImage?.setColorFilter(col)
+            }
+
             val bitmap = Bitmap.createBitmap(lockscreenView.width, lockscreenView.height, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(bitmap)
             lockscreenView.draw(canvas)
@@ -303,5 +323,23 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
         }
         return null
     }
-    
+
+    private fun buildImageString(context: Context, res: Int, emoji: String, text: String, colour: Int? = null): SpannableStringBuilder {
+        val spannable = SpannableStringBuilder("")
+        if (colour == null) {
+            spannable.append(emoji + text)
+        }
+        else {
+            spannable.append(" $text")
+            val drawable: Drawable? = ContextCompat.getDrawable(context, res)
+            if (drawable != null) {
+                DrawableCompat.setTint(drawable, colour)
+                drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+                spannable.setSpan(ImageSpan(drawable, ImageSpan.ALIGN_BASELINE), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                spannable.setSpan(ForegroundColorSpan(colour), 1, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+        }
+        return spannable
+    }
+
 }
