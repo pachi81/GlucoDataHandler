@@ -39,6 +39,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
     protected abstract val stylePref: String
     protected abstract val sizePref: String
     protected open val chartDurationPref =  ""
+    protected open val MIN_SIZE = 8f
     protected open val MAX_SIZE = 24f
     protected var enabled = false
     protected var style = Constants.WIDGET_STYLE_GLUCOSE_TREND
@@ -287,11 +288,11 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             val usedSize = if(graphImage != null && (txtIob.visibility == VISIBLE || txtCob.visibility == VISIBLE)) size /2 else size
 
             txtBgValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+usedSize*4f)
-            viewIcon.minimumWidth = Utils.dpToPx(32f+usedSize*4f, context)
-            txtDelta.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+usedSize*2f, MAX_SIZE))
-            txtTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+usedSize*2f, MAX_SIZE))
-            txtIob.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+usedSize*2f, MAX_SIZE))
-            txtCob.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(8f+usedSize*2f, MAX_SIZE))
+            viewIcon.minimumWidth = Utils.dpToPx((MIN_SIZE+usedSize)*4f, context)
+            txtDelta.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(MIN_SIZE+usedSize*2f, MAX_SIZE))
+            txtTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(MIN_SIZE+usedSize*2f, MAX_SIZE))
+            txtIob.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(MIN_SIZE+usedSize*2f, MAX_SIZE))
+            txtCob.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(MIN_SIZE+usedSize*2f, MAX_SIZE))
 
 
             if(graphImage != null) {

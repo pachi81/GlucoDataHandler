@@ -29,6 +29,8 @@ class FloatingWidget(context: Context): WallpaperBase(context, "GDH.FloatingWidg
     override val stylePref = Constants.SHARED_PREF_FLOATING_WIDGET_STYLE
     override val sizePref = Constants.SHARED_PREF_FLOATING_WIDGET_SIZE
     override val chartDurationPref = Constants.SHARED_PREF_FLOATING_WIDGET_GRAPH_DURATION
+    override val MIN_SIZE = 6f
+    override val MAX_SIZE = 30f
 
     override fun enable() {
         try {

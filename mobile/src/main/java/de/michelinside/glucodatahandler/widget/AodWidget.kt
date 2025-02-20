@@ -3,7 +3,6 @@ package de.michelinside.glucodatahandler.widget
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.util.Log
 import de.michelinside.glucodatahandler.AODAccessibilityService
 import de.michelinside.glucodatahandler.common.Constants
@@ -16,6 +15,8 @@ class AodWidget(context: Context): WallpaperBase(context, "GDH.AodWidget") {
     override val stylePref = Constants.SHARED_PREF_AOD_WP_STYLE
     override val sizePref = Constants.SHARED_PREF_AOD_WP_SIZE
     override val chartDurationPref = Constants.SHARED_PREF_AOD_WP_GRAPH_DURATION
+    override val MIN_SIZE = 12f
+    override val MAX_SIZE = 30f
 
     private lateinit var service: AODAccessibilityService
 
