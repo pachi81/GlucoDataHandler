@@ -1,6 +1,5 @@
 package de.michelinside.glucodatahandler.preferences
 
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -22,13 +21,11 @@ import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
-import de.michelinside.glucodatahandler.common.GlucoDataService.Companion
 import de.michelinside.glucodatahandler.common.Intents
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.preferences.PreferenceHelper
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
-import de.michelinside.glucodatahandler.widget.AodWidget
 import kotlin.collections.HashMap
 import kotlin.collections.List
 import kotlin.collections.mutableSetOf

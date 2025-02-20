@@ -6,43 +6,19 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.PixelFormat
-import android.graphics.PorterDuff
-import android.os.Bundle
 import android.os.PowerManager
 import android.util.Log
-import android.util.TypedValue
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
 import android.widget.ImageView
-import android.widget.TextView
-import androidx.core.content.ContextCompat
 import de.michelinside.glucodatahandler.common.Constants
-import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
-import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
-import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
-
-import android.accessibilityservice.AccessibilityServiceInfo
-import android.app.Activity
-import android.graphics.Bitmap
-import android.provider.DocumentsContract
 import android.provider.Settings
 import android.view.ViewGroup
-import android.view.accessibility.AccessibilityManager
 import android.widget.FrameLayout
-//import androidx.core.app.ActivityCompat.startActivityForResult
-import androidx.core.content.ContextCompat.startActivity
-import de.michelinside.glucodatahandler.common.GlucoDataService.Companion.context
-import de.michelinside.glucodatahandler.preferences.ExportImportSettingsFragment.Companion.IMPORT_PHONE_SETTINGS
-
-
-import androidx.appcompat.app.AppCompatActivity
 import de.michelinside.glucodatahandler.widget.AodWidget
-import de.michelinside.glucodatahandler.widget.LockScreenWallpaper
 import kotlin.math.max
 
 
@@ -56,13 +32,20 @@ class AODAccessibilityService : AccessibilityService() {
 
     companion object {
         val LOG_ID = "GDH.Aod"
-
         fun isAccessibilitySettingsEnabled(context: Context): Boolean {
-            val prefString =
-                Settings.Secure.getString(context.contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES)
-            val enabled = prefString.contains("${context.packageName}/${context.packageName}.${AODAccessibilityService::class.simpleName}")
-            Log.d(LOG_ID, "Checking ACCESSIBILITY_SERVICES : ${enabled}")
-            return enabled
+            try {
+                val prefString =
+                    Settings.Secure.getString(context.contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES)
+                Log.d(LOG_ID, "Checking ACCESSIBILITY_SERVICES : ${prefString}")
+                if(prefString.isNullOrEmpty())
+                    return false
+                val enabled = prefString.contains("${context.packageName}/${AODAccessibilityService::class.qualifiedName}")
+                Log.d(LOG_ID, "Checking ACCESSIBILITY_SERVICES : ${enabled}")
+                return enabled
+            } catch (e: Exception) {
+                Log.e(LOG_ID, "Error checking ACCESSIBILITY_SERVICES", e)
+                return false
+            }
         }
     }
 

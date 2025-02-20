@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler.widget
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
@@ -8,7 +9,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.text.style.ImageSpan
@@ -189,6 +189,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
         }
     }
 
+    @SuppressLint("SetTextI18n")
     protected fun createWallpaperView(colour: Int? = null, isAod: Boolean = false): Bitmap? {
         try {
             Log.d(LOG_ID, "Create wallpaper view for size $size and style $style")
@@ -260,18 +261,29 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             }
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
 
-            txtDelta.text = buildImageString(context, R.drawable.icon_delta, "Δ", "   ${ReceiveData.getDeltaAsString()}", colour)
-            txtTime.text = buildImageString(context, R.drawable.icon_clock, "🕒", "   ${ReceiveData.getElapsedTimeMinuteAsString(context)}", colour)
-
-            if(ReceiveData.iob.isNaN())
-                txtIob.visibility = GONE
-            else
-                txtIob.text = buildImageString(context, R.drawable.icon_injection, "💉", " ${ReceiveData.getIobAsString()}", colour)
-            if(ReceiveData.cob.isNaN())
-                txtCob.visibility = GONE
-            else
-                txtCob.text = buildImageString(context, R.drawable.icon_burger, "🍔", " ${ReceiveData.getCobAsString()}", colour)
-
+            if(colour == null) {
+                txtDelta.text = "Δ ${ReceiveData.getDeltaAsString()}"
+                txtTime.text = "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(context)}"
+                if(ReceiveData.iob.isNaN())
+                    txtIob.visibility = GONE
+                else
+                    txtIob.text = "💉 ${ReceiveData.getIobAsString()}"
+                if(ReceiveData.cob.isNaN())
+                    txtCob.visibility = GONE
+                else
+                    txtCob.text = "🍔 ${ReceiveData.getCobAsString()}"
+            } else {
+                txtDelta.text = buildImageString(context, R.drawable.icon_delta, "Δ", "   ${ReceiveData.getDeltaAsString()}", colour)
+                txtTime.text = buildImageString(context, R.drawable.icon_clock, "🕒", "   ${ReceiveData.getElapsedTimeMinuteAsString(context)}", colour)
+                if(ReceiveData.iob.isNaN())
+                    txtIob.visibility = GONE
+                else
+                    txtIob.text = buildImageString(context, R.drawable.icon_injection, "💉", " ${ReceiveData.getIobAsString()}", colour)
+                if(ReceiveData.cob.isNaN())
+                    txtCob.visibility = GONE
+                else
+                    txtCob.text = buildImageString(context, R.drawable.icon_burger, "🍔", " ${ReceiveData.getCobAsString()}", colour)
+            }
             val usedSize = if(graphImage != null && (txtIob.visibility == VISIBLE || txtCob.visibility == VISIBLE)) size /2 else size
 
             txtBgValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+usedSize*4f)
