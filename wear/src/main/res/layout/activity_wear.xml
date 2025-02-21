@@ -202,6 +202,25 @@
             </TableLayout>
 
             <TableLayout
+                android:id="@+id/tableDelta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="?android:attr/dividerHorizontal"
+                android:showDividers="middle">
+
+                <TableRow android:background="@color/table_header" android:padding="5dp"
+                    tools:ignore="UselessParent">
+                    <TextView
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/table_header_details"/>
+                </TableRow>
+            </TableLayout>
+
+            <TableLayout
                 android:id="@+id/tableDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
