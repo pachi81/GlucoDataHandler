@@ -134,12 +134,18 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString() )
         }
     }
+
+    protected open fun getFilters() : MutableSet<NotifySource> {
+        return mutableSetOf()
+    }
+
     private fun updateNotifier() {
         Log.d(LOG_ID, "updateNotifier called - enabled=$enabled")
         if (enabled) {
             val filter = mutableSetOf(
                 NotifySource.SETTINGS
             )
+            filter.addAll(getFilters())
             if(style == Constants.WIDGET_STYLE_CHART_GLUCOSE_TREND_TIME_DELTA_IOB_COB) {
                 filter.add(NotifySource.GRAPH_CHANGED)
             } else {

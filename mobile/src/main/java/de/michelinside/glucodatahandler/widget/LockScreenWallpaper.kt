@@ -6,9 +6,11 @@ import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.os.Bundle
 import android.util.Log
 import androidx.core.graphics.drawable.toDrawable
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -103,6 +105,31 @@ class LockScreenWallpaper(context: Context): WallpaperBase(context, "GDH.LockScr
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.message.toString() )
+        }
+    }
+
+    override fun getFilters(): MutableSet<NotifySource> {
+        Log.d(LOG_ID, "getFilters called - enabled=$enabled")
+        if(enabled)
+            return mutableSetOf(NotifySource.AOD_STATE_CHANGED)
+        return mutableSetOf()
+    }
+
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
+        try {
+            if(dataSource == NotifySource.AOD_STATE_CHANGED) {
+                if(extras != null) {
+                    val aod_enabled = extras.getBoolean("aod_state")
+                    Log.d(LOG_ID, "Display state changed - is AOD on: $aod_enabled")
+                    if(aod_enabled)
+                        disable()
+                    else
+                        enable()
+                }
+            } else
+                super.OnNotifyData(context, dataSource, extras)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString() )
         }
     }
 }

@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.PixelFormat
+import android.os.Bundle
 import android.os.PowerManager
 import android.util.Log
 import android.view.Gravity
@@ -18,6 +19,9 @@ import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import android.provider.Settings
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.widget.AodWidget
 import kotlin.math.max
 
@@ -49,27 +53,31 @@ class AODAccessibilityService : AccessibilityService() {
         }
     }
 
+    private fun triggerAodState(context: Context, state: Boolean) {
+        val extras = Bundle()
+        extras.putBoolean("aod_state", state)
+        InternalNotifier.notify(context, NotifySource.AOD_STATE_CHANGED, extras)
+    }
+
 
     private val screenStateReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
+        override fun onReceive(context: Context, intent: Intent?) {
             try {
                 when (intent?.action) {
                     Intent.ACTION_SCREEN_OFF -> {
                         Log.d(LOG_ID, "Screen turned off")
-
-                        if (context != null) {
-                            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-                            val enabled = sharedPref.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
-                            if (enabled) {
-                                checkAndCreateOverlay()
-                            }
-                            else {
-                                Log.d(LOG_ID, "Aod disabled in settings")
-                            }
+                        val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                        val enabled = sharedPref.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
+                        if (enabled) {
+                            checkAndCreateOverlay()
+                        }
+                        else {
+                            Log.d(LOG_ID, "Aod disabled in settings")
                         }
                     }
                     Intent.ACTION_SCREEN_ON -> {
                         Log.d(LOG_ID, "Screen turned on")
+                        triggerAodState(context, false)
                         removeOverlay()
                         aodWidget.disable()
                         aodWidget.destroy()
@@ -109,6 +117,7 @@ class AODAccessibilityService : AccessibilityService() {
         handler.postDelayed({
             if (!powerManager.isInteractive) {
                 try {
+                    triggerAodState(GlucoDataService.context!!, true)
                     aodWidget = AodWidget(this)
                     aodWidget.create()
                     removeAndCreateOverlay()

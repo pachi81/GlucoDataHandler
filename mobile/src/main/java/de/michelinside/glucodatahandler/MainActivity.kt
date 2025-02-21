@@ -249,12 +249,16 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     }
 
     private fun checkMissingPermissions() {
+        var permissionRequested = false
         if(sharedPref.contains(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED) && sharedPref.getBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, true)) {
             if (!AlarmNotification.hasFullscreenPermission()) {
                 Dialogs.showOkCancelDialog(this,
                     resources.getString(CR.string.permission_missing_title),
                     resources.getString(CR.string.setting_permission_missing_message, resources.getString(CR.string.alarm_fullscreen_notification_enabled)),
-                    { _, _ -> AlarmFragment.requestFullScreenPermission(this) },
+                    { _, _ ->
+                        permissionRequested = true
+                        AlarmFragment.requestFullScreenPermission(this)
+                    },
                     { _, _ ->
                         with(sharedPref.edit()) {
                             putBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, false)
@@ -264,8 +268,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 )
             }
         }
-
-        if(sharedPref.contains(Constants.SHARED_PREF_AOD_WP_ENABLED) && sharedPref.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, true)) {
+        if(!permissionRequested && sharedPref.contains(Constants.SHARED_PREF_AOD_WP_ENABLED) && sharedPref.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, true)) {
             if (!AODAccessibilityService.isAccessibilitySettingsEnabled(this)) {
                 Dialogs.showOkCancelDialog(this,
                     resources.getString(CR.string.permission_missing_title),
