@@ -572,7 +572,7 @@
     <string name="src_dexcom_share_password_summary">Password for Dexcom Share account.</string>
     <string name="pref_source_dexcom_share_info">Setup Dexcom Share</string>
     <string name="permission_missing_title">Missing permission!</string>
-    <string name="setting_permission_missing_message">The settings \'%1$s\' is set, but the related permission is not granted! Press \"OK\" to be forwared the permission dialog or press \"Cancel\" to disable this setting.</string>
+    <string name="setting_permission_missing_message">The settings\n\'%1$s\'\nis set, but the related permission is not granted!\nPress \"OK\" to be forwared the permission dialog or press \"Cancel\" to disable this setting.</string>
     <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
     <string name="xdrip_broadcast_service_api_enabled_summary">Use xDrip+ Broadcast Service API to receive data (also IOB) from xDrip+.\nPlease activate \"Broadcast Service API\" in \"Inter-App settings\" in xDrip+ first!</string>
     <string name="obsolete_time">Obsolete time</string>
@@ -804,8 +804,8 @@
     <string name="pref_aod_size_summary">Change size of the AOD data.</string>
     <string name="pref_aod_y_pos">Vertical position</string>
     <string name="pref_aod_y_pos_summary">Vertical position of the glucose-trend image on AOD display:\n0 is the top of the display\n100 is the botton of the display</string>
-    <string name="pref_aod_coloured">Coloured</string>
-    <string name="pref_aod_coloured_summary">Show AOD in colour.</string>
+    <string name="pref_aod_coloured">Colored</string>
+    <string name="pref_aod_coloured_summary">Show AOD in color.</string>
 
     <string name="graph_show_axis">Show axis</string>
     <string name="graph_show_axis_summary">Show y- and x-Axis in the widget.</string>
@@ -829,5 +829,6 @@
     <string name="notification_dexcom_info">Important</string>
     <string name="notification_dexcom_info_summary">Because of special behaviour of Dexcom notificiations, you must also enable the foreground notification of Dexcom.</string>
     <string name="sensor_age_label">Sensor age</string>
-    <string name="sensor_age_value">%dd %dh</string>
+    <string name="sensor_age_value">%1$dd %2$dh</string>
+    <string name="vibrate_pattern_shorty">Shorty</string>
 </resources>
