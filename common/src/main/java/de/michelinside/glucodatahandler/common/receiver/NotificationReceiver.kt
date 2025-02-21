@@ -24,6 +24,8 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     private var parsedTextViews = mutableListOf<String>()
     private var lastDexcomForegroundTime = 0L
     private var lastDexcomValueTime = 0L
+    private var updateOnlyChangedValue = false
+    private var lastValue = Float.NaN
 
     override fun getName(): String {
         return LOG_ID
@@ -32,12 +34,17 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     private fun validGlucoseNotification(sbn: StatusBarNotification, sharedPref: SharedPreferences): Boolean {
         if (sbn.packageName == sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP, "")) {
             Log.d(LOG_ID, "New notification from ${sbn.packageName} - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`})")
+            updateOnlyChangedValue = false
             var minDiff = 50
             val diffTime = (sbn.postTime - ReceiveData.time)/1000 // in seconds
             if(PackageUtils.isDexcomApp(sbn.packageName)) {
-                // special Dexcom handling (only for G7?)
-                // value notification is updated quite often and all must be ignored, until the "Dexcom app is running" notification is received
-                // this can be detected using the title of the notification -> null: value -> not null: foreground
+                /* special Dexcom handling (only for G7?)
+                   - value notification is updated quite often and all must be ignored, until the "Dexcom app is running" notification is received
+                   - this can be detected using the title of the notification -> null: value -> not null: foreground
+                   - value notifications with an update of 30s must be ignored
+                   - value notification with an update of 0s should be used, even with 50s diff as after a long disconnect, a new value can come within this time frame
+                   - foreground notifications will normally updated direct before value notification (less 1s diff), but can also update in the mean time, for example during connection lost (keep 250s diff)
+                 */
                 val extras = sbn.notification?.extras
                 val title = extras?.getCharSequence("android.title")?.toString()
                 if(title != null) {
@@ -49,12 +56,32 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                     val diffValueTime = (sbn.postTime - lastDexcomValueTime)/1000 // in seconds
                     lastDexcomValueTime = sbn.postTime
                     Log.d(LOG_ID, "Dexcom value notification updated at ${Utils.getUiTimeStamp(sbn.postTime)} - diff foreground: $diffForegroundTime, diff value notify: $diffValueTime, diff recv value: $diffTime ")
-                    if(diffForegroundTime > 5) {
+
+                    if(diffValueTime > 0 && diffValueTime.mod(30) == 0) {
+                        Log.d(LOG_ID, "Ignoring Dexcom value notification with fix 30s update")
+                        return false
+                    }
+                    if(lastDexcomForegroundTime == 0L || diffForegroundTime <= 3 || diffForegroundTime >= 300) {
+                        if(diffValueTime == 0L) {
+                            Log.d(LOG_ID, "Check for new value for 0s update")
+                            if(lastDexcomForegroundTime > 0L)
+                                updateOnlyChangedValue = true
+                        } else if(lastDexcomForegroundTime == 0L || diffForegroundTime <= 3) {
+                            Log.d(LOG_ID, "New value after foreground notification -> check for 5 min interval")
+                            minDiff = 250  // ignore other updates of the foreground notification -> wait for the next one for value (~300s)
+                            if(lastDexcomForegroundTime == 0L) {
+                                updateOnlyChangedValue = true
+                            }
+                        } else {
+                            Log.d(LOG_ID, "Ignoring Dexcom value notification")
+                            return false
+                        }
+                    } else {
                         Log.d(LOG_ID, "Ignoring Dexcom value notification -> wait for foreground notification")
                         return false
                     }
                 }
-                minDiff = 250  // ignore other updates of the foreground notification -> wait for the next one for value (~300s)
+
             }
             if(diffTime < minDiff) {
                 Log.d(LOG_ID, "Ignoring notification out of interval - diff: $diffTime < $minDiff")
@@ -74,7 +101,12 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                     Log.i(LOG_ID, "using regex $regex")
                     val value = parseValueFromNotification(sbn, false, regex)
                     if(!value.isNaN()) {
-                        handleGlucoseValue(value, sbn.postTime)
+                        if(updateOnlyChangedValue && value == lastValue) {
+                            Log.d(LOG_ID, "Ignoring value notification with same value: $value")
+                        } else {
+                            lastValue = value
+                            handleGlucoseValue(value, sbn.postTime)
+                        }
                     } else if(parsedTextViews.size > 0) {
                         SourceStateData.setError(DataSource.NOTIFICATION, "Could not parse from $parsedTextViews")
                     } else {
