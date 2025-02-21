@@ -152,7 +152,7 @@ object AlarmNotification : AlarmNotificationBase() {
             }
         }
 
-        if (fullscreenEnabled && hasFullscreenPermission()) {
+        if (fullscreenEnabled && hasFullscreenPermission(context)) {
             val fullScreenIntent = Intent(context, LockscreenActivity::class.java)
             fullScreenIntent.flags =
                 Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or
