@@ -197,7 +197,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
     private fun checkHighAlarm(newAlarmType: AlarmType, alarmInterval: Int): Boolean {
         if (newAlarmType > lastAlarmType || ReceiveData.time - lastAlarmTime >= alarmInterval) {
             if(ReceiveData.delta.isNaN() || ReceiveData.delta == 0F)
-                return ReceiveData.rate > 0F
+                return ReceiveData.calculatedRate > 0F || ReceiveData.sourceRate > 0F
             return ReceiveData.delta > 0F
         }
         return false
@@ -206,7 +206,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
     private fun checkLowAlarm(newAlarmType: AlarmType, alarmInterval: Int): Boolean {
         if (newAlarmType < lastAlarmType || ReceiveData.time - lastAlarmTime >= alarmInterval) {
             if(ReceiveData.delta.isNaN() || ReceiveData.delta == 0F)
-                return ReceiveData.rate < 0F
+                return ReceiveData.calculatedRate < 0F || ReceiveData.sourceRate < 0F
             return ReceiveData.delta < 0F
         }
         return false
