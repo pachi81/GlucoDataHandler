@@ -586,6 +586,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             if (noDataSend.contains(p0.sourceNodeId)) {
                 sendDataRequest()
             }
+            GlucoDataService.checkServices(context)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onMessageReceived exception: " + exc.message.toString() )
         }

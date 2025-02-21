@@ -23,6 +23,7 @@ object Constants {
     const val GLUCOSE_MIN_VALUE = 40
     const val GLUCOSE_MAX_VALUE = 600
     const val ACTION_STOP_FOREGROUND = "stop_foreground"
+    const val ACTION_START_FOREGROUND = "start_foreground"
 
     const val ACTION_PREFIX = "gdh_action_"
     const val ACTION_FLOATING_WIDGET_TOGGLE = ACTION_PREFIX + "floating_widget_toggle"

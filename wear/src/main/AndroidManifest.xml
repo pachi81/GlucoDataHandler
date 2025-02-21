@@ -184,14 +184,20 @@
         <receiver android:name=".common.notification.AlarmIntentReceiver" />
         <receiver android:name=".common.receiver.InternalActionReceiver" />
         <receiver android:name=".common.notification.AlarmSnoozeEndReceiver" />
+        <receiver android:name=".StartServiceReceiver" />
         <receiver
             android:name=".StartServiceAtBootReceiver"
             android:enabled="true"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            <intent-filter android:priority="100">
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
-                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.REBOOT"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.MY_PACKAGE_UNSUSPENDED"/>
             </intent-filter>
         </receiver>
         <receiver
@@ -249,7 +255,7 @@
                 android:value="RANGED_VALUE,SHORT_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".SmallValueImageComplication"
@@ -266,7 +272,7 @@
                 android:value="SMALL_IMAGE, LARGE_IMAGE" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".SmallValueSmallImageComplication"
@@ -283,7 +289,7 @@
                 android:value="SMALL_IMAGE, LARGE_IMAGE" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".ValueIconComplication"
@@ -300,7 +306,7 @@
                 android:value="ICON, SMALL_IMAGE" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".ShortGlucoseWithIconComplication"
@@ -317,7 +323,7 @@
                 android:value="SHORT_TEXT,RANGED_VALUE,LONG_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".ShortGlucoseWithTrendComplication"
@@ -334,7 +340,7 @@
                 android:value="SHORT_TEXT,RANGED_VALUE" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".SmallImageGlucoseWithTrendComplication"
@@ -351,7 +357,7 @@
                 android:value="SMALL_IMAGE,LARGE_IMAGE" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".IconGlucoseWithTrendComplication"
@@ -368,7 +374,7 @@
                 android:value="ICON, SMALL_IMAGE" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".SmallImageGlucoseWithTrendSmallComplication"
@@ -385,7 +391,7 @@
                 android:value="SMALL_IMAGE,LARGE_IMAGE" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".ShortGlucoseWithDeltaComplication"
@@ -402,7 +408,7 @@
                 android:value="SHORT_TEXT,RANGED_VALUE" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".ShortGlucoseWithDeltaAndTrendComplication"
@@ -419,7 +425,7 @@
                 android:value="LONG_TEXT,SHORT_TEXT,RANGED_VALUE" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".LongGlucoseWithDeltaAndTrendAndTimeComplication"
@@ -436,7 +442,7 @@
                 android:value="LONG_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".LongGlucoseWithDeltaAndTrendIconAndTimeComplication"
@@ -453,7 +459,7 @@
                 android:value="LONG_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".DeltaIconComplication"
@@ -470,7 +476,7 @@
                 android:value="ICON, SMALL_IMAGE" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".DeltaImageComplication"
@@ -487,7 +493,7 @@
                 android:value="SMALL_IMAGE" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".ShortDeltaComplication"
@@ -504,7 +510,7 @@
                 android:value="SHORT_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".ShortDeltaWithTrendComplication"
@@ -521,7 +527,7 @@
                 android:value="SHORT_TEXT,LONG_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".ShortDeltaWithIconComplication"
@@ -538,7 +544,7 @@
                 android:value="SHORT_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".ShortDeltaWithTimeComplication"
@@ -555,7 +561,7 @@
                 android:value="SHORT_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".SmallImageDeltaWithTimeComplication"
@@ -572,7 +578,7 @@
                 android:value="SMALL_IMAGE" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".IconDeltaWithTimeComplication"
@@ -589,7 +595,7 @@
                 android:value="ICON, SMALL_IMAGE" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".SmallTrendImageComplication"
@@ -606,7 +612,7 @@
                 android:value="SMALL_IMAGE" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".SmallTrendSmallImageComplication"
@@ -623,7 +629,7 @@
                 android:value="SMALL_IMAGE" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".TrendIconComplication"
@@ -640,7 +646,7 @@
                 android:value="ICON" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".TimeStampComplication"
@@ -656,7 +662,7 @@
                 android:value="SHORT_TEXT,RANGED_VALUE" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".TimeImageComplication"
@@ -673,7 +679,7 @@
                 android:value="SMALL_IMAGE" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".TimeIconComplication"
@@ -690,7 +696,7 @@
                 android:value="ICON, SMALL_IMAGE" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".BatteryLevelComplication"
@@ -706,7 +712,7 @@
                 android:value="SHORT_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".PhoneBatteryLevelComplication"
@@ -722,7 +728,7 @@
                 android:value="RANGED_VALUE,SHORT_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".WatchBatteryLevelComplication"
@@ -738,7 +744,7 @@
                 android:value="RANGED_VALUE,SHORT_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".complications.IobCobComplication"
@@ -754,7 +760,7 @@
                 android:value="SHORT_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".complications.CobComplication"
@@ -770,7 +776,7 @@
                 android:value="SHORT_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".complications.IobComplication"
@@ -786,7 +792,7 @@
                 android:value="SHORT_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
         <service
             android:name=".OtherUnitComplication"
@@ -802,7 +808,7 @@
                 android:value="SHORT_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="300" />
         </service>
     </application>
     <queries>

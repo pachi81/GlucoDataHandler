@@ -25,7 +25,8 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
         fun start(context: Context) {
             if(!starting) {
                 starting = true
-                Log.v(LOG_ID, "start called")
+                Log.d(LOG_ID, "start called")
+                startServiceReceiver = StartServiceReceiver::class.java
                 migrateSettings(context)
                 start(AppSource.WEAR_APP, context, GlucoDataServiceWear::class.java)
                 starting = false
@@ -98,7 +99,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
 
     override fun onCreate() {
         try {
-            Log.d(LOG_ID, "onCreate called")
+            Log.i(LOG_ID, "onCreate called")
             super.onCreate()
             AlarmNotificationWear.initNotifications(this)
             val filter = mutableSetOf(
@@ -145,6 +146,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
     }
 
     override fun getNotification(): Notification {
+        Log.i(LOG_ID,"create notification")
         Channels.createNotificationChannel(this, ChannelType.WEAR_FOREGROUND)
 
         val pendingIntent = PackageUtils.getAppIntent(this, WearActivity::class.java, 11)
