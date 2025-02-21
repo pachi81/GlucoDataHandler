@@ -508,7 +508,7 @@
     <string name="src_dexcom_share_password_summary">Passwort für das Dexcom Share Konto.</string>
     <string name="pref_source_dexcom_share_info">Dexcom Share einrichten</string>
     <string name="permission_missing_title">Fehlende Berechtigung!</string>
-    <string name="setting_permission_missing_message">Für die gesetzt Einstellung \'%1$s\' wurde die Berechtigung entfernt!\nBitte \"OK\" drücken, um zu der entsprechenden Berechtigungseinstellung weitergeleitet zu werden, um diese zu wieder zu aktivieren.\nBeim Drücken von \"Abbrechen\" wird die Einstellung deaktiviert und kann später über das Menü wieder aktiviert werden.</string>
+    <string name="setting_permission_missing_message">Für die gesetzt Einstellung\n\'%1$s\'\nwurde die Berechtigung entfernt!\nBitte \"OK\" drücken, um zu der entsprechenden Berechtigungseinstellung weitergeleitet zu werden, um diese zu wieder zu aktivieren.\nBeim Drücken von \"Abbrechen\" wird die Einstellung deaktiviert und kann später über das Menü wieder aktiviert werden.</string>
     <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
     <string name="xdrip_broadcast_service_api_enabled_summary">"xDrip+ Broadcast Service API verwenden, um Daten (inkl. IOB) von xDrip+ zu erhalten.\nBevor diese Einstellung aktiviert wird, muss zu erst in xDrip+ unter \"Inter-App Einstellungen\", \"Broadcast Service API\" aktiviert werden! "</string>
     <string name="obsolete_time">Zeit für veralteten Wert</string>

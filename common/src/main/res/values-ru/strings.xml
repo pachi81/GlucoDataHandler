@@ -517,7 +517,7 @@
     <string name="src_dexcom_share_password_summary">Пароль для учетной записи Dexcom Share.</string>
     <string name="pref_source_dexcom_share_info">Настройка Dexcom Share</string>
     <string name="permission_missing_title">Отсутствует разрешение!</string>
-    <string name="setting_permission_missing_message">Настройка \'%1$s\' установлена, но соответствующее разрешение не предоставлено! Нажмите \"ОК\", чтобы перейти к диалоговому окну разрешений, или нажмите \"Отмена\", чтобы отключить эту настройку.</string>
+    <string name="setting_permission_missing_message">Настройка\n\'%1$s\'\nустановлена, но соответствующее разрешение не предоставлено!\nНажмите \"ОК\", чтобы перейти к диалоговому окну разрешений, или нажмите \"Отмена\", чтобы отключить эту настройку.</string>
     <string name="xdrip_broadcast_service_api_enabled">API службы вещания</string>
     <string name="xdrip_broadcast_service_api_enabled_summary">Используйте API службы вещания xDrip+ для получения данных (также IOB) из xDrip+.\nСначала активируйте \"API службы вещания\" в \"Настройках взаимодействия приложений\" в xDrip+!</string>
     <string name="obsolete_time">Время устаревания</string>

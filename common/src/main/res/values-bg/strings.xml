@@ -516,7 +516,7 @@
     <string name="src_dexcom_share_password_summary">Парола за акаунт в Dexcom Share.</string>
     <string name="pref_source_dexcom_share_info">Настройка на Dexcom Share</string>
     <string name="permission_missing_title">Липсва разрешение!</string>
-    <string name="setting_permission_missing_message">Настройката \'%1$s\' е зададена, но съответното разрешение не е предоставено! Натиснете \"OK\", за да бъдете пренасочени към диалоговия прозорец за разрешения, или натиснете \"Отказ\", за да деактивирате тази настройка.</string>
+    <string name="setting_permission_missing_message">Настройката\n\'%1$s\'\nе зададена, но съответното разрешение не е предоставено!\nНатиснете \"OK\", за да бъдете пренасочени към диалоговия прозорец за разрешения, или натиснете \"Отказ\", за да деактивирате тази настройка.</string>
     <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
     <string name="xdrip_broadcast_service_api_enabled_summary">Използвайте xDrip+ Broadcast Service API, за да получавате данни (също IOB) от xDrip+.\nМоля, първо активирайте \"Broadcast Service API\" в \"Настройки за между приложения\" в xDrip+!</string>
     <string name="obsolete_time">Време за остаряване</string>

@@ -517,7 +517,7 @@
     <string name="src_dexcom_share_password_summary">Senha para a conta Dexcom Share.</string>
     <string name="pref_source_dexcom_share_info">Configurar Dexcom Share</string>
     <string name="permission_missing_title">Missing permission!</string>
-    <string name="setting_permission_missing_message">A configuração \'%1$s\' está ativada, mas a permissão relacionada não foi concedida! \nPressione \"OK\" para ser direcionado ao diálogo de permissões ou pressione \"Cancelar\" para desativar esta configuração.</string>
+    <string name="setting_permission_missing_message">A configuração\n\'%1$s\'\nestá ativada, mas a permissão relacionada não foi concedida!\nPressione \"OK\" para ser direcionado ao diálogo de permissões ou pressione \"Cancelar\" para desativar esta configuração.</string>
     <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
     <string name="xdrip_broadcast_service_api_enabled_summary">Use a API do Serviço de Transmissão xDrip+ para receber dados (incluindo IOB) do xDrip+.\nPor favor, ative o \"API do Serviço de Transmissão\" nas \"Configurações entre aplicações\" no xDrip+ primeiro!</string>
     <string name="obsolete_time">Tempo obsoleto</string>

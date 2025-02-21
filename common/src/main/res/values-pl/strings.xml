@@ -514,7 +514,7 @@
     <string name="src_dexcom_share_password_summary">Hasło do konta Dexcom Share.</string>
     <string name="pref_source_dexcom_share_info">Konfiguracja Dexcom Share</string>
     <string name="permission_missing_title">Brak uprawnienia!</string>
-    <string name="setting_permission_missing_message">Ustawienie \&quot;%1$s\&quot; jest ustawione, ale powiązane uprawnienie nie zostało przyznane! Naciśnij \&quot;OK\&quot;, aby wyświetlić okno dialogowe uprawnień lub naciśnij \&quot;Anuluj\&quot;, aby wyłączyć to ustawienie.</string>
+    <string name="setting_permission_missing_message">Ustawienie\n\&quot;%1$s\&quot;\njest ustawione, ale powiązane uprawnienie nie zostało przyznane!\nNaciśnij \&quot;OK\&quot;, aby wyświetlić okno dialogowe uprawnień lub naciśnij \&quot;Anuluj\&quot;, aby wyłączyć to ustawienie.</string>
     <string name="xdrip_broadcast_service_api_enabled">Interfejs API usługi transmisji</string>
     <string name="xdrip_broadcast_service_api_enabled_summary">Użyj transmisji „Broadcast Service API” do komunikacji z xDrip+.\nNajpierw aktywuj \&quot;Broadcast Service API\&quot; w \&quot;Ustawieniach innych aplikacji\&quot; w xDrip+!</string>
     <string name="obsolete_time">Okres wart. nieaktualnych</string>

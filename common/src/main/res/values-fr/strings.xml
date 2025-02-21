@@ -519,7 +519,7 @@
     <string name="src_dexcom_share_password_summary">Mot de passe pour le compte Dexcom Share.</string>
     <string name="pref_source_dexcom_share_info">Configurer Dexcom Share</string>
     <string name="permission_missing_title">Autorisation manquante!</string>
-    <string name="setting_permission_missing_message">Le paramètre \'%1$s\' est défini, mais l\'autorisation correspondante n\'est pas accordée! Appuyez sur "OK" pour être redirigé vers la boîte de dialogue d\'autorisation ou appuyez sur "Annuler" pour désactiver ce paramètre.</string>
+    <string name="setting_permission_missing_message">Le paramètre\n\'%1$s\'\nest défini, mais l\'autorisation correspondante n\'est pas accordée!\nAppuyez sur "OK" pour être redirigé vers la boîte de dialogue d\'autorisation ou appuyez sur "Annuler" pour désactiver ce paramètre.</string>
     <string name="xdrip_broadcast_service_api_enabled">API du service de diffusion</string>
     <string name="xdrip_broadcast_service_api_enabled_summary">Utiliser l\'API du service de diffusion xDrip+ pour recevoir des données (y compris l\'IOB) de xDrip+.\nVeuillez d\'abord activer "API du service de diffusion" dans "Paramètres inter-applications" dans xDrip+!</string>
     <string name="obsolete_time">Temps d\'obsolescence</string>

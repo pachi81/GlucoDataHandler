@@ -518,7 +518,7 @@
     <string name="src_dexcom_share_password_summary">Wachtwoord voor Dexcom Share-account.</string>
     <string name="pref_source_dexcom_share_info">Dexcom Share instellen</string>
     <string name="permission_missing_title">Ontbrekende toestemming!</string>
-    <string name="setting_permission_missing_message">De instelling \'%1$s\' is ingesteld, maar de bijbehorende toestemming is niet verleend! Druk op \"OK\" om door te gaan naar het toestemmingsdialoogvenster of druk op \"Annuleren\" om deze instelling uit te schakelen.</string>
+    <string name="setting_permission_missing_message">De instelling\n\'%1$s\'\nis ingesteld, maar de bijbehorende toestemming is niet verleend!\nDruk op \"OK\" om door te gaan naar het toestemmingsdialoogvenster of druk op \"Annuleren\" om deze instelling uit te schakelen.</string>
     <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
     <string name="xdrip_broadcast_service_api_enabled_summary">Gebruik xDrip+ Broadcast Service API om gegevens (ook IOB) van xDrip+ te ontvangen.\nActiveer eerst \"Broadcast Service API\" in \"Inter-app-instellingen\" in xDrip+!</string>
     <string name="obsolete_time">Verouderde tijd</string>
