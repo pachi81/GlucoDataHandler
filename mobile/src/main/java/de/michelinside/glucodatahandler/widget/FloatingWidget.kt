@@ -79,7 +79,7 @@ class FloatingWidget(context: Context): WallpaperBase(context, "GDH.FloatingWidg
 
     @SuppressLint("SetTextI18n")
     private fun setContent() {
-        imageView.setImageBitmap(createWallpaperView())
+        imageView.setImageBitmap(createWallpaperView(backgroundColor = Utils.getBackgroundColor(sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY, 3))))
     }
 
     override fun update() {
@@ -125,8 +125,6 @@ class FloatingWidget(context: Context): WallpaperBase(context, "GDH.FloatingWidg
             windowManager = context.getSystemService(WINDOW_SERVICE) as WindowManager?
             windowManager!!.addView(floatingView, params)
 
-            //val widget = floatingView.findViewById<View>(R.id.widget)
-            imageView.setBackgroundColor(Utils.getBackgroundColor(sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY, 3)))
             imageView.setOnClickListener {
                 Log.d(LOG_ID, "onClick called")
                 val action = PackageUtils.getTapAction(context, sharedPref.getString(Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION, null))

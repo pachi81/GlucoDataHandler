@@ -197,7 +197,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
     }
 
     @SuppressLint("SetTextI18n")
-    protected fun createWallpaperView(colour: Int? = null, isAod: Boolean = false): Bitmap? {
+    protected fun createWallpaperView(color: Int? = null, backgroundColor: Int = Color.TRANSPARENT): Bitmap? {
         try {
             Log.d(LOG_ID, "Create wallpaper view for size $size and style $style")
             //getting the widget layout from xml using layout inflater
@@ -214,8 +214,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             val txtCob: TextView = lockscreenView.findViewById(R.id.cobText)
             val graphImage: ImageView? = lockscreenView.findViewById(R.id.graphImage)
 
-            if (isAod)
-                lockscreenView.setBackgroundColor(Color.TRANSPARENT)
+            lockscreenView.setBackgroundColor(backgroundColor)
 
             var textSize = 30f
             when(style) {
@@ -268,7 +267,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             }
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
 
-            if(colour == null) {
+            if(color == null) {
                 txtDelta.text = "Δ ${ReceiveData.getDeltaAsString()}"
                 txtTime.text = "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(context)}"
                 if(ReceiveData.iob.isNaN())
@@ -280,16 +279,16 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
                 else
                     txtCob.text = "🍔 ${ReceiveData.getCobAsString()}"
             } else {
-                txtDelta.text = buildImageString(context, R.drawable.icon_delta, "Δ", "   ${ReceiveData.getDeltaAsString()}", colour)
-                txtTime.text = buildImageString(context, R.drawable.icon_clock, "🕒", "   ${ReceiveData.getElapsedTimeMinuteAsString(context)}", colour)
+                txtDelta.text = buildImageString(context, R.drawable.icon_delta, "Δ", "   ${ReceiveData.getDeltaAsString()}", color)
+                txtTime.text = buildImageString(context, R.drawable.icon_clock, "🕒", "   ${ReceiveData.getElapsedTimeMinuteAsString(context)}", color)
                 if(ReceiveData.iob.isNaN())
                     txtIob.visibility = GONE
                 else
-                    txtIob.text = buildImageString(context, R.drawable.icon_injection, "💉", " ${ReceiveData.getIobAsString()}", colour)
+                    txtIob.text = buildImageString(context, R.drawable.icon_injection, "💉", " ${ReceiveData.getIobAsString()}", color)
                 if(ReceiveData.cob.isNaN())
                     txtCob.visibility = GONE
                 else
-                    txtCob.text = buildImageString(context, R.drawable.icon_burger, "🍔", " ${ReceiveData.getCobAsString()}", colour)
+                    txtCob.text = buildImageString(context, R.drawable.icon_burger, "🍔", " ${ReceiveData.getCobAsString()}", color)
             }
             val usedSize = if(graphImage != null && (txtIob.visibility == VISIBLE || txtCob.visibility == VISIBLE)) size /2 else size
 
@@ -327,7 +326,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             Log.d(LOG_ID, "Mesasured width ${lockscreenView.measuredWidth} and height ${lockscreenView.measuredHeight}")
 
 
-            colour?.let { col ->
+            color?.let { col ->
                 txtBgValue.setTextColor(col)
                 viewIcon.setColorFilter(col)
                 graphImage?.setColorFilter(col)

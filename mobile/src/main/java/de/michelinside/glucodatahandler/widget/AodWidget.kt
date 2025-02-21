@@ -63,7 +63,7 @@ class AodWidget(context: Context): WallpaperBase(context, "GDH.AodWidget") {
     }
 
     fun getBitmap() : Bitmap? {
-        return createWallpaperView(if (widgetColoured) null else Constants.AOD_COLOUR, true)
+        return createWallpaperView(if (widgetColoured) null else Constants.AOD_COLOUR)
     }
 
     fun getYPos() : Int {
