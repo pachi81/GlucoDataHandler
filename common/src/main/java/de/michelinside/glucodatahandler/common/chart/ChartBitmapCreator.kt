@@ -97,10 +97,10 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
         }
         addEmptyTimeData()
         chart.notifyDataSetChanged()
-        bitmap = null  // reset
         chart.postInvalidate()
         Handler(context.mainLooper).post {
             Log.d(LOG_ID, "notify graph changed")
+            bitmap = null  // reset
             InternalNotifier.notify(context, NotifySource.GRAPH_CHANGED, Bundle().apply { putInt(Constants.GRAPH_ID, chart.id) })
         }
     }

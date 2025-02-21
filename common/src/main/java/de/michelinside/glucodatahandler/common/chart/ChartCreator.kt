@@ -660,6 +660,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
 
     protected fun createBitmap(): Bitmap? {
         try {
+            Log.d(LOG_ID, "Create bitmap - duration: $durationHours - width: ${chart.width} - height: ${chart.height}")
             if(durationHours > 0) {
                 if(chart.width == 0 || chart.height == 0)
                     chart.waitForInvalidate()
@@ -671,6 +672,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         } catch (exc: Exception) {
             Log.e(LOG_ID, "getBitmap exception: " + exc.message.toString() )
         }
+        Log.i(LOG_ID, "No bitmap created!")
         return null
     }
 
