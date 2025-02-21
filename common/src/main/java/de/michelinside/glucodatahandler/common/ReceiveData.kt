@@ -34,6 +34,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     const val IOB = "glucodata.Minute.IOB"
     const val COB = "glucodata.Minute.COB"
     const val IOBCOB_TIME = "gdh.IOB_COB_time"
+    const val SENSOR_START_TIME = "gdh.sensor_start_time"
     const val DELTA_FALLING_COUNT = "gdh.delta_falling_count"
     const val DELTA_RISING_COUNT = "gdh.delta_rising_count"
 
@@ -45,6 +46,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     const val RATE_CALC = "gdh.rate.calculated"
 
     var sensorID: String? = null
+    var sensorStartTime: Long = 0L
     var rawValue: Int = 0
     var glucose: Float = 0.0F
     var sourceRate = Float.NaN
@@ -622,6 +624,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     receiveTime = System.currentTimeMillis()
                     source = dataSource
                     sensorID = extras.getString(SERIAL) //Name of sensor
+                    sensorStartTime = extras.getLong(SENSOR_START_TIME)
                     sourceRate = extras.getFloat(RATE) //Rate of change of glucose. See libre and dexcom label functions
 
                     if(!readCalculatedBundle(extras)) {
@@ -906,6 +909,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         extras.putFloat(GLUCOSECUSTOM, glucose)
         extras.putInt(MGDL, rawValue)
         extras.putString(SERIAL, sensorID)
+        extras.putLong(SENSOR_START_TIME, sensorStartTime)
         extras.putFloat(RATE, rate)
         extras.putInt(ALARM, alarm)
         extras.putFloat(DELTA, deltaValue)
@@ -955,6 +959,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 putFloat(GLUCOSECUSTOM, glucose)
                 putInt(MGDL, rawValue)
                 putString(SERIAL, sensorID)
+                putLong(SENSOR_START_TIME, sensorStartTime)
                 putFloat(RATE, rate)
                 putInt(ALARM, alarm)
                 putFloat(DELTA, deltaValue)
@@ -982,6 +987,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     extras.putFloat(GLUCOSECUSTOM, sharedGlucosePref.getFloat(GLUCOSECUSTOM, glucose))
                     extras.putInt(MGDL, sharedGlucosePref.getInt(MGDL, rawValue))
                     extras.putString(SERIAL, sharedGlucosePref.getString(SERIAL, sensorID))
+                    extras.putLong(SENSOR_START_TIME, sharedGlucosePref.getLong(SENSOR_START_TIME, 0L))
                     extras.putFloat(RATE, sharedGlucosePref.getFloat(RATE, rate))
                     extras.putInt(ALARM, sharedGlucosePref.getInt(ALARM, alarm))
                     extras.putFloat(DELTA, sharedGlucosePref.getFloat(DELTA, deltaValue))
