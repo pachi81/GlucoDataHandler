@@ -1,3 +1,5 @@
+package de.michelinside.glucodatahandler
+
 import android.content.Context
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver

@@ -37,6 +37,13 @@ open class ScreenEventReceiver: BroadcastReceiver() {
             Log.i(LOG_ID, "triggerNotify called")
             InternalNotifier.notify(context, NotifySource.DISPLAY_STATE_CHANGED, null)
         }
+        fun switchOn(context: Context) {
+            if(isDisplayOff()) {
+                Log.i(LOG_ID, "switchOn called")
+                displayState = Display.STATE_ON
+                triggerNotify(context)
+            }
+        }
 
     }
     open fun onDisplayOn(context: Context) {
