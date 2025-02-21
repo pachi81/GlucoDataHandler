@@ -525,6 +525,13 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                     val sensor = data.optJSONObject("sensor")
                     if (sensor != null && sensor.has("sn"))
                         glucoExtras.putString(ReceiveData.SERIAL, sensor.optString("sn"))
+                    if(sensor != null && sensor.has("a")) {
+                        val age = sensor.optLong("a")
+                        if(age > 0L) {
+                            Log.d(LOG_ID, "Sensor start-time: $age - ${Utils.getUiTimeStamp(age*1000)}")
+                            glucoExtras.putLong(ReceiveData.SENSOR_START_TIME, age*1000)
+                        }
+                    }
                 }
                 dataReceived = true
                 handleResult(glucoExtras)

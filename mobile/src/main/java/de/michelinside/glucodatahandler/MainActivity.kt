@@ -59,6 +59,7 @@ import de.michelinside.glucodatahandler.preferences.AlarmFragment
 import de.michelinside.glucodatahandler.preferences.LockscreenSettingsFragment
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import java.text.DateFormat
+import java.time.Duration
 import java.util.Date
 import kotlin.time.Duration.Companion.days
 import de.michelinside.glucodatahandler.common.R as CR
@@ -787,6 +788,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     DateFormat.DEFAULT).format(Date(ReceiveData.iobCobTime))))
             if (ReceiveData.sensorID?.isNotEmpty() == true) {
                 tableDetails.addView(createRow(CR.string.info_label_sensor_id, if(BuildConfig.DEBUG) "ABCDE12345" else ReceiveData.sensorID!!))
+            }
+            if(ReceiveData.sensorStartTime > 0) {
+                val duration = Duration.ofMillis(System.currentTimeMillis() - ReceiveData.sensorStartTime)
+                val days = duration.toDays()
+                val hours = duration.minusDays(days).toHours()
+                tableDetails.addView(createRow(CR.string.sensor_age_label, resources.getString(CR.string.sensor_age_value).format(days, hours)))
+
             }
             if(ReceiveData.source != DataSource.NONE)
                 tableDetails.addView(createRow(CR.string.info_label_source, resources.getString(ReceiveData.source.resId)))

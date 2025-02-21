@@ -32,12 +32,14 @@ import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.settings.AlarmsActivity
 import de.michelinside.glucodatahandler.settings.SettingsActivity
 import de.michelinside.glucodatahandler.settings.SourcesActivity
 import java.text.DateFormat
+import java.time.Duration
 import java.util.Date
 import kotlin.time.Duration.Companion.days
 
@@ -56,6 +58,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtVersion: TextView
     private lateinit var txtValueInfo: TextView
     private lateinit var tableDetails: TableLayout
+    private lateinit var tableDelta: TableLayout
     private lateinit var tableConnections: TableLayout
     private lateinit var tableAlarms: TableLayout
     private lateinit var tableNotes: TableLayout
@@ -89,6 +92,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             tableConnections = findViewById(R.id.tableConnections)
             tableAlarms = findViewById(R.id.tableAlarms)
             tableDetails = findViewById(R.id.tableDetails)
+            tableDelta = findViewById(R.id.tableDelta)
             tableNotes = findViewById(R.id.tableNotes)
             chartImage = findViewById(R.id.graphImage)
 
@@ -154,7 +158,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             super.onResume()
             Log.d(LOG_ID, "onResume called")
             GlucoDataService.checkServices(this)
-            ScreenEventReceiver.update(this)  // on resume can only be called, if display is on, so update screen event
+            ScreenEventReceiver.switchOn(this) // on resume can only be called, if display is on, so update screen event
             doNotUpdate = false
             update()
             InternalNotifier.addNotifier(this, this, mutableSetOf(
@@ -245,6 +249,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             updateNotesTable()
             updateAlarmsTable()
             updateConnectionsTable()
+            updateDeltaTable()
             updateDetailsTable()
             updateAlarmIcon()
 
@@ -437,6 +442,19 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         checkTableVisibility(tableAlarms)
     }
 
+    private fun updateDeltaTable() {
+        tableDelta.removeViews(1, maxOf(0, tableDelta.childCount - 1))
+        if(!ReceiveData.isObsoleteShort()) {
+            if(!ReceiveData.delta1Min.isNaN())
+                tableDelta.addView(createRow(CR.string.delta_per_minute, GlucoDataUtils.deltaToString(ReceiveData.delta1Min, true)))
+            if(!ReceiveData.delta5Min.isNaN())
+                tableDelta.addView(createRow(CR.string.delta_per_5_minute, GlucoDataUtils.deltaToString(ReceiveData.delta5Min, true)))
+            if(!ReceiveData.delta15Min.isNaN())
+                tableDelta.addView(createRow(CR.string.delta_per_15_minute, GlucoDataUtils.deltaToString(ReceiveData.delta15Min, true)))
+        }
+        checkTableVisibility(tableDelta)
+    }
+
     private fun updateDetailsTable() {
         tableDetails.removeViews(1, maxOf(0, tableDetails.childCount - 1))
         if(ReceiveData.time > 0) {
@@ -450,6 +468,13 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                     DateFormat.DEFAULT).format(Date(ReceiveData.iobCobTime))))
             if (ReceiveData.sensorID?.isNotEmpty() == true) {
                 tableDetails.addView(createRow(CR.string.info_label_sensor_id, if(BuildConfig.DEBUG) "ABCDE12345" else ReceiveData.sensorID!!))
+            }
+            if(ReceiveData.sensorStartTime > 0) {
+                val duration = Duration.ofMillis(System.currentTimeMillis() - ReceiveData.sensorStartTime)
+                val days = duration.toDays()
+                val hours = duration.minusDays(days).toHours()
+                tableDetails.addView(createRow(CR.string.sensor_age_label, resources.getString(CR.string.sensor_age_value).format(days, hours)))
+
             }
             if(ReceiveData.source != DataSource.NONE)
                 tableDetails.addView(createRow(CR.string.info_label_source, resources.getString(ReceiveData.source.resId)))
