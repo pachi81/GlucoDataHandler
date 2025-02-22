@@ -65,7 +65,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                         if(diffValueTime == 0L) {
                             Log.d(LOG_ID, "Check for new value for 0s update")
                             if(lastDexcomForegroundTime > 0L)
-                                updateOnlyChangedValue = true
+                                updateOnlyChangedValue = diffTime < 250
                         } else if(lastDexcomForegroundTime == 0L || diffForegroundTime <= 3) {
                             Log.d(LOG_ID, "New value after foreground notification -> check for 5 min interval")
                             minDiff = 250  // ignore other updates of the foreground notification -> wait for the next one for value (~300s)
