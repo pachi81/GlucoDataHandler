@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             if (requestPermission())
                 GlucoDataServiceMobile.start(this)
             TextToSpeechUtils.initTextToSpeech(this)
-            chartCreator = ChartCreator(chart, this, Constants.SHARED_PREF_GRAPH_DURATION_PHONE_MAIN)
+            chartCreator = ChartCreator(chart, this, Constants.SHARED_PREF_GRAPH_DURATION_PHONE_MAIN, Constants.SHARED_PREF_GRAPH_TRANSPARENCY_PHONE_MAIN)
             chartCreator.create()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
@@ -762,15 +762,19 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 tableDelta.addView(createRow(CR.string.delta_per_minute, GlucoDataUtils.deltaToString(ReceiveData.delta1Min, true)))
             if(!ReceiveData.delta5Min.isNaN())
                 tableDelta.addView(createRow(CR.string.delta_per_5_minute, GlucoDataUtils.deltaToString(ReceiveData.delta5Min, true)))
-            if(!ReceiveData.delta10Min.isNaN())
-                tableDelta.addView(createRow(CR.string.delta_per_10_minute, GlucoDataUtils.deltaToString(ReceiveData.delta10Min, true)))
+            if(BuildConfig.DEBUG) {
+                if(!ReceiveData.delta10Min.isNaN())
+                    tableDelta.addView(createRow(CR.string.delta_per_10_minute, GlucoDataUtils.deltaToString(ReceiveData.delta10Min, true)))
+            }
             if(!ReceiveData.delta15Min.isNaN())
                 tableDelta.addView(createRow(CR.string.delta_per_15_minute, GlucoDataUtils.deltaToString(ReceiveData.delta15Min, true)))
-            if(!ReceiveData.calculatedRate.isNaN()) {
-                tableDelta.addView(createRow("Calculated rate", Utils.round(ReceiveData.calculatedRate, 2).toString() + " (" + GlucoDataUtils.getRateDegrees(ReceiveData.calculatedRate).toString() + "°)"))
-            }
-            if(!ReceiveData.sourceRate.isNaN()) {
-                tableDelta.addView(createRow("Source rate", Utils.round(ReceiveData.sourceRate, 2).toString() + " (" + GlucoDataUtils.getRateDegrees(ReceiveData.sourceRate).toString() + "°)"))
+            if(BuildConfig.DEBUG) {
+                if(!ReceiveData.calculatedRate.isNaN()) {
+                    tableDelta.addView(createRow("Calculated rate", Utils.round(ReceiveData.calculatedRate, 2).toString() + " (" + GlucoDataUtils.getRateDegrees(ReceiveData.calculatedRate).toString() + "°)"))
+                }
+                if(!ReceiveData.sourceRate.isNaN()) {
+                    tableDelta.addView(createRow("Source rate", Utils.round(ReceiveData.sourceRate, 2).toString() + " (" + GlucoDataUtils.getRateDegrees(ReceiveData.sourceRate).toString() + "°)"))
+                }
             }
         }
         checkTableVisibility(tableDelta)

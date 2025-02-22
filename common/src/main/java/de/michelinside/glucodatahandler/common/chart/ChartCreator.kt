@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
 
-open class ChartCreator(protected val chart: GlucoseChart, protected val context: Context, protected val durationPref: String = ""): NotifierInterface,
+open class ChartCreator(protected val chart: GlucoseChart, protected val context: Context, protected val durationPref: String = "", protected val transparencyPref: String = ""): NotifierInterface,
     SharedPreferences.OnSharedPreferenceChangeListener {
     companion object {
         const val defaultDurationHours = 4
@@ -59,10 +59,13 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     protected open val circleRadius = 2F
     protected open val touchEnabled = true
     protected open val graphStartTime = 0L
+    protected open var backgroundTransparency = 0
     var labelColor: Int = 0
     protected open val textColor: Int get() {
         if(labelColor != 0)
             return labelColor
+        if(backgroundTransparency > 3)
+            return Color.WHITE
         return context.resources.getColor(R.color.text_color)
     }
 
@@ -90,6 +93,9 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                 durationHours = sharedPref.getInt(durationPref, durationHours)
                 if(durationHours == 0)
                     disable()
+            }
+            if(transparencyPref.isNotEmpty()) {
+                backgroundTransparency = sharedPref.getInt(transparencyPref, backgroundTransparency)
             }
             sharedPref.registerOnSharedPreferenceChangeListener(this)
             updateNotifier()
@@ -273,7 +279,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         Log.v(LOG_ID, "initChart - touchEnabled: $touchEnabled")
         chart.setTouchEnabled(false)
         initDataSet()
-        chart.setBackgroundColor(Color.TRANSPARENT)
+        chart.setBackgroundColor(Utils.getBackgroundColor(backgroundTransparency))
         chart.isAutoScaleMinMaxEnabled = false
         chart.legend.isEnabled = false
         chart.description.isEnabled = false
@@ -722,6 +728,11 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             if(key == durationPref) {
                 durationHours = sharedPref.getInt(durationPref, durationHours)
                 OnDurationChanged()
+            } else if(key == transparencyPref) {
+                backgroundTransparency = sharedPref.getInt(transparencyPref, backgroundTransparency)
+                Log.d(LOG_ID, "re create graph after transparency changed to: $backgroundTransparency")
+                if(chart.data != null)
+                    create(true) // recreate chart with new graph data
             } else if (graphPrefList.contains(key)) {
                 Log.i(LOG_ID, "re create graph after settings changed for key: $key")
                 ReceiveData.updateSettings(sharedPref)

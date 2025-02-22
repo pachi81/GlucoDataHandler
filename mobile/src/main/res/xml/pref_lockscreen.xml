@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
         <PreferenceCategory
             android:title="@string/pref_cat_locksreen_wallpaper"
-            android:summary="@string/pref_cat_locksreen_wallpaper_summary"
             app:iconSpaceReserved="false">
                 <androidx.preference.SwitchPreferenceCompat
                     android:defaultValue="false"
@@ -52,7 +51,6 @@
         </PreferenceCategory>
         <PreferenceCategory
             android:title="@string/pref_cat_aod"
-            android:summary="@string/pref_cat_aod_summary"
             app:iconSpaceReserved="false">
                 <androidx.preference.SwitchPreferenceCompat
                     android:defaultValue="false"
