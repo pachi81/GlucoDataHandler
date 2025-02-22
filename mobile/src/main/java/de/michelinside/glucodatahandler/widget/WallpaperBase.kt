@@ -39,7 +39,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
     protected abstract val stylePref: String
     protected abstract val sizePref: String
     protected open val chartDurationPref =  ""
-    protected open val MIN_SIZE = 8f
+    protected open val MIN_SIZE = 6f
     protected open val MAX_SIZE = 24f
     protected var enabled = false
     protected var style = Constants.WIDGET_STYLE_GLUCOSE_TREND
@@ -216,7 +216,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
 
             lockscreenView.setBackgroundColor(backgroundColor)
 
-            var textSize = 30f
+            var textSize = 25f
             when(style) {
                 Constants.WIDGET_STYLE_GLUCOSE_TREND_DELTA -> {
                     txtTime.visibility = GONE
@@ -241,7 +241,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
                 }
                 Constants.WIDGET_STYLE_CHART_GLUCOSE_TREND_TIME_DELTA_IOB_COB,
                 Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA_IOB_COB -> {
-                    textSize = 20f
+                    textSize = 10f
                     txtTime.visibility = VISIBLE
                     txtDelta.visibility = VISIBLE
                     viewIcon.visibility = VISIBLE
@@ -249,7 +249,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
                     txtCob.visibility = VISIBLE
                 }
                 else -> {
-                    textSize = 20f
+                    textSize = 15f
                     txtTime.visibility = VISIBLE
                     txtDelta.visibility = VISIBLE
                     viewIcon.visibility = VISIBLE
@@ -268,8 +268,8 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
 
             if(color == null) {
-                txtDelta.text = "Δ ${ReceiveData.getDeltaAsString()}"
-                txtTime.text = "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(context)}"
+                txtDelta.text = "Δ  ${ReceiveData.getDeltaAsString()}"
+                txtTime.text =  "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(context)}"
                 if(ReceiveData.iob.isNaN())
                     txtIob.visibility = GONE
                 else
@@ -292,7 +292,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             }
             val usedSize = if(graphImage != null && (txtIob.visibility == VISIBLE || txtCob.visibility == VISIBLE)) size /2 else size
 
-            txtBgValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+usedSize*4f)
+            txtBgValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+MIN_SIZE+usedSize*4f)
             viewIcon.minimumWidth = Utils.dpToPx((MIN_SIZE+usedSize)*4f, context)
             txtDelta.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(MIN_SIZE+usedSize*2f, MAX_SIZE))
             txtTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(MIN_SIZE+usedSize*2f, MAX_SIZE))
