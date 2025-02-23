@@ -29,7 +29,7 @@ android {
         dev_release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-dev-rules.pro'
-            versionNameSuffix '-dev'
+            versionNameSuffix '-dev.' + rootProject.versionCode
             resValue "string", "app_name", "GlucoDataAuto"
             signingConfig signingConfigs.debug
         }

@@ -56,7 +56,7 @@
                     android:defaultValue="false"
                     android:key="aod_enabled"
                     android:summary="@string/pref_aod_enabled_summary"
-                    android:title="@string/pref_aod_enabled"
+                    android:title="@string/pref_lockscreen_enabled"
                     app:iconSpaceReserved="false" />
                 <androidx.preference.ListPreference
                     android:defaultValue="glucose_trend"
@@ -80,8 +80,8 @@
                     android:defaultValue="75"
                     android:key="aod_y_pos"
                     android:max="100"
-                    android:summary="@string/pref_aod_y_pos_summary"
-                    android:title="@string/pref_aod_y_pos"
+                    android:summary="@string/pref_lockscreen_y_pos_summary"
+                    android:title="@string/pref_lockscreen_y_pos"
                     app:iconSpaceReserved="false"
                     app:min="0"
                     app:seekBarIncrement="1"
