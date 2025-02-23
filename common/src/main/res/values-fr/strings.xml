@@ -758,7 +758,7 @@
     <string name="notification_reader_app">Application</string>
     <string name="notification_reader_app_summary">Sélectionnez une application à partir de laquelle la notification doit être lue.</string>
     <string name="notification_reader_enabled_summary_on">Le lecteur de notifications est activé pour analyser les valeurs des notifications pour des applications spécifiques.</string>
-    <string name="notification_reader_enabled_summary_off">Le lecteur de notifications est désactivé et aucune notification ne sera analysée.\nVeuillez d'abord spécifier au moins une application.</string>
+    <string name="notification_reader_enabled_summary_off">Le lecteur de notifications est désactivé et aucune notification ne sera analysée.\nVeuillez d\'abord spécifier au moins une application.</string>
     <string name="notification_cat_glucose">Lire la valeur de glucose</string>
     <string name="notification_cat_iob">Lire la valeur d\'IOB</string>
     <string name="notification_reader_enabled">Activer le lecteur de notifications</string>
@@ -766,8 +766,8 @@
     <string name="notification_reader_app_regex">Filtre de valeur Regex</string>
     <string name="notification_reader_app_regex_summary">Regex pour analyser la valeur du texte dans la notification.\nVeuillez modifier uniquement si vous savez ce que vous faites ou si vous obtenez un conseil du développeur.</string>
     <string name="notification_reader_five_minute_interval">Intervalle de 5 minutes</string>
-    <string name="notification_reader_five_minute_interval_summary">Certaines applications, comme Dexcom, mettent à jour leurs notifications assez souvent. Pour ignorer ces mises à jour avec la même valeur, activez l\'intervalle de 5 minutes.\nSi activé, il n'y aura une nouvelle valeur que toutes les 5 minutes ou si la valeur dans la notification a changé.</string>
-    <string name="pref_source_notification_info_summary">Pour recevoir des valeurs des notifications d\'autres applications, une autorisation d\'accès aux notifications est nécessaire !\nLa notification doit inclure la valeur de glucose ou l\'IOB sous forme de chaîne.\nComme chaque notification a une mise en page différente, elle peut ne pas fonctionner avec toutes les applications. En cas de problème, veuillez me contacter avec une capture d'écran de la notification et les journaux.</string>
+    <string name="notification_reader_five_minute_interval_summary">Certaines applications, comme Dexcom, mettent à jour leurs notifications assez souvent. Pour ignorer ces mises à jour avec la même valeur, activez l\'intervalle de 5 minutes.\nSi activé, il n\'y aura une nouvelle valeur que toutes les 5 minutes ou si la valeur dans la notification a changé.</string>
+    <string name="pref_source_notification_info_summary">Pour recevoir des valeurs des notifications d\'autres applications, une autorisation d\'accès aux notifications est nécessaire !\nLa notification doit inclure la valeur de glucose ou l\'IOB sous forme de chaîne.\nComme chaque notification a une mise en page différente, elle peut ne pas fonctionner avec toutes les applications. En cas de problème, veuillez me contacter avec une capture d\'écran de la notification et les journaux.</string>
     <string name="notification_dexcom_info">Important</string>
     <string name="notification_dexcom_info_summary">En raison du comportement particulier des notifications Dexcom, vous devez également activer la notification de premier plan de Dexcom.</string>
     <string name="sensor_age_label">Âge du capteur</string>
