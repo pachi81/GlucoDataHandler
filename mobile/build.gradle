@@ -27,7 +27,7 @@ android {
         dev_release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-dev-rules.pro'
-            versionNameSuffix '-dev'
+            versionNameSuffix '-dev.' + rootProject.versionCode
             resValue "string", "app_name", "GlucoDataHandler"
             signingConfig signingConfigs.debug
         }
@@ -94,6 +94,7 @@ dependencies {
     implementation "com.ncorti:slidetoact:0.11.0"
     implementation 'com.takisoft.preferencex:preferencex-datetimepicker:1.1.0'
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.2.0'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'

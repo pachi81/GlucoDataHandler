@@ -31,6 +31,21 @@ object GlucoDataUtils {
         return Utils.round(value * Constants.GLUCOSE_CONVERSION_FACTOR, 0)
     }
 
+    fun deltaToString(delta: Float, withUnit: Boolean = false): String {
+        if(delta.isNaN())
+            return "--"
+        var deltaVal = ""
+        if (delta > 0)
+            deltaVal += "+"
+        deltaVal += if( !ReceiveData.isMmol && delta.toDouble() == Math.floor(delta.toDouble()))
+            delta.toInt().toString()
+        else
+            delta.toString()
+        if(withUnit)
+            deltaVal += " " + ReceiveData.getUnit()
+        return deltaVal
+    }
+
     fun getRateSymbol(rate: Float): Char {
         if(ReceiveData.isObsoleteShort() || java.lang.Float.isNaN(
                 rate
@@ -83,7 +98,7 @@ object GlucoDataUtils {
     fun getRateDegrees(rate: Float): Int {
         if (rate.isNaN())
             return 0
-        return Utils.round(maxOf(-2F, minOf(2F, rate)) / 2F * 90F, 0).toInt()
+        return (Utils.round(maxOf(-2F, minOf(2F, rate)) / 2F * 90F, 0).toInt()/5)*5  // series of 5
     }
 
     private var rateDelta = 0.1F

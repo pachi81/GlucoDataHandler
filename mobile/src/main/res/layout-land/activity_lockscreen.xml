@@ -132,7 +132,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
             <RelativeLayout
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:layout_width="match_parent"
                 android:layout_height="0dp">
                 <com.ncorti.slidetoact.SlideToActView
@@ -158,10 +158,19 @@
                     android:textSize="25sp"
                     tools:ignore="HardcodedText,SpUsage" />
             </RelativeLayout>
+            <ImageView
+                android:id="@+id/graphImage"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:minWidth="60dp"
+                android:layout_weight="1"
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/graph"
+                android:src="@drawable/icon_graph"/>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_weight="2">
                 <LinearLayout
                     android:id="@+id/layoutSnooze"
                     android:layout_width="match_parent"

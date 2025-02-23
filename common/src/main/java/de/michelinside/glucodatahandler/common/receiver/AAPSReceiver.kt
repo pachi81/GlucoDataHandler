@@ -11,7 +11,7 @@ import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 
-open class AAPSReceiver: ReceiverBase() {
+open class AAPSReceiver: NamedBroadcastReceiver() {
     private val LOG_ID = "GDH.AAPSReceiver"
     companion object {
         private const val BG_VALUE = "glucoseMgdl" // double

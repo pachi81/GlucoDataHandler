@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/box_inset_layout_padding"
+    tools:context=".GraphActivity"
+    tools:deviceIds="wear">
+
+    <de.michelinside.glucodatahandler.common.chart.GlucoseChart
+        android:id="@+id/chart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:contentDescription="@string/graph"
+        />
+
+    <TextView
+        android:id="@+id/txtChartDisabled"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/graph_disabled"
+        android:gravity="center"
+        android:paddingHorizontal="10dp"
+        android:autoSizeStepGranularity="1sp"
+        android:autoSizeTextType="uniform"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:visibility="gone"
+        />
+</androidx.wear.widget.BoxInsetLayout>
