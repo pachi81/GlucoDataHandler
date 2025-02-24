@@ -763,4 +763,7 @@
     <string name="sensor_age_value">%1$dd %2$dh</string>
     <string name="vibrate_pattern_shorty">Breve</string>
 
+    <string name="pref_cat_locksreen_aod">Schermata di blocco e AOD</string>
+    <string name="pref_cat_locksreen_aod_summary">Impostazioni per aggiungere uno sfondo alla schermata di blocco e all\'Always On Display.</string>
+    <string name="pref_graph_transparency_phone_main_summary">Trasparenza dello sfondo per il grafico nella schermata principale.\nQuesto è necessario solo per la combinazione di colori chiari.</string>
 </resources>

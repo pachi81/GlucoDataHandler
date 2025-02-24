@@ -768,4 +768,7 @@
     <string name="sensor_age_value">%1$dд %2$dч</string>
     <string name="vibrate_pattern_shorty">Короткий</string>
 
+    <string name="pref_cat_locksreen_aod">Экран блокировки и AOD</string>
+    <string name="pref_cat_locksreen_aod_summary">Настройки для добавления обоев на экран блокировки и Always On Display.</string>
+    <string name="pref_graph_transparency_phone_main_summary">Прозрачность фона для графика на главном экране.\nЭто необходимо только для светлой цветовой схемы.</string>
 </resources>

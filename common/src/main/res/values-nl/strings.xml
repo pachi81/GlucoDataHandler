@@ -776,4 +776,7 @@
     <string name="sensor_age_value">%1$dd %2$dh</string>
     <string name="vibrate_pattern_shorty">Kort</string>
 
+    <string name="pref_cat_locksreen_aod">Vergrendelscherm en AOD</string>
+    <string name="pref_cat_locksreen_aod_summary">Instellingen om een achtergrond toe te voegen aan het vergrendelscherm en Always On Display.</string>
+    <string name="pref_graph_transparency_phone_main_summary">Achtergrondtransparantie voor grafiek op het hoofdscherm.\nDit is alleen nodig voor een licht kleurenschema.</string>
 </resources>

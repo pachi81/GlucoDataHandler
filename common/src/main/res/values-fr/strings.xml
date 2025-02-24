@@ -774,4 +774,7 @@
     <string name="sensor_age_value">%1$dj %2$dh</string>
     <string name="vibrate_pattern_shorty">Court</string>
 
+    <string name="pref_cat_locksreen_aod">Écran de verrouillage et AOD</string>
+    <string name="pref_cat_locksreen_aod_summary">Paramètres pour ajouter un fond d\'écran à l\'écran de verrouillage et à l\'Always On Display.</string>
+    <string name="pref_graph_transparency_phone_main_summary">Transparence de l\'arrière-plan pour le graphique sur l\'écran principal.\nCeci n\'est nécessaire que pour le thème de couleur clair.</string>
 </resources>

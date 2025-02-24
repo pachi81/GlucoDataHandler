@@ -773,4 +773,7 @@
     <string name="sensor_age_value">%1$dd %2$dh</string>
     <string name="vibrate_pattern_shorty">Corto</string>
 
+    <string name="pref_cat_locksreen_aod">Pantalla de bloqueo y AOD</string>
+    <string name="pref_cat_locksreen_aod_summary">Ajustes para añadir un fondo de pantalla a la pantalla de bloqueo y a la pantalla Always On Display.</string>
+    <string name="pref_graph_transparency_phone_main_summary">Transparencia de fondo para el gráfico en la pantalla principal.\nEsto solo es necesario para el esquema de color claro.</string>
 </resources>

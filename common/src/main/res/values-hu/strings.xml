@@ -842,4 +842,8 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="sensor_age_value">%1$d nap %2$d óra</string>
     <string name="vibrate_pattern_shorty">Rövid</string>
 
+    <string name="pref_cat_locksreen_aod">Zárolási képernyő és AOD</string>
+    <string name="pref_cat_locksreen_aod_summary">Beállítások háttérkép hozzáadásához a zárolási képernyőhöz és az Always On Display-hez.</string>
+    <string name="pref_graph_transparency_phone_main_summary">A grafikon háttér-átlátszósága a főképernyőn.\nEz csak világos színsémához szükséges.</string>
+
 </resources>

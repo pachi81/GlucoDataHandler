@@ -774,4 +774,8 @@
     <string name="sensor_age_value">%1$dd %2$dh</string>
     <string name="vibrate_pattern_shorty">Кратко</string>
 
+    <string name="pref_cat_locksreen_aod">Заключен екран и AOD</string>
+    <string name="pref_cat_locksreen_aod_summary">Настройки за добавяне на тапет към заключения екран и Always On Display.</string>
+    <string name="pref_graph_transparency_phone_main_summary">Прозрачност на фона за графика на главния екран.\nТова е необходимо само за светла цветова схема.</string>
+
 </resources>

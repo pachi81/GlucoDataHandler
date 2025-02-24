@@ -769,4 +769,7 @@
     <string name="sensor_age_label">Idade do sensor</string>
     <string name="sensor_age_value">%1$dd %2$dh</string>
     <string name="vibrate_pattern_shorty">Curto</string>
+    <string name="pref_cat_locksreen_aod">Ecrã de bloqueio e AOD</string>
+    <string name="pref_cat_locksreen_aod_summary">Definições para adicionar um fundo de ecrã ao ecrã de bloqueio e ao Always On Display.</string>
+    <string name="pref_graph_transparency_phone_main_summary">Transparência do fundo para o gráfico no ecrã principal.\nIsto só é necessário para o esquema de cores claro.</string>
 </resources>
