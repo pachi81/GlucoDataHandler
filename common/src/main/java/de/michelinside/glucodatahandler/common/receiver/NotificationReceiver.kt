@@ -61,20 +61,22 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                         Log.d(LOG_ID, "Ignoring Dexcom value notification with fix 30s update")
                         return false
                     }
-                    if(lastDexcomForegroundTime == 0L || diffForegroundTime <= 3 || diffForegroundTime >= 300) {
+                    if(lastDexcomForegroundTime == 0L || diffForegroundTime >= 600) {   // no foreground notification
+                        Log.d(LOG_ID, "Dexcom foreground notification is disabled!")
                         if(diffValueTime == 0L) {
                             Log.d(LOG_ID, "Check for new value for 0s update")
-                            if(lastDexcomForegroundTime > 0L)
-                                updateOnlyChangedValue = diffTime < 250
-                        } else if(lastDexcomForegroundTime == 0L || diffForegroundTime <= 3) {
+                            updateOnlyChangedValue = diffTime < 250
+                        } else {
+                            Log.d(LOG_ID, "Ignore new value notification as foreground notification is disabled")
+                            return false
+                        }
+                    } else if(diffForegroundTime <= 3) {   // new value after update of foreground notification
+                        if(diffValueTime == 0L) {
+                            Log.d(LOG_ID, "Check for new value for 0s update")
+                            updateOnlyChangedValue = diffTime < 250
+                        } else {
                             Log.d(LOG_ID, "New value after foreground notification -> check for 5 min interval")
                             minDiff = 250  // ignore other updates of the foreground notification -> wait for the next one for value (~300s)
-                            if(lastDexcomForegroundTime == 0L) {
-                                updateOnlyChangedValue = true
-                            }
-                        } else {
-                            Log.d(LOG_ID, "Ignoring Dexcom value notification")
-                            return false
                         }
                     } else {
                         Log.d(LOG_ID, "Ignoring Dexcom value notification -> wait for foreground notification")
