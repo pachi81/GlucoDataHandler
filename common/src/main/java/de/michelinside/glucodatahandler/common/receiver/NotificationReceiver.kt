@@ -3,6 +3,7 @@ package de.michelinside.glucodatahandler.common.receiver
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
@@ -26,19 +27,61 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     private var lastDexcomValueTime = 0L
     private var updateOnlyChangedValue = false
     private var lastValue = Float.NaN
+    private var waitForAdditionalNotification: Thread? = null
 
     override fun getName(): String {
         return LOG_ID
     }
 
+    private fun isWaitThreadActive(): Boolean {
+        return waitForAdditionalNotification != null && waitForAdditionalNotification!!.isAlive
+    }
+
+    private fun startWaitThread(sbn: StatusBarNotification) {
+        stopWaitThread()
+        Log.d(LOG_ID, "Start wait thread")
+        waitForAdditionalNotification = Thread {
+            try {
+                Thread.sleep(3000)
+                // no additional notification, parse this one
+                Handler(applicationContext.mainLooper).post {
+                    val diffTime = (sbn.postTime - ReceiveData.time)/1000 // in seconds
+                    Log.i(LOG_ID, "Handle wait value notification - diff: $diffTime")
+                    if(diffTime > 50) {
+                        updateOnlyChangedValue = diffTime < 250
+                        parseValue(sbn)
+                    }
+                }
+            } catch (exc: InterruptedException) {
+                Log.d(LOG_ID, "Delay thread interrupted")
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "Exception in delay thread: " + exc.toString())
+            }
+        }
+        waitForAdditionalNotification!!.start()
+    }
+
+    private fun stopWaitThread() {
+        Log.v(LOG_ID, "Stop wait thread for $waitForAdditionalNotification")
+        if (isWaitThreadActive() && waitForAdditionalNotification!!.id != Thread.currentThread().id )
+        {
+            Log.d(LOG_ID, "Stop running wait thread!")
+            waitForAdditionalNotification!!.interrupt()
+            while(waitForAdditionalNotification!!.isAlive)
+                Thread.sleep(1)
+            Log.d(LOG_ID, "Wait thread stopped!")
+            waitForAdditionalNotification = null
+        }
+    }
+
     private fun validGlucoseNotification(sbn: StatusBarNotification, sharedPref: SharedPreferences): Boolean {
         if (sbn.packageName == sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP, "")) {
-            Log.d(LOG_ID, "New notification from ${sbn.packageName} - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`})")
+            Log.i(LOG_ID, "New notification from ${sbn.packageName} - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`})")
             updateOnlyChangedValue = false
             var minDiff = 50
             val diffTime = (sbn.postTime - ReceiveData.time)/1000 // in seconds
             if(PackageUtils.isDexcomApp(sbn.packageName)) {
-                /* special Dexcom handling (only for G7?)
+                /* special Dexcom handling (only for G7!)
                    - value notification is updated quite often and all must be ignored, until the "Dexcom app is running" notification is received
                    - this can be detected using the title of the notification -> null: value -> not null: foreground
                    - value notifications with an update of 30s must be ignored
@@ -55,20 +98,24 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                     val diffForegroundTime = (sbn.postTime - lastDexcomForegroundTime)/1000 // in seconds
                     val diffValueTime = (sbn.postTime - lastDexcomValueTime)/1000 // in seconds
                     lastDexcomValueTime = sbn.postTime
-                    Log.d(LOG_ID, "Dexcom value notification updated at ${Utils.getUiTimeStamp(sbn.postTime)} - diff foreground: $diffForegroundTime, diff value notify: $diffValueTime, diff recv value: $diffTime ")
+                    Log.i(LOG_ID, "Dexcom value notification updated at ${Utils.getUiTimeStamp(sbn.postTime)} - diff foreground: $diffForegroundTime, diff value notify: $diffValueTime, diff recv value: $diffTime ")
 
-                    if(diffValueTime > 0 && diffValueTime.mod(30) == 0) {
+                    if(diffValueTime > 0 && diffValueTime == 30L) {
                         Log.d(LOG_ID, "Ignoring Dexcom value notification with fix 30s update")
                         return false
                     }
-                    if(lastDexcomForegroundTime == 0L || diffForegroundTime >= 600) {   // no foreground notification
+                    if(lastDexcomForegroundTime == 0L) {   // no foreground notification
                         Log.d(LOG_ID, "Dexcom foreground notification is disabled!")
-                        if(diffValueTime == 0L) {
+                        if(diffValueTime == 0L || isWaitThreadActive()) {
+                            stopWaitThread()
                             Log.d(LOG_ID, "Check for new value for 0s update")
                             updateOnlyChangedValue = diffTime < 250
-                        } else {
-                            Log.d(LOG_ID, "Ignore new value notification as foreground notification is disabled")
+                        } else if(diffTime in 297..303) {
+                            startWaitThread(sbn)  // wait for a new notification with a value update otherwise use this one
                             return false
+                        } else {
+                            Log.d(LOG_ID, "New value without foreground notification -> check for 5 min interval")
+                            minDiff = 250
                         }
                     } else if(diffForegroundTime <= 3) {   // new value after update of foreground notification
                         if(diffValueTime == 0L) {
@@ -83,7 +130,6 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                         return false
                     }
                 }
-
             }
             if(diffTime < minDiff) {
                 Log.d(LOG_ID, "Ignoring notification out of interval - diff: $diffTime < $minDiff")
@@ -99,21 +145,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             statusBarNotification?.let { sbn ->
                 val sharedPref = applicationContext.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 if (validGlucoseNotification(sbn, sharedPref)) {
-                    val regex = sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, "(\\d*\\.?\\d+)")!!.toRegex()
-                    Log.i(LOG_ID, "using regex $regex")
-                    val value = parseValueFromNotification(sbn, false, regex)
-                    if(!value.isNaN()) {
-                        if(updateOnlyChangedValue && value == lastValue) {
-                            Log.d(LOG_ID, "Ignoring value notification with same value: $value")
-                        } else {
-                            lastValue = value
-                            handleGlucoseValue(value, sbn.postTime)
-                        }
-                    } else if(parsedTextViews.size > 0) {
-                        SourceStateData.setError(DataSource.NOTIFICATION, "Could not parse from $parsedTextViews")
-                    } else {
-                        SourceStateData.setError(DataSource.NOTIFICATION, "No text found for parsing!")
-                    }
+                    parseValue(sbn)
                 }
                 if (sbn.packageName == sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP, "")) {
                     Log.d(LOG_ID, "New IOB notification from ${sbn.packageName} - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`})")
@@ -129,6 +161,25 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                     }
                 }
             }
+        }
+    }
+
+    private fun parseValue(sbn: StatusBarNotification) {
+        val sharedPref = applicationContext.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        val regex = sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, "(\\d*\\.?\\d+)")!!.toRegex()
+        Log.i(LOG_ID, "using regex $regex")
+        val value = parseValueFromNotification(sbn, false, regex)
+        if(!value.isNaN()) {
+            if(updateOnlyChangedValue && value == lastValue) {
+                Log.d(LOG_ID, "Ignoring value notification with same value: $value")
+            } else {
+                lastValue = value
+                handleGlucoseValue(value, sbn.postTime)
+            }
+        } else if(parsedTextViews.size > 0) {
+            SourceStateData.setError(DataSource.NOTIFICATION, "Could not parse from $parsedTextViews")
+        } else {
+            SourceStateData.setError(DataSource.NOTIFICATION, "No text found for parsing!")
         }
     }
 

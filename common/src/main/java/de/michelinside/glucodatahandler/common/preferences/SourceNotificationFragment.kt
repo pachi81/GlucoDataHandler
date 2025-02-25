@@ -103,7 +103,7 @@ class SourceNotificationFragment : PreferenceFragmentCompat(), SharedPreferences
             }
             val glucoseCat = findPreference<PreferenceCategory>("notification_cat_glucose")
             val dexcomInfo = findPreference<Preference>("notification_dexcom_info")
-            if(!glucoseApp.isNullOrEmpty() && PackageUtils.isDexcomApp(glucoseApp)) {
+            if(!glucoseApp.isNullOrEmpty() && PackageUtils.isDexcomG7App(glucoseApp)) {
                 glucoseCat!!.initialExpandedChildrenCount = 2
                 dexcomInfo!!.isVisible = true
             } else {

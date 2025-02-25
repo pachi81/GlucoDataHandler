@@ -763,7 +763,7 @@
     <string name="notification_reader_five_minute_interval_summary">Некоторые приложения, такие как Dexcom, обновляют свои уведомления довольно часто. Чтобы игнорировать эти обновления с тем же значением, включите интервал в 5 минут.\nЕсли включено, новое значение будет появляться только каждые 5 минут или если значение в уведомлении изменилось.</string>
     <string name="pref_source_notification_info_summary">Для получения значений из уведомлений других приложений требуется разрешение на доступ к уведомлениям!\nУведомление должно содержать значение глюкозы или IOB в виде строки.\nПоскольку каждое уведомление имеет разный макет, оно может работать не со всеми приложениями. В случае проблем, пожалуйста, свяжитесь со мной, приложив скриншот уведомления и логи.</string>
     <string name="notification_dexcom_info">Важно</string>
-    <string name="notification_dexcom_info_summary">Из-за особенностей уведомлений Dexcom, вы также должны включить уведомление Dexcom на переднем плане.</string>
+    <string name="notification_dexcom_info_summary">Из-за особенностей уведомлений Dexcom G7, вы также должны включить уведомление Dexcom на переднем плане.</string>
     <string name="sensor_age_label">Возраст сенсора</string>
     <string name="sensor_age_value">%1$dд %2$dч</string>
     <string name="vibrate_pattern_shorty">Короткий</string>

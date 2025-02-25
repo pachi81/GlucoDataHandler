@@ -179,6 +179,10 @@ object PackageUtils {
         return filterContains(getTapActionFilter(context), value)
     }
 
+    fun isDexcomG7App(packageName: String): Boolean {
+        return packageName.lowercase().startsWith("com.dexcom.g7")
+    }
+
     fun isDexcomApp(packageName: String): Boolean {
         return packageName.lowercase().startsWith("com.dexcom.")
     }

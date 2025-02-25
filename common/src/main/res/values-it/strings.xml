@@ -758,7 +758,7 @@
     <string name="notification_reader_five_minute_interval_summary">Alcune app, come Dexcom, aggiornano le loro notifiche abbastanza spesso. Per ignorare questi aggiornamenti con lo stesso valore, abilita l\'intervallo di 5 minuti.\nSe abilitato, ci sarà un nuovo valore solo ogni 5 minuti o se il valore nella notifica è cambiato.</string>
     <string name="pref_source_notification_info_summary">Per ricevere valori dalle notifiche di altre app, è necessaria l\'autorizzazione per accedere alle notifiche!\nLa notifica deve includere il valore del glucosio o l\'IOB come stringa.\nPoiché ogni notifica ha un layout diverso, potrebbe non funzionare con tutte le app. In caso di problemi, contattami con uno screenshot della notifica e i log.</string>
     <string name="notification_dexcom_info">Importante</string>
-    <string name="notification_dexcom_info_summary">A causa del comportamento speciale delle notifiche Dexcom, devi anche abilitare la notifica in primo piano di Dexcom.</string>
+    <string name="notification_dexcom_info_summary">A causa del comportamento speciale delle notifiche Dexcom G7, devi anche abilitare la notifica in primo piano di Dexcom.</string>
     <string name="sensor_age_label">Età del sensore</string>
     <string name="sensor_age_value">%1$dd %2$dh</string>
     <string name="vibrate_pattern_shorty">Breve</string>

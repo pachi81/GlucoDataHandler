@@ -762,7 +762,7 @@
     <string name="notification_reader_five_minute_interval_summary">Einige Apps, wie Dexcom, aktualisieren ihre Benachrichtigungen recht häufig. Um diese Aktualisierungen mit dem gleichen Wert zu ignorieren, aktivieren Sie das 5-Minuten-Intervall.\nWenn aktiviert, gibt es nur alle 5 Minuten einen neuen Wert oder wenn sich der Wert in der Benachrichtigung geändert hat.</string>
     <string name="pref_source_notification_info_summary">Um Werte aus Benachrichtigungen anderer Apps zu empfangen, ist eine Berechtigung für den Zugriff auf die Benachrichtigungen erforderlich!\nDie Benachrichtigung muss entweder den Zuckerwert oder IOB als String enthalten.\nDa jede Benachrichtigung ein anderes Layout hat, funktioniert es möglicherweise nicht mit jeder App. Bei Problemen kontaktieren Sie mich bitte mit einem Screenshot der Benachrichtigung und den Logs.</string>
     <string name="notification_dexcom_info">Wichtig</string>
-    <string name="notification_dexcom_info_summary">Aufgrund des besonderen Verhaltens von Dexcom-Benachrichtigungen müssen Sie auch die Vordergrundbenachrichtigung von Dexcom aktivieren.</string>
+    <string name="notification_dexcom_info_summary">Aufgrund des besonderen Verhaltens von Dexcom G7-Benachrichtigungen müssen Sie auch die Vordergrundbenachrichtigung von Dexcom aktivieren.</string>
     <string name="sensor_age_label">Sensoralter</string>
     <string name="sensor_age_value">%1$dd %2$dh</string>
     <string name="vibrate_pattern_shorty">Kurz</string>
