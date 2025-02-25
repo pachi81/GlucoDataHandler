@@ -12,6 +12,7 @@ import android.content.SharedPreferences
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.android.gms.wearable.WearableListenerService
@@ -26,8 +27,10 @@ import de.michelinside.glucodatahandler.common.receiver.BroadcastServiceAPI
 import de.michelinside.glucodatahandler.common.receiver.DexcomBroadcastReceiver
 import de.michelinside.glucodatahandler.common.receiver.DiaboxReceiver
 import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
+import de.michelinside.glucodatahandler.common.receiver.NamedBroadcastReceiver
+import de.michelinside.glucodatahandler.common.receiver.NamedReceiver
+import de.michelinside.glucodatahandler.common.receiver.NotificationReceiver
 import de.michelinside.glucodatahandler.common.receiver.NsEmulatorReceiver
-import de.michelinside.glucodatahandler.common.receiver.ReceiverBase
 import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
 import de.michelinside.glucodatahandler.common.tasks.BackgroundWorker
@@ -78,11 +81,15 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             extContext = value
         }
 
+        val isServiceRunning: Boolean get() {
+            return service != null
+        }
+
         @SuppressLint("StaticFieldLeak")
         private var extContext: Context? = null
         val sharedPref: SharedPreferences? get() {
             if (context != null) {
-                return context!!.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                return context!!.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
             }
             return null
         }
@@ -246,22 +253,25 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             }
         }
 
+        fun getWearPhoneConnection(): WearPhoneConnection? {
+            return connection
+        }
+
         private var glucoDataReceiver: GlucoseDataReceiver? = null
         private var xDripReceiver: XDripBroadcastReceiver?  = null
         private var aapsReceiver: AAPSReceiver?  = null
         private var dexcomReceiver: DexcomBroadcastReceiver? = null
         private var nsEmulatorReceiver: NsEmulatorReceiver? = null
         private var diaboxReceiver: DiaboxReceiver? = null
+        private var notificationReceiver: NotificationReceiver? = null
         private val registeredReceivers = mutableSetOf<String>()
 
         @SuppressLint("UnspecifiedRegisterReceiverFlag")
-        fun registerReceiver(context: Context, receiver: ReceiverBase, filter: IntentFilter): Boolean {
+        fun registerReceiver(context: Context, receiver: NamedReceiver, filter: IntentFilter): Boolean {
             Log.i(LOG_ID, "Register receiver ${receiver.getName()} for $receiver on $context")
             try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    context.registerReceiver(receiver, filter, RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
-                } else {
-                    context.registerReceiver(receiver, filter)
+                if (receiver is NamedBroadcastReceiver) {
+                    PackageUtils.registerReceiver(context, receiver, filter)
                 }
                 registeredReceivers.add(receiver.getName())
                 return true
@@ -271,26 +281,28 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             return false
         }
 
-        fun unregisterReceiver(context: Context, receiver: ReceiverBase?) {
+        fun unregisterReceiver(context: Context, receiver: NamedReceiver?) {
             try {
                 if (receiver != null) {
                     Log.i(LOG_ID, "Unregister receiver ${receiver.getName()} on $context")
                     registeredReceivers.remove(receiver.getName())
-                    context.unregisterReceiver(receiver)
+                    if (receiver is NamedBroadcastReceiver) {
+                        context.unregisterReceiver(receiver)
+                    }
                 }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "unregisterReceiver exception: " + exc.toString())
             }
         }
 
-        fun isRegistered(receiver: ReceiverBase): Boolean {
+        fun isRegistered(receiver: NamedReceiver): Boolean {
             return registeredReceivers.contains(receiver.getName())
         }
 
         fun updateSourceReceiver(context: Context, key: String? = null) {
             Log.d(LOG_ID, "Register receiver")
             try {
-                val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
                 if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED) {
                     if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, true)) {
                         if(glucoDataReceiver == null) {
@@ -372,6 +384,33 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     }
                 }
 
+                if (key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED) {
+                    // default to false because reading notifications is a scary permission to give for no reason
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
+                        Log.d(LOG_ID, "Notification source enabled")
+                        val notificationListeners = Settings.Secure.getString(context.contentResolver, "enabled_notification_listeners")
+                        if (!notificationListeners.contains(context.packageName)) {
+                            // disable until permission is granted:
+                            with(sharedPref.edit()) {
+                                putBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)
+                                apply()
+                            }
+                            // request permissions
+                            val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            context.startActivity(intent)
+                        } else {
+                            notificationReceiver = NotificationReceiver()
+                            registerReceiver(context, notificationReceiver!!, IntentFilter())
+                        }
+                    } else if(notificationReceiver!=null) {
+                        unregisterReceiver(context, notificationReceiver)
+                        notificationReceiver = null
+                    }
+                    // notification listeners can not be unregistered
+                }
+
+
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "registerSourceReceiver exception: " + exc.toString())
             }
@@ -404,16 +443,20 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     unregisterReceiver(context, diaboxReceiver)
                     diaboxReceiver = null
                 }
+                if(notificationReceiver != null) {
+                    unregisterReceiver(context, notificationReceiver)
+                    notificationReceiver = null
+                }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "unregisterSourceReceiver exception: " + exc.toString())
             }
         }
 
         fun migrateSettings(context: Context) {
-            val sharedPrefs = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            val sharedPrefs = context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
             Log.v(LOG_ID, "migrateSettings called")
             if(!sharedPrefs.contains(Constants.SHARED_PREF_OBSOLETE_TIME)) {
-                val sharedGlucosePref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, Context.MODE_PRIVATE)
+                val sharedGlucosePref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, MODE_PRIVATE)
                 var obsoleteTime = 6
                 if(sharedGlucosePref.contains(Constants.EXTRA_SOURCE_INDEX)) {
                     val srcOrdinal = sharedGlucosePref.getInt(Constants.EXTRA_SOURCE_INDEX, DataSource.NONE.ordinal)
@@ -474,6 +517,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 bundle.putBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_BYODA_ENABLED, true))
                 bundle.putBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true))
                 bundle.putBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true))
+                bundle.putBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false))
                 bundle.putBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, sharedPref!!.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true))
             }
             Log.v(LOG_ID, "getSettings called with bundle ${(Utils.dumpBundle(bundle))}")
@@ -482,7 +526,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
 
         fun setSettings(context: Context, bundle: Bundle) {
             Log.v(LOG_ID, "setSettings called with bundle ${(Utils.dumpBundle(bundle))}")
-            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
             with(sharedPref!!.edit()) {
                 putBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, bundle.getBoolean(Constants.SHARED_PREF_SHOW_OTHER_UNIT, ReceiveData.isMmol))
                 putBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, true))
@@ -492,6 +536,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 putBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED, true))
                 putBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true))
                 putBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, bundle.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true))
+                putBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false))
                 apply()
             }
             ReceiveData.setSettings(sharedPref, bundle)
@@ -648,7 +693,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 Constants.SHARED_PREF_SOURCE_AAPS_ENABLED,
                 Constants.SHARED_PREF_SOURCE_BYODA_ENABLED,
                 Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED,
-                Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED -> {
+                Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED,
+                Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED -> {
                     updateSourceReceiver(this, key)
                     shareSettings = true
                 }

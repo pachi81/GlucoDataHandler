@@ -16,8 +16,9 @@ enum class DataSource(val resId: Int, val interval5Min: Boolean = false) {
     DEXCOM_SHARE(R.string.source_dexcom_share, true),
     DEXCOM_BYODA(R.string.source_dexcom_byoda, true),
     NS_EMULATOR(R.string.source_ns_emulator, true),
-    DIABOX(R.string.source_diabox);
-    
+    DIABOX(R.string.source_diabox),
+    NOTIFICATION(R.string.source_notification);
+
     companion object {
         fun fromIndex(idx: Int): DataSource {
             entries.forEach {

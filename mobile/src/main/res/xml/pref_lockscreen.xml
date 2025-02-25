@@ -1,38 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="lockscreen_enabled"
-            android:title="@string/pref_lockscreen_enabled"
-            android:summary="@string/pref_lockscreen_enabled_summary"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.ListPreference
-            android:defaultValue="glucose_trend"
-            android:entries="@array/pref_floating_widget_style_labels"
-            android:entryValues="@array/pref_floating_widget_style_values"
-            android:key="lockscreen_style"
-            android:summary="@string/pref_floating_widget_style"
-            android:title="@string/pref_floating_widget_style"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SeekBarPreference
-            android:defaultValue="10"
-            app:showSeekBarValue="true"
-            app:seekBarIncrement="1"
-            app:min="1"
-            android:max="20"
-            android:key="lockscreen_size"
-            android:summary="@string/pref_lockscreen_size_summary"
-            android:title="@string/pref_floating_widget_size"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SeekBarPreference
-            android:defaultValue="75"
-            app:showSeekBarValue="true"
-            app:seekBarIncrement="1"
-            app:min="0"
-            android:max="100"
-            android:key="lockscreen_y_pos"
-            android:title="@string/pref_lockscreen_y_pos"
-            android:summary="@string/pref_lockscreen_y_pos_summary"
-            app:iconSpaceReserved="false" />
+        <PreferenceCategory
+            android:title="@string/pref_cat_locksreen_wallpaper"
+            app:iconSpaceReserved="false">
+                <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="false"
+                    android:key="lockscreen_enabled"
+                    android:title="@string/pref_lockscreen_enabled"
+                    android:summary="@string/pref_lockscreen_enabled_summary"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.ListPreference
+                    android:defaultValue="glucose_trend"
+                    android:entries="@array/pref_floating_widget_style_labels"
+                    android:entryValues="@array/pref_floating_widget_style_values"
+                    android:key="lockscreen_style"
+                    android:summary="@string/pref_floating_widget_style"
+                    android:title="@string/pref_floating_widget_style"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SeekBarPreference
+                    android:defaultValue="10"
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="1"
+                    app:min="1"
+                    android:max="20"
+                    android:key="lockscreen_size"
+                    android:summary="@string/pref_lockscreen_size_summary"
+                    android:title="@string/pref_floating_widget_size"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SeekBarPreference
+                    android:defaultValue="75"
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="1"
+                    app:min="0"
+                    android:max="100"
+                    android:key="lockscreen_y_pos"
+                    android:title="@string/pref_lockscreen_y_pos"
+                    android:summary="@string/pref_lockscreen_y_pos_summary"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SeekBarPreference
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="1"
+                    app:min="1"
+                    android:max="12"
+                    android:defaultValue="2"
+                    android:key="lockscreen_graph_duration"
+                    android:summary="@string/graph_duration_phone_widget_summary"
+                    android:title="@string/graph_duration"
+                    app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+        <PreferenceCategory
+            android:title="@string/pref_cat_aod"
+            app:iconSpaceReserved="false">
+                <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="false"
+                    android:key="aod_enabled"
+                    android:summary="@string/pref_aod_enabled_summary"
+                    android:title="@string/pref_lockscreen_enabled"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.ListPreference
+                    android:defaultValue="glucose_trend"
+                    android:entries="@array/pref_floating_widget_style_labels"
+                    android:entryValues="@array/pref_floating_widget_style_values"
+                    android:key="aod_style"
+                    android:summary="@string/pref_floating_widget_style"
+                    android:title="@string/pref_floating_widget_style"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SeekBarPreference
+                    android:defaultValue="10"
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="1"
+                    app:min="1"
+                    android:max="20"
+                    android:key="aod_size"
+                    android:summary="@string/pref_aod_size_summary"
+                    android:title="@string/pref_floating_widget_size"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SeekBarPreference
+                    android:defaultValue="75"
+                    android:key="aod_y_pos"
+                    android:max="100"
+                    android:summary="@string/pref_lockscreen_y_pos_summary"
+                    android:title="@string/pref_lockscreen_y_pos"
+                    app:iconSpaceReserved="false"
+                    app:min="0"
+                    app:seekBarIncrement="1"
+                    app:showSeekBarValue="true" />
+                <androidx.preference.SeekBarPreference
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="1"
+                    app:min="1"
+                    android:max="12"
+                    android:defaultValue="2"
+                    android:key="aod_graph_duration"
+                    android:summary="@string/graph_duration_phone_widget_summary"
+                    android:title="@string/graph_duration"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="false"
+                    android:key="aod_coloured"
+                    android:summary="@string/pref_aod_coloured_summary"
+                    android:title="@string/pref_aod_coloured"
+                    app:iconSpaceReserved="false" />
+        </PreferenceCategory>
 </PreferenceScreen>

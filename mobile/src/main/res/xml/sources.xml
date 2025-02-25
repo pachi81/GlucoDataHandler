@@ -13,10 +13,23 @@
         android:summary="@string/pref_cat_follower_summary"
         app:fragment="de.michelinside.glucodatahandler.common.preferences.SourceOnlineFragment"
         app:iconSpaceReserved="false" />
+    <Preference
+        android:key="pref_source_notification"
+        android:title="@string/pref_source_notification"
+        android:summary="@string/pref_source_notification_summary"
+        app:fragment="de.michelinside.glucodatahandler.common.preferences.SourceNotificationFragment"
+        app:iconSpaceReserved="false" />
     <androidx.preference.SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="five_minute_delta"
         android:summary="@string/pref_switch_use_5_min_delta_summary"
         android:title="@string/pref_switch_use_5_min_delta"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="rate_calculation"
+        android:summaryOn="@string/pref_switch_use_rate_calculation_summary_on"
+        android:summaryOff="@string/pref_switch_use_rate_calculation_summary_off"
+        android:title="@string/pref_switch_use_rate_calculation"
         app:iconSpaceReserved="false" />
 </PreferenceScreen>

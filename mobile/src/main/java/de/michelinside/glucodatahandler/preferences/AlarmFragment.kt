@@ -116,7 +116,7 @@ class AlarmFragment : SettingsFragmentCompatBase(), SharedPreferences.OnSharedPr
                 disableSwitch(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED)
             }
 
-            if (!AlarmNotification.hasFullscreenPermission()) {
+            if (!AlarmNotification.hasFullscreenPermission(requireContext())) {
                 disableSwitch(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED)
             }
 
@@ -246,7 +246,7 @@ class AlarmFragment : SettingsFragmentCompatBase(), SharedPreferences.OnSharedPr
                     }
                 }
                 Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED -> {
-                    if (sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, false) && !AlarmNotification.hasFullscreenPermission()) {
+                    if (sharedPreferences.getBoolean(Constants.SHARED_PREF_ALARM_FULLSCREEN_NOTIFICATION_ENABLED, false) && !AlarmNotification.hasFullscreenPermission(requireContext())) {
                         requestFullScreenPermission(requireContext())
                     }
                 }

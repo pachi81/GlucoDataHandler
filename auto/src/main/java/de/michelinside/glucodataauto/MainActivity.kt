@@ -46,6 +46,7 @@ import de.michelinside.glucodatahandler.common.utils.GitHubVersionChecker
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.ui.Dialogs
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
+import java.time.Duration
 import de.michelinside.glucodatahandler.common.R as CR
 
 class MainActivity : AppCompatActivity(), NotifierInterface {
@@ -555,6 +556,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableDetails.addView(createRow(CR.string.info_label_timestamp, Utils.getUiTimeStamp(ReceiveData.time)))
             if (ReceiveData.sensorID?.isNotEmpty() == true) {
                 tableDetails.addView(createRow(CR.string.info_label_sensor_id, if(BuildConfig.DEBUG) "ABCDE12345" else ReceiveData.sensorID!!))
+            }
+            if(ReceiveData.sensorStartTime > 0) {
+                val duration = Duration.ofMillis(System.currentTimeMillis() - ReceiveData.sensorStartTime)
+                val days = duration.toDays()
+                val hours = duration.minusDays(days).toHours()
+                tableDetails.addView(createRow(CR.string.sensor_age_label, resources.getString(CR.string.sensor_age_value).format(days, hours)))
+
             }
             if(ReceiveData.source != DataSource.NONE)
                 tableDetails.addView(createRow(CR.string.info_label_source, resources.getString(ReceiveData.source.resId)))

@@ -12,7 +12,7 @@ import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 
 
-open class DexcomBroadcastReceiver: ReceiverBase() {
+open class DexcomBroadcastReceiver: NamedBroadcastReceiver() {
     private val LOG_ID = "GDH.DexcomBroadcastReceiver"
 
     private val EXTRA_GLUCOSE_VALUES = "glucoseValues"

@@ -7,13 +7,18 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="blue">#FF005CCC</color>
     <color name="red">#FFFF0000</color>
     <color name="yellow">#FFFFFF00</color>
     <color name="green">#FF00FF00</color>
     <color name="gray">#FF888888</color>
     <color name="text_color">@color/white</color>
     <color name="table_header">#FF333333</color>
-    <color name="table_row">#FF666666</color>
+    <color name="table_row">#FF333333</color>
     <color name="transparent_widget_background">#55000000</color>
     <color name="transparent_widget_textcolor">@color/white</color>
+    <color name="transparent_marker_background">#BB000000</color>
+    <color name="chart_label_color">@color/white</color>
+    <color name="chart_limit_line_color">#FFCCCCCC</color>
+    <color name="transparent_layout_background">#55222222</color>
 </resources>

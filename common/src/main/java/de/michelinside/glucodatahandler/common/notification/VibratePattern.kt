@@ -17,7 +17,8 @@ enum class VibratePattern(val key: String, val resId: Int, val pattern: LongArra
     STAR_WARS("star_wars", R.string.vibrate_pattern_star_wars, longArrayOf(0,500,110,500,110,450,110,200,110,170,40,450,110,200,110,170,40,500)),
     POWER_RANGERS("power_rangers", R.string.vibrate_pattern_power_rangers, longArrayOf(0,150,150,150,150,75,75,150,150,150,150,450)),
     JAMES_BOND("james_bond", R.string.vibrate_pattern_james_bond, longArrayOf(0,200,100,200,275,425,100,200,100,200,275,425,100,75,25,75,125,75,25,75,125,100,100)),
-    MORTAL_KOMBAT("mortal_kombat", R.string.vibrate_pattern_mortal_kombat, longArrayOf(0,100,200,100,200,100,200,100,200,100,100,100,100,100,200,100,200,100,200,100,200,100,100,100,100,100,200,100,200,100,200,100,200,100,100,100,100,100,100,100,100,100,100,50,50,100,800))
+    MORTAL_KOMBAT("mortal_kombat", R.string.vibrate_pattern_mortal_kombat, longArrayOf(0,100,200,100,200,100,200,100,200,100,100,100,100,100,200,100,200,100,200,100,200,100,100,100,100,100,200,100,200,100,200,100,200,100,100,100,100,100,100,100,100,100,100,50,50,100,800)),
+    SHORTY("shorty", R.string.vibrate_pattern_shorty, longArrayOf(0, 400, 200, 500))
     ;
 
     companion object {

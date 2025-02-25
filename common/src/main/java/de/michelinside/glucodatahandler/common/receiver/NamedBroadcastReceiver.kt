@@ -5,8 +5,7 @@ import android.content.Context
 import android.content.Intent
 import de.michelinside.glucodatahandler.common.GlucoDataService
 
-abstract class ReceiverBase: BroadcastReceiver() {
-    abstract fun getName(): String
+abstract class NamedBroadcastReceiver: BroadcastReceiver(), NamedReceiver {
 
     final override fun onReceive(context: Context, intent: Intent) {
         if(!GlucoDataService.isRegistered(this))

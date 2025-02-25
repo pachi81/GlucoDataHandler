@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.GlucoDataHandler" parent="@style/Theme.MaterialComponents">
         <!-- Primary brand color. -->
@@ -15,5 +15,10 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
+    </style>
+
+
+    <style name="Theme.NoSwipe" parent="Theme.GlucoDataHandler">
+        <item name="android:windowSwipeToDismiss" tools:ignore="WearBackNavigation">false</item>
     </style>
 </resources>
