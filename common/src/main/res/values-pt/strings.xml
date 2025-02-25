@@ -772,4 +772,8 @@
     <string name="pref_cat_locksreen_aod">Ecrã de bloqueio e AOD</string>
     <string name="pref_cat_locksreen_aod_summary">Definições para adicionar um fundo de ecrã ao ecrã de bloqueio e ao Always On Display.</string>
     <string name="pref_graph_transparency_phone_main_summary">Transparência do fundo para o gráfico no ecrã principal.\nIsto só é necessário para o esquema de cores claro.</string>
+
+    <string name="pref_floating_widget_lock_position">Bloquear posição</string>
+    <string name="pref_floating_widget_lock_position_summary">Se a posição estiver bloqueada, o widget flutuante não pode ser movido. Estará sempre na mesma posição.</string>
+
 </resources>

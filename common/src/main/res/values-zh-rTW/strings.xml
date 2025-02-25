@@ -774,4 +774,8 @@
     <string name="pref_cat_locksreen_aod">鎖定螢幕和 AOD</string>
     <string name="pref_cat_locksreen_aod_summary">在鎖定螢幕和永遠顯示 (AOD) 上新增桌布的設定。</string>
     <string name="pref_graph_transparency_phone_main_summary">主螢幕上圖表的背景透明度。\n這僅適用於淺色配色方案。</string>
+
+    <string name="pref_floating_widget_lock_position">鎖定位置</string>
+    <string name="pref_floating_widget_lock_position_summary">如果位置已鎖定，則無法移動浮動小工具。它將始終位於相同的位置。</string>
+
 </resources>

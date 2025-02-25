@@ -779,4 +779,8 @@
     <string name="pref_cat_locksreen_aod">Vergrendelscherm en AOD</string>
     <string name="pref_cat_locksreen_aod_summary">Instellingen om een achtergrond toe te voegen aan het vergrendelscherm en Always On Display.</string>
     <string name="pref_graph_transparency_phone_main_summary">Achtergrondtransparantie voor grafiek op het hoofdscherm.\nDit is alleen nodig voor een licht kleurenschema.</string>
+
+    <string name="pref_floating_widget_lock_position">Positie vergrendelen</string>
+    <string name="pref_floating_widget_lock_position_summary">Als de positie is vergrendeld, kan de zwevende widget niet worden verplaatst. Deze zal altijd op dezelfde positie staan.</string>
+
 </resources>

@@ -101,6 +101,7 @@ object Constants {
     const val SHARED_PREF_FLOATING_WIDGET_TIME_TO_CLOSE = "floating_widget_time_to_close"
     const val SHARED_PREF_FLOATING_WIDGET_TAP_ACTION = "floating_widget_tap_action"
     const val SHARED_PREF_FLOATING_WIDGET_GRAPH_DURATION = "graph_duration_floating_widget"
+    const val SHARED_PREF_FLOATING_WIDGET_LOCK_POSITION = "floating_widget_lock_position"
     const val SHARED_PREF_WIDGET_TRANSPARENCY = "widget_transparency"
     const val SHARED_PREF_WIDGET_TAP_ACTION = "widget_tap_action"
     const val SHARED_PREF_RELATIVE_TIME = "relative_time"

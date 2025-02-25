@@ -846,4 +846,6 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="pref_cat_locksreen_aod_summary">Beállítások háttérkép hozzáadásához a zárolási képernyőhöz és az Always On Display-hez.</string>
     <string name="pref_graph_transparency_phone_main_summary">A grafikon háttér-átlátszósága a főképernyőn.\nEz csak világos színsémához szükséges.</string>
 
+    <string name="pref_floating_widget_lock_position">Pozíció zárolása</string>
+    <string name="pref_floating_widget_lock_position_summary">Ha a pozíció zárolva van, az úszó widget nem mozgatható. Mindig ugyanazon a pozíción lesz.</string>
 </resources>

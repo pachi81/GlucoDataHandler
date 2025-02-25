@@ -780,4 +780,7 @@
     <string name="pref_cat_locksreen_aod_summary">Settings to add a wallpaper to lockscreen and Always On Display.</string>
     <string name="pref_graph_transparency_phone_main_summary">Background transparency for graph on main screen.\nThis is only needed for light color scheme.</string>
 
+    <string name="pref_floating_widget_lock_position">Lock position</string>
+    <string name="pref_floating_widget_lock_position_summary">If the position is locked, the floating widget can not be moved. It will always be on the same position.</string>
+
 </resources>

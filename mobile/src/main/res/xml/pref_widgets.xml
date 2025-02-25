@@ -50,6 +50,12 @@
                     android:summary="@string/pref_floating_widget_time_to_close_summary"
                     android:title="@string/pref_floating_widget_time_to_close"
                     app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="false"
+                    android:key="floating_widget_lock_position"
+                    android:title="@string/pref_floating_widget_lock_position"
+                    android:summary="@string/pref_floating_widget_lock_position_summary"
+                    app:iconSpaceReserved="false" />
                 <de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
                     android:key="floating_widget_tap_action"
                     android:title="@string/tap_action"

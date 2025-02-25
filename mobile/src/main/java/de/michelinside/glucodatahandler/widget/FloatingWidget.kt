@@ -187,10 +187,12 @@ class FloatingWidget(context: Context): WallpaperBase(context, "GDH.FloatingWidg
                                 return true
                             }
                             MotionEvent.ACTION_MOVE -> {
-                                //this code is helping the widget to move around the screen with fingers
-                                params.x = initialX + (event.rawX - initialTouchX).toInt()
-                                params.y = initialY + (event.rawY - initialTouchY).toInt()
-                                windowManager!!.updateViewLayout(floatingView, params)
+                                if(!sharedPref.getBoolean(Constants.SHARED_PREF_FLOATING_WIDGET_LOCK_POSITION, false)) {
+                                    //this code is helping the widget to move around the screen with fingers
+                                    params.x = initialX + (event.rawX - initialTouchX).toInt()
+                                    params.y = initialY + (event.rawY - initialTouchY).toInt()
+                                    windowManager!!.updateViewLayout(floatingView, params)
+                                }
                                 return true
                             }
                         }
@@ -215,6 +217,7 @@ class FloatingWidget(context: Context): WallpaperBase(context, "GDH.FloatingWidg
                     remove()
                 }
                 Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION,
+                Constants.SHARED_PREF_FLOATING_WIDGET_LOCK_POSITION,
                 Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY -> {
                     remove()
                     update()

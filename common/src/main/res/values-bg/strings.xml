@@ -778,4 +778,6 @@
     <string name="pref_cat_locksreen_aod_summary">Настройки за добавяне на тапет към заключения екран и Always On Display.</string>
     <string name="pref_graph_transparency_phone_main_summary">Прозрачност на фона за графика на главния екран.\nТова е необходимо само за светла цветова схема.</string>
 
+    <string name="pref_floating_widget_lock_position">Заключване на позицията</string>
+    <string name="pref_floating_widget_lock_position_summary">Ако позицията е заключена, плаващият уиджет не може да бъде преместван. Той винаги ще бъде на една и съща позиция.</string>
 </resources>
