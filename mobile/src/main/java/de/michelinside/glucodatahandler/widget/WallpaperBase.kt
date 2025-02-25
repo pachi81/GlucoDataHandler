@@ -216,7 +216,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
 
             lockscreenView.setBackgroundColor(backgroundColor)
 
-            var textSize = 25f
+            var textSize = 12f
             when(style) {
                 Constants.WIDGET_STYLE_GLUCOSE_TREND_DELTA -> {
                     txtTime.visibility = GONE
@@ -249,7 +249,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
                     txtCob.visibility = VISIBLE
                 }
                 else -> {
-                    textSize = 15f
+                    textSize = 12f
                     txtTime.visibility = VISIBLE
                     txtDelta.visibility = VISIBLE
                     viewIcon.visibility = VISIBLE
@@ -268,8 +268,11 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
 
             if(color == null) {
-                txtDelta.text = "Δ  ${ReceiveData.getDeltaAsString()}"
                 txtTime.text =  "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(context)}"
+                if(graphImage != null)
+                    txtDelta.text = "Δ  ${ReceiveData.getDeltaAsString()}"
+                else
+                    txtDelta.text = " Δ ${ReceiveData.getDeltaAsString()}"
                 if(ReceiveData.iob.isNaN())
                     txtIob.visibility = GONE
                 else
