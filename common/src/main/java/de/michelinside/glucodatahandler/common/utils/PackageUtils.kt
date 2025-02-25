@@ -152,6 +152,7 @@ object PackageUtils {
             receiverFilter.add("com.senseonics.")  // Eversense CGM
             receiverFilter.add("esel.esel.")   // ESEL for Eversense
             receiverFilter.add("com.camdiab.")   // Cam APS FX
+            receiverFilter.add("com.medtronic.")
         }
         return receiverFilter
     }

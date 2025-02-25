@@ -165,12 +165,20 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                     }
                 }
 
-                // graph settings
+                // graph settings related to screen reader
                 if(!sharedPrefs.contains(Constants.SHARED_PREF_GRAPH_DURATION_PHONE_MAIN)) {
                     val isScreenReader = context.isScreenReaderOn()
                     Log.i(LOG_ID, "Setting default duration for graph - screenReader: $isScreenReader")
                     with(sharedPrefs.edit()) {
                         putInt(Constants.SHARED_PREF_GRAPH_DURATION_PHONE_MAIN, if(isScreenReader) 0 else ChartCreator.defaultDurationHours)
+                        apply()
+                    }
+                }
+                if(!sharedPrefs.contains(Constants.SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION)) {
+                    val isScreenReader = context.isScreenReaderOn()
+                    Log.i(LOG_ID, "Setting default duration for notification graph - screenReader: $isScreenReader")
+                    with(sharedPrefs.edit()) {
+                        putInt(Constants.SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION, if(isScreenReader) 0 else ChartCreator.defaultDurationHours)
                         apply()
                     }
                 }
