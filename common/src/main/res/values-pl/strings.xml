@@ -719,27 +719,27 @@
 
     <!-- v2.0 -->
 
-    <string name="delta_per_10_minute">a 10 minut</string>
-    <string name="delta_per_15_minute">a 15 minut</string>
+    <string name="delta_per_10_minute">Na 10 minut</string>
+    <string name="delta_per_15_minute">Na 15 minut</string>
 
-    <string name="widget_wearos_battery_level">WearOS battery level</string>
+    <string name="widget_wearos_battery_level">Poziom baterii WearOS</string>
 
-    <string name="graph">Graph</string>
-    <string name="graph_duration">Graph duration</string>
-    <string name="graph_duration_wear_summary">Number of hours shown in the graph in complication and on main screen.\nUse 0 to disable graph.</string>
-    <string name="graph_duration_phone_summary">Number of hours shown in the graph.\nUse 0 to disable graph.</string>
-    <string name="graph_duration_phone_widget_summary">Number of hours shown in the graph.</string>
-    <string name="show_graph">Show graph</string>
-    <string name="menu_database">Database</string>
-    <string name="reset_db">Reset database</string>
-    <string name="reset_db_summary">Press here to remove all data from database.</string>
-    <string name="reset_db_warning">If you press OK, all data from database will be removed!\nAre you sure?</string>
-    <string name="graph_disabled">Graph disabled!</string>
-    <string name="no_graph_data">Graph creation failed!</string>
+    <string name="graph">Wykres</string>
+    <string name="graph_duration">Okres na wykresie</string>
+    <string name="graph_duration_wear_summary">Liczba godzin pokazanych na wykresie na komplikacji i na ekranie głównym.\nWpisz 0, aby wyłączyć wykres.</string>
+    <string name="graph_duration_phone_summary">Liczba godzin pokazanych na wykresie.\Wpisz 0, aby wyłączyć wykres.</string>
+    <string name="graph_duration_phone_widget_summary">Liczba godzin pokazanych na wykresie.</string>
+    <string name="show_graph">Pokaż wykres</string>
+    <string name="menu_database">Baza danych</string>
+    <string name="reset_db">Reset bazy danych</string>
+    <string name="reset_db_summary">Naciśnij tutaj, aby usunąć wszystkie dane z bazy.</string>
+    <string name="reset_db_warning">Jeśli naciśniesz OK, z bazy usunięte zostaną wszystkie dane!\nCzy jesteś pewny?</string>
+    <string name="graph_disabled">Wykres wyłączony!</string>
+    <string name="no_graph_data">Nie udało się utworzyć wykresu!</string>
 
-    <string name="pref_switch_use_rate_calculation">Trend calculation</string>
-    <string name="pref_switch_use_rate_calculation_summary_on">Use internal trend calculation related to the last values.</string>
-    <string name="pref_switch_use_rate_calculation_summary_off">Use trend provided by the source.\nIf no trend is available, the internal calculation is used.</string>
+    <string name="pref_switch_use_rate_calculation">Kalkulacja trendu</string>
+    <string name="pref_switch_use_rate_calculation_summary_on">Użyj wewnętrznej kalkulacji trendu związanej z ostatnimi wartościami.</string>
+    <string name="pref_switch_use_rate_calculation_summary_off">Użyj trendu ze źródła.\Jeżeli trend nie jest dostępny, używana będzie kalkulacja wewnętrzna.</string>
 
     <string name="accessibility_service_description">Display glucose values on the Always-on Display</string>
 
