@@ -848,4 +848,6 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
 
     <string name="pref_floating_widget_lock_position">Pozíció zárolása</string>
     <string name="pref_floating_widget_lock_position_summary">Ha a pozíció zárolva van, az úszó widget nem mozgatható. Mindig ugyanazon a területen lesz.</string>
+
+    <string name="widget_chart_glucose_trend_delta_time_iob_cob">Értékek és grafikon</string>
 </resources>

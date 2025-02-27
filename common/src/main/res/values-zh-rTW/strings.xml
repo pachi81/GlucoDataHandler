@@ -778,4 +778,6 @@
     <string name="pref_floating_widget_lock_position">鎖定位置</string>
     <string name="pref_floating_widget_lock_position_summary">如果位置已鎖定，則無法移動浮動小工具。它將始終位於相同的位置。</string>
 
+    <string name="widget_chart_glucose_trend_delta_time_iob_cob">數值和圖表</string>
+
 </resources>

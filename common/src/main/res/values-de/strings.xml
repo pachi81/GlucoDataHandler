@@ -773,5 +773,6 @@
 
     <string name="pref_floating_widget_lock_position">Position sperren</string>
     <string name="pref_floating_widget_lock_position_summary">Wenn die Position gesperrt ist, kann das schwebende Widget nicht verschoben werden. Es befindet sich immer an derselben Position.</string>
+    <string name="widget_chart_glucose_trend_delta_time_iob_cob">Werte und Graph</string>
 
 </resources>

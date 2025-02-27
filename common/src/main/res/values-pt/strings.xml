@@ -776,4 +776,6 @@
     <string name="pref_floating_widget_lock_position">Bloquear posição</string>
     <string name="pref_floating_widget_lock_position_summary">Se a posição estiver bloqueada, o widget flutuante não pode ser movido. Estará sempre na mesma posição.</string>
 
+    <string name="widget_chart_glucose_trend_delta_time_iob_cob">Valores e gráfico</string>
+
 </resources>

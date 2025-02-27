@@ -129,5 +129,4 @@
         <item>@string/snooze_90</item>
         <item>@string/snooze_120</item>
     </array>
-    <string name="widget_chart_glucose_trend_delta_time_iob_cob">Values and graph</string>
 </resources>

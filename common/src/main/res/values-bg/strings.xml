@@ -780,4 +780,6 @@
 
     <string name="pref_floating_widget_lock_position">Заключване на позицията</string>
     <string name="pref_floating_widget_lock_position_summary">Ако позицията е заключена, плаващият уиджет не може да бъде преместван. Той винаги ще бъде на една и съща позиция.</string>
+
+    <string name="widget_chart_glucose_trend_delta_time_iob_cob">Стойности и графика</string>
 </resources>

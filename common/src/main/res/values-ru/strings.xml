@@ -775,4 +775,6 @@
     <string name="pref_floating_widget_lock_position">Зафиксировать положение</string>
     <string name="pref_floating_widget_lock_position_summary">Если положение зафиксировано, плавающий виджет нельзя перемещать. Он всегда будет находиться в одном и том же месте.</string>
 
+    <string name="widget_chart_glucose_trend_delta_time_iob_cob">Значения и график</string>
+
 </resources>

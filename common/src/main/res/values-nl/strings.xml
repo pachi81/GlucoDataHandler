@@ -782,5 +782,6 @@
 
     <string name="pref_floating_widget_lock_position">Positie vergrendelen</string>
     <string name="pref_floating_widget_lock_position_summary">Als de positie is vergrendeld, kan de zwevende widget niet worden verplaatst. Deze zal altijd op dezelfde positie staan.</string>
+    <string name="widget_chart_glucose_trend_delta_time_iob_cob">Waarden en grafiek</string>
 
 </resources>

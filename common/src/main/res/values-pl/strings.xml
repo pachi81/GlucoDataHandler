@@ -783,4 +783,5 @@
     <string name="pref_floating_widget_lock_position">Lock position</string>
     <string name="pref_floating_widget_lock_position_summary">If the position is locked, the floating widget can not be moved. It will always be on the same position.</string>
 
+    <string name="widget_chart_glucose_trend_delta_time_iob_cob">Values and graph</string>
 </resources>
