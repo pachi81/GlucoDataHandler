@@ -35,6 +35,7 @@ object Constants {
     const val ACTION_GRAPH = ACTION_PREFIX + "show_graph"
 
     const val IS_SECOND = BuildConfig.BUILD_TYPE == "second"
+    const val RELEASE = (BuildConfig.BUILD_TYPE == "release" || BuildConfig.BUILD_TYPE == "second")
 
     val PACKAGE_GLUCODATAHANDLER = if (IS_SECOND) "de.michelinside.glucodatahandler.second" else "de.michelinside.glucodatahandler"
     val PACKAGE_GLUCODATAAUTO = if (IS_SECOND) "de.michelinside.glucodataauto.second" else "de.michelinside.glucodataauto"

@@ -775,6 +775,10 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 if(!ReceiveData.sourceRate.isNaN()) {
                     tableDelta.addView(createRow("Source rate", Utils.round(ReceiveData.sourceRate, 2).toString() + " (" + GlucoDataUtils.getRateDegrees(ReceiveData.sourceRate).toString() + "°)"))
                 }
+            } else {
+                if(!ReceiveData.rate.isNaN()) {
+                    tableDelta.addView(createRow(CR.string.trend, GlucoDataUtils.getRateDegrees(ReceiveData.rate).toString() + "°"))
+                }
             }
         }
         checkTableVisibility(tableDelta)

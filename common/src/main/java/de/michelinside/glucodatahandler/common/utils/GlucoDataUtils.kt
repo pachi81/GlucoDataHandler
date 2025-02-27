@@ -99,7 +99,7 @@ object GlucoDataUtils {
         if (rate.isNaN())
             return 0
         val degree = Utils.round(maxOf(-2F, minOf(2F, rate)) / 2F * 90F, 0).toInt()
-        if(degree in -9 .. 9)
+        if(degree in -14 .. 14)
             return 0  // start with 10 degree
         return (degree/5)*5  // series of 5
     }
