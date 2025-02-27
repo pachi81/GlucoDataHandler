@@ -60,7 +60,7 @@
             android:id="@+id/trendImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/rate_html_label"
+            android:contentDescription="@string/trend"
             android:minWidth="65dp"
             android:gravity="center"
             android:src="@drawable/icon_question" />
