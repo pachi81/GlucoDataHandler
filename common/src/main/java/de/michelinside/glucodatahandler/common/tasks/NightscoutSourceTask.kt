@@ -50,7 +50,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
         val count = Utils.getElapsedTimeMinute(firstValueTime)
         Log.i(LOG_ID, "Getting up to $count graph data for time > ${Utils.getUiTimeStamp(firstValueTime)} - ($firstValueTime)")
         if(count > 0) {
-            val (result, errorText) = handleEntriesResponse(httpGet(getUrl(GRAPHDATA_ENDPOINT.format(firstValueTime,count)), getHeader()))
+            val (result, errorText) = handleEntriesResponse(httpGet(getUrl(GRAPHDATA_ENDPOINT.format(firstValueTime,count)), getHeader()), firstValueTime)
             if(errorText.isNotEmpty())
                 Log.e(LOG_ID, "Error while getting graph data: $errorText")
             return result
@@ -135,7 +135,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
         return result
     }
 
-    private fun handleEntriesResponse(body: String?) : Pair<Boolean, String> {
+    private fun handleEntriesResponse(body: String?, firstValueTime: Long = 0) : Pair<Boolean, String> {
         if (!body.isNullOrEmpty()) {
             Log.d(LOG_ID, "Handle entries response: " + body.take(1000))
             val jsonEntries = JSONArray(body)
@@ -152,10 +152,13 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
             if(!jsonObject.has("date") || !jsonObject.has("sgv") || !jsonObject.has("direction"))
                 return Pair(false, "Missing values in response: " + body.take(100))
 
+            val valueTime = jsonObject.getLong("date")
+            if(valueTime < firstValueTime)
+                return Pair(true, "")   // no new value
             val glucoExtras = Bundle()
             setSgv(glucoExtras, jsonObject)
             setRate(glucoExtras, jsonObject)
-            glucoExtras.putLong(ReceiveData.TIME, jsonObject.getLong("date"))
+            glucoExtras.putLong(ReceiveData.TIME, valueTime)
             if(jsonObject.has("device"))
                 glucoExtras.putString(ReceiveData.SERIAL, jsonObject.getString("device"))
 
@@ -168,7 +171,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
                         if (GlucoDataUtils.isMmolValue(glucose))
                             glucose = GlucoDataUtils.mmolToMg(glucose)
                         val time = jsonEntry.getLong("date")
-                        if(!glucose.isNaN() && time > 0) {
+                        if(!glucose.isNaN() && time > 0 && time >= firstValueTime) {
                             values.add(GlucoseValue(time, glucose.toInt()))
                         }
                     }

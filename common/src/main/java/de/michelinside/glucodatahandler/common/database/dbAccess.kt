@@ -110,7 +110,7 @@ object dbAccess {
         if(active) {
             scope.launch {
                 try {
-                    Log.v(LOG_ID, "Add new value $value at ${Utils.getUiTimeStamp(time)}")
+                    Log.d(LOG_ID, "Add new value $value at ${Utils.getUiTimeStamp(time)}")
                     database!!.glucoseValuesDao().insertValue(GlucoseValue(time, value))
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "addGlucoseValue exception: $exc")
@@ -123,7 +123,7 @@ object dbAccess {
         if(active && values.isNotEmpty()) {
             scope.launch {
                 try {
-                    Log.v(LOG_ID, "Add ${values.size} values")
+                    Log.d(LOG_ID, "Add ${values.size} values")
                     database!!.glucoseValuesDao().insertValues(values)
                     InternalNotifier.notify(GlucoDataService.context!!, NotifySource.GRAPH_DATA_CHANGED, null)
                 } catch (exc: Exception) {
@@ -171,7 +171,7 @@ object dbAccess {
         if(active) {
             scope.launch {
                 try {
-                    Log.d(LOG_ID, "delete - ${timestamps.size} values")
+                    Log.i(LOG_ID, "delete - ${timestamps.size} values")
                     database!!.glucoseValuesDao().deleteValues(timestamps)
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "deleteValues exception: $exc")
@@ -184,7 +184,7 @@ object dbAccess {
         if(active) {
             scope.launch {
                 try {
-                    Log.v(LOG_ID, "deleteAllValues")
+                    Log.i(LOG_ID, "deleteAllValues")
                     database!!.glucoseValuesDao().deleteAllValues()
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "deleteAllValues exception: $exc")
@@ -197,7 +197,7 @@ object dbAccess {
         if(active) {
             scope.launch {
                 try {
-                    Log.v(LOG_ID, "deleteOldValues - minTime: ${Utils.getUiTimeStamp(minTime)}")
+                    Log.i(LOG_ID, "deleteOldValues - minTime: ${Utils.getUiTimeStamp(minTime)}")
                     database!!.glucoseValuesDao().deleteOldValues(minTime)
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "deleteOldValues exception: $exc")

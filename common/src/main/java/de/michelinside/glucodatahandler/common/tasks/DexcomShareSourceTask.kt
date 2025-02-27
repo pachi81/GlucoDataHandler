@@ -87,7 +87,7 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
             query += "&minutes=${count}&maxCount=${count}"
         else
             query += "&minutes=30&maxCount=1"
-        return handleValueResponse(httpPost(getUrl(DEXCOM_PATH_GET_VALUE, query), getHeader(false), ""))
+        return handleValueResponse(httpPost(getUrl(DEXCOM_PATH_GET_VALUE, query), getHeader(false), ""), firstValueTime)
     }
 
     override fun authenticate() : Boolean {
@@ -127,7 +127,7 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
         }
     }
 
-    private fun handleValueResponse(body: String?): Boolean {
+    private fun handleValueResponse(body: String?, firstValueTime: Long = 0): Boolean {
         Log.i(LOG_ID, "handleValueResponse called: $body")
         if (body == null) {
             return false
@@ -199,6 +199,8 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
                         val value = data.getInt("Value")
                         val re = Regex("[^0-9]")
                         val worldTime = re.replace(data.getString("WT"), "").toLong()
+                        if(worldTime < firstValueTime)
+                            continue
                         values.add(GlucoseValue(worldTime, value))
                         if(worldTime > lastTime)
                             lastValueIndex = i
