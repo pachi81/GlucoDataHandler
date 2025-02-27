@@ -138,6 +138,18 @@
                 android:resource="@xml/glucose_trend_delta_time_iob_cob_widget_info" />
         </receiver>
         <receiver
+            android:name=".widget.ChartWidget"
+            android:label="@string/graph"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/chart_widget_info" />
+        </receiver>
+        <receiver
             android:name=".widget.OtherUnitWidget"
             android:label="@string/other_unit"
             android:exported="false">
@@ -149,7 +161,18 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/other_unit_widget_info" />
         </receiver>
+        <receiver
+            android:name=".widget.BatteryLevelWidget"
+            android:exported="false"
+            android:label="@string/widget_wearos_battery_level">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
 
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/battery_level_widget_info" />
+        </receiver>
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -356,6 +379,19 @@
             </intent-filter>
         </receiver>
 
+        <service
+            android:name=".AODAccessibilityService"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+
+
         <service android:name="androidx.work.impl.foreground.SystemForegroundService"
             android:foregroundServiceType="dataSync"
             tools:node="merge" />
@@ -371,6 +407,19 @@
                     android:host="*"
                     android:scheme="glucodata_intent_wear" />
             </intent-filter>
+        </service>
+
+        <service
+            android:name=".common.receiver.NotificationReceiver"
+            android:label="Notification Listener"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.notification.default_filter_types"
+                android:value="alerting|ongoing|silent" />
         </service>
     </application>
 

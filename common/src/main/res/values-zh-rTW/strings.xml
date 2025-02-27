@@ -337,7 +337,7 @@
     <string name="pref_lockscreen_enabled">啟用</string>
     <string name="pref_lockscreen_enabled_summary">如果您啟用鎖定螢幕桌布，程式將會取代原本鎖定螢幕設定的桌布</string>
     <string name="pref_lockscreen_y_pos">垂直位置</string>
-    <string name="pref_lockscreen_y_pos_summary">鎖定螢幕上血糖趨勢箭頭的垂直位置：\n0 是螢幕的最上方\n100 是螢幕的最下方</string>
+    <string name="pref_lockscreen_y_pos_summary">血糖趨勢影像的垂直位置：\n0 為螢幕頂部\n100 為螢幕底部</string>
     <string name="activity_main_notification_permission">顯示通知已停用！！！\nGlucoDataHandler 可能無法正常運作並無法顯示警報！！！\n按這裡前往權限設定</string>
 
     <string name="src_libre_setup_librelink">缺少資料！請先在 LibreLinkUp 程式中接受邀請！</string>
@@ -711,5 +711,73 @@
 
     <string name="pref_show_iob_cob">顯示 IOB/COB 值</string>
     <string name="pref_show_iob_cob_summary">顯示 IOB 和 COB 值（如果有的話）。</string>
+
+    <string name="delta_per_10_minute">每 10 分鐘</string>
+    <string name="delta_per_15_minute">每 15 分鐘</string>
+
+    <!-- v2.0 -->
+
+    <string name="widget_wearos_battery_level">WearOS 電量</string>
+
+    <string name="graph">圖表</string>
+    <string name="graph_duration">圖表持續時間</string>
+    <string name="graph_duration_wear_summary">在錶面複雜功能和主螢幕上顯示的圖表小時數。\n使用 0 停用圖表。</string>
+    <string name="graph_duration_phone_summary">在圖表中顯示的小時數。\n使用 0 停用圖表。</string>
+    <string name="graph_duration_phone_widget_summary">在圖表中顯示的小時數。</string>
+    <string name="show_graph">顯示圖表</string>
+    <string name="menu_database">資料庫</string>
+    <string name="reset_db">重設資料庫</string>
+    <string name="reset_db_summary">點擊此處以移除資料庫中的所有資料。</string>
+    <string name="reset_db_warning">如果您按下「確定」，資料庫中的所有資料都將被移除！\n您確定嗎？</string>
+    <string name="graph_disabled">圖表已停用！</string>
+    <string name="no_graph_data">無法建立圖表！</string>
+
+    <string name="pref_switch_use_rate_calculation">趨勢計算</string>
+    <string name="pref_switch_use_rate_calculation_summary_on">使用基於最新數值的內部趨勢計算。</string>
+    <string name="pref_switch_use_rate_calculation_summary_off">使用來源提供的趨勢。\n如果沒有可用的趨勢，則使用內部計算。</string>
+
+    <string name="accessibility_service_description">在永遠顯示螢幕上顯示血糖值</string>
+
+    <string name="pref_cat_aod">永遠顯示</string>
+    <string name="pref_cat_aod_summary">永遠顯示的設定。</string>
+
+   <string name="pref_aod_enabled_summary">在 AOD 螢幕上顯示數值。</string>
+    <string name="pref_aod_size_summary">變更 AOD 資料的大小。</string>
+    <string name="pref_aod_coloured">彩色</string>
+    <string name="pref_aod_coloured_summary">以彩色顯示 AOD。</string>
+
+    <string name="graph_show_axis">顯示軸</string>
+    <string name="graph_show_axis_summary">在小工具中顯示 y 軸和 x 軸。</string>
+
+    <string name="source_notification">通知</string>
+    <string name="pref_source_notification">通知讀取器</string>
+    <string name="pref_source_notification_summary">從其他應用程式（例如 Dexcom、CamAPS FX 和 Omnipod 5）的通知接收血糖值和 IOB。</string>
+    <string name="notification_reader_app">應用程式</string>
+    <string name="notification_reader_app_summary">選擇要從哪個應用程式讀取通知。</string>
+    <string name="notification_reader_enabled_summary_on">已啟用通知讀取器，以分析特定應用程式通知中的數值。</string>
+    <string name="notification_reader_enabled_summary_off">通知讀取器已停用，不會分析任何通知。\n請先指定至少一個應用程式。</string>
+    <string name="notification_cat_glucose">讀取血糖值</string>
+    <string name="notification_cat_iob">讀取 IOB 值</string>
+    <string name="notification_reader_enabled">啟用通知讀取器</string>
+    <string name="no_receiver">沒有應用程式</string>
+    <string name="notification_reader_app_regex">Regex 數值篩選器</string>
+    <string name="notification_reader_app_regex_summary">用於分析通知中文字數值的 Regex。\n請僅在您知道自己在做什麼或收到開發人員的建議時才進行變更。</string>
+    <string name="notification_reader_five_minute_interval">5 分鐘間隔</string>
+    <string name="notification_reader_five_minute_interval_summary">某些應用程式（例如 Dexcom）會相當頻繁地更新其通知。若要忽略具有相同數值的更新，請啟用 5 分鐘間隔。\n如果已啟用，則只會每 5 分鐘出現一個新數值，或當通知中的數值已變更時。</string>
+    <string name="pref_source_notification_info_summary">若要從其他應用程式的通知接收數值，需要有存取通知的權限！\n通知必須包含字串形式的血糖值或 IOB。\n由於每個通知都有不同的版面配置，因此可能無法與所有應用程式搭配使用。如果發生問題，請透過通知的螢幕截圖和記錄與我聯絡。</string>
+    <string name="notification_dexcom_info">重要</string>
+    <string name="notification_dexcom_info_summary">由於 Dexcom G7 通知的特殊行為，您也必須啟用 Dexcom 的前景通知。</string>
+    <string name="sensor_age_label">感測器使用時間</string>
+    <string name="sensor_age_value">%1$d 天 %2$d 小時</string>
+    <string name="vibrate_pattern_shorty">短</string>
+
+    <string name="pref_cat_locksreen_aod">鎖定螢幕和 AOD</string>
+    <string name="pref_cat_locksreen_aod_summary">在鎖定螢幕和永遠顯示 (AOD) 上新增桌布的設定。</string>
+    <string name="pref_graph_transparency_phone_main_summary">主螢幕上圖表的背景透明度。\n這僅適用於淺色配色方案。</string>
+
+    <string name="pref_floating_widget_lock_position">鎖定位置</string>
+    <string name="pref_floating_widget_lock_position_summary">如果位置已鎖定，則無法移動浮動小工具。它將始終位於相同的位置。</string>
+
+    <string name="widget_chart_glucose_trend_delta_time_iob_cob">數值和圖表</string>
 
 </resources>

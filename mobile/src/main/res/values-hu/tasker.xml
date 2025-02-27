@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alarm_label">Riasztás</string>
+    <string name="alarm_html_label">Riasztás a Jugglucótól (0: nincs riasztás, 6/14: nagyon magas, 2/10: magas, 3/11: alacsony, 7/15: nagyon alacsony)</string>
+    <string name="arrow_html_label">Nyíl Unicode karakterként</string>
+    <string name="arrow_label">Nyíl</string>
+    <string name="cob_html_label">Szénhidrát a szervezetben</string>
+    <string name="cob_label">COB</string>
+    <string name="delta_html_label">Delta az aktuális és az előző érték között percenként.</string>
+    <string name="delta_label">Delta</string>
+    <string name="dexcom_html_label">Dexcom specifikus címke (en)</string>
+    <string name="dexcom_label">Dexcom címke</string>
+    <string name="glucose_html_label">Vércukorszint</string>
+    <string name="glucose_label">Vércukorszint</string>
+    <string name="iob_html_label">Inzulin a szervezetben</string>
+    <string name="iob_label">IOB</string>
+    <string name="obsolete_time_html_label">Idő percben (5 vagy 10) az utolsó érték fogadása óta.</string>
+    <string name="obsolete_time_label">Idő az utolsó érték óta</string>
+    <string name="rate_html_label">A vércukorszint trendje</string>
+    <string name="rate_label">Trend</string>
+    <string name="rate_label_html_label">A vércukorszint trendje szavakban</string>
+    <string name="rate_label_label">Trend szövegként</string>
+    <string name="raw_value_html_label">Vércukorszint az eredeti mg/dl egységben</string>
+    <string name="raw_value_label">Nyers adatok</string>
+    <string name="sensor_id_html_label">Az aktuálisan használt szenzor azonosítója</string>
+    <string name="sensor_id_label">Szenzor azonosító</string>
+    <string name="time_diff_html_label">Idő ezredmásodpercben az aktuális és az előző érték között</string>
+    <string name="time_diff_label">Időkülönbség</string>
+    <string name="time_html_label">A vércukorszint időpontja ezredmásodpercben (1970.01.01. óta)</string>
+    <string name="time_label">Időpont</string>
+    <string name="unit_html_label">A vércukorérték egysége (mg/dl vagy mmol/l)</string>
+    <string name="unit_label">Egység</string>
+</resources>

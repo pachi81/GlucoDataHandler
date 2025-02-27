@@ -332,7 +332,7 @@
     <string name="pref_lockscreen_enabled">Aktivieren</string>
     <string name="pref_lockscreen_enabled_summary">Wenn das Hintergrundbild für den Sperrbildschirm aktiviert wird, erstellt die App einen Hintergrund auf dem Sperrbildschirm.</string>
     <string name="pref_lockscreen_y_pos">Vertikale Position</string>
-    <string name="pref_lockscreen_y_pos_summary">Vertikale Position auf dem Sperrbildschirm:\n0: am oberen Rand des Bildschirms\n100: am unteren Rand des Bildschirms</string>
+    <string name="pref_lockscreen_y_pos_summary">Vertikale Position:\n0: am oberen Rand des Bildschirms\n100: am unteren Rand des Bildschirms</string>
     <string name="activity_main_notification_permission">!!!Die Anzeige von Benachrichtigungen ist deaktiviert!!!\nKorrekte Funktionalität von GlucoDataHandler ist nicht gewährleistet und es können keine Alarme angezeigt werden!!!\nBitte hier drücken, um zu der entsprechenden Berechtigungseinstellung zu gelangen.</string>
     <string name="prefstatus_bar_notification_colored_icon">Farbiges Statusbar Icon</string>
     <string name="pref_status_bar_notification_colored_icon_summary">Falls es Probleme mit dem farbigen Statusbar Icon gibt, kann es hier deaktiviert werden, um ein weißes Icon zu benutzen.</string>
@@ -508,13 +508,13 @@
     <string name="src_dexcom_share_password_summary">Passwort für das Dexcom Share Konto.</string>
     <string name="pref_source_dexcom_share_info">Dexcom Share einrichten</string>
     <string name="permission_missing_title">Fehlende Berechtigung!</string>
-    <string name="setting_permission_missing_message">Für die gesetzt Einstellung \'%1$s\' wurde die Berechtigung entfernt!\nBitte \"OK\" drücken, um zu der entsprechenden Berechtigungseinstellung weitergeleitet zu werden, um diese zu wieder zu aktivieren.\nBeim Drücken von \"Abbrechen\" wird die Einstellung deaktiviert und kann später über das Menü wieder aktiviert werden.</string>
+    <string name="setting_permission_missing_message">Für die gesetzt Einstellung\n\'%1$s\'\nwurde die Berechtigung entfernt!\nBitte \"OK\" drücken, um zu der entsprechenden Berechtigungseinstellung weitergeleitet zu werden, um diese zu wieder zu aktivieren.\nBeim Drücken von \"Abbrechen\" wird die Einstellung deaktiviert und kann später über das Menü wieder aktiviert werden.</string>
     <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
     <string name="xdrip_broadcast_service_api_enabled_summary">"xDrip+ Broadcast Service API verwenden, um Daten (inkl. IOB) von xDrip+ zu erhalten.\nBevor diese Einstellung aktiviert wird, muss zu erst in xDrip+ unter \"Inter-App Einstellungen\", \"Broadcast Service API\" aktiviert werden! "</string>
     <string name="obsolete_time">Zeit für veralteten Wert</string>
     <string name="obsolete_time_summary">Zeit in Minuten nachdem der Wert als alt angesehen wird.\nNach der doppelten Zeit, verschwindet er komplett.</string>
     <string name="pref_source_offline">Lokale Apps</string>
-    <string name="pref_source_offline_summary">Apps, welche auf dem gleichen Gerät laufen und interne Nachrichten (Broadcasts) verschicken, wie etwas Juggluco, xDrip+, AAPS usw..</string>
+    <string name="pref_source_offline_summary">Apps, welche auf dem gleichen Gerät laufen und interne Nachrichten (Broadcasts) verschicken, wie etwa Juggluco, xDrip+, AAPS usw..</string>
     <string name="pref_cat_follower_summary">Cloud Dienste, welche die Daten über das Internet zur Verfügung stellen, wie LibreLinkUp, Dexcom Share und Nightscout.</string>
     <string name="pref_source_xdrip_broadcast">Alternative: Lokaler Broadcast</string>
     <string name="pref_source_dexcom_byoda_info_summary">Um Werte von Dexcom BYODA zu erhalten, muss bei der Erstellung der App, die Übertragung an AAPS aktiviert werden.</string>
@@ -630,7 +630,7 @@
     <string name="tts_test_summary">Tippen Sie hier, um die Text-to-Speech-Funktion zu testen.</string>
     <string name="pref_aa_media_player_speak_alarm_only_summary">Nur Alarme vorlesen.</string>
     <string name="pref_aa_media_player_speak_interval_summary">Intervall für das Vorlesen neuer Werte in Android Auto festlegen.</string>
-    <string name="pref_aa_media_player_duration_summary">Das Intervall für den Empfang neuer Glukosewerte bestimmt die Dauer des Fortschrittsbalkens im Media Player.\nSetzen Sie den Wert auf 0, um den Fortschrittsbalken zu deaktivieren.</string>
+    <string name="pref_aa_media_player_duration_summary">Das Intervall für den Empfang neuer Zuckerwerte bestimmt die Dauer des Fortschrittsbalkens im Media Player.\nSetzen Sie den Wert auf 0, um den Fortschrittsbalken zu deaktivieren.</string>
     <string name="gda_media_speak_toggle_title">Neuen Wert vorlesen umschalten</string>
     <string name="gda_speak_on">Vorlesen ist an</string>
     <string name="gda_speak_off">Vorlesen ist aus</string>
@@ -646,8 +646,8 @@
     <string name="src_librelink_error4_tou">Neue Nutzungsbedingungen müssen akzeptiert werden. Aktiviere die automatische Annahme in den LibreLinkUp-Quelleinstellungen oder melde dich erneut bei der LibreLinkUp App an und akzeptiere die Bedingungen.</string>
     <string name="src_libre_tou_message">GlucoDataHandler kann neue Nutzungsbedingungen für LibreLinkUp automatisch akzeptieren.\nDrücke OK, um diese Funktion zu aktivieren, oder Abbrechen, um die Bedingungen in der LibreLinkUp App zu lesen und manuell zu akzeptieren.</string>
     <string name="src_librelink_error2">Falscher Benutzername oder Passwort. Bitte überprüfe deine LibreLinkUp-Quelleinstellungen. Versuche gegebenenfalls, dich erneut anzumelden oder die LibreLinkUp App neu zu installieren und deine Kontoeinstellungen zu überprüfen.\nBitte beende alle anderen Apps, die auf dasselbe Konto zugreifen!</string>
-    <string name="last_value_on_server">Letzter Glukosewert auf dem Server von %1$s</string>
-    <string name="no_data_in_server_response">Keine Glukosewerte auf dem Server gefunden.</string>
+    <string name="last_value_on_server">Letzter Zuckerwert auf dem Server von %1$s</string>
+    <string name="no_data_in_server_response">Keine Zuckerwerte auf dem Server gefunden.</string>
     <string name="http_error_429">Zu viele Anfragen!</string>
     <string name="http_error_429_info">Bitte beende alle anderen Apps, die auf dasselbe Konto zugreifen!</string>
     <string name="state_await_data">Verbindungsaufbau</string>
@@ -707,5 +707,72 @@
 
     <string name="pref_show_iob_cob">IOB/COB-Werte anzeigen</string>
     <string name="pref_show_iob_cob_summary">IOB- und COB-Werte anzeigen, falls verfügbar.</string>
+
+    <!-- v2.0 -->
+
+    <string name="delta_per_10_minute">pro 10 Minuten</string>
+    <string name="delta_per_15_minute">pro 15 Minuten</string>
+
+    <string name="widget_wearos_battery_level">WearOS-Akkustand</string>
+
+    <string name="graph">Graph</string>
+    <string name="graph_duration">Zeitspanne im Graphen</string>
+    <string name="graph_duration_wear_summary">Anzahl der Stunden, die im Graph in der Komplikation und auf dem Hauptbildschirm angezeigt werden.\nVerwende 0, um den Graph zu deaktivieren.</string>
+    <string name="graph_duration_phone_summary">Anzahl der Stunden, die im Graph angezeigt werden.\nVerwende 0, um den Graph zu deaktivieren.</string>
+    <string name="graph_duration_phone_widget_summary">Anzahl der Stunden, die im Graph angezeigt werden.</string>
+    <string name="show_graph">Graph anzeigen</string>
+    <string name="menu_database">Datenbank</string>
+    <string name="reset_db">Datenbank zurücksetzen</string>
+    <string name="reset_db_summary">Hier drücken, um alle Daten aus der Datenbank zu entfernen.</string>
+    <string name="reset_db_warning">Wenn du OK drückst, werden alle Daten aus der Datenbank entfernt!\nBist du sicher?</string>
+    <string name="graph_disabled">Graph deaktiviert!</string>
+    <string name="no_graph_data">Graph konnte nicht erstellt werden!</string>
+
+    <string name="pref_switch_use_rate_calculation">Trendberechnung</string>
+    <string name="pref_switch_use_rate_calculation_summary_on">Verwende interne Trendberechnung basierend auf den letzten Werten.</string>
+    <string name="pref_switch_use_rate_calculation_summary_off">Verwende den vom Sensor bereitgestellten Trend.\nWenn kein Trend verfügbar ist, wird die interne Berechnung verwendet.</string>
+
+    <string name="accessibility_service_description">Zuckerwerte auf dem Always-on-Display anzeigen</string>
+
+    <string name="pref_cat_aod">Always-on-Display</string>
+    <string name="pref_cat_aod_summary">Einstellungen für das Always-on-Display.</string>
+
+    <string name="pref_aod_enabled_summary">Werte auf dem AOD anzeigen.</string>
+    <string name="pref_aod_size_summary">Größe der Darstellung auf dem AOD anpassen.</string>
+    <string name="pref_aod_coloured">Farbig</string>
+    <string name="pref_aod_coloured_summary">AOD in Farbe anzeigen.</string>
+
+    <string name="graph_show_axis">Achsen anzeigen</string>
+    <string name="graph_show_axis_summary">x- und y-Achse im Widget anzeigen.</string>
+
+    <string name="source_notification">Benachrichtigung</string>
+    <string name="pref_source_notification">Benachrichtigung</string>
+    <string name="pref_source_notification_summary">Um den Zuckerwert und IOB aus Benachrichtigungen anderer Apps wie Dexcom, CamAPS FX und Omnipod 5 zu empfangen.</string>
+    <string name="notification_reader_app">Anwendung</string>
+    <string name="notification_reader_app_summary">Wählen Sie eine Anwendung aus, aus der die Benachrichtigung gelesen werden soll.</string>
+    <string name="notification_reader_enabled_summary_on">Der Benachrichtigungsleser ist aktiviert, um Werte aus Benachrichtigungen für bestimmte Anwendungen zu analysieren.</string>
+    <string name="notification_reader_enabled_summary_off">Der Benachrichtigungsleser ist deaktiviert und es werden keine Benachrichtigungen analysiert.\nBitte geben Sie zuerst mindestens eine Anwendung an.</string>
+    <string name="notification_cat_glucose">Zuckerwert lesen</string>
+    <string name="notification_cat_iob">IOB-Wert lesen</string>
+    <string name="notification_reader_enabled">Aktivieren</string>
+    <string name="no_receiver">Keine Anwendung</string>
+    <string name="notification_reader_app_regex">Regex-Filter</string>
+    <string name="notification_reader_app_regex_summary">Regex zum Analysieren des Werts aus dem Text in der Benachrichtigung.\nBitte nur ändern, wenn Sie wissen, was Sie tun, oder wenn Sie eine Aufforderung vom Entwickler erhalten.</string>
+    <string name="notification_reader_five_minute_interval">5-Minuten-Intervall</string>
+    <string name="notification_reader_five_minute_interval_summary">Einige Apps, wie Dexcom, aktualisieren ihre Benachrichtigungen recht häufig. Um diese Aktualisierungen mit dem gleichen Wert zu ignorieren, aktivieren Sie das 5-Minuten-Intervall.\nWenn aktiviert, gibt es nur alle 5 Minuten einen neuen Wert oder wenn sich der Wert in der Benachrichtigung geändert hat.</string>
+    <string name="pref_source_notification_info_summary">Um Werte aus Benachrichtigungen anderer Apps zu empfangen, ist eine Berechtigung für den Zugriff auf die Benachrichtigungen erforderlich!\nDie Benachrichtigung muss entweder den Zuckerwert oder IOB als String enthalten.\nDa jede Benachrichtigung ein anderes Layout hat, funktioniert es möglicherweise nicht mit jeder App. Bei Problemen kontaktieren Sie mich bitte mit einem Screenshot der Benachrichtigung und den Logs.</string>
+    <string name="notification_dexcom_info">Wichtig</string>
+    <string name="notification_dexcom_info_summary">Aufgrund des besonderen Verhaltens von Dexcom G7-Benachrichtigungen müssen Sie auch die Vordergrundbenachrichtigung von Dexcom aktivieren.</string>
+    <string name="sensor_age_label">Sensoralter</string>
+    <string name="sensor_age_value">%1$dd %2$dh</string>
+    <string name="vibrate_pattern_shorty">Kurz</string>
+
+    <string name="pref_cat_locksreen_aod">Sperrbildschirm und AOD</string>
+    <string name="pref_cat_locksreen_aod_summary">Einstellungen, um ein Hintergrundbild zum Sperrbildschirm und Always On Display hinzuzufügen.</string>
+    <string name="pref_graph_transparency_phone_main_summary">Hintergrundtransparenz für den Graph auf dem Hauptbildschirm.\nDies ist nur für das helle Farbschemata erforderlich.</string>
+
+    <string name="pref_floating_widget_lock_position">Position sperren</string>
+    <string name="pref_floating_widget_lock_position_summary">Wenn die Position gesperrt ist, kann das schwebende Widget nicht verschoben werden. Es befindet sich immer an derselben Position.</string>
+    <string name="widget_chart_glucose_trend_delta_time_iob_cob">Werte und Graph</string>
 
 </resources>

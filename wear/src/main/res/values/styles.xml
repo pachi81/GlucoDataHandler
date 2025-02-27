@@ -12,4 +12,5 @@
         <!-- Set the theme of the Activity that follows your splash screen. -->
         <item name="postSplashScreenTheme">@style/Theme.GlucoDataHandler</item>
     </style>
+
 </resources>

@@ -1,5 +1,7 @@
 package de.michelinside.glucodatahandler.common
 
+import android.graphics.Color
+
 object Constants {
     const val CAPABILITY_PHONE = "glucodata_intent_mobile"
     const val CAPABILITY_WEAR = "glucodata_intent_wear"
@@ -11,6 +13,7 @@ object Constants {
     const val REQUEST_DATA_MESSAGE_PATH = "/request_data_intent"
     const val REQUEST_LOGCAT_MESSAGE_PATH = "/request_logcat_intent"
     const val LOGCAT_CHANNEL_PATH = "/logcat_intent"
+    const val DB_SYNC_CHANNEL_PATH = "/db_sync_intent"
     const val COMMAND_PATH = "/command_intent"
     const val GLUCODATA_BROADCAST_ACTION = "glucodata.Minute"
     const val SETTINGS_BUNDLE = "settings_bundle"
@@ -29,8 +32,10 @@ object Constants {
     const val ACTION_FLOATING_WIDGET_TOGGLE = ACTION_PREFIX + "floating_widget_toggle"
     const val ACTION_DUMMY_VALUE = ACTION_PREFIX + "dummy_value"
     const val ACTION_SPEAK = ACTION_PREFIX + "speak"
+    const val ACTION_GRAPH = ACTION_PREFIX + "show_graph"
 
     const val IS_SECOND = BuildConfig.BUILD_TYPE == "second"
+    const val RELEASE = (BuildConfig.BUILD_TYPE == "release" || BuildConfig.BUILD_TYPE == "second")
 
     val PACKAGE_GLUCODATAHANDLER = if (IS_SECOND) "de.michelinside.glucodatahandler.second" else "de.michelinside.glucodatahandler"
     val PACKAGE_GLUCODATAAUTO = if (IS_SECOND) "de.michelinside.glucodataauto.second" else "de.michelinside.glucodataauto"
@@ -96,6 +101,8 @@ object Constants {
     const val SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY = "floating_widget_transparency"
     const val SHARED_PREF_FLOATING_WIDGET_TIME_TO_CLOSE = "floating_widget_time_to_close"
     const val SHARED_PREF_FLOATING_WIDGET_TAP_ACTION = "floating_widget_tap_action"
+    const val SHARED_PREF_FLOATING_WIDGET_GRAPH_DURATION = "graph_duration_floating_widget"
+    const val SHARED_PREF_FLOATING_WIDGET_LOCK_POSITION = "floating_widget_lock_position"
     const val SHARED_PREF_WIDGET_TRANSPARENCY = "widget_transparency"
     const val SHARED_PREF_WIDGET_TAP_ACTION = "widget_tap_action"
     const val SHARED_PREF_RELATIVE_TIME = "relative_time"
@@ -130,6 +137,7 @@ object Constants {
     const val WIDGET_STYLE_GLUCOSE_TREND_DELTA = "glucose_trend_delta"
     const val WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA = "glucose_trend_delta_time"
     const val WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA_IOB_COB = "glucose_trend_delta_time_iob_cob"
+    const val WIDGET_STYLE_CHART_GLUCOSE_TREND_TIME_DELTA_IOB_COB = "chart_glucose_trend_delta_time_iob_cob"
 
     // Wear only preferences
     const val SHARED_PREF_WEAR_COLORED_AOD = "colored_aod"
@@ -147,6 +155,14 @@ object Constants {
     const val SHARED_PREF_SOURCE_BYODA_ENABLED="source_byoda_enabled"
     const val SHARED_PREF_SOURCE_EVERSENSE_ENABLED="source_eversense_enabled"
     const val SHARED_PREF_SOURCE_DIABOX_ENABLED="source_diabox_enabled"
+
+    // notification reader
+    const val SHARED_PREF_SOURCE_NOTIFICATION_ENABLED="source_notification_enabled"
+    const val SHARED_PREF_SOURCE_NOTIFICATION_READER_APP="notification_reader_app"
+    const val SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl="notification_reader_five_minute_interval"
+    const val SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX="notification_reader_app_regex"
+    const val SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP="notification_reader_iob_app"
+    const val SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX="notification_reader_iob_app_regex"
 
     // online sources
     const val SHARED_PREF_LIBRE_ENABLED="source_libre_enabled"
@@ -180,6 +196,7 @@ object Constants {
     const val SHARED_PREF_LOCKSCREEN_WP_Y_POS = "lockscreen_y_pos"
     const val SHARED_PREF_LOCKSCREEN_WP_STYLE = "lockscreen_style"
     const val SHARED_PREF_LOCKSCREEN_WP_SIZE = "lockscreen_size"
+    const val SHARED_PREF_LOCKSCREEN_WP_GRAPH_DURATION = "lockscreen_graph_duration"
 
     const val SHARED_PREF_SOURCE_JUGGLUCO_SET_NS_IOB_ACTION = "source_juggluco_activate_local_nightscout_iob_action"
     const val SHARED_PREF_SOURCE_XDRIP_SET_NS_IOB_ACTION = "source_xdrip_activate_local_nightscout_iob_action"
@@ -187,6 +204,15 @@ object Constants {
     const val SHARED_PREF_APP_COLOR_SCHEME = "application_color_scheme"
 
     const val SHARED_PREF_EVERSENSE_ESEL_INFO = "source_eversense_info"
+
+    // aod
+    const val SHARED_PREF_AOD_WP_ENABLED = "aod_enabled"
+    const val SHARED_PREF_AOD_WP_Y_POS = "aod_y_pos"
+    const val SHARED_PREF_AOD_WP_STYLE = "aod_style"
+    const val SHARED_PREF_AOD_WP_SIZE = "aod_size"
+    const val SHARED_PREF_AOD_WP_COLOURED = "aod_coloured"
+    const val SHARED_PREF_AOD_WP_GRAPH_DURATION = "aod_graph_duration"
+    const val AOD_COLOUR = Color.LTGRAY
 
     // Alarm
     const val ALARM_SNOOZE_ACTION = "de.michelinside.glucodatahandler.SNOOZE"
@@ -285,4 +311,20 @@ object Constants {
     const val AA_MEDIA_PLAYER_DURATION = "aa_media_player_duration"
 
     const val PATIENT_NAME = "patient_name"
+
+    // database
+    const val DB_MAX_DATA_WEAR_TIME_MS = (24*60*60*1000)  // 24h
+    const val DB_MAX_DATA_TIME_MS = (7*24*60*60*1000)  // 7 days
+    const val SHARED_PREF_RESET_DATABASE = "reset_db"
+    const val SHARED_PREF_USE_RATE_CALCULATION = "rate_calculation"
+
+    // graph
+    const val GRAPH_ID = "graph_id"
+    const val SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION = "graph_duration_wear_complication"
+    const val SHARED_PREF_GRAPH_DURATION_PHONE_MAIN = "graph_duration_phone_main"
+    const val SHARED_PREF_GRAPH_TRANSPARENCY_PHONE_MAIN = "graph_transparency_phone_main"
+    const val SHARED_PREF_GRAPH_DURATION_PHONE_WIDGET = "graph_duration_phone_widget"
+    const val SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_WIDGET = "graph_show_axis_phone_widget"
+    const val SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION = "graph_duration_phone_notification"
+
 }

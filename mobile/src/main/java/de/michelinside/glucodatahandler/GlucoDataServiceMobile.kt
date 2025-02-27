@@ -11,14 +11,17 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.chart.ChartCreator
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
 import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.common.utils.Utils.isScreenReaderOn
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.watch.WatchDrip
+import de.michelinside.glucodatahandler.widget.BatteryLevelWidgetNotifier
 import de.michelinside.glucodatahandler.widget.FloatingWidget
 import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
 import de.michelinside.glucodatahandler.widget.LockScreenWallpaper
@@ -27,6 +30,7 @@ import java.math.RoundingMode
 
 class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInterface {
     private lateinit var floatingWidget: FloatingWidget
+    private lateinit var lockScreenWallpaper: LockScreenWallpaper
     private var lastForwardTime = 0L
 
     init {
@@ -161,6 +165,24 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                     }
                 }
 
+                // graph settings related to screen reader
+                if(!sharedPrefs.contains(Constants.SHARED_PREF_GRAPH_DURATION_PHONE_MAIN)) {
+                    val isScreenReader = context.isScreenReaderOn()
+                    Log.i(LOG_ID, "Setting default duration for graph - screenReader: $isScreenReader")
+                    with(sharedPrefs.edit()) {
+                        putInt(Constants.SHARED_PREF_GRAPH_DURATION_PHONE_MAIN, if(isScreenReader) 0 else ChartCreator.defaultDurationHours)
+                        apply()
+                    }
+                }
+                if(!sharedPrefs.contains(Constants.SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION)) {
+                    val isScreenReader = context.isScreenReaderOn()
+                    Log.i(LOG_ID, "Setting default duration for notification graph - screenReader: $isScreenReader")
+                    with(sharedPrefs.edit()) {
+                        putInt(Constants.SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION, if(isScreenReader) 0 else ChartCreator.defaultDurationHours)
+                        apply()
+                    }
+                }
+
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "migrateSettings exception: " + exc.message.toString() )
             }
@@ -181,12 +203,14 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 NotifySource.BATTERY_LEVEL)  // used for watchdog-check
             InternalNotifier.addNotifier(this, this, filter)
             floatingWidget = FloatingWidget(this)
+            lockScreenWallpaper = LockScreenWallpaper(this)
             PermanentNotification.create(applicationContext)
             CarModeReceiver.init(applicationContext)
             GlucoseBaseWidget.updateWidgets(applicationContext)
+            BatteryLevelWidgetNotifier.OnNotifyData(applicationContext, NotifySource.CAPILITY_INFO, null)
             WatchDrip.init(applicationContext)
             floatingWidget.create()
-            LockScreenWallpaper.create(this)
+            lockScreenWallpaper.create()
             AlarmNotification.initNotifications(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
@@ -224,7 +248,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             CarModeReceiver.cleanup(applicationContext)
             WatchDrip.close(applicationContext)
             floatingWidget.destroy()
-            LockScreenWallpaper.destroy(this)
+            lockScreenWallpaper.destroy()
             super.onDestroy()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )

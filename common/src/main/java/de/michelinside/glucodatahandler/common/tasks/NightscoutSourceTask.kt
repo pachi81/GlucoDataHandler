@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.database.GlucoseValue
+import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.JsonUtils
@@ -23,6 +25,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
         private var iob_cob_support = true
         const val PEBBLE_ENDPOINT = "/pebble"
         const val ENTRIES_ENDPOINT = "/api/v1/entries/current.json"
+        const val GRAPHDATA_ENDPOINT = "/api/v1/entries/sgv.json?find[date][\$gt]=%d&count=%d"
     }
 
     override fun hasIobCobSupport(): Boolean {
@@ -43,9 +46,28 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
         return true
     }
 
+    private fun getGraphData(firstValueTime: Long): Boolean {
+        val count = Utils.getElapsedTimeMinute(firstValueTime)
+        Log.i(LOG_ID, "Getting up to $count graph data for time > ${Utils.getUiTimeStamp(firstValueTime)} - ($firstValueTime)")
+        if(count > 0) {
+            val (result, errorText) = handleEntriesResponse(httpGet(getUrl(GRAPHDATA_ENDPOINT.format(firstValueTime,count)), getHeader()), firstValueTime)
+            if(errorText.isNotEmpty())
+                Log.e(LOG_ID, "Error while getting graph data: $errorText")
+            return result
+        }
+        return false
+    }
+
     override fun getValue() : Boolean {
+        val firstNeededValue = getFirstNeedGraphValueTime()
+        if (firstNeededValue > 0) {
+            if(getGraphData(firstNeededValue) && !iob_cob_support) {
+                // data received, also no iob/cob to request
+                return true
+            }
+        }
         if (!handlePebbleResponse(httpGet(getUrl(PEBBLE_ENDPOINT), getHeader()))) {
-            if (!hasIobCobSupport() || ReceiveData.getElapsedIobCobTimeMinute() > 0) {
+            if (!hasIobCobSupport() || ReceiveData.getElapsedTimeMinute() > 0) {
                 // only check for new value, if there is no (otherwise it was only called for IOB/COB)
                 val body = httpGet(getUrl(ENTRIES_ENDPOINT), getHeader())
                 if (body == null && lastErrorCode >= 300)
@@ -96,8 +118,12 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
 
     private fun getUrl(endpoint: String): String {
         var resultUrl = url + endpoint
-        if (token.isNotEmpty())
-            resultUrl += "?token=" + token
+        if (token.isNotEmpty()) {
+            if(resultUrl.contains("?"))
+                resultUrl += "&token=" + token
+            else
+                resultUrl += "?token=" + token
+        }
         return resultUrl
     }
     
@@ -109,9 +135,9 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
         return result
     }
 
-    private fun handleEntriesResponse(body: String?) : Pair<Boolean, String> {
+    private fun handleEntriesResponse(body: String?, firstValueTime: Long = 0) : Pair<Boolean, String> {
         if (!body.isNullOrEmpty()) {
-            Log.d(LOG_ID, "Handle entries response: " + body)
+            Log.d(LOG_ID, "Handle entries response: " + body.take(1000))
             val jsonEntries = JSONArray(body)
             if (jsonEntries.length() <= 0) {
                 return Pair(false, "No entries in body: " + body)
@@ -120,18 +146,41 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
             val jsonObject = jsonEntries.getJSONObject(0)
             val type: String? = if (jsonObject.has("type") ) jsonObject.getString("type") else null
             if (type == null || type != "sgv") {
-                return Pair(false, "Unsupported type '" + type + "' found in response: " + body)
+                return Pair(false, "Unsupported type '" + type + "' found in response: " + body.take(100))
             }
 
             if(!jsonObject.has("date") || !jsonObject.has("sgv") || !jsonObject.has("direction"))
-                return Pair(false, "Missing values in response: " + body)
+                return Pair(false, "Missing values in response: " + body.take(100))
 
+            val valueTime = jsonObject.getLong("date")
+            if(valueTime < firstValueTime)
+                return Pair(true, "")   // no new value
             val glucoExtras = Bundle()
             setSgv(glucoExtras, jsonObject)
             setRate(glucoExtras, jsonObject)
-            glucoExtras.putLong(ReceiveData.TIME, jsonObject.getLong("date"))
+            glucoExtras.putLong(ReceiveData.TIME, valueTime)
             if(jsonObject.has("device"))
                 glucoExtras.putString(ReceiveData.SERIAL, jsonObject.getString("device"))
+
+            try {
+                if(jsonEntries.length() > 1) {
+                    val values = mutableListOf<GlucoseValue>()
+                    for (i in 0 until jsonEntries.length()) {
+                        val jsonEntry = jsonEntries.getJSONObject(i)
+                        var glucose = JsonUtils.getFloat("sgv", jsonEntry)
+                        if (GlucoDataUtils.isMmolValue(glucose))
+                            glucose = GlucoDataUtils.mmolToMg(glucose)
+                        val time = jsonEntry.getLong("date")
+                        if(!glucose.isNaN() && time > 0 && time >= firstValueTime) {
+                            values.add(GlucoseValue(time, glucose.toInt()))
+                        }
+                    }
+                    Log.i(LOG_ID, "Add ${values.size} values to database")
+                    dbAccess.addGlucoseValues(values)
+                }
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "Exception while parsing entries response: " + exc.message)
+            }
 
             handleResult(glucoExtras)
             return Pair(true, "")

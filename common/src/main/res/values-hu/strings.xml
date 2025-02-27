@@ -1,0 +1,853 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_floating_widget_toggle">Lebegő widget be/ki kapcsolása</string>
+    <string name="action_read_values">Értékek felolvasása</string>
+    <string name="activate_local_nightscout_iob_message">"Ez felül fogja írni a jelenlegi nightscout forrás beállításait, hogy a helyi webszolgáltatást használja az IOB értékek fogadásához a 17580-as porton!
+Biztos benne?"</string>
+    <string name="activate_local_nightscout_iob_title">Nightscout felülírása</string>
+    <string name="activity_connected_label">Telefon: csatlakozva (%1$s)</string>
+    <string name="activity_disconnected_label">Telefon: leválasztva</string>
+    <string name="activity_large_arrow_icon">Nagy trendnyíl</string>
+    <string name="activity_large_arrow_icon_summary">Kérjük ezt kapcsolja ki, ha a trendnyíl túl nagy és emiatt levágásra kerül!</string>
+    <string name="activity_main_battery_optimization_disabled">Akkumulátor optimalizálás aktív!</string>
+    <string name="activity_main_car_connected_label">Android Auto: csatlakozva</string>
+    <string name="activity_main_car_disconnected_label">Android Auto: leválasztva</string>
+    <string name="activity_main_connected_label">Óra: csatlakozva (%1$s)</string>
+    <string name="activity_main_disconnected_label">Óra: leválasztva</string>
+    <string name="activity_main_high_contrast_enabled">"Nagy kontraszt aktív!
+Kattintson ide a beállításokhoz."</string>
+    <string name="activity_main_no_source_label">Forrás: nem aktív</string>
+    <string name="activity_main_notification_permission">"!!!Az értesítések megjelenítése ki van kapcsolva!!!
+A GlucoDataHandler helyes működése nem garantált és nem jeleníthetők meg riasztások!!!
+Kattintson ide a megfelelő engedélybeállításhoz."</string>
+    <string name="activity_main_schedule_exact_alarm">"Az intervallumok pontos szerkesztése letiltva!!!
+A GlucoDataHandler helyes működése nem garantált!!!
+Kattintson ide a megfelelő engedélybeállításhoz."</string>
+    <string name="activity_switch_colored_aod">Színes AOD</string>
+    <string name="activity_switch_foreground">Előtér</string>
+    <string name="advanced_settings">Speciális</string>
+    <string name="advanced_settings_alarm">Speciális riasztási beállítások</string>
+    <string name="advanced_settings_alarm_summary">Speciális riasztási beállítások a hanghoz és az értesítésekhez.</string>
+    <string name="alarm_advanced_cat_notifcation">Értesítés</string>
+    <string name="alarm_advanced_cat_sound">Hang</string>
+    <string name="alarm_app_sound">Belső alkalmazás hang</string>
+    <string name="alarm_cat_all">Minden riasztás</string>
+    <string name="alarm_cat_categories">Riasztási kategóriák</string>
+    <string name="alarm_enabled">Aktív</string>
+    <string name="alarm_enabled_summary_off">Az értesítések ki vannak kapcsolva ehhez a riasztáshoz.</string>
+    <string name="alarm_enabled_summary_on">Az értesítések be vannak kapcsolva ehhez a riasztáshoz.</string>
+    <string name="alarm_falling_fast">Gyorsan esik</string>
+    <string name="alarm_falling_fast_summary">Riasztás, ha a vércukorszint kisebb vagy egyenlő, mint %1$s, és a delta %3$d alkalommal egymás után legalább -%2$s értékkel csökken.</string>
+    <string name="alarm_force_sound">Riasztási hang kényszerítése</string>
+    <string name="alarm_force_sound_summary">"A hang és a rezgés kényszerítése riasztási értesítés közben, még akkor is, ha a telefon néma vagy rezgő üzemmódban van. A Ne zavarjanak üzemmód addig ki lesz kapcsolva.
+Ehhez a beállításhoz szükséges a Ne zavarjanak üzemmód módosításának engedélye."</string>
+    <string name="alarm_force_vibration">Rezgés kényszerítése</string>
+    <string name="alarm_force_vibration_summary">"A rezgés kényszerítése riasztási értesítés közben, még akkor is, ha a telefon néma üzemmódban van. A Ne zavarjanak üzemmód addig ki lesz kapcsolva.
+Ehhez a beállításhoz szükséges a Ne zavarjanak üzemmód módosításának engedélye."</string>
+    <string name="alarm_fullscreen_dismiss_keyguard">Képernyőzár feloldása</string>
+    <string name="alarm_fullscreen_dismiss_keyguard_summary">"Kérjük, csak akkor kapcsolja be ezt a beállítást, ha problémák vannak a teljes képernyős értesítés megjelenítésével a zárolt képernyőn.
+Néhány eszközön ez a beállítás azt eredményezi, hogy mindig megjelenik a képernyőzár feloldás kérés az értesítés megtekintése előtt."</string>
+    <string name="alarm_fullscreen_notification_enabled">Teljes képernyős értesítés</string>
+    <string name="alarm_fullscreen_notification_enabled_summary">"A teljes képernyős értesítés engedélyezése a zárolt képernyőn.
+Az engedélyezéskor szükség lehet a megfelelő engedélyre."</string>
+    <string name="alarm_header">Riasztások</string>
+    <string name="alarm_high">magas</string>
+    <string name="alarm_ignore_snooze_for_very_low">Nagyon alacsony riasztás kényszerítése</string>
+    <string name="alarm_ignore_snooze_for_very_low_summary">A nagyon alacsony riasztás értesítése akkor is, ha a szundi funkció vagy a pihenőidő aktív minden riasztásra.</string>
+    <string name="alarm_inactive_enabled">Pihenőidő engedélyezése</string>
+    <string name="alarm_inactive_enabled_summary">"A beállított pihenőidő alatt nem kap értesítést erről a riasztásról.
+Állítsa be a kezdő és befejező időt a funkció használatához."</string>
+    <string name="alarm_inactive_end_time">Befejezési idő</string>
+    <string name="alarm_inactive_end_time_summary">Állítsa be a pihenőidő végét!</string>
+    <string name="alarm_inactive_start_time">Kezdési idő</string>
+    <string name="alarm_inactive_start_time_summary">Állítsa be a pihenőidő kezdetét!</string>
+    <string name="alarm_inactive_weekdays">Pihenőidő napjai</string>
+    <string name="alarm_inactive_weekdays_summary">Állítsa be, hogy a pihenőidő mely napokon legyen aktív a kiválasztott kezdési időpontban!</string>
+    <string name="alarm_interval">Intervallum</string>
+    <string name="alarm_interval_summary_high">"A riasztási értesítések közötti minimális idő percben.
+Információ: csak akkor jelenik meg új értesítés ezen intervallum után, ha a delta pozitív."</string>
+    <string name="alarm_interval_summary_low">"A riasztási értesítések közötti minimális idő percben.
+Információ: csak akkor jelenik meg új értesítés ezen intervallum után, ha a delta negatív."</string>
+    <string name="alarm_interval_summary_obsolete">Az értesítés létrehozásához szükséges idő percben az utolsó vércukorérték beérkezése után. Az értesítés ugyanazon időközönként ismét megjelenik, ha nem áll rendelkezésre új érték.</string>
+    <string name="alarm_low">alacsony</string>
+    <string name="alarm_no_notification_auto_connected">Nincs riasztás, ha az Android Auto csatlakozva van</string>
+    <string name="alarm_no_notification_auto_connected_summary_off">A riasztási értesítés a telfonon is megjelenik, ha az Android Auto csatlakozva van.</string>
+    <string name="alarm_no_notification_auto_connected_summary_on">Nincs riasztási értesítés a telefonon, amíg az Android Auto csatlakozva van.</string>
+    <string name="alarm_no_notification_wear_connected">Nincs riasztás, ha az óra csatlakozva van</string>
+    <string name="alarm_no_notification_wear_connected_summary_off">A riasztási értesítés atelefonon is megjelenik, ha a GlucoDataHandler csatlakozva van az órához.</string>
+    <string name="alarm_no_notification_wear_connected_summary_on">Nincs riasztási értesítés a telefonon, amíg a GlucoDataHandler csatlakozva van az órához.</string>
+    <string name="alarm_none">-</string>
+    <string name="alarm_notification_descr">Riasztási értesítések. Kérjük, ne módosítsa, mivel a hangok és a rezgések belsőleg generálódnak.</string>
+    <string name="alarm_notification_name">Riasztási értesítés</string>
+    <string name="alarm_notifications_enabled">Riasztási értesítések</string>
+    <string name="alarm_notifications_enabled_summary_off">A riasztási értesítések ki vannak kapcsolva a telefonon.</string>
+    <string name="alarm_notifications_enabled_summary_on">"A riasztási értesítések be vannak kapcsolva a telefonon.
+Megjegyzés: a riasztások a telefon riasztási/ébresztő hangerejének beállításait használják."</string>
+    <string name="alarm_obsolete">elavult</string>
+    <string name="alarm_obsolete_summary">Riasztás, ha nincs új érték %1$s percig.</string>
+    <string name="alarm_occurrence_count">Eseményszám</string>
+    <string name="alarm_occurrence_count_summary">Hányszor kell egymás után elérni a deltaértéket.</string>
+    <string name="alarm_repeat">Ismétlés</string>
+    <string name="alarm_repeat_summary">A riasztás ismétlődik és rezeg, amíg az értesítés be nem zárul vagy el nem éri a beállított maximális riasztási időt.</string>
+    <string name="alarm_repeat_time">Maximális riasztási idő</string>
+    <string name="alarm_repeat_time_summary">Adja meg a maximális időt (percben), ameddig a riasztás szól és rezeg. A 0 érték azt jelenti, hogy a riasztás korlátlanul ismétlődik.</string>
+    <string name="alarm_retrigger">Riasztás újraindítás</string>
+    <string name="alarm_retrigger_summary">"Amíg a riasztási értesítés nincs bezárva, ezen intervallum után (percben) újraindul a riasztás.
+0 - a riasztás újraindításának letiltásához"</string>
+    <string name="alarm_rising_fast">Gyorsan emelkedik</string>
+    <string name="alarm_rising_fast_summary">"Riasztás, ha a vércukorszint nagyobb vagy egyenlő, mint %1$s, és a delta %3$d alkalommal egymás után legalább +%2$s értékkel emelkedik."</string>
+    <string name="alarm_save_sound">Hang mentése</string>
+    <string name="alarm_save_sound_summary">Kattintson ide a standard riasztási hang mentéséhez a telefonra.</string>
+    <string name="alarm_saved">Riasztás mentve!</string>
+    <string name="alarm_settings">Beállítások</string>
+    <string name="alarm_settings_summary">Kattintson ide a riasztási értesítési beállításokhoz.</string>
+    <string name="alarm_snooze_on_notification_enabled">Szundi</string>
+    <string name="alarm_snooze_on_notification_summary">Válasszon ki legfeljebb 3 szundi időt, amelyek gombként jelennek meg a riasztási értesítésben.</string>
+    <string name="alarm_sound">Értesítési hang kiválasztása</string>
+    <string name="alarm_sound_delay">Hang késleltetése</string>
+    <string name="alarm_sound_delay_summary">"Idő másodpercben, mielőtt az értesítési hang elindul.
+Amíg nincs hang kiválasztva, addig rezgés generálódik."</string>
+    <string name="alarm_sound_level">Hangerő</string>
+    <string name="alarm_sound_level_summary">"Rögzített hangerő kényszerítése a riasztási értesítéshez.
+-1 esetén a telefon alapértelmezett beállítása használatos."</string>
+    <string name="alarm_sound_summary">Néma</string>
+    <string name="alarm_start_delay">Késleltetés</string>
+    <string name="alarm_start_delay_wear_summary">"Késleltetés a hang és a rezgés indítása előtt.
+Ha a rezgés vagy a hang csak nagyon rövid."</string>
+    <string name="alarm_state_inactive">inaktív</string>
+    <string name="alarm_state_snooze">Szundi %1$s ig</string>
+    <string name="alarm_state_temp_disabled">Ideiglenesen letiltva %1$s ig</string>
+    <string name="alarm_test">Teszt</string>
+    <string name="alarm_test_summary">Kattintson ide az értesítés 3 másodperc múlva történő generálásához.</string>
+    <string name="alarm_toggle_state">Riasztások: %1$s</string>
+    <string name="alarm_type_summary">Riasztási beállítások %1$s-től kezdődő vércukorszintekhez.</string>
+    <string name="alarm_use_alarm_sound">Ébresztő hangerő használata</string>
+    <string name="alarm_use_alarm_sound_summary">"Az ébresztő hangerő használata a csengőhang helyett.
+A modelltől függően ez független a rezgési módtól!"</string>
+    <string name="alarm_use_custom_sound">Külső értesítési hang.</string>
+    <string name="alarm_use_custom_sound_summary_off">A belső értesítési hang használatos.</string>
+    <string name="alarm_use_custom_sound_summary_on">A kiválasztott értesítési hang használatos.</string>
+    <string name="alarm_very_high">nagyon magas</string>
+    <string name="alarm_very_low">nagyon alacsony</string>
+    <string name="alarm_vibrate_amplitude">Rezgés erőssége</string>
+    <string name="alarm_vibrate_amplitude_summary">A rezgés intenzitása</string>
+    <string name="alarm_vibrate_mode">Rezgési mód</string>
+    <string name="alarm_vibrate_only">Csak rezgés</string>
+    <string name="alarm_vibrate_only_summary">Ha aktív, semmilyen riasztási hang nem szól, függetlenül a többi riasztási hangbeállítástól.</string>
+    <string name="alarm_vibrate_only_wear_info">A rezgés értesítés nélkül nem működik minden órán!</string>
+    <string name="alarm_wear_no_notification_phone_connected">Nincs felugró ablak, ha a telefon csatlakoztatva van</string>
+    <string name="alarm_wear_no_notification_phone_connected_summary">"Nincs további óra felugró ablak, amíg a telefon csatlakozva van.
+A hangok és a rezgések a beállításoknak megfelelően történnek."</string>
+    <string name="all_alarm_inactive_enabled_summary">"Minden riasztás ki van kapcsolva a pihenőidő alatt.
+Állítsa be a kezdő és befejező időt a funkció használatához."</string>
+    <string name="android_auto_notification_descr">Értesítés, amely az Android Auto-ban jelenik meg.</string>
+    <string name="android_auto_notification_name">Értesítés az Android Auto-hoz</string>
+    <string name="app_crash_bad_notification">"Az alkalmazás összeomlott az értesítések színes elrendezése miatt!
+A beállítás ezért ki lett kapcsolva.
+A telefon újraindítása általában megoldja a problémát."</string>
+    <string name="app_crash_message">"Nagyon sajnálom, az alkalmazás összeomlott!
+Kérlek, küldd el a naplókat, hogy elemezhessem a hibát és megpróbáljam minél hamarabb kijavítani.
+Köszönöm!"</string>
+    <string name="app_crash_title">Összeomlás észlelve!</string>
+    <string name="application_color_scheme_dark">Sötét téma</string>
+    <string name="application_color_scheme_light">Világos téma</string>
+    <string name="application_color_scheme_system">Rendszer téma</string>
+    <string name="auto_close_notification">Értesítés automatikus bezárása</string>
+    <string name="auto_close_notification_summary">"A riasztási értesítés automatikusan bezáródik, miután a hang és a rezgés leáll, de legkorábban 30 másodperc után.
+Ha az \"Újraindítás\" aktív, az értesítés csak akkor záródik be, ha a riasztás már nem indul újra."</string>
+    <string name="battery_level">Akkumulátorszint (óra és telefon)</string>
+    <string name="btn_dismiss">Bezárás</string>
+    <string name="button_cancel">Mégse</string>
+    <string name="button_ok">OK</string>
+    <string name="connected_label">csatlakozva</string>
+    <string name="delta_per_5_minute">5 percenként</string>
+    <string name="delta_per_minute">percenként</string>
+    <string name="detail_reset_connection">A kapcsolat nem működik megfelelően! Kérjük, indítsa újra az okosórát.</string>
+    <string name="dexcom_share_check_non_us_account">Kattintson ide a nemzetközi Dexcom Share fiók bejelentkezési adatainak ellenőrzéséhez.</string>
+    <string name="dexcom_share_check_us_account">Kattintson ide az USA Dexcom Share fiók bejelentkezési adatainak ellenőrzéséhez.</string>
+    <string name="disabled">letiltva</string>
+    <string name="disconnected_label">leválasztva</string>
+    <string name="elapsed_time">%1$d perc</string>
+    <string name="elapsed_time_hour">> 1 óra</string>
+    <string name="enable_alarm_icon_toggle">Riasztási ikon engedélyezése</string>
+    <string name="enable_alarm_icon_toggle_summary">Riasztási ikon engedélyezése a főképernyőn a riasztási állapot váltásához.</string>
+    <string name="enabled">engedélyezve</string>
+    <string name="falling_fast_alarm_notification_name">Gyorsan eső riasztás</string>
+    <string name="falling_fast_alarm_text">Gyorsan esik!</string>
+    <string name="forground_notification_descr">Adatfeldolgozás a komplikációkhoz</string>
+    <string name="forward_to_values_summary">Állítsa be a minimális időt (percben) a vércukormérések között, mielőtt új frissítést küld a címzetteknek.</string>
+    <string name="forward_to_watch_interval_summary">"Állítsa be a minimális időt (percben) a vércukormérések között, mielőtt új frissítést küld az okosórára.
+A riasztások és a nagyon alacsony értékek mindig elküldésre kerülnek."</string>
+    <string name="gda_battery_optimization_disabled">"Az akkumulátor optimalizálás aktív!
+Kattintson ide a letiltáshoz."</string>
+    <string name="gda_foreground_info">A GlucoDataAuto fut</string>
+    <string name="gda_foreground_summary">"Csak akkor engedélyezze, ha csak egy követő forrást és Android Auto értesítéseket használ.
+Ez megakadályozza, hogy az Android bezárja ezt az alkalmazást, miközben nincs csatlakoztatva az Android Auto-hoz, így az alkalmazás nem ismeri fel az Android Auto kapcsolatot.
+Alternatív megoldásként megnyithatja az alkalmazást közvetlenül az Android Auto alkalmazásban."</string>
+    <string name="gda_help_aa_dev_mode">1. Fejlesztői beállítások engedélyezése</string>
+    <string name="gda_help_aa_dev_mode_summary">"- Nyissa meg az Android Auto-t
+- Görgessen a verzióig
+- Többször kattintson a verzióra, amíg meg nem jelenik egy felugró ablak a \"Fejlesztői beállítások engedélyezése\" szöveggel
+- Kattintson az \"OK\" gombra"</string>
+    <string name="gda_help_aa_enable_gda">4. GlucoDataAuto engedélyezése</string>
+    <string name="gda_help_aa_enable_gda_summary">"- Nyissa meg az Android Auto-t
+- Görgessen a \"Kijelző\"-ig
+- Nyissa meg a \"Kezdőképernyő testreszabása\" lehetőséget
+- Engedélyezze a \"GlucoDataAuto\"-t
+Ha a GlucoDataAuto nem elérhető, kérjük, indítsa újra a telefont."</string>
+    <string name="gda_help_aa_notification">3. Értesítések engedélyezése</string>
+    <string name="gda_help_aa_notification_summary">"- Nyissa meg az Android Auto-t
+- Görgessen a \"Üzenetküldés\"-ig
+- Engedélyezze a \"Üzenetek értesítéseinek megjelenítése\" lehetőséget
+- Engedélyezze a \"Üzenetek első sorának megjelenítése\" lehetőséget"</string>
+    <string name="gda_help_aa_sources">2. \"Ismeretlen források\" engedélyezése</string>
+    <string name="gda_help_aa_sources_summary">"- Nyissa meg az Android Auto-t
+- A 3 pont menüben válassza a \"Fejlesztői beállítások kiválasztása\" lehetőséget
+- Görgessen az \"Ismeretlen források\"-ig és engedélyezze"</string>
+    <string name="gda_help_aa_summary">Első lépések a GDA-val az Android Auto-ban</string>
+    <string name="gda_help_aa_title">Android Auto beállítása</string>
+    <string name="gda_help_aa_title_summary">"Az Android Auto vagy egy külön alkalmazás, vagy a rendszer része, és az Android beállításain keresztül nyitható meg.
+A GlucoDataAuto használatához az Android Auto-ban a következő lépéseket kell végrehajtani:"</string>
+    <string name="gda_media_notification_toggle_action">Nyomja meg a lejátszás gombot az értesítések váltásához</string>
+    <string name="gda_media_notification_toggle_title">Kapcsolja be az értesítéseket</string>
+    <string name="gda_media_speak_toggle_title">Kapcsolja be az új érték felolvasását</string>
+    <string name="gda_no_data">Ahhoz, hogy ezt az alkalmazást használhassa az Android Auto-ban, engedélyeznie kell a fejlesztői beállításokat. Ehhez többször kattintson a verzióra az Android Auto-ban. Ezután a fejlesztői beállításokban engedélyezze az \"Ismeretlen források\" lehetőséget.</string>
+    <string name="gda_notification_permission">"Az értesítések ki vannak kapcsolva!
+Kattintson ide a beállítások módosításához."</string>
+    <string name="gda_notifications_off">Az értesítések ki vannak kapcsolva</string>
+    <string name="gda_notifications_on">Az értesítések be vannak kapcsolva</string>
+    <string name="gda_source_follower_info_summary">"Ha online adatforrást használ, az alkalmazás lehet, hogy nem indul el, ha csatlakoztatva van az Android Auto-hoz, és csak Android Auto értesítéseket használ.
+Annak érdekében, hogy az alkalmazás felismerje az Android Auto kapcsolatot, le kell tiltani az akkumulátor optimalizálást.
+Ha még mindig nem működik, aktiválja a előtér módot, vagy nyissa meg egyszer közvetlenül az Android Auto-ban az alkalmazást."</string>
+    <string name="gda_speak_off">A felolvasás ki van kapcsolva</string>
+    <string name="gda_speak_on">A felolvasás be van kapcsolva</string>
+    <string name="gdh_disclaimer_message">"Ez az alkalmazás szabadidős hobbi projektként készült. Ezért nem tudom garantálni, hogy az összes funkció minden eszközön hibátlanul működik. Azonban folyamatosan dolgozom a fejlesztéseken.
+Probléma, vagy kérdés esetén kérem, először vegye fel velem a kapcsolatot, mielőtt negatív értékelést adna!
+Ha szeretne értesülni a fontos frissítésekről és hibajavításokról, kérem csatlakozzon a Facebook, vagy a Google Csoportokhoz!"</string>
+    <string name="gdh_disclaimer_title">Fejlesztői megjegyzés</string>
+    <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataAuto/blob/main/README_DE.md</string>
+    <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README_DE.md</string>
+    <string name="high_alarm_notification_descr">Értesítés magas riasztásokhoz.</string>
+    <string name="high_alarm_notification_name">Magas riasztás</string>
+    <string name="http_error_429">Túl sok kérés!</string>
+    <string name="http_error_429_info">Kérjük, zárja be az összes többi alkalmazást, amely ugyanahhoz a fiókhoz próbál hozzáférni!</string>
+    <string name="icon_arrow">Trendnyíl</string>
+    <string name="icon_delta">Delta (nagy)</string>
+    <string name="icon_delta_time">Delta és időpont (nagy)</string>
+    <string name="icon_timestamp">IdőBélyeg (nagy)</string>
+    <string name="icon_value">Vércukorérték (nagy)</string>
+    <string name="icon_value_arrow">Vérukorérték és trendnyíl (nagy)</string>
+    <string name="image_arrow">Trendnyíl (nagy, színes)</string>
+    <string name="image_delta">Delta (nagy, színes)</string>
+    <string name="image_delta_time">Delta és időpont (színes)</string>
+    <string name="image_timestamp">Időbélyeg (színes)</string>
+    <string name="image_value">Vércukorérték (nagyon nagy és színes)</string>
+    <string name="info_label_alarm">Riasztás</string>
+    <string name="info_label_delta">Delta</string>
+    <string name="info_label_iob_cob_timestamp">IOB/COB idő</string>
+    <string name="info_label_notes">Megjegyzések</string>
+    <string name="info_label_per_minute">percenként</string>
+    <string name="info_label_rate">Trend</string>
+    <string name="info_label_raw">Nyersérték</string>
+    <string name="info_label_sensor_id">Szenzor</string>
+    <string name="info_label_source">Forrás</string>
+    <string name="info_label_timediff">Időkülönbség</string>
+    <string name="info_label_timestamp">Időbélyeg</string>
+    <string name="info_label_value">Érték</string>
+    <string name="iob_cob">IOB/COB</string>
+    <string name="last_value_on_server">Utolsó vércukorérték a szerveren %1$s-től</string>
+    <string name="libre_no_new_value_info">Ha ez a hiba továbbra is fennáll, próbálja meg újratelepíteni a Libre alkalmazást! Ez általában megoldja a problémát.</string>
+    <string name="locale">hu</string>
+    <string name="logcat_save_failed">Hiba a naplók mentésekor!</string>
+    <string name="logcat_save_succeeded">Naplók sikeresen mentve</string>
+    <string name="logcat_wear_save_failed">Hiba az okosóra naplóinak mentésekor!</string>
+    <string name="logcat_wear_save_succeeded">Okosóra naplói sikeresen mentve</string>
+    <string name="long_value_arrow_delta">Vércukorérték, trendnyíl és delta</string>
+    <string name="long_value_arrow_delta_time">Vércukorérték, trendnyíl, delta és időpont</string>
+    <string name="long_value_arrow_icon_delta_time">Vércukorérték, trendikon, delta és időpont</string>
+    <string name="low_alarm_notification_descr">Értesítés alacsony riasztásokhoz.</string>
+    <string name="low_alarm_notification_name">Alacsony riasztás</string>
+    <string name="menu_alarms">Riasztások</string>
+    <string name="menu_contact">Kapcsolat</string>
+    <string name="menu_group_github">GitHub</string>
+    <string name="menu_help">Segítség</string>
+    <string name="menu_save_logs">Naplók mentése</string>
+    <string name="menu_save_mobile_logs">Telefon</string>
+    <string name="menu_save_mobile_logs_summary">Telefon naplóinak mentése fájlba.</string>
+    <string name="menu_save_wear_logs">Óra</string>
+    <string name="menu_save_wear_logs_summary">A csatlakoztatott Wear OS óra naplóinak mentése fájlba.</string>
+    <string name="menu_settings">Beállítások</string>
+    <string name="menu_sources">Források</string>
+    <string name="menu_support">Támogatás</string>
+    <string name="menu_update">Frissítések</string>
+    <string name="mobile_foreground_notification_descr">Az előtér értesítés megakadályozza, hogy az Android bezárja az alkalmazást.</string>
+    <string name="mobile_foreground_notification_name">Előtér értesítés</string>
+    <string name="mobile_second_notification_descr">További értesítés egy további ikon megjelenítéséhez az állapotsorban.</string>
+    <string name="mobile_second_notification_name">Második értesítés</string>
+    <string name="mobile_third_notification_name">Harmadik értesítés</string>
+    <string name="new_version">A %s verzió elérhető!</string>
+    <string name="no_action">Nincs művelet</string>
+    <string name="no_data">"Még nem érkeztek adatok!
+Kérjük, először állítson be egy forrást."</string>
+    <string name="no_data_in_server_response">Nem található vércukorérték a szerveren.</string>
+    <string name="no_new_value">Nincs új érték %1$d perce!</string>
+    <string name="no_tts">"A szövegfelolvasás (TTS) funkció nincs engedélyezve.
+A funkció használatához engedélyezze a TTS-t az Android hozzáférési beállításaiban.
+Miután engedélyezte, kattintson ide a frissítéshez."</string>
+    <string name="no_vibration">Nincs rezgés</string>
+    <string name="not_available">nem elérhető</string>
+    <string name="obsolete_alarm_notification_descr">Ez az értesítés akkor jelenik meg, ha nincs új érték.</string>
+    <string name="obsolete_alarm_notification_name">Elavult érték</string>
+    <string name="obsolete_alarm_text">Nincs új érték!</string>
+    <string name="obsolete_time">Az elavult érték ideje</string>
+    <string name="obsolete_time_summary">"Eltelt idő percben, amikor az érték elavultnak tekinthető.
+A dupla idő után teljesen eltűnik."</string>
+    <string name="other_alarm_cat_categories">További riasztások</string>
+    <string name="other_unit">Másik egység</string>
+    <string name="patient_name">Név</string>
+    <string name="patient_name_summary">"A felhasználó/beteg neve, amely megjelenik az értesítésben és felolvasáskor.
+Ezt akkor kell használni, ha több GlucoDataAuto változatot használ, egyébként üresen hagyható."</string>
+    <string name="permission_alarm_notification_message">"A riasztások használatához engedélyezni kell a riasztási értesítési kategóriát!
+Az OK gomb megnyomása után megnyílnak az értesítési beállítások.
+Kérjük, engedélyezze ott a riasztási értesítési kategóriát."</string>
+    <string name="permission_alarm_notification_title">Az értesítés ki van kapcsolva!</string>
+    <string name="permission_missing_title">Hiányzó engedély!</string>
+    <string name="permission_notification_message">A GlucoDataHandler alkalmazásnak az értesítések megjelenítéséhez engedélyre van szüksége a háttérben végzett feladatok és a riasztások megjelenítéséhez.</string>
+    <string name="permission_notification_title">Az értesítések megjelenítése ki van kapcsolva!!!</string>
+    <string name="phone_battery_level">Telefon akkumulátor töltöttségi szint</string>
+    <string name="pref_aa_media_player_always_speak">Új érték felolvasása</string>
+    <string name="pref_aa_media_player_always_speak_summary">Új értékek felolvasása az Android Auto-ban, még akkor is, ha más médialejátszó használatban van.</string>
+    <string name="pref_aa_media_player_duration_summary">"Az új vércukorértékek fogadásának intervalluma határozza meg a médialejátszó állapotsávjának hosszát.
+Állítsa 0-ra az állapotsáv letiltásához."</string>
+    <string name="pref_aa_media_player_icon_style">Ikon/háttérkép stílusa</string>
+    <string name="pref_aa_media_player_icon_style_summary">A hamis médialejátszó ikonjának/háttérképének stílusa.</string>
+    <string name="pref_aa_media_player_speak_alarm_only_summary">Csak a riasztások felolvasása.</string>
+    <string name="pref_aa_media_player_speak_interval_summary">Az új értékek felolvasás intervallumának beállítása az Android Auto-ban.</string>
+    <string name="pref_aa_media_player_speak_values_off_summary">Üres hang lejátszása a médialejátszó előtérbe helyezéséhez a megosztott képernyőn.</string>
+    <string name="pref_aa_media_player_speak_values_on_summary">"Aktuális érték felolvasása lejátszáskor.
+Ehhez engedélyezni kell a szövegfelolvasást."</string>
+    <string name="pref_alarm_delta_summary">Delta érték, amelytől kezdve a riasztás aktiválódik.</string>
+    <string name="pref_alarm_rising_falling_border">Határ</string>
+    <string name="pref_alarm_rising_falling_border_summary">"Az emelkedő/eső riasztás határértéke.
+A vércukorértéknek nagyobbnak, illetve kisebbnek kell lennie, hogy a riasztás aktiválódjon."</string>
+    <string name="pref_application_color_scheme">Alkalmazás színsémája</string>
+    <string name="pref_battery_level">Akkumulátorszint megjelenítése</string>
+    <string name="pref_button_select_target">Glucodata címzettek meghatározása</string>
+    <string name="pref_button_select_target_summary">Válassza ki a címzetteket, akik megkapják a Glucodata adásokat. Egy globális adást bármely alkalmazás fogadhat, amely regisztrálta magát erre az adásra.</string>
+    <string name="pref_button_select_xdrip_broadcast_target">xDrip+ adás címzettek meghatározása</string>
+    <string name="pref_button_select_xdrip_broadcast_target_summary">Válassza ki a címzetteket, akik megkapják az xDrip+ adásokat. Egy globális adást bármely alkalmazás fogadhat, amely regisztrálta magát erre az adásra.</string>
+    <string name="pref_button_select_xdrip_target">Patchelt Libre címzettek meghatározása</string>
+    <string name="pref_button_select_xdrip_target_summary">Válassza ki a címzetteket, akik megkapják a Patchelt Libre adásokat. Egy globális adást bármely alkalmazás fogadhat, amely regisztrálta magát erre az adásra.</string>
+    <string name="pref_car_notification_interval">Értesítési intervallum</string>
+    <string name="pref_car_notification_interval_summary">"Intervallum az új értékekhez tartozó értesítési felugró ablakok megjelenítéséhez az Android Auto-ban.
+A riasztások ettől függetlenül mindig megjelennek."</string>
+    <string name="pref_car_notification_reappear_interval">Ismételt megjelenés</string>
+    <string name="pref_car_notification_reappear_interval_summary">Intervallum, amikor az értesítés ismét megjelenik, ha nincs új érték (0 soha).</string>
+    <string name="pref_cat_alarm_settings">Riasztási beállítások</string>
+    <string name="pref_cat_alarm_vibration_sound">Hangok és rezgések</string>
+    <string name="pref_cat_android_auto">Android Auto</string>
+    <string name="pref_cat_android_auto_speak">Érték felolvasása</string>
+    <string name="pref_cat_android_auto_summary">Beállítások a GlucoDataAuto használatához az Android Auto-ban történő megjelenítéshez.</string>
+    <string name="pref_cat_banglejs">BangleJS órák</string>
+    <string name="pref_cat_colors">Színek</string>
+    <string name="pref_cat_export_import">Export / Import</string>
+    <string name="pref_cat_export_import_summary">Beállítások exportálása és importálása, valamint a naplók mentése.</string>
+    <string name="pref_cat_follower">Felhőszolgáltatások</string>
+    <string name="pref_cat_follower_summary">Felhőszolgáltatások, amelyek az interneten keresztül biztosítják az adatokat, mint például a LibreLinkUp, a Dexcom Share és a Nightscout.</string>
+    <string name="pref_cat_forward_broadcast">Vércukorértékek továbbítása</string>
+    <string name="pref_cat_general">Általános</string>
+    <string name="pref_cat_general_summary">Általános beállítások, mint az egység, az időmegjelenítés és a delta számítás</string>
+    <string name="pref_cat_locksreen_wallpaper">Zárolt képernyő háttérképe</string>
+    <string name="pref_cat_locksreen_wallpaper_summary">Beállítások a háttérkép módosításához a zárolt képernyőn.</string>
+    <string name="pref_cat_notification">Értesítés</string>
+    <string name="pref_cat_notification_summary">Értesítési beállítások, mint az ikon és a tartalom.</string>
+    <string name="pref_cat_play_button">Lejátszás</string>
+    <string name="pref_cat_transfer">Vércukorértékek továbbítása</string>
+    <string name="pref_cat_transfer_summary">Beállítások a vércukorértékek más alkalmazásokhoz történő továbbításához.</string>
+    <string name="pref_cat_ui_settings">Felület</string>
+    <string name="pref_cat_ui_settings_summary">Általános beállítások az alkalmazás felületéhez.</string>
+    <string name="pref_cat_visualisation">Megjelenítés</string>
+    <string name="pref_cat_watch">Órák</string>
+    <string name="pref_cat_watch_summary">Beállítások a csatlakoztatott okosórákon történő megjelenítéshez.</string>
+    <string name="pref_cat_watchdrip">MiBand és Amazfit órák</string>
+    <string name="pref_cat_wear_os">Wear OS órák</string>
+    <string name="pref_cat_widgets">Widgetek</string>
+    <string name="pref_cat_widgets_summary">Beállítások a widgetekhez és a lebegő widgethez.</string>
+    <string name="pref_color_alarm">Nagyon magas/alacsony értékek</string>
+    <string name="pref_color_alarm_summary">Szín a nagyon magas és nagyon alacsony vércukorértékekhez.</string>
+    <string name="pref_color_obsolete">Elavult érték</string>
+    <string name="pref_color_obsolete_summary">Szín, ha nincs új érték.</string>
+    <string name="pref_color_ok">Célérték tartományban lévő értékek</string>
+    <string name="pref_color_ok_summary">Szín a célérték tartományban lévő vércukorértékekhez.</string>
+    <string name="pref_color_out_of_range">Magas/alacsony értékek</string>
+    <string name="pref_color_out_of_range_summary">Szín a magas és alacsony vércukorértékekhez.</string>
+    <string name="pref_export_settings">Export</string>
+    <string name="pref_export_settings_summary">"Kattintson ide a beállítások fájlba exportálásához.
+FONTOS: csak a módosított beállítások kerülnek exportálásra, az alapértelmezett beállítások nem."</string>
+    <string name="pref_floating_widget">Lebegő widget</string>
+    <string name="pref_floating_widget_size">Méret</string>
+    <string name="pref_floating_widget_size_summary">A lebegő widget méretének módosítása</string>
+    <string name="pref_floating_widget_style">Stílus</string>
+    <string name="pref_floating_widget_style_summary">A lebegő widget stílusa.</string>
+    <string name="pref_floating_widget_summary">"Trendnyíl, vércukorérték, deltaérték, időpont és IOB/COB megjelenítése lebegő widgetként.
+A letiltáshoz legalább 5 másodpercig kell nyomva tartani a widgetet anélkül, hogy mozgatnánk."</string>
+    <string name="pref_floating_widget_time_to_close">Bezárási idő</string>
+    <string name="pref_floating_widget_time_to_close_summary">"Idő másodpercben, amennyi ideig nyomva kell tartani a lebegő widgetet mozgatás nélkül a letiltáshoz.
+0 a beállítás letiltásához.
+"</string>
+    <string name="pref_floating_widget_transparency">Átlátszóság</string>
+    <string name="pref_floating_widget_transparency_summary">A lebegő widget hátterének átlátszósága.</string>
+    <string name="pref_gda_alarm_info_summary">A riasztási beállítások csak az Android Auto értesítéseire vonatkoznak, és nem generálnak hangot.</string>
+    <string name="pref_gda_info_summary">Ha a GlucoDataHandler forrásként van használatban, akkor a GlucoDataHandler adatai felülírásra kerülnek, és itt nem kell konfigurálni.</string>
+    <string name="pref_gda_source_juggluco_info_summary">"Juggluco konfigurációja:
+- Nyissa meg a Juggluco alkalmazást
+- Nyissa meg a \"Beállítások\" menüt
+- Engedélyezze a \"Glucodata adás\" lehetőséget
+- Válassza ki a \"de.michelinside.glucodataauto\" lehetőséget"</string>
+    <string name="pref_gda_source_xdrip_info_2_summary">"- Engedélyezze a \"Kompatibilis adások\" lehetőséget
+- Hagyja üresen a \"Címzettek azonosítása\" mezőt, vagy adjon hozzá egy új sort a \"de.michelinside.glucodataauto\" szöveggel"</string>
+    <string name="pref_global_broadcast">Globális adás</string>
+    <string name="pref_high_value">Magas vércukorérték</string>
+    <string name="pref_high_value_summary">Határérték a magas vércukorértékekhez.</string>
+    <string name="pref_import_settings">Import</string>
+    <string name="pref_import_settings_summary">"Kattintson ide a beállítások fájlból történő importálásához
+FONTOS: az alapértelmezett beállítások nem kerülnek visszaállításra.
+Ha ezt szeretné, először törölje az alkalmazás adatait, majd hajtsa végre az importálást."</string>
+    <string name="pref_information">Információ</string>
+    <string name="pref_lockscreen_enabled">Engedélyezés</string>
+    <string name="pref_lockscreen_enabled_summary">Ha a háttérkép engedélyezve van a zárolt képernyőn, az alkalmazás létrehoz egy háttérképet a zárolt képernyőn.</string>
+    <string name="pref_lockscreen_size_summary">A megjelenítés méretének beállítása a zárolt képernyőn.</string>
+    <string name="pref_lockscreen_y_pos">Függőleges pozíció</string>
+    <string name="pref_lockscreen_y_pos_summary">A glükóz-trend kép függőleges pozíciója:\n0 a kijelző teteje\n100 a kijelző alja</string>
+    <string name="pref_low_value">Alacsony vércukorérték</string>
+    <string name="pref_low_value_summary">Határérték az alacsony vércukorértékekhez.</string>
+    <string name="pref_no_gda_info">GlucoDataAuto telepítése</string>
+    <string name="pref_no_gda_info_summary">"A GlucoDataHandler használatához az Android Auto-ban telepíteni kell a GlucoDataAuto-t a GitHub-ról.
+Kattintson ide további információkhoz és a letöltéshez."</string>
+    <string name="pref_notification">Értesítés</string>
+    <string name="pref_notification_big_icon">Nagy állapotsori ikon</string>
+    <string name="pref_notification_big_icon_summary">Nagy ikon az állapotsorban. Kérjük, kapcsolja ki, ha túl nagy és levágásra kerül!</string>
+    <string name="pref_notification_custom_layout">Színes elrendezés</string>
+    <string name="pref_notification_custom_layout_summary">"Az értékek nagy és színes betűkkel jelennek meg.
+Néhány Samsung eszközön Android 13-tól kezdve ez az alkalmazás összeomlását okozhatja egy Samsung hibája miatt.
+Ha a probléma felmerül, ez a beállítás automatikusan ki lesz kapcsolva, hogy az alkalmazás újra működőképes legyen."</string>
+    <string name="pref_notification_icon">Állapotsor ikon</string>
+    <string name="pref_notification_icon_summary">Az értesítési állapotsor ikon típusa.</string>
+    <string name="pref_notification_no_content">Üres tartalom</string>
+    <string name="pref_notification_no_content_summary">Ha csak az állapotsori ikon érdekes, az értesítés tartalma eltávolítható.</string>
+    <string name="pref_notification_summary">"Egy állandó értesítést jelenít meg az aktuális trendnyíl, a vércukor és deltaértékkel az állapotsorban.
+Ez az értesítés megakadályozza, hogy az Android bezárja az alkalmazást a háttérben."</string>
+    <string name="pref_permanent_notification_info_summary">"Az értesítés szükséges az alkalmazás helyes működéséhez.
+Android 13-tól kezdve ez az értesítés eltávolítható egy húzással. Annak érdekében, hogy az értesítés ezután ne jelenjen meg újra, az \"Alkalmazás ikon\" lehetőséget kell kiválasztani az \"Állapotsor ikon\" részben, és emellett aktiválni kell az \"Üres tartalom\" lehetőséget."</string>
+    <string name="pref_phone_wear_screen_off_update">Komplikációk folyamatos frissítése</string>
+    <string name="pref_phone_wear_screen_off_update_summary">"Új vércukorértékek folyamatos elküldése az okosórára.
+Tiltsa le ezt a beállítást, hogy ne küldjön adatokat az okosórára, amíg annak a képernyője ki van kapcsolva, a hosszabb üzemidő elérésének érdekében.
+A riasztási értékek mindig elküldésre kerülnek az okosórára.
+FONTOS: Az elavult riasztás az okosórán letiltásra kerül, ha ez a beállítás ki van kapcsolva!"</string>
+    <string name="pref_relative_time">Relatív idő</string>
+    <string name="pref_relative_time_summary">"Relatív idő használata a rögzített vércukor időbélyeg helyett.
+Az eszköz akkumulátor optimalizálásától függően előfordulhat, hogy ez nem működik megfelelően."</string>
+    <string name="pref_second_notification">2. értesítés</string>
+    <string name="pref_second_notification_icon">2. állapotsori ikon</string>
+    <string name="pref_second_notification_icon_summary">Az értesítési állapotsor ikon típusa.</string>
+    <string name="pref_second_notification_summary">Egy további értesítést jelenít meg tartalom nélkül, hogy egy további állapotsori ikont adjon hozzá.</string>
+    <string name="pref_send_battery_level_to_watch">Akkumulátor töltöttségi szint küldése</string>
+    <string name="pref_send_battery_level_to_watch_summary">Akkumulátor töltöttségi szint küldése az okosórára, hogy megjelenjen a komplikációban és a főképernyőn.</string>
+    <string name="pref_send_pref_to_glucodataauto">Beállítások küldése</string>
+    <string name="pref_send_pref_to_glucodataauto_summary">"Beállítások küldése a GlucoDataAuto-nak.
+A GlucoDataAuto beállításai felülírásra kerülnek ezekkel."</string>
+    <string name="pref_send_to_bangleJS">BangleJS támogatás</string>
+    <string name="pref_send_to_bangleJS_summary">Értékek küldése a widbgjs widgetre a BangleJS órákon.</string>
+    <string name="pref_send_to_glucodataauto">Küldés a GlucoDataAuto-nak</string>
+    <string name="pref_send_to_glucodataauto_summary">Az aktuális vércukorérték és a beállítások küldése a GlucoDataAuto-nak.</string>
+    <string name="pref_show_iob_cob">IOB/COB értékek megjelenítése</string>
+    <string name="pref_show_iob_cob_summary">IOB és COB értékek megjelenítése, ha elérhető.</string>
+    <string name="pref_show_other_unit">Másik egység megjelenítése</string>
+    <string name="pref_show_other_unit_summary">A vércukorérték megjelenítése %s-ben is a részletekben.</string>
+    <string name="pref_source_aaps_info">AndroidAPS</string>
+    <string name="pref_source_aaps_info_summary">"AAPS konfigurációja:
+- Nyissa meg az AAPS alkalmazást
+- Nyissa meg a \"Konfiguráció\" menüt
+- Engedélyezze a \"Samsung Tizen\" vagy a \"Adatadás\" lehetőséget"</string>
+    <string name="pref_source_activate_local_nightscout_iob">IOB használat engedélyezése</string>
+    <string name="pref_source_activate_local_nightscout_iob_summary">Kattintson ide a Nightscout forrás helyi webszerverre váltásához az IOB értékek fogadásához.</string>
+    <string name="pref_source_dexcom_byoda_info_summary">A Dexcom BYODA értékeinek fogadásához az alkalmazás létrehozásakor engedélyezni kell az AAPS-re történő továbbítást.</string>
+    <string name="pref_source_dexcom_byoda_not_working_info_summary">"Megjegyzés: az AAPS adás a BYODA-ból nem működik más alkalmazásokkal.
+Ezért az xDrip+ adást kell használni a BYODA-ból."</string>
+    <string name="pref_source_dexcom_share_info">Dexcom Share beállítása</string>
+    <string name="pref_source_dexcom_share_info_1_summary">"Adatok fogadása a Dexcom Share szerverekről:
+A Dexcom alkalmazásban:
+ - hozzon létre egy követőt
+ - ellenőrizze a kapcsolatoknál, hogy a \"Megosztás be\" állapotban van-e"</string>
+    <string name="pref_source_dexcom_share_info_2_summary">"A GlucoDataHandler-ben:
+ - adja meg a Dexcom Clarity fiók felhasználónevét és jelszavát
+ (ha telefonszámot használ, adja meg az országkódot is, pl. +49 Németországhoz)
+ - ellenőrizze az USA fiók beállítását
+Fontos: nem működik követő felhasználóval!"</string>
+    <string name="pref_source_diabox_info_summary">"Nyissa meg az Integrációt és engedélyezze a \"Adatok megosztása a GWatch-val\"
+Megjegyzés: a DiaBox adás csak a vércukorértéket tartalmazza, és nem tartalmaz további információkat, mint például a trend!"</string>
+    <string name="pref_source_eversense_byoda_info_summary">A Dexcom BYODA értékeinek fogadásához az alkalmazás létrehozásakor engedélyezni kell az xDrip+-ra történő továbbítást.</string>
+    <string name="pref_source_eversense_info_summary">"Adatok fogadása az Eversense-től az ESEL alkalmazás szükséges, amely vagy Companion módban (értesítések olvasása) vagy a patchelt Eversense alkalmazással együtt működhet.
+További információk az ESEL-ről: kattintson ide."</string>
+    <string name="pref_source_gdh_info_summary">"GlucoDataHandler konfigurációja:
+- Nyissa meg a GlucoDataHandler alkalmazást
+- Nyissa meg a Beállítások menüt
+- Engedélyezze a \"Küldés a GlucoDataAuto-nak\" lehetőséget
+- Engedélyezze a \"Beállítások küldése\" lehetőséget a beállítások átvételéhez"</string>
+    <string name="pref_source_juggluco_info">Juggluco</string>
+    <string name="pref_source_juggluco_info_summary">"Juggluco konfigurációja:
+- Nyissa meg a Juggluco alkalmazást
+- Nyissa meg a \"Beállítások\" menüt
+- Engedélyezze a \"Glucodata adás\" lehetőséget
+- Válassza ki a \"de.michelinside.glucodatahandler\" lehetőséget"</string>
+    <string name="pref_source_juggluco_iob_info">IOB a Jugglucótól</string>
+    <string name="pref_source_juggluco_iob_info_summary">"IOB fogadása a Jugglucótól:
+- Nyissa meg a Juggluco alkalmazást
+- Nyissa meg a \"Beállítások\" menüt
+- Engedélyezze az \"IOB\" lehetőséget
+- Válassza ki a \"Webszerver\" lehetőséget
+- Engedélyezze az \"Aktív\" lehetőséget
+- opcionális: engedélyezze a \"Helyi\" lehetőséget"</string>
+    <string name="pref_source_librelinkup_info">LibreLinkUp beállítása</string>
+    <string name="pref_source_librelinkup_info_summary">"FONTOS: NE a FreeStyle Libre alkalmazás hozzáférési adatait használja!!!
+A LibreLinkUp kapcsolat beállítása:
+- Nyissa meg a FreeStyle Libre alkalmazást, és a Kapcsolatok alatt kattintson a Megosztás, vagy az alkalmazások lehetőségre
+- Engedélyezze a LibreLinkUp-ot
+- Telepítse a LibreLinkUp alkalmazást a Play Store-ból
+- jelentkezzen be a LibreLinkUp alkalmazásba, és fogadja el a meghívót"</string>
+    <string name="pref_source_offline">Helyi alkalmazások</string>
+    <string name="pref_source_offline_summary">Azok az alkalmazások, amelyek ugyanazon az eszközön futnak, és belső üzeneteket (adásokat) küldenek, mint például a Juggluco, xDrip+, AAPS stb..</string>
+    <string name="pref_source_xdrip_broadcast">Alternatíva: Helyi adás</string>
+    <string name="pref_source_xdrip_info">xDrip+</string>
+    <string name="pref_source_xdrip_info_1_summary">"xDrip+ konfigurációja:
+- Nyissa meg az xDrip+ alkalmazást
+- Nyissa meg a \"Beállítások\" menüt
+- Válassza ki az \"Alkalmazások közötti beállítások\" lehetőséget
+- Engedélyezze a \"Helyi adás\" lehetőséget
+- a \"Zajszűrés\" részben válassza ki a \"Extrém zajos jelek küldése\" lehetőséget"</string>
+    <string name="pref_source_xdrip_info_2_summary">"- Engedélyezze a \"Kompatibilis adások\" lehetőséget
+- Hagyja üresen a \"Címzettek azonosítása\" mezőt, vagy adjon hozzá egy új sort a \"de.michelinside.glucodatahandler\" szöveggel"</string>
+    <string name="pref_source_xdrip_iob_info">IOB az xDrip+-tól</string>
+    <string name="pref_source_xdrip_iob_info_summary">"IOB fogadása az xDrip+-tól:
+- Nyissa meg az xDrip+ alkalmazást
+- Nyissa meg a \"Beállítások\" menüt
+- Válassza ki az \"Alkalmazások közötti beállítások\" lehetőséget
+- Engedélyezze az \"xDrip Web szolgáltatás\" lehetőséget"</string>
+    <string name="pref_status_bar_icon_app">Alkalmazás ikon</string>
+    <string name="pref_status_bar_icon_delta">Delta</string>
+    <string name="pref_status_bar_icon_glucose">Vércukorérték</string>
+    <string name="pref_status_bar_icon_trend">Trendnyíl</string>
+    <string name="pref_status_bar_notification_colored_icon_summary">Ha problémák vannak a színes állapotsor ikonnal, itt letiltható, hogy csak fehér ikont használjon.</string>
+    <string name="pref_switch_car_media">Hamis médialejátszó</string>
+    <string name="pref_switch_car_media_summary">A vércukorértéket aktuális számként jeleníti meg.</string>
+    <string name="pref_switch_car_notification">Android Auto értesítés</string>
+    <string name="pref_switch_car_notification_alarm_only">Csak riasztásokhoz</string>
+    <string name="pref_switch_car_notification_alarm_only_summary">"Csak a riasztásokhoz tartozó felugró ablakokat jeleníti meg.
+A nagyon alacsony értékek mindig értesítést jelenítenek meg."</string>
+    <string name="pref_switch_car_notification_summary">Értesítés az Android Auto-hoz.</string>
+    <string name="pref_switch_notification">Hamis értékek</string>
+    <string name="pref_switch_send_to_aod">Glucodata adás küldése</string>
+    <string name="pref_switch_send_to_aod_summary">Glucodata adás küldése új értékekhez minden forrásból.</string>
+    <string name="pref_switch_send_to_xdrip">Patchelt Libre adás küldése</string>
+    <string name="pref_switch_send_to_xdrip_summary">"Vércukorértékek továbbítása az xDrip+-nak.
+Az xDrip+-ban állítsa be a forrást \"Libre (patchelt alkalmazás)\" értékre."</string>
+    <string name="pref_switch_send_xdrip_broadcast">xDrip+ adás küldése</string>
+    <string name="pref_switch_send_xdrip_broadcast_summary">Adás küldése az xDrip+ adáshoz hasonlóan. Például az AAPS-nek.</string>
+    <string name="pref_switch_use_5_min_delta">5 perces delta</string>
+    <string name="pref_switch_use_5_min_delta_summary">Delta értékek megjelenítése 5 perces intervallumban, egyébként percenkénti delta érték jelenik meg.</string>
+    <string name="pref_switch_use_mmol">mmol/l</string>
+    <string name="pref_switch_use_mmol_summary">Használja az mmol/l-t mg/dl helyett.</string>
+    <string name="pref_switch_watchdrip_enabled">WatchDrip+</string>
+    <string name="pref_switch_watchdrip_enabled_summary">"Engedélyezze a WatchDrip+ kapcsolatot (grafikon nélkül).
+FONTOS: Engedélyezze az \"Enable service\" lehetőséget a WatchDrip+-ban csak az itteni engedélyezés után!"</string>
+    <string name="pref_target_max_value">Felső határ</string>
+    <string name="pref_target_max_value_summary">Felső határ a célérték tartományhoz.</string>
+    <string name="pref_target_min_value">Alsó határ</string>
+    <string name="pref_target_min_value_summary">Alsó határ a célérték tartományhoz.</string>
+    <string name="pref_target_range">Célérték tartomány</string>
+    <string name="pref_target_range_summary">Beállítások a vércukorérték határokhoz és a megfelelő színekhez</string>
+    <string name="pref_third_notification">3. értesítés</string>
+    <string name="pref_third_notification_icon">3. állapotsor ikon</string>
+    <string name="pref_very_high_value">Nagyon magas vércukorérték</string>
+    <string name="pref_very_high_value_summary">Határérték a nagyon magas vércukorértékekhez.</string>
+    <string name="pref_very_low_value">Nagyon alacsony vércukorérték</string>
+    <string name="pref_very_low_value_summary">Határérték a nagyon alacsony vércukorértékekhez.</string>
+    <string name="pref_watchdrip_info_summary">"A WatchDrip+ különböző MiBand és Amazfit modelleket támogat.
+Az összes támogatott óra listájához és a beállítási információkért kattintson ide."</string>
+    <string name="pref_watchfaces_cat">Harmadik féltől származó számlapok</string>
+    <string name="pref_watchfaces_default">Alapértelmezett</string>
+    <string name="pref_watchfaces_default_summary">"A legtöbb okosóra gyártó már kínál számlapokat, amelyek kompatibilisek a GlucoDataHandler komplikációival.
+Például a legtöbb Samsung \"Info\" számlap kompatibilis."</string>
+    <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
+    <string name="pref_watchfaces_dmm_summary">"A Diabetic Masked Man harmadik féltől származó számlapokat készít, amelyek kifejezetten a GlucoDataHandler használatára lettek tervezve.
+Kattintson ide a Play Store oldalának megnyitásához."</string>
+    <string name="pref_watchfaces_gdc">GDC számlapok</string>
+    <string name="pref_watchfaces_gdc_summary">"A GDC számlapok a GlucoDataHandler használatára lettek tervezve.
+Kattintson ide a Play Store oldalának megnyitásához."</string>
+    <string name="pref_watchfaces_info_summary">Ez az alkalmazás nem kínál saját számlapot, hanem több komplikációt (a számlapon lévő kis kör alakú elemek), amelyek olyan számlapokon használhatók, amelyek támogatják a harmadik féltől származó komplikációkat.</string>
+    <string name="pref_watchfaces_pujie">Pujie</string>
+    <string name="pref_watchfaces_pujie_summary">"A Pujie egy alkalmazás számlapok létrehozására felhőalapú könyvtárral.
+Kompatibilis számlapok kereséséhez keressen a könyvtárban \"GDH_\"-vel kezdődő számlapokat.
+Megjegyzés: A Pujie nem kompatibilis a Wear OS 5 eszközökkel.
+Kattintson ide az alkalmazás megnyitásához a Play Store-ban."</string>
+    <string name="pref_wear_notification">Okosóra: Rezgés</string>
+    <string name="pref_wear_os_check_connection">Kapcsolat ellenőrzése</string>
+    <string name="pref_wear_os_check_connection_summary">"Kattintson ide a háttérben történő kapcsolat ellenőrzéséhez az okosórával.
+Ez elindítható az okosórán és a telefonon is a kapcsolati információkra kattintva."</string>
+    <string name="pref_wear_os_reset_connection">Kapcsolat visszaállítása</string>
+    <string name="pref_wear_os_reset_connection_summary">"Kattintson ide, ha a kapcsolat a telefon és az okosóra között nem működik a várt módon.
+Ha a probléma nem oldódik meg, kérjük, indítsa újra az órát."</string>
+    <string name="pref_wearos_info_summary">A GlucoDataHandler használatához egy Wear OS órán telepíteni kell a Google Play Store-ból.</string>
+    <string name="pref_widget_transparency">Widget átlátszóság</string>
+    <string name="pref_widget_transparency_summary">A widgetek háttér átlátszósága.</string>
+    <string name="prefstatus_bar_notification_colored_icon">Színes állapotsor ikon</string>
+    <string name="rate_double_down">gyorsan esik</string>
+    <string name="rate_double_up">gyorsan emelkedik</string>
+    <string name="rate_falling">%1$d fokban esik</string>
+    <string name="rate_flat">állandó</string>
+    <string name="rate_forty_five_down">enyhén esik</string>
+    <string name="rate_forty_five_up">enyhén emelkedik</string>
+    <string name="rate_rising">%1$d fokban emelkedik</string>
+    <string name="rate_single_down">esik</string>
+    <string name="rate_single_up">emelkedik</string>
+    <string name="request_exact_alarm_summary">"Minden idő és intervallumspecifikus feladathoz az alkalmazásnak szüksége van az ébresztők és emlékeztetők engedélyére.
+Az alkalmazás nem módosítja a felhasználó által beállított ébresztőket vagy emlékeztetőket. Csak belső triggerekhez szükséges az engedély.
+Az OK gomb megnyomása után megnyílik a megfelelő engedélykezelő menü. Kérjük, adja meg ezt az engedélyt a GlucoDataHandler számára!"</string>
+    <string name="request_exact_alarm_title">Ébresztők és emlékeztetők engedélye</string>
+    <string name="request_timestamp">Frissítve</string>
+    <string name="rising_fast_alarm_notification_name">Gyorsan emelkedő riasztás</string>
+    <string name="rising_fast_alarm_text">Gyorsan emelkedik!</string>
+    <string name="select_receiver_no_glucodata_receiver">Nincs címzett!</string>
+    <string name="select_receiver_show_all">Összes megjelenítése</string>
+    <string name="setting_permission_missing_message">"A '%1$s' be van állítva, de hiányzik hozzá az engedély!
+Kérjük, kattintson az \"OK\" gombra, hogy a megfelelő engedélykezelő menübe kerüljön, és aktiválja újra.
+A \"Mégse\" gomb megnyomásával a beállítás letiltásra kerül és később a menüben újra aktiválható."</string>
+    <string name="settings_read_failed">Hiba az importálás során!</string>
+    <string name="settings_read_succeeded">Beállítások sikeresen importálva!</string>
+    <string name="settings_save_failed">A beállítások nem menthetők!</string>
+    <string name="settings_save_succeeded">Beállítások sikeresen mentve.</string>
+    <string name="setup">Beállítás</string>
+    <string name="short_delta">Delta</string>
+    <string name="short_delta_arrow">Delta és trendnyíl</string>
+    <string name="short_delta_icon">Delta ikonnal</string>
+    <string name="short_delta_time">Delta és időpont</string>
+    <string name="short_delta_trend_arrow_range">Delta, trendnyíl és trendkör (ha támogatott)</string>
+    <string name="short_rate">Trendérték</string>
+    <string name="short_rate_arrow">Trendérték és trendnyíl</string>
+    <string name="short_rate_icon">Trendérték ikonnal</string>
+    <string name="short_timestamp">Időbélyeg</string>
+    <string name="short_value">Vércukorérték</string>
+    <string name="short_value_arrow">Vércukorérték és trendnyíl</string>
+    <string name="short_value_arrow_image">Vércukorérték és trendnyíl (nagy és színes)</string>
+    <string name="short_value_arrow_small_image">Vércukorérték és trendnyíl (színes)</string>
+    <string name="short_value_delta">Vércukorérték és delta</string>
+    <string name="short_value_delta_trend_range">Vércukorérték, delta és trendkör (ha támogatott)</string>
+    <string name="short_value_icon">Vércukorérték ikonnal</string>
+    <string name="short_value_rate">Vércukorérték és trendérték</string>
+    <string name="short_value_trend_range">Vércukorérték és trendkör (ha támogatott)</string>
+    <string name="small_image_arrow">Trendnyíl (színes)</string>
+    <string name="small_image_value">Vércukorérték (színes)</string>
+    <string name="snooze">Szundi</string>
+    <string name="snooze_120">120 perc</string>
+    <string name="snooze_30">30 perc</string>
+    <string name="snooze_60">60 perc</string>
+    <string name="snooze_90">90 perc</string>
+    <string name="snooze_until">Szundi eddig</string>
+    <string name="source_aaps">AAPS</string>
+    <string name="source_delay">Késleltetés</string>
+    <string name="source_delay_summary">Késleltetés másodpercben, amíg az adatok beérkeznek, mivel egy kis időbe telik, amíg az adatok elérhetővé válnak a felhőben.</string>
+    <string name="source_interval">Intervallum</string>
+    <string name="source_interval_summary">Intervallum az adatok lekéréséhez a forrásból.</string>
+    <string name="source_libre_auto_accept_tou">Új felhasználási feltételek automatikus elfogadása</string>
+    <string name="source_libre_auto_accept_tou_summary">Ha engedélyezi ezt, automatikusan elfogadja az új felhasználási feltételeket, hogy folyamatos adatfogadást biztosítson. Nem kap külön értesítést az új feltételekről. Ha el szeretné olvasni őket, tiltsa le ezt a beállítást, és forduljon a LibreLinkUp alkalmazáshoz hibakód 4 esetén.</string>
+    <string name="source_libre_server_default">Alapértelmezett (.io)</string>
+    <string name="source_libre_server_russian">Orosz (.ru)</string>
+    <string name="source_phone">Telefon</string>
+    <string name="source_request_interval_1">1 perc</string>
+    <string name="source_request_interval_10">10 perc</string>
+    <string name="source_request_interval_15">15 perc</string>
+    <string name="source_request_interval_20">20 perc</string>
+    <string name="source_request_interval_30">30 perc</string>
+    <string name="source_request_interval_5">5 perc</string>
+    <string name="source_request_interval_alarm">Csak riasztásokhoz</string>
+    <string name="source_request_interval_always">Mindig</string>
+    <string name="source_state_error">Hiba</string>
+    <string name="source_state_in_progress">Folyamatban</string>
+    <string name="source_state_no_connection">Nincs internetkapcsolat</string>
+    <string name="source_state_no_new_value">Nincs új érték</string>
+    <string name="source_state_not_active">Inaktív</string>
+    <string name="source_state_ok">OK</string>
+    <string name="source_wear">Óra</string>
+    <string name="src_cat_dexcom_share">Dexcom Share</string>
+    <string name="src_cat_libreview">LibreLinkUp</string>
+    <string name="src_cat_nightscout">Nightscout</string>
+    <string name="src_dexcom_share_enabled_summary">"Dexcom Share adatforrás engedélyezése.
+Ehhez be kell állítani a felhasználónevet és a jelszót!"</string>
+    <string name="src_dexcom_share_password_summary">Jelszó a Dexcom Share fiókhoz.</string>
+    <string name="src_dexcom_share_us_server">USA fiók</string>
+    <string name="src_dexcom_share_us_server_summary_off">Nemzetközi fiók használatban.</string>
+    <string name="src_dexcom_share_us_server_summary_on">USA fiók használatban.</string>
+    <string name="src_dexcom_share_user_summary">"Felhasználónév, e-mail vagy telefonszám a Dexcom Share fiók bejelentkezéséhez.
+FONTOS: a telefonszámnak tartalmaznia kell az országkódot, pl. +49 Németország."</string>
+    <string name="src_enabled">Aktív</string>
+    <string name="src_libre_enabled_summary">Engedélyezze a LibreLinkUp adatforrást, ha a felhasználónév és a jelszó már be van állítva.</string>
+    <string name="src_libre_password_summary">Jelszó a LibreLinkUp-hoz</string>
+    <string name="src_libre_patient">Beteg</string>
+    <string name="src_libre_patient_summary">Ha a Libre fiók több beteghez is tartozik, válassza ki a megfelelő beteget, akinek az adatait szeretné fogadni.</string>
+    <string name="src_libre_reconnect">Újrakapcsolódás</string>
+    <string name="src_libre_reconnect_summary">A következő futtatáskor újra bejelentkezik.</string>
+    <string name="src_libre_server">Szerver</string>
+    <string name="src_libre_setup_librelink">Nincsenek adatok! Kérjük, először fogadja el a meghívót a LibreLinkUp alkalmazásban!</string>
+    <string name="src_libre_tou_message">"A GlucoDataHandler automatikusan elfogadhatja a LibreLinkUp új felhasználási feltételeit.
+Kattintson az \"OK\" gombra a funkció engedélyezéséhez, vagy a \"Mégse\" gombra a feltételek elolvasásához és manuális elfogadásához a LibreLinkUp alkalmazásban."</string>
+    <string name="src_libre_user">E-mail</string>
+    <string name="src_libre_user_summary">E-mail a LibreLinkUp bejelentkezéshez</string>
+    <string name="src_librelink_error2">"Hibás felhasználónév vagy jelszó. Kérjük, ellenőrizze a LibreLinkUp forrásbeállításokat. Próbáljon újra bejelentkezni, vagy telepítse újra a LibreLinkUp alkalmazást, és ellenőrizze a fiókbeállításokat!
+Kérjük, zárja be az összes többi alkalmazást, amely ugyanarra a fiókra próbál hozzáférni!"</string>
+    <string name="src_librelink_error4">Hiba, kérjük, jelentkezzen be újra a LibreLinkUp alkalmazásba, és ellenőrizze, szükséges-e valamilyen lépés!</string>
+    <string name="src_librelink_error4_tou">Az új felhasználási feltételeket el kell fogadni! Engedélyezze az automatikus elfogadást a LibreLinkUp forrásbeállításokban, vagy jelentkezzen be újra a LibreLinkUp alkalmazásba, és fogadja el a feltételeket!</string>
+    <string name="src_librelink_error4_type">Hibakód %1$s, kérjük, jelentkezzen be újra a LibreLinkUp alkalmazásba, és ellenőrizze, szükséges-e valamilyen lépés!</string>
+    <string name="src_ns_enabled">Aktív</string>
+    <string name="src_ns_enabled_summary">Nightscout adatforrás engedélyezése</string>
+    <string name="src_ns_iob_cob">IOB/COB támogatás</string>
+    <string name="src_ns_iob_cob_summary">IOB és COB értékek fogadása a Nightscout Pebble végpontról.</string>
+    <string name="src_ns_secret">API titkosítás</string>
+    <string name="src_ns_secret_summary">API titkosítás az adathozzáféréshez (opcionális).</string>
+    <string name="src_ns_token">Hozzáférési token</string>
+    <string name="src_ns_token_summary">További hozzáférési token, ha szükséges (opcionális).</string>
+    <string name="src_ns_url">Nightscout URL</string>
+    <string name="src_ns_url_summary">A Nightscout szerver URL címe.</string>
+    <string name="src_offline_enabled_summary_off">Az alkalmazás belső üzenetei figyelmen kívül maradnak.</string>
+    <string name="src_offline_enabled_summary_on">Az alkalmazás belső üzenetei feldolgozásra kerülnek.</string>
+    <string name="src_password">Jelszó</string>
+    <string name="src_username">Felhasználónév</string>
+    <string name="src_xdrip_noise_blocking">"Zajszűrés aktív az xDrip+ alkalmazások közötti beállításokban!
+Kérjük, állítsa a beállítást \"Extrém zajos\" értékre!"</string>
+    <string name="state_await_data">Kapcsolat létesítése</string>
+    <string name="state_connected">csatlakoztatva</string>
+    <string name="state_disabled">letiltva</string>
+    <string name="state_error">Hiba: %s</string>
+    <string name="state_not_connected">nincs csatlakoztatva</string>
+    <string name="stop_snooze">Leállítás</string>
+    <string name="table_header_connections">Kapcsolatok</string>
+    <string name="table_header_details">Részletek</string>
+    <string name="tap_action">Koppintási művelet</string>
+    <string name="tap_action_summary">Válasszon ki egy műveletet vagy alkalmazást, amely a koppintáskor végrehajtódik.</string>
+    <string name="tasker_android_auto_connection_state">Android Auto kapcsolat</string>
+    <string name="tasker_event_glucodata">Új vércukorérték</string>
+    <string name="tasker_event_glucodata_alarm">Vércukor riasztás</string>
+    <string name="tasker_event_glucodata_obsolete">Elavult érték</string>
+    <string name="tasker_target_range_state">Vércukor tartomány változás</string>
+    <string name="tasker_wear_connection_state">Okosóra kapcsolat</string>
+    <string name="temp_disabled">Ideiglenesen letiltva</string>
+    <string name="temp_disabled_until">Ideiglenesen letiltva %1$s-ig</string>
+    <string name="test_alarm">Teszt riasztás!</string>
+    <string name="test_neg_range">Teszt Range komplikáció negatív értékekkel (trendkör támogatáshoz)</string>
+    <string name="timestamp">A vércukorérték időbélyege</string>
+    <string name="trend">Trend</string>
+    <string name="tts_test_summary">Kattintson ide a szövegfelolvasás funkció teszteléséhez.</string>
+    <string name="very_high_alarm_notification_descr">Értesítés a nagyon magas riasztásokhoz.</string>
+    <string name="very_high_alarm_notification_name">Nagyon magas riasztás</string>
+    <string name="very_high_alarm_text">Nagyon magas!</string>
+    <string name="very_high_text">Magas!</string>
+    <string name="very_low_alarm_notification_descr">Értesítés a nagyon alacsony riasztásokhoz.</string>
+    <string name="very_low_alarm_notification_name">Nagyon alacsony riasztás</string>
+    <string name="very_low_alarm_summary">Ha az Android Auto értesítés engedélyezve van, a nagyon alacsony riasztások mindig megjelennek. Ez nem módosítható.</string>
+    <string name="very_low_alarm_text">Nagyon alacsony!</string>
+    <string name="very_low_text">Alacsony!</string>
+    <string name="video_tutorial">Videó bemutató</string>
+    <string name="video_tutorial_summary">Kattintson ide a YouTube videó megtekintéséhez, amely bemutatja a forrás beállítását. Köszönet a Diabetic Masked Man-nek a videók elkészítéséért!</string>
+    <string name="watch_battery_level">Okosóra akkumulátor töltöttségi szint</string>
+    <string name="wear_alarm_force_sound">Okosóra: Riasztási hang kényszerítése</string>
+    <string name="wear_alarm_notifications_enabled">Okosóra: Riasztási értesítések</string>
+    <string name="wear_alarm_vibrate_only">Okosóra: Csak rezgés</string>
+    <string name="wear_complication_tap_action">Komplikáció koppintási művelet</string>
+    <string name="wear_foreground_notification_descr">Az előtér értesítés megakadályozza, hogy az Android bezárja az alkalmazást.</string>
+    <string name="wear_foreground_notification_name">Előtér értesítés</string>
+    <string name="wear_source_info">A források aktiválásához először állítsa be őket a telefonos alkalmazásban. Csak akkor aktiválja a forrásokat az okosórán, ha még nem kapja meg az adatokat a telefonon.</string>
+    <string name="wearos_watchfaces">Számlapok</string>
+    <string name="wearos_watchfaces_summary">Információk harmadik féltől származó számlapokról a Wear OS-hoz.</string>
+    <string name="widget_glucose">Vércukorérték</string>
+    <string name="widget_glucose_trend">Vércukorérték és trendnyíl</string>
+    <string name="widget_glucose_trend_delta">Vércukorérték, trendnyíl és delta</string>
+    <string name="widget_glucose_trend_delta_timestamp">Vércukorérték, trendnyíl, delta és időbélyeg</string>
+    <string name="widget_glucose_trend_delta_timestamp_iob_cob">Vércukorérték, trendnyíl, delta, időbélyeg és IOB/COB</string>
+    <string name="worker_notification_descr">Háttér értesítés, amely addig jelenik meg, amíg a háttérben fut egy tevékenység.</string>
+    <string name="worker_notification_name">Háttér értesítés</string>
+    <string name="xdrip_broadcast_service_api_enabled">Adás szolgáltatás API</string>
+    <string name="xdrip_broadcast_service_api_enabled_summary">"xDrip+ adás szolgáltatás API használata adatok (beleértve az IOB-t) fogadásához az xDrip+-tól.
+Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás szolgáltatás API\" lehetőséget az xDrip+ \"Alkalmazások közötti beállítások\" részében!"</string>
+
+    <plurals name="elapsed_time_full_text">
+        <item quantity="other">Idő %d perc</item>
+        <item quantity="one">Idő %d perc</item>
+    </plurals>
+
+    <!-- v2.0 -->
+
+    <string name="delta_per_10_minute">10 percenként</string>
+    <string name="delta_per_15_minute">15 percenként</string>
+
+    <string name="widget_wearos_battery_level">WearOS akkumulátor töltöttsége</string>
+
+    <string name="graph">Grafikon</string>
+    <string name="graph_duration">Grafikon időtartama</string>
+    <string name="graph_duration_wear_summary">A grafikonon, a komplikációban és a főképernyőn megjelenített órák száma.\nA grafikon letiltásához használjon 0-t.</string>
+    <string name="graph_duration_phone_summary">A grafikonon megjelenített órák száma.\nA grafikon letiltásához használjon 0-t.</string>
+    <string name="graph_duration_phone_widget_summary">A grafikonon megjelenített órák száma.</string>
+    <string name="show_graph">Grafikon megjelenítése</string>
+    <string name="menu_database">Adatbázis</string>
+    <string name="reset_db">Adatbázis visszaállítása</string>
+    <string name="reset_db_summary">Nyomja meg itt az összes adat eltávolításához az adatbázisból.</string>
+    <string name="reset_db_warning">Ha megnyomja az OK gombot, az összes adat törlődik az adatbázisból!\nBiztos benne?</string>
+    <string name="graph_disabled">Grafikon letiltva!</string>
+    <string name="no_graph_data">A grafikon létrehozása sikertelen!</string>
+
+    <string name="pref_switch_use_rate_calculation">Trendszámítás</string>
+    <string name="pref_switch_use_rate_calculation_summary_on">Belső trendszámítás használata az utolsó értékek alapján.</string>
+    <string name="pref_switch_use_rate_calculation_summary_off">A forrás által biztosított trend használata.\nHa nincs elérhető trend, a belső számítás kerül felhasználásra.</string>
+
+    <string name="accessibility_service_description">Glükóz értékek megjelenítése az Always on Display-en</string>
+
+    <string name="pref_cat_aod">Always on Display</string>
+    <string name="pref_cat_aod_summary">Beállítások az Always on Display-hez.</string>
+
+    <string name="pref_aod_enabled_summary">Értékek megjelenítése az AOD kijelzőn.</string>
+    <string name="pref_aod_size_summary">Az AOD adatok méretének módosítása.</string>
+    <string name="pref_aod_coloured">Színes</string>
+    <string name="pref_aod_coloured_summary">AOD megjelenítése színesben.</string>
+
+    <string name="graph_show_axis">Tengelyek megjelenítése</string>
+    <string name="graph_show_axis_summary">y és x tengely megjelenítése a widgetben.</string>
+
+    <string name="source_notification">Értesítés</string>
+    <string name="pref_source_notification">Értesítés olvasó</string>
+    <string name="pref_source_notification_summary">A glükóz érték és az IOB fogadásához más alkalmazások értesítéseiből, mint például a Dexcom, CamAPS FX és Omnipod 5.</string>
+    <string name="notification_reader_app">Alkalmazás</string>
+    <string name="notification_reader_app_summary">Válasszon ki egy alkalmazást, amelyből az értesítést ki kell olvasni.</string>
+    <string name="notification_reader_enabled_summary_on">Az értesítés olvasó engedélyezve van, hogy értékeket elemezzen a meghatározott alkalmazások értesítéseiből.</string>
+    <string name="notification_reader_enabled_summary_off">Az értesítés olvasó le van tiltva, és nem lesz értesítés elemezve.\nKérjük, először adjon meg legalább egy alkalmazást.</string>
+    <string name="notification_cat_glucose">Glükóz érték olvasása</string>
+    <string name="notification_cat_iob">IOB érték olvasása</string>
+    <string name="notification_reader_enabled">Értesítés olvasó engedélyezése</string>
+    <string name="no_receiver">Nincs alkalmazás</string>
+    <string name="notification_reader_app_regex">Regex érték szűrő</string>
+    <string name="notification_reader_app_regex_summary">Regex az érték elemzéséhez az értesítés szövegéből.\nKérjük, csak akkor módosítsa, ha tudja, mit csinál, vagy ha tanácsot kap a fejlesztőtől.</string>
+    <string name="notification_reader_five_minute_interval">5 perces intervallum</string>
+    <string name="notification_reader_five_minute_interval_summary">Néhány alkalmazás, mint például a Dexcom, elég gyakran frissíti az értesítéseit. Az azonos értékű frissítések figyelmen kívül hagyásához engedélyezze az 5 perces intervallumot.\nHa engedélyezve van, csak 5 percenként lesz új érték, vagy ha az értesítésben lévő érték megváltozott.</string>
+    <string name="pref_source_notification_info_summary">Más alkalmazások értesítéseiből származó értékek fogadásához engedély szükséges az értesítések eléréséhez!\nAz értesítésnek tartalmaznia kell a glükóz értéket vagy az IOB-t karakterláncként.\nMivel minden értesítésnek más az elrendezése, előfordulhat, hogy nem működik minden alkalmazással. Probléma esetén kérjük, vegye fel velem a kapcsolatot az értesítés képernyőképével és a naplókkal.</string>
+    <string name="notification_dexcom_info">Fontos</string>
+    <string name="notification_dexcom_info_summary">A Dexcom G7 értesítések speciális viselkedése miatt engedélyeznie kell a Dexcom előtérbeli értesítését is.</string>
+    <string name="sensor_age_label">Szenzor kora</string>
+    <string name="sensor_age_value">%1$d nap %2$d óra</string>
+    <string name="vibrate_pattern_shorty">Rövid</string>
+
+    <string name="pref_cat_locksreen_aod">Zárolási képernyő és AOD</string>
+    <string name="pref_cat_locksreen_aod_summary">Beállítások egy háttérkép hozzáadásához a zárolási képernyőhöz és az Always On Display-hez.</string>
+    <string name="pref_graph_transparency_phone_main_summary">A grafikon háttér átlátszósága a főképernyőn.\nEz csak világos színsémához szükséges.</string>
+
+    <string name="pref_floating_widget_lock_position">Pozíció zárolása</string>
+    <string name="pref_floating_widget_lock_position_summary">Ha a pozíció zárolva van, az úszó widget nem mozgatható. Mindig ugyanazon a területen lesz.</string>
+
+    <string name="widget_chart_glucose_trend_delta_time_iob_cob">Értékek és grafikon</string>
+</resources>

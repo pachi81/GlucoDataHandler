@@ -19,6 +19,7 @@
         <item>@string/widget_glucose_trend_delta</item>
         <item>@string/widget_glucose_trend_delta_timestamp</item>
         <item>@string/widget_glucose_trend_delta_timestamp_iob_cob</item>
+        <item>@string/widget_chart_glucose_trend_delta_time_iob_cob</item>
     </array>
     <array name="pref_floating_widget_style_values">
         <item>"glucose"</item>
@@ -26,6 +27,7 @@
         <item>"glucose_trend_delta"</item>
         <item>"glucose_trend_delta_time"</item>
         <item>"glucose_trend_delta_time_iob_cob"</item>
+        <item>"chart_glucose_trend_delta_time_iob_cob"</item>
     </array>
     <array name="pref_application_color_scheme_labels">
         <item>@string/application_color_scheme_system</item>

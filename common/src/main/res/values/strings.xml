@@ -118,7 +118,6 @@
     <string name="tasker_target_range_state">Glucose range change</string>
 
     <!-- sources -->
-
     <string name="source_phone">Phone</string>
     <string name="source_wear">Wear</string>
 
@@ -393,7 +392,7 @@
     <string name="pref_lockscreen_enabled">Enable</string>
     <string name="pref_lockscreen_enabled_summary">If you enable lockscreen wallpaper, the app replaces the wallpaper on lockscreen.</string>
     <string name="pref_lockscreen_y_pos">Vertical position</string>
-    <string name="pref_lockscreen_y_pos_summary">Vertical position of the glucose-trend image on lockscreen:\n0 is the top of the display\n100 is the botton of the display</string>
+    <string name="pref_lockscreen_y_pos_summary">Vertical position of the glucose-trend image:\n0 is the top of the display\n100 is the bottom of the display</string>
     <string name="activity_main_notification_permission">Showing notifications is disabled!!!\nGlucoDataHandler may not work correct and can not show alarms!!!\nPress here to go direct to the permission setting.</string>
 
     <string name="src_libre_setup_librelink">Missing data! Please accept invitation in LibreLinkUp app first!</string>
@@ -573,7 +572,7 @@
     <string name="src_dexcom_share_password_summary">Password for Dexcom Share account.</string>
     <string name="pref_source_dexcom_share_info">Setup Dexcom Share</string>
     <string name="permission_missing_title">Missing permission!</string>
-    <string name="setting_permission_missing_message">The settings \'%1$s\' is set, but the related permission is not granted! Press \"OK\" to be forwared the permission dialog or press \"Cancel\" to disable this setting.</string>
+    <string name="setting_permission_missing_message">The settings\n\'%1$s\'\nis set, but the related permission is not granted!\nPress \"OK\" to be forwared the permission dialog or press \"Cancel\" to disable this setting.</string>
     <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
     <string name="xdrip_broadcast_service_api_enabled_summary">Use xDrip+ Broadcast Service API to receive data (also IOB) from xDrip+.\nPlease activate \"Broadcast Service API\" in \"Inter-App settings\" in xDrip+ first!</string>
     <string name="obsolete_time">Obsolete time</string>
@@ -771,4 +770,70 @@
     <string name="pref_show_iob_cob">Show IOB/COB values</string>
     <string name="pref_show_iob_cob_summary">Show IOB and COB values, if available.</string>
 
+    <!-- v2.0 -->
+
+    <string name="delta_per_10_minute">per 10 minutes</string>
+    <string name="delta_per_15_minute">per 15 minutes</string>
+
+    <string name="widget_wearos_battery_level">WearOS battery level</string>
+
+    <string name="graph">Graph</string>
+    <string name="graph_duration">Graph duration</string>
+    <string name="graph_duration_wear_summary">Number of hours shown in the graph in complication and on main screen.\nUse 0 to disable graph.</string>
+    <string name="graph_duration_phone_summary">Number of hours shown in the graph.\nUse 0 to disable graph.</string>
+    <string name="graph_duration_phone_widget_summary">Number of hours shown in the graph.</string>
+    <string name="show_graph">Show graph</string>
+    <string name="menu_database">Database</string>
+    <string name="reset_db">Reset database</string>
+    <string name="reset_db_summary">Press here to remove all data from database.</string>
+    <string name="reset_db_warning">If you press OK, all data from database will be removed!\nAre you sure?</string>
+    <string name="graph_disabled">Graph disabled!</string>
+    <string name="no_graph_data">Graph creation failed!</string>
+
+    <string name="pref_switch_use_rate_calculation">Trend calculation</string>
+    <string name="pref_switch_use_rate_calculation_summary_on">Use internal trend calculation related to the last values.</string>
+    <string name="pref_switch_use_rate_calculation_summary_off">Use trend provided by the source.\nIf no trend is available, the internal calculation is used.</string>
+    
+   <string name="accessibility_service_description">Display glucose values on the Always-on Display</string>
+
+    <string name="pref_cat_aod">Always on Display</string>
+    <string name="pref_cat_aod_summary">Settings for Always on Display.</string>
+
+    <string name="pref_aod_enabled_summary">Show values on the AOD display.</string>
+    <string name="pref_aod_size_summary">Change size of the AOD data.</string>
+    <string name="pref_aod_coloured">Colored</string>
+    <string name="pref_aod_coloured_summary">Show AOD in color.</string>
+
+    <string name="graph_show_axis">Show axis</string>
+    <string name="graph_show_axis_summary">Show y- and x-Axis in the widget.</string>
+
+    <string name="source_notification">Notification</string>
+    <string name="pref_source_notification">Notification Reader</string>
+    <string name="pref_source_notification_summary">To receive the glucose value and IOB from notifications other apps, like Dexcom, CamAPS FX and Omnipod 5.</string>
+    <string name="notification_reader_app">Application</string>
+    <string name="notification_reader_app_summary">Select an application, from which the notification should be read.</string>
+    <string name="notification_reader_enabled_summary_on">Notification reader is enabled to parse values from notifications for specific applications.</string>
+    <string name="notification_reader_enabled_summary_off">Notification reader is disabled and no notification will be parsed.\nPlease specify at least one application first.</string>
+    <string name="notification_cat_glucose">Read glucose value</string>
+    <string name="notification_cat_iob">Read IOB value</string>
+    <string name="notification_reader_enabled">Enable notification reader</string>
+    <string name="no_receiver">No application</string>
+    <string name="notification_reader_app_regex">Regex value filter</string>
+    <string name="notification_reader_app_regex_summary">Regex to parse the value from text in notification.\nPlease only change, if you know, what you are doing or if you get an advice from the developer.</string>
+    <string name="notification_reader_five_minute_interval">5 minute interval</string>
+    <string name="notification_reader_five_minute_interval_summary">Some apps, like Dexcom updates their notifications quite often. To ignore these updates with the same value, enable the 5 minute interval.\nIf enabled, there will be only a new value every 5 minutes or if the value in the notification has changed.</string>
+    <string name="pref_source_notification_info_summary">To receive values from notifications of other apps, a permission to access the notifications is needed!\nThe notifcation must include either the glucose value or IOB as string.\nAs each notification has a different layout, it may not work with every app. In case of problems, please contact me with a screenshot of the notification and the logs.</string>
+    <string name="notification_dexcom_info">Important</string>
+    <string name="notification_dexcom_info_summary">Because of special behaviour of Dexcom G7 notificiations, you must also enable the foreground notification of Dexcom.</string>
+    <string name="sensor_age_label">Sensor age</string>
+    <string name="sensor_age_value">%1$dd %2$dh</string>
+    <string name="vibrate_pattern_shorty">Shorty</string>
+
+    <string name="pref_cat_locksreen_aod">Lockscreen and AOD</string>
+    <string name="pref_cat_locksreen_aod_summary">Settings to add a wallpaper to lockscreen and Always On Display.</string>
+    <string name="pref_graph_transparency_phone_main_summary">Background transparency for graph on main screen.\nThis is only needed for light color scheme.</string>
+    <string name="pref_floating_widget_lock_position">Lock position</string>
+    <string name="pref_floating_widget_lock_position_summary">If the position is locked, the floating widget can not be moved. It will always be on the same position.</string>
+
+    <string name="widget_chart_glucose_trend_delta_time_iob_cob">Values and graph</string>
 </resources>

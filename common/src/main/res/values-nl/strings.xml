@@ -338,7 +338,7 @@
     <string name="pref_lockscreen_enabled">Inschakelen</string>
     <string name="pref_lockscreen_enabled_summary">Als u de vergrendelschermachtergrond inschakelt, vervangt de app de achtergrond op het vergrendelscherm.</string>
     <string name="pref_lockscreen_y_pos">Verticale positie</string>
-    <string name="pref_lockscreen_y_pos_summary">Verticale positie van de glucose-trendafbeelding op het vergrendelscherm:\n0 is de bovenkant van het scherm\n100 is de onderkant van het scherm</string>
+    <string name="pref_lockscreen_y_pos_summary">Verticale positie van de glucose-trendafbeelding:\n0 is de bovenkant van het scherm\n100 is de onderkant van het scherm</string>
     <string name="activity_main_notification_permission">Het weergeven van meldingen is uitgeschakeld!!!\nGlucoDataHandler werkt mogelijk niet correct en kan geen alarmen weergeven!!!\nDruk hier om direct naar de toestemmingsinstelling te gaan.</string>
 
     <string name="src_libre_setup_librelink">Ontbrekende gegevens! Accepteer eerst de uitnodiging in de LibreLinkUp app!</string>
@@ -518,7 +518,7 @@
     <string name="src_dexcom_share_password_summary">Wachtwoord voor Dexcom Share-account.</string>
     <string name="pref_source_dexcom_share_info">Dexcom Share instellen</string>
     <string name="permission_missing_title">Ontbrekende toestemming!</string>
-    <string name="setting_permission_missing_message">De instelling \'%1$s\' is ingesteld, maar de bijbehorende toestemming is niet verleend! Druk op \"OK\" om door te gaan naar het toestemmingsdialoogvenster of druk op \"Annuleren\" om deze instelling uit te schakelen.</string>
+    <string name="setting_permission_missing_message">De instelling\n\'%1$s\'\nis ingesteld, maar de bijbehorende toestemming is niet verleend!\nDruk op \"OK\" om door te gaan naar het toestemmingsdialoogvenster of druk op \"Annuleren\" om deze instelling uit te schakelen.</string>
     <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
     <string name="xdrip_broadcast_service_api_enabled_summary">Gebruik xDrip+ Broadcast Service API om gegevens (ook IOB) van xDrip+ te ontvangen.\nActiveer eerst \"Broadcast Service API\" in \"Inter-app-instellingen\" in xDrip+!</string>
     <string name="obsolete_time">Verouderde tijd</string>
@@ -716,5 +716,72 @@
 
     <string name="pref_show_iob_cob">IOB/COB waarden weergeven</string>
     <string name="pref_show_iob_cob_summary">IOB en COB waarden weergeven, indien beschikbaar.</string>
+
+    <string name="delta_per_10_minute">per 10 minuten</string>
+    <string name="delta_per_15_minute">per 15 minuten</string>
+
+    <!-- v2.0 -->
+
+    <string name="widget_wearos_battery_level">WearOS batterijniveau</string>
+
+    <string name="graph">Grafiek</string>
+    <string name="graph_duration">Grafiekduur</string>
+    <string name="graph_duration_wear_summary">Aantal uren weergegeven in de grafiek in de complicatie en op het hoofdscherm.\nGebruik 0 om de grafiek uit te schakelen.</string>
+    <string name="graph_duration_phone_summary">Aantal uren weergegeven in de grafiek.\nGebruik 0 om de grafiek uit te schakelen.</string>
+    <string name="graph_duration_phone_widget_summary">Aantal uren weergegeven in de grafiek.</string>
+    <string name="show_graph">Grafiek weergeven</string>
+    <string name="menu_database">Database</string>
+    <string name="reset_db">Database resetten</string>
+    <string name="reset_db_summary">Druk hier om alle gegevens uit de database te verwijderen.</string>
+    <string name="reset_db_warning">Als je op OK drukt, worden alle gegevens uit de database verwijderd!\nWeet je het zeker?</string>
+    <string name="graph_disabled">Grafiek uitgeschakeld!</string>
+    <string name="no_graph_data">Grafiek maken mislukt!</string>
+
+    <string name="pref_switch_use_rate_calculation">Trendberekening</string>
+    <string name="pref_switch_use_rate_calculation_summary_on">Gebruik interne trendberekening gerelateerd aan de laatste waarden.</string>
+    <string name="pref_switch_use_rate_calculation_summary_off">Gebruik de trend die door de bron wordt geleverd.\nAls er geen trend beschikbaar is, wordt de interne berekening gebruikt.</string>
+
+    <string name="accessibility_service_description">Glucosewaarden weergeven op het Always-on Display</string>
+
+    <string name="pref_cat_aod">Always on Display</string>
+    <string name="pref_cat_aod_summary">Instellingen voor Always on Display.</string>
+
+    <string name="pref_aod_enabled_summary">Waarden weergeven op het AOD-display.</string>
+    <string name="pref_aod_size_summary">Wijzig de grootte van de AOD-gegevens.</string>
+    <string name="pref_aod_coloured">Gekleurd</string>
+    <string name="pref_aod_coloured_summary">AOD in kleur weergeven.</string>
+
+    <string name="graph_show_axis">Assen weergeven</string>
+    <string name="graph_show_axis_summary">y- en x-as weergeven in de widget.</string>
+
+    <string name="source_notification">Melding</string>
+    <string name="pref_source_notification">Meldingslezer</string>
+    <string name="pref_source_notification_summary">Om de glucosewaarde en IOB te ontvangen van meldingen van andere apps, zoals Dexcom, CamAPS FX en Omnipod 5.</string>
+    <string name="notification_reader_app">Applicatie</string>
+    <string name="notification_reader_app_summary">Selecteer een applicatie waarvan de melding moet worden gelezen.</string>
+    <string name="notification_reader_enabled_summary_on">Meldingslezer is ingeschakeld om waarden te analyseren van meldingen voor specifieke applicaties.</string>
+    <string name="notification_reader_enabled_summary_off">Meldingslezer is uitgeschakeld en er worden geen meldingen geanalyseerd.\nGeef eerst ten minste één applicatie op.</string>
+    <string name="notification_cat_glucose">Glucosewaarde lezen</string>
+    <string name="notification_cat_iob">IOB-waarde lezen</string>
+    <string name="notification_reader_enabled">Meldingslezer inschakelen</string>
+    <string name="no_receiver">Geen applicatie</string>
+    <string name="notification_reader_app_regex">Regex-waardefilter</string>
+    <string name="notification_reader_app_regex_summary">Regex om de waarde uit de tekst in de melding te analyseren.\nWijzig dit alleen als je weet wat je doet of als je advies krijgt van de ontwikkelaar.</string>
+    <string name="notification_reader_five_minute_interval">5 minuten interval</string>
+    <string name="notification_reader_five_minute_interval_summary">Sommige apps, zoals Dexcom, werken hun meldingen vrij vaak bij. Om deze updates met dezelfde waarde te negeren, schakel je het interval van 5 minuten in.\nIndien ingeschakeld, is er slechts om de 5 minuten een nieuwe waarde of als de waarde in de melding is gewijzigd.</string>
+    <string name="pref_source_notification_info_summary">Om waarden te ontvangen van meldingen van andere apps, is een toestemming nodig om toegang te krijgen tot de meldingen!\nDe melding moet de glucosewaarde of IOB als string bevatten.\nAangezien elke melding een andere lay-out heeft, werkt het mogelijk niet met elke app. Neem in geval van problemen contact met mij op met een screenshot van de melding en de logs.</string>
+    <string name="notification_dexcom_info">Belangrijk</string>
+    <string name="notification_dexcom_info_summary">Vanwege het speciale gedrag van Dexcom G7-meldingen, moet je ook de voorgrondmelding van Dexcom inschakelen.</string>
+    <string name="sensor_age_label">Sensorleeftijd</string>
+    <string name="sensor_age_value">%1$dd %2$dh</string>
+    <string name="vibrate_pattern_shorty">Kort</string>
+
+    <string name="pref_cat_locksreen_aod">Vergrendelscherm en AOD</string>
+    <string name="pref_cat_locksreen_aod_summary">Instellingen om een achtergrond toe te voegen aan het vergrendelscherm en Always On Display.</string>
+    <string name="pref_graph_transparency_phone_main_summary">Achtergrondtransparantie voor grafiek op het hoofdscherm.\nDit is alleen nodig voor een licht kleurenschema.</string>
+
+    <string name="pref_floating_widget_lock_position">Positie vergrendelen</string>
+    <string name="pref_floating_widget_lock_position_summary">Als de positie is vergrendeld, kan de zwevende widget niet worden verplaatst. Deze zal altijd op dezelfde positie staan.</string>
+    <string name="widget_chart_glucose_trend_delta_time_iob_cob">Waarden en grafiek</string>
 
 </resources>

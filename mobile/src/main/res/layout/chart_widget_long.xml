@@ -1,0 +1,138 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/widget"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent_widget_background"
+    android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/layout_glucose_trend"
+            android:layout_width="match_parent"
+            android:layout_weight="2"
+            android:layout_height="0dp"
+            android:layout_marginTop="2dp"
+            android:gravity="center|top"
+            android:orientation="horizontal"
+            tools:ignore="NestedWeights,UselessParent">
+
+            <LinearLayout
+                android:layout_weight="3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingHorizontal="5dp"
+                tools:ignore="UselessParent">
+                <TextView
+                    android:id="@+id/glucose"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:autoSizeMinTextSize="1sp"
+                    android:autoSizeStepGranularity="1sp"
+                    android:autoSizeTextType="uniform"
+                    android:maxLines="1"
+                    android:text="---"
+                    android:gravity="center_vertical|end"
+                    tools:ignore="HardcodedText" />
+
+                <ImageView
+                    android:id="@+id/trendImage"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:paddingVertical="2dp"
+                    android:gravity="center"
+                    android:src="@drawable/icon_question"
+                    tools:ignore="ContentDescription" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_delta_time"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center|start"
+                android:orientation="vertical"
+                android:paddingHorizontal="5dp"
+                tools:ignore="UselessParent">
+
+                <TextView
+                    android:id="@+id/timeText"
+                    android:text="🕒 0 min"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="0dp"
+                    android:gravity="center_vertical|start"
+                    android:maxLines="1"
+                    android:autoSizeMinTextSize="1sp"
+                    android:autoSizeMaxTextSize="24sp"
+                    android:autoSizeStepGranularity="1sp"
+                    android:autoSizeTextType="uniform"
+                    android:textColor="@color/transparent_widget_textcolor"
+                    tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
+                <TextView
+                    android:id="@+id/deltaText"
+                    android:text="Δ +0.06"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:paddingStart="3dp"
+                    android:gravity="center_vertical|start"
+                    android:maxLines="1"
+                    android:autoSizeMinTextSize="1sp"
+                    android:autoSizeMaxTextSize="24sp"
+                    android:autoSizeStepGranularity="1sp"
+                    android:autoSizeTextType="uniform"
+                    android:textColor="@color/transparent_widget_textcolor"
+                    tools:ignore="HardcodedText,RtlSymmetry" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout_iob_cob"
+                android:layout_weight="2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center|start"
+                android:orientation="vertical"
+                android:paddingHorizontal="5dp"
+                tools:ignore="UselessParent">
+                <TextView
+                    android:id="@+id/iobText"
+                    android:text="💉 1.30U"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="0dp"
+                    android:gravity="center_vertical|start"
+                    android:maxLines="1"
+                    android:autoSizeMinTextSize="1sp"
+                    android:autoSizeMaxTextSize="24sp"
+                    android:autoSizeStepGranularity="1sp"
+                    android:autoSizeTextType="uniform"
+                    android:textColor="@color/transparent_widget_textcolor"
+                    tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
+
+                <TextView
+                    android:id="@+id/cobText"
+                    android:text="🍔 31.2g"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|start"
+                    android:maxLines="1"
+                    android:autoSizeMinTextSize="1sp"
+                    android:autoSizeMaxTextSize="24sp"
+                    android:autoSizeStepGranularity="1sp"
+                    android:autoSizeTextType="uniform"
+                    android:textColor="@color/transparent_widget_textcolor"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/graphImage"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"
+            android:contentDescription="@string/graph"
+            android:src="@drawable/icon_graph"/>
+</LinearLayout>

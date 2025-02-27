@@ -336,7 +336,7 @@
     <string name="pref_lockscreen_enabled">Активиране</string>
     <string name="pref_lockscreen_enabled_summary">Ако активирате тапета на заключения екран, приложението ще замени тапета на заключения екран.</string>
     <string name="pref_lockscreen_y_pos">Вертикална позиция</string>
-    <string name="pref_lockscreen_y_pos_summary">Вертикална позиция на изображението на глюкозата и тенденцията на заключения екран:\n0 е горната част на дисплея\n100 е долната част на дисплея</string>
+    <string name="pref_lockscreen_y_pos_summary">Вертикална позиция на изображението на глюкозата и тенденцията:\n0 е горната част на дисплея\n100 е долната част на дисплея</string>
     <string name="activity_main_notification_permission">Показването на известия е деактивирано!!!\nGlucoDataHandler може да не работи правилно и не може да показва аларми!!!\nНатиснете тук, за да отидете директно на настройката за разрешение.</string>
 
     <string name="src_libre_setup_librelink">Липсват данни! Моля, първо приемете поканата в приложението LibreLinkUp!</string>
@@ -516,7 +516,7 @@
     <string name="src_dexcom_share_password_summary">Парола за акаунт в Dexcom Share.</string>
     <string name="pref_source_dexcom_share_info">Настройка на Dexcom Share</string>
     <string name="permission_missing_title">Липсва разрешение!</string>
-    <string name="setting_permission_missing_message">Настройката \'%1$s\' е зададена, но съответното разрешение не е предоставено! Натиснете \"OK\", за да бъдете пренасочени към диалоговия прозорец за разрешения, или натиснете \"Отказ\", за да деактивирате тази настройка.</string>
+    <string name="setting_permission_missing_message">Настройката\n\'%1$s\'\nе зададена, но съответното разрешение не е предоставено!\nНатиснете \"OK\", за да бъдете пренасочени към диалоговия прозорец за разрешения, или натиснете \"Отказ\", за да деактивирате тази настройка.</string>
     <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
     <string name="xdrip_broadcast_service_api_enabled_summary">Използвайте xDrip+ Broadcast Service API, за да получавате данни (също IOB) от xDrip+.\nМоля, първо активирайте \"Broadcast Service API\" в \"Настройки за между приложения\" в xDrip+!</string>
     <string name="obsolete_time">Време за остаряване</string>
@@ -715,4 +715,71 @@
     <string name="pref_show_iob_cob">Показване на IOB/COB стойности</string>
     <string name="pref_show_iob_cob_summary">Показване на IOB и COB стойности, ако са налични.</string>
 
+    <!-- v2.0 -->
+
+    <string name="delta_per_10_minute">за 10 минути</string>
+    <string name="delta_per_15_minute">за 15 минути</string>
+
+    <string name="widget_wearos_battery_level">Ниво на батерията на WearOS</string>
+
+    <string name="graph">Графика</string>
+    <string name="graph_duration">Продължителност на графиката</string>
+    <string name="graph_duration_wear_summary">Брой часове, показани на графиката в усложнението и на главния екран.\nИзползвайте 0, за да деактивирате графиката.</string>
+    <string name="graph_duration_phone_summary">Брой часове, показани на графиката.\nИзползвайте 0, за да деактивирате графиката.</string>
+    <string name="graph_duration_phone_widget_summary">Брой часове, показани на графиката.</string>
+    <string name="show_graph">Показване на графика</string>
+    <string name="menu_database">База данни</string>
+    <string name="reset_db">Нулиране на базата данни</string>
+    <string name="reset_db_summary">Натиснете тук, за да премахнете всички данни от базата данни.</string>
+    <string name="reset_db_warning">Ако натиснете OK, всички данни от базата данни ще бъдат премахнати!\nСигурни ли сте?</string>
+    <string name="graph_disabled">Графиката е деактивирана!</string>
+    <string name="no_graph_data">Неуспешно създаване на графика!</string>
+
+    <string name="pref_switch_use_rate_calculation">Изчисляване на тенденцията</string>
+    <string name="pref_switch_use_rate_calculation_summary_on">Използване на вътрешно изчисляване на тенденцията, базирано на последните стойности.</string>
+    <string name="pref_switch_use_rate_calculation_summary_off">Използване на тенденцията, предоставена от източника.\nАко няма налична тенденция, се използва вътрешното изчисление.</string>
+
+    <string name="accessibility_service_description">Показване на стойностите на глюкозата на Always-on Display</string>
+
+    <string name="pref_cat_aod">Always on Display</string>
+    <string name="pref_cat_aod_summary">Настройки за Always on Display.</string>
+
+    <string name="pref_aod_enabled_summary">Показване на стойностите на AOD дисплея.</string>
+    <string name="pref_aod_size_summary">Промяна на размера на данните на AOD.</string>
+    <string name="pref_aod_coloured">Цветно</string>
+    <string name="pref_aod_coloured_summary">Показване на AOD в цвят.</string>
+
+    <string name="graph_show_axis">Показване на оси</string>
+    <string name="graph_show_axis_summary">Показване на y- и x-оси в джаджата.</string>
+
+    <string name="source_notification">Известие</string>
+    <string name="pref_source_notification">Четец на известия</string>
+    <string name="pref_source_notification_summary">За получаване на стойността на глюкозата и IOB от известия на други приложения, като Dexcom, CamAPS FX и Omnipod 5.</string>
+    <string name="notification_reader_app">Приложение</string>
+    <string name="notification_reader_app_summary">Изберете приложение, от което да се чете известието.</string>
+    <string name="notification_reader_enabled_summary_on">Четецът на известия е активиран за анализиране на стойности от известия за конкретни приложения.</string>
+    <string name="notification_reader_enabled_summary_off">Четецът на известия е деактивиран и няма да се анализират известия.\nМоля, първо посочете поне едно приложение.</string>
+    <string name="notification_cat_glucose">Четене на стойността на глюкозата</string>
+    <string name="notification_cat_iob">Четене на стойността на IOB</string>
+    <string name="notification_reader_enabled">Активиране на четеца на известия</string>
+    <string name="no_receiver">Няма приложение</string>
+    <string name="notification_reader_app_regex">Филтър за стойност с Regex</string>
+    <string name="notification_reader_app_regex_summary">Regex за анализиране на стойността от текста в известието.\nМоля, променяйте само ако знаете какво правите или ако получите съвет от разработчика.</string>
+    <string name="notification_reader_five_minute_interval">Интервал от 5 минути</string>
+    <string name="notification_reader_five_minute_interval_summary">Някои приложения, като Dexcom, актуализират известията си доста често. За да игнорирате тези актуализации със същата стойност, активирайте интервала от 5 минути.\nАко е активирано, ще има нова стойност само на всеки 5 минути или ако стойността в известието се е променила.</string>
+    <string name="pref_source_notification_info_summary">За да получавате стойности от известия на други приложения, е необходимо разрешение за достъп до известията!\nИзвестието трябва да включва или стойността на глюкозата, или IOB като низ.\nТъй като всяко известие има различно оформление, може да не работи с всяко приложение. В случай на проблеми, моля, свържете се с мен със снимка на известието и логовете.</string>
+    <string name="notification_dexcom_info">Важно</string>
+    <string name="notification_dexcom_info_summary">Поради специалното поведение на известията на Dexcom G7, трябва да активирате и известието на преден план на Dexcom.</string>
+    <string name="sensor_age_label">Възраст на сензора</string>
+    <string name="sensor_age_value">%1$dd %2$dh</string>
+    <string name="vibrate_pattern_shorty">Кратко</string>
+
+    <string name="pref_cat_locksreen_aod">Заключен екран и AOD</string>
+    <string name="pref_cat_locksreen_aod_summary">Настройки за добавяне на тапет към заключения екран и Always On Display.</string>
+    <string name="pref_graph_transparency_phone_main_summary">Прозрачност на фона за графика на главния екран.\nТова е необходимо само за светла цветова схема.</string>
+
+    <string name="pref_floating_widget_lock_position">Заключване на позицията</string>
+    <string name="pref_floating_widget_lock_position_summary">Ако позицията е заключена, плаващият уиджет не може да бъде преместван. Той винаги ще бъде на една и съща позиция.</string>
+
+    <string name="widget_chart_glucose_trend_delta_time_iob_cob">Стойности и графика</string>
 </resources>

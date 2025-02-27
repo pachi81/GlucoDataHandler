@@ -5,6 +5,8 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.database.GlucoseValue
+import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notification.AlarmType
@@ -32,13 +34,29 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     const val IOB = "glucodata.Minute.IOB"
     const val COB = "glucodata.Minute.COB"
     const val IOBCOB_TIME = "gdh.IOB_COB_time"
+    const val SENSOR_START_TIME = "gdh.sensor_start_time"
     const val DELTA_FALLING_COUNT = "gdh.delta_falling_count"
     const val DELTA_RISING_COUNT = "gdh.delta_rising_count"
 
+    const val CALCULATED_BUNDLE = "gdh.bundle.calculated"
+    const val DELTA1MIN = "gdh.delta.1min"
+    const val DELTA5MIN = "gdh.delta.5min"
+    const val DELTA15MIN = "gdh.delta.15min"
+    const val RATE_SOURCE = "gdh.rate.source"
+    const val RATE_CALC = "gdh.rate.calculated"
+
     var sensorID: String? = null
+    var sensorStartTime: Long = 0L
     var rawValue: Int = 0
     var glucose: Float = 0.0F
-    var rate: Float = 0.0F
+    var sourceRate = Float.NaN
+    var calculatedRate = Float.NaN
+    val rate: Float get() {
+        if((useRateCalculation && !calculatedRate.isNaN()) || sourceRate.isNaN())
+            return calculatedRate
+        return sourceRate
+    }
+    private var useRateCalculation = true
     var alarm: Int = 0
     var time: Long = 0
     var receiveTime: Long = 0
@@ -64,6 +82,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     var cob: Float = Float.NaN
     var iobCobTime: Long = 0
     private var lowValue: Float = 70F
+    val lowRaw: Float get() = lowValue
     val low: Float get() {
         if(isMmol && lowValue > 0F)  // mmol/l
         {
@@ -72,6 +91,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return lowValue
     }
     private var highValue: Float = 240F
+    val highRaw: Float get() = highValue
     val high: Float get() {
         if(isMmol && highValue > 0F)  // mmol/l
         {
@@ -80,6 +100,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return highValue
     }
     private var targetMinValue = 90F
+    val targetMinRaw: Float get() = targetMinValue
     val targetMin: Float get() {
         if(isMmol)  // mmol/l
         {
@@ -88,6 +109,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return targetMinValue
     }
     private var targetMaxValue = 165F
+    val targetMaxRaw: Float get() = targetMaxValue
     val targetMax: Float get() {
         if(isMmol)  // mmol/l
         {
@@ -96,7 +118,44 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return targetMaxValue
     }
 
-    private var deltaValue: Float = Float.NaN
+    private var deltaValue1Min: Float = Float.NaN
+    val delta1Min: Float get() {
+        if(isMmol)  // mmol/l
+        {
+            return GlucoDataUtils.mgToMmol(deltaValue1Min)
+        }
+        return Utils.round(deltaValue1Min, 1)
+    }
+    private var deltaValue5Min: Float = Float.NaN
+    val delta5Min: Float get() {
+        if(isMmol)  // mmol/l
+        {
+            return GlucoDataUtils.mgToMmol(deltaValue5Min)
+        }
+        return Utils.round(deltaValue5Min, 1)
+    }
+    private var deltaValue10Min: Float = Float.NaN
+    val delta10Min: Float get() {
+        if(isMmol)  // mmol/l
+        {
+            return GlucoDataUtils.mgToMmol(deltaValue10Min)
+        }
+        return Utils.round(deltaValue10Min, 1)
+    }
+    private var deltaValue15Min: Float = Float.NaN
+    val delta15Min: Float get() {
+        if(isMmol)  // mmol/l
+        {
+            return GlucoDataUtils.mgToMmol(deltaValue15Min)
+        }
+        return Utils.round(deltaValue15Min, 1)
+    }
+    private val deltaValue: Float
+        get() {
+            if(use5minDelta)
+                return deltaValue5Min
+            return deltaValue1Min
+        }
     val delta: Float get() {
         if( deltaValue.isNaN() )
             return deltaValue
@@ -139,6 +198,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 initialized = true
                 unitMgDl = context.resources.getString(R.string.unit_mgdl)
                 unitMmol = context.resources.getString(R.string.unit_mmol)
+                dbAccess.init(context)
                 AlarmHandler.initData(context)
                 readTargets(context)
                 loadExtras(context)
@@ -193,23 +253,23 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return rawValue.toString()
     }
 
+    fun getDbValue(): Int {
+        if(isMmol) {
+            return GlucoDataUtils.mmolToMg(glucose).toInt()
+        }
+        return rawValue
+    }
+
     fun getDeltaAsString(): String {
         if(isObsoleteShort() || deltaValue.isNaN())
             return "--"
-        var deltaVal = ""
-        if (delta > 0)
-            deltaVal += "+"
-        deltaVal += if( !isMmol && delta.toDouble() == Math.floor(delta.toDouble()) )
-            delta.toInt().toString()
-        else
-            delta.toString()
-        return deltaVal
+        return GlucoDataUtils.deltaToString(delta)
     }
 
     fun getRateAsString(): String {
         if(isObsoleteShort())
             return "--"
-        return (if (rate > 0) "+" else "") + rate.toString()
+        return (if (rate > 0) "+" else "") + Utils.round(rate, 2).toString()
     }
 
     fun getRateAsText(context: Context): String {
@@ -317,6 +377,102 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         if(((alarm and 3) == 2) || (targetMax > 0 && glucose > targetMax ))
             return AlarmType.HIGH
         return AlarmType.OK
+    }
+
+    fun getValueColor(rawValue: Int): Int {
+        val customValue = if(isMmol) GlucoDataUtils.mgToMmol(rawValue.toFloat()) else rawValue.toFloat()
+        if(high>0F && customValue >= high)
+            return getAlarmTypeColor(AlarmType.VERY_HIGH)
+        if(low>0F && customValue <= low)
+            return getAlarmTypeColor(AlarmType.VERY_LOW)
+        if(targetMin>0F && customValue < targetMin)
+            return getAlarmTypeColor(AlarmType.LOW)
+        if(targetMax>0F && customValue > targetMax)
+            return getAlarmTypeColor(AlarmType.HIGH)
+        return getAlarmTypeColor(AlarmType.OK)
+    }
+
+    private fun calculateRate(glucoseValues: List<GlucoseValue>, new_time: Long, new_value: Int) {
+        var count = 0F
+        var sum = 0F
+        glucoseValues.forEach {
+            val diffTime = Utils.getTimeDiffMinute(new_time, it.timestamp, RoundingMode.HALF_UP)
+            if(diffTime > 25)
+                return@forEach
+            val factor = if(diffTime <= 5) 2F else if(diffTime <= 10) 1.5F else if(diffTime <= 15) 1F else 0.5F
+            sum += (new_value-it.value)*factor/diffTime
+            count += factor
+        }
+        if(count > 0) {
+            calculatedRate = (sum*10/count)/Constants.GLUCOSE_CONVERSION_FACTOR
+            Log.d(LOG_ID, "Calculated rate for $count values - sum $sum: $calculatedRate")
+        } else if(!sourceRate.isNaN()) {
+            calculatedRate = sourceRate
+        }
+    }
+
+    private fun calculateDeltasAndRate(new_time: Long, new_value: Int) {
+        // reset old deltas
+        deltaValue1Min = Float.NaN
+        deltaValue5Min = Float.NaN
+        deltaValue10Min = Float.NaN
+        deltaValue15Min = Float.NaN
+        if(dbAccess.active) {
+            val glucoseValues = dbAccess.getGlucoseValuesInRange(new_time-(25*60*1000), new_time) // max 20 minutes to calculate the delta
+            if (glucoseValues.isNotEmpty()) {
+                glucoseValues.reversed().forEach {
+                    if(it.timestamp == time)
+                        it.value = rawValue  // override for correct delta calculation
+                    val diffTime = Utils.getTimeDiffMinute(new_time, it.timestamp, RoundingMode.HALF_UP)
+                    if(deltaValue1Min.isNaN() && diffTime >= 1) {
+                        deltaValue1Min = (new_value-it.value).toFloat()/diffTime
+                        Log.d(LOG_ID, "1 Calculate $diffTime min delta - new_value $new_value, old_value ${it.value}, delta $deltaValue1Min ")
+                    }
+                    if(deltaValue5Min.isNaN() && diffTime >= 5) {
+                        deltaValue5Min = (new_value-it.value).toFloat()/(diffTime/5)
+                        Log.d(LOG_ID, "5 Calculate $diffTime min delta - new_value $new_value, old_value ${it.value}, delta $deltaValue5Min ")
+                    }
+                    if(deltaValue10Min.isNaN() && diffTime >= 10) {
+                        deltaValue10Min = (new_value-it.value).toFloat()/(diffTime/10)
+                        Log.d(LOG_ID, "10 Calculate $diffTime min delta - new_value $new_value, old_value ${it.value}, delta $deltaValue10Min ")
+                    }
+                    if(deltaValue15Min.isNaN() && diffTime >= 15) {
+                        deltaValue15Min = (new_value-it.value).toFloat()/(diffTime/15)
+                        Log.d(LOG_ID, "15 Calculate $diffTime min delta - new_value $new_value, old_value ${it.value}, delta $deltaValue15Min ")
+                        return@forEach
+                    }
+                }
+                calculateRate(glucoseValues, new_time, new_value)
+            }
+            if(!deltaValue.isNaN())
+                return  // calculated
+        }
+        // else compare with last value
+        calculatedRate = sourceRate
+        if (time > 0) {
+            // calculate delta value
+            timeDiff = new_time-time
+            val timeDiffMinute = getTimeDiffMinute(new_time)
+            Log.d(LOG_ID, "Calculate delta with db data with time diff minute: $timeDiffMinute min")
+            if (timeDiffMinute == 0L) {
+                Log.w(LOG_ID, "Time diff is less than a minute! Can not calculate delta value!")
+            } else if (timeDiffMinute <= 20L) {
+                val newDelta = (new_value - rawValue).toFloat()
+                val deltaTime = if(use5minDelta) 5L else 1L
+                val factor = if(timeDiffMinute != deltaTime) {
+                    val factor: Float = timeDiffMinute.toFloat() / deltaTime.toFloat()
+                    Log.d(LOG_ID, "Divide delta " + newDelta.toString() + " with factor " + factor.toString() + " for time diff: " + timeDiffMinute.toString() + " minute(s)")
+                    factor
+                } else {
+                    1F
+                }
+                if(use5minDelta) {
+                    deltaValue5Min = newDelta / factor
+                    deltaValue1Min = deltaValue5Min/5
+                } else
+                    deltaValue1Min = newDelta / factor
+            }
+        }
     }
 
     private fun calculateAlarm(): Int {
@@ -430,7 +586,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     private fun isNewValueTime(newTime: Long): Boolean {
-        return getTimeDiffMinute(newTime) >= 1
+        return (newTime-time) >= 45000  // at least 45 seconds should be passed to be considered a new value
     }
 
     fun handleIntent(context: Context, dataSource: DataSource, extras: Bundle?, interApp: Boolean = false) : Boolean
@@ -468,33 +624,21 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     receiveTime = System.currentTimeMillis()
                     source = dataSource
                     sensorID = extras.getString(SERIAL) //Name of sensor
-                    rate = extras.getFloat(RATE) //Rate of change of glucose. See libre and dexcom label functions
-                    rateLabel = GlucoDataUtils.getRateLabel(context, rate)
+                    sensorStartTime = extras.getLong(SENSOR_START_TIME)
+                    sourceRate = extras.getFloat(RATE) //Rate of change of glucose. See libre and dexcom label functions
 
-                    if (extras.containsKey(DELTA)) {
-                        deltaValue = extras.getFloat(DELTA, Float.NaN)
-                    } else if (time > 0) {
-                        // calculate delta value
-                        timeDiff = new_time-time
-                        val timeDiffMinute = getTimeDiffMinute(new_time)
-                        if (timeDiffMinute == 0L) {
-                            Log.w(LOG_ID, "Time diff is less than a minute! Can not calculate delta value!")
-                            deltaValue = Float.NaN
-                        } else if (timeDiffMinute > 20L) {
-                            deltaValue = Float.NaN   // no delta calculation for too high time diffs
-                        } else {
-                            deltaValue = (extras.getInt(MGDL) - rawValue).toFloat()
-                            val deltaTime = if(use5minDelta) 5L else 1L
-                            if(timeDiffMinute != deltaTime) {
-                                val factor: Float = timeDiffMinute.toFloat() / deltaTime.toFloat()
-                                Log.d(LOG_ID, "Divide delta " + deltaValue.toString() + " with factor " + factor.toString() + " for time diff: " + timeDiffMinute.toString() + " minute(s)")
-                                deltaValue /= factor
+                    if(!readCalculatedBundle(extras)) {
+                        calculateDeltasAndRate(new_time, extras.getInt(MGDL))
+                        if (deltaValue.isNaN() && extras.containsKey(DELTA)) {
+                            if(use5minDelta) {
+                                deltaValue5Min = extras.getFloat(DELTA, Float.NaN)
+                                deltaValue1Min = deltaValue5Min/5
+                            } else {
+                                deltaValue1Min = extras.getFloat(DELTA, Float.NaN)
                             }
                         }
-                    } else {
-                        deltaValue = Float.NaN
                     }
-
+                    rateLabel = GlucoDataUtils.getRateLabel(context, rate)
                     rawValue = extras.getInt(MGDL)
                     if (isMmol) {
                         if (extras.containsKey(GLUCOSECUSTOM)) {
@@ -540,6 +684,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                             alarm = alarm or 16
                         }
                     }
+
+                    dbAccess.addGlucoseValue(time, getDbValue())
 
                     val notifySource = if(interApp) NotifySource.MESSAGECLIENT else NotifySource.BROADCAST
 
@@ -669,6 +815,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             putInt(Constants.SHARED_PREF_COLOR_ALARM, bundle.getInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm))
             putInt(Constants.SHARED_PREF_COLOR_OBSOLETE, bundle.getInt(Constants.SHARED_PREF_COLOR_OBSOLETE, colorObsolete))
             putInt(Constants.SHARED_PREF_OBSOLETE_TIME, bundle.getInt(Constants.SHARED_PREF_OBSOLETE_TIME, obsoleteTimeMin))
+            putBoolean(Constants.SHARED_PREF_USE_RATE_CALCULATION, bundle.getBoolean(Constants.SHARED_PREF_USE_RATE_CALCULATION, useRateCalculation))
             if (bundle.containsKey(Constants.SHARED_PREF_RELATIVE_TIME)) {
                 putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, bundle.getBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime))
             }
@@ -690,7 +837,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         bundle.putInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm)
         bundle.putInt(Constants.SHARED_PREF_COLOR_OBSOLETE, colorObsolete)
         bundle.putInt(Constants.SHARED_PREF_OBSOLETE_TIME, obsoleteTimeMin)
-
+        bundle.putBoolean(Constants.SHARED_PREF_USE_RATE_CALCULATION, useRateCalculation)
         return bundle
     }
 
@@ -705,6 +852,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         colorAlarm = sharedPref.getInt(Constants.SHARED_PREF_COLOR_ALARM, colorAlarm)
         colorObsolete = sharedPref.getInt(Constants.SHARED_PREF_COLOR_OBSOLETE, colorObsolete)
         obsoleteTimeMin = sharedPref.getInt(Constants.SHARED_PREF_OBSOLETE_TIME, obsoleteTimeMin)
+        useRateCalculation = sharedPref.getBoolean(Constants.SHARED_PREF_USE_RATE_CALCULATION, useRateCalculation)
         changeIsMmol(sharedPref.getBoolean(Constants.SHARED_PREF_USE_MMOL, isMmol))
         calculateAlarm()  // re-calculate alarm with new settings
         Log.i(LOG_ID, "Raw low/min/max/high set: " + lowValue.toString() + "/" + targetMinValue.toString() + "/" + targetMaxValue.toString() + "/" + highValue.toString()
@@ -761,6 +909,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         extras.putFloat(GLUCOSECUSTOM, glucose)
         extras.putInt(MGDL, rawValue)
         extras.putString(SERIAL, sensorID)
+        extras.putLong(SENSOR_START_TIME, sensorStartTime)
         extras.putFloat(RATE, rate)
         extras.putInt(ALARM, alarm)
         extras.putFloat(DELTA, deltaValue)
@@ -769,9 +918,35 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             extras.putFloat(COB, cob)
             extras.putLong(IOBCOB_TIME, iobCobTime)
         }
+        extras.putBundle(CALCULATED_BUNDLE, getCalculatedBundle())
         extras.putInt(DELTA_FALLING_COUNT, deltaFallingCount)
         extras.putInt(DELTA_RISING_COUNT, deltaRisingCount)
         return extras
+    }
+
+    private fun getCalculatedBundle(): Bundle? {
+        if(time == 0L)
+            return null
+        val extras = Bundle()
+        extras.putFloat(DELTA1MIN, deltaValue1Min)
+        extras.putFloat(DELTA5MIN, deltaValue5Min)
+        extras.putFloat(DELTA15MIN, deltaValue15Min)
+        extras.putFloat(RATE_CALC, calculatedRate)
+        extras.putFloat(RATE_SOURCE, sourceRate)
+        return extras
+    }
+
+    private fun readCalculatedBundle(bundle: Bundle): Boolean {
+        if(bundle.containsKey(CALCULATED_BUNDLE)) {
+            val extras = bundle.getBundle(CALCULATED_BUNDLE) ?: return false
+            deltaValue1Min = extras.getFloat(DELTA1MIN, Float.NaN)
+            deltaValue5Min = extras.getFloat(DELTA5MIN, Float.NaN)
+            deltaValue15Min = extras.getFloat(DELTA15MIN, Float.NaN)
+            calculatedRate = extras.getFloat(RATE_CALC, Float.NaN)
+            sourceRate = extras.getFloat(RATE_SOURCE, Float.NaN)
+            return !(deltaValue1Min.isNaN() || deltaValue5Min.isNaN() || deltaValue15Min.isNaN() || calculatedRate.isNaN())
+        }
+        return false
     }
 
     private fun saveExtras(context: Context) {
@@ -784,6 +959,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 putFloat(GLUCOSECUSTOM, glucose)
                 putInt(MGDL, rawValue)
                 putString(SERIAL, sensorID)
+                putLong(SENSOR_START_TIME, sensorStartTime)
                 putFloat(RATE, rate)
                 putInt(ALARM, alarm)
                 putFloat(DELTA, deltaValue)
@@ -811,6 +987,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     extras.putFloat(GLUCOSECUSTOM, sharedGlucosePref.getFloat(GLUCOSECUSTOM, glucose))
                     extras.putInt(MGDL, sharedGlucosePref.getInt(MGDL, rawValue))
                     extras.putString(SERIAL, sharedGlucosePref.getString(SERIAL, sensorID))
+                    extras.putLong(SENSOR_START_TIME, sharedGlucosePref.getLong(SENSOR_START_TIME, 0L))
                     extras.putFloat(RATE, sharedGlucosePref.getFloat(RATE, rate))
                     extras.putInt(ALARM, sharedGlucosePref.getInt(ALARM, alarm))
                     extras.putFloat(DELTA, sharedGlucosePref.getFloat(DELTA, deltaValue))
@@ -844,7 +1021,8 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     Constants.SHARED_PREF_COLOR_OUT_OF_RANGE,
                     Constants.SHARED_PREF_COLOR_OBSOLETE,
                     Constants.SHARED_PREF_COLOR_OK,
-                    Constants.SHARED_PREF_OBSOLETE_TIME -> {
+                    Constants.SHARED_PREF_OBSOLETE_TIME,
+                    Constants.SHARED_PREF_USE_RATE_CALCULATION -> {
                         updateSettings(sharedPreferences!!)
                         val extras = Bundle()
                         extras.putBundle(Constants.SETTINGS_BUNDLE, GlucoDataService.getSettings())

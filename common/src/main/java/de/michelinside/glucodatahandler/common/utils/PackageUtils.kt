@@ -1,11 +1,17 @@
 package de.michelinside.glucodatahandler.common.utils
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
+import android.os.Build
 import android.util.Log
+import com.google.android.gms.wearable.WearableListenerService.RECEIVER_EXPORTED
+import com.google.android.gms.wearable.WearableListenerService.RECEIVER_VISIBLE_TO_INSTANT_APPS
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver
 import kotlinx.coroutines.*
@@ -87,7 +93,7 @@ object PackageUtils {
     fun getTapAction(
         context: Context,
         tapAction: String?
-    ): Pair<Intent?, Boolean> {  // Boolean: true = Broadcase - false = Activity
+    ): Pair<Intent?, Boolean> {  // Boolean: true = Broadcast - false = Activity
         Log.d(LOG_ID, "Get tap action $tapAction")
         if (tapAction == null && context.packageName != null) {
             return getTapAction(context, context.packageName)
@@ -132,31 +138,54 @@ object PackageUtils {
         return null
     }
 
+    private val receiverFilter = mutableSetOf<String>()
+    fun getReceiverFilter(): MutableSet<String> {
+        if (receiverFilter.isEmpty()) {
+            receiverFilter.add(Constants.PACKAGE_JUGGLUCO)
+            receiverFilter.add("info.nightscout")  // AAPS
+            receiverFilter.add("com.eveningoutpost.dexdrip")
+            receiverFilter.add("jamorham.xdrip.plus")
+            receiverFilter.add("com.freestylelibre")
+            receiverFilter.add("org.nativescript.librelinkup")
+            receiverFilter.add("com.dexcom.")
+            receiverFilter.add("com.insulet.myblue.pdm")   // Omnipod 5 app
+            receiverFilter.add("com.senseonics.")  // Eversense CGM
+            receiverFilter.add("esel.esel.")   // ESEL for Eversense
+            receiverFilter.add("com.camdiab.")   // Cam APS FX
+            receiverFilter.add("com.medtronic.")
+        }
+        return receiverFilter
+    }
 
     private val tapActionFilter = mutableSetOf<String>()
-    private fun getTapActionFilter(context: Context): MutableSet<String> {
+    fun getTapActionFilter(context: Context): MutableSet<String> {
         if (tapActionFilter.isEmpty()) {
             tapActionFilter.add(context.packageName)
             tapActionFilter.add(Constants.PACKAGE_JUGGLUCO)
             tapActionFilter.add(Constants.PACKAGE_GLUCODATAAUTO)
-            tapActionFilter.add("info.nightscout")  // AAPS
-            tapActionFilter.add("com.eveningoutpost.dexdrip")
-            tapActionFilter.add("jamorham.xdrip.plus")
-            tapActionFilter.add("com.freestylelibre")
-            tapActionFilter.add("org.nativescript.librelinkup")
-            tapActionFilter.add("com.dexcom.")
-            tapActionFilter.add("com.senseonics.")  // Eversense CGM
-            tapActionFilter.add("esel.esel.")   // ESEL for Eversense
+            getReceiverFilter().forEach { tapActionFilter.add(it) }
         }
         return tapActionFilter
     }
 
-    fun tapActionFilterContains(context: Context, value: String): Boolean {
-        getTapActionFilter(context).forEach {
+    fun filterContains(filter: MutableSet<String>, value: String): Boolean {
+        filter.forEach {
             if(value.lowercase().startsWith(it.lowercase()))
                 return true
         }
         return false
+    }
+
+    fun tapActionFilterContains(context: Context, value: String): Boolean {
+        return filterContains(getTapActionFilter(context), value)
+    }
+
+    fun isDexcomG7App(packageName: String): Boolean {
+        return packageName.lowercase().startsWith("com.dexcom.g7")
+    }
+
+    fun isDexcomApp(packageName: String): Boolean {
+        return packageName.lowercase().startsWith("com.dexcom.")
     }
 
     /*
@@ -183,5 +212,20 @@ object PackageUtils {
             gdaAvailable = isPackageAvailable(context, Constants.PACKAGE_GLUCODATAAUTO)
         }
         return gdaAvailable
+    }
+
+
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    fun registerReceiver(context: Context, receiver: BroadcastReceiver, filter: IntentFilter) {
+        Log.d(LOG_ID, "Register receiver ${receiver.javaClass.name} on ${context.applicationContext}")
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                context.applicationContext.registerReceiver(receiver, filter, RECEIVER_EXPORTED or RECEIVER_VISIBLE_TO_INSTANT_APPS)
+            } else {
+                context.applicationContext.registerReceiver(receiver, filter)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "registerReceiver exception: " + exc.toString())
+        }
     }
 }

@@ -334,7 +334,7 @@
     <string name="pref_lockscreen_enabled">Abilita</string>
     <string name="pref_lockscreen_enabled_summary">Se abiliti lo sfondo della schermata di blocco, l\'app sostituisce lo sfondo sulla schermata di blocco.</string>
     <string name="pref_lockscreen_y_pos">Posizione verticale</string>
-    <string name="pref_lockscreen_y_pos_summary">Posizione verticale dell\'immagine della tendenza della glicemia sulla schermata di blocco:\n0 è la parte superiore del display\n100 è la parte inferiore del display</string>
+    <string name="pref_lockscreen_y_pos_summary">Posizione verticale dell\'immagine della tendenza del glucosio:\n0 è la parte superiore del display\n100 è la parte inferiore del display</string>
     <string name="activity_main_notification_permission">La visualizzazione delle notifiche è disabilitata!!!\nGlucoDataHandler potrebbe non funzionare correttamente e non può mostrare gli allarmi!!!\nPremi qui per andare direttamente all\'impostazione delle autorizzazioni.</string>
 
     <string name="src_libre_setup_librelink">Dati mancanti! Accetta prima l\'invito nell\'app LibreLinkUp!</string>
@@ -514,7 +514,7 @@
     <string name="src_dexcom_share_password_summary">Password per l\'account Dexcom Share.</string>
     <string name="pref_source_dexcom_share_info">Configura Dexcom Share</string>
     <string name="permission_missing_title">Autorizzazione mancante!</string>
-    <string name="setting_permission_missing_message">L\'impostazione \'%1$s\' è impostata, ma l\'autorizzazione correlata non è stata concessa! Premi \"OK\" per essere reindirizzato alla finestra di dialogo delle autorizzazioni o premi \"Annulla\" per disabilitare questa impostazione.</string>
+    <string name="setting_permission_missing_message">L\'impostazione\n\'%1$s\'\nè impostata, ma l\'autorizzazione correlata non è stata concessa!\nPremi \"OK\" per essere reindirizzato alla finestra di dialogo delle autorizzazioni o premi \"Annulla\" per disabilitare questa impostazione.</string>
     <string name="xdrip_broadcast_service_api_enabled">API del servizio di trasmissione</string>
     <string name="xdrip_broadcast_service_api_enabled_summary">Utilizza l\'API del servizio di trasmissione xDrip+ per ricevere dati (anche IOB) da xDrip+.\nAttiva prima \"API del servizio di trasmissione\" in \"Impostazioni Inter-app\" in xDrip+!</string>
     <string name="obsolete_time">Tempo di obsolescenza</string>
@@ -704,4 +704,71 @@
     <string name="pref_show_iob_cob">Mostra valori IOB/COB</string>
     <string name="pref_show_iob_cob_summary">Mostra i valori IOB e COB, se disponibili.</string>
 
+    <string name="delta_per_10_minute">ogni 10 minuti</string>
+    <string name="delta_per_15_minute">ogni 15 minuti</string>
+
+    <!-- v2.0 -->
+
+    <string name="widget_wearos_battery_level">Livello batteria WearOS</string>
+
+    <string name="graph">Grafico</string>
+    <string name="graph_duration">Durata grafico</string>
+    <string name="graph_duration_wear_summary">Numero di ore mostrate nel grafico nella complicazione e nella schermata principale.\nUsa 0 per disabilitare il grafico.</string>
+    <string name="graph_duration_phone_summary">Numero di ore mostrate nel grafico.\nUsa 0 per disabilitare il grafico.</string>
+    <string name="graph_duration_phone_widget_summary">Numero di ore mostrate nel grafico.</string>
+    <string name="show_graph">Mostra grafico</string>
+    <string name="menu_database">Database</string>
+    <string name="reset_db">Ripristina database</string>
+    <string name="reset_db_summary">Premi qui per rimuovere tutti i dati dal database.</string>
+    <string name="reset_db_warning">Se premi OK, tutti i dati dal database verranno rimossi!\nSei sicuro?</string>
+    <string name="graph_disabled">Grafico disabilitato!</string>
+    <string name="no_graph_data">Creazione grafico fallita!</string>
+
+    <string name="pref_switch_use_rate_calculation">Calcolo tendenza</string>
+    <string name="pref_switch_use_rate_calculation_summary_on">Usa il calcolo della tendenza interno relativo agli ultimi valori.</string>
+    <string name="pref_switch_use_rate_calculation_summary_off">Usa la tendenza fornita dalla sorgente.\nSe non è disponibile alcuna tendenza, viene utilizzato il calcolo interno.</string>
+
+    <string name="accessibility_service_description">Visualizza i valori di glucosio sull\'Always-on Display</string>
+
+    <string name="pref_cat_aod">Always on Display</string>
+    <string name="pref_cat_aod_summary">Impostazioni per Always on Display.</string>
+
+    <string name="pref_aod_enabled_summary">Mostra i valori sul display AOD.</string>
+    <string name="pref_aod_size_summary">Cambia la dimensione dei dati AOD.</string>
+    <string name="pref_aod_coloured">Colorato</string>
+    <string name="pref_aod_coloured_summary">Mostra AOD a colori.</string>
+
+    <string name="graph_show_axis">Mostra assi</string>
+    <string name="graph_show_axis_summary">Mostra gli assi y e x nel widget.</string>
+
+    <string name="source_notification">Notifica</string>
+    <string name="pref_source_notification">Lettore di notifiche</string>
+    <string name="pref_source_notification_summary">Per ricevere il valore del glucosio e l\'IOB dalle notifiche di altre app, come Dexcom, CamAPS FX e Omnipod 5.</string>
+    <string name="notification_reader_app">Applicazione</string>
+    <string name="notification_reader_app_summary">Seleziona un\'applicazione da cui leggere la notifica.</string>
+    <string name="notification_reader_enabled_summary_on">Il lettore di notifiche è abilitato per analizzare i valori dalle notifiche per applicazioni specifiche.</string>
+    <string name="notification_reader_enabled_summary_off">Il lettore di notifiche è disabilitato e nessuna notifica verrà analizzata.\nSpecifica prima almeno un\'applicazione.</string>
+    <string name="notification_cat_glucose">Leggi il valore del glucosio</string>
+    <string name="notification_cat_iob">Leggi il valore IOB</string>
+    <string name="notification_reader_enabled">Abilita lettore di notifiche</string>
+    <string name="no_receiver">Nessuna applicazione</string>
+    <string name="notification_reader_app_regex">Filtro valore Regex</string>
+    <string name="notification_reader_app_regex_summary">Regex per analizzare il valore dal testo nella notifica.\nModifica solo se sai cosa stai facendo o se ricevi un consiglio dallo sviluppatore.</string>
+    <string name="notification_reader_five_minute_interval">Intervallo di 5 minuti</string>
+    <string name="notification_reader_five_minute_interval_summary">Alcune app, come Dexcom, aggiornano le loro notifiche abbastanza spesso. Per ignorare questi aggiornamenti con lo stesso valore, abilita l\'intervallo di 5 minuti.\nSe abilitato, ci sarà un nuovo valore solo ogni 5 minuti o se il valore nella notifica è cambiato.</string>
+    <string name="pref_source_notification_info_summary">Per ricevere valori dalle notifiche di altre app, è necessaria l\'autorizzazione per accedere alle notifiche!\nLa notifica deve includere il valore del glucosio o l\'IOB come stringa.\nPoiché ogni notifica ha un layout diverso, potrebbe non funzionare con tutte le app. In caso di problemi, contattami con uno screenshot della notifica e i log.</string>
+    <string name="notification_dexcom_info">Importante</string>
+    <string name="notification_dexcom_info_summary">A causa del comportamento speciale delle notifiche Dexcom G7, devi anche abilitare la notifica in primo piano di Dexcom.</string>
+    <string name="sensor_age_label">Età del sensore</string>
+    <string name="sensor_age_value">%1$dd %2$dh</string>
+    <string name="vibrate_pattern_shorty">Breve</string>
+
+    <string name="pref_cat_locksreen_aod">Schermata di blocco e AOD</string>
+    <string name="pref_cat_locksreen_aod_summary">Impostazioni per aggiungere uno sfondo alla schermata di blocco e all\'Always On Display.</string>
+    <string name="pref_graph_transparency_phone_main_summary">Trasparenza dello sfondo per il grafico nella schermata principale.\nQuesto è necessario solo per la combinazione di colori chiari.</string>
+
+    <string name="pref_floating_widget_lock_position">Blocca posizione</string>
+    <string name="pref_floating_widget_lock_position_summary">Se la posizione è bloccata, il widget mobile non può essere spostato. Sarà sempre nella stessa posizione.</string>
+
+    <string name="widget_chart_glucose_trend_delta_time_iob_cob">Valori e grafico</string>
 </resources>

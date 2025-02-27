@@ -14,4 +14,29 @@
             android:summary="@string/activity_large_arrow_icon_summary"
             android:title="@string/activity_large_arrow_icon"
             app:iconSpaceReserved="false" />
+
+        <PreferenceCategory
+            android:title="@string/graph"
+            app:iconSpaceReserved="false">
+                <androidx.preference.SeekBarPreference
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="1"
+                    app:min="0"
+                    android:max="12"
+                    android:defaultValue="4"
+                    android:key="graph_duration_phone_main"
+                    android:summary="@string/graph_duration_phone_summary"
+                    android:title="@string/graph_duration"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SeekBarPreference
+                    android:defaultValue="0"
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="1"
+                    app:min="0"
+                    android:max="10"
+                    android:key="graph_transparency_phone_main"
+                    android:summary="@string/pref_graph_transparency_phone_main_summary"
+                    android:title="@string/pref_floating_widget_transparency"
+                    app:iconSpaceReserved="false" />
+        </PreferenceCategory>
 </PreferenceScreen>

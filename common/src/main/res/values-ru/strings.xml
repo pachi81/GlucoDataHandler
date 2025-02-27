@@ -337,7 +337,7 @@
     <string name="pref_lockscreen_enabled">Включить</string>
     <string name="pref_lockscreen_enabled_summary">Если вы включите обои экрана блокировки, приложение заменит обои на экране блокировки.</string>
     <string name="pref_lockscreen_y_pos">Вертикальное положение</string>
-    <string name="pref_lockscreen_y_pos_summary">Вертикальное положение изображения тренда глюкозы на экране блокировки:\n0 - верх дисплея\n100 - низ дисплея</string>
+    <string name="pref_lockscreen_y_pos_summary">Вертикальное положение изображения тренда глюкозы:\n0 — верхняя часть экрана\n100 — нижняя часть экрана</string>
     <string name="activity_main_notification_permission">Отображение уведомлений отключено!!!\nGlucoDataHandler может работать некорректно и не сможет показывать уведомления!!!\nНажмите здесь, чтобы перейти непосредственно к настройке разрешений.</string>
 
     <string name="src_libre_setup_librelink">Нет данных! Сначала примите приглашение в приложении LibreLinkUp!</string>
@@ -517,7 +517,7 @@
     <string name="src_dexcom_share_password_summary">Пароль для учетной записи Dexcom Share.</string>
     <string name="pref_source_dexcom_share_info">Настройка Dexcom Share</string>
     <string name="permission_missing_title">Отсутствует разрешение!</string>
-    <string name="setting_permission_missing_message">Настройка \'%1$s\' установлена, но соответствующее разрешение не предоставлено! Нажмите \"ОК\", чтобы перейти к диалоговому окну разрешений, или нажмите \"Отмена\", чтобы отключить эту настройку.</string>
+    <string name="setting_permission_missing_message">Настройка\n\'%1$s\'\nустановлена, но соответствующее разрешение не предоставлено!\nНажмите \"ОК\", чтобы перейти к диалоговому окну разрешений, или нажмите \"Отмена\", чтобы отключить эту настройку.</string>
     <string name="xdrip_broadcast_service_api_enabled">API службы вещания</string>
     <string name="xdrip_broadcast_service_api_enabled_summary">Используйте API службы вещания xDrip+ для получения данных (также IOB) из xDrip+.\nСначала активируйте \"API службы вещания\" в \"Настройках взаимодействия приложений\" в xDrip+!</string>
     <string name="obsolete_time">Время устаревания</string>
@@ -708,5 +708,73 @@
 
     <string name="pref_show_iob_cob">Показывать значения IOB/COB</string>
     <string name="pref_show_iob_cob_summary">Показывать значения IOB и COB, если они доступны.</string>
+
+    <string name="delta_per_10_minute">за 10 минут</string>
+    <string name="delta_per_15_minute">за 15 минут</string>
+
+    <!-- v2.0 -->
+
+    <string name="widget_wearos_battery_level">Уровень заряда WearOS</string>
+
+    <string name="graph">График</string>
+    <string name="graph_duration">Длительность графика</string>
+    <string name="graph_duration_wear_summary">Количество часов, отображаемых на графике в виджете и на главном экране.\nИспользуйте 0, чтобы отключить график.</string>
+    <string name="graph_duration_phone_summary">Количество часов, отображаемых на графике.\nИспользуйте 0, чтобы отключить график.</string>
+    <string name="graph_duration_phone_widget_summary">Количество часов, отображаемых на графике.</string>
+    <string name="show_graph">Показать график</string>
+    <string name="menu_database">База данных</string>
+    <string name="reset_db">Сбросить базу данных</string>
+    <string name="reset_db_summary">Нажмите здесь, чтобы удалить все данные из базы данных.</string>
+    <string name="reset_db_warning">Если вы нажмете OK, все данные из базы данных будут удалены!\nВы уверены?</string>
+    <string name="graph_disabled">График отключен!</string>
+    <string name="no_graph_data">Не удалось создать график!</string>
+
+    <string name="pref_switch_use_rate_calculation">Расчет тренда</string>
+    <string name="pref_switch_use_rate_calculation_summary_on">Использовать внутренний расчет тренда, основанный на последних значениях.</string>
+    <string name="pref_switch_use_rate_calculation_summary_off">Использовать тренд, предоставленный источником.\nЕсли тренд недоступен, используется внутренний расчет.</string>
+
+    <string name="accessibility_service_description">Отображать значения глюкозы на Always-on Display</string>
+
+    <string name="pref_cat_aod">Always on Display</string>
+    <string name="pref_cat_aod_summary">Настройки для Always on Display.</string>
+
+    <string name="pref_aod_enabled_summary">Показывать значения на AOD-дисплее.</string>
+    <string name="pref_aod_size_summary">Изменить размер данных AOD.</string>
+    <string name="pref_aod_coloured">Цветной</string>
+    <string name="pref_aod_coloured_summary">Показывать AOD в цвете.</string>
+
+    <string name="graph_show_axis">Показать оси</string>
+    <string name="graph_show_axis_summary">Показать оси y и x в виджете.</string>
+
+    <string name="source_notification">Уведомление</string>
+    <string name="pref_source_notification">Чтение уведомлений</string>
+    <string name="pref_source_notification_summary">Для получения значения глюкозы и IOB из уведомлений других приложений, таких как Dexcom, CamAPS FX и Omnipod 5.</string>
+    <string name="notification_reader_app">Приложение</string>
+    <string name="notification_reader_app_summary">Выберите приложение, из которого следует читать уведомление.</string>
+    <string name="notification_reader_enabled_summary_on">Чтение уведомлений включено для анализа значений из уведомлений для определенных приложений.</string>
+    <string name="notification_reader_enabled_summary_off">Чтение уведомлений отключено, и никакие уведомления не будут анализироваться.\nПожалуйста, сначала укажите хотя бы одно приложение.</string>
+    <string name="notification_cat_glucose">Читать значение глюкозы</string>
+    <string name="notification_cat_iob">Читать значение IOB</string>
+    <string name="notification_reader_enabled">Включить чтение уведомлений</string>
+    <string name="no_receiver">Нет приложения</string>
+    <string name="notification_reader_app_regex">Фильтр значений Regex</string>
+    <string name="notification_reader_app_regex_summary">Regex для анализа значения из текста в уведомлении.\nПожалуйста, изменяйте только если вы знаете, что делаете, или если вы получили совет от разработчика.</string>
+    <string name="notification_reader_five_minute_interval">Интервал 5 минут</string>
+    <string name="notification_reader_five_minute_interval_summary">Некоторые приложения, такие как Dexcom, обновляют свои уведомления довольно часто. Чтобы игнорировать эти обновления с тем же значением, включите интервал в 5 минут.\nЕсли включено, новое значение будет появляться только каждые 5 минут или если значение в уведомлении изменилось.</string>
+    <string name="pref_source_notification_info_summary">Для получения значений из уведомлений других приложений требуется разрешение на доступ к уведомлениям!\nУведомление должно содержать значение глюкозы или IOB в виде строки.\nПоскольку каждое уведомление имеет разный макет, оно может работать не со всеми приложениями. В случае проблем, пожалуйста, свяжитесь со мной, приложив скриншот уведомления и логи.</string>
+    <string name="notification_dexcom_info">Важно</string>
+    <string name="notification_dexcom_info_summary">Из-за особенностей уведомлений Dexcom G7, вы также должны включить уведомление Dexcom на переднем плане.</string>
+    <string name="sensor_age_label">Возраст сенсора</string>
+    <string name="sensor_age_value">%1$dд %2$dч</string>
+    <string name="vibrate_pattern_shorty">Короткий</string>
+
+    <string name="pref_cat_locksreen_aod">Экран блокировки и AOD</string>
+    <string name="pref_cat_locksreen_aod_summary">Настройки для добавления обоев на экран блокировки и Always On Display.</string>
+    <string name="pref_graph_transparency_phone_main_summary">Прозрачность фона для графика на главном экране.\nЭто необходимо только для светлой цветовой схемы.</string>
+
+    <string name="pref_floating_widget_lock_position">Зафиксировать положение</string>
+    <string name="pref_floating_widget_lock_position_summary">Если положение зафиксировано, плавающий виджет нельзя перемещать. Он всегда будет находиться в одном и том же месте.</string>
+
+    <string name="widget_chart_glucose_trend_delta_time_iob_cob">Значения и график</string>
 
 </resources>

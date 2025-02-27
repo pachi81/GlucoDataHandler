@@ -31,7 +31,7 @@ import org.json.JSONObject
     * }
 */
 
-open class DiaboxReceiver: ReceiverBase() {
+open class DiaboxReceiver: NamedBroadcastReceiver() {
     private val LOG_ID = "GDH.DiaboxReceiver"
     private val JSON_DATA = "data"
     private val REALTIME_GLUCOSE = "realTimeGlucose"
