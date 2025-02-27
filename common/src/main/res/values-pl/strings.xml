@@ -591,8 +591,8 @@
     <string name="alarm_occurrence_count_summary">Liczba kolejnych osiągnięć danej wartości delta.</string>
     <string name="pref_alarm_rising_falling_border">Granica</string>
     <string name="pref_alarm_rising_falling_border_summary">Granica alarmu dla wzrostu/spadku.\nWartość glukozy musi być wyższa/niższa, aby włączyć ten alarm.</string>
-    <string name="delta_per_minute">na min.</string>
-    <string name="delta_per_5_minute">a 5 minut</string>
+    <string name="delta_per_minute">Na 1 minutę</string>
+    <string name="delta_per_5_minute">Na 5 minut</string>
     <string name="other_alarm_cat_categories">Inne alarmy</string>
     <string name="advanced_settings_alarm">Zaawansowane ustawienia alarmów</string>
     <string name="src_offline_enabled_summary_on">Wewnętrzne wiadomości z tego źródła będą obsługiwane.</string>
@@ -727,7 +727,7 @@
     <string name="graph">Wykres</string>
     <string name="graph_duration">Okres na wykresie</string>
     <string name="graph_duration_wear_summary">Liczba godzin pokazanych na wykresie na komplikacji i na ekranie głównym.\nWpisz 0, aby wyłączyć wykres.</string>
-    <string name="graph_duration_phone_summary">Liczba godzin pokazanych na wykresie.\Wpisz 0, aby wyłączyć wykres.</string>
+    <string name="graph_duration_phone_summary">Liczba godzin pokazanych na wykresie.\nWpisz 0, aby wyłączyć wykres.</string>
     <string name="graph_duration_phone_widget_summary">Liczba godzin pokazanych na wykresie.</string>
     <string name="show_graph">Pokaż wykres</string>
     <string name="menu_database">Baza danych</string>
@@ -739,48 +739,48 @@
 
     <string name="pref_switch_use_rate_calculation">Kalkulacja trendu</string>
     <string name="pref_switch_use_rate_calculation_summary_on">Użyj wewnętrznej kalkulacji trendu związanej z ostatnimi wartościami.</string>
-    <string name="pref_switch_use_rate_calculation_summary_off">Użyj trendu ze źródła.\Jeżeli trend nie jest dostępny, używana będzie kalkulacja wewnętrzna.</string>
+    <string name="pref_switch_use_rate_calculation_summary_off">Użyj trendu ze źródła.\nJeżeli trend nie jest dostępny, używana będzie kalkulacja wewnętrzna.</string>
 
-    <string name="accessibility_service_description">Display glucose values on the Always-on Display</string>
+    <string name="accessibility_service_description”>Wyświetlanie wartości glukozy na ekranie Always-on Display</string>
 
-    <string name="pref_cat_aod">Always on Display</string>
-    <string name="pref_cat_aod_summary">Settings for Always on Display.</string>
+    <string name="pref_cat_aod”>Always on Display</string>
+    <string name="pref_cat_aod_summary”>Ustawienia dla Always on Display.</string>
 
-    <string name="pref_aod_enabled_summary">Show values on the AOD display.</string>
-    <string name="pref_aod_size_summary">Change size of the AOD data.</string>
-    <string name="pref_aod_coloured">Colored</string>
-    <string name="pref_aod_coloured_summary">Show AOD in color.</string>
+    <string name="pref_aod_enabled_summary”>Pokaż wartości na ekranie AOD.</string>
+    <string name="pref_aod_size_summary”>Zmień rozmiar danych na AOD.</string>
+    <string name="pref_aod_coloured”>Kolorowy</string>
+    <string name="pref_aod_coloured_summary”>Pokaż AOD w kolorze.</string>
+    
+    <string name="graph_show_axis”>Pokaż oś</string>
+    <string name="graph_show_axis_summary”>Pokazuje oś x i y na widgecie.</string>
 
-    <string name="graph_show_axis">Show axis</string>
-    <string name="graph_show_axis_summary">Show y- and x-Axis in the widget.</string>
-
-    <string name="source_notification">Notification</string>
-    <string name="pref_source_notification">Notification Reader</string>
-    <string name="pref_source_notification_summary">To receive the glucose value and IOB from notifications other apps, like Dexcom, CamAPS FX and Omnipod 5.</string>
-    <string name="notification_reader_app">Application</string>
-    <string name="notification_reader_app_summary">Select an application, from which the notification should be read.</string>
-    <string name="notification_reader_enabled_summary_on">Notification reader is enabled to parse values from notifications for specific applications.</string>
-    <string name="notification_reader_enabled_summary_off">Notification reader is disabled and no notification will be parsed.\nPlease specify at least one application first.</string>
-    <string name="notification_cat_glucose">Read glucose value</string>
-    <string name="notification_cat_iob">Read IOB value</string>
-    <string name="notification_reader_enabled">Enable notification reader</string>
-    <string name="no_receiver">No application</string>
-    <string name="notification_reader_app_regex">Regex value filter</string>
-    <string name="notification_reader_app_regex_summary">Regex to parse the value from text in notification.\nPlease only change, if you know, what you are doing or if you get an advice from the developer.</string>
-    <string name="notification_reader_five_minute_interval">5 minute interval</string>
-    <string name="notification_reader_five_minute_interval_summary">Some apps, like Dexcom updates their notifications quite often. To ignore these updates with the same value, enable the 5 minute interval.\nIf enabled, there will be only a new value every 5 minutes or if the value in the notification has changed.</string>
-    <string name="pref_source_notification_info_summary">To receive values from notifications of other apps, a permission to access the notifications is needed!\nThe notifcation must include either the glucose value or IOB as string.\nAs each notification has a different layout, it may not work with every app. In case of problems, please contact me with a screenshot of the notification and the logs.</string>
-    <string name="notification_dexcom_info">Important</string>
-    <string name="notification_dexcom_info_summary">Because of special behaviour of Dexcom G7 notificiations, you must also enable the foreground notification of Dexcom.</string>
-    <string name="sensor_age_label">Sensor age</string>
-    <string name="sensor_age_value">%1$dd %2$dh</string>
-    <string name="vibrate_pattern_shorty">Shorty</string>
-
-    <string name="pref_cat_locksreen_aod">Lockscreen and AOD</string>
-    <string name="pref_cat_locksreen_aod_summary">Settings to add a wallpaper to lockscreen and Always On Display.</string>
-    <string name="pref_graph_transparency_phone_main_summary">Background transparency for graph on main screen.\nThis is only needed for light color scheme.</string>
-
-    <string name="pref_floating_widget_lock_position">Lock position</string>
-    <string name="pref_floating_widget_lock_position_summary">If the position is locked, the floating widget can not be moved. It will always be on the same position.</string>
+    <string name="source_notification”>Powiadomienie</string>
+    <string name="pref_source_notification”>Czytnik powiadomień</string>
+    <string name="pref_source_notification_summary”>Odbieranie wartości glukozy i IOB z powiadomień innych aplikacji, takich jak Dexcom, CamAPS FX i Omnipod 5.</string>.
+    <string name="notification_reader_app”>Aplikacja</string>
+    <string name="notification_reader_app_summary”>Wybierz aplikację, z której ma być odczytywane powiadomienie.</string>
+    <string name="notification_reader_enabled_summary_on”>Czytnik powiadomień jest włączony, aby analizować wartości z powiadomień dla określonych aplikacji.</string>
+    <string name="notification_reader_enabled_summary_off”>Czytnik powiadomień jest wyłączony i żadne powiadomienie nie będzie analizowane.\nNależy najpierw określić co najmniej jedną aplikację.</string>
+    <string name="notification_cat_glucose”>Odczyuj wartość glukozy</string>
+    <string name="notification_cat_iob”>Odczytuj wartość IOB</string>
+    <string name="notification_reader_enabled”>Włącz czytnik powiadomień</string>
+    <string name="no_receiver”>Brak aplikacji</string>
+    <string name="notification_reader_app_regex”>Filtr wartości Regex</string>
+    <string name="notification_reader_app_regex_summary”>Regex do analizowania wartości z tekstu w powiadomieniu.\nZmień tylko, jeśli wiesz, co robisz lub jeśli otrzymasz poradę od programisty.</string>
+    <string name="notification_reader_five_minute_interval”>5-minutowy interwał</string>
+    <string name="notification_reader_five_minute_interval_summary”>Niektóre aplikacje, takie jak Dexcom, aktualizują swoje powiadomienia dość często. Aby zignorować te aktualizacje z tą samą wartością, włącz 5-minutowy interwał.\nJeśli opcja ta jest włączona, nowa wartość będzie pojawiać się co 5 minut lub jeśli wartość w powiadomieniu uległa zmianie.</string>.
+    <string name="pref_source_notification_info_summary”>Aby otrzymywać wartości z powiadomień innych aplikacji, potrzebne jest uprawnienie dostępu do powiadomień! Powiadomienie musi zawierać wartość glukozy lub IOB jako ciąg znaków.\nPonieważ każde powiadomienie ma inny układ, może nie działać z każdą aplikacją. W przypadku problemów, proszę o kontakt ze zrzutem ekranu powiadomienia i logami.</string>
+    <string name="notification_dexcom_info”>Ważne</string>
+    <string name="notification_dexcom_info_summary”>Ze względu na specjalne działanie powiadomień Dexcom G7, należy również włączyć powiadomienia Dexcom na pierwszym planie.</string>
+    <string name="sensor_age_label”>Czas działania sensora</string>
+    <string name="sensor_age_value”>%1$dd %2$dh</string>
+    <string name="vibrate_pattern_shorty”>Krótko</string>
+    
+    <string name="pref_cat_locksreen_aod”>Ekran blokady i AOD</string>
+    <string name="pref_cat_locksreen_aod_summary”>Ustawienia dodawania tapety do ekranu blokady i Always On Display.</string>
+    <string name="pref_graph_transparency_phone_main_summary”>Przezroczystość tła dla wykresu na ekranie głównym.\nJest to potrzebne tylko w przypadku jasnego trybu kolorów.</string>
+    
+    <string name="pref_floating_widget_lock_position”>Blokada położenia</string>
+    <string name="pref_floating_widget_lock_position_summary”>Jeśli położenie jest zablokowane, pływającego widżetu nie można przesuwać. Zawsze będzie znajdował się w tym samym miejscu.</string>
 
 </resources>
