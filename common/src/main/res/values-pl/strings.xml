@@ -250,7 +250,7 @@
     <string name="icon_delta">Delta (duża)</string>
     <string name="image_delta">Delta (duży, kolor)</string>
     <string name="short_delta">Delta</string>
-    <string name="short_delta_arrow">Trend delta i</string>
+    <string name="short_delta_arrow">Trend i delta</string>
     <string name="short_delta_icon">Delta z ikoną</string>
     <string name="short_delta_time">Delta i znacznik czasu</string>
     <string name="image_delta_time">Delta i znacznik czasu (kolor)</string>
