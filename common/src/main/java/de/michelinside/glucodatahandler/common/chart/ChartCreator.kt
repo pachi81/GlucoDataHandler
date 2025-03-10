@@ -68,6 +68,12 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             return Color.WHITE
         return context.resources.getColor(R.color.text_color)
     }
+    protected open val limitLineColor: Int get() {
+        if(backgroundTransparency > 3)
+            return 0xFFCCCCCC.toInt()
+        return context.resources.getColor(R.color.chart_limit_line_color)
+    }
+
 
     val enabled: Boolean get() {
         return chart.visibility == View.VISIBLE
@@ -240,7 +246,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     private fun createLimitLine(limit: Float): LimitLine {
         Log.v(LOG_ID, "Create limit line for limit: $limit")
         val line = LimitLine(limit)
-        line.lineColor = context.resources.getColor(R.color.chart_limit_line_color)
+        line.lineColor = limitLineColor
         return line
     }
 
