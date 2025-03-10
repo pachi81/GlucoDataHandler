@@ -31,6 +31,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.common.R
 
 
 open class ChartComplication(): SuspendingComplicationDataSourceService() {
@@ -138,7 +139,16 @@ open class ChartComplication(): SuspendingComplicationDataSourceService() {
         return Icon.createWithBitmap(resize(graph, true))
     }
 
-    private fun getImage(graph: Bitmap): SmallImage {
+    private fun getTransparentImage(): SmallImage {
+        return SmallImage.Builder(
+            image = Icon.createWithResource(this, R.drawable.icon_transparent),
+            type = SmallImageType.PHOTO
+        ).build()
+    }
+
+    private fun getImage(graph: Bitmap?): SmallImage {
+        if(graph==null)
+            return getTransparentImage()
         val icon = Icon.createWithBitmap(resize(graph))
         return SmallImage.Builder(
             image = icon,
@@ -178,9 +188,6 @@ open class ChartComplication(): SuspendingComplicationDataSourceService() {
 
     private fun getSmallImageComplicationData(complicationInstanceId: Int): ComplicationData? {
         val graph = chartBitmap?.getBitmap()
-        if(graph == null) {
-            return null
-        }
         //  else
         return SmallImageComplicationData.Builder (
             smallImage = getImage(graph),
@@ -195,7 +202,7 @@ open class ChartComplication(): SuspendingComplicationDataSourceService() {
     ): PendingIntent {
         return PackageUtils.getAppIntent(
             applicationContext,
-            if(chartBitmap != null && chartBitmap!!.enabled) GraphActivity::class.java else GraphActivity::class.java,
+            if(chartBitmap != null && chartBitmap!!.enabled) GraphActivity::class.java else WearActivity::class.java,
             complicationInstanceId
         )
     }

@@ -120,6 +120,9 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
     }
 
     fun getBitmap(): Bitmap? {
+        if(durationHours == 0) {
+            return null
+        }
         if(bitmap == null)
             bitmap = createBitmap()
         return bitmap

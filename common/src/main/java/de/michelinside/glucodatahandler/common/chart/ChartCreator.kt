@@ -681,6 +681,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                     return chart.drawToBitmap()
                 }
             }
+            return null
         } catch (exc: Exception) {
             Log.e(LOG_ID, "getBitmap exception: " + exc.message.toString() )
         }
