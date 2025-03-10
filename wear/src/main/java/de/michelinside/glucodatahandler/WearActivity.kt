@@ -147,6 +147,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         try {
             super.onPause()
             InternalNotifier.remNotifier(this, this)
+            chartBitmap.pause()
             Log.d(LOG_ID, "onPause called")
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
@@ -180,6 +181,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 GlucoDataServiceWear.start(this)
             }
             GlucoDataService.checkForConnectedNodes(true)
+            chartBitmap.resume()
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }

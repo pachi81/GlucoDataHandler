@@ -81,7 +81,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             var minDiff = 50
             val diffTime = (sbn.postTime - ReceiveData.time)/1000 // in seconds
             Log.i(LOG_ID, "New notification from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`}) - diff notify: ${(sbn.postTime - lastValueNotificationTime)/1000}, diff recv value: $diffTime")
-            if(!sbn.isOngoing)
+            if(!sbn.isOngoing && !PackageUtils.isDexcomG7App(sbn.packageName))  // G7 foreground had disabled ongoing flag
                 return false
             if(PackageUtils.isDexcomApp(sbn.packageName)) {
                 /* special Dexcom handling (only for G7!)
@@ -94,7 +94,8 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                 val extras = sbn.notification?.extras
                 val title: String? = if(PackageUtils.isDexcomG7App(sbn.packageName)) extras?.getCharSequence("android.title")?.toString() else null
                 if(title != null) {
-                    Log.d(LOG_ID, "Dexcom foreground notification updated with title '${title}' at ${Utils.getUiTimeStamp(sbn.postTime)} -> ignore and wait for next value notification")
+                    val text = extras?.getCharSequence("android.text")?.toString()
+                    Log.d(LOG_ID, "Dexcom foreground notification updated with title '${title}' and text '${text}' at ${Utils.getUiTimeStamp(sbn.postTime)} -> ignore and wait for next value notification")
                     lastDexcomForegroundTime = sbn.postTime
                     return false
                 } else {

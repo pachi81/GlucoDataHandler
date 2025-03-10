@@ -150,6 +150,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         try {
             super.onPause()
             InternalNotifier.remNotifier(this, this)
+            chartCreator.pause()
             Log.v(LOG_ID, "onPause called")
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.message.toString() )

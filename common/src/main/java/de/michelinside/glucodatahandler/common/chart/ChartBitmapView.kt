@@ -28,6 +28,16 @@ class ChartBitmapView(val imageView: ImageView, val context: Context, durationPr
         imageView.visibility = if(chartBitmap.enabled) View.VISIBLE else View.GONE
     }
 
+    fun pause() {
+        Log.v(LOG_ID, "pause")
+        chartBitmap.pause()
+    }
+
+    fun resume() {
+        Log.v(LOG_ID, "resume")
+        chartBitmap.resume()
+    }
+
     fun close() {
         Log.v(LOG_ID, "close")
         InternalNotifier.remNotifier(context, this)

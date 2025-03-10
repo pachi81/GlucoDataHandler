@@ -6,8 +6,11 @@ import android.content.ComponentName
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
@@ -129,16 +132,22 @@ open class ChartComplication(): SuspendingComplicationDataSourceService() {
         }
     }
 
+    private fun ambientGraphIcon(graph: Bitmap): Icon? {
+        if (GlucoDataService.sharedPref != null && GlucoDataService.sharedPref!!.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false))
+            return null  // use colored one!
+        return Icon.createWithBitmap(resize(graph, true))
+    }
+
     private fun getImage(graph: Bitmap): SmallImage {
         val icon = Icon.createWithBitmap(resize(graph))
         return SmallImage.Builder(
             image = icon,
             type = SmallImageType.PHOTO
-        ).setAmbientImage(icon)
+        ).setAmbientImage(ambientGraphIcon(graph))
             .build()
     }
 
-    private fun resize(originalImage: Bitmap): Bitmap {
+    private fun resize(originalImage: Bitmap, monochrom: Boolean = false): Bitmap {
         val background = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
 
         val originalWidth: Float = originalImage.getWidth().toFloat()
@@ -159,6 +168,8 @@ open class ChartComplication(): SuspendingComplicationDataSourceService() {
 
         val paint = Paint()
         paint.isFilterBitmap = true
+        if(monochrom)
+            paint.setColorFilter(PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP))
 
         canvas.drawBitmap(originalImage, transformation, paint)
 

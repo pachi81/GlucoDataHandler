@@ -35,6 +35,16 @@ class ChartBitmap(val context: Context, durationPref: String = "", width: Int = 
         return chartViewer.getBitmap()
     }
 
+    fun pause() {
+        Log.v(LOG_ID, "pause")
+        chartViewer.pause()
+    }
+
+    fun resume() {
+        Log.v(LOG_ID, "resume")
+        chartViewer.resume()
+    }
+
     val chartId: Int get() = chart.id
 
 }
