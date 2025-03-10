@@ -620,7 +620,7 @@
     <plurals name="elapsed_time_full_text">
         <item quantity="other">時間 %d 分鐘</item>
     </plurals>
-    <string name="pref_source_diabox_info_summary">開啟整合並啟用「與 GWatch 分享資料」\n備註: DiaBox 廣播只有血糖值，沒有趨勢箭頭等更多資訊！</string>
+    <string name="pref_source_diabox_info_summary">開啟整合並啟用「與 GWatch 分享資料」</string>
     <string name="pref_source_dexcom_byoda_not_working_info_summary">備註: 來自 BYODA 的 AAPS 廣播似乎無法與其他程式一起使用\n請在 BYODA 中使用 xDrip+ 廣播</string>
 
     <string name="gda_help_aa_summary">在 Android Auto 上開始使用 GDA</string>
@@ -733,7 +733,7 @@
     <string name="no_graph_data">無法建立圖表！</string>
 
     <string name="pref_switch_use_rate_calculation">趨勢計算</string>
-    <string name="pref_switch_use_rate_calculation_summary_on">使用基於最新數值的內部趨勢計算。</string>
+    <string name="pref_switch_use_rate_calculation_summary_on">使用基於最新數值的內部趨勢計算。\n這將以 5° 的間隔顯示趨勢箭頭的旋轉。</string>
     <string name="pref_switch_use_rate_calculation_summary_off">使用來源提供的趨勢。\n如果沒有可用的趨勢，則使用內部計算。</string>
 
     <string name="accessibility_service_description">在永遠顯示螢幕上顯示血糖值</string>
@@ -750,7 +750,7 @@
     <string name="graph_show_axis_summary">在小工具中顯示 y 軸和 x 軸。</string>
 
     <string name="source_notification">通知</string>
-    <string name="pref_source_notification">通知讀取器</string>
+    <string name="pref_source_notification">通知讀取器 (Beta)</string>
     <string name="pref_source_notification_summary">從其他應用程式（例如 Dexcom、CamAPS FX 和 Omnipod 5）的通知接收血糖值和 IOB。</string>
     <string name="notification_reader_app">應用程式</string>
     <string name="notification_reader_app_summary">選擇要從哪個應用程式讀取通知。</string>

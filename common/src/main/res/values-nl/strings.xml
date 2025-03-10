@@ -623,7 +623,7 @@
         <item quantity="one">Tijd %d minuut</item>
         <item quantity="other">Tijd %d minuten</item>
     </plurals>
-    <string name="pref_source_diabox_info_summary">Open Integratie en schakel \"Gegevens delen met GWatch\" in\nOpmerking: de DiaBox-uitzending bevat alleen de glucosewaarde en geen verdere informatie zoals trend!</string>
+    <string name="pref_source_diabox_info_summary">Open Integratie en schakel \"Gegevens delen met GWatch\" in</string>
     <string name="pref_source_dexcom_byoda_not_working_info_summary">Opmerking: de AAPS-uitzending van BYODA lijkt niet te werken met andere apps. \nGebruik de xDrip+-uitzending in BYODA.</string>
 
     <string name="gda_help_aa_summary">Aan de slag met GDA op Android Auto</string>
@@ -738,7 +738,7 @@
     <string name="no_graph_data">Grafiek maken mislukt!</string>
 
     <string name="pref_switch_use_rate_calculation">Trendberekening</string>
-    <string name="pref_switch_use_rate_calculation_summary_on">Gebruik interne trendberekening gerelateerd aan de laatste waarden.</string>
+    <string name="pref_switch_use_rate_calculation_summary_on">Gebruik interne trendberekening gerelateerd aan de laatste waarden.\nDit toont de rotatie van de trendpijl in intervallen van 5°.</string>
     <string name="pref_switch_use_rate_calculation_summary_off">Gebruik de trend die door de bron wordt geleverd.\nAls er geen trend beschikbaar is, wordt de interne berekening gebruikt.</string>
 
     <string name="accessibility_service_description">Glucosewaarden weergeven op het Always-on Display</string>
@@ -755,7 +755,7 @@
     <string name="graph_show_axis_summary">y- en x-as weergeven in de widget.</string>
 
     <string name="source_notification">Melding</string>
-    <string name="pref_source_notification">Meldingslezer</string>
+    <string name="pref_source_notification">Meldingslezer (Bèta)</string>
     <string name="pref_source_notification_summary">Om de glucosewaarde en IOB te ontvangen van meldingen van andere apps, zoals Dexcom, CamAPS FX en Omnipod 5.</string>
     <string name="notification_reader_app">Applicatie</string>
     <string name="notification_reader_app_summary">Selecteer een applicatie waarvan de melding moet worden gelezen.</string>

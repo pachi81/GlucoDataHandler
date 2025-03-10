@@ -621,7 +621,7 @@
         <item quantity="one">Време %d минута</item>
         <item quantity="other">Време %d минути</item>
     </plurals>
-    <string name="pref_source_diabox_info_summary">Отворете Интеграция и активирайте \"Споделяне на данни с GWatch\"\nЗабележка: broadcast-ът на DiaBox съдържа само стойността на глюкозата и не съдържа повече информация, като например тенденция!</string>
+    <string name="pref_source_diabox_info_summary">Отворете Интеграция и активирайте \"Споделяне на данни с GWatch\"</string>
     <string name="pref_source_dexcom_byoda_not_working_info_summary">Забележка: broadcast-ът на AAPS от BYODA изглежда не работи с други приложения. \nМоля, използвайте broadcast-а на xDrip+ в BYODA.</string>
 
     <string name="gda_help_aa_summary">Започнете с GDA на Android Auto</string>
@@ -736,7 +736,7 @@
     <string name="no_graph_data">Неуспешно създаване на графика!</string>
 
     <string name="pref_switch_use_rate_calculation">Изчисляване на тенденцията</string>
-    <string name="pref_switch_use_rate_calculation_summary_on">Използване на вътрешно изчисляване на тенденцията, базирано на последните стойности.</string>
+    <string name="pref_switch_use_rate_calculation_summary_on">Използване на вътрешно изчисляване на тенденцията, базирано на последните стойности.\nТова ще покаже завъртането на стрелката на тренда на интервали от 5°.</string>
     <string name="pref_switch_use_rate_calculation_summary_off">Използване на тенденцията, предоставена от източника.\nАко няма налична тенденция, се използва вътрешното изчисление.</string>
 
     <string name="accessibility_service_description">Показване на стойностите на глюкозата на Always-on Display</string>
@@ -753,7 +753,7 @@
     <string name="graph_show_axis_summary">Показване на y- и x-оси в джаджата.</string>
 
     <string name="source_notification">Известие</string>
-    <string name="pref_source_notification">Четец на известия</string>
+    <string name="pref_source_notification">Четец на известия (Beta)</string>
     <string name="pref_source_notification_summary">За получаване на стойността на глюкозата и IOB от известия на други приложения, като Dexcom, CamAPS FX и Omnipod 5.</string>
     <string name="notification_reader_app">Приложение</string>
     <string name="notification_reader_app_summary">Изберете приложение, от което да се чете известието.</string>

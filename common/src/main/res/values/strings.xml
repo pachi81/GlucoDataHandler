@@ -677,7 +677,7 @@
         <item quantity="one">Time %d minute</item>
         <item quantity="other">Time %d minutes</item>
     </plurals>
-    <string name="pref_source_diabox_info_summary">Open Integration and enable \"Share data with GWatch\"\nRemark: the DiaBox broadcast only contains the glucose value and no more information like trend!</string>
+    <string name="pref_source_diabox_info_summary">Open Integration and enable \"Share data with GWatch\"</string>
     <string name="pref_source_dexcom_byoda_not_working_info_summary">Remark: the AAPS broadcast from BYODA doesn\'t seem to work with other apps. \nPlease use the xDrip+ broadcast in BYODA.</string>
 
     <string name="gda_help_aa_summary">Get started with GDA on Android Auto</string>
@@ -791,7 +791,7 @@
     <string name="no_graph_data">Graph creation failed!</string>
 
     <string name="pref_switch_use_rate_calculation">Trend calculation</string>
-    <string name="pref_switch_use_rate_calculation_summary_on">Use internal trend calculation related to the last values.</string>
+    <string name="pref_switch_use_rate_calculation_summary_on">Use internal trend calculation related to the last values.\nThis will show the trend arrow rotation in 5° intervals.</string>
     <string name="pref_switch_use_rate_calculation_summary_off">Use trend provided by the source.\nIf no trend is available, the internal calculation is used.</string>
     
    <string name="accessibility_service_description">Display glucose values on the Always-on Display</string>
@@ -808,7 +808,7 @@
     <string name="graph_show_axis_summary">Show y- and x-Axis in the widget.</string>
 
     <string name="source_notification">Notification</string>
-    <string name="pref_source_notification">Notification Reader</string>
+    <string name="pref_source_notification">Notification Reader (Beta)</string>
     <string name="pref_source_notification_summary">To receive the glucose value and IOB from notifications other apps, like Dexcom, CamAPS FX and Omnipod 5.</string>
     <string name="notification_reader_app">Application</string>
     <string name="notification_reader_app_summary">Select an application, from which the notification should be read.</string>

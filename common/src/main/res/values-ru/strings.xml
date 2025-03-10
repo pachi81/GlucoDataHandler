@@ -618,7 +618,7 @@
         <item quantity="many">Время %d минут</item>
         <item quantity="other">Время %d минут</item>
     </plurals>
-    <string name="pref_source_diabox_info_summary">Откройте «Интеграция» и включите «Общий доступ к данным с GWatch»\nПримечание: широковещательная рассылка DiaBox содержит только значение глюкозы и больше никакой информации, например, тренда!</string>
+    <string name="pref_source_diabox_info_summary">Откройте «Интеграция» и включите «Общий доступ к данным с GWatch»</string>
     <string name="pref_source_dexcom_byoda_not_working_info_summary">Примечание: широковещательная рассылка AAPS от BYODA, похоже, не работает с другими приложениями. \nПожалуйста, используйте широковещательную рассылку xDrip+ в BYODA.</string>
     <string name="gda_help_aa_summary">Начать работу с GDA в Android Auto</string>
     <string name="no_tts">Преобразование текста в речь (TTS) не включено.\nЧтобы использовать эту функцию, включите TTS в настройках специальных возможностей Android.\nПосле включения нажмите здесь, чтобы обновить.</string>
@@ -730,7 +730,7 @@
     <string name="no_graph_data">Не удалось создать график!</string>
 
     <string name="pref_switch_use_rate_calculation">Расчет тренда</string>
-    <string name="pref_switch_use_rate_calculation_summary_on">Использовать внутренний расчет тренда, основанный на последних значениях.</string>
+    <string name="pref_switch_use_rate_calculation_summary_on">Использовать внутренний расчет тренда, основанный на последних значениях.\nЭто будет отображать поворот стрелки тренда с интервалом в 5°.</string>
     <string name="pref_switch_use_rate_calculation_summary_off">Использовать тренд, предоставленный источником.\nЕсли тренд недоступен, используется внутренний расчет.</string>
 
     <string name="accessibility_service_description">Отображать значения глюкозы на Always-on Display</string>
@@ -747,7 +747,7 @@
     <string name="graph_show_axis_summary">Показать оси y и x в виджете.</string>
 
     <string name="source_notification">Уведомление</string>
-    <string name="pref_source_notification">Чтение уведомлений</string>
+    <string name="pref_source_notification">Чтение уведомлений (Beta)</string>
     <string name="pref_source_notification_summary">Для получения значения глюкозы и IOB из уведомлений других приложений, таких как Dexcom, CamAPS FX и Omnipod 5.</string>
     <string name="notification_reader_app">Приложение</string>
     <string name="notification_reader_app_summary">Выберите приложение, из которого следует читать уведомление.</string>

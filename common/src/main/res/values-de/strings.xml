@@ -614,7 +614,7 @@
         <item quantity="one">Zeit %d Minute</item>
         <item quantity="other">Zeit %d Minuten</item>
     </plurals>
-    <string name="pref_source_diabox_info_summary">Öffne Integration und aktiviere \"Share data with GWatch\"\nHinweis: der DiaBox Broadcast beinhaltet nur den Zuckerwert und keine weiteren Informationen, wie den Trend!</string>
+    <string name="pref_source_diabox_info_summary">Öffne Integration und aktiviere \"Share data with GWatch\"</string>
     <string name="pref_source_dexcom_byoda_not_working_info_summary">Hinweis: der AAPS Broadcast von BYODA funktioniert anscheinend nicht mit anderen Apps.\nDaher sollte der xDrip+ Broadcast von BYODA verwendet werden.</string>
 
     <!-- new for GDA -->
@@ -729,7 +729,7 @@
     <string name="no_graph_data">Graph konnte nicht erstellt werden!</string>
 
     <string name="pref_switch_use_rate_calculation">Trendberechnung</string>
-    <string name="pref_switch_use_rate_calculation_summary_on">Verwende interne Trendberechnung basierend auf den letzten Werten.</string>
+    <string name="pref_switch_use_rate_calculation_summary_on">Verwende interne Trendberechnung basierend auf den letzten Werten.\nDies zeigt die Drehung des Trendpfeils in 5°-Intervallen an.</string>
     <string name="pref_switch_use_rate_calculation_summary_off">Verwende den vom Sensor bereitgestellten Trend.\nWenn kein Trend verfügbar ist, wird die interne Berechnung verwendet.</string>
 
     <string name="accessibility_service_description">Zuckerwerte auf dem Always-on-Display anzeigen</string>
@@ -746,7 +746,7 @@
     <string name="graph_show_axis_summary">x- und y-Achse im Widget anzeigen.</string>
 
     <string name="source_notification">Benachrichtigung</string>
-    <string name="pref_source_notification">Benachrichtigung</string>
+    <string name="pref_source_notification">Benachrichtigung (Beta)</string>
     <string name="pref_source_notification_summary">Um den Zuckerwert und IOB aus Benachrichtigungen anderer Apps wie Dexcom, CamAPS FX und Omnipod 5 zu empfangen.</string>
     <string name="notification_reader_app">Anwendung</string>
     <string name="notification_reader_app_summary">Wählen Sie eine Anwendung aus, aus der die Benachrichtigung gelesen werden soll.</string>

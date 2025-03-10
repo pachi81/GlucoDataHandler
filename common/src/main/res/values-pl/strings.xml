@@ -623,7 +623,7 @@
         <item quantity="many">Czas %d minut(y)</item>
         <item quantity="other">Czas %d minut(y)</item>
     </plurals>
-    <string name="pref_source_diabox_info_summary">Otwórz menu Integracja i włącz opcję \"Share data with GWatch\" (udostępnij dane aplikacji GWatch).\nUwaga: transmisja DiaBox zawiera tylko wartość glukozy i żadnych dodatkowych informacji, takich jak trend!</string>
+    <string name="pref_source_diabox_info_summary">Otwórz menu Integracja i włącz opcję \"Share data with GWatch\" (udostępnij dane aplikacji GWatch).</string>
     <string name="pref_source_dexcom_byoda_not_working_info_summary">Uwaga: zdaje się, że transmisja AAPS z BYODA nie działa z innymi aplikacjami.\nW BYODA należy używać transmisji xDrip+.\n\n</string>
 
     <!-- new for GDA -->
@@ -738,7 +738,7 @@
     <string name="no_graph_data">Nie udało się utworzyć wykresu!</string>
 
     <string name="pref_switch_use_rate_calculation">Kalkulacja trendu</string>
-    <string name="pref_switch_use_rate_calculation_summary_on">Użyj wewnętrznej kalkulacji trendu związanej z ostatnimi wartościami.</string>
+    <string name="pref_switch_use_rate_calculation_summary_on">Użyj wewnętrznej kalkulacji trendu związanej z ostatnimi wartościami.\nSpowoduje to wyświetlenie obrotu strzałki trendu w interwałach co 5°.</string>
     <string name="pref_switch_use_rate_calculation_summary_off">Użyj trendu ze źródła.\nJeżeli trend nie jest dostępny, używana będzie kalkulacja wewnętrzna.</string>
 
     <string name="accessibility_service_description">Wyświetlanie wartości glukozy na ekranie Always-on Display</string>
@@ -755,7 +755,7 @@
     <string name="graph_show_axis_summary">Pokazuje oś x i y na widgecie.</string>
 
     <string name="source_notification">Powiadomienie</string>
-    <string name="pref_source_notification">Czytnik powiadomień</string>
+    <string name="pref_source_notification">Czytnik powiadomień (Beta)</string>
     <string name="pref_source_notification_summary">Odbieranie wartości glukozy i IOB z powiadomień innych aplikacji, takich jak Dexcom, CamAPS FX i Omnipod 5.</string>.
     <string name="notification_reader_app">Aplikacja</string>
     <string name="notification_reader_app_summary">Wybierz aplikację, z której ma być odczytywane powiadomienie.</string>

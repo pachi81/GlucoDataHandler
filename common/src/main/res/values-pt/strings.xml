@@ -618,7 +618,7 @@
         <item quantity="many">Tempo %d minutos</item>
         <item quantity="other">Tempo %d minutos</item>
     </plurals>
-    <string name="pref_source_diabox_info_summary">Abra Integração e ative \"Share data with GWatch\"\nObservação: a transmissão do DiaBox contém apenas o valor da glicose e nenhuma informação adicional, como a tendência!</string>
+    <string name="pref_source_diabox_info_summary">Abra Integração e ative \"Share data with GWatch\"</string>
     <string name="pref_source_dexcom_byoda_not_working_info_summary">Observação: a transmissão AAPS do BYODA parece não funcionar com outros aplicativos.\nUtilize a transmissão xDrip+ no BYODA.</string>
 
     <string name="gda_help_aa_summary">Começar com o GDA no Android Auto</string>
@@ -732,7 +732,7 @@
     <string name="no_graph_data">Falha ao criar o gráfico!</string>
 
     <string name="pref_switch_use_rate_calculation">Cálculo de tendência</string>
-    <string name="pref_switch_use_rate_calculation_summary_on">Usar cálculo de tendência interno relacionado com os últimos valores.</string>
+    <string name="pref_switch_use_rate_calculation_summary_on">Usar cálculo de tendência interno relacionado com os últimos valores.\nIsto mostrará a rotação da seta de tendência em intervalos de 5°.</string>
     <string name="pref_switch_use_rate_calculation_summary_off">Usar a tendência fornecida pela fonte.\nSe nenhuma tendência estiver disponível, o cálculo interno será usado.</string>
 
     <string name="accessibility_service_description">Exibir valores de glicose no Always-on Display</string>
@@ -749,7 +749,7 @@
     <string name="graph_show_axis_summary">Mostrar eixos y e x no widget.</string>
 
     <string name="source_notification">Notificação</string>
-    <string name="pref_source_notification">Leitor de notificações</string>
+    <string name="pref_source_notification">Leitor de notificações (Beta)</string>
     <string name="pref_source_notification_summary">Para receber o valor de glicose e IOB de notificações de outros aplicativos, como Dexcom, CamAPS FX e Omnipod 5.</string>
     <string name="notification_reader_app">Aplicativo</string>
     <string name="notification_reader_app_summary">Selecione um aplicativo do qual a notificação deve ser lida.</string>

@@ -56,7 +56,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             return calculatedRate
         return sourceRate
     }
-    private var useRateCalculation = true
+    private var useRateCalculation = false
     var alarm: Int = 0
     var time: Long = 0
     var receiveTime: Long = 0
