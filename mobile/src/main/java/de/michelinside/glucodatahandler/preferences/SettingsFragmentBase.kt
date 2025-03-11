@@ -150,10 +150,10 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
         }
     }
 
-    fun <T : Preference?> setEnableState(sharedPreferences: SharedPreferences, key: String, enableKey: String, secondEnableKey: String? = null, defValue: Boolean = false, invert: Boolean = false) {
+    fun <T : Preference?> setEnableState(sharedPreferences: SharedPreferences, key: String, enableKey: String, secondEnableKey: String? = null, defValue: Boolean = false, invert: Boolean = false, secondDevValue: Boolean = false) {
         val pref = findPreference<T>(key)
         if (pref != null) {
-            pref.isEnabled = invert != (sharedPreferences.getBoolean(enableKey, defValue) && (if (secondEnableKey != null) sharedPreferences.getBoolean(secondEnableKey, defValue) else true))
+            pref.isEnabled = invert != sharedPreferences.getBoolean(enableKey, defValue) && (if (secondEnableKey != null) sharedPreferences.getBoolean(secondEnableKey, secondDevValue) else true)
 
             if(!updateEnablePrefs.contains(enableKey)) {
                 Log.v(LOG_ID, "Add update enable pref $enableKey")
@@ -185,7 +185,8 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
             setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_GLUCODATA_RECEIVERS, Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD)
             setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_XDRIP_RECEIVERS, Constants.SHARED_PREF_SEND_TO_XDRIP)
             setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_XDRIP_BROADCAST_RECEIVERS, Constants.SHARED_PREF_SEND_XDRIP_BROADCAST)
-            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, defValue = true, invert = true)
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, defValue = false, invert = true)
+            setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY,  Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, defValue = false, invert = true, secondDevValue = true)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_STYLE, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY, Constants.SHARED_PREF_FLOATING_WIDGET)
