@@ -18,6 +18,14 @@ object GdhUncaughtExecptionHandler : Thread.UncaughtExceptionHandler {
         }
     }
 
+    fun isForegroundserviceNotificationException(message: String) : Boolean {
+        if (message.contains("BadForegroundServiceNotificationException") ||
+            (message.contains("RemoteServiceException") && !message.contains("ForegroundServiceDidNotStartInTimeException"))) {
+            return true
+        }
+        return false
+    }
+
     override fun uncaughtException(t: Thread, e: Throwable) {
         try {
             if(!exceptionCaught) {
@@ -34,10 +42,7 @@ object GdhUncaughtExecptionHandler : Thread.UncaughtExceptionHandler {
                         putBoolean(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_DETECT, true)
                         putLong(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_TIME, System.currentTimeMillis())
                         putString(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE, message)
-                        if (message.contains("BadForegroundServiceNotificationException") || message.contains(
-                                "RemoteServiceException"
-                            )
-                        ) {
+                        if (isForegroundserviceNotificationException(message)) {
                             Log.e(
                                 LOG_ID,
                                 "BadForegroundServiceNotificationException detected! customLayoutEnabled=$customLayoutEnabled"

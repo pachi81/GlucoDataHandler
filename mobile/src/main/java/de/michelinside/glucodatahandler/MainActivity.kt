@@ -32,6 +32,7 @@ import androidx.core.view.setPadding
 import androidx.preference.PreferenceManager
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GdhUncaughtExecptionHandler
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
@@ -869,10 +870,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }
 
             if(time > 0 && (System.currentTimeMillis()- ReceiveData.time) < (60*60 * 1000)) {
-                if (excMsg.contains("BadForegroundServiceNotificationException") || excMsg.contains(
-                        "RemoteServiceException"
-                    )
-                ) {
+                if (GdhUncaughtExecptionHandler.isForegroundserviceNotificationException(excMsg)) {
                     Dialogs.showOkDialog(this, CR.string.app_crash_title, CR.string.app_crash_bad_notification, null)
                 } else {
                     Dialogs.showOkDialog(this, CR.string.app_crash_title, CR.string.app_crash_message, null)

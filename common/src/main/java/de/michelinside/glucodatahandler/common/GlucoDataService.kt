@@ -567,6 +567,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     startForeground(NOTIFICATION_ID, getNotification())
                 }
                 isForegroundService = true
+                Log.i(LOG_ID, "Service in foreground started!")
                 stopTrigger()
             }
         } catch (exc: Exception) {
