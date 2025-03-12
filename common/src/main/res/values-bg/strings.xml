@@ -734,6 +734,8 @@
     <string name="reset_db_warning">Ако натиснете OK, всички данни от базата данни ще бъдат премахнати!\nСигурни ли сте?</string>
     <string name="graph_disabled">Графиката е деактивирана!</string>
     <string name="no_graph_data">Неуспешно създаване на графика!</string>
+    <string name="graph_comp_square">Графика 3x3</string>
+    <string name="graph_comp_rect">Графика 3x1</string>
 
     <string name="pref_switch_use_rate_calculation">Изчисляване на тенденцията</string>
     <string name="pref_switch_use_rate_calculation_summary_on">Използване на вътрешно изчисляване на тенденцията, базирано на последните стойности.\nТова ще покаже завъртането на стрелката на тренда на интервали от 5°.</string>

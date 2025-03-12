@@ -31,10 +31,10 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
-import de.michelinside.glucodatahandler.common.R
+import de.michelinside.glucodatahandler.common.R as CR
 
 
-open class ChartComplication(): SuspendingComplicationDataSourceService() {
+abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() {
 
     companion object {
         protected val LOG_ID = "GDH.Chart.Complication"
@@ -74,7 +74,7 @@ open class ChartComplication(): SuspendingComplicationDataSourceService() {
         private fun createBitmap() {
             if(chartBitmap == null && GlucoDataService.isServiceRunning) {
                 Log.i(LOG_ID, "Create bitmap")
-                chartBitmap = ChartBitmap(GlucoDataService.context!!, Constants.SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION, size, 250, true)
+                chartBitmap = ChartBitmap(GlucoDataService.context!!, Constants.SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION, size, size/3, true)
                 InternalNotifier.addNotifier(GlucoDataService.context!!, ChartComplicationUpdater, mutableSetOf(NotifySource.GRAPH_CHANGED))
             }
         }
@@ -88,7 +88,13 @@ open class ChartComplication(): SuspendingComplicationDataSourceService() {
             }
         }
 
+        fun getBitmap(): Bitmap? {
+            return chartBitmap?.getBitmap()
+        }
+
     }
+
+    private var forPreview = false
 
     override suspend fun onComplicationRequest(request: ComplicationRequest): ComplicationData? {
         try {
@@ -115,9 +121,18 @@ open class ChartComplication(): SuspendingComplicationDataSourceService() {
         }
     }
 
-    override fun getPreviewData(type: ComplicationType): ComplicationData {
-        Log.d(LOG_ID, "onComplicationRequest called for " + type.toString())
-        return getComplicationData(ComplicationRequest(0, type, false))!!
+    override fun getPreviewData(type: ComplicationType): ComplicationData? {
+        try {
+            Log.d(LOG_ID, "onComplicationRequest called for " + type.toString())
+            forPreview = true
+            val result = getComplicationData(ComplicationRequest(0, type, false))!!
+            forPreview = false
+            return result
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "getPreviewData exception: " + exc.message.toString())
+        }
+        forPreview = false
+        return null
     }
 
     private fun getComplicationData(request: ComplicationRequest): ComplicationData? {
@@ -133,44 +148,43 @@ open class ChartComplication(): SuspendingComplicationDataSourceService() {
         }
     }
 
-    private fun ambientGraphIcon(graph: Bitmap): Icon? {
+    private fun ambientGraphIcon(bitmap: Bitmap): Icon? {
         if (GlucoDataService.sharedPref != null && GlucoDataService.sharedPref!!.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false))
             return null  // use colored one!
-        return Icon.createWithBitmap(resize(graph, true))
+        return Icon.createWithBitmap(monochromBitmap(bitmap))
     }
 
     private fun getTransparentImage(): SmallImage {
         return SmallImage.Builder(
-            image = Icon.createWithResource(this, R.drawable.icon_transparent),
+            image = Icon.createWithResource(this, if(forPreview) R.drawable.icon_rate else CR.drawable.icon_transparent),
             type = SmallImageType.PHOTO
         ).build()
     }
 
-    private fun getImage(graph: Bitmap?): SmallImage {
-        if(graph==null)
-            return getTransparentImage()
-        val icon = Icon.createWithBitmap(resize(graph))
+    protected fun getImage(resize: Boolean): SmallImage {
+        val graph = getBitmap() ?: return getTransparentImage()
+        val bitmap = if(resize) resize(graph) else graph
         return SmallImage.Builder(
-            image = icon,
+            image = Icon.createWithBitmap(bitmap),
             type = SmallImageType.PHOTO
-        ).setAmbientImage(ambientGraphIcon(graph))
+        ).setAmbientImage(ambientGraphIcon(bitmap))
             .build()
     }
 
-    private fun resize(originalImage: Bitmap, monochrom: Boolean = false): Bitmap {
-        val background = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+    private fun resize(originalImage: Bitmap): Bitmap {
+        val compBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
 
         val originalWidth: Float = originalImage.getWidth().toFloat()
         val originalHeight: Float = originalImage.getHeight().toFloat()
 
-        val canvas = Canvas(background)
+        val canvas = Canvas(compBitmap)
 
         val scale = size / originalWidth
 
         val xTranslation = 0.0f
         val yTranslation = (size - originalHeight * scale) / 2f
 
-        Log.v(LOG_ID, "scale: $scale, xTranslation: $xTranslation, yTranslation: $yTranslation")
+        Log.v(LOG_ID, "scale: $scale, width: $originalWidth, height: $originalHeight, xTranslation: $xTranslation, yTranslation: $yTranslation")
 
         val transformation = Matrix()
         transformation.postTranslate(xTranslation, yTranslation)
@@ -178,26 +192,25 @@ open class ChartComplication(): SuspendingComplicationDataSourceService() {
 
         val paint = Paint()
         paint.isFilterBitmap = true
-        if(monochrom)
-            paint.setColorFilter(PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP))
 
         canvas.drawBitmap(originalImage, transformation, paint)
 
-        return background
+        return compBitmap
     }
 
-    private fun getSmallImageComplicationData(complicationInstanceId: Int): ComplicationData? {
-        val graph = chartBitmap?.getBitmap()
-        //  else
-        return SmallImageComplicationData.Builder (
-            smallImage = getImage(graph),
-            contentDescription = PlainComplicationText.Builder("glucose graph").build()
-        )
-            .setTapAction(getTapAction(complicationInstanceId))
-            .build()
+    private fun monochromBitmap(bitmap: Bitmap): Bitmap {
+        val compBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(compBitmap)
+        val paint = Paint()
+        paint.isFilterBitmap = true
+        paint.setColorFilter(PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP))
+        canvas.drawBitmap(bitmap, 0F, 0F, paint)
+        return compBitmap
     }
 
-    private fun getTapAction(
+    protected abstract fun getSmallImageComplicationData(complicationInstanceId: Int): ComplicationData?
+
+    protected fun getTapAction(
         complicationInstanceId: Int
     ): PendingIntent {
         return PackageUtils.getAppIntent(
@@ -208,19 +221,41 @@ open class ChartComplication(): SuspendingComplicationDataSourceService() {
     }
 }
 
+class ChartComplication: ChartComplicationBase() {
+    override fun getSmallImageComplicationData(complicationInstanceId: Int): ComplicationData {
+        return SmallImageComplicationData.Builder (
+            smallImage = getImage(true),
+            contentDescription = PlainComplicationText.Builder(applicationContext.resources.getString(CR.string.graph)).build()
+        )
+            .setTapAction(getTapAction(complicationInstanceId))
+            .build()
+    }
+}
+
+class ChartComplicationRect: ChartComplicationBase() {
+    override fun getSmallImageComplicationData(complicationInstanceId: Int): ComplicationData {
+        return SmallImageComplicationData.Builder (
+            smallImage = getImage(false),
+            contentDescription = PlainComplicationText.Builder(applicationContext.resources.getString(CR.string.graph)).build()
+        )
+            .setTapAction(getTapAction(complicationInstanceId))
+            .build()
+    }
+}
+
 object ChartComplicationUpdater: NotifierInterface {
-    private var complicationClasses = mutableListOf(ChartComplication::class.java)
+    private var complicationClasses = mutableListOf(ChartComplication::class.java, ChartComplicationRect::class.java)
     val LOG_ID = "GDH.Chart.ComplicationUpdater"
 
     fun init(context: Context) {
         Log.i(LOG_ID, "init chart complications")
-        ChartComplication.init()
+        ChartComplicationBase.init()
         OnNotifyData(context, NotifySource.CAPILITY_INFO, null)
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
-        Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - graph-id ${ChartComplication.getChartId()}" )
-        if (dataSource == NotifySource.GRAPH_CHANGED && extras?.getInt(Constants.GRAPH_ID) != ChartComplication.getChartId()) {
+        Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - graph-id ${ChartComplicationBase.getChartId()}" )
+        if (dataSource == NotifySource.GRAPH_CHANGED && extras?.getInt(Constants.GRAPH_ID) != ChartComplicationBase.getChartId()) {
             Log.v(LOG_ID, "Ignore graph changed as it is not for this chart")
             return  // ignore as it is not for this graph
         }

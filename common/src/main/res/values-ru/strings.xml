@@ -728,6 +728,8 @@
     <string name="reset_db_warning">Если вы нажмете OK, все данные из базы данных будут удалены!\nВы уверены?</string>
     <string name="graph_disabled">График отключен!</string>
     <string name="no_graph_data">Не удалось создать график!</string>
+    <string name="graph_comp_square">График 3x3</string>
+    <string name="graph_comp_rect">График 3x1</string>
 
     <string name="pref_switch_use_rate_calculation">Расчет тренда</string>
     <string name="pref_switch_use_rate_calculation_summary_on">Использовать внутренний расчет тренда, основанный на последних значениях.\nЭто будет отображать поворот стрелки тренда с интервалом в 5°.</string>

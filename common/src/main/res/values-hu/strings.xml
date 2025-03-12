@@ -801,6 +801,8 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="reset_db_warning">Ha megnyomja az OK gombot, az összes adat törlődik az adatbázisból!\nBiztos benne?</string>
     <string name="graph_disabled">Grafikon letiltva!</string>
     <string name="no_graph_data">A grafikon létrehozása sikertelen!</string>
+    <string name="graph_comp_square">Grafikon 3x3</string>
+    <string name="graph_comp_rect">Grafikon 3x1</string>
 
     <string name="pref_switch_use_rate_calculation">Trendszámítás</string>
     <string name="pref_switch_use_rate_calculation_summary_on">Belső trendszámítás használata az utolsó értékek alapján.\nEz az 5°-os intervallumokban mutatja a trendnyíl forgását.</string>

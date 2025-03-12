@@ -80,12 +80,6 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
         return getDefaultRange()
     }
 
-    override fun getDefaultMaxValue(): Float {
-        if(forComplication)
-            return maxOf(super.getDefaultMaxValue(), 310F)
-        return super.getDefaultMaxValue()
-    }
-
     override fun updateChart(dataSet: LineDataSet?) {
         Log.v(LOG_ID, "updateChart for dataSet: $dataSet")
         if(dataSet != null) {

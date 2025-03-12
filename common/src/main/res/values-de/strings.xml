@@ -727,6 +727,8 @@
     <string name="reset_db_warning">Wenn du OK drückst, werden alle Daten aus der Datenbank entfernt!\nBist du sicher?</string>
     <string name="graph_disabled">Graph deaktiviert!</string>
     <string name="no_graph_data">Graph konnte nicht erstellt werden!</string>
+    <string name="graph_comp_square">Graph 3x3</string>
+    <string name="graph_comp_rect">Graph 3x1</string>
 
     <string name="pref_switch_use_rate_calculation">Trendberechnung</string>
     <string name="pref_switch_use_rate_calculation_summary_on">Verwende interne Trendberechnung basierend auf den letzten Werten.\nDies zeigt die Drehung des Trendpfeils in 5°-Intervallen an.</string>

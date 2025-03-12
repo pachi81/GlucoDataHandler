@@ -736,6 +736,8 @@
     <string name="reset_db_warning">Als je op OK drukt, worden alle gegevens uit de database verwijderd!\nWeet je het zeker?</string>
     <string name="graph_disabled">Grafiek uitgeschakeld!</string>
     <string name="no_graph_data">Grafiek maken mislukt!</string>
+    <string name="graph_comp_square">Grafiek 3x3</string>
+    <string name="graph_comp_rect">Grafiek 3x1</string>
 
     <string name="pref_switch_use_rate_calculation">Trendberekening</string>
     <string name="pref_switch_use_rate_calculation_summary_on">Gebruik interne trendberekening gerelateerd aan de laatste waarden.\nDit toont de rotatie van de trendpijl in intervallen van 5°.</string>

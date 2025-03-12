@@ -789,6 +789,8 @@
     <string name="reset_db_warning">If you press OK, all data from database will be removed!\nAre you sure?</string>
     <string name="graph_disabled">Graph disabled!</string>
     <string name="no_graph_data">Graph creation failed!</string>
+    <string name="graph_comp_square">Graph 3x3</string>
+    <string name="graph_comp_rect">Graph 3x1</string>
 
     <string name="pref_switch_use_rate_calculation">Trend calculation</string>
     <string name="pref_switch_use_rate_calculation_summary_on">Use internal trend calculation related to the last values.\nThis will show the trend arrow rotation in 5° intervals.</string>

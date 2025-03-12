@@ -731,6 +731,8 @@
     <string name="reset_db_warning">如果您按下「確定」，資料庫中的所有資料都將被移除！\n您確定嗎？</string>
     <string name="graph_disabled">圖表已停用！</string>
     <string name="no_graph_data">無法建立圖表！</string>
+    <string name="graph_comp_square">圖表 3x3</string>
+    <string name="graph_comp_rect">圖表 3x1</string>
 
     <string name="pref_switch_use_rate_calculation">趨勢計算</string>
     <string name="pref_switch_use_rate_calculation_summary_on">使用基於最新數值的內部趨勢計算。\n這將以 5° 的間隔顯示趨勢箭頭的旋轉。</string>

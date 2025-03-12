@@ -730,6 +730,8 @@
     <string name="reset_db_warning">Se premir OK, todos os dados da base de dados serão removidos!\nTem a certeza?</string>
     <string name="graph_disabled">Gráfico desativado!</string>
     <string name="no_graph_data">Falha ao criar o gráfico!</string>
+    <string name="graph_comp_square">Gráfico 3x3</string>
+    <string name="graph_comp_rect">Gráfico 3x1</string>
 
     <string name="pref_switch_use_rate_calculation">Cálculo de tendência</string>
     <string name="pref_switch_use_rate_calculation_summary_on">Usar cálculo de tendência interno relacionado com os últimos valores.\nIsto mostrará a rotação da seta de tendência em intervalos de 5°.</string>

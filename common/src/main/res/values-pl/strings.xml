@@ -736,6 +736,8 @@
     <string name="reset_db_warning">Jeśli naciśniesz OK, z bazy usunięte zostaną wszystkie dane!\nCzy jesteś pewny?</string>
     <string name="graph_disabled">Wykres wyłączony!</string>
     <string name="no_graph_data">Nie udało się utworzyć wykresu!</string>
+    <string name="graph_comp_square">Wykres 3x3</string>
+    <string name="graph_comp_rect">Wykres 3x1</string>
 
     <string name="pref_switch_use_rate_calculation">Kalkulacja trendu</string>
     <string name="pref_switch_use_rate_calculation_summary_on">Użyj wewnętrznej kalkulacji trendu związanej z ostatnimi wartościami.\nSpowoduje to wyświetlenie obrotu strzałki trendu w interwałach co 5°.</string>

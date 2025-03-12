@@ -723,6 +723,8 @@
     <string name="reset_db_warning">Se premi OK, tutti i dati dal database verranno rimossi!\nSei sicuro?</string>
     <string name="graph_disabled">Grafico disabilitato!</string>
     <string name="no_graph_data">Creazione grafico fallita!</string>
+    <string name="graph_comp_square">Grafico 3x3</string>
+    <string name="graph_comp_rect">Grafico 3x1</string>
 
     <string name="pref_switch_use_rate_calculation">Calcolo tendenza</string>
     <string name="pref_switch_use_rate_calculation_summary_on">Usa il calcolo della tendenza interno relativo agli ultimi valori.\nQuesto mostrerà la rotazione della freccia di tendenza a intervalli di 5°.</string>
