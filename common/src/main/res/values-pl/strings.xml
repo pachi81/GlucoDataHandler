@@ -738,7 +738,7 @@
     <string name="no_graph_data">Nie udało się utworzyć wykresu!</string>
 
     <string name="pref_switch_use_rate_calculation">Kalkulacja trendu</string>
-    <string name="pref_switch_use_rate_calculation_summary_on">Użyj wewnętrznej kalkulacji trendu związanej z ostatnimi wartościami.\nSpowoduje to wyświetlenie obrotu strzałki trendu w interwałach co 5°.</string>
+    <string name="pref_switch_use_rate_calculation_summary_on">Użyj wewnętrznej kalkulacji trendu na podstawie ostatnich wartości.\nDzięki temu nachylenie strzałki trendu zmienia się o 5°.</string>
     <string name="pref_switch_use_rate_calculation_summary_off">Użyj trendu ze źródła.\nJeżeli trend nie jest dostępny, używana będzie kalkulacja wewnętrzna.</string>
 
     <string name="accessibility_service_description">Wyświetlanie wartości glukozy na ekranie Always-on Display</string>
