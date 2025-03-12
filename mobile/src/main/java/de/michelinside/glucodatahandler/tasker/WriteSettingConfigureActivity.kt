@@ -26,13 +26,19 @@ class WriteSettingConfigureActivity : AppCompatActivity(),
     private val binding by lazy { TaskerWriteSettingBinding.inflate(layoutInflater) }
 
     override fun assignFromInput(input: TaskerInput<TaskerWriteSettingData>) {
-        key = input.regular.key
-        type = input.regular.type
-        value = input.regular.value
+        try {
+            Log.d(LOG_ID, "assignFromInput called with input: $input")
+            key = input.regular.key
+            type = input.regular.type
+            value = input.regular.value
+        } catch (ex: Exception) {
+            Log.e(LOG_ID, "assignFromInput exception: " + ex)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
+            Log.d(LOG_ID, "onCreate called")
             super.onCreate(savedInstanceState)
             helper.onCreate()
 
@@ -49,11 +55,17 @@ class WriteSettingConfigureActivity : AppCompatActivity(),
                 binding.switchSetting.isChecked = true
 
             binding.apply.setOnClickListener {
-                key = supportedValues[binding.spinnerSetting.selectedItemPosition]
-                type = "bool"
-                value = binding.switchSetting.isChecked.toString()
+                try {
+                    Log.d(LOG_ID, "apply clicked for pos ${binding.spinnerSetting.selectedItemPosition} - count ${supportedValues.size}")
+                    key = supportedValues[binding.spinnerSetting.selectedItemPosition]
+                    Log.d(LOG_ID, "key: $key")
+                    type = "bool"
+                    value = binding.switchSetting.isChecked.toString()
 
-                helper.finishForTasker()
+                    helper.finishForTasker()
+                } catch (ex: Exception) {
+                    Log.e(LOG_ID, "OnClickListener exception: " + ex)
+                }
             }
         } catch (ex: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + ex)

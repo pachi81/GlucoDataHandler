@@ -35,18 +35,6 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
 
     init {
         Log.d(LOG_ID, "init called")
-        InternalNotifier.addNotifier(
-            this,
-            TaskerDataReceiver,
-            mutableSetOf(
-                NotifySource.BROADCAST,
-                NotifySource.IOB_COB_CHANGE,
-                NotifySource.MESSAGECLIENT,
-                NotifySource.OBSOLETE_VALUE,
-                NotifySource.ALARM_TRIGGER,
-                NotifySource.DELTA_ALARM_TRIGGER
-            )
-        )
     }
 
     companion object {
@@ -212,6 +200,18 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             floatingWidget.create()
             lockScreenWallpaper.create()
             AlarmNotification.initNotifications(this)
+            InternalNotifier.addNotifier(
+                this,
+                TaskerDataReceiver,
+                mutableSetOf(
+                    NotifySource.BROADCAST,
+                    NotifySource.IOB_COB_CHANGE,
+                    NotifySource.MESSAGECLIENT,
+                    NotifySource.OBSOLETE_VALUE,
+                    NotifySource.ALARM_TRIGGER,
+                    NotifySource.DELTA_ALARM_TRIGGER
+                )
+            )
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -344,7 +344,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            Log.v(LOG_ID, "OnNotifyData called for source " + dataSource.toString())
+            Log.d(LOG_ID, "OnNotifyData called for source " + dataSource.toString())
             start(context)
             if (dataSource == NotifySource.CAPILITY_INFO) {
                 context.setWearConnectionState(WearPhoneConnection.nodesConnected)
