@@ -41,8 +41,10 @@ object dbSync : ChannelClient.ChannelCallback() {
 
     override fun onChannelOpened(p0: ChannelClient.Channel) {
         try {
+            Log.d(LOG_ID, "onChannelOpened for path ${p0.path}")
+            if(p0.path != Constants.DB_SYNC_CHANNEL_PATH)
+                return
             super.onChannelOpened(p0)
-            Log.d(LOG_ID, "onChannelOpened")
             channel = p0
             scope.launch {
                 try {
@@ -67,8 +69,10 @@ object dbSync : ChannelClient.ChannelCallback() {
 
     override fun onInputClosed(p0: ChannelClient.Channel, i: Int, i1: Int) {
         try {
+            Log.d(LOG_ID, "onInputClosed for path ${p0.path}")
+            if(p0.path != Constants.DB_SYNC_CHANNEL_PATH)
+                return
             super.onInputClosed(p0, i, i1)
-            Log.d(LOG_ID, "onInputClosed")
             Wearable.getChannelClient(GlucoDataService.context!!).close(p0)
             channel = null
             finished = true
@@ -80,7 +84,9 @@ object dbSync : ChannelClient.ChannelCallback() {
     override fun onOutputClosed(p0: ChannelClient.Channel, p1: Int, p2: Int) {
         try {
             super.onOutputClosed(p0, p1, p2)
-            Log.d(LOG_ID, "onOutputClosed")
+            Log.d(LOG_ID, "onOutputClosed for path ${p0.path}")
+            if(p0.path != Constants.DB_SYNC_CHANNEL_PATH)
+                return
             Wearable.getChannelClient(GlucoDataService.context!!).close(p0)
             channel = null
             finished = true
@@ -127,15 +133,16 @@ object dbSync : ChannelClient.ChannelCallback() {
 
     private fun close(context: Context) {
         try {
+            val channelClient = Wearable.getChannelClient(context)
             if(channel != null) {
                 Log.d(LOG_ID, "close channel")
-                val channelClient = Wearable.getChannelClient(context)
                 channelClient.close(channel!!)
-                channelClient.unregisterChannelCallback(this)
                 finished = true
                 channel = null
                 Log.d(LOG_ID, "channel closed")
             }
+            channelClient.unregisterChannelCallback(this)
+            Log.d(LOG_ID, "unregisterChannel called")
         } catch (exc: Exception) {
             Log.e(LOG_ID, "close exception: " + exc.toString())
         }
