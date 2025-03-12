@@ -163,7 +163,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             super.onResume()
             Log.v(LOG_ID, "onResume called")
             GlucoDataService.checkServices(this)
-            checkUncaughtException()
             doNotUpdate = false
             update()
             chartCreator.resume()
@@ -179,6 +178,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.TIME_VALUE,
                 NotifySource.ALARM_STATE_CHANGED,
                 NotifySource.SOURCE_STATE_CHANGE))
+            checkUncaughtException()
             checkMissingPermissions()
             checkNewSettings()
 
