@@ -480,9 +480,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         }
         if(!hasTimeNotifier)
             updateNotifier()
-        var minTime = getMinTime()
-        if (minTime == 0L) // at least one hour should be shown
-            minTime = System.currentTimeMillis() - (60 * 60 * 1000L)
+        var minTime = System.currentTimeMillis() - (getDefaultRange() * 60 * 1000L)
 
         var minValue = 0L
         var maxValue = 0L

@@ -56,7 +56,7 @@ object dbSync : ChannelClient.ChannelCallback() {
                     val gson = Gson()
                     val data = gson.fromJson(received, Array<GlucoseValue>::class.java).toList()
                     Log.i(LOG_ID, "${data.size} values received")
-                    dbAccess.addGlucoseValues(data)
+                    dbAccess.addGlucoseValues(data, true)
                     Log.d(LOG_ID, "db data saved")
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "reading input exception: " + exc.message.toString() )

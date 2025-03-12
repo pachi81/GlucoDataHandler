@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
 import androidx.room.Room
+import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
@@ -119,7 +120,7 @@ object dbAccess {
         }
     }
 
-    fun addGlucoseValues(values: List<GlucoseValue>) {
+    fun addGlucoseValues(values: List<GlucoseValue>, internal: Boolean = false) {
         if(active && values.isNotEmpty()) {
             scope.launch {
                 try {
@@ -129,6 +130,10 @@ object dbAccess {
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "addGlucoseValues exception: $exc")
                 }
+            }
+            if(!internal) {
+                // trigger dbsync with watch
+                GlucoDataService.sendCommand(Command.REQUEST_DB_SYNC)
             }
         }
     }

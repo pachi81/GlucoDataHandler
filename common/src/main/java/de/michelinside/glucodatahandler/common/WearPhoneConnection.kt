@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.*
+import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.database.dbSync
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
@@ -31,7 +32,9 @@ enum class Command {
     PAUSE_NODE,
     RESUME_NODE,
     FORCE_UPDATE,
-    DB_SYNC
+    DB_SYNC,
+    CLEAN_UP_DB,
+    REQUEST_DB_SYNC
 }
 
 class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener, NotifierInterface {
@@ -660,6 +663,8 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     }
                 }
                 Command.DB_SYNC -> dbSync.sendData(context, nodeId)
+                Command.CLEAN_UP_DB -> dbAccess.deleteAllValues()
+                Command.REQUEST_DB_SYNC -> dbSync.requestDbSync(context)
             }
 
         } catch (exc: Exception) {
