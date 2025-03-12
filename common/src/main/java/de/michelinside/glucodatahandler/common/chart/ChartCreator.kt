@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -16,7 +17,6 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import com.github.mikephil.charting.utils.Utils as ChartUtils
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -36,6 +36,7 @@ import kotlinx.coroutines.runBlocking
 import java.math.RoundingMode
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
+import com.github.mikephil.charting.utils.Utils as ChartUtils
 
 
 open class ChartCreator(protected val chart: GlucoseChart, protected val context: Context, protected val durationPref: String = "", protected val transparencyPref: String = ""): NotifierInterface,
@@ -292,17 +293,29 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         }
     }
 
+    private fun createChartBackground() {
+        Log.v(LOG_ID, "createChartBackground for transparency: $backgroundTransparency")
+        if(backgroundTransparency == 0) {
+            chart.setBackgroundColor(Utils.getBackgroundColor(backgroundTransparency))
+            chart.minOffset = 0F
+        } else {
+            chart.setBackgroundResource(R.drawable.layout_bg_graph)
+            val shape = chart.background as GradientDrawable
+            shape.setColor(Utils.getBackgroundColor(backgroundTransparency))
+            chart.minOffset = 15F
+        }
+    }
+
     protected open fun initChart() {
         Log.v(LOG_ID, "initChart - touchEnabled: $touchEnabled")
         chart.setTouchEnabled(false)
         initDataSet()
-        chart.setBackgroundColor(Utils.getBackgroundColor(backgroundTransparency))
+        createChartBackground()
         chart.isAutoScaleMinMaxEnabled = false
         chart.legend.isEnabled = false
         chart.description.isEnabled = false
         chart.isScaleYEnabled = false
-        chart.minOffset = 0F
-        chart.setExtraOffsets(4F, 4F, 4F, 4F)
+        chart.setExtraOffsets(4F, 4F, 4F, if(chart.xAxis.isEnabled) 8F else 4F)
         if(touchEnabled) {
             val mMarker = CustomBubbleMarker(context, true)
             mMarker.chartView = chart
