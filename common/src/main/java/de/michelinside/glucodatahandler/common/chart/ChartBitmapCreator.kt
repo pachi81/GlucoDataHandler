@@ -104,17 +104,15 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
         update(dbAccess.getGlucoseValues(getMinTime()))
     }
 
-    override fun disable(): Boolean {
-        if(super.disable()) {
-            bitmap = null  // reset
-            InternalNotifier.notify(context, NotifySource.GRAPH_CHANGED, Bundle().apply { putInt(Constants.GRAPH_ID, chart.id) })
-            return true
-        }
-        return false
+    override fun onDataSyncStopped() {
+        Log.d(LOG_ID, "onDataSyncStopped")
+        super.onDataSyncStopped()
+        bitmap = null  // reset
+        InternalNotifier.notify(context, NotifySource.GRAPH_CHANGED, Bundle().apply { putInt(Constants.GRAPH_ID, chart.id) })
     }
 
     fun getBitmap(): Bitmap? {
-        if(durationHours == 0) {
+        if(durationHours == 0 || paused) {
             return null
         }
         if(bitmap == null)

@@ -79,6 +79,10 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         return chart.visibility == View.VISIBLE
     }
 
+    val paused: Boolean get() {
+        return dataSyncJob!!.isActive != true
+    }
+
     private var graphPrefList = mutableSetOf(
         Constants.SHARED_PREF_LOW_GLUCOSE,
         Constants.SHARED_PREF_HIGH_GLUCOSE,
@@ -116,10 +120,15 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             InternalNotifier.addNotifier(context, this, mutableSetOf(NotifySource.TIME_VALUE))
             hasTimeNotifier = true
         } else {
-            InternalNotifier.remNotifier(context, this)
-            hasTimeNotifier = false
+            remNotifier()
         }
         Log.v(LOG_ID, "updateNotifier - has notifier: $hasTimeNotifier")
+    }
+
+    private fun remNotifier() {
+        Log.d(LOG_ID, "remNotifier called")
+        InternalNotifier.remNotifier(context, this)
+        hasTimeNotifier = false
     }
 
     private fun waitForCreation() {
@@ -157,6 +166,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
 
     fun pause() {
         try {
+            remNotifier()
             stopDataSync()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "pause exception: " + exc.message.toString() )
@@ -165,6 +175,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
 
     fun resume() {
         try {
+            updateNotifier()
             if(enabled && !startDataSync()) {
                 if(chart.xAxis.axisMinimum > chart.xAxis.axisMaximum)
                     chart.postInvalidate()   // need to redraw the chart
@@ -335,6 +346,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         return listOf(200F, ReceiveData.highRaw, ReceiveData.targetMaxRaw, dbAccess.getMaxValue(getMinTime()).toFloat()).max() + 10F
     }
 
+    protected open fun onDataSyncStopped() {}
+
     protected fun stopDataSync() {
         if(dataSyncJob != null && dataSyncJob!!.isActive) {
             dataSyncJob!!.cancel()
@@ -344,6 +357,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                     dataSyncJob!!.join()
                 }
             }
+            onDataSyncStopped()
         }
     }
 
@@ -673,7 +687,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     protected fun createBitmap(): Bitmap? {
         try {
             Log.d(LOG_ID, "Create bitmap - duration: $durationHours - width: ${chart.width} - height: ${chart.height}")
-            if(durationHours > 0) {
+            if(durationHours > 0 && !paused) {
                 if(chart.width == 0 || chart.height == 0)
                     chart.waitForInvalidate()
                 if(chart.width > 0 && chart.height > 0) {

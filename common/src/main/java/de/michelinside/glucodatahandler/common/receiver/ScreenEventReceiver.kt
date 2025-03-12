@@ -24,15 +24,32 @@ open class ScreenEventReceiver: BroadcastReceiver() {
     }
 
     companion object {
-        private val LOG_ID = "GDH.ScreenEventReceiver"
+        @JvmStatic
+        protected val LOG_ID = "GDH.ScreenEventReceiver"
         private var displayState = Display.STATE_ON
         private var displayManager: DisplayManager? = null
+        private fun getDisplayManager(context: Context): DisplayManager? {
+            if(displayManager == null)
+                displayManager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager?
+            return displayManager
+        }
+
+        private fun getDisplayState(context: Context, defaultState: Int): Int {
+            getDisplayManager(context)
+            if(displayManager != null && displayManager!!.displays.isNotEmpty()) {
+                val display = displayManager!!.displays[0]
+                return display.state
+            }
+            return defaultState
+        }
+
         fun isDisplayOff() : Boolean {
             return displayState == Display.STATE_OFF
         }
+        /*
         fun isDisplayOn() : Boolean {
             return displayState == Display.STATE_ON
-        }
+        }*/
         fun triggerNotify(context: Context) {
             Log.i(LOG_ID, "triggerNotify called")
             InternalNotifier.notify(context, NotifySource.DISPLAY_STATE_CHANGED, null)
@@ -66,10 +83,11 @@ open class ScreenEventReceiver: BroadcastReceiver() {
     }
 
     private fun setDisplayState(context: Context, state: Int) {
-        if(displayState != state) {
-            Log.i(LOG_ID, "Change display state from $displayState to ${state}")
+        val newState = if(state==Display.STATE_OFF) getDisplayState(context, state) else state
+        if(displayState != newState) {
+            Log.i(LOG_ID, "Change display state from $displayState to ${newState}")
             val oldState = displayState
-            displayState = state
+            displayState = newState
             // state doze (2) is also handled as on!
             if(displayState == Display.STATE_OFF) {
                 onDisplayOff(context)
@@ -81,8 +99,7 @@ open class ScreenEventReceiver: BroadcastReceiver() {
 
     fun update(context: Context) {
         Log.d(LOG_ID, "update called")
-        if(displayManager == null)
-            displayManager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager?
+        getDisplayManager(context)
         if(displayManager != null && displayManager!!.displays.isNotEmpty()) {
             val display = displayManager!!.displays[0]
             setDisplayState(context, display.state)

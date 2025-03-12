@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.*
 import de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator
+import de.michelinside.glucodatahandler.common.database.dbSync
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.R as CR
@@ -149,6 +150,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
                         sendCommand(Command.PAUSE_NODE)
                     } else {
                         sendCommand(Command.RESUME_NODE)
+                        dbSync.requestDbSync(context)
                     }
                 }
                 else -> {}

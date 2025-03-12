@@ -29,6 +29,7 @@ import de.michelinside.glucodatahandler.common.chart.ChartBitmap
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.R as CR
@@ -75,7 +76,7 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
             if(chartBitmap == null && GlucoDataService.isServiceRunning) {
                 Log.i(LOG_ID, "Create bitmap")
                 chartBitmap = ChartBitmap(GlucoDataService.context!!, Constants.SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION, size, size/3, true)
-                InternalNotifier.addNotifier(GlucoDataService.context!!, ChartComplicationUpdater, mutableSetOf(NotifySource.GRAPH_CHANGED))
+                InternalNotifier.addNotifier(GlucoDataService.context!!, ChartComplicationUpdater, mutableSetOf(NotifySource.GRAPH_CHANGED, NotifySource.DISPLAY_STATE_CHANGED))
             }
         }
 
@@ -90,6 +91,16 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
 
         fun getBitmap(): Bitmap? {
             return chartBitmap?.getBitmap()
+        }
+
+        fun pauseBitmap() {
+            Log.d(LOG_ID, "Pause bitmap")
+            chartBitmap?.pause()
+        }
+
+        fun resumeBitmap() {
+            Log.d(LOG_ID, "Resume bitmap")
+            chartBitmap?.resume()
         }
 
     }
@@ -255,6 +266,13 @@ object ChartComplicationUpdater: NotifierInterface {
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - graph-id ${ChartComplicationBase.getChartId()}" )
+        if(dataSource==NotifySource.DISPLAY_STATE_CHANGED) {
+            if(ScreenEventReceiver.isDisplayOff())
+                ChartComplicationBase.pauseBitmap()
+            else
+                ChartComplicationBase.resumeBitmap()
+            return
+        }
         if (dataSource == NotifySource.GRAPH_CHANGED && extras?.getInt(Constants.GRAPH_ID) != ChartComplicationBase.getChartId()) {
             Log.v(LOG_ID, "Ignore graph changed as it is not for this chart")
             return  // ignore as it is not for this graph
