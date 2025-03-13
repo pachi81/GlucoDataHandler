@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatSeekBar
 import androidx.appcompat.widget.SwitchCompat
 import de.michelinside.glucodatahandler.ActiveComplicationHandler
+import de.michelinside.glucodatahandler.ChartComplicationUpdater
 import de.michelinside.glucodatahandler.GlucoDataServiceWear
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
@@ -93,6 +94,7 @@ class SettingsActivity : AppCompatActivity() {
                     }
                     // trigger update of each complication on change
                     ActiveComplicationHandler.OnNotifyData(this, NotifySource.SETTINGS, null)
+                    ChartComplicationUpdater.OnNotifyData(this, NotifySource.SETTINGS, null)
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Changing colored AOD exception: " + exc.message.toString() )
                 }

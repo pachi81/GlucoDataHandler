@@ -185,6 +185,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     override fun onNotificationPosted(statusBarNotification: StatusBarNotification?) {
         if (isRegistered()) {
             statusBarNotification?.let { sbn ->
+                Log.d(LOG_ID, "New notification posted from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`})")
                 val sharedPref = applicationContext.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 if (validGlucoseNotification(sbn, sharedPref)) {
                     parseValue(sbn)
