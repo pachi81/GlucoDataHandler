@@ -21,13 +21,28 @@ import java.io.StringWriter
 object dbSync : ChannelClient.ChannelCallback() {
     private val LOG_ID = "GDH.dbSync"
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    private var finished = true
+    private var recvFinished = true
     private var channel: ChannelClient.Channel? = null
+    private var registered = false
     private var retryCount = 0
+    private var syncThread: Thread? = null
 
     private fun registerChannel(context: Context) {
-        Log.d(LOG_ID, "registerChannel called")
-        Wearable.getChannelClient(context).registerChannelCallback(this)
+        if(!registered) {
+            Log.d(LOG_ID, "registerChannel called")
+            Wearable.getChannelClient(context).registerChannelCallback(this)
+            registered = true
+            Log.d(LOG_ID, "ChannelClient registered")
+        }
+    }
+
+    private fun unregisterChannel(context: Context) {
+        if(registered) {
+            Log.d(LOG_ID, "unregisterChannel called")
+            Wearable.getChannelClient(context).unregisterChannelCallback(this)
+            registered = false
+            Log.d(LOG_ID, "ChannelClient unregistered")
+        }
     }
 
     private fun getStringFromInputStream(stream: InputStream?): String {
@@ -73,9 +88,7 @@ object dbSync : ChannelClient.ChannelCallback() {
             if(p0.path != Constants.DB_SYNC_CHANNEL_PATH)
                 return
             super.onInputClosed(p0, i, i1)
-            Wearable.getChannelClient(GlucoDataService.context!!).close(p0)
-            channel = null
-            finished = true
+            close(GlucoDataService.context!!)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onInputClosed exception: " + exc.message.toString() )
         }
@@ -85,11 +98,6 @@ object dbSync : ChannelClient.ChannelCallback() {
         try {
             super.onOutputClosed(p0, p1, p2)
             Log.d(LOG_ID, "onOutputClosed for path ${p0.path}")
-            if(p0.path != Constants.DB_SYNC_CHANNEL_PATH)
-                return
-            Wearable.getChannelClient(GlucoDataService.context!!).close(p0)
-            channel = null
-            finished = true
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onInputClosed exception: " + exc.message.toString() )
         }
@@ -98,14 +106,13 @@ object dbSync : ChannelClient.ChannelCallback() {
     fun sendData(context: Context, nodeId: String) {
         try {
             Log.i(LOG_ID, "send db data to $nodeId")
-            finished = false
             val channelClient = Wearable.getChannelClient(context)
             val channelTask =
                 channelClient.openChannel(nodeId, Constants.DB_SYNC_CHANNEL_PATH)
-            channelTask.addOnSuccessListener { channel ->
+            channelTask.addOnSuccessListener { sendChannel ->
                 Thread {
                     try {
-                        val outputStream = Tasks.await(channelClient.getOutputStream(channel))
+                        val outputStream = Tasks.await(channelClient.getOutputStream(sendChannel))
                         val minTime = System.currentTimeMillis() - (if(GlucoDataService.appSource == AppSource.WEAR_APP) Constants.DB_MAX_DATA_TIME_MS else Constants.DB_MAX_DATA_WEAR_TIME_MS)  // from phone to wear, only send the last 24h
                         val data = dbAccess.getGlucoseValues(minTime)
                         Log.i(LOG_ID, "sending ${data.size} values")
@@ -115,7 +122,7 @@ object dbSync : ChannelClient.ChannelCallback() {
                         outputStream.write(string.toByteArray())
                         outputStream.flush()
                         outputStream.close()
-                        channelClient.close(channel)
+                        channelClient.close(sendChannel)
                         Log.d(LOG_ID, "db data sent")
                         if(GlucoDataService.appSource == AppSource.WEAR_APP) {
                             Log.i(LOG_ID, "Clear old data after sync")
@@ -137,28 +144,33 @@ object dbSync : ChannelClient.ChannelCallback() {
             if(channel != null) {
                 Log.d(LOG_ID, "close channel")
                 channelClient.close(channel!!)
-                finished = true
                 channel = null
                 Log.d(LOG_ID, "channel closed")
             }
-            channelClient.unregisterChannelCallback(this)
-            Log.d(LOG_ID, "unregisterChannel called")
+            syncThread = null
+            recvFinished = true
+            unregisterChannel(context)
+            Log.d(LOG_ID, "sync closed")
         } catch (exc: Exception) {
             Log.e(LOG_ID, "close exception: " + exc.toString())
         }
     }
 
+    private fun isSyncActive(): Boolean {
+        return syncThread != null && syncThread!!.isAlive
+    }
+
     private fun waitFor(context: Context) {
-        Thread {
+        syncThread = Thread {
             try {
                 Log.v(LOG_ID, "Waiting for receiving db data")
                 var count = 0
-                while (!finished && count < 10) {
+                while (!recvFinished && count < 10) {
                     Thread.sleep(1000)
                     count++
                 }
                 val success: Boolean
-                if (!finished) {
+                if (!recvFinished) {
                     Log.w(LOG_ID, "Receiving still not finished!")
                     success = false
                 } else {
@@ -168,24 +180,34 @@ object dbSync : ChannelClient.ChannelCallback() {
                 close(context)
                 if (success) {
                     Log.i(LOG_ID, "db sync succeeded")
+                    if (GlucoDataService.appSource == AppSource.PHONE_APP) {
+                        Log.d(LOG_ID, "Trigger watch sync")
+                        GlucoDataService.sendCommand(Command.REQUEST_DB_SYNC)
+                    }
                 } else {
-                    Log.w(LOG_ID, "db sync failed")
+                    Log.w(LOG_ID, "db sync failed - cur retry: $retryCount")
                     if(retryCount < 3) {
+                        Thread.sleep(10000)
                         retryCount++
                         requestDbSync(context, retryCount)
+                    } else {
+                        Log.d(LOG_ID, "Trigger watch sync even phone sync failed...")
+                        GlucoDataService.sendCommand(Command.REQUEST_DB_SYNC)
                     }
                 }
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "waitFor exception: " + exc.message.toString() )
             }
-        }.start()
+        }
+        syncThread!!.start()
     }
 
     fun requestDbSync(context: Context, curRetry: Int = 0) {
-        Log.d(LOG_ID, "request db sync - finished: $finished - retry: $curRetry")
-        if (finished) {
-            finished = false
+        Log.d(LOG_ID, "request db sync - finished: $recvFinished - retry: $curRetry - syncActive: ${isSyncActive()}")
+        if (!isSyncActive()) {
+            close(context)
             retryCount = curRetry
+            recvFinished = false
             registerChannel(context)
             GlucoDataService.sendCommand(Command.DB_SYNC)
             waitFor(context)

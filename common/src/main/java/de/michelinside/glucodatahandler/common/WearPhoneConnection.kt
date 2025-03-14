@@ -439,7 +439,9 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             Log.i(LOG_ID, "Node with id " + nodeId + " connected!")
             if(notConnectedNodes.isEmpty())
                 removeTimer()
-            dbSync.requestDbSync(context)
+            if (GlucoDataService.appSource == AppSource.PHONE_APP) {
+                dbSync.requestDbSync(context)   // update data on phone first, before sending data to wear
+            }
         } else if(noDataReceived.contains(nodeId)) {
             Log.i(LOG_ID, "Node with id " + nodeId + " still waiting for receiving data!")
         } else if(noDataSend.contains(nodeId)) {
@@ -479,6 +481,11 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         try {
             Log.i(LOG_ID, "onMessageReceived from " + p0.sourceNodeId + " with path " + p0.path)
             checkConnectedNode(p0.sourceNodeId)
+            if (p0.path == Constants.REQUEST_DATA_MESSAGE_PATH && !noDataSend.contains(p0.sourceNodeId)) {
+                Log.d(LOG_ID, "Request data called from " + p0.sourceNodeId + " wait for sending data")
+                // new data request -> new connection on other side -> reset connection
+                noDataSend.add(p0.sourceNodeId)  // add to trigger db sync after connection established
+            }
             if(noDataReceived.contains(p0.sourceNodeId)) {
                 noDataReceived.remove(p0.sourceNodeId)
                 checkNodeConnect(p0.sourceNodeId)
@@ -598,10 +605,6 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
                 if(p0.path == Constants.REQUEST_DATA_MESSAGE_PATH || forceSend) {
                     Log.d(LOG_ID, "Data request received from " + p0.sourceNodeId)
-                    if (p0.path == Constants.REQUEST_DATA_MESSAGE_PATH) {
-                        // new data request -> new connection on other side -> reset connection
-                        noDataSend.add(p0.sourceNodeId)  // add to trigger db sync after connection established
-                    }
                     var bundle = ReceiveData.createExtras()
                     var source = NotifySource.BROADCAST
                     if( bundle == null && BatteryReceiver.batteryPercentage >= 0) {
