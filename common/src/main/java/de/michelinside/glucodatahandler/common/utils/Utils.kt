@@ -150,7 +150,7 @@ object Utils {
                 string += " " + key + " => " + (if (bundle[key] != null) bundle[key].toString() else "NULL") + "\r\n"
             }
             string += " }"
-            return string
+            return string.take(1000)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "dumpBundle exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
         }

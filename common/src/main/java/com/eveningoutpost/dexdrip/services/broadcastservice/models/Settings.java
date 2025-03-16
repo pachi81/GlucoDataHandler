@@ -59,6 +59,11 @@ public class Settings implements Parcelable {
     }
 
     @SuppressWarnings("all")
+    public long getGraphEnd() {
+        return this.graphEnd;
+    }
+
+    @SuppressWarnings("all")
     public boolean isDisplayGraph() {
         return this.displayGraph;
     }

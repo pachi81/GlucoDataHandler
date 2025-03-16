@@ -316,7 +316,7 @@
     <string name="pref_source_aaps_info">AndroidAPS</string>
     <string name="pref_source_aaps_info_summary">Pour recevoir les valeurs d\'AAPS:\n- ouvrez l\'application AAPS\n- allez dans "Config Builder"\n- activez "Samsung Tizen" ou "Data Broadcaster"</string>
     <string name="pref_switch_watchdrip_enabled">WatchDrip+</string>
-    <string name="pref_switch_watchdrip_enabled_summary">"Activer la communication WatchDrip+ (sans graphique).\nIMPORTANT: activez "Activer le service" dans WatchDrip+ après avoir activé ce paramètre ici !"</string>
+    <string name="pref_switch_watchdrip_enabled_summary">"Activer la communication WatchDrip+.\nIMPORTANT: activez "Activer le service" dans WatchDrip+ après avoir activé ce paramètre ici !"</string>
     <string name="pref_car_notification_reappear_interval">Réapparaître</string>
     <string name="pref_car_notification_reappear_interval_summary">Intervalle auquel la notification doit réapparaître s\'il n\'y a pas de nouvelle valeur. (0 pour jamais).</string>
     <string name="pref_aa_media_player_icon_style_summary">Style de l\'icône/image du lecteur multimédia factice.</string>

@@ -369,7 +369,7 @@
     <string name="pref_source_aaps_info">AndroidAPS</string>
     <string name="pref_source_aaps_info_summary">To receive values from AAPS:\n- open AAPS app\n- go to \"Config Builder\"\n- enable \"Samsung Tizen\" or \"Data Broadcaster\"</string>
     <string name="pref_switch_watchdrip_enabled">WatchDrip+</string>
-    <string name="pref_switch_watchdrip_enabled_summary">"Enable WatchDrip+ communication (without graph).\nIMPORTANT: enable \"Enable service\" in WatchDrip+ after enabling this setting here!"</string>
+    <string name="pref_switch_watchdrip_enabled_summary">"Enable WatchDrip+ communication.\nIMPORTANT: enable \"Enable service\" in WatchDrip+ after enabling this setting here!"</string>
     <string name="pref_car_notification_reappear_interval">Reappear</string>
     <string name="pref_car_notification_reappear_interval_summary">Interval when the notification shall reappear if there is no new value. (0 for never).</string>
     <string name="pref_aa_media_player_icon_style_summary">Style of the dummy media player icon/image.</string>
@@ -838,4 +838,7 @@
     <string name="pref_floating_widget_lock_position_summary">If the position is locked, the floating widget can not be moved. It will always be on the same position.</string>
 
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">Values and graph</string>
+
+    <string name="aod_permission_info">To enable glucose display on the Always On Display, this app requires the Accessibility Service permission.\nThis permission is used exclusively for displaying glucose data on the AOD. Your privacy is important, and no other personal data is accessed, collected, or shared.\nPress \"OK\" to go to the permission screen.</string>
+
 </resources>
