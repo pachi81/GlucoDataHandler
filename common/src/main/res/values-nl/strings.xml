@@ -786,4 +786,6 @@
     <string name="pref_floating_widget_lock_position_summary">Als de positie is vergrendeld, kan de zwevende widget niet worden verplaatst. Deze zal altijd op dezelfde positie staan.</string>
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">Waarden en grafiek</string>
 
+    <string name="aod_permission_info">Om de glucoseweergave op het Always On Display in te schakelen, heeft deze app de toestemming voor de Toegankelijkheidsservice nodig.\nDeze toestemming wordt uitsluitend gebruikt voor het weergeven van glucosegegevens op de AOD. Uw privacy is belangrijk en er worden geen andere persoonlijke gegevens ingezien, verzameld of gedeeld.\nDruk op \"OK\" om naar het scherm met toestemmingen te gaan.</string>
+
 </resources>

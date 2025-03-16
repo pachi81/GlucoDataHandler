@@ -784,4 +784,7 @@
     <string name="pref_floating_widget_lock_position_summary">Si la position est verrouillée, le widget flottant ne peut pas être déplacé. Il sera toujours à la même position.</string>
 
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">Valeurs et graphique</string>
+
+    <string name="aod_permission_info">Pour activer l\'affichage du glucose sur l\'Always On Display, cette application nécessite l\'autorisation du service d\'accessibilité.\nCette autorisation est utilisée exclusivement pour afficher les données de glucose sur l\'AOD. Votre vie privée est importante, et aucune autre donnée personnelle n\'est consultée, collectée ou partagée.\nAppuyez sur \"OK\" pour accéder à l\'écran d\'autorisation.</string>
+
 </resources>

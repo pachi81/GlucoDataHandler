@@ -782,4 +782,6 @@
 
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">數值和圖表</string>
 
+    <string name="aod_permission_info">若要在永遠顯示 (AOD) 上啟用血糖顯示，此應用程式需要無障礙服務權限。\n此權限僅用於在 AOD 上顯示血糖資料。您的隱私權很重要，我們不會存取、收集或分享任何其他個人資料。\n按下 \"確定\" 以前往權限畫面。</string>
+
 </resources>

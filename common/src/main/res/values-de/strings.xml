@@ -777,4 +777,6 @@
     <string name="pref_floating_widget_lock_position_summary">Wenn die Position gesperrt ist, kann das schwebende Widget nicht verschoben werden. Es befindet sich immer an derselben Position.</string>
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">Werte und Graph</string>
 
+    <string name="aod_permission_info">Um die Glukoseanzeige auf dem Always On Display zu aktivieren, benötigt diese App die Berechtigung für den Bedienungshilfendienst.\nDiese Berechtigung wird ausschließlich für die Anzeige von Glukosedaten auf dem AOD verwendet. Ihre Privatsphäre ist wichtig, und es werden keine anderen persönlichen Daten abgerufen, gesammelt oder weitergegeben.\nDrücken Sie \"OK\", um zum Berechtigungsbildschirm zu gelangen.</string>
+
 </resources>

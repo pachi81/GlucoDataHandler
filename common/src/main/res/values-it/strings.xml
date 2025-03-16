@@ -773,4 +773,7 @@
     <string name="pref_floating_widget_lock_position_summary">Se la posizione è bloccata, il widget mobile non può essere spostato. Sarà sempre nella stessa posizione.</string>
 
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">Valori e grafico</string>
+
+    <string name="aod_permission_info">Per abilitare la visualizzazione del glucosio sull\'Always On Display, questa app richiede l\'autorizzazione del Servizio di accessibilità.\nQuesta autorizzazione viene utilizzata esclusivamente per la visualizzazione dei dati del glucosio sull\'AOD. La tua privacy è importante e nessun altro dato personale viene consultato, raccolto o condiviso.\nPremi \"OK\" per andare alla schermata delle autorizzazioni.</string>
+
 </resources>

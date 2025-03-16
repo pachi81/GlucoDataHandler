@@ -783,4 +783,7 @@
     <string name="pref_floating_widget_lock_position_summary">Si la posición está bloqueada, el widget flotante no se puede mover. Siempre estará en la misma posición.</string>
 
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">Valores y gráfico</string>
+
+    <string name="aod_permission_info">Para habilitar la visualización de glucosa en la pantalla Always On Display, esta aplicación requiere el permiso del Servicio de Accesibilidad.\nEste permiso se utiliza exclusivamente para mostrar datos de glucosa en la AOD. Su privacidad es importante y no se accede, recopila ni comparte ningún otro dato personal.\nPulse "OK" para ir a la pantalla de permisos.</string>
+
 </resources>

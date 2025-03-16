@@ -786,4 +786,7 @@
     <string name="pref_floating_widget_lock_position_summary">Jeśli położenie jest zablokowane, pływającego widżetu nie można przesuwać. Zawsze będzie znajdował się w tym samym miejscu.</string>
 
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">Wartości i wykres</string>
+
+    <string name="aod_permission_info">Aby włączyć wyświetlanie glukozy na ekranie Always On Display, ta aplikacja wymaga uprawnień Usługi ułatwień dostępu.\nTo uprawnienie jest używane wyłącznie do wyświetlania danych glukozy na AOD. Twoja prywatność jest ważna i żadne inne dane osobowe nie są dostępne, gromadzone ani udostępniane.\nWciśnij \"OK\", aby przejść do ekranu uprawnień.</string>
+
 </resources>

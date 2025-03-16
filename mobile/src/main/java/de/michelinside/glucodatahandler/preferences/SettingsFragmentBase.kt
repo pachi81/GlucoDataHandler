@@ -319,11 +319,14 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        Log.v(LOG_ID, "onSharedPreferenceChanged called with key $key")
         super.onSharedPreferenceChanged(sharedPreferences, key)
         when (key) {
             Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE -> updateStyleSummary()
             Constants.SHARED_PREF_AOD_WP_STYLE -> updateStyleSummary()
-            Constants.SHARED_PREF_AOD_WP_ENABLED -> checkAccesibilityService()
+            Constants.SHARED_PREF_AOD_WP_ENABLED -> {
+                checkAccesibilityService()
+            }
         }
     }
 
@@ -340,6 +343,7 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
     private val accessibilitySettingsLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             val enabled = (AODAccessibilityService.isAccessibilitySettingsEnabled(requireContext()))
+            Log.i(LOG_ID, "Accessibility permission: $enabled")
             preferenceManager.sharedPreferences?.edit()?.putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, enabled)?.apply()
             val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_AOD_WP_ENABLED)
             if (pref != null)
@@ -358,10 +362,22 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
     }
 
     private fun checkAccesibilityService() {
-        val enabled = AODAccessibilityService.isAccessibilitySettingsEnabled(requireContext())
-        if (!enabled) {
-            val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-            accessibilitySettingsLauncher.launch(intent)
+        if(preferenceManager.sharedPreferences!!.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)) {
+            val enabled = AODAccessibilityService.isAccessibilitySettingsEnabled(requireContext())
+            if (!enabled) {
+                Dialogs.showOkCancelDialog(requireContext(),
+                    resources.getString(CR.string.permission_missing_title),
+                    resources.getString(CR.string.aod_permission_info),
+                    { _, _ ->
+                        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                        accessibilitySettingsLauncher.launch(intent)
+                    },
+                    { _, _ ->
+                        Log.v(LOG_ID, "Accessibility permission canceled!")
+                        updateEnabledInitial()
+                    }
+                )
+            }
         }
     }
 }

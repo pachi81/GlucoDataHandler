@@ -851,4 +851,7 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="pref_floating_widget_lock_position_summary">Ha a pozíció zárolva van, az úszó widget nem mozgatható. Mindig ugyanazon a területen lesz.</string>
 
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">Értékek és grafikon</string>
+
+    <string name="aod_permission_info">A glükóz megjelenítésének engedélyezéséhez az Always On Display-en, ehhez az alkalmazáshoz az Akadálymentesítési szolgáltatás engedélye szükséges.\nEz az engedély kizárólag a glükózadatok AOD-n történő megjelenítésére szolgál. Az Ön adatainak védelme fontos, és más személyes adatokhoz nem férünk hozzá, azokat nem gyűjtjük és nem osztjuk meg.\nNyomja meg az „OK” gombot az engedélyképernyőre lépéshez.</string>
+
 </resources>

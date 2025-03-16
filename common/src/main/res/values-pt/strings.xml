@@ -780,4 +780,6 @@
 
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">Valores e gráfico</string>
 
+    <string name="aod_permission_info">Para ativar a exibição de glicose no Always On Display, esta aplicação requer a permissão do Serviço de Acessibilidade.\nEsta permissão é usada exclusivamente para exibir dados de glicose no AOD. A sua privacidade é importante e nenhum outro dado pessoal é acedido, recolhido ou partilhado.\nPressione \"OK\" para ir para o ecrã de permissões.</string>
+
 </resources>
