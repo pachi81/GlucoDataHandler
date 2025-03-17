@@ -21,7 +21,7 @@ public class GraphLine implements Parcelable {
             return new GraphLine[size];
         }
     };
-    private List<GraphPoint> values;
+    public List<GraphPoint> values;
     private int color;
 
     public GraphLine(int col) {

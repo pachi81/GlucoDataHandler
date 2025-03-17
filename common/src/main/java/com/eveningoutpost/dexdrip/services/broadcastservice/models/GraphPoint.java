@@ -17,9 +17,9 @@ public class GraphPoint implements Parcelable {
         }
     };
 
-    private float x;
+    public float x;
 
-    private float y;
+    public float y;
 
     public GraphPoint(float x, float y) {
         this.x = x;

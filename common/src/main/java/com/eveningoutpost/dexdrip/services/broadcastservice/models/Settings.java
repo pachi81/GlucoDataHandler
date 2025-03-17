@@ -39,6 +39,13 @@ public class Settings implements Parcelable {
         displayGraph = false;
     }
 
+    public Settings(String appName, long graphDurationMs) {
+        apkName = appName;
+        displayGraph = true;
+        graphStart = graphDurationMs;
+        graphEnd = 0;
+    }
+
     @Override
     public int describeContents() {
         return 0;
