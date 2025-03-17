@@ -221,12 +221,12 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
                     val startFuz = (start / FUZZER).toFloat()
                     val endFuz = (end / FUZZER).toFloat()
 
-                    val lowLine= GraphLine(Color.WHITE)
+                    val lowLine= GraphLine(Color.LTGRAY)
                     lowLine.add(startFuz,ReceiveData.targetMin)
                     lowLine.add(endFuz,ReceiveData.targetMin)
                     bundle.putParcelable("graph.lowLine", lowLine)
 
-                    val highLine= GraphLine(Color.WHITE)
+                    val highLine= GraphLine(Color.LTGRAY)
                     highLine.add(startFuz,ReceiveData.targetMax)
                     highLine.add(endFuz,ReceiveData.targetMax)
                     bundle.putParcelable("graph.highLine", highLine)
