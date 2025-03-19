@@ -196,6 +196,10 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
         }
     }
 
+    protected fun hasIobCob(): Boolean {
+        return style == Constants.WIDGET_STYLE_CHART_GLUCOSE_TREND_TIME_DELTA_IOB_COB || style == Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA_IOB_COB
+    }
+
     @SuppressLint("SetTextI18n")
     protected fun createWallpaperView(color: Int? = null, backgroundColor: Int = Color.TRANSPARENT): Bitmap? {
         try {

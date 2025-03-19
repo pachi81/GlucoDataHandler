@@ -27,6 +27,7 @@ import de.michelinside.glucodatahandler.common.Intents
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.preferences.PreferenceHelper
+import de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import kotlin.collections.HashMap
 import kotlin.collections.List
@@ -192,6 +193,7 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_TIME_TO_CLOSE, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_LOCK_POSITION, Constants.SHARED_PREF_FLOATING_WIDGET)
+            setEnableState<SelectReceiverPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO, Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO, defValue = true)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_Y_POS, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
@@ -288,7 +290,8 @@ class WidgetSettingsFragment: SettingsFragmentBase(R.xml.pref_widgets) {
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         super.onSharedPreferenceChanged(sharedPreferences, key)
         when (key) {
-            Constants.SHARED_PREF_FLOATING_WIDGET_STYLE -> updateStyleSummary()
+            Constants.SHARED_PREF_FLOATING_WIDGET_STYLE,
+            Constants.SHARED_PREF_FLOATING_WIDGET -> updateStyleSummary()
         }
     }
 
@@ -296,6 +299,11 @@ class WidgetSettingsFragment: SettingsFragmentBase(R.xml.pref_widgets) {
         val widgetStylePref = findPreference<ListPreference>(Constants.SHARED_PREF_FLOATING_WIDGET_STYLE)
         if(widgetStylePref != null) {
             widgetStylePref.summary = widgetStylePref.entry
+            val widgetGraphDuration = findPreference<SeekBarPreference>(Constants.SHARED_PREF_FLOATING_WIDGET_GRAPH_DURATION)
+            val floatingWidgetEnabled = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_FLOATING_WIDGET)
+            if(widgetGraphDuration != null && floatingWidgetEnabled != null) {
+                widgetGraphDuration.isEnabled = floatingWidgetEnabled.isChecked && widgetStylePref.value == "chart_glucose_trend_delta_time_iob_cob"
+            }
         }
     }
 }

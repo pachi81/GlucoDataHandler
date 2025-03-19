@@ -13,6 +13,7 @@ import android.view.View.*
 import android.widget.ImageView
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
@@ -80,6 +81,7 @@ class FloatingWidget(context: Context): WallpaperBase(context, "GDH.FloatingWidg
     @SuppressLint("SetTextI18n")
     private fun setContent() {
         imageView.setImageBitmap(createWallpaperView(backgroundColor = Utils.getBackgroundColor(sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY, 3))))
+        imageView.contentDescription = ReceiveData.getAsText(context, hasIobCob())
     }
 
     override fun update() {
