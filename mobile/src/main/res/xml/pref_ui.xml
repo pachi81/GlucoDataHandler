@@ -22,7 +22,7 @@
                     app:showSeekBarValue="true"
                     app:seekBarIncrement="1"
                     app:min="0"
-                    android:max="12"
+                    android:max="24"
                     android:defaultValue="4"
                     android:key="graph_duration_phone_main"
                     android:summary="@string/graph_duration_phone_summary"
