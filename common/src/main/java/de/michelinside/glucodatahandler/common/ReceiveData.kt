@@ -859,6 +859,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 + " mg/dl - unit: " + getUnit()
                 + " - 5 min delta: " + use5minDelta
                 + " - obsolete time: " + obsoleteTimeMin
+                + " - rate calc: " + useRateCalculation
                 + " - alarm/out/ok/obsolete colors: " + colorAlarm.toString() + "/" + colorOutOfRange.toString() + "/" + colorOK.toString() + "/" + colorObsolete.toString())
     }
 
