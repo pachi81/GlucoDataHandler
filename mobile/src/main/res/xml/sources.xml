@@ -26,7 +26,7 @@
         android:title="@string/pref_switch_use_5_min_delta"
         app:iconSpaceReserved="false" />
     <androidx.preference.SwitchPreferenceCompat
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:key="rate_calculation"
         android:summaryOn="@string/pref_switch_use_rate_calculation_summary_on"
         android:summaryOff="@string/pref_switch_use_rate_calculation_summary_off"
