@@ -95,6 +95,7 @@
             android:layout_height="wrap_content"
             android:scaleType="fitStart"
             android:src="@drawable/icon_graph"
+            android:adjustViewBounds="true"
             tools:ignore="ContentDescription" />
     </LinearLayout>
 </LinearLayout>

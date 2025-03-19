@@ -127,6 +127,8 @@
         android:minWidth="60dp"
         android:layout_weight="7"
         android:contentDescription="@string/graph"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
         android:src="@drawable/icon_graph"/>
 
 </LinearLayout>

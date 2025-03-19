@@ -8,7 +8,9 @@ import android.os.Handler
 import android.util.Log
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -21,7 +23,9 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
     private var LOG_ID = "GDH.Chart.BitmapCreator"
     private var bitmap: Bitmap? = null
     override val resetChart = true
-    override val circleRadius = 3F
+    override val circleRadius: Float get() {
+        return if(GlucoDataService.appSource == AppSource.WEAR_APP) 3F else 2F
+    }
     override var durationHours = defaultDurationHours
     override val touchEnabled = false
 

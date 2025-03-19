@@ -119,5 +119,6 @@
             android:layout_height="wrap_content"
             android:scaleType="fitCenter"
             android:contentDescription="@string/graph"
+            android:adjustViewBounds="true"
             android:src="@drawable/icon_graph"/>
 </LinearLayout>

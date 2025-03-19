@@ -11,6 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/graph"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
         android:src="@drawable/icon_graph"/>
 
 </LinearLayout>
