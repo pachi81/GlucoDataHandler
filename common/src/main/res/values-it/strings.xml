@@ -714,7 +714,7 @@
     <string name="graph">Grafico</string>
     <string name="graph_duration">Durata grafico</string>
     <string name="graph_duration_wear_summary">Numero di ore mostrate nel grafico nella complicazione e nella schermata principale.\nUsa 0 per disabilitare il grafico.</string>
-    <string name="graph_duration_phone_summary">Numero di ore mostrate nel grafico.\nUsa 0 per disabilitare il grafico.</string>
+    <string name="graph_duration_summary">Numero di ore mostrate nel grafico.\nUsa 0 per disabilitare il grafico.</string>
     <string name="graph_duration_phone_widget_summary">Numero di ore mostrate nel grafico.</string>
     <string name="show_graph">Mostra grafico</string>
     <string name="menu_database">Database</string>
@@ -775,5 +775,9 @@
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">Valori e grafico</string>
 
     <string name="aod_permission_info">Per abilitare la visualizzazione del glucosio sull\'Always On Display, questa app richiede l\'autorizzazione del Servizio di accessibilità.\nQuesta autorizzazione viene utilizzata esclusivamente per la visualizzazione dei dati del glucosio sull\'AOD. La tua privacy è importante e nessun altro dato personale viene consultato, raccolto o condiviso.\nPremi \"OK\" per andare alla schermata delle autorizzazioni.</string>
+
+    <string name="graph_duration_phone_main_summary">Numero di ore mostrate nel grafico nella schermata principale.\nUsa 0 per disabilitare il grafico.</string>
+    <string name="graph_circle_radius">Dimensione punto</string>
+    <string name="graph_circle_radius_summary">Dimensione dei punti del grafico per tutti i widget, la schermata di blocco e Always-On Display (AOD). Questa impostazione non influisce sul grafico nella schermata principale dell\'app.</string>
 
 </resources>

@@ -95,7 +95,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         Constants.SHARED_PREF_SHOW_OTHER_UNIT
     )
 
-    private fun init() {
+    protected open fun init() {
         if(!init) {
             LOG_ID = "GDH.Chart.Creator." + chart.id.toString()
             Log.d(LOG_ID, "init")
@@ -480,7 +480,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         }
         if(!hasTimeNotifier)
             updateNotifier()
-        var minTime = System.currentTimeMillis() - (getDefaultRange() * 60 * 1000L)
+        val minTime = System.currentTimeMillis() - (getDefaultRange() * 60 * 1000L)
 
         var minValue = 0L
         var maxValue = 0L

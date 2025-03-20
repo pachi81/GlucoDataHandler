@@ -725,7 +725,7 @@
     <string name="graph">Graphique</string>
     <string name="graph_duration">Durée du graphique</string>
     <string name="graph_duration_wear_summary">Nombre d\'heures affichées sur le graphique dans la complication et sur l\'écran principal.\nUtilisez 0 pour désactiver le graphique.</string>
-    <string name="graph_duration_phone_summary">Nombre d\'heures affichées sur le graphique.\nUtilisez 0 pour désactiver le graphique.</string>
+    <string name="graph_duration_summary">Nombre d\'heures affichées sur le graphique.\nUtilisez 0 pour désactiver le graphique.</string>
     <string name="graph_duration_phone_widget_summary">Nombre d\'heures affichées sur le graphique.</string>
     <string name="show_graph">Afficher le graphique</string>
     <string name="menu_database">Base de données</string>
@@ -786,5 +786,9 @@
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">Valeurs et graphique</string>
 
     <string name="aod_permission_info">Pour activer l\'affichage du glucose sur l\'Always On Display, cette application nécessite l\'autorisation du service d\'accessibilité.\nCette autorisation est utilisée exclusivement pour afficher les données de glucose sur l\'AOD. Votre vie privée est importante, et aucune autre donnée personnelle n\'est consultée, collectée ou partagée.\nAppuyez sur \"OK\" pour accéder à l\'écran d\'autorisation.</string>
+
+    <string name="graph_duration_phone_main_summary">Nombre d\'heures affichées sur le graphique de l\'écran principal.\nUtilisez 0 pour désactiver le graphique.</string>
+    <string name="graph_circle_radius">Taille du point</string>
+    <string name="graph_circle_radius_summary">Taille des points du graphique pour tous les widgets, l\'écran de verrouillage et l\'affichage permanent (AOD). Ce paramètre n\'affecte pas le graphique sur l\'écran principal de l\'application.</string>
 
 </resources>

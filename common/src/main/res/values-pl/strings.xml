@@ -727,7 +727,7 @@
     <string name="graph">Wykres</string>
     <string name="graph_duration">Okres na wykresie</string>
     <string name="graph_duration_wear_summary">Liczba godzin pokazanych na wykresie na komplikacji i na ekranie głównym.\nWpisz 0, aby wyłączyć wykres.</string>
-    <string name="graph_duration_phone_summary">Liczba godzin pokazanych na wykresie.\nWpisz 0, aby wyłączyć wykres.</string>
+    <string name="graph_duration_summary">Liczba godzin pokazanych na wykresie.\nWpisz 0, aby wyłączyć wykres.</string>
     <string name="graph_duration_phone_widget_summary">Liczba godzin pokazanych na wykresie.</string>
     <string name="show_graph">Pokaż wykres</string>
     <string name="menu_database">Baza danych</string>
@@ -788,5 +788,9 @@
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">Wartości i wykres</string>
 
     <string name="aod_permission_info">Aby włączyć wyświetlanie glukozy na ekranie Always On Display, ta aplikacja wymaga uprawnień Usługi ułatwień dostępu.\nTo uprawnienie jest używane wyłącznie do wyświetlania danych glukozy na AOD. Twoja prywatność jest ważna i żadne inne dane osobowe nie są dostępne, gromadzone ani udostępniane.\nWciśnij \"OK\", aby przejść do ekranu uprawnień.</string>
+
+    <string name="graph_duration_phone_main_summary">Number of hours shown in the graph on main screen.\nUse 0 to disable graph.</string>
+    <string name="graph_circle_radius">Point size</string>
+    <string name="graph_circle_radius_summary">Size of the graph points for all widgets, the lock screen and Always-On Display (AOD). This setting does not affect the graph on the main app screen.</string>
 
 </resources>

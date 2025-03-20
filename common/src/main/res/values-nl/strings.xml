@@ -727,7 +727,7 @@
     <string name="graph">Grafiek</string>
     <string name="graph_duration">Grafiekduur</string>
     <string name="graph_duration_wear_summary">Aantal uren weergegeven in de grafiek in de complicatie en op het hoofdscherm.\nGebruik 0 om de grafiek uit te schakelen.</string>
-    <string name="graph_duration_phone_summary">Aantal uren weergegeven in de grafiek.\nGebruik 0 om de grafiek uit te schakelen.</string>
+    <string name="graph_duration_summary">Aantal uren weergegeven in de grafiek.\nGebruik 0 om de grafiek uit te schakelen.</string>
     <string name="graph_duration_phone_widget_summary">Aantal uren weergegeven in de grafiek.</string>
     <string name="show_graph">Grafiek weergeven</string>
     <string name="menu_database">Database</string>
@@ -787,5 +787,9 @@
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">Waarden en grafiek</string>
 
     <string name="aod_permission_info">Om de glucoseweergave op het Always On Display in te schakelen, heeft deze app de toestemming voor de Toegankelijkheidsservice nodig.\nDeze toestemming wordt uitsluitend gebruikt voor het weergeven van glucosegegevens op de AOD. Uw privacy is belangrijk en er worden geen andere persoonlijke gegevens ingezien, verzameld of gedeeld.\nDruk op \"OK\" om naar het scherm met toestemmingen te gaan.</string>
+
+    <string name="graph_duration_phone_main_summary">Aantal uren weergegeven in de grafiek op het hoofdscherm.\nGebruik 0 om de grafiek uit te schakelen.</string>
+    <string name="graph_circle_radius">Puntgrootte</string>
+    <string name="graph_circle_radius_summary">Grootte van de punten van de grafiek voor alle widgets, het vergrendelscherm en Always-On Display (AOD). Deze instelling heeft geen invloed op de grafiek op het hoofdscherm van de app.</string>
 
 </resources>

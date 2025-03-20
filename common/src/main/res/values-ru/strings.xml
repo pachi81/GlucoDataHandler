@@ -719,7 +719,7 @@
     <string name="graph">График</string>
     <string name="graph_duration">Длительность графика</string>
     <string name="graph_duration_wear_summary">Количество часов, отображаемых на графике в виджете и на главном экране.\nИспользуйте 0, чтобы отключить график.</string>
-    <string name="graph_duration_phone_summary">Количество часов, отображаемых на графике.\nИспользуйте 0, чтобы отключить график.</string>
+    <string name="graph_duration_summary">Количество часов, отображаемых на графике.\nИспользуйте 0, чтобы отключить график.</string>
     <string name="graph_duration_phone_widget_summary">Количество часов, отображаемых на графике.</string>
     <string name="show_graph">Показать график</string>
     <string name="menu_database">База данных</string>
@@ -780,5 +780,9 @@
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">Значения и график</string>
 
     <string name="aod_permission_info">Чтобы включить отображение глюкозы на Always On Display, этому приложению требуется разрешение службы специальных возможностей.\nЭто разрешение используется исключительно для отображения данных о глюкозе на AOD. Ваша конфиденциальность важна, и никакие другие личные данные не доступны, не собираются и не передаются.\nНажмите \"OK\", чтобы перейти к экрану разрешений.</string>
+
+    <string name="graph_duration_phone_main_summary">Количество часов, отображаемых на графике на главном экране.\nИспользуйте 0, чтобы отключить график.</string>
+    <string name="graph_circle_radius">Размер точки</string>
+    <string name="graph_circle_radius_summary">Размер точек графика для всех виджетов, экрана блокировки и Always-On Display (AOD). Этот параметр не влияет на график на главном экране приложения.</string>
 
 </resources>

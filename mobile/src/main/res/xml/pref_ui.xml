@@ -25,7 +25,7 @@
                     android:max="24"
                     android:defaultValue="4"
                     android:key="graph_duration_phone_main"
-                    android:summary="@string/graph_duration_phone_summary"
+                    android:summary="@string/graph_duration_phone_main_summary"
                     android:title="@string/graph_duration"
                     app:iconSpaceReserved="false" />
                 <androidx.preference.SeekBarPreference
@@ -37,6 +37,16 @@
                     android:key="graph_transparency_phone_main"
                     android:summary="@string/pref_graph_transparency_phone_main_summary"
                     android:title="@string/pref_floating_widget_transparency"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SeekBarPreference
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="1"
+                    app:min="1"
+                    android:max="8"
+                    android:defaultValue="5"
+                    android:key="graph_bitmap_circle_radius"
+                    android:summary="@string/graph_circle_radius_summary"
+                    android:title="@string/graph_circle_radius"
                     app:iconSpaceReserved="false" />
         </PreferenceCategory>
 </PreferenceScreen>

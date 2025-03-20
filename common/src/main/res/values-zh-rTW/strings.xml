@@ -722,7 +722,7 @@
     <string name="graph">圖表</string>
     <string name="graph_duration">圖表持續時間</string>
     <string name="graph_duration_wear_summary">在錶面複雜功能和主螢幕上顯示的圖表小時數。\n使用 0 停用圖表。</string>
-    <string name="graph_duration_phone_summary">在圖表中顯示的小時數。\n使用 0 停用圖表。</string>
+    <string name="graph_duration_summary">在圖表中顯示的小時數。\n使用 0 停用圖表。</string>
     <string name="graph_duration_phone_widget_summary">在圖表中顯示的小時數。</string>
     <string name="show_graph">顯示圖表</string>
     <string name="menu_database">資料庫</string>
@@ -783,5 +783,9 @@
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">數值和圖表</string>
 
     <string name="aod_permission_info">若要在永遠顯示 (AOD) 上啟用血糖顯示，此應用程式需要無障礙服務權限。\n此權限僅用於在 AOD 上顯示血糖資料。您的隱私權很重要，我們不會存取、收集或分享任何其他個人資料。\n按下 \"確定\" 以前往權限畫面。</string>
+
+    <string name="graph_duration_phone_main_summary">在主螢幕圖表中顯示的小時數。\n使用 0 可停用圖表。</string>
+    <string name="graph_circle_radius">點大小</string>
+    <string name="graph_circle_radius_summary">所有小工具、鎖定螢幕和 Always-On Display (AOD) 的圖表點大小。此設定不會影響應用程式主螢幕上的圖表。</string>
 
 </resources>

@@ -792,7 +792,7 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="graph">Grafikon</string>
     <string name="graph_duration">Grafikon időtartama</string>
     <string name="graph_duration_wear_summary">A grafikonon, a komplikációban és a főképernyőn megjelenített órák száma.\nA grafikon letiltásához használjon 0-t.</string>
-    <string name="graph_duration_phone_summary">A grafikonon megjelenített órák száma.\nA grafikon letiltásához használjon 0-t.</string>
+    <string name="graph_duration_summary">A grafikonon megjelenített órák száma.\nA grafikon letiltásához használjon 0-t.</string>
     <string name="graph_duration_phone_widget_summary">A grafikonon megjelenített órák száma.</string>
     <string name="show_graph">Grafikon megjelenítése</string>
     <string name="menu_database">Adatbázis</string>
@@ -853,5 +853,9 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">Értékek és grafikon</string>
 
     <string name="aod_permission_info">A glükóz megjelenítésének engedélyezéséhez az Always On Display-en, ehhez az alkalmazáshoz az Akadálymentesítési szolgáltatás engedélye szükséges.\nEz az engedély kizárólag a glükózadatok AOD-n történő megjelenítésére szolgál. Az Ön adatainak védelme fontos, és más személyes adatokhoz nem férünk hozzá, azokat nem gyűjtjük és nem osztjuk meg.\nNyomja meg az „OK” gombot az engedélyképernyőre lépéshez.</string>
+
+    <string name="graph_duration_phone_main_summary">A főképernyőn lévő grafikonon megjelenített órák száma.\nHasználjon 0-t a grafikon letiltásához.</string>
+    <string name="graph_circle_radius">Pontméret</string>
+    <string name="graph_circle_radius_summary">A grafikon pontjainak mérete az összes widget, a lezárási képernyő és az Always-On Display (AOD) esetén. Ez a beállítás nincs hatással az alkalmazás főképernyőjén lévő grafikonra.</string>
 
 </resources>

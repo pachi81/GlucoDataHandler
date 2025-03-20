@@ -718,7 +718,7 @@
     <string name="graph">Graph</string>
     <string name="graph_duration">Zeitspanne im Graphen</string>
     <string name="graph_duration_wear_summary">Anzahl der Stunden, die im Graph in der Komplikation und auf dem Hauptbildschirm angezeigt werden.\nVerwende 0, um den Graph zu deaktivieren.</string>
-    <string name="graph_duration_phone_summary">Anzahl der Stunden, die im Graph angezeigt werden.\nVerwende 0, um den Graph zu deaktivieren.</string>
+    <string name="graph_duration_summary">Anzahl der Stunden, die im Graph angezeigt werden.\nVerwende 0, um den Graph zu deaktivieren.</string>
     <string name="graph_duration_phone_widget_summary">Anzahl der Stunden, die im Graph angezeigt werden.</string>
     <string name="show_graph">Graph anzeigen</string>
     <string name="menu_database">Datenbank</string>
@@ -778,5 +778,9 @@
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">Werte und Graph</string>
 
     <string name="aod_permission_info">Um die Glukoseanzeige auf dem Always On Display zu aktivieren, benötigt diese App die Berechtigung für den Bedienungshilfendienst.\nDiese Berechtigung wird ausschließlich für die Anzeige von Glukosedaten auf dem AOD verwendet. Ihre Privatsphäre ist wichtig, und es werden keine anderen persönlichen Daten abgerufen, gesammelt oder weitergegeben.\nDrücken Sie \"OK\", um zum Berechtigungsbildschirm zu gelangen.</string>
+
+    <string name="graph_duration_phone_main_summary">Anzahl der Stunden, die im Diagramm auf dem Hauptbildschirm angezeigt werden.\nVerwenden Sie 0, um das Diagramm zu deaktivieren.</string>
+    <string name="graph_circle_radius">Punktgröße</string>
+    <string name="graph_circle_radius_summary">Größe der Punkte des Diagramms für alle Widgets, den Sperrbildschirm und Always-On-Display (AOD). Diese Einstellung hat keinen Einfluss auf das Diagramm im Hauptbildschirm der App.</string>
 
 </resources>

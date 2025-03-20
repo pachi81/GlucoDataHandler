@@ -725,7 +725,7 @@
     <string name="graph">Графика</string>
     <string name="graph_duration">Продължителност на графиката</string>
     <string name="graph_duration_wear_summary">Брой часове, показани на графиката в усложнението и на главния екран.\nИзползвайте 0, за да деактивирате графиката.</string>
-    <string name="graph_duration_phone_summary">Брой часове, показани на графиката.\nИзползвайте 0, за да деактивирате графиката.</string>
+    <string name="graph_duration_summary">Брой часове, показани на графиката.\nИзползвайте 0, за да деактивирате графиката.</string>
     <string name="graph_duration_phone_widget_summary">Брой часове, показани на графиката.</string>
     <string name="show_graph">Показване на графика</string>
     <string name="menu_database">База данни</string>
@@ -786,5 +786,9 @@
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">Стойности и графика</string>
 
     <string name="aod_permission_info">За да активирате показването на глюкоза на Always On Display, това приложение изисква разрешение за услугата за достъпност.\nТова разрешение се използва изключително за показване на данни за глюкозата на AOD. Вашата поверителност е важна и други лични данни не се осъществяват, събират или споделят.\nНатиснете „OK“, за да отидете на екрана с разрешения.</string>
+
+    <string name="graph_duration_phone_main_summary">Брой часове, показани на графиката на главния екран.\nИзползвайте 0, за да деактивирате графиката.</string>
+    <string name="graph_circle_radius">Размер на точката</string>
+    <string name="graph_circle_radius_summary">Размер на точките на графиката за всички джаджи, заключения екран и Always-On Display (AOD). Тази настройка не засяга графиката на главния екран на приложението.</string>
 
 </resources>

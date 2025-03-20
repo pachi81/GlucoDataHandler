@@ -721,7 +721,7 @@
     <string name="graph">Gráfico</string>
     <string name="graph_duration">Duração do gráfico</string>
     <string name="graph_duration_wear_summary">Número de horas mostradas no gráfico na complicação e no ecrã principal.\nUse 0 para desativar o gráfico.</string>
-    <string name="graph_duration_phone_summary">Número de horas mostradas no gráfico.\nUse 0 para desativar o gráfico.</string>
+    <string name="graph_duration_summary">Número de horas mostradas no gráfico.\nUse 0 para desativar o gráfico.</string>
     <string name="graph_duration_phone_widget_summary">Número de horas mostradas no gráfico.</string>
     <string name="show_graph">Mostrar gráfico</string>
     <string name="menu_database">Base de dados</string>
@@ -781,5 +781,9 @@
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">Valores e gráfico</string>
 
     <string name="aod_permission_info">Para ativar a exibição de glicose no Always On Display, esta aplicação requer a permissão do Serviço de Acessibilidade.\nEsta permissão é usada exclusivamente para exibir dados de glicose no AOD. A sua privacidade é importante e nenhum outro dado pessoal é acedido, recolhido ou partilhado.\nPressione \"OK\" para ir para o ecrã de permissões.</string>
+
+    <string name="graph_duration_phone_main_summary">Número de horas mostradas no gráfico na tela principal.\nUse 0 para desativar o gráfico.</string>
+    <string name="graph_circle_radius">Tamanho do ponto</string>
+    <string name="graph_circle_radius_summary">Tamanho dos pontos do gráfico para todos os widgets, a tela de bloqueio e Always-On Display (AOD). Esta configuração não afeta o gráfico na tela principal do aplicativo.</string>
 
 </resources>

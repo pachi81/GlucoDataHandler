@@ -24,13 +24,24 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
     private var bitmap: Bitmap? = null
     override val resetChart = true
     override val circleRadius: Float get() {
-        return if(GlucoDataService.appSource == AppSource.WEAR_APP) 3F else 2F
+        return if(GlucoDataService.appSource == AppSource.WEAR_APP) 3F else customCircleRadius
     }
     override var durationHours = defaultDurationHours
     override val touchEnabled = false
+    var customCircleRadius = 2.2F
 
     init {
         LOG_ID = "GDH.Chart.BitmapCreator." + chart.id.toString()
+    }
+
+    override fun init() {
+        readCircleRadius()
+        super.init()
+    }
+
+    private fun readCircleRadius() {
+        customCircleRadius = ((sharedPref.getInt(Constants.SHARED_PREF_GRAPH_BITMAP_CIRCLE_RADIUS, 5)).toFloat()*3/10) + 0.7F  // starts at one!
+        Log.i(LOG_ID, "using circle radius: $customCircleRadius")
     }
 
     private val showAxis: Boolean get() {
@@ -85,7 +96,7 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
     }
 
     override fun updateChart(dataSet: LineDataSet?) {
-        Log.v(LOG_ID, "updateChart for dataSet: $dataSet")
+        Log.v(LOG_ID, "updateChart for dataSet: ${dataSet?.label}")
         if(dataSet != null) {
             Log.v(LOG_ID, "Update chart for ${dataSet.values.size} entries and ${dataSet.circleColors.size} colors")
             if(dataSet.values.isNotEmpty())
@@ -128,7 +139,11 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
         Log.v(LOG_ID, "onSharedPreferenceChanged: $key")
 
         try {
-            if(key == showAxisPref) {
+            if(key == Constants.SHARED_PREF_GRAPH_BITMAP_CIRCLE_RADIUS) {
+                readCircleRadius()
+                if(chart.data != null)
+                    create(true) // recreate chart with new graph data
+            } else if(key == showAxisPref) {
                 if(chart.data != null)
                     create(true) // recreate chart with new graph data
             } else {

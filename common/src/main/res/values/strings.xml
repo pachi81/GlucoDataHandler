@@ -780,7 +780,7 @@
     <string name="graph">Graph</string>
     <string name="graph_duration">Graph duration</string>
     <string name="graph_duration_wear_summary">Number of hours shown in the graph in complication and on main screen.\nUse 0 to disable graph.</string>
-    <string name="graph_duration_phone_summary">Number of hours shown in the graph.\nUse 0 to disable graph.</string>
+    <string name="graph_duration_summary">Number of hours shown in the graph.\nUse 0 to disable graph.</string>
     <string name="graph_duration_phone_widget_summary">Number of hours shown in the graph.</string>
     <string name="show_graph">Show graph</string>
     <string name="menu_database">Database</string>
@@ -840,5 +840,9 @@
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">Values and graph</string>
 
     <string name="aod_permission_info">To enable glucose display on the Always On Display, this app requires the Accessibility Service permission.\nThis permission is used exclusively for displaying glucose data on the AOD. Your privacy is important, and no other personal data is accessed, collected, or shared.\nPress \"OK\" to go to the permission screen.</string>
+
+    <string name="graph_duration_phone_main_summary">Number of hours shown in the graph on main screen.\nUse 0 to disable graph.</string>
+    <string name="graph_circle_radius">Point size</string>
+    <string name="graph_circle_radius_summary">Size of the graph points for all widgets, the lock screen and Always-On Display (AOD). This setting does not affect the graph on the main app screen.</string>
 
 </resources>
