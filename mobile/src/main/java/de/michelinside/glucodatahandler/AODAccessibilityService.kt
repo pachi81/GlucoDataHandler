@@ -143,6 +143,8 @@ class AODAccessibilityService : AccessibilityService() {
 
     private fun createOverlay() {
         try {
+            if (powerManager.isInteractive)
+                return
             if(aodWidget == null) {
                 aodWidget = AodWidget(this)
                 aodWidget!!.create()

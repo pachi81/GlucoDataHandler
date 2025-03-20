@@ -70,7 +70,8 @@ class LockScreenWallpaper(context: Context): WallpaperBase(context, "GDH.LockScr
 
     override fun enable() {
         Log.d(LOG_ID, "enable called")
-        update()
+        if(canCreate())
+            update()  // else wait for graph creation finished
     }
 
     override fun disable() {

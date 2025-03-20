@@ -28,7 +28,8 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
     }
     override var durationHours = defaultDurationHours
     override val touchEnabled = false
-    var customCircleRadius = 2.2F
+    private var customCircleRadius = 2.2F
+    private var graphCreated = false
 
     init {
         LOG_ID = "GDH.Chart.BitmapCreator." + chart.id.toString()
@@ -96,9 +97,9 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
     }
 
     override fun updateChart(dataSet: LineDataSet?) {
-        Log.v(LOG_ID, "updateChart for dataSet: ${dataSet?.label}")
+        Log.d(LOG_ID, "updateChart for dataSet: ${dataSet?.label}")
         if(dataSet != null) {
-            Log.v(LOG_ID, "Update chart for ${dataSet.values.size} entries and ${dataSet.circleColors.size} colors")
+            Log.d(LOG_ID, "Update chart for ${dataSet.values.size} entries and ${dataSet.circleColors.size} colors")
             if(dataSet.values.isNotEmpty())
                 chart.data = LineData(dataSet)
             else
@@ -109,6 +110,7 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
         chart.postInvalidate()
         Handler(context.mainLooper).post {
             Log.d(LOG_ID, "notify graph changed")
+            graphCreated = true
             bitmap = null  // reset
             InternalNotifier.notify(context, NotifySource.GRAPH_CHANGED, Bundle().apply { putInt(Constants.GRAPH_ID, chart.id) })
         }
@@ -122,12 +124,13 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
     override fun onDataSyncStopped() {
         Log.d(LOG_ID, "onDataSyncStopped")
         super.onDataSyncStopped()
+        graphCreated = false
         bitmap = null  // reset
         InternalNotifier.notify(context, NotifySource.GRAPH_CHANGED, Bundle().apply { putInt(Constants.GRAPH_ID, chart.id) })
     }
 
     fun getBitmap(): Bitmap? {
-        if(durationHours == 0 || paused) {
+        if(durationHours == 0 || paused || !graphCreated) {
             return null
         }
         if(bitmap == null)

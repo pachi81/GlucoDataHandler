@@ -115,14 +115,16 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
                         Log.d(LOG_ID, "New style: $style")
                         updateChartCreation()
                         updateNotifier()
-                        update()
+                        if(active)
+                            update()
                     }
                 }
                 sizePref -> {
                     if (size != sharedPreferences.getInt(sizePref, size)) {
                         size = sharedPreferences.getInt(sizePref, size)
                         Log.d(LOG_ID, "New size: $size")
-                        update()
+                        if(active)
+                            update()
                     }
                 }
                 enabledPref -> {
@@ -235,6 +237,12 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             Log.i(LOG_ID, "Resume bitmap")
             chartBitmap?.resume()
         }
+    }
+
+    protected fun canCreate(): Boolean {
+        if(chartBitmap == null)
+            return true
+        return chartBitmap!!.getBitmap() != null
     }
 
     protected fun hasIobCob(): Boolean {
@@ -351,6 +359,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             if(graphImage != null) {
                 val chart = getChart()
                 if(chart != null) {
+                    graphImage.visibility = VISIBLE
                     lockscreenView.setDrawingCacheEnabled(true)
                     lockscreenView.measure(
                         View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
@@ -361,6 +370,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
                     graphImage.layoutParams.height = lockscreenView.measuredWidth/3
                     graphImage.requestLayout()
                 } else {
+                    Log.d(LOG_ID, "No chart available")
                     graphImage.visibility = GONE
                 }
             }
