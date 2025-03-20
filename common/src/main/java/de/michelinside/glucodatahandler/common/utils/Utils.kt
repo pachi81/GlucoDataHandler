@@ -278,6 +278,14 @@ object Utils {
                         s+= " (${pi.requestedPermissionsFlags[i]})\n"
                     }
                 }
+                if(GlucoDataService.sharedPref != null && GlucoDataService.sharedPref!!.contains(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE)) {
+                    s += "---------------------------------------------------------------\n\n"
+                    s += "---------------------UNCAUGHT EXCEPTION:-----------------------\n"
+                    val excMsg = GlucoDataService.sharedPref!!.getString(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE, "") ?: ""
+                    val time = GlucoDataService.sharedPref!!.getLong(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_TIME, 0)
+                    s+= getUiTimeStamp(time) + "\n"
+                    s+= excMsg + "\n"
+                }
             }
         } catch (e: java.lang.Exception) {
         }
