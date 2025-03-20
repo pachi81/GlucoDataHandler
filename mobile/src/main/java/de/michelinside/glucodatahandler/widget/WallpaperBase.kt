@@ -42,10 +42,15 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
     protected open val MIN_SIZE = 6f
     protected open val MAX_SIZE = 24f
     protected var enabled = false
+    protected var paused = false
     protected var style = Constants.WIDGET_STYLE_GLUCOSE_TREND
     protected var size = 10
     protected lateinit var sharedPref: SharedPreferences
     private var chartBitmap: ChartBitmap? = null
+
+    protected val active: Boolean get() {
+        return enabled && !paused
+    }
 
     fun create() {
         try {
@@ -61,15 +66,31 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
     fun destroy() {
         try {
             Log.d(LOG_ID, "destroy called")
+            disable()
+            removeBitmap()
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "destroy exception: " + exc.message.toString() )
         }
     }
 
-    abstract fun enable()
-    abstract fun disable()
-    abstract fun update()
+    fun pause() {
+        paused = true
+        updateNotifier()
+        disable()
+        pauseBitmap()
+    }
+
+    fun resume() {
+        paused = false
+        updateNotifier()
+        resumeBitmap()
+        enable()
+    }
+
+    protected abstract fun enable()
+    protected abstract fun disable()
+    protected abstract fun update()
 
     protected open fun initSettings(sharedPreferences: SharedPreferences) {
         style = sharedPreferences.getString(stylePref, style)?: style
@@ -124,7 +145,9 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - graph-id ${chartBitmap?.chartId}")
+            Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - active=$active - graph-id ${chartBitmap?.chartId}")
+            if(!active)
+                return
             if (dataSource == NotifySource.GRAPH_CHANGED && chartBitmap != null && extras?.getInt(Constants.GRAPH_ID) != chartBitmap!!.chartId) {
                 Log.v(LOG_ID, "Ignore graph changed as it is not for this chart")
                 return  // ignore as it is not for this graph
@@ -140,8 +163,8 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
     }
 
     private fun updateNotifier() {
-        Log.d(LOG_ID, "updateNotifier called - enabled=$enabled")
-        if (enabled) {
+        Log.d(LOG_ID, "updateNotifier called - active=$active")
+        if (active) {
             val filter = mutableSetOf(
                 NotifySource.SETTINGS
             )
@@ -166,7 +189,11 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             }
             InternalNotifier.addNotifier(context, this, filter)
         } else {
-            InternalNotifier.remNotifier(context, this)
+            val filter = getFilters()
+            if(filter.isNotEmpty())
+                InternalNotifier.addNotifier(context, this, filter)
+            else
+                InternalNotifier.remNotifier(context, this)
         }
     }
 
@@ -188,11 +215,25 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
         }
     }
 
-    private fun removeBitmap() {
+    protected fun removeBitmap() {
         if(chartBitmap != null) {
             Log.i(LOG_ID, "Remove bitmap")
             chartBitmap!!.close()
             chartBitmap = null
+        }
+    }
+
+    protected fun pauseBitmap() {
+        if(chartBitmap!=null) {
+            Log.i(LOG_ID, "Pause bitmap")
+            chartBitmap?.pause()
+        }
+    }
+
+    protected fun resumeBitmap() {
+        if(chartBitmap!=null) {
+            Log.i(LOG_ID, "Resume bitmap")
+            chartBitmap?.resume()
         }
     }
 
@@ -366,5 +407,4 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
         }
         return spannable
     }
-
 }

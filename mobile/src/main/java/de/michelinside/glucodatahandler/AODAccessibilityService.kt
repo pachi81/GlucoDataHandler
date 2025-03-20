@@ -32,7 +32,7 @@ class AODAccessibilityService : AccessibilityService() {
     private lateinit var powerManager: PowerManager
     private val LOG_ID = "GDH.Aod"
 
-    private lateinit var aodWidget: AodWidget
+    private var aodWidget: AodWidget? = null
 
     companion object {
         val LOG_ID = "GDH.Aod"
@@ -73,14 +73,17 @@ class AODAccessibilityService : AccessibilityService() {
                         }
                         else {
                             Log.d(LOG_ID, "Aod disabled in settings")
+                            if(aodWidget != null) {
+                                aodWidget!!.destroy()
+                                aodWidget = null
+                            }
                         }
                     }
                     Intent.ACTION_SCREEN_ON -> {
                         Log.d(LOG_ID, "Screen turned on")
                         triggerAodState(context, false)
                         removeOverlay()
-                        aodWidget.disable()
-                        aodWidget.destroy()
+                        aodWidget?.pause()
                     }
                 }
             } catch (e: Exception) {
@@ -118,8 +121,12 @@ class AODAccessibilityService : AccessibilityService() {
             if (!powerManager.isInteractive) {
                 try {
                     triggerAodState(GlucoDataService.context!!, true)
-                    aodWidget = AodWidget(this)
-                    aodWidget.create()
+                    if(aodWidget == null) {
+                        aodWidget = AodWidget(this)
+                        aodWidget!!.create()
+                    } else {
+                        aodWidget!!.resume()
+                    }
                     removeAndCreateOverlay()
                 } catch (e: Exception) {
                     Log.e(LOG_ID, "Error adding overlay", e)
@@ -136,7 +143,11 @@ class AODAccessibilityService : AccessibilityService() {
 
     private fun createOverlay() {
         try {
-            val bitmap = aodWidget.getBitmap()
+            if(aodWidget == null) {
+                aodWidget = AodWidget(this)
+                aodWidget!!.create()
+            }
+            val bitmap = aodWidget!!.getBitmap()
 
             if (bitmap == null)
                 return
@@ -149,7 +160,7 @@ class AODAccessibilityService : AccessibilityService() {
             )
 
             imageView.setImageBitmap(bitmap)
-            val yOffset = max(0F, ((BitmapUtils.getScreenHeight()-bitmap.height)*aodWidget.getYPos()/100F))
+            val yOffset = max(0F, ((BitmapUtils.getScreenHeight()-bitmap.height)*aodWidget!!.getYPos()/100F))
 
             val layoutParams = WindowManager.LayoutParams().apply {
                 type = WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY

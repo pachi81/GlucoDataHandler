@@ -74,13 +74,14 @@ class LockScreenWallpaper(context: Context): WallpaperBase(context, "GDH.LockScr
     }
 
     override fun disable() {
+        Log.d(LOG_ID, "disable called")
         setWallpaper(null, context)
     }
 
     override fun update() {
         try {
-            Log.v(LOG_ID, "updateLockScreen called - enabled=$enabled")
-            if (enabled) {
+            Log.v(LOG_ID, "updateLockScreen called - active=$active")
+            if (active) {
                 setWallpaper(getBitmapForWallpaper(), context)
             }
         } catch (exc: Exception) {
@@ -122,9 +123,9 @@ class LockScreenWallpaper(context: Context): WallpaperBase(context, "GDH.LockScr
                     val aod_enabled = extras.getBoolean("aod_state")
                     Log.d(LOG_ID, "Display state changed - is AOD on: $aod_enabled")
                     if(aod_enabled)
-                        disable()
+                        pause()
                     else
-                        enable()
+                        resume()
                 }
             } else
                 super.OnNotifyData(context, dataSource, extras)
