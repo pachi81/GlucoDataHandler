@@ -783,14 +783,14 @@
     <string name="pref_graph_transparency_phone_main_summary">Przezroczystość tła dla wykresu na ekranie głównym.\nJest to potrzebne tylko w przypadku jasnego trybu kolorów.</string>
     
     <string name="pref_floating_widget_lock_position">Blokada położenia</string>
-    <string name="pref_floating_widget_lock_position_summary">Jeśli położenie jest zablokowane, pływającego widżetu nie można przesuwać. Zawsze będzie znajdował się w tym samym miejscu.</string>
+    <string name="pref_floating_widget_lock_position_summary">Jeśli położenie jest zablokowane, pływającego widgetu nie można przesuwać. Zawsze będzie znajdował się w tym samym miejscu.</string>
 
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">Wartości i wykres</string>
 
     <string name="aod_permission_info">Aby włączyć wyświetlanie glukozy na ekranie Always On Display, ta aplikacja wymaga uprawnień Usługi ułatwień dostępu.\nTo uprawnienie jest używane wyłącznie do wyświetlania danych glukozy na AOD. Twoja prywatność jest ważna i żadne inne dane osobowe nie są dostępne, gromadzone ani udostępniane.\nWciśnij \"OK\", aby przejść do ekranu uprawnień.</string>
 
-    <string name="graph_duration_phone_main_summary">Number of hours shown in the graph on main screen.\nUse 0 to disable graph.</string>
-    <string name="graph_circle_radius">Point size</string>
-    <string name="graph_circle_radius_summary">Size of the graph points for all widgets, the lock screen and Always-On Display (AOD). This setting does not affect the graph on the main app screen.</string>
+    <string name="graph_duration_phone_main_summary">Liczba godzin pokazanych na wykresie na ekranie głównym.\nWpisz 0, by wyłączyć wykres.</string>
+    <string name="graph_circle_radius">Wielkość punktu</string>
+    <string name="graph_circle_radius_summary">Wielkość punktów wykresu dla wszystkich widgetów, ekranu blokady i ekranu Always-On Display (AOD). To ustawienie nie ma wpływu na wykres na głównym ekranie aplikacji.</string>
 
 </resources>
