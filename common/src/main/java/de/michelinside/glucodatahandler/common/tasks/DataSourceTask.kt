@@ -122,6 +122,10 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                 Log.i(LOG_ID, "Set connected for source $source")
                 isFirstRequest = false
             }
+            SourceState.NO_NEW_VALUE -> {
+                Log.i(LOG_ID, "No new value for source $source - $error ($code) - message: $message")
+                isFirstRequest = false
+            }
             else -> {
                 Log.w(LOG_ID, "Set state for source $source: $state - $error ($code) - message: $message")
             }
