@@ -770,7 +770,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             }
             if(!ReceiveData.delta15Min.isNaN())
                 tableDelta.addView(createRow(CR.string.delta_per_15_minute, GlucoDataUtils.deltaToString(ReceiveData.delta15Min, true)))
-            if(BuildConfig.DEBUG) {
+            /*if(BuildConfig.DEBUG) {
                 if(!ReceiveData.calculatedRate.isNaN()) {
                     tableDelta.addView(createRow("Calculated rate", Utils.round(ReceiveData.calculatedRate, 2).toString() + " (" + GlucoDataUtils.getRateDegrees(ReceiveData.calculatedRate).toString() + "°)"))
                 }
@@ -781,7 +781,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 if(!ReceiveData.rate.isNaN()) {
                     tableDelta.addView(createRow(CR.string.trend, GlucoDataUtils.getRateDegrees(ReceiveData.rate).toString() + "°"))
                 }
-            }
+            }*/
         }
         checkTableVisibility(tableDelta)
     }
