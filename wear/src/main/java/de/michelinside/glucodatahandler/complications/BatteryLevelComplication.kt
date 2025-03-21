@@ -123,7 +123,9 @@ open class BatteryLevelComplicationBase(val type: BatteryLevelType): SuspendingC
     }
 
     fun getWatchBatteryDescr(): String {
-        return resources.getString(CR.string.source_wear) + " " + BatteryReceiver.batteryPercentage.toString() + "%"
+        if(BatteryReceiver.batteryPercentage > 0)
+            return resources.getString(CR.string.source_wear) + " " + BatteryReceiver.batteryPercentage.toString() + "%"
+        return resources.getString(CR.string.source_wear) + " " + resources.getString(CR.string.not_available)
     }
 
     private fun descriptionText(): PlainComplicationText {
@@ -171,8 +173,11 @@ class BatteryLevelComplication: BatteryLevelComplicationBase(BatteryLevelType.PH
 class WatchBatteryLevelComplication: BatteryLevelComplicationBase(BatteryLevelType.WATCH_BATTERY_LEVEL) {
     override fun getRangeValue(): Float = BatteryReceiver.batteryPercentage.toFloat()
 
-    override fun getText(): PlainComplicationText =
-        plainText(BatteryReceiver.batteryPercentage.toString() + "%")
+    override fun getText(): PlainComplicationText {
+        if(BatteryReceiver.batteryPercentage > 0)
+            return plainText(BatteryReceiver.batteryPercentage.toString() + "%")
+        return plainText("--%")
+    }
 
     override fun getIcon(): MonochromaticImage =
         MonochromaticImage.Builder(
