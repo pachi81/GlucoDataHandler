@@ -189,7 +189,7 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
         }
         var lastValueIndex = 0
         if(dataArray.length() > 1) {
-            val lastTime = 0L
+            var lastTime = 0L
             Log.d(LOG_ID, "Handle ${dataArray.length()} entries in response as graph data - ${body.take(1000)}")
             val values = mutableListOf<GlucoseValue>()
             for(i in 0 until dataArray.length()) {
@@ -202,14 +202,16 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
                         if(worldTime < firstValueTime)
                             continue
                         values.add(GlucoseValue(worldTime, value))
-                        if(worldTime > lastTime)
+                        if(worldTime > lastTime) {
+                            lastTime = worldTime
                             lastValueIndex = i
+                        }
                     }
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Exception while parsing entry response: " + exc.message)
                 }
             }
-            Log.i(LOG_ID, "Add ${values.size} values to database")
+            Log.i(LOG_ID, "Add ${values.size} values to database - new value index: $lastValueIndex")
             dbAccess.addGlucoseValues(values)
         }
         val data = dataArray.getJSONObject(lastValueIndex)

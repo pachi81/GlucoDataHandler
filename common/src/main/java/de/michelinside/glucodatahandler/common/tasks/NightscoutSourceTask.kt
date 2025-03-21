@@ -143,7 +143,33 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
                 return Pair(false, "No entries in body: " + body)
             }
 
-            val jsonObject = jsonEntries.getJSONObject(0)
+            var lastValueIndex = 0
+            try {
+                if(jsonEntries.length() > 1) {
+                    var lastTime = 0L
+                    val values = mutableListOf<GlucoseValue>()
+                    for (i in 0 until jsonEntries.length()) {
+                        val jsonEntry = jsonEntries.getJSONObject(i)
+                        var glucose = JsonUtils.getFloat("sgv", jsonEntry)
+                        if (GlucoDataUtils.isMmolValue(glucose))
+                            glucose = GlucoDataUtils.mmolToMg(glucose)
+                        val time = jsonEntry.getLong("date")
+                        if(!glucose.isNaN() && time > 0 && time >= firstValueTime) {
+                            values.add(GlucoseValue(time, glucose.toInt()))
+                            if(time > lastTime) {
+                                lastTime = time
+                                lastValueIndex = i
+                            }
+                        }
+                    }
+                    Log.i(LOG_ID, "Add ${values.size} values to database - new value index: $lastValueIndex")
+                    dbAccess.addGlucoseValues(values)
+                }
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "Exception while parsing entries response: " + exc.message)
+            }
+
+            val jsonObject = jsonEntries.getJSONObject(lastValueIndex)
             val type: String? = if (jsonObject.has("type") ) jsonObject.getString("type") else null
             if (type == null || type != "sgv") {
                 return Pair(false, "Unsupported type '" + type + "' found in response: " + body.take(100))
@@ -162,25 +188,6 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
             if(jsonObject.has("device"))
                 glucoExtras.putString(ReceiveData.SERIAL, jsonObject.getString("device"))
 
-            try {
-                if(jsonEntries.length() > 1) {
-                    val values = mutableListOf<GlucoseValue>()
-                    for (i in 0 until jsonEntries.length()) {
-                        val jsonEntry = jsonEntries.getJSONObject(i)
-                        var glucose = JsonUtils.getFloat("sgv", jsonEntry)
-                        if (GlucoDataUtils.isMmolValue(glucose))
-                            glucose = GlucoDataUtils.mmolToMg(glucose)
-                        val time = jsonEntry.getLong("date")
-                        if(!glucose.isNaN() && time > 0 && time >= firstValueTime) {
-                            values.add(GlucoseValue(time, glucose.toInt()))
-                        }
-                    }
-                    Log.i(LOG_ID, "Add ${values.size} values to database")
-                    dbAccess.addGlucoseValues(values)
-                }
-            } catch (exc: Exception) {
-                Log.e(LOG_ID, "Exception while parsing entries response: " + exc.message)
-            }
 
             handleResult(glucoExtras)
             return Pair(true, "")

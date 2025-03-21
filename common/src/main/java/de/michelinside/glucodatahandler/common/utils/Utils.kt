@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Parcel
 import android.provider.Settings
+import android.text.format.DateUtils
 import android.util.Log
 import android.util.TypedValue
 import android.view.accessibility.AccessibilityManager
@@ -510,9 +511,9 @@ object Utils {
     }
 
     fun getUiTimeStamp(time: Long): String {
-        if(getElapsedTimeMinute(time) >= (60*24))
-            return DateFormat.getDateTimeInstance().format(Date(time))
-        return getTimeStamp(time)
+        if(DateUtils.isToday(time))
+            return getTimeStamp(time)
+        return DateFormat.getDateTimeInstance().format(Date(time))
     }
 
     fun getTimeStamp(time: Long): String {
