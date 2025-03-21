@@ -77,13 +77,21 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         }
     }
 
+    private fun hasNoOngoingNotification(packageName: String): Boolean {
+        if(PackageUtils.isDexcomG7App(packageName)) // G7 foreground has disabled ongoing flag
+            return true
+        if(packageName.lowercase().startsWith("com.senseonics.eversense365"))  // Eversense 365 CGM has no ongoing
+            return true
+        return false
+    }
+
     private fun validGlucoseNotification(sbn: StatusBarNotification, sharedPref: SharedPreferences): Boolean {
         if (sbn.packageName == sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP, "")) {
             updateOnlyChangedValue = false
             var minDiff = 50
             val diffTime = (sbn.postTime - ReceiveData.time)/1000 // in seconds
             Log.i(LOG_ID, "New notification from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`}) - diff notify: ${(sbn.postTime - lastValueNotificationTime)/1000}, diff recv value: $diffTime")
-            if(!sbn.isOngoing && !PackageUtils.isDexcomG7App(sbn.packageName))  // G7 foreground had disabled ongoing flag
+            if(!sbn.isOngoing && !hasNoOngoingNotification(sbn.packageName))
                 return false
             if(PackageUtils.isDexcomApp(sbn.packageName)) {
                 /* special Dexcom handling (only for G7!)
