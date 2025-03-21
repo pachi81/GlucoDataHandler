@@ -107,6 +107,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 }
             })
 
+            session.isActive = true
             session.setPlaybackState(buildState(PlaybackState.STATE_STOPPED))
 
             // set callback depending on the current speak value to prevent speaking for values in background as affect on state!
