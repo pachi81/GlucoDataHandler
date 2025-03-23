@@ -77,11 +77,19 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         }
     }
 
-    private fun hasNoOngoingNotification(packageName: String): Boolean {
+    private fun hasOngoingNotification(packageName: String): Boolean {
         if(PackageUtils.isDexcomG7App(packageName)) // G7 foreground has disabled ongoing flag
+            return false
+        if(packageName.lowercase().startsWith("com.senseonics."))  // Eversense 365 CGM has no ongoing
+            return false
+
+        // apps supporting ongoing notifications
+        if(PackageUtils.isDexcomApp(packageName))  // Dexcom G6 has ongoing
             return true
-        if(packageName.lowercase().startsWith("com.senseonics.eversense365"))  // Eversense 365 CGM has no ongoing
+        if(packageName.lowercase().startsWith("com.camdiab."))  // CamAPS FX
             return true
+
+        // default (unknown app): also allow no ongoing notifications
         return false
     }
 
@@ -91,7 +99,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             var minDiff = 50
             val diffTime = (sbn.postTime - ReceiveData.time)/1000 // in seconds
             Log.i(LOG_ID, "New notification from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`}) - diff notify: ${(sbn.postTime - lastValueNotificationTime)/1000}, diff recv value: $diffTime")
-            if(!sbn.isOngoing && !hasNoOngoingNotification(sbn.packageName))
+            if(!sbn.isOngoing && hasOngoingNotification(sbn.packageName))
                 return false
             if(PackageUtils.isDexcomApp(sbn.packageName)) {
                 /* special Dexcom handling (only for G7!)
