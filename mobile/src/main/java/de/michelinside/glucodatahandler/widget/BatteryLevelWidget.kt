@@ -36,9 +36,9 @@ class BatteryLevelWidget : AppWidgetProvider() {
                 remoteViews.setTextViewText(R.id.device_name, deviceName)
                 val levelColour = if(batteryLevel == 0)
                         ReceiveData.getAlarmTypeColor(AlarmType.NONE)
-                    else if (batteryLevel < 25)
+                    else if (batteryLevel < 20)
                         ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW)
-                    else if (batteryLevel < 45)
+                    else if (batteryLevel < 40)
                         ReceiveData.getAlarmTypeColor(AlarmType.LOW)
                     else
                         ReceiveData.getAlarmTypeColor(AlarmType.OK)
