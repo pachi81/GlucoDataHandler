@@ -323,33 +323,37 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
 
     fun showNotifications(onlySecond: Boolean = false) {
         Log.d(LOG_ID, "showNotifications service running: ${GlucoDataService.foreground} - onlySecond=$onlySecond")
-        if (GlucoDataService.foreground) {
-            if (!onlySecond)
-                showPrimaryNotification(true)
-            if (sharedPref.getBoolean(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, false)) {
-                Log.d(LOG_ID, "show second notification")
-                showNotification(
-                    SECOND_NOTIFICATION_ID,
-                    false,
-                    Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON,
-                    ChannelType.MOBILE_SECOND,
-                    false
-                )
-            } else {
-                Channels.getNotificationManager().cancel(SECOND_NOTIFICATION_ID)
+        try {
+            if (GlucoDataService.foreground) {
+                if (!onlySecond)
+                    showPrimaryNotification(true)
+                if (sharedPref.getBoolean(Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION, false)) {
+                    Log.d(LOG_ID, "show second notification")
+                    showNotification(
+                        SECOND_NOTIFICATION_ID,
+                        false,
+                        Constants.SHARED_PREF_SECOND_PERMANENT_NOTIFICATION_ICON,
+                        ChannelType.MOBILE_SECOND,
+                        false
+                    )
+                } else {
+                    Channels.getNotificationManager().cancel(SECOND_NOTIFICATION_ID)
+                }
+                if (sharedPref.getBoolean(Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION, false)) {
+                    Log.d(LOG_ID, "show third notification")
+                    showNotification(
+                        THIRD_NOTIFICATION_ID,
+                        false,
+                        Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_ICON,
+                        ChannelType.MOBILE_THIRD,
+                        false
+                    )
+                } else {
+                    Channels.getNotificationManager().cancel(THIRD_NOTIFICATION_ID)
+                }
             }
-            if (sharedPref.getBoolean(Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION, false)) {
-                Log.d(LOG_ID, "show third notification")
-                showNotification(
-                    THIRD_NOTIFICATION_ID,
-                    false,
-                    Constants.SHARED_PREF_THIRD_PERMANENT_NOTIFICATION_ICON,
-                    ChannelType.MOBILE_THIRD,
-                    false
-                )
-            } else {
-                Channels.getNotificationManager().cancel(THIRD_NOTIFICATION_ID)
-            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "showNotifications exception: " + exc.toString() )
         }
     }
 
