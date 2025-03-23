@@ -347,7 +347,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             chart.axisRight.addLimitLine(createLimitLine(ReceiveData.targetMinRaw))
         if(ReceiveData.targetMaxRaw > 0F)
             chart.axisRight.addLimitLine(createLimitLine(ReceiveData.targetMaxRaw))
-        chart.axisRight.axisMinimum = Constants.GLUCOSE_MIN_VALUE.toFloat()-10F
+        chart.axisRight.axisMinimum = getDefaultMinValue()
         chart.axisRight.axisMaximum = getDefaultMaxValue()
         chart.axisLeft.axisMinimum = chart.axisRight.axisMinimum
         chart.axisLeft.axisMaximum = chart.axisRight.axisMaximum
@@ -357,6 +357,10 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
 
     protected open fun getDefaultMaxValue() : Float {
         return listOf(200F, ReceiveData.highRaw, ReceiveData.targetMaxRaw, dbAccess.getMaxValue(getMinTime()).toFloat()).max() + 10F
+    }
+
+    protected open fun getDefaultMinValue(): Float {
+        return Constants.GLUCOSE_MIN_VALUE.toFloat()-10F
     }
 
     protected open fun onDataSyncStopped() {}

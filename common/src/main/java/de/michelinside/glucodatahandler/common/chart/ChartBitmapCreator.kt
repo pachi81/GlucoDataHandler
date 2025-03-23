@@ -11,6 +11,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -90,6 +91,16 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
         } else {
             chart.description.isEnabled = false
         }
+    }
+
+    override fun getDefaultMinValue(): Float {
+        if(forComplication) {
+            if(ReceiveData.lowRaw > 0F)
+                return ReceiveData.lowRaw - 10F
+            if(ReceiveData.targetMinRaw > 0F)
+                return ReceiveData.targetMinRaw - 10F
+        }
+        return super.getDefaultMinValue()
     }
 
     override fun getMaxRange(): Long {
