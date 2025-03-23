@@ -16,6 +16,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.wear.watchface.complications.data.ComplicationData
 import androidx.wear.watchface.complications.data.ComplicationType
+import androidx.wear.watchface.complications.data.PhotoImageComplicationData
 import androidx.wear.watchface.complications.data.PlainComplicationText
 import androidx.wear.watchface.complications.data.SmallImage
 import androidx.wear.watchface.complications.data.SmallImageComplicationData
@@ -25,11 +26,13 @@ import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.chart.ChartBitmap
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
+import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.R as CR
@@ -149,6 +152,7 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
     private fun getComplicationData(request: ComplicationRequest): ComplicationData? {
         return when (request.complicationType) {
             ComplicationType.SMALL_IMAGE -> getSmallImageComplicationData(request.complicationInstanceId)
+            ComplicationType.PHOTO_IMAGE -> getLargeImageComplicationData(request.complicationInstanceId)
             else -> {
                 Log.e(
                     LOG_ID,
@@ -165,9 +169,11 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
         return Icon.createWithBitmap(monochromBitmap(bitmap))
     }
 
+    protected abstract fun getPreview(): Int
+
     private fun getTransparentImage(): SmallImage {
         return SmallImage.Builder(
-            image = Icon.createWithResource(this, if(forPreview) R.drawable.icon_rate else CR.drawable.icon_transparent),
+            image = Icon.createWithResource(this, if(forPreview) getPreview() else CR.drawable.icon_transparent),
             type = SmallImageType.PHOTO
         ).build()
     }
@@ -182,24 +188,27 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
             .build()
     }
 
-    private fun resize(originalImage: Bitmap): Bitmap {
-        val compBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+    protected fun getLargeImage(): Icon {
+        val graph = getBitmap() ?: return Icon.createWithResource(this, if(forPreview) getPreview() else CR.drawable.icon_transparent)
+        return Icon.createWithBitmap(resize(graph, 800))
+    }
+
+    private fun resize(originalImage: Bitmap, bitmapSize: Int = size): Bitmap {
+        val compBitmap = Bitmap.createBitmap(bitmapSize, bitmapSize, Bitmap.Config.ARGB_8888)
 
         val originalWidth: Float = originalImage.getWidth().toFloat()
         val originalHeight: Float = originalImage.getHeight().toFloat()
 
         val canvas = Canvas(compBitmap)
 
-        val scale = size / originalWidth
+        val xTranslation = if(bitmapSize>originalWidth) ((bitmapSize-originalWidth)/2f) else 0.0f
+        val yTranslation = (bitmapSize - originalHeight) / 2f
 
-        val xTranslation = 0.0f
-        val yTranslation = (size - originalHeight * scale) / 2f
-
-        Log.v(LOG_ID, "scale: $scale, width: $originalWidth, height: $originalHeight, xTranslation: $xTranslation, yTranslation: $yTranslation")
+        Log.d(LOG_ID, "size: $bitmapSize, width: $originalWidth, height: $originalHeight, xTranslation: $xTranslation, yTranslation: $yTranslation")
 
         val transformation = Matrix()
         transformation.postTranslate(xTranslation, yTranslation)
-        transformation.preScale(scale, scale)
+        transformation.preScale(1f, 1f)
 
         val paint = Paint()
         paint.isFilterBitmap = true
@@ -220,6 +229,7 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
     }
 
     protected abstract fun getSmallImageComplicationData(complicationInstanceId: Int): ComplicationData?
+    protected open fun getLargeImageComplicationData(complicationInstanceId: Int): ComplicationData? = null
 
     protected fun getTapAction(
         complicationInstanceId: Int
@@ -233,6 +243,7 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
 }
 
 class ChartComplication: ChartComplicationBase() {
+    override fun getPreview(): Int = R.drawable.graph_comp_square_trans
     override fun getSmallImageComplicationData(complicationInstanceId: Int): ComplicationData {
         return SmallImageComplicationData.Builder (
             smallImage = getImage(true),
@@ -241,9 +252,19 @@ class ChartComplication: ChartComplicationBase() {
             .setTapAction(getTapAction(complicationInstanceId))
             .build()
     }
+
+    override fun getLargeImageComplicationData(complicationInstanceId: Int): ComplicationData {
+        return PhotoImageComplicationData.Builder (
+            photoImage = getLargeImage(),
+            contentDescription = PlainComplicationText.Builder(applicationContext.resources.getString(CR.string.graph)).build()
+        )
+        .setTapAction(getTapAction(complicationInstanceId))
+        .build()
+    }
 }
 
 class ChartComplicationRect: ChartComplicationBase() {
+    override fun getPreview(): Int = R.drawable.graph_comp_rect_trans
     override fun getSmallImageComplicationData(complicationInstanceId: Int): ComplicationData {
         return SmallImageComplicationData.Builder (
             smallImage = getImage(false),
