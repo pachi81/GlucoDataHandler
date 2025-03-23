@@ -824,7 +824,7 @@
         <service
             android:name=".ChartComplication"
             android:exported="true"
-            android:icon="@drawable/icon_rate"
+            android:icon="@drawable/graph_comp_square"
             android:label="@string/graph_comp_square"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -841,7 +841,7 @@
         <service
             android:name=".ChartComplicationRect"
             android:exported="true"
-            android:icon="@drawable/icon_rate"
+            android:icon="@drawable/graph_comp_rect"
             android:label="@string/graph_comp_rect"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>

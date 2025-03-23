@@ -734,18 +734,18 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         Log.v(LOG_ID, "handleIobCob for source " + dataSource + ": " + extras.toString())
         if (hasNewIobCob(extras)) {
             var iobCobChange = false
-            if(iob != extras.getFloat(IOB, Float.NaN) || cob != extras.getFloat(COB, Float.NaN)) {
-                Log.i(LOG_ID, "Only IOB/COB changed: " + extras.getFloat(IOB, Float.NaN) + "/" +  extras.getFloat(COB, Float.NaN))
-                iob = extras.getFloat(IOB, Float.NaN)
-                cob = extras.getFloat(COB, Float.NaN)
-                iobCobChange = true
-            } else {
-                Log.d(LOG_ID, "Only IOB/COB time changed")
-            }
             iobCobTime = if(extras.containsKey(IOBCOB_TIME))
                 extras.getLong(IOBCOB_TIME)
             else
                 System.currentTimeMillis()
+            if(iob != extras.getFloat(IOB, Float.NaN) || cob != extras.getFloat(COB, Float.NaN)) {
+                Log.i(LOG_ID, "Only IOB/COB changed: " + extras.getFloat(IOB, Float.NaN) + "/" +  extras.getFloat(COB, Float.NaN) + " - at " + Utils.getUiTimeStamp(iobCobTime))
+                iob = extras.getFloat(IOB, Float.NaN)
+                cob = extras.getFloat(COB, Float.NaN)
+                iobCobChange = true
+            } else {
+                Log.d(LOG_ID, "Only IOB/COB time changed at " + Utils.getUiTimeStamp(iobCobTime))
+            }
 
             // do not forward extras as interApp to prevent sending back to source...
             val bundle: Bundle? = if(interApp) null else createExtras()  // re-create extras to have all changed value inside for sending to receiver
