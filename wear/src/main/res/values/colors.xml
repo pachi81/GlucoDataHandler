@@ -19,4 +19,6 @@
     <color name="transparent_marker_background">#BB000000</color>
     <color name="chart_label_color">@color/white</color>
     <color name="chart_limit_line_color">#FFCCCCCC</color>
+    <color name="transparent">#00000000</color>
+    <color name="transparent_button">#11000000</color>
 </resources>

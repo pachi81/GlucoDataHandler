@@ -25,12 +25,23 @@ class GraphActivity : AppCompatActivity() {
             chart = findViewById(R.id.chart)
             findViewById<SwipeDismissFrameLayout>(R.id.swipe_dismiss_root)?.apply {
                 addCallback(object : SwipeDismissFrameLayout.Callback() {
-
+                    override fun onSwipeStarted(layout: SwipeDismissFrameLayout) {
+                        Log.d(LOG_ID, "onSwipeStarted")
+                        finish()
+                    }
+                    override fun onSwipeCanceled(layout: SwipeDismissFrameLayout) {
+                        Log.d(LOG_ID, "onSwipeCanceled")
+                    }
                     override fun onDismissed(layout: SwipeDismissFrameLayout) {
                         Log.d(LOG_ID, "onDismissed")
+                        layout.visibility = View.GONE
                         finish()
                     }
                 })
+            }
+            findViewById<View>(R.id.btnClose).setOnClickListener {
+                Log.d(LOG_ID, "btnClose clicked")
+                finish()
             }
             chartCreator = WearChartCreator(chart, this, Constants.SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION)
             chartCreator.create()
@@ -44,7 +55,6 @@ class GraphActivity : AppCompatActivity() {
             Log.v(LOG_ID, "onPause called")
             super.onPause()
             chartCreator.pause()
-            //finish()
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
