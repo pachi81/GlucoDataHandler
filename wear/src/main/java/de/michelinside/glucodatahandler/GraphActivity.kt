@@ -7,7 +7,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.wear.widget.SwipeDismissFrameLayout
 import de.michelinside.glucodatahandler.common.Constants
-import de.michelinside.glucodatahandler.common.chart.GlucoseChart
 
 class GraphActivity : AppCompatActivity() {
     private val LOG_ID = "GDH.Main.Graph"
