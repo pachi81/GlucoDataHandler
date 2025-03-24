@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.wear.widget.SwipeDismissFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/swipe_dismiss_root"
     android:padding="@dimen/box_inset_layout_padding"
     tools:context=".GraphActivity"
     tools:deviceIds="wear">
 
-    <de.michelinside.glucodatahandler.common.chart.GlucoseChart
+    <de.michelinside.glucodatahandler.WearGlucoseChart
         android:id="@+id/chart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -29,4 +30,4 @@
         android:maxLines="1"
         android:visibility="gone"
         />
-</androidx.wear.widget.BoxInsetLayout>
+</androidx.wear.widget.SwipeDismissFrameLayout>

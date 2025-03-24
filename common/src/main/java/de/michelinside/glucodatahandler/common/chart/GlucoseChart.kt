@@ -8,7 +8,7 @@ import android.util.Log
 import android.view.View
 import com.github.mikephil.charting.charts.LineChart
 
-class GlucoseChart: LineChart {
+open class GlucoseChart: LineChart {
     private var LOG_ID = "GDH.Chart.GlucoseChart"
 
     constructor(context: Context?) : super(context)
@@ -122,5 +122,4 @@ class GlucoseChart: LineChart {
         }
         isDrawing = false
     }
-
 }
