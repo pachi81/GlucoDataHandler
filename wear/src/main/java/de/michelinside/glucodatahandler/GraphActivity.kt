@@ -18,7 +18,7 @@ class GraphActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
-            Log.v(LOG_ID, "onCreate called")
+            Log.d(LOG_ID, "onCreate called")
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_graph)
             txtChartDisabled = findViewById(R.id.txtChartDisabled)
@@ -27,7 +27,7 @@ class GraphActivity : AppCompatActivity() {
                 addCallback(object : SwipeDismissFrameLayout.Callback() {
                     override fun onSwipeStarted(layout: SwipeDismissFrameLayout) {
                         Log.d(LOG_ID, "onSwipeStarted")
-                        finish()
+                        finish()   // finish already here, as finish is called asynchronously and will take some time...
                     }
                     override fun onSwipeCanceled(layout: SwipeDismissFrameLayout) {
                         Log.d(LOG_ID, "onSwipeCanceled")
@@ -35,7 +35,6 @@ class GraphActivity : AppCompatActivity() {
                     override fun onDismissed(layout: SwipeDismissFrameLayout) {
                         Log.d(LOG_ID, "onDismissed")
                         layout.visibility = View.GONE
-                        finish()
                     }
                 })
             }
@@ -76,7 +75,7 @@ class GraphActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         try {
-            Log.v(LOG_ID, "onDestroy called")
+            Log.d(LOG_ID, "onDestroy called")
             super.onDestroy()
             chartCreator.close()
         } catch( exc: Exception ) {
