@@ -754,7 +754,7 @@
     <string name="pref_aod_coloured_summary">AOD in kleur weergeven.</string>
 
     <string name="graph_show_axis">Assen weergeven</string>
-    <string name="graph_show_axis_summary">y- en x-as weergeven in de widget.</string>
+    <string name="graph_show_axis_summary">Tijd- en glucosewaarde-assen weergeven.</string>
 
     <string name="source_notification">Melding</string>
     <string name="pref_source_notification">Meldingslezer (Bèta)</string>

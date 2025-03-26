@@ -741,7 +741,7 @@
     <string name="pref_aod_coloured_summary">Mostra AOD a colori.</string>
 
     <string name="graph_show_axis">Mostra assi</string>
-    <string name="graph_show_axis_summary">Mostra gli assi y e x nel widget.</string>
+    <string name="graph_show_axis_summary">Mostra gli assi del tempo e del valore del glucosio.</string>
 
     <string name="source_notification">Notifica</string>
     <string name="pref_source_notification">Lettore di notifiche (Beta)</string>

@@ -819,7 +819,7 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="pref_aod_coloured_summary">AOD megjelenítése színesben.</string>
 
     <string name="graph_show_axis">Tengelyek megjelenítése</string>
-    <string name="graph_show_axis_summary">y és x tengely megjelenítése a widgetben.</string>
+    <string name="graph_show_axis_summary">Idő- és glükózérték tengelyek megjelenítése.</string>
 
     <string name="source_notification">Értesítés</string>
     <string name="pref_source_notification">Értesítés olvasó (Béta)</string>

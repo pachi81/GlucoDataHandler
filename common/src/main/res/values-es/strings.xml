@@ -751,7 +751,7 @@
     <string name="pref_aod_coloured_summary">Mostrar AOD en color.</string>
 
     <string name="graph_show_axis">Mostrar ejes</string>
-    <string name="graph_show_axis_summary">Mostrar ejes y- y x- en el widget.</string>
+    <string name="graph_show_axis_summary">Mostrar ejes de tiempo y valor de glucosa.</string>
 
     <string name="source_notification">Notificación</string>
     <string name="pref_source_notification">Lector de notificaciones (Beta)</string>

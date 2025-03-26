@@ -15,6 +15,7 @@ class AodWidget(context: Context): WallpaperBase(context, "GDH.AodWidget") {
     override val stylePref = Constants.SHARED_PREF_AOD_WP_STYLE
     override val sizePref = Constants.SHARED_PREF_AOD_WP_SIZE
     override val chartDurationPref = Constants.SHARED_PREF_AOD_WP_GRAPH_DURATION
+    override val chartShowAxisPref = Constants.SHARED_PREF_AOD_WP_GRAPH_SHOW_AXIS
     override val MIN_SIZE = 10f
     override val MAX_SIZE = 24f
 
@@ -60,6 +61,21 @@ class AodWidget(context: Context): WallpaperBase(context, "GDH.AodWidget") {
         widgetColoured = sharedPreferences.getBoolean(Constants.SHARED_PREF_AOD_WP_COLOURED, false)
         Log.d(LOG_ID, "Widget is coloured : $widgetColoured")
         super.initSettings(sharedPreferences)
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
+        try {
+            Log.v(LOG_ID, "onSharedPreferenceChanged called for key $key")
+            if (key == Constants.SHARED_PREF_AOD_WP_Y_POS && yPos != sharedPreferences.getInt(Constants.SHARED_PREF_AOD_WP_Y_POS, 75)) {
+                yPos = sharedPreferences.getInt(Constants.SHARED_PREF_AOD_WP_Y_POS, 75)
+                Log.d(LOG_ID, "New Y pos: $yPos")
+                update()
+            } else {
+                super.onSharedPreferenceChanged(sharedPreferences, key)
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.message.toString() )
+        }
     }
 
     fun getBitmap() : Bitmap? {

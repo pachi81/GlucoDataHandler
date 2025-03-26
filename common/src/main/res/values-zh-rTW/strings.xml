@@ -749,7 +749,7 @@
     <string name="pref_aod_coloured_summary">以彩色顯示 AOD。</string>
 
     <string name="graph_show_axis">顯示軸</string>
-    <string name="graph_show_axis_summary">在小工具中顯示 y 軸和 x 軸。</string>
+    <string name="graph_show_axis_summary">顯示時間和葡萄糖值軸。</string>
 
     <string name="source_notification">通知</string>
     <string name="pref_source_notification">通知讀取器 (Beta)</string>

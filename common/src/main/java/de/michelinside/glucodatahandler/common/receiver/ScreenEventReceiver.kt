@@ -3,11 +3,11 @@ package de.michelinside.glucodatahandler.common.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.hardware.display.DisplayManager
 import android.util.Log
 import android.view.Display
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 
 
 open class ScreenEventReceiver: BroadcastReceiver() {
@@ -27,17 +27,12 @@ open class ScreenEventReceiver: BroadcastReceiver() {
         @JvmStatic
         protected val LOG_ID = "GDH.ScreenEventReceiver"
         private var displayState = Display.STATE_ON
-        private var displayManager: DisplayManager? = null
-        private fun getDisplayManager(context: Context): DisplayManager? {
-            if(displayManager == null)
-                displayManager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager?
-            return displayManager
-        }
+
 
         private fun getDisplayState(context: Context, defaultState: Int): Int {
-            getDisplayManager(context)
-            if(displayManager != null && displayManager!!.displays.isNotEmpty()) {
-                val display = displayManager!!.displays[0]
+            val displayManager = BitmapUtils.getDisplayManager(context)
+            if(displayManager != null && displayManager.displays.isNotEmpty()) {
+                val display = displayManager.displays[0]
                 return display.state
             }
             return defaultState
@@ -74,6 +69,7 @@ open class ScreenEventReceiver: BroadcastReceiver() {
 
     fun reset(context: Context) {
         Log.d(LOG_ID, "reset called")
+        val displayManager = BitmapUtils.getDisplayManager(context)
         if(displayManager != null) {
             if(displayState == Display.STATE_OFF) {
                 displayState = Display.STATE_ON
@@ -99,9 +95,9 @@ open class ScreenEventReceiver: BroadcastReceiver() {
 
     fun update(context: Context) {
         Log.d(LOG_ID, "update called")
-        getDisplayManager(context)
-        if(displayManager != null && displayManager!!.displays.isNotEmpty()) {
-            val display = displayManager!!.displays[0]
+        val displayManager = BitmapUtils.getDisplayManager(context)
+        if(displayManager != null && displayManager.displays.isNotEmpty()) {
+            val display = displayManager.displays[0]
             setDisplayState(context, display.state)
         } else {
             Log.w(LOG_ID, "No display manager or display found")

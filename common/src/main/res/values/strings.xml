@@ -806,8 +806,8 @@
     <string name="pref_aod_coloured">Colored</string>
     <string name="pref_aod_coloured_summary">Show AOD in color.</string>
 
-    <string name="graph_show_axis">Show axis</string>
-    <string name="graph_show_axis_summary">Show y- and x-Axis in the widget.</string>
+    <string name="graph_show_axis">Display graph axes</string>
+    <string name="graph_show_axis_summary">Display time and glucose value axes.</string>
 
     <string name="source_notification">Notification</string>
     <string name="pref_source_notification">Notification Reader (Beta)</string>

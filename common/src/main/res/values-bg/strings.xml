@@ -751,8 +751,8 @@
     <string name="pref_aod_coloured">Цветно</string>
     <string name="pref_aod_coloured_summary">Показване на AOD в цвят.</string>
 
-    <string name="graph_show_axis">Показване на оси</string>
-    <string name="graph_show_axis_summary">Показване на y- и x-оси в джаджата.</string>
+    <string name="graph_show_axis">Показване на осите на графиката</string>
+    <string name="graph_show_axis_summary">Показване на осите за време и стойност на глюкозата.</string>
 
     <string name="source_notification">Известие</string>
     <string name="pref_source_notification">Четец на известия (Beta)</string>

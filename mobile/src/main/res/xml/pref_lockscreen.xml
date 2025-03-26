@@ -48,6 +48,12 @@
                     android:summary="@string/graph_duration_phone_widget_summary"
                     android:title="@string/graph_duration"
                     app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="false"
+                    android:key="lockscreen_graph_show_axis"
+                    android:summary="@string/graph_show_axis_summary"
+                    android:title="@string/graph_show_axis"
+                    app:iconSpaceReserved="false" />
         </PreferenceCategory>
         <PreferenceCategory
             android:title="@string/pref_cat_aod"
@@ -101,6 +107,12 @@
                     android:key="aod_coloured"
                     android:summary="@string/pref_aod_coloured_summary"
                     android:title="@string/pref_aod_coloured"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="false"
+                    android:key="aod_graph_show_axis"
+                    android:summary="@string/graph_show_axis_summary"
+                    android:title="@string/graph_show_axis"
                     app:iconSpaceReserved="false" />
         </PreferenceCategory>
 </PreferenceScreen>

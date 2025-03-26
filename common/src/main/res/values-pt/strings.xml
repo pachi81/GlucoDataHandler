@@ -747,8 +747,8 @@
     <string name="pref_aod_coloured">Colorido</string>
     <string name="pref_aod_coloured_summary">Mostrar AOD em cores.</string>
 
-    <string name="graph_show_axis">Mostrar eixos</string>
-    <string name="graph_show_axis_summary">Mostrar eixos y e x no widget.</string>
+    <string name="graph_show_axis">Exibir eixos</string>
+    <string name="graph_show_axis_summary">Exibir eixos de tempo e valor de glicose.</string>
 
     <string name="source_notification">Notificação</string>
     <string name="pref_source_notification">Leitor de notificações (Beta)</string>

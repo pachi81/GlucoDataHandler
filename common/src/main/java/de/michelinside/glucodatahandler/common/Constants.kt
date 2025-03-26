@@ -197,6 +197,7 @@ object Constants {
     const val SHARED_PREF_LOCKSCREEN_WP_STYLE = "lockscreen_style"
     const val SHARED_PREF_LOCKSCREEN_WP_SIZE = "lockscreen_size"
     const val SHARED_PREF_LOCKSCREEN_WP_GRAPH_DURATION = "lockscreen_graph_duration"
+    const val SHARED_PREF_LOCKSCREEN_WP_GRAPH_SHOW_AXIS = "lockscreen_graph_show_axis"
 
     const val SHARED_PREF_SOURCE_JUGGLUCO_SET_NS_IOB_ACTION = "source_juggluco_activate_local_nightscout_iob_action"
     const val SHARED_PREF_SOURCE_XDRIP_SET_NS_IOB_ACTION = "source_xdrip_activate_local_nightscout_iob_action"
@@ -212,6 +213,7 @@ object Constants {
     const val SHARED_PREF_AOD_WP_SIZE = "aod_size"
     const val SHARED_PREF_AOD_WP_COLOURED = "aod_coloured"
     const val SHARED_PREF_AOD_WP_GRAPH_DURATION = "aod_graph_duration"
+    const val SHARED_PREF_AOD_WP_GRAPH_SHOW_AXIS = "aod_graph_show_axis"
     const val AOD_COLOUR = Color.LTGRAY
 
     // Alarm

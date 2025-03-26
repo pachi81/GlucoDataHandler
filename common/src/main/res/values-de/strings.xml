@@ -745,7 +745,7 @@
     <string name="pref_aod_coloured_summary">AOD in Farbe anzeigen.</string>
 
     <string name="graph_show_axis">Achsen anzeigen</string>
-    <string name="graph_show_axis_summary">x- und y-Achse im Widget anzeigen.</string>
+    <string name="graph_show_axis_summary">Zeit- und Glukosewertachsen anzeigen.</string>
 
     <string name="source_notification">Benachrichtigung</string>
     <string name="pref_source_notification">Benachrichtigung (Beta)</string>

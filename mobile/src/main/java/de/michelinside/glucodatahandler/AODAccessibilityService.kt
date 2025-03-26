@@ -162,7 +162,7 @@ class AODAccessibilityService : AccessibilityService() {
             )
 
             imageView.setImageBitmap(bitmap)
-            val yOffset = max(0F, ((BitmapUtils.getScreenHeight()-bitmap.height)*aodWidget!!.getYPos()/100F))
+            val yOffset = max(0F, ((BitmapUtils.getScreenHeight(this)-bitmap.height)*aodWidget!!.getYPos()/100F))
 
             val layoutParams = WindowManager.LayoutParams().apply {
                 type = WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY

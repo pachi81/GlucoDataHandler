@@ -746,7 +746,7 @@
     <string name="pref_aod_coloured_summary">Показывать AOD в цвете.</string>
 
     <string name="graph_show_axis">Показать оси</string>
-    <string name="graph_show_axis_summary">Показать оси y и x в виджете.</string>
+    <string name="graph_show_axis_summary">Показывать оси времени и значения глюкозы.</string>
 
     <string name="source_notification">Уведомление</string>
     <string name="pref_source_notification">Чтение уведомлений (Beta)</string>

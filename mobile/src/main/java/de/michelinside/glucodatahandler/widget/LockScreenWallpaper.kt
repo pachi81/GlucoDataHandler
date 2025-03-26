@@ -24,6 +24,7 @@ class LockScreenWallpaper(context: Context): WallpaperBase(context, "GDH.LockScr
     override val stylePref = Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE
     override val sizePref = Constants.SHARED_PREF_LOCKSCREEN_WP_SIZE
     override val chartDurationPref = Constants.SHARED_PREF_LOCKSCREEN_WP_GRAPH_DURATION
+    override val chartShowAxisPref = Constants.SHARED_PREF_LOCKSCREEN_WP_GRAPH_SHOW_AXIS
 
     @OptIn(DelicateCoroutinesApi::class)
     private fun setWallpaper(bitmap: Bitmap?, context: Context) {
@@ -43,8 +44,8 @@ class LockScreenWallpaper(context: Context): WallpaperBase(context, "GDH.LockScr
     private fun createWallpaper(bitmap: Bitmap?, context: Context): Bitmap? {
         try {
             Log.v(LOG_ID, "creatWallpaper called")
-            val screenWidth = BitmapUtils.getScreenWidth()
-            val screenHeigth = BitmapUtils.getScreenHeight()
+            val screenWidth = BitmapUtils.getScreenWidth(context)
+            val screenHeigth = BitmapUtils.getScreenHeight(context)
             val wallpaper = Bitmap.createBitmap(screenWidth, screenHeigth, Bitmap.Config.ARGB_8888)
             if(bitmap != null) {
                 val screenDPI = BitmapUtils.getScreenDpi().toFloat()

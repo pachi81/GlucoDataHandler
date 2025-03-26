@@ -39,6 +39,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
     protected abstract val stylePref: String
     protected abstract val sizePref: String
     protected open val chartDurationPref =  ""
+    protected open val chartShowAxisPref: String? = null
     protected open val MIN_SIZE = 6f
     protected open val MAX_SIZE = 24f
     protected var enabled = false
@@ -213,7 +214,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
     private fun createBitmap() {
         if(chartBitmap == null && GlucoDataService.isServiceRunning) {
             Log.i(LOG_ID, "Create bitmap")
-            chartBitmap = ChartBitmap(context, chartDurationPref, labelColor = Color.WHITE)
+            chartBitmap = ChartBitmap(context, chartDurationPref, showAxisPref = chartShowAxisPref, labelColor = Color.WHITE)
         }
     }
 

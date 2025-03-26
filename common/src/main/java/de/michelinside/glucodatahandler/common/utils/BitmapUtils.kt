@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler.common.utils
 
+import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -10,6 +11,8 @@ import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.graphics.drawable.Icon
+import android.hardware.display.DisplayManager
+import android.util.DisplayMetrics
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
@@ -20,13 +23,44 @@ import kotlin.math.abs
 
 object BitmapUtils {
     private val LOG_ID = "GDH.Utils.Bitmap"
+    private var displayManager: DisplayManager? = null
+    private var displayMetrics: DisplayMetrics? = null
 
+    fun getDisplayManager(context: Context): DisplayManager? {
+        if(displayManager == null)
+            displayManager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager?
+        return displayManager
+    }
 
-    fun getScreenWidth(): Int {
+    fun getScreenWidth(context: Context): Int {
+        try {
+            if(displayMetrics!=null)
+                return displayMetrics!!.widthPixels
+            val displayManager = getDisplayManager(context)
+            if(displayManager != null && displayManager.displays.isNotEmpty()) {
+                displayMetrics = DisplayMetrics()
+                displayManager.displays[0].getRealMetrics(displayMetrics)
+                return displayMetrics!!.widthPixels
+            }
+        } catch (e: Exception) {
+            Log.e(LOG_ID, "Error in getScreenWidth", e)
+        }
         return Resources.getSystem().displayMetrics.widthPixels
     }
 
-    fun getScreenHeight(): Int {
+    fun getScreenHeight(context: Context): Int {
+        try {
+            if(displayMetrics!=null)
+                return displayMetrics!!.heightPixels
+            val displayManager = getDisplayManager(context)
+            if(displayManager != null && displayManager.displays.isNotEmpty()) {
+                displayMetrics = DisplayMetrics()
+                displayManager.displays[0].getRealMetrics(displayMetrics)
+                return displayMetrics!!.heightPixels
+            }
+        } catch (e: Exception) {
+            Log.e(LOG_ID, "Error in getScreenHeight", e)
+        }
         return Resources.getSystem().displayMetrics.heightPixels
     }
 
