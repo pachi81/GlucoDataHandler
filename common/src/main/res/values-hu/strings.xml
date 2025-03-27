@@ -808,7 +808,7 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="pref_switch_use_rate_calculation_summary_on">Belső trendszámítás használata az utolsó értékek alapján.\nEz az 5°-os intervallumokban mutatja a trendnyíl forgását.</string>
     <string name="pref_switch_use_rate_calculation_summary_off">A forrás által biztosított trend használata.\nHa nincs elérhető trend, a belső számítás kerül felhasználásra.</string>
 
-    <string name="accessibility_service_description">Glükóz értékek megjelenítése az Always on Display-en</string>
+    <string name="accessibility_service_description">Vércukorértékek megjelenítése az Always on Display-en</string>
 
     <string name="pref_cat_aod">Always on Display</string>
     <string name="pref_cat_aod_summary">Beállítások az Always on Display-hez.</string>
@@ -819,24 +819,24 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="pref_aod_coloured_summary">AOD megjelenítése színesben.</string>
 
     <string name="graph_show_axis">Tengelyek megjelenítése</string>
-    <string name="graph_show_axis_summary">Idő- és glükózérték tengelyek megjelenítése.</string>
+    <string name="graph_show_axis_summary">Idő és vércukorérték tengelyek megjelenítése.</string>
 
     <string name="source_notification">Értesítés</string>
     <string name="pref_source_notification">Értesítés olvasó (Béta)</string>
-    <string name="pref_source_notification_summary">A glükóz érték és az IOB fogadásához más alkalmazások értesítéseiből, mint például a Dexcom, CamAPS FX és Omnipod 5.</string>
+    <string name="pref_source_notification_summary">A vércukorérték és az IOB fogadásához más alkalmazások értesítéseiből, mint például a Dexcom, CamAPS FX és Omnipod 5.</string>
     <string name="notification_reader_app">Alkalmazás</string>
     <string name="notification_reader_app_summary">Válasszon ki egy alkalmazást, amelyből az értesítést ki kell olvasni.</string>
     <string name="notification_reader_enabled_summary_on">Az értesítés olvasó engedélyezve van, hogy értékeket elemezzen a meghatározott alkalmazások értesítéseiből.</string>
     <string name="notification_reader_enabled_summary_off">Az értesítés olvasó le van tiltva, és nem lesz értesítés elemezve.\nKérjük, először adjon meg legalább egy alkalmazást.</string>
-    <string name="notification_cat_glucose">Glükóz érték olvasása</string>
+    <string name="notification_cat_glucose">Vércukorérték olvasása</string>
     <string name="notification_cat_iob">IOB érték olvasása</string>
     <string name="notification_reader_enabled">Értesítés olvasó engedélyezése</string>
     <string name="no_receiver">Nincs alkalmazás</string>
     <string name="notification_reader_app_regex">Regex érték szűrő</string>
-    <string name="notification_reader_app_regex_summary">Regex az érték elemzéséhez az értesítés szövegéből.\nKérjük, csak akkor módosítsa, ha tudja, mit csinál, vagy ha tanácsot kap a fejlesztőtől.</string>
+    <string name="notification_reader_app_regex_summary">Regex az érték elemzéséhez az értesítés szövegéből.\nKérjük, csak akkor módosítsa, ha tudja, mit csinál, vagy ha erre javaslatot kap a fejlesztőtől.</string>
     <string name="notification_reader_five_minute_interval">5 perces intervallum</string>
     <string name="notification_reader_five_minute_interval_summary">Néhány alkalmazás, mint például a Dexcom, elég gyakran frissíti az értesítéseit. Az azonos értékű frissítések figyelmen kívül hagyásához engedélyezze az 5 perces intervallumot.\nHa engedélyezve van, csak 5 percenként lesz új érték, vagy ha az értesítésben lévő érték megváltozott.</string>
-    <string name="pref_source_notification_info_summary">Más alkalmazások értesítéseiből származó értékek fogadásához engedély szükséges az értesítések eléréséhez!\nAz értesítésnek tartalmaznia kell a glükóz értéket vagy az IOB-t karakterláncként.\nMivel minden értesítésnek más az elrendezése, előfordulhat, hogy nem működik minden alkalmazással. Probléma esetén kérjük, vegye fel velem a kapcsolatot az értesítés képernyőképével és a naplókkal.</string>
+    <string name="pref_source_notification_info_summary">Más alkalmazások értesítéseiből származó értékek fogadásához engedély szükséges az értesítések eléréséhez!\nAz értesítésnek tartalmaznia kell a vércukorértéket vagy az IOB-t karakterláncként.\nMivel minden értesítésnek más az elrendezése, előfordulhat, hogy nem működik minden alkalmazással. Probléma esetén kérem, vegye fel velem a kapcsolatot az értesítés képernyőképével és a naplófájlokkal.</string>
     <string name="notification_dexcom_info">Fontos</string>
     <string name="notification_dexcom_info_summary">A Dexcom G7 értesítések speciális viselkedése miatt engedélyeznie kell a Dexcom előtérbeli értesítését is.</string>
     <string name="sensor_age_label">Szenzor kora</string>
@@ -852,10 +852,10 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
 
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">Értékek és grafikon</string>
 
-    <string name="aod_permission_info">A glükóz megjelenítésének engedélyezéséhez az Always On Display-en, ehhez az alkalmazáshoz az Akadálymentesítési szolgáltatás engedélye szükséges.\nEz az engedély kizárólag a glükózadatok AOD-n történő megjelenítésére szolgál. Az Ön adatainak védelme fontos, és más személyes adatokhoz nem férünk hozzá, azokat nem gyűjtjük és nem osztjuk meg.\nNyomja meg az „OK” gombot az engedélyképernyőre lépéshez.</string>
+    <string name="aod_permission_info">A vércukor megjelenítésének engedélyezéséhez az Always On Display-en, ehhez az alkalmazáshoz az Akadálymentesítési szolgáltatás engedélye szükséges.\nEz az engedély kizárólag a vércukor adatok AOD-n történő megjelenítésére szolgál. Az Ön adatainak védelme fontos, és más személyes adatokhoz nem férünk hozzá, azokat nem gyűjtjük és nem osztjuk meg.\nNyomja meg az „OK” gombot az engedélyezési képernyőre való lépéshez.</string>
 
     <string name="graph_duration_phone_main_summary">A főképernyőn lévő grafikonon megjelenített órák száma.\nHasználjon 0-t a grafikon letiltásához.</string>
     <string name="graph_circle_radius">Pontméret</string>
-    <string name="graph_circle_radius_summary">A grafikon pontjainak mérete az összes widget, a lezárási képernyő és az Always-On Display (AOD) esetén. Ez a beállítás nincs hatással az alkalmazás főképernyőjén lévő grafikonra.</string>
+    <string name="graph_circle_radius_summary">A grafikon pontjainak mérete az összes widget, a lezárási képernyő és az Always On Display (AOD) esetén. Ez a beállítás nincs hatással az alkalmazás főképernyőjén lévő grafikonra.</string>
 
 </resources>
