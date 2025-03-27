@@ -418,7 +418,7 @@ Ha ezt szeretné, először törölje az alkalmazás adatait, majd hajtsa végre
     <string name="pref_lockscreen_enabled_summary">Ha a háttérkép engedélyezve van a zárolt képernyőn, az alkalmazás létrehoz egy háttérképet a zárolt képernyőn.</string>
     <string name="pref_lockscreen_size_summary">A megjelenítés méretének beállítása a zárolt képernyőn.</string>
     <string name="pref_lockscreen_y_pos">Függőleges pozíció</string>
-    <string name="pref_lockscreen_y_pos_summary">A glükóz-trend kép függőleges pozíciója:\n0 a kijelző teteje\n100 a kijelző alja</string>
+    <string name="pref_lockscreen_y_pos_summary">A vércukor trend kép függőleges pozíciója:\n0 a kijelző teteje\n100 a kijelző alja</string>
     <string name="pref_low_value">Alacsony vércukorérték</string>
     <string name="pref_low_value_summary">Határérték az alacsony vércukorértékekhez.</string>
     <string name="pref_no_gda_info">GlucoDataAuto telepítése</string>
