@@ -302,9 +302,13 @@ class WidgetSettingsFragment: SettingsFragmentBase(R.xml.pref_widgets) {
         if(widgetStylePref != null) {
             widgetStylePref.summary = widgetStylePref.entry
             val widgetGraphDuration = findPreference<SeekBarPreference>(Constants.SHARED_PREF_FLOATING_WIDGET_GRAPH_DURATION)
+            val showGrapAxis = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_FLOATING_WIDGET_GRAPH_SHOW_AXIS)
             val floatingWidgetEnabled = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_FLOATING_WIDGET)
-            if(widgetGraphDuration != null && floatingWidgetEnabled != null) {
-                widgetGraphDuration.isEnabled = floatingWidgetEnabled.isChecked && widgetStylePref.value == "chart_glucose_trend_delta_time_iob_cob"
+            if(floatingWidgetEnabled != null) {
+                if(widgetGraphDuration != null)
+                    widgetGraphDuration.isEnabled = floatingWidgetEnabled.isChecked && widgetStylePref.value == "chart_glucose_trend_delta_time_iob_cob"
+                if(showGrapAxis != null)
+                    showGrapAxis.isEnabled = floatingWidgetEnabled.isChecked && widgetStylePref.value == "chart_glucose_trend_delta_time_iob_cob"
             }
         }
     }

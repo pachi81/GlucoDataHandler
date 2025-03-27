@@ -73,6 +73,12 @@
                     android:summary="@string/graph_duration_phone_widget_summary"
                     android:title="@string/graph_duration"
                     app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="false"
+                    android:key="graph_show_axis_floating_widget"
+                    android:summary="@string/graph_show_axis_summary"
+                    android:title="@string/graph_show_axis"
+                    app:iconSpaceReserved="false" />
         </PreferenceCategory>
         <PreferenceCategory
             android:title="@string/pref_cat_widgets"
