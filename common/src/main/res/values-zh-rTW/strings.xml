@@ -309,7 +309,7 @@
     <string name="menu_contact">聯絡作者</string>
     <string name="src_ns_iob_cob">IOB/COB 支援</string>
     <string name="src_ns_iob_cob_summary">也從 Nightscout Pebble 端點接收 IOB 和 COB 值</string>
-    <string name="pref_permanent_notification_info_summary">程式需要顯示通知才能正常運作\nAndroid 13 以後可以滑動移除通知，如果您再次顯示通知，請將「狀態列圖示」設為「程式圖示」並啟用「隱藏內容」</string>
+    <string name="pref_permanent_notification_info_summary">程式需要顯示通知才能正常運作\nAndroid 13 以後可以滑動移除通知，如果您不想要一直顯示通知，請將「狀態列圖示」設為「程式圖示」並啟用「隱藏內容」</string>
     <string name="source_aaps">AAPS</string>
     <string name="pref_source_aaps_info">AndroidAPS</string>
     <string name="pref_source_aaps_info_summary">若要從 AAPS 接收血糖值:\n- 開啟 AAPS 程式\n- 點選「Config Builder」\n- 啟用「Samsung Tizen」或「Data Broadcaster」</string>
@@ -337,7 +337,7 @@
     <string name="pref_lockscreen_enabled">啟用</string>
     <string name="pref_lockscreen_enabled_summary">如果您啟用鎖定螢幕桌布，程式將會取代原本鎖定螢幕設定的桌布</string>
     <string name="pref_lockscreen_y_pos">垂直位置</string>
-    <string name="pref_lockscreen_y_pos_summary">血糖趨勢影像的垂直位置：\n0 為螢幕頂部\n100 為螢幕底部</string>
+    <string name="pref_lockscreen_y_pos_summary">血糖趨勢箭頭的垂直位置：\n0 是螢幕的最上方\n100 是螢幕的最下方</string>
     <string name="activity_main_notification_permission">顯示通知已停用！！！\nGlucoDataHandler 可能無法正常運作並無法顯示警報！！！\n按這裡前往權限設定</string>
 
     <string name="src_libre_setup_librelink">缺少資料！請先在 LibreLinkUp 程式中接受邀請！</string>
@@ -553,7 +553,7 @@
     <string name="alarm_inactive_weekdays">每週天數</string>
     <string name="alarm_inactive_weekdays_summary">設定每週幾勿擾時段會於開始時間生效</string>
 
-    <string name="app_crash_bad_notification">程式因彩色佈局當機！\n為防止再次當機已停用此功能\n重新啟動手機通常可以解決這個問題。</string>
+    <string name="app_crash_bad_notification">程式因彩色佈局當機！\n為防止再次當機已停用此功能\n重新啟動手機通常可以解決此問題</string>
     <string name="auto_close_notification">自動關閉通知</string>
     <string name="auto_close_notification_summary">在聲音和震動結束後自動關閉警報通知，但通知至少會顯示 30 秒。\n如果已啟用重新觸發功能，則會在重新觸發結束後才會自動關閉</string>
 
@@ -598,8 +598,8 @@
     <string name="src_offline_enabled_summary_on">將處理此資料來源的內部訊息</string>
     <string name="src_offline_enabled_summary_off">將忽略此資料來源的內部訊息</string>
     <string name="temp_disabled">暫時停用</string>
-    <string name="snooze_until">貪睡至</string>
-    <string name="temp_disabled_until">暫時停用至</string>
+    <string name="snooze_until">貪睡直到</string>
+    <string name="temp_disabled_until">暫時停用直到</string>
 
     <string name="trend">趨勢箭頭</string>
     <string name="rate_rising">上升 %1$d 度</string>
@@ -696,21 +696,21 @@
     <string name="source_libre_server_default">預設 (.io)</string>
     <string name="source_libre_server_russian">俄羅斯 (.ru)</string>
 
-    <string name="patient_name">姓名</string>
-    <string name="patient_name_summary">使用者/病患的姓名，將會顯示在通知和語音播報中。\n如果您正在使用多個 GlucoDataAuto 變體，則應使用此選項，否則可以留空。</string>
+    <string name="patient_name">名稱</string>
+    <string name="patient_name_summary">使用者/病患名稱會顯示在通知和語音播報中\n如果您同時使用多個 GlucoDataAuto 程式則須使用此選項，否則請留空</string>
 
     <string name="video_tutorial">影片教學</string>
-    <string name="video_tutorial_summary">點擊此處前往 YouTube 影片，其中說明了此來源的設定。非常感謝 Diabetic Masked Man 製作這些影片。</string>
+    <string name="video_tutorial_summary">按這裡可以連到 YouTube 影片說明如何設定資料來源。非常感謝 Diabetic Masked Man 製作影片</string>
 
     <string name="snooze_30">30 分鐘</string>
     <string name="snooze_60">60 分鐘</string>
     <string name="snooze_90">90 分鐘</string>
     <string name="snooze_120">120 分鐘</string>
     <string name="alarm_snooze_on_notification_enabled">通知貪睡</string>
-    <string name="alarm_snooze_on_notification_summary">選擇最多 3 個貪睡持續時間，以便在鬧鐘通知上顯示為按鈕。</string>
+    <string name="alarm_snooze_on_notification_summary">可以於警報通知中顯示最多 3 個時間的貪睡按鈕</string>
 
     <string name="pref_show_iob_cob">顯示 IOB/COB 值</string>
-    <string name="pref_show_iob_cob_summary">顯示 IOB 和 COB 值（如果有的話）。</string>
+    <string name="pref_show_iob_cob_summary">如果可以則顯示 IOB 和 COB 值</string>
 
     <string name="delta_per_10_minute">每 10 分鐘</string>
     <string name="delta_per_15_minute">每 15 分鐘</string>
