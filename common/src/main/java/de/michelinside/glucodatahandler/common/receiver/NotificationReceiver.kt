@@ -19,6 +19,8 @@ import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
+import java.math.RoundingMode
+import kotlin.math.abs
 
 class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     private val LOG_ID = "GDH.NotificationReceiver"
@@ -91,6 +93,12 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
 
         // default (unknown app): also allow no ongoing notifications
         return false
+    }
+
+    private fun hasBigContentViewData(packageName: String): Boolean {
+        if(PackageUtils.receiverFilterContains(packageName))
+            return false  // all these apps has the value in the normal view...
+        return true
     }
 
     private fun validGlucoseNotification(sbn: StatusBarNotification, sharedPref: SharedPreferences): Boolean {
@@ -229,12 +237,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         Log.i(LOG_ID, "using regex $regex")
         val value = parseValueFromNotification(sbn, false, regex)
         if(!value.isNaN()) {
-            if(updateOnlyChangedValue && value == lastValue) {
-                Log.i(LOG_ID, "Ignoring value notification with same value: $value")
-            } else {
-                lastValue = value
-                handleGlucoseValue(value, sbn.postTime)
-            }
+            handleGlucoseValue(value, sbn.postTime)
         } else if(parsedTextViews.size > 0) {
             SourceStateData.setError(DataSource.NOTIFICATION, "Could not parse from $parsedTextViews")
         } else {
@@ -276,7 +279,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
 
         // Try processing different RemoteViews
         val glucoseValue = processRemoteViews(sbn.notification.contentView, isIobCob, regex)
-        if(!glucoseValue.isNaN())
+        if(!glucoseValue.isNaN() || !hasBigContentViewData(sbn.packageName))
             return glucoseValue
         Log.i(LOG_ID, "Could not find value in content view - check big content view")
         return processRemoteViews(sbn.notification.bigContentView, isIobCob, regex)
@@ -290,14 +293,14 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                 if(regex!=null) {
                     regex.find(text)?.groupValues?.get(1)?.toFloatOrNull()?.let {
                         if(isValidValue(it, isIobCob)) {
-                            Log.i(LOG_ID, "Found value: $it using regex")
+                            Log.i(LOG_ID, "Found value: $it using regex in $textView")
                             return it
                         }
                     }
                 } else {
                     text.toFloatOrNull()?.let {
                         if(isValidValue(it, isIobCob)) {
-                            Log.i(LOG_ID, "Found value: $it")
+                            Log.i(LOG_ID, "Found value: $it in $textView")
                             return it
                         }
                     }
@@ -386,9 +389,30 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         return Float.NaN
     }
 
+    private fun validGlucoseValue(value: Float): Boolean {
+        if(updateOnlyChangedValue && value == lastValue) {
+            Log.i(LOG_ID, "Ignoring value notification with same value: $value")
+            return false
+        }
+        val mgVal = if (GlucoDataUtils.isMmolValue(value)) GlucoDataUtils.mmolToMg(value).toInt() else value.toInt()
+        if(mgVal >= Constants.GLUCOSE_MIN_VALUE && mgVal <= Constants.GLUCOSE_MAX_NOTIFICATION_VALUE) {
+            if(ReceiveData.getElapsedTimeMinute(RoundingMode.HALF_UP) > 0) {
+                val delta = (mgVal - ReceiveData.rawValue).toFloat() / ReceiveData.getElapsedTimeMinute(RoundingMode.HALF_UP)
+                val maxDelta = if(updateOnlyChangedValue) 10F else 40F
+                if(abs(delta) > maxDelta) {
+                    Log.i(LOG_ID, "Ignoring value notification with delta: $delta (max: $maxDelta)")
+                    return false
+                }
+            }
+            return GlucoDataUtils.isGlucoseValid(value)
+        }
+        return false
+    }
+
     private fun handleGlucoseValue(glucoseValue: Float, time: Long) {
         Log.i(LOG_ID, "Extracted glucose value: $glucoseValue from time: ${Utils.getUiTimeStamp(time)}")
-        if (GlucoDataUtils.isGlucoseValid(glucoseValue)) {
+        if (validGlucoseValue(glucoseValue)) {
+            lastValue = glucoseValue
             val glucoExtras = Bundle()
             glucoExtras.putLong(ReceiveData.TIME, time)
             if (GlucoDataUtils.isMmolValue(glucoseValue)) {

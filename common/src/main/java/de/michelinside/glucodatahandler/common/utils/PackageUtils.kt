@@ -180,6 +180,11 @@ object PackageUtils {
         return filterContains(getTapActionFilter(context), value)
     }
 
+    fun receiverFilterContains(value: String): Boolean {
+        return filterContains(getReceiverFilter(), value)
+    }
+
+
     fun isDexcomG7App(packageName: String): Boolean {
         return packageName.lowercase().startsWith("com.dexcom.g7")
     }

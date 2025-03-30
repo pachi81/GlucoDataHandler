@@ -25,6 +25,7 @@ object Constants {
     const val GLUCOSE_CONVERSION_FACTOR = 18.0182F
     const val GLUCOSE_MIN_VALUE = 40
     const val GLUCOSE_MAX_VALUE = 600
+    const val GLUCOSE_MAX_NOTIFICATION_VALUE = 400
     const val ACTION_STOP_FOREGROUND = "stop_foreground"
     const val ACTION_START_FOREGROUND = "start_foreground"
 
