@@ -15,11 +15,6 @@
             android:summary="@string/pref_watchfaces_default_summary"
             app:iconSpaceReserved="false" />
         <Preference
-            android:key="pref_watchfaces_pujie"
-            android:title="@string/pref_watchfaces_pujie"
-            android:summary="@string/pref_watchfaces_pujie_summary"
-            app:iconSpaceReserved="false" />
-        <Preference
             android:key="pref_watchfaces_dmm"
             android:title="@string/pref_watchfaces_dmm"
             android:summary="@string/pref_watchfaces_dmm_summary"
@@ -28,6 +23,11 @@
             android:key="pref_watchfaces_gdc"
             android:title="@string/pref_watchfaces_gdc"
             android:summary="@string/pref_watchfaces_gdc_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="pref_watchfaces_pujie"
+            android:title="@string/pref_watchfaces_pujie"
+            android:summary="@string/pref_watchfaces_pujie_summary"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 </PreferenceScreen>

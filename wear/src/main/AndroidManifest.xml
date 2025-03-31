@@ -132,6 +132,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".settings.AlarmTypeActivity" />
         </activity>
+        <activity
+            android:name=".settings.WatchfacesActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".WearActivity"
+            android:theme="@style/Theme.GlucoDataHandler"
+            android:taskAffinity="">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".WearActivity" />
+        </activity>
         <receiver android:name=".common.receiver.GlucoseDataReceiver" android:enabled="true" android:exported="true"
             tools:ignore="ExportedReceiver">
             <intent-filter>

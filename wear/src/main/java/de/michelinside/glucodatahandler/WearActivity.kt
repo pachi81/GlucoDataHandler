@@ -38,6 +38,7 @@ import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.settings.AlarmsActivity
 import de.michelinside.glucodatahandler.settings.SettingsActivity
 import de.michelinside.glucodatahandler.settings.SourcesActivity
+import de.michelinside.glucodatahandler.settings.WatchfacesActivity
 import java.text.DateFormat
 import java.time.Duration
 import java.util.Date
@@ -62,9 +63,6 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var tableConnections: TableLayout
     private lateinit var tableAlarms: TableLayout
     private lateinit var tableNotes: TableLayout
-    private lateinit var btnSettings: Button
-    private lateinit var btnSources: Button
-    private lateinit var btnAlarms: Button
     private lateinit var chartImage: ImageView
     private var doNotUpdate = false
     private var requestNotificationPermission = false
@@ -105,23 +103,20 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 toggleAlarm()
             }
 
-            btnSettings = findViewById(R.id.btnSettings)
-            btnSettings.setOnClickListener {
+            findViewById<Button>(R.id.btnSettings)?.setOnClickListener {
                 Log.v(LOG_ID, "Settings button clicked!")
                 val intent = Intent(this, SettingsActivity::class.java)
                 startActivity(intent)
             }
 
-            btnSources = findViewById(R.id.btnSources)
-            btnSources.setOnClickListener {
+            findViewById<Button>(R.id.btnSources)?.setOnClickListener {
                 Log.v(LOG_ID, "Sources button clicked!")
                 val intent = Intent(this, SourcesActivity::class.java)
                 startActivity(intent)
             }
 
 
-            btnAlarms = findViewById(R.id.btnAlarms)
-            btnAlarms.setOnClickListener {
+            findViewById<Button>(R.id.btnAlarms)?.setOnClickListener {
                 Log.v(LOG_ID, "Alarm button clicked!")
                 val intent = Intent(this, AlarmsActivity::class.java)
                 startActivity(intent)
@@ -130,6 +125,12 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             chartImage.setOnClickListener {
                 Log.v(LOG_ID, "Chart Image clicked!")
                 val intent = Intent(this, GraphActivity::class.java)
+                startActivity(intent)
+            }
+
+            findViewById<Button>(R.id.btnWatchfaces)?.setOnClickListener {
+                Log.v(LOG_ID, "Watchface button clicked!")
+                val intent = Intent(this, WatchfacesActivity::class.java)
                 startActivity(intent)
             }
 
