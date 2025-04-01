@@ -753,7 +753,7 @@
     <string name="pref_aod_coloured">Kolorowy</string>
     <string name="pref_aod_coloured_summary">Pokaż AOD w kolorze.</string>
     
-    <string name="graph_show_axis">Pokaż oś</string>
+    <string name="graph_show_axis">Pokaż osie</string>
     <string name="graph_show_axis_summary">Pokaż osie czasu i wartości glukozy.</string>
 
     <string name="source_notification">Powiadomienie</string>
