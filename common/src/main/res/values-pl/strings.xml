@@ -664,7 +664,7 @@
     <string name="pref_send_battery_level_to_watch">Prześlij poziom baterii</string>
     <string name="pref_send_battery_level_to_watch_summary">Prześlij informację o poziomie naładowania baterii do zegarka, aby wyświetlić ją w komplikacjach i na ekranie głównym.</string>
     <string name="pref_battery_level">Pokaż poziom baterii</string>
-    <string name="forward_to_watch_interval_summary">Ustaw minimalny czas (w minutach) między pomiarami poziomu glukozy przed wysłaniem nowej aktualizacji do zegarka.\nAlarmy i wartości bardzo niskie będą zawsze wysyłane.</string>
+    <string name="forward_to_watch_interval_summary">Ustaw minimalny czas (w minutach) między pomiarami poziomu glukozy przed wysłaniem nowej aktualizacji do zegarka. Alarmy i wartości bardzo niskie będą zawsze wysyłane.</string>
     <string name="forward_to_values_summary">Ustaw minimalny czas (w minutach) między pomiarami poziomu glukozy przed wysłaniem nowej aktualizacji do odbiorców.</string>
     <string name="alarm_repeat_summary">Alarm będzie emitował dźwięk i wibracje do momentu odrzucenia powiadomienia lub osiągnięcia ustawionego maksymalnego czasu trwania alarmu.</string>
     <string name="alarm_repeat_time">Maksymalny czas trwania alarmu</string>
