@@ -17,6 +17,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -279,7 +280,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             dataSet.enableDashedLine(0F, 1F, 0F)
             chart.data = LineData(dataSet)
             chart.notifyDataSetChanged()
-            Log.v(LOG_ID, "Min: ${chart.xAxis.axisMinimum} - visible: ${chart.lowestVisibleX} - Max: ${chart.xAxis.axisMaximum} - visible: ${chart.highestVisibleX}")
+            if (BuildConfig.DEBUG)
+                Log.v(LOG_ID, "Min: ${chart.xAxis.axisMinimum} - visible: ${chart.lowestVisibleX} - Max: ${chart.xAxis.axisMaximum} - visible: ${chart.highestVisibleX}")
         }
     }
 
@@ -324,7 +326,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             chart.marker = mMarker
             chart.setOnChartValueSelectedListener(object: OnChartValueSelectedListener {
                 override fun onValueSelected(e: Entry?, h: Highlight?) {
-                    Log.v(LOG_ID, "onValueSelected: ${e?.x} - ${e?.y} - index: ${h?.dataSetIndex}")
+                    if (BuildConfig.DEBUG)
+                        Log.v(LOG_ID, "onValueSelected: ${e?.x} - ${e?.y} - index: ${h?.dataSetIndex}")
                     if(h?.dataSetIndex == 1) {
                         // do not select time line
                         chart.highlightValue(null)
@@ -499,12 +502,13 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                 minValue = minTime
                 maxValue = System.currentTimeMillis()
             } else {
-                Log.v(
-                    LOG_ID,
-                    "Min time: ${Utils.getUiTimeStamp(minTime)} - first value: ${
-                        Utils.getUiTimeStamp(TimeValueFormatter.from_chart_x(values.first().x))
-                    } - last value: ${Utils.getUiTimeStamp(TimeValueFormatter.from_chart_x(values.last().x))}"
-                )
+                if (BuildConfig.DEBUG)
+                    Log.v(
+                        LOG_ID,
+                        "Min time: ${Utils.getUiTimeStamp(minTime)} - first value: ${
+                            Utils.getUiTimeStamp(TimeValueFormatter.from_chart_x(values.first().x))
+                        } - last value: ${Utils.getUiTimeStamp(TimeValueFormatter.from_chart_x(values.last().x))}"
+                    )
                 if (TimeValueFormatter.from_chart_x(values.first().x) > minTime) {
                     minValue = minTime
                 }
@@ -535,7 +539,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     protected open fun updateChart(dataSet: LineDataSet?) {
         val right = isRight()
         val left = isLeft()
-        Log.v(LOG_ID, "updateChart - Min: ${chart.xAxis.axisMinimum} - visible: ${chart.lowestVisibleX} - Max: ${chart.xAxis.axisMaximum} - visible: ${chart.highestVisibleX} - isLeft: ${left} - isRight: ${right}" )
+        if (BuildConfig.DEBUG)
+            Log.v(LOG_ID, "updateChart - Min: ${chart.xAxis.axisMinimum} - visible: ${chart.lowestVisibleX} - Max: ${chart.xAxis.axisMaximum} - visible: ${chart.highestVisibleX} - isLeft: ${left} - isRight: ${right}" )
         val diffTimeMin = TimeUnit.MILLISECONDS.toMinutes(TimeValueFormatter.from_chart_x(chart.highestVisibleX) - TimeValueFormatter.from_chart_x(chart.lowestVisibleX))
         if(!chart.highlighted.isNullOrEmpty() && chart.highlighted[0].dataSetIndex != 0) {
             Log.v(LOG_ID, "Unset current highlighter")
