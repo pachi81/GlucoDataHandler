@@ -148,7 +148,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
         return when(status) {
             2 -> GlucoDataService.context!!.getString(R.string.src_librelink_error2)
             4 -> GlucoDataService.context!!.getString(R.string.src_librelink_error4)
-            else -> ""
+            else -> getErrorInfo(status)
         }
     }
 

@@ -133,17 +133,12 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         lastErrorCode = code
         lastState = state
 
-        SourceStateData.setState(source, state, getErrorMessage(state, error, code), message)
+        SourceStateData.setState(source, state, getErrorMessage(state, error, code), getErrorInfo(code, message))
     }
 
     private fun getErrorMessage(state: SourceState, error: String, code: Int): String {
-        if (state == SourceState.ERROR && error.isNotEmpty()) {
-            var result = ""
-            if (code > 0) {
-                result = code.toString() + ": "
-            }
-            result += error
-            return result
+        if (state == SourceState.ERROR && code > 0) {
+            return "$code: ${getErrorMessage(code, error)}"
         }
         return error
     }
@@ -282,17 +277,17 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         Log.d(LOG_ID, "handleResult for " + source + " done!")
     }
 
-    private fun getErrorMessage(code: Int, message: String?): String {
+    protected fun getErrorMessage(code: Int, message: String?): String {
         when(code) {
             429 -> return GlucoDataService.context!!.resources.getString(R.string.http_error_429)
             else -> return message ?: "Error"
         }
     }
 
-    private fun getErrorInfo(code: Int): String {
+    protected fun getErrorInfo(code: Int, message: String? = null): String {
         when(code) {
             429 -> return GlucoDataService.context!!.resources.getString(R.string.http_error_429_info)
-            else -> return ""
+            else -> return message ?: ""
         }
     }
 
