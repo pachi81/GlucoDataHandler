@@ -97,7 +97,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
 
-            ReceiveData.initData(this)
+            ReceiveData.initData(this.applicationContext)
 
             alarmIcon.setOnClickListener {
                 toggleAlarm()
@@ -135,10 +135,9 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             }
 
             if(requestPermission())
-                GlucoDataServiceWear.start(this)
-            PackageUtils.updatePackages(this)
+                GlucoDataServiceWear.start(this.applicationContext)
+            PackageUtils.updatePackages(this.applicationContext)
             checkUncaughtException()
-            TextToSpeechUtils.initTextToSpeech(this)
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
@@ -159,8 +158,8 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         try {
             super.onResume()
             Log.d(LOG_ID, "onResume called")
-            GlucoDataService.checkServices(this)
-            ScreenEventReceiver.switchOn(this) // on resume can only be called, if display is on, so update screen event
+            GlucoDataService.checkServices(this.applicationContext)
+            ScreenEventReceiver.switchOn(this.applicationContext) // on resume can only be called, if display is on, so update screen event
             doNotUpdate = false
             update()
             InternalNotifier.addNotifier(this, this, mutableSetOf(
@@ -176,10 +175,10 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.TIME_VALUE,
                 NotifySource.SOURCE_STATE_CHANGE,
                 NotifySource.ALARM_STATE_CHANGED))
-            if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
+            if (requestNotificationPermission && Utils.checkPermission(this.applicationContext, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Notification permission granted")
                 requestNotificationPermission = false
-                GlucoDataServiceWear.start(this)
+                GlucoDataServiceWear.start(this.applicationContext)
             }
             GlucoDataService.checkForConnectedNodes(true)
             chartBitmap.resume()
@@ -197,7 +196,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     fun requestPermission() : Boolean {
         requestNotificationPermission = false
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (!Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
+            if (!Utils.checkPermission(this.applicationContext, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Request notification permission...")
                 requestNotificationPermission = true
                 this.requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 3)
@@ -211,7 +210,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private fun requestExactAlarmPermission() {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                if (!Utils.canScheduleExactAlarms(this)) {
+                if (!Utils.canScheduleExactAlarms(this.applicationContext)) {
                     Log.i(LOG_ID, "Request exact alarm permission...")
                     startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
                 }
@@ -264,8 +263,8 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private fun toggleAlarm() {
         try {
             doNotUpdate = true
-            val state = AlarmNotificationWear.getAlarmState(this)
-            if(AlarmNotificationWear.channelActive(this)) {
+            val state = AlarmNotificationWear.getAlarmState(this.applicationContext)
+            if(AlarmNotificationWear.channelActive(this.applicationContext)) {
                 Log.d(LOG_ID, "toggleAlarm called for state $state")
                 when (state) {
                     AlarmState.SNOOZE -> AlarmHandler.setSnooze(0)  // disable snooze
@@ -313,14 +312,14 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateAlarmIcon() {
         try {
-            if(!AlarmNotificationWear.channelActive(this)) {
+            if(!AlarmNotificationWear.channelActive(this.applicationContext)) {
                 Log.w(LOG_ID, "Alarm channel inactive!")
                 with(sharedPref.edit()) {
                     putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
                     apply()
                 }
             }
-            val state = AlarmNotificationWear.getAlarmState(this)
+            val state = AlarmNotificationWear.getAlarmState(this.applicationContext)
             Log.v(LOG_ID, "updateAlarmIcon called for state $state")
             alarmIcon.isEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ENABLE_ALARM_ICON_TOGGLE, true)
             alarmIcon.setImageIcon(Icon.createWithResource(this, state.icon))
@@ -343,10 +342,10 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateNotesTable() {
         tableNotes.removeViews(1, maxOf(0, tableNotes.childCount - 1))
-        if (!Channels.notificationChannelActive(this, ChannelType.WEAR_FOREGROUND)) {
+        if (!Channels.notificationChannelActive(this.applicationContext, ChannelType.WEAR_FOREGROUND)) {
             val onClickListener = View.OnClickListener {
                 try {
-                    if (!Channels.notificationChannelActive(this, ChannelType.WEAR_FOREGROUND)) {
+                    if (!Channels.notificationChannelActive(this.applicationContext, ChannelType.WEAR_FOREGROUND)) {
                         requestNotificationPermission = true
                         startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
                             .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName))
@@ -356,7 +355,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "updateNotesTable exception: " + exc.message.toString() )
                     if(requestPermission()) {
-                        GlucoDataServiceWear.start(this)
+                        GlucoDataServiceWear.start(this.applicationContext)
                         updateNotesTable()
                     }
                 }
@@ -364,7 +363,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             tableNotes.addView(createRow(CR.string.activity_main_notification_permission, onClickListener))
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !Utils.canScheduleExactAlarms(this)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !Utils.canScheduleExactAlarms(this.applicationContext)) {
             Log.w(LOG_ID, "Schedule exact alarm is not active!!!")
             val onClickListener = View.OnClickListener {
                 try {
@@ -375,7 +374,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             }
             tableNotes.addView(createRow(CR.string.activity_main_schedule_exact_alarm, onClickListener))
         }
-        if (Utils.isHighContrastTextEnabled(this)) {
+        if (Utils.isHighContrastTextEnabled(this.applicationContext)) {
             Log.w(LOG_ID, "High contrast is active")
             val onClickListener = View.OnClickListener {
                 try {
@@ -393,7 +392,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private fun updateConnectionsTable() {
         tableConnections.removeViews(1, maxOf(0, tableConnections.childCount - 1))
         if (SourceStateData.lastState != SourceState.NONE) {
-            tableConnections.addView(createRow(SourceStateData.lastSource.resId, SourceStateData.getStateMessage(this)))
+            tableConnections.addView(createRow(SourceStateData.lastSource.resId, SourceStateData.getStateMessage(this.applicationContext)))
             if(SourceStateData.lastErrorInfo.isNotEmpty()) {
                 // add error specific information in an own row
                 tableConnections.addView(createRow(SourceStateData.lastErrorInfo))
@@ -411,7 +410,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 val onCheckClickListener = View.OnClickListener {
                     GlucoDataService.checkForConnectedNodes(false)
                 }
-                val states = WearPhoneConnection.getNodeConnectionStates(this)
+                val states = WearPhoneConnection.getNodeConnectionStates(this.applicationContext)
                 if(states.size == 1 ) {
                     val state = states.values.first()
                     tableConnections.addView(createRow(CR.string.source_phone, state, onCheckClickListener))

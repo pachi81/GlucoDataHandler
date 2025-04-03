@@ -38,7 +38,7 @@ object Channels {
     fun getNotificationManager(context: Context? = null): NotificationManager {
         if (notificationMgr == null) {
             notificationMgr = if (context != null)
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                context.applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             else
                 GlucoDataService.context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             cleanUpNotifications(notificationMgr!!)

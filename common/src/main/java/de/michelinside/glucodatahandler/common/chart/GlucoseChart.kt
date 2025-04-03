@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.jobs.MoveViewJob
 
 open class GlucoseChart: LineChart {
     private var LOG_ID = "GDH.Chart.GlucoseChart"
@@ -101,6 +102,9 @@ open class GlucoseChart: LineChart {
     override fun onDetachedFromWindow() {
         try {
             super.onDetachedFromWindow()
+            MoveViewJob.getInstance(null, 0F, 0F, null, null)
+            isInvalidating = false
+            isDrawing = false
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDetachedFromWindow exception: ${exc.message}\n${exc.stackTraceToString()}")
         }

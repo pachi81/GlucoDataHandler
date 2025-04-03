@@ -53,7 +53,6 @@ import de.michelinside.glucodatahandler.common.ui.Dialogs
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
-import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.preferences.AlarmFragment
@@ -99,8 +98,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             setContentView(R.layout.activity_main)
             Log.v(LOG_ID, "onCreate called")
 
-            GlucoDataServiceMobile.start(this)
-            PackageUtils.updatePackages(this)
+            GlucoDataServiceMobile.start(this.applicationContext)
+            PackageUtils.updatePackages(this.applicationContext)
 
             txtBgValue = findViewById(R.id.txtBgValue)
             viewIcon = findViewById(R.id.viewIcon)
@@ -121,7 +120,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
 
-            ReceiveData.initData(this)
+            ReceiveData.initData(this.applicationContext)
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
@@ -139,7 +138,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             if (requestPermission())
                 GlucoDataServiceMobile.start(this)
-            TextToSpeechUtils.initTextToSpeech(this)
             chartCreator = ChartCreator(chart, this, Constants.SHARED_PREF_GRAPH_DURATION_PHONE_MAIN, Constants.SHARED_PREF_GRAPH_TRANSPARENCY_PHONE_MAIN)
             chartCreator.create()
         } catch (exc: Exception) {
@@ -162,7 +160,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         try {
             super.onResume()
             Log.v(LOG_ID, "onResume called")
-            GlucoDataService.checkServices(this)
+            GlucoDataService.checkServices(this.applicationContext)
             doNotUpdate = false
             update()
             chartCreator.resume()
