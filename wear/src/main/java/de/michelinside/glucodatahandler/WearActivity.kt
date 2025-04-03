@@ -34,7 +34,6 @@ import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
-import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.settings.AlarmsActivity
 import de.michelinside.glucodatahandler.settings.SettingsActivity
 import de.michelinside.glucodatahandler.settings.SourcesActivity
