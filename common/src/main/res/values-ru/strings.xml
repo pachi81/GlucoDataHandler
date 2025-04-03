@@ -785,4 +785,7 @@
     <string name="graph_circle_radius">Размер точки</string>
     <string name="graph_circle_radius_summary">Размер точек графика для всех виджетов, экрана блокировки и Always-On Display (AOD). Этот параметр не влияет на график на главном экране приложения.</string>
 
+    <string name="graph_days_phone_main">Количество дней</string>
+    <string name="graph_days_phone_main_summary">Количество дней, доступных на графике.\nВАЖНО: слишком большое количество дней может вызвать проблемы с памятью!</string>
+
 </resources>

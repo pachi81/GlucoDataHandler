@@ -858,4 +858,7 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="graph_circle_radius">Pontméret</string>
     <string name="graph_circle_radius_summary">A grafikon pontjainak mérete az összes widget, a lezárási képernyő és az Always On Display (AOD) esetén. Ez a beállítás nincs hatással az alkalmazás főképernyőjén lévő grafikonra.</string>
 
+    <string name="graph_days_phone_main">Napok száma</string>
+    <string name="graph_days_phone_main_summary">A grafikonon elérhető napok száma.\nFONTOS: túl sok nap memóriaproblémákat okozhat!</string>
+
 </resources>

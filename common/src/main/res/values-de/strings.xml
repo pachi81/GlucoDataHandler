@@ -783,4 +783,7 @@
     <string name="graph_circle_radius">Punktgröße</string>
     <string name="graph_circle_radius_summary">Größe der Punkte des Diagramms für alle Widgets, den Sperrbildschirm und Always-On-Display (AOD). Diese Einstellung hat keinen Einfluss auf das Diagramm im Hauptbildschirm der App.</string>
 
+    <string name="graph_days_phone_main">Anzahl der Tage</string>
+    <string name="graph_days_phone_main_summary">Anzahl der Tage, die im Diagramm verfügbar sind.\nWICHTIG: Zu viele Tage können zu Speicherproblemen führen!</string>
+
 </resources>

@@ -791,4 +791,7 @@
     <string name="graph_circle_radius">Размер на точката</string>
     <string name="graph_circle_radius_summary">Размер на точките на графиката за всички джаджи, заключения екран и Always-On Display (AOD). Тази настройка не засяга графиката на главния екран на приложението.</string>
 
+    <string name="graph_days_phone_main">Брой дни</string>
+    <string name="graph_days_phone_main_summary">Брой дни, които са налични в графиката.\nВАЖНО: твърде много дни могат да причинят проблеми с паметта!</string>
+
 </resources>

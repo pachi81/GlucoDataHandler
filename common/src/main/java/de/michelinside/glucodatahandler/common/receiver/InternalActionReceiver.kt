@@ -11,6 +11,8 @@ import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.DataSource
+import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
@@ -26,6 +28,7 @@ class InternalActionReceiver: BroadcastReceiver() {
                 Intent.ACTION_DATE_CHANGED -> {
                     Log.i(LOG_ID, "Action: date changed received - trigger db cleanup")
                     dbAccess.cleanUpOldData()
+                    InternalNotifier.notify(context, NotifySource.DAY_CHANGED, null)
                 }
                 Constants.ACTION_FLOATING_WIDGET_TOGGLE -> {
                     Log.d(LOG_ID, "Action: floating widget toggle")

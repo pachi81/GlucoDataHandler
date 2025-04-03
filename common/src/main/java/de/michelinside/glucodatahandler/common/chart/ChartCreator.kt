@@ -59,7 +59,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     protected open val yAxisInterval = 50F
     protected open val circleRadius = 2F
     protected open val touchEnabled = true
-    protected open val graphStartTime = 0L
+    protected open var graphDays = 0
+    private var graphStartTime = 0L
     protected open var backgroundTransparency = 0
     var labelColor: Int = 0
     protected open val textColor: Int get() {
@@ -77,7 +78,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
 
 
     val enabled: Boolean get() {
-        return chart.visibility == View.VISIBLE
+        return init && chart.visibility == View.VISIBLE
     }
 
     val paused: Boolean get() {
@@ -110,6 +111,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             }
             sharedPref.registerOnSharedPreferenceChangeListener(this)
             updateNotifier()
+            updateGraphStartTime()
             init = true
         }
     }
@@ -118,7 +120,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         val hasData = dbAccess.hasGlucoseValues(getMinTime())
         Log.d(LOG_ID, "updateNotifier -enabled: $enabled - has data: $hasData - xAxisEnabled: ${chart.xAxis.isEnabled}")
         if(enabled && (hasData || chart.xAxis.isEnabled)) {
-            InternalNotifier.addNotifier(context, this, mutableSetOf(NotifySource.TIME_VALUE))
+            InternalNotifier.addNotifier(context, this, mutableSetOf(NotifySource.TIME_VALUE, NotifySource.DAY_CHANGED))
             hasTimeNotifier = true
         } else {
             remNotifier()
@@ -641,7 +643,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                 }
                 val newValues = values.filter { data -> data.timestamp > getLastTimestamp() }
                 addEntries(newValues)
-            } else if(getEntryCount() > 0)  {
+            } else if(getEntryCount() > 0) {
                 Log.d(LOG_ID, "Reset chart after db clean up")
                 create(true)
             } else {
@@ -683,6 +685,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         if(!init) {
             Log.w(LOG_ID, "Chart still not init - create!")
             create(true)
+        } else if(dataSource == NotifySource.DAY_CHANGED) {
+            updateGraphStartTime()
         }
         if(dataSource == NotifySource.TIME_VALUE) {
             Log.d(LOG_ID, "time elapsed: ${ReceiveData.getElapsedTimeMinute()}")
@@ -751,11 +755,34 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         if(durationHours == 0)
             disable()
         else if(!enable()) {
+            recreateChart()
+        }
+    }
+
+    private fun recreateChart() {
+        Log.v(LOG_ID, "recreate chart - enabled: $enabled")
+        if(enabled) {
             stopDataSync()
             resetChartData()
             chart.fitScreen()
             initData()
         }
+    }
+
+    protected fun updateGraphStartTime() {
+        Log.d(LOG_ID, "updateGraphStartTime - days $graphDays - graph start time: ${Utils.getUiTimeStamp(graphStartTime)}")
+        // get start time from graph days
+        if(graphDays == 0 || graphDays >= Constants.DB_MAX_DATA_DAYS) {
+            Log.i(LOG_ID, "updateGraphStartTime: reset graph start time - current: $graphStartTime")
+            if(graphStartTime != 0L) {
+                graphStartTime = 0L
+                recreateChart()
+            }
+            return
+        }
+        graphStartTime = System.currentTimeMillis() - (graphDays * 24 * 60 * 60 * 1000L)
+        Log.i(LOG_ID, "updateGraphStartTime: ${Utils.getUiTimeStamp(graphStartTime)}")
+        recreateChart()
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {

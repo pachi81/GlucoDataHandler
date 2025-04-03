@@ -792,4 +792,7 @@
     <string name="graph_circle_radius">Puntgrootte</string>
     <string name="graph_circle_radius_summary">Grootte van de punten van de grafiek voor alle widgets, het vergrendelscherm en Always-On Display (AOD). Deze instelling heeft geen invloed op de grafiek op het hoofdscherm van de app.</string>
 
+    <string name="graph_days_phone_main">Aantal dagen</string>
+    <string name="graph_days_phone_main_summary">Aantal dagen dat beschikbaar is in de grafiek.\nBELANGRIJK: te veel dagen kunnen geheugenproblemen veroorzaken!</string>
+
 </resources>

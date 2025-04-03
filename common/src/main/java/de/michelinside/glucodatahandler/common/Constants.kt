@@ -317,8 +317,10 @@ object Constants {
     const val PATIENT_NAME = "patient_name"
 
     // database
-    const val DB_MAX_DATA_WEAR_TIME_MS = (24*60*60*1000)  // 24h
-    const val DB_MAX_DATA_TIME_MS = (7*24*60*60*1000)  // 7 days
+    const val DB_MAX_DATA_WEAR_DAYS = 1 // 24h
+    const val DB_MAX_DATA_WEAR_TIME_MS = (DB_MAX_DATA_WEAR_DAYS*24*60*60*1000)
+    const val DB_MAX_DATA_DAYS = 7 // 7 days
+    const val DB_MAX_DATA_TIME_MS = (DB_MAX_DATA_DAYS*24*60*60*1000)
     const val SHARED_PREF_RESET_DATABASE = "reset_db"
     const val SHARED_PREF_USE_RATE_CALCULATION = "rate_calculation"
 
@@ -326,6 +328,7 @@ object Constants {
     const val GRAPH_ID = "graph_id"
     const val SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION = "graph_duration_wear_complication"
     const val SHARED_PREF_GRAPH_DURATION_PHONE_MAIN = "graph_duration_phone_main"
+    const val SHARED_PREF_GRAPH_DAYS_PHONE_MAIN = "graph_days_phone_main"
     const val SHARED_PREF_GRAPH_TRANSPARENCY_PHONE_MAIN = "graph_transparency_phone_main"
     const val SHARED_PREF_GRAPH_DURATION_PHONE_WIDGET = "graph_duration_phone_widget"
     const val SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_WIDGET = "graph_show_axis_phone_widget"

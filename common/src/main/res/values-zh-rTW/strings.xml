@@ -788,4 +788,7 @@
     <string name="graph_circle_radius">點大小</string>
     <string name="graph_circle_radius_summary">所有小工具、鎖定螢幕和 Always-On Display (AOD) 的圖表點大小。此設定不會影響應用程式主螢幕上的圖表。</string>
 
+    <string name="graph_days_phone_main">天數</string>
+    <string name="graph_days_phone_main_summary">圖表中可用的天數。\n重要：天數過多可能會導致記憶體問題！</string>
+
 </resources>

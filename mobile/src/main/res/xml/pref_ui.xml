@@ -29,6 +29,16 @@
                     android:title="@string/graph_duration"
                     app:iconSpaceReserved="false" />
                 <androidx.preference.SeekBarPreference
+                    app:showSeekBarValue="true"
+                    app:seekBarIncrement="1"
+                    app:min="1"
+                    android:max="7"
+                    android:defaultValue="2"
+                    android:key="graph_days_phone_main"
+                    android:summary="@string/graph_days_phone_main_summary"
+                    android:title="@string/graph_days_phone_main"
+                    app:iconSpaceReserved="false" />
+                <androidx.preference.SeekBarPreference
                     android:defaultValue="0"
                     app:showSeekBarValue="true"
                     app:seekBarIncrement="1"

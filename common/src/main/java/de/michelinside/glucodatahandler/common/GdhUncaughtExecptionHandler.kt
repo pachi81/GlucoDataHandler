@@ -26,6 +26,13 @@ object GdhUncaughtExecptionHandler : Thread.UncaughtExceptionHandler {
         return false
     }
 
+    fun isOutOfMemoryException(message: String) : Boolean {
+        if (message.contains("java.lang.OutOfMemoryError")) {
+            return true
+        }
+        return false
+    }
+
     override fun uncaughtException(t: Thread, e: Throwable) {
         try {
             if(!exceptionCaught) {

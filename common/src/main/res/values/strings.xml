@@ -844,5 +844,7 @@
     <string name="graph_duration_phone_main_summary">Number of hours shown in the graph on main screen.\nUse 0 to disable graph.</string>
     <string name="graph_circle_radius">Point size</string>
     <string name="graph_circle_radius_summary">Size of the graph points for all widgets, the lock screen and Always-On Display (AOD). This setting does not affect the graph on the main app screen.</string>
+    <string name="graph_days_phone_main">Number of days</string>
+    <string name="graph_days_phone_main_summary">Number of days which are available in the graph.\nIMPORTANT: too many days can cause memory issues!</string>
 
 </resources>

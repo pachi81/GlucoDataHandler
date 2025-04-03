@@ -138,7 +138,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             if (requestPermission())
                 GlucoDataServiceMobile.start(this)
-            chartCreator = ChartCreator(chart, this, Constants.SHARED_PREF_GRAPH_DURATION_PHONE_MAIN, Constants.SHARED_PREF_GRAPH_TRANSPARENCY_PHONE_MAIN)
+            chartCreator = MainChartCreator(chart, this, Constants.SHARED_PREF_GRAPH_DURATION_PHONE_MAIN, Constants.SHARED_PREF_GRAPH_TRANSPARENCY_PHONE_MAIN)
             chartCreator.create()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
@@ -867,7 +867,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 apply()
             }
 
-            if(time > 0 && (System.currentTimeMillis()- ReceiveData.time) < (60*60 * 1000)) {
+            if(time > 0 && (System.currentTimeMillis()- ReceiveData.time) < (60*60 * 1000) && !GdhUncaughtExecptionHandler.isOutOfMemoryException(excMsg)) {
                 if (GdhUncaughtExecptionHandler.isForegroundserviceNotificationException(excMsg)) {
                     Dialogs.showOkDialog(this, CR.string.app_crash_title, CR.string.app_crash_bad_notification, null)
                 } else {

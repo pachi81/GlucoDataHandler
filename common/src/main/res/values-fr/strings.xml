@@ -791,4 +791,7 @@
     <string name="graph_circle_radius">Taille du point</string>
     <string name="graph_circle_radius_summary">Taille des points du graphique pour tous les widgets, l\'écran de verrouillage et l\'affichage permanent (AOD). Ce paramètre n\'affecte pas le graphique sur l\'écran principal de l\'application.</string>
 
+    <string name="graph_days_phone_main">Nombre de jours</string>
+    <string name="graph_days_phone_main_summary">Nombre de jours disponibles sur le graphique.\nIMPORTANT : un trop grand nombre de jours peut entraîner des problèmes de mémoire !</string>
+
 </resources>

@@ -793,4 +793,7 @@
     <string name="graph_circle_radius">Wielkość punktu</string>
     <string name="graph_circle_radius_summary">Wielkość punktów wykresu dla wszystkich widgetów, ekranu blokady i ekranu Always-On Display (AOD). To ustawienie nie ma wpływu na wykres na głównym ekranie aplikacji.</string>
 
+    <string name="graph_days_phone_main">Liczba dni</string>
+    <string name="graph_days_phone_main_summary">Liczba dni widocznych na wykresie.\nUWAGA: zbyt duża liczba dni może powodować problemy z pamięcią telefonu!</string>
+
 </resources>

@@ -786,4 +786,7 @@
     <string name="graph_circle_radius">Tamanho do ponto</string>
     <string name="graph_circle_radius_summary">Tamanho dos pontos do gráfico para todos os widgets, a tela de bloqueio e Always-On Display (AOD). Esta configuração não afeta o gráfico na tela principal do aplicativo.</string>
 
+    <string name="graph_days_phone_main">Número de dias</string>
+    <string name="graph_days_phone_main_summary">Número de dias que estão disponíveis no gráfico.\nIMPORTANTE: muitos dias podem causar problemas de memória!</string>
+
 </resources>
