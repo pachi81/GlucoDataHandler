@@ -518,7 +518,7 @@
     <string name="xdrip_broadcast_service_api_enabled">Interfejs API usługi transmisji</string>
     <string name="xdrip_broadcast_service_api_enabled_summary">Użyj transmisji „Broadcast Service API" do komunikacji z xDrip+.\nNajpierw aktywuj \&quot;Broadcast Service API\&quot; w \&quot;Ustawieniach innych aplikacji\&quot; w xDrip+!</string>
     <string name="obsolete_time">Okres wart. nieaktualnych</string>
-    <string name="obsolete_time_summary">Czas w minutach, po którym wartość zostanie uznana za nieaktualną (zostanie oznaczona kolorem dla wartości nieaktualnych).\nPo dwukrotnym upływie tego czasu wartość\nzostanie usunięta.</string>
+    <string name="obsolete_time_summary">Czas w minutach, po którym wartość będzie nieaktualna (oznaczona kolorem wart. nieakt.).\nWartość znika po dwukrotnym upływie tego czasu.</string>
     <string name="pref_source_offline">Źródła offline</string>
     <string name="pref_source_offline_summary">Aplikacje na tym samym urządzeniu dostarczające wartości glukozy w formie transmisji wewnętrznej, takie jak Juggluco, xDrip+, AAPS itp.</string>
     <string name="pref_cat_follower_summary">Usługi chmurowe dostarczające wartości glukozy za pośrednictwem innych interfejsów API, takie jak LibreLinkUp, Dexcom Share i Nightscout.</string>
@@ -692,7 +692,7 @@
     <string name="pref_watchfaces_gdc">Tarcze zegarka GDC</string>
     <string name="pref_watchfaces_gdc_summary">Tarcze zegarka GDC są przeznaczone do użytku z aplikacją GlucoDataHandler.\nStuknij tutaj, aby otworzyć stronę Sklepu Play.</string>
     <string name="pref_phone_wear_screen_off_update">Zawsze aktualizuj komplikacje</string>
-    <string name="pref_phone_wear_screen_off_update_summary">Zawsze wysyłaj nowe wartości glukozy do zegarka.\nWyłącz tę opcję, aby zapobiec aktualizowaniu danych na zegarku, gdy ekran zegarka jest wyłączony w celu oszczędzania baterii.\nWartości alarmowe będą zawsze przesyłane do zegarka.\nWAŻNE: Gdy opcja ta jest włączona, alarm wartości nieaktualnych jest wyłączony w\nzegarku!</string>
+    <string name="pref_phone_wear_screen_off_update_summary">Zawsze wysyłaj nowe wartości do zegarka.\nWyłącz tę opcję i nie aktualizuj danych na zegarku, gdy ekran jest wyłączony, by oszczędzać baterię.\nWartości alarmowe zawsze są przesyłane do zegarka.\nWAŻNE: Gdy opcja jest wł., alarm wart. nieakt. jest w zegarku wyłączony!</string>
     <string name="alarm_ignore_snooze_for_very_low">Zawsze alarm dla wart. bardzo niskich</string>
     <string name="alarm_ignore_snooze_for_very_low_summary">Ten alarm powiadomi Cię nawet wtedy, gdy aktywna jest drzemka lub trwają ogólne ciche godziny dla wszystkich alarmów, gwarantując, że zostaniesz powiadomiony o bardzo niskim poziomie glukozy.</string>
 
