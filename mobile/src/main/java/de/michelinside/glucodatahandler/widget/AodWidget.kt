@@ -70,6 +70,10 @@ class AodWidget(context: Context): WallpaperBase(context, "GDH.AodWidget") {
                 yPos = sharedPreferences.getInt(Constants.SHARED_PREF_AOD_WP_Y_POS, 75)
                 Log.d(LOG_ID, "New Y pos: $yPos")
                 update()
+            } else if(key == Constants.SHARED_PREF_AOD_WP_COLOURED && widgetColoured != sharedPreferences.getBoolean(Constants.SHARED_PREF_AOD_WP_COLOURED, false)) {
+                widgetColoured = sharedPreferences.getBoolean(Constants.SHARED_PREF_AOD_WP_COLOURED, false)
+                Log.d(LOG_ID, "Widget is coloured : $widgetColoured")
+                update()
             } else {
                 super.onSharedPreferenceChanged(sharedPreferences, key)
             }
