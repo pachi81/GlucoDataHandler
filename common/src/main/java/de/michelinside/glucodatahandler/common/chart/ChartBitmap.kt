@@ -26,6 +26,11 @@ class ChartBitmap(val context: Context, durationPref: String = "", width: Int = 
         chartViewer.create(true)
     }
 
+    fun recreate() {
+        Log.v(LOG_ID, "recreate")
+        chartViewer.recreate()
+    }
+
     fun close() {
         Log.v(LOG_ID, "close")
         chartViewer.close()

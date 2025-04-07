@@ -188,6 +188,7 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
             setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_XDRIP_BROADCAST_RECEIVERS, Constants.SHARED_PREF_SEND_XDRIP_BROADCAST)
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, defValue = false, invert = true)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY,  Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, defValue = false, invert = true, secondDevValue = true)
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_NOTIFICATION, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY,  Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, defValue = false, invert = true, secondDevValue = true)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_STYLE, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY, Constants.SHARED_PREF_FLOATING_WIDGET)

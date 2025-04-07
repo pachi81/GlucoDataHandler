@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -387,4 +388,12 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             Log.e(LOG_ID, "updateBatteryReceiver exception: " + exc.toString())
         }
     }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        Log.i(LOG_ID, "onConfigurationChanged called: $newConfig")
+        if(!PermanentNotification.recreateBitmap())
+            PermanentNotification.showNotifications()
+    }
+
 }

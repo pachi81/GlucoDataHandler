@@ -46,6 +46,12 @@
                     android:summary="@string/graph_duration_summary"
                     android:title="@string/graph_duration"
                     app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="false"
+                    android:key="graph_show_axis_phone_notification"
+                    android:summary="@string/graph_show_axis_summary"
+                    android:title="@string/graph_show_axis"
+                    app:iconSpaceReserved="false" />
                 <de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
                     android:key="permanent_notification_tap_action"
                     android:title="@string/tap_action"

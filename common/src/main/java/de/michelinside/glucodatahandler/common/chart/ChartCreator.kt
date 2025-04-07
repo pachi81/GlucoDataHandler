@@ -805,6 +805,11 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         recreateChart()
     }
 
+    fun recreate() {
+        if(chart.data != null)
+            create(true) // recreate chart with new graph data
+    }
+
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         Log.d(LOG_ID, "onSharedPreferenceChanged: $key")
         try {
@@ -814,13 +819,11 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             } else if(key == transparencyPref) {
                 backgroundTransparency = sharedPref.getInt(transparencyPref, backgroundTransparency)
                 Log.d(LOG_ID, "re create graph after transparency changed to: $backgroundTransparency")
-                if(chart.data != null)
-                    create(true) // recreate chart with new graph data
+                recreate()
             } else if (graphPrefList.contains(key)) {
                 Log.i(LOG_ID, "re create graph after settings changed for key: $key")
                 ReceiveData.updateSettings(sharedPref)
-                if(chart.data != null)
-                    create(true) // recreate chart with new graph data
+                recreate()
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.message.toString() )

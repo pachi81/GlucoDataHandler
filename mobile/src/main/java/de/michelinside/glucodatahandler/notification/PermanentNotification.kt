@@ -442,7 +442,8 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON,
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_COLORED_ICON,
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION,
-                Constants.SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION -> {
+                Constants.SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION,
+                Constants.SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_NOTIFICATION -> {
                     updatePreferences()
                 }
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY -> {
@@ -467,8 +468,17 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     private fun createBitmap() {
         if(chartBitmap == null && GlucoDataService.isServiceRunning) {
             Log.i(LOG_ID, "Create bitmap")
-            chartBitmap = ChartBitmap(GlucoDataService.context!!, Constants.SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION, 1000)
+            chartBitmap = ChartBitmap(GlucoDataService.context!!, Constants.SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION, 1000, showAxisPref = Constants.SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_NOTIFICATION)
         }
+    }
+
+    fun recreateBitmap(): Boolean {
+        if(chartBitmap != null) {
+            Log.i(LOG_ID, "Recreate bitmap")
+            chartBitmap!!.recreate()
+            return true
+        }
+        return false
     }
 
     private fun removeBitmap() {

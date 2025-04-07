@@ -155,11 +155,9 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
         try {
             if(key == Constants.SHARED_PREF_GRAPH_BITMAP_CIRCLE_RADIUS) {
                 readCircleRadius()
-                if(chart.data != null)
-                    create(true) // recreate chart with new graph data
+                recreate()
             } else if(key == showAxisPref) {
-                if(chart.data != null)
-                    create(true) // recreate chart with new graph data
+                recreate()
             } else {
                 super.onSharedPreferenceChanged(sharedPreferences, key)
             }
