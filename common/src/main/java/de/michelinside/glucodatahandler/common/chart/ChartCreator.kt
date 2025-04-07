@@ -592,11 +592,15 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     }
 
     private fun getFirstTimestamp(): Float {
-        if(chart.data != null && chart.data.dataSetCount > 0) {
-            val dataSet = chart.data.getDataSetByIndex(0) as LineDataSet
-            if (dataSet.values.isNotEmpty()) {
-                return dataSet.values.first().x
+        try {
+            if(chart.data != null && chart.data.dataSetCount > 0) {
+                val dataSet = chart.data.getDataSetByIndex(0) as LineDataSet
+                if (dataSet.values.isNotEmpty() && dataSet.values.first() != null) {
+                    return dataSet.values.first().x
+                }
             }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "getFirstTimestamp exception: " + exc.message.toString() )
         }
         return 0F
     }
@@ -610,11 +614,15 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     }
 
     private fun getLastTimestamp(): Long {
-        if(chart.data != null && chart.data.dataSetCount > 0) {
-            val dataSet = chart.data.getDataSetByIndex(0) as LineDataSet
-            if (dataSet.values.isNotEmpty()) {
-                return TimeValueFormatter.from_chart_x(dataSet.values.last().x)
+        try {
+            if(chart.data != null && chart.data.dataSetCount > 0) {
+                val dataSet = chart.data.getDataSetByIndex(0) as LineDataSet
+                if (dataSet.values.isNotEmpty() && dataSet.values.last() != null) {
+                    return TimeValueFormatter.from_chart_x(dataSet.values.last().x)
+                }
             }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "getLastTimestamp exception: " + exc.message.toString() )
         }
         return 0L
     }
@@ -654,8 +662,15 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             } else {
                 addEntries(values)
             }
+            return
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() + " - " + exc.stackTraceToString() )
+            try {
+                Log.w(LOG_ID, "Reset data after exception occurs!")
+                resetData(values)
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "update-reset exception: " + exc.message.toString() + " - " + exc.stackTraceToString() )
+            }
         }
     }
 
