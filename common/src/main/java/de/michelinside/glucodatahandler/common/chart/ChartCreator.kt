@@ -79,7 +79,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
 
 
     val enabled: Boolean get() {
-        return init && chart.visibility == View.VISIBLE
+        return chart.visibility == View.VISIBLE
     }
 
     val paused: Boolean get() {
@@ -104,6 +104,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             ChartUtils.init(context)
             if(durationPref.isNotEmpty()) {
                 durationHours = sharedPref.getInt(durationPref, durationHours)
+                Log.d(LOG_ID, "Duration: $durationHours hours")
                 if(durationHours == 0)
                     disable()
             }
@@ -781,7 +782,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
 
     private fun recreateChart() {
         Log.v(LOG_ID, "recreate chart - enabled: $enabled")
-        if(enabled) {
+        if(init && enabled) {
             stopDataSync()
             resetChartData()
             chart.fitScreen()
