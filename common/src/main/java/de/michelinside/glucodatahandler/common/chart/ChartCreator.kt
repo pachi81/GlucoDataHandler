@@ -188,7 +188,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         }
     }
 
-    fun close() {
+    open fun close() {
         Log.d(LOG_ID, "close init: $init")
         try {
             if(init) {

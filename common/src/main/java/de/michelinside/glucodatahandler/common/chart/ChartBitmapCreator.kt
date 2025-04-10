@@ -15,6 +15,7 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.utils.BitmapPool
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 
@@ -41,6 +42,13 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
     override fun init() {
         readCircleRadius()
         super.init()
+    }
+
+    override fun close() {
+        super.close()
+        BitmapPool.returnBitmap(bitmap)
+        bitmap = null
+        bitmapValid = false
     }
 
     private fun readCircleRadius() {

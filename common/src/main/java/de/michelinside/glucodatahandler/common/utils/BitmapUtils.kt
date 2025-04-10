@@ -117,7 +117,7 @@ object BitmapUtils {
 
     fun textToBitmap(text: String, color: Int, roundTarget: Boolean = false, strikeThrough: Boolean = false, width: Int = 100, height: Int = 100, top: Boolean = false, bold: Boolean = false, resizeFactor: Float = 1F, withShadow: Boolean = false, bottom: Boolean = false, useTallFont: Boolean = false): Bitmap? {
         try {
-            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888 )
+            val bitmap = BitmapPool.getBitmap(width, height, Bitmap.Config.ARGB_8888 )
             val maxTextSize = calcMaxTextSizeForBitmap(bitmap, text, roundTarget, minOf(width,height).toFloat(), top, bold, useTallFont) * minOf(1F, resizeFactor)
             val canvas = Canvas(bitmap)
             bitmap.eraseColor(Color.TRANSPARENT)
@@ -173,7 +173,7 @@ object BitmapUtils {
             newW = h
             newH = w
         }
-        val rotatedBitmap = Bitmap.createBitmap(newW, newH, bitmap.config)
+        val rotatedBitmap = BitmapPool.getBitmap(newW, newH, bitmap.config)
         val canvas = Canvas(rotatedBitmap)
         val rect = Rect(0, 0, newW, newH)
         val matrix = Matrix()
@@ -188,6 +188,7 @@ object BitmapUtils {
             Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG or Paint.FILTER_BITMAP_FLAG)
         )
         matrix.reset()
+        BitmapPool.returnBitmap(bitmap)
         return rotatedBitmap
     }
 
@@ -222,7 +223,9 @@ object BitmapUtils {
                     Constants.SHARED_PREF_LARGE_ARROW_ICON, true)) {
                 textSize *= shortArrowRate
             }
-            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888 )
+            //val key = "$width:$height:$degrees:$textSize:$color:$strikeThrough:$withShadow"
+
+            val bitmap = BitmapPool.getBitmap(width, height)
             val canvas = Canvas(bitmap)
             bitmap.eraseColor(Color.TRANSPARENT)
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
@@ -267,7 +270,7 @@ object BitmapUtils {
             val textBitmap = textToBitmap(text, color, true, strikeThrough, resizeWidth, textHeight, true, false, 1F, withShadow)
             val rateDimension = Utils.round(rateSize.toFloat() * resizeFactor, 0).toInt()
             val rateBitmap = rateToBitmap(rate, color, rateDimension, rateDimension, 1F, obsolete, withShadow)
-            val comboBitmap = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888)
+            val comboBitmap = BitmapPool.getBitmap(width,height, Bitmap.Config.ARGB_8888)
             val comboImage = Canvas(comboBitmap)
             if (small) {
                 comboImage.drawBitmap(rateBitmap!!, ((height-rateDimension)/2).toFloat(), topRateSmall, null)
@@ -277,6 +280,8 @@ object BitmapUtils {
                 comboImage.drawBitmap(rateBitmap!!, ((height-rateDimension)/2).toFloat(), padding, null)
                 comboImage.drawBitmap(textBitmap!!, 0F, rateBitmap.height.toFloat()+padding, null)
             }
+            BitmapPool.returnBitmap(rateBitmap)
+            BitmapPool.returnBitmap(textBitmap)
             return comboBitmap
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Cannot create rate icon: " + exc.message.toString())
@@ -286,7 +291,7 @@ object BitmapUtils {
 
     fun createComboBitmap(bitmapAbove: Bitmap, bitmapBelow: Bitmap, width: Int = 100, height: Int = 100) : Bitmap? {
         try {
-            val comboBitmap = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888)
+            val comboBitmap = BitmapPool.getBitmap(width,height, Bitmap.Config.ARGB_8888)
             val comboImage = Canvas(comboBitmap)
             comboImage.drawBitmap(bitmapAbove, ((width-bitmapAbove.width)/2).toFloat(), 0F, null)
             comboImage.drawBitmap(bitmapBelow, ((width-bitmapBelow.width)/2).toFloat(), height - bitmapBelow.height.toFloat(), null)
@@ -340,7 +345,8 @@ object BitmapUtils {
 
     fun createIcon(bitmap: Bitmap?): Icon {
         val icon = Icon.createWithBitmap(bitmap)
-        bitmap?.recycle()
+        if(bitmap!=null)
+            BitmapPool.returnBitmap(bitmap)
         return icon
     }
 
@@ -354,7 +360,7 @@ object BitmapUtils {
     }
 
     fun loadBitmapFromView(view: View, targetBitmap: Bitmap? = null): Bitmap {
-        val bitmap = targetBitmap?: Bitmap.createBitmap(
+        val bitmap = targetBitmap?: BitmapPool.getBitmap(
                 view.width,
                 view.height,
                 Bitmap.Config.ARGB_8888
