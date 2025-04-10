@@ -81,6 +81,7 @@
 
         </LinearLayout>
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/graphImageLayout"
         android:layout_width="match_parent"

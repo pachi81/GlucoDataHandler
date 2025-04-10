@@ -14,6 +14,7 @@ import android.graphics.drawable.Icon
 import android.hardware.display.DisplayManager
 import android.util.DisplayMetrics
 import android.util.Log
+import android.view.View
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
@@ -303,7 +304,7 @@ object BitmapUtils {
     }
 
     fun getGlucoseAsIcon(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, withShadow: Boolean = false, useTallFont: Boolean = false): Icon {
-        return Icon.createWithBitmap(getGlucoseAsBitmap(color, roundTarget, width, height, resizeFactor, withShadow, useTallFont))
+        return createIcon(getGlucoseAsBitmap(color, roundTarget, width, height, resizeFactor, withShadow, useTallFont))
     }
 
     fun getDeltaAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, top: Boolean = false, resizeFactor: Float = 1F, useTallFont: Boolean = false): Bitmap? {
@@ -311,7 +312,7 @@ object BitmapUtils {
     }
 
     fun getDeltaAsIcon(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, useTallFont: Boolean = false): Icon {
-        return Icon.createWithBitmap(getDeltaAsBitmap(color, roundTarget, width, height, resizeFactor = resizeFactor, useTallFont = useTallFont))
+        return createIcon(getDeltaAsBitmap(color, roundTarget, width, height, resizeFactor = resizeFactor, useTallFont = useTallFont))
     }
 
     fun getRateAsBitmap(
@@ -334,7 +335,13 @@ object BitmapUtils {
         height: Int = 100,
         withShadow: Boolean = false
     ): Icon {
-        return Icon.createWithBitmap(getRateAsBitmap(color, resizeFactor, width, height, withShadow))
+        return createIcon(getRateAsBitmap(color, resizeFactor, width, height, withShadow))
+    }
+
+    fun createIcon(bitmap: Bitmap?): Icon {
+        val icon = Icon.createWithBitmap(bitmap)
+        bitmap?.recycle()
+        return icon
     }
 
     fun getGlucoseTrendBitmap(color: Int? = null, width: Int = 100, height: Int = 100, small: Boolean = false, withShadow: Boolean = false): Bitmap? {
@@ -343,6 +350,20 @@ object BitmapUtils {
     }
 
     fun getGlucoseTrendIcon(color: Int? = null, width: Int = 100, height: Int = 100, small: Boolean = false, withShadow: Boolean = false): Icon {
-        return Icon.createWithBitmap(getGlucoseTrendBitmap(color, width, height, small, withShadow))
+        return createIcon(getGlucoseTrendBitmap(color, width, height, small, withShadow))
+    }
+
+    fun loadBitmapFromView(view: View, targetBitmap: Bitmap? = null): Bitmap {
+        val bitmap = targetBitmap?: Bitmap.createBitmap(
+                view.width,
+                view.height,
+                Bitmap.Config.ARGB_8888
+            )
+        val canvas = Canvas(bitmap)
+        if(targetBitmap != null)  // clear target bitmap
+            canvas.drawColor(Color.TRANSPARENT, android.graphics.PorterDuff.Mode.CLEAR)
+        view.layout(view.left, view.top, view.right, view.bottom)
+        view.draw(canvas)
+        return bitmap
     }
 }

@@ -15,6 +15,7 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 
 class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: String = "", private val forComplication: Boolean = false, private val showAxisPref: String? = null): ChartCreator(chart, context, durationPref) {
@@ -23,6 +24,7 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
     }
     private var LOG_ID = "GDH.Chart.BitmapCreator"
     private var bitmap: Bitmap? = null
+    private var bitmapValid = false
     override val resetChart = true
     override val circleRadius: Float get() {
         return if(GlucoDataService.appSource == AppSource.WEAR_APP) 3F else customCircleRadius
@@ -122,7 +124,7 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
         Handler(context.mainLooper).post {
             Log.d(LOG_ID, "notify graph changed")
             graphCreated = true
-            bitmap = null  // reset
+            bitmapValid = false  // reset
             InternalNotifier.notify(context, NotifySource.GRAPH_CHANGED, Bundle().apply { putInt(Constants.GRAPH_ID, chart.id) })
         }
     }
@@ -136,16 +138,36 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
         Log.d(LOG_ID, "onDataSyncStopped")
         super.onDataSyncStopped()
         graphCreated = false
-        bitmap = null  // reset
+        bitmapValid = false  // reset
         InternalNotifier.notify(context, NotifySource.GRAPH_CHANGED, Bundle().apply { putInt(Constants.GRAPH_ID, chart.id) })
+    }
+
+    private fun createBitmap() {
+        try {
+            Log.d(LOG_ID, "Create bitmap - duration: $durationHours - width: ${chart.width} - height: ${chart.height}")
+            if(durationHours > 0 && !paused) {
+                if(chart.width == 0 || chart.height == 0)
+                    chart.waitForInvalidate()
+                if(chart.width > 0 && chart.height > 0) {
+                    Log.d(LOG_ID, "Draw bitmap")
+                    bitmap = BitmapUtils.loadBitmapFromView(chart, bitmap)
+                    bitmapValid = true
+                    return
+                }
+            }
+            Log.i(LOG_ID, "No bitmap created!")
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "getBitmap exception: " + exc.message.toString() )
+        }
     }
 
     fun getBitmap(): Bitmap? {
         if(durationHours == 0 || paused || !graphCreated) {
             return null
         }
-        if(bitmap == null)
-            bitmap = createBitmap()
+        if(!bitmapValid || bitmap == null) {
+            createBitmap()
+        }
         return bitmap
     }
 
