@@ -56,9 +56,7 @@ object BitmapPool {
                 val bitmapList = pool.getOrPut(dimensionKey) { mutableListOf() }
                 if (bitmapList.size < maxSizePerDimension) {
                     // Clear the bitmap before returning it to the pool
-                    val canvas = Canvas(bitmap)
-                    canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
-                    bitmapList.add(bitmap)
+                    bitmapList.add(BitmapUtils.clearBitmap(bitmap))
                     Log.d(
                         LOG_ID,
                         "Bitmap returned to pool for dimensions: $dimensionKey (new size: ${bitmapList.size})"

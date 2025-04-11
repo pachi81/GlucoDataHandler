@@ -372,4 +372,10 @@ object BitmapUtils {
         view.draw(canvas)
         return bitmap
     }
+
+    fun clearBitmap(bitmap: Bitmap): Bitmap {
+        val canvas = Canvas(bitmap)
+        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
+        return bitmap
+    }
 }

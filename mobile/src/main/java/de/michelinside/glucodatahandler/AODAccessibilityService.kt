@@ -186,62 +186,6 @@ class AODAccessibilityService : AccessibilityService() {
         }
     }
 
-//    private fun createOverlay(bitmap: Bitmap) {
-//        Log.d(LOG_ID, "Creating overlay")
-//
-//        if (overlayView != null)
-//            return
-//
-//        var layoutParams = WindowManager.LayoutParams().apply {
-//            type = WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY
-//            format = PixelFormat.TRANSLUCENT
-//            flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-//                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-//            width = WindowManager.LayoutParams.WRAP_CONTENT
-//            height = WindowManager.LayoutParams.WRAP_CONTENT
-//            gravity = Gravity.CENTER
-//        }
-//
-//        if (laidoutWidth != 0) {
-//            val desired = BitmapUtils.getScreenWidth().toFloat() * 0.6f
-//            val scaleFactor = desired / laidoutWidth.toFloat()
-//            Log.d(LOG_ID, "scaleFactor: $scaleFactor")
-//            layoutParams.width = (laidoutWidth * scaleFactor).toInt()
-//            layoutParams.height = (laidoutHeight * scaleFactor).toInt()
-//            Log.d(LOG_ID, "Scaled dimensions: $layoutParams.width * $layoutParams.height")
-//        }
-//
-//        overlayView = LayoutInflater.from(this).inflate(R.layout.wallpaper, null)
-//
-//
-//        updateOverlay()
-//
-//        try {
-//
-//            windowManager.addView(overlayView, layoutParams)
-//
-//            overlayView?.post {
-//                if (laidoutWidth == 0) {
-//                    laidoutWidth = overlayView!!.measuredWidth
-//                    laidoutHeight = overlayView!!.measuredHeight
-//                    Log.d(LOG_ID, "View dimensions: $laidoutWidth * $laidoutHeight")
-//
-//                    // Now we know the size of the overlay, recreate and apply scaling to desired size
-//                    removeOverlay()
-//                    createOverlay()
-//                }
-//                else {
-//                    Log.d(LOG_ID, "View dimensions cached: $laidoutWidth * $laidoutHeight")
-//                }
-//            }
-//
-//
-//            Log.d(LOG_ID, "Overlay added successfully")
-//        } catch (e: Exception) {
-//            Log.e(LOG_ID, "Error adding overlay", e)
-//        }
-//    }
-
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
 //        Log.d(LOG_ID, "Received event: ${event.eventType}")
     }

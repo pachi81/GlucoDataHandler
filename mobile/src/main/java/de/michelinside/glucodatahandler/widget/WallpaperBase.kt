@@ -48,6 +48,8 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
     protected var size = 10
     protected lateinit var sharedPref: SharedPreferences
     private var chartBitmap: ChartBitmap? = null
+    private var curWallpaper: Bitmap? = null
+    private var oldWallpaper: Bitmap? = null
 
     protected val active: Boolean get() {
         return enabled && !paused
@@ -70,6 +72,16 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             disable()
             removeBitmap()
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
+            if(curWallpaper != null) {
+                Log.i(LOG_ID, "Destroy current wallpaper")
+                curWallpaper?.recycle()
+                curWallpaper = null
+            }
+            if(oldWallpaper != null) {
+                Log.i(LOG_ID, "Destroy old wallpaper")
+                oldWallpaper?.recycle()
+                oldWallpaper = null
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "destroy exception: " + exc.message.toString() )
         }
@@ -161,6 +173,15 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
         }
     }
 
+    fun receycleOldWallpaper() {
+        if(oldWallpaper != null) {
+            Log.i(LOG_ID, "Receycle old wallpaper")
+            if(oldWallpaper?.isRecycled == false)
+                oldWallpaper?.recycle()
+            oldWallpaper = null
+        }
+    }
+
     protected open fun getFilters() : MutableSet<NotifySource> {
         return mutableSetOf()
     }
@@ -182,6 +203,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
                 Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA -> {
                     filter.add(NotifySource.TIME_VALUE)
                 }
+                Constants.WIDGET_STYLE_CHART_GLUCOSE_TREND_TIME_DELTA_IOB_COB,
                 Constants.WIDGET_STYLE_GLUCOSE_TREND_TIME_DELTA_IOB_COB -> {
                     filter.add(NotifySource.TIME_VALUE)
                     filter.add(NotifySource.IOB_COB_CHANGE)
@@ -376,7 +398,6 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
                 }
             }
 
-            lockscreenView.setDrawingCacheEnabled(true)
             lockscreenView.measure(
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
@@ -391,10 +412,18 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
                 graphImage?.setColorFilter(col)
             }
 
-            val bitmap = Bitmap.createBitmap(lockscreenView.width, lockscreenView.height, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(bitmap)
+            if(curWallpaper == null || curWallpaper!!.width != lockscreenView.width || curWallpaper!!.height != lockscreenView.height) {
+                receycleOldWallpaper()
+                Log.i(LOG_ID, "Create new bitmap with size ${lockscreenView.width} x ${lockscreenView.height}")
+                oldWallpaper = curWallpaper
+                curWallpaper = Bitmap.createBitmap(lockscreenView.width, lockscreenView.height, Bitmap.Config.ARGB_8888)
+            } else {
+                Log.d(LOG_ID, "Reuse old bitmap")
+                BitmapUtils.clearBitmap(curWallpaper!!)
+            }
+            val canvas = Canvas(curWallpaper!!)
             lockscreenView.draw(canvas)
-            return bitmap
+            return curWallpaper
         } catch (exc: Exception) {
             Log.e(LOG_ID, "createWallpaperView exception: " + exc.message.toString())
         }

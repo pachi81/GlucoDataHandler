@@ -35,6 +35,7 @@ class LockScreenWallpaper(context: Context): WallpaperBase(context, "GDH.LockScr
                 val wallpaper =  createWallpaper(bitmap, context)
                 wallpaperManager.setBitmap(wallpaper, null, false, WallpaperManager.FLAG_LOCK)
                 wallpaper!!.recycle()
+                receycleOldWallpaper()
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "updateLockScreen exception: " + exc.message.toString())
             }
@@ -56,7 +57,6 @@ class LockScreenWallpaper(context: Context): WallpaperBase(context, "GDH.LockScr
                 val yOffset = max(0F, ((screenHeigth-bitmap.height)*yPos/100F)) //-(screenDPI*0.3F))
                 Log.d(LOG_ID, "Create wallpaper at x=$xOffset/$screenWidth and y=$yOffset/$screenHeigth DPI=$screenDPI")
                 canvas.drawBitmap(bitmap, xOffset, yOffset, Paint(Paint.ANTI_ALIAS_FLAG))
-                bitmap.recycle()
             }
             return wallpaper
         } catch (exc: Exception) {

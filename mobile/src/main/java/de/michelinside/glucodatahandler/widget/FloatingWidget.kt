@@ -83,6 +83,7 @@ class FloatingWidget(context: Context): WallpaperBase(context, "GDH.FloatingWidg
     private fun setContent() {
         imageView.setImageBitmap(createWallpaperView(backgroundColor = Utils.getBackgroundColor(sharedPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY, 3))))
         imageView.contentDescription = ReceiveData.getAsText(context, hasIobCob())
+        receycleOldWallpaper()
     }
 
     override fun update() {
