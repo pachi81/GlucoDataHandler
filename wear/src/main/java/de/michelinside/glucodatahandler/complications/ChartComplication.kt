@@ -32,6 +32,7 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
+import de.michelinside.glucodatahandler.common.utils.BitmapPool
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
@@ -166,7 +167,7 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
     private fun ambientGraphIcon(bitmap: Bitmap): Icon? {
         if (GlucoDataService.sharedPref != null && GlucoDataService.sharedPref!!.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false))
             return null  // use colored one!
-        return Icon.createWithBitmap(monochromBitmap(bitmap))
+        return BitmapUtils.createIcon(monochromBitmap(bitmap))
     }
 
     protected abstract fun getPreview(): Int
@@ -181,20 +182,25 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
     protected fun getImage(resize: Boolean): SmallImage {
         val graph = getBitmap() ?: return getTransparentImage()
         val bitmap = if(resize) resize(graph) else graph
-        return SmallImage.Builder(
+        val image = SmallImage.Builder(
             image = Icon.createWithBitmap(bitmap),
             type = SmallImageType.PHOTO
         ).setAmbientImage(ambientGraphIcon(bitmap))
             .build()
+        if(resize) {
+            BitmapPool.returnBitmap(bitmap)
+        }
+        return image
     }
 
     protected fun getLargeImage(): Icon {
         val graph = getBitmap() ?: return Icon.createWithResource(this, if(forPreview) getPreview() else CR.drawable.icon_transparent)
-        return Icon.createWithBitmap(resize(graph, 800))
+        return BitmapUtils.createIcon(resize(graph, 800))
     }
 
     private fun resize(originalImage: Bitmap, bitmapSize: Int = size): Bitmap {
-        val compBitmap = Bitmap.createBitmap(bitmapSize, bitmapSize, Bitmap.Config.ARGB_8888)
+        Log.v(LOG_ID, "resize: $bitmapSize")
+        val compBitmap = BitmapPool.getBitmap(bitmapSize, bitmapSize, Bitmap.Config.ARGB_8888)
 
         val originalWidth: Float = originalImage.getWidth().toFloat()
         val originalHeight: Float = originalImage.getHeight().toFloat()
@@ -219,7 +225,8 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
     }
 
     private fun monochromBitmap(bitmap: Bitmap): Bitmap {
-        val compBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        Log.v(LOG_ID, "Creating monochromBitmap")
+        val compBitmap = BitmapPool.getBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(compBitmap)
         val paint = Paint()
         paint.isFilterBitmap = true

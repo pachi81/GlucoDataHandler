@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.drawable.Icon
 import androidx.wear.watchface.complications.data.*
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.utils.BitmapPool
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 
 
@@ -172,7 +173,7 @@ class DeltaImageComplication: BgValueComplicationService() {
 
 open class TimeImageComplication: TimeComplicationBase() {
     protected fun getTimeIcon(color: Int): Icon {
-        return Icon.createWithBitmap(BitmapUtils.textToBitmap(ReceiveData.getElapsedTimeMinuteAsString(this, true), color = color, resizeFactor = 0.9F))
+        return BitmapUtils.createIcon(BitmapUtils.textToBitmap(ReceiveData.getElapsedTimeMinuteAsString(this, true), color = color, resizeFactor = 0.9F))
     }
     override fun getImage(): SmallImage {
         return  SmallImage.Builder(
@@ -217,7 +218,10 @@ open class SmallImageDeltaWithTimeComplication: TimeComplicationBase() {
     protected fun getDeltaTimeIcon(color: Int): Icon {
         val deltaBitmap = BitmapUtils.getDeltaAsBitmap(color = color, roundTarget = true, height = 45, width = 90, top = true)
         val timeBitmap = BitmapUtils.textToBitmap(ReceiveData.getElapsedTimeMinuteAsString(this, true), color = color, height = 45, width = 75, bottom = true)
-        return Icon.createWithBitmap(BitmapUtils.createComboBitmap(timeBitmap!!, deltaBitmap!!, height = 100, width = 100))
+        val icon = BitmapUtils.createIcon(BitmapUtils.createComboBitmap(timeBitmap!!, deltaBitmap!!, height = 100, width = 100))
+        BitmapPool.returnBitmap(deltaBitmap)
+        BitmapPool.returnBitmap(timeBitmap)
+        return icon
     }
 
     override fun getImage(): SmallImage {

@@ -1,6 +1,7 @@
 package de.michelinside.glucodatahandler.common.utils
 
 import android.content.Context
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -33,8 +34,10 @@ object BitmapUtils {
         return displayManager
     }
 
-    fun getScreenWidth(context: Context): Int {
+    fun getScreenWidth(context: Context, checkOrientation: Boolean = false): Int {
         try {
+            if(checkOrientation && isLandscapeOrientation(context))
+                return getScreenHeight(context, false)
             if(displayMetrics!=null)
                 return displayMetrics!!.widthPixels
             val displayManager = getDisplayManager(context)
@@ -49,8 +52,10 @@ object BitmapUtils {
         return Resources.getSystem().displayMetrics.widthPixels
     }
 
-    fun getScreenHeight(context: Context): Int {
+    fun getScreenHeight(context: Context, checkOrientation: Boolean = false): Int {
         try {
+            if(checkOrientation && isLandscapeOrientation(context))
+                return getScreenWidth(context, false)
             if(displayMetrics!=null)
                 return displayMetrics!!.heightPixels
             val displayManager = getDisplayManager(context)
@@ -63,6 +68,10 @@ object BitmapUtils {
             Log.e(LOG_ID, "Error in getScreenHeight", e)
         }
         return Resources.getSystem().displayMetrics.heightPixels
+    }
+
+    fun isLandscapeOrientation(context: Context): Boolean {
+        return (context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
     }
 
     fun getScreenDpi(): Int {
@@ -345,8 +354,7 @@ object BitmapUtils {
 
     fun createIcon(bitmap: Bitmap?): Icon {
         val icon = Icon.createWithBitmap(bitmap)
-        if(bitmap!=null)
-            BitmapPool.returnBitmap(bitmap)
+        BitmapPool.returnBitmap(bitmap)
         return icon
     }
 
