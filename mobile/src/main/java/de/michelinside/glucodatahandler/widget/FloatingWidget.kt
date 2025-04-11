@@ -16,6 +16,7 @@ import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
+import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import java.util.*
 
@@ -123,8 +124,10 @@ class FloatingWidget(context: Context): WallpaperBase(context, "GDH.FloatingWidg
                 PixelFormat.TRANSLUCENT
             )
             params.gravity = Gravity.TOP or Gravity.START
-            params.x = maxOf(sharedInternalPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_X, 100), 0)
-            params.y = maxOf(sharedInternalPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_Y, 100), 0)
+            params.x = minOf(maxOf(sharedInternalPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_X, 100), 0), BitmapUtils.getScreenWidth(context, true) - imageView.drawable.minimumWidth)
+            params.y = minOf(maxOf(sharedInternalPref.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_Y, 100), 0), BitmapUtils.getScreenHeight(context, true) - imageView.drawable.minimumHeight)
+
+            Log.d(LOG_ID, "Creating widget at x/y: " + params.x + "/" + params.y + " - screen x/y: " + BitmapUtils.getScreenWidth(context, true) + "/" + BitmapUtils.getScreenHeight(context, true))
 
             windowManager = context.getSystemService(WINDOW_SERVICE) as WindowManager?
             windowManager!!.addView(floatingView, params)
@@ -193,8 +196,8 @@ class FloatingWidget(context: Context): WallpaperBase(context, "GDH.FloatingWidg
                             MotionEvent.ACTION_MOVE -> {
                                 if(!sharedPref.getBoolean(Constants.SHARED_PREF_FLOATING_WIDGET_LOCK_POSITION, false)) {
                                     //this code is helping the widget to move around the screen with fingers
-                                    params.x = initialX + (event.rawX - initialTouchX).toInt()
-                                    params.y = initialY + (event.rawY - initialTouchY).toInt()
+                                    params.x = minOf(initialX + (event.rawX - initialTouchX).toInt(), BitmapUtils.getScreenWidth(context, true) - floatingView.width)
+                                    params.y = minOf(initialY + (event.rawY - initialTouchY).toInt(), BitmapUtils.getScreenHeight(context, true) - floatingView.height)
                                     windowManager!!.updateViewLayout(floatingView, params)
                                 }
                                 return true
