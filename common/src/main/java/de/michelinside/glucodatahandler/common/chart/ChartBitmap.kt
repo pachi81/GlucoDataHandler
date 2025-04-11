@@ -34,6 +34,7 @@ class ChartBitmap(val context: Context, durationPref: String = "", width: Int = 
     fun close() {
         Log.v(LOG_ID, "close")
         chartViewer.close()
+        chart.onDetachedFromWindow()
     }
 
     fun getBitmap(): Bitmap? {

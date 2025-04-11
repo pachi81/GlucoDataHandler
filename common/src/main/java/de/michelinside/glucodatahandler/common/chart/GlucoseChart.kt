@@ -99,7 +99,7 @@ open class GlucoseChart: LineChart {
         }
     }
 
-    override fun onDetachedFromWindow() {
+    public override fun onDetachedFromWindow() {
         try {
             super.onDetachedFromWindow()
             MoveViewJob.getInstance(null, 0F, 0F, null, null)
