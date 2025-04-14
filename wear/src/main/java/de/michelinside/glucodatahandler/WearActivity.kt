@@ -232,7 +232,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             } else {
                 txtBgValue.paintFlags = 0
             }
-            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
+            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon("main_trend"))
             viewIcon.contentDescription = ReceiveData.getRateAsText(this)
 
             timeText.text = "🕒 ${ReceiveData.getElapsedRelativeTimeAsString(this)}"

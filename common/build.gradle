@@ -16,6 +16,7 @@ android {
         consumerProguardFiles "consumer-rules.pro"
 
         buildConfigField("String", "DEXCOM_APPLICATION_ID", rootProject.DEXCOM_APPLICATION_ID)
+        buildConfigField("String", "NIGHTSCOUT_DEBUG_SERVER", rootProject.NIGHTSCOUT_DEBUG_SERVER)
     }
 
     buildTypes {

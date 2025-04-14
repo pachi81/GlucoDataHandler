@@ -17,12 +17,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.ncorti.slidetoact.SlideToActView
-import de.michelinside.glucodatahandler.PermanentNotification
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
-import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.chart.ChartBitmap
 import de.michelinside.glucodatahandler.common.chart.ChartBitmapView
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
@@ -284,7 +281,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             } else {
                 txtBgValue.paintFlags = 0
             }
-            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(withShadow = true))
+            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon("lockscreen_trend", withShadow = true))
             viewIcon.contentDescription = ReceiveData.getRateAsText(this)
             txtDelta.text = "Δ ${ReceiveData.getDeltaAsString()}"
             txtTime.text = "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(this)}"

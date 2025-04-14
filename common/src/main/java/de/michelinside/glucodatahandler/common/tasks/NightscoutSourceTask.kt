@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.database.GlucoseValue
@@ -89,6 +90,8 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
         var result = false
         if (key == null) {
             url = sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, "")!!.trim().trimEnd('/')
+            if(BuildConfig.DEBUG && url.isEmpty())
+                url = BuildConfig.NIGHTSCOUT_DEBUG_SERVER
             secret = Utils.encryptSHA1(sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, "")!!)
             token = sharedPreferences.getString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, "")!!
             iob_cob_support = sharedPreferences.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, true)

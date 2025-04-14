@@ -6,6 +6,7 @@ import androidx.wear.watchface.complications.data.*
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.utils.BitmapPool
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import de.michelinside.glucodatahandler.common.utils.IconBitmapPool
 
 
 class SmallTrendImageComplication: BgValueComplicationService() {
@@ -47,7 +48,7 @@ class SmallImageGlucoseWithTrendComplication: BgValueComplicationService() {
 
     override fun getLargeImageComplicationData(): ComplicationData {
         return PhotoImageComplicationData.Builder (
-            photoImage = BitmapUtils.getGlucoseTrendIcon(ReceiveData.getGlucoseColor(), 500, 500),
+            photoImage = BitmapUtils.getGlucoseTrendIcon("SmallImageGlucoseWithTrend_large_$instanceId", ReceiveData.getGlucoseColor(), 500, 500),
             contentDescription = descriptionText()
         )
             .setTapAction(getTapAction())
@@ -61,17 +62,19 @@ class SmallImageGlucoseWithTrendComplication: BgValueComplicationService() {
 
 class IconGlucoseWithTrendComplication: BgValueComplicationService() {
     override fun getImage(): SmallImage {
+        val icon = BitmapUtils.getGlucoseTrendIcon("IconGlucoseWithTrendComp_$instanceId", Color.WHITE)
         return  SmallImage.Builder(
-            image = BitmapUtils.getGlucoseTrendIcon(Color.WHITE),
+            image = icon,
             type = SmallImageType.PHOTO
-        ).setAmbientImage(BitmapUtils.getGlucoseTrendIcon(Color.WHITE))
+        ).setAmbientImage(icon)
             .build()
     }
 
     override fun getIconComplicationData(): ComplicationData {
+        val icon = BitmapUtils.getGlucoseTrendIcon("IconGlucoseWithTrendComp_$instanceId", Color.WHITE)
         val imageIcon = MonochromaticImage.Builder(
-            image = BitmapUtils.getGlucoseTrendIcon(Color.WHITE)
-        ).setAmbientImage(BitmapUtils.getGlucoseTrendIcon(Color.WHITE)).build()
+            image = icon
+        ).setAmbientImage(icon).build()
 
         return MonochromaticImageComplicationData.Builder(
             imageIcon,
@@ -92,7 +95,7 @@ class SmallImageGlucoseWithTrendSmallComplication: BgValueComplicationService() 
 
     override fun getLargeImageComplicationData(): ComplicationData {
         return PhotoImageComplicationData.Builder (
-            photoImage = BitmapUtils.getGlucoseTrendIcon(ReceiveData.getGlucoseColor(), 500, 500, true),
+            photoImage = BitmapUtils.getGlucoseTrendIcon("SmallImageGlucoseWithTrendSmall_large_$instanceId", ReceiveData.getGlucoseColor(), 500, 500, true),
             contentDescription = descriptionText()
         )
             .setTapAction(getTapAction())
@@ -107,16 +110,17 @@ class SmallImageGlucoseWithTrendSmallComplication: BgValueComplicationService() 
 class ValueIconComplication: BgValueComplicationService() {
     override fun getImage(): SmallImage {
         return  SmallImage.Builder(
-            image = BitmapUtils.getGlucoseAsIcon(color = Color.WHITE, roundTarget = true),
+            image = BitmapUtils.getGlucoseAsIcon("ValueIconComp_$instanceId", color = Color.WHITE, roundTarget = true),
             type = SmallImageType.PHOTO
-        ).setAmbientImage(BitmapUtils.getGlucoseAsIcon(color = Color.WHITE))
+        ).setAmbientImage(BitmapUtils.getGlucoseAsIcon("ValueIconComp_mono_$instanceId", color = Color.WHITE))
             .build()
     }
 
     override fun getIconComplicationData(): ComplicationData {
+        val icon = BitmapUtils.getGlucoseAsIcon("ValueIconComp_$instanceId", color = Color.WHITE)
         val imageIcon = MonochromaticImage.Builder(
-            image = BitmapUtils.getGlucoseAsIcon(color = Color.WHITE)
-        ).setAmbientImage(BitmapUtils.getGlucoseAsIcon(color = Color.WHITE)).build()
+            image = icon
+        ).setAmbientImage(icon).build()
 
         return MonochromaticImageComplicationData.Builder(
             imageIcon,
@@ -134,16 +138,17 @@ class ValueIconComplication: BgValueComplicationService() {
 class DeltaIconComplication: BgValueComplicationService() {
     override fun getImage(): SmallImage {
         return  SmallImage.Builder(
-            image = BitmapUtils.getDeltaAsIcon(color = Color.WHITE, roundTarget = true),
+            image = BitmapUtils.getDeltaAsIcon("DeltaIconComp_$instanceId", color = Color.WHITE, roundTarget = true),
             type = SmallImageType.PHOTO
-        ).setAmbientImage(BitmapUtils.getDeltaAsIcon(color = Color.WHITE))
+        ).setAmbientImage(BitmapUtils.getDeltaAsIcon("DeltaIconComp_mono_$instanceId", color = Color.WHITE))
             .build()
     }
 
     override fun getIconComplicationData(): ComplicationData {
+        val icon = BitmapUtils.getDeltaAsIcon("DeltaIconComp_$instanceId", color = Color.WHITE)
         val imageIcon = MonochromaticImage.Builder(
-            image = BitmapUtils.getDeltaAsIcon(color = Color.WHITE)
-        ).setAmbientImage(BitmapUtils.getDeltaAsIcon(color = Color.WHITE)).build()
+            image = icon
+        ).setAmbientImage(icon).build()
 
         return MonochromaticImageComplicationData.Builder(
             imageIcon,
@@ -161,9 +166,9 @@ class DeltaIconComplication: BgValueComplicationService() {
 class DeltaImageComplication: BgValueComplicationService() {
     override fun getImage(): SmallImage {
         return  SmallImage.Builder(
-            image = BitmapUtils.getDeltaAsIcon(color = ReceiveData.getGlucoseColor(), roundTarget = true),
+            image = BitmapUtils.getDeltaAsIcon("DeltaImageComp_$instanceId", color = ReceiveData.getGlucoseColor(), roundTarget = true),
             type = SmallImageType.PHOTO
-        ).setAmbientImage(BitmapUtils.getDeltaAsIcon(color = Color.WHITE))
+        ).setAmbientImage(BitmapUtils.getDeltaAsIcon("DeltaImageComp_mono_$instanceId", color = Color.WHITE))
             .build()
     }
     override fun getDescription(): String {
@@ -173,7 +178,7 @@ class DeltaImageComplication: BgValueComplicationService() {
 
 open class TimeImageComplication: TimeComplicationBase() {
     protected fun getTimeIcon(color: Int): Icon {
-        return BitmapUtils.createIcon(BitmapUtils.textToBitmap(ReceiveData.getElapsedTimeMinuteAsString(this, true), color = color, resizeFactor = 0.9F))
+        return IconBitmapPool.createIcon("TimeImageComp_${color}_$instanceId", BitmapUtils.textToBitmap(ReceiveData.getElapsedTimeMinuteAsString(this, true), color = color, resizeFactor = 0.9F))
     }
     override fun getImage(): SmallImage {
         return  SmallImage.Builder(
@@ -190,17 +195,19 @@ open class TimeImageComplication: TimeComplicationBase() {
 class TimeIconComplication: TimeImageComplication() {
 
     override fun getImage(): SmallImage {
+        val icon = getTimeIcon(Color.WHITE)
         return  SmallImage.Builder(
-            image = getTimeIcon(Color.WHITE),
+            image = icon,
             type = SmallImageType.PHOTO
-        ).setAmbientImage(getTimeIcon(Color.WHITE))
+        ).setAmbientImage(icon)
             .build()
     }
 
     override fun getIconComplicationData(): ComplicationData {
+        val icon = getTimeIcon(Color.WHITE)
         val imageIcon = MonochromaticImage.Builder(
-            image = getTimeIcon(Color.WHITE)
-        ).setAmbientImage(getTimeIcon(Color.WHITE)).build()
+            image = icon
+        ).setAmbientImage(icon).build()
 
         return MonochromaticImageComplicationData.Builder(
             imageIcon,
@@ -218,7 +225,7 @@ open class SmallImageDeltaWithTimeComplication: TimeComplicationBase() {
     protected fun getDeltaTimeIcon(color: Int): Icon {
         val deltaBitmap = BitmapUtils.getDeltaAsBitmap(color = color, roundTarget = true, height = 45, width = 90, top = true)
         val timeBitmap = BitmapUtils.textToBitmap(ReceiveData.getElapsedTimeMinuteAsString(this, true), color = color, height = 45, width = 75, bottom = true)
-        val icon = BitmapUtils.createIcon(BitmapUtils.createComboBitmap(timeBitmap!!, deltaBitmap!!, height = 100, width = 100))
+        val icon = IconBitmapPool.createIcon("SmallImageDeltaWithTimeComp_${color}_$instanceId", BitmapUtils.createComboBitmap(timeBitmap!!, deltaBitmap!!, height = 100, width = 100))
         BitmapPool.returnBitmap(deltaBitmap)
         BitmapPool.returnBitmap(timeBitmap)
         return icon
@@ -238,17 +245,19 @@ open class SmallImageDeltaWithTimeComplication: TimeComplicationBase() {
 
 class IconDeltaWithTimeComplication: SmallImageDeltaWithTimeComplication() {
     override fun getImage(): SmallImage {
+        val icon = getDeltaTimeIcon(Color.WHITE)
         return  SmallImage.Builder(
-            image = getDeltaTimeIcon(Color.WHITE),
+            image = icon,
             type = SmallImageType.PHOTO
-        ).setAmbientImage(getDeltaTimeIcon(Color.WHITE))
+        ).setAmbientImage(icon)
             .build()
     }
 
     override fun getIconComplicationData(): ComplicationData {
+        val icon = getDeltaTimeIcon(Color.WHITE)
         val imageIcon = MonochromaticImage.Builder(
-            image = getDeltaTimeIcon(Color.WHITE)
-        ).setAmbientImage(getDeltaTimeIcon(Color.WHITE)).build()
+            image = icon
+        ).setAmbientImage(icon).build()
 
         return MonochromaticImageComplicationData.Builder(
             imageIcon,

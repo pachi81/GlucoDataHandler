@@ -32,7 +32,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
 import de.michelinside.glucodatahandler.common.utils.BitmapPool
-import de.michelinside.glucodatahandler.common.utils.BitmapUtils
+import de.michelinside.glucodatahandler.common.utils.IconBitmapPool
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.R as CR
@@ -109,6 +109,7 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
     }
 
     private var forPreview = false
+    protected var instanceId = 0
 
     override suspend fun onComplicationRequest(request: ComplicationRequest): ComplicationData? {
         try {
@@ -150,6 +151,7 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
     }
 
     private fun getComplicationData(request: ComplicationRequest): ComplicationData? {
+        instanceId = request.complicationInstanceId
         return when (request.complicationType) {
             ComplicationType.SMALL_IMAGE -> getSmallImageComplicationData(request.complicationInstanceId)
             ComplicationType.PHOTO_IMAGE -> getLargeImageComplicationData(request.complicationInstanceId)
@@ -166,7 +168,7 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
     private fun ambientGraphIcon(bitmap: Bitmap): Icon? {
         if (GlucoDataService.sharedPref != null && GlucoDataService.sharedPref!!.getBoolean(Constants.SHARED_PREF_WEAR_COLORED_AOD, false))
             return null  // use colored one!
-        return BitmapUtils.createIcon(monochromBitmap(bitmap))
+        return IconBitmapPool.createIcon("ambientGraphIcon_$instanceId", monochromBitmap(bitmap))
     }
 
     protected abstract fun getPreview(): Int
@@ -194,7 +196,7 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
 
     protected fun getLargeImage(): Icon {
         val graph = getBitmap() ?: return Icon.createWithResource(this, if(forPreview) getPreview() else CR.drawable.icon_transparent)
-        return BitmapUtils.createIcon(resize(graph, 800))
+        return IconBitmapPool.createIcon("LargeResizeGraph_$instanceId", resize(graph, 800))
     }
 
     private fun resize(originalImage: Bitmap, bitmapSize: Int = size): Bitmap {

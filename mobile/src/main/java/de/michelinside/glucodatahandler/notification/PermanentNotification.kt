@@ -144,17 +144,20 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         val coloredIcon = sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_COLORED_ICON, true)
         return when(sharedPref.getString(iconKey, StatusBarIcon.APP.pref)) {
             StatusBarIcon.GLUCOSE.pref -> BitmapUtils.getGlucoseAsIcon(
+                iconKey,
                 roundTarget=!bigIcon,
                 color = if(coloredIcon) ReceiveData.getGlucoseColor() else Color.WHITE,
                 withShadow = coloredIcon,
                 useTallFont = true
             )
             StatusBarIcon.TREND.pref -> BitmapUtils.getRateAsIcon(
+                iconKey,
                 color = if(coloredIcon) ReceiveData.getGlucoseColor() else Color.WHITE,
                 resizeFactor = if (bigIcon) 1.5F else 1F,
                 withShadow = coloredIcon
             )
             StatusBarIcon.DELTA.pref -> BitmapUtils.getDeltaAsIcon(
+                iconKey,
                 roundTarget=!bigIcon,
                 color = if(coloredIcon) ReceiveData.getGlucoseColor(true) else Color.WHITE,
                 useTallFont = true)
@@ -188,7 +191,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
         val remoteViews = RemoteViews(GlucoDataService.context!!.packageName, R.layout.notification_layout)
         remoteViews.setTextViewText(R.id.glucose, ReceiveData.getGlucoseAsString())
         remoteViews.setTextColor(R.id.glucose, ReceiveData.getGlucoseColor())
-        remoteViews.setImageViewIcon(R.id.trendImage, BitmapUtils.getRateAsIcon(withShadow = true))
+        remoteViews.setImageViewIcon(R.id.trendImage, BitmapUtils.getRateAsIcon("notification_trend_$withGraph", withShadow = true))
         remoteViews.setContentDescription(R.id.trendImage, ReceiveData.getRateAsText(context))
         remoteViews.setTextViewText(R.id.deltaText, "Δ ${ReceiveData.getDeltaAsString()}")
         if (ReceiveData.isObsoleteShort()) {
@@ -251,7 +254,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
                 } else {
                     notificationBuild.setContentText(null)
                 }
-                notificationBuild.setLargeIcon(BitmapUtils.getRateAsIcon(withShadow = true))
+                notificationBuild.setLargeIcon(BitmapUtils.getRateAsIcon("notificationBuild", withShadow = true))
             } else {
                 notificationBuild.setContentTitle(null)
                 notificationBuild.setContentText(null)

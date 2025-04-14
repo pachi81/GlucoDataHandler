@@ -317,16 +317,16 @@ object BitmapUtils {
                     !ReceiveData.isObsoleteLong(),width, height, resizeFactor = resizeFactor, withShadow = withShadow, useTallFont = useTallFont)
     }
 
-    fun getGlucoseAsIcon(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, withShadow: Boolean = false, useTallFont: Boolean = false): Icon {
-        return createIcon(getGlucoseAsBitmap(color, roundTarget, width, height, resizeFactor, withShadow, useTallFont))
+    fun getGlucoseAsIcon(key: String, color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, withShadow: Boolean = false, useTallFont: Boolean = false): Icon {
+        return IconBitmapPool.createIcon(key, getGlucoseAsBitmap(color, roundTarget, width, height, resizeFactor, withShadow, useTallFont))
     }
 
     fun getDeltaAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, top: Boolean = false, resizeFactor: Float = 1F, useTallFont: Boolean = false): Bitmap? {
         return textToBitmap(ReceiveData.getDeltaAsString(),color ?: ReceiveData.getGlucoseColor(true), roundTarget, false, width, height, top = top, resizeFactor = resizeFactor, useTallFont = useTallFont)
     }
 
-    fun getDeltaAsIcon(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, useTallFont: Boolean = false): Icon {
-        return createIcon(getDeltaAsBitmap(color, roundTarget, width, height, resizeFactor = resizeFactor, useTallFont = useTallFont))
+    fun getDeltaAsIcon(key: String, color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, useTallFont: Boolean = false): Icon {
+        return IconBitmapPool.createIcon(key, getDeltaAsBitmap(color, roundTarget, width, height, resizeFactor = resizeFactor, useTallFont = useTallFont))
     }
 
     fun getRateAsBitmap(
@@ -343,19 +343,14 @@ object BitmapUtils {
     }
 
     fun getRateAsIcon(
+        key: String,
         color: Int? = null,
         resizeFactor: Float = 1F,
         width: Int = 100,
         height: Int = 100,
         withShadow: Boolean = false
     ): Icon {
-        return createIcon(getRateAsBitmap(color, resizeFactor, width, height, withShadow))
-    }
-
-    fun createIcon(bitmap: Bitmap?): Icon {
-        val icon = Icon.createWithBitmap(bitmap)
-        BitmapPool.returnBitmap(bitmap)
-        return icon
+        return IconBitmapPool.createIcon(key, getRateAsBitmap(color, resizeFactor, width, height, withShadow))
     }
 
     fun getGlucoseTrendBitmap(color: Int? = null, width: Int = 100, height: Int = 100, small: Boolean = false, withShadow: Boolean = false): Bitmap? {
@@ -363,8 +358,8 @@ object BitmapUtils {
             ReceiveData.getGlucoseAsString(), ReceiveData.rate, color ?: ReceiveData.getGlucoseColor(), ReceiveData.isObsoleteShort(), ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong(),width, height, small, withShadow)
     }
 
-    fun getGlucoseTrendIcon(color: Int? = null, width: Int = 100, height: Int = 100, small: Boolean = false, withShadow: Boolean = false): Icon {
-        return createIcon(getGlucoseTrendBitmap(color, width, height, small, withShadow))
+    fun getGlucoseTrendIcon(key: String, color: Int? = null, width: Int = 100, height: Int = 100, small: Boolean = false, withShadow: Boolean = false): Icon {
+        return IconBitmapPool.createIcon(key, getGlucoseTrendBitmap(color, width, height, small, withShadow))
     }
 
     fun loadBitmapFromView(view: View, targetBitmap: Bitmap? = null): Bitmap {

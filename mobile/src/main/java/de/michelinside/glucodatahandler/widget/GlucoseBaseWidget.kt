@@ -185,7 +185,7 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
         return ratio > 2.8F
     }
 
-    private fun getRemoteViews(context: Context, width: Int, height: Int): RemoteViews {
+    private fun getRemoteViews(context: Context, width: Int, height: Int, appWidgetId: Int): RemoteViews {
         val ratio = width.toFloat() / height.toFloat()
         Log.d(LOG_ID, "Create remote views for " + type.toString() + " with width/height=" + width + "/" + height + " and ratio=" + ratio)
         val shortWidget = isShortWidget(width, height)
@@ -213,12 +213,13 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
 
         if (hasTrend) {
             if (shortWidget) {
-                remoteViews.setImageViewIcon(R.id.glucose_trend, BitmapUtils.getGlucoseTrendIcon(width = width, height = width))
+                remoteViews.setImageViewIcon(R.id.glucose_trend, BitmapUtils.getGlucoseTrendIcon("widget_glucose_trend_$appWidgetId", width = width, height = width))
                 remoteViews.setContentDescription(R.id.glucose_trend, ReceiveData.getAsText(context))
             } else {
                 val size = minOf(500, maxOf(width, height))
                 remoteViews.setImageViewIcon(
                     R.id.trendImage, BitmapUtils.getRateAsIcon(
+                        "widget_trend_$appWidgetId",
                         width = size,
                         height = size
                     )
@@ -294,7 +295,7 @@ abstract class GlucoseBaseWidget(private val type: WidgetType,
             val width = if (isPortrait) minWidth else maxWidth
             val height = if (isPortrait) maxHeight else minHeight
 
-            val remoteViews = getRemoteViews(context, width, height)
+            val remoteViews = getRemoteViews(context, width, height, appWidgetId)
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             remoteViews.setOnClickPendingIntent(R.id.widget, PackageUtils.getTapActionIntent(context, sharedPref.getString(Constants.SHARED_PREF_WIDGET_TAP_ACTION, null), appWidgetId))
 

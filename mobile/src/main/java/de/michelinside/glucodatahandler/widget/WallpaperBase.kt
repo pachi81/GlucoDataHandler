@@ -341,7 +341,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             } else {
                 txtBgValue.paintFlags = 0
             }
-            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
+            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(LOG_ID+"_trend"))
 
             if(color == null) {
                 txtTime.text =  "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(context)}"
@@ -383,7 +383,6 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
                 val chart = getChart()
                 if(chart != null) {
                     graphImage.visibility = VISIBLE
-                    lockscreenView.setDrawingCacheEnabled(true)
                     lockscreenView.measure(
                         View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                         View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))

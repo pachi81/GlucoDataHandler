@@ -98,7 +98,7 @@ object AlarmNotification : AlarmNotificationBase() {
                 contentView.setViewVisibility(R.id.trendImage, View.VISIBLE)
                 contentView.setTextViewText(R.id.glucose, ReceiveData.getGlucoseAsString())
                 contentView.setTextColor(R.id.glucose, ReceiveData.getGlucoseColor())
-                contentView.setImageViewIcon(R.id.trendImage, BitmapUtils.getRateAsIcon(withShadow = true))
+                contentView.setImageViewIcon(R.id.trendImage, BitmapUtils.getRateAsIcon("alarm_trend", withShadow = true))
                 contentView.setContentDescription(R.id.trendImage, ReceiveData.getRateAsText(context))
                 contentView.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
             }

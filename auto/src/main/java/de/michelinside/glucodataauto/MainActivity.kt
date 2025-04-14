@@ -406,7 +406,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             } else {
                 txtBgValue.paintFlags = 0
             }
-            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(withShadow = true))
+            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon("main_trend", withShadow = true))
             viewIcon.contentDescription = ReceiveData.getRateAsText(this)
             timeText.text = "🕒 ${ReceiveData.getElapsedRelativeTimeAsString(this)}"
             timeText.contentDescription = ReceiveData.getElapsedRelativeTimeAsString(this, true)
