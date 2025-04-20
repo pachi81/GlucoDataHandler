@@ -160,12 +160,16 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - active=$active - graph-id ${chartBitmap?.chartId}")
+            Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - active=$active - graph-id ${chartBitmap?.chartId} - elapsed: ${ReceiveData.getElapsedTimeMinute()}")
             if(!active)
                 return
             if (dataSource == NotifySource.GRAPH_CHANGED && chartBitmap != null && extras?.getInt(Constants.GRAPH_ID) != chartBitmap!!.chartId) {
                 Log.v(LOG_ID, "Ignore graph changed as it is not for this chart")
                 return  // ignore as it is not for this graph
+            }
+            if(dataSource == NotifySource.TIME_VALUE && hasBitmap() && ReceiveData.getElapsedTimeMinute().mod(2) == 0) {
+                Log.d(LOG_ID, "Ignore time value and wait for chart update")
+                return
             }
             update()
         } catch (exc: Exception) {
@@ -266,6 +270,10 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
         if(chartBitmap == null)
             return true
         return chartBitmap!!.getBitmap() != null
+    }
+
+    protected fun hasBitmap(): Boolean {
+        return chartBitmap != null
     }
 
     protected fun hasIobCob(): Boolean {

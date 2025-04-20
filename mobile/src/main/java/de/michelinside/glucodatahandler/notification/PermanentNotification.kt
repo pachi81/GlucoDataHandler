@@ -78,6 +78,10 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
                 Log.v(LOG_ID, "Ignore graph changed as it is not for this chart")
                 return  // ignore as it is not for this graph
             }
+            if(dataSource == NotifySource.TIME_VALUE && chartBitmap != null && ReceiveData.getElapsedTimeMinute().mod(2) == 0) {
+                Log.d(LOG_ID, "Ignore time value and wait for chart update")
+                return
+            }
             showNotifications()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString() )

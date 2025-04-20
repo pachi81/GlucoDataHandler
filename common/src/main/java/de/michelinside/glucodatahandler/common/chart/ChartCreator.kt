@@ -710,6 +710,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         if(dataSource == NotifySource.TIME_VALUE) {
             Log.d(LOG_ID, "time elapsed: ${ReceiveData.getElapsedTimeMinute()}")
             if(ReceiveData.getElapsedTimeMinute().mod(2) == 0) {
+                Log.d(LOG_ID, "update graph after time elapsed")
                 waitForCreation()
                 //createJob = scope.launch {
                     try {
@@ -786,6 +787,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     }
 
     fun recreate() {
+        Log.d(LOG_ID, "recreate called")
         if(chart.data != null)
             create(true) // recreate chart with new graph data
     }

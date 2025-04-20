@@ -26,6 +26,7 @@ import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.chart.ChartBitmap
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
@@ -104,6 +105,10 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
         fun resumeBitmap() {
             Log.d(LOG_ID, "Resume bitmap")
             chartBitmap?.resume()
+        }
+
+        fun hasBitmap(): Boolean {
+            return chartBitmap != null
         }
 
     }
@@ -305,6 +310,10 @@ object ChartComplicationUpdater: NotifierInterface {
         if (dataSource == NotifySource.GRAPH_CHANGED && extras?.getInt(Constants.GRAPH_ID) != ChartComplicationBase.getChartId()) {
             Log.v(LOG_ID, "Ignore graph changed as it is not for this chart")
             return  // ignore as it is not for this graph
+        }
+        if(dataSource == NotifySource.TIME_VALUE && ChartComplicationBase.hasBitmap() && ReceiveData.getElapsedTimeMinute().mod(2) == 0) {
+            Log.d(LOG_ID, "Ignore time value and wait for chart update")
+            return
         }
         complicationClasses.forEach {
             Log.d(LOG_ID, "Trigger complication update for ${it.name}")

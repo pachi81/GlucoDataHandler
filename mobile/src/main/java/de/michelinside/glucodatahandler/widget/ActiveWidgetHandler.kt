@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.chart.ChartBitmap
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
@@ -90,10 +91,12 @@ object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPrefere
         activeWidgets.forEach {
             if(it == WidgetType.CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB) {
                 // do not update for glucose values, wait for graph has changed!
-                if(dataSource == NotifySource.TIME_VALUE || dataSource == NotifySource.IOB_COB_CHANGE || dataSource == NotifySource.SETTINGS)
+                if(dataSource == NotifySource.IOB_COB_CHANGE || dataSource == NotifySource.SETTINGS)
                     GlucoseBaseWidget.updateWidgets(context, it)
                 else if(dataSource == NotifySource.GRAPH_CHANGED && chartBitmap != null && extras?.getInt(Constants.GRAPH_ID) == chartBitmap!!.chartId)
                     GlucoseBaseWidget.updateWidgets(context, it)
+                else if(dataSource == NotifySource.TIME_VALUE && (chartBitmap == null || ReceiveData.getElapsedTimeMinute().mod(2) != 0))
+                    GlucoseBaseWidget.updateWidgets(context, it)  // otherwise wait for chart update
             } else if (it == WidgetType.GLUCOSE_TREND_DELTA_TIME || it == WidgetType.GLUCOSE_TREND_DELTA_TIME_IOB_COB) {
                 if(dataSource != NotifySource.OBSOLETE_VALUE)  // do not update again, as there are already updated by TIME_VALUE
                     GlucoseBaseWidget.updateWidgets(context, it)

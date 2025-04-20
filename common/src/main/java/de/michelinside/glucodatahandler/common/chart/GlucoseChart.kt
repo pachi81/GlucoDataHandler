@@ -36,11 +36,11 @@ open class GlucoseChart: LineChart {
     }
 
     override fun postInvalidate() {
-        Log.v(LOG_ID, "postInvalidate - shown: $isShown")
+        //Log.v(LOG_ID, "postInvalidate - shown: $isShown")
         isInvalidating = true
         isDrawing = isShown
         super.postInvalidate()
-        Log.v(LOG_ID, "postInvalidate done")
+        //Log.v(LOG_ID, "postInvalidate done")
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -55,7 +55,7 @@ open class GlucoseChart: LineChart {
         isInvalidating = true
         isDrawing = isShown
         try {
-            Log.v(LOG_ID, "invalidate - shown: $isShown")
+            //Log.v(LOG_ID, "invalidate - shown: $isShown")
             super.invalidate()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "invalidate exception: ${exc.message}\n${exc.stackTraceToString()}")
@@ -114,9 +114,9 @@ open class GlucoseChart: LineChart {
     override fun onDraw(canvas: Canvas) {
         try {
             isDrawing = true
-            Log.v(LOG_ID, "onDraw - min: ${xAxis.axisMinimum} - max: ${xAxis.axisMaximum}")
+            //Log.v(LOG_ID, "onDraw - min: ${xAxis.axisMinimum} - max: ${xAxis.axisMaximum}")
             super.onDraw(canvas)
-            Log.v(LOG_ID, "drawn")
+            //Log.v(LOG_ID, "drawn")
         } catch (exc: Exception) {
             if(xAxis.axisMinimum > xAxis.axisMaximum) {  // ignore this, as it is caused during reset and draw...
                 Log.w(LOG_ID, "onDraw exception: ${exc.message}")
