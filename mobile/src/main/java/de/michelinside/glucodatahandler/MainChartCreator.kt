@@ -15,7 +15,7 @@ class MainChartCreator(chart: GlucoseChart, context: Context, durationPref: Stri
         super.init()
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         try {
             if(key == Constants.SHARED_PREF_GRAPH_DAYS_PHONE_MAIN) {
                 graphDays = sharedPref.getInt(Constants.SHARED_PREF_GRAPH_DAYS_PHONE_MAIN, 2)

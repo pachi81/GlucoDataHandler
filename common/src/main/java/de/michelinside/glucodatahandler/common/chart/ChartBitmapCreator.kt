@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
@@ -13,24 +12,16 @@ import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.database.dbAccess
-import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
-import de.michelinside.glucodatahandler.common.utils.BitmapPool
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 
-class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: String = "", private val forComplication: Boolean = false, private val showAxisPref: String? = null): ChartCreator(chart, context, durationPref) {
-    companion object {
-        const val defaultDurationHours = 2
-    }
+class ChartBitmapCreator(chart: GlucoseChart, context: Context, override var durationHours: Int = 2, private val forComplication: Boolean = false, private val showAxis: Boolean = false): ChartCreator(chart, context) {
     private var LOG_ID = "GDH.Chart.BitmapCreator"
-    private var bitmap: Bitmap? = null
-    private var bitmapValid = false
     override val resetChart = true
     override val circleRadius: Float get() {
         return if(GlucoDataService.appSource == AppSource.WEAR_APP) 3F else customCircleRadius
     }
-    override var durationHours = defaultDurationHours
     override val touchEnabled = false
     private var customCircleRadius = 2.2F
     private var graphCreated = false
@@ -44,22 +35,15 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
         super.init()
     }
 
-    override fun close() {
-        super.close()
-        BitmapPool.returnBitmap(bitmap)
-        bitmap = null
-        bitmapValid = false
-    }
-
     private fun readCircleRadius() {
         customCircleRadius = ((sharedPref.getInt(Constants.SHARED_PREF_GRAPH_BITMAP_CIRCLE_RADIUS, 5)).toFloat()*3/10) + 0.7F  // starts at one!
         Log.i(LOG_ID, "using circle radius: $customCircleRadius")
     }
 
-    private val showAxis: Boolean get() {
-        if(showAxisPref.isNullOrEmpty())
-            return false
-        return sharedPref.getBoolean(showAxisPref, false)
+    override fun isGraphPref(key: String?): Boolean {
+        if(key == Constants.SHARED_PREF_GRAPH_BITMAP_CIRCLE_RADIUS)
+            return true
+        return super.isGraphPref(key)
     }
 
     override fun initXaxis() {
@@ -129,12 +113,17 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
         addEmptyTimeData()
         chart.notifyDataSetChanged()
         chart.postInvalidate()
-        Handler(context.mainLooper).post {
-            Log.d(LOG_ID, "notify graph changed")
-            graphCreated = true
-            bitmapValid = false  // reset
-            InternalNotifier.notify(context, NotifySource.GRAPH_CHANGED, Bundle().apply { putInt(Constants.GRAPH_ID, chart.id) })
+        graphCreated = true
+    }
+
+    fun waitForCreation() {
+        Log.d(LOG_ID, "waitForCreation")
+        var sleepCount = 0
+        while(!graphCreated && sleepCount <= 1000) {
+            Thread.sleep(10)
+            sleepCount += 10
         }
+        Log.d(LOG_ID, "waitForCreation done")
     }
 
     override fun updateTimeElapsed() {
@@ -142,57 +131,43 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, durationPref: St
         update(dbAccess.getGlucoseValues(getMinTime()))
     }
 
-    override fun onDataSyncStopped() {
-        Log.d(LOG_ID, "onDataSyncStopped")
-        super.onDataSyncStopped()
-        graphCreated = false
-        bitmapValid = false  // reset
-        InternalNotifier.notify(context, NotifySource.GRAPH_CHANGED, Bundle().apply { putInt(Constants.GRAPH_ID, chart.id) })
-    }
-
-    private fun createBitmap() {
+    fun createBitmap(bitmap: Bitmap?): Bitmap? {
         try {
             Log.d(LOG_ID, "Create bitmap - duration: $durationHours - width: ${chart.width} - height: ${chart.height}")
-            if(durationHours > 0 && !paused) {
+            if(durationHours > 0) {
                 if(chart.width == 0 || chart.height == 0)
                     chart.waitForInvalidate()
                 if(chart.width > 0 && chart.height > 0) {
                     Log.d(LOG_ID, "Draw bitmap")
-                    bitmap = BitmapUtils.loadBitmapFromView(chart, bitmap)
-                    bitmapValid = true
-                    return
+                    return BitmapUtils.loadBitmapFromView(chart, bitmap)
                 }
             }
             Log.i(LOG_ID, "No bitmap created!")
         } catch (exc: Exception) {
             Log.e(LOG_ID, "getBitmap exception: " + exc.message.toString() )
         }
+        return null
     }
 
-    fun getBitmap(): Bitmap? {
-        if(durationHours == 0 || paused || !graphCreated) {
-            return null
-        }
-        if(!bitmapValid || bitmap == null) {
-            createBitmap()
-        }
-        return bitmap
-    }
-
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         Log.v(LOG_ID, "onSharedPreferenceChanged: $key")
+        // ignore
+    }
 
+    override fun updateNotifier() {
+        // do nothing (triggered external)
+    }
+
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
+        Log.w(LOG_ID, "OnNotifyData should not be used!!!")
+    }
+
+    override suspend fun dataSync() {
         try {
-            if(key == Constants.SHARED_PREF_GRAPH_BITMAP_CIRCLE_RADIUS) {
-                readCircleRadius()
-                recreate()
-            } else if(key == showAxisPref) {
-                recreate()
-            } else {
-                super.onSharedPreferenceChanged(sharedPreferences, key)
-            }
+            Log.d(LOG_ID, "dataSync")
+            update(dbAccess.getGlucoseValues(getMinTime()))
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.message.toString() )
+            Log.e(LOG_ID, "dataSync exception: " + exc.message.toString() )
         }
     }
 }

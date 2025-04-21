@@ -8,7 +8,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.*
-import de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator
 import de.michelinside.glucodatahandler.common.database.dbSync
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
@@ -66,7 +65,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
                     val isScreenReader = context.isScreenReaderOn()
                     Log.i(LOG_ID, "Setting default duration for graph - screenReader: $isScreenReader")
                     with(sharedPref.edit()) {
-                        putInt(Constants.SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION, if(isScreenReader) 0 else ChartBitmapCreator.defaultDurationHours)
+                        putInt(Constants.SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION, if(isScreenReader) 0 else 2)
                         apply()
                     }
                 }

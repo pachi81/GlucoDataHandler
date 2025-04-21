@@ -95,6 +95,10 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         Constants.SHARED_PREF_SHOW_OTHER_UNIT
     )
 
+    open fun isGraphPref(key: String?): Boolean {
+        return graphPrefList.contains(key)
+    }
+
     protected open fun init() {
         if(!init) {
             LOG_ID = "GDH.Chart.Creator." + chart.id.toString()
@@ -116,7 +120,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         }
     }
 
-    protected fun updateNotifier() {
+    protected open fun updateNotifier() {
         val hasData = dbAccess.hasGlucoseValues(getMinTime())
         Log.d(LOG_ID, "updateNotifier -enabled: $enabled - has data: $hasData - xAxisEnabled: ${chart.xAxis.isEnabled}")
         if(enabled && (hasData || chart.xAxis.isEnabled)) {
@@ -398,7 +402,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         return false
     }
 
-    private suspend fun dataSync() {
+    protected open suspend fun dataSync() {
         Log.d(LOG_ID, "dataSync running")
         try {
             if(getMaxRange() > 0L) {
@@ -786,13 +790,13 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         recreateChart()
     }
 
-    fun recreate() {
+    private fun recreate() {
         Log.d(LOG_ID, "recreate called")
         if(chart.data != null)
             create(true) // recreate chart with new graph data
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         Log.d(LOG_ID, "onSharedPreferenceChanged: $key")
         try {
             if(key == durationPref) {
@@ -802,7 +806,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                 backgroundTransparency = sharedPref.getInt(transparencyPref, backgroundTransparency)
                 Log.d(LOG_ID, "re create graph after transparency changed to: $backgroundTransparency")
                 recreate()
-            } else if (graphPrefList.contains(key)) {
+            } else if (isGraphPref(key)) {
                 Log.i(LOG_ID, "re create graph after settings changed for key: $key")
                 ReceiveData.updateSettings(sharedPref)
                 recreate()

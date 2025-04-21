@@ -14,6 +14,11 @@ open class GlucoseChart: LineChart {
 
     constructor(context: Context?) : super(context)
 
+    constructor(context: Context?, id: Int) : super(context) {
+        this.id = id
+        LOG_ID = "GDH.Chart.GlucoseChart." + id.toString()
+    }
+
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
 
     constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(
@@ -22,18 +27,14 @@ open class GlucoseChart: LineChart {
         defStyle
     )
 
-    private var isInvalidating = false
-    private var isDrawing = false
     init {
-        LOG_ID = "GDH.Chart.GlucoseChart." + id.toString()
+        if(id != View.NO_ID) {
+            LOG_ID = "GDH.Chart.GlucoseChart." + id.toString()
+        }
     }
 
-    override fun getId(): Int {
-        if(super.getId() == View.NO_ID) {
-            id = generateViewId()
-        }
-        return super.getId()
-    }
+    private var isInvalidating = false
+    private var isDrawing = false
 
     override fun postInvalidate() {
         //Log.v(LOG_ID, "postInvalidate - shown: $isShown")
@@ -67,7 +68,7 @@ open class GlucoseChart: LineChart {
         if(isInvalidating && Looper.myLooper() != Looper.getMainLooper()) {
             Log.d(LOG_ID, "waitForInvalidate")
             var sleepCount = 0
-            while(isInvalidating && sleepCount < 1000) {
+            while(isInvalidating && sleepCount < 3000) {
                 Thread.sleep(10)
                 sleepCount += 10
             }
