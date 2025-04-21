@@ -792,8 +792,11 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
 
     private fun recreate() {
         Log.d(LOG_ID, "recreate called")
-        if(chart.data != null)
+        if(chart.data != null) {
+            close()
+            chart.onDetachedFromWindow()
             create(true) // recreate chart with new graph data
+        }
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
