@@ -17,13 +17,14 @@ import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
+import de.michelinside.glucodatahandler.common.utils.Utils
 import java.time.Duration
 
 abstract class BackgroundWorker(val context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
     companion object {
         private val LOG_ID = "GDH.Task.BackgroundWorker"
         fun triggerWork(context: Context, taskServiceClass: Class<out BackgroundWorker>) {
-            Log.v("GDH.Task.BackgroundTaskService", "triggerWork called for class " + taskServiceClass.simpleName)
+            Log.v(LOG_ID, "triggerWork called for class " + taskServiceClass.simpleName)
             val builder = OneTimeWorkRequest.Builder(taskServiceClass)
                 .setConstraints(
                     Constraints.Builder()
@@ -33,6 +34,28 @@ abstract class BackgroundWorker(val context: Context, workerParams: WorkerParame
 
             val workManager = WorkManager.getInstance(context)
             workManager.enqueue(builder.build())
+        }
+
+        fun triggerDelay(context: Context, taskServiceClass: Class<out BackgroundWorker>, delaySec: Long) {
+            stopWork(context, taskServiceClass)
+            Log.d(LOG_ID, "triggerDelay called for class ${taskServiceClass.simpleName} with delay ${delaySec}s at ${Utils.getUiTimeStamp(System.currentTimeMillis() + delaySec*1000)}")
+            val builder = OneTimeWorkRequest.Builder(taskServiceClass)
+                .setConstraints(
+                    Constraints.Builder()
+                        .setTriggerContentMaxDelay(Duration.ofMillis(100))
+                        .build()
+                )
+                .setInitialDelay(delaySec, java.util.concurrent.TimeUnit.SECONDS)
+                .addTag(taskServiceClass.simpleName)
+
+            val workManager = WorkManager.getInstance(context)
+            workManager.enqueue(builder.build())
+        }
+
+        fun stopWork(context: Context, taskServiceClass: Class<out BackgroundWorker>) {
+            Log.d(LOG_ID, "stopWork called for class " + taskServiceClass.simpleName)
+            val workManager = WorkManager.getInstance(context)
+            workManager.cancelAllWorkByTag(taskServiceClass.simpleName)
         }
 
         fun stopAllWork(context: Context) {
@@ -60,22 +83,22 @@ abstract class BackgroundWorker(val context: Context, workerParams: WorkerParame
     abstract fun execute(context: Context)
 
     override fun doWork(): Result {
-        Log.v(LOG_ID, "doWork called")
+        Log.i(LOG_ID, "doWork called for ${javaClass.simpleName}")
         try {
             execute(context)
         } catch (ex: Exception) {
             Log.e(LOG_ID, "doWork: " + ex)
         }
-        Log.v(LOG_ID, "doWork finished")
+        Log.d(LOG_ID, "doWork finished for ${javaClass.simpleName}")
         return Result.success()
     }
 
     override fun onStopped() {
-        Log.w(LOG_ID, "onStopped called")
+        Log.i(LOG_ID, "onStopped called for ${javaClass.simpleName}")
     }
 
     override fun getForegroundInfo(): ForegroundInfo {
-        Log.w(LOG_ID, "getForegroundInfo called")
+        Log.d(LOG_ID, "getForegroundInfo called for ${javaClass.simpleName}")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             return ForegroundInfo(GlucoDataService.NOTIFICATION_ID, getNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
         }

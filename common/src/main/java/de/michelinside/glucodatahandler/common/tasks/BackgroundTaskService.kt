@@ -23,7 +23,7 @@ import java.util.Date
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
-abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: String, protected val initialExecution: Boolean = false): SharedPreferences.OnSharedPreferenceChangeListener,
+abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: String, val taskServiceClass: Class<out BackgroundWorker>, protected val initialExecution: Boolean = false): SharedPreferences.OnSharedPreferenceChangeListener,
     NotifierInterface {
     private val DEFAULT_DELAY_MS = 3000L
 
@@ -89,6 +89,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                     }
                 }
             }
+            Log.v(LOG_ID, "nothing to execute for " + task.javaClass.simpleName)
         } else {
             Log.v(LOG_ID,"checkExecution: " + "elapsedTimeMinute=" + elapsedTimeMinute
                     + " - lastElapsedMinute=" + lastElapsedMinute
@@ -101,13 +102,9 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                 Log.d(LOG_ID, "Check IOB/COB task execution after " + elapsedIobCobTimeMinute + " min")
                 return true // check each task for additional IOB COB data
             }
-        }
-        // nothing to execute
-        if (task != null) {
-            Log.v(LOG_ID, "nothing to execute for " + task.javaClass.simpleName)
-        } else {
             Log.v(LOG_ID, "nothing to execute")
         }
+        // nothing to execute
         return false
     }
 
@@ -283,7 +280,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                     }
                 }
 
-                Log.v(LOG_ID, "Cur time $currentAlarmTime - next time ${nextAlarm.timeInMillis} - diff ${abs(currentAlarmTime-nextAlarm.timeInMillis)}")
+                Log.v(LOG_ID, "Cur time $currentAlarmTime - next time ${nextAlarm.timeInMillis} - diff ${abs(currentAlarmTime-nextAlarm.timeInMillis)} - elapsedTimeMinute $elapsedTimeMinute")
 
                 if (abs(currentAlarmTime-nextAlarm.timeInMillis) > 1000) {
                     if (hasExactAlarmPermission) {
@@ -299,11 +296,13 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                             pendingIntent!!
                         )
                     }
+                    BackgroundWorker.triggerDelay(context!!, taskServiceClass, (nextAlarm.timeInMillis+3000 - System.currentTimeMillis())/1000)
                     currentAlarmTime = nextAlarm.timeInMillis
                     lastElapsedMinute = elapsedTimeMinute
                 } else {
                     Log.d(LOG_ID, "Ignore next alarm as it is already active")
                     currentAlarmTime = nextAlarm.timeInMillis
+                    lastElapsedMinute = elapsedTimeMinute
                 }
                 return
             }
@@ -317,6 +316,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     fun stopTimer() {
         if (alarmManager != null && pendingIntent != null) {
             Log.i(LOG_ID, "stopTimer called")
+            BackgroundWorker.stopWork(context!!, taskServiceClass)
             alarmManager!!.cancel(pendingIntent!!)
             alarmManager = null
             currentAlarmTime = 0L
@@ -394,6 +394,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
     fun alarmTrigger() {
         try {
             Log.v(LOG_ID, "alarmTrigger called")
+            BackgroundWorker.stopWork(context!!, taskServiceClass)
             if (active(elapsedTimeMinute)) {
                 executeTasks()
             }
