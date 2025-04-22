@@ -363,7 +363,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
                         NotifySource.SETTINGS,
                         NotifySource.OBSOLETE_VALUE
                     )   // to trigger re-start for the case of stopped by the system
-                    if(sharedPref.getInt(Constants.SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION, 2) > 0) {
+                    if(sharedPref.getBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_SHOW_GRAPH, false)) {
                         filter.add(NotifySource.GRAPH_CHANGED)
                         createBitmap()
                     } else {
@@ -405,8 +405,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_USE_BIG_ICON,
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_COLORED_ICON,
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION,
-                Constants.SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION,
-                Constants.SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_NOTIFICATION -> {
+                Constants.SHARED_PREF_PERMANENT_NOTIFICATION_SHOW_GRAPH -> {
                     updatePreferences()
                 }
                 Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY -> {
@@ -435,7 +434,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     private fun createBitmap() {
         if(chartBitmap == null && GlucoDataService.isServiceRunning) {
             Log.i(LOG_ID, "Create bitmap")
-            chartBitmap = ChartBitmap(GlucoDataService.context!!, Constants.SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION, 1000, showAxisPref = Constants.SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_NOTIFICATION)
+            chartBitmap = ChartBitmap(GlucoDataService.context!!, 1000)
         }
     }
 

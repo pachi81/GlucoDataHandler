@@ -187,8 +187,7 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
             setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_XDRIP_RECEIVERS, Constants.SHARED_PREF_SEND_TO_XDRIP)
             setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_XDRIP_BROADCAST_RECEIVERS, Constants.SHARED_PREF_SEND_XDRIP_BROADCAST)
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, defValue = false, invert = true)
-            setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY,  Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, defValue = false, invert = true, secondDevValue = true)
-            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_NOTIFICATION, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY,  Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, defValue = false, invert = true, secondDevValue = true)
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_SHOW_GRAPH, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY,  Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, defValue = false, invert = true, secondDevValue = true)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_STYLE, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY, Constants.SHARED_PREF_FLOATING_WIDGET)
@@ -199,14 +198,10 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_Y_POS, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_SIZE, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
-            setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_GRAPH_DURATION, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
-            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_GRAPH_SHOW_AXIS, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
 
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_Y_POS, Constants.SHARED_PREF_AOD_WP_ENABLED)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_STYLE, Constants.SHARED_PREF_AOD_WP_ENABLED)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_SIZE, Constants.SHARED_PREF_AOD_WP_ENABLED)
-            setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_GRAPH_DURATION, Constants.SHARED_PREF_AOD_WP_ENABLED)
-            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_GRAPH_SHOW_AXIS, Constants.SHARED_PREF_AOD_WP_ENABLED)
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_COLOURED, Constants.SHARED_PREF_AOD_WP_ENABLED)
 
         } catch (exc: Exception) {
@@ -302,15 +297,6 @@ class WidgetSettingsFragment: SettingsFragmentBase(R.xml.pref_widgets) {
         val widgetStylePref = findPreference<ListPreference>(Constants.SHARED_PREF_FLOATING_WIDGET_STYLE)
         if(widgetStylePref != null) {
             widgetStylePref.summary = widgetStylePref.entry
-            val widgetGraphDuration = findPreference<SeekBarPreference>(Constants.SHARED_PREF_FLOATING_WIDGET_GRAPH_DURATION)
-            val showGrapAxis = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_FLOATING_WIDGET_GRAPH_SHOW_AXIS)
-            val floatingWidgetEnabled = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_FLOATING_WIDGET)
-            if(floatingWidgetEnabled != null) {
-                if(widgetGraphDuration != null)
-                    widgetGraphDuration.isEnabled = floatingWidgetEnabled.isChecked && widgetStylePref.value == "chart_glucose_trend_delta_time_iob_cob"
-                if(showGrapAxis != null)
-                    showGrapAxis.isEnabled = floatingWidgetEnabled.isChecked && widgetStylePref.value == "chart_glucose_trend_delta_time_iob_cob"
-            }
         }
     }
 }

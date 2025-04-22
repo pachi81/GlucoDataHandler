@@ -861,4 +861,9 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="graph_days_phone_main">Napok száma</string>
     <string name="graph_days_phone_main_summary">A grafikonon elérhető napok száma.\nFONTOS: túl sok nap memóriaproblémákat okozhat!</string>
 
+    <string name="graph_main">Grafikon a főképernyőn</string>
+    <string name="graph_main_summary">A főképernyőn lévő grafikon beállításai.</string>
+    <string name="graph_widgets">Grafikon a widgetekben</string>
+    <string name="graph_widgets_summary">A widgetekben, értesítésekben, zárolási képernyőn és Always-On Display (AOD) megjelenő grafikon beállításai.</string>
+    <string name="show_graph_notification_summary">Grafikon megjelenítése az értesítésben.</string>
 </resources>

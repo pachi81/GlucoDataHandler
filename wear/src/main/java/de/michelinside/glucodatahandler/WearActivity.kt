@@ -120,7 +120,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 val intent = Intent(this, AlarmsActivity::class.java)
                 startActivity(intent)
             }
-            chartBitmap = ChartBitmapView(chartImage, this, Constants.SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION)
+            chartBitmap = ChartBitmapView(chartImage, this, forComplication = true)
             chartImage.setOnClickListener {
                 Log.v(LOG_ID, "Chart Image clicked!")
                 val intent = Intent(this, GraphActivity::class.java)

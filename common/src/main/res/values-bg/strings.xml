@@ -794,4 +794,10 @@
     <string name="graph_days_phone_main">Брой дни</string>
     <string name="graph_days_phone_main_summary">Брой дни, които са налични в графиката.\nВАЖНО: твърде много дни могат да причинят проблеми с паметта!</string>
 
+    <string name="graph_main">Графика на главния екран</string>
+    <string name="graph_main_summary">Настройки на графиката за графиката на главния екран.</string>
+    <string name="graph_widgets">Графика в уиджети</string>
+    <string name="graph_widgets_summary">Настройки на графиката за уиджети, известия, заключен екран и Always-On Display (AOD).</string>
+    <string name="show_graph_notification_summary">Показване на графиката в известието.</string>
+
 </resources>

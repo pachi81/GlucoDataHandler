@@ -22,11 +22,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class ChartBitmap(val context: Context,
-                  val durationPref: String = "",
                   val width: Int = 1000,
                   val height: Int = 0,
                   val forComplication: Boolean = false,
-                  val showAxisPref: String? = null,
                   val labelColor: Int = 0) : NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private var LOG_ID = "GDH.Chart.Bitmap."
@@ -66,18 +64,15 @@ class ChartBitmap(val context: Context,
     private fun create() {
         if(chart != null)
             destroy()
-        val durationHours =  sharedPref.getInt(durationPref, 2)
         val viewHeight = if(height > 0) height else width/3
-        Log.d(LOG_ID, "create - width: $width - height: $viewHeight - durationHours: $durationHours")
-        if(durationHours > 0) {
-            chart = GlucoseChart(context, viewId)
-            chart!!.measure (View.MeasureSpec.makeMeasureSpec (width, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec (viewHeight, View.MeasureSpec.EXACTLY))
-            chart!!.layout (0, 0, chart!!.getMeasuredWidth(), chart!!.getMeasuredHeight())
-            chartViewer = ChartBitmapCreator(chart!!, context, durationHours, forComplication, sharedPref.getBoolean(showAxisPref, false))
-            chartViewer!!.labelColor = labelColor
-            chartViewer!!.create(true)
-            waitForCreation()
-        }
+        Log.d(LOG_ID, "create - width: $width - height: $viewHeight")
+        chart = GlucoseChart(context, viewId)
+        chart!!.measure (View.MeasureSpec.makeMeasureSpec (width, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec (viewHeight, View.MeasureSpec.EXACTLY))
+        chart!!.layout (0, 0, chart!!.getMeasuredWidth(), chart!!.getMeasuredHeight())
+        chartViewer = ChartBitmapCreator(chart!!, context, forComplication)
+        chartViewer!!.labelColor = labelColor
+        chartViewer!!.create(true)
+        waitForCreation()
     }
 
     private fun waitForCreation() {
@@ -163,10 +158,8 @@ class ChartBitmap(val context: Context,
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         Log.d(LOG_ID, "onSharedPreferenceChanged: $key")
-        if(chartViewer != null && key != null) {
-            if(key == durationPref || key == showAxisPref || chartViewer!!.isGraphPref(key)) {
-                recreate()
-            }
+        if(chartViewer != null && key != null && chartViewer!!.isGraphPref(key)) {
+            recreate()
         }
     }
 

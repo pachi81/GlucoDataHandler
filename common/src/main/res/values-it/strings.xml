@@ -783,4 +783,9 @@
     <string name="graph_days_phone_main">Numero di giorni</string>
     <string name="graph_days_phone_main_summary">Numero di giorni disponibili nel grafico.\nIMPORTANTE: troppi giorni possono causare problemi di memoria!</string>
 
+    <string name="graph_main">Grafico nella schermata principale</string>
+    <string name="graph_main_summary">Impostazioni del grafico per il grafico nella schermata principale.</string>
+    <string name="graph_widgets">Grafico nei widget</string>
+    <string name="graph_widgets_summary">Impostazioni del grafico per widget, notifiche, schermata di blocco e Always-On Display (AOD).</string>
+    <string name="show_graph_notification_summary">Mostra il grafico nella notifica.</string>
 </resources>

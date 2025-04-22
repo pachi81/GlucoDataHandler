@@ -163,11 +163,31 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                         apply()
                     }
                 }
-                if(!sharedPrefs.contains(Constants.SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION)) {
+                if(sharedPrefs.contains(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION) || !sharedPrefs.contains(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_SHOW_GRAPH)) {
                     val isScreenReader = context.isScreenReaderOn()
                     Log.i(LOG_ID, "Setting default duration for notification graph - screenReader: $isScreenReader")
                     with(sharedPrefs.edit()) {
-                        putInt(Constants.SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION, if(isScreenReader) 0 else ChartCreator.defaultDurationHours)
+                        putBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_SHOW_GRAPH, !isScreenReader && sharedPrefs.getInt(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION, 0) > 0)
+                        remove(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION)
+                        apply()
+                    }
+                }
+                if(sharedPrefs.contains(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_WIDGET)) {
+                    val oldDuration = sharedPrefs.getInt(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_WIDGET, 0)
+                    Log.i(LOG_ID, "Migratate old widget duration of $oldDuration hours to bitmap duration")
+                    with(sharedPrefs.edit()) {
+                        if(oldDuration > 0)
+                            putInt(Constants.SHARED_PREF_GRAPH_BITMAP_DURATION, oldDuration)
+                        remove(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_WIDGET)
+                        apply()
+                    }
+                }
+                if(sharedPrefs.contains(Constants.DEPRECATED_SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_WIDGET)) {
+                    val oldShowAxis = sharedPrefs.getBoolean(Constants.DEPRECATED_SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_WIDGET, false)
+                    Log.i(LOG_ID, "Migratate old widget show axis of $oldShowAxis to bitmap show axis")
+                    with(sharedPrefs.edit()) {
+                        putBoolean(Constants.SHARED_PREF_GRAPH_BITMAP_SHOW_AXIS, oldShowAxis)
+                        remove(Constants.DEPRECATED_SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_WIDGET)
                         apply()
                     }
                 }

@@ -23,8 +23,6 @@ class LockScreenWallpaper(context: Context): WallpaperBase(context, "GDH.LockScr
     override val enabledPref = Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED
     override val stylePref = Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE
     override val sizePref = Constants.SHARED_PREF_LOCKSCREEN_WP_SIZE
-    override val chartDurationPref = Constants.SHARED_PREF_LOCKSCREEN_WP_GRAPH_DURATION
-    override val chartShowAxisPref = Constants.SHARED_PREF_LOCKSCREEN_WP_GRAPH_SHOW_AXIS
 
     @OptIn(DelicateCoroutinesApi::class)
     private fun setWallpaper(bitmap: Bitmap?, context: Context) {

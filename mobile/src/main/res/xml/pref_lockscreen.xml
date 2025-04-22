@@ -38,22 +38,6 @@
                     android:title="@string/pref_lockscreen_y_pos"
                     android:summary="@string/pref_lockscreen_y_pos_summary"
                     app:iconSpaceReserved="false" />
-                <androidx.preference.SeekBarPreference
-                    app:showSeekBarValue="true"
-                    app:seekBarIncrement="1"
-                    app:min="1"
-                    android:max="12"
-                    android:defaultValue="2"
-                    android:key="lockscreen_graph_duration"
-                    android:summary="@string/graph_duration_phone_widget_summary"
-                    android:title="@string/graph_duration"
-                    app:iconSpaceReserved="false" />
-                <androidx.preference.SwitchPreferenceCompat
-                    android:defaultValue="false"
-                    android:key="lockscreen_graph_show_axis"
-                    android:summary="@string/graph_show_axis_summary"
-                    android:title="@string/graph_show_axis"
-                    app:iconSpaceReserved="false" />
         </PreferenceCategory>
         <PreferenceCategory
             android:title="@string/pref_cat_aod"
@@ -92,27 +76,11 @@
                     app:min="0"
                     app:seekBarIncrement="1"
                     app:showSeekBarValue="true" />
-                <androidx.preference.SeekBarPreference
-                    app:showSeekBarValue="true"
-                    app:seekBarIncrement="1"
-                    app:min="1"
-                    android:max="12"
-                    android:defaultValue="2"
-                    android:key="aod_graph_duration"
-                    android:summary="@string/graph_duration_phone_widget_summary"
-                    android:title="@string/graph_duration"
-                    app:iconSpaceReserved="false" />
                 <androidx.preference.SwitchPreferenceCompat
                     android:defaultValue="false"
                     android:key="aod_coloured"
                     android:summary="@string/pref_aod_coloured_summary"
                     android:title="@string/pref_aod_coloured"
-                    app:iconSpaceReserved="false" />
-                <androidx.preference.SwitchPreferenceCompat
-                    android:defaultValue="false"
-                    android:key="aod_graph_show_axis"
-                    android:summary="@string/graph_show_axis_summary"
-                    android:title="@string/graph_show_axis"
                     app:iconSpaceReserved="false" />
         </PreferenceCategory>
 </PreferenceScreen>

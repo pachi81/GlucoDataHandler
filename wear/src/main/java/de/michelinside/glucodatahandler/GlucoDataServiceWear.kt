@@ -61,11 +61,13 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
                 }
 
                 // graph settings
-                if(!sharedPref.contains(Constants.SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION)) {
+                if(sharedPref.contains(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION) || !sharedPref.contains(Constants.SHARED_PREF_GRAPH_BITMAP_DURATION)) {
                     val isScreenReader = context.isScreenReaderOn()
-                    Log.i(LOG_ID, "Setting default duration for graph - screenReader: $isScreenReader")
+                    val oldDuration = if(isScreenReader) 0 else sharedPref.getInt(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION, 2)
+                    Log.i(LOG_ID, "Setting default duration for graph - screenReader: $isScreenReader - oldDuration: $oldDuration")
                     with(sharedPref.edit()) {
-                        putInt(Constants.SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION, if(isScreenReader) 0 else 2)
+                        putInt(Constants.SHARED_PREF_GRAPH_BITMAP_DURATION, oldDuration)
+                        remove(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION)
                         apply()
                     }
                 }

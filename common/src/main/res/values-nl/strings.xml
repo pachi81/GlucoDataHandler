@@ -795,4 +795,9 @@
     <string name="graph_days_phone_main">Aantal dagen</string>
     <string name="graph_days_phone_main_summary">Aantal dagen dat beschikbaar is in de grafiek.\nBELANGRIJK: te veel dagen kunnen geheugenproblemen veroorzaken!</string>
 
+    <string name="graph_main">Grafiek op hoofdscherm</string>
+    <string name="graph_main_summary">Grafiekinstellingen voor de grafiek op het hoofdscherm.</string>
+    <string name="graph_widgets">Grafiek in widgets</string>
+    <string name="graph_widgets_summary">Grafiekinstellingen voor widgets, meldingen, vergrendelscherm en Always-On Display (AOD).</string>
+    <string name="show_graph_notification_summary">Toon de grafiek in de melding.</string>
 </resources>

@@ -14,8 +14,6 @@ class AodWidget(context: Context): WallpaperBase(context, "GDH.AodWidget") {
     override val enabledPref = Constants.SHARED_PREF_AOD_WP_ENABLED
     override val stylePref = Constants.SHARED_PREF_AOD_WP_STYLE
     override val sizePref = Constants.SHARED_PREF_AOD_WP_SIZE
-    override val chartDurationPref = Constants.SHARED_PREF_AOD_WP_GRAPH_DURATION
-    override val chartShowAxisPref = Constants.SHARED_PREF_AOD_WP_GRAPH_SHOW_AXIS
     override val MIN_SIZE = 10f
     override val MAX_SIZE = 24f
 

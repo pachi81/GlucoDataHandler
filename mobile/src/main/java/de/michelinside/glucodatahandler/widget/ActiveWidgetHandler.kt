@@ -125,7 +125,7 @@ object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPrefere
     private fun createBitmap(context: Context) {
         if(chartBitmap == null && GlucoDataService.isServiceRunning) {
             Log.i(LOG_ID, "Create bitmap")
-            chartBitmap = ChartBitmap(context, Constants.SHARED_PREF_GRAPH_DURATION_PHONE_WIDGET, showAxisPref = Constants.SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_WIDGET, labelColor = Color.WHITE)
+            chartBitmap = ChartBitmap(context, labelColor = Color.WHITE)
         }
     }
 

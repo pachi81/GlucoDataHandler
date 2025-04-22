@@ -36,21 +36,11 @@
                     android:summary="@string/pref_notification_no_content_summary"
                     android:title="@string/pref_notification_no_content"
                     app:iconSpaceReserved="false" />
-                <androidx.preference.SeekBarPreference
-                    app:showSeekBarValue="true"
-                    app:seekBarIncrement="1"
-                    app:min="0"
-                    android:max="12"
-                    android:defaultValue="2"
-                    android:key="graph_duration_phone_notification"
-                    android:summary="@string/graph_duration_summary"
-                    android:title="@string/graph_duration"
-                    app:iconSpaceReserved="false" />
                 <androidx.preference.SwitchPreferenceCompat
                     android:defaultValue="false"
-                    android:key="graph_show_axis_phone_notification"
-                    android:summary="@string/graph_show_axis_summary"
-                    android:title="@string/graph_show_axis"
+                    android:key="permanent_notification_show_graph"
+                    android:summary="@string/show_graph_notification_summary"
+                    android:title="@string/show_graph"
                     app:iconSpaceReserved="false" />
                 <de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
                     android:key="permanent_notification_tap_action"

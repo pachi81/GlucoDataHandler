@@ -16,12 +16,16 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 
-class ChartBitmapCreator(chart: GlucoseChart, context: Context, override var durationHours: Int = 2, private val forComplication: Boolean = false, private val showAxis: Boolean = false): ChartCreator(chart, context) {
+class ChartBitmapCreator(chart: GlucoseChart, context: Context, private val forComplication: Boolean = false): ChartCreator(chart, context, Constants.SHARED_PREF_GRAPH_BITMAP_DURATION) {
+    companion object {
+        const val defaultDurationHours = 2
+    }
     private var LOG_ID = "GDH.Chart.BitmapCreator"
     override val resetChart = true
     override val circleRadius: Float get() {
         return if(GlucoDataService.appSource == AppSource.WEAR_APP) 3F else customCircleRadius
     }
+    override var durationHours = defaultDurationHours
     override val touchEnabled = false
     private var customCircleRadius = 2.2F
     private var graphCreated = false
@@ -40,9 +44,19 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, override var dur
         Log.i(LOG_ID, "using circle radius: $customCircleRadius")
     }
 
+
+    private val showAxis: Boolean get() {
+        return sharedPref.getBoolean(Constants.SHARED_PREF_GRAPH_BITMAP_SHOW_AXIS, false)
+    }
+
     override fun isGraphPref(key: String?): Boolean {
-        if(key == Constants.SHARED_PREF_GRAPH_BITMAP_CIRCLE_RADIUS)
-            return true
+        when(key) {
+            Constants.SHARED_PREF_GRAPH_BITMAP_DURATION,
+            Constants.SHARED_PREF_GRAPH_BITMAP_SHOW_AXIS,
+            Constants.SHARED_PREF_GRAPH_BITMAP_CIRCLE_RADIUS ->
+                return true
+
+        }
         return super.isGraphPref(key)
     }
 

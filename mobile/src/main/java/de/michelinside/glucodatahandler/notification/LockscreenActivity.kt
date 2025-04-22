@@ -150,7 +150,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
                             layoutSnoozeButtons.visibility = View.VISIBLE
                         }
                     }
-                chartBitmap = ChartBitmapView(graphImage, this, "")
+                chartBitmap = ChartBitmapView(graphImage, this)
             }
             btnSnooze1.visibility = View.GONE
             btnSnooze2.visibility = View.GONE

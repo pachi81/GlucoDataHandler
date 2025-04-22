@@ -79,7 +79,7 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
         private fun createBitmap() {
             if(chartBitmap == null && GlucoDataService.isServiceRunning) {
                 Log.i(LOG_ID, "Create bitmap")
-                chartBitmap = ChartBitmap(GlucoDataService.context!!, Constants.SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION, size, size/3, true)
+                chartBitmap = ChartBitmap(GlucoDataService.context!!, size, size/3, true)
                 InternalNotifier.addNotifier(GlucoDataService.context!!, ChartComplicationUpdater, mutableSetOf(NotifySource.GRAPH_CHANGED, NotifySource.DISPLAY_STATE_CHANGED))
             }
         }

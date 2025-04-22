@@ -42,7 +42,7 @@ class GraphActivity : AppCompatActivity() {
                 Log.d(LOG_ID, "btnClose clicked")
                 finish()
             }
-            chartCreator = WearChartCreator(chart, this, Constants.SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION)
+            chartCreator = WearChartCreator(chart, this, Constants.SHARED_PREF_GRAPH_BITMAP_DURATION)
             chartCreator.create()
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())

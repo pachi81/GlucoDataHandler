@@ -134,9 +134,9 @@ class SettingsActivity : AppCompatActivity() {
             seekGraphDuration = findViewById(R.id.seekGraphDuration)
             txtGraphDurationLevel = findViewById(R.id.txtGraphDurationLevel)
 
-            seekGraphDuration.progress = sharedPref.getInt(Constants.SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION, 2)
+            seekGraphDuration.progress = sharedPref.getInt(Constants.SHARED_PREF_GRAPH_BITMAP_DURATION, 2)
             txtGraphDurationLevel.text = getGraphDurationString()
-            seekGraphDuration.setOnSeekBarChangeListener(SeekBarChangeListener(Constants.SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION, txtGraphDurationLevel))
+            seekGraphDuration.setOnSeekBarChangeListener(SeekBarChangeListener(Constants.SHARED_PREF_GRAPH_BITMAP_DURATION, txtGraphDurationLevel))
 
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())

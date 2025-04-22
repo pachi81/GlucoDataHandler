@@ -85,6 +85,7 @@ object Constants {
     const val SHARED_PREF_PERMANENT_NOTIFICATION_ICON = "status_bar_notification_icon"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_COLORED_ICON = "status_bar_notification_colored_icon"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY = "permanent_notification_empty"
+    const val SHARED_PREF_PERMANENT_NOTIFICATION_SHOW_GRAPH = "permanent_notification_show_graph"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT = "permanent_notification_custom_layout"
     const val SHARED_PREF_PERMANENT_NOTIFICATION_TAP_ACTION = "permanent_notification_tap_action"
     const val SHARED_PREF_SECOND_PERMANENT_NOTIFICATION = "second_permanent_notification"
@@ -102,8 +103,6 @@ object Constants {
     const val SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY = "floating_widget_transparency"
     const val SHARED_PREF_FLOATING_WIDGET_TIME_TO_CLOSE = "floating_widget_time_to_close"
     const val SHARED_PREF_FLOATING_WIDGET_TAP_ACTION = "floating_widget_tap_action"
-    const val SHARED_PREF_FLOATING_WIDGET_GRAPH_DURATION = "graph_duration_floating_widget"
-    const val SHARED_PREF_FLOATING_WIDGET_GRAPH_SHOW_AXIS = "graph_show_axis_floating_widget"
     const val SHARED_PREF_FLOATING_WIDGET_LOCK_POSITION = "floating_widget_lock_position"
     const val SHARED_PREF_WIDGET_TRANSPARENCY = "widget_transparency"
     const val SHARED_PREF_WIDGET_TAP_ACTION = "widget_tap_action"
@@ -198,8 +197,6 @@ object Constants {
     const val SHARED_PREF_LOCKSCREEN_WP_Y_POS = "lockscreen_y_pos"
     const val SHARED_PREF_LOCKSCREEN_WP_STYLE = "lockscreen_style"
     const val SHARED_PREF_LOCKSCREEN_WP_SIZE = "lockscreen_size"
-    const val SHARED_PREF_LOCKSCREEN_WP_GRAPH_DURATION = "lockscreen_graph_duration"
-    const val SHARED_PREF_LOCKSCREEN_WP_GRAPH_SHOW_AXIS = "lockscreen_graph_show_axis"
 
     const val SHARED_PREF_SOURCE_JUGGLUCO_SET_NS_IOB_ACTION = "source_juggluco_activate_local_nightscout_iob_action"
     const val SHARED_PREF_SOURCE_XDRIP_SET_NS_IOB_ACTION = "source_xdrip_activate_local_nightscout_iob_action"
@@ -214,8 +211,6 @@ object Constants {
     const val SHARED_PREF_AOD_WP_STYLE = "aod_style"
     const val SHARED_PREF_AOD_WP_SIZE = "aod_size"
     const val SHARED_PREF_AOD_WP_COLOURED = "aod_coloured"
-    const val SHARED_PREF_AOD_WP_GRAPH_DURATION = "aod_graph_duration"
-    const val SHARED_PREF_AOD_WP_GRAPH_SHOW_AXIS = "aod_graph_show_axis"
     const val AOD_COLOUR = Color.LTGRAY
 
     // Alarm
@@ -326,14 +321,21 @@ object Constants {
 
     // graph
     const val GRAPH_ID = "graph_id"
-    const val SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION = "graph_duration_wear_complication"
     const val SHARED_PREF_GRAPH_DURATION_PHONE_MAIN = "graph_duration_phone_main"
     const val SHARED_PREF_GRAPH_DAYS_PHONE_MAIN = "graph_days_phone_main"
     const val SHARED_PREF_GRAPH_TRANSPARENCY_PHONE_MAIN = "graph_transparency_phone_main"
-    const val SHARED_PREF_GRAPH_DURATION_PHONE_WIDGET = "graph_duration_phone_widget"
-    const val SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_WIDGET = "graph_show_axis_phone_widget"
-    const val SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION = "graph_duration_phone_notification"
-    const val SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_NOTIFICATION = "graph_show_axis_phone_notification"
+
+    const val SHARED_PREF_GRAPH_BITMAP_DURATION = "graph_bitmap_duration"
+    const val SHARED_PREF_GRAPH_BITMAP_SHOW_AXIS = "graph_bitmap_show_axis"
     const val SHARED_PREF_GRAPH_BITMAP_CIRCLE_RADIUS = "graph_bitmap_circle_radius"
+
+
+
+    // deprecated:
+    const val DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION = "graph_duration_phone_notification"
+    const val DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_WIDGET = "graph_duration_phone_widget"
+    const val DEPRECATED_SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_WIDGET = "graph_show_axis_phone_widget"
+    const val DEPRECATED_SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION = "graph_duration_wear_complication"
+
 
 }
