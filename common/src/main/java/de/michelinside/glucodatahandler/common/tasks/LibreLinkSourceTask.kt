@@ -60,7 +60,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     private fun getHeader(): MutableMap<String, String> {
         val result = mutableMapOf(
             "product" to "llu.android",
-            "version" to "4.13.0",
+            "version" to "4.14.0",
             "Accept" to "application/json",
             "Content-Type" to "application/json",
             "cache-control" to "no-cache",
