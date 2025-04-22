@@ -796,10 +796,10 @@
     <string name="graph_days_phone_main">Liczba dni</string>
     <string name="graph_days_phone_main_summary">Liczba dni widocznych na wykresie.\nUWAGA: zbyt duża liczba dni może powodować problemy z pamięcią telefonu!</string>
 
-    <string name="graph_main">Graph on main screen</string>
-    <string name="graph_main_summary">Graph settings for the graph on main screen.</string>
-    <string name="graph_widgets">Graph in widgets</string>
-    <string name="graph_widgets_summary">Graph settings for widgets, notifications, lock screen, and Always-On Display (AOD).</string>
-    <string name="show_graph_notification_summary">Show the graph in the notification.</string>
+    <string name="graph_main">Wykres na głównym ekranie aplikacji</string>
+    <string name="graph_main_summary">Ustawienia wykresu na głównym ekranie aplikacji.</string>
+    <string name="graph_widgets">Wykres na widgetach</string>
+    <string name="graph_widgets_summary">Ustawienia wykresu na widgecie, w powiadomieniu, na ekranie blokady i ekranie Always-On Display (AOD).</string>
+    <string name="show_graph_notification_summary">Pokazuj wykres w powiadomieniu.</string>
 
 </resources>
