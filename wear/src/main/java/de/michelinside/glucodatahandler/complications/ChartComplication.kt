@@ -1,6 +1,5 @@
 package de.michelinside.glucodatahandler
 
-import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
@@ -27,7 +26,7 @@ import androidx.wear.watchface.complications.datasource.SuspendingComplicationDa
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.chart.ChartBitmap
+import de.michelinside.glucodatahandler.common.chart.ChartBitmapHandler
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -43,15 +42,11 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
 
     companion object {
         protected val LOG_ID = "GDH.Chart.Complication"
-        @SuppressLint("StaticFieldLeak")
-        private var chartBitmap: ChartBitmap? = null
         private var complications = mutableSetOf<Int>()
         private val size = 600
 
         fun getChartId(): Int {
-            if(chartBitmap != null)
-                return chartBitmap!!.chartId
-            return -1
+            return ChartBitmapHandler.chartId
         }
 
         fun init() {
@@ -60,11 +55,15 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
         }
 
         private fun addComplication(id: Int) {
-            if(GlucoDataService.isServiceRunning && !complications.contains(id)) {
-                Log.d(LOG_ID, "Add complication $id")
-                complications.add(id)
+            if(GlucoDataService.isServiceRunning && id > 0) {
+                if(!complications.contains(id)) {
+                    Log.d(LOG_ID, "Add complication $id")
+                    complications.add(id)
+                }
+                createBitmap()
+            } else {
+                Log.w(LOG_ID, "Ignore complication with $id - service running: ${GlucoDataService.isServiceRunning}")
             }
-            createBitmap()
         }
 
         private fun remComplication(id: Int) {
@@ -77,38 +76,35 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
         }
 
         private fun createBitmap() {
-            if(chartBitmap == null && GlucoDataService.isServiceRunning) {
+            if(GlucoDataService.isServiceRunning && !ChartBitmapHandler.isRegistered(LOG_ID)) {
                 Log.i(LOG_ID, "Create bitmap")
-                chartBitmap = ChartBitmap(GlucoDataService.context!!, size, size/3, true)
+                ChartBitmapHandler.register(GlucoDataService.context!!, LOG_ID)
                 InternalNotifier.addNotifier(GlucoDataService.context!!, ChartComplicationUpdater, mutableSetOf(NotifySource.GRAPH_CHANGED, NotifySource.DISPLAY_STATE_CHANGED))
             }
         }
 
         private fun removeBitmap() {
-            if(chartBitmap != null) {
-                Log.i(LOG_ID, "Remove bitmap")
-                InternalNotifier.remNotifier(GlucoDataService.context!!, ChartComplicationUpdater)
-                chartBitmap!!.close()
-                chartBitmap = null
-            }
+            Log.i(LOG_ID, "Remove bitmap")
+            ChartBitmapHandler.unregister(LOG_ID)
+            InternalNotifier.remNotifier(GlucoDataService.context!!, ChartComplicationUpdater)
         }
 
         fun getBitmap(): Bitmap? {
-            return chartBitmap?.getBitmap()
+            return ChartBitmapHandler.getBitmap()
         }
 
         fun pauseBitmap() {
             Log.d(LOG_ID, "Pause bitmap")
-            chartBitmap?.pause()
+            ChartBitmapHandler.pause(LOG_ID)
         }
 
         fun resumeBitmap() {
             Log.d(LOG_ID, "Resume bitmap")
-            chartBitmap?.resume()
+            ChartBitmapHandler.resume(LOG_ID)
         }
 
         fun hasBitmap(): Boolean {
-            return chartBitmap != null
+            return ChartBitmapHandler.hasBitmap()
         }
 
     }
@@ -143,7 +139,7 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
 
     override fun getPreviewData(type: ComplicationType): ComplicationData? {
         try {
-            Log.d(LOG_ID, "onComplicationRequest called for " + type.toString())
+            Log.d(LOG_ID, "getPreviewData called for " + type.toString())
             forPreview = true
             val result = getComplicationData(ComplicationRequest(0, type, false))!!
             forPreview = false
@@ -249,7 +245,7 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
     ): PendingIntent {
         return PackageUtils.getAppIntent(
             applicationContext,
-            if(chartBitmap != null && chartBitmap!!.enabled) GraphActivity::class.java else WearActivity::class.java,
+            if(ChartBitmapHandler.hasBitmap()) GraphActivity::class.java else WearActivity::class.java,
             complicationInstanceId
         )
     }

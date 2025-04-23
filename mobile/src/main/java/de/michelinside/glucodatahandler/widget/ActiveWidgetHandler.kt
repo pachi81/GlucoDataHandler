@@ -1,16 +1,14 @@
 package de.michelinside.glucodatahandler.widget
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.chart.ChartBitmap
+import de.michelinside.glucodatahandler.common.chart.ChartBitmapHandler
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
@@ -19,10 +17,8 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
     private const val LOG_ID = "GDH.widget.ActiveWidgetHandler"
     private var activeWidgets = mutableSetOf<WidgetType>()
-    @SuppressLint("StaticFieldLeak")
-    private var chartBitmap: ChartBitmap? = null
     val chart: Bitmap? get() {
-        return chartBitmap?.getBitmap()
+        return ChartBitmapHandler.getBitmap()
     }
 
     init {
@@ -87,15 +83,15 @@ object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPrefere
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
-        Log.d(LOG_ID, "OnNotifyData for source $dataSource with extras ${Utils.dumpBundle(extras)} - graph-id ${chartBitmap?.chartId}")
+        Log.d(LOG_ID, "OnNotifyData for source $dataSource with extras ${Utils.dumpBundle(extras)} - graph-id ${ChartBitmapHandler.chartId}")
         activeWidgets.forEach {
             if(it == WidgetType.CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB) {
                 // do not update for glucose values, wait for graph has changed!
                 if(dataSource == NotifySource.IOB_COB_CHANGE || dataSource == NotifySource.SETTINGS)
                     GlucoseBaseWidget.updateWidgets(context, it)
-                else if(dataSource == NotifySource.GRAPH_CHANGED && chartBitmap != null && extras?.getInt(Constants.GRAPH_ID) == chartBitmap!!.chartId)
+                else if(dataSource == NotifySource.GRAPH_CHANGED && ChartBitmapHandler.active && extras?.getInt(Constants.GRAPH_ID) == ChartBitmapHandler.chartId)
                     GlucoseBaseWidget.updateWidgets(context, it)
-                else if(dataSource == NotifySource.TIME_VALUE && (chartBitmap == null || ReceiveData.getElapsedTimeMinute().mod(2) != 0))
+                else if(dataSource == NotifySource.TIME_VALUE && (!ChartBitmapHandler.isRegistered(this.javaClass.simpleName) || ReceiveData.getElapsedTimeMinute().mod(2) != 0))
                     GlucoseBaseWidget.updateWidgets(context, it)  // otherwise wait for chart update
             } else if (it == WidgetType.GLUCOSE_TREND_DELTA_TIME || it == WidgetType.GLUCOSE_TREND_DELTA_TIME_IOB_COB) {
                 if(dataSource != NotifySource.OBSOLETE_VALUE)  // do not update again, as there are already updated by TIME_VALUE
@@ -123,18 +119,11 @@ object ActiveWidgetHandler: NotifierInterface, SharedPreferences.OnSharedPrefere
     }
 
     private fun createBitmap(context: Context) {
-        if(chartBitmap == null && GlucoDataService.isServiceRunning) {
-            Log.i(LOG_ID, "Create bitmap")
-            chartBitmap = ChartBitmap(context, labelColor = Color.WHITE)
-        }
+        ChartBitmapHandler.register(context, this.javaClass.simpleName)
     }
 
     private fun removeBitmap() {
-        if(chartBitmap != null) {
-            Log.i(LOG_ID, "Remove bitmap")
-            chartBitmap!!.close()
-            chartBitmap = null
-        }
+        ChartBitmapHandler.unregister(this.javaClass.simpleName)
     }
 
 }

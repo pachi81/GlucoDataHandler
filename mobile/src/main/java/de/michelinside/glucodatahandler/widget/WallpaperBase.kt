@@ -24,15 +24,14 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
-import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.chart.ChartBitmap
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import android.text.Spanned
+import de.michelinside.glucodatahandler.common.chart.ChartBitmapHandler
 
 abstract class WallpaperBase(protected val context: Context, protected val LOG_ID: String): NotifierInterface, SharedPreferences.OnSharedPreferenceChangeListener {
     protected abstract val enabledPref: String
@@ -45,7 +44,6 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
     protected var style = Constants.WIDGET_STYLE_GLUCOSE_TREND
     protected var size = 10
     protected lateinit var sharedPref: SharedPreferences
-    private var chartBitmap: ChartBitmap? = null
     private var curWallpaper: Bitmap? = null
     private var oldWallpaper: Bitmap? = null
 
@@ -158,10 +156,10 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - active=$active - graph-id ${chartBitmap?.chartId} - elapsed: ${ReceiveData.getElapsedTimeMinute()}")
+            Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - active=$active - graph-id ${ChartBitmapHandler.chartId} - elapsed: ${ReceiveData.getElapsedTimeMinute()}")
             if(!active)
                 return
-            if (dataSource == NotifySource.GRAPH_CHANGED && chartBitmap != null && extras?.getInt(Constants.GRAPH_ID) != chartBitmap!!.chartId) {
+            if (dataSource == NotifySource.GRAPH_CHANGED && ChartBitmapHandler.active && extras?.getInt(Constants.GRAPH_ID) != ChartBitmapHandler.chartId) {
                 Log.v(LOG_ID, "Ignore graph changed as it is not for this chart")
                 return  // ignore as it is not for this graph
             }
@@ -225,7 +223,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
     }
 
     private fun getChart(): Bitmap? {
-        return chartBitmap?.getBitmap()
+        return ChartBitmapHandler.getBitmap()
     }
 
     private fun updateChartCreation() {
@@ -236,42 +234,28 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
     }
 
     private fun createBitmap() {
-        if(chartBitmap == null && GlucoDataService.isServiceRunning) {
-            Log.i(LOG_ID, "Create bitmap")
-            chartBitmap = ChartBitmap(context, labelColor = Color.WHITE)
-        }
+        Log.i(LOG_ID, "Create bitmap")
+        ChartBitmapHandler.register(context, this.javaClass.simpleName)
     }
 
     protected fun removeBitmap() {
-        if(chartBitmap != null) {
-            Log.i(LOG_ID, "Remove bitmap")
-            chartBitmap!!.close()
-            chartBitmap = null
-        }
+        ChartBitmapHandler.unregister(this.javaClass.simpleName)
     }
 
     protected fun pauseBitmap() {
-        if(chartBitmap!=null) {
-            Log.i(LOG_ID, "Pause bitmap")
-            chartBitmap?.pause()
-        }
+        ChartBitmapHandler.pause(this.javaClass.simpleName)
     }
 
     protected fun resumeBitmap() {
-        if(chartBitmap!=null) {
-            Log.i(LOG_ID, "Resume bitmap")
-            chartBitmap?.resume()
-        }
+        ChartBitmapHandler.resume(this.javaClass.simpleName)
     }
 
     protected fun canCreate(): Boolean {
-        if(chartBitmap == null)
-            return true
-        return chartBitmap!!.getBitmap() != null
+        return !ChartBitmapHandler.isCreating()
     }
 
     protected fun hasBitmap(): Boolean {
-        return chartBitmap != null
+        return ChartBitmapHandler.hasBitmap()
     }
 
     protected fun hasIobCob(): Boolean {

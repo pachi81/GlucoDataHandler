@@ -36,6 +36,7 @@ class ChartBitmap(val context: Context,
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private var createBitmapJob: Job? = null
     private val viewId = generateViewId()
+    private var paused = false
 
     val enabled: Boolean get() {
         return chartViewer?.enabled?: false
@@ -43,6 +44,10 @@ class ChartBitmap(val context: Context,
 
     val chartId: Int get() {
         return viewId
+    }
+
+    val isPaused: Boolean get() {
+        return paused
     }
 
     init {
@@ -90,12 +95,17 @@ class ChartBitmap(val context: Context,
             Handler(context.mainLooper).post {
                 Log.d(LOG_ID, "notify graph changed")
                 InternalNotifier.notify(context, NotifySource.GRAPH_CHANGED, Bundle().apply { putInt(Constants.GRAPH_ID, chartId) })
+                createBitmapJob = null
             }
         }
     }
 
+    fun isCreating(): Boolean {
+        return createBitmapJob != null && createBitmapJob!!.isActive
+    }
+
     private fun stopCreation() {
-        if(createBitmapJob != null && createBitmapJob!!.isActive) {
+        if(isCreating()) {
             createBitmapJob!!.cancel()
             if(createBitmapJob!!.isActive) {
                 runBlocking {
@@ -134,17 +144,22 @@ class ChartBitmap(val context: Context,
     }
 
     fun pause() {
-        Log.v(LOG_ID, "pause")
-        //chartViewer?.pause()
+        Log.d(LOG_ID, "pause")
+        paused = true
     }
 
     fun resume() {
-        Log.v(LOG_ID, "resume")
-        //chartViewer?.resume()
+        if(paused) {
+            Log.d(LOG_ID, "resume")
+            paused = false
+            recreate()
+        }
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
-        Log.d(LOG_ID, "OnNotifyData - source: $dataSource")
+        Log.d(LOG_ID, "OnNotifyData - source: $dataSource - paused: $paused")
+        if(paused)
+            return
         if(dataSource == NotifySource.TIME_VALUE) {
             Log.d(LOG_ID, "time elapsed: ${ReceiveData.getElapsedTimeMinute()}")
             if(ReceiveData.getElapsedTimeMinute().mod(2) == 0) {
@@ -157,8 +172,8 @@ class ChartBitmap(val context: Context,
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        Log.d(LOG_ID, "onSharedPreferenceChanged: $key")
-        if(chartViewer != null && key != null && chartViewer!!.isGraphPref(key)) {
+        Log.d(LOG_ID, "onSharedPreferenceChanged: $key - paused: $paused")
+        if(!paused && chartViewer != null && key != null && chartViewer!!.isGraphPref(key)) {
             recreate()
         }
     }

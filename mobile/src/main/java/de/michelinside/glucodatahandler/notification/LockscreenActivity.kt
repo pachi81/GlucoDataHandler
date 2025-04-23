@@ -20,7 +20,7 @@ import com.ncorti.slidetoact.SlideToActView
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
-import de.michelinside.glucodatahandler.common.chart.ChartBitmapView
+import de.michelinside.glucodatahandler.common.chart.ChartBitmapHandlerView
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notification.AlarmType
@@ -50,7 +50,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var layoutSnooze: LinearLayout
     private lateinit var layoutSnoozeButtons: LinearLayout
     private lateinit var graphImage: ImageView
-    private var chartBitmap: ChartBitmapView? = null
+    private var chartBitmap: ChartBitmapHandlerView? = null
     private var alarmType: AlarmType? = null
     private var notificationId: Int = -1
     private var createTime = 0L
@@ -150,7 +150,7 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
                             layoutSnoozeButtons.visibility = View.VISIBLE
                         }
                     }
-                chartBitmap = ChartBitmapView(graphImage, this)
+                chartBitmap = ChartBitmapHandlerView(graphImage, this)
             }
             btnSnooze1.visibility = View.GONE
             btnSnooze2.visibility = View.GONE
