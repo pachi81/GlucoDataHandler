@@ -14,12 +14,9 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapPool
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.runBlocking
+import java.util.concurrent.atomic.AtomicBoolean
 
 class ChartBitmap(val context: Context,
                   val width: Int = 1000,
@@ -33,10 +30,10 @@ class ChartBitmap(val context: Context,
     private var chart: GlucoseChart? = null
     private val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
     private var bitmap: Bitmap? = null
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-    private var createBitmapJob: Job? = null
+    private var createBitmapJob: Thread? = null
     private val viewId = generateViewId()
     private var paused = false
+    private var jobCanceled = AtomicBoolean(false)
 
     val enabled: Boolean get() {
         return chartViewer?.enabled?: false
@@ -51,9 +48,13 @@ class ChartBitmap(val context: Context,
     }
 
     init {
-        LOG_ID += viewId.toString()
-        initNotifier()
-        create()
+        try {
+            LOG_ID += viewId.toString()
+            initNotifier()
+            create()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "init exception: " + exc.message + " - " + exc.stackTraceToString())
+        }
     }
 
     private fun initNotifier() {
@@ -81,39 +82,75 @@ class ChartBitmap(val context: Context,
     }
 
     private fun waitForCreation() {
-        createBitmapJob = scope.launch {
+        stopCreation()
+        jobCanceled.set(false)
+        createBitmapJob = Thread {
             try {
-                chartViewer?.waitForCreation()
-                bitmap = chartViewer?.createBitmap(bitmap)
+                try {
+                    Log.d(LOG_ID, "waitForCreation - wait for creation")
+                    chartViewer?.waitForCreation()
+                    if(jobCanceled.get()) {
+                        Log.d(LOG_ID, "waitForCreation cancelled before bitmap creation")
+                        return@Thread
+                    }
+                    Log.d(LOG_ID, "waitForCreation - create bitmap")
+                    bitmap = chartViewer?.createBitmap(bitmap)
+                } catch (exc: CancellationException) {
+                    Log.d(LOG_ID, "waitForCreation cancelled")
+                } catch (exc: InterruptedException) {
+                    Log.d(LOG_ID, "waitForCreation interrupted")
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "waitForCreation exception: " + exc.message + " - " + exc.stackTraceToString())
+                }
+                if(jobCanceled.get()) {
+                    Log.d(LOG_ID, "waitForCreation cancelled before notify")
+                    return@Thread
+                }
+                Handler(context.mainLooper).post {
+                    if(!jobCanceled.get()) {
+                        Log.d(LOG_ID, "notify graph changed")
+                        InternalNotifier.notify(context, NotifySource.GRAPH_CHANGED, Bundle().apply { putInt(Constants.GRAPH_ID, chartId) })
+                    }
+                    createBitmapJob = null
+                }
+            } catch (exc: CancellationException) {
+                Log.d(LOG_ID, "waitForCreation cancelled")
+            } catch (exc: InterruptedException) {
+                Log.d(LOG_ID, "waitForCreation interrupted")
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "waitForCreation exception: " + exc.message + " - " + exc.stackTraceToString())
-                if(bitmap != null) {
-                    BitmapPool.returnBitmap(bitmap)
-                    bitmap = null
-                }
             }
-            Handler(context.mainLooper).post {
-                Log.d(LOG_ID, "notify graph changed")
-                InternalNotifier.notify(context, NotifySource.GRAPH_CHANGED, Bundle().apply { putInt(Constants.GRAPH_ID, chartId) })
-                createBitmapJob = null
-            }
+            Log.d(LOG_ID, "waitForCreation - end")
         }
+        createBitmapJob?.start()
     }
 
     fun isCreating(): Boolean {
-        return createBitmapJob != null && createBitmapJob!!.isActive
+        try {
+            return createBitmapJob != null && createBitmapJob?.isAlive == true
+        } catch (exc: Exception) {
+            return false
+        }
     }
 
     private fun stopCreation() {
-        if(isCreating()) {
-            createBitmapJob!!.cancel()
-            if(createBitmapJob!!.isActive) {
+        try {
+            jobCanceled.set(true)
+            if(isCreating()) {
+                Log.i(LOG_ID, "stop bitmap creation")
+                createBitmapJob?.interrupt()
+                Log.d(LOG_ID, "stop bitmap creation - wait for current execution")
                 runBlocking {
-                    Log.d(LOG_ID, "stop data sync - wait for current execution")
-                    createBitmapJob!!.join()
+                    if(isCreating()) {
+                        Log.d(LOG_ID, "stop bitmap creation - wait for current execution")
+                        createBitmapJob?.join()
+                    }
                 }
             }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "stopCreation exception: " + exc.message + " - " + exc.stackTraceToString())
         }
+        Log.d(LOG_ID, "stopCreation - end")
     }
 
     private fun destroy() {
@@ -127,16 +164,24 @@ class ChartBitmap(val context: Context,
     }
 
     fun recreate() {
-        Log.d(LOG_ID, "recreate")
-        destroy()
-        create()
+        try {
+            Log.d(LOG_ID, "recreate")
+            destroy()
+            create()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "recreate exception: " + exc.message + " - " + exc.stackTraceToString())
+        }
     }
 
     fun close() {
-        remNotifier()
-        destroy()
-        BitmapPool.returnBitmap(bitmap)
-        bitmap = null
+        try {
+            remNotifier()
+            destroy()
+            BitmapPool.returnBitmap(bitmap)
+            bitmap = null
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "close exception: " + exc.message + " - " + exc.stackTraceToString())
+        }
     }
 
     fun getBitmap(): Bitmap? {
@@ -157,24 +202,32 @@ class ChartBitmap(val context: Context,
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
-        Log.d(LOG_ID, "OnNotifyData - source: $dataSource - paused: $paused")
-        if(paused)
-            return
-        if(dataSource == NotifySource.TIME_VALUE) {
-            Log.d(LOG_ID, "time elapsed: ${ReceiveData.getElapsedTimeMinute()}")
-            if(ReceiveData.getElapsedTimeMinute().mod(2) == 0) {
-                Log.d(LOG_ID, "update graph after time elapsed")
+        try {
+            Log.d(LOG_ID, "OnNotifyData - source: $dataSource - paused: $paused")
+            if(paused)
+                return
+            if(dataSource == NotifySource.TIME_VALUE) {
+                Log.d(LOG_ID, "time elapsed: ${ReceiveData.getElapsedTimeMinute()}")
+                if(ReceiveData.getElapsedTimeMinute().mod(2) == 0) {
+                    Log.d(LOG_ID, "update graph after time elapsed")
+                    recreate()
+                }
+            } else {
                 recreate()
             }
-        } else {
-            recreate()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "OnNotifyData exception: " + exc.message + " - " + exc.stackTraceToString())
         }
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        Log.d(LOG_ID, "onSharedPreferenceChanged: $key - paused: $paused")
-        if(!paused && chartViewer != null && key != null && chartViewer!!.isGraphPref(key)) {
-            recreate()
+        try {
+            Log.d(LOG_ID, "onSharedPreferenceChanged: $key - paused: $paused")
+            if(!paused && chartViewer != null && key != null && chartViewer!!.isGraphPref(key)) {
+                recreate()
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.message + " - " + exc.stackTraceToString())
         }
     }
 
