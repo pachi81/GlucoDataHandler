@@ -1,14 +1,14 @@
 package de.michelinside.glucodatahandler.common.tasks
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
-import de.michelinside.glucodatahandler.common.Intents
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
@@ -17,12 +17,12 @@ import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
-import de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver
 import de.michelinside.glucodatahandler.common.utils.HttpRequest
 import de.michelinside.glucodatahandler.common.utils.Utils
 import java.net.HttpURLConnection
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import java.util.concurrent.atomic.AtomicBoolean
 
 abstract class DataSourceTask(private val enabledKey: String, protected val source: DataSource) : BackgroundTask() {
     private var enabled = false
@@ -231,7 +231,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             return
         }
 
-        val intent = Intent(GlucoDataService.context!!, InternalActionReceiver::class.java)
+        /*val intent = Intent(GlucoDataService.context!!, InternalActionReceiver::class.java)
         intent.action = Intents.GLUCODATA_ACTION
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
         intent.setPackage(GlucoDataService.context!!.packageName)
@@ -239,20 +239,15 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         intent.putExtras(extras)
         setState(SourceState.CONNECTED)
         GlucoDataService.context!!.sendBroadcast(intent)
-        /*
+        */
         val done = AtomicBoolean(false)
         val active = AtomicBoolean(false)
         val task = Runnable {
             try {
                 active.set(true)
                 Log.d(LOG_ID, "handleResult for $source in main thread")
-                val lastTime = ReceiveData.time
-                val lastIobCobTime = ReceiveData.iobCobTime
                 ReceiveData.handleIntent(GlucoDataService.context!!, source, extras)
-                if (ReceiveData.time == lastTime && lastIobCobTime == ReceiveData.iobCobTime)
-                    setState(SourceState.NO_NEW_VALUE)
-                else
-                    setState(SourceState.CONNECTED)
+                setState(SourceState.CONNECTED)
             } catch (ex: Exception) {
                 Log.e(LOG_ID, "Exception during task run: " + ex)
                 setLastError(ex.message.toString())
@@ -273,7 +268,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             Log.e(LOG_ID, "Handler for $source not finished after $count ms! Active: ${active.get()} - Stop it!")
             handler.removeCallbacksAndMessages(null)
             setLastError("Internal error!")
-        }*/
+        }
         Log.d(LOG_ID, "handleResult for " + source + " done!")
     }
 
