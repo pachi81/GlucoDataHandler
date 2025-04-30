@@ -493,6 +493,9 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             val extras = Utils.bytesToBundle(p0.data)
             //Log.v(LOG_ID, "Received extras for path ${p0.path}: ${Utils.dumpBundle(extras)}")
             if(extras!= null) {
+                if(BuildConfig.DEBUG) {
+                    Log.v(LOG_ID, "Received extras for path ${p0.path}: ${Utils.dumpBundle(extras)}")
+                }
                 if (extras.containsKey(Constants.SETTINGS_BUNDLE)) {
                     val bundle = extras.getBundle(Constants.SETTINGS_BUNDLE)
                     Log.d(LOG_ID, "Glucose settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(bundle))
@@ -631,7 +634,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             }
             GlucoDataService.checkServices(context)
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "onMessageReceived exception: " + exc.message.toString() )
+            Log.e(LOG_ID, "onMessageReceived exception: " + exc.message.toString() + " for path " + p0.path + " - data: ${Utils.toHexString(p0.data)}")
         }
     }
 

@@ -125,7 +125,7 @@ object Utils {
         val parcel = Parcel.obtain()
         parcel.unmarshall(bytes, 0, bytes.size)
         parcel.setDataPosition(0)
-        val bundle = parcel.readBundle(GlucoDataService::class.java.getClassLoader())
+        val bundle = parcel.readBundle(GlucoDataService.context!!.applicationContext.classLoader)
         parcel.recycle()
         return bundle
     }
