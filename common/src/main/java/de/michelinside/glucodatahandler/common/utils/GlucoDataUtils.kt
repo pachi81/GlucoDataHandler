@@ -11,6 +11,10 @@ import kotlin.random.Random
 object GlucoDataUtils {
     //private val LOG_ID = "GDH.Utils.GlucoData"
 
+    fun getGlucoseTime(time: Long): Long {  // remove milliseconds
+        return (time / 1000)*1000
+    }
+
     fun isGlucoseValid(value: Float): Boolean {
         var mgdl = value
         if (isMmolValue(mgdl))

@@ -577,7 +577,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     fun hasNewValue(extras: Bundle?, checkIobCob: Boolean = true): Boolean {
         if(extras == null || extras.isEmpty)
             return false
-        if(extras.containsKey(TIME) && isNewValueTime(extras.getLong(TIME))) {
+        if(extras.containsKey(TIME) && isNewValueTime(GlucoDataUtils.getGlucoseTime(extras.getLong(TIME)))) {
             return true
         }
         if(!checkIobCob)
@@ -599,12 +599,12 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         WakeLockHelper(context).use {
             initData(context)
             try {
-                val new_time = extras.getLong(TIME)
+                val newTime = GlucoDataUtils.getGlucoseTime(extras.getLong(TIME))
                 Log.d(
                     LOG_ID, "Glucodata received from " + dataSource.toString() + ": " +
                             extras.toString() +
-                            " - timestamp: " + DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(Date(new_time)) +
-                            " - difference: " + (new_time-time)
+                            " - timestamp: " + DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(Date(newTime)) +
+                            " - difference: " + (newTime-time)
                 )
 
                 if (!GlucoDataUtils.isGlucoseValid(extras.getInt(MGDL))) {
@@ -612,12 +612,12 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     return false
                 }
 
-                if(isNewValueTime(new_time)) // check for new value received (diff must around one minute at least to prevent receiving same data from different sources with similar timestamps
+                if(isNewValueTime(newTime)) // check for new value received (diff must around one minute at least to prevent receiving same data from different sources with similar timestamps
                 {
                     Log.i(
                         LOG_ID, "Glucodata received from " + dataSource.toString() + ": " +
                                 extras.toString() +
-                                " - timestamp: " + DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(Date(extras.getLong(TIME)))
+                                " - timestamp: " + DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(Date(newTime))
                     )
                     if(time == 0L)
                         handleFirstValue(context, dataSource, extras)
@@ -628,7 +628,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     sourceRate = extras.getFloat(RATE) //Rate of change of glucose. See libre and dexcom label functions
 
                     if(!readCalculatedBundle(extras)) {
-                        calculateDeltasAndRate(new_time, extras.getInt(MGDL))
+                        calculateDeltasAndRate(newTime, extras.getInt(MGDL))
                         if (deltaValue.isNaN() && extras.containsKey(DELTA)) {
                             if(use5minDelta) {
                                 deltaValue5Min = extras.getFloat(DELTA, Float.NaN)
@@ -651,7 +651,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     } else {
                         glucose = rawValue.toFloat()
                     }
-                    time = extras.getLong(TIME) //time in msec
+                    time = newTime //time in msec
 
                     if(extras.containsKey(IOB) || extras.containsKey(COB)) {
                         iob = extras.getFloat(IOB, Float.NaN)

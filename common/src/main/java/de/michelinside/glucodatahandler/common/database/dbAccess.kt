@@ -9,6 +9,7 @@ import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import kotlinx.coroutines.CoroutineScope
@@ -28,6 +29,12 @@ object dbAccess {
         return database != null
     }
 
+    private val migration_1_2 = object : androidx.room.migration.Migration(1, 2) {
+        override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+            db.execSQL("UPDATE glucose_values SET TIMESTAMP = ((TIMESTAMP / 1000) * 1000)")
+        }
+    }
+
     fun init(context: Context) {
         Log.v(LOG_ID, "init")
         try {
@@ -35,7 +42,9 @@ object dbAccess {
                 context.applicationContext,
                 Database::class.java,
                 "gdh_database"
-            ).build()
+            )
+                .addMigrations(migration_1_2)
+                .build()
             cleanUpOldData()
             PackageUtils.registerReceiver(context, InternalActionReceiver(), IntentFilter(Intent.ACTION_DATE_CHANGED))
         } catch (exc: Exception) {
@@ -105,12 +114,20 @@ object dbAccess {
         }
     }
 
+    private fun updateTimestamps(values: List<GlucoseValue>): List<GlucoseValue> {
+        val updated = mutableListOf<GlucoseValue>()
+        values.forEach {
+            updated.add(GlucoseValue(GlucoDataUtils.getGlucoseTime(it.timestamp), it.value))
+        }
+        return updated
+    }
+
     fun addGlucoseValue(time: Long, value: Int) {
         if(active) {
             scope.launch {
                 try {
                     Log.d(LOG_ID, "Add new value $value at ${Utils.getUiTimeStamp(time)} ($time)")
-                    database!!.glucoseValuesDao().insertValue(GlucoseValue(time, value))
+                    database!!.glucoseValuesDao().insertValue(GlucoseValue(GlucoDataUtils.getGlucoseTime(time), value))
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "addGlucoseValue exception: $exc")
                 }
@@ -123,7 +140,7 @@ object dbAccess {
             scope.launch {
                 try {
                     Log.d(LOG_ID, "Add ${values.size} values from ${values.first().timestamp} to ${values.last().timestamp}")
-                    database!!.glucoseValuesDao().insertValues(values)
+                    database!!.glucoseValuesDao().insertValues(updateTimestamps(values))
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "addGlucoseValues exception: $exc")
                 }
