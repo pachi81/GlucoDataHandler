@@ -101,9 +101,9 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
             ChartBitmapHandler.pause(LOG_ID)
         }
 
-        fun resumeBitmap() {
+        fun resumeBitmap(create: Boolean) {
             Log.d(LOG_ID, "Resume bitmap")
-            ChartBitmapHandler.resume(LOG_ID, false)  // resume, but do not create, wait for broadcast from phone
+            ChartBitmapHandler.resume(LOG_ID, create)  // resume, but do not create, wait for broadcast from phone
         }
 
         fun recreateBitmap() {
@@ -310,12 +310,14 @@ object ChartComplicationUpdater: NotifierInterface {
             if(ScreenEventReceiver.isDisplayOff())
                 ChartComplicationBase.pauseBitmap()
             else {
-                ChartComplicationBase.resumeBitmap()
                 if(WearPhoneConnection.nodesConnected) {
                     // if phone is connected, not updating, wait for data from phone
+                    ChartComplicationBase.resumeBitmap(false)
                     startWaitForUpdateThread()
-                    return
+                } else {
+                    ChartComplicationBase.resumeBitmap(true)
                 }
+                return
             }
         }
         if (dataSource == NotifySource.GRAPH_CHANGED && extras?.getInt(Constants.GRAPH_ID) != ChartComplicationBase.getChartId()) {
@@ -326,6 +328,7 @@ object ChartComplicationUpdater: NotifierInterface {
             Log.d(LOG_ID, "Ignore time value and wait for chart update")
             return
         }
+        stopWaitForUpdateThread()
         complicationClasses.forEach {
             Log.d(LOG_ID, "Trigger complication update for ${it.name}")
             ComplicationDataSourceUpdateRequester
@@ -347,7 +350,7 @@ object ChartComplicationUpdater: NotifierInterface {
             waitForUpdateThread = Thread {
                 try {
                     Log.d(LOG_ID, "Start wait for update thread")
-                    Thread.sleep(1000)
+                    Thread.sleep(2000)
                     waitForUpdateThread = null
                     Log.w(LOG_ID, "No updates received yet trigger re-create of bitmap!")
                     ChartComplicationBase.recreateBitmap()

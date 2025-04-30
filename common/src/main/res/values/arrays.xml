@@ -54,7 +54,7 @@
         <item>@string/alarm_force_sound</item>
         <item>@string/alarm_force_vibration</item>
         <item>@string/alarm_vibrate_only</item>
-        <item>"@string/pref_send_battery_level_to_watch"</item>
+        <item>@string/pref_send_battery_level_to_watch</item>
         <item>@string/pref_phone_wear_screen_off_update</item>
         <item>@string/pref_wear_notification</item>
         <item>@string/wear_alarm_notifications_enabled</item>
