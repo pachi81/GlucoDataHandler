@@ -26,6 +26,7 @@ import androidx.wear.watchface.complications.datasource.SuspendingComplicationDa
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.WearPhoneConnection
 import de.michelinside.glucodatahandler.common.chart.ChartBitmapHandler
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
@@ -103,6 +104,11 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
         fun resumeBitmap() {
             Log.d(LOG_ID, "Resume bitmap")
             ChartBitmapHandler.resume(LOG_ID, false)  // resume, but do not create, wait for broadcast from phone
+        }
+
+        fun recreateBitmap() {
+            Log.d(LOG_ID, "Recreate bitmap")
+            ChartBitmapHandler.recreate()
         }
 
         fun hasBitmap(): Boolean {
@@ -290,6 +296,7 @@ class ChartComplicationRect: ChartComplicationBase() {
 object ChartComplicationUpdater: NotifierInterface {
     private var complicationClasses = mutableListOf(ChartComplication::class.java, ChartComplicationRect::class.java)
     val LOG_ID = "GDH.Chart.ComplicationUpdater"
+    private var waitForUpdateThread: Thread? = null
 
     fun init(context: Context) {
         Log.i(LOG_ID, "init chart complications")
@@ -304,7 +311,11 @@ object ChartComplicationUpdater: NotifierInterface {
                 ChartComplicationBase.pauseBitmap()
             else {
                 ChartComplicationBase.resumeBitmap()
-                return
+                if(WearPhoneConnection.nodesConnected) {
+                    // if phone is connected, not updating, wait for data from phone
+                    startWaitForUpdateThread()
+                    return
+                }
             }
         }
         if (dataSource == NotifySource.GRAPH_CHANGED && extras?.getInt(Constants.GRAPH_ID) != ChartComplicationBase.getChartId()) {
@@ -328,4 +339,42 @@ object ChartComplicationUpdater: NotifierInterface {
                 .requestUpdateAll()
         }
     }
+
+    private fun startWaitForUpdateThread() {
+        try {
+            Log.v(LOG_ID, "Start wait for update thread")
+            stopWaitForUpdateThread()
+            waitForUpdateThread = Thread {
+                try {
+                    Log.d(LOG_ID, "Start wait for update thread")
+                    Thread.sleep(1000)
+                    waitForUpdateThread = null
+                    Log.w(LOG_ID, "No updates received yet trigger re-create of bitmap!")
+                    ChartComplicationBase.recreateBitmap()
+                } catch (exc: InterruptedException) {
+                    Log.d(LOG_ID, "Check wait for update interrupted")
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Exception wait for update thread: " + exc.toString())
+                }
+                waitForUpdateThread = null
+            }
+            waitForUpdateThread!!.start()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Exception in wait for update thread: " + exc.toString())
+        }
+    }
+
+    private fun stopWaitForUpdateThread() {
+        try {
+            Log.v(LOG_ID, "Stop wait for update thread for $waitForUpdateThread")
+            if (waitForUpdateThread != null && waitForUpdateThread!!.isAlive && waitForUpdateThread!!.id != Thread.currentThread().id )
+            {
+                Log.d(LOG_ID, "Stop wait for update thread!")
+                waitForUpdateThread!!.interrupt()
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Exception in stop wait for update thread: " + exc.toString())
+        }
+    }
+
 }

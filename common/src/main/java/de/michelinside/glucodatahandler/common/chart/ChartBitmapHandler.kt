@@ -100,4 +100,9 @@ object ChartBitmapHandler {
             chartBitmap?.resume(create)
     }
 
+    fun recreate() {
+        Log.d(LOG_ID, "recreate")
+        chartBitmap?.recreate()
+    }
+
 }

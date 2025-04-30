@@ -654,10 +654,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     if(nodesPaused.contains(nodeId)) {
                         Log.d(LOG_ID, "Resume node $nodeId")
                         nodesPaused.remove(nodeId)
-                        if (canSendMessage(context, NotifySource.BROADCAST))
-                            sendMessage(NotifySource.BROADCAST, ReceiveData.createExtras())
-                        else
-                            sendCommand(Command.FORCE_UPDATE, ReceiveData.createExtras())
+                        sendCommand(Command.FORCE_UPDATE, ReceiveData.createExtras())  // always force, for case the watch already have a new value (from Juggluco for example)
                     }
                 }
                 Command.FORCE_UPDATE -> {
