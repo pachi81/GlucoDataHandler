@@ -12,6 +12,7 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.Icon
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.wear.watchface.complications.data.ComplicationData
 import androidx.wear.watchface.complications.data.ComplicationType
@@ -313,7 +314,7 @@ object ChartComplicationUpdater: NotifierInterface {
                 if(WearPhoneConnection.nodesConnected) {
                     // if phone is connected, not updating, wait for data from phone
                     ChartComplicationBase.resumeBitmap(false)
-                    startWaitForUpdateThread()
+                    startWaitForUpdateThread(context)
                 } else {
                     ChartComplicationBase.resumeBitmap(true)
                 }
@@ -343,23 +344,27 @@ object ChartComplicationUpdater: NotifierInterface {
         }
     }
 
-    private fun startWaitForUpdateThread() {
+    private fun startWaitForUpdateThread(context: Context) {
         try {
             Log.v(LOG_ID, "Start wait for update thread")
             stopWaitForUpdateThread()
             waitForUpdateThread = Thread {
                 try {
+                    val thisThread = waitForUpdateThread
                     Log.d(LOG_ID, "Start wait for update thread")
                     Thread.sleep(2000)
-                    waitForUpdateThread = null
                     Log.w(LOG_ID, "No updates received yet trigger re-create of bitmap!")
-                    ChartComplicationBase.recreateBitmap()
+                    Handler(context.mainLooper).post {
+                        if(waitForUpdateThread == thisThread) {
+                            ChartComplicationBase.recreateBitmap()
+                            waitForUpdateThread = null
+                        }
+                    }
                 } catch (exc: InterruptedException) {
                     Log.d(LOG_ID, "Check wait for update interrupted")
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Exception wait for update thread: " + exc.toString())
                 }
-                waitForUpdateThread = null
             }
             waitForUpdateThread!!.start()
         } catch (exc: Exception) {
@@ -375,6 +380,7 @@ object ChartComplicationUpdater: NotifierInterface {
                 Log.d(LOG_ID, "Stop wait for update thread!")
                 waitForUpdateThread!!.interrupt()
             }
+            waitForUpdateThread = null
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Exception in stop wait for update thread: " + exc.toString())
         }
