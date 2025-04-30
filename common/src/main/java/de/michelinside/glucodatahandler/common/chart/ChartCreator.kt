@@ -635,9 +635,11 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         val deleteValues = mutableListOf<Long>()
         values.forEach {
             if(Utils.getTimeDiffMinute(it.timestamp, lastTime, RoundingMode.HALF_UP) == 0L) {
+                Log.d(LOG_ID, "Delete duplicate value with timestamp ${Utils.getUiTimeStamp(it.timestamp)} (${it.timestamp}) - previous timestamp ${Utils.getUiTimeStamp(lastTime)} (${lastTime}) - diff: ${it.timestamp - lastTime}ms")
                 deleteValues.add(it.timestamp)
+            } else {
+                lastTime = it.timestamp
             }
-            lastTime = it.timestamp
         }
         if(deleteValues.isNotEmpty()) {
             Log.i(LOG_ID, "Delete ${deleteValues.size} duplicate values")
@@ -647,15 +649,15 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         return true
     }
 
-    protected fun update(values: List<GlucoseValue>) {
+    protected fun update(values: List<GlucoseValue>): Boolean {
         try {
             if(!checkValues(values))
-                return
+                return false
             if(values.isNotEmpty()) {
                 Log.d(LOG_ID, "update called for ${values.size} values - resetChart: $resetChart - entries: ${getEntryCount()} - first value: ${TimeValueFormatter.to_chart_x(values.first().timestamp)} - first: ${getFirstTimestamp()}")
                 if(resetChart || TimeValueFormatter.to_chart_x(values.first().timestamp) != getFirstTimestamp() || (getEntryCount() > 0 && abs(values.size-getEntryCount()) > 1)) {
                     resetData(values)
-                    return
+                    return true
                 }
                 val newValues = values.filter { data -> data.timestamp > getLastTimestamp() }
                 addEntries(newValues)
@@ -665,7 +667,6 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             } else {
                 addEntries(values)
             }
-            return
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() + " - " + exc.stackTraceToString() )
             try {
@@ -675,6 +676,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                 Log.e(LOG_ID, "update-reset exception: " + exc.message.toString() + " - " + exc.stackTraceToString() )
             }
         }
+        return true
     }
 
     protected open fun updateTimeElapsed() {

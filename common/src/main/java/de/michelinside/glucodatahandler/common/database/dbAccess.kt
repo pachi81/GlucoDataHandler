@@ -47,7 +47,7 @@ object dbAccess {
         if(active) {
             scope.async {
                 try {
-                    Log.v(LOG_ID, "getGlucoseValues - minTime: ${Utils.getUiTimeStamp(minTime)}")
+                    Log.d(LOG_ID, "getGlucoseValues - minTime: ${Utils.getUiTimeStamp(minTime)}")
                     database!!.glucoseValuesDao().getValuesByTime(minTime)
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "getGlucoseValues exception: $exc")
@@ -109,7 +109,7 @@ object dbAccess {
         if(active) {
             scope.launch {
                 try {
-                    Log.d(LOG_ID, "Add new value $value at ${Utils.getUiTimeStamp(time)}")
+                    Log.d(LOG_ID, "Add new value $value at ${Utils.getUiTimeStamp(time)} ($time)")
                     database!!.glucoseValuesDao().insertValue(GlucoseValue(time, value))
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "addGlucoseValue exception: $exc")
@@ -122,7 +122,7 @@ object dbAccess {
         if(active && values.isNotEmpty()) {
             scope.launch {
                 try {
-                    Log.d(LOG_ID, "Add ${values.size} values")
+                    Log.d(LOG_ID, "Add ${values.size} values from ${values.first().timestamp} to ${values.last().timestamp}")
                     database!!.glucoseValuesDao().insertValues(values)
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "addGlucoseValues exception: $exc")

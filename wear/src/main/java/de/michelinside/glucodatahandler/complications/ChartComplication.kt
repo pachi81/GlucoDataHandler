@@ -90,6 +90,8 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
         }
 
         fun getBitmap(): Bitmap? {
+            if(ChartBitmapHandler.isPaused(LOG_ID))
+                return null
             return ChartBitmapHandler.getBitmap()
         }
 
@@ -100,7 +102,7 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
 
         fun resumeBitmap() {
             Log.d(LOG_ID, "Resume bitmap")
-            ChartBitmapHandler.resume(LOG_ID)
+            ChartBitmapHandler.resume(LOG_ID, false)  // resume, but do not create, wait for broadcast from phone
         }
 
         fun hasBitmap(): Boolean {
@@ -175,8 +177,9 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
     protected abstract fun getPreview(): Int
 
     private fun getTransparentImage(): SmallImage {
+        Log.d(LOG_ID, "using transparent image")
         return SmallImage.Builder(
-            image = Icon.createWithResource(this, if(forPreview) getPreview() else CR.drawable.icon_transparent),
+            image = Icon.createWithResource(this, if(forPreview) getPreview() else CR.drawable.icon_empty),
             type = SmallImageType.PHOTO
         ).build()
     }
@@ -299,9 +302,10 @@ object ChartComplicationUpdater: NotifierInterface {
         if(dataSource==NotifySource.DISPLAY_STATE_CHANGED) {
             if(ScreenEventReceiver.isDisplayOff())
                 ChartComplicationBase.pauseBitmap()
-            else
+            else {
                 ChartComplicationBase.resumeBitmap()
-            return
+                return
+            }
         }
         if (dataSource == NotifySource.GRAPH_CHANGED && extras?.getInt(Constants.GRAPH_ID) != ChartComplicationBase.getChartId()) {
             Log.v(LOG_ID, "Ignore graph changed as it is not for this chart")

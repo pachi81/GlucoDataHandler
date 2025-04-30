@@ -86,32 +86,40 @@ class ChartBitmap(val context: Context,
         jobCanceled.set(false)
         createBitmapJob = Thread {
             try {
+                val curChartView = chartViewer
                 try {
-                    Log.d(LOG_ID, "waitForCreation - wait for creation")
-                    chartViewer?.waitForCreation()
-                    if(jobCanceled.get()) {
-                        Log.d(LOG_ID, "waitForCreation cancelled before bitmap creation")
+                    if(curChartView == null || jobCanceled.get()) {
+                        Log.d(LOG_ID, "waitForCreation cancelled for chart $curChartView")
                         return@Thread
                     }
-                    Log.d(LOG_ID, "waitForCreation - create bitmap")
-                    bitmap = chartViewer?.createBitmap(bitmap)
+                    Log.d(LOG_ID, "waitForCreation - wait for creation for chart $curChartView")
+                    curChartView.waitForCreation()
+                    if(jobCanceled.get()) {
+                        Log.d(LOG_ID, "waitForCreation cancelled before bitmap creation for chart $curChartView")
+                        return@Thread
+                    }
                 } catch (exc: CancellationException) {
-                    Log.d(LOG_ID, "waitForCreation cancelled")
+                    Log.d(LOG_ID, "waitForCreation cancelled for chart $curChartView")
                 } catch (exc: InterruptedException) {
-                    Log.d(LOG_ID, "waitForCreation interrupted")
+                    Log.d(LOG_ID, "waitForCreation interrupted for chart $curChartView")
                 } catch (exc: Exception) {
-                    Log.e(LOG_ID, "waitForCreation exception: " + exc.message + " - " + exc.stackTraceToString())
+                    Log.e(LOG_ID, "waitForCreation exception for chart $curChartView: " + exc.message + " - " + exc.stackTraceToString())
                 }
                 if(jobCanceled.get()) {
-                    Log.d(LOG_ID, "waitForCreation cancelled before notify")
+                    Log.d(LOG_ID, "waitForCreation cancelled before notify for chart $curChartView")
                     return@Thread
                 }
+                Log.d(LOG_ID, "waitForCreation - create bitmap for chart $curChartView")
+                bitmap = curChartView?.createBitmap(bitmap)
+                Log.i(LOG_ID, "bitmap created for chart $curChartView")
                 Handler(context.mainLooper).post {
-                    if(!jobCanceled.get()) {
-                        Log.d(LOG_ID, "notify graph changed")
+                    if(curChartView == chartViewer ) {
+                        Log.d(LOG_ID, "notify graph changed for chart $curChartView")
                         InternalNotifier.notify(context, NotifySource.GRAPH_CHANGED, Bundle().apply { putInt(Constants.GRAPH_ID, chartId) })
+                        createBitmapJob = null
+                    } else {
+                        Log.d(LOG_ID, "notify graph changed - cancelled for chart $curChartView")
                     }
-                    createBitmapJob = null
                 }
             } catch (exc: CancellationException) {
                 Log.d(LOG_ID, "waitForCreation cancelled")
@@ -135,6 +143,7 @@ class ChartBitmap(val context: Context,
 
     private fun stopCreation() {
         try {
+            Log.d(LOG_ID, "stopCreation - isCreating: ${isCreating()}")
             jobCanceled.set(true)
             if(isCreating()) {
                 Log.i(LOG_ID, "stop bitmap creation")
@@ -146,17 +155,18 @@ class ChartBitmap(val context: Context,
                         createBitmapJob?.join()
                     }
                 }
+                Log.d(LOG_ID, "stopCreation - end")
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "stopCreation exception: " + exc.message + " - " + exc.stackTraceToString())
         }
-        Log.d(LOG_ID, "stopCreation - end")
     }
 
     private fun destroy() {
         Log.d(LOG_ID, "destroy")
         stopCreation()
         chartViewer?.close()
+        chartViewer = null
         if(chart != null) {
             chart!!.onDetachedFromWindow()
             chart = null
@@ -193,11 +203,12 @@ class ChartBitmap(val context: Context,
         paused = true
     }
 
-    fun resume() {
+    fun resume(create: Boolean = true) {
         if(paused) {
-            Log.d(LOG_ID, "resume")
+            Log.d(LOG_ID, "resume - create: $create")
             paused = false
-            recreate()
+            if(create)
+                recreate()
         }
     }
 

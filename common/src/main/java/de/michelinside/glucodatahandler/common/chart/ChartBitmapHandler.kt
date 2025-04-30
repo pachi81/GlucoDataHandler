@@ -76,6 +76,12 @@ object ChartBitmapHandler {
         return chartBitmap?.isCreating()?: false
     }
 
+    fun isPaused(widget: String = ""): Boolean {
+        if(widget.isNotEmpty())
+            return pausedWidgets.contains(widget)
+        return chartBitmap?.isPaused?: false
+    }
+
     fun pause(widget: String) {
         Log.d(LOG_ID, "pause widget $widget")
         pausedWidgets.add(widget)
@@ -86,12 +92,12 @@ object ChartBitmapHandler {
         }
     }
 
-    fun resume(widget: String) {
-        Log.d(LOG_ID, "resume widget $widget")
+    fun resume(widget: String, create: Boolean = true) {
+        Log.d(LOG_ID, "resume widget $widget - create: $create")
         activeWidgets.add(widget)
         pausedWidgets.remove(widget)
         if(chartBitmap?.isPaused == true)
-            chartBitmap?.resume()
+            chartBitmap?.resume(create)
     }
 
 }

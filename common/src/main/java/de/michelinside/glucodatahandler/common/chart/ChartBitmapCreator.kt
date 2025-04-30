@@ -179,7 +179,11 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, private val forC
     override suspend fun dataSync() {
         try {
             Log.d(LOG_ID, "dataSync")
-            update(dbAccess.getGlucoseValues(getMinTime()))
+            var count = 0
+            while(!update(dbAccess.getGlucoseValues(getMinTime())) && count < 5) {  // after a deletion of duplicate values, the chart is not created!
+                count += 1
+                Log.d(LOG_ID, "dataSync - ${count}. retry")
+            }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "dataSync exception: " + exc.message.toString() )
         }
