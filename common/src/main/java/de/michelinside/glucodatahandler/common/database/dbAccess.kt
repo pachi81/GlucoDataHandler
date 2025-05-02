@@ -31,7 +31,12 @@ object dbAccess {
 
     private val migration_1_2 = object : androidx.room.migration.Migration(1, 2) {
         override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
-            db.execSQL("UPDATE glucose_values SET TIMESTAMP = ((TIMESTAMP / 1000) * 1000)")
+            try {
+                db.execSQL("UPDATE glucose_values SET TIMESTAMP = ((TIMESTAMP / 1000) * 1000)")
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "migration exception: $exc")
+                db.execSQL("DELETE FROM glucose_values")
+            }
         }
     }
 
