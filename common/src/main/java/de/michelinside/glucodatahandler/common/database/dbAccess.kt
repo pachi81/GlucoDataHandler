@@ -8,6 +8,8 @@ import androidx.room.Room
 import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
@@ -150,7 +152,10 @@ object dbAccess {
                     Log.e(LOG_ID, "addGlucoseValues exception: $exc")
                 }
             }
-            if(!internal) {
+            if(internal) {
+                // trigger update of db data
+                InternalNotifier.notify(GlucoDataService.context!!, NotifySource.DB_DATA_CHANGED, null)
+            } else {
                 // trigger dbsync with watch
                 GlucoDataService.sendCommand(Command.REQUEST_DB_SYNC)
             }

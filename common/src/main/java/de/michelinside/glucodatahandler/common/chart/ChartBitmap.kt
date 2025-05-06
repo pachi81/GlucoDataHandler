@@ -31,6 +31,7 @@ class ChartBitmap(val context: Context,
     private val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
     private var bitmap: Bitmap? = null
     private var createBitmapJob: Thread? = null
+    private var recreateThread: Thread? = null
     private val viewId = generateViewId()
     private var paused = false
     private var jobCanceled = AtomicBoolean(false)
@@ -58,7 +59,7 @@ class ChartBitmap(val context: Context,
     }
 
     private fun initNotifier() {
-        InternalNotifier.addNotifier(context, this, mutableSetOf(NotifySource.TIME_VALUE, NotifySource.BROADCAST, NotifySource.MESSAGECLIENT))
+        InternalNotifier.addNotifier(context, this, mutableSetOf(NotifySource.TIME_VALUE, NotifySource.BROADCAST, NotifySource.MESSAGECLIENT, NotifySource.DB_DATA_CHANGED))
         sharedPref.registerOnSharedPreferenceChangeListener(this)
     }
 
@@ -176,6 +177,7 @@ class ChartBitmap(val context: Context,
     fun recreate() {
         try {
             Log.d(LOG_ID, "recreate")
+            stopRecreateThread()
             destroy()
             create()
         } catch (exc: Exception) {
@@ -221,10 +223,10 @@ class ChartBitmap(val context: Context,
                 Log.d(LOG_ID, "time elapsed: ${ReceiveData.getElapsedTimeMinute()}")
                 if(ReceiveData.getElapsedTimeMinute().mod(2) == 0) {
                     Log.d(LOG_ID, "update graph after time elapsed")
-                    recreate()
+                    triggerRecreate()
                 }
             } else {
-                recreate()
+                triggerRecreate()
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.message + " - " + exc.stackTraceToString())
@@ -235,10 +237,44 @@ class ChartBitmap(val context: Context,
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged: $key - paused: $paused")
             if(!paused && chartViewer != null && key != null && chartViewer!!.isGraphPref(key)) {
-                recreate()
+                triggerRecreate()
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.message + " - " + exc.stackTraceToString())
+        }
+    }
+
+    private fun triggerRecreate() {
+        if(recreateThread == null || !recreateThread!!.isAlive) {
+            Log.d(LOG_ID, "triggerRecreate")
+            recreateThread = Thread {
+                try {
+                    Thread.sleep(1000)
+                    Handler(context.mainLooper).post {
+                        if(!paused)
+                            recreate()
+                    }
+                } catch (exc: CancellationException) {
+                    Log.d(LOG_ID, "triggerRecreate cancelled")
+                } catch (exc: InterruptedException) {
+                    Log.d(LOG_ID, "triggerRecreate interrupted")
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "triggerRecreate exception: " + exc.message.toString() + " - " + exc.stackTraceToString() )
+                }
+                recreateThread = null
+            }
+            recreateThread!!.start()
+        } else {
+            Log.d(LOG_ID, "triggerRecreate - recreate thread already running")
+        }
+    }
+
+    private fun stopRecreateThread() {
+        try {
+            recreateThread?.interrupt()
+            recreateThread = null
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "stopRecreateThread exception: " + exc.message.toString() + " - " + exc.stackTraceToString() )
         }
     }
 

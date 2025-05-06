@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import com.github.mikephil.charting.components.LimitLine
@@ -60,6 +61,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     protected open val touchEnabled = true
     protected open var graphDays = 0
     private var graphStartTime = 0L
+    private var recreateThread: Thread? = null
     protected open var backgroundTransparency = 0
     var labelColor: Int = 0
     protected open val textColor: Int get() {
@@ -801,6 +803,26 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         }
     }
 
+    private fun triggerRecreate() {
+        if(recreateThread == null || !recreateThread!!.isAlive) {
+            Log.d(LOG_ID, "triggerRecreate")
+            recreateThread = Thread {
+                try {
+                    Thread.sleep(1000)
+                    Handler(context.mainLooper).post {
+                        recreate()
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "triggerRecreate exception: " + exc.message.toString() + " - " + exc.stackTraceToString() )
+                }
+                recreateThread = null
+            }
+            recreateThread!!.start()
+        } else {
+            Log.d(LOG_ID, "triggerRecreate - recreate thread already running")
+        }
+    }
+
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         Log.d(LOG_ID, "onSharedPreferenceChanged: $key")
         try {
@@ -810,11 +832,11 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             } else if(key == transparencyPref) {
                 backgroundTransparency = sharedPref.getInt(transparencyPref, backgroundTransparency)
                 Log.d(LOG_ID, "re create graph after transparency changed to: $backgroundTransparency")
-                recreate()
+                triggerRecreate()
             } else if (isGraphPref(key)) {
                 Log.i(LOG_ID, "re create graph after settings changed for key: $key")
                 ReceiveData.updateSettings(sharedPref)
-                recreate()
+                triggerRecreate()
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.message.toString() )

@@ -4,12 +4,16 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.os.Bundle
 import android.util.Log
 import android.view.View
 import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
+import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
 
-object ChartBitmapHandler {
+object ChartBitmapHandler : NotifierInterface {
     private val LOG_ID = "GDH.chart.BitmapHandler"
     private val activeWidgets = mutableSetOf<String>()
     private val pausedWidgets = mutableSetOf<String>()
@@ -53,6 +57,9 @@ object ChartBitmapHandler {
                 chartBitmap = ChartBitmap(context, width = 600, forComplication = true, labelColor = Color.WHITE)
             else
                 chartBitmap = ChartBitmap(context, labelColor = Color.WHITE)
+        } else if(!GlucoDataService.isServiceRunning) {
+            Log.i(LOG_ID, "Service not running!")
+            InternalNotifier.addNotifier(context, this, mutableSetOf(NotifySource.SERVICE_STARTED))
         }
     }
 
@@ -93,16 +100,28 @@ object ChartBitmapHandler {
     }
 
     fun resume(widget: String, create: Boolean = true) {
-        Log.d(LOG_ID, "resume widget $widget - create: $create")
+        Log.d(LOG_ID, "resume widget $widget - create: $create - service running ${GlucoDataService.isServiceRunning}")
         activeWidgets.add(widget)
         pausedWidgets.remove(widget)
-        if(chartBitmap?.isPaused == true)
+        if(chartBitmap == null)
+            createBitmap(GlucoDataService.context!!)
+        else if(chartBitmap?.isPaused == true)
             chartBitmap?.resume(create)
     }
 
     fun recreate() {
         Log.d(LOG_ID, "recreate")
         chartBitmap?.recreate()
+    }
+
+    override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
+        Log.d(LOG_ID, "OnNotifyData - source: $dataSource")
+        if(dataSource == NotifySource.SERVICE_STARTED) {
+            if(enabled && GlucoDataService.isServiceRunning) {
+                createBitmap(context)
+                InternalNotifier.remNotifier(context, this)
+            }
+        }
     }
 
 }
