@@ -395,7 +395,10 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
 
     protected fun getFirstNeedGraphValueTime(): Long {
         val firstLastPair = dbAccess.getFirstLastTimestamp()
-        val minTime = System.currentTimeMillis() - Constants.DB_MAX_DATA_WEAR_TIME_MS    // 24h for init the first time
+        val minTime = if(GlucoDataService.appSource == AppSource.AUTO_APP)
+                System.currentTimeMillis() - Constants.DB_MAX_DATA_GDA_TIME_MS     // only for delta calculation
+            else
+                System.currentTimeMillis() - Constants.DB_MAX_DATA_WEAR_TIME_MS    // 24h for init the first time
         if(firstLastPair.first == 0L || (isFirstRequest && firstLastPair.first > minTime)) {
             Log.i(LOG_ID, "First value is ${Utils.getElapsedTimeMinute(firstLastPair.first)} minutes old - try get older data on first request")
             return minTime

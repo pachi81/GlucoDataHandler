@@ -31,6 +31,7 @@ import de.michelinside.glucodataauto.receiver.GlucoDataReceiver
 import de.michelinside.glucodataauto.receiver.NsEmulatorReceiver
 import de.michelinside.glucodataauto.receiver.XDripReceiver
 import de.michelinside.glucodatahandler.common.Intents
+import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.tasks.BackgroundWorker
 import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
@@ -149,6 +150,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
             try {
                 Log.i(LOG_ID, "starting datasync - count=$dataSyncCount - context: ${GlucoDataService.context} - force: $force")
                 if ((dataSyncCount == 0 || force) && GlucoDataService.context != null) {
+                    dbAccess.deleteOldValues(System.currentTimeMillis()-Constants.DB_MAX_DATA_GDA_TIME_MS)
                     updateSourceReceiver(GlucoDataService.context!!)
                     TimeTaskService.run(GlucoDataService.context!!)
                     SourceTaskService.run(GlucoDataService.context!!)

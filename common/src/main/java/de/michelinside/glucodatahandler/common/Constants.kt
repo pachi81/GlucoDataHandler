@@ -323,6 +323,7 @@ object Constants {
     const val DB_MAX_DATA_WEAR_TIME_MS = (DB_MAX_DATA_WEAR_DAYS*24*60*60*1000)
     const val DB_MAX_DATA_DAYS = 7 // 7 days
     const val DB_MAX_DATA_TIME_MS = (DB_MAX_DATA_DAYS*24*60*60*1000)
+    const val DB_MAX_DATA_GDA_TIME_MS = (30*60*1000)  // 30min for GDA (needed for Delta calculation)
     const val SHARED_PREF_RESET_DATABASE = "reset_db"
     const val SHARED_PREF_USE_RATE_CALCULATION = "rate_calculation"
 
