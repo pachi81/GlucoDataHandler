@@ -158,7 +158,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".receiver.BroadcastServiceAPI"
+            android:name="de.michelinside.glucodatahandler.common.receiver.BroadcastServiceAPI"
             android:enabled="true"
             android:exported="true"
             tools:ignore="ExportedReceiver">
