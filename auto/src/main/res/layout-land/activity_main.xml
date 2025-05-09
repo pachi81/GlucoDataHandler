@@ -209,10 +209,12 @@
                     android:id="@+id/tableNotes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/layout_bg"
                     android:divider="?android:attr/dividerHorizontal"
                     android:showDividers="middle">
 
-                    <TableRow android:background="@color/table_header" android:padding="5dp"
+                    <TableRow android:background="@drawable/layout_table_header" android:padding="5dp"
                         tools:ignore="UselessParent">
                         <TextView
                             android:textStyle="bold"
@@ -228,10 +230,12 @@
                     android:id="@+id/tableAlarms"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/layout_bg"
                     android:divider="?android:attr/dividerHorizontal"
                     android:showDividers="middle">
 
-                    <TableRow android:background="@color/table_header" android:padding="5dp"
+                    <TableRow android:background="@drawable/layout_table_header" android:padding="5dp"
                         tools:ignore="UselessParent">
                         <TextView
                             android:textStyle="bold"
@@ -247,10 +251,12 @@
                     android:id="@+id/tableDetails"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/layout_bg"
                     android:divider="?android:attr/dividerHorizontal"
                     android:showDividers="middle">
 
-                    <TableRow android:background="@color/table_header" android:padding="5dp"
+                    <TableRow android:background="@drawable/layout_table_header" android:padding="5dp"
                         tools:ignore="UselessParent">
                         <TextView
                             android:textStyle="bold"
@@ -266,10 +272,12 @@
                     android:id="@+id/tableConnections"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/layout_bg"
                     android:divider="?android:attr/dividerHorizontal"
                     android:showDividers="middle">
 
-                    <TableRow android:background="@color/table_header" android:padding="5dp"
+                    <TableRow android:background="@drawable/layout_table_header" android:padding="5dp"
                         tools:ignore="UselessParent">
                         <TextView
                             android:textStyle="bold"
