@@ -34,6 +34,7 @@ import de.michelinside.glucodatahandler.common.GlucoDataService.Companion.checkN
 import de.michelinside.glucodatahandler.common.GlucoDataService.Companion.updateNotificationReceiver
 import de.michelinside.glucodatahandler.common.Intents
 import de.michelinside.glucodatahandler.common.database.dbAccess
+import de.michelinside.glucodatahandler.common.receiver.BroadcastServiceAPI
 import de.michelinside.glucodatahandler.common.tasks.BackgroundWorker
 import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
@@ -57,6 +58,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
         private var dexcomReceiver: DexcomBroadcastReceiver? = null
         private var nsEmulatorReceiver: NsEmulatorReceiver? = null
         private var diaboxReceiver: DiaboxReceiver? = null
+        private val broadcastServiceAPI = BroadcastServiceAPI()
         private var patient_name: String? = null
         val patientName: String? get() = patient_name
 
@@ -154,6 +156,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                 if ((dataSyncCount == 0 || force) && GlucoDataService.context != null) {
                     dbAccess.deleteOldValues(System.currentTimeMillis()-Constants.DB_MAX_DATA_GDA_TIME_MS)
                     updateSourceReceiver(GlucoDataService.context!!)
+                    broadcastServiceAPI.init()
                     TimeTaskService.run(GlucoDataService.context!!)
                     SourceTaskService.run(GlucoDataService.context!!)
                     sendStateBroadcast(GlucoDataService.context!!, true)
@@ -172,6 +175,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                 Log.i(LOG_ID, "stopping datasync - count=$dataSyncCount")
                 if (dataSyncCount == 0 && GlucoDataService.context != null) {
                     unregisterSourceReceiver(GlucoDataService.context!!)
+                    broadcastServiceAPI.close(context)
                     sendStateBroadcast(context, false)
                     BackgroundWorker.stopAllWork(context)
                     Log.i(LOG_ID, "Datasync stopped")
