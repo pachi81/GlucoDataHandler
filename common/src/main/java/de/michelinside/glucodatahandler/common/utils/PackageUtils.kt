@@ -41,6 +41,7 @@ object PackageUtils {
                     val name =
                         resolveInfo.activityInfo.loadLabel(context.packageManager).toString()
                     if (pkgName != null) {
+                        Log.v(LOG_ID, "Package: $pkgName - $name")
                         packages[pkgName] = name
                     }
                 }

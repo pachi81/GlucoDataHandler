@@ -385,35 +385,45 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 }
 
                 if (key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED) {
-                    // default to false because reading notifications is a scary permission to give for no reason
-                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
-                        Log.d(LOG_ID, "Notification source enabled")
-                        val notificationListeners = Settings.Secure.getString(context.contentResolver, "enabled_notification_listeners")
-                        if (!notificationListeners.contains(context.packageName)) {
-                            // disable until permission is granted:
-                            with(sharedPref.edit()) {
-                                putBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)
-                                apply()
-                            }
-                            // request permissions
-                            val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            context.startActivity(intent)
-                        } else {
-                            notificationReceiver = NotificationReceiver()
-                            registerReceiver(context, notificationReceiver!!, IntentFilter())
-                        }
-                    } else if(notificationReceiver!=null) {
-                        unregisterReceiver(context, notificationReceiver)
-                        notificationReceiver = null
-                    }
-                    // notification listeners can not be unregistered
+                    updateNotificationReceiver(sharedPref, context)
                 }
 
 
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "registerSourceReceiver exception: " + exc.toString())
             }
+        }
+
+        fun checkNotificationReceiverPermission(sharedPref: SharedPreferences, context: Context): Boolean {
+            val notificationListeners = Settings.Secure.getString(context.contentResolver, "enabled_notification_listeners")
+            if(!notificationListeners.contains(context.packageName)) {
+                // disable until permission is granted:
+                with(sharedPref.edit()) {
+                    putBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)
+                    apply()
+                }
+                // request permissions
+                val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(intent)
+                return false
+            }
+            return true
+        }
+
+        fun updateNotificationReceiver(sharedPref: SharedPreferences, context: Context) {
+            // default to false because reading notifications is a scary permission to give for no reason
+            if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
+                Log.d(LOG_ID, "Notification source enabled")
+                if (checkNotificationReceiverPermission(sharedPref, context)) {
+                    notificationReceiver = NotificationReceiver()
+                    registerReceiver(context, notificationReceiver!!, IntentFilter())
+                }
+            } else if(notificationReceiver!=null) {
+                unregisterReceiver(context, notificationReceiver)
+                notificationReceiver = null
+            }
+            // notification listeners can not be unregistered
         }
 
         fun unregisterSourceReceiver(context: Context) {

@@ -30,6 +30,8 @@ import de.michelinside.glucodataauto.receiver.DiaboxReceiver
 import de.michelinside.glucodataauto.receiver.GlucoDataReceiver
 import de.michelinside.glucodataauto.receiver.NsEmulatorReceiver
 import de.michelinside.glucodataauto.receiver.XDripReceiver
+import de.michelinside.glucodatahandler.common.GlucoDataService.Companion.checkNotificationReceiverPermission
+import de.michelinside.glucodatahandler.common.GlucoDataService.Companion.updateNotificationReceiver
 import de.michelinside.glucodatahandler.common.Intents
 import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.tasks.BackgroundWorker
@@ -223,7 +225,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
         }
 
         fun updateSourceReceiver(context: Context, key: String? = null) {
-            Log.d(LOG_ID, "Register receiver")
+            Log.d(LOG_ID, "Register receiver for $key")
             try {
                 val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED) {
@@ -307,6 +309,10 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                     }
                 }
 
+                if (key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED) {
+                    updateNotificationReceiver(sharedPref, context)
+                }
+
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "registerSourceReceiver exception: " + exc.toString())
             }
@@ -339,6 +345,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                     GlucoDataService.unregisterReceiver(context, diaboxReceiver)
                     diaboxReceiver = null
                 }
+                GlucoDataService.unregisterSourceReceiver(context)
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "unregisterSourceReceiver exception: " + exc.toString())
             }
@@ -413,16 +420,20 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         try {
-            Log.d(LOG_ID, "onSharedPreferenceChanged called with key $key")
+            Log.d(LOG_ID, "onSharedPreferenceChanged called with key $key - dataSyncCount = $dataSyncCount")
             when(key) {
                 Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED,
                 Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED,
                 Constants.SHARED_PREF_SOURCE_AAPS_ENABLED,
                 Constants.SHARED_PREF_SOURCE_BYODA_ENABLED,
                 Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED,
-                Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED -> {
-                    if(dataSyncCount>0)
+                Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED,
+                Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED -> {
+                    if(dataSyncCount>0) {
                         updateSourceReceiver(this, key)
+                    } else if(key == Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED && sharedPreferences.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
+                        checkNotificationReceiverPermission(sharedPreferences, this)
+                    }
                 }
                 Constants.PATIENT_NAME -> {
                     patient_name = sharedPreferences.getString(Constants.PATIENT_NAME, "")
