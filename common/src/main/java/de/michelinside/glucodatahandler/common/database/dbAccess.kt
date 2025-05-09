@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
 import androidx.room.Room
+import com.google.gson.Gson
 import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
@@ -237,5 +238,11 @@ object dbAccess {
 
     fun cleanUpOldData() {
         deleteOldValues(System.currentTimeMillis()-Constants.DB_MAX_DATA_TIME_MS)
+    }
+
+    fun getGlucoseValuesAsJson(minTime: Long): String {
+        val data = getGlucoseValues(minTime)
+        val gson = Gson()
+        return gson.toJson(data)
     }
 }
