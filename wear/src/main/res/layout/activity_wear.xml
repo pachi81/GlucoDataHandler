@@ -22,8 +22,6 @@
             android:layout_height="0dp"
             android:orientation="vertical"
             android:gravity="center|top"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
             android:paddingTop="10dp"
             android:paddingBottom="40dp"
             app:layout_boxedEdges="all">
@@ -153,6 +151,12 @@
             android:textColor="#FFFFFF"
             android:textSize="14sp" />
 
+            <ImageView
+                android:id="@+id/graphImage"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:contentDescription="@string/graph" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp"/>
@@ -192,6 +196,25 @@
                         android:layout_width="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/alarm_header"/>
+                </TableRow>
+            </TableLayout>
+
+            <TableLayout
+                android:id="@+id/tableDelta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="?android:attr/dividerHorizontal"
+                android:showDividers="middle">
+
+                <TableRow android:background="@color/table_header" android:padding="5dp"
+                    tools:ignore="UselessParent">
+                    <TextView
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/info_label_delta"/>
                 </TableRow>
             </TableLayout>
 
@@ -251,6 +274,11 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:text="@string/menu_alarms" />
+            <Button
+                android:id="@+id/btnWatchfaces"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="@string/wearos_watchfaces" />
 
         <TextView
             android:id="@+id/txtVersion"

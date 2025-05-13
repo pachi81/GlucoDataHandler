@@ -10,7 +10,7 @@
         android:summary="@string/source_interval_summary"
         app:iconSpaceReserved="false" />
     <androidx.preference.SeekBarPreference
-        android:defaultValue="10"
+        android:defaultValue="30"
         app:showSeekBarValue="true"
         app:seekBarIncrement="10"
         app:min="5"

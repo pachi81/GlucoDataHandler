@@ -9,7 +9,10 @@ import de.michelinside.glucodatahandler.common.Intents
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
+import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.DataSource
+import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
+import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
@@ -22,6 +25,11 @@ class InternalActionReceiver: BroadcastReceiver() {
         try {
             Log.d(LOG_ID, "Action received: ${intent.action} - bundle: ${Utils.dumpBundle(intent.extras)}")
             when(intent.action) {
+                Intent.ACTION_DATE_CHANGED -> {
+                    Log.i(LOG_ID, "Action: date changed received - trigger db cleanup")
+                    dbAccess.cleanUpOldData()
+                    InternalNotifier.notify(context, NotifySource.DAY_CHANGED, null)
+                }
                 Constants.ACTION_FLOATING_WIDGET_TOGGLE -> {
                     Log.d(LOG_ID, "Action: floating widget toggle")
                     val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)

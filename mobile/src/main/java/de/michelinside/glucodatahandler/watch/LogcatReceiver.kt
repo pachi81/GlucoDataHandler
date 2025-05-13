@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.ChannelClient
 import com.google.android.gms.wearable.Wearable
 import de.michelinside.glucodatahandler.GlucoDataServiceMobile
+import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
 import kotlinx.coroutines.CoroutineScope
@@ -24,6 +25,7 @@ object LogcatReceiver : ChannelClient.ChannelCallback() {
     private var finished = true
     private var fileUri: Uri? = null
     private var channel: ChannelClient.Channel? = null
+    private var receivedBytes = 0
 
     val isActive: Boolean get() = !finished
     @SuppressLint("StaticFieldLeak")
@@ -37,12 +39,15 @@ object LogcatReceiver : ChannelClient.ChannelCallback() {
 
     override fun onChannelOpened(p0: ChannelClient.Channel) {
         try {
+            Log.d(LOG_ID, "onChannelOpened for path ${p0.path}")
+            if(p0.path != Constants.LOGCAT_CHANNEL_PATH)
+                return
             super.onChannelOpened(p0)
-            Log.d(LOG_ID, "onChannelOpened")
             channel = p0
             scope.launch {
                 try {
                     Log.d(LOG_ID, "receiving...")
+                    receivedBytes = 0
                     val inputStream = Tasks.await(Wearable.getChannelClient(GlucoDataService.context!!).getInputStream(p0))
                     Log.d(LOG_ID, "received, save to file " + fileUri)
                     GlucoDataService.context!!.contentResolver.openFileDescriptor(fileUri!!, "w")?.use {
@@ -51,8 +56,9 @@ object LogcatReceiver : ChannelClient.ChannelCallback() {
                             val buffer = ByteArray(4 * 1024) // or other buffer size
                             var read: Int
                             while (inputStream.read(buffer).also { rb -> read = rb } != -1) {
-                                Log.v(LOG_ID, "write")
+                                Log.v(LOG_ID, "write $read bytes")
                                 os.write(buffer, 0, read)
+                                receivedBytes += read
                             }
                             Log.v(LOG_ID, "flush")
                             os.flush()
@@ -69,8 +75,10 @@ object LogcatReceiver : ChannelClient.ChannelCallback() {
 
     override fun onInputClosed(p0: ChannelClient.Channel, i: Int, i1: Int) {
         try {
+            Log.d(LOG_ID, "onInputClosed for path ${p0.path}")
+            if(p0.path != Constants.LOGCAT_CHANNEL_PATH)
+                return
             super.onInputClosed(p0, i, i1)
-            Log.d(LOG_ID, "onInputClosed")
             Wearable.getChannelClient(GlucoDataService.context!!).close(p0)
             channel = null
             finished = true
@@ -90,13 +98,13 @@ object LogcatReceiver : ChannelClient.ChannelCallback() {
                 }
                 var success: Boolean
                 if (!finished) {
-                    Log.w(LOG_ID, "Receiving still not finished!")
+                    Log.w(LOG_ID, "Receiving still not finished after receiving $receivedBytes bytes!")
                     if(channel != null)
                         Wearable.getChannelClient(context).close(channel!!)
                     success = false
                 } else {
-                    Log.d(LOG_ID, "Receiving finished!")
-                    success = true
+                    Log.d(LOG_ID, "Receiving finished for $receivedBytes bytes!")
+                    success = receivedBytes > 0
                 }
                 Wearable.getChannelClient(context).unregisterChannelCallback(this)
                 Log.d(LOG_ID, "unregisterChannel called")

@@ -8,12 +8,14 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.database.dbSync
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
+import de.michelinside.glucodatahandler.common.utils.Utils.isScreenReaderOn
 
 
 class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterface {
@@ -54,6 +56,18 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
                     Log.i(LOG_ID, "Setting default tap action for complications to $curApp")
                     with(sharedPref.edit()) {
                         putString(Constants.SHARED_PREF_COMPLICATION_TAP_ACTION, curApp)
+                        apply()
+                    }
+                }
+
+                // graph settings
+                if(sharedPref.contains(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION) || !sharedPref.contains(Constants.SHARED_PREF_GRAPH_BITMAP_DURATION)) {
+                    val isScreenReader = context.isScreenReaderOn()
+                    val oldDuration = if(isScreenReader) 0 else sharedPref.getInt(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION, 2)
+                    Log.i(LOG_ID, "Setting default duration for graph - screenReader: $isScreenReader - oldDuration: $oldDuration")
+                    with(sharedPref.edit()) {
+                        putInt(Constants.SHARED_PREF_GRAPH_BITMAP_DURATION, oldDuration)
+                        remove(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_WEAR_COMPLICATION)
                         apply()
                     }
                 }
@@ -111,6 +125,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
             InternalNotifier.addNotifier(this, this, filter)
             updateComplicationNotifier()
             ActiveComplicationHandler.OnNotifyData(this, NotifySource.CAPILITY_INFO, null)
+            ChartComplicationUpdater.init(this)
         } catch (ex: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + ex)
         }
@@ -126,7 +141,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
                 }
                 NotifySource.CAPILITY_INFO -> {
                     if(ScreenEventReceiver.isDisplayOff()) {
-                        ScreenEventReceiver.onDisplayOff(this)
+                        ScreenEventReceiver.triggerNotify(this)
                     }
                 }
                 NotifySource.DISPLAY_STATE_CHANGED -> {
@@ -136,6 +151,7 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
                         sendCommand(Command.PAUSE_NODE)
                     } else {
                         sendCommand(Command.RESUME_NODE)
+                        dbSync.requestDbSync(context)
                     }
                 }
                 else -> {}
@@ -179,18 +195,18 @@ class GlucoDataServiceWear: GlucoDataService(AppSource.WEAR_APP), NotifierInterf
             if(!sharedPref!!.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true)) {
                 if(screenEventReceiver == null) {
                     Log.i(LOG_ID, "register screenEventReceiver")
-                    screenEventReceiver = ScreenEventReceiver()
+                    screenEventReceiver = ScreenEventReceiverWear()
                     val filter = IntentFilter()
                     filter.addAction(Intent.ACTION_SCREEN_OFF)
                     filter.addAction(Intent.ACTION_SCREEN_ON)
                     registerReceiver(screenEventReceiver, filter)
-                    ScreenEventReceiver.update(this)
+                    screenEventReceiver!!.update(this)
                 }
             } else if(screenEventReceiver != null) {
                 Log.i(LOG_ID, "unregister screenEventReceiver")
                 unregisterReceiver(screenEventReceiver)
+                screenEventReceiver!!.reset(this)
                 screenEventReceiver = null
-                ScreenEventReceiver.reset(this)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateScreenReceiver exception: " + exc.toString())

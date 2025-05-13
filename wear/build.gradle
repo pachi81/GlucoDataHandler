@@ -25,7 +25,7 @@ android {
         dev_release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-dev-rules.pro'
-            versionNameSuffix '-dev'
+            versionNameSuffix '-dev.' + rootProject.versionCode
             resValue "string", "app_name", "GlucoDataHandler"
         }
         debug {
@@ -104,6 +104,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'androidx.work:work-runtime:2.9.1'
     implementation "androidx.core:core-splashscreen:1.1.0-rc01"
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
 
 afterEvaluate {

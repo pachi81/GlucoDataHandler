@@ -9,6 +9,7 @@ import android.os.Build
 import android.util.Log
 import androidx.car.app.connection.CarConnection
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
@@ -21,6 +22,7 @@ object CarModeReceiver {
     private var init = false
     private var car_connected = false
     private var gda_enabled = false
+    private var graph_duration = 0
     val connected: Boolean get() {  // connected to GlucoDataAuto
         if (!car_connected)
             return gda_enabled
@@ -40,6 +42,8 @@ object CarModeReceiver {
                 PackageUtils.updatePackages(context)
             }
             gda_enabled = intent.getBooleanExtra(Constants.GLUCODATAAUTO_STATE_EXTRA, false)
+            graph_duration = intent.getIntExtra(Constants.EXTRA_GRAPH_DURATION_HOURS, 0)
+            Log.i(LOG_ID, "gda_enabled: $gda_enabled - graph_duration: $graph_duration")
             if(!car_connected && gda_enabled) {
                 InternalNotifier.notify(context, NotifySource.CAR_CONNECTION, null)
             }
@@ -117,11 +121,19 @@ object CarModeReceiver {
                     Log.i(LOG_ID, "send to ${Constants.PACKAGE_GLUCODATAAUTO}")
                     val intent = Intent(Intents.GLUCODATA_ACTION)
                     intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-                    if(withSettings && sharedPref.getBoolean(Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO, true)) {
-                        val settings = GlucoDataService.getSettings()
-                        settings.putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime)
-                        extras.putBundle(Constants.SETTINGS_BUNDLE, settings)
-                        extras.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings(true))
+                    if(withSettings) {
+                        if(sharedPref.getBoolean(Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO, true)) {
+                            val settings = GlucoDataService.getSettings()
+                            settings.putBoolean(Constants.SHARED_PREF_RELATIVE_TIME, ElapsedTimeTask.relativeTime)
+                            extras.putBundle(Constants.SETTINGS_BUNDLE, settings)
+                            extras.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings(true))
+                        }
+                        if(graph_duration > 0) {
+                            val minTime = System.currentTimeMillis() - (graph_duration*60*60*1000)
+                            val data = dbAccess.getGlucoseValuesAsJson(minTime)
+                            Log.i(LOG_ID, "Sending graph data since: ${Utils.getUiTimeStamp(minTime)} - size: ${data.length}")
+                            extras.putString(Constants.EXTRA_GRAPH_DATA, data)
+                        }
                     }
                     intent.putExtras(extras)
                     intent.setPackage(Constants.PACKAGE_GLUCODATAAUTO)

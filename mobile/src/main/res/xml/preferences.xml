@@ -40,8 +40,8 @@
             app:iconSpaceReserved="false" />
         <Preference
             android:key="pref_cat_locksreen_wallpaper"
-            android:title="@string/pref_cat_locksreen_wallpaper"
-            android:summary="@string/pref_cat_locksreen_wallpaper_summary"
+            android:title="@string/pref_cat_locksreen_aod"
+            android:summary="@string/pref_cat_locksreen_aod_summary"
             app:fragment="de.michelinside.glucodatahandler.preferences.LockscreenSettingsFragment"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>

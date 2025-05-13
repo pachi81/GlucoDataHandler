@@ -5,20 +5,24 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.*
+import de.michelinside.glucodatahandler.common.chart.ChartCreator
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
 import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.common.utils.Utils.isScreenReaderOn
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.watch.WatchDrip
+import de.michelinside.glucodatahandler.widget.BatteryLevelWidgetNotifier
 import de.michelinside.glucodatahandler.widget.FloatingWidget
 import de.michelinside.glucodatahandler.widget.GlucoseBaseWidget
 import de.michelinside.glucodatahandler.widget.LockScreenWallpaper
@@ -27,22 +31,11 @@ import java.math.RoundingMode
 
 class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInterface {
     private lateinit var floatingWidget: FloatingWidget
+    private lateinit var lockScreenWallpaper: LockScreenWallpaper
     private var lastForwardTime = 0L
 
     init {
         Log.d(LOG_ID, "init called")
-        InternalNotifier.addNotifier(
-            this,
-            TaskerDataReceiver,
-            mutableSetOf(
-                NotifySource.BROADCAST,
-                NotifySource.IOB_COB_CHANGE,
-                NotifySource.MESSAGECLIENT,
-                NotifySource.OBSOLETE_VALUE,
-                NotifySource.ALARM_TRIGGER,
-                NotifySource.DELTA_ALARM_TRIGGER
-            )
-        )
     }
 
     companion object {
@@ -161,6 +154,44 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                     }
                 }
 
+                // graph settings related to screen reader
+                if(!sharedPrefs.contains(Constants.SHARED_PREF_GRAPH_DURATION_PHONE_MAIN)) {
+                    val isScreenReader = context.isScreenReaderOn()
+                    Log.i(LOG_ID, "Setting default duration for graph - screenReader: $isScreenReader")
+                    with(sharedPrefs.edit()) {
+                        putInt(Constants.SHARED_PREF_GRAPH_DURATION_PHONE_MAIN, if(isScreenReader) 0 else ChartCreator.defaultDurationHours)
+                        apply()
+                    }
+                }
+                if(sharedPrefs.contains(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION) || !sharedPrefs.contains(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_SHOW_GRAPH)) {
+                    val isScreenReader = context.isScreenReaderOn()
+                    Log.i(LOG_ID, "Setting default duration for notification graph - screenReader: $isScreenReader")
+                    with(sharedPrefs.edit()) {
+                        putBoolean(Constants.SHARED_PREF_PERMANENT_NOTIFICATION_SHOW_GRAPH, !isScreenReader && sharedPrefs.getInt(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION, 0) > 0)
+                        remove(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_NOTIFICATION)
+                        apply()
+                    }
+                }
+                if(sharedPrefs.contains(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_WIDGET)) {
+                    val oldDuration = sharedPrefs.getInt(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_WIDGET, 0)
+                    Log.i(LOG_ID, "Migratate old widget duration of $oldDuration hours to bitmap duration")
+                    with(sharedPrefs.edit()) {
+                        if(oldDuration > 0)
+                            putInt(Constants.SHARED_PREF_GRAPH_BITMAP_DURATION, oldDuration)
+                        remove(Constants.DEPRECATED_SHARED_PREF_GRAPH_DURATION_PHONE_WIDGET)
+                        apply()
+                    }
+                }
+                if(sharedPrefs.contains(Constants.DEPRECATED_SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_WIDGET)) {
+                    val oldShowAxis = sharedPrefs.getBoolean(Constants.DEPRECATED_SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_WIDGET, false)
+                    Log.i(LOG_ID, "Migratate old widget show axis of $oldShowAxis to bitmap show axis")
+                    with(sharedPrefs.edit()) {
+                        putBoolean(Constants.SHARED_PREF_GRAPH_BITMAP_SHOW_AXIS, oldShowAxis)
+                        remove(Constants.DEPRECATED_SHARED_PREF_GRAPH_SHOW_AXIS_PHONE_WIDGET)
+                        apply()
+                    }
+                }
+
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "migrateSettings exception: " + exc.message.toString() )
             }
@@ -181,13 +212,27 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 NotifySource.BATTERY_LEVEL)  // used for watchdog-check
             InternalNotifier.addNotifier(this, this, filter)
             floatingWidget = FloatingWidget(this)
+            lockScreenWallpaper = LockScreenWallpaper(this)
             PermanentNotification.create(applicationContext)
             CarModeReceiver.init(applicationContext)
             GlucoseBaseWidget.updateWidgets(applicationContext)
+            BatteryLevelWidgetNotifier.OnNotifyData(applicationContext, NotifySource.CAPILITY_INFO, null)
             WatchDrip.init(applicationContext)
             floatingWidget.create()
-            LockScreenWallpaper.create(this)
+            lockScreenWallpaper.create()
             AlarmNotification.initNotifications(this)
+            InternalNotifier.addNotifier(
+                this,
+                TaskerDataReceiver,
+                mutableSetOf(
+                    NotifySource.BROADCAST,
+                    NotifySource.IOB_COB_CHANGE,
+                    NotifySource.MESSAGECLIENT,
+                    NotifySource.OBSOLETE_VALUE,
+                    NotifySource.ALARM_TRIGGER,
+                    NotifySource.DELTA_ALARM_TRIGGER
+                )
+            )
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -224,7 +269,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             CarModeReceiver.cleanup(applicationContext)
             WatchDrip.close(applicationContext)
             floatingWidget.destroy()
-            LockScreenWallpaper.destroy(this)
+            lockScreenWallpaper.destroy()
             super.onDestroy()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )
@@ -320,7 +365,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            Log.v(LOG_ID, "OnNotifyData called for source " + dataSource.toString())
+            Log.d(LOG_ID, "OnNotifyData called for source " + dataSource.toString())
             start(context)
             if (dataSource == NotifySource.CAPILITY_INFO) {
                 context.setWearConnectionState(WearPhoneConnection.nodesConnected)
@@ -363,4 +408,12 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             Log.e(LOG_ID, "updateBatteryReceiver exception: " + exc.toString())
         }
     }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        Log.i(LOG_ID, "onConfigurationChanged called: $newConfig")
+        if(!PermanentNotification.recreateBitmap())
+            PermanentNotification.showNotifications()
+    }
+
 }

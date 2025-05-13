@@ -1,10 +1,12 @@
 package de.michelinside.glucodatahandler.preferences
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -15,6 +17,7 @@ import androidx.preference.MultiSelectListPreference
 import androidx.preference.Preference
 import androidx.preference.SeekBarPreference
 import androidx.preference.SwitchPreferenceCompat
+import de.michelinside.glucodatahandler.AODAccessibilityService
 import de.michelinside.glucodatahandler.common.ui.Dialogs
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
@@ -24,6 +27,7 @@ import de.michelinside.glucodatahandler.common.Intents
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.preferences.PreferenceHelper
+import de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import kotlin.collections.HashMap
 import kotlin.collections.List
@@ -147,10 +151,10 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
         }
     }
 
-    fun <T : Preference?> setEnableState(sharedPreferences: SharedPreferences, key: String, enableKey: String, secondEnableKey: String? = null, defValue: Boolean = false, invert: Boolean = false) {
+    fun <T : Preference?> setEnableState(sharedPreferences: SharedPreferences, key: String, enableKey: String, secondEnableKey: String? = null, defValue: Boolean = false, invert: Boolean = false, secondDevValue: Boolean = false) {
         val pref = findPreference<T>(key)
         if (pref != null) {
-            pref.isEnabled = invert != (sharedPreferences.getBoolean(enableKey, defValue) && (if (secondEnableKey != null) sharedPreferences.getBoolean(secondEnableKey, defValue) else true))
+            pref.isEnabled = invert != sharedPreferences.getBoolean(enableKey, defValue) && (if (secondEnableKey != null) sharedPreferences.getBoolean(secondEnableKey, secondDevValue) else true)
 
             if(!updateEnablePrefs.contains(enableKey)) {
                 Log.v(LOG_ID, "Add update enable pref $enableKey")
@@ -182,15 +186,24 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
             setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_GLUCODATA_RECEIVERS, Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD)
             setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_XDRIP_RECEIVERS, Constants.SHARED_PREF_SEND_TO_XDRIP)
             setEnableState<MultiSelectListPreference>(sharedPreferences, Constants.SHARED_PREF_XDRIP_BROADCAST_RECEIVERS, Constants.SHARED_PREF_SEND_XDRIP_BROADCAST)
-            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, defValue = true, invert = true)
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY, defValue = false, invert = true)
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_SHOW_GRAPH, Constants.SHARED_PREF_PERMANENT_NOTIFICATION_EMPTY,  Constants.SHARED_PREF_PERMANENT_NOTIFICATION_CUSTOM_LAYOUT, defValue = false, invert = true, secondDevValue = true)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_STYLE, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_TIME_TO_CLOSE, Constants.SHARED_PREF_FLOATING_WIDGET)
+            setEnableState<ListPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_LOCK_POSITION, Constants.SHARED_PREF_FLOATING_WIDGET)
+            setEnableState<SelectReceiverPreference>(sharedPreferences, Constants.SHARED_PREF_FLOATING_WIDGET_TAP_ACTION, Constants.SHARED_PREF_FLOATING_WIDGET)
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SEND_PREF_TO_GLUCODATAAUTO, Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO, defValue = true)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_Y_POS, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_LOCKSCREEN_WP_SIZE, Constants.SHARED_PREF_LOCKSCREEN_WP_ENABLED)
+
+            setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_Y_POS, Constants.SHARED_PREF_AOD_WP_ENABLED)
+            setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_STYLE, Constants.SHARED_PREF_AOD_WP_ENABLED)
+            setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_SIZE, Constants.SHARED_PREF_AOD_WP_ENABLED)
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_COLOURED, Constants.SHARED_PREF_AOD_WP_ENABLED)
+
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
         }
@@ -275,7 +288,8 @@ class WidgetSettingsFragment: SettingsFragmentBase(R.xml.pref_widgets) {
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         super.onSharedPreferenceChanged(sharedPreferences, key)
         when (key) {
-            Constants.SHARED_PREF_FLOATING_WIDGET_STYLE -> updateStyleSummary()
+            Constants.SHARED_PREF_FLOATING_WIDGET_STYLE,
+            Constants.SHARED_PREF_FLOATING_WIDGET -> updateStyleSummary()
         }
     }
 
@@ -288,16 +302,32 @@ class WidgetSettingsFragment: SettingsFragmentBase(R.xml.pref_widgets) {
 }
 
 class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
+    companion object {
+        fun requestAccessibilitySettings(context: Context) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                intent.putExtra(Settings.EXTRA_APP_PACKAGE,context.packageName)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(intent)
+            }
+        }
+    }
     override fun initPreferences() {
         Log.v(LOG_ID, "initPreferences called")
         super.initPreferences()
         updateStyleSummary()
+        updateEnabledInitial()
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        Log.v(LOG_ID, "onSharedPreferenceChanged called with key $key")
         super.onSharedPreferenceChanged(sharedPreferences, key)
         when (key) {
             Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE -> updateStyleSummary()
+            Constants.SHARED_PREF_AOD_WP_STYLE -> updateStyleSummary()
+            Constants.SHARED_PREF_AOD_WP_ENABLED -> {
+                checkAccesibilityService()
+            }
         }
     }
 
@@ -305,6 +335,50 @@ class LockscreenSettingsFragment: SettingsFragmentBase(R.xml.pref_lockscreen)  {
         val lockscreenStylePref = findPreference<ListPreference>(Constants.SHARED_PREF_LOCKSCREEN_WP_STYLE)
         if(lockscreenStylePref != null) {
             lockscreenStylePref.summary = lockscreenStylePref.entry
+        }
+        val aodStylePref = findPreference<ListPreference>(Constants.SHARED_PREF_AOD_WP_STYLE)
+        if(aodStylePref != null) {
+            aodStylePref.summary = aodStylePref.entry
+        }
+    }
+    private val accessibilitySettingsLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            val enabled = (AODAccessibilityService.isAccessibilitySettingsEnabled(requireContext()))
+            Log.i(LOG_ID, "Accessibility permission: $enabled")
+            preferenceManager.sharedPreferences?.edit()?.putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, enabled)?.apply()
+            val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_AOD_WP_ENABLED)
+            if (pref != null)
+                pref.isChecked = enabled
+        }
+
+    private fun updateEnabledInitial() {
+        val pref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_AOD_WP_ENABLED)
+        if (pref != null && pref.isChecked) {
+            if (!AODAccessibilityService.isAccessibilitySettingsEnabled(requireContext())) {
+                preferenceManager.sharedPreferences?.edit()
+                    ?.putBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)?.apply()
+                pref.isChecked = false
+            }
+        }
+    }
+
+    private fun checkAccesibilityService() {
+        if(preferenceManager.sharedPreferences!!.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)) {
+            val enabled = AODAccessibilityService.isAccessibilitySettingsEnabled(requireContext())
+            if (!enabled) {
+                Dialogs.showOkCancelDialog(requireContext(),
+                    resources.getString(CR.string.permission_missing_title),
+                    resources.getString(CR.string.aod_permission_info),
+                    { _, _ ->
+                        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                        accessibilitySettingsLauncher.launch(intent)
+                    },
+                    { _, _ ->
+                        Log.v(LOG_ID, "Accessibility permission canceled!")
+                        updateEnabledInitial()
+                    }
+                )
+            }
         }
     }
 }

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/box_inset_layout_padding"
+    tools:context=".settings.SourcesActivity"
+    tools:deviceIds="wear">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp">
+        <requestFocus/>
+        <LinearLayout
+            android:id="@+id/frameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:gravity="center|top"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:paddingTop="40dp"
+            android:paddingBottom="80dp"
+            app:layout_boxedEdges="all">
+
+            <TextView
+                android:id="@+id/txtWatchfaceInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pref_watchfaces_info_summary"
+                android:textAlignment="textStart"
+                android:textSize="18sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginVertical="10dp"/>
+
+            <TextView
+                android:id="@+id/txtThirdPartyWatchfaces"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pref_watchfaces_cat"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:layout_marginVertical="10dp" />
+
+            <TextView
+                android:id="@+id/txtDefaultWatchfaceInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pref_watchfaces_default_summary"
+                android:textAlignment="textStart"
+                android:textSize="18sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginVertical="10dp"/>
+
+            <TextView
+                android:id="@+id/txtDMMWatchfaceInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pref_watchfaces_dmm_summary"
+                android:textAlignment="textStart"
+                android:textSize="18sp" />
+            <Button
+                android:id="@+id/btnDMMWatchfaces"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="@string/pref_watchfaces_dmm" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginVertical="10dp"/>
+
+            <TextView
+                android:id="@+id/txtGDCWatchfaceInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pref_watchfaces_gdc_summary"
+                android:textAlignment="textStart"
+                android:textSize="18sp" />
+            <Button
+                android:id="@+id/btnGDCWatchfaces"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="@string/pref_watchfaces_gdc" />
+
+    </LinearLayout>
+    </ScrollView>
+</androidx.wear.widget.BoxInsetLayout>

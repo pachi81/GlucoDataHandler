@@ -10,7 +10,7 @@ import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 
 
-open class GlucoseDataReceiver: ReceiverBase() {
+open class GlucoseDataReceiver: NamedBroadcastReceiver() {
     private val LOG_ID = "GDH.GlucoseDataReceiver"
     override fun getName(): String {
         return LOG_ID

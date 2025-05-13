@@ -96,10 +96,11 @@ class GlucodataEvent : Activity(), TaskerPluginConfig<GlucodataValues> {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
+            Log.d(LOG_ID, "GlucodataEvent - onCreate called")
             super.onCreate(savedInstanceState)
             GlucodataEventHelper(this).finishForTasker()
         } catch (ex: Exception) {
-            Log.e(LOG_ID, "onCreate exception: " + ex)
+            Log.e(LOG_ID, "GlucodataEvent - onCreate exception: " + ex)
         }
     }
 }
@@ -111,10 +112,11 @@ class GlucodataAlarmEvent : Activity(), TaskerPluginConfig<GlucodataValues> {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
+            Log.d(LOG_ID, "GlucodataAlarmEvent - onCreate called")
             super.onCreate(savedInstanceState)
             GlucodataEventHelper(this).finishForTasker()
         } catch (ex: Exception) {
-            Log.e(LOG_ID, "onCreate exception: " + ex)
+            Log.e(LOG_ID, "GlucodataAlarmEvent- onCreate exception: " + ex)
         }
     }
 }
@@ -139,10 +141,11 @@ class GlucodataObsoleteEvent : Activity(), TaskerPluginConfig<GlucodataObsoleteV
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
+            Log.d(LOG_ID, "GlucodataObsoleteEvent - onCreate called")
             super.onCreate(savedInstanceState)
             GlucodataObsoleteEventHelper(this).finishForTasker()
         } catch (ex: Exception) {
-            Log.e(LOG_ID, "onCreate exception: " + ex)
+            Log.e(LOG_ID, "GlucodataObsoleteEvent - onCreate exception: " + ex)
         }
     }
 }

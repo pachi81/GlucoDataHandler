@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:key="source_notification_info"
+        android:title="@string/pref_information"
+        android:summary="@string/pref_source_notification_info_summary"
+        app:iconSpaceReserved="false" />
+    <androidx.preference.SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="source_notification_enabled"
+        android:summaryOff="@string/notification_reader_enabled_summary_off"
+        android:summaryOn="@string/notification_reader_enabled_summary_on"
+        android:title="@string/notification_reader_enabled"
+        app:iconSpaceReserved="false" />
+    <PreferenceCategory
+        android:key="notification_cat_glucose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="@string/notification_cat_glucose"
+        app:initialExpandedChildrenCount="2"
+        app:iconSpaceReserved="false">
+        <de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
+            android:key="notification_reader_app"
+            android:title="@string/notification_reader_app"
+            android:summary="@string/notification_reader_app_summary"
+            app:description="@string/notification_reader_app_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="notification_reader_five_minute_interval"
+            android:title="@string/notification_reader_five_minute_interval"
+            android:summary="@string/notification_reader_five_minute_interval_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="notification_dexcom_info"
+            android:title="@string/notification_dexcom_info"
+            android:summary="@string/notification_dexcom_info_summary"
+            app:isPreferenceVisible="false"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.EditTextPreference
+            android:defaultValue="(\\d*\\.?\\d+)"
+            android:key="notification_reader_app_regex"
+            android:title="@string/notification_reader_app_regex"
+            android:summary="@string/notification_reader_app_regex_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="@string/notification_cat_iob"
+        app:initialExpandedChildrenCount="1"
+        app:iconSpaceReserved="false">
+        <de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
+            android:key="notification_reader_iob_app"
+            android:title="@string/notification_reader_app"
+            android:summary="@string/notification_reader_app_summary"
+            app:description="@string/notification_reader_app_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.EditTextPreference
+            android:defaultValue="IOB: (\\d*\\.?\\d+) U"
+            android:key="notification_reader_iob_app_regex"
+            android:title="@string/notification_reader_app_regex"
+            android:summary="@string/notification_reader_app_regex_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+</PreferenceScreen>

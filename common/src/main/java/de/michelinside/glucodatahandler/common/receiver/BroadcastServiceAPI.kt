@@ -11,12 +11,15 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import com.eveningoutpost.dexdrip.services.broadcastservice.models.GraphLine
 import com.eveningoutpost.dexdrip.services.broadcastservice.models.Settings
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
+import de.michelinside.glucodatahandler.common.database.GlucoseValue
+import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
@@ -111,7 +114,7 @@ open class BroadcastServiceAPI: BroadcastReceiver(), NotifierInterface,
         if(enabled) {
             Log.d(LOG_ID, "sendForceDataRequest called")
             val intent = Intent(BROADCAST_RECEIVE_ACTION)
-            intent.putExtra(EXTRA_SETTINGS, Settings(context.packageName))
+            intent.putExtra(EXTRA_SETTINGS, Settings(context.packageName, 4*60*60*1000))  // request graph data for 4 hours
             sendBroadcast(context, CMD_UPDATE_BG_FORCE, intent)
         }
     }
@@ -198,8 +201,49 @@ open class BroadcastServiceAPI: BroadcastReceiver(), NotifierInterface,
             bundle.putLong(PREDICT_IOB_TIME, ReceiveData.iobCobTime)
         }
 
+        if(bundle.containsKey("graph.inRange") || bundle.containsKey("graph.low") || bundle.containsKey("graph.high")) {
+            val firstLastPair = dbAccess.getFirstLastTimestamp()
+            val minTime = System.currentTimeMillis() - (4*60*60*1000)  // max 4 hours
+            if(firstLastPair.first == 0L || firstLastPair.first > minTime || Utils.getElapsedTimeMinute(firstLastPair.second) > 5) {
+                Log.d(LOG_ID, "handle graph data")
+                val values = mutableListOf<GlucoseValue>()
+                values.addAll(parseGraphData(bundle, "graph.inRange", firstLastPair))
+                values.addAll(parseGraphData(bundle, "graph.low", firstLastPair))
+                values.addAll(parseGraphData(bundle, "graph.high", firstLastPair))
+                if(values.isNotEmpty()) {
+                    Log.i(LOG_ID, "Add ${values.size} values to database")
+                    dbAccess.addGlucoseValues(values)
+                }
+            }
+        }
+
         ReceiveData.handleIntent(context, DataSource.XDRIP, glucoExtras)
         SourceStateData.setState(DataSource.XDRIP, SourceState.NONE)
+    }
+
+    private fun parseGraphData(bundle: Bundle, key: String, firstLastPair: Pair<Long, Long>): MutableList<GlucoseValue> {
+        val values = mutableListOf<GlucoseValue>()
+        try {
+            val graphLine: GraphLine? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                bundle.getParcelable(key, GraphLine::class.java)
+            } else {
+                bundle.getParcelable(key)
+            }
+            val fuzzer = bundle.getInt("fuzzer", -1)
+            if(fuzzer > 0 && graphLine != null && graphLine.values.isNotEmpty()) {
+                graphLine.values.forEach {
+                    val time = it.x*fuzzer
+                    if(time < firstLastPair.first || time > firstLastPair.second) {
+                        val value = if(GlucoDataUtils.isMmolValue(it.y)) GlucoDataUtils.mmolToMg(it.y) else it.y
+                        values.add(GlucoseValue(time.toLong(), value.toInt()))
+                    }
+                }
+                Log.d(LOG_ID, "Parsed ${values.size} new values from graph data for key $key")
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "parseGraphData exception: " + exc.message.toString() )
+        }
+        return values
     }
 
 

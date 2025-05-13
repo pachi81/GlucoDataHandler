@@ -1,5 +1,7 @@
 package de.michelinside.glucodatahandler.common.utils
 
+import android.content.Context
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -10,7 +12,10 @@ import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.graphics.drawable.Icon
+import android.hardware.display.DisplayManager
+import android.util.DisplayMetrics
 import android.util.Log
+import android.view.View
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
@@ -20,14 +25,53 @@ import kotlin.math.abs
 
 object BitmapUtils {
     private val LOG_ID = "GDH.Utils.Bitmap"
+    private var displayManager: DisplayManager? = null
+    private var displayMetrics: DisplayMetrics? = null
 
+    fun getDisplayManager(context: Context): DisplayManager? {
+        if(displayManager == null)
+            displayManager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager?
+        return displayManager
+    }
 
-    fun getScreenWidth(): Int {
+    fun getScreenWidth(context: Context, checkOrientation: Boolean = false): Int {
+        try {
+            if(checkOrientation && isLandscapeOrientation(context))
+                return getScreenHeight(context, false)
+            if(displayMetrics!=null)
+                return displayMetrics!!.widthPixels
+            val displayManager = getDisplayManager(context)
+            if(displayManager != null && displayManager.displays.isNotEmpty()) {
+                displayMetrics = DisplayMetrics()
+                displayManager.displays[0].getRealMetrics(displayMetrics)
+                return displayMetrics!!.widthPixels
+            }
+        } catch (e: Exception) {
+            Log.e(LOG_ID, "Error in getScreenWidth", e)
+        }
         return Resources.getSystem().displayMetrics.widthPixels
     }
 
-    fun getScreenHeight(): Int {
+    fun getScreenHeight(context: Context, checkOrientation: Boolean = false): Int {
+        try {
+            if(checkOrientation && isLandscapeOrientation(context))
+                return getScreenWidth(context, false)
+            if(displayMetrics!=null)
+                return displayMetrics!!.heightPixels
+            val displayManager = getDisplayManager(context)
+            if(displayManager != null && displayManager.displays.isNotEmpty()) {
+                displayMetrics = DisplayMetrics()
+                displayManager.displays[0].getRealMetrics(displayMetrics)
+                return displayMetrics!!.heightPixels
+            }
+        } catch (e: Exception) {
+            Log.e(LOG_ID, "Error in getScreenHeight", e)
+        }
         return Resources.getSystem().displayMetrics.heightPixels
+    }
+
+    fun isLandscapeOrientation(context: Context): Boolean {
+        return (context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
     }
 
     fun getScreenDpi(): Int {
@@ -82,7 +126,7 @@ object BitmapUtils {
 
     fun textToBitmap(text: String, color: Int, roundTarget: Boolean = false, strikeThrough: Boolean = false, width: Int = 100, height: Int = 100, top: Boolean = false, bold: Boolean = false, resizeFactor: Float = 1F, withShadow: Boolean = false, bottom: Boolean = false, useTallFont: Boolean = false): Bitmap? {
         try {
-            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888 )
+            val bitmap = BitmapPool.getBitmap(width, height, Bitmap.Config.ARGB_8888 )
             val maxTextSize = calcMaxTextSizeForBitmap(bitmap, text, roundTarget, minOf(width,height).toFloat(), top, bold, useTallFont) * minOf(1F, resizeFactor)
             val canvas = Canvas(bitmap)
             bitmap.eraseColor(Color.TRANSPARENT)
@@ -138,7 +182,7 @@ object BitmapUtils {
             newW = h
             newH = w
         }
-        val rotatedBitmap = Bitmap.createBitmap(newW, newH, bitmap.config)
+        val rotatedBitmap = BitmapPool.getBitmap(newW, newH, bitmap.config)
         val canvas = Canvas(rotatedBitmap)
         val rect = Rect(0, 0, newW, newH)
         val matrix = Matrix()
@@ -153,6 +197,7 @@ object BitmapUtils {
             Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG or Paint.FILTER_BITMAP_FLAG)
         )
         matrix.reset()
+        BitmapPool.returnBitmap(bitmap)
         return rotatedBitmap
     }
 
@@ -187,7 +232,9 @@ object BitmapUtils {
                     Constants.SHARED_PREF_LARGE_ARROW_ICON, true)) {
                 textSize *= shortArrowRate
             }
-            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888 )
+            //val key = "$width:$height:$degrees:$textSize:$color:$strikeThrough:$withShadow"
+
+            val bitmap = BitmapPool.getBitmap(width, height)
             val canvas = Canvas(bitmap)
             bitmap.eraseColor(Color.TRANSPARENT)
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
@@ -232,7 +279,7 @@ object BitmapUtils {
             val textBitmap = textToBitmap(text, color, true, strikeThrough, resizeWidth, textHeight, true, false, 1F, withShadow)
             val rateDimension = Utils.round(rateSize.toFloat() * resizeFactor, 0).toInt()
             val rateBitmap = rateToBitmap(rate, color, rateDimension, rateDimension, 1F, obsolete, withShadow)
-            val comboBitmap = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888)
+            val comboBitmap = BitmapPool.getBitmap(width,height, Bitmap.Config.ARGB_8888)
             val comboImage = Canvas(comboBitmap)
             if (small) {
                 comboImage.drawBitmap(rateBitmap!!, ((height-rateDimension)/2).toFloat(), topRateSmall, null)
@@ -242,6 +289,8 @@ object BitmapUtils {
                 comboImage.drawBitmap(rateBitmap!!, ((height-rateDimension)/2).toFloat(), padding, null)
                 comboImage.drawBitmap(textBitmap!!, 0F, rateBitmap.height.toFloat()+padding, null)
             }
+            BitmapPool.returnBitmap(rateBitmap)
+            BitmapPool.returnBitmap(textBitmap)
             return comboBitmap
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Cannot create rate icon: " + exc.message.toString())
@@ -251,7 +300,7 @@ object BitmapUtils {
 
     fun createComboBitmap(bitmapAbove: Bitmap, bitmapBelow: Bitmap, width: Int = 100, height: Int = 100) : Bitmap? {
         try {
-            val comboBitmap = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888)
+            val comboBitmap = BitmapPool.getBitmap(width,height, Bitmap.Config.ARGB_8888)
             val comboImage = Canvas(comboBitmap)
             comboImage.drawBitmap(bitmapAbove, ((width-bitmapAbove.width)/2).toFloat(), 0F, null)
             comboImage.drawBitmap(bitmapBelow, ((width-bitmapBelow.width)/2).toFloat(), height - bitmapBelow.height.toFloat(), null)
@@ -268,16 +317,16 @@ object BitmapUtils {
                     !ReceiveData.isObsoleteLong(),width, height, resizeFactor = resizeFactor, withShadow = withShadow, useTallFont = useTallFont)
     }
 
-    fun getGlucoseAsIcon(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, withShadow: Boolean = false, useTallFont: Boolean = false): Icon {
-        return Icon.createWithBitmap(getGlucoseAsBitmap(color, roundTarget, width, height, resizeFactor, withShadow, useTallFont))
+    fun getGlucoseAsIcon(key: String, color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, withShadow: Boolean = false, useTallFont: Boolean = false): Icon {
+        return IconBitmapPool.createIcon(key, getGlucoseAsBitmap(color, roundTarget, width, height, resizeFactor, withShadow, useTallFont))
     }
 
     fun getDeltaAsBitmap(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, top: Boolean = false, resizeFactor: Float = 1F, useTallFont: Boolean = false): Bitmap? {
         return textToBitmap(ReceiveData.getDeltaAsString(),color ?: ReceiveData.getGlucoseColor(true), roundTarget, false, width, height, top = top, resizeFactor = resizeFactor, useTallFont = useTallFont)
     }
 
-    fun getDeltaAsIcon(color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, useTallFont: Boolean = false): Icon {
-        return Icon.createWithBitmap(getDeltaAsBitmap(color, roundTarget, width, height, resizeFactor = resizeFactor, useTallFont = useTallFont))
+    fun getDeltaAsIcon(key: String, color: Int? = null, roundTarget: Boolean = false, width: Int = 100, height: Int = 100, resizeFactor: Float = 1F, useTallFont: Boolean = false): Icon {
+        return IconBitmapPool.createIcon(key, getDeltaAsBitmap(color, roundTarget, width, height, resizeFactor = resizeFactor, useTallFont = useTallFont))
     }
 
     fun getRateAsBitmap(
@@ -294,13 +343,14 @@ object BitmapUtils {
     }
 
     fun getRateAsIcon(
+        key: String,
         color: Int? = null,
         resizeFactor: Float = 1F,
         width: Int = 100,
         height: Int = 100,
         withShadow: Boolean = false
     ): Icon {
-        return Icon.createWithBitmap(getRateAsBitmap(color, resizeFactor, width, height, withShadow))
+        return IconBitmapPool.createIcon(key, getRateAsBitmap(color, resizeFactor, width, height, withShadow))
     }
 
     fun getGlucoseTrendBitmap(color: Int? = null, width: Int = 100, height: Int = 100, small: Boolean = false, withShadow: Boolean = false): Bitmap? {
@@ -308,7 +358,27 @@ object BitmapUtils {
             ReceiveData.getGlucoseAsString(), ReceiveData.rate, color ?: ReceiveData.getGlucoseColor(), ReceiveData.isObsoleteShort(), ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong(),width, height, small, withShadow)
     }
 
-    fun getGlucoseTrendIcon(color: Int? = null, width: Int = 100, height: Int = 100, small: Boolean = false, withShadow: Boolean = false): Icon {
-        return Icon.createWithBitmap(getGlucoseTrendBitmap(color, width, height, small, withShadow))
+    fun getGlucoseTrendIcon(key: String, color: Int? = null, width: Int = 100, height: Int = 100, small: Boolean = false, withShadow: Boolean = false): Icon {
+        return IconBitmapPool.createIcon(key, getGlucoseTrendBitmap(color, width, height, small, withShadow))
+    }
+
+    fun loadBitmapFromView(view: View, targetBitmap: Bitmap? = null): Bitmap {
+        val bitmap = targetBitmap?: BitmapPool.getBitmap(
+                view.width,
+                view.height,
+                Bitmap.Config.ARGB_8888
+            )
+        val canvas = Canvas(bitmap)
+        if(targetBitmap != null)  // clear target bitmap
+            canvas.drawColor(Color.TRANSPARENT, android.graphics.PorterDuff.Mode.CLEAR)
+        view.layout(view.left, view.top, view.right, view.bottom)
+        view.draw(canvas)
+        return bitmap
+    }
+
+    fun clearBitmap(bitmap: Bitmap): Bitmap {
+        val canvas = Canvas(bitmap)
+        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
+        return bitmap
     }
 }

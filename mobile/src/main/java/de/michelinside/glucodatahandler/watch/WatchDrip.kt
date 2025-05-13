@@ -6,23 +6,29 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import de.michelinside.glucodatahandler.common.notification.AlarmType
+import com.eveningoutpost.dexdrip.services.broadcastservice.models.GraphLine
+import com.eveningoutpost.dexdrip.services.broadcastservice.models.Settings
 import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
+import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.receiver.BroadcastServiceAPI
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.JsonUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 import java.math.RoundingMode
+
 
 object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
     private val LOG_ID = "GDH.WatchDrip"
@@ -30,7 +36,8 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
     private var active = false
     private var sendInterval = 1
     private var lastSendValuesTime = 0L
-    val receivers = mutableSetOf<String>()
+    const val CMD_SET_SETTINGS = "set_settings"
+    val receivers = mutableMapOf<String, Settings?>()
     class WatchDripReceiver: BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             Log.v(LOG_ID, "onReceive called")
@@ -70,10 +77,29 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
         }
     }
 
-    private fun handleNewReceiver(pkg: String): Boolean {
+    private fun getSettings(extras: Bundle): Settings? {
+        try {
+            if(extras.containsKey(BroadcastServiceAPI.EXTRA_SETTINGS)) {
+                val settings = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    extras.getParcelable(BroadcastServiceAPI.EXTRA_SETTINGS, Settings::class.java)
+                } else {
+                    extras.getParcelable(BroadcastServiceAPI.EXTRA_SETTINGS)
+                }
+                if(settings != null) {
+                    Log.i(LOG_ID, "Settings received: has graph = ${settings.isDisplayGraph} - start offset = ${settings.graphStart} - end offset = ${settings.graphEnd}")
+                    return settings
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "getSettings exception: " + exc.toString())
+        }
+        return null
+    }
+
+    private fun handleNewReceiver(pkg: String, extras: Bundle): Boolean {
         if(pkg != "" && !receivers.contains(pkg)) {
             Log.i(LOG_ID, "Adding new receiver " + pkg)
-            receivers.add(pkg)
+            receivers[pkg] = getSettings(extras)
             saveReceivers()
             return true
         }
@@ -96,9 +122,16 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
                 return // ignore messages from itself
             val cmd = extras.getString(BroadcastServiceAPI.EXTRA_FUNCTION, "")
             Log.d(LOG_ID, "Command " + cmd + " received for package " + pkg)
-            val newReceiver = handleNewReceiver(pkg)
+            val newReceiver = handleNewReceiver(pkg, extras)
             if(newReceiver) {
                 sendBroadcast(context, BroadcastServiceAPI.CMD_UPDATE_BG_FORCE, pkg)
+            } else {
+                val settings = getSettings(extras)
+                if(settings != null) {
+                    Log.i(LOG_ID, "Settings changed for pkg $pkg: has graph = ${settings.isDisplayGraph} - start offset = ${settings.graphStart} - end offset = ${settings.graphEnd}")
+                    receivers[pkg] = settings
+                    saveReceivers()
+                }
             }
             when(cmd) {
                 BroadcastServiceAPI.CMD_UPDATE_BG_FORCE -> {
@@ -109,6 +142,9 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
                 BroadcastServiceAPI.CMD_SNOOZE_ALARM -> {
                     AlarmNotification.stopCurrentNotification(context)
                 }
+                CMD_SET_SETTINGS -> {
+                    // ignore as settings already set
+                }
                 else -> {
                     Log.d(LOG_ID, "Unknown command received: " + cmd + " received from " + pkg)
                 }
@@ -118,11 +154,11 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
         }
     }
 
-    private fun createBundle(context: Context, cmd: String, alarmType: AlarmType): Bundle {
+    private fun createBundle(context: Context, cmd: String, alarmType: AlarmType, receiver: String?): Bundle {
         return when(cmd) {
             BroadcastServiceAPI.CMD_ALARM -> createAlarmBundle(context, alarmType)
             BroadcastServiceAPI.CMD_UPDATE_BG,
-            BroadcastServiceAPI.CMD_UPDATE_BG_FORCE -> createBgBundle(cmd)
+            BroadcastServiceAPI.CMD_UPDATE_BG_FORCE -> createBgBundle(cmd, receiver)
             else -> createCmdBundle(cmd)
         }
     }
@@ -133,7 +169,7 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
         return bundle
     }
 
-    private fun createBgBundle(cmd: String): Bundle {
+    private fun createBgBundle(cmd: String, receiver: String?): Bundle {
         val bundle = createCmdBundle(cmd)
         bundle.putDouble(BroadcastServiceAPI.BG_VALUE_MGDL, ReceiveData.rawValue.toDouble())
         bundle.putDouble(BroadcastServiceAPI.BG_DELTA_VALUE_MGDL, ReceiveData.deltaValueMgDl.toDouble())
@@ -147,6 +183,82 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
         if (!ReceiveData.isIobCobObsolete() && !ReceiveData.iob.isNaN()) {
             bundle.putString(BroadcastServiceAPI.PREDICT_IOB, ReceiveData.iobString)
             bundle.putLong(BroadcastServiceAPI.PREDICT_IOB_TIME, ReceiveData.iobCobTime)
+        }
+        return bundle
+    }
+
+    private fun formatedValue(rawValue: Int): Float {
+        if(ReceiveData.isMmol)
+            return GlucoDataUtils.mgToMmol(rawValue.toFloat())
+        return rawValue.toFloat()
+    }
+
+    const val FUZZER: Int = 60000
+    private fun addGraph(bundle: Bundle, receiver: String?): Bundle {
+        try {
+            if(receiver != null && receivers.contains(receiver)) {
+                val cmd = bundle.getString(BroadcastServiceAPI.EXTRA_FUNCTION)
+                if(cmd != BroadcastServiceAPI.CMD_UPDATE_BG && cmd != BroadcastServiceAPI.CMD_UPDATE_BG_FORCE)
+                    return bundle
+                // add graph to bg bundle
+                val settings = receivers[receiver]
+                if (settings == null || settings.isDisplayGraph) {
+                    var graphStartOffset = settings?.graphStart?: 0L
+                    if (graphStartOffset == 0L) {
+                        graphStartOffset = 2*60*60*1000 // 2 hours
+                    }
+                    val start = System.currentTimeMillis() - graphStartOffset
+                    val end = System.currentTimeMillis()
+
+                    Log.d(LOG_ID, "Add graph data from ${Utils.getUiTimeStamp(start)} ($start) with offset = $graphStartOffset")
+
+                    bundle.putInt("fuzzer", FUZZER)
+                    bundle.putLong("start", start)
+                    bundle.putLong("end", end)
+                    bundle.putDouble("highMark", ReceiveData.targetMax.toDouble())  // mg/dl ????
+                    bundle.putDouble("lowMark", ReceiveData.targetMin.toDouble())
+
+                    val startFuz = (start / FUZZER).toFloat()
+                    val endFuz = (end / FUZZER).toFloat()
+
+                    val lowLine= GraphLine(Color.LTGRAY)
+                    lowLine.add(startFuz,ReceiveData.targetMin)
+                    lowLine.add(endFuz,ReceiveData.targetMin)
+                    bundle.putParcelable("graph.lowLine", lowLine)
+
+                    val highLine= GraphLine(Color.LTGRAY)
+                    highLine.add(startFuz,ReceiveData.targetMax)
+                    highLine.add(endFuz,ReceiveData.targetMax)
+                    bundle.putParcelable("graph.highLine", highLine)
+
+                    val inRangeValues = GraphLine(ReceiveData.getAlarmTypeColor(AlarmType.OK))
+                    val lowValues = GraphLine(ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW))
+                    val highValues = GraphLine(ReceiveData.getAlarmTypeColor(AlarmType.HIGH))
+
+                    val values = dbAccess.getGlucoseValues(start)
+                    Log.d(LOG_ID, "Found ${values.size} values")
+                    values.forEach {
+                        if(it.value > 400)
+                            highValues.add(it.timestamp.toFloat()/FUZZER, formatedValue(400))
+                        if(it.value > ReceiveData.targetMaxRaw)
+                            highValues.add(it.timestamp.toFloat()/FUZZER, formatedValue(it.value))
+                        else if(it.value < 40)
+                            lowValues.add(it.timestamp.toFloat()/FUZZER, formatedValue(40))
+                        else if(it.value < ReceiveData.targetMinRaw)
+                            lowValues.add(it.timestamp.toFloat()/FUZZER, formatedValue(it.value))
+                        else
+                            inRangeValues.add(it.timestamp.toFloat()/FUZZER, formatedValue(it.value))
+                    }
+                    bundle.putParcelable("graph.inRange", inRangeValues)
+                    bundle.putParcelable("graph.low", lowValues)
+                    bundle.putParcelable("graph.high", highValues)
+                    Log.d(LOG_ID, "Add graph data done")
+                }
+            } else {
+                Log.e(LOG_ID, "Receiver $receiver not registered!")
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "addGraph exception: " + exc.toString() + "" + exc.stackTraceToString() )
         }
         return bundle
     }
@@ -194,12 +306,12 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
     private fun sendBroadcast(context: Context, cmd: String, receiver: String? = null, alarmType: AlarmType = AlarmType.NONE) {
         try {
             if (receiver != null || receivers.size > 0) {
-                val bundle = createBundle(context, cmd, alarmType)
+                val bundle = createBundle(context, cmd, alarmType, receiver)
                 if (receiver != null) {
-                    sendBroadcastToReceiver(context, receiver, bundle)
+                    sendBroadcastToReceiver(context, receiver, addGraph(bundle, receiver))
                 } else {
                     receivers.forEach {
-                        sendBroadcastToReceiver(context, it, bundle)
+                        sendBroadcastToReceiver(context, it.key, addGraph(bundle, it.key))
                     }
                 }
                 lastSendValuesTime = ReceiveData.time
@@ -268,11 +380,19 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
                 val savedReceivers = sharedExtraPref.getStringSet(Constants.SHARED_PREF_WATCHDRIP_RECEIVERS, HashSet<String>())
                 if (!savedReceivers.isNullOrEmpty()) {
                     Log.i(LOG_ID, "Loading receivers: " + savedReceivers)
-                    receivers.addAll(savedReceivers)
+                    savedReceivers.forEach {
+                        if(sharedExtraPref.contains(it)) {
+                            val settings: Settings? = JsonUtils.getParcelableFromJson(sharedExtraPref.getString(it, ""))
+                            receivers[it] = settings
+                            if(settings != null)
+                                Log.i(LOG_ID, "Loaded receiver $it: has graph = ${settings.isDisplayGraph} - start offset = ${settings.graphStart} - end offset = ${settings.graphEnd}")
+                        } else
+                            receivers[it] = null
+                    }
                 }
             }
             if(BuildConfig.DEBUG && receivers.isEmpty()) {
-                receivers.add("dummy")
+                receivers["dummy"] = null
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Loading receivers exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
@@ -285,7 +405,11 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
             // use own tag to prevent trigger onChange event at every time!
             val sharedExtraPref = GlucoDataService.context!!.getSharedPreferences(Constants.SHARED_PREF_EXTRAS_TAG, Context.MODE_PRIVATE)
             with(sharedExtraPref.edit()) {
-                putStringSet(Constants.SHARED_PREF_WATCHDRIP_RECEIVERS, receivers)
+                putStringSet(Constants.SHARED_PREF_WATCHDRIP_RECEIVERS, receivers.keys)
+                receivers.forEach {
+                    if(it.value != null)
+                        putString(it.key, JsonUtils.getParcelableAsJson(it.value!!))
+                }
                 apply()
             }
         } catch (exc: Exception) {

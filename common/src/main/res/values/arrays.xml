@@ -19,6 +19,7 @@
         <item>@string/widget_glucose_trend_delta</item>
         <item>@string/widget_glucose_trend_delta_timestamp</item>
         <item>@string/widget_glucose_trend_delta_timestamp_iob_cob</item>
+        <item>@string/widget_chart_glucose_trend_delta_time_iob_cob</item>
     </array>
     <array name="pref_floating_widget_style_values">
         <item>"glucose"</item>
@@ -26,6 +27,7 @@
         <item>"glucose_trend_delta"</item>
         <item>"glucose_trend_delta_time"</item>
         <item>"glucose_trend_delta_time_iob_cob"</item>
+        <item>"chart_glucose_trend_delta_time_iob_cob"</item>
     </array>
     <array name="pref_application_color_scheme_labels">
         <item>@string/application_color_scheme_system</item>
@@ -52,6 +54,8 @@
         <item>@string/alarm_force_sound</item>
         <item>@string/alarm_force_vibration</item>
         <item>@string/alarm_vibrate_only</item>
+        <item>@string/pref_send_battery_level_to_watch</item>
+        <item>@string/pref_phone_wear_screen_off_update</item>
         <item>@string/pref_wear_notification</item>
         <item>@string/wear_alarm_notifications_enabled</item>
         <item>@string/wear_alarm_force_sound</item>
@@ -72,6 +76,8 @@
         <item>"alarm_force_sound"</item>
         <item>"alarm_force_vibration"</item>
         <item>"alarm_vibrate_only"</item>
+        <item>"battery_receiver_enabled"</item>
+        <item>"phone_wear_screen_off_update"</item>
         <item>"wear_notification"</item>
         <item>"wear_alarm_notifications_enabled"</item>
         <item>"wear_alarm_force_sound"</item>

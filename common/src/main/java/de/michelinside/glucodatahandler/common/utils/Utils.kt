@@ -4,13 +4,16 @@ import android.accessibilityservice.AccessibilityServiceInfo
 import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.content.Context
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.content.pm.PackageManager.NameNotFoundException
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Parcel
 import android.provider.Settings
+import android.text.format.DateUtils
 import android.util.Log
 import android.util.TypedValue
 import android.view.accessibility.AccessibilityManager
@@ -122,7 +125,7 @@ object Utils {
         val parcel = Parcel.obtain()
         parcel.unmarshall(bytes, 0, bytes.size)
         parcel.setDataPosition(0)
-        val bundle = parcel.readBundle(GlucoDataService::class.java.getClassLoader())
+        val bundle = parcel.readBundle(GlucoDataService.context!!.applicationContext.classLoader)
         parcel.recycle()
         return bundle
     }
@@ -148,7 +151,7 @@ object Utils {
                 string += " " + key + " => " + (if (bundle[key] != null) bundle[key].toString() else "NULL") + "\r\n"
             }
             string += " }"
-            return string
+            return string.take(2000)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "dumpBundle exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
         }
@@ -242,6 +245,55 @@ object Utils {
         return ""
     }
 
+    private fun getDeviceInformations(): String {
+        var s = ""
+        try {
+            if(GlucoDataService.context!=null) {
+                val pInfo: PackageInfo = GlucoDataService.context!!.packageManager.getPackageInfo(
+                    GlucoDataService.context!!.packageName, PackageManager.GET_META_DATA
+                )
+                s += "APP Package Name: ${GlucoDataService.context!!.packageName}\n"
+                s += "APP Version Name: ${pInfo.versionName}\n"
+                s += "APP Version Code: ${pInfo.versionCode}\n"
+            }
+        } catch (e: NameNotFoundException) {
+        }
+        s += "OS Version: ${System.getProperty("os.version")} (${Build.VERSION.INCREMENTAL})\n"
+        s += "OS API Level: ${Build.VERSION.SDK}\n"
+        s += "Device: ${Build.DEVICE}\n"
+        s += "Model (and Product): ${Build.MODEL} (${Build.PRODUCT})\n"
+        s += "Manufacturer: ${Build.MANUFACTURER}\n"
+        s += "Other TAGS: ${Build.TAGS}\n"
+        try {
+            if(GlucoDataService.context != null) {
+                val pi: PackageInfo =
+                    GlucoDataService.context!!.packageManager.getPackageInfo(GlucoDataService.context!!.packageName, PackageManager.GET_PERMISSIONS)
+                if(!pi.requestedPermissions.isEmpty()) {
+                    s += "---------------------PERMISSIONS:------------------------------\n"
+                    for (i in pi.requestedPermissions.indices) {
+                        s += "${pi.requestedPermissions[i]}:"
+                        if ((pi.requestedPermissionsFlags[i] and 1) != 0)
+                            s+= " REQUIRED"
+                        if ((pi.requestedPermissionsFlags[i] and PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0)
+                            s+= " GRANTED"
+                        s+= " (${pi.requestedPermissionsFlags[i]})\n"
+                    }
+                }
+                if(GlucoDataService.sharedPref != null && GlucoDataService.sharedPref!!.contains(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE)) {
+                    s += "---------------------------------------------------------------\n\n"
+                    s += "---------------------UNCAUGHT EXCEPTION:-----------------------\n"
+                    val excMsg = GlucoDataService.sharedPref!!.getString(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE, "") ?: ""
+                    val time = GlucoDataService.sharedPref!!.getLong(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_TIME, 0)
+                    s+= getUiTimeStamp(time) + "\n"
+                    s+= excMsg + "\n"
+                }
+            }
+        } catch (e: java.lang.Exception) {
+        }
+        s += "---------------------------------------------------------------\n\n"
+        return s
+    }
+
     fun saveLogs(context: Context, uri: Uri) {
         try {
             Thread {
@@ -258,6 +310,8 @@ object Utils {
 
     fun saveLogs(outputStream: OutputStream) {
         try {
+            outputStream.write(getDeviceInformations().toByteArray())
+            outputStream.flush()
             val cmd = "logcat -t 4000"
             Log.i(LOG_ID, "Getting logcat with command: $cmd")
             val process = Runtime.getRuntime().exec(cmd)
@@ -452,10 +506,14 @@ object Utils {
         return round((System.currentTimeMillis()-time).toFloat()/60000, 0, roundingMode).toLong()
     }
 
+    fun getTimeDiffMinute(time1: Long, time2: Long, roundingMode: RoundingMode = RoundingMode.DOWN): Long {
+        return round((time1-time2).toFloat()/60000, 0, roundingMode).toLong()
+    }
+
     fun getUiTimeStamp(time: Long): String {
-        if(getElapsedTimeMinute(time) >= (60*24))
-            return DateFormat.getDateTimeInstance().format(Date(time))
-        return getTimeStamp(time)
+        if(DateUtils.isToday(time))
+            return getTimeStamp(time)
+        return DateFormat.getDateTimeInstance().format(Date(time))
     }
 
     fun getTimeStamp(time: Long): String {

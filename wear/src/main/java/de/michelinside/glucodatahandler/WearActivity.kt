@@ -25,18 +25,21 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.databinding.ActivityWearBinding
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.setPadding
+import de.michelinside.glucodatahandler.common.chart.ChartBitmapHandlerView
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmState
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.common.notification.Channels
 import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
-import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import de.michelinside.glucodatahandler.settings.AlarmsActivity
 import de.michelinside.glucodatahandler.settings.SettingsActivity
 import de.michelinside.glucodatahandler.settings.SourcesActivity
+import de.michelinside.glucodatahandler.settings.WatchfacesActivity
 import java.text.DateFormat
+import java.time.Duration
 import java.util.Date
 import kotlin.time.Duration.Companion.days
 
@@ -55,14 +58,14 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtVersion: TextView
     private lateinit var txtValueInfo: TextView
     private lateinit var tableDetails: TableLayout
+    private lateinit var tableDelta: TableLayout
     private lateinit var tableConnections: TableLayout
     private lateinit var tableAlarms: TableLayout
     private lateinit var tableNotes: TableLayout
-    private lateinit var btnSettings: Button
-    private lateinit var btnSources: Button
-    private lateinit var btnAlarms: Button
+    private lateinit var chartImage: ImageView
     private var doNotUpdate = false
     private var requestNotificationPermission = false
+    private lateinit var chartBitmap: ChartBitmapHandlerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -86,43 +89,54 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             tableConnections = findViewById(R.id.tableConnections)
             tableAlarms = findViewById(R.id.tableAlarms)
             tableDetails = findViewById(R.id.tableDetails)
+            tableDelta = findViewById(R.id.tableDelta)
             tableNotes = findViewById(R.id.tableNotes)
+            chartImage = findViewById(R.id.graphImage)
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
 
-            ReceiveData.initData(this)
+            ReceiveData.initData(this.applicationContext)
 
             alarmIcon.setOnClickListener {
                 toggleAlarm()
             }
 
-            btnSettings = findViewById(R.id.btnSettings)
-            btnSettings.setOnClickListener {
+            findViewById<Button>(R.id.btnSettings)?.setOnClickListener {
                 Log.v(LOG_ID, "Settings button clicked!")
                 val intent = Intent(this, SettingsActivity::class.java)
                 startActivity(intent)
             }
 
-            btnSources = findViewById(R.id.btnSources)
-            btnSources.setOnClickListener {
+            findViewById<Button>(R.id.btnSources)?.setOnClickListener {
                 Log.v(LOG_ID, "Sources button clicked!")
                 val intent = Intent(this, SourcesActivity::class.java)
                 startActivity(intent)
             }
 
 
-            btnAlarms = findViewById(R.id.btnAlarms)
-            btnAlarms.setOnClickListener {
+            findViewById<Button>(R.id.btnAlarms)?.setOnClickListener {
                 Log.v(LOG_ID, "Alarm button clicked!")
                 val intent = Intent(this, AlarmsActivity::class.java)
                 startActivity(intent)
             }
+            chartBitmap = ChartBitmapHandlerView(chartImage, this)
+            chartImage.setOnClickListener {
+                Log.v(LOG_ID, "Chart Image clicked!")
+                val intent = Intent(this, GraphActivity::class.java)
+                startActivity(intent)
+            }
+
+            findViewById<Button>(R.id.btnWatchfaces)?.setOnClickListener {
+                Log.v(LOG_ID, "Watchface button clicked!")
+                val intent = Intent(this, WatchfacesActivity::class.java)
+                startActivity(intent)
+            }
+
             if(requestPermission())
-                GlucoDataServiceWear.start(this)
-            PackageUtils.updatePackages(this)
+                GlucoDataServiceWear.start(this.applicationContext)
+            PackageUtils.updatePackages(this.applicationContext)
             checkUncaughtException()
-            TextToSpeechUtils.initTextToSpeech(this)
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
@@ -132,6 +146,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         try {
             super.onPause()
             InternalNotifier.remNotifier(this, this)
+            chartBitmap.pause()
             Log.d(LOG_ID, "onPause called")
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
@@ -142,8 +157,8 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         try {
             super.onResume()
             Log.d(LOG_ID, "onResume called")
-            GlucoDataService.checkServices(this)
-            ScreenEventReceiver.update(this)  // on resume can only be called, if display is on, so update screen event
+            GlucoDataService.checkServices(this.applicationContext)
+            ScreenEventReceiver.switchOn(this.applicationContext) // on resume can only be called, if display is on, so update screen event
             doNotUpdate = false
             update()
             InternalNotifier.addNotifier(this, this, mutableSetOf(
@@ -159,21 +174,28 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.TIME_VALUE,
                 NotifySource.SOURCE_STATE_CHANGE,
                 NotifySource.ALARM_STATE_CHANGED))
-            if (requestNotificationPermission && Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
+            if (requestNotificationPermission && Utils.checkPermission(this.applicationContext, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Notification permission granted")
                 requestNotificationPermission = false
-                GlucoDataServiceWear.start(this)
+                GlucoDataServiceWear.start(this.applicationContext)
             }
             GlucoDataService.checkForConnectedNodes(true)
+            chartBitmap.resume()
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
     }
 
+    override fun onDestroy() {
+        Log.v(LOG_ID, "onDestroy called")
+        super.onDestroy()
+        chartBitmap.close()
+    }
+
     fun requestPermission() : Boolean {
         requestNotificationPermission = false
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (!Utils.checkPermission(this, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
+            if (!Utils.checkPermission(this.applicationContext, android.Manifest.permission.POST_NOTIFICATIONS, Build.VERSION_CODES.TIRAMISU)) {
                 Log.i(LOG_ID, "Request notification permission...")
                 requestNotificationPermission = true
                 this.requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 3)
@@ -187,7 +209,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private fun requestExactAlarmPermission() {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                if (!Utils.canScheduleExactAlarms(this)) {
+                if (!Utils.canScheduleExactAlarms(this.applicationContext)) {
                     Log.i(LOG_ID, "Request exact alarm permission...")
                     startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
                 }
@@ -210,7 +232,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             } else {
                 txtBgValue.paintFlags = 0
             }
-            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon())
+            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon("main_trend"))
             viewIcon.contentDescription = ReceiveData.getRateAsText(this)
 
             timeText.text = "🕒 ${ReceiveData.getElapsedRelativeTimeAsString(this)}"
@@ -228,6 +250,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             updateNotesTable()
             updateAlarmsTable()
             updateConnectionsTable()
+            updateDeltaTable()
             updateDetailsTable()
             updateAlarmIcon()
 
@@ -239,8 +262,8 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private fun toggleAlarm() {
         try {
             doNotUpdate = true
-            val state = AlarmNotificationWear.getAlarmState(this)
-            if(AlarmNotificationWear.channelActive(this)) {
+            val state = AlarmNotificationWear.getAlarmState(this.applicationContext)
+            if(AlarmNotificationWear.channelActive(this.applicationContext)) {
                 Log.d(LOG_ID, "toggleAlarm called for state $state")
                 when (state) {
                     AlarmState.SNOOZE -> AlarmHandler.setSnooze(0)  // disable snooze
@@ -288,14 +311,14 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateAlarmIcon() {
         try {
-            if(!AlarmNotificationWear.channelActive(this)) {
+            if(!AlarmNotificationWear.channelActive(this.applicationContext)) {
                 Log.w(LOG_ID, "Alarm channel inactive!")
                 with(sharedPref.edit()) {
                     putBoolean(Constants.SHARED_PREF_ALARM_NOTIFICATION_ENABLED, false)
                     apply()
                 }
             }
-            val state = AlarmNotificationWear.getAlarmState(this)
+            val state = AlarmNotificationWear.getAlarmState(this.applicationContext)
             Log.v(LOG_ID, "updateAlarmIcon called for state $state")
             alarmIcon.isEnabled = sharedPref.getBoolean(Constants.SHARED_PREF_ENABLE_ALARM_ICON_TOGGLE, true)
             alarmIcon.setImageIcon(Icon.createWithResource(this, state.icon))
@@ -318,10 +341,10 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
     private fun updateNotesTable() {
         tableNotes.removeViews(1, maxOf(0, tableNotes.childCount - 1))
-        if (!Channels.notificationChannelActive(this, ChannelType.WEAR_FOREGROUND)) {
+        if (!Channels.notificationChannelActive(this.applicationContext, ChannelType.WEAR_FOREGROUND)) {
             val onClickListener = View.OnClickListener {
                 try {
-                    if (!Channels.notificationChannelActive(this, ChannelType.WEAR_FOREGROUND)) {
+                    if (!Channels.notificationChannelActive(this.applicationContext, ChannelType.WEAR_FOREGROUND)) {
                         requestNotificationPermission = true
                         startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
                             .putExtra(Settings.EXTRA_APP_PACKAGE, this.packageName))
@@ -331,7 +354,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "updateNotesTable exception: " + exc.message.toString() )
                     if(requestPermission()) {
-                        GlucoDataServiceWear.start(this)
+                        GlucoDataServiceWear.start(this.applicationContext)
                         updateNotesTable()
                     }
                 }
@@ -339,7 +362,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             tableNotes.addView(createRow(CR.string.activity_main_notification_permission, onClickListener))
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !Utils.canScheduleExactAlarms(this)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !Utils.canScheduleExactAlarms(this.applicationContext)) {
             Log.w(LOG_ID, "Schedule exact alarm is not active!!!")
             val onClickListener = View.OnClickListener {
                 try {
@@ -350,7 +373,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             }
             tableNotes.addView(createRow(CR.string.activity_main_schedule_exact_alarm, onClickListener))
         }
-        if (Utils.isHighContrastTextEnabled(this)) {
+        if (Utils.isHighContrastTextEnabled(this.applicationContext)) {
             Log.w(LOG_ID, "High contrast is active")
             val onClickListener = View.OnClickListener {
                 try {
@@ -368,7 +391,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private fun updateConnectionsTable() {
         tableConnections.removeViews(1, maxOf(0, tableConnections.childCount - 1))
         if (SourceStateData.lastState != SourceState.NONE) {
-            tableConnections.addView(createRow(SourceStateData.lastSource.resId, SourceStateData.getStateMessage(this)))
+            tableConnections.addView(createRow(SourceStateData.lastSource.resId, SourceStateData.getStateMessage(this.applicationContext)))
             if(SourceStateData.lastErrorInfo.isNotEmpty()) {
                 // add error specific information in an own row
                 tableConnections.addView(createRow(SourceStateData.lastErrorInfo))
@@ -386,7 +409,7 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 val onCheckClickListener = View.OnClickListener {
                     GlucoDataService.checkForConnectedNodes(false)
                 }
-                val states = WearPhoneConnection.getNodeConnectionStates(this)
+                val states = WearPhoneConnection.getNodeConnectionStates(this.applicationContext)
                 if(states.size == 1 ) {
                     val state = states.values.first()
                     tableConnections.addView(createRow(CR.string.source_phone, state, onCheckClickListener))
@@ -420,6 +443,19 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         checkTableVisibility(tableAlarms)
     }
 
+    private fun updateDeltaTable() {
+        tableDelta.removeViews(1, maxOf(0, tableDelta.childCount - 1))
+        if(!ReceiveData.isObsoleteShort()) {
+            if(!ReceiveData.delta1Min.isNaN())
+                tableDelta.addView(createRow(CR.string.delta_per_minute, GlucoDataUtils.deltaToString(ReceiveData.delta1Min, true)))
+            if(!ReceiveData.delta5Min.isNaN())
+                tableDelta.addView(createRow(CR.string.delta_per_5_minute, GlucoDataUtils.deltaToString(ReceiveData.delta5Min, true)))
+            if(!ReceiveData.delta15Min.isNaN())
+                tableDelta.addView(createRow(CR.string.delta_per_15_minute, GlucoDataUtils.deltaToString(ReceiveData.delta15Min, true)))
+        }
+        checkTableVisibility(tableDelta)
+    }
+
     private fun updateDetailsTable() {
         tableDetails.removeViews(1, maxOf(0, tableDetails.childCount - 1))
         if(ReceiveData.time > 0) {
@@ -433,6 +469,13 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                     DateFormat.DEFAULT).format(Date(ReceiveData.iobCobTime))))
             if (ReceiveData.sensorID?.isNotEmpty() == true) {
                 tableDetails.addView(createRow(CR.string.info_label_sensor_id, if(BuildConfig.DEBUG) "ABCDE12345" else ReceiveData.sensorID!!))
+            }
+            if(ReceiveData.sensorStartTime > 0) {
+                val duration = Duration.ofMillis(System.currentTimeMillis() - ReceiveData.sensorStartTime)
+                val days = duration.toDays()
+                val hours = duration.minusDays(days).toHours()
+                tableDetails.addView(createRow(CR.string.sensor_age_label, resources.getString(CR.string.sensor_age_value).format(days, hours)))
+
             }
             if(ReceiveData.source != DataSource.NONE)
                 tableDetails.addView(createRow(CR.string.info_label_source, resources.getString(ReceiveData.source.resId)))

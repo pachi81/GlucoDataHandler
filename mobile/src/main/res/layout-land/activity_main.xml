@@ -12,119 +12,159 @@
         android:layout_height="match_parent"
         tools:ignore="UselessLeaf" />
 
-        <ScrollView
-            android:layout_weight="10"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:paddingVertical="10dp">
             <LinearLayout
                 android:id="@+id/main_layout_left"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_weight="20"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 tools:context=".MainActivity"
                 android:orientation="vertical"
                 android:gravity="center|top">
 
                 <LinearLayout
-                    android:id="@+id/layout_glucose_trend"
-                    android:layout_width="250dp"
-                    android:layout_height="80dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_weight="2"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="0dp"
+                    android:baselineAligned="false"
                     android:gravity="center|top"
                     android:orientation="horizontal"
-                    tools:ignore="UselessParent">
+                    tools:ignore="NestedWeights,UselessParent">
 
-                    <TextView
-                        android:id="@+id/txtBgValue"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="4"
-                        android:autoSizeStepGranularity="1sp"
-                        android:autoSizeTextType="uniform"
-                        android:maxLines="1"
-                        android:text="---"
-                        android:textAlignment="viewEnd"
-                        android:textColor="#757575"
-                        android:textStyle="bold"
-                        android:shadowColor="@color/black"
-                        android:shadowRadius="5"
-                        tools:ignore="HardcodedText" />
-
-                    <ImageView
-                        android:id="@+id/viewIcon"
+                    <LinearLayout
+                        android:id="@+id/layout_glucose_trend"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="3"
-                        android:paddingVertical="2dp"
-                        android:src="@drawable/icon_question"
-                        tools:ignore="ContentDescription" />
+                        android:gravity="center|start"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="10dp"
+                        tools:ignore="UselessParent">
+                        <TextView
+                            android:id="@+id/txtBgValue"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="4"
+                            android:autoSizeStepGranularity="1sp"
+                            android:autoSizeTextType="uniform"
+                            android:maxLines="1"
+                            android:text="---"
+                            android:textAlignment="viewEnd"
+                            android:textColor="#757575"
+                            android:textStyle="bold"
+                            android:shadowColor="@color/black"
+                            android:shadowRadius="5"
+                            tools:ignore="HardcodedText" />
 
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/layout_delta_time"
-                    android:layout_width="250dp"
-                    android:layout_height="30dp"
-                    android:gravity="center|top"
-                    android:orientation="horizontal"
-                    tools:ignore="UselessParent">
+                        <ImageView
+                            android:id="@+id/viewIcon"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:scaleType="fitStart"
+                            android:paddingVertical="2dp"
+                            android:src="@drawable/icon_question"
+                            tools:ignore="ContentDescription" />
 
-                    <TextView
-                        android:id="@+id/timeText"
-                        android:text="🕒 0 min"
-                        android:layout_width="0dp"
-                        android:layout_weight="4"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|end"
-                        android:maxLines="1"
-                        android:autoSizeStepGranularity="1sp"
-                        android:autoSizeTextType="uniform"
-                        android:paddingEnd="10dp"
-                        tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
-                    <TextView
-                        android:id="@+id/deltaText"
-                        android:text="Δ +0.06"
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/layout_delta_time"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="3"
-                        android:gravity="center"
-                        android:maxLines="1"
-                        android:autoSizeStepGranularity="1sp"
-                        android:autoSizeTextType="uniform"
-                        tools:ignore="HardcodedText" />
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/layout_iob_cob"
-                    android:layout_width="250dp"
-                    android:layout_height="30dp"
-                    android:gravity="center|top"
-                    android:orientation="horizontal"
-                    tools:ignore="UselessParent">
-                    <TextView
-                        android:id="@+id/iobText"
-                        android:text="💉 1.30U"
-                        android:layout_width="0dp"
-                        android:layout_weight="4"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|end"
-                        android:maxLines="1"
-                        android:autoSizeStepGranularity="1sp"
-                        android:autoSizeTextType="uniform"
-                        android:paddingEnd="10dp"
-                        tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
+                        android:layout_weight="2"
+                        android:gravity="center|start"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="10dp"
+                        tools:ignore="UselessParent">
 
-                    <TextView
-                        android:id="@+id/cobText"
-                        android:text="🍔 31.2g"
+                        <TextView
+                            android:id="@+id/timeText"
+                            android:text="🕒 0 min"
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
+                            android:layout_height="0dp"
+                            android:gravity="center_vertical|start"
+                            android:maxLines="1"
+                            android:autoSizeStepGranularity="1sp"
+                            android:autoSizeTextType="uniform"
+                            tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
+                        <TextView
+                            android:id="@+id/deltaText"
+                            android:text="Δ +0.06"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical|start"
+                            android:maxLines="1"
+                            android:paddingStart="4dp"
+                            android:autoSizeStepGranularity="1sp"
+                            android:autoSizeTextType="uniform"
+                            tools:ignore="HardcodedText,RtlSymmetry" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/layout_iob_cob"
+                        android:layout_weight="2"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="3"
-                        android:gravity="center"
-                        android:maxLines="1"
-                        android:autoSizeStepGranularity="1sp"
-                        android:autoSizeTextType="uniform"
-                        tools:ignore="HardcodedText" />
+                        android:orientation="vertical"
+                        android:paddingHorizontal="10dp"
+                        tools:ignore="UselessParent">
+                        <TextView
+                            android:id="@+id/iobText"
+                            android:text="💉 1.30U"
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
+                            android:layout_height="0dp"
+                            android:gravity="center_vertical|start"
+                            android:maxLines="1"
+                            android:autoSizeStepGranularity="1sp"
+                            android:autoSizeTextType="uniform"
+                            tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
+
+                        <TextView
+                            android:id="@+id/cobText"
+                            android:text="🍔 31.2g"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical|start"
+                            android:maxLines="1"
+                            android:autoSizeStepGranularity="1sp"
+                            android:autoSizeTextType="uniform"
+                            tools:ignore="HardcodedText" />
+                    </LinearLayout>
                 </LinearLayout>
+                <de.michelinside.glucodatahandler.common.chart.GlucoseChart
+                    android:id="@+id/chart"
+                    android:layout_width="match_parent"
+                    android:layout_weight="9"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:contentDescription="@string/graph"
+                    />
+            </LinearLayout>
+
+    <RelativeLayout
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        tools:ignore="UselessLeaf" />
+
+
+        <ScrollView
+            android:layout_weight="15"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:paddingVertical="10dp">
+            <LinearLayout
+                android:id="@+id/main_layout_right"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                tools:context=".MainActivity"
+                android:orientation="vertical"
+                android:gravity="center|top">
                 <TextView
                     android:id="@+id/txtLastValue"
                     android:layout_width="350dp"
@@ -143,38 +183,17 @@
                     android:layout_marginTop="20dp"
                     android:text="@string/menu_sources"
                     />
-            </LinearLayout>
-        </ScrollView>
-
-    <RelativeLayout
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        tools:ignore="UselessLeaf" />
-
-
-        <ScrollView
-            android:layout_weight="10"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:paddingVertical="10dp">
-            <LinearLayout
-                android:id="@+id/main_layout_right"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                tools:context=".MainActivity"
-                android:orientation="vertical"
-                android:gravity="center|top">
 
                 <TableLayout
                     android:id="@+id/tableNotes"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/layout_bg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:divider="?android:attr/dividerHorizontal"
                     android:showDividers="middle">
 
-                    <TableRow android:background="@color/table_header" android:padding="5dp"
+                    <TableRow android:background="@drawable/layout_table_header" android:padding="5dp"
                         tools:ignore="UselessParent">
                         <TextView
                             android:textStyle="bold"
@@ -187,12 +206,14 @@
                 </TableLayout>
                 <TableLayout
                     android:id="@+id/tableAlarms"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/layout_bg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:divider="?android:attr/dividerHorizontal"
                     android:showDividers="middle">
 
-                    <TableRow android:background="@color/table_header" android:padding="5dp"
+                    <TableRow android:background="@drawable/layout_table_header" android:padding="5dp"
                         tools:ignore="UselessParent">
                         <TextView
                             android:textStyle="bold"
@@ -205,13 +226,36 @@
                 </TableLayout>
 
                 <TableLayout
-                    android:id="@+id/tableDetails"
+                    android:id="@+id/tableDelta"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/layout_bg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:divider="?android:attr/dividerHorizontal"
                     android:showDividers="middle">
 
-                    <TableRow android:background="@color/table_header" android:padding="5dp"
+                    <TableRow android:background="@drawable/layout_table_header" android:padding="5dp"
+                        tools:ignore="UselessParent">
+                        <TextView
+                            android:textStyle="bold"
+                            android:textSize="20sp"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/info_label_delta"/>
+                    </TableRow>
+                </TableLayout>
+
+                <TableLayout
+                    android:id="@+id/tableDetails"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/layout_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="?android:attr/dividerHorizontal"
+                    android:showDividers="middle">
+
+                    <TableRow android:background="@drawable/layout_table_header" android:padding="5dp"
                         tools:ignore="UselessParent">
                         <TextView
                             android:textStyle="bold"
@@ -225,12 +269,14 @@
 
                 <TableLayout
                     android:id="@+id/tableConnections"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/layout_bg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:divider="?android:attr/dividerHorizontal"
                     android:showDividers="middle">
 
-                    <TableRow android:background="@color/table_header" android:padding="5dp"
+                    <TableRow android:background="@drawable/layout_table_header" android:padding="5dp"
                         tools:ignore="UselessParent">
                         <TextView
                             android:textStyle="bold"
@@ -255,6 +301,7 @@
                     android:id="@+id/txtVersion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
                     android:layout_marginBottom="25dp"
                     android:text="1.0"
                     android:textSize="16sp"

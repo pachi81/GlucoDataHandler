@@ -15,105 +15,111 @@
     android:gravity="center|top">
 
 
-    <LinearLayout
-        android:id="@+id/layout_glucose_trend"
-        android:layout_width="250dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="20dp"
-        android:gravity="center|top"
-        android:orientation="horizontal"
-        tools:ignore="UselessParent">
+        <LinearLayout
+            android:id="@+id/layout_glucose_trend"
+            android:layout_width="250dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center|top"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
 
-        <TextView
-            android:id="@+id/txtBgValue"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:autoSizeStepGranularity="1sp"
-            android:autoSizeTextType="uniform"
-            android:maxLines="1"
-            android:text="---"
-            android:textAlignment="viewEnd"
-            android:textColor="#757575"
-            android:textStyle="bold"
-            android:shadowColor="@color/black"
-            android:shadowRadius="5"
-            tools:ignore="HardcodedText" />
+            <TextView
+                android:id="@+id/txtBgValue"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:maxLines="1"
+                android:shadowColor="@color/black"
+                android:shadowRadius="5"
+                android:text="---"
+                android:textAlignment="viewEnd"
+                android:textColor="#757575"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
 
-        <ImageView
-            android:id="@+id/viewIcon"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:paddingVertical="2dp"
-            android:src="@drawable/icon_question"
-            tools:ignore="ContentDescription" />
+            <ImageView
+                android:id="@+id/viewIcon"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:paddingVertical="2dp"
+                android:src="@drawable/icon_question"
+                tools:ignore="ContentDescription" />
 
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/layout_delta_time"
-        android:layout_width="250dp"
-        android:layout_height="30dp"
-        android:gravity="center|top"
-        android:orientation="horizontal"
-        tools:ignore="UselessParent">
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/timeText"
-            android:text="🕒 0 min"
-            android:layout_width="0dp"
-            android:layout_weight="4"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical|end"
-            android:maxLines="1"
-            android:autoSizeStepGranularity="1sp"
-            android:autoSizeTextType="uniform"
-            android:paddingEnd="10dp"
-            tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
-        <TextView
-            android:id="@+id/deltaText"
-            android:text="Δ +0.06"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:gravity="center"
-            android:maxLines="1"
-            android:autoSizeStepGranularity="1sp"
-            android:autoSizeTextType="uniform"
-            tools:ignore="HardcodedText" />
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/layout_iob_cob"
-        android:layout_width="250dp"
-        android:layout_height="30dp"
-        android:gravity="center|top"
-        android:orientation="horizontal"
-        tools:ignore="UselessParent">
-        <TextView
-            android:id="@+id/iobText"
-            android:text="💉 1.30U"
-            android:layout_width="0dp"
-            android:layout_weight="4"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical|end"
-            android:maxLines="1"
-            android:autoSizeStepGranularity="1sp"
-            android:autoSizeTextType="uniform"
-            android:paddingEnd="10dp"
-            tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
+        <LinearLayout
+            android:id="@+id/layout_delta_time"
+            android:layout_width="250dp"
+            android:layout_height="30dp"
+            android:gravity="center|top"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
 
-        <TextView
-            android:id="@+id/cobText"
-            android:text="🍔 31.2g"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:gravity="center"
-            android:maxLines="1"
-            android:autoSizeStepGranularity="1sp"
-            android:autoSizeTextType="uniform"
-            tools:ignore="HardcodedText" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/timeText"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:gravity="center_vertical|end"
+                android:maxLines="1"
+                android:paddingEnd="10dp"
+                android:text="🕒 0 min"
+                tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/deltaText"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="Δ +0.06"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_iob_cob"
+            android:layout_width="250dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="center|top"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <TextView
+                android:id="@+id/iobText"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:gravity="center_vertical|end"
+                android:maxLines="1"
+                android:paddingEnd="10dp"
+                android:text="💉 1.30U"
+                tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/cobText"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="🍔 31.2g"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
     <TextView
         android:id="@+id/txtLastValue"
         android:layout_width="350dp"
@@ -133,22 +139,24 @@
         android:text="@string/menu_sources"
         />
 
-    <LinearLayout
-        android:id="@+id/space_table"
-        android:layout_height="20dp"
-        android:layout_width="0dp"
-        android:orientation="horizontal">
-        <!-- this expands to fill the empty space if needed -->
-    </LinearLayout>
+    <de.michelinside.glucodatahandler.common.chart.GlucoseChart
+        android:id="@+id/chart"
+        android:layout_marginVertical="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:contentDescription="@string/graph"
+        />
 
     <TableLayout
         android:id="@+id/tableNotes"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/layout_bg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="?android:attr/dividerHorizontal"
         android:showDividers="middle">
 
-        <TableRow android:background="@color/table_header" android:padding="5dp"
+        <TableRow android:background="@drawable/layout_table_header" android:padding="5dp"
             tools:ignore="UselessParent">
             <TextView
                 android:textStyle="bold"
@@ -162,12 +170,14 @@
 
     <TableLayout
         android:id="@+id/tableAlarms"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:background="@drawable/layout_bg"
+        android:layout_marginTop="10dp"
         android:divider="?android:attr/dividerHorizontal"
-        android:showDividers="middle">
+        android:showDividers="middle"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
 
-        <TableRow android:background="@color/table_header" android:padding="5dp"
+        <TableRow android:background="@drawable/layout_table_header" android:padding="5dp"
             tools:ignore="UselessParent">
             <TextView
                 android:textStyle="bold"
@@ -180,13 +190,36 @@
     </TableLayout>
 
     <TableLayout
-        android:id="@+id/tableDetails"
+        android:id="@+id/tableDelta"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/layout_bg"
         android:divider="?android:attr/dividerHorizontal"
         android:showDividers="middle">
 
-        <TableRow android:background="@color/table_header" android:padding="5dp"
+        <TableRow android:background="@drawable/layout_table_header" android:padding="5dp"
+            tools:ignore="UselessParent">
+            <TextView
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/info_label_delta"/>
+        </TableRow>
+    </TableLayout>
+
+    <TableLayout
+        android:id="@+id/tableDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/layout_bg"
+        android:divider="?android:attr/dividerHorizontal"
+        android:showDividers="middle">
+
+        <TableRow android:background="@drawable/layout_table_header" android:padding="5dp"
             tools:ignore="UselessParent">
             <TextView
                 android:textStyle="bold"
@@ -202,10 +235,12 @@
         android:id="@+id/tableConnections"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/layout_bg"
         android:divider="?android:attr/dividerHorizontal"
         android:showDividers="middle">
 
-        <TableRow android:background="@color/table_header" android:padding="5dp"
+        <TableRow android:background="@drawable/layout_table_header" android:padding="5dp"
             tools:ignore="UselessParent">
             <TextView
                 android:textStyle="bold"
@@ -230,6 +265,7 @@
         android:id="@+id/txtVersion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
         android:layout_marginBottom="25dp"
         android:text="1.0"
         android:textSize="16sp"

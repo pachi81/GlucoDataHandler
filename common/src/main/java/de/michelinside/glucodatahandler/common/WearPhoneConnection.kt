@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.*
+import de.michelinside.glucodatahandler.common.database.dbAccess
+import de.michelinside.glucodatahandler.common.database.dbSync
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmNotificationBase
 import de.michelinside.glucodatahandler.common.notification.AlarmType
@@ -29,7 +31,10 @@ enum class Command {
     DISABLE_INACTIVE_TIME,
     PAUSE_NODE,
     RESUME_NODE,
-    FORCE_UPDATE
+    FORCE_UPDATE,
+    DB_SYNC,
+    CLEAN_UP_DB,
+    REQUEST_DB_SYNC
 }
 
 class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityClient.OnCapabilityChangedListener, NotifierInterface {
@@ -79,7 +84,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 }
                 else if (addMissing) {
                     batterLevels.add(-1)
-                })
+                } else {})
             }
             return batterLevels
         }
@@ -102,11 +107,26 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 }
                 else if (addMissing) {
                     connectionStates[getDisplayName(node.value)] = context.getString(R.string.state_await_data)
-                })
+                } else {})
             }
             return connectionStates
 
         }
+
+        fun getNodeBatteryLevel(nodeId: String, addMissing: Boolean = true): Map<String, Int> {
+            val nodeBatterLevels = mutableMapOf<String, Int>()
+            val node = connectedNodes[nodeId]
+            if (node != null) {
+                if (nodeBatteryLevel.containsKey(nodeId)) {
+                    nodeBatterLevels[getDisplayName(node)] = nodeBatteryLevel.getValue(nodeId)
+                }
+                else if (addMissing) {
+                    nodeBatterLevels[getDisplayName(node)] = -1
+                }
+            }
+            return nodeBatterLevels
+        }
+
     }
 
     private fun openConnection() {
@@ -384,9 +404,10 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                         LOG_ID,
                         dataSource.toString() + " data send to node " + node.toString()
                     )
-                    noDataSend.remove(node.id)
-                    if(notConnectedNodes.isEmpty())
-                        removeTimer()
+                    if(noDataSend.contains(node.id)) {
+                        noDataSend.remove(node.id)
+                        checkNodeConnect(node.id)
+                    }
                 }
                 addOnFailureListener { error ->
                     if (retryCount < 2) {
@@ -409,6 +430,22 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     }
                 }
             }
+        }
+    }
+
+    private fun checkNodeConnect(nodeId: String) {
+        Log.d(LOG_ID, "check node connect $nodeId")
+        if(!noDataReceived.contains(nodeId) && !noDataSend.contains(nodeId)) {
+            Log.i(LOG_ID, "Node with id " + nodeId + " connected!")
+            if(notConnectedNodes.isEmpty())
+                removeTimer()
+            if (GlucoDataService.appSource == AppSource.PHONE_APP) {
+                dbSync.requestDbSync(context)   // update data on phone first, before sending data to wear
+            }
+        } else if(noDataReceived.contains(nodeId)) {
+            Log.i(LOG_ID, "Node with id " + nodeId + " still waiting for receiving data!")
+        } else if(noDataSend.contains(nodeId)) {
+            Log.i(LOG_ID, "Node with id " + nodeId + " still sending data!")
         }
     }
 
@@ -444,12 +481,21 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         try {
             Log.i(LOG_ID, "onMessageReceived from " + p0.sourceNodeId + " with path " + p0.path)
             checkConnectedNode(p0.sourceNodeId)
-            noDataReceived.remove(p0.sourceNodeId)
-            if (notConnectedNodes.isEmpty())
-                removeTimer()
+            if (p0.path == Constants.REQUEST_DATA_MESSAGE_PATH && !noDataSend.contains(p0.sourceNodeId)) {
+                Log.d(LOG_ID, "Request data called from " + p0.sourceNodeId + " wait for sending data")
+                // new data request -> new connection on other side -> reset connection
+                noDataSend.add(p0.sourceNodeId)  // add to trigger db sync after connection established
+            }
+            if(noDataReceived.contains(p0.sourceNodeId)) {
+                noDataReceived.remove(p0.sourceNodeId)
+                checkNodeConnect(p0.sourceNodeId)
+            }
             val extras = Utils.bytesToBundle(p0.data)
             //Log.v(LOG_ID, "Received extras for path ${p0.path}: ${Utils.dumpBundle(extras)}")
             if(extras!= null) {
+                if(BuildConfig.DEBUG) {
+                    Log.v(LOG_ID, "Received extras for path ${p0.path}: ${Utils.dumpBundle(extras)}")
+                }
                 if (extras.containsKey(Constants.SETTINGS_BUNDLE)) {
                     val bundle = extras.getBundle(Constants.SETTINGS_BUNDLE)
                     Log.d(LOG_ID, "Glucose settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(bundle))
@@ -583,12 +629,12 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             if(p0.path == Constants.REQUEST_LOGCAT_MESSAGE_PATH) {
                 sendLogcat(p0.sourceNodeId)
             }
-            if (noDataSend.contains(p0.sourceNodeId)) {
+            if (p0.path != Constants.REQUEST_DATA_MESSAGE_PATH && noDataSend.contains(p0.sourceNodeId)) {
                 sendDataRequest()
             }
             GlucoDataService.checkServices(context)
         } catch (exc: Exception) {
-            Log.e(LOG_ID, "onMessageReceived exception: " + exc.message.toString() )
+            Log.e(LOG_ID, "onMessageReceived exception: " + exc.message.toString() + " for path " + p0.path + " - data: ${Utils.toHexString(p0.data)}")
         }
     }
 
@@ -608,10 +654,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     if(nodesPaused.contains(nodeId)) {
                         Log.d(LOG_ID, "Resume node $nodeId")
                         nodesPaused.remove(nodeId)
-                        if (canSendMessage(context, NotifySource.BROADCAST))
-                            sendMessage(NotifySource.BROADCAST, ReceiveData.createExtras())
-                        else
-                            sendCommand(Command.FORCE_UPDATE, ReceiveData.createExtras())
+                        sendCommand(Command.FORCE_UPDATE, ReceiveData.createExtras())  // always force, for case the watch already have a new value (from Juggluco for example)
                     }
                 }
                 Command.FORCE_UPDATE -> {
@@ -622,6 +665,9 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                         InternalNotifier.notify(context, NotifySource.MESSAGECLIENT, bundle)
                     }
                 }
+                Command.DB_SYNC -> dbSync.sendData(context, nodeId)
+                Command.CLEAN_UP_DB -> dbAccess.deleteAllValues()
+                Command.REQUEST_DB_SYNC -> dbSync.requestDbSync(context)
             }
 
         } catch (exc: Exception) {

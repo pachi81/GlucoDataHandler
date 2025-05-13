@@ -1,27 +1,28 @@
 package de.michelinside.glucodatahandler.common.tasks
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
-import de.michelinside.glucodatahandler.common.Intents
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
+import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
-import de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver
 import de.michelinside.glucodatahandler.common.utils.HttpRequest
 import de.michelinside.glucodatahandler.common.utils.Utils
 import java.net.HttpURLConnection
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import java.util.concurrent.atomic.AtomicBoolean
 
 abstract class DataSourceTask(private val enabledKey: String, protected val source: DataSource) : BackgroundTask() {
     private var enabled = false
@@ -30,6 +31,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     private var httpRequest = HttpRequest()
     protected var retry = false
     protected var firstGetValue = false
+    private var isFirstRequest = true  // first request after startup
 
 
     companion object {
@@ -118,6 +120,11 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             }
             SourceState.CONNECTED -> {
                 Log.i(LOG_ID, "Set connected for source $source")
+                isFirstRequest = false
+            }
+            SourceState.NO_NEW_VALUE -> {
+                Log.i(LOG_ID, "No new value for source $source - $error ($code) - message: $message")
+                isFirstRequest = false
             }
             else -> {
                 Log.w(LOG_ID, "Set state for source $source: $state - $error ($code) - message: $message")
@@ -126,17 +133,12 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         lastErrorCode = code
         lastState = state
 
-        SourceStateData.setState(source, state, getErrorMessage(state, error, code), message)
+        SourceStateData.setState(source, state, getErrorMessage(state, error, code), getErrorInfo(code, message))
     }
 
     private fun getErrorMessage(state: SourceState, error: String, code: Int): String {
-        if (state == SourceState.ERROR && error.isNotEmpty()) {
-            var result = ""
-            if (code > 0) {
-                result = code.toString() + ": "
-            }
-            result += error
-            return result
+        if (state == SourceState.ERROR && code > 0) {
+            return "$code: ${getErrorMessage(code, error)}"
         }
         return error
     }
@@ -229,7 +231,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             return
         }
 
-        val intent = Intent(GlucoDataService.context!!, InternalActionReceiver::class.java)
+        /*val intent = Intent(GlucoDataService.context!!, InternalActionReceiver::class.java)
         intent.action = Intents.GLUCODATA_ACTION
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
         intent.setPackage(GlucoDataService.context!!.packageName)
@@ -237,20 +239,15 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         intent.putExtras(extras)
         setState(SourceState.CONNECTED)
         GlucoDataService.context!!.sendBroadcast(intent)
-        /*
+        */
         val done = AtomicBoolean(false)
         val active = AtomicBoolean(false)
         val task = Runnable {
             try {
                 active.set(true)
                 Log.d(LOG_ID, "handleResult for $source in main thread")
-                val lastTime = ReceiveData.time
-                val lastIobCobTime = ReceiveData.iobCobTime
                 ReceiveData.handleIntent(GlucoDataService.context!!, source, extras)
-                if (ReceiveData.time == lastTime && lastIobCobTime == ReceiveData.iobCobTime)
-                    setState(SourceState.NO_NEW_VALUE)
-                else
-                    setState(SourceState.CONNECTED)
+                setState(SourceState.CONNECTED)
             } catch (ex: Exception) {
                 Log.e(LOG_ID, "Exception during task run: " + ex)
                 setLastError(ex.message.toString())
@@ -271,21 +268,21 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             Log.e(LOG_ID, "Handler for $source not finished after $count ms! Active: ${active.get()} - Stop it!")
             handler.removeCallbacksAndMessages(null)
             setLastError("Internal error!")
-        }*/
+        }
         Log.d(LOG_ID, "handleResult for " + source + " done!")
     }
 
-    private fun getErrorMessage(code: Int, message: String?): String {
+    protected fun getErrorMessage(code: Int, message: String?): String {
         when(code) {
             429 -> return GlucoDataService.context!!.resources.getString(R.string.http_error_429)
             else -> return message ?: "Error"
         }
     }
 
-    private fun getErrorInfo(code: Int): String {
+    protected fun getErrorInfo(code: Int, message: String? = null): String {
         when(code) {
             429 -> return GlucoDataService.context!!.resources.getString(R.string.http_error_429_info)
-            else -> return ""
+            else -> return message ?: ""
         }
     }
 
@@ -367,7 +364,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         if(key == null) {
             setEnabled(sharedPreferences.getBoolean(enabledKey, false))
             interval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
-            delaySec = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, 10).toLong()
+            delaySec = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, 30).toLong()
             if(GlucoDataService.appSource == AppSource.WEAR_APP)
                 delaySec += 5L  // add 5 seconds delay to receive by phone if connected
             return true
@@ -384,8 +381,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                     }
                 }
                 Constants.SHARED_PREF_SOURCE_DELAY -> {
-                    if (delaySec != sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, 10).toLong()) {
-                        delaySec = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, 10).toLong()
+                    if (delaySec != sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, 30).toLong()) {
+                        delaySec = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, 30).toLong()
                         if(GlucoDataService.appSource == AppSource.WEAR_APP)
                             delaySec += 5L // add 5 seconds delay to receive by phone if connected
                         result = true  // retrigger alarm after delay has changed
@@ -394,5 +391,19 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             }
             return result
         }
+    }
+
+    protected fun getFirstNeedGraphValueTime(): Long {
+        val firstLastPair = dbAccess.getFirstLastTimestamp()
+        val minTime = System.currentTimeMillis() - Constants.DB_MAX_DATA_WEAR_TIME_MS    // 24h for init the first time
+        if(firstLastPair.first == 0L || (isFirstRequest && firstLastPair.first > minTime)) {
+            Log.i(LOG_ID, "First value is ${Utils.getElapsedTimeMinute(firstLastPair.first)} minutes old - try get older data on first request")
+            return minTime
+        }
+        if(firstLastPair.second > 0L && Utils.getElapsedTimeMinute(firstLastPair.second) > interval) {
+            Log.i(LOG_ID, "Last value is ${Utils.getElapsedTimeMinute(firstLastPair.second)} minutes old - try get newer data")
+            return maxOf(firstLastPair.second + 30000, minTime)
+        }
+        return 0L
     }
 }

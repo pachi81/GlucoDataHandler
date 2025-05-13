@@ -98,7 +98,7 @@ object AlarmNotification : AlarmNotificationBase() {
                 contentView.setViewVisibility(R.id.trendImage, View.VISIBLE)
                 contentView.setTextViewText(R.id.glucose, ReceiveData.getGlucoseAsString())
                 contentView.setTextColor(R.id.glucose, ReceiveData.getGlucoseColor())
-                contentView.setImageViewBitmap(R.id.trendImage, BitmapUtils.getRateAsBitmap(withShadow = true))
+                contentView.setImageViewIcon(R.id.trendImage, BitmapUtils.getRateAsIcon("alarm_trend", withShadow = true))
                 contentView.setContentDescription(R.id.trendImage, ReceiveData.getRateAsText(context))
                 contentView.setTextViewText(R.id.deltaText, "Δ " + ReceiveData.getDeltaAsString())
             }
@@ -152,7 +152,7 @@ object AlarmNotification : AlarmNotificationBase() {
             }
         }
 
-        if (fullscreenEnabled && hasFullscreenPermission()) {
+        if (fullscreenEnabled && hasFullscreenPermission(context)) {
             val fullScreenIntent = Intent(context, LockscreenActivity::class.java)
             fullScreenIntent.flags =
                 Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or

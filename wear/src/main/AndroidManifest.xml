@@ -51,6 +51,17 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".GraphActivity"
+            android:label="@string/graph"
+            android:launchMode="singleTop"
+            android:parentActivityName=".WearActivity"
+            android:theme="@style/Theme.GlucoDataHandler"
+            android:taskAffinity="">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".WearActivity" />
+        </activity>
+        <activity
             android:name=".settings.SourcesActivity"
             android:label="@string/menu_sources"
             android:launchMode="singleTop"
@@ -120,6 +131,16 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".settings.AlarmTypeActivity" />
+        </activity>
+        <activity
+            android:name=".settings.WatchfacesActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".WearActivity"
+            android:theme="@style/Theme.GlucoDataHandler"
+            android:taskAffinity="">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".WearActivity" />
         </activity>
         <receiver android:name=".common.receiver.GlucoseDataReceiver" android:enabled="true" android:exported="true"
             tools:ignore="ExportedReceiver">
@@ -809,6 +830,40 @@
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
                 android:value="300" />
+        </service>
+        <service
+            android:name=".ChartComplication"
+            android:exported="true"
+            android:icon="@drawable/graph_comp_square"
+            android:label="@string/graph_comp_square"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SMALL_IMAGE, LARGE_IMAGE" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="0" />
+        </service>
+        <service
+            android:name=".ChartComplicationRect"
+            android:exported="true"
+            android:icon="@drawable/graph_comp_rect"
+            android:label="@string/graph_comp_rect"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SMALL_IMAGE" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="0" />
         </service>
     </application>
     <queries>

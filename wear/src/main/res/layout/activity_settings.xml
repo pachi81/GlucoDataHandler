@@ -81,6 +81,53 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:text="@string/wear_complication_tap_action" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginVertical="10dp"/>
+
+            <RelativeLayout
+                android:id="@+id/graphDurationHead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/txtGraphDurationTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/graph_duration"
+                    android:textColor="#FFFFFF" />
+
+                <TextView
+                    android:id="@+id/txtGraphDurationLevel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_toEndOf="@+id/txtGraphDurationTitle"
+                    android:text="2h"
+                    android:textAlignment="textEnd"
+                    android:textColor="#FFFFFF"
+                    tools:ignore="HardcodedText" />
+            </RelativeLayout>
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/seekGraphDuration"
+                android:min="0"
+                android:max="12"
+                android:progress="2"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/txtGraphDurationSummary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/graph_duration_wear_summary"
+                android:textAlignment="textStart" />
     </LinearLayout>
     </ScrollView>
 </androidx.wear.widget.BoxInsetLayout>

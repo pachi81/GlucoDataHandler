@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.wear.widget.SwipeDismissFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/swipe_dismiss_root"
+    android:padding="@dimen/box_inset_layout_padding"
+    tools:context=".GraphActivity"
+    tools:deviceIds="wear">
+
+
+    <RelativeLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <de.michelinside.glucodatahandler.WearGlucoseChart
+        android:id="@+id/chart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="10dp"
+        android:contentDescription="@string/graph"
+        />
+
+    <TextView
+        android:id="@+id/txtChartDisabled"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/graph_disabled"
+        android:gravity="center"
+        android:paddingHorizontal="10dp"
+        android:autoSizeStepGranularity="1sp"
+        android:autoSizeTextType="uniform"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:visibility="gone"
+        />
+
+    <Button
+        android:id="@+id/btnClose"
+        android:minHeight="0dp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:text="x"
+        android:textSize="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="@color/transparent_button"
+        tools:ignore="HardcodedText,SpUsage" />
+    </RelativeLayout>
+</androidx.wear.widget.SwipeDismissFrameLayout>

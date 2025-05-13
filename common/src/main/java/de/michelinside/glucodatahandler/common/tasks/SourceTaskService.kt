@@ -7,7 +7,7 @@ import android.content.Intent
 import androidx.work.WorkerParameters
 
 @SuppressLint("StaticFieldLeak")
-object SourceTaskService: BackgroundTaskService(43, "GDH.Task.Source.TaskService", true) {
+object SourceTaskService: BackgroundTaskService(43, "GDH.Task.Source.TaskService", SourceTaskWorker::class.java, true) {
     override fun getAlarmReceiver() : Class<*> = SourceAlarmReceiver::class.java
 
     override fun getBackgroundTasks(): MutableList<BackgroundTask> =
