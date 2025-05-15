@@ -70,6 +70,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             Log.d(LOG_ID, "destroy called")
             disable()
             removeBitmap()
+            InternalNotifier.remNotifier(context, this)
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
             if(curWallpaper != null) {
                 Log.i(LOG_ID, "Destroy current wallpaper")

@@ -15,7 +15,6 @@ import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.utils.Utils
-import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import java.util.*
@@ -62,7 +61,6 @@ class FloatingWidget(context: Context): WallpaperBase(context, "GDH.FloatingWidg
     private fun remove() {
         Log.d(LOG_ID, "remove called")
         try {
-            InternalNotifier.remNotifier(context, this)
             if (windowManager != null) {
                 try {
                     with(sharedInternalPref.edit()) {
