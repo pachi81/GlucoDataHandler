@@ -38,7 +38,10 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
     protected abstract val stylePref: String
     protected abstract val sizePref: String
     protected open val MIN_SIZE = 6f
+    protected open val MIN_VALUE_SIZE = 6f
+    protected open val VALUE_RESIZE_FACTOR = 4f
     protected open val MAX_SIZE = 24f
+    protected open val DEFAULT_FONT_SIZE = 12f
     protected var enabled = false
     protected var paused = false
     protected var style = Constants.WIDGET_STYLE_GLUCOSE_TREND
@@ -285,7 +288,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
 
             lockscreenView.setBackgroundColor(backgroundColor)
 
-            var textSize = 12f
+            var textSize = DEFAULT_FONT_SIZE
             when(style) {
                 Constants.WIDGET_STYLE_GLUCOSE_TREND_DELTA -> {
                     txtTime.visibility = GONE
@@ -318,7 +321,6 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
                     txtCob.visibility = VISIBLE
                 }
                 else -> {
-                    textSize = 12f
                     txtTime.visibility = VISIBLE
                     txtDelta.visibility = VISIBLE
                     viewIcon.visibility = VISIBLE
@@ -364,7 +366,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             }
             val usedSize = if(graphImage != null && (txtIob.visibility == VISIBLE || txtCob.visibility == VISIBLE)) size /2 else size
 
-            txtBgValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+MIN_SIZE+usedSize*4f)
+            txtBgValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+MIN_VALUE_SIZE+usedSize*VALUE_RESIZE_FACTOR)
             viewIcon.minimumWidth = Utils.dpToPx((MIN_SIZE+usedSize)*4f, context)
             txtDelta.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(MIN_SIZE+usedSize*2f, MAX_SIZE))
             txtTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(MIN_SIZE+usedSize*2f, MAX_SIZE))
