@@ -71,7 +71,9 @@ object ChartBitmapHandler : NotifierInterface {
         }
     }
 
-    fun hasBitmap(): Boolean {
+    fun hasBitmap(forWidget: String? = null): Boolean {
+        if(forWidget != null && !isRegistered(forWidget))
+            return false
         return chartBitmap != null
     }
 

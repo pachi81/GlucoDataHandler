@@ -36,7 +36,7 @@ class AodWidget(context: Context): WallpaperBase(context, "GDH.AodWidget") {
     }
 
     override fun update() {
-        Log.d(LOG_ID, "update()")
+        Log.d(LOG_ID, "update called")
         try {
             service.removeAndCreateOverlay()
         } catch (e: Exception) {

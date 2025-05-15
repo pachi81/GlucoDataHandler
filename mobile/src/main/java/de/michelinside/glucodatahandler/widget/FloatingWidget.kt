@@ -86,7 +86,7 @@ class FloatingWidget(context: Context): WallpaperBase(context, "GDH.FloatingWidg
     }
 
     override fun update() {
-        Log.d(LOG_ID, "update called")
+        Log.d(LOG_ID, "update called - enabled: $enabled")
         try {
             if (enabled) {
                 if (Settings.canDrawOverlays(context)) {

@@ -156,7 +156,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - active=$active - graph-id ${ChartBitmapHandler.chartId} - elapsed: ${ReceiveData.getElapsedTimeMinute()}")
+            Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - active: $active - graph-id: ${if(hasBitmap()) ChartBitmapHandler.chartId else -1} - elapsed: ${ReceiveData.getElapsedTimeMinute()}")
             if(!active)
                 return
             if (dataSource == NotifySource.GRAPH_CHANGED && ChartBitmapHandler.active && extras?.getInt(Constants.GRAPH_ID) != ChartBitmapHandler.chartId) {
@@ -167,6 +167,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
                 Log.d(LOG_ID, "Ignore time value and wait for chart update")
                 return
             }
+            Log.i(LOG_ID, "Update called for source $dataSource - style $style - size $size")
             update()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString() )
@@ -212,9 +213,11 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
                     filter.add(NotifySource.OBSOLETE_VALUE)
                 }
             }
+            Log.d(LOG_ID, "Notifier filter for active: $filter")
             InternalNotifier.addNotifier(context, this, filter)
         } else {
             val filter = getFilters()
+            Log.d(LOG_ID, "Notifier filter for inactive: $filter")
             if(filter.isNotEmpty())
                 InternalNotifier.addNotifier(context, this, filter)
             else
@@ -255,7 +258,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
     }
 
     protected fun hasBitmap(): Boolean {
-        return ChartBitmapHandler.hasBitmap()
+        return ChartBitmapHandler.isRegistered(this.javaClass.simpleName)
     }
 
     protected fun hasIobCob(): Boolean {
