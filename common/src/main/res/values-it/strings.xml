@@ -485,7 +485,6 @@
     <string name="wear_complication_tap_action">Azione al tocco della complicazione</string>
     <string name="activity_large_arrow_icon_summary">Disabilita questa impostazione se la freccia di tendenza è troppo grande o ritagliata.</string>
     <string name="pref_cat_ui_settings">Interfaccia utente</string>
-    <string name="pref_cat_ui_settings_summary">Impostazioni generali per l\'interfaccia utente di questa applicazione.</string>
     <string name="gda_foreground_info">GlucoDataAuto è in esecuzione</string>
     <string name="gda_foreground_summary">Abilitalo solo se utilizzi una sorgente follower e solo notifiche Android Auto.\nQuesto impedisce ad Android di chiudere questa app mentre non è connessa ad Android Auto, quindi l\'app non può riconoscere la connessione Android Auto.\nInvece di abilitare questa impostazione, puoi anche aprire l\'app in Android Auto una volta, se sei connesso.</string>
     <string name="gda_battery_optimization_disabled">L\'ottimizzazione della batteria è abilitata!\nPremi qui per disabilitarla.</string>
@@ -788,4 +787,7 @@
     <string name="graph_widgets">Grafico nei widget</string>
     <string name="graph_widgets_summary">Impostazioni del grafico per widget, notifiche, schermata di blocco e Always-On Display (AOD).</string>
     <string name="show_graph_notification_summary">Mostra il grafico nella notifica.</string>
+
+    <string name="pref_cat_ui_graph_settings_summary">Impostazioni generali per l\'interfaccia utente e il grafico nella schermata principale e nei widget.</string>
+    <string name="pref_cat_ui_graph_settings">Interfaccia utente e grafico</string>
 </resources>

@@ -479,7 +479,6 @@
     <string name="wear_complication_tap_action">Complication Tip Aktion</string>
     <string name="activity_large_arrow_icon_summary">Bitte deaktivieren, wenn der Trendpfeil zu groß und dadurch abgeschnitten wird.</string>
     <string name="pref_cat_ui_settings">Oberfläche</string>
-    <string name="pref_cat_ui_settings_summary">Allgemeine Einstellung für die Oberfläche von dieser App.</string>
     <string name="gda_foreground_info">GlucoDataAuto wird ausgeführt</string>
     <string name="gda_foreground_summary">Nur aktivieren, wenn eine Online Datenquelle und nur Android Auto-Benachrichtigungen verwendet werden.\nDiese Einstellung verhindert, dass Android diese App schließt, wenn sie nicht mit Android Auto verbunden ist, sodass die App die Android Auto-Verbindung nicht erkennen kann.\nAlternativ kann man auch einmal die App direkt in Android Auto öffnen.</string>
     <string name="gda_battery_optimization_disabled">Akkuoptimierungen sind aktiv!\nHier drücken, um es zu deaktivieren.</string>
@@ -791,4 +790,7 @@
     <string name="graph_widgets">Graph in Widgets</string>
     <string name="graph_widgets_summary">Grapheinstellungen für Widgets, Benachrichtigungen, Sperrbildschirm und Always-On-Display (AOD).</string>
     <string name="show_graph_notification_summary">Graph in der Benachrichtigung anzeigen.</string>
+
+    <string name="pref_cat_ui_graph_settings_summary">Allgemeine Einstellungen für die Benutzeroberfläche und den Graphen auf dem Hauptbildschirm und in den Widgets.</string>
+    <string name="pref_cat_ui_graph_settings">Oberfläche und Graph</string>
 </resources>

@@ -365,7 +365,6 @@ A riasztások ettől függetlenül mindig megjelennek."</string>
     <string name="pref_cat_transfer">Vércukorértékek továbbítása</string>
     <string name="pref_cat_transfer_summary">Beállítások a vércukorértékek más alkalmazásokhoz történő továbbításához.</string>
     <string name="pref_cat_ui_settings">Felület</string>
-    <string name="pref_cat_ui_settings_summary">Általános beállítások az alkalmazás felületéhez.</string>
     <string name="pref_cat_visualisation">Megjelenítés</string>
     <string name="pref_cat_watch">Órák</string>
     <string name="pref_cat_watch_summary">Beállítások a csatlakoztatott okosórákon történő megjelenítéshez.</string>
@@ -866,4 +865,7 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="graph_widgets">Grafikon a widgetekben</string>
     <string name="graph_widgets_summary">A widgetekben, értesítésekben, zárolási képernyőn és Always-On Display (AOD) megjelenő grafikon beállításai.</string>
     <string name="show_graph_notification_summary">Grafikon megjelenítése az értesítésben.</string>
+
+    <string name="pref_cat_ui_graph_settings_summary">Általános beállítások a felhasználói felülethez és a grafikonhoz a főképernyőn és a widgetekben.</string>
+    <string name="pref_cat_ui_graph_settings">Felhasználói felület és grafikon</string>
 </resources>
