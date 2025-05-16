@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Parcel
 import android.provider.Settings
 import android.text.format.DateUtils
 import android.util.Log
@@ -19,6 +20,7 @@ import android.view.accessibility.AccessibilityManager
 import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
@@ -122,31 +124,36 @@ object Utils {
         ).toInt()
     }
 
-    fun bytesToBundle(bytes: ByteArray): Bundle? {
+    fun bytesToBundle(bytes: ByteArray?, isJson: Boolean = true): Bundle? {
         try {
-            return jsonBytesToBundle(bytes)
-            /*val parcel = Parcel.obtain()
+            if(bytes==null)
+                return null
+            if(isJson)
+                return jsonBytesToBundle(bytes)
+            val parcel = Parcel.obtain()
             parcel.unmarshall(bytes, 0, bytes.size)
             parcel.setDataPosition(0)
             val bundle = parcel.readBundle(GlucoDataService::class.java.getClassLoader())
             parcel.recycle()
-            return bundle*/
+            dumpBundle(bundle)  // workaround for problems with API 36
+            return bundle
         } catch (exc: Exception) {
             Log.e(LOG_ID, "bytesToBundle exception: " + exc.toString())
             return null
         }
     }
 
-    fun bundleToBytes(bundle: Bundle?): ByteArray? {
+    fun bundleToBytes(bundle: Bundle?, useJson: Boolean = true): ByteArray? {
         if (bundle==null)
             return null
         try {
-            return bundleToJsonBytes(bundle)
-            /*val parcel = Parcel.obtain()
+            if(useJson)
+                return bundleToJsonBytes(bundle)
+            val parcel = Parcel.obtain()
             parcel.writeBundle(bundle)
             val bytes = parcel.marshall()
             parcel.recycle()
-            return bytes*/
+            return bytes
         } catch (exc: Exception) {
             Log.e(LOG_ID, "bundleToBytes exception: " + exc.toString())
             return null
@@ -154,7 +161,7 @@ object Utils {
     }
     data class TypedJsonValue(val type: String, val value: Any?)
 
-    fun bundleToTypedMap(bundle: Bundle?): Map<String, TypedJsonValue>? {
+    private fun bundleToTypedMap(bundle: Bundle?): Map<String, TypedJsonValue>? {
         if (bundle == null) return null
         val typedMap = mutableMapOf<String, TypedJsonValue>()
         for (key in bundle.keySet()) {
@@ -182,9 +189,25 @@ object Utils {
                     // For lists, typeName will be like "ArrayList", "LinkedList"
                     typedMap[key] = TypedJsonValue(typeName, actualValue)
                 }
+                is Double -> {
+                    when {
+                        actualValue.isNaN() -> typedMap[key] = TypedJsonValue(typeName, "NaN")
+                        actualValue.isInfinite() && actualValue > 0 -> typedMap[key] = TypedJsonValue(typeName, "Infinity")
+                        actualValue.isInfinite() && actualValue < 0 -> typedMap[key] = TypedJsonValue(typeName, "-Infinity")
+                        else -> typedMap[key] = TypedJsonValue(typeName, actualValue)
+                    }
+                }
+                is Float -> {
+                    when {
+                        actualValue.isNaN() -> typedMap[key] = TypedJsonValue(typeName, "NaN")
+                        actualValue.isInfinite() && actualValue > 0 -> typedMap[key] = TypedJsonValue(typeName, "Infinity")
+                        actualValue.isInfinite() && actualValue < 0 -> typedMap[key] = TypedJsonValue(typeName, "-Infinity")
+                        else -> typedMap[key] = TypedJsonValue(typeName, actualValue)
+                    }
+                }
                 // For other known primitive wrappers and strings, typeName will be "String", "Integer", "Boolean", etc.
                 // Gson can handle these directly.
-                is String, is Int, is Long, is Double, is Float, is Boolean -> {
+                is String, is Int, is Long, is Boolean -> {
                     typedMap[key] = TypedJsonValue(typeName, actualValue)
                 }
                 // Default case for other types
@@ -200,7 +223,7 @@ object Utils {
         return typedMap
     }
 
-    fun bundleToJsonBytes(bundle: Bundle?): ByteArray? {
+    private fun bundleToJsonBytes(bundle: Bundle?): ByteArray? {
         if (bundle == null) return null
         return try {
             val map = bundleToTypedMap(bundle)
@@ -216,7 +239,7 @@ object Utils {
     }
 
     // that matches the simpleNames: "String", "Integer", "Bundle", "ArrayList", "StringArray", "Null", etc.
-    fun typedMapToBundle(typedMap: Map<String, Any?>?): Bundle? {
+    private fun typedMapToBundle(typedMap: Map<String, Any?>?): Bundle? {
         if (typedMap == null) return null
         val bundle = Bundle()
         for ((key, rawValue) in typedMap) {
@@ -234,15 +257,64 @@ object Utils {
                     "Integer" -> if (value is Number) bundle.putInt(key, value.toInt())
                     "Int" -> if (value is Number) bundle.putInt(key, value.toInt())
                     "Long" -> if (value is Number) bundle.putLong(key, value.toLong())
-                    "Double" -> if (value is Number) bundle.putDouble(key, value.toDouble())
-                    "Float" -> if (value is Number) bundle.putFloat(key, value.toFloat())
                     "Boolean" -> if (value is Boolean) bundle.putBoolean(key, value)
                     "Bundle" -> {
                         @Suppress("UNCHECKED_CAST")
                         bundle.putBundle(key, typedMapToBundle(value as? Map<String, Any?>))
                     }
                     "Null" -> bundle.putString(key, null) // Or handle as you see fit
-
+                    "Float" -> {
+                        when (value) {
+                            is String -> { // Check if the JSON value is a string (e.g., "NaN", "Infinity")
+                                when (value) {
+                                    "NaN" -> bundle.putFloat(key, Float.NaN)
+                                    "Infinity" -> bundle.putFloat(key, Float.POSITIVE_INFINITY)
+                                    "-Infinity" -> bundle.putFloat(key, Float.NEGATIVE_INFINITY)
+                                    else -> { // Attempt to parse if it's a string representation of a normal number
+                                        try {
+                                            bundle.putFloat(key, value.toFloat())
+                                        } catch (e: NumberFormatException) {
+                                            Log.w(LOG_ID, "Could not parse string '$value' to Float for key '$key'. Defaulting to NaN.")
+                                            bundle.putFloat(key, Float.NaN)
+                                        }
+                                    }
+                                }
+                            }
+                            is Number -> { // If it's already a number (Gson might parse valid numbers directly)
+                                bundle.putFloat(key, value.toFloat())
+                            }
+                            else -> {
+                                Log.w(LOG_ID, "Unexpected value type for Float key '$key': ${value?.javaClass?.name}. Defaulting to NaN.")
+                                bundle.putFloat(key, Float.NaN)
+                            }
+                        }
+                    }
+                    "Double" -> {
+                        when (value) {
+                            is String -> { // Check if the JSON value is a string
+                                when (value) {
+                                    "NaN" -> bundle.putDouble(key, Double.NaN)
+                                    "Infinity" -> bundle.putDouble(key, Double.POSITIVE_INFINITY)
+                                    "-Infinity" -> bundle.putDouble(key, Double.NEGATIVE_INFINITY)
+                                    else -> { // Attempt to parse if it's a string representation of a normal number
+                                        try {
+                                            bundle.putDouble(key, value.toDouble())
+                                        } catch (e: NumberFormatException) {
+                                            Log.w(LOG_ID, "Could not parse string '$value' to Double for key '$key'. Defaulting to NaN.")
+                                            bundle.putDouble(key, Double.NaN)
+                                        }
+                                    }
+                                }
+                            }
+                            is Number -> { // If it's already a number
+                                bundle.putDouble(key, value.toDouble())
+                            }
+                            else -> {
+                                Log.w(LOG_ID, "Unexpected value type for Double key '$key': ${value?.javaClass?.name}. Defaulting to NaN.")
+                                bundle.putDouble(key, Double.NaN)
+                            }
+                        }
+                    }
                     // More specific array/list handling would be needed here if you want to restore them
                     // to their exact original array types (e.g., IntArray vs ArrayList<Int>).
                     // Gson typically deserializes JSON arrays to ArrayList.
@@ -274,8 +346,8 @@ object Utils {
         return bundle
     }
 
-    fun jsonBytesToBundle(bytes: ByteArray?): Bundle? {
-        if (bytes == null) return null
+    private fun jsonBytesToBundle(bytes: ByteArray?): Bundle? {
+        if (bytes == null || bytes.isEmpty()) return null
         return try {
             val jsonString = String(bytes, Charsets.UTF_8)
             Log.v(LOG_ID, "Received jsonString: $jsonString")

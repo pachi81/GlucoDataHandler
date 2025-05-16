@@ -5,17 +5,19 @@ import android.graphics.Color
 object Constants {
     const val CAPABILITY_PHONE = "glucodata_intent_mobile"
     const val CAPABILITY_WEAR = "glucodata_intent_wear"
-    const val GLUCODATA_INTENT_MESSAGE_PATH = "/glucodata_intent_json"
-    const val BATTERY_INTENT_MESSAGE_PATH = "/battery_intent_json"
-    const val SETTINGS_INTENT_MESSAGE_PATH = "/settings_intent_json"
-    const val SOURCE_SETTINGS_INTENT_MESSAGE_PATH = "/source_settings_intent_json"
-    const val ALARM_SETTINGS_INTENT_MESSAGE_PATH = "/alarm_settings_intent_json"
-    const val REQUEST_DATA_MESSAGE_PATH = "/request_data_intent_json"
-    const val OLD_REQUEST_DATA_MESSAGE_PATH = "/request_data_intent"
-    const val REQUEST_LOGCAT_MESSAGE_PATH = "/request_logcat_intent_json"
+    const val GLUCODATA_INTENT_MESSAGE_PATH = "/glucodata_intent"
+    const val BATTERY_INTENT_MESSAGE_PATH = "/battery_intent"
+    const val SETTINGS_INTENT_MESSAGE_PATH = "/settings_intent"
+    const val SOURCE_SETTINGS_INTENT_MESSAGE_PATH = "/source_settings_intent"
+    const val ALARM_SETTINGS_INTENT_MESSAGE_PATH = "/alarm_settings_intent"
+    const val REQUEST_DATA_MESSAGE_PATH = "/request_data_intent"
+    const val COMMAND_PATH = "/command_intent"
+    const val JSON_PATH_EXTENSION = "_json"
+
+    const val REQUEST_LOGCAT_MESSAGE_PATH = "/request_logcat_intent"
+
     const val LOGCAT_CHANNEL_PATH = "/logcat_intent"
     const val DB_SYNC_CHANNEL_PATH = "/db_sync_intent"
-    const val COMMAND_PATH = "/command_intent_json"
     const val GLUCODATA_BROADCAST_ACTION = "glucodata.Minute"
     const val SETTINGS_BUNDLE = "settings_bundle"
     const val SOURCE_SETTINGS_BUNDLE = "source_settings_bundle"
@@ -29,6 +31,7 @@ object Constants {
     const val GLUCOSE_MAX_NOTIFICATION_VALUE = 400
     const val ACTION_STOP_FOREGROUND = "stop_foreground"
     const val ACTION_START_FOREGROUND = "start_foreground"
+    const val VERSION_CODE = "gdh.version_code"
 
     const val ACTION_PREFIX = "gdh_action_"
     const val ACTION_FLOATING_WIDGET_TOGGLE = ACTION_PREFIX + "floating_widget_toggle"
