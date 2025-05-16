@@ -803,5 +803,5 @@
 
     <string name="pref_cat_ui_graph_settings_summary">Ustawienia ogólne dot. interfejsu użytkownika i wykresu na ekranie głównym i w widgetach.</string>
     <string name="pref_cat_ui_graph_settings">Interfejs użytkownika i wykres</string>
-    <string name="state_update_required">Update required!</string>
+    <string name="state_update_required">Wymagana aktualizacja!</string>
 </resources>
