@@ -110,6 +110,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setShowWhen(true)
             .setColorized(true)
             .setGroup(ChannelType.MOBILE_SECOND.channelId)
+            .setGroupSummary(false)
             .setCategory(Notification.CATEGORY_STATUS)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
 
@@ -121,6 +122,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setShowWhen(true)
             .setColorized(true)
             .setGroup(ChannelType.MOBILE_THIRD.channelId)
+            .setGroupSummary(false)
             .setCategory(Notification.CATEGORY_STATUS)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
 
@@ -132,6 +134,7 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setShowWhen(true)
             .setColorized(true)
             .setGroup(ChannelType.MOBILE_FOREGROUND.channelId)
+            .setGroupSummary(false)
             .setCategory(Notification.CATEGORY_STATUS)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
     }
