@@ -801,4 +801,5 @@
 
     <string name="pref_cat_ui_graph_settings_summary">Paramètres généraux de l\'interface utilisateur et du graphique sur l\'écran principal et les widgets.</string>
     <string name="pref_cat_ui_graph_settings">Interface utilisateur et graphique</string>
+    <string name="state_update_required">Mise à jour requise!</string>
 </resources>

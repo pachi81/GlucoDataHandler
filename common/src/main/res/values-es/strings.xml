@@ -800,4 +800,6 @@
 
     <string name="pref_cat_ui_graph_settings_summary">Ajustes generales para la interfaz de usuario y el gráfico en la pantalla principal y los widgets.</string>
     <string name="pref_cat_ui_graph_settings">Interfaz de usuario y gráfico</string>
+
+    <string name="state_update_required">¡Actualización requerida!</string>
 </resources>

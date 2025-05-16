@@ -852,5 +852,6 @@
     <string name="show_graph_notification_summary">Show the graph in the notification.</string>
     <string name="pref_cat_ui_graph_settings_summary">General settings for the user interface and the graph on main screen and widgets.</string>
     <string name="pref_cat_ui_graph_settings">User interface and graph</string>
+    <string name="state_update_required">Update required!</string>
 
 </resources>

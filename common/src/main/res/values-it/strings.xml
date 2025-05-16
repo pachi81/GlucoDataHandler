@@ -790,4 +790,5 @@
 
     <string name="pref_cat_ui_graph_settings_summary">Impostazioni generali per l\'interfaccia utente e il grafico nella schermata principale e nei widget.</string>
     <string name="pref_cat_ui_graph_settings">Interfaccia utente e grafico</string>
+    <string name="state_update_required">Aggiornamento richiesto!</string>
 </resources>
