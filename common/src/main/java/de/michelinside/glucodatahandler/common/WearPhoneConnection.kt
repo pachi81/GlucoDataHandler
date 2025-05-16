@@ -65,6 +65,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         private val noDataReceived = Collections.synchronizedSet(mutableSetOf<String>())
         private val noDataSend = Collections.synchronizedSet(mutableSetOf<String>())
         private val nodesPaused = Collections.synchronizedSet(mutableSetOf<String>())
+        private val oldNodes = Collections.synchronizedSet(mutableSetOf<String>())
         val nodesConnected: Boolean get() = connectedNodes.size>0
         private var connectRetries = 0
         private val filter = mutableSetOf(
@@ -101,13 +102,18 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         fun getNodeConnectionStates(context: Context, addMissing: Boolean = true): Map<String, String> {
             val connectionStates = mutableMapOf<String, String>()
             connectedNodes.forEach { node ->
-                (if (nodeBatteryLevel.containsKey(node.key)) {
-                    val level = nodeBatteryLevel.getValue(node.key)
-                    connectionStates[getDisplayName(node.value)] = if (level > 0) "${level}%" else context.getString(R.string.state_connected)
-                }
-                else if (addMissing) {
-                    connectionStates[getDisplayName(node.value)] = context.getString(R.string.state_await_data)
-                } else {})
+                (
+                    if(oldNodes.contains(node.key)) {
+                        connectionStates[getDisplayName(node.value)] = context.getString(R.string.state_update_required)
+                    }
+                    else if (nodeBatteryLevel.containsKey(node.key)) {
+                        val level = nodeBatteryLevel.getValue(node.key)
+                        connectionStates[getDisplayName(node.value)] = if (level > 0) "${level}%" else context.getString(R.string.state_connected)
+                    }
+                    else if (addMissing) {
+                        connectionStates[getDisplayName(node.value)] = context.getString(R.string.state_await_data)
+                    } else {}
+                )
             }
             return connectionStates
 
@@ -132,6 +138,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
     private fun openConnection() {
         Log.d(LOG_ID, "open connection")
         connectedNodes.clear()
+        oldNodes.clear()
         nodeBatteryLevel.clear()
         noDataReceived.clear()
         noDataSend.clear()
@@ -149,6 +156,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         Wearable.getMessageClient(context).removeListener(this)
         Wearable.getCapabilityClient(context).removeListener(this)
         connectedNodes.clear()
+        oldNodes.clear()
         nodeBatteryLevel.clear()
         noDataReceived.clear()
         noDataSend.clear()
@@ -279,6 +287,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
     private fun remNode(nodeId: String) {
         Log.i(LOG_ID, "Node disconnected: $nodeId")
         connectedNodes.remove(nodeId)
+        oldNodes.remove(nodeId)
         nodeBatteryLevel.remove(nodeId)// remove all battery levels from not connected nodes
         noDataReceived.remove(nodeId)
         noDataSend.remove(nodeId)
@@ -402,7 +411,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 addOnSuccessListener {
                     Log.i(
                         LOG_ID,
-                        dataSource.toString() + " data send to node " + node.toString()
+                        dataSource.toString() + ": ${data?.size} bytes send to node " + node.toString()
                     )
                     if(noDataSend.contains(node.id)) {
                         noDataSend.remove(node.id)
@@ -479,12 +488,19 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
     override fun onMessageReceived(p0: MessageEvent) {
         try {
-            Log.i(LOG_ID, "onMessageReceived from " + p0.sourceNodeId + " with path " + p0.path)
+            Log.i(LOG_ID, "onMessageReceived from " + p0.sourceNodeId + " with path " + p0.path + " with data: " + p0.data?.size + " bytes")
             checkConnectedNode(p0.sourceNodeId)
+            if(p0.path == Constants.OLD_REQUEST_DATA_MESSAGE_PATH) {
+                Log.w(LOG_ID, "Old request data message received from " + p0.sourceNodeId)
+                oldNodes.add(p0.sourceNodeId)
+                InternalNotifier.notify(context, NotifySource.NODE_BATTERY_LEVEL, null)
+                return
+            }
             if (p0.path == Constants.REQUEST_DATA_MESSAGE_PATH && !noDataSend.contains(p0.sourceNodeId)) {
                 Log.d(LOG_ID, "Request data called from " + p0.sourceNodeId + " wait for sending data")
                 // new data request -> new connection on other side -> reset connection
                 noDataSend.add(p0.sourceNodeId)  // add to trigger db sync after connection established
+                oldNodes.remove(p0.sourceNodeId)
             }
             if(noDataReceived.contains(p0.sourceNodeId)) {
                 noDataReceived.remove(p0.sourceNodeId)

@@ -22,8 +22,8 @@
         app:iconSpaceReserved="false">
         <Preference
             android:key="pref_cat_ui_settings"
-            android:title="@string/pref_cat_ui_settings"
-            android:summary="@string/pref_cat_ui_settings_summary"
+            android:title="@string/pref_cat_ui_graph_settings"
+            android:summary="@string/pref_cat_ui_graph_settings_summary"
             app:fragment="de.michelinside.glucodatahandler.preferences.UiSettingsFragment"
             app:iconSpaceReserved="false" />
         <Preference

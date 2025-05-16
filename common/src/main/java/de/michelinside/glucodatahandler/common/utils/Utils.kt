@@ -11,13 +11,14 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.os.Parcel
 import android.provider.Settings
 import android.text.format.DateUtils
 import android.util.Log
 import android.util.TypedValue
 import android.view.accessibility.AccessibilityManager
 import android.widget.Toast
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
@@ -122,23 +123,172 @@ object Utils {
     }
 
     fun bytesToBundle(bytes: ByteArray): Bundle? {
-        val parcel = Parcel.obtain()
-        parcel.unmarshall(bytes, 0, bytes.size)
-        parcel.setDataPosition(0)
-        val bundle = parcel.readBundle(GlucoDataService.context!!.applicationContext.classLoader)
-        parcel.recycle()
-        return bundle
+        try {
+            return jsonBytesToBundle(bytes)
+            /*val parcel = Parcel.obtain()
+            parcel.unmarshall(bytes, 0, bytes.size)
+            parcel.setDataPosition(0)
+            val bundle = parcel.readBundle(GlucoDataService::class.java.getClassLoader())
+            parcel.recycle()
+            return bundle*/
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "bytesToBundle exception: " + exc.toString())
+            return null
+        }
     }
 
     fun bundleToBytes(bundle: Bundle?): ByteArray? {
         if (bundle==null)
             return null
-        val parcel = Parcel.obtain()
-        parcel.writeBundle(bundle)
-        val bytes = parcel.marshall()
-        parcel.recycle()
-        return bytes
+        try {
+            return bundleToJsonBytes(bundle)
+            /*val parcel = Parcel.obtain()
+            parcel.writeBundle(bundle)
+            val bytes = parcel.marshall()
+            parcel.recycle()
+            return bytes*/
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "bundleToBytes exception: " + exc.toString())
+            return null
+        }
     }
+    data class TypedJsonValue(val type: String, val value: Any?)
+
+    fun bundleToTypedMap(bundle: Bundle?): Map<String, TypedJsonValue>? {
+        if (bundle == null) return null
+        val typedMap = mutableMapOf<String, TypedJsonValue>()
+        for (key in bundle.keySet()) {
+            val actualValue = bundle.get(key)
+            if (actualValue == null) {
+                // For null, we don't have a class.simpleName, so define it.
+                typedMap[key] = TypedJsonValue("Null", null)
+                continue
+            }
+
+            // Get the simple class name as the type identifier
+            val typeName = actualValue::class.simpleName ?: actualValue.javaClass.simpleName
+
+            when (actualValue) {
+                is Bundle -> {
+                    // For nested bundles, we recurse. The typeName will be "Bundle".
+                    typedMap[key] = TypedJsonValue(typeName, bundleToTypedMap(actualValue))
+                }
+                is Array<*> -> {
+                    // For arrays, typeName will be like "StringArray", "IntArray", or "Array" for Array<Any>
+                    // Gson serializes arrays to JSON arrays (lists).
+                    typedMap[key] = TypedJsonValue(typeName, actualValue.toList())
+                }
+                is List<*> -> {
+                    // For lists, typeName will be like "ArrayList", "LinkedList"
+                    typedMap[key] = TypedJsonValue(typeName, actualValue)
+                }
+                // For other known primitive wrappers and strings, typeName will be "String", "Integer", "Boolean", etc.
+                // Gson can handle these directly.
+                is String, is Int, is Long, is Double, is Float, is Boolean -> {
+                    typedMap[key] = TypedJsonValue(typeName, actualValue)
+                }
+                // Default case for other types
+                else -> {
+                    // This is for types not explicitly handled above but where typeName is still valid.
+                    // Gson will attempt to serialize 'actualValue'. This works for simple POJOs.
+                    // For complex objects not directly serializable by Gson, you'd need custom TypeAdapters.
+                    Log.w(LOG_ID, "Using generic typeName '$typeName' for key '$key' for value of class ${actualValue.javaClass.name}")
+                    typedMap[key] = TypedJsonValue(typeName, actualValue)
+                }
+            }
+        }
+        return typedMap
+    }
+
+    fun bundleToJsonBytes(bundle: Bundle?): ByteArray? {
+        if (bundle == null) return null
+        return try {
+            val map = bundleToTypedMap(bundle)
+            if (map == null) return null
+            val gson = Gson()
+            val jsonString = gson.toJson(map)
+            Log.v(LOG_ID, "Created jsonString: $jsonString")
+            jsonString.toByteArray(Charsets.UTF_8)
+        } catch (e: Exception) {
+            Log.e(LOG_ID, "Error converting Bundle to JSON bytes: ${e.message}", e)
+            null
+        }
+    }
+
+    // that matches the simpleNames: "String", "Integer", "Bundle", "ArrayList", "StringArray", "Null", etc.
+    fun typedMapToBundle(typedMap: Map<String, Any?>?): Bundle? {
+        if (typedMap == null) return null
+        val bundle = Bundle()
+        for ((key, rawValue) in typedMap) {
+            try {
+                if (rawValue !is Map<*, *>) {
+                    Log.w(LOG_ID, "Expected a map for TypedJsonValue, but got ${rawValue?.javaClass?.name} for key '$key'")
+                    continue
+                }
+                val valueMap = rawValue as Map<String, Any?>
+                val type = valueMap["type"] as? String
+                val value = valueMap["value"]
+
+                when (type) {
+                    "String" -> bundle.putString(key, value as? String)
+                    "Integer" -> if (value is Number) bundle.putInt(key, value.toInt())
+                    "Int" -> if (value is Number) bundle.putInt(key, value.toInt())
+                    "Long" -> if (value is Number) bundle.putLong(key, value.toLong())
+                    "Double" -> if (value is Number) bundle.putDouble(key, value.toDouble())
+                    "Float" -> if (value is Number) bundle.putFloat(key, value.toFloat())
+                    "Boolean" -> if (value is Boolean) bundle.putBoolean(key, value)
+                    "Bundle" -> {
+                        @Suppress("UNCHECKED_CAST")
+                        bundle.putBundle(key, typedMapToBundle(value as? Map<String, Any?>))
+                    }
+                    "Null" -> bundle.putString(key, null) // Or handle as you see fit
+
+                    // More specific array/list handling would be needed here if you want to restore them
+                    // to their exact original array types (e.g., IntArray vs ArrayList<Int>).
+                    // Gson typically deserializes JSON arrays to ArrayList.
+                    "ArrayList" -> { // Example: if Gson deserialized a JSON array to an ArrayList
+                        if (value is List<*>) {
+                            // This is tricky. What kind of ArrayList? Bundle needs typed ArrayLists.
+                            // e.g., bundle.putStringArrayList(), bundle.putIntegerArrayList()
+                            // You'd need more info or make assumptions.
+                            // For simplicity, this example doesn't fully rehydrate all list types.
+                            Log.d(LOG_ID, "Deserialized ArrayList for key $key. Type of elements: ${value.firstOrNull()?.javaClass?.simpleName}")
+                            // Attempt to convert to known parcelable array list types
+                            when {
+                                value.all { it is String } -> bundle.putStringArrayList(key, value as ArrayList<String>)
+                                value.all { it is Int } -> bundle.putIntegerArrayList(key, value as ArrayList<Int>)
+                                // Add other types like Parcelable if you have a way to cast them
+                                else -> Log.w(LOG_ID, "Cannot directly put generic ArrayList into Bundle for key '$key'")
+                            }
+                        }
+                    }
+                    // Add cases for "StringArray", "IntArray" etc. if you serialized them that way
+                    // and need to convert List<Number> back to, e.g., IntArray.
+
+                    else -> Log.w(LOG_ID, "Unknown type '$type' in typedMapToBundle for key '$key'")
+                }
+            } catch (e: ClassCastException) {
+                Log.e(LOG_ID, "Type casting error for key '$key' during typedMapToBundle: ${e.message}", e)
+            }
+        }
+        return bundle
+    }
+
+    fun jsonBytesToBundle(bytes: ByteArray?): Bundle? {
+        if (bytes == null) return null
+        return try {
+            val jsonString = String(bytes, Charsets.UTF_8)
+            Log.v(LOG_ID, "Received jsonString: $jsonString")
+            val mapType = object : TypeToken<Map<String, Any?>>() {}.type
+            val gson = Gson()
+            val map: Map<String, Any?> = gson.fromJson(jsonString, mapType)
+            typedMapToBundle(map)
+        } catch (e: Exception) {
+            Log.e(LOG_ID, "Error converting JSON bytes to Bundle: ${e.message}", e)
+            null
+        }
+    }
+
 
     @Suppress("DEPRECATION")
     fun dumpBundle(bundle: Bundle?): String {
@@ -148,7 +298,7 @@ object Utils {
             }
             var string = "{"
             for (key in bundle.keySet()) {
-                string += " " + key + " => " + (if (bundle[key] != null) bundle[key].toString() else "NULL") + "\r\n"
+                string += " " + key + " => " + (if (bundle[key] != null) (bundle[key]!!.javaClass.simpleName + ": " + bundle[key].toString()) else "NULL") + "\r\n"
             }
             string += " }"
             return string.take(2000)

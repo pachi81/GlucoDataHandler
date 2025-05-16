@@ -134,14 +134,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         }
         return Utils.round(deltaValue5Min, 1)
     }
-    private var deltaValue10Min: Float = Float.NaN
-    val delta10Min: Float get() {
-        if(isMmol)  // mmol/l
-        {
-            return GlucoDataUtils.mgToMmol(deltaValue10Min)
-        }
-        return Utils.round(deltaValue10Min, 1)
-    }
     private var deltaValue15Min: Float = Float.NaN
     val delta15Min: Float get() {
         if(isMmol)  // mmol/l
@@ -415,7 +407,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         // reset old deltas
         deltaValue1Min = Float.NaN
         deltaValue5Min = Float.NaN
-        deltaValue10Min = Float.NaN
         deltaValue15Min = Float.NaN
         if(dbAccess.active) {
             val glucoseValues = dbAccess.getGlucoseValuesInRange(new_time-(25*60*1000), new_time) // max 20 minutes to calculate the delta
@@ -431,10 +422,6 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     if(deltaValue5Min.isNaN() && diffTime >= 5) {
                         deltaValue5Min = (new_value-it.value).toFloat()/(diffTime/5)
                         Log.d(LOG_ID, "5 Calculate $diffTime min delta - new_value $new_value, old_value ${it.value}, delta $deltaValue5Min ")
-                    }
-                    if(deltaValue10Min.isNaN() && diffTime >= 10) {
-                        deltaValue10Min = (new_value-it.value).toFloat()/(diffTime/10)
-                        Log.d(LOG_ID, "10 Calculate $diffTime min delta - new_value $new_value, old_value ${it.value}, delta $deltaValue10Min ")
                     }
                     if(deltaValue15Min.isNaN() && diffTime >= 15) {
                         deltaValue15Min = (new_value-it.value).toFloat()/(diffTime/15)

@@ -24,7 +24,7 @@ class ChartBitmapHandlerView(val imageView: ImageView, val context: Context): No
         InternalNotifier.addNotifier(context, this, mutableSetOf(NotifySource.GRAPH_CHANGED))
         ChartBitmapHandler.register(context, this.toString())
         imageView.setImageBitmap(ChartBitmapHandler.getBitmap())
-        imageView.visibility = if(ChartBitmapHandler.hasBitmap()) View.VISIBLE else View.GONE
+        imageView.visibility = if(ChartBitmapHandler.hasBitmap(this.toString())) View.VISIBLE else View.GONE
     }
 
     fun pause() {
@@ -49,10 +49,10 @@ class ChartBitmapHandlerView(val imageView: ImageView, val context: Context): No
         if(dataSource == NotifySource.GRAPH_CHANGED && extras?.getInt(Constants.GRAPH_ID) == ChartBitmapHandler.chartId) {
             GlobalScope.launch(Dispatchers.Main) {
                 try {
-                    Log.i(LOG_ID, "Update bitmap for id ${ChartBitmapHandler.chartId} - enabled: ${ChartBitmapHandler.hasBitmap()}")
+                    Log.i(LOG_ID, "Update bitmap for id ${ChartBitmapHandler.chartId} - enabled: ${ChartBitmapHandler.hasBitmap(this.toString())}")
                     imageView.setImageBitmap(ChartBitmapHandler.getBitmap())
-                    if(ChartBitmapHandler.hasBitmap() != (imageView.visibility== View.VISIBLE)) {
-                        imageView.visibility = if(ChartBitmapHandler.hasBitmap()) View.VISIBLE else View.GONE
+                    if(ChartBitmapHandler.hasBitmap(this.toString()) != (imageView.visibility== View.VISIBLE)) {
+                        imageView.visibility = if(ChartBitmapHandler.hasBitmap(this.toString())) View.VISIBLE else View.GONE
                     }
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Update bitmap exception: " + exc.toString())
