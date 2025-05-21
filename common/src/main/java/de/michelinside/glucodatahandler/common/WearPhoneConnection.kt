@@ -520,7 +520,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 }
                 setNodeVersion(p0.sourceNodeId, extras?.getInt(Constants.VERSION_CODE, if(isJsonReq) 1 else 0) ?: if(isJsonReq) 1 else 0, true)  // reset version for new data request
             } else if(isJsonReq || extras?.containsKey(Constants.VERSION_CODE) == true) {
-                setNodeVersion(p0.sourceNodeId, extras?.getInt(Constants.VERSION_CODE) ?: 1)  // no version, but support json, so set to version 1
+                setNodeVersion(p0.sourceNodeId, extras?.getInt(Constants.VERSION_CODE, 1) ?: 1)  // no version, but support json, so set to version 1
             } else {
                 setNodeVersion(p0.sourceNodeId, 0)
             }
