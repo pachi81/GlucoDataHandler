@@ -73,14 +73,14 @@ Aplikację można również pobrać i zainstalować ręcznie. [Tutaj](./INSTALLA
 
 <img src='images/playstore/tablet_10.png' width=800>
 
-## Watchfaces
+## Tarcze zegarków
 
-GlucoDataHandler only provide Wear OS complications to be used in other watchfaces.
+GlucoDataHandler udostępnia tylko komplikacje do wykorzystania w innych tarczach zegarka z WearOS.
 
-But there are two users creating watchfaces especially for the complications of GlucoDataHandler:
+Dwóch użytkowników tworzy jednak tarcze zegarka specjalnie dla komplikacji GlucoDataHandler:
 
-- [watchfaces](https://sites.google.com/view/diabeticmaskedman) provided by @[sderaps](https://github.com/sderaps)
-- [watchfaces](https://play.google.com/store/apps/dev?id=7197840107055554214) provided by Graham
+- [tarcze](https://sites.google.com/view/diabeticmaskedman), które tworzy @[sderaps](https://github.com/sderaps)
+- [tarcze](https://play.google.com/store/apps/dev?id=7197840107055554214), które tworzy Graham
 
 # Deweloperzy wnoszący swój wkład
 
