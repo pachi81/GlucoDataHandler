@@ -68,7 +68,7 @@ You can also download and install it manually. See [here](./INSTALLATION.md) for
 
 ## Watchfaces
 
-GlucoDataHandler only provide complications to be used in other watchfaces.
+GlucoDataHandler only provide Wear OS complications to be used in other watchfaces.
 
 But there are two users creating watchfaces especially for the complications of GlucoDataHandler:
 
