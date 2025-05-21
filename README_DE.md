@@ -5,7 +5,9 @@
 
 Deine zentrale Drehscheibe für Glukosewerte auf deinen Android-Geräten!
 
-Behalte deine Glukosewerte immer im Blick mit GlucoDataHandler (GDH)! Diese innovative App empfängt Daten von zahlreichen Quellen und visualisiert sie übersichtlich auf deinem Android-Smartphone, deiner Smartwatch (Wear OS, Miband und Amazfit) sowie in deinem Auto (via GlucoDataAuto).
+Behalte deine Glukosewerte immer im Blick mit GlucoDataHandler! 
+
+Diese innovative App empfängt Daten von zahlreichen Quellen und visualisiert sie übersichtlich auf deinem Android-Smartphone, deiner Smartwatch (Wear OS, Miband und Amazfit) sowie in deinem Auto (via GlucoDataAuto).
 
 ## Features
 
