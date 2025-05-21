@@ -61,10 +61,19 @@ Die neuste Version kann auch manuell heruntergeladen und installiert werden. [Hi
 <img src='images/playstore/de/phone_main.png' width=200>  <img src='images/playstore/de/phone_alarm_fullscreen_notification.png' width=200>  <img src='images/playstore/de/phone_ps_2.png' width=200>  <img src='images/playstore/phone_widgets.png' width=200>
 
 ### Watch
-<img src='images/playstore/gdh_wear.png' width=200>  <img src='images/playstore/gdh_wear_graph.png' width=200>  <img src='images/playstore/de/gdh_wear_notification.png' width=200>  <img src='images/playstore/gdh_wear_watchface.png' width=200> 
+<img src='images/playstore/gdh_wear.png' width=200>  <img src='images/playstore/gdh_wear_graph.png' width=200>  <img src='images/playstore/de/gdh_wear_notification.png' width=200>  <img src='images/playstore/Complications1x1.png' width=200> 
 
 ### Tablet
 <img src='images/playstore/de/tablet_10.png' width=800>
+
+## Ziffernblätter
+
+GlucoDataHandler bietet lediglich Wear OS Complications zur Verwendung in anderen Zifferblättern an.
+
+Es gibt jedoch zwei Benutzer, die speziell Zifferblätter für die Complications von GlucoDataHandler erstellen:
+
+- [Ziffernblätter](https://sites.google.com/view/diabeticmaskedman) bereitgestellt von @[sderaps](https://github.com/sderaps)
+- [Ziffernblätter](https://play.google.com/store/apps/dev?id=7197840107055554214) bereitgestellt von Graham
 
 # Mitwirkende Entwickler
 @[RobertoW-UK](https://github.com/RobertoW-UK): AOD, Batterie-Widget
