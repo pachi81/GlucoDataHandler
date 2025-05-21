@@ -5,10 +5,6 @@
 
 <img src='images/playstore/Playstore_Present_2.png'>
 
-Your central hub for glucose readings on your Android devices!
-
-Keep Your Glucose Levels in Check with GlucoDataHandler!
-
 This innovative app receives data from various sources and visualizes it clearly on your Android smartphone, smartwatch (Wear OS, Miband, and Amazfit), and in your car (via GlucoDataAuto).
 
 ## Features
