@@ -5,7 +5,7 @@
 
 <img src='images/playstore/Playstore_Present_2.png'>
 
-This innovative app receives data from various sources and visualizes it clearly on your Android smartphone, smartwatch (Wear OS, Miband, and Amazfit), and in your car (via GlucoDataAuto).
+This innovative app receives data from various sources and visualizes it clearly on your Android smartphone, smartwatch (Wear OS, Miband, and Amazfit), and in your car (via [GlucoDataAuto](https://github.com/pachi81/GlucoDataAuto/blob/main/README.md)).
 
 ## Features
 
