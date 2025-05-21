@@ -1,27 +1,53 @@
 [<img src='images/de.png' height=10> Deutsche Version](README_DE.md)  
 [<img src='images/pl.png' height=10> Wersja polska](README_PL.md)
 
-# Glucose Data Handler
+# GlucoDataHandler
+
+Keep Your Glucose Levels in Check with GlucoDataHandler (GDH)!
+
+This innovative app receives data from various sources and visualizes it clearly on your Android smartphone, smartwatch (Wear OS, Miband, and Amazfit), and in your car (via GlucoDataAuto).
+
 ## Features
 
-* receives glucose values as **[LibreLink follower](./SOURCES.md#librelink)**
-* receives glucose values as **[Dexcom Share follower](./SOURCES.md#dexcom-share)**
-* receives glucose, IOB and COB values from **Nightscout** (pebble interface)
-* receives glucose, IOB and COB values from **[AndroidAPS](./SOURCES.md#androidaps)**
-* receives glucose values from **[Juggluco](./SOURCES.md#juggluco)**
-* receives glucose values from **[xDrip+](./SOURCES.md#xdrip)**
-* receives glucose values from **[Eversense](./SOURCES.md#eversense)** (using **[ESEL](https://github.com/BernhardRo/Esel)**)
-* receives glucose values from **[Dexcom BYODA](./SOURCES.md#dexcom-byoda)** (not tested, yet!)
-* Support for **[alarms](#alarms)**:
-  * alarm for very low, low, high, very high and obsolete glucose values
-  * individual sound settings for each alarm type
-  * fullscreen alarm on lockscreen
-* provides several **[widgets](#widgets)** and a floating widget for the phone
-* provides optional **[notifications](#notifications)** with different icons for the phone
-* provides several **[complications](#complications)** for Wear OS
-* provides **[Android Auto](https://github.com/pachi81/GlucoDataAuto/blob/main/README.md)** support using [GlucoDataAuto app](https://github.com/pachi81/GlucoDataAuto/releases)
-* **[Tasker](#tasker)** integration
-* sends glucodata broadcasts to other apps (which supports this broadcast)
+* **Diverse Data Sources:**
+    * **Cloud Services:**
+        * Receives glucose values as **[LibreLink follower](./SOURCES.md#librelink)**
+        * Receives glucose values as **[Dexcom Share follower](./SOURCES.md#dexcom-share)**
+        * Receives glucose, IOB and COB values from **Nightscout** (pebble interface)
+    * **Local Apps:**
+        * Receives glucose, IOB and COB values from **[AndroidAPS](./SOURCES.md#androidaps)**
+        * Receives glucose values from **[Juggluco](./SOURCES.md#juggluco)**
+        * Receives glucose values from **[xDrip+](./SOURCES.md#xdrip)**
+        * Receives glucose values from **[Eversense](./SOURCES.md#eversense)** (using **[ESEL](https://github.com/BernhardRo/Esel)**)
+        * Receives glucose values from **[Dexcom BYODA](./SOURCES.md#dexcom-byoda)** (not tested, yet!)
+    * **Notifications (Beta!):** Receives values from Cam APS FX, Dexcom G6/G7, Eversense, and potentially many more apps (just contact me!).
+
+* **Comprehensive Visualization:**
+    * Provides several **[widgets](#widgets)** and a floating widget for the phone.
+    * Provides optional **[notifications](#notifications)** with different icons for the phone.
+    * Optional display as lock screen wallpaper.
+    * Always On Display (AOD) support.
+
+* **Customizable Alarms:**
+    * Support for **[alarms](#alarms)**:
+        * Alarm for very low, low, high, very high and obsolete glucose values.
+        * Individual sound settings for each alarm type.
+        * Fullscreen alarm on lockscreen.
+
+* **Wear OS Integration:**
+    * Provides several **[complications](#complications)** for Wear OS.
+    * Receive alarms directly on your watch.
+    * **IMPORTANT NOTE:** GDH is not a standalone Wear OS app. The phone app is required for setup.
+
+* **WatchDrip+ Support:** Use GDH with specific Miband and Amazfit devices.
+
+* **Accessibility:** Full TalkBack support (Thanks to Alex for testing!).
+
+* **Android Auto:** **[Android Auto](https://github.com/pachi81/GlucoDataAuto/blob/main/README.md)** support using [GlucoDataAuto app](https://github.com/pachi81/GlucoDataAuto/releases)
+
+* **Tasker Integration:** **[Tasker](#tasker)** integration
+
+* **Data Forwarding:** Sends glucodata broadcasts to other apps (which supports this broadcast).
 
 ## Download
 [<img src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' height=100>](https://play.google.com/store/apps/details?id=de.michelinside.glucodatahandler) 
