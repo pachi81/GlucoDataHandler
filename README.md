@@ -67,9 +67,13 @@ You can also download and install it manually. See [here](./INSTALLATION.md) for
 <img src='images/playstore/tablet_10.png' width=800>
 
 ## Watchfaces
-@[sderaps](https://github.com/sderaps) provides several [watchfaces](https://sites.google.com/view/diabeticmaskedman) to be used with GlucoDataHandler complications:
 
-<img src='https://raw.githubusercontent.com/sderaps/DMM/refs/heads/main/DMM13_175.png' width=200>  <img src='https://raw.githubusercontent.com/sderaps/DMM/refs/heads/main/DMM18_175.png' width=200>  <img src='https://raw.githubusercontent.com/sderaps/DMM/refs/heads/main/DMMx2v1_175.png' width=200>  <img src='https://raw.githubusercontent.com/sderaps/DMM/refs/heads/main/DMM3_175%20.png' width=200>
+GlucoDataHandler only provide complications to be used in other watchfaces.
+
+But there are two users creating watchfaces especially for the complications of GlucoDataHandler:
+
+- [watchfaces](https://sites.google.com/view/diabeticmaskedman) provided by @[sderaps](https://github.com/sderaps)
+- [watchfaces](https://play.google.com/store/apps/dev?id=7197840107055554214) provided by Graham
 
 # Contributing Developers
 @[RobertoW-UK](https://github.com/RobertoW-UK): AOD, Battery Widget
