@@ -79,6 +79,6 @@ You can also download and install it manually. See [here](./INSTALLATION.md) for
 @[nevergiveup](https://github.com/nevergiveup) for testing, motivation and feedback
 
 # Support my work
-[🍺 Buy me a beer](https://www.buymeacoffee.com/pachi81)
+[<img src='https://www.paypalobjects.com/webstatic/de_DE/i/de-pp-logo-100px.png'>](https://paypal.me/pachi81)
 
-[Paypal me](https://paypal.me/pachi81)
+[🍺 Buy me a beer](https://www.buymeacoffee.com/pachi81)
