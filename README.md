@@ -1,9 +1,11 @@
 [<img src='images/de.png' height=10> Deutsche Version](README_DE.md)  
 [<img src='images/pl.png' height=10> Wersja polska](README_PL.md)
 
-# GlucoDataHandler
+# GlucoDataHandler (GDH)
 
-Keep Your Glucose Levels in Check with GlucoDataHandler (GDH)!
+Your central hub for glucose readings on your Android devices!
+
+Keep Your Glucose Levels in Check with GlucoDataHandler!
 
 This innovative app receives data from various sources and visualizes it clearly on your Android smartphone, smartwatch (Wear OS, Miband, and Amazfit), and in your car (via GlucoDataAuto).
 
