@@ -2,7 +2,7 @@
 [<img src='images/pl.png' height=10> Wersja polska](SOURCES_PL.md)
 
 # Quellen <!-- omit in toc -->
-- [LibreLink](#librelink)
+- [LibreLinkUp](#librelinkup)
 - [Dexcom Share](#dexcom-share)
 - [Juggluco](#juggluco)
 - [xDrip+](#xdrip)
@@ -11,7 +11,10 @@
 - [Dexcom BYODA](#dexcom-byoda)
 
 
-# LibreLink
+# LibreLinkUp
+
+[Video Anleitung](https://youtu.be/YRs9nY4DgnA?si=v108UhnBNfQSeK2I)
+
 Um LibreLink zu verwenden wird ein LibreLinkUp Konto benötigt.
 Wenn noch keines erstellt wurde, folgen Sie bitte dieser [Anleitung](https://librelinkup.com/articles/getting-started).
 
@@ -25,12 +28,21 @@ Eine kleiner Zusammenfassung der Schritte, welche zu erledigen sind:
     
 # Dexcom Share
 Um Daten von Dexcom Share zu empfangen, müssen folgende Schritte erfüllt sein:
-- in der Dexcom App, welche mit dem Sensor verbunden ist, Teilen aktivieren
-- einmalig die Einladung in der Dexcom Follower App annehmen (die App kann danach wieder deinstalliert werden)
+
+In der **Dexcom App**:
+- erstelle einen Follower
+- überprüfe unter Verbindungen, ob \"Share Ein\" steht
+
+In **GlucoDataHandler**:
+- Benutzername und Passwort des Dexcom Clarity-Kontos eingeben (bei Verwendung der Telefonnummer, Länderkennung mit angeben!)
+- überprüfe die Einstellung für US Konto
 
 Wichtig: es funktioniert nicht mit einem Follower Benutzer!
 
 # Juggluco
+
+[Video Anleitung](https://youtu.be/evS5rXDiciY?si=DTxlGYhYm-nNboHl)
+
 Für die Benuzer von Juggluco, nach der Installation des GlucoDataHandler in den Juggluco Einstellungen den Punkt `Glucodata broadcast` aktivieren und `de.michelinside.glucodatahandler` (oder `de.michelinside.glucodataauto` für [GlucoDataAuto](https://github.com/pachi81/GlucoDataAuto/blob/main/README_DE.md)) auswählen.
 Anschließend speichern und mit OK beenden.
 
