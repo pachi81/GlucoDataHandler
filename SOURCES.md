@@ -13,6 +13,8 @@
 
 # LibreLink
 
+[Video Tutorial](https://youtu.be/YRs9nY4DgnA?si=v108UhnBNfQSeK2I)
+
 To set up LibreLink as follower, you need the account data from LibreLinkUp.
 If you have not set up your LibreLinkUp account yet, follow this [instruction](https://librelinkup.com/articles/getting-started).
 
@@ -26,13 +28,22 @@ Here is a quick summary of the steps to do:
     
 # Dexcom Share
 
-To receive data from Dexcom Share servers, you need to have:
-- sharing enabled on the Dexcom application that is connected to the sensor
-- accepted the invitation on the Dexcom Follower app (you can uninstall it afterwards)
+To receive data from Dexcom Share servers:
 
-**Important**: it does not work with a follower user!
+In the **Dexcom App**:
+- Create a follower
+- Under \"Connections\" ensure \"Share On\" is displayed
+
+In **GlucoDataHandler**:
+- Enter your Dexcom Clarity username and password (if you use your phone number as your username, include your country code)
+- Check the setting for a US account
+
+**Important**: It does not work with a follower account!
 
 # Juggluco
+
+[Video Tutorial](https://youtu.be/evS5rXDiciY?si=DTxlGYhYm-nNboHl)
+
 If you are using Juggluco to receive glucose values, open Juggluco and enable `Glucodata broadcast` and select `de.michelinside.glucodatahandler` (or `de.michelinside.glucodataauto` for [GlucoDataAuto](https://github.com/pachi81/GlucoDataAuto/blob/main/README.md)) in Settings. Save and Ok.
 
 <img src='images/broadcast.png' width=700>
