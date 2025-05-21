@@ -11,7 +11,7 @@ This innovative app receives data from various sources and visualizes it clearly
 
 * **Diverse Data [Sources](./SOURCES.md):**
     * **Cloud Services:**
-        * Receives glucose values as **[LibreLink follower](./SOURCES.md#librelink)**
+        * Receives glucose values as **[LibreLinkUp follower](./SOURCES.md#librelink)**
         * Receives glucose values as **[Dexcom Share follower](./SOURCES.md#dexcom-share)**
         * Receives glucose, IOB and COB values from **Nightscout** (pebble interface)
     * **Local Apps:**
