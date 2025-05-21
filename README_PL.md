@@ -12,7 +12,7 @@ Ta innowacyjna aplikacja odbiera dane z różnych źródeł i wizualizuje je w p
 * **Różne [źródła](./SOURCES_PL.md) danych:**
   
   * **Usługi chmurowe:**
-    * Odbiera wartości glukozy jako **[LibreLink follower](./SOURCES_PL.md#librelink)**
+    * Odbiera wartości glukozy jako **[LibreLinkUp follower](./SOURCES_PL.md#librelinkup)**
     * Odbiera wartości glukozy jako **[Dexcom Share follower](./SOURCES_PL.md#dexcom-share)**
     * Odbiera wartości glukozy, IOB i COB z **Nightscout** (interfejs pebble).
   * **Aplikacje lokalne:**
