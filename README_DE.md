@@ -43,7 +43,7 @@ Diese innovative App empfängt Daten von zahlreichen Quellen und visualisiert si
 
 * **Barrierefreiheit:** Volle TalkBack-Unterstützung (Dank an Alex für die Tests!).
 
-* **Android Auto:** Unterstützt **[Android Auto](https://github.com/pachi81/GlucoDataAuto/blob/main/README_DE.md)** über die [GlucoDataAuto App](https://github.com/pachi81/GlucoDataAuto/releases).
+* **Android Auto:** Unterstützt **Android Auto** über die [GlucoDataAuto App](https://github.com/pachi81/GlucoDataAuto/blob/main/README_DE.md).
 
 * **[Tasker Integration](./TASKER.md)**
 
