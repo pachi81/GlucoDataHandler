@@ -47,7 +47,7 @@ Ta innowacyjna aplikacja odbiera dane z różnych źródeł i wizualizuje je w p
 
 * **Ułatwienia dostępu:** Pełna obsługa funkcji TalkBack (podziękowania dla Alexa za testy!).
 
-* **Android Auto:** Obsługa **[Android Auto](https://github.com/pachi81/GlucoDataAuto/blob/main/README_PL.md)** przy użyciu [aplikacji GlucoDataAuto](https://github.com/pachi81/GlucoDataAuto/releases)
+* **Android Auto:** Obsługa **Android Auto** przy użyciu aplikacji [GlucoDataAuto app](https://github.com/pachi81/GlucoDataAuto/blob/main/README_PL.md)
 
 * **Integracja z aplikacją Tasker:** Integracja z aplikacją **[Tasker](./TASKER.md)**
 
