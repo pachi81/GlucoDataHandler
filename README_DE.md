@@ -11,7 +11,7 @@ Diese innovative App empfängt Daten von zahlreichen Quellen und visualisiert si
 
 * **Vielfältige [Datenquellen](./SOURCES_DE.md):**
     * **Cloud-Dienste:**
-        * Empfängt Glukose Werte als **[LibreLink Follower](./SOURCES_DE.md#librelink)**
+        * Empfängt Glukose Werte als **[LibreLinkUp Follower](./SOURCES_DE.md#librelinkup)**
         * Empfängt Glukose Werte als **[Dexcom Share Follower](./SOURCES_DE.md#dexcom-share)**
         * Empfängt Glukose, IOB und COB Werte von **Nightscout** (Pebble Schnittstelle)
     * **Lokale Apps:**
