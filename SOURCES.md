@@ -2,7 +2,7 @@
 [<img src='images/pl.png' height=10> Wersja polska](SOURCES_PL.md)
 
 # Sources <!-- omit in toc -->
-- [LibreLink](#librelink)
+- [LibreLinkUp](#librelinkup)
 - [Dexcom Share](#dexcom-share)
 - [Juggluco](#juggluco)
 - [xDrip+](#xdrip)
@@ -11,7 +11,7 @@
 - [Dexcom BYODA](#dexcom-byoda)
 
 
-# LibreLink
+# LibreLinkUp
 
 [Video Tutorial](https://youtu.be/YRs9nY4DgnA?si=v108UhnBNfQSeK2I)
 
@@ -28,7 +28,7 @@ Here is a quick summary of the steps to do:
     
 # Dexcom Share
 
-To receive data from Dexcom Share servers:
+To receive data from Dexcom Share:
 
 In the **Dexcom App**:
 - Create a follower
