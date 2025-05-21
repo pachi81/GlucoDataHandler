@@ -57,7 +57,7 @@ This innovative app receives data from various sources and visualizes it clearly
 [<img src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' height=100>](https://play.google.com/store/apps/details?id=de.michelinside.glucodatahandler) 
 [<img src='https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png' height=100>](https://apt.izzysoft.de/fdroid/index/apk/de.michelinside.glucodatahandler) 
 
-You can download and install it manually. See [here](./INSTALLATION.md) for more information.
+You can also download and install it manually. See [here](./INSTALLATION.md) for more information.
 
 ## Source configuration
 
