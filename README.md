@@ -13,7 +13,7 @@ This innovative app receives data from various sources and visualizes it clearly
 
 ## Features
 
-* **Diverse Data Sources:**
+* **Diverse Data [Sources](./SOURCES.md):**
     * **Cloud Services:**
         * Receives glucose values as **[LibreLink follower](./SOURCES.md#librelink)**
         * Receives glucose values as **[Dexcom Share follower](./SOURCES.md#dexcom-share)**
@@ -24,7 +24,7 @@ This innovative app receives data from various sources and visualizes it clearly
         * Receives glucose values from **[xDrip+](./SOURCES.md#xdrip)**
         * Receives glucose values from **[Eversense](./SOURCES.md#eversense)** (using **[ESEL](https://github.com/BernhardRo/Esel)**)
         * Receives glucose values from **[Dexcom BYODA](./SOURCES.md#dexcom-byoda)** (not tested, yet!)
-    * **Notifications (Beta!):** Receives values from Cam APS FX, Dexcom G6/G7, Eversense, and potentially many more apps (just contact me!).
+    * **Notifications (Beta!):** Receives values from Cam APS FX, Dexcom G6/G7, Eversense, and potentially many more apps
 
 * **Comprehensive Visualization:**
     * Provides several **widgets** and a floating widget for the phone.
@@ -58,10 +58,6 @@ This innovative app receives data from various sources and visualizes it clearly
 [<img src='https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png' height=100>](https://apt.izzysoft.de/fdroid/index/apk/de.michelinside.glucodatahandler) 
 
 You can also download and install it manually. See [here](./INSTALLATION.md) for more information.
-
-## Source configuration
-
--> [Source configuration instruction](./SOURCES.md)
 
 ## Screenshots
 
