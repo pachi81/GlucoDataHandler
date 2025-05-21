@@ -61,10 +61,15 @@ You can also download and install it manually. See [here](./INSTALLATION.md) for
 <img src='images/playstore/phone_main.png' width=200>  <img src='images/playstore/phone_alarm_fullscreen_notification.png' width=200>  <img src='images/playstore/phone_ps_2.png' width=200>  <img src='images/playstore/phone_widgets.png' width=200>
 
 ### Watch
-<img src='images/playstore/gdh_wear.png' width=200>  <img src='images/playstore/gdh_wear_graph.png' width=200>  <img src='images/playstore/gdh_wear_notification.png' width=200>  <img src='images/playstore/gdh_wear_watchface.png' width=200> 
+<img src='images/playstore/gdh_wear.png' width=200>  <img src='images/playstore/gdh_wear_graph.png' width=200>  <img src='images/playstore/gdh_wear_notification.png' width=200>  <img src='images/playstore/Complications1x1.png' width=200> 
 
 ### Tablet
 <img src='images/playstore/tablet_10.png' width=800>
+
+## Watchfaces
+@[sderaps](https://github.com/sderaps) provides several [watchfaces](https://sites.google.com/view/diabeticmaskedman) to be used with GlucoDataHandler complications:
+
+<img src='https://raw.githubusercontent.com/sderaps/DMM/refs/heads/main/DMM13_175.png' width=200>  <img src='https://raw.githubusercontent.com/sderaps/DMM/refs/heads/main/DMM18_175.png' width=200>  <img src='https://raw.githubusercontent.com/sderaps/DMM/refs/heads/main/DMMx2v1_175.png' width=200>  <img src='https://raw.githubusercontent.com/sderaps/DMM/refs/heads/main/DMM3_175%20.png' width=200>
 
 # Contributing Developers
 @[RobertoW-UK](https://github.com/RobertoW-UK): AOD, Battery Widget
