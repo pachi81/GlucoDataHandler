@@ -67,11 +67,20 @@ Aplikację można również pobrać i zainstalować ręcznie. [Tutaj](./INSTALLA
 
 ### Zegarek
 
-<img src='images/playstore/gdh_wear.png' width=200>  <img src='images/playstore/gdh_wear_graph.png' width=200>  <img src='images/playstore/gdh_wear_notification.png' width=200>  <img src='images/playstore/gdh_wear_watchface.png' width=200>
+<img src='images/playstore/gdh_wear.png' width=200>  <img src='images/playstore/gdh_wear_graph.png' width=200>  <img src='images/playstore/gdh_wear_notification.png' width=200>  <img src='images/playstore/Complications1x1.png' width=200>
 
 ### Tablet
 
 <img src='images/playstore/tablet_10.png' width=800>
+
+## Watchfaces
+
+GlucoDataHandler only provide Wear OS complications to be used in other watchfaces.
+
+But there are two users creating watchfaces especially for the complications of GlucoDataHandler:
+
+- [watchfaces](https://sites.google.com/view/diabeticmaskedman) provided by @[sderaps](https://github.com/sderaps)
+- [watchfaces](https://play.google.com/store/apps/dev?id=7197840107055554214) provided by Graham
 
 # Deweloperzy wnoszący swój wkład
 
