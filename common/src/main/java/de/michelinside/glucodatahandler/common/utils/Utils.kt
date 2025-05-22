@@ -519,10 +519,14 @@ object Utils {
     fun saveLogs(context: Context, uri: Uri) {
         try {
             Thread {
-                context.contentResolver.openFileDescriptor(uri, "w")?.use {
-                    FileOutputStream(it.fileDescriptor).use { os ->
-                        saveLogs(os)
+                try {
+                    context.contentResolver.openFileDescriptor(uri, "w")?.use {
+                        FileOutputStream(it.fileDescriptor).use { os ->
+                            saveLogs(os)
+                        }
                     }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Saving logs to stream exception: " + exc.message.toString() )
                 }
             }.start()
         } catch (exc: Exception) {
@@ -539,18 +543,25 @@ object Utils {
             val process = Runtime.getRuntime().exec(cmd)
             val thread = Thread {
                 try {
-                    Log.v(LOG_ID, "read")
-                    val buffer = ByteArray(4 * 1024) // or other buffer size
-                    var read: Int
-                    while (process.inputStream.read(buffer).also { rb -> read = rb } != -1) {
-                        Log.v(LOG_ID, "write")
-                        outputStream.write(buffer, 0, read)
+                    try {
+                        Log.v(LOG_ID, "read")
+                        val buffer = ByteArray(4 * 1024) // or other buffer size
+                        var read: Int
+                        while (process.inputStream.read(buffer).also { rb -> read = rb } != -1) {
+                            Log.v(LOG_ID, "write")
+                            outputStream.write(buffer, 0, read)
+                        }
+                    } catch (exc: Exception) {
+                        Log.e(LOG_ID, "Writing logs exception: " + exc.message.toString() )
+                        outputStream.write("Exception while writing logs:".toByteArray())
+                        outputStream.write(exc.message.toString().toByteArray())
+                        outputStream.write(exc.stackTraceToString().toByteArray())
                     }
                     Log.v(LOG_ID, "flush")
                     outputStream.flush()
                     outputStream.close()
                 } catch (exc: Exception) {
-                    Log.e(LOG_ID, "Writing logs exception: " + exc.message.toString() )
+                    Log.e(LOG_ID, "Exception while closing stream: " + exc.message.toString() )
                 }
             }
             thread.start()
@@ -575,6 +586,11 @@ object Utils {
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Saving logs exception: " + exc.message.toString() )
+            outputStream.write("Exception while reading logcat:".toByteArray())
+            outputStream.write(exc.message.toString().toByteArray())
+            outputStream.write(exc.stackTraceToString().toByteArray())
+            outputStream.flush()
+            outputStream.close()
         }
     }
 
