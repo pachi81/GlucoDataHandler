@@ -38,7 +38,10 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
     protected abstract val stylePref: String
     protected abstract val sizePref: String
     protected open val MIN_SIZE = 6f
+    protected open val MIN_VALUE_SIZE = 6f
+    protected open val VALUE_RESIZE_FACTOR = 4f
     protected open val MAX_SIZE = 24f
+    protected open val DEFAULT_FONT_SIZE = 12f
     protected var enabled = false
     protected var paused = false
     protected var style = Constants.WIDGET_STYLE_GLUCOSE_TREND
@@ -67,6 +70,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             Log.d(LOG_ID, "destroy called")
             disable()
             removeBitmap()
+            InternalNotifier.remNotifier(context, this)
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
             if(curWallpaper != null) {
                 Log.i(LOG_ID, "Destroy current wallpaper")
@@ -156,7 +160,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - active=$active - graph-id ${ChartBitmapHandler.chartId} - elapsed: ${ReceiveData.getElapsedTimeMinute()}")
+            Log.d(LOG_ID, "OnNotifyData called for source $dataSource with extras ${Utils.dumpBundle(extras)} - active: $active - graph-id: ${if(hasBitmap()) ChartBitmapHandler.chartId else -1} - elapsed: ${ReceiveData.getElapsedTimeMinute()}")
             if(!active)
                 return
             if (dataSource == NotifySource.GRAPH_CHANGED && ChartBitmapHandler.active && extras?.getInt(Constants.GRAPH_ID) != ChartBitmapHandler.chartId) {
@@ -167,6 +171,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
                 Log.d(LOG_ID, "Ignore time value and wait for chart update")
                 return
             }
+            Log.i(LOG_ID, "Update called for source $dataSource - style $style - size $size")
             update()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString() )
@@ -212,9 +217,11 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
                     filter.add(NotifySource.OBSOLETE_VALUE)
                 }
             }
+            Log.d(LOG_ID, "Notifier filter for active: $filter")
             InternalNotifier.addNotifier(context, this, filter)
         } else {
             val filter = getFilters()
+            Log.d(LOG_ID, "Notifier filter for inactive: $filter")
             if(filter.isNotEmpty())
                 InternalNotifier.addNotifier(context, this, filter)
             else
@@ -255,7 +262,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
     }
 
     protected fun hasBitmap(): Boolean {
-        return ChartBitmapHandler.hasBitmap()
+        return ChartBitmapHandler.isRegistered(this.javaClass.simpleName)
     }
 
     protected fun hasIobCob(): Boolean {
@@ -282,7 +289,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
 
             lockscreenView.setBackgroundColor(backgroundColor)
 
-            var textSize = 12f
+            var textSize = DEFAULT_FONT_SIZE
             when(style) {
                 Constants.WIDGET_STYLE_GLUCOSE_TREND_DELTA -> {
                     txtTime.visibility = GONE
@@ -315,7 +322,6 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
                     txtCob.visibility = VISIBLE
                 }
                 else -> {
-                    textSize = 12f
                     txtTime.visibility = VISIBLE
                     txtDelta.visibility = VISIBLE
                     viewIcon.visibility = VISIBLE
@@ -361,7 +367,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             }
             val usedSize = if(graphImage != null && (txtIob.visibility == VISIBLE || txtCob.visibility == VISIBLE)) size /2 else size
 
-            txtBgValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+MIN_SIZE+usedSize*4f)
+            txtBgValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+MIN_VALUE_SIZE+usedSize*VALUE_RESIZE_FACTOR)
             viewIcon.minimumWidth = Utils.dpToPx((MIN_SIZE+usedSize)*4f, context)
             txtDelta.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(MIN_SIZE+usedSize*2f, MAX_SIZE))
             txtTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, minOf(MIN_SIZE+usedSize*2f, MAX_SIZE))

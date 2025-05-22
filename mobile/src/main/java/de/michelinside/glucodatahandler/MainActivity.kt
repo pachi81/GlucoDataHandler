@@ -762,10 +762,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 tableDelta.addView(createRow(CR.string.delta_per_minute, GlucoDataUtils.deltaToString(ReceiveData.delta1Min, true)))
             if(!ReceiveData.delta5Min.isNaN())
                 tableDelta.addView(createRow(CR.string.delta_per_5_minute, GlucoDataUtils.deltaToString(ReceiveData.delta5Min, true)))
-            if(BuildConfig.DEBUG) {
-                if(!ReceiveData.delta10Min.isNaN())
-                    tableDelta.addView(createRow(CR.string.delta_per_10_minute, GlucoDataUtils.deltaToString(ReceiveData.delta10Min, true)))
-            }
             if(!ReceiveData.delta15Min.isNaN())
                 tableDelta.addView(createRow(CR.string.delta_per_15_minute, GlucoDataUtils.deltaToString(ReceiveData.delta15Min, true)))
             /*if(BuildConfig.DEBUG) {

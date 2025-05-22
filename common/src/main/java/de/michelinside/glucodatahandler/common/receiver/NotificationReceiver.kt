@@ -31,6 +31,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     private var lastValue = Float.NaN
     private var waitForAdditionalNotification: Thread? = null
     private var multiValueNotificationPackage: String? = null  // notification updates several times within 0s for new values
+    private var onGoingNotificationPackage = ""
 
     override fun getName(): String {
         return LOG_ID
@@ -91,6 +92,8 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         if(packageName.lowercase().startsWith("com.camdiab."))  // CamAPS FX
             return true
 
+        if(onGoingNotificationPackage == packageName)
+            return true
         // default (unknown app): also allow no ongoing notifications
         return false
     }
@@ -237,7 +240,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         Log.i(LOG_ID, "using regex $regex")
         val value = parseValueFromNotification(sbn, false, regex)
         if(!value.isNaN()) {
-            handleGlucoseValue(value, sbn.postTime)
+            handleGlucoseValue(value, sbn)
         } else if(parsedTextViews.size > 0) {
             SourceStateData.setError(DataSource.NOTIFICATION, "Could not parse from $parsedTextViews")
         } else {
@@ -409,12 +412,12 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         return false
     }
 
-    private fun handleGlucoseValue(glucoseValue: Float, time: Long) {
-        Log.i(LOG_ID, "Extracted glucose value: $glucoseValue from time: ${Utils.getUiTimeStamp(time)}")
+    private fun handleGlucoseValue(glucoseValue: Float, sbn: StatusBarNotification) {
+        Log.i(LOG_ID, "Extracted glucose value: $glucoseValue from time: ${Utils.getUiTimeStamp(sbn.postTime)}")
         if (validGlucoseValue(glucoseValue)) {
             lastValue = glucoseValue
             val glucoExtras = Bundle()
-            glucoExtras.putLong(ReceiveData.TIME, time)
+            glucoExtras.putLong(ReceiveData.TIME, sbn.postTime)
             if (GlucoDataUtils.isMmolValue(glucoseValue)) {
                 glucoExtras.putInt(ReceiveData.MGDL, GlucoDataUtils.mmolToMg(glucoseValue).toInt())
                 glucoExtras.putFloat(ReceiveData.GLUCOSECUSTOM, glucoseValue)
@@ -426,6 +429,10 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             glucoExtras.putInt(ReceiveData.ALARM, 0)
             ReceiveData.handleIntent(applicationContext, DataSource.NOTIFICATION, glucoExtras)
             SourceStateData.setState(DataSource.NOTIFICATION, SourceState.NONE)
+            if(sbn.isOngoing && !hasOngoingNotification(sbn.packageName)) {
+                Log.i(LOG_ID, "Valid glucose value received with ongoing notification from ${sbn.packageName}")
+                onGoingNotificationPackage = sbn.packageName
+            }
         } else {
             SourceStateData.setError(
                 DataSource.NOTIFICATION,

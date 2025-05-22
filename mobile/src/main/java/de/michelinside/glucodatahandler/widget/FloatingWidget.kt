@@ -15,7 +15,6 @@ import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.utils.Utils
-import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import java.util.*
@@ -31,7 +30,10 @@ class FloatingWidget(context: Context): WallpaperBase(context, "GDH.FloatingWidg
     override val stylePref = Constants.SHARED_PREF_FLOATING_WIDGET_STYLE
     override val sizePref = Constants.SHARED_PREF_FLOATING_WIDGET_SIZE
     override val MIN_SIZE = 6f
+    override val MIN_VALUE_SIZE = 0f
+    override val VALUE_RESIZE_FACTOR = 5f
     override val MAX_SIZE = 30f
+    override val DEFAULT_FONT_SIZE = 10f
 
     override fun enable() {
         try {
@@ -59,7 +61,6 @@ class FloatingWidget(context: Context): WallpaperBase(context, "GDH.FloatingWidg
     private fun remove() {
         Log.d(LOG_ID, "remove called")
         try {
-            InternalNotifier.remNotifier(context, this)
             if (windowManager != null) {
                 try {
                     with(sharedInternalPref.edit()) {
@@ -86,7 +87,7 @@ class FloatingWidget(context: Context): WallpaperBase(context, "GDH.FloatingWidg
     }
 
     override fun update() {
-        Log.d(LOG_ID, "update called")
+        Log.d(LOG_ID, "update called - enabled: $enabled")
         try {
             if (enabled) {
                 if (Settings.canDrawOverlays(context)) {

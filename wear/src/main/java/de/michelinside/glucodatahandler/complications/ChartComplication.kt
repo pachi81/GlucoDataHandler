@@ -113,7 +113,7 @@ abstract class ChartComplicationBase: SuspendingComplicationDataSourceService() 
         }
 
         fun hasBitmap(): Boolean {
-            return ChartBitmapHandler.hasBitmap()
+            return ChartBitmapHandler.hasBitmap(LOG_ID)
         }
 
     }
