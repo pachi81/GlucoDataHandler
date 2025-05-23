@@ -308,8 +308,10 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
             if (receiver != null || receivers.size > 0) {
                 val bundle = createBundle(context, cmd, alarmType, receiver)
                 if (receiver != null) {
+                    Log.i(LOG_ID, "Sending broadcast to $receiver")
                     sendBroadcastToReceiver(context, receiver, addGraph(bundle, receiver))
                 } else {
+                    Log.i(LOG_ID, "Sending broadcast to ${receivers.size} receivers")
                     receivers.forEach {
                         sendBroadcastToReceiver(context, it.key, addGraph(bundle, it.key))
                     }
@@ -438,6 +440,7 @@ object WatchDrip: SharedPreferences.OnSharedPreferenceChangeListener, NotifierIn
                 }
                 Constants.SHARED_PREF_SEND_TO_WATCH_INTERVAL -> {
                     sendInterval = sharedPreferences!!.getInt(Constants.SHARED_PREF_SEND_TO_WATCH_INTERVAL, 1)
+                    Log.i(LOG_ID, "Send interval changed to $sendInterval")
                 }
             }
         } catch (exc: Exception) {
