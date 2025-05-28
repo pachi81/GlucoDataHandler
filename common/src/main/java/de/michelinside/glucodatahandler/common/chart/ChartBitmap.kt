@@ -112,15 +112,19 @@ class ChartBitmap(val context: Context,
                 }
                 Log.d(LOG_ID, "waitForCreation - create bitmap for chart $curChartView")
                 bitmap = curChartView?.createBitmap(bitmap)
-                Log.i(LOG_ID, "bitmap created for chart $curChartView")
-                Handler(context.mainLooper).post {
-                    if(curChartView == chartViewer ) {
-                        Log.d(LOG_ID, "notify graph changed for chart $curChartView")
-                        InternalNotifier.notify(context, NotifySource.GRAPH_CHANGED, Bundle().apply { putInt(Constants.GRAPH_ID, chartId) })
-                        createBitmapJob = null
-                    } else {
-                        Log.d(LOG_ID, "notify graph changed - cancelled for chart $curChartView")
+                if(bitmap != null) {
+                    Log.i(LOG_ID, "bitmap created for chart $curChartView")
+                    Handler(context.mainLooper).post {
+                        if(curChartView == chartViewer ) {
+                            Log.d(LOG_ID, "notify graph changed for chart $curChartView")
+                            InternalNotifier.notify(context, NotifySource.GRAPH_CHANGED, Bundle().apply { putInt(Constants.GRAPH_ID, chartId) })
+                            createBitmapJob = null
+                        } else {
+                            Log.d(LOG_ID, "notify graph changed - cancelled for chart $curChartView")
+                        }
                     }
+                } else if(enabled) {
+                    Log.e(LOG_ID, "bitmap not created for chart $curChartView")
                 }
             } catch (exc: CancellationException) {
                 Log.d(LOG_ID, "waitForCreation cancelled")

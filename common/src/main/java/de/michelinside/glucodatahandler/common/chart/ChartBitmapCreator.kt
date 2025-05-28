@@ -155,8 +155,10 @@ class ChartBitmapCreator(chart: GlucoseChart, context: Context, private val forC
                     Log.d(LOG_ID, "Draw bitmap")
                     return BitmapUtils.loadBitmapFromView(chart, bitmap)
                 }
+                Log.i(LOG_ID, "No bitmap created!")
+            } else {
+                Log.i(LOG_ID, "Bitmap disabled!")
             }
-            Log.i(LOG_ID, "No bitmap created!")
         } catch (exc: Exception) {
             Log.e(LOG_ID, "getBitmap exception: " + exc.message.toString() )
         }

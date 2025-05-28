@@ -38,14 +38,15 @@ object ChartBitmapHandler : NotifierInterface {
     }
 
     fun register(context: Context, widget: String) {
-        Log.i(LOG_ID, "register widget $widget")
         activeWidgets.add(widget)
+        Log.i(LOG_ID, "widget $widget registered - active: ${activeWidgets.size}")
         createBitmap(context)
     }
 
     fun unregister(widget: String) {
-        Log.i(LOG_ID, "unregister widget $widget")
         activeWidgets.remove(widget)
+        pausedWidgets.remove(widget)
+        Log.i(LOG_ID, "widget $widget unregistered - active: ${activeWidgets.size} - paused: ${pausedWidgets.size} - enabled: $enabled")
         if(!enabled)
             removeBitmap()
     }
@@ -72,9 +73,12 @@ object ChartBitmapHandler : NotifierInterface {
     }
 
     fun hasBitmap(forWidget: String? = null): Boolean {
-        if(forWidget != null && !isRegistered(forWidget))
+        Log.d(LOG_ID, "hasBitmap - for widget: $forWidget - chartBitmap enabled: ${chartBitmap?.enabled} - bitmap: ${getBitmap() != null}")
+        if(!forWidget.isNullOrEmpty() && !isRegistered(forWidget)) {
+            Log.i(LOG_ID, "Widget $forWidget not registered!")
             return false
-        return chartBitmap != null
+        }
+        return chartBitmap?.enabled == true
     }
 
     fun getBitmap(): Bitmap? {
