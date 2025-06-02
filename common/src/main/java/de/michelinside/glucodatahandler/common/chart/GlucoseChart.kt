@@ -1,10 +1,12 @@
 package de.michelinside.glucodatahandler.common.chart
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.jobs.MoveViewJob
@@ -126,5 +128,24 @@ open class GlucoseChart: LineChart {
             }
         }
         isDrawing = false
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        try {
+            return super.onTouchEvent(event)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "onTouchEvent exception: ${exc.message}:\n${exc.stackTraceToString()}")
+        }
+        return false
+    }
+
+    override fun performClick(): Boolean {
+        try {
+            return super.performClick()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "performClick exception: ${exc.message}:\n${exc.stackTraceToString()}")
+        }
+        return false
     }
 }

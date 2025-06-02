@@ -11,10 +11,13 @@ object Constants {
     const val SOURCE_SETTINGS_INTENT_MESSAGE_PATH = "/source_settings_intent"
     const val ALARM_SETTINGS_INTENT_MESSAGE_PATH = "/alarm_settings_intent"
     const val REQUEST_DATA_MESSAGE_PATH = "/request_data_intent"
+    const val COMMAND_PATH = "/command_intent"
+    const val JSON_PATH_EXTENSION = "_json"
+
     const val REQUEST_LOGCAT_MESSAGE_PATH = "/request_logcat_intent"
+
     const val LOGCAT_CHANNEL_PATH = "/logcat_intent"
     const val DB_SYNC_CHANNEL_PATH = "/db_sync_intent"
-    const val COMMAND_PATH = "/command_intent"
     const val GLUCODATA_BROADCAST_ACTION = "glucodata.Minute"
     const val SETTINGS_BUNDLE = "settings_bundle"
     const val SOURCE_SETTINGS_BUNDLE = "source_settings_bundle"
@@ -28,6 +31,7 @@ object Constants {
     const val GLUCOSE_MAX_NOTIFICATION_VALUE = 400
     const val ACTION_STOP_FOREGROUND = "stop_foreground"
     const val ACTION_START_FOREGROUND = "start_foreground"
+    const val VERSION_CODE = "gdh.version_code"
 
     const val ACTION_PREFIX = "gdh_action_"
     const val ACTION_FLOATING_WIDGET_TOGGLE = ACTION_PREFIX + "floating_widget_toggle"
@@ -102,6 +106,7 @@ object Constants {
     const val SHARED_PREF_FLOATING_WIDGET_STYLE = "floating_widget_style"
     const val SHARED_PREF_FLOATING_WIDGET_SIZE = "floating_widget_size"
     const val SHARED_PREF_FLOATING_WIDGET_SIZE_MIGRATION = "floating_widget_size_migration"
+    const val SHARED_PREF_FLOATING_WIDGET_SIZE_MIGRATION_2 = "floating_widget_size_migration_2" // migrate from version 2.0 to 2.0.1, because of the size changes in v 2.0
     const val SHARED_PREF_FLOATING_WIDGET_TRANSPARENCY = "floating_widget_transparency"
     const val SHARED_PREF_FLOATING_WIDGET_TIME_TO_CLOSE = "floating_widget_time_to_close"
     const val SHARED_PREF_FLOATING_WIDGET_TAP_ACTION = "floating_widget_tap_action"

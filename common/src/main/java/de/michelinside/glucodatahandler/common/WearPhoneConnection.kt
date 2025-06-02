@@ -62,6 +62,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
     companion object {
         private var connectedNodes = Collections.synchronizedMap(mutableMapOf<String,Node>())
         private val nodeBatteryLevel = Collections.synchronizedMap(mutableMapOf<String,Int>())
+        private val nodeVersions = Collections.synchronizedMap(mutableMapOf<String,Int>())
         private val noDataReceived = Collections.synchronizedSet(mutableSetOf<String>())
         private val noDataSend = Collections.synchronizedSet(mutableSetOf<String>())
         private val nodesPaused = Collections.synchronizedSet(mutableSetOf<String>())
@@ -101,13 +102,18 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         fun getNodeConnectionStates(context: Context, addMissing: Boolean = true): Map<String, String> {
             val connectionStates = mutableMapOf<String, String>()
             connectedNodes.forEach { node ->
-                (if (nodeBatteryLevel.containsKey(node.key)) {
-                    val level = nodeBatteryLevel.getValue(node.key)
-                    connectionStates[getDisplayName(node.value)] = if (level > 0) "${level}%" else context.getString(R.string.state_connected)
-                }
-                else if (addMissing) {
-                    connectionStates[getDisplayName(node.value)] = context.getString(R.string.state_await_data)
-                } else {})
+                (
+                    if (nodeBatteryLevel.containsKey(node.key)) {
+                        val level = nodeBatteryLevel.getValue(node.key)
+                        connectionStates[getDisplayName(node.value)] = if (level > 0) "${level}%" else context.getString(R.string.state_connected)
+                        /*if(nodeVersions.contains(node.key) && nodeVersions.getValue(node.key) >= 0 && nodeVersions.getValue(node.key) < BuildConfig.BASE_VERSION) {
+                            connectionStates[getDisplayName(node.value)] += "\n" + context.getString(R.string.state_update_required)
+                        } else {}*/
+                    }
+                    else if (addMissing) {
+                        connectionStates[getDisplayName(node.value)] = context.getString(R.string.state_await_data)
+                    } else {}
+                )
             }
             return connectionStates
 
@@ -132,6 +138,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
     private fun openConnection() {
         Log.d(LOG_ID, "open connection")
         connectedNodes.clear()
+        nodeVersions.clear()
         nodeBatteryLevel.clear()
         noDataReceived.clear()
         noDataSend.clear()
@@ -149,6 +156,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         Wearable.getMessageClient(context).removeListener(this)
         Wearable.getCapabilityClient(context).removeListener(this)
         connectedNodes.clear()
+        nodeVersions.clear()
         nodeBatteryLevel.clear()
         noDataReceived.clear()
         noDataSend.clear()
@@ -272,6 +280,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         connectedNodes[node.id] = node
         noDataReceived.add(node.id)
         noDataSend.add(node.id)
+        setNodeVersion(node.id, -1)  // init version
         sendDataRequest(node.id)
         addTimer()
     }
@@ -279,6 +288,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
     private fun remNode(nodeId: String) {
         Log.i(LOG_ID, "Node disconnected: $nodeId")
         connectedNodes.remove(nodeId)
+        nodeVersions.remove(nodeId)
         nodeBatteryLevel.remove(nodeId)// remove all battery levels from not connected nodes
         noDataReceived.remove(nodeId)
         noDataSend.remove(nodeId)
@@ -337,16 +347,21 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         }
     }
 
-    private fun getPath(dataSource: NotifySource) =
-        when(dataSource) {
+    private fun getPath(dataSource: NotifySource, useJson: Boolean): String {
+        val path = when(dataSource) {
             NotifySource.BATTERY_LEVEL -> Constants.BATTERY_INTENT_MESSAGE_PATH
             NotifySource.CAPILITY_INFO -> Constants.REQUEST_DATA_MESSAGE_PATH
             NotifySource.SETTINGS -> Constants.SETTINGS_INTENT_MESSAGE_PATH
             NotifySource.SOURCE_SETTINGS -> Constants.SOURCE_SETTINGS_INTENT_MESSAGE_PATH
             NotifySource.ALARM_SETTINGS -> Constants.ALARM_SETTINGS_INTENT_MESSAGE_PATH
             NotifySource.LOGCAT_REQUEST -> Constants.REQUEST_LOGCAT_MESSAGE_PATH
+            NotifySource.COMMAND -> Constants.COMMAND_PATH
             else -> Constants.GLUCODATA_INTENT_MESSAGE_PATH
         }
+        if(useJson)
+            return path.plus(Constants.JSON_PATH_EXTENSION)
+        return path
+    }
 
     fun sendMessage(dataSource: NotifySource, extras: Bundle?, ignoreReceiverId: String? = null, filterReceiverId: String? = null)
     {
@@ -354,14 +369,20 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             Log.v(LOG_ID, "sendMessage called for $dataSource filter receiver $filterReceiverId ignoring receiver $ignoreReceiverId with extras $extras")
             if( nodesConnected && dataSource != NotifySource.NODE_BATTERY_LEVEL ) {
                 Log.d(LOG_ID, connectedNodes.size.toString() + " nodes found for sending message for " + dataSource.toString())
-                if (extras != null && dataSource != NotifySource.BATTERY_LEVEL && BatteryReceiver.batteryPercentage >= 0) {
-                    extras.putInt(BatteryReceiver.LEVEL, BatteryReceiver.batteryPercentage)
-                }
-                if (extras != null && dataSource == NotifySource.CAPILITY_INFO && GlucoDataService.appSource == AppSource.PHONE_APP) {
-                    Log.d(LOG_ID, "Adding settings for sending")
-                    extras.putBundle(Constants.SETTINGS_BUNDLE, GlucoDataService.getSettings())
-                    extras.putBundle(Constants.SOURCE_SETTINGS_BUNDLE, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)))
-                    extras.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings())
+                if(extras != null) {
+                    extras.putInt(Constants.VERSION_CODE, BuildConfig.BASE_VERSION)  // add current version to bundle
+                    if (dataSource != NotifySource.BATTERY_LEVEL && BatteryReceiver.batteryPercentage >= 0) {
+                        extras.putInt(BatteryReceiver.LEVEL, BatteryReceiver.batteryPercentage)
+                    }
+                    if (dataSource == NotifySource.CAPILITY_INFO) {
+                        if(GlucoDataService.appSource == AppSource.PHONE_APP) {
+                            Log.d(LOG_ID, "Adding settings for sending")
+                            extras.putBundle(Constants.SETTINGS_BUNDLE, GlucoDataService.getSettings())
+                            extras.putBundle(Constants.SOURCE_SETTINGS_BUNDLE, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)))
+                            extras.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings())
+                        }
+                        extras.putBundle(Constants.ALARM_EXTRA_BUNDLE, AlarmHandler.getExtras())
+                    }
                 }
                 // Send a message to all nodes in parallel
                 val curNodes = connectedNodes.values
@@ -371,7 +392,11 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                             if ((ignoreReceiverId == null && filterReceiverId == null) || ignoreReceiverId != node.id || filterReceiverId == node.id) {
                                 if (dataSource == NotifySource.CAPILITY_INFO)
                                     Thread.sleep(1000)  // wait a bit after the connection has changed
-                                sendMessage(node, getPath(dataSource), Utils.bundleToBytes(extras), dataSource)
+                                val useJson = dataSource == NotifySource.CAPILITY_INFO || nodeHasJson(node.id)   // force json for request data
+                                sendMessage(node, getPath(dataSource, useJson), Utils.bundleToBytes(extras, useJson), dataSource)
+                                if(dataSource == NotifySource.CAPILITY_INFO) { // also send request data in old format
+                                    sendMessage(node, getPath(dataSource, false), Utils.bundleToBytes(extras, false), dataSource)
+                                }
                             }
                         } catch (exc: Exception) {
                             Log.e(LOG_ID, "sendMessage to " + node.toString() + " exception: " + exc.toString())
@@ -402,7 +427,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 addOnSuccessListener {
                     Log.i(
                         LOG_ID,
-                        dataSource.toString() + " data send to node " + node.toString()
+                        dataSource.toString() + ": ${data?.size} bytes send with path $path to node " + node.toString()
                     )
                     if(noDataSend.contains(node.id)) {
                         noDataSend.remove(node.id)
@@ -469,7 +494,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         connectedNodes.forEach { node ->
             Thread {
                 try {
-                    sendMessage(node.value, Constants.COMMAND_PATH, Utils.bundleToBytes(commandBundle), NotifySource.COMMAND)
+                    sendMessage(node.value, getPath(NotifySource.COMMAND, nodeHasJson(node.value.id)), Utils.bundleToBytes(commandBundle, nodeHasJson(node.value.id)), NotifySource.COMMAND)
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "sendCommand to " + node.value.toString() + " exception: " + exc.toString())
                 }
@@ -479,23 +504,31 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
     override fun onMessageReceived(p0: MessageEvent) {
         try {
-            Log.i(LOG_ID, "onMessageReceived from " + p0.sourceNodeId + " with path " + p0.path)
+            Log.i(LOG_ID, "onMessageReceived from " + p0.sourceNodeId + " with path " + p0.path + " with data: " + p0.data.size + " bytes")
             checkConnectedNode(p0.sourceNodeId)
-            if (p0.path == Constants.REQUEST_DATA_MESSAGE_PATH && !noDataSend.contains(p0.sourceNodeId)) {
-                Log.d(LOG_ID, "Request data called from " + p0.sourceNodeId + " wait for sending data")
-                // new data request -> new connection on other side -> reset connection
-                noDataSend.add(p0.sourceNodeId)  // add to trigger db sync after connection established
+            val isJsonReq = p0.path.contains(Constants.JSON_PATH_EXTENSION)
+            val extras = Utils.bytesToBundle(p0.data, isJsonReq)
+            if (p0.path.contains(Constants.REQUEST_DATA_MESSAGE_PATH)) {
+                if(!noDataSend.contains(p0.sourceNodeId)) {
+                    Log.d(LOG_ID, "Request data called from " + p0.sourceNodeId + " wait for sending data")
+                    // new data request -> new connection on other side -> reset connection
+                    noDataSend.add(p0.sourceNodeId)  // add to trigger db sync after connection established
+                }
+                if(!isJsonReq && nodeHasJson(p0.sourceNodeId)) {
+                    Log.d(LOG_ID, "Ignoring old data request from " + p0.sourceNodeId + " as node has json data")
+                    return
+                }
+                setNodeVersion(p0.sourceNodeId, extras?.getInt(Constants.VERSION_CODE, if(isJsonReq) 1 else 0) ?: if(isJsonReq) 1 else 0, true)  // reset version for new data request
+            } else if(isJsonReq || extras?.containsKey(Constants.VERSION_CODE) == true) {
+                setNodeVersion(p0.sourceNodeId, extras?.getInt(Constants.VERSION_CODE, 1) ?: 1)  // no version, but support json, so set to version 1
+            } else {
+                setNodeVersion(p0.sourceNodeId, 0)
             }
             if(noDataReceived.contains(p0.sourceNodeId)) {
                 noDataReceived.remove(p0.sourceNodeId)
                 checkNodeConnect(p0.sourceNodeId)
             }
-            val extras = Utils.bytesToBundle(p0.data)
-            //Log.v(LOG_ID, "Received extras for path ${p0.path}: ${Utils.dumpBundle(extras)}")
             if(extras!= null) {
-                if(BuildConfig.DEBUG) {
-                    Log.v(LOG_ID, "Received extras for path ${p0.path}: ${Utils.dumpBundle(extras)}")
-                }
                 if (extras.containsKey(Constants.SETTINGS_BUNDLE)) {
                     val bundle = extras.getBundle(Constants.SETTINGS_BUNDLE)
                     Log.d(LOG_ID, "Glucose settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(bundle))
@@ -538,13 +571,13 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     extras.remove(BatteryReceiver.LEVEL)
                 }
 
-                if(p0.path == Constants.COMMAND_PATH) {
+                if(p0.path.contains(Constants.COMMAND_PATH)) {
                     handleCommand(extras, p0.sourceNodeId)
                     return
                 }
 
                 var forceSend = false
-                if(p0.path == Constants.GLUCODATA_INTENT_MESSAGE_PATH || extras.containsKey(ReceiveData.SERIAL)) {
+                if(p0.path.contains(Constants.GLUCODATA_INTENT_MESSAGE_PATH) || extras.containsKey(ReceiveData.SERIAL)) {
                     Log.d(LOG_ID, "Glucodata values received from " + p0.sourceNodeId + ": " + extras.toString())
                     if (extras.containsKey(ReceiveData.TIME)) {
                         Log.d(LOG_ID, "Received data from: " +
@@ -566,21 +599,21 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     }
                 }
 
-                if (p0.path == Constants.SOURCE_SETTINGS_INTENT_MESSAGE_PATH) {
+                if (p0.path.contains(Constants.SOURCE_SETTINGS_INTENT_MESSAGE_PATH)) {
                     if (!extras.isEmpty) {
                         Log.d(LOG_ID, "Glucose source settings received from " + p0.sourceNodeId + ": " + extras.toString())
                         DataSourceTask.updateSettings(context, extras)
                     }
                 }
 
-                if (p0.path == Constants.ALARM_SETTINGS_INTENT_MESSAGE_PATH) {
+                if (p0.path.contains(Constants.ALARM_SETTINGS_INTENT_MESSAGE_PATH)) {
                     if (!extras.isEmpty) {
                         Log.d(LOG_ID, "Glucose alarm settings received from " + p0.sourceNodeId + ": " + extras.toString())
                         AlarmHandler.setSettings(context, extras)
                     }
                 }
 
-                if (p0.path == Constants.SETTINGS_INTENT_MESSAGE_PATH) {
+                if (p0.path.contains(Constants.SETTINGS_INTENT_MESSAGE_PATH)) {
                     // check for other settings send...
                     extras.remove(Constants.SETTINGS_BUNDLE)
                     extras.remove(Constants.SOURCE_SETTINGS_BUNDLE)
@@ -606,7 +639,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     }
                 }
 
-                if(p0.path == Constants.REQUEST_DATA_MESSAGE_PATH || forceSend) {
+                if(p0.path.contains(Constants.REQUEST_DATA_MESSAGE_PATH) || forceSend) {
                     Log.d(LOG_ID, "Data request received from " + p0.sourceNodeId)
                     var bundle = ReceiveData.createExtras()
                     var source = NotifySource.BROADCAST
@@ -626,10 +659,10 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     }
                 }
             }
-            if(p0.path == Constants.REQUEST_LOGCAT_MESSAGE_PATH) {
+            if(p0.path.contains(Constants.REQUEST_LOGCAT_MESSAGE_PATH)) {
                 sendLogcat(p0.sourceNodeId)
             }
-            if (p0.path != Constants.REQUEST_DATA_MESSAGE_PATH && noDataSend.contains(p0.sourceNodeId)) {
+            if (!p0.path.contains(Constants.REQUEST_DATA_MESSAGE_PATH) && noDataSend.contains(p0.sourceNodeId)) {
                 sendDataRequest()
             }
             GlucoDataService.checkServices(context)
@@ -759,4 +792,17 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.toString())
         }
     }
+
+    private fun nodeHasJson(nodeId: String): Boolean {
+        return nodeVersions.contains(nodeId) && nodeVersions.getValue(nodeId) > 0
+    }
+
+    private fun setNodeVersion(nodeId: String, version: Int, force: Boolean = false) {
+        if(force || !nodeVersions.containsKey(nodeId) || nodeVersions.getValue(nodeId) < 0 || (version > 0 && nodeVersions.getValue(nodeId) < version)) {
+            Log.i(LOG_ID, "Set version for node $nodeId to $version")
+            nodeVersions[nodeId] = version
+            InternalNotifier.notify(context, NotifySource.NODE_BATTERY_LEVEL, null)
+        }
+    }
+
 }

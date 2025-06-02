@@ -485,7 +485,6 @@
     <string name="wear_complication_tap_action">Po dotknięciu komplikacji</string>
     <string name="activity_large_arrow_icon_summary">Należy sprawdzić, czy strzałka trendu nie jest przycięta i czy nie jest zbyt duża.</string>
     <string name="pref_cat_ui_settings">Interfejs użytkownika</string>
-    <string name="pref_cat_ui_settings_summary">Ogólne ustawienia dotyczące interfejsu użytkownika tej aplikacji.</string>
     <string name="gda_foreground_info">GlucoDataAuto działa</string>
     <string name="gda_foreground_summary">Włącz tę opcję tylko wtedy, gdy jako źródła używasz funkcji „follower" (obserwatora) i wyłącznie powiadomień z Android Auto.\nZapobiega to zamknięciu tej aplikacji przez system Android, gdy nie jest podłączona do Android Auto, więc aplikacja nie może rozpoznać połączenia z Android Auto.\nZamiast włączać to ustawienie, możesz również otworzyć aplikację w Android Auto raz, gdy jesteś już podłączony.</string>
     <string name="gda_battery_optimization_disabled">Optymalizacja baterii jest włączona!\nNaciśnij tutaj, aby ją wyłączyć.</string>
@@ -802,4 +801,7 @@
     <string name="graph_widgets_summary">Ustawienia wykresu na widgecie, w powiadomieniu, na ekranie blokady i ekranie Always-On Display (AOD).</string>
     <string name="show_graph_notification_summary">Pokazuj wykres w powiadomieniu.</string>
 
+    <string name="pref_cat_ui_graph_settings_summary">Ustawienia ogólne dot. interfejsu użytkownika i wykresu na ekranie głównym i w widgetach.</string>
+    <string name="pref_cat_ui_graph_settings">Interfejs użytkownika i wykres</string>
+    <string name="state_update_required">Wymagana aktualizacja!</string>
 </resources>

@@ -1,1 +1,1 @@
-receives glucose data from from LibreLinkUp, Juggluco or xDrip+.
+Your central hub for glucose readings on your Android devices!

@@ -126,7 +126,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                         apply()
                     }
                 }
-                if(!sharedPrefs.contains(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE_MIGRATION)) {
+                if(!sharedPrefs.contains(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE_MIGRATION) || !sharedPrefs.contains(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE_MIGRATION_2)) {
                     if(sharedPrefs.contains(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE)) {
                         val oldValue = sharedPrefs.getInt(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE, 0)
                         if(oldValue in 1..10) {
@@ -139,6 +139,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                     }
                     with(sharedPrefs.edit()) {
                         putBoolean(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE_MIGRATION, true)
+                        putBoolean(Constants.SHARED_PREF_FLOATING_WIDGET_SIZE_MIGRATION_2, true)
                         apply()
                     }
                 }

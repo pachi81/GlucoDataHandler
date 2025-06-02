@@ -488,7 +488,6 @@
     <string name="wear_complication_tap_action">小工具點選動作</string>
     <string name="activity_large_arrow_icon_summary">如趨勢箭頭太大導致被裁切請停用此設定</string>
     <string name="pref_cat_ui_settings">使用者介面</string>
-    <string name="pref_cat_ui_settings_summary">程式使用者介面一般設定</string>
     <string name="gda_foreground_info">GlucoDataAuto 執行中</string>
     <string name="gda_foreground_summary">僅在您使用追蹤器資料來源且只使用 Android Auto 通知時才啟用\n這可以避免 Android 未連線到 Android Auto 時就將程式關閉，導致程式無法偵測 Android Auto 連線\n除了啟用此選項外，也可以在連線時於 Android Auto 中手動開啟程式一次</string>
     <string name="gda_battery_optimization_disabled">已啟用電池最佳化！\n按這裡停用</string>
@@ -796,4 +795,8 @@
     <string name="graph_widgets">小工具中的圖表</string>
     <string name="graph_widgets_summary">小工具、通知、鎖定畫面和永遠顯示 (AOD) 中的圖表設定。</string>
     <string name="show_graph_notification_summary">在通知中顯示圖表。</string>
+
+    <string name="pref_cat_ui_graph_settings_summary">主畫面和 Widget 中使用者介面和圖表的一般設定。</string>
+    <string name="pref_cat_ui_graph_settings">使用者介面和圖表</string>
+    <string name="state_update_required">需要更新！</string>
 </resources>

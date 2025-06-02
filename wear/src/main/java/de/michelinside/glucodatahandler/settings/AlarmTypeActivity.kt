@@ -188,33 +188,37 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
     }
 
     private fun setRingtoneSelect(curUri: Uri?) {
-        Log.v(LOG_ID, "setRingtoneSelect called with uri $curUri" )
-        if(ringtoneSelecter == null) {
-            ringtoneSelecter = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-                Log.v(LOG_ID, "$alarmType result ${result.resultCode}: ${result.data}")
-                if (result.resultCode == Activity.RESULT_OK) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        setRingtoneResult(result.data!!.getParcelableExtra(
-                            RingtoneManager.EXTRA_RINGTONE_PICKED_URI, Uri::class.java))
-                    } else {
-                        @Suppress("DEPRECATION")
-                        setRingtoneResult(result.data!!.getParcelableExtra(
-                            RingtoneManager.EXTRA_RINGTONE_PICKED_URI))
+        try {
+            Log.v(LOG_ID, "setRingtoneSelect called with uri $curUri" )
+            if(ringtoneSelecter == null) {
+                ringtoneSelecter = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+                    Log.v(LOG_ID, "$alarmType result ${result.resultCode}: ${result.data}")
+                    if (result.resultCode == Activity.RESULT_OK) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            setRingtoneResult(result.data!!.getParcelableExtra(
+                                RingtoneManager.EXTRA_RINGTONE_PICKED_URI, Uri::class.java))
+                        } else {
+                            @Suppress("DEPRECATION")
+                            setRingtoneResult(result.data!!.getParcelableExtra(
+                                RingtoneManager.EXTRA_RINGTONE_PICKED_URI))
+                        }
                     }
                 }
             }
-        }
-        btnSelectSound.setOnClickListener {
-            Log.v(LOG_ID, "Select custom sound clicked")
-            val ringtoneIntent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
-            ringtoneIntent.putExtra(
-                RingtoneManager.EXTRA_RINGTONE_TYPE,
-                RingtoneManager.TYPE_ALL
-            )
-            ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true)
-            ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)
-            ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, curUri)
-            ringtoneSelecter!!.launch(ringtoneIntent)
+            btnSelectSound.setOnClickListener {
+                Log.v(LOG_ID, "Select custom sound clicked")
+                val ringtoneIntent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
+                ringtoneIntent.putExtra(
+                    RingtoneManager.EXTRA_RINGTONE_TYPE,
+                    RingtoneManager.TYPE_ALL
+                )
+                ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true)
+                ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)
+                ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, curUri)
+                ringtoneSelecter!!.launch(ringtoneIntent)
+            }
+        } catch( exc: Exception ) {
+            Log.e(LOG_ID, "setRingtoneSelect exception: " + exc.message + ": " + exc.stackTraceToString())
         }
     }
 

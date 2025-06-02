@@ -487,7 +487,6 @@
     <string name="wear_complication_tap_action">Действие при докосване на усложнение</string>
     <string name="activity_large_arrow_icon_summary">Моля, деактивирайте тази настройка, ако стрелката за тенденция е твърде голяма или е отрязана.</string>
     <string name="pref_cat_ui_settings">Потребителски интерфейс</string>
-    <string name="pref_cat_ui_settings_summary">Общи настройки за потребителския интерфейс на това приложение.</string>
     <string name="gda_foreground_info">GlucoDataAuto работи</string>
     <string name="gda_foreground_summary">Активирайте го само ако използвате източник на последовател и само известия за Android Auto.\nТова предотвратява затварянето на това приложение от Android, докато не е свързано с Android Auto, така че приложението не може да разпознае връзката с Android Auto.\nВместо да активирате тази настройка, можете също да отворите приложението в Android Auto веднъж, ако сте свързани.</string>
     <string name="gda_battery_optimization_disabled">Оптимизацията на батерията е активирана!\nНатиснете тук, за да я деактивирате.</string>
@@ -800,4 +799,8 @@
     <string name="graph_widgets_summary">Настройки на графиката за уиджети, известия, заключен екран и Always-On Display (AOD).</string>
     <string name="show_graph_notification_summary">Показване на графиката в известието.</string>
 
+    <string name="pref_cat_ui_graph_settings_summary">Общи настройки за потребителския интерфейс и графиката на главния екран и уиджетите.</string>
+    <string name="pref_cat_ui_graph_settings">Потребителски интерфейс и графика</string>
+
+    <string name="state_update_required">Нужна е актуализация!</string>
 </resources>
