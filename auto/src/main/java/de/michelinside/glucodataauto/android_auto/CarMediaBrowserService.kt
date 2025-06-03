@@ -233,18 +233,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         }
     }
 
-    private fun getIcon(size: Int = 100): Bitmap? {
-        return when(sharedPref.getString(Constants.AA_MEDIA_ICON_STYLE, Constants.AA_MEDIA_ICON_STYLE_GLUCOSE_TREND)) {
-            Constants.AA_MEDIA_ICON_STYLE_TREND -> {
-                BitmapUtils.getRateAsBitmap(width = size, height = size)
-            }
-            Constants.AA_MEDIA_ICON_STYLE_GLUCOSE -> {
-                BitmapUtils.getGlucoseAsBitmap(width = size, height = size)
-            }
-            else -> {
-                BitmapUtils.getGlucoseTrendBitmap(width = size, height = size)
-            }
-        }
+    private fun getBackgroundImage(): Bitmap? {
+        return BitmapUtils.getGlucoseTrendBitmap(width = 400, height = 400)
     }
 
     fun setItem() {
@@ -306,7 +296,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                         subtitle
                     )
                     .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, getDuration())
-                    .putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, getIcon(400)!!)
+                    .putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, BitmapUtils.getRateAsBitmap()!!)
+                    .putBitmap(MediaMetadataCompat.METADATA_KEY_ART, getBackgroundImage()!!)
                     .build()
             )
             if(playBackState == PlaybackState.STATE_PLAYING && lastGlucoseTime < ReceiveData.time) {
@@ -324,7 +315,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             .setMediaId(MEDIA_GLUCOSE_ID)
             .setTitle(ReceiveData.getGlucoseAsString() + " (Δ " + ReceiveData.getDeltaAsString() + ")\n" + ReceiveData.getElapsedTimeMinuteAsString(this))
             //.setSubtitle(ReceiveData.timeformat.format(Date(ReceiveData.time)))
-            .setIconBitmap(getIcon()!!)
+            .setIconBitmap(BitmapUtils.getRateAsBitmap())
         return MediaBrowserCompat.MediaItem(
             mediaDescriptionBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE)
     }
