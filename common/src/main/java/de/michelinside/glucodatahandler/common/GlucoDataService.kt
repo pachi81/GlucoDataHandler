@@ -82,7 +82,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         }
 
         val isServiceRunning: Boolean get() {
-            return service != null
+            return service != null || extContext != null
         }
 
         @SuppressLint("StaticFieldLeak")

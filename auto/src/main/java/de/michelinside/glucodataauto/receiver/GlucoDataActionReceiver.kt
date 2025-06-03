@@ -9,6 +9,7 @@ import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.Intents
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 
@@ -36,6 +37,13 @@ open class GlucoDataActionReceiver: BroadcastReceiver() {
                     Log.d(LOG_ID, "Alarm settings receceived")
                     AlarmHandler.setSettings(context, bundle!!)
                     extras.remove(Constants.ALARM_SETTINGS_BUNDLE)
+                }
+                if(extras.containsKey(Constants.EXTRA_GRAPH_DATA)) {
+                    Log.d(LOG_ID, "Graph data receceived")
+                    val graphData = extras.getString(Constants.EXTRA_GRAPH_DATA)
+                    if(!graphData.isNullOrEmpty())
+                        dbAccess.addGlucoseValuesFromJson(graphData)
+                    extras.remove(Constants.EXTRA_GRAPH_DATA)
                 }
                 ReceiveData.handleIntent(context, DataSource.GDH, extras, true)
             }

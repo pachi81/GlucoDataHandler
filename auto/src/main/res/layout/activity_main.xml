@@ -144,13 +144,15 @@
             android:text="@string/menu_sources"
             />
 
-        <LinearLayout
-            android:id="@+id/space_table"
-            android:layout_height="20dp"
-            android:layout_width="0dp"
-            android:orientation="horizontal">
-            <!-- this expands to fill the empty space if needed -->
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/graphImage"
+            android:layout_marginVertical="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:visibility="gone"
+            android:contentDescription="@string/graph" />
 
         <TableLayout
             android:id="@+id/tableNotes"

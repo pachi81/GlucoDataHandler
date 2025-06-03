@@ -167,11 +167,9 @@
                 android:gravity="center|top">
                 <TextView
                     android:id="@+id/txtLastValue"
-                    android:layout_width="350dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
-                    android:layout_marginEnd="20dp"
                     android:text="@string/no_data"
                     android:textAlignment="center"
                     android:textSize="20sp" />

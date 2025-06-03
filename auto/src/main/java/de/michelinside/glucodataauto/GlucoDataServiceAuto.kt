@@ -222,6 +222,8 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                 intent.setPackage(Constants.PACKAGE_GLUCODATAHANDLER)
                 intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
                 intent.putExtra(Constants.GLUCODATAAUTO_STATE_EXTRA, enabled)
+                if(enabled)
+                    intent.putExtra(Constants.EXTRA_GRAPH_DURATION_HOURS, 4)
                 context.sendBroadcast(intent)
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "sendStateBroadcast exception: " + exc.toString())
