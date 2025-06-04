@@ -13,7 +13,6 @@ import android.os.Bundle
 import android.util.Log
 import com.eveningoutpost.dexdrip.services.broadcastservice.models.GraphLine
 import com.eveningoutpost.dexdrip.services.broadcastservice.models.Settings
-import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -115,10 +114,7 @@ open class BroadcastServiceAPI: BroadcastReceiver(), NotifierInterface,
         if(enabled) {
             Log.d(LOG_ID, "sendForceDataRequest called")
             val intent = Intent(BROADCAST_RECEIVE_ACTION)
-            if(GlucoDataService.appSource == AppSource.AUTO_APP)
-                intent.putExtra(EXTRA_SETTINGS, Settings(context.packageName))  // no graph data
-            else
-                intent.putExtra(EXTRA_SETTINGS, Settings(context.packageName, 4*60*60*1000))  // request graph data for 4 hours
+            intent.putExtra(EXTRA_SETTINGS, Settings(context.packageName, 4*60*60*1000))  // request graph data for 4 hours
             sendBroadcast(context, CMD_UPDATE_BG_FORCE, intent)
         }
     }
