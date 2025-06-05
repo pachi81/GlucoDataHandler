@@ -245,4 +245,11 @@ object dbAccess {
         val gson = Gson()
         return gson.toJson(data)
     }
+
+    fun addGlucoseValuesFromJson(jsonData: String) {
+        val gson = Gson()
+        val data = gson.fromJson(jsonData, Array<GlucoseValue>::class.java).toList()
+        Log.i(LOG_ID, "${data.size} values received")
+        addGlucoseValues(data, true)
+    }
 }

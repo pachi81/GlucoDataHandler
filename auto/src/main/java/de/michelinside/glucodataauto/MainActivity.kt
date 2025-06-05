@@ -30,9 +30,11 @@ import androidx.preference.PreferenceManager
 import de.michelinside.glucodataauto.preferences.SettingsActivity
 import de.michelinside.glucodataauto.preferences.SettingsFragmentClass
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
+import de.michelinside.glucodatahandler.common.chart.ChartBitmapHandlerView
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notification.ChannelType
@@ -68,6 +70,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var versionChecker: GitHubVersionChecker
     private var notificationIcon: MenuItem? = null
     private var speakIcon: MenuItem? = null
+    private lateinit var chartImage: ImageView
+    private lateinit var chartBitmap: ChartBitmapHandlerView
     private val LOG_ID = "GDH.AA.Main"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,6 +93,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableNotes = findViewById(R.id.tableNotes)
             tableDetails = findViewById(R.id.tableDetails)
             txtNoData = findViewById(R.id.txtNoData)
+            chartImage = findViewById(R.id.graphImage)
             versionChecker = GitHubVersionChecker("GlucoDataAuto", BuildConfig.VERSION_NAME, this)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
@@ -129,6 +134,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 }
             }
             GlucoDataServiceAuto.init(this)
+            chartBitmap = ChartBitmapHandlerView(chartImage, this)
             requestPermission()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
@@ -141,6 +147,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             super.onPause()
             InternalNotifier.remNotifier(this, this)
             GlucoDataServiceAuto.stopDataSync(this)
+            chartBitmap.pause()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.message.toString() )
         }
@@ -167,11 +174,20 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.TTS_STATE_CHANGED))
 
             GlucoDataServiceAuto.startDataSync()
+            if(!GlucoDataService.isServiceRunning)
+                GlucoDataService.context = this.applicationContext
+            chartBitmap.resume()
             versionChecker.checkVersion(1)
             checkNewSettings()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
         }
+    }
+
+    override fun onDestroy() {
+        Log.v(LOG_ID, "onDestroy called")
+        super.onDestroy()
+        chartBitmap.close()
     }
 
     fun requestPermission() : Boolean {
