@@ -4,6 +4,16 @@
     <PreferenceCategory
         android:title="@string/pref_cat_general"
         app:iconSpaceReserved="false">
+        <androidx.preference.SeekBarPreference
+            app:showSeekBarValue="true"
+            app:seekBarIncrement="1"
+            app:min="0"
+            android:max="4"
+            android:defaultValue="2"
+            android:key="graph_bitmap_duration"
+            android:summary="@string/graph_duration_summary"
+            android:title="@string/graph_duration"
+            app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="aa_media_player_show_iob_cob"

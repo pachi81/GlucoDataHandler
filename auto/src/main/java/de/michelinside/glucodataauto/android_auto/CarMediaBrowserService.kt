@@ -4,6 +4,7 @@ import de.michelinside.glucodataauto.R
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
+import android.graphics.Paint
 import android.media.session.PlaybackState
 import android.os.Bundle
 import android.os.SystemClock
@@ -27,6 +28,12 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import android.support.v4.media.session.MediaControllerCompat
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import de.michelinside.glucodatahandler.common.chart.ChartBitmapHandler
+import de.michelinside.glucodatahandler.common.utils.BitmapPool
 import de.michelinside.glucodatahandler.common.R as CR
 
 
@@ -42,6 +49,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     private var curMediaItem = MEDIA_ROOT_ID
     private var playBackState = PlaybackState.STATE_NONE
     private var lastGlucoseTime = 0L
+    private var curBitmap: Bitmap? = null
 
     companion object {
         var active = false
@@ -55,6 +63,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             GlucoDataServiceAuto.init(this)
             GlucoDataServiceAuto.start(this)
             CarMediaPlayer.enable(this)
+            ChartBitmapHandler.register(this, this.javaClass.simpleName)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
 
@@ -120,7 +129,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 NotifySource.BROADCAST,
                 NotifySource.MESSAGECLIENT,
                 NotifySource.SETTINGS,
-                NotifySource.TIME_VALUE))
+                NotifySource.TIME_VALUE,
+                NotifySource.GRAPH_CHANGED))
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -135,6 +145,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
             session.release()
             GlucoDataServiceAuto.stop(this)
+            ChartBitmapHandler.unregister(this.javaClass.simpleName)
+            BitmapPool.returnBitmap(curBitmap)
             super.onDestroy()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )
@@ -184,6 +196,10 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.d(LOG_ID, "OnNotifyData called for source $dataSource")
         try {
+            if(dataSource == NotifySource.GRAPH_CHANGED && (!ChartBitmapHandler.isRegistered(this.javaClass.simpleName) || extras?.getInt(Constants.GRAPH_ID) != ChartBitmapHandler.chartId)) {
+                Log.d(LOG_ID, "Ignore graph change")
+                return // ignore
+            }
             notifyChildrenChanged(MEDIA_ROOT_ID)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() )
@@ -234,6 +250,43 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     }
 
     private fun getBackgroundImage(): Bitmap? {
+        try {
+            if(ChartBitmapHandler.hasBitmap(this.javaClass.simpleName)) {
+                Log.i(LOG_ID, "Create bitmap")
+                val lockscreenView = LayoutInflater.from(this).inflate(R.layout.media_layout, null)
+                val txtBgValue: TextView = lockscreenView.findViewById(R.id.glucose)
+                val viewIcon: ImageView = lockscreenView.findViewById(R.id.trendImage)
+                val graphImage: ImageView = lockscreenView.findViewById(R.id.graphImage)
+
+                txtBgValue.text = ReceiveData.getGlucoseAsString()
+                txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
+                if (ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong()) {
+                    txtBgValue.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+                } else {
+                    txtBgValue.paintFlags = 0
+                }
+                viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(LOG_ID +"_trend", width = 400, height = 400))
+
+
+                    Log.d(LOG_ID, "Update graphImage bitmap")
+                    lockscreenView.measure(
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
+                    Log.d(LOG_ID, "Mesasured width ${lockscreenView.measuredWidth} and height ${lockscreenView.measuredHeight} for chart")
+                    graphImage.setImageBitmap(ChartBitmapHandler.getBitmap())
+                    graphImage.requestLayout()
+
+                lockscreenView.measure(
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
+                lockscreenView.layout(0, 0, lockscreenView.measuredWidth, lockscreenView.measuredHeight)
+                Log.d(LOG_ID, "Mesasured width ${lockscreenView.measuredWidth} and height ${lockscreenView.measuredHeight}")
+                curBitmap = BitmapUtils.loadBitmapFromView(lockscreenView, curBitmap)
+                return curBitmap
+            }
+        } catch (e: Exception) {
+            Log.e(LOG_ID, "Error creating bitmap", e)
+        }
         return BitmapUtils.getGlucoseTrendBitmap(width = 400, height = 400)
     }
 

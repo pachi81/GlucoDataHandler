@@ -1,0 +1,54 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/widget"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layout_glucose_trend"
+        android:layout_marginTop="50dp"
+        android:layout_width="600dp"
+        android:layout_height="300dp"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:paddingHorizontal="10dp"
+        tools:ignore="UselessParent">
+
+        <TextView
+            android:id="@+id/glucose"
+            android:layout_weight="3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center|end"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMaxTextSize="2000sp"
+            android:text="---"
+            android:maxLines="1"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            tools:ignore="HardcodedText,NestedWeights" />
+
+        <ImageView
+            android:id="@+id/trendImage"
+            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/trend"
+            android:gravity="center|start"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="5dp"
+            android:src="@drawable/icon_question" />
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/graphImage"
+        android:layout_width="600dp"
+        android:layout_height="200dp"
+        android:scaleType="fitCenter"
+        android:contentDescription="@string/graph"
+        android:layout_marginBottom="250dp"
+        android:adjustViewBounds="true" />
+
+</LinearLayout>
