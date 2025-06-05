@@ -8,7 +8,7 @@
     <LinearLayout
         android:id="@+id/layout_glucose_trend"
         android:layout_marginTop="50dp"
-        android:layout_width="600dp"
+        android:layout_width="620dp"
         android:layout_height="300dp"
         android:orientation="horizontal"
         android:gravity="center_horizontal"
@@ -44,11 +44,12 @@
     </LinearLayout>
     <ImageView
         android:id="@+id/graphImage"
-        android:layout_width="600dp"
+        android:layout_width="620dp"
         android:layout_height="200dp"
         android:scaleType="fitCenter"
         android:contentDescription="@string/graph"
-        android:layout_marginBottom="250dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginBottom="290dp"
         android:adjustViewBounds="true" />
 
 </LinearLayout>
