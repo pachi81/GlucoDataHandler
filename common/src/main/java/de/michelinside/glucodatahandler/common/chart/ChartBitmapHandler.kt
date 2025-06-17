@@ -106,13 +106,15 @@ object ChartBitmapHandler : NotifierInterface {
     }
 
     fun resume(widget: String, create: Boolean = true) {
-        Log.d(LOG_ID, "resume widget $widget - create: $create - service running ${GlucoDataService.isServiceRunning}")
+        Log.d(LOG_ID, "resume widget $widget - create: $create - paused: ${chartBitmap?.isPaused == true} - service running ${GlucoDataService.isServiceRunning}")
         activeWidgets.add(widget)
         pausedWidgets.remove(widget)
-        if(chartBitmap == null)
-            createBitmap(GlucoDataService.context!!)
-        else if(chartBitmap?.isPaused == true)
-            chartBitmap?.resume(create)
+        if(GlucoDataService.isServiceRunning) {
+            if(chartBitmap == null)
+                createBitmap(GlucoDataService.context!!)
+            else if(chartBitmap?.isPaused == true)
+                chartBitmap?.resume(create)
+        }
     }
 
     fun recreate() {
