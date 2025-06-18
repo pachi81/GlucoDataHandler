@@ -7,9 +7,9 @@
 
     <LinearLayout
         android:id="@+id/layout_glucose_trend"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="100dp"
         android:layout_width="620dp"
-        android:layout_height="300dp"
+        android:layout_height="250dp"
         android:orientation="horizontal"
         android:gravity="center_horizontal"
         android:paddingHorizontal="10dp"
