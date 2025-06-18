@@ -68,6 +68,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
             Log.v(LOG_ID, "init called: init=$init")
             if(!init) {
                 GlucoDataService.appSource = AppSource.AUTO_APP
+                GlucoDataService.context = context.applicationContext
                 migrateSettings(context)
                 CarNotification.initNotification(context)
                 startService(context, false)
@@ -385,6 +386,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                 stopForeground(STOP_FOREGROUND_REMOVE)
             }
             CarConnection(applicationContext).type.observeForever(GlucoDataServiceAuto::onConnectionStateUpdated)
+            InternalNotifier.notify(this, NotifySource.SERVICE_STARTED, null)
             if(dataSyncCount > 0)
                 startDataSync(true)
         } catch (exc: Exception) {

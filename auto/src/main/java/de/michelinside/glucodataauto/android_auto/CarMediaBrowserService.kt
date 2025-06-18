@@ -200,6 +200,16 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 Log.d(LOG_ID, "Ignore graph change")
                 return // ignore
             }
+            if(ChartBitmapHandler.hasBitmap(this.javaClass.simpleName)) {
+                if(dataSource == NotifySource.BROADCAST || dataSource == NotifySource.MESSAGECLIENT) {
+                    Log.d(LOG_ID, "Ignore glucose value and wait for chart update")
+                    return
+                }
+                if(dataSource == NotifySource.TIME_VALUE && ReceiveData.getElapsedTimeMinute().mod(2) == 0) {
+                    Log.d(LOG_ID, "Ignore time value and wait for chart update")
+                    return
+                }
+            }
             notifyChildrenChanged(MEDIA_ROOT_ID)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() )
