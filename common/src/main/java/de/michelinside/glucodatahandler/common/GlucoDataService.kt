@@ -514,6 +514,25 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 }
             }
 
+            if(!sharedPrefs.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {  // only of notification reader is not enabled!
+                // change old notification regex
+                if(sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX)) {
+                    if(sharedPrefs.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, "") == "(\\d*\\.?\\d+)") {
+                        with(sharedPrefs.edit()) {
+                            putString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, NotificationReceiver.defaultGlucoseRegex)
+                            apply()
+                        }
+                    }
+                }
+                if(sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX)) {
+                    if(sharedPrefs.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, "") == "IOB: (\\d*\\.?\\d+) U") {
+                        with(sharedPrefs.edit()) {
+                            putString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, NotificationReceiver.defaultIobRegex)
+                            apply()
+                        }
+                    }
+                }
+            }
         }
 
         fun getSettings(): Bundle {

@@ -33,6 +33,11 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     private var multiValueNotificationPackage: String? = null  // notification updates several times within 0s for new values
     private var onGoingNotificationPackage = ""
 
+    companion object {
+        const val defaultGlucoseRegex = "(?:^|\\s)(\\d*\\.?\\d+)(?=\\s|\$)" //"""(?:^|\s)(\d{1,3}(?:\.\d{1,3})?)(?=\s|${'$'})"""
+        const val defaultIobRegex = "(\\d*\\.?\\d+) U"
+    }
+
     override fun getName(): String {
         return LOG_ID
     }
@@ -95,6 +100,13 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         if(onGoingNotificationPackage == packageName)
             return true
         // default (unknown app): also allow no ongoing notifications
+        return false
+    }
+
+    // returns true, if the notification is only updated by a new value, so no special handing is needed
+    private fun hasRegularNotification(packageName: String): Boolean {
+        if(packageName.lowercase().startsWith("com.camdiab."))  // CamAPS FX
+            return true
         return false
     }
 
@@ -172,7 +184,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                         return false
                     }
                 }
-            } else if(sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl, true)) {
+            } else if(!hasRegularNotification(sbn.packageName) && sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl, true)) {
                 val diffValueTime = (sbn.postTime - lastValueNotificationTime)/1000 // in seconds
                 lastValueNotificationTime = sbn.postTime
                 if(diffValueTime <= 1L || isWaitThreadActive()) {
@@ -219,7 +231,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                 }
                 if (sbn.packageName == sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP, "")) {
                     Log.i(LOG_ID, "New IOB notification from ${sbn.packageName} - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`})")
-                    val regex = sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, "IOB: (\\d*\\.?\\d+) U")!!.toRegex()
+                    val regex = sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, defaultIobRegex)!!.toRegex()
                     Log.i(LOG_ID, "using IOB regex $regex")
                     val value = parseValueFromNotification(sbn, true, regex)
                     if(!value.isNaN())
@@ -236,7 +248,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
 
     private fun parseValue(sbn: StatusBarNotification) {
         val sharedPref = applicationContext.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-        val regex = sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, "(\\d*\\.?\\d+)")!!.toRegex()
+        val regex = sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, defaultGlucoseRegex)!!.toRegex()
         Log.i(LOG_ID, "using regex $regex")
         val value = parseValueFromNotification(sbn, false, regex)
         if(!value.isNaN()) {
@@ -393,10 +405,6 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     }
 
     private fun validGlucoseValue(value: Float): Boolean {
-        if(updateOnlyChangedValue && value == lastValue) {
-            Log.i(LOG_ID, "Ignoring value notification with same value: $value")
-            return false
-        }
         val mgVal = if (GlucoDataUtils.isMmolValue(value)) GlucoDataUtils.mmolToMg(value).toInt() else value.toInt()
         if(mgVal >= Constants.GLUCOSE_MIN_VALUE && mgVal <= Constants.GLUCOSE_MAX_NOTIFICATION_VALUE) {
             if(ReceiveData.getElapsedTimeMinute(RoundingMode.HALF_UP) > 0) {
@@ -414,7 +422,9 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
 
     private fun handleGlucoseValue(glucoseValue: Float, sbn: StatusBarNotification) {
         Log.i(LOG_ID, "Extracted glucose value: $glucoseValue from time: ${Utils.getUiTimeStamp(sbn.postTime)}")
-        if (validGlucoseValue(glucoseValue)) {
+        if(updateOnlyChangedValue && glucoseValue == lastValue) {
+            Log.i(LOG_ID, "Ignoring value notification with same value: $glucoseValue")
+        } else if (validGlucoseValue(glucoseValue)) {
             lastValue = glucoseValue
             val glucoExtras = Bundle()
             glucoExtras.putLong(ReceiveData.TIME, sbn.postTime)
