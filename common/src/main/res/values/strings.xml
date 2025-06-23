@@ -853,5 +853,7 @@
     <string name="pref_cat_ui_graph_settings_summary">General settings for the user interface and the graph on main screen and widgets.</string>
     <string name="pref_cat_ui_graph_settings">User interface and graph</string>
     <string name="state_update_required">Update required!</string>
+    <string name="pref_notification_recreate">Recreate notifications</string>
+    <string name="pref_notification_recreate_summary">Remove and re-create second and third notification.\nThis is only required for special AOD displays, which do not update the icon of the notifications.\nIt is not possible to re-create the icon of the foreground notification.</string>
 
 </resources>
