@@ -1,15 +1,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widget"
-    android:layout_width="wrap_content"
+    android:layout_width="620dp"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/layout_glucose_trend"
-        android:layout_marginTop="100dp"
-        android:layout_width="620dp"
-        android:layout_height="250dp"
+        android:layout_marginTop="150dp"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
         android:orientation="horizontal"
         android:gravity="center_horizontal"
         android:paddingHorizontal="10dp"
@@ -40,16 +40,17 @@
             android:gravity="center|start"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="5dp"
+            android:paddingVertical="2dp"
             android:src="@drawable/icon_question" />
     </LinearLayout>
     <ImageView
         android:id="@+id/graphImage"
-        android:layout_width="620dp"
+        android:layout_width="match_parent"
         android:layout_height="200dp"
         android:scaleType="fitCenter"
         android:contentDescription="@string/graph"
         android:layout_marginHorizontal="10dp"
-        android:layout_marginBottom="290dp"
+        android:layout_marginBottom="400dp"
         android:adjustViewBounds="true" />
 
 </LinearLayout>
