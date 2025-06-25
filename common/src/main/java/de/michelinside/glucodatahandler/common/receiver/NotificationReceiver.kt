@@ -27,6 +27,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     private var parsedTextViews = mutableListOf<String>()
     private var lastDexcomForegroundTime = 0L
     private var lastValueNotificationTime = 0L
+    private var lastIobNotificationTime = 0L
     private var updateOnlyChangedValue = false
     private var lastValue = Float.NaN
     private var waitForAdditionalNotification: Thread? = null
@@ -96,6 +97,8 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             return true
         if(packageName.lowercase().startsWith("com.camdiab."))  // CamAPS FX
             return true
+        if(packageName.lowercase().startsWith("com.medtronic."))  // MiniMed
+            return true
 
         if(onGoingNotificationPackage == packageName)
             return true
@@ -121,7 +124,8 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             updateOnlyChangedValue = false
             var minDiff = 50
             val diffTime = (sbn.postTime - ReceiveData.time)/1000 // in seconds
-            Log.i(LOG_ID, "New notification from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`}) - diff notify: ${(sbn.postTime - lastValueNotificationTime)/1000}, diff recv value: $diffTime")
+            val diffValueTime = (sbn.postTime - lastValueNotificationTime)/1000 // in seconds
+            Log.i(LOG_ID, "New notification from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`}) - diff notify: $diffValueTime, diff recv value: $diffTime")
             if(!sbn.isOngoing && hasOngoingNotification(sbn.packageName))
                 return false
             if(PackageUtils.isDexcomApp(sbn.packageName)) {
@@ -149,7 +153,6 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                         return false // ignore this notification as it is not ongoing and no foreground
                     }
                     val diffForegroundTime = (sbn.postTime - lastDexcomForegroundTime)/1000 // in seconds
-                    val diffValueTime = (sbn.postTime - lastValueNotificationTime)/1000 // in seconds
                     lastValueNotificationTime = sbn.postTime
                     Log.i(LOG_ID, "Dexcom value notification updated at ${Utils.getUiTimeStamp(sbn.postTime)} - diff foreground: $diffForegroundTime, diff value notify: $diffValueTime, diff recv value: $diffTime")
 
@@ -185,7 +188,6 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                     }
                 }
             } else if(!hasRegularNotification(sbn.packageName) && sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl, true)) {
-                val diffValueTime = (sbn.postTime - lastValueNotificationTime)/1000 // in seconds
                 lastValueNotificationTime = sbn.postTime
                 if(diffValueTime <= 1L || isWaitThreadActive()) {
                     stopWaitThread()
@@ -230,16 +232,18 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                     parseValue(sbn)
                 }
                 if (sbn.packageName == sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP, "")) {
-                    Log.i(LOG_ID, "New IOB notification from ${sbn.packageName} - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`})")
-                    val regex = sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, defaultIobRegex)!!.toRegex()
-                    Log.i(LOG_ID, "using IOB regex $regex")
-                    val value = parseValueFromNotification(sbn, true, regex)
-                    if(!value.isNaN())
-                        handleIobValue(value, sbn.postTime)
-                    else if(parsedTextViews.size > 0) {
-                        SourceStateData.setError(DataSource.NOTIFICATION, "Could not parse IOB from ${parsedTextViews.distinct()}")
-                    } else {
-                        SourceStateData.setError(DataSource.NOTIFICATION, "No text found for parsing IOB!")
+                    Log.i(LOG_ID, "New IOB notification from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`})")
+                    if(sbn.isOngoing || !hasOngoingNotification(sbn.packageName)) {
+                        val regex = sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, defaultIobRegex)!!.toRegex()
+                        Log.i(LOG_ID, "using IOB regex $regex")
+                        val value = parseValueFromNotification(sbn, true, regex)
+                        if(!value.isNaN())
+                            handleIobValue(value, sbn.postTime)
+                        else if(parsedTextViews.size > 0) {
+                            SourceStateData.setError(DataSource.NOTIFICATION, "Could not parse IOB from ${parsedTextViews.distinct()}")
+                        } else {
+                            SourceStateData.setError(DataSource.NOTIFICATION, "No text found for parsing IOB!")
+                        }
                     }
                 }
             }
@@ -452,7 +456,13 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     }
 
     private fun handleIobValue(iobValue: Float, time: Long) {
-        Log.i(LOG_ID, "Extracted iob value: $iobValue from time: ${Utils.getUiTimeStamp(time)}")
+        val diffValueTime = (time - lastIobNotificationTime)/1000 //seconds
+        if(iobValue == ReceiveData.iob && diffValueTime <= 250) {
+            Log.i(LOG_ID, "Ignoring IOB notification with same value: $iobValue - diff: $diffValueTime")
+            return
+        }
+        Log.i(LOG_ID, "Extracted iob value: $iobValue from time: ${Utils.getUiTimeStamp(time)} - diff: $diffValueTime")
+        lastIobNotificationTime = time
         val glucoExtras = Bundle()
         glucoExtras.putLong(ReceiveData.IOBCOB_TIME, time)
         glucoExtras.putFloat(ReceiveData.IOB, iobValue)
