@@ -403,8 +403,6 @@ A letiltáshoz legalább 5 másodpercig kell nyomva tartani a widgetet anélkül
 - Nyissa meg a \"Beállítások\" menüt
 - Engedélyezze a \"Glucodata adás\" lehetőséget
 - Válassza ki a \"de.michelinside.glucodataauto\" lehetőséget"</string>
-    <string name="pref_gda_source_xdrip_info_2_summary">"- Engedélyezze a \"Kompatibilis adások\" lehetőséget
-- Hagyja üresen a \"Címzettek azonosítása\" mezőt, vagy adjon hozzá egy új sort a \"de.michelinside.glucodataauto\" szöveggel"</string>
     <string name="pref_global_broadcast">Globális adás</string>
     <string name="pref_high_value">Magas vércukorérték</string>
     <string name="pref_high_value_summary">Határérték a magas vércukorértékekhez.</string>
@@ -525,6 +523,8 @@ A LibreLinkUp kapcsolat beállítása:
 - a \"Zajszűrés\" részben válassza ki a \"Extrém zajos jelek küldése\" lehetőséget"</string>
     <string name="pref_source_xdrip_info_2_summary">"- Engedélyezze a \"Kompatibilis adások\" lehetőséget
 - Hagyja üresen a \"Címzettek azonosítása\" mezőt, vagy adjon hozzá egy új sort a \"de.michelinside.glucodatahandler\" szöveggel"</string>
+    <string name="pref_gda_source_xdrip_info_2_summary">"- Engedélyezze a \"Kompatibilis adások\" lehetőséget
+- Hagyja üresen a \"Címzettek azonosítása\" mezőt, vagy adjon hozzá egy új sort a \"de.michelinside.glucodataauto\" szöveggel"</string>
     <string name="pref_source_xdrip_iob_info">IOB az xDrip+-tól</string>
     <string name="pref_source_xdrip_iob_info_summary">"IOB fogadása az xDrip+-tól:
 - Nyissa meg az xDrip+ alkalmazást

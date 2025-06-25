@@ -65,7 +65,7 @@
             app:iconSpaceReserved="false" />
         <Preference
             android:key="source_xdrip_info_2"
-            android:summary="@string/pref_source_xdrip_info_2_summary"
+            android:summary="@string/pref_gda_source_xdrip_info_2_summary"
             app:iconSpaceReserved="false" />
         <Preference
             android:key="source_xdrip_iob_info"
