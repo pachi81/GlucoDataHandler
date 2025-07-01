@@ -574,6 +574,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
 
     init {
         appSource = source
+        Log.i(LOG_ID, "Init for $appSource")
     }
 
     abstract fun getNotification() : Notification

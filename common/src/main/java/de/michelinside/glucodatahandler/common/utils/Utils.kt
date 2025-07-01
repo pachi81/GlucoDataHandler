@@ -20,7 +20,6 @@ import android.view.accessibility.AccessibilityManager
 import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
@@ -37,6 +36,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.util.Calendar
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
@@ -756,6 +756,18 @@ object Utils {
 
     fun getTimeStamp(time: Long): String {
         return DateFormat.getTimeInstance(DateFormat.DEFAULT).format(Date(time))
+    }
+
+    // returns the current day start time
+    fun getDayStartTime(time: Long = System.currentTimeMillis()): Long {
+        val calendar = Calendar.getInstance()
+        calendar.time = Date(time)
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        //calendar.set(2025, 1, 1, 0, 0, 0)
+        return calendar.time.time
     }
 
     fun Context.isScreenReaderOn():Boolean{

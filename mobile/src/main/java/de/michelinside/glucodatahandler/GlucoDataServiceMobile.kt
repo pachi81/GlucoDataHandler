@@ -35,7 +35,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
     private var lastForwardTime = 0L
 
     init {
-        Log.d(LOG_ID, "init called")
+        Log.i(LOG_ID, "init called")
     }
 
     companion object {
@@ -336,12 +336,12 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             val intent = Intent(Constants.XDRIP_ACTION_GLUCOSE_READING)
             // always sends time as start time, because it is only set, if the sensorId have changed!
             val sensor = Bundle()
-            sensor.putLong("sensorStartTime", ReceiveData.time)  // use last received time as start time
+            sensor.putLong("sensorStartTime", if(ReceiveData.sensorStartTime > 0) ReceiveData.sensorStartTime else Utils.getDayStartTime())  // use start time of the current day
             val currentSensor = Bundle()
             currentSensor.putBundle("currentSensor", sensor)
             intent.putExtra("sas", currentSensor)
             val bleManager = Bundle()
-            bleManager.putString("sensorSerial", ReceiveData.sensorID ?: "GDH")
+            bleManager.putString("sensorSerial", ReceiveData.sensorID ?: context.packageName)
             intent.putExtra("bleManager", bleManager)
             intent.putExtra("glucose", ReceiveData.rawValue.toDouble())
             intent.putExtra("timestamp", ReceiveData.time)
