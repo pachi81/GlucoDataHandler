@@ -281,7 +281,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         try {
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
             var receivers = sharedPref.getStringSet(receiverPrefKey, HashSet<String>())
-            Log.d(LOG_ID, "Resend " + receiverPrefKey + " Broadcast to " + receivers?.size.toString() + " receivers")
+            Log.i(LOG_ID, "Forward " + receiverPrefKey + " Broadcast to " + receivers?.size.toString() + " receivers: ${Utils.dumpBundle(intent.extras)}")
             if (receivers == null || receivers.size == 0) {
                 receivers = setOf("")
             }
@@ -341,7 +341,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             currentSensor.putBundle("currentSensor", sensor)
             intent.putExtra("sas", currentSensor)
             val bleManager = Bundle()
-            bleManager.putString("sensorSerial", ReceiveData.sensorID)
+            bleManager.putString("sensorSerial", ReceiveData.sensorID ?: "GDH")
             intent.putExtra("bleManager", bleManager)
             intent.putExtra("glucose", ReceiveData.rawValue.toDouble())
             intent.putExtra("timestamp", ReceiveData.time)

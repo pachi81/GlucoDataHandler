@@ -77,6 +77,14 @@ object PackageUtils {
         return packages
     }
 
+    fun getAppName(context: Context, packageName: String): String? {
+        val packageMap = getPackages(context)
+        if (packageMap.containsKey(packageName)) {
+            return packageMap[packageName]
+        }
+        return packageName
+    }
+
     fun getAppIntent(
         context: Context,
         activityClass: Class<*>,

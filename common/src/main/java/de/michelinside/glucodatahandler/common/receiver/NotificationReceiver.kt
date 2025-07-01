@@ -33,6 +33,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     private var waitForAdditionalNotification: Thread? = null
     private var multiValueNotificationPackage: String? = null  // notification updates several times within 0s for new values
     private var onGoingNotificationPackage = ""
+    private var lastValueChanged = false
 
     companion object {
         const val defaultGlucoseRegex = "(?:^|\\s)(\\d*\\.?\\d+)(?=\\s|\$)" //"""(?:^|\s)(\d{1,3}(?:\.\d{1,3})?)(?=\s|${'$'})"""
@@ -123,12 +124,12 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         if (sbn.packageName == sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP, "")) {
             updateOnlyChangedValue = false
             var minDiff = 50
-            val diffTime = (sbn.postTime - ReceiveData.time)/1000 // in seconds
-            val diffValueTime = (sbn.postTime - lastValueNotificationTime)/1000 // in seconds
-            Log.i(LOG_ID, "New notification from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`}) - diff notify: $diffValueTime, diff recv value: $diffTime")
+            val diffValueTime = (sbn.postTime - ReceiveData.time)/1000 // in seconds
+            val diffNotifyTime = (sbn.postTime - lastValueNotificationTime)/1000 // in seconds
+            Log.i(LOG_ID, "New notification from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`}) - diff notify: $diffNotifyTime, diff recv value: $diffValueTime")
             if(!sbn.isOngoing && hasOngoingNotification(sbn.packageName))
                 return false
-            if(PackageUtils.isDexcomApp(sbn.packageName)) {
+            /*if(PackageUtils.isDexcomApp(sbn.packageName)) {
                 /* special Dexcom handling (only for G7!)
                    - value notification is updated quite often and all must be ignored, until the "Dexcom app is running" notification is received
                    - this can be detected using the title of the notification -> null: value -> not null: foreground
@@ -154,20 +155,20 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                     }
                     val diffForegroundTime = (sbn.postTime - lastDexcomForegroundTime)/1000 // in seconds
                     lastValueNotificationTime = sbn.postTime
-                    Log.i(LOG_ID, "Dexcom value notification updated at ${Utils.getUiTimeStamp(sbn.postTime)} - diff foreground: $diffForegroundTime, diff value notify: $diffValueTime, diff recv value: $diffTime")
+                    Log.i(LOG_ID, "Dexcom value notification updated at ${Utils.getUiTimeStamp(sbn.postTime)} - diff foreground: $diffForegroundTime, diff value notify: $diffNotifyTime, diff recv value: $diffValueTime")
 
-                    if(diffValueTime > 0 && diffValueTime == 30L) {
+                    if(diffNotifyTime > 0 && diffNotifyTime == 30L) {
                         Log.i(LOG_ID, "Ignoring Dexcom value notification with fix 30s update")
                         return false
                     }
                     if(lastDexcomForegroundTime == 0L || diffForegroundTime > 900) {   // no foreground notification
                         Log.w(LOG_ID, "Dexcom foreground notification is disabled!")
                         lastDexcomForegroundTime = 0L
-                        if(diffValueTime == 0L || isWaitThreadActive()) {
+                        if(diffNotifyTime == 0L || isWaitThreadActive()) {
                             stopWaitThread()
                             Log.i(LOG_ID, "Check for new value for 0s update")
-                            updateOnlyChangedValue = diffTime < 250
-                        } else if(diffTime in 297..303) {
+                            updateOnlyChangedValue = diffValueTime < 250
+                        } else if(diffValueTime in 297..303) {
                             startWaitThread(sbn, 10000)  // wait for a new notification with a value update otherwise use this one
                             return false
                         } else {
@@ -175,9 +176,9 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                             minDiff = 250
                         }
                     } else if(diffForegroundTime <= 3) {   // new value after update of foreground notification
-                        if(diffValueTime == 0L) {
+                        if(diffNotifyTime == 0L) {
                             Log.i(LOG_ID, "Check for new value for 0s update")
-                            updateOnlyChangedValue = diffTime < 250
+                            updateOnlyChangedValue = diffValueTime < 250
                         } else {
                             Log.i(LOG_ID, "New value after foreground notification -> check for 5 min interval")
                             minDiff = 250  // ignore other updates of the foreground notification -> wait for the next one for value (~300s)
@@ -187,21 +188,49 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                         return false
                     }
                 }
-            } else if(!hasRegularNotification(sbn.packageName) && sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl, true)) {
+            } else*/ if(!hasRegularNotification(sbn.packageName) && (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl, true) || PackageUtils.isDexcomApp(sbn.packageName) )) {
                 lastValueNotificationTime = sbn.postTime
-                if(diffValueTime <= 1L || isWaitThreadActive()) {
+
+                //if(sbn.packageName.lowercase().startsWith("com.medtronic.")) { // MiniMed
+                    Log.i(LOG_ID, "Handle 5 min notification - lastValueChanged: $lastValueChanged - diff: $diffValueTime")
                     stopWaitThread()
-                    Log.i(LOG_ID, "Check for new value for ${diffValueTime}s update")
-                    if(diffValueTime == 0L && (multiValueNotificationPackage.isNullOrEmpty() || multiValueNotificationPackage != sbn.packageName)) {
+                    // special MiniMed handling as MiniMed has completely irregular notification updates: TODO: if this is working well, also try for Dexcom and so on...
+                    /*
+                        - time to ignore notifications: 60s if the last value was not a new one and 180s if the last value was a new one
+                        - until 250s only update for changed values
+                        - after 250s wait until 315s for a newer notification if the value has not changed - if there is no new one, use this one
+                        - after 310s use the value
+                     */
+                    val ignoreTime = if(lastValueChanged) 60 else 180
+                    if(diffValueTime<=ignoreTime) {
+                        Log.i(LOG_ID, "Ignoring notification")
+                        return false
+                    }
+                    if(diffValueTime<=250) {
+                        Log.i(LOG_ID, "Check for changed value only")
+                        updateOnlyChangedValue = true
+                        return true
+                    }
+                    if(diffValueTime>=310)  // use this value
+                        return true
+                    Log.i(LOG_ID, "Check for changed value and wait for newer notification until 315s")
+                    startWaitThread(sbn, (315-diffValueTime)*1000)   // wait for the case, the value is the same and there is no newer notification
+                    updateOnlyChangedValue=true
+                    return true
+                /*}
+                if(diffNotifyTime <= 1L || isWaitThreadActive()) {
+                    stopWaitThread()
+                    Log.i(LOG_ID, "Check for new value for ${diffNotifyTime}s update")
+                    if(diffNotifyTime == 0L && (multiValueNotificationPackage.isNullOrEmpty() || multiValueNotificationPackage != sbn.packageName)) {
                         Log.i(LOG_ID, "Multi value package discovered: ${sbn.packageName}")
                         multiValueNotificationPackage = sbn.packageName
                     }
-                    updateOnlyChangedValue = diffTime < 250
+                    updateOnlyChangedValue = diffValueTime < 250
                 } else if(multiValueNotificationPackage == sbn.packageName) {
                     Log.i(LOG_ID, "Check for changed value or wait for multi value package with 0s interval")
                     minDiff = 250  // ignore values not in 5 minute interval
                     updateOnlyChangedValue = true  // check for new values only
-                } else if(diffTime >= 250) {
+                } else if(diffValueTime >= 250) {
                     if(multiValueNotificationPackage != "") {
                         startWaitThread(sbn, 20000)  // wait for a new notification with a value update otherwise use this one
                         return false
@@ -209,13 +238,13 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                 } else {
                     Log.i(LOG_ID, "New value notification -> check for changed value within 5 min interval")
                     updateOnlyChangedValue = true
-                }
+                }*/
             } else {
                 lastValueNotificationTime = sbn.postTime
             }
 
-            if(diffTime < minDiff) {
-                Log.i(LOG_ID, "Ignoring notification out of interval - diff: $diffTime < $minDiff")
+            if(diffValueTime < minDiff) {
+                Log.i(LOG_ID, "Ignoring notification out of interval - diff: $diffValueTime < $minDiff")
                 return false
             }
             return true
@@ -429,8 +458,11 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         if(updateOnlyChangedValue && glucoseValue == lastValue) {
             Log.i(LOG_ID, "Ignoring value notification with same value: $glucoseValue")
         } else if (validGlucoseValue(glucoseValue)) {
+            stopWaitThread()
+            lastValueChanged = lastValue != glucoseValue
             lastValue = glucoseValue
             val glucoExtras = Bundle()
+            glucoExtras.putString(ReceiveData.SERIAL, PackageUtils.getAppName(applicationContext, sbn.packageName))
             glucoExtras.putLong(ReceiveData.TIME, sbn.postTime)
             if (GlucoDataUtils.isMmolValue(glucoseValue)) {
                 glucoExtras.putInt(ReceiveData.MGDL, GlucoDataUtils.mmolToMg(glucoseValue).toInt())
