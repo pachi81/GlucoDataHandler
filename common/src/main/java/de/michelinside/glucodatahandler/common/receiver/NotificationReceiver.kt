@@ -129,7 +129,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             Log.i(LOG_ID, "New notification from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`}) - diff notify: $diffNotifyTime, diff recv value: $diffValueTime")
             if(!sbn.isOngoing && hasOngoingNotification(sbn.packageName))
                 return false
-            /*if(PackageUtils.isDexcomApp(sbn.packageName)) {
+            if(PackageUtils.isDexcomApp(sbn.packageName)) {
                 /* special Dexcom handling (only for G7!)
                    - value notification is updated quite often and all must be ignored, until the "Dexcom app is running" notification is received
                    - this can be detected using the title of the notification -> null: value -> not null: foreground
@@ -146,9 +146,9 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                         return false
                     }
                     Log.i(LOG_ID, "Dexcom foreground notification updated with title '${title}' and text '${text}' at ${Utils.getUiTimeStamp(sbn.postTime)} -> ignore and wait for next value notification")
-                    lastDexcomForegroundTime = sbn.postTime
+                    //lastDexcomForegroundTime = sbn.postTime
                     return false
-                } else {
+                } /*else {
                     if(!sbn.isOngoing) {
                         Log.i(LOG_ID, "Ignoring Dexcom notification as it is not ongoing and no foreground")
                         return false // ignore this notification as it is not ongoing and no foreground
@@ -187,8 +187,9 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                         Log.i(LOG_ID, "Ignoring Dexcom value notification -> wait for foreground notification")
                         return false
                     }
-                }
-            } else*/ if(!hasRegularNotification(sbn.packageName) && (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl, true) || PackageUtils.isDexcomApp(sbn.packageName) )) {
+                }*/
+            }
+            if(!hasRegularNotification(sbn.packageName) && (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl, true) || PackageUtils.isDexcomApp(sbn.packageName) )) {
                 lastValueNotificationTime = sbn.postTime
 
                 //if(sbn.packageName.lowercase().startsWith("com.medtronic.")) { // MiniMed
