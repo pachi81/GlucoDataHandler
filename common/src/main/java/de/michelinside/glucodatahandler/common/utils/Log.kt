@@ -5,11 +5,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.Collections
 import java.util.Date
+import java.util.Locale
 
-class LogObject(val time: Long, val thread: Long, val priority: Int, val tag: String?, val msg: String?) {
+val format = SimpleDateFormat("dd.MM HH:mm:ss.SSS", Locale.GERMAN)
+
+class LogObject(val priority: Int, val tag: String?, val msg: String?, val time: Long = System.currentTimeMillis(), val pid: Int = android.os.Process.myPid(), val tid: Int = android.os.Process.myTid()) {
     private fun getPriorityString(): String {
         return when (priority) {
             android.util.Log.VERBOSE -> "V"
@@ -21,48 +24,46 @@ class LogObject(val time: Long, val thread: Long, val priority: Int, val tag: St
         }
     }
     override fun toString(): String {
-        return "${DateFormat.getDateTimeInstance().format(Date(time))} ${thread.toString().padStart(5)} ${getPriorityString()} $tag: $msg"
+        return "${format.format(Date(time))} ${pid.toString().padStart(5)} ${tid.toString().padStart(5)} ${getPriorityString()} $tag: $msg"
     }
 }
 
 object Log {
-    private var prefix = "GDx."  // TODO!!!
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val logList = Collections.synchronizedList(mutableListOf<LogObject>())
     private var minLevel = if(BuildConfig.DEBUG)  android.util.Log.VERBOSE else android.util.Log.INFO
     private val logDuration = 60*60*1000 // 1h
     private var lastClearTime = 0L
 
-    fun v(tag: String?, msg: String?): Int {
+    fun v(tag: String, msg: String): Int {
         return println(android.util.Log.VERBOSE, tag, msg)
     }
 
-    fun d(tag: String?, msg: String?): Int {
+    fun d(tag: String, msg: String): Int {
         return println(android.util.Log.DEBUG, tag, msg)
     }
 
-    fun i(tag: String?, msg: String?): Int {
+    fun i(tag: String, msg: String): Int {
         return println(android.util.Log.INFO, tag, msg)
     }
 
-    fun w(tag: String?, msg: String?): Int {
+    fun w(tag: String, msg: String): Int {
         return println(android.util.Log.WARN, tag, msg)
     }
 
-    fun e(tag: String?, msg: String?): Int {
+    fun e(tag: String, msg: String): Int {
         return println(android.util.Log.ERROR, tag, msg)
     }
 
-    private fun println(priority: Int, tag: String?, msg: String?): Int {
+    fun e(tag: String, msg: String, throwable: Throwable?): Int {
+        return println(android.util.Log.ERROR, tag, msg, throwable)
+    }
+
+    private fun println(priority: Int, tag: String, msg: String, throwable: Throwable? = null): Int {
         try {
             if(priority >= minLevel) {
-                val tagWithPrefix = prefix + tag
-                val result = Log.println(priority, tagWithPrefix, msg!!)
-                    val time = System.currentTimeMillis()
-                    val thread = Thread.currentThread().id
-                    scope.launch {
-                        saveLog(LogObject(time, thread, priority, tag, msg))
-                    }
+                val result = if(throwable != null) android.util.Log.e(tag, msg, throwable) else android.util.Log.println(priority, tag, msg)
+                saveLog(LogObject(priority, tag, msg))
                 return result
             }
         } catch (exc: Exception) {
@@ -72,11 +73,13 @@ object Log {
     }
 
     private fun saveLog(logObject: LogObject) {
-        try {
-            logList.add(logObject)
-            clearLogs()
-        } catch (exc: Exception) {
-            // ignore as it happens while logging...
+        scope.launch {
+            try {
+                logList.add(logObject)
+                clearLogs()
+            } catch (exc: Exception) {
+                // ignore as it happens while logging...
+            }
         }
     }
 
@@ -106,6 +109,7 @@ object Log {
         list.forEach {
             sb.append(it.toString() + "\n")
         }
+        sb.append("---------------------------------------------------------------\n\n")
         return sb.toString()
     }
 }

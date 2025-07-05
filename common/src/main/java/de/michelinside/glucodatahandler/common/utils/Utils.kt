@@ -14,7 +14,6 @@ import android.os.Handler
 import android.os.Parcel
 import android.provider.Settings
 import android.text.format.DateUtils
-import android.util.Log
 import android.util.TypedValue
 import android.view.accessibility.AccessibilityManager
 import android.widget.Toast
@@ -341,8 +340,9 @@ object Utils {
     fun saveLogs(outputStream: OutputStream) {
         try {
             outputStream.write(getDeviceInformations().toByteArray())
+            outputStream.write(Log.getLogs().toByteArray())
             outputStream.flush()
-            val cmd = "logcat -t 4000"
+            val cmd = "logcat *:W -t 4000"
             Log.i(LOG_ID, "Getting logcat with command: $cmd")
             val process = Runtime.getRuntime().exec(cmd)
             val thread = Thread {
