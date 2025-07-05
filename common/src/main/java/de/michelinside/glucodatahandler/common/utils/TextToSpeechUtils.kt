@@ -44,7 +44,7 @@ object TextToSpeechUtils {
                         Log.d(LOG_ID, "initTextToSpeech status=$status")
                         if (status == TextToSpeech.SUCCESS) {
                             if(textToSpeech!!.voices != null && textToSpeech!!.voices.isNotEmpty()) {
-                                Log.i(LOG_ID, "language: ${textToSpeech!!.language} - default: ${textToSpeech!!.defaultVoice?.name} - voices: ${textToSpeech!!.voices}")
+                                Log.i(LOG_ID, "language: ${textToSpeech!!.language} - default: ${textToSpeech!!.defaultVoice?.name} - voices: ${textToSpeech!!.voices.size}")
                                 val curLanguage = textToSpeech!!.voice?.locale
                                 curLocal = context.resources.getString(R.string.locale)
                                 textToSpeech!!.language = Locale(curLocal)

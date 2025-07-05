@@ -1,19 +1,46 @@
 package de.michelinside.glucodatahandler.common.utils
 
+import android.content.Context
+import android.content.SharedPreferences
 import de.michelinside.glucodatahandler.common.BuildConfig
+import de.michelinside.glucodatahandler.common.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.time.Duration
 import java.util.Collections
 import java.util.Date
 import java.util.Locale
 
 val format = SimpleDateFormat("dd.MM HH:mm:ss.SSS", Locale.GERMAN)
 
-class LogObject(val priority: Int, val tag: String?, val msg: String?, val time: Long = System.currentTimeMillis(), val pid: Int = android.os.Process.myPid(), val tid: Int = android.os.Process.myTid()) {
-    private fun getPriorityString(): String {
+class LogObject(
+    val priority: Int,
+    val tag: String?,
+    val msg: String?,
+    val time: Long = System.currentTimeMillis(),
+    val pid: Int = android.os.Process.myPid(),
+    val tid: Int = android.os.Process.myTid()) {
+
+    override fun toString(): String {
+        return "${format.format(Date(time))} ${pid.toString().padStart(5)} ${tid.toString().padStart(5)} ${Log.getPriorityString(priority)} $tag: $msg"
+    }
+}
+
+object Log: SharedPreferences.OnSharedPreferenceChangeListener {
+    private val LOG_ID = "GDH.Log"
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private var minLevel = if(BuildConfig.DEBUG) android.util.Log.DEBUG else android.util.Log.INFO
+    private var logDuration = 0 // 1h
+    private var lastClearTime = 0L
+
+    val dbLoggingEnabled: Boolean get() {
+        return logDuration > 0
+    }
+
+    fun getPriorityString(priority: Int): String {
         return when (priority) {
             android.util.Log.VERBOSE -> "V"
             android.util.Log.DEBUG -> "D"
@@ -23,17 +50,17 @@ class LogObject(val priority: Int, val tag: String?, val msg: String?, val time:
             else -> priority.toString()
         }
     }
-    override fun toString(): String {
-        return "${format.format(Date(time))} ${pid.toString().padStart(5)} ${tid.toString().padStart(5)} ${getPriorityString()} $tag: $msg"
-    }
-}
 
-object Log {
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    private val logList = Collections.synchronizedList(mutableListOf<LogObject>())
-    private var minLevel = if(BuildConfig.DEBUG)  android.util.Log.VERBOSE else android.util.Log.INFO
-    private val logDuration = 60*60*1000 // 1h
-    private var lastClearTime = 0L
+    fun init(context: Context) {
+        val sharedPreferences = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+        onSharedPreferenceChanged(sharedPreferences, null)
+    }
+
+    fun close(context: Context) {
+        val sharedPreferences = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+    }
 
     fun v(tag: String, msg: String): Int {
         return println(android.util.Log.VERBOSE, tag, msg)
@@ -61,13 +88,13 @@ object Log {
 
     private fun println(priority: Int, tag: String, msg: String, throwable: Throwable? = null): Int {
         try {
-            if(priority >= minLevel) {
-                val result = if(throwable != null) android.util.Log.e(tag, msg, throwable) else android.util.Log.println(priority, tag, msg)
+            val result = if(throwable != null) android.util.Log.e(tag, msg, throwable) else android.util.Log.println(priority, tag, msg)
+            if(priority >= minLevel && dbLoggingEnabled) {
                 saveLog(LogObject(priority, tag, msg))
-                return result
             }
+            return result
         } catch (exc: Exception) {
-            // ignore as it happens while logging...
+            android.util.Log.e(LOG_ID, "Error while logging", exc)
         }
         return -1
     }
@@ -75,41 +102,47 @@ object Log {
     private fun saveLog(logObject: LogObject) {
         scope.launch {
             try {
-                logList.add(logObject)
+                // TODO save to db!
                 clearLogs()
             } catch (exc: Exception) {
-                // ignore as it happens while logging...
+                android.util.Log.e(LOG_ID, "Error while logging", exc)
             }
         }
     }
 
-    private fun clearLogs() {
+    private fun clearLogs(force: Boolean = false) {
         try {
-            if(System.currentTimeMillis() - lastClearTime >= 15*60*1000) {  // remove old entries every 15 minutes
-                synchronized(logList) {
-                    if(System.currentTimeMillis() - lastClearTime > logDuration) {
-                        val removeTime = System.currentTimeMillis() - logDuration
-                        logList.removeAll { it.time < removeTime }
-                        lastClearTime = System.currentTimeMillis()
-                    }
+            if(force || System.currentTimeMillis() - lastClearTime >= 15*60*1000) {  // remove old entries every 15 minutes
+                d(LOG_ID, "Clearing logs - force=$force - lastClearTime=${Utils.getUiTimeStamp(lastClearTime)} - logDuration=${Duration.ofMillis(logDuration.toLong()).toHours()}h")
+
+                if(force || System.currentTimeMillis() - lastClearTime > logDuration) {
+                    val removeTime = System.currentTimeMillis() - logDuration
+                    // TODO: clear db logs
+                    lastClearTime = System.currentTimeMillis()
                 }
             }
         } catch (exc: Exception) {
-            // ignore as it happens while logging...
+            android.util.Log.e(LOG_ID, "Error while logging", exc)
         }
     }
 
     fun getLogs(): String {
-        var list: MutableList<LogObject>
-        synchronized(logList) {
-            list = logList.toMutableList()
-        }
-        list.sortBy { it.time }
+        // TODO get from db
         val sb = StringBuilder()
-        list.forEach {
-            sb.append(it.toString() + "\n")
-        }
         sb.append("---------------------------------------------------------------\n\n")
         return sb.toString()
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
+        if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_LOG_DEBUG) {
+            minLevel = if(sharedPreferences.getBoolean(Constants.SHARED_PREF_LOG_DEBUG, false))  android.util.Log.DEBUG else android.util.Log.INFO
+            i(LOG_ID, "Log level changed to ${getPriorityString(minLevel)}")
+            clearLogs(true)
+        }
+        if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_LOG_DURATION) {
+            logDuration = sharedPreferences.getInt(Constants.SHARED_PREF_LOG_DURATION, 0) * 60*60*1000
+            i(LOG_ID, "Log duration changed to ${Duration.ofMillis(logDuration.toLong()).toHours()}h")
+        }
+
     }
 }

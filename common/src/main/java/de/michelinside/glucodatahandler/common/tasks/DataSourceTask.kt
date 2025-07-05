@@ -222,7 +222,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             if(firstCall) {
                 executeRequest(false)
             } else {
-                setLastError(context.resources.getString(R.string.timeout))
+                setLastError(GlucoDataService.context!!.resources.getString(R.string.timeout))
             }
         }
     }

@@ -6,7 +6,7 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Environment
 import android.provider.DocumentsContract
-import android.util.Log
+import de.michelinside.glucodatahandler.common.utils.Log
 import androidx.preference.Preference
 import de.michelinside.glucodataauto.R
 import de.michelinside.glucodatahandler.common.Constants
@@ -16,49 +16,54 @@ import java.util.Date
 import java.util.Locale
 
 
-class ExportImportSettingsFragment: SettingsFragmentBase(R.xml.pref_export_import) {
+class LogSettingsFragment: SettingsFragmentBase(R.xml.pref_logging) {
 
     companion object {
-        const val EXPORT_PHONE_SETTINGS = 2
-        const val IMPORT_PHONE_SETTINGS = 3
+        const val CREATE_PHONE_FILE = 1
     }
-    override fun initPreferences() {
-        Log.v(LOG_ID, "initPreferences called")
 
-        var downloadUri: Uri? = null
-        MediaScannerConnection.scanFile(requireContext(), arrayOf(
-            Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOWNLOADS
-            ).absolutePath), null
-        ) { s: String, uri: Uri ->
-            Log.v(LOG_ID, "Set URI $uri for path $s")
-            downloadUri = uri
+    override fun initPreferences() {
+        try {
+            Log.v(LOG_ID, "initPreferences called")
+
+            var downloadUri: Uri? = null
+            MediaScannerConnection.scanFile(requireContext(), arrayOf(
+                Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DOWNLOADS
+                ).absolutePath), null
+            ) { s: String, uri: Uri ->
+                Log.v(LOG_ID, "Set URI $uri for path $s")
+                downloadUri = uri
+            }
+
+            val prefSaveMobileLogs = findPreference<Preference>(Constants.SHARED_PREF_SAVE_MOBILE_LOGS)
+            prefSaveMobileLogs!!.setOnPreferenceClickListener {
+                SaveLogs(downloadUri)
+                true
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "initPreferences exception: " + exc.message.toString() )
         }
 
-        val prefExportSettings = findPreference<Preference>(Constants.SHARED_PREF_EXPORT_SETTINGS)
-        prefExportSettings!!.setOnPreferenceClickListener {
+    }
+
+    private fun SaveLogs(downloadUri: Uri?) {
+        try {
+            Log.v(LOG_ID, "Save mobile logs called")
             val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
                 addCategory(Intent.CATEGORY_OPENABLE)
                 type = "text/plain"
                 val currentDateandTime = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(
                     Date()
                 )
-                val fileName = "GDA_settings_" + currentDateandTime
+                val fileName = "GDA_" + currentDateandTime + ".txt"
                 putExtra(Intent.EXTRA_TITLE, fileName)
                 putExtra(DocumentsContract.EXTRA_INITIAL_URI, downloadUri)
             }
-            startActivityForResult(intent, EXPORT_PHONE_SETTINGS)
-            true
-        }
-        val prefImportSettings = findPreference<Preference>(Constants.SHARED_PREF_IMPORT_SETTINGS)
-        prefImportSettings!!.setOnPreferenceClickListener {
-            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-                addCategory(Intent.CATEGORY_OPENABLE)
-                type = "text/plain"
-                putExtra(DocumentsContract.EXTRA_INITIAL_URI, downloadUri)
-            }
-            startActivityForResult(intent, IMPORT_PHONE_SETTINGS)
-            true
+            startActivityForResult(intent, CREATE_PHONE_FILE)
+
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Saving mobile logs exception: " + exc.message.toString() )
         }
     }
 
@@ -70,8 +75,7 @@ class ExportImportSettingsFragment: SettingsFragmentBase(R.xml.pref_export_impor
                 data?.data?.also { uri ->
                     Log.i(LOG_ID, "Export/Import for ${requestCode} to $uri")
                     when(requestCode) {
-                        EXPORT_PHONE_SETTINGS -> Utils.saveSettings(requireContext(), uri)
-                        IMPORT_PHONE_SETTINGS -> Utils.readSettings(requireContext(), uri)
+                        CREATE_PHONE_FILE -> Utils.saveLogs(requireContext(), uri)
                     }
                 }
             }

@@ -340,9 +340,15 @@ object Utils {
     fun saveLogs(outputStream: OutputStream) {
         try {
             outputStream.write(getDeviceInformations().toByteArray())
-            outputStream.write(Log.getLogs().toByteArray())
             outputStream.flush()
-            val cmd = "logcat *:W -t 4000"
+            val cmd: String
+            if(Log.dbLoggingEnabled) {
+                outputStream.write(Log.getLogs().toByteArray())
+                outputStream.flush()
+                cmd = "logcat *:W -t 4000"
+            } else {
+                cmd = "logcat -t 4000"
+            }
             Log.i(LOG_ID, "Getting logcat with command: $cmd")
             val process = Runtime.getRuntime().exec(cmd)
             val thread = Thread {

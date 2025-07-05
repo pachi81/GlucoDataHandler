@@ -33,6 +33,9 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var btnComplicationTapAction: Button
     private lateinit var seekGraphDuration: AppCompatSeekBar
     private lateinit var txtGraphDurationLevel: TextView
+    private lateinit var seekLogDuration: AppCompatSeekBar
+    private lateinit var txtLogDurationLevel: TextView
+    private lateinit var switchEnableDebugLog: SwitchCompat
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
             Log.v(LOG_ID, "onCreate called")
@@ -156,8 +159,30 @@ class SettingsActivity : AppCompatActivity() {
             txtGraphDurationLevel = findViewById(R.id.txtGraphDurationLevel)
 
             seekGraphDuration.progress = sharedPref.getInt(Constants.SHARED_PREF_GRAPH_BITMAP_DURATION, 2)
-            txtGraphDurationLevel.text = getGraphDurationString()
+            txtGraphDurationLevel.text = getProgressHoursString(seekGraphDuration.progress)
             seekGraphDuration.setOnSeekBarChangeListener(SeekBarChangeListener(Constants.SHARED_PREF_GRAPH_BITMAP_DURATION, txtGraphDurationLevel))
+
+            seekLogDuration = findViewById(R.id.seekLogDuration)
+            txtLogDurationLevel = findViewById(R.id.txtLogDurationLevel)
+
+            seekLogDuration.progress = sharedPref.getInt(Constants.SHARED_PREF_LOG_DURATION, 0)
+            txtLogDurationLevel.text = getProgressHoursString(seekLogDuration.progress)
+            seekLogDuration.setOnSeekBarChangeListener(SeekBarChangeListener(Constants.SHARED_PREF_LOG_DURATION, txtLogDurationLevel))
+
+            switchEnableDebugLog = findViewById(R.id.switchEnableDebugLog)
+            switchEnableDebugLog.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_LOG_DEBUG, false)
+            switchEnableDebugLog.setOnCheckedChangeListener { _, isChecked ->
+                Log.d(LOG_ID, "Debug logging changed: " + isChecked.toString())
+                try {
+                    with (sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_LOG_DEBUG, isChecked)
+                        apply()
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Changing debug logging exception: " + exc.message.toString() )
+                }
+            }
+
 
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
@@ -191,9 +216,8 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun getGraphDurationString(): String {
-        return "${seekGraphDuration.progress}h"
+    private fun getProgressHoursString(progress: Int): String {
+        return "${progress}h"
     }
 
     inner class SeekBarChangeListener(val preference: String, val txtLevel: TextView) : SeekBar.OnSeekBarChangeListener {
@@ -202,7 +226,7 @@ class SettingsActivity : AppCompatActivity() {
             try {
                 Log.v(LOG_ID, "onProgressChanged called for $preference with progress=$progress - fromUser=$fromUser")
                 if(fromUser) {
-                    txtLevel.text = getGraphDurationString()
+                    txtLevel.text = getProgressHoursString(progress)
                     with(sharedPref.edit()) {
                         putInt(preference, progress)
                         apply()
