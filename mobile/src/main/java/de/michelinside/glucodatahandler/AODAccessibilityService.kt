@@ -17,6 +17,7 @@ import android.widget.ImageView
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import android.provider.Settings
+import android.view.Display
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import de.michelinside.glucodatahandler.common.GlucoDataService
@@ -107,6 +108,18 @@ class AODAccessibilityService : AccessibilityService() {
                 addAction(Intent.ACTION_SCREEN_OFF)
             }
             registerReceiver(screenStateReceiver, filter)
+            val displayManager = BitmapUtils.getDisplayManager(this)
+            if(displayManager != null && displayManager.displays.isNotEmpty()) {
+                val display = displayManager.displays[0]
+                if(display.state == Display.STATE_OFF) {
+                    val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                    val enabled = sharedPref.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
+                    Log.i(LOG_ID, "Initial screen state is off - enabled: $enabled")
+                    if (enabled) {
+                        checkAndCreateOverlay()
+                    }
+                }
+            }
         } catch (e: Exception) {
             Log.e(LOG_ID, "Error in onCreate", e)
         }
