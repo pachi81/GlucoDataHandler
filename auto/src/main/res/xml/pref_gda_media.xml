@@ -20,6 +20,20 @@
             android:title="@string/pref_show_iob_cob"
             android:summary="@string/pref_show_iob_cob_summary"
             app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="aa_media_player_value_trend_coloured"
+            android:summaryOn="Show colored value and trend"
+            android:summaryOff="Show white value and trend"
+            android:title="Colored value/trend"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="aa_media_player_graph_coloured"
+            android:summaryOn="Show colored graph"
+            android:summaryOff="Show white graph"
+            android:title="Colored graph"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_cat_play_button"

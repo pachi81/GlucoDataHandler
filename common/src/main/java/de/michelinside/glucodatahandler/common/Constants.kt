@@ -315,6 +315,8 @@ object Constants {
     const val AA_MEDIA_PLAYER_SPEAK_INTERVAL = "aa_media_player_speak_interval"
     const val AA_MEDIA_PLAYER_SPEAK_TEST = "aa_media_player_speak_test"
     const val AA_MEDIA_PLAYER_DURATION = "aa_media_player_duration"
+    const val AA_MEDIA_GRAPH_COLORED = "aa_media_player_graph_coloured"
+    const val AA_MEDIA_VALUE_TREND_COLORED = "aa_media_player_value_trend_coloured"
 
     const val PATIENT_NAME = "patient_name"
 

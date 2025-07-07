@@ -4,6 +4,7 @@ import de.michelinside.glucodataauto.R
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.Paint
 import android.media.session.PlaybackState
 import android.os.Bundle
@@ -224,6 +225,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE,
                 Constants.SHARED_PREF_CAR_MEDIA,
                 Constants.AA_MEDIA_ICON_STYLE,
+                Constants.AA_MEDIA_GRAPH_COLORED,
+                Constants.AA_MEDIA_VALUE_TREND_COLORED,
                 Constants.AA_MEDIA_SHOW_IOB_COB -> {
                     notifyChildrenChanged(MEDIA_ROOT_ID)
                 }
@@ -260,6 +263,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     }
 
     private fun getBackgroundImage(): Bitmap? {
+        val coloredValueTrend = sharedPref.getBoolean(Constants.AA_MEDIA_VALUE_TREND_COLORED, true)
         try {
             if(ChartBitmapHandler.hasBitmap(this.javaClass.simpleName)) {
                 Log.i(LOG_ID, "Create bitmap")
@@ -268,23 +272,29 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 val viewIcon: ImageView = lockscreenView.findViewById(R.id.trendImage)
                 val graphImage: ImageView = lockscreenView.findViewById(R.id.graphImage)
 
+
                 txtBgValue.text = ReceiveData.getGlucoseAsString()
-                txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
+                if(coloredValueTrend)
+                    txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
+                else
+                    txtBgValue.setTextColor(Color.WHITE)
                 if (ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong()) {
                     txtBgValue.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
                 } else {
                     txtBgValue.paintFlags = 0
                 }
-                viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(LOG_ID +"_trend", width = 400, height = 400))
+                viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(LOG_ID +"_trend", color = if(coloredValueTrend) null else Color.WHITE,  width = 400, height = 400))
 
-
-                    Log.d(LOG_ID, "Update graphImage bitmap")
-                    lockscreenView.measure(
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
-                    Log.d(LOG_ID, "Mesasured width ${lockscreenView.measuredWidth} and height ${lockscreenView.measuredHeight} for chart")
-                    graphImage.setImageBitmap(ChartBitmapHandler.getBitmap())
-                    graphImage.requestLayout()
+                Log.d(LOG_ID, "Update graphImage bitmap")
+                lockscreenView.measure(
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
+                Log.d(LOG_ID, "Mesasured width ${lockscreenView.measuredWidth} and height ${lockscreenView.measuredHeight} for chart")
+                graphImage.setImageBitmap(ChartBitmapHandler.getBitmap())
+                if (!sharedPref.getBoolean(Constants.AA_MEDIA_GRAPH_COLORED, false)) {
+                    graphImage.setColorFilter(Color.WHITE)
+                }
+                graphImage.requestLayout()
 
                 lockscreenView.measure(
                     View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
@@ -297,7 +307,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         } catch (e: Exception) {
             Log.e(LOG_ID, "Error creating bitmap", e)
         }
-        return BitmapUtils.getGlucoseTrendBitmap(width = 400, height = 400)
+        return BitmapUtils.getGlucoseTrendBitmap( color = if(coloredValueTrend) null else Color.WHITE, width = 400, height = 400)
     }
 
     fun setItem() {
