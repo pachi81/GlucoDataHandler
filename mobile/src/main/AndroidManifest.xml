@@ -75,8 +75,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GlucoDataHandler"
-        android:usesCleartextTraffic="true"
-        tools:targetApi="31">
+        android:usesCleartextTraffic="true">
         <receiver
             android:name=".widget.GlucoseWidget"
             android:label="@string/widget_glucose"
@@ -192,7 +191,7 @@
             android:launchMode="singleTop"
             android:showOnLockScreen="true"
             android:forceDarkAllowed="true"
-            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
+            tools:ignore="DiscouragedApi,LockedOrientationActivity,UnusedAttribute" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/menu_settings"

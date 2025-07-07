@@ -490,15 +490,15 @@ object Utils {
             if(GlucoDataService.context != null) {
                 val pi: PackageInfo =
                     GlucoDataService.context!!.packageManager.getPackageInfo(GlucoDataService.context!!.packageName, PackageManager.GET_PERMISSIONS)
-                if(!pi.requestedPermissions.isEmpty()) {
+                if(pi.requestedPermissions != null && pi.requestedPermissions?.isNotEmpty() == true) {
                     s += "---------------------PERMISSIONS:------------------------------\n"
-                    for (i in pi.requestedPermissions.indices) {
-                        s += "${pi.requestedPermissions[i]}:"
-                        if ((pi.requestedPermissionsFlags[i] and 1) != 0)
+                    for (i in pi.requestedPermissions!!.indices) {
+                        s += "${pi.requestedPermissions!![i]}:"
+                        if ((pi.requestedPermissionsFlags!![i] and 1) != 0)
                             s+= " REQUIRED"
-                        if ((pi.requestedPermissionsFlags[i] and PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0)
+                        if ((pi.requestedPermissionsFlags!![i] and PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0)
                             s+= " GRANTED"
-                        s+= " (${pi.requestedPermissionsFlags[i]})\n"
+                        s+= " (${pi.requestedPermissionsFlags!![i]})\n"
                     }
                 }
                 if(GlucoDataService.sharedPref != null && GlucoDataService.sharedPref!!.contains(Constants.SHARED_PREF_UNCAUGHT_EXCEPTION_MESSAGE)) {

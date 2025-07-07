@@ -23,11 +23,14 @@ import android.widget.LinearLayout
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.setPadding
 import androidx.preference.PreferenceManager
 import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
@@ -95,8 +98,16 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
             super.onCreate(savedInstanceState)
+            enableEdgeToEdge()
             setContentView(R.layout.activity_main)
             Log.v(LOG_ID, "onCreate called")
+
+            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.root)) { v, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                Log.d(LOG_ID, "Insets: " + systemBars.toString())
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+                insets
+            }
 
             GlucoDataServiceMobile.start(this.applicationContext)
             PackageUtils.updatePackages(this.applicationContext)

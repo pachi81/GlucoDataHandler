@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.DialogFragment
 import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
 import com.takisoft.preferencex.TimePickerPreference
 import com.takisoft.preferencex.TimePickerPreferenceDialogFragmentCompat
+import de.michelinside.glucodatahandler.common.preferences.PreferenceFragmentCompatBase
 import de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
 import de.michelinside.glucodatahandler.common.ui.SelectReceiverPreferenceDialogFragmentCompat
 
-abstract class SettingsFragmentCompatBase: PreferenceFragmentCompat() {
+abstract class SettingsFragmentCompatBase: PreferenceFragmentCompatBase() {
     private val LOG_ID = "GDH.SettingsFragmentCompatBase"
 
     open fun getDialogFragment(preference: Preference): DialogFragment? {

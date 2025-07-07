@@ -2,12 +2,12 @@ package de.michelinside.glucodataauto.preferences
 
 import android.os.Bundle
 import android.util.Log
-import androidx.preference.*
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodataauto.R
+import de.michelinside.glucodatahandler.common.preferences.PreferenceFragmentCompatBase
 
 
-class HelpFragment() : PreferenceFragmentCompat() {
+class HelpFragment() : PreferenceFragmentCompatBase() {
     protected val LOG_ID = "GDH.AA.HelpFragment"
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

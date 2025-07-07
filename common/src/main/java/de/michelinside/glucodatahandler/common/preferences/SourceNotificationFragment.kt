@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.fragment.app.DialogFragment
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.R
@@ -14,7 +13,7 @@ import de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
 import de.michelinside.glucodatahandler.common.ui.SelectReceiverPreferenceDialogFragmentCompat
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 
-class SourceNotificationFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
+class SourceNotificationFragment : PreferenceFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GDH.NotificationFragment"
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         Log.d(LOG_ID, "onCreatePreferences called")
