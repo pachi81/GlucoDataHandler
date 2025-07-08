@@ -449,22 +449,33 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     }
 
     private fun buildState(state: Int): PlaybackStateCompat? {
-        val duration = getDuration()
-        val position = if(state==PlaybackState.STATE_PLAYING) getPosition() else 0L
-        Log.d(LOG_ID, "buildState called for state $state - pos: ${position}/${duration}")
-        playBackState = state
-        val bundleWithDuration = if (duration == 0L) null else Bundle().apply {
-            putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration) // duration in Millisekunden
+        try {
+            Log.i(LOG_ID, "buildState called for state $state")
+            val duration = getDuration()
+            if(duration == 0L) {
+                Log.d(LOG_ID, "buildState with duration 0")
+                return PlaybackStateCompat.Builder().setActions(
+                    PlaybackStateCompat.ACTION_PLAY or PlaybackStateCompat.ACTION_STOP).setState(state, 0L, 1f).build()
+            }
+            val position = if(state==PlaybackState.STATE_PLAYING) getPosition() else 0L
+            Log.d(LOG_ID, "buildState called for state $state - pos: ${position}/${duration}")
+            playBackState = state
+            val bundleWithDuration = if (duration == 0L) null else Bundle().apply {
+                putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration) // duration in Millisekunden
+            }
+            return PlaybackStateCompat.Builder().setActions(
+                PlaybackStateCompat.ACTION_PLAY or PlaybackStateCompat.ACTION_STOP)
+                .setState(
+                    state,
+                    position,
+                    1f,
+                    SystemClock.elapsedRealtime()
+                ).setExtras(bundleWithDuration)
+                .build()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "buildState exception: " + exc.message.toString() )
+            return null
         }
-        return PlaybackStateCompat.Builder().setActions(
-            PlaybackStateCompat.ACTION_PLAY or PlaybackStateCompat.ACTION_STOP)
-            .setState(
-                state,
-                position,
-                1f,
-                SystemClock.elapsedRealtime()
-            ).setExtras(bundleWithDuration)
-            .build()
     }
 
     private fun getPosition(): Long {
