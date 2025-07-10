@@ -112,8 +112,8 @@ class ChartBitmap(val context: Context,
                 }
                 Log.d(LOG_ID, "waitForCreation - create bitmap for chart $curChartView")
                 bitmap = curChartView?.createBitmap(bitmap)
-                if(bitmap != null) {
-                    Log.i(LOG_ID, "bitmap created for chart $curChartView")
+                if(bitmap != null || chartViewer?.enabled==false) {
+                    Log.i(LOG_ID, "bitmap created for chart $curChartView - enabled: ${chartViewer?.enabled}")
                     Handler(context.mainLooper).post {
                         if(curChartView == chartViewer ) {
                             Log.d(LOG_ID, "notify graph changed for chart $curChartView")

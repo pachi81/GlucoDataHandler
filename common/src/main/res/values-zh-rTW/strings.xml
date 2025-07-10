@@ -303,7 +303,7 @@
     <string name="pref_source_xdrip_info">xDrip+</string>
     <string name="pref_source_xdrip_info_1_summary">若要從 xDrip+ 接收血糖值:\n- 開啟 xDrip+\n- 點選 Settings\n- 前往 Inter-app Settings\n- 啟用「Broadcast locally」\n- 將「Noise Blocking」設為「Send even Extremely noisy signals」</string>
     <string name="pref_source_xdrip_info_2_summary">- 啟用「Compatible Broadcast」- 檢查「Identify receiver」是否為空或已存在內容，然後加入「de.michelinside.glucodatahandler」並以空白分隔</string>
-    <string name="pref_gda_source_xdrip_info_2_summary">- 啟用「Compatible Broadcast」\n- 檢查「Identify receiver」是否為空，然後新增一行「de.michelinside.glucodataauto」</string>
+    <string name="pref_gda_source_xdrip_info_2_summary">- 啟用「Compatible Broadcast」- 檢查「Identify receiver」是否為空或已存在內容，然後加入「de.michelinside.glucodataauto」並以空白分隔</string>
     <string name="pref_source_librelinkup_info">設定 LibreLinkUp</string>
     <string name="pref_source_librelinkup_info_summary">重要提示: 這不是登入 FreeStyle Libre 程式的帳號！\n若要啟用 LibreLinkUp 追蹤器：\n- 開啟 FreeStyle Libre 程式，並在選單中選擇「分享」或「已連結的應用程式」\n- 啟用 LibreLinkUp 連線\n- 從 Play 商店安裝 LibreLinkUp\n- 設定帳號並等候邀請</string>
     <string name="menu_contact">聯絡作者</string>

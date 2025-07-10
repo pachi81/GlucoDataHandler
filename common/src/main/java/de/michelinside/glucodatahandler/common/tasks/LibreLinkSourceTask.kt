@@ -427,9 +427,9 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     private fun parseGraphData(graphData: JSONArray?) {
         try {
             if(graphData != null && graphData.length() > 0) {
-                Log.d(LOG_ID, "Parse graph data for ${graphData.length()} entries")
-                val firstLastPair = dbAccess.getFirstLastTimestamp()
-                if(Utils.getElapsedTimeMinute(firstLastPair.first) < (8*60) || Utils.getElapsedTimeMinute(firstLastPair.second) > (30)) {
+                val firstTime = getFirstNeedGraphValueTime()
+                Log.d(LOG_ID, "Parse graph data for ${graphData.length()} entries with time >= ${Utils.getUiTimeStamp(firstTime)}")
+                if(firstTime > 0L) {
                     val values = mutableListOf<GlucoseValue>()
                     for (i in 0 until graphData.length()) {
                         val glucoseData = graphData.optJSONObject(i)
@@ -437,13 +437,14 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                             val parsedUtc = parseUtcTimestamp(glucoseData.optString("FactoryTimestamp"))
                             val parsedLocal = parseLocalTimestamp(glucoseData.optString("Timestamp"))
                             val time = if (parsedUtc > 0) parsedUtc else parsedLocal
-                            if(time < firstLastPair.first || time > firstLastPair.second) {
+                            if(time >= firstTime) {
                                 val value = glucoseData.optInt("ValueInMgPerDl")
-                                if(value > 0 && time > 0)
+                                if(value > 0)
                                     values.add(GlucoseValue(time, value))
                             }
                         }
                     }
+                    Log.d(LOG_ID, "Add ${values.size} values to db")
                     dbAccess.addGlucoseValues(values)
                 }
             }

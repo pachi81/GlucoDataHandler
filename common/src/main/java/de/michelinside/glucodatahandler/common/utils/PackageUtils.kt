@@ -41,6 +41,7 @@ object PackageUtils {
                     val name =
                         resolveInfo.activityInfo.loadLabel(context.packageManager).toString()
                     if (pkgName != null) {
+                        Log.v(LOG_ID, "Package: $pkgName - $name")
                         packages[pkgName] = name
                     }
                 }
@@ -152,7 +153,7 @@ object PackageUtils {
             receiverFilter.add("com.senseonics.")  // Eversense CGM
             receiverFilter.add("esel.esel.")   // ESEL for Eversense
             receiverFilter.add("com.camdiab.")   // Cam APS FX
-            receiverFilter.add("com.medtronic.")
+            receiverFilter.add("com.medtronic.")  // Medtronic MiniMed
             receiverFilter.add("com.microtech.aidexx.") // LinX CGM
         }
         return receiverFilter

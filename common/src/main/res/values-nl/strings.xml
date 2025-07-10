@@ -304,7 +304,7 @@
     <string name="pref_source_xdrip_info">xDrip+</string>
     <string name="pref_source_xdrip_info_1_summary">Om waarden van xDrip+ te ontvangen:\n- open xDrip+\n- ga naar instellingen\n- ga naar Inter-app-instellingen\n- schakel \"Lokaal uitzenden\" in\n- stel \"Ruisblokkering\" in op \"Verzend zelfs extreem luide signalen\"</string>
     <string name="pref_source_xdrip_info_2_summary">- schakel \"Compatibele broadcast\" in - controleer of \"Ontvanger identificeren\" leeg is of als er al een item bestaat, voeg \"de.michelinside.glucodatahandler\" toe, gescheiden door een spatie</string>
-    <string name="pref_gda_source_xdrip_info_2_summary">- schakel \"Compatibele broadcast\" in\n- controleer of \"Ontvangers identificeren\" leeg is of voeg een nieuwe regel toe met \"de.michelinside.glucodataauto\"</string>
+    <string name="pref_gda_source_xdrip_info_2_summary">- schakel \"Compatibele broadcast\" in - controleer of \"Ontvanger identificeren\" leeg is of als er al een item bestaat, voeg \"de.michelinside.glucodataauto\" toe, gescheiden door een spatie</string>
     <string name="pref_source_librelinkup_info">LibreLinkUp instellen</string>
     <string name="pref_source_librelinkup_info_summary">BELANGRIJK: dit is niet het account dat wordt gebruikt voor de FreeStyle Libre app!\nOm LibreLinkUp-volger te activeren:\n- open uw FreeStyle Libre app en selecteer in het menu Delen of Verbonden apps\n- activeer LibreLinkUp-verbinding\n- installeer LibreLinkUp vanuit de Play Store\n- stel uw account in en wacht op de uitnodiging</string>
     <string name="menu_contact">Contact</string>
