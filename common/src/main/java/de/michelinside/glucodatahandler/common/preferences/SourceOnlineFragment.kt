@@ -1,9 +1,7 @@
 package de.michelinside.glucodatahandler.common.preferences
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -14,10 +12,11 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
+import de.michelinside.glucodatahandler.common.tasks.DexcomShareSourceTask
 import de.michelinside.glucodatahandler.common.tasks.LibreLinkSourceTask
 
 
-class SourceOnlineFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
+class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener, NotifierInterface {
     private val LOG_ID = "GDH.SourceFragment"
     private var settingsChanged = false
 
@@ -104,7 +103,7 @@ class SourceOnlineFragment : PreferenceFragmentCompat(), SharedPreferences.OnSha
                 Constants.SHARED_PREF_LIBRE_SERVER -> {
                     update()
                 }
-                Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL -> {
+                Constants.SHARED_PREF_DEXCOM_SHARE_SERVER -> {
                     updateDexcomAccountLink()
                 }
             }
@@ -210,14 +209,13 @@ class SourceOnlineFragment : PreferenceFragmentCompat(), SharedPreferences.OnSha
 
     private fun updateDexcomAccountLink() {
         try {
-            val prefUseUsAccount = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL)
-            if(prefUseUsAccount != null) {
-                val us_account = prefUseUsAccount.isChecked
-                val prefLink = findPreference<Preference>(Constants.SHARED_PREF_DEXCOM_SHARE_ACCOUNT_LINK)
-                if (prefLink != null) {
-                    prefLink.summary = resources.getString(if(us_account) CR.string.dexcom_share_check_us_account else CR.string.dexcom_share_check_non_us_account)
-                    PreferenceHelper.setLinkOnClick(prefLink, if(us_account)CR.string.dexcom_account_us_url else CR.string.dexcom_account_non_us_url, requireContext())
-                }
+            val prefServer = findPreference<ListPreference>(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER)
+            val prefLink = findPreference<Preference>(Constants.SHARED_PREF_DEXCOM_SHARE_ACCOUNT_LINK)
+            if(prefServer != null && prefLink != null) {
+                val server = prefServer.value
+                prefServer.summary = prefServer.entry
+                prefLink.summary = resources.getString(DexcomShareSourceTask.getClarityUrlSummaryRes(server))
+                PreferenceHelper.setLinkOnClick(prefLink, DexcomShareSourceTask.getClarityUrlRes(server), requireContext())
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "setupLibrePatientData exception: $exc")

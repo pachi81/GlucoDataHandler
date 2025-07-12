@@ -43,6 +43,7 @@ import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.tasks.DexcomShareSourceTask
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.GitHubVersionChecker
 import de.michelinside.glucodatahandler.common.utils.Utils
@@ -462,10 +463,10 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableConnections.addView(createRow(SourceStateData.lastSource.resId,msg))
             if(SourceStateData.lastState == SourceState.ERROR && SourceStateData.lastSource == DataSource.DEXCOM_SHARE) {
                 if (msg.contains("500:")) { // invalid password
-                    val us_account = sharedPref.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, false)
+                    val server = sharedPref.getString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu") ?: "eu"
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse(resources.getString(if(us_account)CR.string.dexcom_account_us_url else CR.string.dexcom_account_non_us_url))
+                        Uri.parse(resources.getString(DexcomShareSourceTask.getClarityUrlRes(server)))
                     )
                     val onClickListener = View.OnClickListener {
                         startActivity(browserIntent)
@@ -473,7 +474,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     tableConnections.addView(
                         createRow(
                             SourceStateData.lastSource.resId,
-                            resources.getString(if(us_account) CR.string.dexcom_share_check_us_account else CR.string.dexcom_share_check_non_us_account),
+                            resources.getString(DexcomShareSourceTask.getClarityUrlSummaryRes(server)),
                             onClickListener
                         )
                     )

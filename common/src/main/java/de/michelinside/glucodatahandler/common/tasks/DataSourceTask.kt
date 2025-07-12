@@ -52,7 +52,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB,
             Constants.SHARED_PREF_DEXCOM_SHARE_USER,
             Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD,
-            Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL,
+            Constants.SHARED_PREF_DEXCOM_SHARE_SERVER,
             Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT
         )
         fun updateSettings(context: Context, bundle: Bundle) {
@@ -75,7 +75,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
 
                 putString(Constants.SHARED_PREF_DEXCOM_SHARE_USER, bundle.getString(Constants.SHARED_PREF_DEXCOM_SHARE_USER, ""))
                 putString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, bundle.getString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, ""))
-                putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, bundle.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, false))
+                putString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, bundle.getString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu"))
                 putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, bundle.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, false))
                 apply()
             }
@@ -100,7 +100,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
 
             bundle.putString(Constants.SHARED_PREF_DEXCOM_SHARE_USER, sharedPref.getString(Constants.SHARED_PREF_DEXCOM_SHARE_USER, ""))
             bundle.putString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, sharedPref.getString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, ""))
-            bundle.putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, sharedPref.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, false))
+            bundle.putString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, sharedPref.getString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu"))
             bundle.putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, sharedPref.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, false))
             return bundle
         }

@@ -493,17 +493,37 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 }
             }
 
-            if(!sharedPrefs.contains(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL)) {
-                // check local for US and set to true if set
-                val currentLocale = Locale.getDefault()
-                val countryCode = currentLocale.country
-                Log.i(LOG_ID, "Using country code $countryCode")
-                if(countryCode == "US") {
+            if(!sharedPrefs.contains(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER)) {
+                if(!sharedPrefs.contains(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL)) {
+                    // check local for US and set to true if set
+                    val currentLocale = Locale.getDefault()
+                    val countryCode = currentLocale.country
+                    Log.i(LOG_ID, "Using country code $countryCode")
                     with(sharedPrefs.edit()) {
-                        putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, true)
+                        when (countryCode.lowercase()) {
+                            "us" -> {
+                                putString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "us")
+                            }
+                            "jp" -> {
+                                putString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "jp")
+                            }
+                            else -> {
+                                putString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu")
+                            }
+                        }
+                        apply()
+                    }
+                } else {
+                    with(sharedPrefs.edit()) {
+                        if(sharedPrefs.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, false))
+                            putString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "us")
+                        else
+                            putString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu")
+                        remove(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL)
                         apply()
                     }
                 }
+                Log.i(LOG_ID, "Using dexcom server ${sharedPrefs.getString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu")}")
             }
 
             if(sharedPrefs.contains(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION)) {

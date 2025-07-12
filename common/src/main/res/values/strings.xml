@@ -24,6 +24,7 @@
     <string name="esel_link" translatable="false">https://github.com/BernhardRo/Esel/blob/master/README.md</string>
     <string name="dexcom_account_non_us_url" translatable="false">https://myaccount.dexcom.eu</string>
     <string name="dexcom_account_us_url" translatable="false">https://myaccount.dexcom.com</string>
+    <string name="dexcom_account_jp_url" translatable="false">https://myaccount.dexcom.jp</string>
     <string name="facebook_gdh_group_url" translatable="false">https://www.facebook.com/groups/823964236542396</string>
     <string name="google_gdh_group_url" translatable="false">https://groups.google.com/g/glucodatahandler</string>
     <string name="playstore_gdc_watchfaces" translatable="false">https://play.google.com/store/apps/dev?id=7197840107055554214</string>
@@ -727,7 +728,7 @@
     <string name="gdh_disclaimer_message">This app was developed in my free time as a hobby project. Therefore, I cannot guarantee that all features will work flawlessly on every device. However, I am constantly working on improvements.\nIf you encounter any problems or have questions, please contact me directly before leaving a negative review. \nTo stay informed about important updates and bug fixes, you are welcome to join the Facebook group or the Google Groups.</string>
 
     <string name="pref_source_dexcom_share_info_1_summary">To receive data from Dexcom Share servers:\nIn the Dexcom App:\n - Create a follower\n - Under \"Connections,\" ensure \"Share On\" is displayed</string>
-    <string name="pref_source_dexcom_share_info_2_summary">In GlucoDataHandler:\n - Enter your Dexcom Clarity username and password \n   (if you use your phone number as your username, include your country code)\n - Check the setting for a US account\nImportant: It does not work with a follower account!</string>
+    <string name="pref_source_dexcom_share_info_2_summary">In GlucoDataHandler:\n - Enter your Dexcom Clarity username and password \n   (if you use your phone number as your username, include your country code)\n - Check the server setting for a EU, US or JP account\nImportant: It does not work with a follower account!</string>
 
     <string name="request_timestamp">Updated</string>
     <string name="alarm_header">Alarms</string>
@@ -853,7 +854,13 @@
     <string name="pref_cat_ui_graph_settings_summary">General settings for the user interface and the graph on main screen and widgets.</string>
     <string name="pref_cat_ui_graph_settings">User interface and graph</string>
     <string name="state_update_required">Update required!</string>
+
+
     <string name="pref_notification_recreate">Recreate notifications</string>
     <string name="pref_notification_recreate_summary">Remove and re-create second and third notification.\nThis is only required for special AOD displays, which do not update the icon of the notifications.\nIt is not possible to re-create the icon of the foreground notification.</string>
-
+    <string name="source_dexcom_server_eu">International/EU</string>
+    <string name="source_dexcom_server_us">United States</string>
+    <string name="source_dexcom_server_jp">Japan</string>
+    <string name="source_dexcom_server_summary">Select the server depending on the country your Dexcom Clarity is related to.</string>
+    <string name="dexcom_share_check_jp_account">Press here to check your Dexcom Share account data for your Japanese account.</string>
 </resources>

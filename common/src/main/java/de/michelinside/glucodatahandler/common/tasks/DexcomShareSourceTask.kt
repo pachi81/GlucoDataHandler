@@ -30,21 +30,54 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
         private var user = ""
         private var password = ""
         private var reconnect = false
-        private var use_us_server = false
+        private var server = ""
         private var sessionId: String? = null
 
-        const val URL_DEFAULT = "https://shareous1.dexcom.com"
-        const val URL_US = "https://share2.dexcom.com"
+        private const val URL_DEFAULT = "https://shareous1.dexcom.com"
+        private const val URL_US = "https://share2.dexcom.com"
+        private const val URL_JP = "https://share.dexcom.jp"
         const val USER_AGENT = "Dexcom Share/3.0.2.11 CFNetwork/711.2.23 Darwin/14.0.0"
         const val DEXCOM_PATH_GET_VALUE = "/ShareWebServices/Services/Publisher/ReadPublisherLatestGlucoseValues"
         const val DEXCOM_PATH_GET_SESSION_ID = "/ShareWebServices/Services/General/LoginPublisherAccountById"
         const val DEXCOM_PATH_AUTHENTICATE = "/ShareWebServices/Services/General/AuthenticatePublisherAccount"
 
         private const val INVALID_ID = "00000000-0000-0000-0000-000000000000"
+
+        fun getDexcomServerUrl(countryCode: String): String {
+            return when(countryCode) {
+                "us" -> URL_US
+                "jp" -> URL_JP
+                else -> URL_DEFAULT
+            }
+        }
+
+        fun getClarityUrlRes(countryCode: String): Int {
+            return when(countryCode) {
+                "us" -> R.string.dexcom_account_us_url
+                "jp" -> R.string.dexcom_account_jp_url
+                else -> R.string.dexcom_account_non_us_url
+            }
+        }
+
+        fun getClarityUrlSummaryRes(countryCode: String): Int {
+            return when(countryCode) {
+                "us" -> R.string.dexcom_share_check_us_account
+                "jp" -> R.string.dexcom_share_check_jp_account
+                else -> R.string.dexcom_share_check_non_us_account
+            }
+        }
+
+        private fun getApplicationId(countryCode: String): String {
+            return when(countryCode) {
+                "jp" -> BuildConfig.DEXCOM_APPLICATION_ID_APAC
+                else -> BuildConfig.DEXCOM_APPLICATION_ID
+            }
+        }
+
     }
 
     private fun getUrl(endpoint: String, queryParameters: String? = null): String {
-        var url = (if(use_us_server) URL_US else URL_DEFAULT) + endpoint
+        var url = getDexcomServerUrl(server) + endpoint
         Log.i(LOG_ID, "Using URL: " + url)
         if(!queryParameters.isNullOrEmpty()) {
             url += "?$queryParameters"
@@ -100,7 +133,7 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
         val json = JSONObject()
         json.put("accountName", user)
         json.put("password", password)
-        json.put("applicationId", BuildConfig.DEXCOM_APPLICATION_ID)
+        json.put("applicationId", getApplicationId(server))
         val accountId = handleIdResponse(httpPost(getUrl(DEXCOM_PATH_AUTHENTICATE), getHeader(), json.toString()))
         return getSessionId(accountId)
     }
@@ -258,7 +291,7 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
         val json = JSONObject()
         json.put("accountId", accountId)
         json.put("password", password)
-        json.put("applicationId", BuildConfig.DEXCOM_APPLICATION_ID)
+        json.put("applicationId", getApplicationId(server))
         sessionId = handleIdResponse(httpPost(getUrl(DEXCOM_PATH_GET_SESSION_ID), getHeader(), json.toString()))
         Log.d(LOG_ID, "Using sessionId: $sessionId")
         return !sessionId.isNullOrEmpty()
@@ -289,7 +322,7 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
         if (key == null) {
             user = sharedPreferences.getString(Constants.SHARED_PREF_DEXCOM_SHARE_USER, "")!!.trim()
             password = sharedPreferences.getString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, "")!!.trim()
-            use_us_server = sharedPreferences.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, false)
+            server = sharedPreferences.getString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu") ?: "eu"
             InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
             trigger = true
         } else {
@@ -310,9 +343,9 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
                         trigger = true
                     }
                 }
-                Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL -> {
-                    if (use_us_server != sharedPreferences.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, false)) {
-                        use_us_server = sharedPreferences.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, false)
+                Constants.SHARED_PREF_DEXCOM_SHARE_SERVER -> {
+                    if (server != sharedPreferences.getString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu")) {
+                        server =  sharedPreferences.getString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu") ?: "eu"
                         InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SOURCE_STATE_CHANGE, null)
                         trigger = true
                     }

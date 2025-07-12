@@ -121,6 +121,16 @@
         <item>"io"</item>
         <item>"ru"</item>
     </array>
+    <array name="source_dexcom_server_labels">
+        <item>@string/source_dexcom_server_eu</item>
+        <item>@string/source_dexcom_server_us</item>
+        <item>@string/source_dexcom_server_jp</item>
+    </array>
+    <array name="source_dexcom_server_values">
+        <item>"eu"</item>
+        <item>"us"</item>
+        <item>"jp"</item>
+    </array>
     <array name="snooze_values">
         <item>"30"</item>
         <item>"60"</item>
