@@ -467,7 +467,7 @@ object Utils {
         return ""
     }
 
-    private fun getDeviceInformations(): String {
+    fun getDeviceInformations(): String {
         var s = ""
         try {
             if(GlucoDataService.context!=null) {
@@ -481,7 +481,8 @@ object Utils {
         } catch (e: NameNotFoundException) {
         }
         s += "OS Version: ${System.getProperty("os.version")} (${Build.VERSION.INCREMENTAL})\n"
-        s += "OS API Level: ${Build.VERSION.SDK}\n"
+        s += "OS API Level: ${Build.VERSION.SDK_INT}\n"
+        s += "Android: ${Build.VERSION.RELEASE}\n"
         s += "Device: ${Build.DEVICE}\n"
         s += "Model (and Product): ${Build.MODEL} (${Build.PRODUCT})\n"
         s += "Manufacturer: ${Build.MANUFACTURER}\n"

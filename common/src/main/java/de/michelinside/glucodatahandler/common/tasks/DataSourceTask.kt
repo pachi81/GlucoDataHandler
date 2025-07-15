@@ -53,7 +53,12 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             Constants.SHARED_PREF_DEXCOM_SHARE_USER,
             Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD,
             Constants.SHARED_PREF_DEXCOM_SHARE_SERVER,
-            Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT
+            Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT,
+            Constants.SHARED_PREF_MEDTRUM_USER,
+            Constants.SHARED_PREF_MEDTRUM_PASSWORD,
+            Constants.SHARED_PREF_MEDTRUM_RECONNECT,
+            Constants.SHARED_PREF_MEDTRUM_PATIENT_ID,
+            Constants.SHARED_PREF_MEDTRUM_SERVER
         )
         fun updateSettings(context: Context, bundle: Bundle) {
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -77,6 +82,13 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                 putString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, bundle.getString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, ""))
                 putString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, bundle.getString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu"))
                 putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, bundle.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, false))
+
+                putString(Constants.SHARED_PREF_MEDTRUM_USER, bundle.getString(Constants.SHARED_PREF_MEDTRUM_USER, ""))
+                putString(Constants.SHARED_PREF_MEDTRUM_PASSWORD, bundle.getString(Constants.SHARED_PREF_MEDTRUM_PASSWORD, ""))
+                putBoolean(Constants.SHARED_PREF_MEDTRUM_RECONNECT, bundle.getBoolean(Constants.SHARED_PREF_MEDTRUM_RECONNECT, false))
+                putString(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID, bundle.getString(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID, ""))
+                putString(Constants.SHARED_PREF_MEDTRUM_SERVER, bundle.getString(Constants.SHARED_PREF_MEDTRUM_SERVER, "eu"))
+
                 apply()
             }
             InternalNotifier.notify(context, NotifySource.SOURCE_SETTINGS, null)
@@ -102,6 +114,13 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             bundle.putString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, sharedPref.getString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, ""))
             bundle.putString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, sharedPref.getString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu"))
             bundle.putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, sharedPref.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, false))
+
+            bundle.putString(Constants.SHARED_PREF_MEDTRUM_USER, sharedPref.getString(Constants.SHARED_PREF_MEDTRUM_USER, ""))
+            bundle.putString(Constants.SHARED_PREF_MEDTRUM_PASSWORD, sharedPref.getString(Constants.SHARED_PREF_MEDTRUM_PASSWORD, ""))
+            bundle.putBoolean(Constants.SHARED_PREF_MEDTRUM_RECONNECT, sharedPref.getBoolean(Constants.SHARED_PREF_MEDTRUM_RECONNECT, false))
+            bundle.putString(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID, sharedPref.getString(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID, ""))
+            bundle.putString(Constants.SHARED_PREF_MEDTRUM_SERVER, sharedPref.getString(Constants.SHARED_PREF_MEDTRUM_SERVER, "eu"))
+
             return bundle
         }
     }
@@ -319,6 +338,10 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             return null
         }
         return httpRequest.response
+    }
+
+    protected fun getHeaderField(name: String): String? {
+        return httpRequest.getHeaderField(name)
     }
 
     protected fun httpGet(url: String, header: MutableMap<String, String>): String? {

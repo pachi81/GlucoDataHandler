@@ -76,6 +76,16 @@ class HttpRequest {
     val response: String? get() = lastResponse
     val code: Int get() = lastCode
 
+    fun getHeaderField(name: String): String? {
+        if (httpURLConnection != null) {
+            val header = httpURLConnection!!.getHeaderField(name)
+            if (header != null) {
+                return header
+            }
+        }
+        return null
+    }
+
     private fun reset() {
         lastResponse = null
         lastError= null
@@ -121,6 +131,7 @@ class HttpRequest {
                     httpURLConnection!!.doOutput = true
                     val dataOutputStream = DataOutputStream(httpURLConnection!!.outputStream)
                     val bytes: ByteArray = postData.toByteArray()
+                    Log.d(LOG_ID, "Send data: $postData with size ${bytes.size}")
                     dataOutputStream.write(bytes, 0, bytes.size)
                 } else {
                     httpURLConnection!!.doOutput = false

@@ -85,12 +85,14 @@
     </array>
     <array name="source_request_interval_labels">
         <item>@string/source_request_interval_1</item>
+        <item>@string/source_request_interval_2</item>
         <item>@string/source_request_interval_5</item>
         <item>@string/source_request_interval_10</item>
         <item>@string/source_request_interval_15</item>
     </array>
     <array name="source_request_interval_values">
         <item>"1"</item>
+        <item>"2"</item>
         <item>"5"</item>
         <item>"10"</item>
         <item>"15"</item>
@@ -142,5 +144,13 @@
         <item>@string/snooze_60</item>
         <item>@string/snooze_90</item>
         <item>@string/snooze_120</item>
+    </array>
+    <array name="source_medtrum_server_labels">
+        <item>@string/source_medtrum_server_default</item>
+        <item>@string/source_medtrum_server_france</item>
+    </array>
+    <array name="source_medtrum_server_values">
+        <item>"eu"</item>
+        <item>"fr"</item>
     </array>
 </resources>

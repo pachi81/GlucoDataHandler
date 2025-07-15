@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-import de.michelinside.glucodatahandler.BuildConfig
 import de.michelinside.glucodatahandler.R
+import de.michelinside.glucodatahandler.common.BuildConfig
 import de.michelinside.glucodatahandler.common.Constants
 
 class SourcesActivity : AppCompatActivity() {
@@ -17,6 +17,7 @@ class SourcesActivity : AppCompatActivity() {
     private lateinit var switchLibreSource: SwitchCompat
     private lateinit var switchDexcomShareSource: SwitchCompat
     private lateinit var switchNightscoutSource: SwitchCompat
+    private lateinit var switchMedtrumSource: SwitchCompat
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
             Log.v(LOG_ID, "onCreate called")
@@ -42,14 +43,14 @@ class SourcesActivity : AppCompatActivity() {
             switchDexcomShareSource = findViewById(R.id.switchDexcomShareSource)
             switchDexcomShareSource.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_ENABLED, false)
             switchDexcomShareSource.setOnCheckedChangeListener { _, isChecked ->
-                Log.d(LOG_ID, "Libre view changed: " + isChecked.toString())
+                Log.d(LOG_ID, "Dexcom changed: " + isChecked.toString())
                 try {
                     with (sharedPref.edit()) {
                         putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_ENABLED, isChecked)
                         apply()
                     }
                 } catch (exc: Exception) {
-                    Log.e(LOG_ID, "Changing Libre view exception: " + exc.message.toString() )
+                    Log.e(LOG_ID, "Changing Dexcom exception: " + exc.message.toString() )
                 }
             }
 
@@ -64,6 +65,20 @@ class SourcesActivity : AppCompatActivity() {
                     }
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Changing Nightscout exception: " + exc.message.toString() )
+                }
+            }
+
+            switchMedtrumSource = findViewById(R.id.switchMedtrumSource)
+            switchMedtrumSource.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_MEDTRUM_ENABLED, false)
+            switchMedtrumSource.setOnCheckedChangeListener { _, isChecked ->
+                Log.d(LOG_ID, "Medtrum changed: " + isChecked.toString())
+                try {
+                    with (sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_MEDTRUM_ENABLED, isChecked)
+                        apply()
+                    }
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Changing Medtrum exception: " + exc.message.toString() )
                 }
             }
 
@@ -123,6 +138,14 @@ class SourcesActivity : AppCompatActivity() {
                 switchNightscoutSource.isEnabled = url.isNotEmpty()
             if(!switchNightscoutSource.isEnabled) {
                 switchNightscoutSource.isChecked = false
+            }
+
+            val medtrumUser = sharedPref.getString(Constants.SHARED_PREF_MEDTRUM_USER, "")!!.trim()
+            val medtrumPwd = sharedPref.getString(Constants.SHARED_PREF_MEDTRUM_PASSWORD, "")!!.trim()
+            if (!BuildConfig.DEBUG)
+                switchMedtrumSource.isEnabled = medtrumUser.isNotEmpty() && medtrumPwd.isNotEmpty()
+            if(!switchMedtrumSource.isEnabled) {
+                switchMedtrumSource.isChecked = false
             }
 
         } catch( exc: Exception ) {

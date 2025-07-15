@@ -199,6 +199,14 @@ object Constants {
     const val SHARED_PREF_NIGHTSCOUT_TOKEN="src_ns_token"
     const val SHARED_PREF_NIGHTSCOUT_IOB_COB="src_ns_iob_cob"
 
+    const val SHARED_PREF_MEDTRUM_ENABLED="source_medtrum_enabled"
+    const val SHARED_PREF_MEDTRUM_USER="source_medtrum_user"
+    const val SHARED_PREF_MEDTRUM_PASSWORD="source_medtrum_password"
+    const val SHARED_PREF_MEDTRUM_RECONNECT="source_medtrum_reconnect"
+    const val SHARED_PREF_MEDTRUM_COOKIE="source_medtrum_cookie"
+    const val SHARED_PREF_MEDTRUM_PATIENT_ID="source_medtrum_patient_id"
+    const val SHARED_PREF_MEDTRUM_SERVER="source_medtrum_server"
+
     const val SHARED_PREF_DUMMY_VALUES = "dummy_values"
 
     const val SHARED_PREF_LOCKSCREEN_WP_ENABLED = "lockscreen_enabled"

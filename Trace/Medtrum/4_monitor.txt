@@ -1,0 +1,178 @@
+METHOD: GET
+URL
+https://easyview.medtrum.eu/mobile/ajax/monitor?flag=monitor_list
+HEADERS
+Accept-Encoding:
+gzip
+AppTag:
+v=1.2.70(112);n=eyfo;p=android
+Connection:
+Keep-Alive
+Cookie:
+[cookie]
+DevInfo:
+Android 11;Google generic_x86_arm;Android 11
+Host:
+easyview.medtrum.eu
+RegionCode:
+DE
+User-Agent:
+okhttp/3.5.0
+
+---------------------------- RESPONSE -----------------------------------------------------
+
+{
+  "monitorlist": [
+    {
+      "birth_date": "---",
+      "create_time": ---,
+      "data_limit": null,
+      "device_option": "cgms",
+      "gender": "GDRM",
+      "monitor_setting": {
+        "enable": true,
+        "high_limit": {
+          "enable": true,
+          "value": 239.4
+        },
+        "low_limit": {
+          "enable": true,
+          "value": 79.2
+        },
+        "no_data_received": {
+          "enable": true,
+          "time": 60
+        },
+        "no_pump_data_received": {
+          "enable": true,
+          "time": 15
+        },
+        "no_sensor_data_received": {
+          "enable": true,
+          "time": 15
+        },
+        "snoose": {
+          "enable": false,
+          "time": 30
+        }
+      },
+      "real_name": "---",
+      "sensor_status": {
+        "appName": "EasySense",
+        "batteryPercent": 0.82,
+        "current": 1243,
+        "deviceType": "TG158",
+        "glucose": 5.1,
+        "glucoseRate": 0,
+        "nextSequenceNeedCalibrate": 22479,
+        "platform": "google",
+        "rssi": -57,
+        "sensorId": 8,
+        "sensorLifetimeTotalCount": 10079,
+        "sequence": 5746,
+        "serial": ----,
+        "status": 3,
+        "updateTime": 1752563497
+      },
+      "uid": ---,
+      "username": "---"
+    },
+    {
+      "birth_date": "",
+      "create_time": 1752430287,
+      "data_limit": null,
+      "device_option": "cgms,pump",
+      "gender": "GDRNF",
+      "monitor_setting": {
+        "enable": true,
+        "high_limit": {
+          "enable": true,
+          "value": 153
+        },
+        "low_limit": {
+          "enable": true,
+          "value": 90
+        },
+        "no_data_received": {
+          "enable": true,
+          "time": 60
+        },
+        "no_pump_data_received": {
+          "enable": true,
+          "time": 15
+        },
+        "no_sensor_data_received": {
+          "enable": true,
+          "time": 15
+        },
+        "snoose": {
+          "enable": false,
+          "time": 30
+        }
+      },
+      "pump_status": {
+        "AutoModeEnabledNew": 1,
+        "AutoModeSGTarget": 100,
+        "appName": "EasyPatch",
+        "autobasalicon": 3,
+        "autobasalstatus": 2,
+        "bGTarget": 100,
+        "basalDeliveried": 0,
+        "basalDeliveriedTime": 1752562800,
+        "basalDelivery": 0,
+        "basalDuration": 0,
+        "basalPatternTotal": 21.6,
+        "basalPercent": 0,
+        "basalRate": 0,
+        "basalSum": 0,
+        "basalType": 10,
+        "bolusDeliveried": 2,
+        "bolusDeliveriedTime": 1752525180,
+        "bolusSet": 0,
+        "bolusSum": 0,
+        "bolusType": 0,
+        "deviceType": 88,
+        "exerciseDuration": 120,
+        "exerciseRemainTime": 120,
+        "exerciseStatus": 0,
+        "extendBolusDeliveried": 0,
+        "extendBolusDuration": 0,
+        "extendBolusSet": 0,
+        "iob": 0.5,
+        "lastBolusType": 1,
+        "platform": "google",
+        "pumpId": 132,
+        "remainingDose": 67.79999542236328,
+        "remainingTime": 930,
+        "runningMins": 3389,
+        "serial": 321977359,
+        "state": 32,
+        "status": 32,
+        "suspendRemainingTime": -6067255,
+        "suspendTime": 1388527200,
+        "updateTime": 1752563491
+      },
+      "real_name": "---",
+      "sensor_status": {
+        "appName": "EasyPatch",
+        "batteryPercent": 0.85,
+        "current": 1761,
+        "deviceType": "TG158",
+        "glucose": 7.1,
+        "glucoseRate": 8,
+        "nextSequenceNeedCalibrate": 22061,
+        "platform": "google",
+        "rssi": 0,
+        "sensorId": 23,
+        "sensorLifetimeTotalCount": 10079,
+        "sequence": 727,
+        "serial": ---,
+        "status": 3,
+        "updateTime": 1752563388
+      },
+      "uid": ----,
+      "username": "---"
+    }
+  ],
+  "res": "OK"
+}

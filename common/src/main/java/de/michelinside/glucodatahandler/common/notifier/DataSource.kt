@@ -11,6 +11,7 @@ enum class DataSource(val resId: Int, val interval5Min: Boolean = false) {
     WEAR(R.string.source_wear),
     LIBRELINK(R.string.source_libreview),
     NIGHTSCOUT(R.string.source_nightscout),
+    MEDTRUM(R.string.source_medtrum),
     AAPS(R.string.source_aaps),
     GDH(if(Constants.IS_SECOND) R.string.source_gdh_second else R.string.source_gdh),
     DEXCOM_SHARE(R.string.source_dexcom_share, true),
