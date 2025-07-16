@@ -27,6 +27,7 @@ import java.util.Locale
 
 class MedtrumSourceTask : DataSourceTask(Constants.SHARED_PREF_MEDTRUM_ENABLED, DataSource.MEDTRUM) {
     private val LOG_ID = "GDH.Task.Source.Medtrum"
+    override var minInterval = 2L
     companion object {
         private var user = ""
         private var password = ""

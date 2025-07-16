@@ -23,16 +23,21 @@ import java.net.HttpURLConnection
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.math.max
 
 abstract class DataSourceTask(private val enabledKey: String, protected val source: DataSource) : BackgroundTask() {
     private var enabled = false
-    private var interval = 1L
+    private var prefInterval = 1L
+    protected open var minInterval = 1L
     private var delaySec = 10L
     private var httpRequest = HttpRequest()
     protected var retry = false
     protected var firstGetValue = false
     private var isFirstRequest = true  // first request after startup
 
+    private val interval: Long get() {
+        return max(minInterval, prefInterval)
+    }
 
     companion object {
         private val LOG_ID = "GDH.Task.Source.DataSourceTask"
@@ -386,7 +391,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         Log.d(LOG_ID, "checkPreferenceChanged for $key")
         if(key == null) {
             setEnabled(sharedPreferences.getBoolean(enabledKey, false))
-            interval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
+            prefInterval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
             delaySec = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, 30).toLong()
             if(GlucoDataService.appSource == AppSource.WEAR_APP)
                 delaySec += 5L  // add 5 seconds delay to receive by phone if connected
@@ -398,8 +403,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                     result = setEnabled(sharedPreferences.getBoolean(enabledKey, false))
                 }
                 Constants.SHARED_PREF_SOURCE_INTERVAL -> {
-                    if (interval != (sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L)) {
-                        interval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
+                    if (prefInterval != (sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L)) {
+                        prefInterval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
                         result = true
                     }
                 }

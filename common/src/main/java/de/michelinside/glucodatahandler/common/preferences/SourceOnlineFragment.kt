@@ -86,7 +86,7 @@ class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.O
         }
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         Log.d(LOG_ID, "onSharedPreferenceChanged called for " + key)
         try {
             if(DataSourceTask.preferencesToSend.contains(key))
@@ -100,7 +100,7 @@ class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.O
                 Constants.SHARED_PREF_DEXCOM_SHARE_USER,
                 Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD,
                 Constants.SHARED_PREF_NIGHTSCOUT_URL -> {
-                    updateEnableStates(sharedPreferences!!)
+                    updateEnableStates(sharedPreferences)
                     update()
                 }
                 Constants.SHARED_PREF_LIBRE_PATIENT_ID,
@@ -112,9 +112,36 @@ class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.O
                 Constants.SHARED_PREF_DEXCOM_SHARE_SERVER -> {
                     updateDexcomAccountLink()
                 }
+                Constants.SHARED_PREF_SOURCE_INTERVAL -> {
+                    updateIntervalSummary()
+                }
+                Constants.SHARED_PREF_DEXCOM_SHARE_ENABLED,
+                Constants.SHARED_PREF_LIBRE_ENABLED,
+                Constants.SHARED_PREF_MEDTRUM_ENABLED -> {
+                    checkIntervalOnEnableChange(sharedPreferences, key)
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
+        }
+    }
+
+    private fun checkIntervalOnEnableChange(sharedPreferences: SharedPreferences, key: String) {
+        Log.v(LOG_ID, "checkIntervalOnEnableChange called for $key - contain key: ${sharedPreferences.contains(Constants.SHARED_PREF_SOURCE_INTERVAL)}")
+        if(sharedPreferences.getBoolean(key, false)) {
+            val interval = when(key) {
+                Constants.SHARED_PREF_DEXCOM_SHARE_ENABLED -> 5
+                Constants.SHARED_PREF_MEDTRUM_ENABLED -> 2
+                else -> 1
+            }
+            val curInterval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
+            if(interval > curInterval) {
+                Log.i(LOG_ID, "Change interval from $curInterval to $interval for $key")
+                with(sharedPreferences.edit()) {
+                    putString(Constants.SHARED_PREF_SOURCE_INTERVAL, interval.toString())
+                    apply()
+                }
+            }
         }
     }
 
@@ -191,6 +218,19 @@ class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.O
         updateDexcomAccountLink()
         setLibrePatientSummary()
         setMedtrumPatientSummary()
+        updateIntervalSummary()
+    }
+
+    private fun updateIntervalSummary() {
+        val listPref = findPreference<ListPreference>(Constants.SHARED_PREF_SOURCE_INTERVAL)
+        if(listPref != null) {
+            val curValue = preferenceManager.sharedPreferences?.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "")
+            if(!curValue.isNullOrEmpty()) {
+                Log.d(LOG_ID, "Update interval summary to $curValue")
+                listPref.value = curValue
+                setListSummary(Constants.SHARED_PREF_SOURCE_INTERVAL, CR.string.source_interval_summary)
+            }
+        }
     }
 
     private fun setLibrePatientSummary() {
