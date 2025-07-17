@@ -161,4 +161,13 @@ object GlucoDataUtils {
         intent.putExtra(ReceiveData.COB, Utils.round(rate, 2)*10F+Utils.round(rate, 2))
         return intent
     }
+
+    fun checkSerial(serial: String?): String? {
+        if(serial.isNullOrEmpty())
+            return serial
+        if(serial.startsWith("XX") && serial.length >= 11) {
+            return serial.substring(2)
+        }
+        return serial
+    }
 }

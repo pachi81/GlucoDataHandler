@@ -53,8 +53,10 @@
     <string name="source_dexcom_byoda" translatable="false">Dexcom BYODA</string>
     <string name="source_ns_emulator" translatable="false">Dexcom/Eversense</string>
     <string name="source_diabox" translatable="false">DiaBox</string>
+    <string name="source_libre_patched" translatable="false">Libre patched app</string>
     <string name="pref_source_eversense_info" translatable="false">Eversense (ESEL)/Dexcom BYODA (xDrip+)</string>
     <string name="pref_source_dexcom_byoda_info" translatable="false">Dexcom BYODA (AAPS)</string>
+    <string name="pref_source_libre_patched" translatable="false">Libre patched app/Juggluco</string>
 
     <!-- start of resources -->
 
@@ -879,4 +881,5 @@
     <string name="source_sensor_need_calibration">Sensor needs calibration!</string>
     <string name="source_no_valid_value">No valid glucose value found!</string>
     <string name="source_invalid_patient">Invalid patient data!</string>
+    <string name="pref_source_libre_patched_info_summary">If you are using the Libre patched app or other apps providing this broadcast.\nFor example Juggluco provide this broadcast, which also includes the sensor start time.</string>
 </resources>

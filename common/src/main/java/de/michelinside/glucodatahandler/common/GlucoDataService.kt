@@ -27,6 +27,7 @@ import de.michelinside.glucodatahandler.common.receiver.BroadcastServiceAPI
 import de.michelinside.glucodatahandler.common.receiver.DexcomBroadcastReceiver
 import de.michelinside.glucodatahandler.common.receiver.DiaboxReceiver
 import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
+import de.michelinside.glucodatahandler.common.receiver.LibrePatchedReceiver
 import de.michelinside.glucodatahandler.common.receiver.NamedBroadcastReceiver
 import de.michelinside.glucodatahandler.common.receiver.NamedReceiver
 import de.michelinside.glucodatahandler.common.receiver.NotificationReceiver
@@ -259,6 +260,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
 
         private var glucoDataReceiver: GlucoseDataReceiver? = null
         private var xDripReceiver: XDripBroadcastReceiver?  = null
+        private var librePatchedReceiver: LibrePatchedReceiver?  = null
         private var aapsReceiver: AAPSReceiver?  = null
         private var dexcomReceiver: DexcomBroadcastReceiver? = null
         private var nsEmulatorReceiver: NsEmulatorReceiver? = null
@@ -384,6 +386,22 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     }
                 }
 
+                if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_LIBRE_PATCHED_ENABLED) {
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_LIBRE_PATCHED_ENABLED, true)) {
+                        if(librePatchedReceiver == null) {
+                            librePatchedReceiver = LibrePatchedReceiver()
+                            val filter = IntentFilter()
+                            filter.addAction(Constants.XDRIP_ACTION_GLUCOSE_READING)
+                            filter.addAction(Constants.XDRIP_ACTION_SENSOR_ACTIVATE)
+                            if(!registerReceiver(context, librePatchedReceiver!!, filter))
+                                librePatchedReceiver = null
+                        }
+                    } else if (librePatchedReceiver != null) {
+                        unregisterReceiver(context, librePatchedReceiver)
+                        librePatchedReceiver = null
+                    }
+                }
+
                 if (key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED) {
                     updateNotificationReceiver(sharedPref, context)
                 }
@@ -452,6 +470,10 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 if (diaboxReceiver != null) {
                     unregisterReceiver(context, diaboxReceiver)
                     diaboxReceiver = null
+                }
+                if (librePatchedReceiver != null) {
+                    unregisterReceiver(context, librePatchedReceiver)
+                    librePatchedReceiver = null
                 }
                 if(notificationReceiver != null) {
                     unregisterReceiver(context, notificationReceiver)

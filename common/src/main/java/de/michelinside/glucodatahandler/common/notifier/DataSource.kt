@@ -18,6 +18,7 @@ enum class DataSource(val resId: Int, val interval5Min: Boolean = false) {
     DEXCOM_BYODA(R.string.source_dexcom_byoda, true),
     NS_EMULATOR(R.string.source_ns_emulator, true),
     DIABOX(R.string.source_diabox),
+    LIBRE_PATCHED(R.string.source_libre_patched),
     NOTIFICATION(R.string.source_notification);
 
     companion object {

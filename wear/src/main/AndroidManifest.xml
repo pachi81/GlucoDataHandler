@@ -192,6 +192,16 @@
             </intent-filter>
         </receiver>
         <receiver
+            android:name=".common.receiver.LibrePatchedReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING" />
+                <action android:name="com.librelink.app.ThirdPartyIntegration.SENSOR_ACTIVATE" />
+            </intent-filter>
+        </receiver>
+        <receiver
             android:name=".SnoozeAlarmReceiverWear"
             android:enabled="true"
             android:exported="true">

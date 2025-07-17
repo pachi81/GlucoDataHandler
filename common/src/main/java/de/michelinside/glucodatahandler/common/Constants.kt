@@ -53,6 +53,7 @@ object Constants {
     const val EXTRA_GRAPH_DATA = "gdh.graph_data"
 
     const val XDRIP_ACTION_GLUCOSE_READING = "com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING"
+    const val XDRIP_ACTION_SENSOR_ACTIVATE = "com.librelink.app.ThirdPartyIntegration.SENSOR_ACTIVATE"
 
     const val GLUCODATAAUTO_STATE_ACTION = "de.michelinside.glucodataauto.state"
     const val GLUCODATAAUTO_STATE_EXTRA = "state"
@@ -163,6 +164,7 @@ object Constants {
     const val SHARED_PREF_SOURCE_BYODA_ENABLED="source_byoda_enabled"
     const val SHARED_PREF_SOURCE_EVERSENSE_ENABLED="source_eversense_enabled"
     const val SHARED_PREF_SOURCE_DIABOX_ENABLED="source_diabox_enabled"
+    const val SHARED_PREF_SOURCE_LIBRE_PATCHED_ENABLED="source_libre_patched_enabled"
 
     // notification reader
     const val SHARED_PREF_SOURCE_NOTIFICATION_ENABLED="source_notification_enabled"

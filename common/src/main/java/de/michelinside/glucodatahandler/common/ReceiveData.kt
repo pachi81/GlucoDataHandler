@@ -46,7 +46,12 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     const val RATE_CALC = "gdh.rate.calculated"
 
     var sensorID: String? = null
-    var sensorStartTime: Long = 0L
+    private var startTimePair = Pair("", 0L)
+    val sensorStartTime: Long get() {
+        if(!sensorID.isNullOrEmpty() && startTimePair.first == sensorID)
+            return startTimePair.second
+        return 0L
+    }
     var rawValue: Int = 0
     var glucose: Float = 0.0F
     var sourceRate = Float.NaN
@@ -610,8 +615,10 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                         handleFirstValue(context, dataSource, extras)
                     receiveTime = System.currentTimeMillis()
                     source = dataSource
-                    sensorID = extras.getString(SERIAL) //Name of sensor
-                    sensorStartTime = extras.getLong(SENSOR_START_TIME)
+                    sensorID = GlucoDataUtils.checkSerial(extras.getString(SERIAL)) //Name of sensor
+                    if(extras.containsKey(SENSOR_START_TIME))
+                        setSensorStartTime(sensorID, extras.getLong(SENSOR_START_TIME))
+
                     sourceRate = extras.getFloat(RATE) //Rate of change of glucose. See libre and dexcom label functions
 
                     if(!readCalculatedBundle(extras)) {
@@ -1020,6 +1027,14 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
+        }
+    }
+
+    fun setSensorStartTime(serialId: String?, startTime: Long) {
+        if(!serialId.isNullOrEmpty() && startTime > 0 && startTimePair.first != serialId) {
+            val serial = GlucoDataUtils.checkSerial(serialId)!!
+            Log.i(LOG_ID, "setSensorStartTime for " + serial + ": " + Utils.getUiTimeStamp(startTime))
+            startTimePair = Pair(serial, startTime)
         }
     }
 }
