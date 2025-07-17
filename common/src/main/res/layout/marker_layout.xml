@@ -39,4 +39,14 @@
         android:autoSizeTextType="uniform"
         tools:text="12.9" />
 
+    <TextView
+        android:id="@+id/delta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:autoSizeMinTextSize="1sp"
+        android:autoSizeStepGranularity="1sp"
+        android:autoSizeTextType="uniform"
+        tools:text="0.06 (12 min)" />
+
 </androidx.appcompat.widget.LinearLayoutCompat>
