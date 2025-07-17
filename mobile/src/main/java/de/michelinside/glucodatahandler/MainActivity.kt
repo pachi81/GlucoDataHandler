@@ -20,6 +20,8 @@ import android.view.View.OnClickListener
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.ScrollView
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
@@ -28,6 +30,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.Insets
 import androidx.core.view.MenuCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -88,6 +91,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var sharedPref: SharedPreferences
     private lateinit var optionsMenu: Menu
     private lateinit var chart: GlucoseChart
+    private var expandCollapseView: ImageView? = null
     private var alarmIcon: MenuItem? = null
     private var snoozeMenu: MenuItem? = null
     private var floatingWidgetItem: MenuItem? = null
@@ -95,6 +99,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private var requestNotificationPermission = false
     private var doNotUpdate = false
     private lateinit var chartCreator: ChartCreator
+    private var systemBars: Insets? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -104,9 +109,14 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Log.v(LOG_ID, "onCreate called")
 
             ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.root)) { v, insets ->
-                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                Log.d(LOG_ID, "Insets: " + systemBars.toString())
-                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+                systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                val fullscreen = sharedPref.getBoolean(Constants.SHARED_PREF_FULLSCREEN_LANDSCAPE, false)
+                Log.d(LOG_ID, "System bars: $systemBars - fullscreen: $fullscreen")
+
+                if(Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM && fullscreen)
+                    v.setPadding(systemBars!!.left, systemBars!!.top/2, systemBars!!.right, systemBars!!.bottom)
+                else
+                    v.setPadding(systemBars!!.left, systemBars!!.top, systemBars!!.right, systemBars!!.bottom)
                 insets
             }
 
@@ -128,6 +138,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableDelta = findViewById(R.id.tableDelta)
             tableNotes = findViewById(R.id.tableNotes)
             chart = findViewById(R.id.chart)
+            expandCollapseView = findViewById(R.id.expandCollapseView)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -146,6 +157,15 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     Log.e(LOG_ID, "btn source exception: " + exc.message.toString() )
                 }
             }
+
+            if(expandCollapseView!=null) {
+                expandCollapseView!!.setOnClickListener{
+                    toggleFullscreenLandMode()
+                }
+                if(sharedPref.getBoolean(Constants.SHARED_PREF_FULLSCREEN_LANDSCAPE, false))
+                    toggleFullscreenLandMode()
+            }
+
             Dialogs.updateColorScheme(this)
 
             if (requestPermission())
@@ -882,6 +902,49 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     Dialogs.showOkDialog(this, CR.string.app_crash_title, CR.string.app_crash_message, null)
                 }
             }
+        }
+    }
+
+    private fun toggleFullscreenLandMode() {
+        try {
+            Log.v(LOG_ID, "toggleFullscreenLandMode actionbar: ${supportActionBar?.isShowing} - insets $systemBars")
+            if(expandCollapseView != null) {
+                val infoView = findViewById<ScrollView>(R.id.infoView)
+                val borderMiddle = findViewById<RelativeLayout>(R.id.borderMiddle)
+                val borderLeft = findViewById<RelativeLayout>(R.id.borderLeft)
+                val borderRight = findViewById<RelativeLayout>(R.id.borderRight)
+                val view = findViewById<LinearLayout>(R.id.root)
+                val fullscreen: Boolean
+                if(supportActionBar?.isShowing == true) {
+                    fullscreen = true
+                    supportActionBar?.hide()
+                    infoView?.visibility = View.GONE
+                    borderMiddle?.visibility = View.GONE
+                    borderLeft?.visibility = View.GONE
+                    borderRight?.visibility = View.GONE
+                    expandCollapseView!!.setImageDrawable(ContextCompat.getDrawable(this, CR.drawable.icon_collapse))
+                    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM && systemBars!=null)
+                        view?.setPadding(systemBars!!.left, systemBars!!.top/2, systemBars!!.right, systemBars!!.bottom)
+                } else {
+                    fullscreen = false
+                    supportActionBar?.show()
+                    infoView?.visibility = View.VISIBLE
+                    borderMiddle?.visibility = View.VISIBLE
+                    borderLeft?.visibility = View.VISIBLE
+                    borderRight?.visibility = View.VISIBLE
+                    expandCollapseView!!.setImageDrawable(ContextCompat.getDrawable(this, CR.drawable.icon_expand))
+                    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM && systemBars!=null)
+                        view?.setPadding(systemBars!!.left, systemBars!!.top, systemBars!!.right, systemBars!!.bottom)
+                }
+                chart.moveViewToX(chart.xChartMax)
+                with(sharedPref.edit()) {
+                    Log.d(LOG_ID, "save fullscreen mode: $fullscreen")
+                    putBoolean(Constants.SHARED_PREF_FULLSCREEN_LANDSCAPE, fullscreen)
+                    apply()
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "toggleFullscreenLandMode exception: " + exc.message.toString() )
         }
     }
 }

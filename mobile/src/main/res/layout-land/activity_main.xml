@@ -8,6 +8,7 @@
     android:baselineAligned="false">
 
     <RelativeLayout
+        android:id="@+id/borderLeft"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -134,6 +135,15 @@
                             android:autoSizeTextType="uniform"
                             tools:ignore="HardcodedText" />
                     </LinearLayout>
+                    <ImageView
+                        android:id="@+id/expandCollapseView"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:scaleType="fitStart"
+                        android:paddingVertical="2dp"
+                        android:src="@drawable/icon_expand"
+                        tools:ignore="ContentDescription" />
                 </LinearLayout>
                 <de.michelinside.glucodatahandler.common.chart.GlucoseChart
                     android:id="@+id/chart"
@@ -147,6 +157,7 @@
             </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/borderMiddle"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -154,6 +165,7 @@
 
 
         <ScrollView
+            android:id="@+id/infoView"
             android:layout_weight="15"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -310,6 +322,7 @@
         </ScrollView>
 
     <RelativeLayout
+        android:id="@+id/borderRight"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="match_parent"

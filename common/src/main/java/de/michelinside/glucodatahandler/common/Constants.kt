@@ -328,6 +328,7 @@ object Constants {
     const val AA_MEDIA_PLAYER_DURATION = "aa_media_player_duration"
 
     const val PATIENT_NAME = "patient_name"
+    const val SHARED_PREF_FULLSCREEN_LANDSCAPE = "fullscreen_landscape"
 
     // database
     const val DB_MAX_DATA_WEAR_DAYS = 1 // 24h
