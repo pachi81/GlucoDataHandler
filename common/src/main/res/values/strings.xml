@@ -882,4 +882,8 @@
     <string name="source_no_valid_value">No valid glucose value found!</string>
     <string name="source_invalid_patient">Invalid patient data!</string>
     <string name="pref_source_libre_patched_info_summary">If you are using the Libre patched app or other apps providing this broadcast.\nFor example Juggluco provide this broadcast, which also includes the sensor start time.</string>
+    <string name="pref_sensor_runtime">Sensor wear-time</string>
+    <string name="pref_sensor_runtime_summary">Number of days the sensor can be worn.</string>
+    <string name="runtime_14_days">14 days</string>
+    <string name="runtime_15_days">15 days</string>
 </resources>

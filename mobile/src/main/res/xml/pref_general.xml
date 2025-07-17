@@ -41,4 +41,12 @@
             android:title="@string/obsolete_time"
             android:summary="@string/obsolete_time_summary"
             app:iconSpaceReserved="false" />
+        <androidx.preference.ListPreference
+            android:defaultValue="14"
+            android:entries="@array/pref_sensor_runtime_labels"
+            android:entryValues="@array/pref_sensor_runtime_values"
+            android:key="sensor_runtime"
+            android:title="@string/pref_sensor_runtime"
+            android:summary="@string/pref_sensor_runtime_summary"
+            app:iconSpaceReserved="false" />
 </PreferenceScreen>

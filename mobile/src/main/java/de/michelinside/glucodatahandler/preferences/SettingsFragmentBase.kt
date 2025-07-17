@@ -24,6 +24,7 @@ import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.Intents
+import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.preferences.PreferenceHelper
@@ -250,6 +251,10 @@ class GeneralSettingsFragment: SettingsFragmentBase(R.xml.pref_general) {
     override fun initPreferences() {
         Log.v(LOG_ID, "initPreferences called")
         super.initPreferences()
+        val prefSensorRuntime = findPreference<ListPreference>(Constants.SHARED_PREF_SENSOR_RUNTIME)
+        if(prefSensorRuntime != null) {
+            prefSensorRuntime.isVisible = ReceiveData.sensorStartTime > 0
+        }
         updateSummary()
     }
 
@@ -258,6 +263,9 @@ class GeneralSettingsFragment: SettingsFragmentBase(R.xml.pref_general) {
             super.onSharedPreferenceChanged(sharedPreferences, key)
             when (key) {
                 Constants.SHARED_PREF_USE_MMOL -> updateSummary()
+                Constants.SHARED_PREF_SENSOR_RUNTIME -> {
+                    InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SETTINGS, null)
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())

@@ -20,6 +20,7 @@ import android.view.View.OnClickListener
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.ScrollView
 import android.widget.TableLayout
@@ -91,6 +92,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var sharedPref: SharedPreferences
     private lateinit var optionsMenu: Menu
     private lateinit var chart: GlucoseChart
+    private lateinit var sensorAgeProgressBar: ProgressBar
     private var expandCollapseView: ImageView? = null
     private var alarmIcon: MenuItem? = null
     private var snoozeMenu: MenuItem? = null
@@ -110,7 +112,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.root)) { v, insets ->
                 systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                val fullscreen = sharedPref.getBoolean(Constants.SHARED_PREF_FULLSCREEN_LANDSCAPE, false)
+                val fullscreen = BitmapUtils.isLandscapeOrientation(this) && sharedPref.getBoolean(Constants.SHARED_PREF_FULLSCREEN_LANDSCAPE, false)
                 Log.d(LOG_ID, "System bars: $systemBars - fullscreen: $fullscreen")
 
                 if(Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM && fullscreen)
@@ -138,6 +140,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableDelta = findViewById(R.id.tableDelta)
             tableNotes = findViewById(R.id.tableNotes)
             chart = findViewById(R.id.chart)
+            sensorAgeProgressBar = findViewById(R.id.sensorAgeProgressBar)
             expandCollapseView = findViewById(R.id.expandCollapseView)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
@@ -621,9 +624,26 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             updateAlarmIcon()
             updateMenuItems()
+            updateProgressBar()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
         }
+    }
+
+    private fun updateProgressBar() {
+        // check visibility
+        if(ReceiveData.sensorStartTime > 0) {
+            val runtime = sharedPref.getString(Constants.SHARED_PREF_SENSOR_RUNTIME, "14")?.toInt() ?: 14
+            if(runtime > 0) {
+                sensorAgeProgressBar.visibility = View.VISIBLE
+                val duration = Duration.ofMillis(System.currentTimeMillis() - ReceiveData.sensorStartTime)
+                sensorAgeProgressBar.max = runtime * 24  // hours
+                sensorAgeProgressBar.progress = duration.toHours().toInt()
+                return
+            }
+        }
+        // else:
+        sensorAgeProgressBar.visibility = View.GONE
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {

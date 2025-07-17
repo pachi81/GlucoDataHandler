@@ -329,6 +329,7 @@ object Constants {
 
     const val PATIENT_NAME = "patient_name"
     const val SHARED_PREF_FULLSCREEN_LANDSCAPE = "fullscreen_landscape"
+    const val SHARED_PREF_SENSOR_RUNTIME = "sensor_runtime"
 
     // database
     const val DB_MAX_DATA_WEAR_DAYS = 1 // 24h
