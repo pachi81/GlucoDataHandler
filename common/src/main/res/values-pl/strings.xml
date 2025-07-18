@@ -808,4 +808,38 @@
     <string name="pref_cat_ui_graph_settings_summary">Ustawienia ogólne dot. interfejsu użytkownika i wykresu na ekranie głównym i w widgetach.</string>
     <string name="pref_cat_ui_graph_settings">Interfejs użytkownika i wykres</string>
     <string name="state_update_required">Wymagana aktualizacja!</string>
+
+    <!-- v2.1 -->
+
+    <string name="pref_notification_recreate">Recreate notifications</string>
+    <string name="pref_notification_recreate_summary">Remove and re-create second and third notification.\nThis is only required for special AOD displays, which do not update the icon of the notifications.\nIt is not possible to re-create the icon of the foreground notification.</string>
+    <string name="source_dexcom_server_eu">International/EU</string>
+    <string name="source_dexcom_server_us">United States</string>
+    <string name="source_dexcom_server_jp">Japan</string>
+    <string name="source_dexcom_server_summary">Select the server depending on the country your Dexcom Clarity is related to.</string>
+    <string name="dexcom_share_check_jp_account">Press here to check your Dexcom Share account data for your Japanese account.</string>
+    <string name="src_cat_medtrum">Medtrum</string>
+    <string name="src_medtrum_enabled_summary">Enable Medtrum connection after settings user and password.</string>
+    <string name="src_medtrum_user">User</string>
+    <string name="src_medtrum_user_summary">Medtrum user name for follower account.</string>
+    <string name="src_medtrum_password_summary">Password for Medtrum follower account.</string>
+    <string name="src_medtrum_patient_summary">If there is more then one patient connected to the Medtrum account, please select the patient receiving the data for.</string>
+    <string name="source_medtrum_server_default">Default (.eu)</string>
+    <string name="source_medtrum_server_france">France (.fr)</string>
+    <string name="source_medtrum">Medtrum</string>
+    <string name="source_request_interval_2">2 minutes</string>
+    <string name="source_select_patient">Please select a patient first!</string>
+    <string name="source_no_patient">No patient found!</string>
+    <string name="source_new_sensor_starting">New sensor is starting…</string>
+    <string name="source_sensor_need_calibration">Sensor needs calibration!</string>
+    <string name="source_no_valid_value">No valid glucose value found!</string>
+    <string name="source_invalid_patient">Invalid patient data!</string>
+    <string name="pref_source_libre_patched_info_summary">If you are using the Libre patched app or other apps providing this broadcast.\nFor example Juggluco provide this broadcast, which also includes the sensor start time.</string>
+    <string name="pref_sensor_runtime">Sensor wear-time</string>
+    <string name="pref_sensor_runtime_summary">Number of days the sensor can be worn.</string>
+    <string name="runtime_14_days">14 days</string>
+    <string name="runtime_15_days">15 days</string>
+    <string name="table_header_statistics">7 Days Statistics</string>
+    <string name="info_label_average">Average</string>
+    <string name="time_in_range">TIR</string>
 </resources>

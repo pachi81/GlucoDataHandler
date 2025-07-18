@@ -876,4 +876,36 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="low">Alacsony</string>
     <string name="high">Magas</string>
 
+    <string name="pref_notification_recreate">Értesítések újraalkotása</string>
+    <string name="pref_notification_recreate_summary">Második és harmadik értesítés eltávolítása és újraalkotása.\nEz csak speciális AOD kijelzőkhöz szükséges, amelyek nem frissítik az értesítések ikonját.\nAz előtérben lévő értesítés ikonjának újraalkotása nem lehetséges.</string>
+    <string name="source_dexcom_server_eu">Nemzetközi/EU</string>
+    <string name="source_dexcom_server_us">Egyesült Államok</string>
+    <string name="source_dexcom_server_jp">Japán</string>
+    <string name="source_dexcom_server_summary">Válassza ki a szervert attól függően, hogy melyik országhoz kapcsolódik a Dexcom Clarity.</string>
+    <string name="dexcom_share_check_jp_account">Nyomja meg itt a japán fiókjához tartozó Dexcom Share fiókadatainak ellenőrzéséhez.</string>
+    <string name="src_cat_medtrum">Medtrum</string>
+    <string name="src_medtrum_enabled_summary">Medtrum kapcsolat engedélyezése a felhasználó és a jelszó beállítása után.</string>
+    <string name="src_medtrum_user">Felhasználó</string>
+    <string name="src_medtrum_user_summary">Medtrum felhasználónév a követő fiókhoz.</string>
+    <string name="src_medtrum_password_summary">Jelszó a Medtrum követő fiókhoz.</string>
+    <string name="src_medtrum_patient_summary">Ha több páciens is csatlakozik a Medtrum fiókhoz, kérjük, válassza ki azt a pácienst, akinek az adatait fogadni szeretné.</string>
+    <string name="source_medtrum_server_default">Alapértelmezett (.eu)</string>
+    <string name="source_medtrum_server_france">Franciaország (.fr)</string>
+    <string name="source_medtrum">Medtrum</string>
+    <string name="source_request_interval_2">2 perc</string>
+    <string name="source_select_patient">Kérjük, először válasszon ki egy pácienst!</string>
+    <string name="source_no_patient">Nem található páciens!</string>
+    <string name="source_new_sensor_starting">Új szenzor indul…</string>
+    <string name="source_sensor_need_calibration">A szenzornak kalibrálásra van szüksége!</string>
+    <string name="source_no_valid_value">Nem található érvényes glükózérték!</string>
+    <string name="source_invalid_patient">Érvénytelen páciensadatok!</string>
+    <string name="pref_source_libre_patched_info_summary">Ha a javított Libre alkalmazást vagy más, ezt a broadcastot biztosító alkalmazásokat használja.\nPéldául a Juggluco biztosítja ezt a broadcastot, amely tartalmazza a szenzor indítási idejét is.</string>
+    <string name="pref_sensor_runtime">Szenzor viselési ideje</string>
+    <string name="pref_sensor_runtime_summary">A szenzor viselhető napjainak száma.</string>
+    <string name="runtime_14_days">14 nap</string>
+    <string name="runtime_15_days">15 nap</string>
+    <string name="table_header_statistics">7 napos statisztika</string>
+    <string name="info_label_average">Átlag</string>
+    <string name="time_in_range">TIR</string>
+
 </resources>

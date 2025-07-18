@@ -803,4 +803,37 @@
     <string name="pref_cat_ui_graph_settings_summary">主畫面和 Widget 中使用者介面和圖表的一般設定。</string>
     <string name="pref_cat_ui_graph_settings">使用者介面和圖表</string>
     <string name="state_update_required">需要更新！</string>
+
+    <string name="pref_notification_recreate">重新建立通知</string>
+    <string name="pref_notification_recreate_summary">移除並重新建立第二和第三則通知。\n這僅適用於特殊的 AOD 顯示器，這些顯示器不會更新通知圖示。\n無法重新建立前景通知的圖示。</string>
+    <string name="source_dexcom_server_eu">國際/歐盟</string>
+    <string name="source_dexcom_server_us">美國</string>
+    <string name="source_dexcom_server_jp">日本</string>
+    <string name="source_dexcom_server_summary">根據您的 Dexcom Clarity 相關國家/地區選取伺服器。</string>
+    <string name="dexcom_share_check_jp_account">按此處檢查您日本帳戶的 Dexcom Share 帳戶資料。</string>
+    <string name="src_cat_medtrum">Medtrum</string>
+    <string name="src_medtrum_enabled_summary">設定使用者和密碼後啟用 Medtrum 連線。</string>
+    <string name="src_medtrum_user">使用者</string>
+    <string name="src_medtrum_user_summary">追蹤者帳戶的 Medtrum 使用者名稱。</string>
+    <string name="src_medtrum_password_summary">Medtrum 追蹤者帳戶的密碼。</string>
+    <string name="src_medtrum_patient_summary">如果 Medtrum 帳戶連接了多個病患，請選取接收資料的病患。</string>
+    <string name="source_medtrum_server_default">預設 (.eu)</string>
+    <string name="source_medtrum_server_france">法國 (.fr)</string>
+    <string name="source_medtrum">Medtrum</string>
+    <string name="source_request_interval_2">2 分鐘</string>
+    <string name="source_select_patient">請先選取病患！</string>
+    <string name="source_no_patient">找不到病患！</string>
+    <string name="source_new_sensor_starting">新感應器正在啟動…</string>
+    <string name="source_sensor_need_calibration">感應器需要校準！</string>
+    <string name="source_no_valid_value">找不到有效的葡萄糖值！</string>
+    <string name="source_invalid_patient">病患資料無效！</string>
+    <string name="pref_source_libre_patched_info_summary">如果您正在使用修補過的 Libre 應用程式或其他提供此廣播的應用程式。\n例如，Juggluco 提供此廣播，其中也包含感應器啟動時間。</string>
+    <string name="pref_sensor_runtime">感應器佩戴時間</string>
+    <string name="pref_sensor_runtime_summary">感應器可佩戴的天數。</string>
+    <string name="runtime_14_days">14 天</string>
+    <string name="runtime_15_days">15 天</string>
+    <string name="table_header_statistics">7 天統計資料</string>
+    <string name="info_label_average">平均值</string>
+    <string name="time_in_range">TIR</string>
+
 </resources>

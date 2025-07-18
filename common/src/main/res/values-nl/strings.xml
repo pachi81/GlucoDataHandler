@@ -807,4 +807,36 @@
     <string name="pref_cat_ui_graph_settings_summary">Algemene instellingen voor de gebruikersinterface en de grafiek op het hoofdscherm en in widgets.</string>
     <string name="pref_cat_ui_graph_settings">Gebruikersinterface en grafiek</string>
     <string name="state_update_required">Update vereist!</string>
+
+    <string name="pref_notification_recreate">Notificaties opnieuw aanmaken</string>
+    <string name="pref_notification_recreate_summary">Verwijder en maak de tweede en derde notificatie opnieuw aan.\nDit is alleen vereist voor speciale AOD-schermen, die het icoon van de notificaties niet bijwerken.\nHet is niet mogelijk om het icoon van de voorgrondnotificatie opnieuw aan te maken.</string>
+    <string name="source_dexcom_server_eu">Internationaal/EU</string>
+    <string name="source_dexcom_server_us">Verenigde Staten</string>
+    <string name="source_dexcom_server_jp">Japan</string>
+    <string name="source_dexcom_server_summary">Selecteer de server afhankelijk van het land waaraan uw Dexcom Clarity is gerelateerd.</string>
+    <string name="dexcom_share_check_jp_account">Druk hier om uw Dexcom Share-accountgegevens voor uw Japanse account te controleren.</string>
+    <string name="src_cat_medtrum">Medtrum</string>
+    <string name="src_medtrum_enabled_summary">Schakel Medtrum-verbinding in na het instellen van gebruiker en wachtwoord.</string>
+    <string name="src_medtrum_user">Gebruiker</string>
+    <string name="src_medtrum_user_summary">Medtrum-gebruikersnaam voor volgersaccount.</string>
+    <string name="src_medtrum_password_summary">Wachtwoord voor Medtrum-volgersaccount.</string>
+    <string name="src_medtrum_patient_summary">Als er meer dan één patiënt aan het Medtrum-account is gekoppeld, selecteer dan de patiënt voor wie de gegevens worden ontvangen.</string>
+    <string name="source_medtrum_server_default">Standaard (.eu)</string>
+    <string name="source_medtrum_server_france">Frankrijk (.fr)</string>
+    <string name="source_medtrum">Medtrum</string>
+    <string name="source_request_interval_2">2 minuten</string>
+    <string name="source_select_patient">Selecteer eerst een patiënt!</string>
+    <string name="source_no_patient">Geen patiënt gevonden!</string>
+    <string name="source_new_sensor_starting">Nieuwe sensor start…</string>
+    <string name="source_sensor_need_calibration">Sensor moet gekalibreerd worden!</string>
+    <string name="source_no_valid_value">Geen geldige glucosewaarde gevonden!</string>
+    <string name="source_invalid_patient">Ongeldige patiëntgegevens!</string>
+    <string name="pref_source_libre_patched_info_summary">Als u de gepatchte Libre-app of andere apps gebruikt die deze broadcast leveren.\nBijvoorbeeld Juggluco levert deze broadcast, die ook de starttijd van de sensor bevat.</string>
+    <string name="pref_sensor_runtime">Draagtijd sensor</string>
+    <string name="pref_sensor_runtime_summary">Aantal dagen dat de sensor gedragen kan worden.</string>
+    <string name="runtime_14_days">14 dagen</string>
+    <string name="runtime_15_days">15 dagen</string>
+    <string name="table_header_statistics">7 dagen statistieken</string>
+    <string name="info_label_average">Gemiddelde</string>
+    <string name="time_in_range">TIR</string>
 </resources>

@@ -799,4 +799,37 @@
     <string name="pref_cat_ui_graph_settings">Oberfläche und Graph</string>
 
     <string name="state_update_required">Update erforderlich!</string>
+
+    <string name="pref_notification_recreate">Benachrichtigungen neu erstellen</string>
+    <string name="pref_notification_recreate_summary">Zweite und dritte Benachrichtigung entfernen und neu erstellen.\nDies ist nur für spezielle AOD-Displays erforderlich, die das Symbol der Benachrichtigungen nicht aktualisieren.\nEs ist nicht möglich, das Symbol der Vordergrundbenachrichtigung neu zu erstellen.</string>
+    <string name="source_dexcom_server_eu">International/EU</string>
+    <string name="source_dexcom_server_us">Vereinigte Staaten</string>
+    <string name="source_dexcom_server_jp">Japan</string>
+    <string name="source_dexcom_server_summary">Wählen Sie den Server abhängig von dem Land aus, mit dem Ihr Dexcom Clarity verbunden ist.</string>
+    <string name="dexcom_share_check_jp_account">Hier drücken, um Ihre Dexcom Share-Kontodaten für Ihr japanisches Konto zu überprüfen.</string>
+    <string name="src_cat_medtrum">Medtrum</string>
+    <string name="src_medtrum_enabled_summary">Medtrum-Verbindung aktivieren, nachdem Benutzer und Passwort festgelegt wurden.</string>
+    <string name="src_medtrum_user">Benutzer</string>
+    <string name="src_medtrum_user_summary">Medtrum-Benutzername für Follower-Konto.</string>
+    <string name="src_medtrum_password_summary">Passwort für Medtrum-Follower-Konto.</string>
+    <string name="src_medtrum_patient_summary">Wenn mehr als ein Patient mit dem Medtrum-Konto verbunden ist, wählen Sie bitte den Patienten aus, für den die Daten empfangen werden sollen.</string>
+    <string name="source_medtrum_server_default">Standard (.eu)</string>
+    <string name="source_medtrum_server_france">Frankreich (.fr)</string>
+    <string name="source_medtrum">Medtrum</string>
+    <string name="source_request_interval_2">2 Minuten</string>
+    <string name="source_select_patient">Bitte zuerst einen Patienten auswählen!</string>
+    <string name="source_no_patient">Kein Patient gefunden!</string>
+    <string name="source_new_sensor_starting">Neuer Sensor startet…</string>
+    <string name="source_sensor_need_calibration">Sensor muss kalibriert werden!</string>
+    <string name="source_no_valid_value">Kein gültiger Glukosewert gefunden!</string>
+    <string name="source_invalid_patient">Ungültige Patientendaten!</string>
+    <string name="pref_source_libre_patched_info_summary">Wenn Sie die gepatchte Libre-App oder andere Apps verwenden, die diesen Broadcast bereitstellen.\nZum Beispiel stellt Juggluco diesen Broadcast bereit, der auch die Startzeit des Sensors enthält.</string>
+    <string name="pref_sensor_runtime">Sensor-Tragezeit</string>
+    <string name="pref_sensor_runtime_summary">Anzahl der Tage, die der Sensor getragen werden kann.</string>
+    <string name="runtime_14_days">14 Tage</string>
+    <string name="runtime_15_days">15 Tage</string>
+    <string name="table_header_statistics">7-Tage-Statistik</string>
+    <string name="info_label_average">Durchschnitt</string>
+    <string name="time_in_range">TIR</string>
+
 </resources>
