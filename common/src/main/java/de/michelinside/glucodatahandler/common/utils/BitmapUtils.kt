@@ -12,10 +12,9 @@ import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.graphics.drawable.Icon
-import android.hardware.display.DisplayManager
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
+import androidx.window.layout.WindowMetricsCalculator
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
@@ -25,45 +24,21 @@ import kotlin.math.abs
 
 object BitmapUtils {
     private val LOG_ID = "GDH.Utils.Bitmap"
-    private var displayManager: DisplayManager? = null
-    private var displayMetrics: DisplayMetrics? = null
 
-    fun getDisplayManager(context: Context): DisplayManager? {
-        if(displayManager == null)
-            displayManager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager?
-        return displayManager
-    }
-
-    fun getScreenWidth(context: Context, checkOrientation: Boolean = false): Int {
+    fun getScreenWidth(context: Context): Int {
         try {
-            if(checkOrientation && isLandscapeOrientation(context))
-                return getScreenHeight(context, false)
-            if(displayMetrics!=null)
-                return displayMetrics!!.widthPixels
-            val displayManager = getDisplayManager(context)
-            if(displayManager != null && displayManager.displays.isNotEmpty()) {
-                displayMetrics = DisplayMetrics()
-                displayManager.displays[0].getRealMetrics(displayMetrics)
-                return displayMetrics!!.widthPixels
-            }
+            val metrics = WindowMetricsCalculator.getOrCreate().computeCurrentWindowMetrics(context)
+            return metrics.bounds.width()
         } catch (e: Exception) {
             Log.e(LOG_ID, "Error in getScreenWidth", e)
         }
         return Resources.getSystem().displayMetrics.widthPixels
     }
 
-    fun getScreenHeight(context: Context, checkOrientation: Boolean = false): Int {
+    fun getScreenHeight(context: Context): Int {
         try {
-            if(checkOrientation && isLandscapeOrientation(context))
-                return getScreenWidth(context, false)
-            if(displayMetrics!=null)
-                return displayMetrics!!.heightPixels
-            val displayManager = getDisplayManager(context)
-            if(displayManager != null && displayManager.displays.isNotEmpty()) {
-                displayMetrics = DisplayMetrics()
-                displayManager.displays[0].getRealMetrics(displayMetrics)
-                return displayMetrics!!.heightPixels
-            }
+            val metrics = WindowMetricsCalculator.getOrCreate().computeCurrentWindowMetrics(context)
+            return metrics.bounds.height()
         } catch (e: Exception) {
             Log.e(LOG_ID, "Error in getScreenHeight", e)
         }

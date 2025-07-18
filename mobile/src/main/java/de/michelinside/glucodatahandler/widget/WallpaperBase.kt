@@ -337,7 +337,8 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
             } else {
                 txtBgValue.paintFlags = 0
             }
-            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(LOG_ID+"_trend"))
+            val imageSize = if(size == 1) 40 else if(size <= 5) 50 else if( size < 15) 100 else 200
+            viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(LOG_ID+"_trend", width = imageSize, height = imageSize))
 
             if(color == null) {
                 txtTime.text =  "🕒 ${ReceiveData.getElapsedTimeMinuteAsString(context)}"

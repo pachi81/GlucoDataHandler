@@ -53,6 +53,7 @@ dependencies {
     implementation 'androidx.work:work-runtime:2.10.2'
     implementation 'androidx.preference:preference-ktx:1.2.1'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation 'androidx.window:window:1.4.0'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'io.mockk:mockk:1.13.12'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
