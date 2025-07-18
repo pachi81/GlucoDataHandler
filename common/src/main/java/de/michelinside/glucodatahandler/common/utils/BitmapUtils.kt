@@ -12,6 +12,7 @@ import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.graphics.drawable.Icon
+import android.hardware.display.DisplayManager
 import android.util.Log
 import android.view.View
 import androidx.window.layout.WindowMetricsCalculator
@@ -24,6 +25,13 @@ import kotlin.math.abs
 
 object BitmapUtils {
     private val LOG_ID = "GDH.Utils.Bitmap"
+    private var displayManager: DisplayManager? = null
+
+    fun getDisplayManager(context: Context): DisplayManager? {
+        if(displayManager == null)
+            displayManager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager?
+        return displayManager
+    }
 
     fun getScreenWidth(context: Context): Int {
         try {

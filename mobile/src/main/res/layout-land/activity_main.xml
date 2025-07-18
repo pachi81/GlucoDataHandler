@@ -24,6 +24,8 @@
                 android:gravity="center|top">
 
                 <LinearLayout
+                    android:id="@+id/glucose_with_graph"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_weight="2"
                     android:layout_height="0dp"
@@ -145,9 +147,118 @@
                         android:src="@drawable/icon_expand"
                         tools:ignore="ContentDescription" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/glucose_without_graph"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:context=".MainActivity"
+                    android:orientation="vertical"
+                    android:gravity="center|top">
+
+                    <LinearLayout
+                        android:id="@+id/layout_glucose_trend2"
+                        android:layout_width="250dp"
+                        android:layout_height="80dp"
+                        android:layout_marginTop="20dp"
+                        android:gravity="center|top"
+                        android:orientation="horizontal"
+                        tools:ignore="UselessParent">
+
+                        <TextView
+                            android:id="@+id/txtBgValue2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="4"
+                            android:autoSizeStepGranularity="1sp"
+                            android:autoSizeTextType="uniform"
+                            android:maxLines="1"
+                            android:text="---"
+                            android:textAlignment="viewEnd"
+                            android:textColor="#757575"
+                            android:textStyle="bold"
+                            android:shadowColor="@color/black"
+                            android:shadowRadius="5"
+                            tools:ignore="HardcodedText" />
+
+                        <ImageView
+                            android:id="@+id/viewIcon2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:paddingVertical="2dp"
+                            android:src="@drawable/icon_question"
+                            tools:ignore="ContentDescription" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/layout_delta_time2"
+                        android:layout_width="250dp"
+                        android:layout_height="30dp"
+                        android:gravity="center|top"
+                        android:orientation="horizontal"
+                        tools:ignore="UselessParent">
+
+                        <TextView
+                            android:id="@+id/timeText2"
+                            android:text="🕒 0 min"
+                            android:layout_width="0dp"
+                            android:layout_weight="4"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|end"
+                            android:maxLines="1"
+                            android:autoSizeStepGranularity="1sp"
+                            android:autoSizeTextType="uniform"
+                            android:paddingEnd="10dp"
+                            tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
+                        <TextView
+                            android:id="@+id/deltaText2"
+                            android:text="Δ +0.06"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:autoSizeStepGranularity="1sp"
+                            android:autoSizeTextType="uniform"
+                            tools:ignore="HardcodedText" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/layout_iob_cob2"
+                        android:layout_width="250dp"
+                        android:layout_height="30dp"
+                        android:gravity="center|top"
+                        android:orientation="horizontal"
+                        tools:ignore="UselessParent">
+                        <TextView
+                            android:id="@+id/iobText2"
+                            android:text="💉 1.30U"
+                            android:layout_width="0dp"
+                            android:layout_weight="4"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|end"
+                            android:maxLines="1"
+                            android:autoSizeStepGranularity="1sp"
+                            android:autoSizeTextType="uniform"
+                            android:paddingEnd="10dp"
+                            tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
+
+                        <TextView
+                            android:id="@+id/cobText2"
+                            android:text="🍔 31.2g"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:autoSizeStepGranularity="1sp"
+                            android:autoSizeTextType="uniform"
+                            tools:ignore="HardcodedText" />
+                    </LinearLayout>
+                </LinearLayout>
+
                 <ProgressBar
                     android:id="@+id/sensorAgeProgressBar"
-                    android:visibility="gone"
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

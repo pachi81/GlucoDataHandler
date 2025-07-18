@@ -96,6 +96,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var optionsMenu: Menu
     private lateinit var chart: GlucoseChart
     private lateinit var sensorAgeProgressBar: ProgressBar
+    private var layoutWithGraph: LinearLayout? = null
+    private var layoutWithoutGraph: LinearLayout? = null
     private var expandCollapseView: ImageView? = null
     private var alarmIcon: MenuItem? = null
     private var snoozeMenu: MenuItem? = null
@@ -146,6 +148,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             chart = findViewById(R.id.chart)
             sensorAgeProgressBar = findViewById(R.id.sensorAgeProgressBar)
             expandCollapseView = findViewById(R.id.expandCollapseView)
+            layoutWithGraph = findViewById(R.id.glucose_with_graph)
+            layoutWithoutGraph = findViewById(R.id.glucose_without_graph)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -591,6 +595,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Log.v(LOG_ID, "update values - doNotUpdate=$doNotUpdate")
             if(doNotUpdate)
                 return
+            updateLandscapeItems()
             txtBgValue.text = ReceiveData.getGlucoseAsString()
             txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
             if (ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong()) {
@@ -1015,4 +1020,43 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Log.e(LOG_ID, "toggleFullscreenLandMode exception: " + exc.message.toString() )
         }
     }
+
+    private fun updateLandscapeItems() {
+        try {
+            if(layoutWithGraph!=null && layoutWithoutGraph!=null) {
+                // depending on landscape mode and if graph is visible change items
+                Log.v(LOG_ID, "updateLandscapeItems: landscape: ${BitmapUtils.isLandscapeOrientation(this)} - chart: ${chartCreator.enabled} ")
+                if(chartCreator.enabled) {
+                    layoutWithGraph?.visibility = View.VISIBLE
+                    layoutWithoutGraph?.visibility = View.GONE
+
+                    txtBgValue = findViewById(R.id.txtBgValue)
+                    viewIcon = findViewById(R.id.viewIcon)
+                    timeText = findViewById(R.id.timeText)
+                    deltaText = findViewById(R.id.deltaText)
+                    iobText = findViewById(R.id.iobText)
+                    cobText = findViewById(R.id.cobText)
+                    iobCobLayout = findViewById(R.id.layout_iob_cob)
+                } else {
+                    layoutWithGraph?.visibility = View.GONE
+                    layoutWithoutGraph?.visibility = View.VISIBLE
+                    txtBgValue = findViewById(R.id.txtBgValue2)
+                    viewIcon = findViewById(R.id.viewIcon2)
+                    timeText = findViewById(R.id.timeText2)
+                    deltaText = findViewById(R.id.deltaText2)
+                    iobText = findViewById(R.id.iobText2)
+                    cobText = findViewById(R.id.cobText2)
+                    iobCobLayout = findViewById(R.id.layout_iob_cob2)
+                    if(sharedPref.getBoolean(Constants.SHARED_PREF_FULLSCREEN_LANDSCAPE,true)) {
+                        toggleFullscreenLandMode()
+                    }
+                }
+            }
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "updateLandscapeItems exception: " + exc.message.toString() )
+        }
+    }
+
+
+
 }
