@@ -127,6 +127,8 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             val diffValueTime = (sbn.postTime - ReceiveData.time)/1000 // in seconds
             val diffNotifyTime = (sbn.postTime - lastValueNotificationTime)/1000 // in seconds
             Log.i(LOG_ID, "New notification from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`}) - diff notify: $diffNotifyTime, diff recv value: $diffValueTime")
+            if(diffNotifyTime == 0L)
+                return false
             if(!sbn.isOngoing && hasOngoingNotification(sbn.packageName))
                 return false
             if(PackageUtils.isDexcomApp(sbn.packageName)) {
