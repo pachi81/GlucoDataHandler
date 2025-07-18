@@ -21,4 +21,5 @@
     <color name="chart_label_color">@color/white</color>
     <color name="chart_limit_line_color">#FFCCCCCC</color>
     <color name="transparent_layout_background">#55222222</color>
+    <color name="main">#94C2FA</color>
 </resources>

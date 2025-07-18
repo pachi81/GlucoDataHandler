@@ -37,6 +37,10 @@
     <string name="alarm_low">низкий</string>
     <string name="alarm_high">высокий</string>
     <string name="alarm_very_high">очень высокий</string>
+    <string name="very_low">очень низкий</string>
+    <string name="low">низкий</string>
+    <string name="high">высокий</string>
+    <string name="very_high">очень высокий</string>
 
     <string name="activity_main_battery_optimization_disabled">Рекомендуется отключить оптимизацию батареи.</string>
     <string name="activity_main_no_source_label">Источник: не активен</string>

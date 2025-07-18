@@ -25,6 +25,20 @@ object GlucoDataUtils {
         return mgdl >= Constants.GLUCOSE_MIN_VALUE.toFloat() && mgdl <= Constants.GLUCOSE_MAX_VALUE.toFloat()
     }
 
+    fun getDisplayGlucose(rawValue: Float): Float {
+        if (ReceiveData.isMmol)
+            return mgToMmol(Utils.round(rawValue,1))
+        return Utils.round(rawValue, 0)
+    }
+
+    fun getDisplayGlucoseAsString(rawValue: Float, withUnit: Boolean = false): String {
+        val glucose = getDisplayGlucose(rawValue)
+        val result = if (ReceiveData.isMmol)  "%.1f".format(glucose) else glucose.toInt().toString()
+        if(withUnit)
+            return result + " " + ReceiveData.getUnit()
+        return result
+    }
+
     fun isMmolValue(value: Float): Boolean = value < Constants.GLUCOSE_MIN_VALUE.toFloat()
 
     fun mgToMmol(value: Float): Float {

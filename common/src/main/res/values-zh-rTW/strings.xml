@@ -34,6 +34,10 @@
     <string name="alarm_low">低</string>
     <string name="alarm_high">高</string>
     <string name="alarm_very_high">非常高</string>
+    <string name="very_low">非常低</string>
+    <string name="low">低</string>
+    <string name="high">高</string>
+    <string name="very_high">非常高</string>
 
     <!-- mobile -->
 

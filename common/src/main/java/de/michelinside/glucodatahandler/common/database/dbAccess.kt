@@ -197,6 +197,34 @@ object dbAccess {
         } else 0
     }
 
+    fun getAverageValue(minTime: Long = 0L): Float = runBlocking {
+        if(active) {
+            scope.async {
+                try {
+                    Log.v(LOG_ID, "getAverageValue - minTime: ${Utils.getUiTimeStamp(minTime)}")
+                    database!!.glucoseValuesDao().getAverageValue(minTime)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "getAverageValue exception: $exc")
+                    Float.NaN
+                }
+            }.await()
+        } else Float.NaN
+    }
+
+    fun getValuesInRangeCount(minTime: Long, minVal: Int, maxVal: Int): Int = runBlocking {
+        if(active) {
+            scope.async {
+                try {
+                    Log.v(LOG_ID, "getValuesInRangeCount - minTime: ${Utils.getUiTimeStamp(minTime)} - from $minVal to $maxVal")
+                    database!!.glucoseValuesDao().getValuesInRangeCount(minTime, minVal, maxVal)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "getValuesInRangeCount exception: $exc")
+                    0
+                }
+            }.await()
+        } else 0
+    }
+
     fun deleteValues(timestamps: List<Long>) = runBlocking {
         if(active) {
             scope.launch {

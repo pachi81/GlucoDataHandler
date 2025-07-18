@@ -34,6 +34,10 @@
     <string name="alarm_low">tief</string>
     <string name="alarm_high">hoch</string>
     <string name="alarm_very_high">sehr hoch</string>
+    <string name="very_low">Sehr tief</string>
+    <string name="low">Tief</string>
+    <string name="high">Hoch</string>
+    <string name="very_high">Sehr hoch</string>
 
     <!-- mobile -->
 

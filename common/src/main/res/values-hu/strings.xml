@@ -51,7 +51,6 @@ Néhány eszközön ez a beállítás azt eredményezi, hogy mindig megjelenik a
     <string name="alarm_fullscreen_notification_enabled_summary">"A teljes képernyős értesítés engedélyezése a zárolt képernyőn.
 Az engedélyezéskor szükség lehet a megfelelő engedélyre."</string>
     <string name="alarm_header">Riasztások</string>
-    <string name="alarm_high">magas</string>
     <string name="alarm_ignore_snooze_for_very_low">Nagyon alacsony riasztás kényszerítése</string>
     <string name="alarm_ignore_snooze_for_very_low_summary">A nagyon alacsony riasztás értesítése akkor is, ha a szundi funkció vagy a pihenőidő aktív minden riasztásra.</string>
     <string name="alarm_inactive_enabled">Pihenőidő engedélyezése</string>
@@ -69,14 +68,12 @@ Információ: csak akkor jelenik meg új értesítés ezen intervallum után, ha
     <string name="alarm_interval_summary_low">"A riasztási értesítések közötti minimális idő percben.
 Információ: csak akkor jelenik meg új értesítés ezen intervallum után, ha a delta negatív."</string>
     <string name="alarm_interval_summary_obsolete">Az értesítés létrehozásához szükséges idő percben az utolsó vércukorérték beérkezése után. Az értesítés ugyanazon időközönként ismét megjelenik, ha nem áll rendelkezésre új érték.</string>
-    <string name="alarm_low">alacsony</string>
     <string name="alarm_no_notification_auto_connected">Nincs riasztás, ha az Android Auto csatlakozva van</string>
     <string name="alarm_no_notification_auto_connected_summary_off">A riasztási értesítés a telfonon is megjelenik, ha az Android Auto csatlakozva van.</string>
     <string name="alarm_no_notification_auto_connected_summary_on">Nincs riasztási értesítés a telefonon, amíg az Android Auto csatlakozva van.</string>
     <string name="alarm_no_notification_wear_connected">Nincs riasztás, ha az óra csatlakozva van</string>
     <string name="alarm_no_notification_wear_connected_summary_off">A riasztási értesítés atelefonon is megjelenik, ha a GlucoDataHandler csatlakozva van az órához.</string>
     <string name="alarm_no_notification_wear_connected_summary_on">Nincs riasztási értesítés a telefonon, amíg a GlucoDataHandler csatlakozva van az órához.</string>
-    <string name="alarm_none">-</string>
     <string name="alarm_notification_descr">Riasztási értesítések. Kérjük, ne módosítsa, mivel a hangok és a rezgések belsőleg generálódnak.</string>
     <string name="alarm_notification_name">Riasztási értesítés</string>
     <string name="alarm_notifications_enabled">Riasztási értesítések</string>
@@ -127,8 +124,6 @@ A modelltől függően ez független a rezgési módtól!"</string>
     <string name="alarm_use_custom_sound">Külső értesítési hang.</string>
     <string name="alarm_use_custom_sound_summary_off">A belső értesítési hang használatos.</string>
     <string name="alarm_use_custom_sound_summary_on">A kiválasztott értesítési hang használatos.</string>
-    <string name="alarm_very_high">nagyon magas</string>
-    <string name="alarm_very_low">nagyon alacsony</string>
     <string name="alarm_vibrate_amplitude">Rezgés erőssége</string>
     <string name="alarm_vibrate_amplitude_summary">A rezgés intenzitása</string>
     <string name="alarm_vibrate_mode">Rezgési mód</string>
@@ -869,4 +864,16 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="pref_cat_ui_graph_settings_summary">Általános beállítások a felhasználói felülethez és a grafikonhoz a főképernyőn és a widgetekben.</string>
     <string name="pref_cat_ui_graph_settings">Felhasználói felület és grafikon</string>
     <string name="state_update_required">Frissítés szükséges!</string>
+
+
+    <string name="alarm_none">-</string>
+    <string name="alarm_very_high">nagyon magas</string>
+    <string name="alarm_very_low">nagyon alacsony</string>
+    <string name="alarm_low">alacsony</string>
+    <string name="alarm_high">magas</string>
+    <string name="very_high">Nagyon magas</string>
+    <string name="very_low">Nagyon alacsony</string>
+    <string name="low">Alacsony</string>
+    <string name="high">Magas</string>
+
 </resources>

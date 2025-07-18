@@ -34,6 +34,10 @@
     <string name="alarm_low">Ниска</string>
     <string name="alarm_high">Висока</string>
     <string name="alarm_very_high">Много висока</string>
+    <string name="very_low">Много ниска</string>
+    <string name="low">Ниска</string>
+    <string name="high">Висока</string>
+    <string name="very_high">Много висока</string>
 
     <!-- mobile -->
 

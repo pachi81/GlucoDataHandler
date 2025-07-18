@@ -34,6 +34,10 @@
     <string name="alarm_low">basso</string>
     <string name="alarm_high">alto</string>
     <string name="alarm_very_high">molto alto</string>
+    <string name="very_low">Molto basso</string>
+    <string name="low">Basso</string>
+    <string name="high">Alto</string>
+    <string name="very_high">Molto alto</string>
 
     <string name="activity_main_battery_optimization_disabled">L\'ottimizzazione della batteria è abilitata.</string>
     <string name="activity_main_no_source_label">Fonte: non attiva</string>

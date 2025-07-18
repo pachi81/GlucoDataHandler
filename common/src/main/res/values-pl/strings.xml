@@ -34,6 +34,10 @@
     <string name="alarm_low">Niski poziom glukozy</string>
     <string name="alarm_high">Wysoki poziom glukozy</string>
     <string name="alarm_very_high">Bardzo wysoki poziom glukozy</string>
+    <string name="very_low">Bardzo niski</string>
+    <string name="low">Niski</string>
+    <string name="high">Wysoki</string>
+    <string name="very_high">Bardzo wysoki</string>
 
     <!-- mobile -->
 

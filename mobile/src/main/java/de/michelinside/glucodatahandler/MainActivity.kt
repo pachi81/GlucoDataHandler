@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.ColorStateList
 import android.graphics.Paint
 import android.net.Uri
 import android.os.Build
@@ -60,6 +61,7 @@ import de.michelinside.glucodatahandler.common.tasks.DexcomShareSourceTask
 import de.michelinside.glucodatahandler.common.ui.Dialogs
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
@@ -84,6 +86,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var txtLastValue: TextView
     private lateinit var txtVersion: TextView
     private lateinit var tableDetails: TableLayout
+    private lateinit var tableStatistics: TableLayout
     private lateinit var tableDelta: TableLayout
     private lateinit var tableConnections: TableLayout
     private lateinit var tableAlarms: TableLayout
@@ -112,7 +115,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.root)) { v, insets ->
                 systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                val fullscreen = BitmapUtils.isLandscapeOrientation(this) && sharedPref.getBoolean(Constants.SHARED_PREF_FULLSCREEN_LANDSCAPE, false)
+                val fullscreen = BitmapUtils.isLandscapeOrientation(this) && sharedPref.getBoolean(Constants.SHARED_PREF_FULLSCREEN_LANDSCAPE, true)
                 Log.d(LOG_ID, "System bars: $systemBars - fullscreen: $fullscreen")
 
                 if(Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM && fullscreen)
@@ -137,6 +140,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableConnections = findViewById(R.id.tableConnections)
             tableAlarms = findViewById(R.id.tableAlarms)
             tableDetails = findViewById(R.id.tableDetails)
+            tableStatistics = findViewById(R.id.tableStatistics)
             tableDelta = findViewById(R.id.tableDelta)
             tableNotes = findViewById(R.id.tableNotes)
             chart = findViewById(R.id.chart)
@@ -165,7 +169,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 expandCollapseView!!.setOnClickListener{
                     toggleFullscreenLandMode()
                 }
-                if(sharedPref.getBoolean(Constants.SHARED_PREF_FULLSCREEN_LANDSCAPE, false))
+                if(sharedPref.getBoolean(Constants.SHARED_PREF_FULLSCREEN_LANDSCAPE, true))
                     toggleFullscreenLandMode()
             }
 
@@ -621,6 +625,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             updateConnectionsTable()
             updateDeltaTable()
             updateDetailsTable()
+            updateStatisticsTable()
 
             updateAlarmIcon()
             updateMenuItems()
@@ -639,6 +644,13 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 val duration = Duration.ofMillis(System.currentTimeMillis() - ReceiveData.sensorStartTime)
                 sensorAgeProgressBar.max = runtime * 24  // hours
                 sensorAgeProgressBar.progress = duration.toHours().toInt()
+                if(sensorAgeProgressBar.max - sensorAgeProgressBar.progress <= 1) {
+                    sensorAgeProgressBar.setProgressTintList(ColorStateList.valueOf(ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW)))
+                } else if(sensorAgeProgressBar.max - sensorAgeProgressBar.progress <= 24) {
+                    sensorAgeProgressBar.setProgressTintList(ColorStateList.valueOf(ReceiveData.getAlarmTypeColor(AlarmType.LOW)))
+                } else {
+                    sensorAgeProgressBar.setProgressTintList(ColorStateList.valueOf(resources.getColor(CR.color.main)))
+                }
                 return
             }
         }
@@ -858,13 +870,28 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         checkTableVisibility(tableDetails)
     }
 
+    private fun updateStatisticsTable() {
+        tableStatistics.removeViews(1, maxOf(0, tableStatistics.childCount - 1))
+        GlucoseStatistics.update()
+        if(GlucoseStatistics.averageGlucose > 0)
+            tableStatistics.addView(createRow(CR.string.info_label_average, GlucoDataUtils.getDisplayGlucoseAsString(GlucoseStatistics.averageGlucose, true)))
+        if(GlucoseStatistics.hasData) {
+            tableStatistics.addView(createProgressBarRow(CR.string.very_high, GlucoseStatistics.percentVeryHigh, ReceiveData.getAlarmTypeColor(AlarmType.VERY_HIGH)))
+            tableStatistics.addView(createProgressBarRow(CR.string.high, GlucoseStatistics.percentHigh, ReceiveData.getAlarmTypeColor(AlarmType.HIGH)))
+            tableStatistics.addView(createProgressBarRow(CR.string.time_in_range, GlucoseStatistics.percentInRange, ReceiveData.getAlarmTypeColor(AlarmType.OK)))
+            tableStatistics.addView(createProgressBarRow(CR.string.low, GlucoseStatistics.percentLow, ReceiveData.getAlarmTypeColor(AlarmType.LOW)))
+            tableStatistics.addView(createProgressBarRow(CR.string.very_low, GlucoseStatistics.percentVeryLow, ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW)))
+        }
+        checkTableVisibility(tableStatistics)
+    }
+
     private fun checkTableVisibility(table: TableLayout) {
         table.visibility = if(table.childCount <= 1) View.GONE else View.VISIBLE
     }
 
-    private fun createColumn(text: String, end: Boolean, onClickListener: OnClickListener? = null) : TextView {
+    private fun createColumn(text: String, end: Boolean, onClickListener: OnClickListener? = null, initWeight: Float = 1F) : TextView {
         val textView = TextView(this)
-        textView.layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1F)
+        textView.layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, initWeight)
         textView.text = text
         textView.textSize = 18F
         if (end)
@@ -887,6 +914,27 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         row.setPadding(Utils.dpToPx(5F, this))
         row.addView(createColumn(key, false, onClickListener))
         row.addView(createColumn(value, true, onClickListener))
+        return row
+    }
+
+    private fun createProgressBar(value: Int, max: Int, color: Int) : ProgressBar {
+        val progressBar = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal)
+        progressBar.layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 4F)
+        progressBar.progress = value
+        progressBar.max = max
+        progressBar.scaleY = 3F
+        progressBar.setProgressTintList(ColorStateList.valueOf(color))
+        progressBar.setPadding(Utils.dpToPx(5F, this))
+        return progressBar
+    }
+
+    private fun createProgressBarRow(keyResId: Int, percentage: Float, color: Int) : TableRow {
+        val row = TableRow(this)
+        row.weightSum = 9f
+        row.setPadding(Utils.dpToPx(5F, this))
+        row.addView(createColumn(resources.getString(keyResId), false, null, 3F))
+        row.addView(createProgressBar(percentage.toInt(), 100, color))
+        row.addView(createColumn("%.1f%%".format(percentage), true, null, 2F))
         return row
     }
 
