@@ -39,6 +39,10 @@ object GlucoseStatistics {
         return (veryHigh.toFloat() / count.toFloat()) * 100f
     }
 
+    fun reset() {
+        lastUpdate = 0
+    }
+
     fun update() {
         if(Utils.getElapsedTimeMinute(lastUpdate) >= 30 || count == 0) {
             Log.d(LOG_ID, "update statistics")

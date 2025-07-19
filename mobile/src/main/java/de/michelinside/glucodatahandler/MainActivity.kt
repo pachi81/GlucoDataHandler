@@ -71,6 +71,7 @@ import de.michelinside.glucodatahandler.watch.WatchDrip
 import java.text.DateFormat
 import java.time.Duration
 import java.util.Date
+import kotlin.math.min
 import kotlin.time.Duration.Companion.days
 import de.michelinside.glucodatahandler.common.R as CR
 
@@ -648,7 +649,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 sensorAgeProgressBar.visibility = View.VISIBLE
                 val duration = Duration.ofMillis(System.currentTimeMillis() - ReceiveData.sensorStartTime)
                 sensorAgeProgressBar.max = runtime * 24  // hours
-                sensorAgeProgressBar.progress = duration.toHours().toInt()
+                sensorAgeProgressBar.progress = min(duration.toHours().toInt(), sensorAgeProgressBar.max)
                 if(sensorAgeProgressBar.max - sensorAgeProgressBar.progress <= 1) {
                     sensorAgeProgressBar.setProgressTintList(ColorStateList.valueOf(ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW)))
                 } else if(sensorAgeProgressBar.max - sensorAgeProgressBar.progress <= 24) {
@@ -1056,7 +1057,4 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             Log.e(LOG_ID, "updateLandscapeItems exception: " + exc.message.toString() )
         }
     }
-
-
-
 }

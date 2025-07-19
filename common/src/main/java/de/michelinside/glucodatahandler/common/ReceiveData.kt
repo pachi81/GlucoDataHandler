@@ -16,6 +16,7 @@ import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
 import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.utils.WakeLockHelper
 import java.math.RoundingMode
@@ -1005,6 +1006,14 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called for key " + key)
             if (GlucoDataService.context != null) {
+                when(key) {
+                    Constants.SHARED_PREF_TARGET_MIN,
+                    Constants.SHARED_PREF_TARGET_MAX,
+                    Constants.SHARED_PREF_LOW_GLUCOSE,
+                    Constants.SHARED_PREF_HIGH_GLUCOSE -> {
+                        GlucoseStatistics.reset()
+                    }
+                }
                 when (key) {
                     Constants.SHARED_PREF_USE_MMOL,
                     Constants.SHARED_PREF_TARGET_MIN,
