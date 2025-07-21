@@ -151,6 +151,16 @@
             android:textColor="#FFFFFF"
             android:textSize="14sp" />
 
+            <ProgressBar
+                android:id="@+id/sensorAgeProgressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="100"
+                android:progress="50"
+                android:layout_marginVertical="5dp"
+                />
+
             <ImageView
                 android:id="@+id/graphImage"
                 android:layout_width="match_parent"

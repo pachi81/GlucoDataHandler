@@ -590,6 +590,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 bundle.putBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true))
                 bundle.putBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false))
                 bundle.putBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, sharedPref!!.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true))
+                bundle.putString(Constants.SHARED_PREF_SENSOR_RUNTIME, sharedPref!!.getString(Constants.SHARED_PREF_SENSOR_RUNTIME, "14"))
             }
             Log.v(LOG_ID, "getSettings called with bundle ${(Utils.dumpBundle(bundle))}")
             return bundle
@@ -608,6 +609,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 putBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true))
                 putBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, bundle.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true))
                 putBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false))
+                putString(Constants.SHARED_PREF_SENSOR_RUNTIME, bundle.getString(Constants.SHARED_PREF_SENSOR_RUNTIME, "14"))
                 apply()
             }
             ReceiveData.setSettings(sharedPref, bundle)
@@ -772,7 +774,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     updateSourceReceiver(this, key)
                     shareSettings = true
                 }
-                Constants.SHARED_PREF_SHOW_OTHER_UNIT -> {
+                Constants.SHARED_PREF_SHOW_OTHER_UNIT,
+                Constants.SHARED_PREF_SENSOR_RUNTIME -> {
                     shareSettings = true
                 }
                 Constants.SHARED_PREF_BATTERY_RECEIVER_ENABLED -> {
