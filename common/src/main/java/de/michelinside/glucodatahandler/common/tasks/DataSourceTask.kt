@@ -128,6 +128,23 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
 
             return bundle
         }
+
+        fun getFirstNeedGraphValueTime(interval: Long, isFirstRequest: Boolean = false): Long {
+            val firstLastPair = dbAccess.getFirstLastTimestamp()
+            val minTime = if(GlucoDataService.appSource == AppSource.AUTO_APP)
+                System.currentTimeMillis() - Constants.DB_MAX_DATA_GDA_TIME_MS     // only for delta calculation
+            else
+                System.currentTimeMillis() - Constants.DB_MAX_DATA_WEAR_TIME_MS    // 24h for init the first time
+            if(firstLastPair.first == 0L || (isFirstRequest && firstLastPair.first > minTime)) {
+                Log.i(LOG_ID, "First value is ${Utils.getElapsedTimeMinute(firstLastPair.first)} minutes old - try get older data on first request")
+                return minTime
+            }
+            if(firstLastPair.second > 0L && Utils.getElapsedTimeMinute(firstLastPair.second) > interval) {
+                Log.i(LOG_ID, "Last value is ${Utils.getElapsedTimeMinute(firstLastPair.second)} minutes old - try get newer data")
+                return maxOf(firstLastPair.second + 30000, minTime)
+            }
+            return 0L
+        }
     }
 
     var lastState = SourceState.NONE
@@ -422,19 +439,6 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     }
 
     protected fun getFirstNeedGraphValueTime(): Long {
-        val firstLastPair = dbAccess.getFirstLastTimestamp()
-        val minTime = if(GlucoDataService.appSource == AppSource.AUTO_APP)
-                System.currentTimeMillis() - Constants.DB_MAX_DATA_GDA_TIME_MS     // only for delta calculation
-            else
-                System.currentTimeMillis() - Constants.DB_MAX_DATA_WEAR_TIME_MS    // 24h for init the first time
-        if(firstLastPair.first == 0L || (isFirstRequest && firstLastPair.first > minTime)) {
-            Log.i(LOG_ID, "First value is ${Utils.getElapsedTimeMinute(firstLastPair.first)} minutes old - try get older data on first request")
-            return minTime
-        }
-        if(firstLastPair.second > 0L && Utils.getElapsedTimeMinute(firstLastPair.second) > interval) {
-            Log.i(LOG_ID, "Last value is ${Utils.getElapsedTimeMinute(firstLastPair.second)} minutes old - try get newer data")
-            return maxOf(firstLastPair.second + 30000, minTime)
-        }
-        return 0L
+        return getFirstNeedGraphValueTime(interval, isFirstRequest)
     }
 }

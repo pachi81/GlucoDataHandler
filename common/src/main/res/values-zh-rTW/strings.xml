@@ -827,7 +827,7 @@
     <string name="source_sensor_need_calibration">感應器需要校準！</string>
     <string name="source_no_valid_value">找不到有效的葡萄糖值！</string>
     <string name="source_invalid_patient">病患資料無效！</string>
-    <string name="pref_source_libre_patched_info_summary">如果您正在使用修補過的 Libre 應用程式或其他提供此廣播的應用程式。\n例如，Juggluco 提供此廣播，其中也包含感應器啟動時間。</string>
+    <string name="pref_source_libre_patched_info_summary">如果您正在使用修補過的 Libre 應用程式或其他提供此廣播的應用程式。</string>
     <string name="pref_sensor_runtime">感應器佩戴時間</string>
     <string name="pref_sensor_runtime_summary">感應器可佩戴的天數。</string>
     <string name="runtime_14_days">14 天</string>
@@ -835,5 +835,7 @@
     <string name="table_header_statistics">7 天統計資料</string>
     <string name="info_label_average">平均值</string>
     <string name="time_in_range">TIR</string>
+    <string name="src_webserver">網路伺服器</string>
+    <string name="src_juggluco_webserver_summary">使用 Juggluco 網路伺服器取得感應器使用時間和遺失的資料 (如果有的話)。請先在 Juggluco 中啟用網路伺服器，且不使用 SSL 和 api_secret。</string>
 
 </resources>

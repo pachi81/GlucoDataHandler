@@ -899,7 +899,7 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="source_sensor_need_calibration">A szenzornak kalibrálásra van szüksége!</string>
     <string name="source_no_valid_value">Nem található érvényes glükózérték!</string>
     <string name="source_invalid_patient">Érvénytelen páciensadatok!</string>
-    <string name="pref_source_libre_patched_info_summary">Ha a javított Libre alkalmazást vagy más, ezt a broadcastot biztosító alkalmazásokat használja.\nPéldául a Juggluco biztosítja ezt a broadcastot, amely tartalmazza a szenzor indítási idejét is.</string>
+    <string name="pref_source_libre_patched_info_summary">Ha a javított Libre alkalmazást vagy más, ezt a broadcastot biztosító alkalmazásokat használja.</string>
     <string name="pref_sensor_runtime">Szenzor viselési ideje</string>
     <string name="pref_sensor_runtime_summary">A szenzor viselhető napjainak száma.</string>
     <string name="runtime_14_days">14 nap</string>
@@ -907,5 +907,7 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="table_header_statistics">7 napos statisztika</string>
     <string name="info_label_average">Átlag</string>
     <string name="time_in_range">TIR</string>
+    <string name="src_webserver">Webszerver</string>
+    <string name="src_juggluco_webserver_summary">A Juggluco webszerver használata a szenzor korának és a hiányzó adatoknak a lekérésére, ha vannak. Kérjük, először engedélyezze a webszervert a Jugglucóban SSL és api_secret nélkül.</string>
 
 </resources>

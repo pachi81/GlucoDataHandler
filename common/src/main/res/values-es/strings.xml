@@ -830,7 +830,7 @@
     <string name="source_sensor_need_calibration">¡El sensor necesita calibración!</string>
     <string name="source_no_valid_value">¡No se encontró ningún valor de glucosa válido!</string>
     <string name="source_invalid_patient">¡Datos del paciente no válidos!</string>
-    <string name="pref_source_libre_patched_info_summary">Si está utilizando la aplicación Libre parcheada u otras aplicaciones que proporcionan esta transmisión.\nPor ejemplo, Juggluco proporciona esta transmisión, que también incluye la hora de inicio del sensor.</string>
+    <string name="pref_source_libre_patched_info_summary">Si está utilizando la aplicación Libre parcheada u otras aplicaciones que proporcionan esta transmisión.</string>
     <string name="pref_sensor_runtime">Tiempo de uso del sensor</string>
     <string name="pref_sensor_runtime_summary">Número de días que se puede usar el sensor.</string>
     <string name="runtime_14_days">14 días</string>
@@ -838,5 +838,7 @@
     <string name="table_header_statistics">Estadísticas de 7 días</string>
     <string name="info_label_average">Promedio</string>
     <string name="time_in_range">TIR</string>
+    <string name="src_webserver">Servidor web</string>
+    <string name="src_juggluco_webserver_summary">Uso del servidor web de Juggluco para obtener la antigüedad del sensor y los datos omitidos, si existen. Habilite primero el servidor web en Juggluco sin SSL ni api_secret.</string>
 
 </resources>

@@ -56,7 +56,7 @@
     <string name="source_libre_patched" translatable="false">Libre patched app</string>
     <string name="pref_source_eversense_info" translatable="false">Eversense (ESEL)/Dexcom BYODA (xDrip+)</string>
     <string name="pref_source_dexcom_byoda_info" translatable="false">Dexcom BYODA (AAPS)</string>
-    <string name="pref_source_libre_patched" translatable="false">Libre patched app/Juggluco</string>
+    <string name="pref_source_libre_patched" translatable="false">Libre patched app</string>
 
     <!-- start of resources -->
 
@@ -886,7 +886,7 @@
     <string name="source_sensor_need_calibration">Sensor needs calibration!</string>
     <string name="source_no_valid_value">No valid glucose value found!</string>
     <string name="source_invalid_patient">Invalid patient data!</string>
-    <string name="pref_source_libre_patched_info_summary">If you are using the Libre patched app or other apps providing this broadcast.\nFor example Juggluco provide this broadcast, which also includes the sensor start time.</string>
+    <string name="pref_source_libre_patched_info_summary">If you are using the Libre patched app or other apps providing this broadcast.</string>
     <string name="pref_sensor_runtime">Sensor wear-time</string>
     <string name="pref_sensor_runtime_summary">Number of days the sensor can be worn.</string>
     <string name="runtime_14_days">14 days</string>
@@ -894,4 +894,6 @@
     <string name="table_header_statistics">7 Days Statistics</string>
     <string name="info_label_average">Average</string>
     <string name="time_in_range">TIR</string>
+    <string name="src_webserver">Webserver</string>
+    <string name="src_juggluco_webserver_summary">Using of Juggluco Webserver for getting sensor age and missed data, if present.\nPlease enable Webserver in Juggluco without SSL and api_secret first.</string>
 </resources>

@@ -823,7 +823,7 @@
     <string name="source_sensor_need_calibration">Sensor muss kalibriert werden!</string>
     <string name="source_no_valid_value">Kein gültiger Glukosewert gefunden!</string>
     <string name="source_invalid_patient">Ungültige Patientendaten!</string>
-    <string name="pref_source_libre_patched_info_summary">Wenn Sie die gepatchte Libre-App oder andere Apps verwenden, die diesen Broadcast bereitstellen.\nZum Beispiel stellt Juggluco diesen Broadcast bereit, der auch die Startzeit des Sensors enthält.</string>
+    <string name="pref_source_libre_patched_info_summary">Wenn Sie die gepatchte Libre-App oder andere Apps verwenden, die diesen Broadcast bereitstellen.</string>
     <string name="pref_sensor_runtime">Sensor-Tragezeit</string>
     <string name="pref_sensor_runtime_summary">Anzahl der Tage, die der Sensor getragen werden kann.</string>
     <string name="runtime_14_days">14 Tage</string>
@@ -831,5 +831,7 @@
     <string name="table_header_statistics">7-Tage-Statistik</string>
     <string name="info_label_average">Durchschnitt</string>
     <string name="time_in_range">TIR</string>
+    <string name="src_webserver">Webserver</string>
+    <string name="src_juggluco_webserver_summary">Juggluco Webservers verwenden, um das Sensoralter und fehlende Daten zu erhalten, falls vorhanden. Bitte aktivieren Sie zuerst den Webserver in Juggluco ohne SSL und api_secret.</string>
 
 </resources>

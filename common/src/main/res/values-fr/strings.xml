@@ -830,7 +830,7 @@
     <string name="source_sensor_need_calibration">Le capteur nécessite un étalonnage !</string>
     <string name="source_no_valid_value">Aucune valeur de glucose valide trouvée !</string>
     <string name="source_invalid_patient">Données patient non valides !</string>
-    <string name="pref_source_libre_patched_info_summary">Si vous utilisez l\'application Libre patchée ou d\'autres applications fournissant cette diffusion.\nPar exemple, Juggluco fournit cette diffusion, qui inclut également l\'heure de démarrage du capteur.</string>
+    <string name="pref_source_libre_patched_info_summary">Si vous utilisez l\'application Libre patchée ou d\'autres applications fournissant cette diffusion.</string>
     <string name="pref_sensor_runtime">Durée de port du capteur</string>
     <string name="pref_sensor_runtime_summary">Nombre de jours pendant lesquels le capteur peut être porté.</string>
     <string name="runtime_14_days">14 jours</string>
@@ -838,4 +838,6 @@
     <string name="table_header_statistics">Statistiques sur 7 jours</string>
     <string name="info_label_average">Moyenne</string>
     <string name="time_in_range">TIR</string>
+    <string name="src_webserver">Serveur Web</string>
+    <string name="src_juggluco_webserver_summary">Utilisation du serveur Web Juggluco pour obtenir l\'âge du capteur et les données manquantes, si présentes. Veuillez d\'abord activer le serveur Web dans Juggluco sans SSL ni api_secret.</string>
 </resources>

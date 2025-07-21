@@ -831,7 +831,7 @@
     <string name="source_sensor_need_calibration">Сензорът се нуждае от калибриране!</string>
     <string name="source_no_valid_value">Няма намерена валидна стойност на глюкозата!</string>
     <string name="source_invalid_patient">Невалидни данни за пациента!</string>
-    <string name="pref_source_libre_patched_info_summary">Ако използвате пачнатото приложение Libre или други приложения, предоставящи това излъчване.\nНапример Juggluco предоставя това излъчване, което включва и времето за стартиране на сензора.</string>
+    <string name="pref_source_libre_patched_info_summary">Ако използвате пачнатото приложение Libre или други приложения, предоставящи това излъчване.</string>
     <string name="pref_sensor_runtime">Време за носене на сензора</string>
     <string name="pref_sensor_runtime_summary">Брой дни, през които сензорът може да се носи.</string>
     <string name="runtime_14_days">14 дни</string>
@@ -839,5 +839,7 @@
     <string name="table_header_statistics">7-дневна статистика</string>
     <string name="info_label_average">Средно</string>
     <string name="time_in_range">TIR</string>
+    <string name="src_webserver">Уеб сървър</string>
+    <string name="src_juggluco_webserver_summary">Използване на уеб сървъра на Juggluco за получаване на възрастта на сензора и пропуснати данни, ако има такива. Моля, първо активирайте уеб сървъра в Juggluco без SSL и api_secret.</string>
 
 </resources>
