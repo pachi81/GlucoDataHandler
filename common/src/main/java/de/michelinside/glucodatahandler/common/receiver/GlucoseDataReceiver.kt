@@ -45,6 +45,8 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
                 return
             }
 
+            Log.d(LOG_ID, "Glucose intent received with values ${Utils.dumpBundle(intent.extras)}")
+
             if (intent.extras!!.containsKey(Constants.EXTRA_SOURCE_PACKAGE)) {
                 val packageSource = intent.extras!!.getString(Constants.EXTRA_SOURCE_PACKAGE, "")
                 Log.d(LOG_ID, "Intent received from " + packageSource)
@@ -71,8 +73,8 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
     private val JUGGLUCO_WEBSERVER = "http://127.0.0.1:17580/x/stream?duration=%d&mg/dL"
 
     private fun requestWebserverData(firstValueTime: Long) {
-        if(webServerJob?.isActive == false && (firstValueTime > 0L || (ReceiveData.sensorStartTime == 0L && !ReceiveData.sensorID.isNullOrEmpty()))) {
-            Log.i(LOG_ID, "Request webserver data with firstNeededValue=${Utils.getUiTimeStamp(firstValueTime)} and sensorStartTime=${Utils.getUiTimeStamp(ReceiveData.sensorStartTime)} and sensorID=${ReceiveData.sensorID}")
+        Log.i(LOG_ID, "Request webserver data (active: ${webServerJob?.isActive}) with firstNeededValue=${Utils.getUiTimeStamp(firstValueTime)} and sensorStartTime=${Utils.getUiTimeStamp(ReceiveData.sensorStartTime)} and sensorID=${ReceiveData.sensorID}")
+        if(webServerJob?.isActive != true && (firstValueTime > 0L || (ReceiveData.sensorStartTime == 0L && !ReceiveData.sensorID.isNullOrEmpty()))) {
             webServerJob = scope.launch {
                 try {
                     val seconds = if(firstValueTime > 0) Utils.getElapsedTimeMinute(firstValueTime) * 60 else 3600
@@ -85,23 +87,20 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
                         return@launch
                     }
                     val result = httpRequest.response
-                    Log.d(LOG_ID, "Webserver result: $result")
+                    Log.d(LOG_ID, "Webserver result: ${result?.take(1000)}")
                     if(result.isNullOrEmpty()) {
                         return@launch
                     }
                     val lines = result.lines()
-                    Log.d(LOG_ID, "Webserver lines: ${lines.size}")
                     val values = mutableListOf<GlucoseValue>()
                     lines.forEach {
                         val parts = it.split("\t")
-                        Log.d(LOG_ID, "Webserver parts: $parts")
                         if(parts.size >= 7) {
                             val sensor = GlucoDataUtils.checkSerial(parts[0])
                             val time = parts[2].toLong() * 1000
                             val age = parts[5].toLong()
                             val startTime = time-(age*60000)
                             val value = parts[6].toInt()
-                            Log.d(LOG_ID, "Webserver sensor=$sensor, time=${Utils.getUiTimeStamp(time)}, startTime=${Utils.getUiTimeStamp(startTime)}, value=$value")
                             if(ReceiveData.sensorStartTime == 0L && sensor == ReceiveData.sensorID) {
                                 ReceiveData.setSensorStartTime(sensor, startTime)
                                 if(firstValueTime == 0L)

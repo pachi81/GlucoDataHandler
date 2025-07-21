@@ -4,7 +4,7 @@
     <PreferenceCategory
         android:title="@string/pref_source_juggluco_info"
         app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="1">
+        app:initialExpandedChildrenCount="2">
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="source_juggluco_enabled"
@@ -12,15 +12,15 @@
             android:summaryOn="@string/src_offline_enabled_summary_on"
             android:summaryOff="@string/src_offline_enabled_summary_off"
             app:iconSpaceReserved="false" />
-        <Preference
-            android:key="source_juggluco_info"
-            android:summary="@string/pref_source_juggluco_info_summary"
-            app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="source_juggluco_webserver_enabled"
             android:title="@string/src_webserver"
             android:summary="@string/src_juggluco_webserver_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_juggluco_info"
+            android:summary="@string/pref_source_juggluco_info_summary"
             app:iconSpaceReserved="false" />
         <Preference
             android:key="source_juggluco_iob_info"
