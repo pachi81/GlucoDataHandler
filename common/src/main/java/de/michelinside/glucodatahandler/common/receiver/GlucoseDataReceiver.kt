@@ -3,6 +3,7 @@ package de.michelinside.glucodatahandler.common.receiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
@@ -57,7 +58,7 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
 
             if(ReceiveData.handleIntent(context, DataSource.JUGGLUCO, intent.extras)) {
                 SourceStateData.setState(DataSource.JUGGLUCO, SourceState.NONE)
-                if(GlucoDataService.sharedPref?.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_ENABLED, false) == true) {
+                if(GlucoDataService.appSource != AppSource.WEAR_APP && GlucoDataService.sharedPref?.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_ENABLED, false) == true) {
                     requestWebserverData(firstNeededValue)
                 }
             }
