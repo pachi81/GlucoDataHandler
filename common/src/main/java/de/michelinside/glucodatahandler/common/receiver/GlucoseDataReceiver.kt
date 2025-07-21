@@ -73,14 +73,13 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
     private val JUGGLUCO_WEBSERVER = "http://127.0.0.1:17580/x/stream?duration=%d&mg/dL"
 
     private fun requestWebserverData(firstValueTime: Long) {
-        Log.i(LOG_ID, "Request webserver data (active: ${webServerJob?.isActive}) with firstNeededValue=${Utils.getUiTimeStamp(firstValueTime)} and sensorStartTime=${Utils.getUiTimeStamp(ReceiveData.sensorStartTime)} and sensorID=${ReceiveData.sensorID}")
         if(webServerJob?.isActive != true && (firstValueTime > 0L || (ReceiveData.sensorStartTime == 0L && !ReceiveData.sensorID.isNullOrEmpty()))) {
             webServerJob = scope.launch {
                 try {
                     val seconds = if(firstValueTime > 0) Utils.getElapsedTimeMinute(firstValueTime) * 60 else 3600
+                    Log.i(LOG_ID, "Request webserver data for $seconds seconds with firstNeededValue=${Utils.getUiTimeStamp(firstValueTime)} and sensorStartTime=${Utils.getUiTimeStamp(ReceiveData.sensorStartTime)} and sensorID=${ReceiveData.sensorID}")
                     val httpRequest = HttpRequest()
                     val responseCode = httpRequest.get(JUGGLUCO_WEBSERVER.format(seconds))
-                    Log.d(LOG_ID, "Requesting $seconds seconds data returns code: $responseCode")
                     if (responseCode != HttpURLConnection.HTTP_OK) {
                         val error = "Error $responseCode: ${httpRequest.responseMessage}\n${httpRequest.responseError}"
                         SourceStateData.setError(DataSource.JUGGLUCO, error)
@@ -106,7 +105,7 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
                                 if(firstValueTime == 0L)
                                     return@launch  // stop handling data
                             }
-                            if(firstValueTime > 0L) {
+                            if(firstValueTime > 0L && time/1000 < ReceiveData.time/1000) {
                                 values.add(GlucoseValue(time, value))
                             }
                         }
