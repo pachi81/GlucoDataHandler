@@ -245,7 +245,10 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             deltaText.text = "Δ ${ReceiveData.getDeltaAsString()}"
             iobText.text = "💉 ${ReceiveData.getIobAsString()}"
             iobText.contentDescription = getString(CR.string.info_label_iob) + " " + ReceiveData.getIobAsString()
-            cobText.text = "🍔 ${ReceiveData.getCobAsString()}"
+            if(ReceiveData.cob.isNaN())
+                cobText.text = ""
+            else
+                cobText.text = "🍔 ${ReceiveData.getCobAsString()}"
             iobText.contentDescription = getString(CR.string.info_label_cob) + " " + ReceiveData.getCobAsString()
             iobText.visibility = if (ReceiveData.isIobCobObsolete()) View.GONE else View.VISIBLE
             cobText.visibility = iobText.visibility

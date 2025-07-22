@@ -18,8 +18,8 @@ import org.json.JSONObject
 import java.lang.NumberFormatException
 
 class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, DataSource.NIGHTSCOUT) {
-    private val LOG_ID = "GDH.Task.Source.NightscoutTask"
     companion object {
+        private val LOG_ID = "GDH.Task.Source.NightscoutTask"
         private var url = ""
         private var secret = ""
         private var token = ""
@@ -27,6 +27,28 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
         const val PEBBLE_ENDPOINT = "/pebble"
         const val ENTRIES_ENDPOINT = "/api/v1/entries/current.json"
         const val GRAPHDATA_ENDPOINT = "/api/v1/entries/sgv.json?find[date][\$gt]=%d&count=%d"
+
+        fun parsePebbleIobCob(jsonObject: JSONObject, bundle: Bundle): Boolean {
+            var result = false
+            if (jsonObject.has("iob")) {
+                bundle.putFloat(ReceiveData.IOB, JsonUtils.getFloat("iob", jsonObject))
+                result = true
+            }
+            if (jsonObject.has("cob")) {
+                bundle.putFloat(ReceiveData.COB, Utils.getCobValue(JsonUtils.getFloat("cob", jsonObject)))
+                result = true
+            }
+            if(!result && jsonObject.has("bgs")) {
+                val jsonEntries = jsonObject.optJSONArray("bgs")
+                if (jsonEntries == null || jsonEntries.length() <= 0) {
+                    Log.w(LOG_ID, "No entries in body: $jsonObject")
+                    return false
+                }
+                return parsePebbleIobCob(jsonEntries.getJSONObject(0), bundle)
+            }
+            return result
+        }
+
     }
 
     override fun hasIobCobSupport(): Boolean {
@@ -226,10 +248,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
                 if (jsonObject.has("device"))
                     glucoExtras.putString(ReceiveData.SERIAL, jsonObject.getString("device"))
                 if (iob_cob_support) {
-                    if (jsonObject.has("iob"))
-                        glucoExtras.putFloat(ReceiveData.IOB, JsonUtils.getFloat("iob", jsonObject))
-                    if (jsonObject.has("cob"))
-                        glucoExtras.putFloat(ReceiveData.COB, Utils.getCobValue(JsonUtils.getFloat("cob", jsonObject)))
+                    parsePebbleIobCob(jsonObject, glucoExtras)
                 } else {
                     glucoExtras.putFloat(ReceiveData.IOB, Float.NaN)
                     glucoExtras.putFloat(ReceiveData.COB, Float.NaN)

@@ -303,8 +303,8 @@
     <string name="src_xdrip_noise_blocking">Noise-Block actief in xDrip+ Inter-app-instellingen!\nWijzig dit in \"Extreem luid\"!</string>
     <string name="pref_cat_follower">Cloudservices</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
-    <string name="pref_source_juggluco_info_summary">Om waarden van Juggluco te ontvangen:\n- open Juggluco\n- ga naar \"Instellingen\"\n- schakel \"Glucodata-broadcast\" in\n- schakel \"de.michelinside.glucodatahandler\" in</string>
-    <string name="pref_gda_source_juggluco_info_summary">Om waarden van Juggluco te ontvangen:\n- open Juggluco\n- ga naar \"Instellingen\"\n- schakel \"Glucodata-broadcast\" in\n- schakel \"de.michelinside.glucodataauto\" in</string>
+    <string name="pref_source_juggluco_info_summary">Om waarden van Juggluco te ontvangen:\n- open Juggluco\n- ga naar \"Instellingen\"\n- ga naar \"Deel gegevens\"\n- schakel \"Glucodata-broadcast\" in\n- schakel \"de.michelinside.glucodatahandler\" in</string>
+    <string name="pref_gda_source_juggluco_info_summary">Om waarden van Juggluco te ontvangen:\n- open Juggluco\n- ga naar \"Instellingen\"\n- ga naar \"Deel gegevens\"\n- schakel \"Glucodata-broadcast\" in\n- schakel \"de.michelinside.glucodataauto\" in</string>
     <string name="pref_source_xdrip_info">xDrip+</string>
     <string name="pref_source_xdrip_info_1_summary">Om waarden van xDrip+ te ontvangen:\n- open xDrip+\n- ga naar instellingen\n- ga naar Inter-app-instellingen\n- schakel \"Lokaal uitzenden\" in\n- stel \"Ruisblokkering\" in op \"Verzend zelfs extreem luide signalen\"</string>
     <string name="pref_source_xdrip_info_2_summary">- schakel \"Compatibele broadcast\" in - controleer of \"Ontvanger identificeren\" leeg is of als er al een item bestaat, voeg \"de.michelinside.glucodatahandler\" toe, gescheiden door een spatie</string>
@@ -319,7 +319,7 @@
     <string name="pref_source_aaps_info">AndroidAPS</string>
     <string name="pref_source_aaps_info_summary">Om waarden van AAPS te ontvangen:\n- open de AAPS-app\n- ga naar \"Config Builder\"\n- schakel \"Samsung Tizen\" of \"Data Broadcaster\" in</string>
     <string name="pref_switch_watchdrip_enabled">WatchDrip+</string>
-    <string name="pref_switch_watchdrip_enabled_summary">"Schakel WatchDrip+ communicatie in.\nBELANGRIJK: schakel \"Service inschakelen\" in WatchDrip+ in nadat u deze instelling hier hebt ingeschakeld!"</string>
+    <string name="pref_switch_watchdrip_enabled_summary">Schakel WatchDrip+ communicatie in.\nBELANGRIJK: schakel \"Service inschakelen\" in WatchDrip+ in nadat u deze instelling hier hebt ingeschakeld!</string>
     <string name="pref_car_notification_reappear_interval">Opnieuw verschijnen</string>
     <string name="pref_car_notification_reappear_interval_summary">Interval wanneer de melding opnieuw moet verschijnen als er geen nieuwe waarde is. (0 voor nooit).</string>
     <string name="pref_aa_media_player_icon_style_summary">Stijl van het dummy mediaspelerpictogram/afbeelding.</string>
@@ -438,7 +438,7 @@
     <string name="pref_source_gdh_info_summary">Om waarden van GlucoDataHandler te ontvangen:\n- open GlucoDataHandler\n- ga naar instellingen\n- schakel \"Doorsturen naar GlucoDataAuto\" in\n- om dezelfde instellingen te gebruiken, schakel \"Instellingen opnemen\" in</string>
     <string name="very_low_alarm_summary">Als u Android Auto-meldingen gebruikt, zullen zeer lage alarmen altijd een melding activeren en dit kan niet worden gedeactiveerd of gewijzigd.</string>
     <string name="pref_source_juggluco_iob_info">IOB van Juggluco</string>
-    <string name="pref_source_juggluco_iob_info_summary">Om IOB van Juggluco te ontvangen:\n- open Juggluco\n- ga naar \"Instellingen\"\n- schakel \"IOB\" in\n- ga naar \"Webserver\"\n- schakel \"Actief\" in\n- optioneel: schakel \"Alleen lokaal\" in</string>
+    <string name="pref_source_juggluco_iob_info_summary">Om IOB van Juggluco te ontvangen:\n- open Juggluco\n- ga naar \"Instellingen\"\n- ga naar \"Weergave\"\n- schakel \"IOB\" in</string>
     <string name="pref_source_xdrip_iob_info">IOB van xDrip+</string>
     <string name="pref_source_xdrip_iob_info_summary">Om waarden van xDrip+ te ontvangen:\n- open xDrip+\n- ga naar instellingen\n- ga naar Inter-app-instellingen\n- schakel \"xDrip-webservice\" in</string>
     <string name="pref_source_activate_local_nightscout_iob">IOB-gebruik activeren</string>
@@ -841,4 +841,10 @@
     <string name="time_in_range">TIR</string>
     <string name="src_webserver">Webserver</string>
     <string name="src_juggluco_webserver_summary">Gebruik van de Juggluco Webserver voor het ophalen van de sensorleeftijd en gemiste gegevens, indien aanwezig. Schakel eerst de Webserver in Juggluco in zonder SSL en api_secret.</string>
+
+    <string name="src_iob_support">IOB-ondersteuning</string>
+    <string name="src_juggluco_iob_support_summary">IOB-waarden ontvangen van de Juggluco Webserver.</string>
+    <string name="pref_source_juggluco_setup_info">Juggluco instellen</string>
+    <string name="pref_source_juggluco_webserver_info">Webserver instellen</string>
+    <string name="pref_source_juggluco_webserver_info_summary">Om de webserver in Juggluco in te schakelen:\n- open Juggluco\n- ga naar \"Instellingen\"\n- open \"Gegevens uitwisselen\"\n- open \"Webserver\"\n- Schakel \"Actief\" in\n- stel \"api_secret\" en \"SSL gebruiken\" NIET in!\n- optioneel: schakel \"Alleen lokaal\" in</string>
 </resources>

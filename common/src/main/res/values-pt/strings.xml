@@ -303,8 +303,8 @@
     <string name="src_xdrip_noise_blocking">NNoise-Block ativo nas configurações entre aplicativos do xDrip+!\nPor favor, altere para \"Extremamente barulhento\"!</string>
     <string name="pref_cat_follower">Serviços na nuvem</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
-    <string name="pref_source_juggluco_info_summary">Para receber valores do Juggluco:\n- abra o Juggluco\n- acesse as configurações\n- ative a transmissão do Glucodata\n- ative \"de.michelinside.glucodatahandler\"</string>
-    <string name="pref_gda_source_juggluco_info_summary">Para receber valores do Juggluco:\n- abra o Juggluco\n- acesse as configurações\n- ative a transmissão do Glucodata\n- ative \"de.michelinside.glucodataauto\"</string>
+    <string name="pref_source_juggluco_info_summary">Para receber valores do Juggluco:\n- abra o Juggluco\n- acesse as configurações\n- acesse as \"Exchange data\"\n- ative a transmissão do Glucodata\n- ative \"de.michelinside.glucodatahandler\"</string>
+    <string name="pref_gda_source_juggluco_info_summary">Para receber valores do Juggluco:\n- abra o Juggluco\n- acesse as configurações\n- acesse as \"Exchange data\"\n- ative a transmissão do Glucodata\n- ative \"de.michelinside.glucodataauto\"</string>
     <string name="pref_source_xdrip_info">xDrip+</string>
     <string name="pref_source_xdrip_info_1_summary">Para receber valores do xDrip+:\n- abra o xDrip+\n- vá em configurações\n- vá em configurações entre aplicativos\n- ative \"Transmitir local\"\n- defina \"Bloqueio de Leituras Irregulares (Noise)\" como \"Send even Extremely noisy signals\"</string>
     <string name="pref_source_xdrip_info_2_summary">- habilite \"Broadcast Compatível\"\n- marque \"Identificar receptores\" preencha com \"de.michelinside.glucodatahandler\" (sem aspas), use espaço como separador caso já tenha algo preenchido</string>
@@ -319,7 +319,7 @@
     <string name="pref_source_aaps_info">AndroidAPS</string>
     <string name="pref_source_aaps_info_summary">Para receber valores do AAPS:\n- abra o aplicativo AAPS\n- vá para \"Config Builder\"\n- ative \"Samsung Tizen\" ou \"Data Broadcaster\"</string>
     <string name="pref_switch_watchdrip_enabled">WatchDrip+</string>
-    <string name="pref_switch_watchdrip_enabled_summary">"Ative a comunicação WatchDrip+.\nIMPORTANTE: ative \"Ativar serviço\" no WatchDrip+ depois de ativar esta configuração aqui!"</string>
+    <string name="pref_switch_watchdrip_enabled_summary">Ative a comunicação WatchDrip+.\nIMPORTANTE: ative \"Ativar serviço\" no WatchDrip+ depois de ativar esta configuração aqui!</string>
     <string name="pref_car_notification_reappear_interval">Reaparecer</string>
     <string name="pref_car_notification_reappear_interval_summary">ntervalo em que a notificação reaparecerá caso não haja novo valor. (0 para nunca).</string>
     <string name="pref_aa_media_player_icon_style_summary">Estilo do ícone/imagem fictício do media player.</string>
@@ -436,7 +436,7 @@
     <string name="pref_source_gdh_info_summary">Para receber valores do GlucoDataHandler:\n- abra o GlucoDataHandler\n- vá em configurações\n- habilite \"Encaminhar para GlucoDataAuto\"\n- para usar as mesmas configurações, habilite \"enviar configurações\"</string>
     <string name="very_low_alarm_summary">Se você estiver usando notificações do Android Auto, alarmes muito baixos sempre acionarão uma notificação e isso não poderá ser desativado ou alterado.</string>
     <string name="pref_source_juggluco_iob_info">IOB recebido do Juggluco</string>
-    <string name="pref_source_juggluco_iob_info_summary">Para receber IOB do Juggluco:\n- abra o Juggluco\n- acesse as configurações\n- enable \"IOB\"\n- go to \"Web server\"\n- enable \"Active\"\n- optional: enable \"Local only\"</string>
+    <string name="pref_source_juggluco_iob_info_summary">Para receber IOB do Juggluco:\n- abra o Juggluco\n- acesse as configurações\n- acesse as \"Exibir\"\n- enable \"IOB\"</string>
     <string name="pref_source_xdrip_iob_info">IOB recebido do  xDrip+</string>
     <string name="pref_source_xdrip_iob_info_summary">Para receber IOB do xDrip+:\n- abra o xDrip+\n- vá em configurações\n- vá em configurações entre aplicativos\n- enable \"xDrip Web Service\"</string>
     <string name="pref_source_activate_local_nightscout_iob">Ativar uso do IOB</string>
@@ -669,7 +669,7 @@
     <string name="gdh_disclaimer_title">Nota do Desenvolvedor</string>
     <string name="gdh_disclaimer_message">Este aplicativo foi desenvolvido no meu tempo livre como um projeto de hobby. Portanto, não posso garantir que todos os recursos funcionarão perfeitamente em todos os dispositivos. No entanto, estou trabalhando constantemente em melhorias.\nSe você encontrar algum problema ou tiver alguma dúvida, entre em contato comigo diretamente antes de deixar uma avaliação negativa. \nPara se manter informado sobre atualizações importantes e correções de bugs, você pode participar do grupo do Facebook ou dos Grupos do Google.</string>
 
-    <string name="pref_source_dexcom_share_info_1_summary">Para receber dados dos servidores Dexcom Share:\nNo aplicativo Dexcom:\n - Crie um seguidor\n - Em "Conexões", verifique se "Compartilhar" está exibido</string>
+    <string name="pref_source_dexcom_share_info_1_summary">Para receber dados dos servidores Dexcom Share:\nNo aplicativo Dexcom:\n - Crie um seguidor\n - Em \"Conexões\", verifique se \"Compartilhar\" está exibido</string>
     <string name="pref_source_dexcom_share_info_2_summary">No GlucoDataHandler:\n - Insira seu nome de usuário e senha do Dexcom Clarity\n   (se você usar seu número de telefone como nome de usuário, inclua o código do país)\n - Verifique a configuração para uma conta dos EUA\nImportante: isso não funciona com uma conta de seguidor!</string>
 
     <string name="request_timestamp">Atualizado</string>
@@ -681,9 +681,9 @@
     <string name="pref_watchfaces_cat">Mostradores de terceiros</string>
     <string name="pref_watchfaces_info_summary">Este aplicativo não fornece um mostrador, mas fornece várias complicações (as pequenas partes redondas do mostrador), que podem ser usadas para mostradores que suportam complicações de terceiros.</string>
     <string name="pref_watchfaces_default">Padrão</string>
-    <string name="pref_watchfaces_default_summary">A maioria dos fabricantes de relógios já fornece mostradores que podem ser usados com a complicação GlucoDataHandler.\nPor exemplo, a maioria dos mostradores "Info" da Samsung são compatíveis.</string>
+    <string name="pref_watchfaces_default_summary">A maioria dos fabricantes de relógios já fornece mostradores que podem ser usados com a complicação GlucoDataHandler.\nPor exemplo, a maioria dos mostradores \"Info\" da Samsung são compatíveis.</string>
     <string name="pref_watchfaces_pujie">Pujie</string>
-    <string name="pref_watchfaces_pujie_summary">Pujie é um aplicativo criador de mostradores com uma biblioteca na nuvem.\nPara encontrar mostradores compatíveis, pesquise na biblioteca por mostradores que começam com "GDH_".\nObservação: Pujie não é compatível com dispositivos Wear OS 5.\nToque aqui para abrir o aplicativo na Play Store.</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie é um aplicativo criador de mostradores com uma biblioteca na nuvem.\nPara encontrar mostradores compatíveis, pesquise na biblioteca por mostradores que começam com \"GDH_\".\nObservação: Pujie não é compatível com dispositivos Wear OS 5.\nToque aqui para abrir o aplicativo na Play Store.</string>
     <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
     <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man cria mostradores de terceiros projetados especificamente para uso com GlucoDataHandler.\nToque aqui para abrir sua página da Play Store.</string>
     <string name="pref_watchfaces_gdc">Mostradores GDC</string>
@@ -835,4 +835,10 @@
     <string name="time_in_range">TIR</string>
     <string name="src_webserver">Servidor Web</string>
     <string name="src_juggluco_webserver_summary">Utilização do Servidor Web Juggluco para obter a idade do sensor e dados em falta, se existirem. Por favor, ative primeiro o Servidor Web no Juggluco sem SSL e api_secret.</string>
+
+    <string name="src_iob_support">Suporte IOB</string>
+    <string name="src_juggluco_iob_support_summary">Receção de valores IOB do Servidor Web Juggluco.</string>
+    <string name="pref_source_juggluco_setup_info">Configurar Juggluco</string>
+    <string name="pref_source_juggluco_webserver_info">Configurar Servidor Web</string>
+    <string name="pref_source_juggluco_webserver_info_summary">Para ativar o servidor web no Juggluco:\n- abra o Juggluco\n- vá para \"Definições\"\n- abra \"Trocar dados\"\n- abra \"Servidor Web\"\n- Ative \"Ativo\"\n- NÃO defina \"api_secret\" e \"Usar SSL\"!\n- opcional: ative \"Apenas local\"</string>
 </resources>

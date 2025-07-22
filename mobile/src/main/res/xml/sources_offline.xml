@@ -4,7 +4,7 @@
     <PreferenceCategory
         android:title="@string/pref_source_juggluco_info"
         app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="2">
+        app:initialExpandedChildrenCount="3">
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="source_juggluco_enabled"
@@ -18,19 +18,26 @@
             android:title="@string/src_webserver"
             android:summary="@string/src_juggluco_webserver_summary"
             app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="source_juggluco_webserver_iob_support"
+            android:title="@string/src_iob_support"
+            android:summary="@string/src_juggluco_iob_support_summary"
+            app:iconSpaceReserved="false" />
         <Preference
             android:key="source_juggluco_info"
+            android:title="@string/pref_source_juggluco_setup_info"
             android:summary="@string/pref_source_juggluco_info_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_juggluco_info"
+            android:title="@string/pref_source_juggluco_webserver_info"
+            android:summary="@string/pref_source_juggluco_webserver_info_summary"
             app:iconSpaceReserved="false" />
         <Preference
             android:key="source_juggluco_iob_info"
             android:title="@string/pref_source_juggluco_iob_info"
             android:summary="@string/pref_source_juggluco_iob_info_summary"
-            app:iconSpaceReserved="false" />
-        <Preference
-            android:key="source_juggluco_activate_local_nightscout_iob_action"
-            android:title="@string/pref_source_activate_local_nightscout_iob"
-            android:summary="@string/pref_source_activate_local_nightscout_iob_summary"
             app:iconSpaceReserved="false" />
         <Preference
             android:key="source_juggluco_video"

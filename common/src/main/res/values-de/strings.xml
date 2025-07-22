@@ -299,8 +299,8 @@
     <string name="src_xdrip_noise_blocking">Verrauschungsunterdrückung aktiv in xDrip+ Inter-App Einstellungen!\nBitte die Einstellung auf \"Extremely noisy\" stellen!</string>
     <string name="pref_cat_follower">Cloud Dienste</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
-    <string name="pref_source_juggluco_info_summary">Konfiguration von Juggluco:\n- Juggluco App öffnen\n- \"Einstellungen\" öffnen\n- \"Glucodata broadcast\" aktivieren\n- \"de.michelinside.glucodatahandler\" auswählen</string>
-    <string name="pref_gda_source_juggluco_info_summary">Konfiguration von Juggluco:\n- Juggluco App öffnen\n- \"Einstellungen\" öffnen\n- \"Glucodata broadcast\" aktivieren\n- \"de.michelinside.glucodataauto\" auswählen</string>
+    <string name="pref_source_juggluco_info_summary">Konfiguration von Juggluco:\n- Juggluco App öffnen\n- \"Einstellungen\" öffnen\n- \"Daten austauschen\" öffnen\n- \"Glucodata broadcast\" aktivieren\n- \"de.michelinside.glucodatahandler\" auswählen</string>
+    <string name="pref_gda_source_juggluco_info_summary">Konfiguration von Juggluco:\n- Juggluco App öffnen\n- \"Einstellungen\" öffnen\n- \"Daten austauschen\" öffnen\n- \"Glucodata broadcast\" aktivieren\n- \"de.michelinside.glucodataauto\" auswählen</string>
     <string name="pref_source_xdrip_info">xDrip+</string>
     <string name="pref_source_xdrip_info_1_summary">Konfiguration von xDrip+:\n- xDrip+ App öffnen\n- \"Einstellungen\" öffnen\n- \"Inter-App Einstellungen\" auswählen\n- \"Lokaler Broadcast\" aktivieren\n- in \"Verrauschungsunterdrückung\" \"Send even Extremely noisy signals\" auswählen</string>
     <string name="pref_source_xdrip_info_2_summary">- \"Kompatible Broadcasts\" aktivieren\n- \"Identifiziere Empfänger\" leer lassen oder \"de.michelinside.glucodatahandler\" durch ein Leerzeichen getrennt hinzufügen</string>
@@ -315,7 +315,7 @@
     <string name="pref_source_aaps_info">AndroidAPS</string>
     <string name="pref_source_aaps_info_summary">Konfiguration von AAPS:\n- AAPS App öffnen\n- \"Konfiguration\" öffnen\n- \"Samsung Tizen\" oder \"Data Broadcaster\" aktivieren</string>
     <string name="pref_switch_watchdrip_enabled">WatchDrip+</string>
-    <string name="pref_switch_watchdrip_enabled_summary">"Aktiviere WatchDrip+ Verbindung.\nWICHTIG: Aktiviere \"Enable service\" in WatchDrip+ erst nachdem es hier aktiviert wurde!"</string>
+    <string name="pref_switch_watchdrip_enabled_summary">Aktiviere WatchDrip+ Verbindung.\nWICHTIG: Aktiviere \"Enable service\" in WatchDrip+ erst nachdem es hier aktiviert wurde!</string>
     <string name="pref_car_notification_reappear_interval">Wieder erscheinen</string>
     <string name="pref_car_notification_reappear_interval_summary">Intervall, wann die Benachrichtigung wieder erscheinen soll, wenn es keinen neuen Wert gibt (0 für nie).</string>
     <string name="pref_aa_media_player_icon_style_summary">Stil des Icons/Hintergrundbildes für den Dummy Media Player.</string>
@@ -428,7 +428,7 @@
     <string name="pref_source_gdh_info_summary">Konfiguration von GlucoDataHandler:\n- GlucoDataHandler App öffnen\n- Einstellungen öffnen\n- \"An GlucoDataAuto senden\" aktivieren\n- \"Einstellungen senden\" aktivieren, um die Einstellungen zu übernehmen</string>
     <string name="very_low_alarm_summary">Wenn die Android Auto Benachrichtigung aktiviert ist, werden sehr tiefe Alarme immer angezeigt. Das kann nicht geändert werden.</string>
     <string name="pref_source_juggluco_iob_info">IOB von Juggluco</string>
-    <string name="pref_source_juggluco_iob_info_summary">Um IOB von Juggluco zu empfangen:\n- Juggluco App öffnen\n- \"Einstellungen\" öffnen\n- \"IOB\" aktivieren\n- \"Webserver\" auswählen\n- \"Aktiv\" aktivieren\n- optional: \"Lokal\"aktivieren</string>
+    <string name="pref_source_juggluco_iob_info_summary">Um IOB von Juggluco zu empfangen:\n- Juggluco App öffnen\n- \"Einstellungen\" öffnen\n- \"Anzeige\" öffnen\n- \"IOB\" aktivieren</string>
     <string name="pref_source_xdrip_iob_info">IOB von xDrip+</string>
     <string name="pref_source_xdrip_iob_info_summary">Um IOB von xDrip+ zu empfangen:\n- xDrip+ App öffnen\n- \"Einstellungen\" öffnen\n- \"Inter-App Einstellungen\" auswählen\n- \"xDrip Web-Dienst\" aktivieren</string>
     <string name="pref_source_activate_local_nightscout_iob">IOB Verwendung aktivieren</string>
@@ -513,7 +513,7 @@
     <string name="permission_missing_title">Fehlende Berechtigung!</string>
     <string name="setting_permission_missing_message">Für die gesetzt Einstellung\n\'%1$s\'\nwurde die Berechtigung entfernt!\nBitte \"OK\" drücken, um zu der entsprechenden Berechtigungseinstellung weitergeleitet zu werden, um diese zu wieder zu aktivieren.\nBeim Drücken von \"Abbrechen\" wird die Einstellung deaktiviert und kann später über das Menü wieder aktiviert werden.</string>
     <string name="xdrip_broadcast_service_api_enabled">Broadcast Service API</string>
-    <string name="xdrip_broadcast_service_api_enabled_summary">"xDrip+ Broadcast Service API verwenden, um Daten (inkl. IOB) von xDrip+ zu erhalten.\nBevor diese Einstellung aktiviert wird, muss zu erst in xDrip+ unter \"Inter-App Einstellungen\", \"Broadcast Service API\" aktiviert werden! "</string>
+    <string name="xdrip_broadcast_service_api_enabled_summary">xDrip+ Broadcast Service API verwenden, um Daten (inkl. IOB) von xDrip+ zu erhalten.\nBevor diese Einstellung aktiviert wird, muss zu erst in xDrip+ unter \"Inter-App Einstellungen\", \"Broadcast Service API\" aktiviert werden!</string>
     <string name="obsolete_time">Zeit für veralteten Wert</string>
     <string name="obsolete_time_summary">Zeit in Minuten nachdem der Wert als alt angesehen wird.\nNach der doppelten Zeit, verschwindet er komplett.</string>
     <string name="pref_source_offline">Lokale Apps</string>
@@ -572,7 +572,7 @@
 
     <string name="alarm_rising_fast">Steigt schnell</string>
     <string name="rising_fast_alarm_notification_name">Schnell steigender Alarm</string>
-    <string name="alarm_rising_fast_summary">"Alarm, wenn der Zuckerwert größer gleich %1$s und das Delta %3$d mal hintereinander um mindestens +%2$s steigt. "</string>
+    <string name="alarm_rising_fast_summary">Alarm, wenn der Zuckerwert größer gleich %1$s und das Delta %3$d mal hintereinander um mindestens +%2$s steigt.</string>
     <string name="rising_fast_alarm_text">Schnell steigend!</string>
 
     <string name="alarm_falling_fast">Fällt schnell</string>
@@ -833,5 +833,9 @@
     <string name="time_in_range">TIR</string>
     <string name="src_webserver">Webserver</string>
     <string name="src_juggluco_webserver_summary">Juggluco Webservers verwenden, um das Sensoralter und fehlende Daten zu erhalten, falls vorhanden. Bitte aktivieren Sie zuerst den Webserver in Juggluco ohne SSL und api_secret.</string>
-
+    <string name="src_iob_support">IOB-Unterstützung</string>
+    <string name="src_juggluco_iob_support_summary">Empfangen von IOB-Werten vom Juggluco Webserver.</string>
+    <string name="pref_source_juggluco_setup_info">Juggluco einrichten</string>
+    <string name="pref_source_juggluco_webserver_info">Webserver einrichten</string>
+    <string name="pref_source_juggluco_webserver_info_summary">So aktivieren Sie den Webserver in Juggluco:\n- Juggluco öffnen\n- Gehen Sie zu \"Einstellungen\"\n- Öffnen Sie \"Datenaustausch\"\n- Öffnen Sie \"Webserver\"\n- Aktivieren Sie \"Aktiv\"\n- Setzen Sie NICHT \"api_secret\" und \"SSL verwenden\"!\n- optional: \"Nur lokal\" aktivieren</string>
 </resources>

@@ -302,8 +302,8 @@
     <string name="src_xdrip_noise_blocking">xDrip+ Inter-app Settings 中已啟用 Noise-Block！\n請變更為「Extremely noisy」！</string>
     <string name="pref_cat_follower">雲端服務</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
-    <string name="pref_source_juggluco_info_summary">若要從 Juggluco 接收血糖值:\n- 開啟 Juggluco\n- 點選「Settings」\n- 啟用「Glucodata broadcast」\n- 啟用「de.michelinside.glucodatahandler」</string>
-    <string name="pref_gda_source_juggluco_info_summary">若要從 Juggluco 接收血糖值:\n- 開啟 Juggluco\n- 點選「Settings」\n- 啟用「Glucodata broadcast」\n- 啟用「de.michelinside.glucodataauto」</string>
+    <string name="pref_source_juggluco_info_summary">若要從 Juggluco 接收血糖值:\n- 開啟 Juggluco\n- 點選「Settings」\n- 點選「Exchange data」\n- 啟用「Glucodata broadcast」\n- 啟用「de.michelinside.glucodatahandler」</string>
+    <string name="pref_gda_source_juggluco_info_summary">若要從 Juggluco 接收血糖值:\n- 開啟 Juggluco\n- 點選「Settings」\n- 點選「Exchange data」\n- 啟用「Glucodata broadcast」\n- 啟用「de.michelinside.glucodataauto」</string>
     <string name="pref_source_xdrip_info">xDrip+</string>
     <string name="pref_source_xdrip_info_1_summary">若要從 xDrip+ 接收血糖值:\n- 開啟 xDrip+\n- 點選 Settings\n- 前往 Inter-app Settings\n- 啟用「Broadcast locally」\n- 將「Noise Blocking」設為「Send even Extremely noisy signals」</string>
     <string name="pref_source_xdrip_info_2_summary">- 啟用「Compatible Broadcast」- 檢查「Identify receiver」是否為空或已存在內容，然後加入「de.michelinside.glucodatahandler」並以空白分隔</string>
@@ -437,7 +437,7 @@
     <string name="pref_source_gdh_info_summary">若要從 GlucoDataHandler 接收血糖值:\n- 開啟 GlucoDataHandler\n- 點選設定\n- 啟用「轉發到 GlucoDataAuto」\n- 若要使用同樣的設定，請啟用「包含設定」</string>
     <string name="very_low_alarm_summary">如果您使用 Android Auto 通知，非常低血糖警報會強制啟用且無法停用或變更</string>
     <string name="pref_source_juggluco_iob_info">Juggluco 的 IOB</string>
-    <string name="pref_source_juggluco_iob_info_summary">若要從 Juggluco 接收 IOB:\n- 開啟 Juggluco\n- 點選「Settings」\n- 啟用「IOB」\n- 點選「Web server」\n- 啟用「Active」\n- 選用: 啟用「Local only」</string>
+    <string name="pref_source_juggluco_iob_info_summary">若要從 Juggluco 接收 IOB:\n- 開啟 Juggluco\n- 點選「Settings」\n- 點選「Display」\n- 啟用「IOB」</string>
     <string name="pref_source_xdrip_iob_info">xDrip+ 的 IOB</string>
     <string name="pref_source_xdrip_iob_info_summary">若要從 xDrip+ 接收血糖值:\n- 開啟 xDrip+\n- 前往 Settings\n- 點選 Inter-app settings\n- 啟用「xDrip Web Service」</string>
     <string name="pref_source_activate_local_nightscout_iob">啟用 IOB 使用</string>
@@ -838,4 +838,9 @@
     <string name="src_webserver">網路伺服器</string>
     <string name="src_juggluco_webserver_summary">使用 Juggluco 網路伺服器取得感應器使用時間和遺失的資料 (如果有的話)。請先在 Juggluco 中啟用網路伺服器，且不使用 SSL 和 api_secret。</string>
 
+    <string name="src_iob_support">IOB 支援</string>
+    <string name="src_juggluco_iob_support_summary">從 Juggluco 網路伺服器接收 IOB 值。</string>
+    <string name="pref_source_juggluco_setup_info">設定 Juggluco</string>
+    <string name="pref_source_juggluco_webserver_info">設定網路伺服器</string>
+    <string name="pref_source_juggluco_webserver_info_summary">若要在 Juggluco 中啟用網路伺服器：\n- 開啟 Juggluco\n- 前往「設定」\n- 開啟「交換資料」\n- 開啟「網路伺服器」\n- 啟用「作用中」\n- 請勿設定 「api_secret」和「使用 SSL」！\n- 選用：啟用「僅限本機」</string>
 </resources>

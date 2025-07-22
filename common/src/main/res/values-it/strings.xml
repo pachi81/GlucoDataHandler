@@ -300,8 +300,8 @@
     <string name="src_xdrip_noise_blocking">Blocco rumore attivo nelle impostazioni Inter-app di xDrip+!\nSi prega di cambiarlo in \"Estremamente rumoroso\"!</string>
     <string name="pref_cat_follower">Servizi cloud</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
-    <string name="pref_source_juggluco_info_summary">Per ricevere valori da Juggluco:\n- apri Juggluco\n- vai su \"Impostazioni\"\n- abilita \"Trasmissione Glucodata\"\n- abilita \"de.michelinside.glucodatahandler\"</string>
-    <string name="pref_gda_source_juggluco_info_summary">Per ricevere valori da Juggluco:\n- apri Juggluco\n- vai su \"Impostazioni\"\n- abilita \"Trasmissione Glucodata\"\n- abilita \"de.michelinside.glucodataauto\"</string>
+    <string name="pref_source_juggluco_info_summary">Per ricevere valori da Juggluco:\n- apri Juggluco\n- vai su \"Impostazioni\"\n- vai su \"Exchange data\"\n- abilita \"Trasmissione Glucodata\"\n- abilita \"de.michelinside.glucodatahandler\"</string>
+    <string name="pref_gda_source_juggluco_info_summary">Per ricevere valori da Juggluco:\n- apri Juggluco\n- vai su \"Impostazioni\"\n- vai su \"Exchange data\"\n- abilita \"Trasmissione Glucodata\"\n- abilita \"de.michelinside.glucodataauto\"</string>
     <string name="pref_source_xdrip_info">xDrip+</string>
     <string name="pref_source_xdrip_info_1_summary">Per ricevere valori da xDrip+:\n- apri xDrip+\n- vai su impostazioni\n- vai su Impostazioni Inter-app\n- abilita \"Trasmetti localmente\"\n- imposta \"Blocco rumore\" su \"Invia anche segnali estremamente rumorosi\"</string>
     <string name="pref_source_xdrip_info_2_summary">- abilita \"Trasmissione compatibile\" - verifica che \"Identifica destinatario\" sia vuoto o, se esiste già una voce, aggiungi \"de.michelinside.glucodatahandler\" separato da uno spazio</string>
@@ -434,7 +434,7 @@
     <string name="pref_source_gdh_info_summary">Per ricevere valori da GlucoDataHandler:\n- apri GlucoDataHandler\n- vai su impostazioni\n- abilita \"Inoltra a GlucoDataAuto\"\n- per utilizzare le stesse impostazioni, abilita \"Includi impostazioni\"</string>
     <string name="very_low_alarm_summary">Se utilizzi le notifiche di Android Auto, gli allarmi molto bassi attiveranno sempre una notifica e questo non può essere disattivato o modificato.</string>
     <string name="pref_source_juggluco_iob_info">IOB da Juggluco</string>
-    <string name="pref_source_juggluco_iob_info_summary">Per ricevere IOB da Juggluco:\n- apri Juggluco\n- vai su \"Impostazioni\"\n- abilita \"IOB\"\n- vai su \"Server Web\"\n- abilita \"Attivo\"\n- facoltativo: abilita \"Solo locale\"</string>
+    <string name="pref_source_juggluco_iob_info_summary">Per ricevere IOB da Juggluco:\n- apri Juggluco\n- vai su \"Impostazioni\"\n- vai su \"Display\"\n- abilita \"IOB\"</string>
     <string name="pref_source_xdrip_iob_info">IOB da xDrip+</string>
     <string name="pref_source_xdrip_iob_info_summary">Per ricevere valori da xDrip+:\n- apri xDrip+\n- vai su impostazioni\n- vai su Impostazioni Inter-app\n- abilita \"Servizio Web xDrip\"</string>
     <string name="pref_source_activate_local_nightscout_iob">Attiva l\'utilizzo di IOB</string>
@@ -662,7 +662,7 @@
     <string name="gdh_disclaimer_title">Nota dello sviluppatore</string>
     <string name="gdh_disclaimer_message">Questa app è stata sviluppata nel mio tempo libero come progetto hobby. Pertanto, non posso garantire che tutte le funzionalità funzionino perfettamente su ogni dispositivo. Tuttavia, lavoro costantemente a miglioramenti.\nSe riscontri problemi o hai domande, contattami direttamente prima di lasciare una recensione negativa. \nPer rimanere informato su importanti aggiornamenti e correzioni di bug, sei invitato a unirti al gruppo Facebook o ai Gruppi Google.</string>
 
-    <string name="pref_source_dexcom_share_info_1_summary">Per ricevere dati dai server Dexcom Share:\nNell\'app Dexcom:\n - Crea un follower\n - In "Connessioni", assicurati che sia visualizzato "Condividi"</string>
+    <string name="pref_source_dexcom_share_info_1_summary">Per ricevere dati dai server Dexcom Share:\nNell\'app Dexcom:\n - Crea un follower\n - In \"Connessioni\", assicurati che sia visualizzato \"Condividi\"</string>
     <string name="pref_source_dexcom_share_info_2_summary">In GlucoDataHandler:\n - Inserisci il tuo nome utente e password di Dexcom Clarity\n   (se usi il tuo numero di telefono come nome utente, includi il prefisso internazionale)\n - Controlla l\'impostazione per un account USA\nImportante: questo non funziona con un account follower!</string>
 
     <string name="request_timestamp">Aggiornato</string>
@@ -674,9 +674,9 @@
     <string name="pref_watchfaces_cat">Quadranti di terze parti</string>
     <string name="pref_watchfaces_info_summary">Questa app non fornisce un quadrante, ma diverse complicazioni (le piccole parti rotonde del quadrante), che possono essere utilizzate per quadranti che supportano complicazioni di terze parti.</string>
     <string name="pref_watchfaces_default">Standard</string>
-    <string name="pref_watchfaces_default_summary">La maggior parte dei produttori di orologi fornisce già quadranti che possono essere utilizzati con la complicazione GlucoDataHandler.\nAd esempio, la maggior parte dei quadranti "Info" di Samsung sono compatibili.</string>
+    <string name="pref_watchfaces_default_summary">La maggior parte dei produttori di orologi fornisce già quadranti che possono essere utilizzati con la complicazione GlucoDataHandler.\nAd esempio, la maggior parte dei quadranti \"Info\" di Samsung sono compatibili.</string>
     <string name="pref_watchfaces_pujie">Pujie</string>
-    <string name="pref_watchfaces_pujie_summary">Pujie è un\'app per la creazione di quadranti con una libreria cloud.\nPer trovare quadranti compatibili, cerca nella libreria i quadranti che iniziano con "GDH_".\nNota: Pujie non è compatibile con i dispositivi Wear OS 5.\nTocca qui per aprire l\'app nel Play Store.</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie è un\'app per la creazione di quadranti con una libreria cloud.\nPer trovare quadranti compatibili, cerca nella libreria i quadranti che iniziano con \"GDH_\".\nNota: Pujie non è compatibile con i dispositivi Wear OS 5.\nTocca qui per aprire l\'app nel Play Store.</string>
     <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
     <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man crea quadranti di terze parti progettati specificamente per l\'uso con GlucoDataHandler.\nTocca qui per aprire la sua pagina del Play Store.</string>
     <string name="pref_watchfaces_gdc">Quadranti GDC</string>
@@ -830,4 +830,9 @@
     <string name="src_webserver">Server Web</string>
     <string name="src_juggluco_webserver_summary">Utilizzo del server Web Juggluco per ottenere l\'età del sensore e i dati mancanti, se presenti. Abilitare prima il server Web in Juggluco senza SSL e api_secret.</string>
 
+    <string name="src_iob_support">Supporto IOB</string>
+    <string name="src_juggluco_iob_support_summary">Ricezione dei valori IOB dal server Web Juggluco.</string>
+    <string name="pref_source_juggluco_setup_info">Configura Juggluco</string>
+    <string name="pref_source_juggluco_webserver_info">Configura server Web</string>
+    <string name="pref_source_juggluco_webserver_info_summary">Per abilitare il server Web in Juggluco:\n- apri Juggluco\n- vai su \"Impostazioni\"\n- apri \"Scambia dati\"\n- apri \"Server Web\"\n- Abilita \"Attivo\"\n- NON impostare \"api_secret\" e \"Usa SSL\"!\n- opzionale: abilita \"Solo locale\"</string>
 </resources>

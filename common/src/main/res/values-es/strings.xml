@@ -282,7 +282,7 @@
     <!-- GlucoDataAuto -->
 
     <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataAuto/blob/main/README.md</string>
-    <string name="gda_no_data">Para usar esta aplicación en Android Auto, debes activar la configuración para desarrolladores en Android Auto haciendo clic varias veces en la versión. Luego debes habilitar "Fuentes desconocidas" en el menú de configuración para desarrolladores.</string>
+    <string name="gda_no_data">Para usar esta aplicación en Android Auto, debes activar la configuración para desarrolladores en Android Auto haciendo clic varias veces en la versión. Luego debes habilitar \"Fuentes desconocidas\" en el menú de configuración para desarrolladores.</string>
     <string name="pref_information">Información</string>
     <string name="pref_gda_info_summary">Si estás utilizando GlucoDataHandler como fuente, estos ajustes serán sobrescritos por GlucoDataHandler, por lo que no necesitas cambiarlos aquí.</string>
     <string name="pref_no_gda_info">Falta GlucoDataAuto</string>
@@ -304,13 +304,13 @@
     <string name="wear_foreground_notification_descr">Notificación en primer plano que evita que la aplicación se detenga mientras se ejecuta en segundo plano.</string>
     <string name="android_auto_notification_name">Notificación para Android Auto</string>
     <string name="android_auto_notification_descr">Notificación que se muestra en Android Auto</string>
-    <string name="src_xdrip_noise_blocking">¡Bloqueo de ruido activo en la configuración interaplicaciones de xDrip+!\n¡Por favor, cámbialo a "Extremadamente ruidoso"!</string>
+    <string name="src_xdrip_noise_blocking">¡Bloqueo de ruido activo en la configuración interaplicaciones de xDrip+!\n¡Por favor, cámbialo a \"Extremadamente ruidoso\"!</string>
     <string name="pref_cat_follower">Servicios en la nube</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
-    <string name="pref_source_juggluco_info_summary">Para recibir valores de Juggluco:\n- abre Juggluco\n- ve a "Configuración"\n- habilita "Transmisión de glucodata"\n- habilita "de.michelinside.glucodatahandler"</string>
-    <string name="pref_gda_source_juggluco_info_summary">Para recibir valores de Juggluco:\n- abre Juggluco\n- ve a "Configuración"\n- habilita "Transmisión de glucodata"\n- habilita "de.michelinside.glucodataauto"</string>
+    <string name="pref_source_juggluco_info_summary">Para recibir valores de Juggluco:\n- abre Juggluco\n- ve a \"Configuración\"\n- ve a \"Exchange data\"\n- habilita \"Transmisión de glucodata\"\n- habilita \"de.michelinside.glucodatahandler\"</string>
+    <string name="pref_gda_source_juggluco_info_summary">Para recibir valores de Juggluco:\n- abre Juggluco\n- ve a \"Configuración\"\n- ve a \"Exchange data\"\n- habilita \"Transmisión de glucodata\"\n- habilita \"de.michelinside.glucodataauto\"</string>
     <string name="pref_source_xdrip_info">xDrip+</string>
-    <string name="pref_source_xdrip_info_1_summary">Para recibir valores de xDrip+:\n- abre xDrip+\n- ve a configuración\n- ve a configuración interaplicaciones\n- habilita "Transmitir localmente"\n- configura "Bloqueo de ruido" en "Enviar incluso señales extremadamente ruidosas"</string>
+    <string name="pref_source_xdrip_info_1_summary">Para recibir valores de xDrip+:\n- abre xDrip+\n- ve a configuración\n- ve a configuración interaplicaciones\n- habilita \"Transmitir localmente\"\n- configura \"Bloqueo de ruido\" en \"Enviar incluso señales extremadamente ruidosas\"</string>
     <string name="pref_source_xdrip_info_2_summary">- habilita Transmisión compatible\n- verifica que \"Identificar receptor\" esté vacío o, si ya existe una entrada, agrega \"de.michelinside.glucodatahandler\" separado por un espacio</string>
     <string name="pref_gda_source_xdrip_info_2_summary">- habilita Transmisión compatible\n- verifica que \"Identificar receptor\" esté vacío o, si ya existe una entrada, agrega \"de.michelinside.glucodataauto\" separado por un espacio</string>
     <string name="pref_source_librelinkup_info">Configurar LibreLinkUp</string>
@@ -318,12 +318,12 @@
     <string name="menu_contact">Contacto</string>
     <string name="src_ns_iob_cob">Soporte de IOB/COB</string>
     <string name="src_ns_iob_cob_summary">Recibe también valores de IOB y COB del punto de conexión pebble de nightscout.</string>
-    <string name="pref_permanent_notification_info_summary">La notificación es obligatoria para el correcto funcionamiento de la aplicación.\nA partir de Android 13 puedes deslizar esta notificación. Si no quieres que vuelva la notificación, configura el "Icono de la barra de estado" en "Icono de la aplicación" y habilita "Ocultar contenido".</string>
+    <string name="pref_permanent_notification_info_summary">La notificación es obligatoria para el correcto funcionamiento de la aplicación.\nA partir de Android 13 puedes deslizar esta notificación. Si no quieres que vuelva la notificación, configura el \"Icono de la barra de estado\" en \"Icono de la aplicación\" y habilita \"Ocultar contenido\".</string>
     <string name="source_aaps">AAPS</string>
     <string name="pref_source_aaps_info">AndroidAPS</string>
-    <string name="pref_source_aaps_info_summary">Para recibir valores de AAPS:\n- abre la aplicación AAPS\n- ve a "Constructor de configuración"\n- habilita "Samsung Tizen"</string>
+    <string name="pref_source_aaps_info_summary">Para recibir valores de AAPS:\n- abre la aplicación AAPS\n- ve a \"Constructor de configuración\"\n- habilita \"Samsung Tizen\"</string>
     <string name="pref_switch_watchdrip_enabled">WatchDrip+</string>
-    <string name="pref_switch_watchdrip_enabled_summary">"Habilitar comunicación de WatchDrip+.\n¡IMPORTANTE: habilita "Habilitar servicio" en WatchDrip+ después de habilitar esta configuración aquí!"</string>
+    <string name="pref_switch_watchdrip_enabled_summary">Habilitar comunicación de WatchDrip+.\n¡IMPORTANTE: habilita \"Habilitar servicio\" en WatchDrip+ después de habilitar esta configuración aquí!</string>
     <string name="pref_car_notification_reappear_interval">Reaparición</string>
     <string name="pref_car_notification_reappear_interval_summary">Intervalo en el que la notificación volverá a aparecer si no hay un nuevo valor. (0 para nunca).</string>
     <string name="pref_aa_media_player_icon_style_summary">Estilo del icono/imagen del reproductor multimedia falso.</string>
@@ -393,10 +393,10 @@
     <string name="alarm_fullscreen_dismiss_keyguard">Descartar protección de pantalla</string>
     <string name="alarm_fullscreen_dismiss_keyguard_summary">Por favor, habilita esta configuración si tienes problemas con la notificación a pantalla completa.\nEn algunos dispositivos, esto causará la pantalla de desbloqueo mientras se activa la notificación a pantalla completa.\nPor lo tanto, no la habilites si no tienes ningún problema.</string>
     <string name="alarm_force_sound">Forzar sonido de alarma</string>
-    <string name="alarm_force_sound_summary">Esto forzará un sonido de alarma y vibración incluso si el teléfono está en modo silencioso o vibración. ¡Siempre detendrá el modo "No molestar"!\nPara habilitar esta configuración, es posible que se te solicite permitir que esta aplicación cambie el modo "No molestar".</string>
+    <string name="alarm_force_sound_summary">Esto forzará un sonido de alarma y vibración incluso si el teléfono está en modo silencioso o vibración. ¡Siempre detendrá el modo \"No molestar\"!\nPara habilitar esta configuración, es posible que se te solicite permitir que esta aplicación cambie el modo \"No molestar\".</string>
     <string name="wear_alarm_force_sound">Wear: Forzar sonido de alarma</string>
     <string name="alarm_force_vibration">Forzar vibración</string>
-    <string name="alarm_force_vibration_summary">Forzar vibración, incluso si el teléfono está en modo silencioso. ¡Siempre detendrá el modo "No molestar"!\nPara habilitar esta configuración, es posible que se te solicite permitir que esta aplicación cambie el modo "No molestar".</string>
+    <string name="alarm_force_vibration_summary">Forzar vibración, incluso si el teléfono está en modo silencioso. ¡Siempre detendrá el modo \"No molestar\"!\nPara habilitar esta configuración, es posible que se te solicite permitir que esta aplicación cambie el modo \"No molestar\".</string>
     <string name="alarm_sound_level">Nivel de sonido</string>
     <string name="alarm_sound_level_summary">Configuración forzada del nivel de sonido para el sonido de la alarma.\n-1 para usar la configuración predeterminada del teléfono.</string>
     <string name="advanced_settings">Avanzado</string>
@@ -437,12 +437,12 @@
     <string name="alarm_app_sound">Sonido interno de la aplicación</string>
     <string name="pref_send_pref_to_glucodataauto">Incluir ajustes</string>
     <string name="pref_send_pref_to_glucodataauto_summary">Incluir ajustes en el mensaje a GlucoDataAuto.\nEsto sobrescribirá los ajustes en GlucoDataAuto.</string>
-    <string name="pref_source_gdh_info_summary">Para recibir valores de GlucoDataHandler:\n- abre GlucoDataHandler\n- ve a configuración\n- habilita "Reenviar a GlucoDataAuto"\n- para usar los mismos ajustes, habilita "Incluir ajustes"</string>
+    <string name="pref_source_gdh_info_summary">Para recibir valores de GlucoDataHandler:\n- abre GlucoDataHandler\n- ve a configuración\n- habilita \"Reenviar a GlucoDataAuto\"\n- para usar los mismos ajustes, habilita \"Incluir ajustes\"</string>
     <string name="very_low_alarm_summary">Si estás utilizando notificaciones de Android Auto, las alarmas muy bajas siempre activarán una notificación y esto no se puede desactivar ni cambiar.</string>
     <string name="pref_source_juggluco_iob_info">IOB de Juggluco</string>
-    <string name="pref_source_juggluco_iob_info_summary">Para recibir IOB de Juggluco:\n- abre Juggluco\n- ve a "Configuración"\n- habilita "IOB"\n- ve a "Servidor web"\n- habilita "Activo"\n- opcional: habilita "Solo local"</string>
+    <string name="pref_source_juggluco_iob_info_summary">Para recibir IOB de Juggluco:\n- abre Juggluco\n- ve a \"Configuración\"\n- ve a \"Display\"\n- habilita \"IOB\"</string>
     <string name="pref_source_xdrip_iob_info">IOB de xDrip+</string>
-    <string name="pref_source_xdrip_iob_info_summary">Para recibir valores de xDrip+:\n- abre xDrip+\n- ve a configuración\n- ve a Configuración entre aplicaciones\n- habilita "Servicio web de xDrip"</string>
+    <string name="pref_source_xdrip_iob_info_summary">Para recibir valores de xDrip+:\n- abre xDrip+\n- ve a configuración\n- ve a Configuración entre aplicaciones\n- habilita \"Servicio web de xDrip\"</string>
     <string name="pref_source_activate_local_nightscout_iob">Activar uso de IOB local de Nightscout</string>
     <string name="pref_source_activate_local_nightscout_iob_summary">Presiona aquí para configurar los ajustes de Nightscout para usar el servidor web local y recibir valores adicionales de IOB.</string>
     <string name="activate_local_nightscout_iob_title">Sobrescribir Nightscout</string>
@@ -787,7 +787,7 @@
 
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">Valores y gráfico</string>
 
-    <string name="aod_permission_info">Para habilitar la visualización de glucosa en la pantalla Always On Display, esta aplicación requiere el permiso del Servicio de Accesibilidad.\nEste permiso se utiliza exclusivamente para mostrar datos de glucosa en la AOD. Su privacidad es importante y no se accede, recopila ni comparte ningún otro dato personal.\nPulse "OK" para ir a la pantalla de permisos.</string>
+    <string name="aod_permission_info">Para habilitar la visualización de glucosa en la pantalla Always On Display, esta aplicación requiere el permiso del Servicio de Accesibilidad.\nEste permiso se utiliza exclusivamente para mostrar datos de glucosa en la AOD. Su privacidad es importante y no se accede, recopila ni comparte ningún otro dato personal.\nPulse \"OK\" para ir a la pantalla de permisos.</string>
 
     <string name="graph_duration_phone_main_summary">Número de horas mostradas en el gráfico en la pantalla principal.\nUtilice 0 para desactivar el gráfico.</string>
     <string name="graph_circle_radius">Tamaño del punto</string>
@@ -840,5 +840,9 @@
     <string name="time_in_range">TIR</string>
     <string name="src_webserver">Servidor web</string>
     <string name="src_juggluco_webserver_summary">Uso del servidor web de Juggluco para obtener la antigüedad del sensor y los datos omitidos, si existen. Habilite primero el servidor web en Juggluco sin SSL ni api_secret.</string>
-
+    <string name="src_iob_support">Soporte IOB</string>
+    <string name="src_juggluco_iob_support_summary">Recepción de valores IOB desde el servidor web de Juggluco.</string>
+    <string name="pref_source_juggluco_setup_info">Configurar Juggluco</string>
+    <string name="pref_source_juggluco_webserver_info">Configurar servidor web</string>
+    <string name="pref_source_juggluco_webserver_info_summary">Para habilitar el servidor web en Juggluco:\n- abra Juggluco\n- vaya a \"Ajustes\"\n- abra \"Intercambiar datos\"\n- abra \"Servidor web\"\n- Habilite \"Activo\"\n- ¡NO configure \"api_secret\" ni \"Usar SSL\"!\n- opcional: habilite \"Solo local\"</string>
 </resources>

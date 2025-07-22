@@ -205,6 +205,8 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_SIZE, Constants.SHARED_PREF_AOD_WP_ENABLED)
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_COLOURED, Constants.SHARED_PREF_AOD_WP_ENABLED)
 
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_ENABLED, Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED)
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_IOB_SUPPORT, Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_ENABLED, Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
         }

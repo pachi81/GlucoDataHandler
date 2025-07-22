@@ -3,16 +3,19 @@ package de.michelinside.glucodatahandler.common.database
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Handler
 import android.util.Log
 import androidx.room.Room
 import com.google.gson.Gson
 import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import kotlinx.coroutines.CoroutineScope
@@ -149,14 +152,21 @@ object dbAccess {
                 try {
                     Log.d(LOG_ID, "Add ${values.size} values from ${values.first().timestamp} to ${values.last().timestamp}")
                     database!!.glucoseValuesDao().insertValues(updateTimestamps(values))
+                    if(Utils.getElapsedTimeMinute(values.last().timestamp) < 20 && GlucoDataService.context != null) {
+                        Handler(GlucoDataService.context!!.mainLooper).post {
+                            ReceiveData.triggerRecalculateDeltaAndTime()
+                        }
+                    }
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "addGlucoseValues exception: $exc")
                 }
             }
-            if(internal) {
-                // trigger update of db data
-                InternalNotifier.notify(GlucoDataService.context!!, NotifySource.DB_DATA_CHANGED, null)
-            } else {
+            if(values.size > 10) {
+                GlucoseStatistics.reset()  // trigger re-calculation!
+            }
+            // trigger update of db data
+            InternalNotifier.notify(GlucoDataService.context!!, NotifySource.DB_DATA_CHANGED, null)
+            if(!internal) {
                 // trigger dbsync with watch
                 GlucoDataService.sendCommand(Command.REQUEST_DB_SYNC)
             }
@@ -227,6 +237,7 @@ object dbAccess {
 
     fun deleteValues(timestamps: List<Long>) = runBlocking {
         if(active) {
+            GlucoseStatistics.reset()  // trigger re-calculation!
             scope.launch {
                 try {
                     Log.i(LOG_ID, "delete - ${timestamps.size} values")
@@ -240,6 +251,7 @@ object dbAccess {
 
     fun deleteAllValues() = runBlocking {
         if(active) {
+            GlucoseStatistics.reset()  // trigger re-calculation!
             scope.launch {
                 try {
                     Log.i(LOG_ID, "deleteAllValues")
@@ -253,6 +265,7 @@ object dbAccess {
 
     fun deleteOldValues(minTime: Long) {
         if(active) {
+            GlucoseStatistics.reset()  // trigger re-calculation!
             scope.launch {
                 try {
                     Log.i(LOG_ID, "deleteOldValues - minTime: ${Utils.getUiTimeStamp(minTime)}")

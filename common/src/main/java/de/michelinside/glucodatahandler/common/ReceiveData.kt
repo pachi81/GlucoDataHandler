@@ -409,6 +409,14 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         }
     }
 
+    fun triggerRecalculateDeltaAndTime() {
+        val lastRate = rate
+        val lastDelta = delta
+        calculateDeltasAndRate(time, rawValue)
+        if(rate != lastRate || delta != lastDelta)
+            InternalNotifier.notify(GlucoDataService.context!!, NotifySource.MESSAGECLIENT, createExtras())
+    }
+
     private fun calculateDeltasAndRate(new_time: Long, new_value: Int) {
         // reset old deltas
         deltaValue1Min = Float.NaN

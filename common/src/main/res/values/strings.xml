@@ -360,8 +360,6 @@
     <string name="src_xdrip_noise_blocking">Noise-Block active in xDrip+ Inter-app settings!\nPlease change it to \"Extremely noisy\"!</string>
     <string name="pref_cat_follower">Cloud services</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
-    <string name="pref_source_juggluco_info_summary">To receive values from Juggluco:\n- open Juggluco\n- go to \"Settings\"\n- enable \"Glucodata broadcast\"\n- enable \"de.michelinside.glucodatahandler\"</string>
-    <string name="pref_gda_source_juggluco_info_summary">To receive values from Juggluco:\n- open Juggluco\n- go to \"Settings\"\n- enable \"Glucodata broadcast\"\n- enable \"de.michelinside.glucodataauto\"</string>
     <string name="pref_source_xdrip_info">xDrip+</string>
     <string name="pref_source_xdrip_info_1_summary">To receive values from xDrip+:\n- open xDrip+\n- go to settings\n- go to Inter-app settings\n- enable \"Broadcast locally\"\n- set \"Noise Blocking\" to \"Send even Extremely noisy signals\"</string>
     <string name="pref_source_xdrip_info_2_summary">- enable \"Compatible Broadcast\" - check \"Identify receiver\" to be empty or if an entry already exists, add \"de.michelinside.glucodatahandler\" separated by a space</string>
@@ -376,7 +374,7 @@
     <string name="pref_source_aaps_info">AndroidAPS</string>
     <string name="pref_source_aaps_info_summary">To receive values from AAPS:\n- open AAPS app\n- go to \"Config Builder\"\n- enable \"Samsung Tizen\" or \"Data Broadcaster\"</string>
     <string name="pref_switch_watchdrip_enabled">WatchDrip+</string>
-    <string name="pref_switch_watchdrip_enabled_summary">"Enable WatchDrip+ communication.\nIMPORTANT: enable \"Enable service\" in WatchDrip+ after enabling this setting here!"</string>
+    <string name="pref_switch_watchdrip_enabled_summary">Enable WatchDrip+ communication.\nIMPORTANT: enable \"Enable service\" in WatchDrip+ after enabling this setting here!</string>
     <string name="pref_car_notification_reappear_interval">Reappear</string>
     <string name="pref_car_notification_reappear_interval_summary">Interval when the notification shall reappear if there is no new value. (0 for never).</string>
     <string name="pref_aa_media_player_icon_style_summary">Style of the dummy media player icon/image.</string>
@@ -495,7 +493,6 @@
     <string name="pref_source_gdh_info_summary">To receive values from GlucoDataHandler:\n- open GlucoDataHandler\n- go to settings\n- enable \"Forward to GlucoDataAuto\"\n- to use the same settings, enable \"Include settings\"</string>
     <string name="very_low_alarm_summary">If you are using Android Auto notifications, very low alarms will always trigger a notification and this can not be deactivated or changed.</string>
     <string name="pref_source_juggluco_iob_info">IOB from Juggluco</string>
-    <string name="pref_source_juggluco_iob_info_summary">To receive IOB from Juggluco:\n- open Juggluco\n- go to \"Settings\"\n- enable \"IOB\"\n- go to \"Web server\"\n- enable \"Active\"\n- optional: enable \"Local only\"</string>
     <string name="pref_source_xdrip_iob_info">IOB from xDrip+</string>
     <string name="pref_source_xdrip_iob_info_summary">To receive values from xDrip+:\n- open xDrip+\n- go to settings\n- go to Inter-app settings\n- enable \"xDrip Web Service\"</string>
     <string name="pref_source_activate_local_nightscout_iob">Activate IOB usage</string>
@@ -861,6 +858,10 @@
     <string name="pref_cat_ui_graph_settings">User interface and graph</string>
     <string name="state_update_required">Update required!</string>
 
+    <string name="pref_source_juggluco_info_summary">To receive values from Juggluco:\n- open Juggluco\n- go to \"Settings\"\n- open \"Exchange data\"\n- enable \"Glucodata broadcast\"\n- enable \"de.michelinside.glucodatahandler\"</string>
+    <string name="pref_gda_source_juggluco_info_summary">To receive values from Juggluco:\n- open Juggluco\n- go to \"Settings\"\n- open \"Exchange data\"\n- enable \"Glucodata broadcast\"\n- enable \"de.michelinside.glucodataauto\"</string>
+    <string name="pref_source_juggluco_iob_info_summary">To receive IOB from Juggluco:\n- open Juggluco\n- go to \"Settings\"\n- open \"Display\"\n- enable \"IOB\"</string>
+
     <!-- v2.1 -->
 
     <string name="pref_notification_recreate">Recreate notifications</string>
@@ -896,4 +897,9 @@
     <string name="time_in_range">TIR</string>
     <string name="src_webserver">Webserver</string>
     <string name="src_juggluco_webserver_summary">Using of Juggluco Webserver for getting sensor age and missed data, if present.\nPlease enable Webserver in Juggluco without SSL and api_secret first.</string>
+    <string name="src_iob_support">IOB support</string>
+    <string name="src_juggluco_iob_support_summary">Receiving IOB values from Juggluco Webserver.</string>
+    <string name="pref_source_juggluco_setup_info">Setup Juggluco</string>
+    <string name="pref_source_juggluco_webserver_info">Setup Webserver</string>
+    <string name="pref_source_juggluco_webserver_info_summary">To enable webserver in Juggluco:\n- open Juggluco\n- go to \"Settings\"\n- open \"Exchange data\"\n- open \"Web server\"\n- Enable \"Active\"\n- do NOT set \"api_secret\" and \"Use SSL\"!\n- optional: enable \"Local only\"</string>
 </resources>

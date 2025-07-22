@@ -97,7 +97,6 @@ class ExportImportSettingsFragment: SettingsFragmentBase(R.xml.pref_export_impor
                 Dialogs.showOkCancelDialog(requireContext(), resources.getString(CR.string.reset_db), resources.getString(CR.string.reset_db_warning),
                     { _, _ ->
                         dbAccess.deleteAllValues()
-                        GlucoseStatistics.reset()
                         GlucoDataService.sendCommand(Command.CLEAN_UP_DB)
                     }
                 )

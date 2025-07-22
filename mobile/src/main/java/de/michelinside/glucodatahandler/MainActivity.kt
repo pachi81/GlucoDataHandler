@@ -613,7 +613,10 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             iobText.text = "💉 " + ReceiveData.getIobAsString()
             iobText.contentDescription = getString(CR.string.info_label_iob) + " " + ReceiveData.getIobAsString()
             iobText.visibility = if (ReceiveData.isIobCobObsolete()) View.GONE else View.VISIBLE
-            cobText.text = "🍔 " + ReceiveData.getCobAsString()
+            if(ReceiveData.cob.isNaN())
+                cobText.text = ""
+            else
+                cobText.text = "🍔 " + ReceiveData.getCobAsString()
             cobText.contentDescription = getString(CR.string.info_label_cob) + " " + ReceiveData.getCobAsString()
             cobText.visibility = iobText.visibility
             iobCobLayout.visibility = iobText.visibility
@@ -867,7 +870,15 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 val duration = Duration.ofMillis(System.currentTimeMillis() - ReceiveData.sensorStartTime)
                 val days = duration.toDays()
                 val hours = duration.minusDays(days).toHours()
-                tableDetails.addView(createRow(CR.string.sensor_age_label, resources.getString(CR.string.sensor_age_value).format(days, hours)))
+                val runtime = sharedPref.getString(Constants.SHARED_PREF_SENSOR_RUNTIME, "14")?.toInt() ?: 14
+                if(runtime > 0) {
+                    val runtimeDuration = Duration.ofDays(runtime.toLong())
+                    val diffDuration = runtimeDuration.minus(duration)
+                    val diffDays = diffDuration.toDays()
+                    val diffHours = diffDuration.minusDays(diffDays).toHours()
+                    tableDetails.addView(createRow(CR.string.sensor_age_label, resources.getString(CR.string.sensor_age_value).format(days, hours) + " (-> " + resources.getString(CR.string.sensor_age_value).format(diffDays, diffHours) + ")"))
+                } else
+                    tableDetails.addView(createRow(CR.string.sensor_age_label, resources.getString(CR.string.sensor_age_value).format(days, hours)))
 
             }
             if(ReceiveData.source != DataSource.NONE)

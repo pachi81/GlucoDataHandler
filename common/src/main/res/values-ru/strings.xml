@@ -303,8 +303,8 @@
     <string name="src_xdrip_noise_blocking">Блокировка шума активна в настройках взаимодействия приложений xDrip+!\nПожалуйста, измените ее на \"Очень шумный\"!</string>
     <string name="pref_cat_follower">Облачные сервисы</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
-    <string name="pref_source_juggluco_info_summary">Для получения значений из Juggluco:\n- откройте Juggluco\n- перейдите в \"Настройки\"\n- включите \"Трансляция Glucodata\"\n- включите \"de.michelinside.glucodatahandler\"</string>
-    <string name="pref_gda_source_juggluco_info_summary">Для получения значений из Juggluco:\n- откройте Juggluco\n- перейдите в \"Настройки\"\n- включите \"Трансляция Glucodata\"\n- включите \"de.michelinside.glucodataauto\"</string>
+    <string name="pref_source_juggluco_info_summary">Для получения значений из Juggluco:\n- откройте Juggluco\n- перейдите в \"Настройки\"\n- перейдите в \"Exchange data\"\n- включите \"Трансляция Glucodata\"\n- включите \"de.michelinside.glucodatahandler\"</string>
+    <string name="pref_gda_source_juggluco_info_summary">Для получения значений из Juggluco:\n- откройте Juggluco\n- перейдите в \"Настройки\"\n- перейдите в \"Exchange data\"\n- включите \"Трансляция Glucodata\"\n- включите \"de.michelinside.glucodataauto\"</string>
     <string name="pref_source_xdrip_info">xDrip+</string>
     <string name="pref_source_xdrip_info_1_summary">Для получения значений из xDrip+:\n- откройте xDrip+\n- перейдите в настройки\n- перейдите в настройки взаимодействия приложений\n- включите \"Локальная трансляция\"\n- установите \"Блокировка шума\" на \"Отправлять даже очень шумные сигналы\"</string>
     <string name="pref_source_xdrip_info_2_summary">- включите \"Совместимая трансляция\" - проверьте, чтобы поле \"Идентифицировать получателя\" было пустым или, если запись уже существует, добавьте \"de.michelinside.glucodatahandler\", разделенный пробелом</string>
@@ -437,7 +437,7 @@
     <string name="pref_source_gdh_info_summary">Чтобы получать значения из GlucoDataHandler:\n- откройте GlucoDataHandler\n- перейдите в настройки\n- включите \"Переслать в GlucoDataAuto\"\n- чтобы использовать те же настройки, включите \"Включить настройки\"</string>
     <string name="very_low_alarm_summary">Если вы используете уведомления Android Auto, сигналы тревоги об очень низком уровне всегда будут запускать уведомление, и это нельзя отключить или изменить.</string>
     <string name="pref_source_juggluco_iob_info">IOB из Juggluco</string>
-    <string name="pref_source_juggluco_iob_info_summary">Чтобы получать IOB из Juggluco:\n- откройте Juggluco\n- перейдите в \"Настройки\"\n- включите \"IOB\"\n- перейдите в \"Веб-сервер\"\n- включите \"Активный\"\n- необязательно: включите \"Только локально\"</string>
+    <string name="pref_source_juggluco_iob_info_summary">Чтобы получать IOB из Juggluco:\n- откройте Juggluco\n- перейдите в \"Настройки\"\n- перейдите в \"Display\"\n- включите \"IOB\"</string>
     <string name="pref_source_xdrip_iob_info">IOB из xDrip+</string>
     <string name="pref_source_xdrip_iob_info_summary">Чтобы получать значения из xDrip+:\n- откройте xDrip+\n- перейдите в настройки\n- перейдите в настройки взаимодействия приложений\n- включите \"Веб-сервис xDrip\"</string>
     <string name="pref_source_activate_local_nightscout_iob">Активировать использование IOB</string>
@@ -679,9 +679,9 @@
     <string name="pref_watchfaces_cat">Сторонние циферблаты</string>
     <string name="pref_watchfaces_info_summary">Это приложение не предоставляет циферблат, оно предоставляет несколько усложнений (небольшие круглые элементы циферблата), которые можно использовать для циферблатов, поддерживающих усложнения сторонних разработчиков.</string>
     <string name="pref_watchfaces_default">Стандартные</string>
-    <string name="pref_watchfaces_default_summary">Большинство производителей часов уже предоставляют циферблаты, которые можно использовать с усложнением GlucoDataHandler.\nНапример, большинство циферблатов Samsung "Info" совместимы.</string>
+    <string name="pref_watchfaces_default_summary">Большинство производителей часов уже предоставляют циферблаты, которые можно использовать с усложнением GlucoDataHandler.\nНапример, большинство циферблатов Samsung \"Info\" совместимы.</string>
     <string name="pref_watchfaces_pujie">Pujie</string>
-    <string name="pref_watchfaces_pujie_summary">Pujie — это приложение для создания циферблатов с облачной библиотекой.\nЧтобы найти совместимые циферблаты, найдите в библиотеке циферблаты, начинающиеся с "GDH_".\nПримечание. Pujie несовместимо с устройствами Wear OS 5.\nНажмите здесь, чтобы открыть приложение в Play Маркете.</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie — это приложение для создания циферблатов с облачной библиотекой.\nЧтобы найти совместимые циферблаты, найдите в библиотеке циферблаты, начинающиеся с \"GDH_\".\nПримечание. Pujie несовместимо с устройствами Wear OS 5.\nНажмите здесь, чтобы открыть приложение в Play Маркете.</string>
     <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
     <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man создает сторонние циферблаты, специально разработанные для использования с GlucoDataHandler.\nНажмите здесь, чтобы открыть его страницу в Play Маркете.</string>
     <string name="pref_watchfaces_gdc">Циферблаты GDC</string>
@@ -835,4 +835,9 @@
     <string name="src_webserver">Веб-сервер</string>
     <string name="src_juggluco_webserver_summary">Использование веб-сервера Juggluco для получения возраста датчика и пропущенных данных, если они есть. Сначала включите веб-сервер в Juggluco без SSL и api_secret.</string>
 
+    <string name="src_iob_support">Поддержка IOB</string>
+    <string name="src_juggluco_iob_support_summary">Получение значений IOB с веб-сервера Juggluco.</string>
+    <string name="pref_source_juggluco_setup_info">Настроить Juggluco</string>
+    <string name="pref_source_juggluco_webserver_info">Настроить веб-сервер</string>
+    <string name="pref_source_juggluco_webserver_info_summary">Чтобы включить веб-сервер в Juggluco:\n- откройте Juggluco\n- перейдите в \"Настройки\"\n- откройте \"Обмен данными\"\n- откройте \"Веб-сервер\"\n- Включите \"Активен\"\n- НЕ устанавливайте \"api_secret\" и \"Использовать SSL\"!\n- необязательно: включите \"Только локально\"</string>
 </resources>
