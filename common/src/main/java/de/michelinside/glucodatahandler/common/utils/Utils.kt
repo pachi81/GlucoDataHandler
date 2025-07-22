@@ -363,16 +363,20 @@ object Utils {
 
 
     @Suppress("DEPRECATION")
-    fun dumpBundle(bundle: Bundle?): String {
+    fun dumpBundle(bundle: Bundle?, prefix: String = ""): String {
         try {
             if (bundle == null) {
                 return "NULL"
             }
-            var string = "{"
+            var string = "{\r\n"
             for (key in bundle.keySet()) {
-                string += " " + key + " => " + (if (bundle[key] != null) (bundle[key]!!.javaClass.simpleName + ": " + bundle[key].toString()) else "NULL") + "\r\n"
+                string += if(bundle[key] is Bundle) {
+                    prefix + "  " + key + " => Bundle: " + dumpBundle(bundle[key] as Bundle, prefix + "  ") + "\r\n"
+                } else {
+                    prefix + "  " + key + " => " + (if (bundle[key] != null) (bundle[key]!!.javaClass.simpleName + ": " + bundle[key].toString()) else "NULL") + "\r\n"
+                }
             }
-            string += " }"
+            string += prefix + "}"
             return string.take(2000)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "dumpBundle exception: " + exc.toString() + "\n" + exc.stackTraceToString() )

@@ -713,6 +713,11 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                 return false
             }
 
+            if(!isIobCob() || (iob == 0F && cob == 0F)) {
+                if(!(extras.getFloat(IOB, Float.NaN) > 0F || extras.getFloat(COB, Float.NaN) > 0F))
+                    return false  // no newer value as IOB/COB is 0 or NaN
+            }
+
             val newTime = if(extras.containsKey(IOBCOB_TIME))
                 extras.getLong(IOBCOB_TIME)
             else
@@ -726,7 +731,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     fun handleIobCob(context: Context, dataSource: DataSource, extras: Bundle, interApp: Boolean = false) {
-        Log.v(LOG_ID, "handleIobCob for source " + dataSource + ": " + extras.toString())
+        Log.v(LOG_ID, "handleIobCob for source " + dataSource + ": " + Utils.dumpBundle(extras))
         if (hasNewIobCob(extras)) {
             var iobCobChange = false
             iobCobTime = if(extras.containsKey(IOBCOB_TIME))
