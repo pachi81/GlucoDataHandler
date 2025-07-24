@@ -111,14 +111,17 @@ class AODAccessibilityService : AccessibilityService() {
             val displayManager = BitmapUtils.getDisplayManager(this)
             if(displayManager != null && displayManager.displays.isNotEmpty()) {
                 val display = displayManager.displays[0]
-                if(display.state == Display.STATE_OFF) {
+                Log.d(LOG_ID, "Display state: ${display.state}")
+                if(display.state != Display.STATE_ON) {
                     val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                     val enabled = sharedPref.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
-                    Log.i(LOG_ID, "Initial screen state is off - enabled: $enabled")
+                    Log.i(LOG_ID, "Initial screen state is ${display.state} - enabled: $enabled")
                     if (enabled) {
                         checkAndCreateOverlay()
                     }
                 }
+            } else {
+                Log.w(LOG_ID, "No displays found")
             }
         } catch (e: Exception) {
             Log.e(LOG_ID, "Error in onCreate", e)
