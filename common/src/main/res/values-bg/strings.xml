@@ -848,4 +848,6 @@
     <string name="pref_source_juggluco_webserver_info">Настройка на уеб сървър</string>
     <string name="pref_source_juggluco_webserver_info_summary">За да активирате уеб сървъра в Juggluco:\n- отворете Juggluco\n- отидете на \"Настройки\"\n- отворете \"Обмен на данни\"\n- отворете \"Уеб сървър\"\n- Активирайте \"Активен\"\n- НЕ задавайте \"api_secret\" и \"Използване на SSL\"!\n- по избор: активирайте \"Само локално\"</string>
 
+    <string name="pref_source_medtrum_info">Настройка на Medtrum</string>
+    <string name="pref_source_medtrum_info_summary">За да получавате данни като последовател на Medtrum:\n- Регистрирайте акаунт в приложението EasyFollower или в EasyView\n-> ВАЖНО: не можете да използвате вашия Medtrum акаунт за това!\n- Поканете себе си\n- Приемете поканата\n- Използвайте този акаунт за GlucoDataHandler\n- По избор: Деинсталирайте приложението EasyFollower</string>
 </resources>

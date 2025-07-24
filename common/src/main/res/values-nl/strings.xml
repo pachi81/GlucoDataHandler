@@ -847,4 +847,8 @@
     <string name="pref_source_juggluco_setup_info">Juggluco instellen</string>
     <string name="pref_source_juggluco_webserver_info">Webserver instellen</string>
     <string name="pref_source_juggluco_webserver_info_summary">Om de webserver in Juggluco in te schakelen:\n- open Juggluco\n- ga naar \"Instellingen\"\n- open \"Gegevens uitwisselen\"\n- open \"Webserver\"\n- Schakel \"Actief\" in\n- stel \"api_secret\" en \"SSL gebruiken\" NIET in!\n- optioneel: schakel \"Alleen lokaal\" in</string>
+
+    <string name="pref_source_medtrum_info">Medtrum instellen</string>
+    <string name="pref_source_medtrum_info_summary">Om gegevens als Medtrum-volger te ontvangen:\n- Registreer een account in de EasyFollower-app of op EasyView\n-> BELANGRIJK: u kunt uw Medtrum-account hiervoor niet gebruiken!\n- Nodig uzelf uit\n- Accepteer de uitnodiging\n- Gebruik dit account voor GlucoDataHandler\n- Optioneel: Verwijder de EasyFollower-app</string>
+
 </resources>

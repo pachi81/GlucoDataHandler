@@ -912,4 +912,8 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="pref_source_juggluco_setup_info">Juggluco beállítása</string>
     <string name="pref_source_juggluco_webserver_info">Webszerver beállítása</string>
     <string name="pref_source_juggluco_webserver_info_summary">A webszerver engedélyezése a Jugglucóban:\n- nyissa meg a Jugglucót\n- lépjen a \"Beállítások\" menüpontba\n- nyissa meg az \"Adatcsere\" menüpontot\n- nyissa meg a \"Webszerver\" menüpontot\n- Engedélyezze az \"Aktív\" opciót\n- NE állítsa be az \"api_secret\" és a \"SSL használata\" opciókat!\n- opcionális: engedélyezze a \"Csak helyi\" opciót</string>
+
+    <string name="pref_source_medtrum_info">Medtrum beállítása</string>
+    <string name="pref_source_medtrum_info_summary">Adatok fogadása Medtrum követőként:\n- Regisztráljon fiókot az EasyFollower alkalmazásban vagy az EasyView-n\n-> FONTOS: ehhez nem használhatja Medtrum fiókját!\n- Hívja meg saját magát\n- Fogadja el a meghívást\n- Használja ezt a fiókot a GlucoDataHandlerhez\n- Opcionális: Távolítsa el az EasyFollower alkalmazást</string>
+
 </resources>

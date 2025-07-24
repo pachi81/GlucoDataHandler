@@ -841,4 +841,8 @@
     <string name="pref_source_juggluco_setup_info">Configurar Juggluco</string>
     <string name="pref_source_juggluco_webserver_info">Configurar Servidor Web</string>
     <string name="pref_source_juggluco_webserver_info_summary">Para ativar o servidor web no Juggluco:\n- abra o Juggluco\n- vá para \"Definições\"\n- abra \"Trocar dados\"\n- abra \"Servidor Web\"\n- Ative \"Ativo\"\n- NÃO defina \"api_secret\" e \"Usar SSL\"!\n- opcional: ative \"Apenas local\"</string>
+
+    <string name="pref_source_medtrum_info">Configurar Medtrum</string>
+    <string name="pref_source_medtrum_info_summary">Para receber dados como seguidor Medtrum:\n- Registe uma conta na aplicação EasyFollower ou no EasyView\n-> IMPORTANTE: não pode usar a sua conta Medtrum para isto!\n- Convide-se a si mesmo\n- Aceite o convite\n- Use esta conta para o GlucoDataHandler\n- Opcional: Desinstale a aplicação EasyFollower</string>
+
 </resources>

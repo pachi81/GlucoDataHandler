@@ -850,4 +850,6 @@
     <string name="pref_source_juggluco_setup_info">Setup Juggluco</string>
     <string name="pref_source_juggluco_webserver_info">Setup Webserver</string>
     <string name="pref_source_juggluco_webserver_info_summary">To enable webserver in Juggluco:\n- open Juggluco\n- go to \"Settings\"\n- open \"Exchange data\"\n- open \"Web server\"\n- Enable \"Active\"\n- do NOT set \"api_secret\" and \"Use SSL\"!\n- optional: enable \"Local only\"</string>
+    <string name="pref_source_medtrum_info">Setup Medtrum</string>
+    <string name="pref_source_medtrum_info_summary">To receive data as Medtrum follower:\n- Register account in EasyFollower app or on EasyView\n-> IMPORTANT: you can not use your Medtrum account for!\n- Invite yourself\n- Accept invitation\n- Use this account for GlucoDataHandler\n- Optional: Uninstall EasyFollower app</string>
 </resources>

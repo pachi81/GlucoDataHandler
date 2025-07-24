@@ -209,10 +209,10 @@
             android:title="@string/src_libre_reconnect"
             android:summary="@string/src_libre_reconnect_summary"
             app:iconSpaceReserved="false" />
-        <!--<Preference
+        <Preference
             android:key="source_medtrumlinkup_info"
             android:title="@string/pref_source_medtrum_info"
             android:summary="@string/pref_source_medtrum_info_summary"
-            app:iconSpaceReserved="false" />-->
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 </PreferenceScreen>

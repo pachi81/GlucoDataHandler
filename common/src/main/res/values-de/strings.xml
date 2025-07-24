@@ -838,4 +838,8 @@
     <string name="pref_source_juggluco_setup_info">Juggluco einrichten</string>
     <string name="pref_source_juggluco_webserver_info">Webserver einrichten</string>
     <string name="pref_source_juggluco_webserver_info_summary">So aktivieren Sie den Webserver in Juggluco:\n- Juggluco öffnen\n- Gehen Sie zu \"Einstellungen\"\n- Öffnen Sie \"Datenaustausch\"\n- Öffnen Sie \"Webserver\"\n- Aktivieren Sie \"Aktiv\"\n- Setzen Sie NICHT \"api_secret\" und \"SSL verwenden\"!\n- optional: \"Nur lokal\" aktivieren</string>
+
+    <string name="pref_source_medtrum_info">Medtrum einrichten</string>
+    <string name="pref_source_medtrum_info_summary">Um Daten als Medtrum-Follower zu empfangen:\n- Registrieren Sie ein Konto in der EasyFollower-App oder auf EasyView\n-> WICHTIG: Sie können Ihr Medtrum-Konto hierfür nicht verwenden!\n- Laden Sie sich selbst ein\n- Akzeptieren Sie die Einladung\n- Verwenden Sie dieses Konto für GlucoDataHandler\n- Optional: Deinstallieren Sie die EasyFollower-App</string>
+
 </resources>

@@ -843,4 +843,8 @@
     <string name="pref_source_juggluco_setup_info">設定 Juggluco</string>
     <string name="pref_source_juggluco_webserver_info">設定網路伺服器</string>
     <string name="pref_source_juggluco_webserver_info_summary">若要在 Juggluco 中啟用網路伺服器：\n- 開啟 Juggluco\n- 前往「設定」\n- 開啟「交換資料」\n- 開啟「網路伺服器」\n- 啟用「作用中」\n- 請勿設定 「api_secret」和「使用 SSL」！\n- 選用：啟用「僅限本機」</string>
+
+    <string name="pref_source_medtrum_info">設定 Medtrum</string>
+    <string name="pref_source_medtrum_info_summary">若要以 Medtrum 追蹤者身分接收資料：\n- 在 EasyFollower 應用程式或 EasyView 上註冊帳戶\n-> 重要：您不能為此使用您的 Medtrum 帳戶！\n- 邀請自己\n- 接受邀請\n- 將此帳戶用於 GlucoDataHandler\n- 選用：解除安裝 EasyFollower 應用程式</string>
+
 </resources>
