@@ -629,12 +629,12 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             Log.i(LOG_ID, "onStartCommand called foregroundService: $isForegroundService")
             GdhUncaughtExecptionHandler.init()
             if (!isForegroundService) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    Log.i(LOG_ID, "Starting service in foreground with type ${ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC}!")
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    Log.i(LOG_ID, "Starting service in foreground with type ${ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE}!")
                     startForeground(
                         NOTIFICATION_ID,
                         getNotification(),
-                        ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+                        ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
                     )
                 } else {
                     Log.i(LOG_ID, "Starting service in foreground!")
@@ -805,5 +805,11 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 Log.e(LOG_ID, "SendMessage exception: " + exc.toString())
             }
         }.start()
+    }
+
+    override fun onTimeout(startId: Int, fgsType: Int) {
+        super.onTimeout(startId, fgsType)
+        Log.e(LOG_ID, "onTimeout called with startId $startId and fgsType $fgsType")
+        //stopSelf() better force crash to see, what happens...
     }
 }
