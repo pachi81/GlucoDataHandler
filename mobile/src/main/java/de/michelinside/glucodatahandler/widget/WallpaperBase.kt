@@ -366,7 +366,7 @@ abstract class WallpaperBase(protected val context: Context, protected val LOG_I
                 else
                     txtCob.text = buildImageString(context, R.drawable.icon_burger, "🍔", " ${ReceiveData.getCobAsString()}", color)
             }
-            val usedSize = if(graphImage != null && (txtIob.visibility == VISIBLE || txtCob.visibility == VISIBLE)) size*2/3 else size
+            val usedSize = if(graphImage != null && (txtIob.visibility == VISIBLE || txtCob.visibility == VISIBLE)) size/2 else size
             val textUsedSize = if(graphImage != null && (txtIob.visibility == VISIBLE || txtCob.visibility == VISIBLE)) size*3/4 else size
 
             txtBgValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize+MIN_VALUE_SIZE+textUsedSize*VALUE_RESIZE_FACTOR)
