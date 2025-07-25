@@ -851,4 +851,5 @@
     <string name="pref_source_medtrum_info">Medtrum instellen</string>
     <string name="pref_source_medtrum_info_summary">Om gegevens als Medtrum-volger te ontvangen:\n- Registreer een account in de EasyFollower-app of op EasyView\n-> BELANGRIJK: u kunt uw Medtrum-account hiervoor niet gebruiken!\n- Nodig uzelf uit\n- Accepteer de uitnodiging\n- Gebruik dit account voor GlucoDataHandler\n- Optioneel: Verwijder de EasyFollower-app</string>
 
+    <string name="pref_battery_complication_percent">% weergeven (batterij)</string>
 </resources>

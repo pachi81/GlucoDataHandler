@@ -849,4 +849,6 @@
     <string name="pref_source_medtrum_info">Configurer Medtrum</string>
     <string name="pref_source_medtrum_info_summary">Pour recevoir des données en tant que suiveur Medtrum :\n- Créez un compte dans l\'application EasyFollower ou sur EasyView\n-> IMPORTANT : vous ne pouvez pas utiliser votre compte Medtrum pour cela !\n- Invitez-vous\n- Acceptez l\'invitation\n- Utilisez ce compte pour GlucoDataHandler\n- Optionnel : Désinstallez l\'application EasyFollower</string>
 
+    <string name="pref_battery_complication_percent">Afficher % (batterie)</string>
+
 </resources>

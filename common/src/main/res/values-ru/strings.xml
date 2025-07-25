@@ -844,4 +844,5 @@
     <string name="pref_source_medtrum_info">Настройка Medtrum</string>
     <string name="pref_source_medtrum_info_summary">Для получения данных в качестве подписчика Medtrum:\n- Зарегистрируйте учетную запись в приложении EasyFollower или на EasyView\n-> ВАЖНО: вы не можете использовать для этого свою учетную запись Medtrum!\n- Пригласите себя\n- Примите приглашение\n- Используйте эту учетную запись для GlucoDataHandler\n- Необязательно: удалите приложение EasyFollower</string>
 
+    <string name="pref_battery_complication_percent">Показать % (батарея)</string>
 </resources>

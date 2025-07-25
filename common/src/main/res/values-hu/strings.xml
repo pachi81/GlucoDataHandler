@@ -916,4 +916,6 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="pref_source_medtrum_info">Medtrum beállítása</string>
     <string name="pref_source_medtrum_info_summary">Adatok fogadása Medtrum követőként:\n- Regisztráljon fiókot az EasyFollower alkalmazásban vagy az EasyView-n\n-> FONTOS: ehhez nem használhatja Medtrum fiókját!\n- Hívja meg saját magát\n- Fogadja el a meghívást\n- Használja ezt a fiókot a GlucoDataHandlerhez\n- Opcionális: Távolítsa el az EasyFollower alkalmazást</string>
 
+    <string name="pref_battery_complication_percent">% megjelenítése (akku)</string>
+
 </resources>
