@@ -24,6 +24,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
         private var secret = ""
         private var token = ""
         private var iob_cob_support = true
+        private var lastIobCobTime = 0L
         const val PEBBLE_ENDPOINT = "/pebble"
         const val ENTRIES_ENDPOINT = "/api/v1/entries/current.json"
         const val GRAPHDATA_ENDPOINT = "/api/v1/entries/sgv.json?find[date][\$gt]=%d&count=%d"
@@ -61,6 +62,10 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
         return false
     }
 
+    override fun getLastIobCobTime(): Long {
+        return lastIobCobTime
+    }
+
     override fun needsInternet(): Boolean {
         if(url.contains("127.0.0.1") || url.lowercase().contains("localhost")) {
             Log.v(LOG_ID, "Localhost detected!")
@@ -90,7 +95,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
             }
         }
         if (!handlePebbleResponse(httpGet(getUrl(PEBBLE_ENDPOINT), getHeader()))) {
-            if (!hasIobCobSupport() || ReceiveData.getElapsedTimeMinute() > 0) {
+            if (!hasIobCobSupport() || ReceiveData.getElapsedTimeMinute() >= getIntervalMinute()) {
                 // only check for new value, if there is no (otherwise it was only called for IOB/COB)
                 val body = httpGet(getUrl(ENTRIES_ENDPOINT), getHeader())
                 if (body == null && lastErrorCode >= 300)
@@ -240,7 +245,6 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
                     Log.w(LOG_ID, "Missing values in response: " + body)
                     return false
                 }
-
                 val glucoExtras = Bundle()
                 glucoExtras.putLong(ReceiveData.TIME, jsonObject.getLong("datetime"))
                 setSgv(glucoExtras, jsonObject)
@@ -248,14 +252,18 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
                 if (jsonObject.has("device"))
                     glucoExtras.putString(ReceiveData.SERIAL, jsonObject.getString("device"))
                 if (iob_cob_support) {
-                    parsePebbleIobCob(jsonObject, glucoExtras)
+                    if(parsePebbleIobCob(jsonObject, glucoExtras))
+                        lastIobCobTime = System.currentTimeMillis()
                 } else {
                     glucoExtras.putFloat(ReceiveData.IOB, Float.NaN)
                     glucoExtras.putFloat(ReceiveData.COB, Float.NaN)
                     glucoExtras.putLong(ReceiveData.IOBCOB_TIME, 0L)
                 }
-
-                handleResult(glucoExtras)
+                if (!hasIobCobSupport() || ReceiveData.getElapsedTimeMinute() >= getIntervalMinute()) {
+                    handleResult(glucoExtras)
+                } else {
+                    handleIobResult(glucoExtras)
+                }
                 return true
             }
         } catch (exc: Exception) {

@@ -256,6 +256,23 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
 
     open fun getNoNewValueInfo(time: Long): String = ""
 
+    protected fun handleIobResult(extras: Bundle) {
+        Log.d(LOG_ID, "handleIobResult for $source: ${Utils.dumpBundle(extras)}")
+        if(!ReceiveData.hasNewIobCob(extras, true)) {
+            setState(SourceState.CONNECTED)
+            return
+        }
+        Handler(Looper.getMainLooper()).post {
+            try {
+                ReceiveData.handleIobCob(GlucoDataService.context!!, source, extras)
+                setState(SourceState.CONNECTED)
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "Handle IOB exception: " + exc.message.toString() )
+                SourceStateData.setError(source, exc.message.toString())
+            }
+        }
+    }
+
     protected fun handleResult(extras: Bundle) {
         Log.d(LOG_ID, "handleResult for $source: ${Utils.dumpBundle(extras)}")
         if(!ReceiveData.hasNewValue(extras)) {

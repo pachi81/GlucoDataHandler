@@ -124,6 +124,7 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
                             var lastAge = 0L
                             var lastTime = 0L
                             var intervalSet = false
+                            var intervalChanged = false
                             lines.forEach {
                                 val parts = it.split("\t")
                                 if(parts.size >= 7) {
@@ -139,7 +140,7 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
                                             val ageDiff = abs(age - lastAge)
                                             val timeDiff = Utils.round(abs(time - lastTime).toFloat()/60000, 0).toInt()
                                             Log.d(LOG_ID, "Age diff: $ageDiff, time diff: $timeDiff -> interval: ${timeDiff/ageDiff}")
-                                            setInterval(timeDiff/ageDiff)
+                                            intervalChanged = setInterval(timeDiff/ageDiff)
                                             intervalSet = true
                                         }
                                     }
@@ -160,6 +161,10 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
                                     }
                                 }
                             }
+                            if(intervalChanged && firstValueTime > 0 && lastValueReceived && values.isEmpty()) {
+                                if(ReceiveData.time - (interval*60000) < firstValueTime)
+                                    return@launch  // stop loop as there are already all data
+                            }
                         }
                         Log.d(LOG_ID, "End of loop: retry=$retry, lastValueReceived=$lastValueReceived, values.size=${values.size}")
                     }
@@ -177,11 +182,18 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
         }
     }
 
-    private fun setInterval(newInterval: Long) {
-        if(interval != newInterval) {
+    private fun setInterval(newInterval: Long): Boolean {
+        if(newInterval > 0 && interval != newInterval) {
             Log.i(LOG_ID, "Interval changed from $interval to $newInterval")
-            interval = newInterval
+            if(newInterval == 1L || newInterval == 5L)
+                interval = newInterval
+            else if(newInterval == 2L)
+                interval = 1
+            else if(newInterval in 4L..6L)
+                interval = 5
+            return true
         }
+        return false
     }
 
     private fun requestIobData(context: Context) {

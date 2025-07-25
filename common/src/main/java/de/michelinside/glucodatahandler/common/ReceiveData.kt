@@ -319,7 +319,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return deltaVal
     }
 
-    fun isIobCob() : Boolean {
+    private fun isIobCob() : Boolean {
         if (isIobCobObsolete()) {
             iob = Float.NaN
             cob = Float.NaN
@@ -714,14 +714,14 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return result
     }
 
-    private fun hasNewIobCob(extras: Bundle?): Boolean {
+    fun hasNewIobCob(extras: Bundle?, ignoreZero: Boolean = false): Boolean {
         if(extras != null && (extras.containsKey(IOB) || extras.containsKey(COB))) {
             if (!isIobCob() && extras.getFloat(IOB, Float.NaN).isNaN() && extras.getFloat(COB, Float.NaN).isNaN()) {
                 Log.d(LOG_ID, "Ignore NaN IOB and COB")
                 return false
             }
 
-            if(!isIobCob() || (iob == 0F && cob == 0F)) {
+            if(ignoreZero && (!isIobCob() || (iob == 0F && cob == 0F))) {
                 if(!(extras.getFloat(IOB, Float.NaN) > 0F || extras.getFloat(COB, Float.NaN) > 0F))
                     return false  // no newer value as IOB/COB is 0 or NaN
             }
@@ -740,7 +740,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
 
     fun handleIobCob(context: Context, dataSource: DataSource, extras: Bundle, interApp: Boolean = false) {
         Log.v(LOG_ID, "handleIobCob for source " + dataSource + ": " + Utils.dumpBundle(extras))
-        if (hasNewIobCob(extras)) {
+        if (hasNewIobCob(extras, true)) {
             var iobCobChange = false
             iobCobTime = if(extras.containsKey(IOBCOB_TIME))
                 extras.getLong(IOBCOB_TIME)
