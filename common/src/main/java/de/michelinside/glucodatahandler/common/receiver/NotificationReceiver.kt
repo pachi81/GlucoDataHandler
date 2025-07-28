@@ -120,6 +120,19 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         return true
     }
 
+    private fun has5MinuteInterval(packageName: String, sharedPref: SharedPreferences): Boolean {
+        if(hasRegularNotification(packageName))
+            return false
+        if(PackageUtils.isDexcomApp(packageName))
+            return true
+        if(packageName.lowercase().startsWith("com.senseonics."))  // Eversense 365 CGM has 5 min interval
+            return true
+        if(packageName.lowercase().startsWith("com.medtronic."))  // MiniMed has 5 min interval
+            return true
+        // else
+        return sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl, true)
+    }
+
     private fun validGlucoseNotification(sbn: StatusBarNotification, sharedPref: SharedPreferences): Boolean {
         if (sbn.packageName == sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP, "")) {
             updateOnlyChangedValue = false
@@ -191,7 +204,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                     }
                 }*/
             }
-            if(!hasRegularNotification(sbn.packageName) && (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl, true) || PackageUtils.isDexcomApp(sbn.packageName) )) {
+            if(has5MinuteInterval(sbn.packageName, sharedPref)) {
                 lastValueNotificationTime = sbn.postTime
 
                 //if(sbn.packageName.lowercase().startsWith("com.medtronic.")) { // MiniMed
@@ -442,7 +455,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
 
     private fun validGlucoseValue(value: Float): Boolean {
         val mgVal = if (GlucoDataUtils.isMmolValue(value)) GlucoDataUtils.mmolToMg(value).toInt() else value.toInt()
-        if(mgVal >= Constants.GLUCOSE_MIN_VALUE && mgVal <= Constants.GLUCOSE_MAX_NOTIFICATION_VALUE) {
+        if(mgVal >= Constants.GLUCOSE_MIN_VALUE && mgVal <= Constants.GLUCOSE_MAX_VALUE) {
             if(ReceiveData.getElapsedTimeMinute(RoundingMode.HALF_UP) > 0) {
                 val delta = (mgVal - ReceiveData.rawValue).toFloat() / ReceiveData.getElapsedTimeMinute(RoundingMode.HALF_UP)
                 val maxDelta = if(updateOnlyChangedValue) 10F else 40F
