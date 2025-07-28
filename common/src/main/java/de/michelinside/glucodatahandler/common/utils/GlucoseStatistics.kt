@@ -3,7 +3,6 @@ package de.michelinside.glucodatahandler.common.utils
 import android.util.Log
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.database.dbAccess
-import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics.LOG_ID
 
 
 class StatisticsData(val days: Int) {
