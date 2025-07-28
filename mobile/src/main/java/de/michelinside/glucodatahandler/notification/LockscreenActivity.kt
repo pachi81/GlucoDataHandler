@@ -83,13 +83,17 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             activity = this
             showWhenLockedAndTurnScreenOn()
             super.onCreate(savedInstanceState)
-            enableEdgeToEdge()
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P)
+                enableEdgeToEdge()
             setContentView(R.layout.activity_lockscreen)
-            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_layout)) { v, insets ->
-                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                Log.d(LOG_ID, "Insets: " + systemBars.toString())
-                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-                insets
+
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+                ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_layout)) { v, insets ->
+                    val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                    Log.d(LOG_ID, "Insets: " + systemBars.toString())
+                    v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+                    insets
+                }
             }
             hideSystemUI()
 
