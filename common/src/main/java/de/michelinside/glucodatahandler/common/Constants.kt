@@ -26,9 +26,8 @@ object Constants {
     const val COMMAND_EXTRA = "command"
     const val COMMAND_BUNDLE = "command_bundle"
     const val GLUCOSE_CONVERSION_FACTOR = 18.0182F
-    const val GLUCOSE_MIN_VALUE = 40
-    const val GLUCOSE_MAX_VALUE = 600
-    const val GLUCOSE_MAX_NOTIFICATION_VALUE = 400
+    const val GLUCOSE_MIN_VALUE = 36    // 2 mmol/l
+    const val GLUCOSE_MAX_VALUE = 600   // 33,3 mmol/l
     const val ACTION_STOP_FOREGROUND = "stop_foreground"
     const val ACTION_START_FOREGROUND = "start_foreground"
     const val VERSION_CODE = "gdh.version_code"
@@ -333,6 +332,8 @@ object Constants {
     const val PATIENT_NAME = "patient_name"
     const val SHARED_PREF_FULLSCREEN_LANDSCAPE = "fullscreen_landscape"
     const val SHARED_PREF_SENSOR_RUNTIME = "sensor_runtime"
+
+    const val SHARED_PREF_MAIN_STATISTICS_DAYS = "main_statistics_days"
 
     // database
     const val DB_MAX_DATA_WEAR_DAYS = 1 // 24h

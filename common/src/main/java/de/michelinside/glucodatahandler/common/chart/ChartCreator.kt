@@ -284,8 +284,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                 averageLine = null
             }
             GlucoseStatistics.update()
-            if(!GlucoseStatistics.averageGlucose.isNaN()) {
-                averageLine = createLimitLine(GlucoseStatistics.averageGlucose, true)
+            if(!GlucoseStatistics.statData7d.averageGlucose.isNaN()) {
+                averageLine = createLimitLine(GlucoseStatistics.statData7d.averageGlucose, true)
                 chart.axisRight.addLimitLine(averageLine)
             }
         }

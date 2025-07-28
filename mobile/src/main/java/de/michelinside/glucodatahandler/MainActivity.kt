@@ -22,6 +22,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.RelativeLayout
 import android.widget.ScrollView
 import android.widget.TableLayout
@@ -97,6 +99,10 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var optionsMenu: Menu
     private lateinit var chart: GlucoseChart
     private lateinit var sensorAgeProgressBar: ProgressBar
+    private lateinit var statGroup: RadioGroup
+    private lateinit var btnStat1d: RadioButton
+    private lateinit var btnStat7d: RadioButton
+
     private var layoutWithGraph: LinearLayout? = null
     private var layoutWithoutGraph: LinearLayout? = null
     private var expandCollapseView: ImageView? = null
@@ -151,6 +157,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             expandCollapseView = findViewById(R.id.expandCollapseView)
             layoutWithGraph = findViewById(R.id.glucose_with_graph)
             layoutWithoutGraph = findViewById(R.id.glucose_without_graph)
+            statGroup = findViewById(R.id.statGroup)
+            btnStat1d = findViewById(R.id.btnStat1d)
+            btnStat7d = findViewById(R.id.btnStat7d)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -177,6 +186,25 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 if(sharedPref.getBoolean(Constants.SHARED_PREF_FULLSCREEN_LANDSCAPE, true))
                     toggleFullscreenLandMode()
             }
+
+            btnStat1d.text = resources.getQuantityString(CR.plurals.duration_days_short, 1, 1)
+            btnStat7d.text = resources.getQuantityString(CR.plurals.duration_days_short, 7, 7)
+
+            if(sharedPref.getInt(Constants.SHARED_PREF_MAIN_STATISTICS_DAYS, 7) == 1) {
+                btnStat1d.isChecked = true
+            } else {
+                btnStat7d.isChecked = true
+            }
+
+            statGroup.setOnCheckedChangeListener { _, _ ->
+                Log.d(LOG_ID, "statGroup changed")
+                with(sharedPref.edit()) {
+                    putInt(Constants.SHARED_PREF_MAIN_STATISTICS_DAYS, if(btnStat1d.isChecked) 1 else 7)
+                    apply()
+                }
+                updateStatisticsTable()
+            }
+
 
             Dialogs.updateColorScheme(this)
 
@@ -890,15 +918,18 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private fun updateStatisticsTable() {
         tableStatistics.removeViews(1, maxOf(0, tableStatistics.childCount - 1))
         GlucoseStatistics.update()
-        if(GlucoseStatistics.averageGlucose > 0)
-            tableStatistics.addView(createRow(CR.string.info_label_average, GlucoDataUtils.getDisplayGlucoseAsString(GlucoseStatistics.averageGlucose, true)))
-        if(GlucoseStatistics.hasData) {
-            tableStatistics.addView(createProgressBarRow(CR.string.very_high, GlucoseStatistics.percentVeryHigh, ReceiveData.getAlarmTypeColor(AlarmType.VERY_HIGH)))
-            tableStatistics.addView(createProgressBarRow(CR.string.high, GlucoseStatistics.percentHigh, ReceiveData.getAlarmTypeColor(AlarmType.HIGH)))
-            tableStatistics.addView(createProgressBarRow(CR.string.time_in_range, GlucoseStatistics.percentInRange, ReceiveData.getAlarmTypeColor(AlarmType.OK)))
-            tableStatistics.addView(createProgressBarRow(CR.string.low, GlucoseStatistics.percentLow, ReceiveData.getAlarmTypeColor(AlarmType.LOW)))
-            tableStatistics.addView(createProgressBarRow(CR.string.very_low, GlucoseStatistics.percentVeryLow, ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW)))
+        val statData = if(btnStat1d.isChecked) GlucoseStatistics.statData1d else GlucoseStatistics.statData7d
+        Log.d(LOG_ID, "Create statistics for ${statData.days}d with ${statData.count} data points")
+        if(statData.averageGlucose > 0)
+            tableStatistics.addView(createRow(CR.string.info_label_average, GlucoDataUtils.getDisplayGlucoseAsString(statData.averageGlucose, true)))
+        if(statData.hasData) {
+            tableStatistics.addView(createProgressBarRow(CR.string.very_high, statData.percentVeryHigh, ReceiveData.getAlarmTypeColor(AlarmType.VERY_HIGH)))
+            tableStatistics.addView(createProgressBarRow(CR.string.high, statData.percentHigh, ReceiveData.getAlarmTypeColor(AlarmType.HIGH)))
+            tableStatistics.addView(createProgressBarRow(CR.string.time_in_range, statData.percentInRange, ReceiveData.getAlarmTypeColor(AlarmType.OK)))
+            tableStatistics.addView(createProgressBarRow(CR.string.low, statData.percentLow, ReceiveData.getAlarmTypeColor(AlarmType.LOW)))
+            tableStatistics.addView(createProgressBarRow(CR.string.very_low, statData.percentVeryLow, ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW)))
         }
+        statGroup.visibility = if(statData.hasData) View.VISIBLE else View.GONE
         checkTableVisibility(tableStatistics)
     }
 

@@ -835,7 +835,7 @@
     <string name="pref_sensor_runtime_summary">Nombre de jours pendant lesquels le capteur peut être porté.</string>
     <string name="runtime_14_days">14 jours</string>
     <string name="runtime_15_days">15 jours</string>
-    <string name="table_header_statistics">Statistiques sur 7 jours</string>
+    <string name="table_header_statistics">Statistiques</string>
     <string name="info_label_average">Moyenne</string>
     <string name="time_in_range">TIR</string>
     <string name="src_webserver">Serveur Web</string>

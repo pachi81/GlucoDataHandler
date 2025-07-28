@@ -892,7 +892,7 @@
     <string name="pref_sensor_runtime_summary">Number of days the sensor can be worn.</string>
     <string name="runtime_14_days">14 days</string>
     <string name="runtime_15_days">15 days</string>
-    <string name="table_header_statistics">7 Days Statistics</string>
+    <string name="table_header_statistics">Statistics</string>
     <string name="info_label_average">Average</string>
     <string name="time_in_range">TIR</string>
     <string name="src_webserver">Webserver</string>
@@ -905,4 +905,11 @@
     <string name="pref_source_medtrum_info">Setup Medtrum</string>
     <string name="pref_source_medtrum_info_summary">To receive data as Medtrum follower:\n- Register account in EasyFollower app or on EasyView\n-> IMPORTANT: you can not use your Medtrum account for!\n- Invite yourself\n- Accept invitation\n- Use this account for GlucoDataHandler\n- Optional: Uninstall EasyFollower app</string>
     <string name="pref_battery_complication_percent">Show % in battery complication</string>
+
+    <plurals name="duration_days_short" translatable="false">
+        <item quantity="one">%dd</item>
+        <item quantity="other">%dd</item>
+    </plurals>
+
 </resources>
+

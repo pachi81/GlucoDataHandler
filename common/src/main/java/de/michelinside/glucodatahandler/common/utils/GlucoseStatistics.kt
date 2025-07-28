@@ -3,10 +3,11 @@ package de.michelinside.glucodatahandler.common.utils
 import android.util.Log
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.database.dbAccess
+import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics.LOG_ID
 
-object GlucoseStatistics {
-    private val LOG_ID = "GDH.GlucoseStatistics"
-    private var lastUpdate = 0L
+
+class StatisticsData(val days: Int) {
+    private val LOG_ID = "GDH.StatisticsData"
     var averageGlucose: Float = Float.NaN
         private set
 
@@ -39,24 +40,36 @@ object GlucoseStatistics {
         return (veryHigh.toFloat() / count.toFloat()) * 100f
     }
 
+    fun update() {
+        val minTime = System.currentTimeMillis() - (days*24*60*60*1000)
+        averageGlucose = dbAccess.getAverageValue(minTime)
+        veryLow = dbAccess.getValuesInRangeCount(minTime, 0, ReceiveData.lowRaw.toInt())
+        low = dbAccess.getValuesInRangeCount(minTime, ReceiveData.lowRaw.toInt()+1, ReceiveData.targetMinRaw.toInt()-1)
+        inRange = dbAccess.getValuesInRangeCount(minTime, ReceiveData.targetMinRaw.toInt(), ReceiveData.targetMaxRaw.toInt())
+        high = dbAccess.getValuesInRangeCount(minTime, ReceiveData.targetMaxRaw.toInt()+1, ReceiveData.highRaw.toInt()-1)
+        veryHigh = dbAccess.getValuesInRangeCount(minTime, ReceiveData.highRaw.toInt(), Int.MAX_VALUE)
+        Log.i(LOG_ID, "statistics updated: count: $count, average: $averageGlucose")
+    }
+}
+
+
+object GlucoseStatistics {
+    private val LOG_ID = "GDH.GlucoseStatistics"
+    private var lastUpdate = 0L
+    val statData1d = StatisticsData(1)
+    val statData7d = StatisticsData(7)
+
     fun reset() {
         lastUpdate = 0
     }
 
     fun update() {
-        if(Utils.getElapsedTimeMinute(lastUpdate) >= 30 || count == 0) {
+        if(Utils.getElapsedTimeMinute(lastUpdate) >= 30 || statData1d.count == 0 || statData7d.count == 0) {
             Log.d(LOG_ID, "update statistics")
             // recalculate statistics data
             lastUpdate = System.currentTimeMillis()
-            val minTime = System.currentTimeMillis() - (7*24*60*60*1000)
-            averageGlucose = dbAccess.getAverageValue(minTime)
-            veryLow = dbAccess.getValuesInRangeCount(minTime, 0, ReceiveData.lowRaw.toInt())
-            low = dbAccess.getValuesInRangeCount(minTime, ReceiveData.lowRaw.toInt()+1, ReceiveData.targetMinRaw.toInt()-1)
-            inRange = dbAccess.getValuesInRangeCount(minTime, ReceiveData.targetMinRaw.toInt(), ReceiveData.targetMaxRaw.toInt())
-            high = dbAccess.getValuesInRangeCount(minTime, ReceiveData.targetMaxRaw.toInt()+1, ReceiveData.highRaw.toInt()-1)
-            veryHigh = dbAccess.getValuesInRangeCount(minTime, ReceiveData.highRaw.toInt(), Int.MAX_VALUE)
-            Log.i(LOG_ID, "statistics updated: count: $count, average: $averageGlucose")
-
+            statData1d.update()
+            statData7d.update()
         }
     }
 }

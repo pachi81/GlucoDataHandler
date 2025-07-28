@@ -901,7 +901,7 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="pref_sensor_runtime_summary">A szenzor viselhető napjainak száma.</string>
     <string name="runtime_14_days">14 nap</string>
     <string name="runtime_15_days">15 nap</string>
-    <string name="table_header_statistics">7 napos statisztika</string>
+    <string name="table_header_statistics">Statisztikák</string>
     <string name="info_label_average">Átlag</string>
     <string name="time_in_range">TIR</string>
     <string name="src_webserver">Webszerver</string>
