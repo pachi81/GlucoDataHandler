@@ -61,6 +61,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     protected open val circleRadius = 2F
     protected open val touchEnabled = true
     protected open var graphDays = 0
+    protected open val showAverage = true
     private var graphStartTime = 0L
     private var recreateThread: Thread? = null
     private var averageLine: LimitLine? = null
@@ -283,10 +284,12 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                 chart.axisRight.removeLimitLine(averageLine)
                 averageLine = null
             }
-            GlucoseStatistics.update()
-            if(!GlucoseStatistics.statData7d.averageGlucose.isNaN()) {
-                averageLine = createLimitLine(GlucoseStatistics.statData7d.averageGlucose, true)
-                chart.axisRight.addLimitLine(averageLine)
+            if(showAverage) {
+                GlucoseStatistics.update()
+                if(!GlucoseStatistics.statData7d.averageGlucose.isNaN()) {
+                    averageLine = createLimitLine(GlucoseStatistics.statData7d.averageGlucose, true)
+                    chart.axisRight.addLimitLine(averageLine)
+                }
             }
         }
     }
