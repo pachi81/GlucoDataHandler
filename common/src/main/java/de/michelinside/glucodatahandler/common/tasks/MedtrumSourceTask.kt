@@ -425,7 +425,7 @@ class MedtrumSourceTask : DataSourceTask(Constants.SHARED_PREF_MEDTRUM_ENABLED, 
                     val time = (dataArray.get(1) as Double).toLong() * 1000
                     if(time >= firstTime) {
                         val value = (dataArray.get(3) as Double).toFloat()
-                        if(value > 0F) {
+                        if(GlucoDataUtils.isGlucoseValid(value)) {
                             if(GlucoDataUtils.isMmolValue(value))
                                 values.add(GlucoseValue(time, GlucoDataUtils.mmolToMg(value).toInt()))
                             else

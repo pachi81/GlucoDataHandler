@@ -184,7 +184,7 @@ class NightscoutSourceTask: DataSourceTask(Constants.SHARED_PREF_NIGHTSCOUT_ENAB
                         if (GlucoDataUtils.isMmolValue(glucose))
                             glucose = GlucoDataUtils.mmolToMg(glucose)
                         val time = jsonEntry.getLong("date")
-                        if(!glucose.isNaN() && time > 0 && time >= firstValueTime) {
+                        if(GlucoDataUtils.isGlucoseValid(glucose) && time > 0 && time >= firstValueTime) {
                             values.add(GlucoseValue(time, glucose.toInt()))
                             if(time > lastTime) {
                                 lastTime = time

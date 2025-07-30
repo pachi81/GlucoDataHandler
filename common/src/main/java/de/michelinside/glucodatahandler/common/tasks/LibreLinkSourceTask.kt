@@ -14,6 +14,7 @@ import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import org.json.JSONArray
 import org.json.JSONObject
@@ -439,7 +440,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                             val time = if (parsedUtc > 0) parsedUtc else parsedLocal
                             if(time >= firstTime) {
                                 val value = glucoseData.optInt("ValueInMgPerDl")
-                                if(value > 0)
+                                if(GlucoDataUtils.isGlucoseValid(value))
                                     values.add(GlucoseValue(time, value))
                             }
                         }

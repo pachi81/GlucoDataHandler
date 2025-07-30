@@ -233,7 +233,7 @@ class DexcomShareSourceTask : DataSourceTask(Constants.SHARED_PREF_DEXCOM_SHARE_
                         val value = data.getInt("Value")
                         val re = Regex("[^0-9]")
                         val worldTime = re.replace(data.getString("WT"), "").toLong()
-                        if(worldTime < firstValueTime)
+                        if(worldTime < firstValueTime || !GlucoDataUtils.isGlucoseValid(value))
                             continue
                         values.add(GlucoseValue(worldTime, value))
                         if(worldTime > lastTime) {

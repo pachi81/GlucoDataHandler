@@ -90,7 +90,6 @@ class ReceiveDataTest {
         assertTrue(ReceiveData.isMmol)
     }
 
-
     @Test
     fun testReceiveInternalGlucoseAlarm() {
         // Context of the app under test.
@@ -107,5 +106,30 @@ class ReceiveDataTest {
         assertEquals(14, ReceiveData.alarm)
         assertTrue(ReceiveData.forceGlucoseAlarm)
         assertTrue(ReceiveData.forceAlarm)
+    }
+
+    @Test
+    fun testReceiveInvalidGlucose() {
+        // too high value
+        val glucoExtras = Bundle()
+        glucoExtras.putLong(ReceiveData.TIME, ReceiveData.time + 60000)
+        glucoExtras.putInt(ReceiveData.MGDL,Constants.GLUCOSE_MAX_VALUE + 1)
+        glucoExtras.putFloat(ReceiveData.RATE, 1F)
+        glucoExtras.putInt(ReceiveData.ALARM, 14)  // very high + force
+        assertFalse(ReceiveData.handleIntent(appContext, DataSource.NONE, glucoExtras, true))
+
+        // too low value
+        glucoExtras.putInt(ReceiveData.MGDL,Constants.GLUCOSE_MIN_VALUE - 1)
+        assertFalse(ReceiveData.handleIntent(appContext, DataSource.NONE, glucoExtras, true))
+    }
+
+    @Test
+    fun testReceiveNoNewValue() {
+        val glucoExtras = Bundle()
+        glucoExtras.putLong(ReceiveData.TIME, ReceiveData.time + 30000)
+        glucoExtras.putInt(ReceiveData.MGDL,180)
+        glucoExtras.putFloat(ReceiveData.RATE, -1F)
+        glucoExtras.putInt(ReceiveData.ALARM, 0)
+        assertFalse(ReceiveData.handleIntent(appContext, DataSource.NONE, glucoExtras, true))
     }
 }

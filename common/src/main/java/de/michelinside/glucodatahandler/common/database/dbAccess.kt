@@ -127,14 +127,19 @@ object dbAccess {
 
     private fun updateTimestamps(values: List<GlucoseValue>): List<GlucoseValue> {
         val updated = mutableListOf<GlucoseValue>()
+        val minTime = System.currentTimeMillis()-Constants.DB_MAX_DATA_TIME_MS
         values.forEach {
-            updated.add(GlucoseValue(GlucoDataUtils.getGlucoseTime(it.timestamp), it.value))
+            if(it.timestamp > minTime && GlucoDataUtils.isGlucoseValid(it.value)) {
+                updated.add(GlucoseValue(GlucoDataUtils.getGlucoseTime(it.timestamp), it.value))
+            } else {
+                Log.w(LOG_ID, "Invalid value ${it.value} at ${Utils.getUiTimeStamp(it.timestamp)} (${it.timestamp})")
+            }
         }
         return updated
     }
 
     fun addGlucoseValue(time: Long, value: Int) {
-        if(active) {
+        if(active && GlucoDataUtils.isGlucoseValid(value)) {
             scope.launch {
                 try {
                     Log.d(LOG_ID, "Add new value $value at ${Utils.getUiTimeStamp(time)} ($time)")

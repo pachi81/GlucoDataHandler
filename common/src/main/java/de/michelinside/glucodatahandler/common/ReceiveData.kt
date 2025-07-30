@@ -610,6 +610,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
 
                 if (!GlucoDataUtils.isGlucoseValid(extras.getInt(MGDL))) {
                     Log.w(LOG_ID, "Invalid glucose values received! " + extras.toString())
+                    SourceStateData.setError(dataSource,"Invalid glucose value: ${extras.getInt(MGDL)}")
                     return false
                 }
 

@@ -22,7 +22,7 @@ object GlucoDataUtils {
         return isGlucoseValid(mgdl.toInt())
     }
     fun isGlucoseValid(mgdl: Int): Boolean {
-        return mgdl >= Constants.GLUCOSE_MIN_VALUE.toFloat() && mgdl <= Constants.GLUCOSE_MAX_VALUE.toFloat()
+        return mgdl >= Constants.GLUCOSE_MIN_VALUE && mgdl <= Constants.GLUCOSE_MAX_VALUE
     }
 
     fun getDisplayGlucose(rawValue: Float): Float {
@@ -39,14 +39,18 @@ object GlucoDataUtils {
         return result
     }
 
-    fun isMmolValue(value: Float): Boolean = value < Constants.GLUCOSE_MIN_VALUE.toFloat()
+    fun isMmolValue(value: Float): Boolean = value <= mgToMmol(Constants.GLUCOSE_MAX_VALUE.toFloat())
 
     fun mgToMmol(value: Float): Float {
-        return Utils.round(value / Constants.GLUCOSE_CONVERSION_FACTOR, if(abs(value) > 1.7F) 1 else 2)
+        if(abs(value.toInt()) <= Constants.GLUCOSE_MAX_VALUE)  // only check for max value as the min value can be used for delta calculation
+            return Utils.round(value / Constants.GLUCOSE_CONVERSION_FACTOR, if(abs(value) > 1.7F) 1 else 2)
+        return Float.NaN
     }
 
     fun mmolToMg(value: Float): Float {
-        return Utils.round(value * Constants.GLUCOSE_CONVERSION_FACTOR, 0)
+        if(isMmolValue(value))
+            return Utils.round(value * Constants.GLUCOSE_CONVERSION_FACTOR, 0)
+        return Float.NaN
     }
 
     fun deltaToString(delta: Float, withUnit: Boolean = false): String {
