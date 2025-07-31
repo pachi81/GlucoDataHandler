@@ -66,7 +66,6 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var tableAlarms: TableLayout
     private lateinit var tableNotes: TableLayout
     private lateinit var chartImage: ImageView
-    private lateinit var sensorAgeProgressBar: ProgressBar
     private var doNotUpdate = false
     private var requestNotificationPermission = false
     private lateinit var chartBitmap: ChartBitmapHandlerView
@@ -96,7 +95,6 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             tableDelta = findViewById(R.id.tableDelta)
             tableNotes = findViewById(R.id.tableNotes)
             chartImage = findViewById(R.id.graphImage)
-            sensorAgeProgressBar = findViewById(R.id.sensorAgeProgressBar)
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
@@ -261,7 +259,6 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             updateDeltaTable()
             updateDetailsTable()
             updateAlarmIcon()
-            updateProgressBar()
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
@@ -346,29 +343,6 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         update()
     }
 
-    private fun updateProgressBar() {
-        // check visibility
-        if(ReceiveData.sensorStartTime > 0) {
-            val runtime = sharedPref.getString(Constants.SHARED_PREF_SENSOR_RUNTIME, "14")?.toInt() ?: 14
-            if(runtime > 0) {
-                sensorAgeProgressBar.visibility = View.VISIBLE
-                val duration = Duration.ofMillis(System.currentTimeMillis() - ReceiveData.sensorStartTime)
-                sensorAgeProgressBar.max = runtime * 24  // hours
-                sensorAgeProgressBar.progress = min(duration.toHours().toInt(), sensorAgeProgressBar.max)
-                if(sensorAgeProgressBar.max - sensorAgeProgressBar.progress <= 1) {
-                    sensorAgeProgressBar.setProgressTintList(ColorStateList.valueOf(ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW)))
-                } else if(sensorAgeProgressBar.max - sensorAgeProgressBar.progress <= 24) {
-                    sensorAgeProgressBar.setProgressTintList(ColorStateList.valueOf(ReceiveData.getAlarmTypeColor(AlarmType.LOW)))
-                } else {
-                    sensorAgeProgressBar.setProgressTintList(ColorStateList.valueOf(resources.getColor(CR.color.main)))
-                }
-                return
-            }
-        }
-        // else:
-        sensorAgeProgressBar.visibility = View.GONE
-    }
-
     private fun updateNotesTable() {
         tableNotes.removeViews(1, maxOf(0, tableNotes.childCount - 1))
         if (!Channels.notificationChannelActive(this.applicationContext, ChannelType.WEAR_FOREGROUND)) {
@@ -442,10 +416,20 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 val states = WearPhoneConnection.getNodeConnectionStates(this.applicationContext)
                 if(states.size == 1 ) {
                     val state = states.values.first()
-                    tableConnections.addView(createRow(CR.string.source_phone, state, onCheckClickListener))
+                    if(state > 0)
+                        tableConnections.addView(createRow(CR.string.source_phone, "$state%", onCheckClickListener))
+                    else if(state == 0)
+                        tableConnections.addView(createRow(CR.string.source_phone, resources.getString(CR.string.state_connected), onCheckClickListener))
+                    else if(state == -1)
+                        tableConnections.addView(createRow(CR.string.source_phone, resources.getString(CR.string.state_await_data), onCheckClickListener))
                 } else {
                     states.forEach { (name, state) ->
-                        tableConnections.addView(createRow(name, state, onCheckClickListener))
+                        if(state > 0)
+                            tableConnections.addView(createRow(name, "$state%", onCheckClickListener))
+                        else if(state == 0)
+                            tableConnections.addView(createRow(name, resources.getString(CR.string.state_connected), onCheckClickListener))
+                        else if(state == -1)
+                            tableConnections.addView(createRow(name, resources.getString(CR.string.state_await_data), onCheckClickListener))
                     }
                 }
             }

@@ -70,7 +70,9 @@ import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.preferences.AlarmFragment
 import de.michelinside.glucodatahandler.preferences.LockscreenSettingsFragment
 import de.michelinside.glucodatahandler.watch.WatchDrip
+import de.michelinside.glucodatahandler.widget.BatteryLevelWidget
 import java.text.DateFormat
+import java.text.DecimalFormat
 import java.time.Duration
 import java.util.Date
 import kotlin.math.min
@@ -98,7 +100,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var sharedPref: SharedPreferences
     private lateinit var optionsMenu: Menu
     private lateinit var chart: GlucoseChart
-    private lateinit var sensorAgeProgressBar: ProgressBar
     private lateinit var statGroup: RadioGroup
     private lateinit var btnStat1d: RadioButton
     private lateinit var btnStat7d: RadioButton
@@ -122,18 +123,6 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             setContentView(R.layout.activity_main)
             Log.v(LOG_ID, "onCreate called")
 
-            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.root)) { v, insets ->
-                systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                val fullscreen = BitmapUtils.isLandscapeOrientation(this) && sharedPref.getBoolean(Constants.SHARED_PREF_FULLSCREEN_LANDSCAPE, true)
-                Log.d(LOG_ID, "System bars: $systemBars - fullscreen: $fullscreen")
-
-                if(Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM && fullscreen)
-                    v.setPadding(systemBars!!.left, systemBars!!.top/2, systemBars!!.right, systemBars!!.bottom)
-                else
-                    v.setPadding(systemBars!!.left, systemBars!!.top, systemBars!!.right, systemBars!!.bottom)
-                insets
-            }
-
             GlucoDataServiceMobile.start(this.applicationContext)
             PackageUtils.updatePackages(this.applicationContext)
 
@@ -153,13 +142,24 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableDelta = findViewById(R.id.tableDelta)
             tableNotes = findViewById(R.id.tableNotes)
             chart = findViewById(R.id.chart)
-            sensorAgeProgressBar = findViewById(R.id.sensorAgeProgressBar)
-            expandCollapseView = findViewById(R.id.expandCollapseView)
             layoutWithGraph = findViewById(R.id.glucose_with_graph)
             layoutWithoutGraph = findViewById(R.id.glucose_without_graph)
             statGroup = findViewById(R.id.statGroup)
             btnStat1d = findViewById(R.id.btnStat1d)
             btnStat7d = findViewById(R.id.btnStat7d)
+
+            expandCollapseView = findViewById(R.id.expandCollapseView)
+            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.root)) { v, insets ->
+                systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                val fullscreen = expandCollapseView != null && BitmapUtils.isLandscapeOrientation(this) && sharedPref.getBoolean(Constants.SHARED_PREF_FULLSCREEN_LANDSCAPE, true)
+                Log.d(LOG_ID, "System bars: $systemBars - fullscreen: $fullscreen")
+
+                if(Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM && fullscreen)
+                    v.setPadding(systemBars!!.left, systemBars!!.top/2, systemBars!!.right, systemBars!!.bottom)
+                else
+                    v.setPadding(systemBars!!.left, systemBars!!.top, systemBars!!.right, systemBars!!.bottom)
+                insets
+            }
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -666,33 +666,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             updateAlarmIcon()
             updateMenuItems()
-            updateProgressBar()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: " + exc.message.toString() )
         }
-    }
-
-    private fun updateProgressBar() {
-        // check visibility
-        if(ReceiveData.sensorStartTime > 0) {
-            val runtime = sharedPref.getString(Constants.SHARED_PREF_SENSOR_RUNTIME, "14")?.toInt() ?: 14
-            if(runtime > 0) {
-                sensorAgeProgressBar.visibility = View.VISIBLE
-                val duration = Duration.ofMillis(System.currentTimeMillis() - ReceiveData.sensorStartTime)
-                sensorAgeProgressBar.max = runtime * 24  // hours
-                sensorAgeProgressBar.progress = min(duration.toHours().toInt(), sensorAgeProgressBar.max)
-                if(sensorAgeProgressBar.max - sensorAgeProgressBar.progress <= 1) {
-                    sensorAgeProgressBar.setProgressTintList(ColorStateList.valueOf(ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW)))
-                } else if(sensorAgeProgressBar.max - sensorAgeProgressBar.progress <= 24) {
-                    sensorAgeProgressBar.setProgressTintList(ColorStateList.valueOf(ReceiveData.getAlarmTypeColor(AlarmType.LOW)))
-                } else {
-                    sensorAgeProgressBar.setProgressTintList(ColorStateList.valueOf(resources.getColor(CR.color.main)))
-                }
-                return
-            }
-        }
-        // else:
-        sensorAgeProgressBar.visibility = View.GONE
     }
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
@@ -825,7 +801,12 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     GlucoDataService.checkForConnectedNodes(false)
                 }
                 WearPhoneConnection.getNodeConnectionStates(this).forEach { (name, state) ->
-                    tableConnections.addView(createRow(name, state, onCheckClickListener))
+                    if(state > 0)
+                        tableConnections.addView(createProgressBarRow(name, state.toFloat(), BatteryLevelWidget.getColor(state)))
+                    else if(state == 0)
+                        tableConnections.addView(createRow(name, resources.getString(CR.string.state_connected), onCheckClickListener))
+                    else if(state == -1)
+                        tableConnections.addView(createRow(name, resources.getString(CR.string.state_await_data), onCheckClickListener))
                 }
             }
         }
@@ -900,11 +881,16 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 val hours = duration.minusDays(days).toHours()
                 val runtime = sharedPref.getString(Constants.SHARED_PREF_SENSOR_RUNTIME, "14")?.toInt() ?: 14
                 if(runtime > 0) {
-                    val runtimeDuration = Duration.ofDays(runtime.toLong())
-                    val diffDuration = runtimeDuration.minus(duration)
-                    val diffDays = diffDuration.toDays()
-                    val diffHours = diffDuration.minusDays(diffDays).toHours()
-                    tableDetails.addView(createRow(CR.string.sensor_age_label, resources.getString(CR.string.sensor_age_value).format(days, hours) + " (-> " + resources.getString(CR.string.sensor_age_value).format(diffDays, diffHours) + ")"))
+                    val max = runtime * 24  // hours
+                    val progress = min(duration.toHours().toInt(), max)
+                    val color = if(max - progress <= 1) {
+                        ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW)
+                    } else if(max - progress <= 24) {
+                        ReceiveData.getAlarmTypeColor(AlarmType.LOW)
+                    } else {
+                        resources.getColor(CR.color.main)
+                    }
+                    tableDetails.addView(createProgressBarRow(CR.string.sensor_age_label, progress.toFloat()*100 / max.toFloat(), color, resources.getString(CR.string.sensor_age_value).format(days, hours)/* + "\n-> " + resources.getString(CR.string.sensor_age_value).format(diffDays, diffHours)*/))
                 } else
                     tableDetails.addView(createRow(CR.string.sensor_age_label, resources.getString(CR.string.sensor_age_value).format(days, hours)))
 
@@ -965,24 +951,31 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         return row
     }
 
-    private fun createProgressBar(value: Int, max: Int, color: Int) : ProgressBar {
+    private fun createProgressBar(value: Int, max: Int, color: Int, description: String) : ProgressBar {
         val progressBar = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal)
         progressBar.layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 4F)
         progressBar.progress = value
         progressBar.max = max
         progressBar.scaleY = 3F
+        progressBar.contentDescription = description
         progressBar.setProgressTintList(ColorStateList.valueOf(color))
         progressBar.setPadding(Utils.dpToPx(5F, this))
         return progressBar
     }
 
-    private fun createProgressBarRow(keyResId: Int, percentage: Float, color: Int) : TableRow {
+    private fun createProgressBarRow(keyResId: Int, percentage: Float, color: Int, value: String? = null) : TableRow {
+        return createProgressBarRow(resources.getString(keyResId), percentage, color, value)
+    }
+    private fun createProgressBarRow(key: String, percentage: Float, color: Int, value: String? = null) : TableRow {
         val row = TableRow(this)
-        row.weightSum = 9f
+        row.weightSum = 10f
         row.setPadding(Utils.dpToPx(5F, this))
-        row.addView(createColumn(resources.getString(keyResId), false, null, 3F))
-        row.addView(createProgressBar(percentage.toInt(), 100, color))
-        row.addView(createColumn("%.1f%%".format(percentage), true, null, 2F))
+        row.addView(createColumn(key, false, null, 4F))
+        row.addView(createProgressBar(percentage.toInt(), 100, color, key))
+        if(value == null)
+            row.addView(createColumn("${DecimalFormat("#.#").format(percentage)}%", true, null, 2F))
+        else
+            row.addView(createColumn(value, true, null, 2F))
         return row
     }
 

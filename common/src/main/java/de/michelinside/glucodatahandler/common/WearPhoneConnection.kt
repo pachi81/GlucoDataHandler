@@ -14,6 +14,7 @@ import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.notifier.DataSource
+import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
 import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
 import de.michelinside.glucodatahandler.common.utils.Utils
 import kotlinx.coroutines.*
@@ -99,19 +100,16 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             }
         }
 
-        fun getNodeConnectionStates(context: Context, addMissing: Boolean = true): Map<String, String> {
-            val connectionStates = mutableMapOf<String, String>()
+        fun getNodeConnectionStates(context: Context, addMissing: Boolean = true): Map<String, Int> {
+            val connectionStates = mutableMapOf<String, Int>()
             connectedNodes.forEach { node ->
                 (
                     if (nodeBatteryLevel.containsKey(node.key)) {
                         val level = nodeBatteryLevel.getValue(node.key)
-                        connectionStates[getDisplayName(node.value)] = if (level > 0) "${level}%" else context.getString(R.string.state_connected)
-                        /*if(nodeVersions.contains(node.key) && nodeVersions.getValue(node.key) >= 0 && nodeVersions.getValue(node.key) < BuildConfig.BASE_VERSION) {
-                            connectionStates[getDisplayName(node.value)] += "\n" + context.getString(R.string.state_update_required)
-                        } else {}*/
+                        connectionStates[getDisplayName(node.value)] = if (level > 0) level else 0
                     }
                     else if (addMissing) {
-                        connectionStates[getDisplayName(node.value)] = context.getString(R.string.state_await_data)
+                        connectionStates[getDisplayName(node.value)] = -1
                     } else {}
                 )
             }
@@ -584,9 +582,11 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                                 DateFormat.getTimeInstance(DateFormat.DEFAULT).format((extras.getLong(ReceiveData.TIME))) +
                                 " - current value time: " +
                                 DateFormat.getTimeInstance(DateFormat.DEFAULT).format((ReceiveData.time)))
-                        if (extras.getLong(ReceiveData.TIME) >= ReceiveData.time)
+                        if (ReceiveData.hasNewValue(extras)) {
+                            val firstNeededValue = GlucoseDataReceiver.getFirstNeededWebServerValue()
                             ReceiveData.handleIntent(context, dataSource, extras, true)
-                        else
+                            GlucoseDataReceiver.checkHandleWebServerRequests(context, firstNeededValue)
+                        } else if(extras.getLong(ReceiveData.TIME) < ReceiveData.time)
                             forceSend = true  //  received data is older than current one, send current one
 
                         if (GlucoDataService.appSource == AppSource.PHONE_APP && connectedNodes.size > 1) {

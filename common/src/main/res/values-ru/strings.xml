@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="locale">ru</string>
 
     <string name="unit_mgdl">мг/дл</string>
@@ -37,10 +37,10 @@
     <string name="alarm_low">низкий</string>
     <string name="alarm_high">высокий</string>
     <string name="alarm_very_high">очень высокий</string>
-    <string name="very_low">очень низкий</string>
+    <string name="very_low">оч. низкий</string>
     <string name="low">низкий</string>
     <string name="high">высокий</string>
-    <string name="very_high">очень высокий</string>
+    <string name="very_high">оч. высокий</string>
 
     <string name="activity_main_battery_optimization_disabled">Рекомендуется отключить оптимизацию батареи.</string>
     <string name="activity_main_no_source_label">Источник: не активен</string>
@@ -831,7 +831,7 @@
     <string name="runtime_15_days">15 дней</string>
     <string name="table_header_statistics">Статистика</string>
     <string name="info_label_average">Среднее</string>
-    <string name="time_in_range">TIR</string>
+    <string name="time_in_range">в норме</string>
     <string name="src_webserver">Веб-сервер</string>
     <string name="src_juggluco_webserver_summary">Использование веб-сервера Juggluco для получения возраста датчика и пропущенных данных, если они есть. Сначала включите веб-сервер в Juggluco без SSL и api_secret.</string>
 
@@ -845,4 +845,9 @@
     <string name="pref_source_medtrum_info_summary">Для получения данных в качестве подписчика Medtrum:\n- Зарегистрируйте учетную запись в приложении EasyFollower или на EasyView\n-> ВАЖНО: вы не можете использовать для этого свою учетную запись Medtrum!\n- Пригласите себя\n- Примите приглашение\n- Используйте эту учетную запись для GlucoDataHandler\n- Необязательно: удалите приложение EasyFollower</string>
 
     <string name="pref_battery_complication_percent">Показать % (батарея)</string>
+
+    <plurals name="duration_days_short" tools:ignore="MissingQuantity">
+        <item quantity="one">%dд</item>
+        <item quantity="other">%dд</item>
+    </plurals>
 </resources>

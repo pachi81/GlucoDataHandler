@@ -143,17 +143,6 @@
         android:text="@string/menu_sources"
         />
 
-    <ProgressBar
-        android:id="@+id/sensorAgeProgressBar"
-        android:visibility="gone"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="100"
-        android:progress="50"
-        android:layout_marginVertical="5dp"
-        />
-
     <de.michelinside.glucodatahandler.common.chart.GlucoseChart
         android:id="@+id/chart"
         android:layout_marginVertical="5dp"

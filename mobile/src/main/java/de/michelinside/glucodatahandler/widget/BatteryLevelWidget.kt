@@ -17,48 +17,54 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.R as CR
 
 class BatteryLevelWidget : AppWidgetProvider() {
-        private val LOG_ID = "GDH.widget.BatteryLevelWidget"
+    private val LOG_ID = "GDH.widget.BatteryLevelWidget"
 
-        private fun updateWidget(
-            context: Context,
-            appWidgetManager: AppWidgetManager,
-            appWidgetId: Int,
-            batteryLevel: Int,
-            deviceName: String
-        ) {
-            try {
-                Log.d(LOG_ID, "updateWidget called for " + this.toString() + " widget:$appWidgetId battery:$batteryLevel device:$deviceName" )
-
-                val remoteViews = RemoteViews(context.packageName, R.layout.battery_level_widget)
-
-                val batteryLevelStr = if (batteryLevel == 0) "?%" else "$batteryLevel%"
-                remoteViews.setTextViewText(R.id.battery_level, batteryLevelStr)
-                remoteViews.setTextViewText(R.id.device_name, deviceName)
-                val levelColour = if(batteryLevel == 0)
-                        ReceiveData.getAlarmTypeColor(AlarmType.NONE)
-                    else if (batteryLevel < 20)
-                        ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW)
-                    else if (batteryLevel < 40)
-                        ReceiveData.getAlarmTypeColor(AlarmType.LOW)
-                    else
-                        ReceiveData.getAlarmTypeColor(AlarmType.OK)
-                remoteViews.setTextColor(R.id.battery_level, levelColour)
-
-                val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
-                remoteViews.setInt(R.id.widget, "setBackgroundColor", Utils.getBackgroundColor(sharedPref.getInt(Constants.SHARED_PREF_WIDGET_TRANSPARENCY, 3)))
-                remoteViews.setOnClickPendingIntent(
-                    R.id.widget,
-                    PackageUtils.getTapActionIntent(
-                        context,
-                        sharedPref.getString(Constants.SHARED_PREF_WIDGET_TAP_ACTION, null),
-                        appWidgetId
-                    )
-                )
-                appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
-            } catch (exc: Exception) {
-                Log.e(LOG_ID, "updateWidget exception: $exc")
-            }
+    companion object {
+        fun getColor(batteryLevel: Int): Int {
+            return if(batteryLevel == 0)
+                ReceiveData.getAlarmTypeColor(AlarmType.NONE)
+            else if (batteryLevel < 20)
+                ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW)
+            else if (batteryLevel < 40)
+                ReceiveData.getAlarmTypeColor(AlarmType.LOW)
+            else
+                ReceiveData.getAlarmTypeColor(AlarmType.OK)
         }
+    }
+
+    private fun updateWidget(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetId: Int,
+        batteryLevel: Int,
+        deviceName: String
+    ) {
+        try {
+            Log.d(LOG_ID, "updateWidget called for " + this.toString() + " widget:$appWidgetId battery:$batteryLevel device:$deviceName" )
+
+            val remoteViews = RemoteViews(context.packageName, R.layout.battery_level_widget)
+
+            val batteryLevelStr = if (batteryLevel == 0) "?%" else "$batteryLevel%"
+            remoteViews.setTextViewText(R.id.battery_level, batteryLevelStr)
+            remoteViews.setTextViewText(R.id.device_name, deviceName)
+            val levelColour = getColor(batteryLevel)
+            remoteViews.setTextColor(R.id.battery_level, levelColour)
+
+            val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+            remoteViews.setInt(R.id.widget, "setBackgroundColor", Utils.getBackgroundColor(sharedPref.getInt(Constants.SHARED_PREF_WIDGET_TRANSPARENCY, 3)))
+            remoteViews.setOnClickPendingIntent(
+                R.id.widget,
+                PackageUtils.getTapActionIntent(
+                    context,
+                    sharedPref.getString(Constants.SHARED_PREF_WIDGET_TAP_ACTION, null),
+                    appWidgetId
+                )
+            )
+            appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "updateWidget exception: $exc")
+        }
+    }
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         try {

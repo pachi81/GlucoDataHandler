@@ -28,6 +28,7 @@ import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.preferences.PreferenceHelper
+import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
 import de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import kotlin.collections.HashMap
@@ -131,6 +132,10 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
                 }
                 Constants.SHARED_PREF_LARGE_ARROW_ICON -> {
                     InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SETTINGS, null)
+                }
+                Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_ENABLED -> {
+                    // update last 24 hours to fill data
+                    GlucoseDataReceiver.checkHandleWebServerRequests(requireContext(), System.currentTimeMillis() - Constants.DB_MAX_DATA_WEAR_TIME_MS)
                 }
             }
         } catch (exc: Exception) {
