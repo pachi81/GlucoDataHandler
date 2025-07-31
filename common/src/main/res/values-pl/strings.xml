@@ -835,13 +835,13 @@
     <string name="source_no_valid_value">Nie znaleziono prawidłowej wartości glukozy!</string>
     <string name="source_invalid_patient">Nieprawidłowe dane pacjenta!</string>
     <string name="pref_source_libre_patched_info_summary">Jeśli korzystasz z poprawionej aplikacji Libre lub innych aplikacji udostępniających tę transmisję.</string>
-    <string name="pref_sensor_runtime">Czas działania sensora</string>
+    <string name="pref_sensor_runtime">Czas działania</string>
     <string name="pref_sensor_runtime_summary">Liczba dni, przez które sensor może działać.</string>
     <string name="runtime_14_days">14 dni</string>
     <string name="runtime_15_days">15 dni</string>
     <string name="table_header_statistics">Statystyka z 7 dni</string>
     <string name="info_label_average">Średnia</string>
-    <string name="time_in_range">TIR - czas w zakresie</string>
+    <string name="time_in_range">Czas w zakresie</string>
     <string name="src_webserver">Serwer sieciowy</string>
     <string name="src_juggluco_webserver_summary">Korzystanie z serwera sieciowego Juggluco w celu uzyskania wieku sensora i brakujących danych, jeśli są obecne.\nNależy najpierw włączyć Serwer sieciowy w Juggluco bez SSL i api_secret.</string>
 
