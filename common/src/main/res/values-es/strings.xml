@@ -59,7 +59,6 @@
 
     <!-- tasker -->
 
-    <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
     <string name="tasker_event_glucodata">Nuevo valor de glucosa</string>
     <string name="tasker_event_glucodata_obsolete">Valor obsoleto</string>
     <string name="tasker_event_glucodata_alarm">Alarma de glucosa</string>
@@ -530,7 +529,7 @@
     <string name="obsolete_time_summary">Tiempo en minutos después del cual el valor se considera obsoleto.\nDespués del doble de este tiempo, el valor se elimina.</string>
     <string name="pref_source_offline">Aplicaciones locales</string>
     <string name="pref_source_offline_summary">Aplicaciones en el mismo dispositivo que proporcionan valores de glucosa como mensaje de transmisión interna, como Juggluco, xDrip+, AAPS y así sucesivamente.</string>
-    <string name="pref_cat_follower_summary">Servicios en la nube que proporcionan valores de glucosa a través de internet, como LibreLinkUp, Dexcom Share y Nightscout.</string>
+    <string name="pref_cat_follower_summary">Servicios en la nube que proporcionan valores de glucosa a través de internet, como LibreLinkUp, Dexcom Share, Nightscout y Medtrum.</string>
     <string name="pref_source_xdrip_broadcast">Alternativa: Transmitir localmente</string>
     <string name="pref_source_dexcom_byoda_info_summary">Para recibir valores de Dexcom BYODA, debes habilitar la transmisión a AAPS mientras construyes la aplicación.</string>
     <string name="pref_source_eversense_info_summary">Para recibir los valores de Eversense, debes usar ESEL, ya sea en modo compañero (notificación de lectura) o conectado a la aplicación Eversense parcheada.\nPara obtener más información sobre ESEL, presiona aquí.</string>
@@ -851,4 +850,5 @@
 
     <string name="pref_battery_complication_percent">Mostrar % (batería)</string>
 
+    <string name="source_help_summary">Pulse aquí para acceder a la wiki de GDH, que enumera los sensores compatibles y las fuentes compatibles.</string>
 </resources>

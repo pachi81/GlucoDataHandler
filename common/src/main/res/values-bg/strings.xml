@@ -526,7 +526,7 @@
     <string name="obsolete_time_summary">Време в минути, след което стойността се третира като остаряла.\nСлед два пъти това време стойността се премахва.</string>
     <string name="pref_source_offline">Локални приложения</string>
     <string name="pref_source_offline_summary">Приложения на същото устройство, предоставящи стойности на глюкозата като вътрешно broadcast съобщение, като Juggluco, xDrip+, AAPS и т.н.</string>
-    <string name="pref_cat_follower_summary">Облачни услуги, предоставящи стойности на глюкозата през интернет, като LibreLinkUp, Dexcom Share и Nightscout.</string>
+    <string name="pref_cat_follower_summary">Облачни услуги, предоставящи стойности на глюкозата през интернет, като LibreLinkUp, Dexcom Share, Nightscout и Medtrum.</string>
     <string name="pref_source_xdrip_broadcast">Алтернатива: Broadcast локално</string>
     <string name="pref_source_dexcom_byoda_info_summary">За да получавате стойности от Dexcom BYODA, трябва да активирате broadcast към AAPS, докато изграждате приложението.</string>
     <string name="pref_source_eversense_info_summary">За да получавате стойности от Eversense, трябва да използвате ESEL или в режим на компаньон (четене на известия), или свързан с patched приложението Eversense.\nЗа повече информация относно ESEL, натиснете тук.</string>
@@ -853,4 +853,5 @@
 
     <string name="pref_battery_complication_percent">Покажи % (батерия)</string>
 
+    <string name="source_help_summary">Натиснете тук за GDH wiki, което изброява поддържаните сензори и съвместимите източници.</string>
 </resources>

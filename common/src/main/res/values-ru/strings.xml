@@ -527,7 +527,7 @@
     <string name="obsolete_time_summary">Время в минутах, по истечении которого значение будет считаться устаревшим.\nПо истечении двух таких периодов времени значение перестанет отображаться.</string>
     <string name="pref_source_offline">Локальные приложения</string>
     <string name="pref_source_offline_summary">Приложения на этом устройстве, предоставляющие значения глюкозы в виде внутреннего широковещательного сообщения, такие как Juggluco, xDrip+, AAPS и т. д.</string>
-    <string name="pref_cat_follower_summary">Облачные сервисы, предоставляющие значения глюкозы через Интернет, такие как LibreLinkUp, Dexcom Share и Nightscout.</string>
+    <string name="pref_cat_follower_summary">Облачные сервисы, предоставляющие значения глюкозы через Интернет, такие как LibreLinkUp, Dexcom Share, Nightscout и Medtrum.</string>
     <string name="pref_source_xdrip_broadcast">Альтернатива: локальная трансляция</string>
     <string name="pref_source_dexcom_byoda_info_summary">Чтобы получать значения из Dexcom BYODA, вам необходимо включить трансляцию в AAPS при сборке приложения.</string>
     <string name="pref_source_eversense_info_summary">Чтобы получать значения из Eversense, вам необходимо использовать ESEL либо в режиме компаньона (чтение уведомлений), либо подключенным к пропатченному приложению Eversense.\nДля получения дополнительной информации об ESEL нажмите здесь.</string>
@@ -850,4 +850,5 @@
         <item quantity="one">%dд</item>
         <item quantity="other">%dд</item>
     </plurals>
+    <string name="source_help_summary">Нажмите здесь, чтобы открыть GDH wiki, где перечислены поддерживаемые датчики и совместимые источники.</string>
 </resources>

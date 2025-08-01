@@ -528,7 +528,7 @@
     <string name="obsolete_time_summary">Tijd in minuten waarna de waarde als verouderd wordt behandeld.\nNa tweemaal deze tijd wordt de waarde verwijderd.</string>
     <string name="pref_source_offline">Lokale applicaties</string>
     <string name="pref_source_offline_summary">Applicaties op hetzelfde apparaat die glucosewaarden leveren als intern broadcastbericht, zoals Juggluco, xDrip+, AAPS, enzovoort.</string>
-    <string name="pref_cat_follower_summary">Cloudservices die glucosewaarden leveren via internet, zoals LibreLinkUp, Dexcom Share en Nightscout.</string>
+    <string name="pref_cat_follower_summary">Cloudservices die glucosewaarden leveren via internet, zoals LibreLinkUp, Dexcom Share, Nightscout en Medtrum.</string>
     <string name="pref_source_xdrip_broadcast">Alternatief: Lokaal uitzenden</string>
     <string name="pref_source_dexcom_byoda_info_summary">Om waarden van Dexcom BYODA te ontvangen, moet u uitzenden naar AAPS inschakelen tijdens het bouwen van de app.</string>
     <string name="pref_source_eversense_info_summary">Om waarden van Eversense te ontvangen, moet u ESEL gebruiken in de companion-modus (melding lezen) of verbonden met de gepatchte Eversense-app.\nVoor meer informatie over ESEL, drukt u hier.</string>
@@ -852,4 +852,7 @@
     <string name="pref_source_medtrum_info_summary">Om gegevens als Medtrum-volger te ontvangen:\n- Registreer een account in de EasyFollower-app of op EasyView\n-> BELANGRIJK: u kunt uw Medtrum-account hiervoor niet gebruiken!\n- Nodig uzelf uit\n- Accepteer de uitnodiging\n- Gebruik dit account voor GlucoDataHandler\n- Optioneel: Verwijder de EasyFollower-app</string>
 
     <string name="pref_battery_complication_percent">% weergeven (batterij)</string>
+
+    <string name="source_help_summary">Druk hier voor de GDH-wiki, die ondersteunde sensoren en compatibele bronnen vermeldt.</string>
+
 </resources>

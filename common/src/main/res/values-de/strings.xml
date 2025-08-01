@@ -57,7 +57,6 @@
     <string name="menu_support">Support</string>
     <string name="menu_help">Hilfe</string>
 
-    <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README_DE.md</string>
 
     <!-- tasker -->
 
@@ -518,7 +517,7 @@
     <string name="obsolete_time_summary">Zeit in Minuten nachdem der Wert als alt angesehen wird.\nNach der doppelten Zeit, verschwindet er komplett.</string>
     <string name="pref_source_offline">Lokale Apps</string>
     <string name="pref_source_offline_summary">Apps, welche auf dem gleichen Gerät laufen und interne Nachrichten (Broadcasts) verschicken, wie etwa Juggluco, xDrip+, AAPS usw..</string>
-    <string name="pref_cat_follower_summary">Cloud Dienste, welche die Daten über das Internet zur Verfügung stellen, wie LibreLinkUp, Dexcom Share und Nightscout.</string>
+    <string name="pref_cat_follower_summary">Cloud Dienste, welche die Daten über das Internet zur Verfügung stellen, wie LibreLinkUp, Dexcom Share, Nightscout und Medtrum.</string>
     <string name="pref_source_xdrip_broadcast">Alternative: Lokaler Broadcast</string>
     <string name="pref_source_dexcom_byoda_info_summary">Um Werte von Dexcom BYODA zu erhalten, muss bei der Erstellung der App, die Übertragung an AAPS aktiviert werden.</string>
     <string name="pref_source_eversense_info_summary">Um Werte von Eversense zu empfangen, benötigt es die App ESEL, welche entweder im Companion Mode (Benachrichtigung lesen) oder in Verbindungen mit der gepatchten Eversense App betrieben werden kann.\nUm mehr Informationen über ESEL zu erhalten, bitte hier klicken.</string>
@@ -844,4 +843,5 @@
 
     <string name="pref_battery_complication_percent">% in Akku-Komp. anzeigen</string>
 
+    <string name="source_help_summary">Hier klicken um das GDH-Wiki zu öffnen, das unterstützte Sensoren und kompatible Quellen auflistet.</string>
 </resources>
