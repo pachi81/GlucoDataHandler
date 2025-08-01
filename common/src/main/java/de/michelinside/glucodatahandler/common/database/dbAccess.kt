@@ -25,9 +25,11 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.io.File
 
 object dbAccess {
     private val LOG_ID = "GDH.dbAccess"
+    private val DATABASE_NAME = "gdh_database"
     private var database: Database? = null
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -49,18 +51,80 @@ object dbAccess {
     fun init(context: Context) {
         Log.v(LOG_ID, "init")
         try {
-            database = Room.databaseBuilder(
-                context.applicationContext,
-                Database::class.java,
-                "gdh_database"
-            )
-                .addMigrations(migration_1_2)
-                .build()
+            createDatabase(context.applicationContext, true)
             cleanUpOldData()
-            PackageUtils.registerReceiver(context, InternalActionReceiver(), IntentFilter(Intent.ACTION_DATE_CHANGED))
+            PackageUtils.registerReceiver(context.applicationContext, InternalActionReceiver(), IntentFilter(Intent.ACTION_DATE_CHANGED))
         } catch (exc: Exception) {
             Log.e(LOG_ID, "init exception: " + exc.toString() + ": " + exc.stackTraceToString() )
         }
+    }
+
+    private fun createDatabase(context: Context, retryOnError: Boolean) {
+        Log.v(LOG_ID, "createDatabase")
+        try {
+            database = Room.databaseBuilder(
+                context.applicationContext,
+                Database::class.java,
+                DATABASE_NAME
+            )
+                .addMigrations(migration_1_2)
+                .build()
+
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "createDatabase exception: " + exc.toString() + ": " + exc.stackTraceToString() )
+            if(retryOnError) {
+                if(deleteDatabase(context))
+                    createDatabase(context, false)
+            }
+        }
+    }
+
+    private fun deleteDatabase(context: Context): Boolean {
+        Log.w(LOG_ID, "Attempting to delete and recreate the database. USER DATA WILL BE LOST for $DATABASE_NAME.")
+        try {
+            val dbPath = context.getDatabasePath(DATABASE_NAME)
+            val walPath = File(dbPath.path + "-wal")
+            val shmPath = File(dbPath.path + "-shm")
+
+            val deletedMain: Boolean
+            val deletedWal: Boolean
+            val deletedShm: Boolean
+
+            if (dbPath.exists()) {
+                deletedMain = dbPath.delete()
+                Log.i(LOG_ID, "Main database file ($DATABASE_NAME) deletion result: $deletedMain")
+            } else {
+                Log.i(LOG_ID, "Main database file ($DATABASE_NAME) did not exist.")
+                deletedMain = true // Consider it "successfully deleted" if it wasn't there
+            }
+
+            if (walPath.exists()) {
+                deletedWal = walPath.delete()
+                Log.i(LOG_ID, "WAL file (${walPath.name}) deletion result: $deletedWal")
+            } else {
+                Log.i(LOG_ID, "WAL file (${walPath.name}) did not exist.")
+                deletedWal = true
+            }
+
+            if (shmPath.exists()) {
+                deletedShm = shmPath.delete()
+                Log.i(LOG_ID, "SHM file (${shmPath.name}) deletion result: $deletedShm")
+            } else {
+                Log.i(LOG_ID, "SHM file (${shmPath.name}) did not exist.")
+                deletedShm = true
+            }
+
+            if (deletedMain && deletedWal && deletedShm) {
+                Log.i(LOG_ID, "All relevant database files for $DATABASE_NAME deleted (or did not exist). Attempting to recreate.")
+                // Try building again
+                return true
+            } else {
+                Log.e(LOG_ID, "Failed to delete all database files. Main: $deletedMain, WAL: $deletedWal, SHM: $deletedShm. Cannot recreate.")
+            }
+        } catch (deleteException: Exception) {
+            Log.e(LOG_ID, "Exception during database deletion/recreation process.", deleteException)
+        }
+        return false
     }
 
     fun getGlucoseValues(minTime: Long = 0L): List<GlucoseValue> = runBlocking {

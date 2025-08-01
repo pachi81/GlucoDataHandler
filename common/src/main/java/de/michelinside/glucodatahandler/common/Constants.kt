@@ -155,6 +155,8 @@ object Constants {
     const val SHARED_PREF_SOURCE_INTERVAL="source_interval"
     const val SHARED_PREF_SOURCE_DELAY="source_delay"
 
+    const val SHARED_PREF_SOURCE_HELP="source_help"
+
     // offline sources
     const val SHARED_PREF_SOURCE_GDH_ENABLED="source_gdh_enabled"
     const val SHARED_PREF_SOURCE_JUGGLUCO_ENABLED="source_juggluco_enabled"

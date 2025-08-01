@@ -266,7 +266,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         }
     }
 
-    private fun createLimitLine(limit: Float, dasched: Boolean = false): LimitLine {
+    private fun createLimitLine(limit: Float, dasched: Boolean = false, label: String? = null): LimitLine {
         Log.v(LOG_ID, "Create limit line for limit: $limit")
         val line = LimitLine(limit)
         line.lineColor = limitLineColor
@@ -274,6 +274,12 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             line.lineWidth = 1F
             //line.lineColor = context.resources.getColor(R.color.main)
             line.enableDashedLine(15F, 10F, 0F)
+        }
+        if(!label.isNullOrEmpty()) {
+            line.label = label
+            line.textSize = 15F
+            line.textColor = limitLineColor
+            line.labelPosition = LimitLine.LimitLabelPosition.RIGHT_BOTTOM
         }
         return line
     }
@@ -287,7 +293,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             if(showAverage) {
                 GlucoseStatistics.update()
                 if(!GlucoseStatistics.statData7d.averageGlucose.isNaN()) {
-                    averageLine = createLimitLine(GlucoseStatistics.statData7d.averageGlucose, true)
+                    averageLine = createLimitLine(GlucoseStatistics.statData7d.averageGlucose, true, "⌀")
                     chart.axisRight.addLimitLine(averageLine)
                 }
             }
