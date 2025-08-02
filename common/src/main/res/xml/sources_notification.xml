@@ -32,12 +32,6 @@
             android:title="@string/notification_reader_five_minute_interval"
             android:summary="@string/notification_reader_five_minute_interval_summary"
             app:iconSpaceReserved="false" />
-        <Preference
-            android:key="notification_dexcom_info"
-            android:title="@string/notification_dexcom_info"
-            android:summary="@string/notification_dexcom_info_summary"
-            app:isPreferenceVisible="false"
-            app:iconSpaceReserved="false" />
         <androidx.preference.EditTextPreference
             android:defaultValue="(?:^|\\s)(\\d*\\.?\\d+)(?=\\s|\$)"
             android:key="notification_reader_app_regex"

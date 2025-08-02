@@ -770,8 +770,6 @@
     <string name="notification_reader_five_minute_interval">5 分鐘間隔</string>
     <string name="notification_reader_five_minute_interval_summary">某些應用程式（例如 Dexcom）會相當頻繁地更新其通知。若要忽略具有相同數值的更新，請啟用 5 分鐘間隔。\n如果已啟用，則只會每 5 分鐘出現一個新數值，或當通知中的數值已變更時。</string>
     <string name="pref_source_notification_info_summary">若要從其他應用程式的通知接收數值，需要有存取通知的權限！\n通知必須包含字串形式的血糖值或 IOB。\n由於每個通知都有不同的版面配置，因此可能無法與所有應用程式搭配使用。如果發生問題，請透過通知的螢幕截圖和記錄與我聯絡。</string>
-    <string name="notification_dexcom_info">重要</string>
-    <string name="notification_dexcom_info_summary">由於 Dexcom G7 通知的特殊行為，您也必須啟用 Dexcom 的前景通知。</string>
     <string name="sensor_age_label">感測器使用時間</string>
     <string name="sensor_age_value">%1$d 天 %2$d 小時</string>
     <string name="vibrate_pattern_shorty">短</string>

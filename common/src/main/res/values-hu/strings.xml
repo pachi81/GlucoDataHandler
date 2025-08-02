@@ -827,8 +827,6 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="notification_reader_five_minute_interval">5 perces intervallum</string>
     <string name="notification_reader_five_minute_interval_summary">Néhány alkalmazás, mint például a Dexcom, elég gyakran frissíti az értesítéseit. Az azonos értékű frissítések figyelmen kívül hagyásához engedélyezze az 5 perces intervallumot.\nHa engedélyezve van, csak 5 percenként lesz új érték, vagy ha az értesítésben lévő érték megváltozott.</string>
     <string name="pref_source_notification_info_summary">Más alkalmazások értesítéseiből származó értékek fogadásához engedély szükséges az értesítések eléréséhez!\nAz értesítésnek tartalmaznia kell a vércukorértéket vagy az IOB-t karakterláncként.\nMivel minden értesítésnek más az elrendezése, előfordulhat, hogy nem működik minden alkalmazással. Probléma esetén kérem, vegye fel velem a kapcsolatot az értesítés képernyőképével és a naplófájlokkal.</string>
-    <string name="notification_dexcom_info">Fontos</string>
-    <string name="notification_dexcom_info_summary">A Dexcom G7 értesítések speciális viselkedése miatt engedélyeznie kell a Dexcom előtérbeli értesítését is.</string>
     <string name="sensor_age_label">Szenzor kora</string>
     <string name="sensor_age_value">%1$d nap %2$d óra</string>
     <string name="vibrate_pattern_shorty">Rövid</string>

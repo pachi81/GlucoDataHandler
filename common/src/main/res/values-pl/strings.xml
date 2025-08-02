@@ -774,8 +774,6 @@
     <string name="notification_reader_five_minute_interval">5-minutowy interwał</string>
     <string name="notification_reader_five_minute_interval_summary">Niektóre aplikacje, takie jak Dexcom, aktualizują swoje powiadomienia dość często. Aby zignorować te aktualizacje z tą samą wartością, włącz 5-minutowy interwał.\nJeśli opcja ta jest włączona, nowa wartość będzie pojawiać się co 5 minut lub jeśli wartość w powiadomieniu uległa zmianie.</string>.
     <string name="pref_source_notification_info_summary">Aby otrzymywać wartości z powiadomień innych aplikacji, potrzebne jest uprawnienie dostępu do powiadomień! Powiadomienie musi zawierać wartość glukozy lub IOB jako ciąg znaków.\nPonieważ każde powiadomienie ma inny układ, może nie działać z każdą aplikacją. W przypadku problemów, proszę o kontakt ze zrzutem ekranu powiadomienia i logami.</string>
-    <string name="notification_dexcom_info">Ważne</string>
-    <string name="notification_dexcom_info_summary">Ze względu na specjalne działanie powiadomień Dexcom G7, należy również włączyć powiadomienia Dexcom na pierwszym planie.</string>
     <string name="sensor_age_label">Czas działania sensora</string>
     <string name="sensor_age_value">%1$dd %2$dh</string>
     <string name="vibrate_pattern_shorty">Krótko</string>

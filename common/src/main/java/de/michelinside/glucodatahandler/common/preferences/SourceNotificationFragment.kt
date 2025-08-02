@@ -5,13 +5,11 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.DialogFragment
 import androidx.preference.Preference
-import androidx.preference.PreferenceCategory
 import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
 import de.michelinside.glucodatahandler.common.ui.SelectReceiverPreferenceDialogFragmentCompat
-import de.michelinside.glucodatahandler.common.utils.PackageUtils
 
 class SourceNotificationFragment : PreferenceFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GDH.NotificationFragment"
@@ -99,15 +97,6 @@ class SourceNotificationFragment : PreferenceFragmentCompatBase(), SharedPrefere
                 enablePref.isEnabled = false
             } else {
                 enablePref.isEnabled = true
-            }
-            val glucoseCat = findPreference<PreferenceCategory>("notification_cat_glucose")
-            val dexcomInfo = findPreference<Preference>("notification_dexcom_info")
-            if(!glucoseApp.isNullOrEmpty() && PackageUtils.isDexcomG7App(glucoseApp)) {
-                glucoseCat!!.initialExpandedChildrenCount = 3
-                dexcomInfo!!.isVisible = true
-            } else {
-                glucoseCat!!.initialExpandedChildrenCount = 2
-                dexcomInfo!!.isVisible = false
             }
         }
     }

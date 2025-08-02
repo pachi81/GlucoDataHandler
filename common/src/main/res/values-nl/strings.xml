@@ -775,8 +775,6 @@
     <string name="notification_reader_five_minute_interval">5 minuten interval</string>
     <string name="notification_reader_five_minute_interval_summary">Sommige apps, zoals Dexcom, werken hun meldingen vrij vaak bij. Om deze updates met dezelfde waarde te negeren, schakel je het interval van 5 minuten in.\nIndien ingeschakeld, is er slechts om de 5 minuten een nieuwe waarde of als de waarde in de melding is gewijzigd.</string>
     <string name="pref_source_notification_info_summary">Om waarden te ontvangen van meldingen van andere apps, is een toestemming nodig om toegang te krijgen tot de meldingen!\nDe melding moet de glucosewaarde of IOB als string bevatten.\nAangezien elke melding een andere lay-out heeft, werkt het mogelijk niet met elke app. Neem in geval van problemen contact met mij op met een screenshot van de melding en de logs.</string>
-    <string name="notification_dexcom_info">Belangrijk</string>
-    <string name="notification_dexcom_info_summary">Vanwege het speciale gedrag van Dexcom G7-meldingen, moet je ook de voorgrondmelding van Dexcom inschakelen.</string>
     <string name="sensor_age_label">Sensorleeftijd</string>
     <string name="sensor_age_value">%1$dd %2$dh</string>
     <string name="vibrate_pattern_shorty">Kort</string>
