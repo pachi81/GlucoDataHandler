@@ -50,6 +50,7 @@ object Constants {
     const val EXTRA_AA_CONNECTED = "gdh.aa_connected"
     const val EXTRA_GRAPH_DURATION_HOURS = "gdh.graph_duration_hours"
     const val EXTRA_GRAPH_DATA = "gdh.graph_data"
+    const val EXTRA_NODE_ID = "gdh.node_id"
 
     const val XDRIP_ACTION_GLUCOSE_READING = "com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING"
     const val XDRIP_ACTION_SENSOR_ACTIVATE = "com.librelink.app.ThirdPartyIntegration.SENSOR_ACTIVATE"

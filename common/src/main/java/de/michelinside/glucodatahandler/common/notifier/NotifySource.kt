@@ -31,5 +31,6 @@ enum class NotifySource {
     DAY_CHANGED,
     AOD_STATE_CHANGED,
     DB_DATA_CHANGED,
-    SERVICE_STARTED;
+    SERVICE_STARTED,
+    NODE_CONNECTED;
 }

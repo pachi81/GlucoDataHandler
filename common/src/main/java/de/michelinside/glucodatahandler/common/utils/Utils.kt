@@ -230,7 +230,7 @@ object Utils {
             if (map == null) return null
             val gson = Gson()
             val jsonString = gson.toJson(map)
-            Log.v(LOG_ID, "Created jsonString: $jsonString")
+            //Log.v(LOG_ID, "Created jsonString: $jsonString")
             jsonString.toByteArray(Charsets.UTF_8)
         } catch (e: Exception) {
             Log.e(LOG_ID, "Error converting Bundle to JSON bytes: ${e.message}", e)
@@ -350,7 +350,7 @@ object Utils {
         if (bytes == null || bytes.isEmpty()) return null
         return try {
             val jsonString = String(bytes, Charsets.UTF_8)
-            Log.v(LOG_ID, "Received jsonString: $jsonString")
+            //Log.v(LOG_ID, "Received jsonString: $jsonString")
             val mapType = object : TypeToken<Map<String, Any?>>() {}.type
             val gson = Gson()
             val map: Map<String, Any?> = gson.fromJson(jsonString, mapType)
@@ -375,9 +375,11 @@ object Utils {
                 } else {
                     prefix + "  " + key + " => " + (if (bundle[key] != null) (bundle[key]!!.javaClass.simpleName + ": " + bundle[key].toString()) else "NULL") + "\r\n"
                 }
+                if(string.length >= 2000)
+                    return string.take(2000)
             }
             string += prefix + "}"
-            return string.take(2000)
+            return string
         } catch (exc: Exception) {
             Log.e(LOG_ID, "dumpBundle exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
         }

@@ -373,12 +373,6 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                         extras.putInt(BatteryReceiver.LEVEL, BatteryReceiver.batteryPercentage)
                     }
                     if (dataSource == NotifySource.CAPILITY_INFO) {
-                        if(GlucoDataService.appSource == AppSource.PHONE_APP) {
-                            Log.d(LOG_ID, "Adding settings for sending")
-                            extras.putBundle(Constants.SETTINGS_BUNDLE, GlucoDataService.getSettings())
-                            extras.putBundle(Constants.SOURCE_SETTINGS_BUNDLE, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)))
-                            extras.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings())
-                        }
                         extras.putBundle(Constants.ALARM_EXTRA_BUNDLE, AlarmHandler.getExtras())
                     }
                 }
@@ -463,8 +457,15 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             if(notConnectedNodes.isEmpty())
                 removeTimer()
             if (GlucoDataService.appSource == AppSource.PHONE_APP) {
+                Log.i(LOG_ID, "Send settings to watch $nodeId")
+                sendMessage(NotifySource.SETTINGS, GlucoDataService.getSettings(), filterReceiverId = nodeId)
+                sendMessage(NotifySource.SOURCE_SETTINGS, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)), filterReceiverId = nodeId)
+                sendMessage(NotifySource.ALARM_SETTINGS, AlarmHandler.getSettings(), filterReceiverId = nodeId)
                 dbSync.requestDbSync(context)   // update data on phone first, before sending data to wear
             }
+            val bundle = Bundle()
+            bundle.putString(Constants.EXTRA_NODE_ID, nodeId)
+            InternalNotifier.notify(context, NotifySource.NODE_CONNECTED, bundle)
         } else if(noDataReceived.contains(nodeId)) {
             Log.i(LOG_ID, "Node with id " + nodeId + " still waiting for receiving data!")
         } else if(noDataSend.contains(nodeId)) {
@@ -479,12 +480,6 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         commandBundle.putString(Constants.COMMAND_EXTRA, command.toString())
         if(extras != null) {
             commandBundle.putBundle(Constants.COMMAND_BUNDLE, extras)
-            if (GlucoDataService.appSource == AppSource.PHONE_APP) {
-                Log.d(LOG_ID, "Adding settings for sending command")
-                commandBundle.putBundle(Constants.SETTINGS_BUNDLE, GlucoDataService.getSettings())
-                commandBundle.putBundle(Constants.SOURCE_SETTINGS_BUNDLE, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)))
-                commandBundle.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings())
-            }
             if(BatteryReceiver.batteryPercentage >= 0) {
                 commandBundle.putInt(BatteryReceiver.LEVEL, BatteryReceiver.batteryPercentage)
             }
@@ -648,12 +643,6 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                         source = NotifySource.BATTERY_LEVEL
                     }
                     if (bundle != null) {
-                        if (GlucoDataService.appSource == AppSource.PHONE_APP) {
-                            Log.d(LOG_ID, "Adding settings for sending")
-                            bundle.putBundle(Constants.SETTINGS_BUNDLE, GlucoDataService.getSettings())
-                            bundle.putBundle(Constants.SOURCE_SETTINGS_BUNDLE, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)))
-                            bundle.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings())
-                        }
                         bundle.putBundle(Constants.ALARM_EXTRA_BUNDLE, AlarmHandler.getExtras())
                         sendMessage(source, bundle)
                     }
