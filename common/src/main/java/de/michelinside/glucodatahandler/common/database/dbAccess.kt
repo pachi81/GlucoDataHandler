@@ -242,6 +242,21 @@ object dbAccess {
         }
     }
 
+    fun getFirstTimestamp(): Long = runBlocking {
+        if (active) {
+            scope.async {
+                try {
+                    database!!.glucoseValuesDao().getFirstTimestamp()
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "getFirstTimestamp exception: $exc")
+                    0L
+                }
+            }.await()
+        } else {
+            0L
+        }
+    }
+
     fun getFirstLastTimestamp(): Pair<Long, Long> = runBlocking {
         if(active) {
             scope.async {

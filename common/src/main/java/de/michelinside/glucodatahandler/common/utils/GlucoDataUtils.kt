@@ -32,8 +32,10 @@ object GlucoDataUtils {
     }
 
     fun getDisplayGlucoseAsString(rawValue: Float, withUnit: Boolean = false): String {
+        if(rawValue.isNaN() || !isGlucoseValid(rawValue))
+            return "---"
         val glucose = getDisplayGlucose(rawValue)
-        val result = if (ReceiveData.isMmol)  "%.1f".format(glucose) else glucose.toInt().toString()
+        val result = if (ReceiveData.isMmol) "%.1f".format(glucose) else glucose.toInt().toString()
         if(withUnit)
             return result + " " + ReceiveData.getUnit()
         return result
