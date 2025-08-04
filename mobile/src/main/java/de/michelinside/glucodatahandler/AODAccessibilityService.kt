@@ -24,6 +24,7 @@ import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.widget.AodWidget
+import kotlin.math.abs
 import kotlin.math.max
 
 
@@ -34,6 +35,17 @@ class AODAccessibilityService : AccessibilityService() {
     private val LOG_ID = "GDH.Aod"
 
     private var aodWidget: AodWidget? = null
+
+    private var yPosOffset = 0
+    private var yPosOffsetFactor = 1
+    private val MAX_Y_POS_OFFSET = 10
+    val offset: Int get() {
+        if(abs(yPosOffset) >= MAX_Y_POS_OFFSET)
+            yPosOffsetFactor *= -1
+        yPosOffset += yPosOffsetFactor
+        Log.d(LOG_ID, "Offset: $yPosOffset")
+        return yPosOffset
+    }
 
     companion object {
         val LOG_ID = "GDH.Aod"
@@ -178,7 +190,7 @@ class AODAccessibilityService : AccessibilityService() {
             )
 
             imageView.setImageBitmap(bitmap)
-            val yOffset = max(0F, ((BitmapUtils.getScreenHeight(this)-bitmap.height)*aodWidget!!.getYPos()/100F))
+            val yOffset = max(0F, ((BitmapUtils.getScreenHeight(this)-bitmap.height)*aodWidget!!.getYPos()/100F)+offset)
 
             val layoutParams = WindowManager.LayoutParams().apply {
                 type = WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY
@@ -193,7 +205,7 @@ class AODAccessibilityService : AccessibilityService() {
                 y = yOffset.toInt()
             }
 
-            Log.d(LOG_ID, "Adding overlay")
+            Log.d(LOG_ID, "Adding overlay at y-pos ${layoutParams.y}")
 
             windowManager.addView(imageView, layoutParams)
             overlayView = imageView
