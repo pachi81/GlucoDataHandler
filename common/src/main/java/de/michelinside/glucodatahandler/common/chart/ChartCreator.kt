@@ -25,6 +25,7 @@ import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
 import de.michelinside.glucodatahandler.common.utils.Utils
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -60,8 +61,10 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     protected open val circleRadius = 2F
     protected open val touchEnabled = true
     protected open var graphDays = 0
+    protected open val showAverage = true
     private var graphStartTime = 0L
     private var recreateThread: Thread? = null
+    private var averageLine: LimitLine? = null
     protected open var backgroundTransparency = 0
     var labelColor: Int = 0
     protected open val textColor: Int get() {
@@ -263,11 +266,38 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         }
     }
 
-    private fun createLimitLine(limit: Float): LimitLine {
+    private fun createLimitLine(limit: Float, dasched: Boolean = false, label: String? = null): LimitLine {
         Log.v(LOG_ID, "Create limit line for limit: $limit")
         val line = LimitLine(limit)
         line.lineColor = limitLineColor
+        if(dasched) {
+            line.lineWidth = 1F
+            //line.lineColor = context.resources.getColor(R.color.main)
+            line.enableDashedLine(15F, 10F, 0F)
+        }
+        if(!label.isNullOrEmpty()) {
+            line.label = label
+            line.textSize = 15F
+            line.textColor = limitLineColor
+            line.labelPosition = LimitLine.LimitLabelPosition.RIGHT_BOTTOM
+        }
         return line
+    }
+
+    private fun updateAverageLine() {
+        if(touchEnabled) {
+            if(averageLine != null) {
+                chart.axisRight.removeLimitLine(averageLine)
+                averageLine = null
+            }
+            if(showAverage) {
+                GlucoseStatistics.update()
+                if(!GlucoseStatistics.statData7d.averageGlucose.isNaN()) {
+                    averageLine = createLimitLine(GlucoseStatistics.statData7d.averageGlucose, true, "⌀")
+                    chart.axisRight.addLimitLine(averageLine)
+                }
+            }
+        }
     }
 
     protected fun initDataSet() {
@@ -476,6 +506,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         }
 
         if(added) {
+            updateAverageLine()
             dataSet.notifyDataSetChanged()
             updateChart(dataSet)
             if(touchEnabled)

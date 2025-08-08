@@ -99,8 +99,8 @@ abstract class BackgroundWorker(val context: Context, workerParams: WorkerParame
 
     override fun getForegroundInfo(): ForegroundInfo {
         Log.d(LOG_ID, "getForegroundInfo called for ${javaClass.simpleName}")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            return ForegroundInfo(GlucoDataService.NOTIFICATION_ID, getNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            return ForegroundInfo(GlucoDataService.NOTIFICATION_ID, getNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
         }
 
         return ForegroundInfo(GlucoDataService.NOTIFICATION_ID,getNotification())

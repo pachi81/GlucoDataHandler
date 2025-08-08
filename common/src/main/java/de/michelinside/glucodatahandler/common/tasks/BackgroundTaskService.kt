@@ -68,7 +68,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
         if(task != null) {
             Log.d(LOG_ID, "checkExecution for " + task.javaClass.simpleName + ": elapsedTimeMinute=" + elapsedTimeMinute
                     + " - lastElapsedMinute=" + lastElapsedMinute
-                    + " - elapsedIobCobTimeMinute=" + elapsedIobCobTimeMinute
+                    + " - elapsedIobCobTimeMinute=" + Utils.getElapsedTimeMinute(task.getLastIobCobTime(), RoundingMode.HALF_UP)
                     + " - interval=" + task.getIntervalMinute()
                     + " - active=" + task.active(elapsedTimeMinute))
             if(task.active(elapsedTimeMinute)) {
@@ -83,8 +83,8 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                     }
                 }
                 if (task.hasIobCobSupport()) {
-                    if (elapsedIobCobTimeMinute >= task.getIntervalMinute()) {
-                        Log.d(LOG_ID, "Trigger " + task.javaClass.simpleName + " IOB/COB execution after " + elapsedIobCobTimeMinute + " min")
+                    if (Utils.getElapsedTimeMinute(task.getLastIobCobTime(), RoundingMode.HALF_UP) >= task.getIntervalMinute()) {
+                        Log.i(LOG_ID, "Trigger " + task.javaClass.simpleName + " IOB/COB execution after " + Utils.getElapsedTimeMinute(task.getLastIobCobTime(), RoundingMode.HALF_UP) + " min")
                         return true   // IOB/COB interval expired for active task
                     }
                 }

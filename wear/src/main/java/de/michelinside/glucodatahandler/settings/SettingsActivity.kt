@@ -12,11 +12,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatSeekBar
 import androidx.appcompat.widget.SwitchCompat
 import de.michelinside.glucodatahandler.ActiveComplicationHandler
+import de.michelinside.glucodatahandler.BatteryLevelComplicationUpdater
 import de.michelinside.glucodatahandler.ChartComplicationUpdater
 import de.michelinside.glucodatahandler.GlucoDataServiceWear
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 
 class SettingsActivity : AppCompatActivity() {
     private val LOG_ID = "GDH.Main.Settings"
@@ -27,6 +29,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var switchForground: SwitchCompat
     private lateinit var switchRelativeTime: SwitchCompat
     private lateinit var switchBatteryLevel: SwitchCompat
+    private lateinit var showBatteryPercent: SwitchCompat
     private lateinit var btnComplicationTapAction: Button
     private lateinit var seekGraphDuration: AppCompatSeekBar
     private lateinit var txtGraphDurationLevel: TextView
@@ -119,7 +122,7 @@ class SettingsActivity : AppCompatActivity() {
             switchBatteryLevel = findViewById(R.id.switchBatteryLevel)
             switchBatteryLevel.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_BATTERY_RECEIVER_ENABLED, true)
             switchBatteryLevel.setOnCheckedChangeListener { _, isChecked ->
-                Log.d(LOG_ID, "Batter level changed: " + isChecked.toString())
+                Log.d(LOG_ID, "Battery level changed: " + isChecked.toString())
                 try {
                     with (sharedPref.edit()) {
                         putBoolean(Constants.SHARED_PREF_BATTERY_RECEIVER_ENABLED, isChecked)
@@ -130,6 +133,20 @@ class SettingsActivity : AppCompatActivity() {
                 }
             }
 
+            showBatteryPercent = findViewById(R.id.showBatteryPercent)
+            showBatteryPercent.isChecked = sharedPref.getBoolean(Constants.SHARED_PREF_SHOW_BATTERY_PERCENT, true)
+            showBatteryPercent.setOnCheckedChangeListener { _, isChecked ->
+                Log.d(LOG_ID, "Battery percent changed: " + isChecked.toString())
+                try {
+                    with (sharedPref.edit()) {
+                        putBoolean(Constants.SHARED_PREF_SHOW_BATTERY_PERCENT, isChecked)
+                        apply()
+                    }
+                    BatteryLevelComplicationUpdater.OnNotifyData(this, NotifySource.BATTERY_LEVEL, BatteryReceiver.batteryBundle)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Changing battery level exception: " + exc.message.toString() )
+                }
+            }
 
             seekGraphDuration = findViewById(R.id.seekGraphDuration)
             txtGraphDurationLevel = findViewById(R.id.txtGraphDurationLevel)

@@ -30,7 +30,11 @@ import de.michelinside.glucodataauto.receiver.DiaboxReceiver
 import de.michelinside.glucodataauto.receiver.GlucoDataReceiver
 import de.michelinside.glucodataauto.receiver.NsEmulatorReceiver
 import de.michelinside.glucodataauto.receiver.XDripReceiver
+import de.michelinside.glucodatahandler.common.GlucoDataService.Companion.checkNotificationReceiverPermission
+import de.michelinside.glucodatahandler.common.GlucoDataService.Companion.updateNotificationReceiver
 import de.michelinside.glucodatahandler.common.Intents
+import de.michelinside.glucodatahandler.common.database.dbAccess
+import de.michelinside.glucodatahandler.common.receiver.BroadcastServiceAPI
 import de.michelinside.glucodatahandler.common.tasks.BackgroundWorker
 import de.michelinside.glucodatahandler.common.tasks.SourceTaskService
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
@@ -54,6 +58,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
         private var dexcomReceiver: DexcomBroadcastReceiver? = null
         private var nsEmulatorReceiver: NsEmulatorReceiver? = null
         private var diaboxReceiver: DiaboxReceiver? = null
+        private val broadcastServiceAPI = BroadcastServiceAPI()
         private var patient_name: String? = null
         val patientName: String? get() = patient_name
 
@@ -63,6 +68,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
             Log.v(LOG_ID, "init called: init=$init")
             if(!init) {
                 GlucoDataService.appSource = AppSource.AUTO_APP
+                GlucoDataService.context = context.applicationContext
                 migrateSettings(context)
                 CarNotification.initNotification(context)
                 startService(context, false)
@@ -149,7 +155,9 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
             try {
                 Log.i(LOG_ID, "starting datasync - count=$dataSyncCount - context: ${GlucoDataService.context} - force: $force")
                 if ((dataSyncCount == 0 || force) && GlucoDataService.context != null) {
+                    dbAccess.deleteOldValues(System.currentTimeMillis()-Constants.DB_MAX_DATA_GDA_TIME_MS)
                     updateSourceReceiver(GlucoDataService.context!!)
+                    broadcastServiceAPI.init()
                     TimeTaskService.run(GlucoDataService.context!!)
                     SourceTaskService.run(GlucoDataService.context!!)
                     sendStateBroadcast(GlucoDataService.context!!, true)
@@ -168,6 +176,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                 Log.i(LOG_ID, "stopping datasync - count=$dataSyncCount")
                 if (dataSyncCount == 0 && GlucoDataService.context != null) {
                     unregisterSourceReceiver(GlucoDataService.context!!)
+                    broadcastServiceAPI.close(context)
                     sendStateBroadcast(context, false)
                     BackgroundWorker.stopAllWork(context)
                     Log.i(LOG_ID, "Datasync stopped")
@@ -214,6 +223,8 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                 intent.setPackage(Constants.PACKAGE_GLUCODATAHANDLER)
                 intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
                 intent.putExtra(Constants.GLUCODATAAUTO_STATE_EXTRA, enabled)
+                if(enabled)
+                    intent.putExtra(Constants.EXTRA_GRAPH_DURATION_HOURS, 4)
                 context.sendBroadcast(intent)
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "sendStateBroadcast exception: " + exc.toString())
@@ -221,7 +232,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
         }
 
         fun updateSourceReceiver(context: Context, key: String? = null) {
-            Log.d(LOG_ID, "Register receiver")
+            Log.d(LOG_ID, "Register receiver for $key")
             try {
                 val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED) {
@@ -305,6 +316,10 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                     }
                 }
 
+                if (key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED) {
+                    updateNotificationReceiver(sharedPref, context)
+                }
+
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "registerSourceReceiver exception: " + exc.toString())
             }
@@ -337,6 +352,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                     GlucoDataService.unregisterReceiver(context, diaboxReceiver)
                     diaboxReceiver = null
                 }
+                GlucoDataService.unregisterSourceReceiver(context)
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "unregisterSourceReceiver exception: " + exc.toString())
             }
@@ -359,8 +375,8 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
             val isForeground = (if(intent != null) intent.getBooleanExtra(Constants.SHARED_PREF_FOREGROUND_SERVICE, false) else false) || sharedPref.getBoolean(Constants.SHARED_PREF_FOREGROUND_SERVICE, false)
             if (isForeground && !isForegroundService) {
                 Log.i(LOG_ID, "Starting service in foreground!")
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                    startForeground(NOTIFICATION_ID, getNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+                    startForeground(NOTIFICATION_ID, getNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
                 else
                     startForeground(NOTIFICATION_ID, getNotification())
                 isForegroundService = true
@@ -370,6 +386,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                 stopForeground(STOP_FOREGROUND_REMOVE)
             }
             CarConnection(applicationContext).type.observeForever(GlucoDataServiceAuto::onConnectionStateUpdated)
+            InternalNotifier.notify(this, NotifySource.SERVICE_STARTED, null)
             if(dataSyncCount > 0)
                 startDataSync(true)
         } catch (exc: Exception) {
@@ -411,16 +428,20 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         try {
-            Log.d(LOG_ID, "onSharedPreferenceChanged called with key $key")
+            Log.d(LOG_ID, "onSharedPreferenceChanged called with key $key - dataSyncCount = $dataSyncCount")
             when(key) {
                 Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED,
                 Constants.SHARED_PREF_SOURCE_XDRIP_ENABLED,
                 Constants.SHARED_PREF_SOURCE_AAPS_ENABLED,
                 Constants.SHARED_PREF_SOURCE_BYODA_ENABLED,
                 Constants.SHARED_PREF_SOURCE_EVERSENSE_ENABLED,
-                Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED -> {
-                    if(dataSyncCount>0)
+                Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED,
+                Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED -> {
+                    if(dataSyncCount>0) {
                         updateSourceReceiver(this, key)
+                    } else if(key == Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED && sharedPreferences.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
+                        checkNotificationReceiverPermission(sharedPreferences, this)
+                    }
                 }
                 Constants.PATIENT_NAME -> {
                     patient_name = sharedPreferences.getString(Constants.PATIENT_NAME, "")

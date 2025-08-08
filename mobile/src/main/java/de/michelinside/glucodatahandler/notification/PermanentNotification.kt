@@ -139,9 +139,10 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
             .setVisibility(Notification.VISIBILITY_PUBLIC)
     }
 
-    private fun removeNotifications() {
-        //notificationMgr.cancel(NOTIFICATION_ID)  // remove notification
-        showPrimaryNotification(false)
+    private fun removeNotifications(onlySecond: Boolean = false) {
+        Log.i(LOG_ID, "Remove notifications - onlySecond=$onlySecond")
+        if(!onlySecond)
+            showPrimaryNotification(false)
         Channels.getNotificationManager().cancel(SECOND_NOTIFICATION_ID)
         Channels.getNotificationManager().cancel(THIRD_NOTIFICATION_ID)
     }
@@ -290,6 +291,8 @@ object PermanentNotification: NotifierInterface, SharedPreferences.OnSharedPrefe
     fun showNotifications(onlySecond: Boolean = false) {
         Log.d(LOG_ID, "showNotifications service running: ${GlucoDataService.foreground} - onlySecond=$onlySecond")
         try {
+            if(sharedPref.getBoolean("notification_recreate", false))
+                removeNotifications(true)
             if (GlucoDataService.foreground) {
                 if (!onlySecond)
                     showPrimaryNotification(true)

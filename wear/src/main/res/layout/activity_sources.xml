@@ -56,6 +56,13 @@
                 android:layout_height="wrap_content"
                 android:text="@string/src_cat_nightscout"
                 android:textAlignment="viewStart" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchMedtrumSource"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/src_cat_medtrum"
+                android:textAlignment="viewStart" />
     </LinearLayout>
     </ScrollView>
 </androidx.wear.widget.BoxInsetLayout>

@@ -9,7 +9,7 @@ import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.preferences.PreferenceHelper
 
 
-class SettingsFragment : PreferenceFragmentCompat() {
+class SettingsFragment : SettingsFragmentCompatBase() {
     private val LOG_ID = "GDH.SettingsFragment"
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -28,5 +28,4 @@ class SettingsFragment : PreferenceFragmentCompat() {
             Log.e(LOG_ID, "onCreatePreferences exception: " + exc.toString())
         }
     }
-
 }

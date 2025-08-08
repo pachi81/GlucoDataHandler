@@ -144,22 +144,26 @@
             android:text="@string/menu_sources"
             />
 
-        <LinearLayout
-            android:id="@+id/space_table"
-            android:layout_height="20dp"
-            android:layout_width="0dp"
-            android:orientation="horizontal">
-            <!-- this expands to fill the empty space if needed -->
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/graphImage"
+            android:layout_marginVertical="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:visibility="gone"
+            android:contentDescription="@string/graph" />
 
         <TableLayout
             android:id="@+id/tableNotes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/layout_bg"
             android:divider="?android:attr/dividerHorizontal"
             android:showDividers="middle">
 
-            <TableRow android:background="@color/table_header" android:padding="5dp"
+            <TableRow android:background="@drawable/layout_table_header" android:padding="5dp"
                 tools:ignore="UselessParent">
                 <TextView
                     android:textStyle="bold"
@@ -175,10 +179,12 @@
             android:id="@+id/tableAlarms"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/layout_bg"
             android:divider="?android:attr/dividerHorizontal"
             android:showDividers="middle">
 
-            <TableRow android:background="@color/table_header" android:padding="5dp"
+            <TableRow android:background="@drawable/layout_table_header" android:padding="5dp"
                 tools:ignore="UselessParent">
                 <TextView
                     android:textStyle="bold"
@@ -194,10 +200,12 @@
             android:id="@+id/tableDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/layout_bg"
             android:divider="?android:attr/dividerHorizontal"
             android:showDividers="middle">
 
-            <TableRow android:background="@color/table_header" android:padding="5dp"
+            <TableRow android:background="@drawable/layout_table_header" android:padding="5dp"
                 tools:ignore="UselessParent">
                 <TextView
                     android:textStyle="bold"
@@ -213,10 +221,12 @@
             android:id="@+id/tableConnections"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/layout_bg"
             android:divider="?android:attr/dividerHorizontal"
             android:showDividers="middle">
 
-            <TableRow android:background="@color/table_header" android:padding="5dp"
+            <TableRow android:background="@drawable/layout_table_header" android:padding="5dp"
                 tools:ignore="UselessParent">
                 <TextView
                     android:textStyle="bold"
@@ -241,6 +251,7 @@
             android:id="@+id/txtVersion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
             android:layout_marginBottom="25dp"
             android:text="1.0"
             android:textSize="16sp"

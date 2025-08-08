@@ -1,0 +1,1401 @@
+06-24 16:19:51.971  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:19:51 (1750778391739) - when 16:19:51 (1750778391732) - diff notify: 120, diff recv value: 120
+06-24 16:19:51.971  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:19:51.971  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 120 < 250
+06-24 16:19:51.971  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:19:51 (1750778391739) - when 16:19:51 (1750778391732)
+06-24 16:19:51.972  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:19:51.972  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:19:51.981  4367  4367 I GDH.NotificationReceiver: Found value: 1.275 using regex in android.widget.TextView{1798d63 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:19:51.981  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.275 from time: 16:19:51
+06-24 16:19:51.981  4367  4367 I GDH.ReceiveData: Only IOB/COB changed: 1.275/NaN - at 16:19:51
+06-24 16:19:51.997  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:19:51.998  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:19:54.018  4367  4367 I GDH.Task.Time.TaskService: Set next alarm after 3 minute(s) at 16:20:54 (received at 16:17:51) with a delay of 3s
+06-24 16:19:54.023  4367 12781 I GDH.Task.Time.TaskService: execute after 2 min: ElapsedTimeTask
+06-24 16:19:55.032  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@f907de7
+06-24 16:19:55.041  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:19:55.042  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:19:55.057  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@e8c2d94
+06-24 16:19:55.063  4367  4367 I GDH.Chart.BitmapCreator.2: using circle radius: 2.8
+06-24 16:19:55.067  4367  4367 I GDH.Chart.Creator.2: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:19:55.095  4367 12784 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@17da878
+06-24 16:19:55.111  4367 12785 I GDH.Chart.Bitmap.2: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@a57b51
+06-24 16:19:55.113  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:20:03.720  4367  4367 I GDH.BatteryReceiver: Received batter level: 41% - enabled: true
+06-24 16:20:04.475  4367  4367 I GDH.BatteryReceiver: Received batter level: 41% - enabled: true
+06-24 16:20:05.037  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:20:04 (1750778404822) - when 16:20:04 (1750778404821) - diff notify: 13, diff recv value: 133
+06-24 16:20:05.037  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:20:05.037  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 133 < 250
+06-24 16:20:05.037  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:20:04 (1750778404822) - when 16:20:04 (1750778404821)
+06-24 16:20:05.038  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:20:05.038  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:20:05.050  4367  4367 I GDH.NotificationReceiver: Found value: 1.275 using regex in android.widget.TextView{406cdbb V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:20:05.050  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.275 from time: 16:20:04
+06-24 16:20:05.051  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:20:08.656  4367  4367 I GDH.Task.Source.TaskService: Not active for elapsed time 2
+06-24 16:20:08.693  4367  4367 I GDH.InternalNotifier: add notifier de.michelinside.glucodatahandler.MainChartCreator@5ee82f4 - filter: [TIME_VALUE, DAY_CHANGED] - timechanged: true
+06-24 16:20:08.693  4367  4367 I GDH.InternalNotifier: add notifier de.michelinside.glucodatahandler.MainActivity@c9037be - filter: [BROADCAST, IOB_COB_CHANGE, IOB_COB_TIME, MESSAGECLIENT, CAPILITY_INFO, NODE_BATTERY_LEVEL, SETTINGS, CAR_CONNECTION, TIME_VALUE, ALARM_STATE_CHANGED, SOURCE_STATE_CHANGE] - timechanged: true
+06-24 16:20:08.694  4367  4367 I GDH.Main: Check uncaught exception exists: false - last occured at 1 ene. 1970 0:00:00
+06-24 16:20:10.992  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.MainActivity@c9037be
+06-24 16:20:10.992  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.MainChartCreator@5ee82f4
+06-24 16:20:11.779  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.MainChartCreator@5ee82f4
+06-24 16:20:47.976  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: false (flags: 1, prio: 0) - posted: 16:20:47 (1750778447703) - when 16:20:47 (1750778447697) - diff notify: 42, diff recv value: 176
+06-24 16:20:47.978  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:20:47 (1750778447703) - when 16:20:47 (1750778447697)
+06-24 16:20:47.978  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:20:47.979  4367  4367 I GDH.NotificationReceiver: extracted title `Alerta en límite alto 305 mg/dL` and text `La glucosa del sensor está alta. Medir GS.
+06-24 16:20:47.979  4367  4367 I GDH.NotificationReceiver: 
+06-24 16:20:47.979  4367  4367 I GDH.NotificationReceiver: Compruebe la bomba.`
+06-24 16:20:48.000  4367  4367 E GDH.SourceStateData: Error state for source NOTIFICATION: Could not parse IOB from [Alerta en límite alto 305 mg/dL, La glucosa del sensor está alta. Medir GS.
+06-24 16:20:48.000  4367  4367 E GDH.SourceStateData: 
+06-24 16:20:48.000  4367  4367 E GDH.SourceStateData: Compruebe la bomba., Alerta en límite alto 305 mg/dL. La glucosa del sensor está alta. Medir GS.] - info: 
+06-24 16:20:50.717  4367  4367 I GDH.BatteryReceiver: Received batter level: 40% - enabled: true
+06-24 16:20:50.717  4367  4367 I GDH.Task.Source.TaskService: Not active for elapsed time 2
+06-24 16:20:52.448  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:20:52 (1750778452235) - when 16:20:52 (1750778452234) - diff notify: 47, diff recv value: 181
+06-24 16:20:52.448  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:20:52.448  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 181 < 250
+06-24 16:20:52.449  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:20:52 (1750778452235) - when 16:20:52 (1750778452234)
+06-24 16:20:52.451  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:20:52.451  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:20:52.470  4367  4367 I GDH.NotificationReceiver: Found value: 1.275 using regex in android.widget.TextView{2d757ae V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:20:52.471  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.275 from time: 16:20:52
+06-24 16:20:52.471  4367  4367 I GDH.ReceiveData: Only IOB/COB changed: 1.275/NaN - at 16:20:52
+06-24 16:20:52.484  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:20:52.485  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:20:54.017  4367  4367 I GDH.Task.Time.TaskService: Set next alarm after 4 minute(s) at 16:21:54 (received at 16:17:51) with a delay of 3s
+06-24 16:20:54.027  4367 12889 I GDH.Task.Time.TaskService: execute after 3 min: ElapsedTimeTask
+06-24 16:20:54.867  4367  4367 I GDH.InternalNotifier: add notifier de.michelinside.glucodatahandler.MainChartCreator@e0047ed - filter: [TIME_VALUE, DAY_CHANGED] - timechanged: true
+06-24 16:20:54.868  4367  4367 I GDH.Chart.Creator.2131361943: updateGraphStartTime: 22 jun. 2025 16:20:54
+06-24 16:20:54.870  4367  5004 I GDH.Utils.Packages: 24 packages found
+06-24 16:20:54.876  4367  4367 I GDH.Task.Source.TaskService: Not active for elapsed time 3
+06-24 16:20:54.888  4367  4367 I GDH.InternalNotifier: add notifier de.michelinside.glucodatahandler.MainChartCreator@e0047ed - filter: [TIME_VALUE, DAY_CHANGED] - timechanged: false
+06-24 16:20:54.888  4367  4367 I GDH.InternalNotifier: add notifier de.michelinside.glucodatahandler.MainActivity@8cf4c6a - filter: [BROADCAST, IOB_COB_CHANGE, IOB_COB_TIME, MESSAGECLIENT, CAPILITY_INFO, NODE_BATTERY_LEVEL, SETTINGS, CAR_CONNECTION, TIME_VALUE, ALARM_STATE_CHANGED, SOURCE_STATE_CHANGE] - timechanged: true
+06-24 16:20:54.889  4367  4367 I GDH.Main: Check uncaught exception exists: false - last occured at 1 ene. 1970 0:00:00
+06-24 16:20:54.964  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:20:54 (1750778454696) - when 16:20:54 (1750778454695) - diff notify: 2, diff recv value: 183
+06-24 16:20:54.964  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:20:54.964  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 183 < 250
+06-24 16:20:54.965  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:20:54 (1750778454696) - when 16:20:54 (1750778454695)
+06-24 16:20:54.965  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:20:54.965  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:20:54.975  4367  4367 I GDH.NotificationReceiver: Found value: 1.25 using regex in android.widget.TextView{bd86b0b V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:20:54.975  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.25 from time: 16:20:54
+06-24 16:20:54.975  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:20:55.917  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:20:55 (1750778455709) - when 16:20:55 (1750778455708) - diff notify: 1, diff recv value: 184
+06-24 16:20:55.917  4367  4367 I GDH.NotificationReceiver: Check for new value for 1s update
+06-24 16:20:55.918  4367  4367 I GDH.NotificationReceiver: using regex (?:^|\s)(\d*\.?\d+)(?=\s|$)
+06-24 16:20:55.918  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:20:55.926  4367  4367 I GDH.NotificationReceiver: Found value: 305.0 using regex in android.widget.TextView{a9ce6c4 V.ED..... ......ID 0,0-0,0 #7f090405 app:id/sg_value}
+06-24 16:20:55.926  4367  4367 I GDH.NotificationReceiver: Extracted glucose value: 305.0 from time: 16:20:55
+06-24 16:20:55.928  4367  4367 I GDH.ReceiveData: Glucodata received from NOTIFICATION: Bundle[{glucodata.Minute.Alarm=0, glucodata.Minute.Rate=NaN, glucodata.Minute.Time=1750778455709, glucodata.Minute.mgdl=305}] - timestamp: 24 jun. 2025 16:20:55
+06-24 16:20:55.931  4367  4367 I GDH.Task.Time.TaskService: Set next alarm after 1 minute(s) at 16:21:58 (received at 16:20:55) with a delay of 3s
+06-24 16:20:55.955  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:20:55.956  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:20:55 (1750778455709) - when 16:20:55 (1750778455708)
+06-24 16:20:55.956  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:20:55.956  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:20:55.965  4367  4367 I GDH.NotificationReceiver: Found value: 1.25 using regex in android.widget.TextView{484edd5 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:20:55.966  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.25 from time: 16:20:55
+06-24 16:20:55.966  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:21:13.829  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:21:13 (1750778473598) - when 16:21:13 (1750778473596) - diff notify: 17, diff recv value: 18
+06-24 16:21:13.829  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:21:13.829  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 18 < 250
+06-24 16:21:13.830  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:21:13 (1750778473598) - when 16:21:13 (1750778473596)
+06-24 16:21:13.833  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:21:13.833  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:21:13.886  4367  4367 I GDH.NotificationReceiver: Found value: 1.25 using regex in android.widget.TextView{548fc22 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:21:13.887  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.25 from time: 16:21:13
+06-24 16:21:13.887  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:21:16.448  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h325dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(96, 0 - 1507, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_270} s.273}
+06-24 16:21:16.448  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:21:16.448  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@12bb742
+06-24 16:21:16.449  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:21:16.450  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:21:16.483  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w360dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.315}
+06-24 16:21:16.483  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:21:16.484  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:21:16.493  4367 13125 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@131e6b3
+06-24 16:21:16.494  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@131e6b3
+06-24 16:21:16.495  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:21:16.496  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:21:16.499  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{c9dc35a} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:21:16.523  4367 13126 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@a1eb86e
+06-24 16:21:16.572  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{4318092} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:21:16.588  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:21:17.250  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:21:17 (1750778477017) - when 16:21:17 (1750778477014) - diff notify: 3, diff recv value: 22
+06-24 16:21:17.250  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:21:17.250  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 22 < 250
+06-24 16:21:17.251  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:21:17 (1750778477017) - when 16:21:17 (1750778477014)
+06-24 16:21:17.253  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:21:17.254  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:21:17.270  4367  4367 I GDH.NotificationReceiver: Found value: 1.25 using regex in android.widget.TextView{7230f52 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:21:17.270  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.25 from time: 16:21:17
+06-24 16:21:17.270  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:21:23.819  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:21:23 (1750778483583) - when 16:21:23 (1750778483582) - diff notify: 6, diff recv value: 28
+06-24 16:21:23.819  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:21:23.819  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 28 < 250
+06-24 16:21:23.819  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:21:23 (1750778483583) - when 16:21:23 (1750778483582)
+06-24 16:21:23.820  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:21:23.820  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:21:23.835  4367  4367 I GDH.NotificationReceiver: Found value: 1.25 using regex in android.widget.TextView{1f09e5a V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:21:23.835  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.25 from time: 16:21:23
+06-24 16:21:23.836  4367  4367 I GDH.ReceiveData: Only IOB/COB changed: 1.25/NaN - at 16:21:23
+06-24 16:21:23.861  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:21:23.862  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:21:24.398  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:21:24 (1750778484175) - when 16:21:24 (1750778484172) - diff notify: 0, diff recv value: 29
+06-24 16:21:24.398  4367  4367 I GDH.NotificationReceiver: Check for new value for 0s update
+06-24 16:21:24.398  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 29 < 50
+06-24 16:21:24.399  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:21:24 (1750778484175) - when 16:21:24 (1750778484172)
+06-24 16:21:24.400  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:21:24.401  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:21:24.423  4367  4367 I GDH.NotificationReceiver: Found value: 1.4 using regex in android.widget.TextView{30ab0 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:21:24.424  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.4 from time: 16:21:24
+06-24 16:21:24.424  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:21:27.906  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:21:27 (1750778487677) - when 16:21:27 (1750778487671) - diff notify: 3, diff recv value: 32
+06-24 16:21:27.907  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:21:27.907  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 32 < 250
+06-24 16:21:27.908  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:21:27 (1750778487677) - when 16:21:27 (1750778487671)
+06-24 16:21:27.911  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:21:27.912  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:21:27.929  4367  4367 I GDH.NotificationReceiver: Found value: 1.425 using regex in android.widget.TextView{4b86af8 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:21:27.930  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.425 from time: 16:21:27
+06-24 16:21:27.930  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:21:29.937  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:21:29 (1750778489701) - when 16:21:29 (1750778489696) - diff notify: 2, diff recv value: 34
+06-24 16:21:29.937  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:21:29.937  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 34 < 250
+06-24 16:21:29.938  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:21:29 (1750778489701) - when 16:21:29 (1750778489696)
+06-24 16:21:29.938  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:21:29.939  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:21:29.953  4367  4367 I GDH.NotificationReceiver: Found value: 1.425 using regex in android.widget.TextView{caf6e40 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:21:29.954  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.425 from time: 16:21:29
+06-24 16:21:29.954  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:21:34.828  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w333dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.347}
+06-24 16:21:34.828  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:21:34.828  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@a1eb86e
+06-24 16:21:34.830  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:21:34.831  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:21:34.862  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h332dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(53, 0 - 1464, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_90} s.385}
+06-24 16:21:34.863  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:21:34.863  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:21:34.865  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@fc9a179
+06-24 16:21:34.866  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:21:34.866  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:21:34.873  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{4318092} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:21:34.898  4367 13136 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@4a2cebe
+06-24 16:21:34.951  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{5fa2a56} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:21:34.963  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:21:35.620  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:21:35 (1750778495391) - when 16:21:35 (1750778495389) - diff notify: 5, diff recv value: 40
+06-24 16:21:35.621  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:21:35.621  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 40 < 250
+06-24 16:21:35.622  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:21:35 (1750778495391) - when 16:21:35 (1750778495389)
+06-24 16:21:35.624  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:21:35.624  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:21:35.641  4367  4367 I GDH.NotificationReceiver: Found value: 1.425 using regex in android.widget.TextView{286fb5 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:21:35.642  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.425 from time: 16:21:35
+06-24 16:21:35.642  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:21:58.015  4367  4367 I GDH.Task.Time.TaskService: Set next alarm after 2 minute(s) at 16:22:58 (received at 16:20:55) with a delay of 3s
+06-24 16:21:58.019  4367 13153 I GDH.Task.Time.TaskService: execute after 1 min: ElapsedTimeTask
+06-24 16:21:58.107  4367  4389 W System  : A resource failed to call release. 
+06-24 16:21:58.114  4367  4389 I chatty  : uid=10193(de.michelinside.glucodatahandler) FinalizerDaemon identical 7 lines
+06-24 16:21:58.114  4367  4389 W System  : A resource failed to call release. 
+06-24 16:22:08.723  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h325dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(53, 0 - 1464, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_90} s.423}
+06-24 16:22:08.723  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:22:08.723  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@4a2cebe
+06-24 16:22:08.726  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:22:08.726  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:22:08.752  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w360dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.461}
+06-24 16:22:08.752  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:22:08.753  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:22:08.760  4367 13156 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@24eb533
+06-24 16:22:08.760  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@24eb533
+06-24 16:22:08.762  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:22:08.762  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:22:08.778  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{5fa2a56} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:22:08.812  4367 13157 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@fa2b8ee
+06-24 16:22:08.841  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{3f4f136} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:22:08.851  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:22:09.493  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:22:09 (1750778529281) - when 16:22:09 (1750778529280) - diff notify: 33, diff recv value: 74
+06-24 16:22:09.493  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:22:09.493  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 74 < 250
+06-24 16:22:09.495  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:22:09 (1750778529281) - when 16:22:09 (1750778529280)
+06-24 16:22:09.496  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:22:09.497  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:22:09.537  4367  4367 I GDH.NotificationReceiver: Found value: 1.425 using regex in android.widget.TextView{b408a2c V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:22:09.537  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.425 from time: 16:22:09
+06-24 16:22:09.537  4367  4367 I GDH.ReceiveData: Only IOB/COB changed: 1.425/NaN - at 16:22:09
+06-24 16:22:09.558  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:22:09.559  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+
+06-24 16:22:41.846  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:22:41 (1750778561625) - when 16:22:41 (1750778561623) - diff notify: 32, diff recv value: 106
+06-24 16:22:41.846  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:22:41.846  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 106 < 250
+06-24 16:22:41.848  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:22:41 (1750778561625) - when 16:22:41 (1750778561623)
+06-24 16:22:41.849  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:22:41.849  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:22:41.872  4367  4367 I GDH.NotificationReceiver: Found value: 1.425 using regex in android.widget.TextView{7fbd793 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:22:41.872  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.425 from time: 16:22:41
+06-24 16:22:41.873  4367  4367 I GDH.ReceiveData: Only IOB/COB changed: 1.425/NaN - at 16:22:41
+06-24 16:22:41.886  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:22:41.887  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:22:47.400  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h325dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(96, 0 - 1507, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_270} s.571}
+06-24 16:22:47.400  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:22:47.401  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@2bb93e4
+06-24 16:22:47.402  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:22:47.403  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:22:47.449  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w360dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.611}
+06-24 16:22:47.449  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:22:47.450  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:22:47.461  4367 13198 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@12a86ce
+06-24 16:22:47.461  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@12a86ce
+06-24 16:22:47.462  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:22:47.463  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:22:47.470  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{3cf043c} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:22:47.504  4367 13199 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@7aabf85
+06-24 16:22:47.557  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{9ff0bfd} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:22:47.563  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:22:47.577  4367  4389 W System  : A resource failed to call release. 
+06-24 16:22:47.577  4367  4389 W System  : A resource failed to call release. 
+06-24 16:22:48.189  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:22:47 (1750778567965) - when 16:22:47 (1750778567962) - diff notify: 6, diff recv value: 112
+06-24 16:22:48.190  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:22:48.190  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 112 < 250
+06-24 16:22:48.191  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:22:47 (1750778567965) - when 16:22:47 (1750778567962)
+06-24 16:22:48.194  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:22:48.194  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:22:48.226  4367  4367 I GDH.NotificationReceiver: Found value: 1.425 using regex in android.widget.TextView{bbf8799 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:22:48.227  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.425 from time: 16:22:47
+06-24 16:22:48.227  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:22:51.433  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:22:51 (1750778571204) - when 16:22:51 (1750778571197) - diff notify: 3, diff recv value: 116
+06-24 16:22:51.433  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:22:51.433  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 116 < 250
+06-24 16:22:51.435  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:22:51 (1750778571204) - when 16:22:51 (1750778571197)
+06-24 16:22:51.436  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:22:51.436  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:22:51.454  4367  4367 I GDH.NotificationReceiver: Found value: 1.4 using regex in android.widget.TextView{7c729e6 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:22:51.455  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.4 from time: 16:22:51
+06-24 16:22:51.455  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:22:58.011  4367  4367 I GDH.Task.Time.TaskService: Set next alarm after 3 minute(s) at 16:23:58 (received at 16:20:55) with a delay of 3s
+06-24 16:22:58.015  4367 13209 I GDH.Task.Time.TaskService: execute after 2 min: ElapsedTimeTask
+06-24 16:22:59.022  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@7aabf85
+06-24 16:22:59.033  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:22:59.037  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:22:59.052  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@8d8d6c6
+06-24 16:22:59.058  4367  4367 I GDH.Chart.BitmapCreator.2: using circle radius: 2.8
+06-24 16:22:59.061  4367  4367 I GDH.Chart.Creator.2: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:22:59.086  4367 13212 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@6c4c679
+06-24 16:22:59.092  4367 13214 I GDH.Chart.Bitmap.2: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@d78fbe
+06-24 16:22:59.099  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:23:00.946  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w333dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.645}
+06-24 16:23:00.946  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:23:00.946  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@6c4c679
+06-24 16:23:00.947  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:23:00.948  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:23:01.002  4367 13218 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@6eb7e58
+06-24 16:23:01.010  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h332dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(53, 0 - 1464, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_90} s.683}
+06-24 16:23:01.010  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:23:01.010  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@6eb7e58
+06-24 16:23:01.011  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:23:01.012  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:23:01.017  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{9ff0bfd} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:23:01.036  4367 13219 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@b7562b3
+06-24 16:23:01.123  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{4644acf} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:23:01.149  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:23:01.778  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:23:01 (1750778581559) - when 16:23:01 (1750778581558) - diff notify: 10, diff recv value: 126
+06-24 16:23:01.778  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:23:01.778  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 126 < 250
+06-24 16:23:01.779  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:23:01 (1750778581559) - when 16:23:01 (1750778581558)
+06-24 16:23:01.780  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:23:01.780  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:23:01.800  4367  4367 I GDH.NotificationReceiver: Found value: 1.4 using regex in android.widget.TextView{d238984 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:23:01.800  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.4 from time: 16:23:01
+06-24 16:23:01.801  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:23:27.311  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h325dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(53, 0 - 1464, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_90} s.721}
+06-24 16:23:27.312  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:23:27.312  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@b7562b3
+06-24 16:23:27.314  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:23:27.314  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:23:27.346  4367 13232 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@c1ff56d
+06-24 16:23:27.361  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w360dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.759}
+06-24 16:23:27.361  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:23:27.361  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@c1ff56d
+06-24 16:23:27.362  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:23:27.363  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:23:27.367  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{4644acf} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:23:27.400  4367 13233 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@811b9f0
+06-24 16:23:27.432  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:23:27.444  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{c7324f} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:23:28.097  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:23:27 (1750778607871) - when 16:23:27 (1750778607869) - diff notify: 26, diff recv value: 152
+06-24 16:23:28.097  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:23:28.097  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 152 < 250
+06-24 16:23:28.098  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:23:27 (1750778607871) - when 16:23:27 (1750778607869)
+06-24 16:23:28.099  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:23:28.099  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:23:28.116  4367  4367 I GDH.NotificationReceiver: Found value: 1.4 using regex in android.widget.TextView{4c3969c V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:23:28.117  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.4 from time: 16:23:27
+06-24 16:23:28.118  4367  4367 I GDH.ReceiveData: Only IOB/COB changed: 1.4/NaN - at 16:23:27
+06-24 16:23:28.131  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:23:28.132  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+
+06-24 16:23:51.536  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:23:51 (1750778631299) - when 16:23:51 (1750778631292) - diff notify: 23, diff recv value: 176
+06-24 16:23:51.536  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:23:51.536  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 176 < 250
+06-24 16:23:51.537  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:23:51 (1750778631299) - when 16:23:51 (1750778631292)
+06-24 16:23:51.538  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:23:51.538  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:23:51.582  4367  4367 I GDH.NotificationReceiver: Found value: 1.375 using regex in android.widget.TextView{1c2ec24 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:23:51.582  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.375 from time: 16:23:51
+06-24 16:23:51.582  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:23:53.013  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w312dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.795}
+06-24 16:23:53.013  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:23:53.013  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@811b9f0
+06-24 16:23:53.016  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:23:53.017  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:23:53.059  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h332dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(96, 0 - 1507, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_270} s.835}
+06-24 16:23:53.059  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:23:53.059  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:23:53.070  4367 13267 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@bc9b38d
+06-24 16:23:53.074  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@bc9b38d
+06-24 16:23:53.076  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:23:53.076  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:23:53.082  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{c7324f} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:23:53.103  4367 13268 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@854a690
+06-24 16:23:53.162  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:23:53.174  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{6298afe} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:23:53.836  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:23:53 (1750778633607) - when 16:23:53 (1750778633605) - diff notify: 2, diff recv value: 178
+06-24 16:23:53.836  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:23:53.836  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 178 < 250
+06-24 16:23:53.837  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:23:53 (1750778633607) - when 16:23:53 (1750778633605)
+06-24 16:23:53.838  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:23:53.838  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:23:53.854  4367  4367 I GDH.NotificationReceiver: Found value: 1.375 using regex in android.widget.TextView{ec03d7d V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:23:53.854  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.375 from time: 16:23:53
+06-24 16:23:53.854  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:23:55.273  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h325dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(96, 0 - 1507, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_270} s.869}
+06-24 16:23:55.273  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:23:55.273  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@854a690
+06-24 16:23:55.275  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:23:55.276  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:23:55.305  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w360dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.909}
+06-24 16:23:55.305  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:23:55.305  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:23:55.307  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@6447472
+06-24 16:23:55.308  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:23:55.308  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:23:55.317  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{6298afe} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:23:55.341  4367 13275 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@8cc80c3
+06-24 16:23:55.396  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{7e108f5} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:23:55.414  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:23:56.072  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:23:55 (1750778635843) - when 16:23:55 (1750778635841) - diff notify: 2, diff recv value: 180
+06-24 16:23:56.072  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:23:56.072  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 180 < 250
+06-24 16:23:56.073  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:23:55 (1750778635843) - when 16:23:55 (1750778635841)
+06-24 16:23:56.075  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:23:56.075  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:23:56.092  4367  4367 I GDH.NotificationReceiver: Found value: 1.375 using regex in android.widget.TextView{ad3ceec V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:23:56.092  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.375 from time: 16:23:55
+06-24 16:23:56.092  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+
+06-24 16:25:00.371  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:25:00 (1750778700061) - when 16:25:00 (1750778700059) - diff notify: 64, diff recv value: 245
+06-24 16:25:00.371  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:25:00.371  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 245 < 250
+06-24 16:25:00.371  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:25:00 (1750778700061) - when 16:25:00 (1750778700059)
+06-24 16:25:00.371  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:25:00.371  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:25:00.388  4367  4367 I GDH.NotificationReceiver: Found value: 1.375 using regex in android.widget.TextView{cf0c598 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:25:00.389  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.375 from time: 16:25:00
+06-24 16:25:00.389  4367  4367 I GDH.ReceiveData: Only IOB/COB changed: 1.375/NaN - at 16:25:00
+06-24 16:25:00.402  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:25:00.404  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:25:00.965  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:25:00 (1750778700739) - when 16:25:00 (1750778700737) - diff notify: 0, diff recv value: 245
+06-24 16:25:00.965  4367  4367 I GDH.NotificationReceiver: Check for new value for 0s update
+06-24 16:25:00.968  4367  4367 I GDH.NotificationReceiver: using regex (?:^|\s)(\d*\.?\d+)(?=\s|$)
+06-24 16:25:00.968  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:25:00.988  4367  4367 I GDH.NotificationReceiver: Found value: 305.0 using regex in android.widget.TextView{90212e3 V.ED..... ......ID 0,0-0,0 #7f090405 app:id/sg_value}
+06-24 16:25:00.988  4367  4367 I GDH.NotificationReceiver: Extracted glucose value: 305.0 from time: 16:25:00
+06-24 16:25:00.988  4367  4367 I GDH.NotificationReceiver: Ignoring value notification with same value: 305.0
+06-24 16:25:00.989  4367  4367 E GDH.SourceStateData: Error state for source NOTIFICATION: Invalid glucose value: 305.0 - info: 
+06-24 16:25:00.989  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:25:00 (1750778700739) - when 16:25:00 (1750778700737)
+06-24 16:25:00.990  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:25:00.990  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:25:01.005  4367  4367 I GDH.NotificationReceiver: Found value: 1.375 using regex in android.widget.TextView{9ff714b V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:25:01.006  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.375 from time: 16:25:00
+06-24 16:25:01.006  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:25:49.179  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:25:48 (1750778748948) - when 16:25:48 (1750778748947) - diff notify: 48, diff recv value: 293
+06-24 16:25:49.180  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:25:49.180  4367  4367 I GDH.NotificationReceiver: using regex (?:^|\s)(\d*\.?\d+)(?=\s|$)
+06-24 16:25:49.181  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:25:49.201  4367  4367 I GDH.NotificationReceiver: Found value: 300.0 using regex in android.widget.TextView{ac8d817 V.ED..... ......ID 0,0-0,0 #7f090405 app:id/sg_value}
+06-24 16:25:49.202  4367  4367 I GDH.NotificationReceiver: Extracted glucose value: 300.0 from time: 16:25:48
+06-24 16:25:49.209  4367  4367 I GDH.ReceiveData: Glucodata received from NOTIFICATION: Bundle[{glucodata.Minute.Alarm=0, glucodata.Minute.Rate=NaN, glucodata.Minute.Time=1750778748948, glucodata.Minute.mgdl=300}] - timestamp: 24 jun. 2025 16:25:48
+06-24 16:25:49.216  4367  4367 I GDH.Task.Time.TaskService: Set next alarm after 1 minute(s) at 16:26:51 (received at 16:25:48) with a delay of 3s
+06-24 16:25:49.227  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:25:49.228  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:25:48 (1750778748948) - when 16:25:48 (1750778748947)
+06-24 16:25:49.229  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:25:49.229  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:25:49.237  4367  4367 I GDH.NotificationReceiver: Found value: 1.375 using regex in android.widget.TextView{4127dff V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:25:49.238  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.375 from time: 16:25:48
+06-24 16:25:49.238  4367  4367 I GDH.ReceiveData: Only IOB/COB changed: 1.375/NaN - at 16:25:48
+06-24 16:25:49.251  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:25:49.252  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:25:50.227  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@6d1662a
+06-24 16:25:50.235  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:25:50.237  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:25:50.247  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@2690777
+06-24 16:25:50.251  4367  4367 I GDH.Chart.BitmapCreator.2: using circle radius: 2.8
+06-24 16:25:50.253  4367  4367 I GDH.Chart.Creator.2: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:25:50.268  4367 13379 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@cae85f6
+06-24 16:25:50.285  4367 13380 I GDH.Chart.Bitmap.2: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@5642df7
+06-24 16:25:50.286  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:25:52.579  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:25:52 (1750778752352) - when 16:25:52 (1750778752344) - diff notify: 3, diff recv value: 4
+06-24 16:25:52.579  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:25:52.579  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 4 < 250
+06-24 16:25:52.581  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:25:52 (1750778752352) - when 16:25:52 (1750778752344)
+06-24 16:25:52.582  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:25:52.582  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:25:52.604  4367  4367 I GDH.NotificationReceiver: Found value: 1.35 using regex in android.widget.TextView{c658f18 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:25:52.605  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.35 from time: 16:25:52
+06-24 16:25:52.605  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:25:57.658  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w312dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.1091}
+06-24 16:25:57.658  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:25:57.658  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@cae85f6
+06-24 16:25:57.659  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:25:57.660  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:25:57.688  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h332dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(96, 0 - 1507, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_270} s.1129}
+06-24 16:25:57.688  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:25:57.688  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:25:57.704  4367 13398 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@ec83756
+06-24 16:25:57.705  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@ec83756
+06-24 16:25:57.712  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:25:57.713  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:25:57.718  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{1dae989} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:25:57.735  4367 13399 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@8346fad
+06-24 16:25:57.774  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{2ad85f0} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:25:57.793  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:25:57.918  4367  4389 W System  : A resource failed to call release. 
+06-24 16:25:57.923  4367  4389 I chatty  : uid=10193(de.michelinside.glucodatahandler) FinalizerDaemon identical 4 lines
+06-24 16:25:57.923  4367  4389 W System  : A resource failed to call release. 
+06-24 16:25:57.926  4367  4389 W System  : A resource failed to call release. 
+06-24 16:25:57.926  4367  4389 I chatty  : uid=10193(de.michelinside.glucodatahandler) FinalizerDaemon identical 1 line
+06-24 16:25:57.926  4367  4389 W System  : A resource failed to call release. 
+06-24 16:25:57.928  4367  4389 W System  : A resource failed to call release. 
+06-24 16:25:57.928  4367  4389 I chatty  : uid=10193(de.michelinside.glucodatahandler) FinalizerDaemon identical 1 line
+06-24 16:25:57.928  4367  4389 W System  : A resource failed to call release. 
+06-24 16:25:58.430  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:25:58 (1750778758217) - when 16:25:58 (1750778758216) - diff notify: 5, diff recv value: 10
+06-24 16:25:58.430  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:25:58.430  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 10 < 250
+06-24 16:25:58.431  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:25:58 (1750778758217) - when 16:25:58 (1750778758216)
+06-24 16:25:58.432  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:25:58.432  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:25:58.466  4367  4367 I GDH.NotificationReceiver: Found value: 1.35 using regex in android.widget.TextView{b8e0c0d V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:25:58.466  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.35 from time: 16:25:58
+06-24 16:25:58.467  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:25:59.094  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h325dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(96, 0 - 1507, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_270} s.1164}
+06-24 16:25:59.094  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:25:59.094  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@8346fad
+06-24 16:25:59.096  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:25:59.096  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:25:59.124  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w360dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.1202}
+06-24 16:25:59.124  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:25:59.124  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:25:59.130  4367 13404 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@23547c2
+06-24 16:25:59.131  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@23547c2
+06-24 16:25:59.132  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:25:59.133  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:25:59.144  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{2ad85f0} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:25:59.165  4367 13405 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@11c5c09
+06-24 16:25:59.214  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{cf2043d} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:25:59.227  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:25:59.874  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:25:59 (1750778759648) - when 16:25:59 (1750778759647) - diff notify: 1, diff recv value: 11
+06-24 16:25:59.874  4367  4367 I GDH.NotificationReceiver: Check for new value for 1s update
+06-24 16:25:59.874  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 11 < 50
+06-24 16:25:59.876  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:25:59 (1750778759648) - when 16:25:59 (1750778759647)
+06-24 16:25:59.879  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:25:59.880  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:25:59.900  4367  4367 I GDH.NotificationReceiver: Found value: 1.35 using regex in android.widget.TextView{a82c2f2 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:25:59.900  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.35 from time: 16:25:59
+06-24 16:25:59.900  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+
+06-24 16:26:07.277  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:26:07 (1750778767055) - when 16:26:07 (1750778767054) - diff notify: 7, diff recv value: 19
+06-24 16:26:07.277  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:26:07.277  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 19 < 250
+06-24 16:26:07.278  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:26:07 (1750778767055) - when 16:26:07 (1750778767054)
+06-24 16:26:07.279  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:26:07.279  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:26:07.295  4367  4367 I GDH.NotificationReceiver: Found value: 1.35 using regex in android.widget.TextView{3b1d546 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:26:07.296  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.35 from time: 16:26:07
+06-24 16:26:07.296  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:26:10.176  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h325dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(96, 0 - 1507, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_270} s.1310}
+06-24 16:26:10.176  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:26:10.176  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@1457b87
+06-24 16:26:10.178  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:26:10.179  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:26:10.204  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w360dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.1349}
+06-24 16:26:10.204  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:26:10.204  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:26:10.220  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@bd75307
+06-24 16:26:10.220  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:26:10.221  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:26:10.226  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{19cd199} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:26:10.254  4367 13428 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@464ac34
+06-24 16:26:10.290  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{75ca063} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:26:10.321  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:26:10.963  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:26:10 (1750778770740) - when 16:26:10 (1750778770738) - diff notify: 3, diff recv value: 22
+06-24 16:26:10.963  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:26:10.963  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 22 < 250
+06-24 16:26:10.965  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:26:10 (1750778770740) - when 16:26:10 (1750778770738)
+06-24 16:26:10.967  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:26:10.968  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:26:10.988  4367  4367 I GDH.NotificationReceiver: Found value: 1.35 using regex in android.widget.TextView{eb85d52 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:26:10.989  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.35 from time: 16:26:10
+06-24 16:26:10.989  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:26:51.022  4367  4367 I GDH.Task.Time.TaskService: Set next alarm after 2 minute(s) at 16:27:51 (received at 16:25:48) with a delay of 3s
+06-24 16:26:51.030  4367 13439 I GDH.Task.Time.TaskService: execute after 1 min: ElapsedTimeTask
+06-24 16:26:51.509  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:26:51 (1750778811277) - when 16:26:51 (1750778811276) - diff notify: 40, diff recv value: 63
+06-24 16:26:51.510  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:26:51.510  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 63 < 250
+06-24 16:26:51.511  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:26:51 (1750778811277) - when 16:26:51 (1750778811276)
+06-24 16:26:51.513  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:26:51.514  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:26:51.534  4367  4367 I GDH.NotificationReceiver: Found value: 1.325 using regex in android.widget.TextView{f2dd614 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:26:51.535  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.325 from time: 16:26:51
+06-24 16:26:51.536  4367  4367 I GDH.ReceiveData: Only IOB/COB changed: 1.325/NaN - at 16:26:51
+06-24 16:26:51.558  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:26:51.559  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:26:57.951  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w312dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.1383}
+06-24 16:26:57.951  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:26:57.951  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@464ac34
+06-24 16:26:57.953  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:26:57.953  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:26:57.979  4367 13453 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@3673403
+06-24 16:26:58.001  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h332dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(96, 0 - 1507, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_270} s.1420}
+06-24 16:26:58.001  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:26:58.001  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@3673403
+06-24 16:26:58.003  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:26:58.004  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:26:58.010  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{75ca063} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:26:58.043  4367 13454 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@ea521fe
+06-24 16:26:58.109  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{b9f6235} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:26:58.112  4367  4389 W System  : A resource failed to call release. 
+06-24 16:26:58.112  4367  4389 I chatty  : uid=10193(de.michelinside.glucodatahandler) FinalizerDaemon identical 1 line
+06-24 16:26:58.112  4367  4389 W System  : A resource failed to call release. 
+06-24 16:26:58.115  4367  4389 W System  : A resource failed to call release. 
+06-24 16:26:58.116  4367  4389 I chatty  : uid=10193(de.michelinside.glucodatahandler) FinalizerDaemon identical 1 line
+06-24 16:26:58.116  4367  4389 W System  : A resource failed to call release. 
+06-24 16:26:58.140  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:26:58.733  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:26:58 (1750778818504) - when 16:26:58 (1750778818502) - diff notify: 7, diff recv value: 70
+06-24 16:26:58.733  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:26:58.733  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 70 < 250
+06-24 16:26:58.735  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:26:58 (1750778818504) - when 16:26:58 (1750778818502)
+06-24 16:26:58.736  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:26:58.737  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:26:58.758  4367  4367 I GDH.NotificationReceiver: Found value: 1.325 using regex in android.widget.TextView{16cdc4 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:26:58.758  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.325 from time: 16:26:58
+06-24 16:26:58.758  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:26:59.392  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h325dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(96, 0 - 1507, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_270} s.1456}
+06-24 16:26:59.392  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:26:59.392  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@ea521fe
+06-24 16:26:59.395  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:26:59.395  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:26:59.420  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w360dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.1493}
+06-24 16:26:59.420  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:26:59.420  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:26:59.432  4367 13461 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@5ff84ad
+06-24 16:26:59.433  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@5ff84ad
+06-24 16:26:59.434  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:26:59.434  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:26:59.438  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{b9f6235} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:26:59.472  4367 13462 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@2950230
+06-24 16:26:59.493  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{136d987} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:26:59.512  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:27:00.175  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:26:59 (1750778819947) - when 16:26:59 (1750778819946) - diff notify: 1, diff recv value: 71
+06-24 16:27:00.175  4367  4367 I GDH.NotificationReceiver: Check for new value for 1s update
+06-24 16:27:00.177  4367  4367 I GDH.NotificationReceiver: using regex (?:^|\s)(\d*\.?\d+)(?=\s|$)
+06-24 16:27:00.177  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:27:00.200  4367  4367 I GDH.NotificationReceiver: Found value: 300.0 using regex in android.widget.TextView{3063aba V.ED..... ......ID 0,0-0,0 #7f090405 app:id/sg_value}
+06-24 16:27:00.201  4367  4367 I GDH.NotificationReceiver: Extracted glucose value: 300.0 from time: 16:26:59
+06-24 16:27:00.201  4367  4367 I GDH.NotificationReceiver: Ignoring value notification with same value: 300.0
+06-24 16:27:00.201  4367  4367 E GDH.SourceStateData: Error state for source NOTIFICATION: Invalid glucose value: 300.0 - info: 
+06-24 16:27:00.201  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:26:59 (1750778819947) - when 16:26:59 (1750778819946)
+06-24 16:27:00.202  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:27:00.202  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:27:00.215  4367  4367 I GDH.NotificationReceiver: Found value: 1.325 using regex in android.widget.TextView{591b8c2 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:27:00.215  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.325 from time: 16:26:59
+06-24 16:27:00.215  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+
+06-24 16:27:17.252  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:27:17 (1750778837024) - when 16:27:17 (1750778837023) - diff notify: 17, diff recv value: 89
+06-24 16:27:17.252  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:27:17.252  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 89 < 250
+06-24 16:27:17.254  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:27:17 (1750778837024) - when 16:27:17 (1750778837023)
+06-24 16:27:17.255  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:27:17.255  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:27:17.272  4367  4367 I GDH.NotificationReceiver: Found value: 1.325 using regex in android.widget.TextView{8cecf31 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:27:17.273  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.325 from time: 16:27:17
+06-24 16:27:17.273  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:27:17.675  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h325dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(96, 0 - 1507, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_270} s.1602}
+06-24 16:27:17.675  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:27:17.675  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@8a8a9ed
+06-24 16:27:17.677  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:27:17.677  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:27:17.711  4367 13493 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@4155616
+06-24 16:27:17.740  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w360dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.1642}
+06-24 16:27:17.740  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:27:17.740  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@4155616
+06-24 16:27:17.742  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:27:17.742  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:27:17.747  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{842f530} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:27:17.774  4367 13494 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@e102d6d
+06-24 16:27:17.810  4367  4389 W System  : A resource failed to call release. 
+06-24 16:27:17.810  4367  4389 W System  : A resource failed to call release. 
+06-24 16:27:17.814  4367  4389 W System  : A resource failed to call release. 
+06-24 16:27:17.815  4367  4389 W System  : A resource failed to call release. 
+06-24 16:27:17.819  4367  4389 W System  : A resource failed to call release. 
+06-24 16:27:17.819  4367  4389 W System  : A resource failed to call release. 
+06-24 16:27:17.819  4367  4389 W System  : A resource failed to call release. 
+06-24 16:27:17.825  4367  4389 W System  : A resource failed to call release. 
+06-24 16:27:17.826  4367  4389 W System  : A resource failed to call release. 
+06-24 16:27:17.828  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{ddaf129} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:27:17.845  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:27:18.472  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:27:18 (1750778838246) - when 16:27:18 (1750778838244) - diff notify: 1, diff recv value: 90
+06-24 16:27:18.472  4367  4367 I GDH.NotificationReceiver: Check for new value for 1s update
+06-24 16:27:18.475  4367  4367 I GDH.NotificationReceiver: using regex (?:^|\s)(\d*\.?\d+)(?=\s|$)
+06-24 16:27:18.475  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:27:18.490  4367  4367 I GDH.NotificationReceiver: Found value: 300.0 using regex in android.widget.TextView{da22c2b V.ED..... ......ID 0,0-0,0 #7f090405 app:id/sg_value}
+06-24 16:27:18.491  4367  4367 I GDH.NotificationReceiver: Extracted glucose value: 300.0 from time: 16:27:18
+06-24 16:27:18.491  4367  4367 I GDH.NotificationReceiver: Ignoring value notification with same value: 300.0
+06-24 16:27:18.491  4367  4367 E GDH.SourceStateData: Error state for source NOTIFICATION: Invalid glucose value: 300.0 - info: 
+06-24 16:27:18.492  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:27:18 (1750778838246) - when 16:27:18 (1750778838244)
+06-24 16:27:18.492  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:27:18.492  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:27:18.510  4367  4367 I GDH.NotificationReceiver: Found value: 1.325 using regex in android.widget.TextView{7c78d93 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:27:18.511  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.325 from time: 16:27:18
+06-24 16:27:18.511  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:27:41.089  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w312dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.1675}
+06-24 16:27:41.090  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:27:41.090  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@e102d6d
+06-24 16:27:41.091  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:27:41.092  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:27:41.117  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h332dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(96, 0 - 1507, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_270} s.1713}
+06-24 16:27:41.117  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:27:41.117  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:27:41.122  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@fcc41d0
+06-24 16:27:41.123  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:27:41.124  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:27:41.127  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{ddaf129} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:27:41.153  4367 13507 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@ce595c9
+06-24 16:27:41.198  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{fb4d266} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:27:41.222  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:27:41.870  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:27:41 (1750778861653) - when 16:27:41 (1750778861651) - diff notify: 23, diff recv value: 113
+06-24 16:27:41.870  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:27:41.870  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 113 < 250
+06-24 16:27:41.871  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:27:41 (1750778861653) - when 16:27:41 (1750778861651)
+06-24 16:27:41.873  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:27:41.873  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:27:41.896  4367  4367 I GDH.NotificationReceiver: Found value: 1.325 using regex in android.widget.TextView{54a976f V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:27:41.896  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.325 from time: 16:27:41
+06-24 16:27:41.897  4367  4367 I GDH.ReceiveData: Only IOB/COB changed: 1.325/NaN - at 16:27:41
+06-24 16:27:41.919  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:27:41.919  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:27:46.828  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h325dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(96, 0 - 1507, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_270} s.1748}
+06-24 16:27:46.828  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:27:46.828  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@ce595c9
+06-24 16:27:46.830  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:27:46.831  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:27:46.864  4367 13514 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@d29bd5a
+06-24 16:27:46.868  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w360dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.1786}
+06-24 16:27:46.868  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:27:46.868  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@d29bd5a
+06-24 16:27:46.870  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:27:46.870  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:27:46.876  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{fb4d266} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:27:46.893  4367 13515 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@1872081
+06-24 16:27:46.937  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{41ebfd4} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:27:46.959  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:27:47.617  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:27:47 (1750778867390) - when 16:27:47 (1750778867388) - diff notify: 5, diff recv value: 119
+06-24 16:27:47.617  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:27:47.617  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 119 < 250
+06-24 16:27:47.618  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:27:47 (1750778867390) - when 16:27:47 (1750778867388)
+06-24 16:27:47.619  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:27:47.619  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:27:47.635  4367  4367 I GDH.NotificationReceiver: Found value: 1.325 using regex in android.widget.TextView{9039ce7 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:27:47.636  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.325 from time: 16:27:47
+06-24 16:27:47.636  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:27:51.011  4367  4367 I GDH.Task.Time.TaskService: Set next alarm after 3 minute(s) at 16:28:51 (received at 16:25:48) with a delay of 3s
+06-24 16:27:51.015  4367 13519 I GDH.Task.Time.TaskService: execute after 2 min: ElapsedTimeTask
+06-24 16:27:51.487  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:27:51 (1750778871275) - when 16:27:51 (1750778871272) - diff notify: 3, diff recv value: 123
+06-24 16:27:51.488  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:27:51.488  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 123 < 250
+06-24 16:27:51.488  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:27:51 (1750778871275) - when 16:27:51 (1750778871272)
+06-24 16:27:51.489  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:27:51.489  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:27:51.503  4367  4367 I GDH.NotificationReceiver: Found value: 1.3 using regex in android.widget.TextView{c579ee1 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:27:51.503  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.3 from time: 16:27:51
+06-24 16:27:51.503  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:27:52.022  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@1872081
+06-24 16:27:52.030  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:27:52.032  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:27:52.046  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@5642df7
+06-24 16:27:52.052  4367  4367 I GDH.Chart.BitmapCreator.2: using circle radius: 2.8
+06-24 16:27:52.055  4367  4367 I GDH.Chart.Creator.2: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:27:52.080  4367 13525 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@6bd6406
+06-24 16:27:52.097  4367 13526 I GDH.Chart.Bitmap.2: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@5c19ac7
+06-24 16:27:52.101  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:28:06.744  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w333dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.1821}
+06-24 16:28:06.744  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:28:06.744  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@6bd6406
+06-24 16:28:06.745  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:28:06.746  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:28:06.766  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h332dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(53, 0 - 1464, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_90} s.1859}
+06-24 16:28:06.766  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:28:06.766  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:28:06.787  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@f0c4919
+06-24 16:28:06.787  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:28:06.788  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:28:06.792  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{41ebfd4} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:28:06.809  4367 13532 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@8d6edde
+06-24 16:28:06.862  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{7972d76} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:28:06.890  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:28:07.517  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:28:07 (1750778887293) - when 16:28:07 (1750778887291) - diff notify: 16, diff recv value: 139
+06-24 16:28:07.517  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:28:07.517  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 139 < 250
+06-24 16:28:07.518  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:28:07 (1750778887293) - when 16:28:07 (1750778887291)
+06-24 16:28:07.519  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:28:07.519  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:28:07.539  4367  4367 I GDH.NotificationReceiver: Found value: 1.3 using regex in android.widget.TextView{2733155 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:28:07.539  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.3 from time: 16:28:07
+06-24 16:28:07.539  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:28:07.808  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h325dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(53, 0 - 1464, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_90} s.1894}
+06-24 16:28:07.808  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:28:07.808  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@8d6edde
+06-24 16:28:07.810  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:28:07.810  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:28:07.839  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w360dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.1932}
+06-24 16:28:07.840  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:28:07.840  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:28:07.849  4367 13537 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@d2176a
+06-24 16:28:07.849  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@d2176a
+06-24 16:28:07.850  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:28:07.851  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:28:07.859  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{7972d76} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:28:07.886  4367 13538 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@3828dd1
+06-24 16:28:07.923  4367  4389 W System  : A resource failed to call release. 
+06-24 16:28:07.923  4367  4389 I chatty  : uid=10193(de.michelinside.glucodatahandler) FinalizerDaemon identical 3 lines
+06-24 16:28:07.923  4367  4389 W System  : A resource failed to call release. 
+06-24 16:28:07.928  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{625d964} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:28:07.930  4367  4389 W System  : A resource failed to call release. 
+06-24 16:28:07.933  4367  4389 W System  : A resource failed to call release. 
+06-24 16:28:07.933  4367  4389 W System  : A resource failed to call release. 
+06-24 16:28:07.933  4367  4389 W System  : A resource failed to call release. 
+06-24 16:28:07.954  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:28:08.588  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:28:08 (1750778888363) - when 16:28:08 (1750778888361) - diff notify: 1, diff recv value: 140
+06-24 16:28:08.588  4367  4367 I GDH.NotificationReceiver: Check for new value for 1s update
+06-24 16:28:08.590  4367  4367 I GDH.NotificationReceiver: using regex (?:^|\s)(\d*\.?\d+)(?=\s|$)
+06-24 16:28:08.591  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:28:08.616  4367  4367 I GDH.NotificationReceiver: Found value: 300.0 using regex in android.widget.TextView{dfa9c9a V.ED..... ......ID 0,0-0,0 #7f090405 app:id/sg_value}
+06-24 16:28:08.617  4367  4367 I GDH.NotificationReceiver: Extracted glucose value: 300.0 from time: 16:28:08
+06-24 16:28:08.617  4367  4367 I GDH.NotificationReceiver: Ignoring value notification with same value: 300.0
+06-24 16:28:08.617  4367  4367 E GDH.SourceStateData: Error state for source NOTIFICATION: Invalid glucose value: 300.0 - info: 
+06-24 16:28:08.617  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:28:08 (1750778888363) - when 16:28:08 (1750778888361)
+06-24 16:28:08.618  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:28:08.618  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:28:08.628  4367  4367 I GDH.NotificationReceiver: Found value: 1.3 using regex in android.widget.TextView{54faea2 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:28:08.628  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.3 from time: 16:28:08
+06-24 16:28:08.629  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+
+06-24 16:28:22.569  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:28:22 (1750778902352) - when 16:28:22 (1750778902351) - diff notify: 13, diff recv value: 154
+06-24 16:28:22.569  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:28:22.569  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 154 < 250
+06-24 16:28:22.570  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:28:22 (1750778902352) - when 16:28:22 (1750778902351)
+06-24 16:28:22.571  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:28:22.571  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:28:22.598  4367  4367 I GDH.NotificationReceiver: Found value: 1.3 using regex in android.widget.TextView{2c6aa93 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:28:22.599  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.3 from time: 16:28:22
+06-24 16:28:22.599  4367  4367 I GDH.ReceiveData: Only IOB/COB changed: 1.3/NaN - at 16:28:22
+06-24 16:28:22.618  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:28:22.619  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:28:23.209  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h325dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(96, 0 - 1507, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_270} s.2040}
+06-24 16:28:23.209  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:28:23.209  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@5fcee77
+06-24 16:28:23.211  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:28:23.212  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:28:23.244  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w360dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.2080}
+06-24 16:28:23.244  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:28:23.244  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:28:23.253  4367 13568 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@c85b5ce
+06-24 16:28:23.254  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@c85b5ce
+06-24 16:28:23.255  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:28:23.256  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:28:23.260  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{4f10a1a} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:28:23.280  4367 13569 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@8a6fa85
+06-24 16:28:23.317  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{a3dc8a8} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:28:23.351  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:28:23.473  4367  4389 W System  : A resource failed to call release. 
+06-24 16:28:23.479  4367  4389 W System  : A resource failed to call release. 
+06-24 16:28:24.006  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:28:23 (1750778903780) - when 16:28:23 (1750778903778) - diff notify: 1, diff recv value: 155
+06-24 16:28:24.006  4367  4367 I GDH.NotificationReceiver: Check for new value for 1s update
+06-24 16:28:24.009  4367  4367 I GDH.NotificationReceiver: using regex (?:^|\s)(\d*\.?\d+)(?=\s|$)
+06-24 16:28:24.009  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:28:24.042  4367  4367 I GDH.NotificationReceiver: Found value: 300.0 using regex in android.widget.TextView{6c0e64f V.ED..... ......ID 0,0-0,0 #7f090405 app:id/sg_value}
+06-24 16:28:24.043  4367  4367 I GDH.NotificationReceiver: Extracted glucose value: 300.0 from time: 16:28:23
+06-24 16:28:24.043  4367  4367 I GDH.NotificationReceiver: Ignoring value notification with same value: 300.0
+06-24 16:28:24.043  4367  4367 E GDH.SourceStateData: Error state for source NOTIFICATION: Invalid glucose value: 300.0 - info: 
+06-24 16:28:24.043  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:28:23 (1750778903780) - when 16:28:23 (1750778903778)
+06-24 16:28:24.043  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:28:24.044  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:28:24.050  4367  4367 I GDH.NotificationReceiver: Found value: 1.3 using regex in android.widget.TextView{d696ea4 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:28:24.050  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.3 from time: 16:28:23
+06-24 16:28:24.050  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:28:31.251  4367  4367 I GDH.BatteryReceiver: Received batter level: 39% - enabled: true
+06-24 16:28:31.251  4367  4367 I GDH.Task.Source.TaskService: Not active for elapsed time 2
+06-24 16:28:39.205  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w312dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.2113}
+06-24 16:28:39.205  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:28:39.205  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@8a6fa85
+06-24 16:28:39.207  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:28:39.208  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:28:39.260  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h332dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(96, 0 - 1507, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_270} s.2153}
+06-24 16:28:39.260  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:28:39.260  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:28:39.272  4367 13585 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@c72440d
+06-24 16:28:39.272  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@c72440d
+06-24 16:28:39.273  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:28:39.274  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:28:39.278  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{a3dc8a8} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:28:39.299  4367 13586 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@358e7c5
+06-24 16:28:39.348  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{c55f39} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:28:39.384  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:28:39.855  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h325dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(96, 0 - 1507, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_270} s.2186}
+06-24 16:28:39.855  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:28:39.855  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@358e7c5
+06-24 16:28:39.856  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:28:39.857  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:28:39.885  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w360dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.2226}
+06-24 16:28:39.885  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:28:39.885  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:28:39.886  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@f48c8bf
+06-24 16:28:39.886  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:28:39.887  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:28:39.894  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{c55f39} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:28:39.926  4367 13592 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@1e1db8c
+06-24 16:28:39.975  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{86d8e76} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:28:39.983  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:28:40.056  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:28:39 (1750778919773) - when 16:28:39 (1750778919772) - diff notify: 15, diff recv value: 171
+06-24 16:28:40.056  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:28:40.056  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 171 < 250
+06-24 16:28:40.056  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:28:39 (1750778919773) - when 16:28:39 (1750778919772)
+06-24 16:28:40.057  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:28:40.057  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:28:40.065  4367  4367 I GDH.NotificationReceiver: Found value: 1.3 using regex in android.widget.TextView{d644837 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:28:40.066  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.3 from time: 16:28:39
+06-24 16:28:40.066  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:28:40.491  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w312dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.2259}
+06-24 16:28:40.491  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:28:40.491  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@1e1db8c
+06-24 16:28:40.492  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:28:40.493  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:28:40.520  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h332dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(96, 0 - 1507, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_270} s.2299}
+06-24 16:28:40.520  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:28:40.520  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:28:40.522  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@33db1a4
+06-24 16:28:40.523  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:28:40.524  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:28:40.530  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{86d8e76} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:28:40.573  4367 13598 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@63ccb0d
+06-24 16:28:40.598  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{59680d0} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:28:40.607  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:28:40.673  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:28:40 (1750778920419) - when 16:28:40 (1750778920417) - diff notify: 0, diff recv value: 172
+06-24 16:28:40.673  4367  4367 I GDH.NotificationReceiver: Check for new value for 0s update
+06-24 16:28:40.674  4367  4367 I GDH.NotificationReceiver: using regex (?:^|\s)(\d*\.?\d+)(?=\s|$)
+06-24 16:28:40.674  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:28:40.682  4367  4367 I GDH.NotificationReceiver: Found value: 300.0 using regex in android.widget.TextView{211f9d5 V.ED..... ......ID 0,0-0,0 #7f090405 app:id/sg_value}
+06-24 16:28:40.683  4367  4367 I GDH.NotificationReceiver: Extracted glucose value: 300.0 from time: 16:28:40
+06-24 16:28:40.683  4367  4367 I GDH.NotificationReceiver: Ignoring value notification with same value: 300.0
+06-24 16:28:40.683  4367  4367 E GDH.SourceStateData: Error state for source NOTIFICATION: Invalid glucose value: 300.0 - info: 
+06-24 16:28:40.683  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:28:40 (1750778920419) - when 16:28:40 (1750778920417)
+06-24 16:28:40.684  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:28:40.684  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:28:40.690  4367  4367 I GDH.NotificationReceiver: Found value: 1.3 using regex in android.widget.TextView{66f34fd V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:28:40.690  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.3 from time: 16:28:40
+06-24 16:28:40.690  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:28:41.262  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:28:41 (1750778921046) - when 16:28:41 (1750778921046) - diff notify: 0, diff recv value: 173
+06-24 16:28:41.262  4367  4367 I GDH.NotificationReceiver: Check for new value for 0s update
+06-24 16:28:41.262  4367  4367 I GDH.NotificationReceiver: using regex (?:^|\s)(\d*\.?\d+)(?=\s|$)
+06-24 16:28:41.263  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:28:41.277  4367  4367 I GDH.NotificationReceiver: Found value: 300.0 using regex in android.widget.TextView{bf3fd69 V.ED..... ......ID 0,0-0,0 #7f090405 app:id/sg_value}
+06-24 16:28:41.277  4367  4367 I GDH.NotificationReceiver: Extracted glucose value: 300.0 from time: 16:28:41
+06-24 16:28:41.277  4367  4367 I GDH.NotificationReceiver: Ignoring value notification with same value: 300.0
+06-24 16:28:41.277  4367  4367 E GDH.SourceStateData: Error state for source NOTIFICATION: Invalid glucose value: 300.0 - info: 
+06-24 16:28:41.278  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:28:41 (1750778921046) - when 16:28:41 (1750778921046)
+06-24 16:28:41.279  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:28:41.279  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:28:41.291  4367  4367 I GDH.NotificationReceiver: Found value: 1.3 using regex in android.widget.TextView{86a4411 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:28:41.292  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.3 from time: 16:28:41
+06-24 16:28:41.292  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:28:41.444  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h325dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(96, 0 - 1507, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_270} s.2332}
+06-24 16:28:41.444  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:28:41.444  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@63ccb0d
+06-24 16:28:41.445  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:28:41.446  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:28:41.468  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w360dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.2371}
+06-24 16:28:41.468  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:28:41.468  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:28:41.481  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@c225976
+06-24 16:28:41.482  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:28:41.482  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:28:41.491  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{59680d0} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:28:41.520  4367 13605 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@9263b77
+06-24 16:28:41.570  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{f815c2} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:28:41.583  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:28:42.227  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:28:41 (1750778921997) - when 16:28:41 (1750778921995) - diff notify: 0, diff recv value: 173
+06-24 16:28:42.227  4367  4367 I GDH.NotificationReceiver: Check for new value for 0s update
+06-24 16:28:42.230  4367  4367 I GDH.NotificationReceiver: using regex (?:^|\s)(\d*\.?\d+)(?=\s|$)
+06-24 16:28:42.230  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:28:42.255  4367  4367 I GDH.NotificationReceiver: Found value: 300.0 using regex in android.widget.TextView{1af2f7 V.ED..... ......ID 0,0-0,0 #7f090405 app:id/sg_value}
+06-24 16:28:42.256  4367  4367 I GDH.NotificationReceiver: Extracted glucose value: 300.0 from time: 16:28:41
+06-24 16:28:42.256  4367  4367 I GDH.NotificationReceiver: Ignoring value notification with same value: 300.0
+06-24 16:28:42.257  4367  4367 E GDH.SourceStateData: Error state for source NOTIFICATION: Invalid glucose value: 300.0 - info: 
+06-24 16:28:42.258  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:28:41 (1750778921997) - when 16:28:41 (1750778921995)
+06-24 16:28:42.259  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:28:42.259  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:28:42.276  4367  4367 I GDH.NotificationReceiver: Found value: 1.3 using regex in android.widget.TextView{a348cdf V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:28:42.276  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.3 from time: 16:28:41
+06-24 16:28:42.277  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:28:51.013  4367  4367 I GDH.Task.Time.TaskService: Set next alarm after 4 minute(s) at 16:29:51 (received at 16:25:48) with a delay of 3s
+06-24 16:28:51.016  4367 13614 I GDH.Task.Time.TaskService: execute after 3 min: ElapsedTimeTask
+06-24 16:29:04.341  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w312dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.2405}
+06-24 16:29:04.341  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:29:04.342  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@9263b77
+06-24 16:29:04.345  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:29:04.345  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:29:04.369  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h332dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(96, 0 - 1507, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_270} s.2443}
+06-24 16:29:04.370  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:29:04.370  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:29:04.397  4367 13622 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@a8b7056
+06-24 16:29:04.397  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@a8b7056
+06-24 16:29:04.398  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:29:04.399  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:29:04.403  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{f815c2} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:29:04.441  4367 13623 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@c17bcad
+06-24 16:29:04.505  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{f47f6f0} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:29:04.509  4367  4389 W System  : A resource failed to call release. 
+06-24 16:29:04.509  4367  4389 I chatty  : uid=10193(de.michelinside.glucodatahandler) FinalizerDaemon identical 2 lines
+06-24 16:29:04.509  4367  4389 W System  : A resource failed to call release. 
+06-24 16:29:04.512  4367  4389 W System  : A resource failed to call release. 
+06-24 16:29:04.512  4367  4389 W System  : A resource failed to call release. 
+06-24 16:29:04.513  4367  4389 W System  : A resource failed to call release. 
+06-24 16:29:04.520  4367  4389 W System  : A resource failed to call release. 
+06-24 16:29:04.521  4367  4389 W System  : A resource failed to call release. 
+06-24 16:29:04.532  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:29:05.111  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:29:04 (1750778944902) - when 16:29:04 (1750778944900) - diff notify: 22, diff recv value: 196
+06-24 16:29:05.111  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:29:05.111  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 196 < 250
+06-24 16:29:05.111  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:29:04 (1750778944902) - when 16:29:04 (1750778944900)
+06-24 16:29:05.112  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:29:05.112  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:29:05.118  4367  4367 I GDH.NotificationReceiver: Found value: 1.3 using regex in android.widget.TextView{3df0e9d V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:29:05.119  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.3 from time: 16:29:04
+06-24 16:29:05.119  4367  4367 I GDH.ReceiveData: Only IOB/COB changed: 1.3/NaN - at 16:29:04
+06-24 16:29:05.132  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:29:05.134  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:29:05.156  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h325dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(96, 0 - 1507, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_270} s.2478}
+06-24 16:29:05.156  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:29:05.156  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@c17bcad
+06-24 16:29:05.158  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:29:05.159  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:29:05.180  4367 13630 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@51dc8e0
+06-24 16:29:05.261  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w360dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.2516}
+06-24 16:29:05.261  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:29:05.261  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@51dc8e0
+06-24 16:29:05.262  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:29:05.262  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:29:05.266  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{f47f6f0} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:29:05.289  4367 13631 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@9f7ae3f
+06-24 16:29:05.322  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{e9b66d0} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:29:05.336  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:29:05.994  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:29:05 (1750778945762) - when 16:29:05 (1750778945760) - diff notify: 0, diff recv value: 197
+06-24 16:29:05.994  4367  4367 I GDH.NotificationReceiver: Check for new value for 0s update
+06-24 16:29:05.995  4367  4367 I GDH.NotificationReceiver: using regex (?:^|\s)(\d*\.?\d+)(?=\s|$)
+06-24 16:29:05.996  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:29:06.014  4367  4367 I GDH.NotificationReceiver: Found value: 300.0 using regex in android.widget.TextView{f759c8d V.ED..... ......ID 0,0-0,0 #7f090405 app:id/sg_value}
+06-24 16:29:06.015  4367  4367 I GDH.NotificationReceiver: Extracted glucose value: 300.0 from time: 16:29:05
+06-24 16:29:06.016  4367  4367 I GDH.NotificationReceiver: Ignoring value notification with same value: 300.0
+06-24 16:29:06.016  4367  4367 E GDH.SourceStateData: Error state for source NOTIFICATION: Invalid glucose value: 300.0 - info: 
+06-24 16:29:06.017  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:29:05 (1750778945762) - when 16:29:05 (1750778945760)
+06-24 16:29:06.017  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:29:06.018  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:29:06.032  4367  4367 I GDH.NotificationReceiver: Found value: 1.3 using regex in android.widget.TextView{42d54b5 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:29:06.032  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.3 from time: 16:29:05
+06-24 16:29:06.032  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+
+06-24 16:29:41.193  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:29:40 (1750778980846) - when 16:29:40 (1750778980844) - diff notify: 35, diff recv value: 232
+06-24 16:29:41.193  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:29:41.193  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 232 < 250
+06-24 16:29:41.193  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:29:40 (1750778980846) - when 16:29:40 (1750778980844)
+06-24 16:29:41.194  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:29:41.194  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:29:41.213  4367  4367 I GDH.NotificationReceiver: Found value: 1.3 using regex in android.widget.TextView{663105 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:29:41.214  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.3 from time: 16:29:40
+06-24 16:29:41.214  4367  4367 I GDH.ReceiveData: Only IOB/COB changed: 1.3/NaN - at 16:29:40
+06-24 16:29:41.227  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:29:41.228  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:29:41.623  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w312dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.2695}
+06-24 16:29:41.623  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:29:41.623  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@c944158
+06-24 16:29:41.625  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:29:41.625  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:29:41.652  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h332dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(96, 0 - 1507, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_270} s.2735}
+06-24 16:29:41.653  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:29:41.653  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:29:41.656  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@ab57c68
+06-24 16:29:41.657  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:29:41.658  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:29:41.664  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{63a4df4} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:29:41.690  4367 13681 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@b9dd881
+06-24 16:29:41.734  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{e7e70c3} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:29:41.767  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:29:41.804  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:29:41 (1750778981516) - when 16:29:41 (1750778981514) - diff notify: 0, diff recv value: 233
+06-24 16:29:41.804  4367  4367 I GDH.NotificationReceiver: Check for new value for 0s update
+06-24 16:29:41.805  4367  4367 I GDH.NotificationReceiver: using regex (?:^|\s)(\d*\.?\d+)(?=\s|$)
+06-24 16:29:41.805  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:29:41.813  4367  4367 I GDH.NotificationReceiver: Found value: 300.0 using regex in android.widget.TextView{b565fc V.ED..... ......ID 0,0-0,0 #7f090405 app:id/sg_value}
+06-24 16:29:41.813  4367  4367 I GDH.NotificationReceiver: Extracted glucose value: 300.0 from time: 16:29:41
+06-24 16:29:41.813  4367  4367 I GDH.NotificationReceiver: Ignoring value notification with same value: 300.0
+06-24 16:29:41.813  4367  4367 E GDH.SourceStateData: Error state for source NOTIFICATION: Invalid glucose value: 300.0 - info: 
+06-24 16:29:41.814  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:29:41 (1750778981516) - when 16:29:41 (1750778981514)
+06-24 16:29:41.814  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:29:41.814  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:29:41.820  4367  4367 I GDH.NotificationReceiver: Found value: 1.3 using regex in android.widget.TextView{4df2ec4 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:29:41.821  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.3 from time: 16:29:41
+06-24 16:29:41.821  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:29:42.421  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:29:42 (1750778982194) - when 16:29:42 (1750778982192) - diff notify: 0, diff recv value: 234
+06-24 16:29:42.421  4367  4367 I GDH.NotificationReceiver: Check for new value for 0s update
+06-24 16:29:42.423  4367  4367 I GDH.NotificationReceiver: using regex (?:^|\s)(\d*\.?\d+)(?=\s|$)
+06-24 16:29:42.424  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:29:42.446  4367  4367 I GDH.NotificationReceiver: Found value: 300.0 using regex in android.widget.TextView{7f10860 V.ED..... ......ID 0,0-0,0 #7f090405 app:id/sg_value}
+06-24 16:29:42.447  4367  4367 I GDH.NotificationReceiver: Extracted glucose value: 300.0 from time: 16:29:42
+06-24 16:29:42.447  4367  4367 I GDH.NotificationReceiver: Ignoring value notification with same value: 300.0
+06-24 16:29:42.447  4367  4367 E GDH.SourceStateData: Error state for source NOTIFICATION: Invalid glucose value: 300.0 - info: 
+06-24 16:29:42.448  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:29:42 (1750778982194) - when 16:29:42 (1750778982192)
+06-24 16:29:42.449  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:29:42.449  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:29:42.469  4367  4367 I GDH.NotificationReceiver: Found value: 1.3 using regex in android.widget.TextView{372baa8 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:29:42.470  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.3 from time: 16:29:42
+06-24 16:29:42.470  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:29:46.621  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h325dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(96, 0 - 1507, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_270} s.2767}
+06-24 16:29:46.621  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:29:46.621  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@b9dd881
+06-24 16:29:46.623  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:29:46.623  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:29:46.647  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w360dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.2807}
+06-24 16:29:46.647  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:29:46.647  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:29:46.664  4367 13686 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@2a8d9c1
+06-24 16:29:46.665  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@2a8d9c1
+06-24 16:29:46.666  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:29:46.667  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:29:46.670  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{e7e70c3} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:29:46.689  4367 13687 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@b8cd954
+06-24 16:29:46.727  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{e08a803} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:29:46.745  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:29:47.393  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:29:47 (1750778987168) - when 16:29:47 (1750778987167) - diff notify: 4, diff recv value: 239
+06-24 16:29:47.394  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:29:47.394  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 239 < 250
+06-24 16:29:47.395  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:29:47 (1750778987168) - when 16:29:47 (1750778987167)
+06-24 16:29:47.395  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:29:47.396  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:29:47.409  4367  4367 I GDH.NotificationReceiver: Found value: 1.3 using regex in android.widget.TextView{8f65f72 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:29:47.410  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.3 from time: 16:29:47
+06-24 16:29:47.410  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:29:51.019  4367  4367 I GDH.Task.Time.TaskService: Set next alarm after 5 minute(s) at 16:30:51 (received at 16:25:48) with a delay of 3s
+06-24 16:29:51.025  4367 13693 I GDH.Task.Time.TaskService: execute after 4 min: ElapsedTimeTask
+06-24 16:29:51.395  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:29:51 (1750778991168) - when 16:29:51 (1750778991166) - diff notify: 4, diff recv value: 243
+06-24 16:29:51.395  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:29:51.395  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 243 < 250
+06-24 16:29:51.396  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:29:51 (1750778991168) - when 16:29:51 (1750778991166)
+06-24 16:29:51.396  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:29:51.397  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:29:51.414  4367  4367 I GDH.NotificationReceiver: Found value: 1.275 using regex in android.widget.TextView{4f75334 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:29:51.415  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.275 from time: 16:29:51
+06-24 16:29:51.415  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+
+06-24 16:30:42.118  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:30:41 (1750779041888) - when 16:30:41 (1750779041882) - diff notify: 50, diff recv value: 293
+06-24 16:30:42.118  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:30:42.119  4367  4367 I GDH.NotificationReceiver: using regex (?:^|\s)(\d*\.?\d+)(?=\s|$)
+06-24 16:30:42.119  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:30:42.146  4367  4367 I GDH.NotificationReceiver: Found value: 300.0 using regex in android.widget.TextView{1b5cd1 V.ED..... ......ID 0,0-0,0 #7f090405 app:id/sg_value}
+06-24 16:30:42.147  4367  4367 I GDH.NotificationReceiver: Extracted glucose value: 300.0 from time: 16:30:41
+06-24 16:30:42.147  4367  4367 I GDH.NotificationReceiver: Ignoring value notification with same value: 300.0
+06-24 16:30:42.147  4367  4367 E GDH.SourceStateData: Error state for source NOTIFICATION: Invalid glucose value: 300.0 - info: 
+06-24 16:30:42.147  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:30:41 (1750779041888) - when 16:30:41 (1750779041882)
+06-24 16:30:42.148  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:30:42.148  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:30:42.157  4367  4367 I GDH.NotificationReceiver: Found value: 1.275 using regex in android.widget.TextView{ca9ebbe V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:30:42.157  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.275 from time: 16:30:41
+06-24 16:30:42.157  4367  4367 I GDH.ReceiveData: Only IOB/COB changed: 1.275/NaN - at 16:30:41
+06-24 16:30:42.168  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:30:42.169  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:30:42.932  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h325dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(96, 0 - 1507, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_270} s.2911}
+06-24 16:30:42.932  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:30:42.932  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@d4a9b7e
+06-24 16:30:42.934  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:30:42.935  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:30:42.961  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w360dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.2951}
+06-24 16:30:42.961  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:30:42.961  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:30:42.980  4367 13741 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@d5d35
+06-24 16:30:42.980  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@d5d35
+06-24 16:30:42.981  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:30:42.981  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:30:42.985  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{e0f0d87} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:30:43.008  4367 13742 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@3cafa58
+06-24 16:30:43.057  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{4a822e2} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:30:43.075  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:30:43.731  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:30:43 (1750779043500) - when 16:30:43 (1750779043498) - diff notify: 1, diff recv value: 295
+06-24 16:30:43.731  4367  4367 I GDH.NotificationReceiver: Check for new value for 1s update
+06-24 16:30:43.734  4367  4367 I GDH.NotificationReceiver: using regex (?:^|\s)(\d*\.?\d+)(?=\s|$)
+06-24 16:30:43.735  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:30:43.756  4367  4367 I GDH.NotificationReceiver: Found value: 300.0 using regex in android.widget.TextView{39e331 V.ED..... ......ID 0,0-0,0 #7f090405 app:id/sg_value}
+06-24 16:30:43.756  4367  4367 I GDH.NotificationReceiver: Extracted glucose value: 300.0 from time: 16:30:43
+06-24 16:30:43.761  4367  4367 I GDH.ReceiveData: Glucodata received from NOTIFICATION: Bundle[{glucodata.Minute.Alarm=0, glucodata.Minute.Rate=NaN, glucodata.Minute.Time=1750779043500, glucodata.Minute.mgdl=300}] - timestamp: 24 jun. 2025 16:30:43
+06-24 16:30:43.767  4367  4367 I GDH.Task.Time.TaskService: Set next alarm after 1 minute(s) at 16:31:46 (received at 16:30:43) with a delay of 3s
+06-24 16:30:43.779  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:30:43.780  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:30:43 (1750779043500) - when 16:30:43 (1750779043498)
+06-24 16:30:43.781  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:30:43.781  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:30:43.794  4367  4367 I GDH.NotificationReceiver: Found value: 1.275 using regex in android.widget.TextView{e55cd9 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:30:43.796  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.275 from time: 16:30:43
+06-24 16:30:43.796  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:30:44.787  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@3cafa58
+06-24 16:30:44.790  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:30:44.791  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:30:44.809  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@4427ed2
+06-24 16:30:44.811  4367  4367 I GDH.Chart.BitmapCreator.2: using circle radius: 2.8
+06-24 16:30:44.812  4367  4367 I GDH.Chart.Creator.2: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:30:44.825  4367 13747 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@9402a9b
+06-24 16:30:44.838  4367 13748 I GDH.Chart.Bitmap.2: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@c2f8e38
+06-24 16:30:44.852  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:30:52.116  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:30:51 (1750779051894) - when 16:30:51 (1750779051888) - diff notify: 8, diff recv value: 8
+06-24 16:30:52.116  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:30:52.116  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 8 < 250
+06-24 16:30:52.116  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:30:51 (1750779051894) - when 16:30:51 (1750779051888)
+06-24 16:30:52.118  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:30:52.118  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:30:52.136  4367  4367 I GDH.NotificationReceiver: Found value: 1.275 using regex in android.widget.TextView{163da0a V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:30:52.137  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.275 from time: 16:30:51
+06-24 16:30:52.137  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:30:54.872  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:30:54 (1750779054640) - when 16:30:54 (1750779054635) - diff notify: 2, diff recv value: 11
+06-24 16:30:54.872  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:30:54.873  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 11 < 250
+06-24 16:30:54.875  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:30:54 (1750779054640) - when 16:30:54 (1750779054635)
+06-24 16:30:54.878  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:30:54.879  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:30:54.903  4367  4367 I GDH.NotificationReceiver: Found value: 1.375 using regex in android.widget.TextView{4e2e612 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:30:54.904  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.375 from time: 16:30:54
+06-24 16:30:54.904  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+
+06-24 16:31:51.887  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:31:51 (1750779111656) - when 16:31:51 (1750779111654) - diff notify: 57, diff recv value: 68
+06-24 16:31:51.887  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:31:51.888  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 68 < 250
+06-24 16:31:51.889  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:31:51 (1750779111656) - when 16:31:51 (1750779111654)
+06-24 16:31:51.892  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:31:51.892  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:31:51.938  4367  4367 I GDH.NotificationReceiver: Found value: 1.35 using regex in android.widget.TextView{aada1e7 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:31:51.938  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.35 from time: 16:31:51
+06-24 16:31:51.938  4367  4367 I GDH.ReceiveData: Only IOB/COB changed: 1.35/NaN - at 16:31:51
+
+06-24 16:32:51.139  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:32:50 (1750779170907) - when 16:32:50 (1750779170899) - diff notify: 59, diff recv value: 127
+06-24 16:32:51.139  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:32:51.139  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 127 < 250
+06-24 16:32:51.140  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:32:50 (1750779170907) - when 16:32:50 (1750779170899)
+06-24 16:32:51.141  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:32:51.142  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:32:51.161  4367  4367 I GDH.NotificationReceiver: Found value: 1.325 using regex in android.widget.TextView{78925fd V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:32:51.162  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.325 from time: 16:32:50
+06-24 16:32:51.162  4367  4367 I GDH.ReceiveData: Only IOB/COB changed: 1.325/NaN - at 16:32:50
+06-24 16:32:51.181  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:32:51.182  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:33:22.789  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:33:22 (1750779202577) - when 16:33:22 (1750779202573) - diff notify: 31, diff recv value: 159
+06-24 16:33:22.789  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:33:22.789  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 159 < 250
+06-24 16:33:22.790  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:33:22 (1750779202577) - when 16:33:22 (1750779202573)
+06-24 16:33:22.791  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:33:22.791  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:33:22.819  4367  4367 I GDH.NotificationReceiver: Found value: 1.325 using regex in android.widget.TextView{c5da608 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:33:22.819  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.325 from time: 16:33:22
+06-24 16:33:22.820  4367  4367 I GDH.ReceiveData: Only IOB/COB changed: 1.325/NaN - at 16:33:22
+06-24 16:33:22.844  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:33:22.845  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:33:46.019  4367  4367 I GDH.Task.Time.TaskService: Set next alarm after 4 minute(s) at 16:34:46 (received at 16:30:43) with a delay of 3s
+06-24 16:33:46.034  4367 13853 I GDH.Task.Time.TaskService: execute after 3 min: ElapsedTimeTask
+06-24 16:33:50.876  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:33:50 (1750779230644) - when 16:33:50 (1750779230638) - diff notify: 28, diff recv value: 187
+06-24 16:33:50.876  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:33:50.876  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 187 < 250
+06-24 16:33:50.876  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:33:50 (1750779230644) - when 16:33:50 (1750779230638)
+06-24 16:33:50.877  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:33:50.877  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:33:50.895  4367  4367 I GDH.NotificationReceiver: Found value: 1.3 using regex in android.widget.TextView{dc4c868 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:33:50.896  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.3 from time: 16:33:50
+06-24 16:33:50.896  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:33:51.355  4367  4367 I GDH.BatteryReceiver: Received batter level: 39% - enabled: true
+06-24 16:33:51.444  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{4a822e2} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:33:52.506  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:33:52 (1750779232296) - when 16:33:52 (1750779232295) - diff notify: 1, diff recv value: 189
+06-24 16:33:52.506  4367  4367 I GDH.NotificationReceiver: Check for new value for 1s update
+06-24 16:33:52.507  4367  4367 I GDH.NotificationReceiver: using regex (?:^|\s)(\d*\.?\d+)(?=\s|$)
+06-24 16:33:52.507  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:33:52.520  4367  4367 I GDH.NotificationReceiver: Found value: 300.0 using regex in android.widget.TextView{eac9ac8 V.ED..... ......ID 0,0-0,0 #7f090405 app:id/sg_value}
+06-24 16:33:52.521  4367  4367 I GDH.NotificationReceiver: Extracted glucose value: 300.0 from time: 16:33:52
+06-24 16:33:52.521  4367  4367 I GDH.NotificationReceiver: Ignoring value notification with same value: 300.0
+06-24 16:33:52.521  4367  4367 E GDH.SourceStateData: Error state for source NOTIFICATION: Invalid glucose value: 300.0 - info: 
+06-24 16:33:52.521  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:33:52 (1750779232296) - when 16:33:52 (1750779232295)
+06-24 16:33:52.522  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:33:52.522  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:33:52.536  4367  4367 I GDH.NotificationReceiver: Found value: 1.3 using regex in android.widget.TextView{d51dc10 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:33:52.537  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.3 from time: 16:33:52
+06-24 16:33:52.537  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+
+06-24 16:34:02.160  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:34:01 (1750779241947) - when 16:34:01 (1750779241944) - diff notify: 9, diff recv value: 198
+06-24 16:34:02.160  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:34:02.160  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 198 < 250
+06-24 16:34:02.160  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:34:01 (1750779241947) - when 16:34:01 (1750779241944)
+06-24 16:34:02.161  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:34:02.161  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:34:02.173  4367  4367 I GDH.NotificationReceiver: Found value: 1.3 using regex in android.widget.TextView{a340d52 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:34:02.174  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.3 from time: 16:34:01
+06-24 16:34:02.174  4367  4367 I GDH.ReceiveData: Only IOB/COB changed: 1.3/NaN - at 16:34:01
+06-24 16:34:02.191  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:34:02.192  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:34:02.823  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h325dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(96, 0 - 1507, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_270} s.3052}
+06-24 16:34:02.823  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:34:02.823  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@8cd2b7a
+06-24 16:34:02.825  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:34:02.826  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:34:02.856  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w360dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.3092}
+06-24 16:34:02.856  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:34:02.856  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:34:02.863  4367 13937 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@8a3cad9
+06-24 16:34:02.873  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@8a3cad9
+06-24 16:34:02.875  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:34:02.876  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:34:02.881  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{ef7cfbf} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:34:02.897  4367 13938 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@7beef4c
+06-24 16:34:02.942  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{1aace2f} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:34:02.983  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:34:03.607  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:34:03 (1750779243377) - when 16:34:03 (1750779243375) - diff notify: 1, diff recv value: 200
+06-24 16:34:03.607  4367  4367 I GDH.NotificationReceiver: Check for new value for 1s update
+06-24 16:34:03.610  4367  4367 I GDH.NotificationReceiver: using regex (?:^|\s)(\d*\.?\d+)(?=\s|$)
+06-24 16:34:03.611  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:34:03.631  4367  4367 I GDH.NotificationReceiver: Found value: 300.0 using regex in android.widget.TextView{290c9da V.ED..... ......ID 0,0-0,0 #7f090405 app:id/sg_value}
+06-24 16:34:03.631  4367  4367 I GDH.NotificationReceiver: Extracted glucose value: 300.0 from time: 16:34:03
+06-24 16:34:03.631  4367  4367 I GDH.NotificationReceiver: Ignoring value notification with same value: 300.0
+06-24 16:34:03.632  4367  4367 E GDH.SourceStateData: Error state for source NOTIFICATION: Invalid glucose value: 300.0 - info: 
+06-24 16:34:03.632  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:34:03 (1750779243377) - when 16:34:03 (1750779243375)
+06-24 16:34:03.633  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:34:03.633  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:34:03.647  4367  4367 I GDH.NotificationReceiver: Found value: 1.3 using regex in android.widget.TextView{8c613e2 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:34:03.648  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.3 from time: 16:34:03
+06-24 16:34:03.648  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+
+06-24 16:35:15.956  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:35:15 (1750779315730) - when 16:35:15 (1750779315728) - diff notify: 72, diff recv value: 272
+06-24 16:35:15.956  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:35:15.957  4367  4367 I GDH.NotificationReceiver: using regex (?:^|\s)(\d*\.?\d+)(?=\s|$)
+06-24 16:35:15.957  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:35:15.978  4367  4367 I GDH.NotificationReceiver: Found value: 300.0 using regex in android.widget.TextView{31aa831 V.ED..... ......ID 0,0-0,0 #7f090405 app:id/sg_value}
+06-24 16:35:15.979  4367  4367 I GDH.NotificationReceiver: Extracted glucose value: 300.0 from time: 16:35:15
+06-24 16:35:15.979  4367  4367 I GDH.NotificationReceiver: Ignoring value notification with same value: 300.0
+06-24 16:35:15.979  4367  4367 E GDH.SourceStateData: Error state for source NOTIFICATION: Invalid glucose value: 300.0 - info: 
+06-24 16:35:15.980  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:35:15 (1750779315730) - when 16:35:15 (1750779315728)
+06-24 16:35:15.981  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:35:15.981  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:35:15.997  4367  4367 I GDH.NotificationReceiver: Found value: 1.3 using regex in android.widget.TextView{dd01d9 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:35:15.997  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.3 from time: 16:35:15
+06-24 16:35:15.998  4367  4367 I GDH.ReceiveData: Only IOB/COB changed: 1.3/NaN - at 16:35:15
+06-24 16:35:16.010  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:35:16.011  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:35:39.418  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w333dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.3121}
+06-24 16:35:39.418  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:35:39.418  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@2123d3a
+06-24 16:35:39.419  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:35:39.420  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:35:39.449  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h332dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(53, 0 - 1464, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_90} s.3158}
+06-24 16:35:39.449  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:35:39.449  4367  4367 I GDH.Chart.Bitmap.1: stop bitmap creation
+06-24 16:35:39.468  4367 14019 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@212e295
+06-24 16:35:39.469  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@212e295
+06-24 16:35:39.470  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:35:39.471  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:35:39.476  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{1aace2f} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:35:39.493  4367 14021 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@f84c738
+06-24 16:35:39.556  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{4c0c210} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:35:39.583  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:35:39.693  4367  4389 W System  : A resource failed to call release. 
+06-24 16:35:39.693  4367  4389 I chatty  : uid=10193(de.michelinside.glucodatahandler) FinalizerDaemon identical 5 lines
+06-24 16:35:39.693  4367  4389 W System  : A resource failed to call release. 
+06-24 16:35:39.697  4367  4389 W System  : A resource failed to call release. 
+06-24 16:35:39.700  4367  4389 W System  : A resource failed to call release. 
+06-24 16:35:40.098  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w705dp h325dp 320dpi nrml long land finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1560, 720) mAppBounds=Rect(53, 0 - 1464, 720) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_90} s.3189}
+06-24 16:35:40.098  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:35:40.099  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@f84c738
+06-24 16:35:40.100  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:35:40.101  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:35:40.131  4367 14028 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@b4d6c6e
+06-24 16:35:40.146  4367  4367 I GDH.GlucoDataServiceMobile: onConfigurationChanged called: {1.0 214mcc22mnc [es_ES] ldltr sw360dp w360dp h697dp 320dpi nrml long port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 720, 1560) mAppBounds=Rect(0, 53 - 720, 1464) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} s.3226}
+06-24 16:35:40.146  4367  4367 I GDH.PermanentNotification: Recreate bitmap
+06-24 16:35:40.146  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@b4d6c6e
+06-24 16:35:40.147  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:35:40.148  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:35:40.154  4367  4367 I GDH.InternalNotifier: rem notifier ExportImportSettingsFragment{4c0c210} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002)
+06-24 16:35:40.178  4367 14029 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@21899a5
+06-24 16:35:40.220  4367  4367 I GDH.InternalNotifier: add notifier ExportImportSettingsFragment{231f4b6} (d457f42e-d895-458f-99a3-884267ae10ff id=0x1020002) - filter: [CAPILITY_INFO] - timechanged: false
+06-24 16:35:40.300  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:35:39 (1750779339989) - when 16:35:39 (1750779339988) - diff notify: 24, diff recv value: 296
+06-24 16:35:40.300  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:35:40.301  4367  4367 I GDH.NotificationReceiver: using regex (?:^|\s)(\d*\.?\d+)(?=\s|$)
+06-24 16:35:40.301  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:35:40.307  4367 12927 D MediaScannerConnection: Scanned /storage/emulated/0/Download to content://media/external_primary/file/11
+06-24 16:35:40.318  4367  4367 I GDH.NotificationReceiver: Found value: 300.0 using regex in android.widget.TextView{9c16203 V.ED..... ......ID 0,0-0,0 #7f090405 app:id/sg_value}
+06-24 16:35:40.318  4367  4367 I GDH.NotificationReceiver: Extracted glucose value: 300.0 from time: 16:35:39
+06-24 16:35:40.319  4367  4367 I GDH.NotificationReceiver: Ignoring value notification with same value: 300.0
+06-24 16:35:40.319  4367  4367 E GDH.SourceStateData: Error state for source NOTIFICATION: Invalid glucose value: 300.0 - info: 
+06-24 16:35:40.319  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:35:39 (1750779339989) - when 16:35:39 (1750779339988)
+06-24 16:35:40.319  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:35:40.319  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:35:40.325  4367  4367 I GDH.NotificationReceiver: Found value: 1.3 using regex in android.widget.TextView{af693c8 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:35:40.326  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.3 from time: 16:35:39
+06-24 16:35:40.326  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:35:40.902  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:35:40 (1750779340674) - when 16:35:40 (1750779340672) - diff notify: 0, diff recv value: 297
+06-24 16:35:40.902  4367  4367 I GDH.NotificationReceiver: Check for new value for 0s update
+06-24 16:35:40.903  4367  4367 I GDH.NotificationReceiver: using regex (?:^|\s)(\d*\.?\d+)(?=\s|$)
+06-24 16:35:40.904  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:35:40.920  4367  4367 I GDH.NotificationReceiver: Found value: 300.0 using regex in android.widget.TextView{e3492a4 V.ED..... ......ID 0,0-0,0 #7f090405 app:id/sg_value}
+06-24 16:35:40.921  4367  4367 I GDH.NotificationReceiver: Extracted glucose value: 300.0 from time: 16:35:40
+06-24 16:35:40.927  4367  4367 I GDH.ReceiveData: Glucodata received from NOTIFICATION: Bundle[{glucodata.Minute.Alarm=0, glucodata.Minute.Rate=NaN, glucodata.Minute.Time=1750779340674, glucodata.Minute.mgdl=300}] - timestamp: 24 jun. 2025 16:35:40
+06-24 16:35:40.933  4367  4367 I GDH.Task.Time.TaskService: Set next alarm after 1 minute(s) at 16:36:43 (received at 16:35:40) with a delay of 3s
+06-24 16:35:40.952  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:35:40.952  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:35:40 (1750779340674) - when 16:35:40 (1750779340672)
+06-24 16:35:40.953  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:35:40.953  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:35:40.960  4367  4367 I GDH.NotificationReceiver: Found value: 1.3 using regex in android.widget.TextView{f20026c V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:35:40.960  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.3 from time: 16:35:40
+06-24 16:35:40.960  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:35:41.959  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@21899a5
+06-24 16:35:41.964  4367  4367 I GDH.Chart.BitmapCreator.1: using circle radius: 2.8
+06-24 16:35:41.966  4367  4367 I GDH.Chart.Creator.1: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:35:41.987  4367  4367 I GDH.InternalNotifier: rem notifier de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@6c80c65
+06-24 16:35:41.992  4367  4367 I GDH.Chart.BitmapCreator.2: using circle radius: 2.8
+06-24 16:35:41.993  4367  4367 I GDH.Chart.Creator.2: updateGraphStartTime: reset graph start time - current: 0
+06-24 16:35:42.020  4367 14036 I GDH.Chart.Bitmap.1: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@1e42b96
+06-24 16:35:42.026  4367 14037 I GDH.Chart.Bitmap.2: bitmap created for chart de.michelinside.glucodatahandler.common.chart.ChartBitmapCreator@f727317
+06-24 16:35:42.050  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:35:51.498  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:35:51 (1750779351270) - when 16:35:51 (1750779351263) - diff notify: 10, diff recv value: 11
+06-24 16:35:51.499  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:35:51.499  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 11 < 250
+06-24 16:35:51.500  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:35:51 (1750779351270) - when 16:35:51 (1750779351263)
+06-24 16:35:51.501  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:35:51.501  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:35:51.523  4367  4367 I GDH.NotificationReceiver: Found value: 1.3 using regex in android.widget.TextView{aa3e3b8 V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:35:51.524  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.3 from time: 16:35:51
+06-24 16:35:51.525  4367  4367 I GDH.ReceiveData: Only IOB/COB changed: 1.3/NaN - at 16:35:51
+06-24 16:35:51.558  4367  4367 I GDH.widget.GlucoseBaseWidget: Trigger update of 1 widget(s) with type CHART_GLUCOSE_TREND_DELTA_TIME_IOB_COB
+06-24 16:35:51.559  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:35:54.343  4367  4367 I GDH.NotificationReceiver: New notification from com.medtronic.diabetes.minimedmobile.eu - ongoing: true (flags: 98, prio: 0) - posted: 16:35:54 (1750779354127) - when 16:35:54 (1750779354125) - diff notify: 2, diff recv value: 14
+06-24 16:35:54.344  4367  4367 I GDH.NotificationReceiver: Check for changed value or wait for multi value package with 0s interval
+06-24 16:35:54.344  4367  4367 I GDH.NotificationReceiver: Ignoring notification out of interval - diff: 14 < 250
+06-24 16:35:54.345  4367  4367 I GDH.NotificationReceiver: New IOB notification from com.medtronic.diabetes.minimedmobile.eu - posted: 16:35:54 (1750779354127) - when 16:35:54 (1750779354125)
+06-24 16:35:54.346  4367  4367 I GDH.NotificationReceiver: using IOB regex (\d*\.?\d+) U
+06-24 16:35:54.347  4367  4367 I GDH.NotificationReceiver: extracted title `` and text ``
+06-24 16:35:54.370  4367  4367 I GDH.NotificationReceiver: Found value: 1.275 using regex in android.widget.TextView{4221d7e V.ED..... ......ID 0,0-0,0 #7f0902c0 app:id/message_active_insulin_value}
+06-24 16:35:54.371  4367  4367 I GDH.NotificationReceiver: Extracted iob value: 1.275 from time: 16:35:54
+06-24 16:35:54.371  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 
+06-24 16:35:54.371  4367  4367 I GDH.SourceStateData: Set state NONE for source NOTIFICATION: 

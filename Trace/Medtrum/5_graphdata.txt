@@ -1,0 +1,57 @@
+METHOD: GET
+URL
+https://easyview.medtrum.eu/mobile/ajax/download?flag=sg&st=2025-07-14%2008:00:00&et=2025-07-15%2008:00:00&user_name=[user_name]
+HEADERS
+Accept-Encoding:
+gzip
+AppTag:
+v=1.2.70(112);n=eyfo;p=android
+Connection:
+Keep-Alive
+Cookie:
+[cookie]
+DevInfo:
+Android 11;Google generic_x86_arm;Android 11
+Host:
+easyview.medtrum.eu
+RegionCode:
+DE
+User-Agent:
+okhttp/3.5.0
+
+
+
+---------------------------- RESPONSE -----------------------------------------------------
+
+
+{
+  "data": [
+    [
+      "[uid]-[serial]-8-5051",
+      1752480092,
+      11.7,
+      4.8,
+      "C",
+      0
+    ],
+    [
+      "[uid]-[serial]-8-5052",
+      1752480212,
+      11.89,
+      4.9,
+      "C",
+      0
+    ],
+    [
+      "[uid]-[serial]-8-5053",
+      1752480332,
+      11.39,
+      4.7,
+      "C",
+      0
+    ]
+  ],
+  "flag": "sg",
+  "res": "OK",
+  "user_name": "---"
+}
