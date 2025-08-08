@@ -1042,9 +1042,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     Constants.SHARED_PREF_OBSOLETE_TIME,
                     Constants.SHARED_PREF_USE_RATE_CALCULATION -> {
                         updateSettings(sharedPreferences!!)
-                        val extras = Bundle()
-                        extras.putBundle(Constants.SETTINGS_BUNDLE, GlucoDataService.getSettings())
-                        InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SETTINGS, extras)
+                        InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SETTINGS, GlucoDataService.getSettings())
                     }
                 }
             }

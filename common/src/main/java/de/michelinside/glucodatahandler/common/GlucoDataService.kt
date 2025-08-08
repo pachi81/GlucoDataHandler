@@ -487,6 +487,16 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         fun migrateSettings(context: Context) {
             val sharedPrefs = context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
             Log.v(LOG_ID, "migrateSettings called")
+
+            val oldVersion = sharedPrefs.getInt(Constants.SHARED_PREF_GDH_VERSION, 0)
+            if(oldVersion != BuildConfig.BASE_VERSION) {
+                Log.i(LOG_ID, "Migrate settings from version $oldVersion to ${BuildConfig.BASE_VERSION}")
+                with(sharedPrefs.edit()) {
+                    putInt(Constants.SHARED_PREF_GDH_VERSION, BuildConfig.BASE_VERSION)
+                    apply()
+                }
+            }
+
             if(!sharedPrefs.contains(Constants.SHARED_PREF_OBSOLETE_TIME)) {
                 val sharedGlucosePref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, MODE_PRIVATE)
                 var obsoleteTime = 6
@@ -787,9 +797,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 }
             }
             if (shareSettings) {
-                val extras = Bundle()
-                extras.putBundle(Constants.SETTINGS_BUNDLE, getSettings())
-                InternalNotifier.notify(this, NotifySource.SETTINGS, extras)
+                InternalNotifier.notify(this, NotifySource.SETTINGS, getSettings())
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())

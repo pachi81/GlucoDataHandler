@@ -167,6 +167,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         this.context = context
         openConnection()
         if (sendSettings) {
+            filter.add(NotifySource.TASKER_SETTINGS)
             filter.add(NotifySource.SETTINGS)   // only send setting changes from phone to wear!
             filter.add(NotifySource.SOURCE_SETTINGS)
             filter.add(NotifySource.ALARM_SETTINGS)
@@ -349,7 +350,8 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         val path = when(dataSource) {
             NotifySource.BATTERY_LEVEL -> Constants.BATTERY_INTENT_MESSAGE_PATH
             NotifySource.CAPILITY_INFO -> Constants.REQUEST_DATA_MESSAGE_PATH
-            NotifySource.SETTINGS -> Constants.SETTINGS_INTENT_MESSAGE_PATH
+            NotifySource.TASKER_SETTINGS -> Constants.TASKER_SETTINGS_INTENT_MESSAGE_PATH
+            NotifySource.SETTINGS -> Constants.GENERAL_SETTINGS_INTENT_MESSAGE_PATH
             NotifySource.SOURCE_SETTINGS -> Constants.SOURCE_SETTINGS_INTENT_MESSAGE_PATH
             NotifySource.ALARM_SETTINGS -> Constants.ALARM_SETTINGS_INTENT_MESSAGE_PATH
             NotifySource.LOGCAT_REQUEST -> Constants.REQUEST_LOGCAT_MESSAGE_PATH
@@ -367,7 +369,14 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             Log.v(LOG_ID, "sendMessage called for $dataSource filter receiver $filterReceiverId ignoring receiver $ignoreReceiverId with extras $extras")
             if( nodesConnected && dataSource != NotifySource.NODE_BATTERY_LEVEL ) {
                 Log.d(LOG_ID, connectedNodes.size.toString() + " nodes found for sending message for " + dataSource.toString())
-                if(extras != null) {
+                if(extras != null && dataSource != NotifySource.TASKER_SETTINGS) {
+                    if(dataSource == NotifySource.SETTINGS && !extras.containsKey(Constants.SETTINGS_BUNDLE) && getMinNodeVersion() < 150) {
+                        Log.i(LOG_ID, "Move settings to bundle because of old version ${getMinNodeVersion()}")
+                        val newExtras = Bundle()
+                        newExtras.putBundle(Constants.SETTINGS_BUNDLE, extras.deepCopy())
+                        extras.clear()
+                        extras.putAll(newExtras)
+                    }
                     extras.putInt(Constants.VERSION_CODE, BuildConfig.BASE_VERSION)  // add current version to bundle
                     if (dataSource != NotifySource.BATTERY_LEVEL && BatteryReceiver.batteryPercentage >= 0) {
                         extras.putInt(BatteryReceiver.LEVEL, BatteryReceiver.batteryPercentage)
@@ -522,6 +531,8 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 checkNodeConnect(p0.sourceNodeId)
             }
             if(extras!= null) {
+                if(Log.isLoggable(LOG_ID, Log.VERBOSE))
+                    Log.v(LOG_ID, "Received extras: ${Utils.dumpBundle(extras)}")
                 if (extras.containsKey(Constants.SETTINGS_BUNDLE)) {
                     val bundle = extras.getBundle(Constants.SETTINGS_BUNDLE)
                     Log.d(LOG_ID, "Glucose settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(bundle))
@@ -594,27 +605,37 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     }
                 }
 
+                if (p0.path.contains(Constants.GENERAL_SETTINGS_INTENT_MESSAGE_PATH)) {
+                    if (!extras.isEmpty) {
+                        Log.d(LOG_ID, "Glucose settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(extras))
+                        GlucoDataService.setSettings(context, extras)
+                        InternalNotifier.notify(context, NotifySource.SETTINGS, extras)
+                    }
+                }
+
                 if (p0.path.contains(Constants.SOURCE_SETTINGS_INTENT_MESSAGE_PATH)) {
                     if (!extras.isEmpty) {
-                        Log.d(LOG_ID, "Glucose source settings received from " + p0.sourceNodeId + ": " + extras.toString())
+                        Log.d(LOG_ID, "Glucose source settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(extras))
                         DataSourceTask.updateSettings(context, extras)
                     }
                 }
 
                 if (p0.path.contains(Constants.ALARM_SETTINGS_INTENT_MESSAGE_PATH)) {
                     if (!extras.isEmpty) {
-                        Log.d(LOG_ID, "Glucose alarm settings received from " + p0.sourceNodeId + ": " + extras.toString())
+                        Log.d(LOG_ID, "Glucose alarm settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(extras))
                         AlarmHandler.setSettings(context, extras)
                     }
                 }
 
-                if (p0.path.contains(Constants.SETTINGS_INTENT_MESSAGE_PATH)) {
-                    // check for other settings send...
+                if (p0.path.contains(Constants.TASKER_SETTINGS_INTENT_MESSAGE_PATH)) {
+                    // check for other settings send... (by Tasker)
                     extras.remove(Constants.SETTINGS_BUNDLE)
                     extras.remove(Constants.SOURCE_SETTINGS_BUNDLE)
                     extras.remove(Constants.ALARM_SETTINGS_BUNDLE)
                     extras.remove(BatteryReceiver.LEVEL)
+                    extras.remove(Constants.VERSION_CODE)
                     if (!extras.isEmpty) {
+                        // this section should only be called for Tasker settings which are only Booleans at the moment
                         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                         val keys = extras.keySet()
                         Log.d(LOG_ID, keys.size.toString() + " settings received")
@@ -622,7 +643,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                             keys.forEach {
                                 try {
                                     val value = extras.getBoolean(it)
-                                    Log.d(LOG_ID, "Setting value " + value + " for " + it)
+                                    Log.d(LOG_ID, "Setting tasker value " + value + " for " + it)
                                         putBoolean(it, value)
                                 } catch (exc: ClassCastException) {
                                     Log.w(LOG_ID,"Getting value for key " + it + " caused exception: " + exc.message)
@@ -784,6 +805,12 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
     private fun nodeHasJson(nodeId: String): Boolean {
         return nodeVersions.contains(nodeId) && nodeVersions.getValue(nodeId) > 0
+    }
+
+    private fun getMinNodeVersion(): Int {
+        if(nodeVersions.isNotEmpty())
+            return nodeVersions.values.min()
+        return 0
     }
 
     private fun setNodeVersion(nodeId: String, version: Int, force: Boolean = false) {

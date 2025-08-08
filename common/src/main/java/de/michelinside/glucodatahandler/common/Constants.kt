@@ -7,7 +7,8 @@ object Constants {
     const val CAPABILITY_WEAR = "glucodata_intent_wear"
     const val GLUCODATA_INTENT_MESSAGE_PATH = "/glucodata_intent"
     const val BATTERY_INTENT_MESSAGE_PATH = "/battery_intent"
-    const val SETTINGS_INTENT_MESSAGE_PATH = "/settings_intent"
+    const val TASKER_SETTINGS_INTENT_MESSAGE_PATH = "/settings_intent"
+    const val GENERAL_SETTINGS_INTENT_MESSAGE_PATH = "/general_settings_intent"
     const val SOURCE_SETTINGS_INTENT_MESSAGE_PATH = "/source_settings_intent"
     const val ALARM_SETTINGS_INTENT_MESSAGE_PATH = "/alarm_settings_intent"
     const val REQUEST_DATA_MESSAGE_PATH = "/request_data_intent"
@@ -64,6 +65,7 @@ object Constants {
     const val VALUE_IOB_COBOBSOLETE_SEC  = 1800
 
     const val SHARED_PREF_TAG = "GlucoDataHandlerPrefs"
+    const val SHARED_PREF_GDH_VERSION = "gdh_version"
     const val SHARED_PREF_AUTO_TAG = "GlucoDataAutoPrefs"
     const val SHARED_PREF_EXTRAS_TAG = "GlucoDataExtrasPrefs"
     const val SHARED_PREF_NO_GLUCODATAAUTO = "no_gda_info"
