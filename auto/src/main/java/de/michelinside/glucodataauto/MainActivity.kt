@@ -106,10 +106,14 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
 
-            btnSources.setOnClickListener{
-                val intent = Intent(this, SettingsActivity::class.java)
-                intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.SORUCE_FRAGMENT.value)
-                startActivity(intent)
+            btnSources.setOnClickListener {
+                try {
+                    val intent = Intent(this, SettingsActivity::class.java)
+                    intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.SORUCE_FRAGMENT.value)
+                    startActivity(intent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Sources button exception: " + exc.message.toString() )
+                }
             }
 
             val sendToAod = sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, false)

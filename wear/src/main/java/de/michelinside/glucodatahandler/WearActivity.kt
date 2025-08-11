@@ -103,34 +103,54 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             }
 
             findViewById<Button>(R.id.btnSettings)?.setOnClickListener {
-                Log.v(LOG_ID, "Settings button clicked!")
-                val intent = Intent(this, SettingsActivity::class.java)
-                startActivity(intent)
+                try {
+                    Log.v(LOG_ID, "Settings button clicked!")
+                    val intent = Intent(this, SettingsActivity::class.java)
+                    startActivity(intent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Settings button exception: " + exc.message.toString() )
+                }
             }
 
             findViewById<Button>(R.id.btnSources)?.setOnClickListener {
-                Log.v(LOG_ID, "Sources button clicked!")
-                val intent = Intent(this, SourcesActivity::class.java)
-                startActivity(intent)
+                try {
+                    Log.v(LOG_ID, "Sources button clicked!")
+                    val intent = Intent(this, SourcesActivity::class.java)
+                    startActivity(intent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Sources button exception: " + exc.message.toString() )
+                }
             }
 
 
             findViewById<Button>(R.id.btnAlarms)?.setOnClickListener {
-                Log.v(LOG_ID, "Alarm button clicked!")
-                val intent = Intent(this, AlarmsActivity::class.java)
-                startActivity(intent)
+                try {
+                    Log.v(LOG_ID, "Alarm button clicked!")
+                    val intent = Intent(this, AlarmsActivity::class.java)
+                    startActivity(intent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Alarm button exception: " + exc.message.toString() )
+                }
             }
             chartBitmap = ChartBitmapHandlerView(chartImage, this)
             chartImage.setOnClickListener {
-                Log.v(LOG_ID, "Chart Image clicked!")
-                val intent = Intent(this, GraphActivity::class.java)
-                startActivity(intent)
+                try {
+                    Log.v(LOG_ID, "Chart Image clicked!")
+                    val intent = Intent(this, GraphActivity::class.java)
+                    startActivity(intent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Chart Image exception: " + exc.message.toString() )
+                }
             }
 
             findViewById<Button>(R.id.btnWatchfaces)?.setOnClickListener {
-                Log.v(LOG_ID, "Watchface button clicked!")
-                val intent = Intent(this, WatchfacesActivity::class.java)
-                startActivity(intent)
+                try {
+                    Log.v(LOG_ID, "Watchface button clicked!")
+                    val intent = Intent(this, WatchfacesActivity::class.java)
+                    startActivity(intent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Watchface button exception: " + exc.message.toString() )
+                }
             }
 
             if(requestPermission())

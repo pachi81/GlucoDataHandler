@@ -124,9 +124,13 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
             updateSoundText()
 
             btnTestAlarm.setOnClickListener {
-                Log.d(LOG_ID, "Test alarm button clicked!")
-                btnTestAlarm.isEnabled = false
-                AlarmNotificationWear.triggerTest(alarmType, this)
+                try {
+                    Log.d(LOG_ID, "Test alarm button clicked!")
+                    btnTestAlarm.isEnabled = false
+                    AlarmNotificationWear.triggerTest(alarmType, this)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Test alarm exception: " + exc.message.toString() )
+                }
             }
 
             setRingtoneSelect(Uri.parse(sharedPref.getString(customSoundPref, "")))
@@ -135,10 +139,14 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
 
 
             btnSelectVibration.setOnClickListener {
-                Log.v(LOG_ID, "${btnSelectVibration.text} button clicked!")
-                val intent = Intent(this, VibrationPatternActivity::class.java)
-                intent.putExtra("type", alarmType.ordinal)
-                startActivity(intent)
+                try {
+                    Log.v(LOG_ID, "${btnSelectVibration.text} button clicked!")
+                    val intent = Intent(this, VibrationPatternActivity::class.java)
+                    intent.putExtra("type", alarmType.ordinal)
+                    startActivity(intent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Select vibration exception: " + exc.message.toString() )
+                }
             }
 
             val vibatrionAmbituteLayout = findViewById<RelativeLayout>(R.id.vibrationAmplitudeHead)
@@ -192,30 +200,38 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
             Log.v(LOG_ID, "setRingtoneSelect called with uri $curUri" )
             if(ringtoneSelecter == null) {
                 ringtoneSelecter = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-                    Log.v(LOG_ID, "$alarmType result ${result.resultCode}: ${result.data}")
-                    if (result.resultCode == Activity.RESULT_OK) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            setRingtoneResult(result.data!!.getParcelableExtra(
-                                RingtoneManager.EXTRA_RINGTONE_PICKED_URI, Uri::class.java))
-                        } else {
-                            @Suppress("DEPRECATION")
-                            setRingtoneResult(result.data!!.getParcelableExtra(
-                                RingtoneManager.EXTRA_RINGTONE_PICKED_URI))
+                    try {
+                        Log.d(LOG_ID, "$alarmType result ${result.resultCode}: ${result.data}")
+                        if (result.resultCode == Activity.RESULT_OK) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                setRingtoneResult(result.data!!.getParcelableExtra(
+                                    RingtoneManager.EXTRA_RINGTONE_PICKED_URI, Uri::class.java))
+                            } else {
+                                @Suppress("DEPRECATION")
+                                setRingtoneResult(result.data!!.getParcelableExtra(
+                                    RingtoneManager.EXTRA_RINGTONE_PICKED_URI))
+                            }
                         }
+                    } catch( exc: Exception ) {
+                        Log.e(LOG_ID, "Error setting ringtone: " + exc.message)
                     }
                 }
             }
             btnSelectSound.setOnClickListener {
-                Log.v(LOG_ID, "Select custom sound clicked")
-                val ringtoneIntent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
-                ringtoneIntent.putExtra(
-                    RingtoneManager.EXTRA_RINGTONE_TYPE,
-                    RingtoneManager.TYPE_ALL
-                )
-                ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true)
-                ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)
-                ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, curUri)
-                ringtoneSelecter!!.launch(ringtoneIntent)
+                try {
+                    Log.d(LOG_ID, "Select custom sound clicked")
+                    val ringtoneIntent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
+                    ringtoneIntent.putExtra(
+                        RingtoneManager.EXTRA_RINGTONE_TYPE,
+                        RingtoneManager.TYPE_ALL
+                    )
+                    ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true)
+                    ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)
+                    ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, curUri)
+                    ringtoneSelecter!!.launch(ringtoneIntent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Select custom sound exception: " + exc.message.toString())
+                }
             }
         } catch( exc: Exception ) {
             Log.e(LOG_ID, "setRingtoneSelect exception: " + exc.message + ": " + exc.stackTraceToString())

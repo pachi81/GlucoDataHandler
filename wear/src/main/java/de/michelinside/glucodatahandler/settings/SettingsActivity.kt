@@ -45,9 +45,13 @@ class SettingsActivity : AppCompatActivity() {
 
 
             btnComplicationTapAction.setOnClickListener {
-                Log.v(LOG_ID, "${btnComplicationTapAction.text} button clicked!")
-                val intent = Intent(this, ComplicationsTapActionActivity::class.java)
-                startActivity(intent)
+                try {
+                    Log.v(LOG_ID, "${btnComplicationTapAction.text} button clicked!")
+                    val intent = Intent(this, ComplicationsTapActionActivity::class.java)
+                    startActivity(intent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Complication tap action exception: " + exc.message.toString())
+                }
             }
 
             switchForground = findViewById(R.id.switchForground)
