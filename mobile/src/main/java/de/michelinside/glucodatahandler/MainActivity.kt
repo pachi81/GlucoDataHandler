@@ -97,6 +97,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var tableAlarms: TableLayout
     private lateinit var tableNotes: TableLayout
     private lateinit var btnSources: Button
+    private lateinit var btnHelp: Button
+    private lateinit var noDataLayout: LinearLayout
     private lateinit var sharedPref: SharedPreferences
     private lateinit var optionsMenu: Menu
     private lateinit var chart: GlucoseChart
@@ -135,6 +137,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             iobCobLayout = findViewById(R.id.layout_iob_cob)
             txtLastValue = findViewById(R.id.txtLastValue)
             btnSources = findViewById(R.id.btnSources)
+            btnHelp = findViewById(R.id.btnHelp)
+            noDataLayout = findViewById(R.id.layout_no_data)
             tableConnections = findViewById(R.id.tableConnections)
             tableAlarms = findViewById(R.id.tableAlarms)
             tableDetails = findViewById(R.id.tableDetails)
@@ -176,6 +180,18 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     startActivity(intent)
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "btn source exception: " + exc.message.toString() )
+                }
+            }
+
+            btnHelp.setOnClickListener{
+                try {
+                    val browserIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(resources.getText(CR.string.help_link).toString())
+                    )
+                    startActivity(browserIntent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "btn help exception: " + exc.message.toString() )
                 }
             }
 
@@ -649,13 +665,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             cobText.visibility = iobText.visibility
             iobCobLayout.visibility = iobText.visibility
 
-            txtLastValue.visibility = if(ReceiveData.time>0) View.GONE else View.VISIBLE
+            noDataLayout.visibility = if(ReceiveData.time>0) View.GONE else View.VISIBLE
 
-            if (ReceiveData.time == 0L) {
-                btnSources.visibility = View.VISIBLE
-            } else {
-                btnSources.visibility = View.GONE
-            }
             //chartHandler.update()
             updateNotesTable()
             updateAlarmsTable()

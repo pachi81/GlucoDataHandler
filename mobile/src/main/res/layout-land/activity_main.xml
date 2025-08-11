@@ -289,22 +289,44 @@
                 tools:context=".MainActivity"
                 android:orientation="vertical"
                 android:gravity="center|top">
-                <TextView
-                    android:id="@+id/txtLastValue"
+
+                <LinearLayout
+                    android:id="@+id/layout_no_data"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/no_data"
-                    android:textAlignment="center"
-                    android:textSize="20sp" />
-                <Button
-                    android:id="@+id/btnSources"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#005CCC"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/menu_sources"
-                    />
+                    tools:context=".MainActivity"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <TextView
+                        android:id="@+id/txtLastValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/no_data"
+                        android:textAlignment="center"
+                        android:textSize="20sp" />
+                    <Button
+                        android:id="@+id/btnSources"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="#005CCC"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/menu_sources"
+                        />
+                    <Button
+                        android:id="@+id/btnHelp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="#005CCC"
+                        android:text="@string/menu_help" />
+                    <TextView
+                        android:id="@+id/txtHelp"
+                        android:layout_width="350dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/source_help_summary"
+                        android:textAlignment="center"
+                        android:textSize="15sp" />
+                </LinearLayout>
 
                 <TableLayout
                     android:id="@+id/tableNotes"
