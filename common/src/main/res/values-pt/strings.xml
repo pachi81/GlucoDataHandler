@@ -824,6 +824,7 @@
     <string name="pref_source_libre_patched_info_summary">Se estiver a utilizar a aplicação Libre corrigida ou outras aplicações que forneçam esta transmissão.</string>
     <string name="pref_sensor_runtime">Tempo de uso do sensor</string>
     <string name="pref_sensor_runtime_summary">Número de dias que o sensor pode ser usado.</string>
+    <string name="runtime_10_days">10 dias</string>
     <string name="runtime_14_days">14 dias</string>
     <string name="runtime_15_days">15 dias</string>
     <string name="table_header_statistics">Estatísticas</string>

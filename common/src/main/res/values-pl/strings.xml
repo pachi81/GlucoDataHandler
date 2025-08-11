@@ -834,6 +834,7 @@
     <string name="pref_source_libre_patched_info_summary">Jeśli korzystasz z poprawionej aplikacji Libre lub innych aplikacji udostępniających tę transmisję.</string>
     <string name="pref_sensor_runtime">Czas działania</string>
     <string name="pref_sensor_runtime_summary">Liczba dni, przez które sensor może działać.</string>
+    <string name="runtime_10_days">10 dni</string>
     <string name="runtime_14_days">14 dni</string>
     <string name="runtime_15_days">15 dni</string>
     <string name="table_header_statistics">Statystyka z 7 dni</string>

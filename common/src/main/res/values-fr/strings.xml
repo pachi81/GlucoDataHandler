@@ -830,6 +830,7 @@
     <string name="pref_source_libre_patched_info_summary">Si vous utilisez l\'application Libre patchée ou d\'autres applications fournissant cette diffusion.</string>
     <string name="pref_sensor_runtime">Durée de port du capteur</string>
     <string name="pref_sensor_runtime_summary">Nombre de jours pendant lesquels le capteur peut être porté.</string>
+    <string name="runtime_10_days">10 jours</string>
     <string name="runtime_14_days">14 jours</string>
     <string name="runtime_15_days">15 jours</string>
     <string name="table_header_statistics">Statistiques</string>

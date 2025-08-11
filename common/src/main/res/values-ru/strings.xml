@@ -825,6 +825,7 @@
     <string name="pref_source_libre_patched_info_summary">Если вы используете исправленное приложение Libre или другие приложения, предоставляющие эту трансляцию.</string>
     <string name="pref_sensor_runtime">Время ношения датчика</string>
     <string name="pref_sensor_runtime_summary">Количество дней, в течение которых можно носить датчик.</string>
+    <string name="runtime_10_days">10 дней</string>
     <string name="runtime_14_days">14 дней</string>
     <string name="runtime_15_days">15 дней</string>
     <string name="table_header_statistics">Статистика</string>

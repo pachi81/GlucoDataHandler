@@ -832,6 +832,7 @@
     <string name="pref_source_libre_patched_info_summary">Als u de gepatchte Libre-app of andere apps gebruikt die deze broadcast leveren.</string>
     <string name="pref_sensor_runtime">Draagtijd sensor</string>
     <string name="pref_sensor_runtime_summary">Aantal dagen dat de sensor gedragen kan worden.</string>
+    <string name="runtime_10_days">10 dagen</string>
     <string name="runtime_14_days">14 dagen</string>
     <string name="runtime_15_days">15 dagen</string>
     <string name="table_header_statistics">Statistieken</string>

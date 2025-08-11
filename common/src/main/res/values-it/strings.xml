@@ -820,6 +820,7 @@
     <string name="pref_source_libre_patched_info_summary">Se stai usando l\'app Libre patchata o altre app che forniscono questo broadcast.</string>
     <string name="pref_sensor_runtime">Durata sensore</string>
     <string name="pref_sensor_runtime_summary">Numero di giorni per cui il sensore può essere indossato.</string>
+    <string name="runtime_10_days">10 giorni</string>
     <string name="runtime_14_days">14 giorni</string>
     <string name="runtime_15_days">15 giorni</string>
     <string name="table_header_statistics">Statistiche</string>

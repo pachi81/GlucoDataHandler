@@ -159,11 +159,13 @@
     </array>
     <array name="pref_sensor_runtime_labels">
         <item>@string/alarm_state_inactive</item>
+        <item>@string/runtime_10_days</item>
         <item>@string/runtime_14_days</item>
         <item>@string/runtime_15_days</item>
     </array>
     <array name="pref_sensor_runtime_values">
         <item>"0"</item>
+        <item>"10"</item>
         <item>"14"</item>
         <item>"15"</item>
     </array>

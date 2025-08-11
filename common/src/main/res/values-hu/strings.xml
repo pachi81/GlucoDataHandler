@@ -896,6 +896,7 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
     <string name="pref_source_libre_patched_info_summary">Ha a javított Libre alkalmazást vagy más, ezt a broadcastot biztosító alkalmazásokat használja.</string>
     <string name="pref_sensor_runtime">Szenzor viselési ideje</string>
     <string name="pref_sensor_runtime_summary">A szenzor viselhető napjainak száma.</string>
+    <string name="runtime_10_days">10 nap</string>
     <string name="runtime_14_days">14 nap</string>
     <string name="runtime_15_days">15 nap</string>
     <string name="table_header_statistics">Statisztikák</string>

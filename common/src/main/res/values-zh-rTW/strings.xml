@@ -828,6 +828,7 @@
     <string name="pref_source_libre_patched_info_summary">如果您正在使用修補過的 Libre 應用程式或其他提供此廣播的應用程式。</string>
     <string name="pref_sensor_runtime">感應器佩戴時間</string>
     <string name="pref_sensor_runtime_summary">感應器可佩戴的天數。</string>
+    <string name="runtime_10_days">10 天</string>
     <string name="runtime_14_days">14 天</string>
     <string name="runtime_15_days">15 天</string>
     <string name="table_header_statistics">統計資料</string>
