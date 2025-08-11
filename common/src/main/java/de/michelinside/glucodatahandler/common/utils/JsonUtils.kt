@@ -9,6 +9,12 @@ import org.json.JSONObject
 
 object JsonUtils {
     val LOG_ID = "GDH.Utils.JsonUtils"
+    const val MAX_SAFE_INTEGER: Long = 9007199254740991L // 2^53 - 1
+    const val MIN_SAFE_INTEGER: Long = -9007199254740991L // -(2^53 - 1)
+
+    private fun isSafeIntegerForLong(value: Long): Boolean {
+        return value in MIN_SAFE_INTEGER..MAX_SAFE_INTEGER
+    }
 
     fun getFloat(key: String, jsonObject: JSONObject): Float {
         return Utils.parseFloatString(jsonObject.optString(key))
@@ -121,7 +127,14 @@ object JsonUtils {
                 is String, is Int, is Boolean, is Short, is Byte -> {
                     typedMap[key] = TypedJsonValue(typeName, actualValue)
                 }
-                is CharSequence, is Char, is Long -> {
+                is Long -> {
+                    if (isSafeIntegerForLong(actualValue)) {
+                        typedMap[key] = TypedJsonValue(typeName, actualValue)  // needed for downport compatibility
+                    } else {
+                        typedMap[key] = TypedJsonValue(typeName, actualValue.toString())
+                    }
+                }
+                is CharSequence, is Char -> {
                     // Convert CharSequence to String for reliable JSON serialization.
                     // Styling (SpannableString) will be lost.
                     typedMap[key] = TypedJsonValue(typeName, actualValue.toString())
@@ -146,7 +159,7 @@ object JsonUtils {
             val gson = Gson()
             val jsonString = gson.toJson(map)
             if(Log.isLoggable(LOG_ID, Log.VERBOSE))
-                Log.d(LOG_ID, "Created jsonString: ${jsonString.take(4000)}")
+                Log.v(LOG_ID, "Created jsonString: ${jsonString.take(4000)}")
             jsonString.toByteArray(Charsets.UTF_8)
         } catch (e: Exception) {
             Log.e(LOG_ID, "Error converting Bundle to JSON bytes: ${e.message}", e)
@@ -164,9 +177,8 @@ object JsonUtils {
                     Log.w(LOG_ID, "Expected a map for TypedJsonValue, but got ${rawValue?.javaClass?.name} for key '$key'")
                     continue
                 }
-                val valueMap = rawValue as Map<String, Any?>
-                val type = valueMap["type"] as? String
-                val value = valueMap["value"]
+                val type = rawValue["type"] as? String
+                val value = rawValue["value"]
 
                 when (type) {
                     "String" -> bundle.putString(key, value as? String)
@@ -410,6 +422,9 @@ object JsonUtils {
                         bundle.putCharSequence(key, value as? String)
                     }
                     else -> Log.w(LOG_ID, "Unknown type '$type' in typedMapToBundle for key '$key'")
+                }
+                if(!bundle.containsKey(key)) {
+                    Log.e(LOG_ID, "Key '$key' not found in bundle after conversion of value '$value'")
                 }
             } catch (e: ClassCastException) {
                 Log.e(LOG_ID, "Type casting error for key '$key' during typedMapToBundle: ${e.message}", e)

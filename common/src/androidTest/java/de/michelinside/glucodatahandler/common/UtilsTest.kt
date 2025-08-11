@@ -2,6 +2,7 @@ package de.michelinside.glucodatahandler.common
 
 import android.os.Bundle
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import de.michelinside.glucodatahandler.common.utils.JsonUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 
 import org.junit.Test
@@ -72,6 +73,8 @@ class UtilsTest {
         originalBundle.putShort("key_short", 12345.toShort())
         originalBundle.putInt("key_int", 1234567890)
         originalBundle.putLong("key_long", 1234567890123456789L)
+        originalBundle.putLong("key_long_max_int", JsonUtils.MAX_SAFE_INTEGER)
+        originalBundle.putLong("key_long_min_int", JsonUtils.MIN_SAFE_INTEGER)
         originalBundle.putFloat("key_float", 123.456f)
         originalBundle.putDouble("key_double", 12345.67890)
         originalBundle.putString("key_string", "Test: \n\t\"'\\@#\$%^&*()_+[]{};':,./<>?`~ éüöäàç€和平")
@@ -233,6 +236,16 @@ class UtilsTest {
             "Long value differs ($testType)",
             originalBundle.getLong("key_long"),
             restoredBundle.getLong("key_long")
+        )
+        assertEquals(
+            "Long max int value differs ($testType)",
+            originalBundle.getLong("key_long_max_int"),
+            restoredBundle.getLong("key_long_max_int")
+        )
+        assertEquals(
+            "Long min int value differs ($testType)",
+            originalBundle.getLong("key_long_min_int"),
+            restoredBundle.getLong("key_long_min_int")
         )
         assertEquals(
             "Float value differs ($testType)",
