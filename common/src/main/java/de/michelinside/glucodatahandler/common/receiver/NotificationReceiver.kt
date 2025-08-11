@@ -303,7 +303,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         if(!value.isNaN()) {
             handleGlucoseValue(value, sbn)
         } else if(parsedTextViews.size > 0) {
-            SourceStateData.setError(DataSource.NOTIFICATION, "Could not parse from $parsedTextViews")
+            SourceStateData.setError(DataSource.NOTIFICATION, "Could not parse glucose from $parsedTextViews")
         } else {
             SourceStateData.setError(DataSource.NOTIFICATION, "No text found for parsing!")
         }
