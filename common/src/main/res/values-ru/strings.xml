@@ -607,7 +607,7 @@
     <string name="rate_falling">%1$d градусов вниз</string>
 
     <string name="alarm_toggle_state">Сигналы тревоги: %1$s</string>
-    <string name="alarm_state_inactive">неактивен</string>
+    <string name="alarm_state_inactive">не отслеживать</string>
     <string name="alarm_state_snooze">отложено до %1$s</string>
     <string name="alarm_state_temp_disabled">временно отключено до %1$s</string>
 
