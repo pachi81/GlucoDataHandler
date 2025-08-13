@@ -823,11 +823,12 @@
     <string name="source_no_valid_value">Допустимое значение глюкозы не найдено!</string>
     <string name="source_invalid_patient">Неверные данные пациента!</string>
     <string name="pref_source_libre_patched_info_summary">Если вы используете исправленное приложение Libre или другие приложения, предоставляющие эту трансляцию.</string>
-    <string name="pref_sensor_runtime">Время ношения датчика</string>
-    <string name="pref_sensor_runtime_summary">Количество дней, в течение которых можно носить датчик.</string>
+    <string name="pref_sensor_runtime">Срок службы датчика</string>
+    <string name="pref_sensor_runtime_summary">Количество дней, которые должен отработать датчик.</string>
     <string name="runtime_10_days">10 дней</string>
     <string name="runtime_14_days">14 дней</string>
     <string name="runtime_15_days">15 дней</string>
+    <string name="runtime_24_days">24 дня</string>
     <string name="table_header_statistics">Статистика</string>
     <string name="info_label_average">Среднее</string>
     <string name="time_in_range">в норме</string>
