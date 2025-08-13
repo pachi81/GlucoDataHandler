@@ -823,6 +823,7 @@
     <string name="runtime_10_days">10 giorni</string>
     <string name="runtime_14_days">14 giorni</string>
     <string name="runtime_15_days">15 giorni</string>
+    <string name="runtime_24_days">24 giorni</string>
     <string name="table_header_statistics">Statistiche</string>
     <string name="info_label_average">Media</string>
     <string name="time_in_range">TIR</string>

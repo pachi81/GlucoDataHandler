@@ -835,6 +835,7 @@
     <string name="runtime_10_days">10 dagen</string>
     <string name="runtime_14_days">14 dagen</string>
     <string name="runtime_15_days">15 dagen</string>
+    <string name="runtime_24_days">24 dagen</string>
     <string name="table_header_statistics">Statistieken</string>
     <string name="info_label_average">Gemiddelde</string>
     <string name="time_in_range">TIR</string>

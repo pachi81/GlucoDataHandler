@@ -837,6 +837,7 @@
     <string name="runtime_10_days">10 dni</string>
     <string name="runtime_14_days">14 dni</string>
     <string name="runtime_15_days">15 dni</string>
+    <string name="runtime_24_days">24 dni</string>
     <string name="table_header_statistics">Statystyka z 7 dni</string>
     <string name="info_label_average">Średnia</string>
     <string name="time_in_range">Czas w zakresie</string>

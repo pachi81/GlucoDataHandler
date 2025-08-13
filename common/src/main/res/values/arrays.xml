@@ -162,11 +162,13 @@
         <item>@string/runtime_10_days</item>
         <item>@string/runtime_14_days</item>
         <item>@string/runtime_15_days</item>
+        <item>@string/runtime_24_days</item>
     </array>
     <array name="pref_sensor_runtime_values">
         <item>"0"</item>
         <item>"10"</item>
         <item>"14"</item>
         <item>"15"</item>
+        <item>"24"</item>
     </array>
 </resources>
