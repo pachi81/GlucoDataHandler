@@ -462,6 +462,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     Log.e(LOG_ID, "Exception in delay thread: " + exc.toString())
                 }
             }
+            startDelayThread!!.priority = Thread.MAX_PRIORITY
             startDelayThread!!.start()
         }
     }
@@ -542,6 +543,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 Log.e(LOG_ID, "Exception in sound thread: " + exc.toString())
             }
         }
+        checkSoundThread!!.priority = Thread.MAX_PRIORITY
         checkSoundThread!!.start()
     }
 
