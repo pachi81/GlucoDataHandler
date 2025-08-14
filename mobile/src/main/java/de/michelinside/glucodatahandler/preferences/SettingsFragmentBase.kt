@@ -9,9 +9,11 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.text.InputType
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
 import androidx.preference.MultiSelectListPreference
 import androidx.preference.Preference
@@ -258,9 +260,12 @@ class GeneralSettingsFragment: SettingsFragmentBase(R.xml.pref_general) {
     override fun initPreferences() {
         Log.v(LOG_ID, "initPreferences called")
         super.initPreferences()
-        val prefSensorRuntime = findPreference<ListPreference>(Constants.SHARED_PREF_SENSOR_RUNTIME)
+        val prefSensorRuntime = findPreference<EditTextPreference>(Constants.SHARED_PREF_SENSOR_RUNTIME)
         if(prefSensorRuntime != null) {
             prefSensorRuntime.isVisible = ReceiveData.sensorStartTime > 0
+            prefSensorRuntime.setOnBindEditTextListener {
+                it.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+            }
         }
         updateSummary()
     }

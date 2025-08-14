@@ -30,6 +30,7 @@ import java.io.OutputStream
 import java.math.RoundingMode
 import java.security.MessageDigest
 import java.text.DateFormat
+import java.time.Duration
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -590,6 +591,37 @@ object Utils {
             return alarmManager.canScheduleExactAlarms()
         }
         return true
+    }
+
+    fun formatDuration(duration: Duration): String {
+        return formatDurationFromSeconds(duration.toMillis()/1000)
+    }
+
+    fun formatDurationFromSeconds(totalSeconds: Long): String {
+        if (totalSeconds < 0) return "Invalid duration"
+
+        val days = TimeUnit.SECONDS.toDays(totalSeconds)
+        val remainingSecondsAfterDays = totalSeconds - TimeUnit.DAYS.toSeconds(days)
+
+        val hours = TimeUnit.SECONDS.toHours(remainingSecondsAfterDays)
+        val remainingSecondsAfterHours = remainingSecondsAfterDays - TimeUnit.HOURS.toSeconds(hours)
+
+        val minutes = TimeUnit.SECONDS.toMinutes(remainingSecondsAfterHours)
+        val seconds = remainingSecondsAfterHours - TimeUnit.MINUTES.toSeconds(minutes)
+
+
+        val parts = mutableListOf<String>()
+        if (days > 0) parts.add("$days day${if (days > 1) "s" else ""}")
+        if (hours > 0) parts.add("$hours hour${if (hours > 1) "s" else ""}")
+        if (minutes > 0) parts.add("$minutes minute${if (minutes > 1) "s" else ""}")
+        if (seconds > 0) parts.add("$seconds second${if (seconds > 1) "s" else ""}")
+
+
+        return if (parts.isEmpty()) {
+            "0 minutes"
+        } else {
+            parts.joinToString(", ")
+        }
     }
 
 }

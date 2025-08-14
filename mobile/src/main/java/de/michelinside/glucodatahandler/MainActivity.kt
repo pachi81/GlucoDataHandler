@@ -890,18 +890,19 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 val duration = Duration.ofMillis(System.currentTimeMillis() - ReceiveData.sensorStartTime)
                 val days = duration.toDays()
                 val hours = duration.minusDays(days).toHours()
-                val runtime = sharedPref.getString(Constants.SHARED_PREF_SENSOR_RUNTIME, "14")?.toInt() ?: 14
-                if(runtime > 0) {
-                    val max = runtime * 24  // hours
-                    val progress = min(duration.toHours().toInt(), max)
-                    val color = if(max - progress <= 1) {
+                val runtime = sharedPref.getString(Constants.SHARED_PREF_SENSOR_RUNTIME, "14")?.toFloatOrNull()
+                if(runtime != null && runtime > 0F) {
+                    val max = runtime * 24 * 60 // minutes
+                    Log.d(LOG_ID, "Sensor age: ${Utils.formatDuration(duration)} - runtime: ${Utils.formatDurationFromSeconds(max.toLong()*60)}")
+                    val progress = min(duration.toMinutes().toFloat(), max)
+                    val color = if(max - progress <= 60) {
                         ReceiveData.getAlarmTypeColor(AlarmType.VERY_LOW)
-                    } else if(max - progress <= 24) {
+                    } else if(max - progress <= (24*60)) {
                         ReceiveData.getAlarmTypeColor(AlarmType.LOW)
                     } else {
                         resources.getColor(CR.color.main)
                     }
-                    tableDetails.addView(createProgressBarRow(CR.string.sensor_age_label, progress.toFloat()*100 / max.toFloat(), color, resources.getString(CR.string.sensor_age_value).format(days, hours)/* + "\n-> " + resources.getString(CR.string.sensor_age_value).format(diffDays, diffHours)*/))
+                    tableDetails.addView(createProgressBarRow(CR.string.sensor_age_label, progress*100 / max, color, resources.getString(CR.string.sensor_age_value).format(days, hours)/* + "\n-> " + resources.getString(CR.string.sensor_age_value).format(diffDays, diffHours)*/))
                 } else
                     tableDetails.addView(createRow(CR.string.sensor_age_label, resources.getString(CR.string.sensor_age_value).format(days, hours)))
 
