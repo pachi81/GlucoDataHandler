@@ -607,7 +607,7 @@
     <string name="rate_falling">%1$d градусов вниз</string>
 
     <string name="alarm_toggle_state">Сигналы тревоги: %1$s</string>
-    <string name="alarm_state_inactive">неактивен</string>
+    <string name="alarm_state_inactive">не отслеживать</string>
     <string name="alarm_state_snooze">отложено до %1$s</string>
     <string name="alarm_state_temp_disabled">временно отключено до %1$s</string>
 
@@ -638,8 +638,8 @@
     <string name="gda_media_speak_toggle_title">Переключатель озвучивания нового значения</string>
     <string name="gda_speak_on">Озвучивание включено</string>
     <string name="gda_speak_off">Озвучивание выключено</string>
-    <string name="enable_alarm_icon_toggle">Включить значок тревоги</string>
-    <string name="enable_alarm_icon_toggle_summary">Включить значок тревоги на главном экране для переключения состояния тревоги.</string>
+    <string name="enable_alarm_icon_toggle">Отображать значок тревоги</string>
+    <string name="enable_alarm_icon_toggle_summary">Отображать значок тревоги на главном экране для переключения состояния тревоги.</string>
 
     <!-- v1.3  -->
 
@@ -767,7 +767,7 @@
     <string name="notification_reader_five_minute_interval">Интервал 5 минут</string>
     <string name="notification_reader_five_minute_interval_summary">Некоторые приложения, такие как Dexcom, обновляют свои уведомления довольно часто. Чтобы игнорировать эти обновления с тем же значением, включите интервал в 5 минут.\nЕсли включено, новое значение будет появляться только каждые 5 минут или если значение в уведомлении изменилось.</string>
     <string name="pref_source_notification_info_summary">Для получения значений из уведомлений других приложений требуется разрешение на доступ к уведомлениям!\nУведомление должно содержать значение глюкозы или IOB в виде строки.\nПоскольку каждое уведомление имеет разный макет, оно может работать не со всеми приложениями. В случае проблем, пожалуйста, свяжитесь со мной, приложив скриншот уведомления и логи.</string>
-    <string name="sensor_age_label">Возраст сенсора</string>
+    <string name="sensor_age_label">Отработал</string>
     <string name="sensor_age_value">%1$dд %2$dч</string>
     <string name="vibrate_pattern_shorty">Короткий</string>
 
@@ -823,12 +823,12 @@
     <string name="source_no_valid_value">Допустимое значение глюкозы не найдено!</string>
     <string name="source_invalid_patient">Неверные данные пациента!</string>
     <string name="pref_source_libre_patched_info_summary">Если вы используете исправленное приложение Libre или другие приложения, предоставляющие эту трансляцию.</string>
-    <string name="pref_sensor_runtime">Время ношения датчика</string>
-    <string name="pref_sensor_runtime_summary">Количество дней, в течение которых можно носить датчик.</string>
+    <string name="pref_sensor_runtime">Срок службы датчика</string>
+    <string name="pref_sensor_runtime_summary">Количество дней, которые должен отработать датчик.</string>
     <string name="runtime_10_days">10 дней</string>
     <string name="runtime_14_days">14 дней</string>
     <string name="runtime_15_days">15 дней</string>
-    <string name="runtime_24_days">24 дней</string>
+    <string name="runtime_24_days">24 дня</string>
     <string name="table_header_statistics">Статистика</string>
     <string name="info_label_average">Среднее</string>
     <string name="time_in_range">в норме</string>
