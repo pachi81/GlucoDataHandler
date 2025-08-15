@@ -32,6 +32,7 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.preferences.PreferenceHelper
 import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
 import de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
+import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import kotlin.collections.HashMap
 import kotlin.collections.List
@@ -277,6 +278,9 @@ class GeneralSettingsFragment: SettingsFragmentBase(R.xml.pref_general) {
                 Constants.SHARED_PREF_USE_MMOL -> updateSummary()
                 Constants.SHARED_PREF_SENSOR_RUNTIME -> {
                     InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SETTINGS, null)
+                }
+                Constants.SHARED_PREF_STANDARD_STATISTICS -> {
+                    GlucoseStatistics.reset()
                 }
             }
         } catch (exc: Exception) {

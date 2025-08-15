@@ -291,7 +291,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
                 averageLine = null
             }
             if(showAverage) {
-                GlucoseStatistics.update()
+                GlucoseStatistics.update(sharedPref.getBoolean(Constants.SHARED_PREF_STANDARD_STATISTICS, false))
                 if(!GlucoseStatistics.statData7d.averageGlucose.isNaN()) {
                     averageLine = createLimitLine(GlucoseStatistics.statData7d.averageGlucose, true, "⌀")
                     chart.axisRight.addLimitLine(averageLine)

@@ -1,8 +1,11 @@
 package de.michelinside.glucodatahandler.common.utils
 
+import android.content.Context
 import android.util.Log
+import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.database.dbAccess
+import de.michelinside.glucodatahandler.common.notification.AlarmType
 
 
 class StatisticsData(val days: Int) {
@@ -59,19 +62,26 @@ class StatisticsData(val days: Int) {
         return (veryHigh.toFloat() / count.toFloat()) * 100f
     }
 
-    fun update() {
+    fun update(standardStats: Boolean) {
         try {
+            /* standard statistics:
+                very high: > 250
+                high: 181 - 250
+                in range: 70 - 180
+                low: 54 - 69
+                very low: < 54
+            */
             val minTime = System.currentTimeMillis() - (days*24*60*60*1000)
             firstTime = dbAccess.getFirstTimestamp()
             Log.d(LOG_ID, "update statistics - firstTime: ${Utils.getUiTimeStamp(firstTime)}, days: $days, dataAgeHours: $dataAgeHours")
             if(dataAgeHours >= MIN_DATA_AGE_HOURS) {
                 averageGlucose = dbAccess.getAverageValue(minTime)
-                veryLow = dbAccess.getValuesInRangeCount(minTime, 0, ReceiveData.lowRaw.toInt())
-                low = dbAccess.getValuesInRangeCount(minTime, ReceiveData.lowRaw.toInt()+1, ReceiveData.targetMinRaw.toInt()-1)
-                inRange = dbAccess.getValuesInRangeCount(minTime, ReceiveData.targetMinRaw.toInt(), ReceiveData.targetMaxRaw.toInt())
-                high = dbAccess.getValuesInRangeCount(minTime, ReceiveData.targetMaxRaw.toInt()+1, ReceiveData.highRaw.toInt()-1)
-                veryHigh = dbAccess.getValuesInRangeCount(minTime, ReceiveData.highRaw.toInt(), Int.MAX_VALUE)
-                Log.i(LOG_ID, "statistics updated for $days days: average: $averageGlucose, count: $count, veryLow: $veryLow, low: $low, inRange: $inRange, high: $high, veryHigh: $veryHigh")
+                veryLow = dbAccess.getValuesInRangeCount(minTime, 0, if(standardStats) 53 else ReceiveData.lowRaw.toInt())
+                low = dbAccess.getValuesInRangeCount(minTime, if(standardStats) 54 else ReceiveData.lowRaw.toInt()+1, if(standardStats) 69 else ReceiveData.targetMinRaw.toInt()-1)
+                inRange = dbAccess.getValuesInRangeCount(minTime, if(standardStats) 70 else ReceiveData.targetMinRaw.toInt(), if(standardStats) 181 else ReceiveData.targetMaxRaw.toInt())
+                high = dbAccess.getValuesInRangeCount(minTime, if(standardStats) 181 else ReceiveData.targetMaxRaw.toInt()+1, if(standardStats) 250 else ReceiveData.highRaw.toInt()-1)
+                veryHigh = dbAccess.getValuesInRangeCount(minTime, if(standardStats) 251 else ReceiveData.highRaw.toInt(), Int.MAX_VALUE)
+                Log.i(LOG_ID, "statistics (standard: $standardStats) updated for $days days: average: $averageGlucose, count: $count, veryLow: $veryLow, low: $low, inRange: $inRange, high: $high, veryHigh: $veryHigh")
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: $exc")
@@ -92,14 +102,14 @@ object GlucoseStatistics {
         statData7d.reset()
     }
 
-    fun update() {
+    fun update(standardStats: Boolean) {
         try {
             if(Utils.getElapsedTimeMinute(lastUpdate) >= 30 || statData1d.needUpdate || statData7d.needUpdate) {
                 Log.d(LOG_ID, "update statistics - lastUpdate: ${Utils.getUiTimeStamp(lastUpdate)}, needUpdate: ${statData1d.needUpdate || statData7d.needUpdate}")
                 // recalculate statistics data
                 lastUpdate = System.currentTimeMillis()
-                statData1d.update()
-                statData7d.update()
+                statData1d.update(standardStats)
+                statData7d.update(standardStats)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "update exception: $exc")
@@ -109,4 +119,36 @@ object GlucoseStatistics {
     val hasStatistics: Boolean get() {
         return statData1d.hasData || statData7d.hasData
     }
+
+    fun getStatisticsTitle(context: Context, statType: AlarmType, standardStats: Boolean): String {
+        when(statType) {
+            AlarmType.VERY_LOW -> {
+                if(standardStats)
+                    return if(ReceiveData.isMmol) "< 3.0" else "< 54"
+                return context.getString(R.string.very_low)
+            }
+            AlarmType.LOW -> {
+                if(standardStats)
+                    return if(ReceiveData.isMmol) "3.0 - 3.8" else "54 - 69"
+                return context.getString(R.string.low)
+            }
+            AlarmType.OK -> {
+                if(standardStats)
+                    return if(ReceiveData.isMmol) "3.9 - 10.0" else "70 - 180"
+                return context.getString(R.string.time_in_range)
+            }
+            AlarmType.HIGH -> {
+                if(standardStats)
+                    return if(ReceiveData.isMmol) "10.1 - 13.9" else "181 - 250"
+                return context.getString(R.string.high)
+            }
+            AlarmType.VERY_HIGH -> {
+                if(standardStats)
+                    return if(ReceiveData.isMmol) "> 13.9" else "> 250"
+                return context.getString(R.string.very_high)
+            }
+            else -> return ""
+        }
+    }
+
 }

@@ -853,4 +853,7 @@
     <string name="pref_source_medtrum_info_summary">Aby otrzymywać dane jako opiekun Medtrum:\n- Zarejestruj konto w aplikacji EasyFollower lub na EasyView\n-&gt; WAŻNE: nie można używać swojego konta Medtrum!\n- Zaproś siebie\n- Zaakceptuj zaproszenie\n- Użyj tego konta dla GlucoDataHandler\n- Opcjonalnie: Odinstaluj aplikację EasyFollower</string>
     <string name="pref_battery_complication_percent">Pokaż % w komplikacji baterii</string>
     <string name="source_help_summary">Naciśnij tutaj, aby przejść do wiki GDH, gdzie znajdziesz listę obsługiwanych sensorów i kompatybilnych źródeł.</string>
+
+    <string name="pref_switch_standard_statistics">Use standard statistics</string>
+    <string name="pref_switch_standard_statistics_summary">Using standard statistic range values or use the custom target range settings of GDH for statistic calculation.</string>
 </resources>
