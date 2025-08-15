@@ -103,34 +103,54 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             }
 
             findViewById<Button>(R.id.btnSettings)?.setOnClickListener {
-                Log.v(LOG_ID, "Settings button clicked!")
-                val intent = Intent(this, SettingsActivity::class.java)
-                startActivity(intent)
+                try {
+                    Log.v(LOG_ID, "Settings button clicked!")
+                    val intent = Intent(this, SettingsActivity::class.java)
+                    startActivity(intent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Settings button exception: " + exc.message.toString() )
+                }
             }
 
             findViewById<Button>(R.id.btnSources)?.setOnClickListener {
-                Log.v(LOG_ID, "Sources button clicked!")
-                val intent = Intent(this, SourcesActivity::class.java)
-                startActivity(intent)
+                try {
+                    Log.v(LOG_ID, "Sources button clicked!")
+                    val intent = Intent(this, SourcesActivity::class.java)
+                    startActivity(intent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Sources button exception: " + exc.message.toString() )
+                }
             }
 
 
             findViewById<Button>(R.id.btnAlarms)?.setOnClickListener {
-                Log.v(LOG_ID, "Alarm button clicked!")
-                val intent = Intent(this, AlarmsActivity::class.java)
-                startActivity(intent)
+                try {
+                    Log.v(LOG_ID, "Alarm button clicked!")
+                    val intent = Intent(this, AlarmsActivity::class.java)
+                    startActivity(intent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Alarm button exception: " + exc.message.toString() )
+                }
             }
             chartBitmap = ChartBitmapHandlerView(chartImage, this)
             chartImage.setOnClickListener {
-                Log.v(LOG_ID, "Chart Image clicked!")
-                val intent = Intent(this, GraphActivity::class.java)
-                startActivity(intent)
+                try {
+                    Log.v(LOG_ID, "Chart Image clicked!")
+                    val intent = Intent(this, GraphActivity::class.java)
+                    startActivity(intent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Chart Image exception: " + exc.message.toString() )
+                }
             }
 
             findViewById<Button>(R.id.btnWatchfaces)?.setOnClickListener {
-                Log.v(LOG_ID, "Watchface button clicked!")
-                val intent = Intent(this, WatchfacesActivity::class.java)
-                startActivity(intent)
+                try {
+                    Log.v(LOG_ID, "Watchface button clicked!")
+                    val intent = Intent(this, WatchfacesActivity::class.java)
+                    startActivity(intent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Watchface button exception: " + exc.message.toString() )
+                }
             }
 
             if(requestPermission())
@@ -240,7 +260,10 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             deltaText.text = "Δ ${ReceiveData.getDeltaAsString()}"
             iobText.text = "💉 ${ReceiveData.getIobAsString()}"
             iobText.contentDescription = getString(CR.string.info_label_iob) + " " + ReceiveData.getIobAsString()
-            cobText.text = "🍔 ${ReceiveData.getCobAsString()}"
+            if(ReceiveData.cob.isNaN())
+                cobText.text = ""
+            else
+                cobText.text = "🍔 ${ReceiveData.getCobAsString()}"
             iobText.contentDescription = getString(CR.string.info_label_cob) + " " + ReceiveData.getCobAsString()
             iobText.visibility = if (ReceiveData.isIobCobObsolete()) View.GONE else View.VISIBLE
             cobText.visibility = iobText.visibility
@@ -253,7 +276,6 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
             updateDeltaTable()
             updateDetailsTable()
             updateAlarmIcon()
-
         } catch( exc: Exception ) {
             Log.e(LOG_ID, exc.message + "\n" + exc.stackTraceToString())
         }
@@ -338,7 +360,6 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
         update()
     }
 
-
     private fun updateNotesTable() {
         tableNotes.removeViews(1, maxOf(0, tableNotes.childCount - 1))
         if (!Channels.notificationChannelActive(this.applicationContext, ChannelType.WEAR_FOREGROUND)) {
@@ -412,10 +433,20 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
                 val states = WearPhoneConnection.getNodeConnectionStates(this.applicationContext)
                 if(states.size == 1 ) {
                     val state = states.values.first()
-                    tableConnections.addView(createRow(CR.string.source_phone, state, onCheckClickListener))
+                    if(state > 0)
+                        tableConnections.addView(createRow(CR.string.source_phone, "$state%", onCheckClickListener))
+                    else if(state == 0)
+                        tableConnections.addView(createRow(CR.string.source_phone, resources.getString(CR.string.state_connected), onCheckClickListener))
+                    else if(state == -1)
+                        tableConnections.addView(createRow(CR.string.source_phone, resources.getString(CR.string.state_await_data), onCheckClickListener))
                 } else {
                     states.forEach { (name, state) ->
-                        tableConnections.addView(createRow(name, state, onCheckClickListener))
+                        if(state > 0)
+                            tableConnections.addView(createRow(name, "$state%", onCheckClickListener))
+                        else if(state == 0)
+                            tableConnections.addView(createRow(name, resources.getString(CR.string.state_connected), onCheckClickListener))
+                        else if(state == -1)
+                            tableConnections.addView(createRow(name, resources.getString(CR.string.state_await_data), onCheckClickListener))
                     }
                 }
             }

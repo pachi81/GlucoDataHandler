@@ -54,6 +54,8 @@
         <item>@string/alarm_force_sound</item>
         <item>@string/alarm_force_vibration</item>
         <item>@string/alarm_vibrate_only</item>
+        <item>@string/pref_cat_locksreen_wallpaper</item>
+        <item>@string/pref_cat_aod</item>
         <item>@string/pref_send_battery_level_to_watch</item>
         <item>@string/pref_phone_wear_screen_off_update</item>
         <item>@string/pref_wear_notification</item>
@@ -76,6 +78,8 @@
         <item>"alarm_force_sound"</item>
         <item>"alarm_force_vibration"</item>
         <item>"alarm_vibrate_only"</item>
+        <item>"lockscreen_enabled"</item>
+        <item>"aod_enabled"</item>
         <item>"battery_receiver_enabled"</item>
         <item>"phone_wear_screen_off_update"</item>
         <item>"wear_notification"</item>
@@ -85,12 +89,14 @@
     </array>
     <array name="source_request_interval_labels">
         <item>@string/source_request_interval_1</item>
+        <item>@string/source_request_interval_2</item>
         <item>@string/source_request_interval_5</item>
         <item>@string/source_request_interval_10</item>
         <item>@string/source_request_interval_15</item>
     </array>
     <array name="source_request_interval_values">
         <item>"1"</item>
+        <item>"2"</item>
         <item>"5"</item>
         <item>"10"</item>
         <item>"15"</item>
@@ -121,6 +127,16 @@
         <item>"io"</item>
         <item>"ru"</item>
     </array>
+    <array name="source_dexcom_server_labels">
+        <item>@string/source_dexcom_server_eu</item>
+        <item>@string/source_dexcom_server_us</item>
+        <item>@string/source_dexcom_server_jp</item>
+    </array>
+    <array name="source_dexcom_server_values">
+        <item>"eu"</item>
+        <item>"us"</item>
+        <item>"jp"</item>
+    </array>
     <array name="snooze_values">
         <item>"30"</item>
         <item>"60"</item>
@@ -132,5 +148,27 @@
         <item>@string/snooze_60</item>
         <item>@string/snooze_90</item>
         <item>@string/snooze_120</item>
+    </array>
+    <array name="source_medtrum_server_labels">
+        <item>@string/source_medtrum_server_default</item>
+        <item>@string/source_medtrum_server_france</item>
+    </array>
+    <array name="source_medtrum_server_values">
+        <item>"eu"</item>
+        <item>"fr"</item>
+    </array>
+    <array name="pref_sensor_runtime_labels">
+        <item>@string/alarm_state_inactive</item>
+        <item>@string/runtime_10_days</item>
+        <item>@string/runtime_14_days</item>
+        <item>@string/runtime_15_days</item>
+        <item>@string/runtime_24_days</item>
+    </array>
+    <array name="pref_sensor_runtime_values">
+        <item>"0"</item>
+        <item>"10"</item>
+        <item>"14"</item>
+        <item>"15"</item>
+        <item>"24"</item>
     </array>
 </resources>

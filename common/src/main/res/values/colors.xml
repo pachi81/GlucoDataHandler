@@ -22,4 +22,5 @@
     <color name="chart_label_color">@color/black</color>
     <color name="chart_limit_line_color">#FF444444</color>
     <color name="transparent_layout_background">#88EEEEEE</color>
+    <color name="main">#0099FF</color>
 </resources>

@@ -35,7 +35,7 @@ class WriteSettingRunner : TaskerPluginRunnerActionNoOutput<TaskerWriteSettingDa
                             val wear_setting = key.substringAfter("wear_", "dummy")
                             val extras = Bundle()
                             extras.putBoolean(wear_setting, value == "true")
-                            GlucoDataService.service?.sendToConnectedDevices(NotifySource.SETTINGS, extras)
+                            GlucoDataService.service?.sendToConnectedDevices(NotifySource.TASKER_SETTINGS, extras)
                         } else {
                             with(sharedPref.edit()) {
                                 putBoolean(key, value == "true")

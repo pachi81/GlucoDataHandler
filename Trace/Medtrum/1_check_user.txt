@@ -1,0 +1,27 @@
+METHOD: GET
+URL
+https://easyview.medtrum.eu/api/v2.0/user/[user]
+HEADERS
+Accept-Encoding:
+gzip
+AppTag:
+v=1.2.70(112);n=eyfo;p=android
+Connection:
+Keep-Alive
+DevInfo:
+Android 11;Google generic_x86_arm;Android 11
+Host:
+easyview.medtrum.eu
+RegionCode:
+DE
+User-Agent:
+okhttp/3.5.0
+
+
+---------------------------- RESPONSE -----------------------------------------------------
+
+{
+  "error": 0,
+  "exist": true,
+  "user_type": "M"
+}

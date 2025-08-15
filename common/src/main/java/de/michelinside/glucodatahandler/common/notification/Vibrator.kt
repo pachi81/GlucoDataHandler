@@ -63,12 +63,12 @@ object Vibrator {
         Log.d(LOG_ID, "Vibrate for $duration ms - useAlarm: $useAlarm")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val attributes = VibrationAttributes.Builder()
-                .setUsage(if(useAlarm)VibrationAttributes.USAGE_ALARM else VibrationAttributes.USAGE_NOTIFICATION)
+                .setUsage(VibrationAttributes.USAGE_ALARM)
                 .build()
             vibratorManager?.vibrate(CombinedVibration.createParallel(getEffect(pattern, repeat, amplitude)),attributes)
         } else {
             val aa = AudioAttributes.Builder()
-                .setUsage(if (useAlarm) AudioAttributes.USAGE_ALARM else AudioAttributes.USAGE_VOICE_COMMUNICATION_SIGNALLING)
+                .setUsage(AudioAttributes.USAGE_ALARM)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                 .build()
             vibrator?.vibrate(getEffect(pattern, repeat, amplitude), aa)

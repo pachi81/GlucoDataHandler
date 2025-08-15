@@ -14,8 +14,11 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.ncorti.slidetoact.SlideToActView
 import de.michelinside.glucodatahandler.R
 import de.michelinside.glucodatahandler.common.Constants
@@ -80,7 +83,18 @@ class LockscreenActivity : AppCompatActivity(), NotifierInterface {
             activity = this
             showWhenLockedAndTurnScreenOn()
             super.onCreate(savedInstanceState)
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P)
+                enableEdgeToEdge()
             setContentView(R.layout.activity_lockscreen)
+
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+                ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_layout)) { v, insets ->
+                    val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                    Log.d(LOG_ID, "Insets: " + systemBars.toString())
+                    v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+                    insets
+                }
+            }
             hideSystemUI()
 
             if(this.intent.extras?.containsKey(Constants.ALARM_TYPE_EXTRA) == true) {

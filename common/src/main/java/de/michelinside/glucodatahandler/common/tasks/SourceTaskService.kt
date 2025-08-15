@@ -11,7 +11,7 @@ object SourceTaskService: BackgroundTaskService(43, "GDH.Task.Source.TaskService
     override fun getAlarmReceiver() : Class<*> = SourceAlarmReceiver::class.java
 
     override fun getBackgroundTasks(): MutableList<BackgroundTask> =
-        mutableListOf(LibreLinkSourceTask(), DexcomShareSourceTask(), NightscoutSourceTask())  // Obsolete should always the last one!
+        mutableListOf(LibreLinkSourceTask(), DexcomShareSourceTask(), MedtrumSourceTask(), NightscoutSourceTask())  // Obsolete should always the last one!
     override fun hasIobCobSupport() = true
 }
 

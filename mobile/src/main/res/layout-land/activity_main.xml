@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:baselineAligned="false">
 
     <RelativeLayout
+        android:id="@+id/borderLeft"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -22,6 +24,8 @@
                 android:gravity="center|top">
 
                 <LinearLayout
+                    android:id="@+id/glucose_with_graph"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_weight="2"
                     android:layout_height="0dp"
@@ -133,6 +137,124 @@
                             android:autoSizeTextType="uniform"
                             tools:ignore="HardcodedText" />
                     </LinearLayout>
+                    <ImageView
+                        android:id="@+id/expandCollapseView"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:scaleType="fitStart"
+                        android:paddingVertical="2dp"
+                        android:src="@drawable/icon_expand"
+                        tools:ignore="ContentDescription" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/glucose_without_graph"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:context=".MainActivity"
+                    android:orientation="vertical"
+                    android:gravity="center|top">
+
+                    <LinearLayout
+                        android:id="@+id/layout_glucose_trend2"
+                        android:layout_width="250dp"
+                        android:layout_height="80dp"
+                        android:layout_marginTop="20dp"
+                        android:gravity="center|top"
+                        android:orientation="horizontal"
+                        tools:ignore="UselessParent">
+
+                        <TextView
+                            android:id="@+id/txtBgValue2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="4"
+                            android:autoSizeStepGranularity="1sp"
+                            android:autoSizeTextType="uniform"
+                            android:maxLines="1"
+                            android:text="---"
+                            android:textAlignment="viewEnd"
+                            android:textColor="#757575"
+                            android:textStyle="bold"
+                            android:shadowColor="@color/black"
+                            android:shadowRadius="5"
+                            tools:ignore="HardcodedText" />
+
+                        <ImageView
+                            android:id="@+id/viewIcon2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:paddingVertical="2dp"
+                            android:src="@drawable/icon_question"
+                            tools:ignore="ContentDescription" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/layout_delta_time2"
+                        android:layout_width="250dp"
+                        android:layout_height="30dp"
+                        android:gravity="center|top"
+                        android:orientation="horizontal"
+                        tools:ignore="UselessParent">
+
+                        <TextView
+                            android:id="@+id/timeText2"
+                            android:text="🕒 0 min"
+                            android:layout_width="0dp"
+                            android:layout_weight="4"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|end"
+                            android:maxLines="1"
+                            android:autoSizeStepGranularity="1sp"
+                            android:autoSizeTextType="uniform"
+                            android:paddingEnd="10dp"
+                            tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
+                        <TextView
+                            android:id="@+id/deltaText2"
+                            android:text="Δ +0.06"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:autoSizeStepGranularity="1sp"
+                            android:autoSizeTextType="uniform"
+                            tools:ignore="HardcodedText" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/layout_iob_cob2"
+                        android:layout_width="250dp"
+                        android:layout_height="30dp"
+                        android:gravity="center|top"
+                        android:orientation="horizontal"
+                        tools:ignore="UselessParent">
+                        <TextView
+                            android:id="@+id/iobText2"
+                            android:text="💉 1.30U"
+                            android:layout_width="0dp"
+                            android:layout_weight="4"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|end"
+                            android:maxLines="1"
+                            android:autoSizeStepGranularity="1sp"
+                            android:autoSizeTextType="uniform"
+                            android:paddingEnd="10dp"
+                            tools:ignore="HardcodedText,NestedWeights,RtlSymmetry" />
+
+                        <TextView
+                            android:id="@+id/cobText2"
+                            android:text="🍔 31.2g"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:autoSizeStepGranularity="1sp"
+                            android:autoSizeTextType="uniform"
+                            tools:ignore="HardcodedText" />
+                    </LinearLayout>
                 </LinearLayout>
                 <de.michelinside.glucodatahandler.common.chart.GlucoseChart
                     android:id="@+id/chart"
@@ -146,6 +268,7 @@
             </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/borderMiddle"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -153,6 +276,7 @@
 
 
         <ScrollView
+            android:id="@+id/infoView"
             android:layout_weight="15"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -165,24 +289,44 @@
                 tools:context=".MainActivity"
                 android:orientation="vertical"
                 android:gravity="center|top">
-                <TextView
-                    android:id="@+id/txtLastValue"
-                    android:layout_width="350dp"
+
+                <LinearLayout
+                    android:id="@+id/layout_no_data"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:text="@string/no_data"
-                    android:textAlignment="center"
-                    android:textSize="20sp" />
-                <Button
-                    android:id="@+id/btnSources"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#005CCC"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/menu_sources"
-                    />
+                    tools:context=".MainActivity"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <TextView
+                        android:id="@+id/txtLastValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/no_data"
+                        android:textAlignment="center"
+                        android:textSize="20sp" />
+                    <Button
+                        android:id="@+id/btnSources"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="#005CCC"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/menu_sources"
+                        />
+                    <Button
+                        android:id="@+id/btnHelp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="#005CCC"
+                        android:text="@string/menu_help" />
+                    <TextView
+                        android:id="@+id/txtHelp"
+                        android:layout_width="350dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/source_help_summary"
+                        android:textAlignment="center"
+                        android:textSize="15sp" />
+                </LinearLayout>
 
                 <TableLayout
                     android:id="@+id/tableNotes"
@@ -243,6 +387,52 @@
                             android:layout_width="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/info_label_delta"/>
+                    </TableRow>
+                </TableLayout>
+
+                <TableLayout
+                    android:id="@+id/tableStatistics"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/layout_bg"
+                    android:divider="?android:attr/dividerHorizontal"
+                    android:showDividers="middle">
+
+                    <TableRow android:background="@drawable/layout_table_header" android:padding="5dp"
+                        tools:ignore="UselessParent">
+                        <TextView
+                            android:textStyle="bold"
+                            android:textSize="20sp"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/table_header_statistics"/>
+                        <RadioGroup
+                            android:id="@+id/statGroup"
+                            android:textStyle="bold"
+                            android:textSize="20sp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent"
+                            android:layout_width="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical|end">
+                            <RadioButton
+                                android:id="@+id/btnStat1d"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:paddingEnd="5dp"
+                                android:text="1d"
+                                tools:ignore="HardcodedText,RtlSymmetry"/>
+                            <RadioButton
+                                android:id="@+id/btnStat7d"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:checked="true"
+                                android:paddingEnd="5dp"
+                                android:text="7d"
+                                tools:ignore="HardcodedText,RtlSymmetry"/>
+                        </RadioGroup>
                     </TableRow>
                 </TableLayout>
 
@@ -311,6 +501,7 @@
         </ScrollView>
 
     <RelativeLayout
+        android:id="@+id/borderRight"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="match_parent"

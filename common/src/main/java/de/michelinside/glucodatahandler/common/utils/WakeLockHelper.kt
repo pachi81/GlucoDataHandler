@@ -18,7 +18,7 @@ class WakeLockHelper(val context: Context) : Closeable {
     init {
         try {
             synchronized(lock) {
-                Log.v(LOG_ID, "init called - count: $wackLockCount")
+                Log.d(LOG_ID, "init called - count: $wackLockCount")
                 wackLockCount++
                 if(wackLockCount == 1 && wakeLock == null) {
                     wakeLock =
@@ -27,7 +27,7 @@ class WakeLockHelper(val context: Context) : Closeable {
                             acquire(WAKE_LOCK_TIMEOUT)
                         }
                     }
-                    Log.d(LOG_ID, "wakelock acquired: " + active())
+                    Log.i(LOG_ID, "wakelock acquired: " + active())
                 }
             }
         } catch (exc: Exception) {
@@ -44,10 +44,10 @@ class WakeLockHelper(val context: Context) : Closeable {
 
     private fun release() {
         synchronized(lock) {
-            Log.v(LOG_ID, "release called - active: " + active() + " count: $wackLockCount")
+            Log.d(LOG_ID, "release called - active: " + active() + " count: $wackLockCount")
             wackLockCount--
             if(wackLockCount == 0 && active()) {
-                Log.d(LOG_ID, "wakelock release")
+                Log.i(LOG_ID, "wakelock release")
                 wakeLock?.release()
                 wakeLock = null
             }
