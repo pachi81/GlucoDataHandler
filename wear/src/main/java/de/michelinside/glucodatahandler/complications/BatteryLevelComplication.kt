@@ -66,6 +66,13 @@ open class BatteryLevelComplicationBase(val type: BatteryLevelType): SuspendingC
         }
     }
 
+    protected fun getUnit(): String {
+        val sharedPref = applicationContext.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        if(sharedPref.getBoolean(Constants.SHARED_PREF_SHOW_BATTERY_PERCENT, true))
+            return "%"
+        return ""
+    }
+
     open fun getRangeValue(): Float {
         return Float.NaN
     }
@@ -108,14 +115,14 @@ open class BatteryLevelComplicationBase(val type: BatteryLevelType): SuspendingC
     }
 
     open fun getText(): PlainComplicationText =
-        plainText("⌚" + BatteryReceiver.batteryPercentage.toString() + "%")
+        plainText("⌚" + BatteryReceiver.batteryPercentage.toString() + getUnit())
     open fun getIcon(): MonochromaticImage? = null
     open fun getTitle(): PlainComplicationText? = null
 
     fun getPhoneBatteryDescr(force: Boolean): String {
         val level = getPhoneLevel()
         if (level != null) {
-            return resources.getString(CR.string.source_phone) + " " + level.toString() + "%"
+            return resources.getString(CR.string.source_phone) + " " + level.toString() + getUnit()
         } else if (force) {
             return resources.getString(CR.string.source_phone) + " " + resources.getString(CR.string.not_available)
         }
@@ -124,7 +131,7 @@ open class BatteryLevelComplicationBase(val type: BatteryLevelType): SuspendingC
 
     fun getWatchBatteryDescr(): String {
         if(BatteryReceiver.batteryPercentage > 0)
-            return resources.getString(CR.string.source_wear) + " " + BatteryReceiver.batteryPercentage.toString() + "%"
+            return resources.getString(CR.string.source_wear) + " " + BatteryReceiver.batteryPercentage.toString() + getUnit()
         return resources.getString(CR.string.source_wear) + " " + resources.getString(CR.string.not_available)
     }
 
@@ -164,7 +171,7 @@ class BatteryLevelComplication: BatteryLevelComplicationBase(BatteryLevelType.PH
     override fun getTitle(): PlainComplicationText? {
         val level = getPhoneLevel()
         if (level != null) {
-            return plainText("\uD83D\uDCF1" + level.toString() + "%")
+            return plainText("\uD83D\uDCF1" + level.toString() + getUnit())
         }
         return null
     }
@@ -175,8 +182,8 @@ class WatchBatteryLevelComplication: BatteryLevelComplicationBase(BatteryLevelTy
 
     override fun getText(): PlainComplicationText {
         if(BatteryReceiver.batteryPercentage > 0)
-            return plainText(BatteryReceiver.batteryPercentage.toString() + "%")
-        return plainText("--%")
+            return plainText(BatteryReceiver.batteryPercentage.toString() + getUnit())
+        return plainText("--${getUnit()}")
     }
 
     override fun getIcon(): MonochromaticImage =
@@ -189,9 +196,9 @@ class PhoneBatteryLevelComplication: BatteryLevelComplicationBase(BatteryLevelTy
     override fun getText(): PlainComplicationText {
         val level = getPhoneLevel()
         if (level != null) {
-            return plainText(level.toString() + "%")
+            return plainText(level.toString() + getUnit())
         }
-        return plainText("--%")
+        return plainText("---${getUnit()}")
     }
 
     override fun getRangeValue(): Float {
@@ -207,9 +214,6 @@ class PhoneBatteryLevelComplication: BatteryLevelComplicationBase(BatteryLevelTy
             image = Icon.createWithResource(this, R.drawable.icon_phone)
         ).build()
 }
-
-
-
 
 object BatteryLevelComplicationUpdater: NotifierInterface {
     private var complicationClasses = mutableListOf(BatteryLevelComplication::class.java, WatchBatteryLevelComplication::class.java, PhoneBatteryLevelComplication::class.java)

@@ -85,7 +85,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
             )
     }
 
-    private fun updateSettings(sharedPref: SharedPreferences) {
+    private fun updateSettings(context: Context, sharedPref: SharedPreferences) {
         val cur_enabled = enable_notification
         enable_notification = sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION, enable_notification)
         val alarmOnly = sharedPref.getBoolean(Constants.SHARED_PREF_CAR_NOTIFICATION_ALARM_ONLY, true)
@@ -99,12 +99,12 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                 ElapsedTimeTask.setInterval(notification_reappear_interval)
             if (cur_enabled != enable_notification) {
                 if (enable_notification) {
-                    showNotification(GlucoDataService.context!!, NotifySource.BROADCAST)
+                    showNotification(context, NotifySource.BROADCAST)
                 } else
                     removeNotification()
             } else if (reappear_active != (notification_reappear_interval > 0) && InternalNotifier.hasNotifier(this) ) {
                 Log.d(LOG_ID, "Update internal notification filter for reappear interval: " + notification_reappear_interval)
-                InternalNotifier.addNotifier(GlucoDataService.context!!, this, getFilter())
+                InternalNotifier.addNotifier(context, this, getFilter())
             }
         }
     }
@@ -116,7 +116,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                 val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                 migrateSettings(sharedPref)
                 sharedPref.registerOnSharedPreferenceChangeListener(this)
-                updateSettings(sharedPref)
+                updateSettings(context, sharedPref)
                 loadExtras(context)
                 createNofitication(context)
                 init = true
@@ -168,7 +168,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
         Log.d(LOG_ID, "enable called")
         initNotification(context)
         forceNextNotify = false
-        InternalNotifier.addNotifier(GlucoDataService.context!!, this, getFilter())
+        InternalNotifier.addNotifier(context, this, getFilter())
         showNotification(context, NotifySource.BROADCAST)
         if (enable_notification)
             ElapsedTimeTask.setInterval(notification_reappear_interval)
@@ -353,7 +353,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
             .build()
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         try {
             Log.v(LOG_ID, "onSharedPreferenceChanged called for key " + key)
             when(key) {
@@ -362,7 +362,7 @@ object CarNotification: NotifierInterface, SharedPreferences.OnSharedPreferenceC
                 Constants.SHARED_PREF_CAR_NOTIFICATION_INTERVAL_NUM,
                 Constants.SHARED_PREF_CAR_NOTIFICATION_REAPPEAR_INTERVAL,
                 Constants.SHARED_PREF_CAR_NOTIFICATION_SHOW_IOB_COB -> {
-                    updateSettings(sharedPreferences!!)
+                    updateSettings(GlucoDataService.context!!, sharedPreferences)
                 }
             }
         } catch (exc: Exception) {

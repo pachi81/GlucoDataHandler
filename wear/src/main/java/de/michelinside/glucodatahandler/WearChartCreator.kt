@@ -12,6 +12,7 @@ class WearChartCreator(chart: GlucoseChart, context: Context, durationPref: Stri
     override val yAxisOffset = -100F
     override var durationHours = 2
     override var graphDays = Constants.DB_MAX_DATA_WEAR_DAYS
+    override val showAverage = false
 
     override fun initXaxis() {
         Log.v(LOG_ID, "initXaxis")

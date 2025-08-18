@@ -239,7 +239,7 @@ object AlarmNotification : AlarmNotificationBase() {
     }
 
     override fun getNotifierFilter(): MutableSet<NotifySource> {
-        return mutableSetOf(NotifySource.CAR_CONNECTION, NotifySource.CAPILITY_INFO)
+        return mutableSetOf(NotifySource.CAR_CONNECTION, NotifySource.NODE_CONNECTED)
     }
 
     override fun executeTest(alarmType: AlarmType, context: Context, fromIntern: Boolean) {
@@ -251,7 +251,7 @@ object AlarmNotification : AlarmNotificationBase() {
         try {
             when(dataSource) {
                 NotifySource.CAR_CONNECTION,
-                NotifySource.CAPILITY_INFO -> {
+                NotifySource.NODE_CONNECTED -> {
                     if(WearPhoneConnection.nodesConnected) {
                         // update AA state on wear to prevent alarms, if they should not been executed while AA connected
                         Log.i(LOG_ID, "Car connection has changed: ${CarModeReceiver.AA_connected}")

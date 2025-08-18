@@ -115,5 +115,11 @@
                     android:summary="@string/pref_notification_big_icon_summary"
                     android:title="@string/pref_notification_big_icon"
                     app:iconSpaceReserved="false" />
+                <androidx.preference.SwitchPreferenceCompat
+                    android:defaultValue="false"
+                    android:key="notification_recreate"
+                    android:summary="@string/pref_notification_recreate_summary"
+                    android:title="@string/pref_notification_recreate"
+                    app:iconSpaceReserved="false" />
         </PreferenceCategory>
 </PreferenceScreen>

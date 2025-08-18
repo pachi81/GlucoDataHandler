@@ -17,6 +17,7 @@ import de.michelinside.glucodatahandler.common.notification.ChannelType
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
+import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.utils.Utils.isScreenReaderOn
@@ -35,7 +36,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
     private var lastForwardTime = 0L
 
     init {
-        Log.d(LOG_ID, "init called")
+        Log.i(LOG_ID, "init called")
     }
 
     companion object {
@@ -193,6 +194,34 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                     }
                 }
 
+                // Juggluco webserver settings
+                if(!sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_ENABLED) || !sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_IOB_SUPPORT)) {
+                    // check current source for Juggluco and if Nightscout is enabled for local requests supporting IOB
+                    var webServer = false
+                    if(sharedPrefs.getBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED, true)
+                        && sharedPrefs.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, false)
+                        && sharedPrefs.getBoolean(Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB, false)
+                        && sharedPrefs.getString(Constants.SHARED_PREF_NIGHTSCOUT_TOKEN, "").isNullOrEmpty()
+                        && sharedPrefs.getString(Constants.SHARED_PREF_NIGHTSCOUT_SECRET, "").isNullOrEmpty()
+                        && sharedPrefs.getString(Constants.SHARED_PREF_NIGHTSCOUT_URL, "")!!.trim().trimEnd('/') == GlucoseDataReceiver.JUGGLUCO_WEBSERVER
+                        ) {
+                        val sharedGlucosePref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, Context.MODE_PRIVATE)
+                        if(DataSource.fromIndex(sharedGlucosePref.getInt(Constants.EXTRA_SOURCE_INDEX, DataSource.NONE.ordinal)) == DataSource.JUGGLUCO) {
+                            webServer = true
+                        }
+                    }
+                    Log.i(LOG_ID, "Using Juggluco webserver: $webServer")
+                    with(sharedPrefs.edit()) {
+                        putBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_ENABLED, webServer)
+                        putBoolean(Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_IOB_SUPPORT, webServer)
+                        if(webServer) {
+                            putBoolean(Constants.SHARED_PREF_NIGHTSCOUT_ENABLED, false)
+                        }
+                        apply()
+                    }
+                }
+
+
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "migrateSettings exception: " + exc.message.toString() )
             }
@@ -281,7 +310,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
         try {
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
             var receivers = sharedPref.getStringSet(receiverPrefKey, HashSet<String>())
-            Log.d(LOG_ID, "Resend " + receiverPrefKey + " Broadcast to " + receivers?.size.toString() + " receivers")
+            Log.i(LOG_ID, "Forward " + receiverPrefKey + " Broadcast to " + receivers?.size.toString() + " receivers: ${Utils.dumpBundle(intent.extras)}")
             if (receivers == null || receivers.size == 0) {
                 receivers = setOf("")
             }
@@ -336,12 +365,12 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             val intent = Intent(Constants.XDRIP_ACTION_GLUCOSE_READING)
             // always sends time as start time, because it is only set, if the sensorId have changed!
             val sensor = Bundle()
-            sensor.putLong("sensorStartTime", ReceiveData.time)  // use last received time as start time
+            sensor.putLong("sensorStartTime", if(ReceiveData.sensorStartTime > 0) ReceiveData.sensorStartTime else Utils.getDayStartTime())  // use start time of the current day
             val currentSensor = Bundle()
             currentSensor.putBundle("currentSensor", sensor)
             intent.putExtra("sas", currentSensor)
             val bleManager = Bundle()
-            bleManager.putString("sensorSerial", ReceiveData.sensorID)
+            bleManager.putString("sensorSerial", ReceiveData.sensorID ?: context.packageName)
             intent.putExtra("bleManager", bleManager)
             intent.putExtra("glucose", ReceiveData.rawValue.toDouble())
             intent.putExtra("timestamp", ReceiveData.time)

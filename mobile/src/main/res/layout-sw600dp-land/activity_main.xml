@@ -2,6 +2,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
@@ -131,24 +132,6 @@
                     android:autoSizeTextType="uniform"
                     tools:ignore="HardcodedText" />
             </LinearLayout>
-            <TextView
-                android:id="@+id/txtLastValue"
-                android:layout_width="350dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
-                android:text="@string/no_data"
-                android:textAlignment="center"
-                android:textSize="20sp" />
-            <Button
-                android:id="@+id/btnSources"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#005CCC"
-                android:layout_marginTop="20dp"
-                android:text="@string/menu_sources"
-                />
         </LinearLayout>
     </ScrollView>
 
@@ -172,6 +155,46 @@
             tools:context=".MainActivity"
             android:orientation="vertical"
             android:gravity="center|top">
+            <LinearLayout
+                android:id="@+id/layout_no_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:context=".MainActivity"
+                android:orientation="vertical"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/txtLastValue"
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:text="@string/no_data"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
+                <Button
+                    android:id="@+id/btnSources"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#005CCC"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/menu_sources"
+                    />
+                <Button
+                    android:id="@+id/btnHelp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#005CCC"
+                    android:text="@string/menu_help" />
+                <TextView
+                    android:id="@+id/txtHelp"
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/source_help_summary"
+                    android:textAlignment="center"
+                    android:layout_marginBottom="20dp"
+                    android:textSize="15sp" />
+            </LinearLayout>
 
             <TableLayout
                 android:id="@+id/tableNotes"
@@ -236,6 +259,52 @@
             </TableLayout>
 
             <TableLayout
+                android:id="@+id/tableStatistics"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/layout_bg"
+                android:divider="?android:attr/dividerHorizontal"
+                android:showDividers="middle">
+
+                <TableRow android:background="@drawable/layout_table_header" android:padding="5dp"
+                    tools:ignore="UselessParent">
+                    <TextView
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/table_header_statistics"/>
+                    <RadioGroup
+                        android:id="@+id/statGroup"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical|end">
+                        <RadioButton
+                            android:id="@+id/btnStat1d"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:paddingEnd="10dp"
+                            android:text="1d"
+                            tools:ignore="HardcodedText,RtlSymmetry" />
+                        <RadioButton
+                            android:id="@+id/btnStat7d"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:checked="true"
+                            android:paddingEnd="10dp"
+                            android:text="7d"
+                            tools:ignore="HardcodedText,RtlSymmetry"/>
+                    </RadioGroup>
+                </TableRow>
+            </TableLayout>
+
+            <TableLayout
                 android:id="@+id/tableDetails"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/layout_bg"
@@ -290,6 +359,7 @@
                 android:id="@+id/txtVersion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
                 android:layout_marginBottom="25dp"
                 android:text="1.0"
                 android:textSize="16sp"

@@ -5,7 +5,6 @@ import android.util.Log
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.ChannelClient
 import com.google.android.gms.wearable.Wearable
-import com.google.gson.Gson
 import de.michelinside.glucodatahandler.common.AppSource
 import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.Constants
@@ -68,10 +67,7 @@ object dbSync : ChannelClient.ChannelCallback() {
                     Log.d(LOG_ID, "received - read")
                     val received = getStringFromInputStream(inputStream)
                     Log.v(LOG_ID, "received data: $received")
-                    val gson = Gson()
-                    val data = gson.fromJson(received, Array<GlucoseValue>::class.java).toList()
-                    Log.i(LOG_ID, "${data.size} values received")
-                    dbAccess.addGlucoseValues(data, true)
+                    dbAccess.addGlucoseValuesFromJson(received)
                     Log.d(LOG_ID, "db data saved")
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "reading input exception: " + exc.message.toString() )
