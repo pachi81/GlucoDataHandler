@@ -258,7 +258,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
 
     protected fun handleIobResult(extras: Bundle) {
         Log.d(LOG_ID, "handleIobResult for $source: ${Utils.dumpBundle(extras)}")
-        if(!ReceiveData.hasNewIobCob(extras, true)) {
+        if(!ReceiveData.hasNewIobCob(extras)) {
             setState(SourceState.CONNECTED)
             return
         }
