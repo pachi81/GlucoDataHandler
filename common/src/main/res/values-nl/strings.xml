@@ -855,4 +855,6 @@
 
     <string name="source_help_summary">Druk hier voor de GDH-wiki, die ondersteunde sensoren en compatibele bronnen vermeldt.</string>
 
+    <string name="pref_switch_standard_statistics">Standaardstatistieken gebruiken</string>
+    <string name="pref_switch_standard_statistics_summary">Gebruik de standaard statistische bereikwaarden of de aangepaste doelbereikinstellingen van GDH voor statistische berekeningen.</string>
 </resources>

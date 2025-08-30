@@ -844,4 +844,7 @@
     <string name="pref_battery_complication_percent">% in Akku-Komp. anzeigen</string>
 
     <string name="source_help_summary">Hier klicken um das GDH-Wiki zu öffnen, das unterstützte Sensoren und kompatible Quellen auflistet.</string>
+
+    <string name="pref_switch_standard_statistics">Standardstatistiken verwenden</string>
+    <string name="pref_switch_standard_statistics_summary">Standard-Statistikbereiche oder die benutzerdefinierten Zielbereichseinstellungen von GDH für statistische Berechnungen verwenden.</string>
 </resources>

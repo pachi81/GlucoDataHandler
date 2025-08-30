@@ -851,4 +851,7 @@
         <item quantity="other">%dд</item>
     </plurals>
     <string name="source_help_summary">Нажмите здесь, чтобы открыть GDH wiki, где перечислены поддерживаемые датчики и совместимые источники.</string>
+
+    <string name="pref_switch_standard_statistics">Использовать стандартную статистику</string>
+    <string name="pref_switch_standard_statistics_summary">Используйте стандартные значения статистического диапазона или пользовательские настройки целевого диапазона из GDH для статистических расчетов.</string>
 </resources>

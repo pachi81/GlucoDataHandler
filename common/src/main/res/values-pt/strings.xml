@@ -846,4 +846,8 @@
     <string name="pref_battery_complication_percent">Mostrar % (bateria)</string>
 
     <string name="source_help_summary">Pressione aqui para aceder à wiki GDH, que lista os sensores suportados e as fontes compatíveis.</string>
+
+    <string name="pref_switch_standard_statistics">Usar estatísticas padrão</string>
+    <string name="pref_switch_standard_statistics_summary">Use os valores de intervalo estatístico padrão ou as configurações de intervalo de destino personalizadas do GDH para cálculos estatísticos.</string>
+
 </resources>

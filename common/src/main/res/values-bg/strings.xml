@@ -854,4 +854,7 @@
     <string name="pref_battery_complication_percent">Покажи % (батерия)</string>
 
     <string name="source_help_summary">Натиснете тук за GDH wiki, което изброява поддържаните сензори и съвместимите източници.</string>
+
+    <string name="pref_switch_standard_statistics">Използване на стандартна статистика</string>
+    <string name="pref_switch_standard_statistics_summary">Използвайте стандартните стойности на статистическия диапазон или персонализираните настройки на целевия диапазон от GDH за статистически изчисления.</string>
 </resources>

@@ -849,4 +849,7 @@
 
     <string name="pref_battery_complication_percent">顯示 % (電池)</string>
     <string name="source_help_summary">按此處前往 GDH 維基，其中列出了支援的感應器和相容來源。</string>
+
+    <string name="pref_switch_standard_statistics">使用標準統計數據</string>
+    <string name="pref_switch_standard_statistics_summary">使用標準統計範圍值或 GDH 中的自訂目標範圍設定進行統計計算。</string>
 </resources>
