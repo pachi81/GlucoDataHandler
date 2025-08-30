@@ -902,7 +902,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     } else {
                         resources.getColor(CR.color.main)
                     }
-                    tableDetails.addView(createProgressBarRow(CR.string.sensor_age_label, progress*100 / max, color, resources.getString(CR.string.sensor_age_value).format(days, hours)/* + "\n-> " + resources.getString(CR.string.sensor_age_value).format(diffDays, diffHours)*/))
+                    tableDetails.addView(createProgressBarRow(CR.string.sensor_age_label, progress*100 / max, color, createSensorAgeColumn(duration, max)/* + "\n-> " + resources.getString(CR.string.sensor_age_value).format(diffDays, diffHours)*/))
                 } else
                     tableDetails.addView(createRow(CR.string.sensor_age_label, resources.getString(CR.string.sensor_age_value).format(days, hours)))
 
@@ -911,6 +911,37 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 tableDetails.addView(createRow(CR.string.info_label_source, resources.getString(ReceiveData.source.resId)))
         }
         checkTableVisibility(tableDetails)
+    }
+
+    private fun getSensorAgeAsString(duration: Duration): String {
+        if(duration.isNegative || duration.toMinutes() < 60) {
+            return resources.getString(CR.string.elapsed_time).format(if(duration.isNegative) 0 else duration.toMinutes())
+        }
+        val days = duration.toDays()
+        val hours = duration.minusDays(days).toHours()
+        return resources.getString(CR.string.sensor_age_value).format(days, hours)
+    }
+
+    private fun createSensorAgeColumn(duration: Duration, runtimeMinutes: Float): TextView {
+        val onClickListener = OnClickListener {
+            try {
+                with(sharedPref.edit()) {
+                    putBoolean(Constants.SHARED_PREF_SHOW_SENSOR_AGE_REMAIN_TIME, !sharedPref.getBoolean(Constants.SHARED_PREF_SHOW_SENSOR_AGE_REMAIN_TIME, false))
+                    apply()
+                }
+                updateDetailsTable()
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "Sensor age exception: " + exc.message.toString() )
+            }
+        }
+        val showRemaining = sharedPref.getBoolean(Constants.SHARED_PREF_SHOW_SENSOR_AGE_REMAIN_TIME, false)
+        return if(showRemaining) {
+            val runtimeDuration = Duration.ofMinutes(runtimeMinutes.toLong())
+            val diffDuration = runtimeDuration.minus(duration)
+            createColumn(getSensorAgeAsString(diffDuration) + " >", true, onClickListener)
+        } else {
+            createColumn("< " + getSensorAgeAsString(duration), true, onClickListener)
+        }
     }
 
     private fun updateStatisticsTable() {
@@ -973,23 +1004,27 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         progressBar.scaleY = 3F
         progressBar.contentDescription = description
         progressBar.setProgressTintList(ColorStateList.valueOf(color))
-        progressBar.setPadding(Utils.dpToPx(5F, this))
         return progressBar
     }
 
-    private fun createProgressBarRow(keyResId: Int, percentage: Float, color: Int, value: String? = null) : TableRow {
-        return createProgressBarRow(resources.getString(keyResId), percentage, color, value)
+    private fun createProgressBarRow(keyResId: Int, percentage: Float, color: Int, valueView: TextView? = null) : TableRow {
+        return createProgressBarRow(resources.getString(keyResId), percentage, color, valueView)
     }
-    private fun createProgressBarRow(key: String, percentage: Float, color: Int, value: String? = null) : TableRow {
+    private fun createProgressBarRow(key: String, percentage: Float, color: Int, valueView: TextView? = null) : TableRow {
         val row = TableRow(this)
-        row.weightSum = 10f
+        row.weightSum = 11f
+        row.gravity = Gravity.CENTER_VERTICAL
         row.setPadding(Utils.dpToPx(5F, this))
         row.addView(createColumn(key, false, null, 4F))
         row.addView(createProgressBar(percentage.toInt(), 100, color, key))
-        if(value == null)
-            row.addView(createColumn("${DecimalFormat("#.#").format(percentage)}%", true, null, 2F))
-        else
-            row.addView(createColumn(value, true, null, 2F))
+        if(valueView == null)
+            row.addView(createColumn("${DecimalFormat("#.#").format(percentage)}%", true, null, 3F))
+        else {
+            val params = valueView.layoutParams as TableRow.LayoutParams
+            params.weight = 3F
+            valueView.layoutParams = params
+            row.addView(valueView)
+        }
         return row
     }
 

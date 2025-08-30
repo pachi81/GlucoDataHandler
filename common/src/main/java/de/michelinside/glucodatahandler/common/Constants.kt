@@ -338,6 +338,7 @@ object Constants {
     const val SHARED_PREF_FULLSCREEN_LANDSCAPE = "fullscreen_landscape"
     const val SHARED_PREF_SENSOR_RUNTIME = "sensor_runtime"
     const val SHARED_PREF_STANDARD_STATISTICS = "standard_statistics"
+    const val SHARED_PREF_SHOW_SENSOR_AGE_REMAIN_TIME = "main_show_sensor_age_remain_time"
 
     const val SHARED_PREF_MAIN_STATISTICS_DAYS = "main_statistics_days"
 
