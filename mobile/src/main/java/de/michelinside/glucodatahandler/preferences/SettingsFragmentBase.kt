@@ -138,7 +138,8 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
                 }
                 Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_ENABLED -> {
                     // update last 24 hours to fill data
-                    GlucoseDataReceiver.checkHandleWebServerRequests(requireContext(), System.currentTimeMillis() - Constants.DB_MAX_DATA_WEAR_TIME_MS)
+                    GlucoseDataReceiver.resetLastServerTime()
+                    GlucoseDataReceiver.checkHandleWebServerRequests(requireContext())
                 }
             }
         } catch (exc: Exception) {

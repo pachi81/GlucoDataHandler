@@ -589,9 +589,8 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                                 " - current value time: " +
                                 DateFormat.getTimeInstance(DateFormat.DEFAULT).format((ReceiveData.time)))
                         if (ReceiveData.hasNewValue(extras)) {
-                            val firstNeededValue = GlucoseDataReceiver.getFirstNeededWebServerValue()
                             ReceiveData.handleIntent(context, dataSource, extras, true)
-                            GlucoseDataReceiver.checkHandleWebServerRequests(context, firstNeededValue)
+                            GlucoseDataReceiver.checkHandleWebServerRequests(context)
                         } else if(extras.getLong(ReceiveData.TIME) < ReceiveData.time)
                             forceSend = true  //  received data is older than current one, send current one
 

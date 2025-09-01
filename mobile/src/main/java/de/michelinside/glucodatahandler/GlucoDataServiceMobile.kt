@@ -239,7 +239,8 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 NotifySource.OBSOLETE_VALUE, // to trigger re-start for the case of stopped by the system
                 NotifySource.CAR_CONNECTION,
                 NotifySource.CAPILITY_INFO,
-                NotifySource.BATTERY_LEVEL)  // used for watchdog-check
+                NotifySource.BATTERY_LEVEL,   // used for watchdog-check
+                NotifySource.DB_DATA_CHANGED)
             InternalNotifier.addNotifier(this, this, filter)
             floatingWidget = FloatingWidget(this)
             lockScreenWallpaper = LockScreenWallpaper(this)
@@ -401,7 +402,10 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
                 context.setWearConnectionState(WearPhoneConnection.nodesConnected)
             }
             if (dataSource == NotifySource.CAR_CONNECTION && CarModeReceiver.connected) {
-                CarModeReceiver.sendToGlucoDataAuto(context, true)
+                CarModeReceiver.sendToGlucoDataAuto(context, true, true)
+            }
+            if (dataSource == NotifySource.DB_DATA_CHANGED && CarModeReceiver.connected) {
+                CarModeReceiver.sendToGlucoDataAuto(context, false, true)
             }
             if (dataSource == NotifySource.BATTERY_LEVEL) {
                 checkServices(context)

@@ -59,11 +59,9 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
                 }
             }
 
-            val firstNeededValue = getFirstNeededWebServerValue()
-
             if(ReceiveData.handleIntent(context, DataSource.JUGGLUCO, intent.extras)) {
                 SourceStateData.setState(DataSource.JUGGLUCO, SourceState.NONE)
-                checkHandleWebServerRequests(context, firstNeededValue)
+                checkHandleWebServerRequests(context)
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "Receive exception: " + exc.message.toString() )
@@ -72,22 +70,24 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
     }
 
     companion object {
-        private val LOG_ID = "GDH.GlucoseDataReceiver"
+        private val LOG_ID = "GDH.GlucoDataReceiver"
         private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         private var webServerJob: Job? = null
         private var iobJob: Job? = null
         private var interval = -1L
+        private var lastServerTime = 0L
         val JUGGLUCO_WEBSERVER = "http://127.0.0.1:17580"
 
         private val STREAM_DATA_ENDPOINT = "/x/stream?duration=%d&mg/dL"
 
-        fun getFirstNeededWebServerValue(): Long {
-            return DataSourceTask.getFirstNeedGraphValueTime(if(interval>0L) interval else 1L, false)
+
+        fun resetLastServerTime() {
+            lastServerTime = 0L
         }
 
-        fun checkHandleWebServerRequests(context: Context, firstNeededValue: Long) {
+        fun checkHandleWebServerRequests(context: Context) {
             if(hasWebServerSupport()) {
-                requestWebserverData(firstNeededValue)
+                requestWebserverData()
                 requestIobData(context)
             }
         }
@@ -107,14 +107,18 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
             return true
         }
 
-        private fun requestWebserverData(firstValueTime: Long) {
-            if(webServerJob?.isActive != true && (firstValueTime > 0L || interval <= 0 || (ReceiveData.sensorStartTime == 0L && !ReceiveData.sensorID.isNullOrEmpty()))) {
+        private fun requestWebserverData() {
+            if(webServerJob?.isActive != true && (interval <= 0 || abs(ReceiveData.getTimeDiffMinute(lastServerTime)) > interval || (ReceiveData.sensorStartTime == 0L && !ReceiveData.sensorID.isNullOrEmpty()))) {
                 webServerJob = scope.launch {
                     try {
                         var retry = 0
                         var lastValueReceived = false
                         val values = mutableListOf<GlucoseValue>()
-                        while((!lastValueReceived || values.isEmpty()) && retry < 5) {
+                        val firstValueTime = if(lastServerTime==0L)
+                                System.currentTimeMillis()-Constants.DB_MAX_DATA_WEAR_TIME_MS
+                            else if(abs(ReceiveData.getTimeDiffMinute(lastServerTime))>interval) lastServerTime
+                            else 0L
+                        while((!lastValueReceived || values.isEmpty()) && retry < 3) {
                             if(firstValueTime > 0)
                                 Thread.sleep(10000)
                             else
@@ -123,7 +127,7 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
                             retry += 1
                             // if the sensor start time is not set, get at least 10 minutes to be able to calculate the interval
                             val seconds = max(if(interval <= 0L) 600 else 120, if(firstValueTime > 0) (Utils.getElapsedTimeMinute(firstValueTime)+1) * 60 else 3600)
-                            Log.i(LOG_ID, "${retry}. request webserver data for $seconds seconds with firstNeededValue=${Utils.getUiTimeStamp(firstValueTime)} and sensorStartTime=${Utils.getUiTimeStamp(ReceiveData.sensorStartTime)} and sensorID=${ReceiveData.sensorID}")
+                            Log.i(LOG_ID, "${retry}. request webserver data for $seconds seconds with firstNeededValue=${Utils.getUiTimeStamp(firstValueTime)}, interval= and sensorStartTime=${Utils.getUiTimeStamp(ReceiveData.sensorStartTime)} and sensorID=${ReceiveData.sensorID} - last server time ${Utils.getUiTimeStamp( lastServerTime)}")
                             val httpRequest = HttpRequest()
                             val responseCode = httpRequest.get(JUGGLUCO_WEBSERVER + STREAM_DATA_ENDPOINT.format(seconds))
                             if (!checkResponse(responseCode, httpRequest)) {
@@ -147,6 +151,7 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
                                             if(lastAge == 0L && lastTime == 0L) {
                                                 lastAge = age
                                                 lastTime = time
+                                                lastServerTime = time
                                                 // get next data set
                                             } else {
                                                 val ageDiff = abs(age - lastAge)
@@ -156,6 +161,17 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
                                                 intervalSet = true
                                             }
                                         }
+                                        if(intervalSet) {
+                                            if(Utils.getTimeDiffMinute(time, lastServerTime) <= interval) {
+                                                lastServerTime = time
+                                            } else if(Utils.getElapsedTimeMinute(time) > if(interval == 1L) 5 else (2*interval)) {
+                                                lastServerTime = time
+                                                Log.w(LOG_ID, "No older values received for ${Utils.getTimeDiffMinute(time, lastServerTime)} minutes - set last server time: ${Utils.getUiTimeStamp(lastServerTime)}")
+                                            } else {
+                                                Log.d(LOG_ID, "Missing data for set interval $interval - diff time ${Utils.getTimeDiffMinute(time, lastServerTime)}")
+                                            }
+                                        }
+
                                         val value = parts[6].toInt()
                                         if(ReceiveData.sensorStartTime == 0L && sensor == ReceiveData.sensorID && interval > 0) {
                                             val startTime = time-(age*interval*60000)
@@ -181,16 +197,19 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
                             Log.d(LOG_ID, "End of loop: retry=$retry, lastValueReceived=$lastValueReceived, values.size=${values.size}")
                         }
                         if(values.isNotEmpty()) {
-                            Log.i(LOG_ID, "Add ${values.size} values to db")
+                            Log.i(LOG_ID, "Add ${values.size} values to db - last server time ${Utils.getUiTimeStamp( lastServerTime)}")
                             dbAccess.addGlucoseValues(values)
                         } else {
-                            Log.i(LOG_ID, "No values found after $retry retries")
+                            Log.i(LOG_ID, "No values found after $retry retries - last server time ${Utils.getUiTimeStamp( lastServerTime)}")
                         }
                     } catch (exc: Exception) {
                         Log.e(LOG_ID, "Webserver exception: " + exc.message.toString() )
                         SourceStateData.setError(DataSource.JUGGLUCO, exc.message.toString())
                     }
                 }
+            } else if(abs(ReceiveData.getTimeDiffMinute(lastServerTime)) <= interval) {
+                lastServerTime = ReceiveData.time
+                Log.d(LOG_ID, "No webserver request needed, update last server time: ${Utils.getUiTimeStamp(lastServerTime)}")
             }
         }
 
