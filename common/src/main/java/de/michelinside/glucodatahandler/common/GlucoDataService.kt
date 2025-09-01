@@ -412,36 +412,37 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             }
         }
 
-        fun checkNotificationReceiverPermission(sharedPref: SharedPreferences, context: Context): Boolean {
+        fun checkNotificationReceiverPermission(context: Context, requestPermission: Boolean): Boolean {
             val notificationListeners = Settings.Secure.getString(context.contentResolver, "enabled_notification_listeners")
             if(!notificationListeners.contains(context.packageName)) {
-                // disable until permission is granted:
-                with(sharedPref.edit()) {
-                    putBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)
-                    apply()
+                if(requestPermission) {
+                    // request permissions
+                    val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(intent)
                 }
-                // request permissions
-                val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                context.startActivity(intent)
                 return false
             }
             return true
         }
 
         fun updateNotificationReceiver(sharedPref: SharedPreferences, context: Context) {
-            // default to false because reading notifications is a scary permission to give for no reason
-            if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
-                Log.d(LOG_ID, "Notification source enabled")
-                if (checkNotificationReceiverPermission(sharedPref, context)) {
+            try {
+                // default to false because reading notifications is a scary permission to give for no reason
+                if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
+                    Log.i(LOG_ID, "Notification source enabled")
+                    checkNotificationReceiverPermission(context, true)
                     notificationReceiver = NotificationReceiver()
                     registerReceiver(context, notificationReceiver!!, IntentFilter())
+                } else if(notificationReceiver!=null) {
+                    Log.i(LOG_ID, "Notification source disabled")
+                    unregisterReceiver(context, notificationReceiver)
+                    notificationReceiver = null
                 }
-            } else if(notificationReceiver!=null) {
-                unregisterReceiver(context, notificationReceiver)
-                notificationReceiver = null
+                // notification listeners can not be unregistered
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "updateNotificationReceiver exception: " + exc.toString())
             }
-            // notification listeners can not be unregistered
         }
 
         fun unregisterSourceReceiver(context: Context) {

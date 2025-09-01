@@ -7,6 +7,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
 import de.michelinside.glucodatahandler.common.ui.SelectReceiverPreferenceDialogFragmentCompat
@@ -25,6 +26,7 @@ class SourceNotificationFragment : PreferenceFragmentCompatBase(), SharedPrefere
         try {
             super.onResume()
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
+            checkPermission()
             updateEnableStates()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.toString())
@@ -97,6 +99,17 @@ class SourceNotificationFragment : PreferenceFragmentCompatBase(), SharedPrefere
                 enablePref.isEnabled = false
             } else {
                 enablePref.isEnabled = true
+            }
+        }
+    }
+
+    private fun checkPermission() {
+        Log.d(LOG_ID, "checkPermission called")
+        val enablePref = findPreference<SwitchPreferenceCompat>(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED)
+        if(enablePref!=null) {
+            if(enablePref.isChecked && !GlucoDataService.checkNotificationReceiverPermission(requireContext(), false)) {
+                Log.w(LOG_ID, "Disable notification receiver as permission not granted, yet!")
+                enablePref.isChecked = false
             }
         }
     }
