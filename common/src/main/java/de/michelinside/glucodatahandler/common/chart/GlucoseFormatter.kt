@@ -8,7 +8,7 @@ class GlucoseFormatter(val inverted: Boolean = false): ValueFormatter() {
     companion object {
         fun getValueAsString(value: Float, inverted: Boolean = false): String {
             if((!inverted && ReceiveData.isMmol) || (inverted && !ReceiveData.isMmol))
-                return GlucoDataUtils.mgToMmol(value).toString()
+                return GlucoDataUtils.mgToMmol(value, true).toString()
             return value.toInt().toString()
         }
     }

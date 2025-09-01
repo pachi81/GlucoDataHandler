@@ -25,6 +25,7 @@ import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
 import de.michelinside.glucodatahandler.common.utils.Utils
 import kotlinx.coroutines.CancellationException
@@ -671,6 +672,9 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         values.forEach {
             if(Utils.getTimeDiffMinute(it.timestamp, lastTime, RoundingMode.HALF_UP) == 0L) {
                 Log.d(LOG_ID, "Delete duplicate value with timestamp ${Utils.getUiTimeStamp(it.timestamp)} (${it.timestamp}) - previous timestamp ${Utils.getUiTimeStamp(lastTime)} (${lastTime}) - diff: ${it.timestamp - lastTime}ms")
+                deleteValues.add(it.timestamp)
+            } else if(!GlucoDataUtils.isGlucoseValid(it.value)) {
+                Log.d(LOG_ID, "Delete invalid value with timestamp ${Utils.getUiTimeStamp(it.timestamp)} (${it.timestamp}) - value: ${it.value}")
                 deleteValues.add(it.timestamp)
             } else {
                 lastTime = it.timestamp

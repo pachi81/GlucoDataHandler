@@ -43,8 +43,8 @@ object GlucoDataUtils {
 
     fun isMmolValue(value: Float): Boolean = value <= mgToMmol(Constants.GLUCOSE_MAX_VALUE.toFloat())
 
-    fun mgToMmol(value: Float): Float {
-        if(abs(value.toInt()) <= Constants.GLUCOSE_MAX_VALUE)  // only check for max value as the min value can be used for delta calculation
+    fun mgToMmol(value: Float, ignoreMax: Boolean = false): Float {
+        if(ignoreMax || abs(value.toInt()) <= Constants.GLUCOSE_MAX_VALUE)  // only check for max value as the min value can be used for delta calculation
             return Utils.round(value / Constants.GLUCOSE_CONVERSION_FACTOR, if(abs(value) > 1.7F) 1 else 2)
         return Float.NaN
     }
