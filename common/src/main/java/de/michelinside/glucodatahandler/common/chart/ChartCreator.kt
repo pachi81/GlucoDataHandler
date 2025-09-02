@@ -693,12 +693,15 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             if(!checkValues(values))
                 return false
             if(values.isNotEmpty()) {
-                Log.d(LOG_ID, "update called for ${values.size} values - resetChart: $resetChart - entries: ${getEntryCount()} - first value: ${TimeValueFormatter.to_chart_x(values.first().timestamp)} - first: ${getFirstTimestamp()}")
-                if(resetChart || TimeValueFormatter.to_chart_x(values.first().timestamp) != getFirstTimestamp() || (getEntryCount() > 0 && abs(values.size-getEntryCount()) > 1)) {
+                val newValues = values.filter { data -> data.timestamp > getLastTimestamp() }
+                Log.d(LOG_ID, "update called for ${values.size} values (${newValues.size} new) - resetChart: $resetChart - entries: ${getEntryCount()} - first value: ${TimeValueFormatter.to_chart_x(values.first().timestamp)} - first: ${getFirstTimestamp()}")
+                if(resetChart
+                    || TimeValueFormatter.to_chart_x(values.first().timestamp) != getFirstTimestamp()
+                    || (getEntryCount() > 0 && abs(values.size-getEntryCount()) != newValues.size)
+                    ) {
                     resetData(values)
                     return true
                 }
-                val newValues = values.filter { data -> data.timestamp > getLastTimestamp() }
                 addEntries(newValues)
             } else if(getEntryCount() > 0) {
                 Log.d(LOG_ID, "Reset chart after db clean up")
