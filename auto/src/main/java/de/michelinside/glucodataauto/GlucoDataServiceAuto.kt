@@ -440,7 +440,7 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                     if(dataSyncCount>0) {
                         updateSourceReceiver(this, key)
                     } else if(key == Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED && sharedPreferences.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
-                        checkNotificationReceiverPermission(sharedPreferences, this)
+                        checkNotificationReceiverPermission(this, true)
                     }
                 }
                 Constants.PATIENT_NAME -> {

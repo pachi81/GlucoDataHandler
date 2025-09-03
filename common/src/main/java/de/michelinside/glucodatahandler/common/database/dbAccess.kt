@@ -221,23 +221,23 @@ object dbAccess {
                 try {
                     Log.d(LOG_ID, "Add ${values.size} values from ${values.first().timestamp} to ${values.last().timestamp}")
                     database!!.glucoseValuesDao().insertValues(updateTimestamps(values))
-                    if(Utils.getElapsedTimeMinute(values.last().timestamp) < 20 && GlucoDataService.context != null) {
-                        Handler(GlucoDataService.context!!.mainLooper).post {
+                    Handler(GlucoDataService.context!!.mainLooper).post {
+                        if(Utils.getElapsedTimeMinute(values.last().timestamp) < 20 && GlucoDataService.context != null) {
                             ReceiveData.triggerRecalculateDeltaAndTime()
+                        }
+                        if(values.size > 10) {
+                            GlucoseStatistics.reset()  // trigger re-calculation!
+                        }
+                        // trigger update of db data
+                        InternalNotifier.notify(GlucoDataService.context!!, NotifySource.DB_DATA_CHANGED, null)
+                        if(!internal) {
+                            // trigger dbsync with watch
+                            GlucoDataService.sendCommand(Command.REQUEST_DB_SYNC)
                         }
                     }
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "addGlucoseValues exception: $exc")
                 }
-            }
-            if(values.size > 10) {
-                GlucoseStatistics.reset()  // trigger re-calculation!
-            }
-            // trigger update of db data
-            InternalNotifier.notify(GlucoDataService.context!!, NotifySource.DB_DATA_CHANGED, null)
-            if(!internal) {
-                // trigger dbsync with watch
-                GlucoDataService.sendCommand(Command.REQUEST_DB_SYNC)
             }
         }
     }
@@ -367,11 +367,12 @@ object dbAccess {
 
     fun getGlucoseValuesAsJson(minTime: Long): String {
         val data = getGlucoseValues(minTime)
+        Log.i(LOG_ID, "Convert ${data.size} values to json")
         val gson = Gson()
         return gson.toJson(data)
     }
 
-    fun addGlucoseValuesFromJson(jsonData: String) {
+    fun addGlucoseValuesFromJson(jsonData: String, dumpLastValues: Boolean = false) {
         val gson = Gson()
         val data = gson.fromJson(jsonData, Array<GlucoseValue>::class.java).toList()
         Log.i(LOG_ID, "${data.size} values received")
