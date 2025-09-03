@@ -16,6 +16,7 @@ import android.widget.ImageView
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.*
@@ -95,6 +96,9 @@ class WearActivity : AppCompatActivity(), NotifierInterface {
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
+            txtVersion.setOnClickListener {
+                Toast.makeText(GlucoDataService.context!!, "Build: ${BuildConfig.VERSION_CODE-2000}", Toast.LENGTH_SHORT).show()
+            }
 
             ReceiveData.initData(this.applicationContext)
 

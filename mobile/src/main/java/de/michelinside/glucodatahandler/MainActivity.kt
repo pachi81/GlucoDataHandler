@@ -29,6 +29,7 @@ import android.widget.ScrollView
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -172,6 +173,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
+            txtVersion.setOnClickListener {
+                Toast.makeText(GlucoDataService.context!!, "Build: ${BuildConfig.VERSION_CODE-1000}", Toast.LENGTH_SHORT).show()
+            }
 
             btnSources.setOnClickListener{
                 try {
