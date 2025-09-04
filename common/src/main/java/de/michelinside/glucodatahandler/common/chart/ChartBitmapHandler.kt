@@ -39,7 +39,7 @@ object ChartBitmapHandler : NotifierInterface {
 
     fun register(context: Context, widget: String) {
         activeWidgets.add(widget)
-        Log.i(LOG_ID, "widget $widget registered - active: ${activeWidgets.size}")
+        Log.i(LOG_ID, "widget $widget registered - active: ${activeWidgets.size} - paused: ${isPaused()} - enabled: $enabled")
         createBitmap(context)
     }
 
@@ -49,6 +49,10 @@ object ChartBitmapHandler : NotifierInterface {
         Log.i(LOG_ID, "widget $widget unregistered - active: ${activeWidgets.size} - paused: ${pausedWidgets.size} - enabled: $enabled")
         if(!enabled)
             removeBitmap()
+        else if(activeWidgets.isEmpty() && chartBitmap?.isPaused != true) {
+            Log.i(LOG_ID, "Pause bitmap")
+            chartBitmap?.pause()
+        }
     }
 
     private fun createBitmap(context: Context) {
@@ -61,6 +65,9 @@ object ChartBitmapHandler : NotifierInterface {
         } else if(!GlucoDataService.isServiceRunning) {
             Log.i(LOG_ID, "Service not running!")
             InternalNotifier.addNotifier(context, this, mutableSetOf(NotifySource.SERVICE_STARTED))
+        } else if(chartBitmap?.isPaused == true) {
+            Log.i(LOG_ID, "Resume paused bitmap")
+            chartBitmap?.resume(true)
         }
     }
 
@@ -96,9 +103,9 @@ object ChartBitmapHandler : NotifierInterface {
     }
 
     fun pause(widget: String) {
-        Log.d(LOG_ID, "pause widget $widget")
         pausedWidgets.add(widget)
         activeWidgets.remove(widget)
+        Log.d(LOG_ID, "pause widget $widget - active: ${activeWidgets.size} - paused: ${pausedWidgets.size} - enabled: $enabled")
         if(activeWidgets.isEmpty()) {
             Log.i(LOG_ID, "Pause bitmap")
             chartBitmap?.pause()
