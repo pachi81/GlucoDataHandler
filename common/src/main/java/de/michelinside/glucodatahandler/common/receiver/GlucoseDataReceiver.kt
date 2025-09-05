@@ -14,7 +14,6 @@ import de.michelinside.glucodatahandler.common.SourceStateData
 import de.michelinside.glucodatahandler.common.database.GlucoseValue
 import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.DataSource
-import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
 import de.michelinside.glucodatahandler.common.tasks.NightscoutSourceTask
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.HttpRequest
@@ -141,6 +140,7 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
                                 var lastTime = 0L
                                 var intervalSet = false
                                 var intervalChanged = false
+                                var lastSensor = ""
                                 lines.forEach {
                                     val parts = it.split("\t")
                                     if(parts.size >= 7) {
@@ -148,15 +148,15 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
                                         val time = parts[2].toLong() * 1000
                                         val age = parts[5].toLong()
                                         if(!intervalSet) {
-                                            if(lastAge == 0L && lastTime == 0L) {
+                                            if((lastAge == 0L && lastTime == 0L) || lastSensor != sensor) {
                                                 lastAge = age
                                                 lastTime = time
-                                                lastServerTime = time
+                                                lastSensor = sensor ?: ""
                                                 // get next data set
                                             } else {
                                                 val ageDiff = abs(age - lastAge)
                                                 val timeDiff = Utils.round(abs(time - lastTime).toFloat()/60000, 0).toInt()
-                                                Log.d(LOG_ID, "Age diff: $ageDiff, time diff: $timeDiff -> interval: ${timeDiff/ageDiff}")
+                                                Log.d(LOG_ID, "Age diff: $ageDiff, time diff: $timeDiff -> new-interval: ${timeDiff/ageDiff} - cur-interval: $interval")
                                                 intervalChanged = setInterval(timeDiff/ageDiff)
                                                 intervalSet = true
                                             }
@@ -165,8 +165,8 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
                                             if(Utils.getTimeDiffMinute(time, lastServerTime) <= interval) {
                                                 lastServerTime = time
                                             } else if(Utils.getElapsedTimeMinute(time) > if(interval == 1L) 5 else (2*interval)) {
+                                                Log.w(LOG_ID, "No older values received for ${Utils.getTimeDiffMinute(time, lastServerTime)} minutes - set last server time: ${Utils.getUiTimeStamp(time)}")
                                                 lastServerTime = time
-                                                Log.w(LOG_ID, "No older values received for ${Utils.getTimeDiffMinute(time, lastServerTime)} minutes - set last server time: ${Utils.getUiTimeStamp(lastServerTime)}")
                                             } else {
                                                 Log.d(LOG_ID, "Missing data for set interval $interval - diff time ${Utils.getTimeDiffMinute(time, lastServerTime)}")
                                             }
@@ -175,9 +175,10 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
                                         val value = parts[6].toInt()
                                         if(ReceiveData.sensorStartTime == 0L && sensor == ReceiveData.sensorID && interval > 0) {
                                             val startTime = time-(age*interval*60000)
+                                            if(time > lastServerTime)
+                                                lastServerTime = time // reset to new sensor
+                                            Log.i(LOG_ID, "New sensor start time found for: $sensor, time=${Utils.getUiTimeStamp(startTime)} - last server time ${Utils.getUiTimeStamp( lastServerTime)}")
                                             ReceiveData.setSensorStartTime(sensor, startTime)
-                                            if(firstValueTime == 0L)
-                                                return@launch  // stop handling data
                                         }
                                         if(firstValueTime == 0L && interval > 0) {
                                             return@launch

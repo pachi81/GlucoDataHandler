@@ -919,7 +919,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
 
     private fun getSensorAgeAsString(duration: Duration): String {
         if(duration.isNegative || duration.toMinutes() < 60) {
-            return resources.getString(CR.string.elapsed_time).format(if(duration.isNegative) 0 else duration.toMinutes())
+            return resources.getString(CR.string.elapsed_time).format(duration.toMinutes())
         }
         val days = duration.toDays()
         val hours = duration.minusDays(days).toHours()
