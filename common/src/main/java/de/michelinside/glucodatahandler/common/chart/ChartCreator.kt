@@ -179,10 +179,10 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
 
     fun pause() {
         try {
-            remNotifier()
-            stopDataSync()
             if(touchEnabled)
                 chart.highlightValue(null)
+            remNotifier()
+            stopDataSync()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "pause exception: " + exc.message.toString() )
         }

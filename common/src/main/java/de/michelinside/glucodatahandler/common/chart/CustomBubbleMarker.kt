@@ -22,7 +22,7 @@ import java.util.Date
 
 @SuppressLint("ViewConstructor")
 class CustomBubbleMarker(context: Context, private val showDate: Boolean = false) : MarkerView(context, R.layout.marker_layout) {
-    private val LOG_ID = "GDH.Chart.MarkerView"
+    private val LOG_ID = "GDH.Chart.BubbleMarker"
     private val arrowSize = 35
     private val arrowCircleOffset = 0f
     private var isGlucose = true
