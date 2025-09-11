@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SeekBarPreference
 import androidx.preference.SwitchPreferenceCompat
 import de.michelinside.glucodataauto.R
@@ -12,10 +11,11 @@ import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmSetting
 import de.michelinside.glucodatahandler.common.notification.AlarmType
+import de.michelinside.glucodatahandler.common.preferences.PreferenceFragmentCompatBase
 import de.michelinside.glucodatahandler.common.ui.GlucoseEditPreference
 import de.michelinside.glucodatahandler.common.utils.Utils
 
-class AlarmTypeFragment : PreferenceFragmentCompat() {
+class AlarmTypeFragment : PreferenceFragmentCompatBase() {
     private val LOG_ID = "GDH.AA.AlarmTypeFragment"
     private var alarmType = AlarmType.NONE
 

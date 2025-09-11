@@ -16,11 +16,10 @@
                     app:iconSpaceReserved="false" />
         </PreferenceCategory>
         <PreferenceCategory
-            android:title="@string/menu_save_logs"
             app:iconSpaceReserved="false">
                 <Preference
                     android:key="save_mobile_logs"
-                    android:title="@string/menu_save_mobile_logs"
+                    android:title="@string/menu_save_logs"
                     android:summary="@string/menu_save_mobile_logs_summary"
                     app:iconSpaceReserved="false" />
         </PreferenceCategory>

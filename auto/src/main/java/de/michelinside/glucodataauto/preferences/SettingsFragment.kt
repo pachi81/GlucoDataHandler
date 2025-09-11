@@ -8,10 +8,11 @@ import de.michelinside.glucodataauto.BuildConfig
 import de.michelinside.glucodataauto.GlucoDataServiceAuto
 import de.michelinside.glucodataauto.R
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.preferences.PreferenceFragmentCompatBase
 import de.michelinside.glucodatahandler.common.preferences.PreferenceHelper
 
 
-class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
+class SettingsFragment : PreferenceFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener {
     private val LOG_ID = "GDH.AA.SettingsFragment"
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

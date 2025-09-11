@@ -6,9 +6,10 @@ import android.util.Log
 import androidx.preference.*
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodataauto.R
+import de.michelinside.glucodatahandler.common.preferences.PreferenceFragmentCompatBase
 
 
-abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
+abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener {
     protected val LOG_ID = "GDH.AA.SettingsFragmentBase"
     protected val updateEnablePrefs = mutableSetOf<String>()
 

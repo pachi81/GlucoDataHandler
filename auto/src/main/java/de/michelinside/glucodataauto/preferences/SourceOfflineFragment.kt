@@ -1,17 +1,16 @@
 package de.michelinside.glucodataauto.preferences
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.preference.*
 import de.michelinside.glucodataauto.R
 import de.michelinside.glucodatahandler.common.R as CR
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.preferences.PreferenceFragmentCompatBase
 import de.michelinside.glucodatahandler.common.preferences.PreferenceHelper
 
 
-class SourceOfflineFragment : PreferenceFragmentCompat() {
+class SourceOfflineFragment : PreferenceFragmentCompatBase() {
     private val LOG_ID = "GDH.AA.SourceOfflineFragment"
     private var settingsChanged = false
 

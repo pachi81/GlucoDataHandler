@@ -18,13 +18,17 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.setPadding
 import androidx.preference.PreferenceManager
 import de.michelinside.glucodataauto.preferences.SettingsActivity
@@ -67,6 +71,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var tableNotes: TableLayout
     private lateinit var btnSources: Button
     private lateinit var txtNoData: TextView
+    private lateinit var btnHelp: Button
+    private lateinit var noDataLayout: LinearLayout
     private lateinit var sharedPref: SharedPreferences
     private lateinit var versionChecker: GitHubVersionChecker
     private var notificationIcon: MenuItem? = null
@@ -78,8 +84,17 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
             super.onCreate(savedInstanceState)
+            enableEdgeToEdge()
             setContentView(R.layout.activity_main)
             Log.v(LOG_ID, "onCreate called")
+
+
+            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.root)) { v, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                Log.d(LOG_ID, "Insets: " + systemBars.toString())
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+                insets
+            }
 
             txtBgValue = findViewById(R.id.txtBgValue)
             viewIcon = findViewById(R.id.viewIcon)
@@ -95,6 +110,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableDetails = findViewById(R.id.tableDetails)
             txtNoData = findViewById(R.id.txtNoData)
             chartImage = findViewById(R.id.graphImage)
+            btnHelp = findViewById(R.id.btnHelp)
+            noDataLayout = findViewById(R.id.layout_no_data)
             versionChecker = GitHubVersionChecker("GlucoDataAuto", BuildConfig.VERSION_NAME, this)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
@@ -113,6 +130,18 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     startActivity(intent)
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Sources button exception: " + exc.message.toString() )
+                }
+            }
+
+            btnHelp.setOnClickListener{
+                try {
+                    val browserIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(resources.getText(CR.string.help_link).toString())
+                    )
+                    startActivity(browserIntent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "btn help exception: " + exc.message.toString() )
                 }
             }
 
@@ -439,15 +468,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             cobText.contentDescription = getString(CR.string.info_label_cob) + " " + ReceiveData.getCobAsString()
             cobText.visibility = iobText.visibility
 
-            if(ReceiveData.time == 0L) {
-                txtLastValue.visibility = View.VISIBLE
-                txtNoData.visibility = View.VISIBLE
-                btnSources.visibility = View.VISIBLE
-            } else {
-                txtLastValue.visibility = View.GONE
-                txtNoData.visibility = View.GONE
-                btnSources.visibility = View.GONE
-            }
+            noDataLayout.visibility = if(ReceiveData.time>0) View.GONE else View.VISIBLE
+
             updateNotesTable()
             updateAlarmsTable()
             updateConnectionsTable()
