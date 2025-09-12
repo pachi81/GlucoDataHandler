@@ -225,8 +225,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE,
                 Constants.SHARED_PREF_CAR_MEDIA,
                 Constants.AA_MEDIA_ICON_STYLE,
-                Constants.AA_MEDIA_GRAPH_COLORED,
-                Constants.AA_MEDIA_VALUE_TREND_COLORED,
+                Constants.AA_MEDIA_PLAYER_COLORED,
                 Constants.AA_MEDIA_SHOW_IOB_COB -> {
                     notifyChildrenChanged(MEDIA_ROOT_ID)
                 }
@@ -263,7 +262,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     }
 
     private fun getBackgroundImage(): Bitmap? {
-        val coloredValueTrend = sharedPref.getBoolean(Constants.AA_MEDIA_VALUE_TREND_COLORED, true)
+        val coloredCover = sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_COLORED, true)
         try {
             if(ChartBitmapHandler.hasBitmap(this.javaClass.simpleName)) {
                 Log.i(LOG_ID, "Create bitmap")
@@ -274,7 +273,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
 
 
                 txtBgValue.text = ReceiveData.getGlucoseAsString()
-                if(coloredValueTrend)
+                if(coloredCover)
                     txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
                 else
                     txtBgValue.setTextColor(Color.WHITE)
@@ -283,7 +282,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 } else {
                     txtBgValue.paintFlags = 0
                 }
-                viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(LOG_ID +"_trend", color = if(coloredValueTrend) null else Color.WHITE,  width = 400, height = 400))
+                viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(LOG_ID +"_trend", color = if(coloredCover) null else Color.WHITE,  width = 400, height = 400))
 
                 Log.d(LOG_ID, "Update graphImage bitmap")
                 lockscreenView.measure(
@@ -291,7 +290,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                     View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
                 Log.d(LOG_ID, "Mesasured width ${lockscreenView.measuredWidth} and height ${lockscreenView.measuredHeight} for chart")
                 graphImage.setImageBitmap(ChartBitmapHandler.getBitmap())
-                if (!sharedPref.getBoolean(Constants.AA_MEDIA_GRAPH_COLORED, false)) {
+                if (!coloredCover) {
                     graphImage.setColorFilter(Color.WHITE)
                 }
                 graphImage.requestLayout()
@@ -307,7 +306,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         } catch (e: Exception) {
             Log.e(LOG_ID, "Error creating bitmap", e)
         }
-        return BitmapUtils.getGlucoseTrendBitmap( color = if(coloredValueTrend) null else Color.WHITE, width = 400, height = 400)
+        return BitmapUtils.getGlucoseTrendBitmap( color = if(coloredCover) null else Color.WHITE, width = 400, height = 400)
     }
 
     fun setItem() {

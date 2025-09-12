@@ -22,17 +22,10 @@
             app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="true"
-            android:key="aa_media_player_value_trend_coloured"
-            android:summaryOn="Show colored value and trend"
-            android:summaryOff="Show white value and trend"
-            android:title="Colored value/trend"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="aa_media_player_graph_coloured"
-            android:summaryOn="Show colored graph"
-            android:summaryOff="Show white graph"
-            android:title="Colored graph"
+            android:key="aa_media_player_colored"
+            android:summaryOn="@string/aa_media_player_colored_summary_on"
+            android:summaryOff="@string/aa_media_player_colored_summary_off"
+            android:title="@string/aa_media_player_colored"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory

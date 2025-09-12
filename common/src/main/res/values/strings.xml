@@ -908,6 +908,9 @@
     <string name="source_help_summary">Press here for the GDH wiki, which lists supported sensors and compatible sources.</string>
     <string name="pref_switch_standard_statistics">Use standard statistics</string>
     <string name="pref_switch_standard_statistics_summary">Use the standard statistical range values or the custom target range settings from GDH for statistical calculations.</string>
+    <string name="aa_media_player_colored">Colored cover</string>
+    <string name="aa_media_player_colored_summary_off">Show white value, trend and graph</string>
+    <string name="aa_media_player_colored_summary_on">Show colored value, trend and graph</string>
 
     <plurals name="duration_days_short" translatable="false">
         <item quantity="one">%dd</item>
