@@ -856,4 +856,8 @@
 
     <string name="pref_switch_standard_statistics">Uzywaj statystyki standardowej</string>
     <string name="pref_switch_standard_statistics_summary">Używaj standardowych wartości zakresu do statystyki lub niestandardowych ustawień zakresu docelowego GDH do obliczeń statystycznych.</string>
+
+    <string name="aa_media_player_colored">Colored cover</string>
+    <string name="aa_media_player_colored_summary_off">Show white value, trend and graph</string>
+    <string name="aa_media_player_colored_summary_on">Show colored value, trend and graph</string>
 </resources>

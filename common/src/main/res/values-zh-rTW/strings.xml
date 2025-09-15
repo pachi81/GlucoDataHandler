@@ -852,4 +852,8 @@
 
     <string name="pref_switch_standard_statistics">使用標準統計數據</string>
     <string name="pref_switch_standard_statistics_summary">使用標準統計範圍值或 GDH 中的自訂目標範圍設定進行統計計算。</string>
+
+    <string name="aa_media_player_colored">彩色封面</string>
+    <string name="aa_media_player_colored_summary_off">顯示白色數值、趨勢和圖表</string>
+    <string name="aa_media_player_colored_summary_on">顯示彩色數值、趨勢和圖表</string>
 </resources>

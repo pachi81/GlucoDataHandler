@@ -921,4 +921,8 @@ Mielőtt engedélyezné ezt a beállítást, először engedélyezze az \"Adás 
 
     <string name="pref_switch_standard_statistics">Standard statisztikák használata</string>
     <string name="pref_switch_standard_statistics_summary">Használja a standard statisztikai tartományértékeket vagy a GDH egyéni céltartomány-beállításait a statisztikai számításokhoz.</string>
+
+    <string name="aa_media_player_colored">Színes borító</string>
+    <string name="aa_media_player_colored_summary_off">Fehér érték, trend és grafikon megjelenítése</string>
+    <string name="aa_media_player_colored_summary_on">Színes érték, trend és grafikon megjelenítése</string>
 </resources>

@@ -854,4 +854,8 @@
 
     <string name="pref_switch_standard_statistics">Использовать стандартную статистику</string>
     <string name="pref_switch_standard_statistics_summary">Используйте стандартные значения статистического диапазона или пользовательские настройки целевого диапазона из GDH для статистических расчетов.</string>
+
+    <string name="aa_media_player_colored">Цветная обложка</string>
+    <string name="aa_media_player_colored_summary_off">Показать белое значение, тренд и график</string>
+    <string name="aa_media_player_colored_summary_on">Показать цветное значение, тренд и график</string>
 </resources>

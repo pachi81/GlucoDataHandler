@@ -850,4 +850,7 @@
     <string name="pref_switch_standard_statistics">Usar estatísticas padrão</string>
     <string name="pref_switch_standard_statistics_summary">Use os valores de intervalo estatístico padrão ou as configurações de intervalo de destino personalizadas do GDH para cálculos estatísticos.</string>
 
+    <string name="aa_media_player_colored">Capa colorida</string>
+    <string name="aa_media_player_colored_summary_off">Mostrar valor, tendência e gráfico em branco</string>
+    <string name="aa_media_player_colored_summary_on">Mostrar valor, tendência e gráfico coloridos</string>
 </resources>

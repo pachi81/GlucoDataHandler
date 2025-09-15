@@ -847,4 +847,9 @@
 
     <string name="pref_switch_standard_statistics">Standardstatistiken verwenden</string>
     <string name="pref_switch_standard_statistics_summary">Standard-Statistikbereiche oder die benutzerdefinierten Zielbereichseinstellungen von GDH für statistische Berechnungen verwenden.</string>
+
+    <string name="aa_media_player_colored">Farbiges Cover</string>
+    <string name="aa_media_player_colored_summary_off">Weißen Wert, Trend und Graph anzeigen</string>
+    <string name="aa_media_player_colored_summary_on">Farbigen Wert, Trend und Graph anzeigen</string>
+
 </resources>

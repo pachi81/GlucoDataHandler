@@ -857,4 +857,8 @@
 
     <string name="pref_switch_standard_statistics">Standaardstatistieken gebruiken</string>
     <string name="pref_switch_standard_statistics_summary">Gebruik de standaard statistische bereikwaarden of de aangepaste doelbereikinstellingen van GDH voor statistische berekeningen.</string>
+
+    <string name="aa_media_player_colored">Gekleurde hoes</string>
+    <string name="aa_media_player_colored_summary_off">Toon witte waarde, trend en grafiek</string>
+    <string name="aa_media_player_colored_summary_on">Toon gekleurde waarde, trend en grafiek</string>
 </resources>
