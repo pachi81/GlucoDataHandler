@@ -193,6 +193,9 @@ class GlucoDataServiceAuto: Service(), SharedPreferences.OnSharedPreferenceChang
                     TimeTaskService.run(GlucoDataService.context!!)
                     SourceTaskService.run(GlucoDataService.context!!)
                     sendStateBroadcast(GlucoDataService.context!!, true)
+                    if(ReceiveData.source == DataSource.JUGGLUCO || ReceiveData.source == DataSource.NONE) {
+                        GlucoseDataReceiver.checkHandleWebServerRequests(GlucoDataService.context!!, true)
+                    }
                     Log.i(LOG_ID, "Datasync started")
                 }
                 if(!force)

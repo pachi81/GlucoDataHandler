@@ -31,7 +31,7 @@ class SourceOnlineFragment : PreferenceFragmentCompatBase(), SharedPreferences.O
             setPasswordPref(Constants.SHARED_PREF_LIBRE_PASSWORD)
             setPasswordPref(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD)
             setPasswordPref(Constants.SHARED_PREF_NIGHTSCOUT_SECRET)
-
+            setPasswordPref(Constants.SHARED_PREF_MEDTRUM_PASSWORD)
 
             PreferenceHelper.setLinkOnClick(findPreference("source_librelinkup_video"), CR.string.video_tutorial_librelinkup, requireContext())
 

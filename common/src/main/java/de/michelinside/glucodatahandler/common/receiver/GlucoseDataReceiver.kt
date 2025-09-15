@@ -84,9 +84,9 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
             lastServerTime = 0L
         }
 
-        fun checkHandleWebServerRequests(context: Context) {
+        fun checkHandleWebServerRequests(context: Context, handleNewValue: Boolean = false) {
             if(hasWebServerSupport()) {
-                requestWebserverData()
+                requestWebserverData(context, handleNewValue)
                 requestIobData(context)
             }
         }
@@ -106,22 +106,28 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
             return true
         }
 
-        private fun requestWebserverData() {
-            if(webServerJob?.isActive != true && (interval <= 0 || abs(ReceiveData.getTimeDiffMinute(lastServerTime)) > interval || (ReceiveData.sensorStartTime == 0L && !ReceiveData.sensorID.isNullOrEmpty()))) {
+        private fun requestWebserverData(context: Context, handleNewValue: Boolean = false) {
+            val maxTime = if(handleNewValue) System.currentTimeMillis() else ReceiveData.time
+            if(webServerJob?.isActive != true && (interval <= 0 || abs(Utils.getTimeDiffMinute(lastServerTime, maxTime)) > interval || (ReceiveData.sensorStartTime == 0L && !ReceiveData.sensorID.isNullOrEmpty()))) {
                 webServerJob = scope.launch {
                     try {
                         var retry = 0
                         var lastValueReceived = false
                         val values = mutableListOf<GlucoseValue>()
                         val firstValueTime = if(lastServerTime==0L)
-                                System.currentTimeMillis()-Constants.DB_MAX_DATA_WEAR_TIME_MS
-                            else if(abs(ReceiveData.getTimeDiffMinute(lastServerTime))>interval) lastServerTime
+                                if(GlucoDataService.appSource == AppSource.AUTO_APP)
+                                    System.currentTimeMillis() - Constants.DB_MAX_DATA_GDA_TIME_MS
+                                else
+                                    System.currentTimeMillis()-Constants.DB_MAX_DATA_WEAR_TIME_MS
+                            else if(abs(Utils.getTimeDiffMinute(lastServerTime, maxTime))>interval) lastServerTime
                             else 0L
                         while((!lastValueReceived || values.isEmpty()) && retry < 3) {
-                            if(firstValueTime > 0)
-                                Thread.sleep(10000)
-                            else
-                                Thread.sleep(5000)
+                            if(!handleNewValue || retry > 0) {
+                                if(firstValueTime > 0)
+                                    Thread.sleep(10000)
+                                else
+                                    Thread.sleep(5000)
+                            }
                             values.clear()
                             retry += 1
                             // if the sensor start time is not set, get at least 10 minutes to be able to calculate the interval
@@ -183,15 +189,16 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
                                         if(firstValueTime == 0L && interval > 0) {
                                             return@launch
                                         }
-                                        if(firstValueTime > 0 && time/1000 < ReceiveData.time/1000 && time > firstValueTime) {
+                                        if(firstValueTime > 0 && time/1000 < maxTime/1000 && time > firstValueTime) {
                                             values.add(GlucoseValue(time, value))
-                                        } else if(time/1000 == ReceiveData.time/1000) {
+                                        }
+                                        if(abs(Utils.getTimeDiffMinute(time, maxTime)) == 0L) {
                                             lastValueReceived = true  // current value must be part and also historical data
                                         }
                                     }
                                 }
                                 if(intervalChanged && firstValueTime > 0 && lastValueReceived && values.isEmpty()) {
-                                    if(ReceiveData.time - (interval*60000) < firstValueTime)
+                                    if(maxTime - (interval*60000) < firstValueTime)
                                         return@launch  // stop loop as there are already all data
                                 }
                             }
@@ -200,6 +207,21 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
                         if(values.isNotEmpty()) {
                             Log.i(LOG_ID, "Add ${values.size} values to db - last server time ${Utils.getUiTimeStamp( lastServerTime)}")
                             dbAccess.addGlucoseValues(values)
+                            if(handleNewValue) {
+                                Log.d(LOG_ID, "Check last value for new one: ${Utils.getUiTimeStamp(values.last().timestamp)} - value: ${values.last().value}")
+                                val glucoExtras = Bundle()
+                                glucoExtras.putLong(ReceiveData.TIME, values.last().timestamp)
+                                glucoExtras.putInt(ReceiveData.MGDL, values.last().value)
+                                glucoExtras.putFloat(ReceiveData.RATE, Float.NaN)
+                                Handler(context.mainLooper).post {
+                                    try {
+                                        ReceiveData.handleIntent(context, DataSource.JUGGLUCO, glucoExtras)
+                                    } catch (exc: Exception) {
+                                        Log.e(LOG_ID, "Handle new value exception: " + exc.message.toString() )
+                                        SourceStateData.setError(DataSource.JUGGLUCO, exc.message.toString())
+                                    }
+                                }
+                            }
                         } else {
                             Log.i(LOG_ID, "No values found after $retry retries - last server time ${Utils.getUiTimeStamp( lastServerTime)}")
                         }
@@ -210,7 +232,7 @@ open class GlucoseDataReceiver: NamedBroadcastReceiver() {
                 }
             } else if(abs(ReceiveData.getTimeDiffMinute(lastServerTime)) <= interval) {
                 lastServerTime = ReceiveData.time
-                Log.d(LOG_ID, "No webserver request needed, update last server time: ${Utils.getUiTimeStamp(lastServerTime)}")
+                Log.d(LOG_ID, "No webserver request needed, update last server time: ${Utils.getUiTimeStamp(lastServerTime)} - interval: $interval")
             }
         }
 
