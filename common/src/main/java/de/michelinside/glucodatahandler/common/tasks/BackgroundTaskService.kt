@@ -89,7 +89,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                     }
                 }
             }
-            Log.v(LOG_ID, "nothing to execute for " + task.javaClass.simpleName)
+            Log.d(LOG_ID, "nothing to execute for " + task.javaClass.simpleName)
         } else {
             Log.v(LOG_ID,"checkExecution: " + "elapsedTimeMinute=" + elapsedTimeMinute
                     + " - lastElapsedMinute=" + lastElapsedMinute
@@ -102,7 +102,9 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                 Log.d(LOG_ID, "Check IOB/COB task execution after " + elapsedIobCobTimeMinute + " min")
                 return true // check each task for additional IOB COB data
             }
-            Log.v(LOG_ID, "nothing to execute")
+            Log.d(LOG_ID, "nothing to execute: " + "elapsedTimeMinute=" + elapsedTimeMinute
+                    + " - lastElapsedMinute=" + lastElapsedMinute
+                    + " - elapsedIobCobTimeMinute=" + elapsedIobCobTimeMinute)
         }
         // nothing to execute
         return false
@@ -143,6 +145,8 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
                                     }
                                 }
                             }
+                            // restart timer in case of interval has changed to short or long one and to update lastElapsedMinute
+                            startTimer()
                         } catch (ex: Exception) {
                             Log.e(LOG_ID, "exception while executing tasks: " + ex)
                         }
@@ -282,7 +286,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
 
                 Log.v(LOG_ID, "Cur time $currentAlarmTime - next time ${nextAlarm.timeInMillis} - diff ${abs(currentAlarmTime-nextAlarm.timeInMillis)} - elapsedTimeMinute $elapsedTimeMinute")
 
-                if (abs(currentAlarmTime-nextAlarm.timeInMillis) > 1000) {
+                if (abs(currentAlarmTime-nextAlarm.timeInMillis) > 3000) {
                     if (hasExactAlarmPermission) {
                         alarmManager!!.setExactAndAllowWhileIdle(
                             AlarmManager.RTC_WAKEUP,
@@ -345,7 +349,7 @@ abstract class BackgroundTaskService(val alarmReqId: Int, protected val LOG_ID: 
 
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         try {
-            Log.v(LOG_ID, "OnNotifyData for source " + dataSource.toString())
+            Log.d(LOG_ID, "OnNotifyData for source " + dataSource.toString())
             if (!isRunning()) {  // check only if for not already in execution
                 if(mutableSetOf(NotifySource.BROADCAST, NotifySource.MESSAGECLIENT).contains(dataSource))
                     executeTasks()    // check for additional IOB - COB content or restart time
