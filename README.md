@@ -21,7 +21,7 @@ This innovative app receives data from various sources and visualizes it clearly
         * Receives glucose values from **[xDrip+](https://github.com/pachi81/GlucoDataHandler/wiki/xDrip)**
         * Receives glucose values from **Eversense** (using **[ESEL](https://github.com/pachi81/GlucoDataHandler/wiki/Esel)**)
         * Receives glucose values from **[Dexcom BYODA](https://github.com/pachi81/GlucoDataHandler/wiki/Dexcom-BYODA)** (not tested, yet!)
-    * **Notifications (Beta!):** Receives values from Cam APS FX, Dexcom G6/G7, Eversense, and potentially many more apps
+    * **[Notifications](https://github.com/pachi81/GlucoDataHandler/wiki/Notification-Reader) (Beta!):** Receives values from Cam APS FX, Dexcom G6/G7, Eversense, and potentially many more apps
 
 * **Comprehensive Visualization:**
     * Provides several **widgets** and a floating widget for the phone.
