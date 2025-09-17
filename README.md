@@ -9,17 +9,18 @@ This innovative app receives data from various sources and visualizes it clearly
 
 ## Features
 
-* **Diverse Data [Sources](./SOURCES.md):**
+* **Diverse Data [Sources](https://github.com/pachi81/GlucoDataHandler/wiki/Sensors):**
     * **Cloud Services:**
-        * Receives glucose values as **[LibreLinkUp follower](./SOURCES.md#librelinkup)**
-        * Receives glucose values as **[Dexcom Share follower](./SOURCES.md#dexcom-share)**
+        * Receives glucose values as **[LibreLinkUp follower](https://github.com/pachi81/GlucoDataHandler/wiki/LibreLinkUp)**
+        * Receives glucose values as **[Dexcom Share follower](https://github.com/pachi81/GlucoDataHandler/wiki/Dexcom-Share)**
+        * Received glucose values as **[Medrum follower](https://github.com/pachi81/GlucoDataHandler/wiki/EasyFollow)**
         * Receives glucose, IOB and COB values from **Nightscout** (pebble interface)
     * **Local Apps:**
-        * Receives glucose, IOB and COB values from **[AndroidAPS](./SOURCES.md#androidaps)**
-        * Receives glucose values from **[Juggluco](./SOURCES.md#juggluco)**
-        * Receives glucose values from **[xDrip+](./SOURCES.md#xdrip)**
-        * Receives glucose values from **[Eversense](./SOURCES.md#eversense)** (using **[ESEL](https://github.com/BernhardRo/Esel)**)
-        * Receives glucose values from **[Dexcom BYODA](./SOURCES.md#dexcom-byoda)** (not tested, yet!)
+        * Receives glucose, IOB and COB values from **[AndroidAPS](https://github.com/pachi81/GlucoDataHandler/wiki/Android-APS-(AAPS))**
+        * Receives glucose values from **[Juggluco](https://github.com/pachi81/GlucoDataHandler/wiki/Juggluco)**
+        * Receives glucose values from **[xDrip+](https://github.com/pachi81/GlucoDataHandler/wiki/xDrip)**
+        * Receives glucose values from **Eversense** (using **[ESEL](https://github.com/pachi81/GlucoDataHandler/wiki/Esel)**)
+        * Receives glucose values from **[Dexcom BYODA](https://github.com/pachi81/GlucoDataHandler/wiki/Dexcom-BYODA)** (not tested, yet!)
     * **Notifications (Beta!):** Receives values from Cam APS FX, Dexcom G6/G7, Eversense, and potentially many more apps
 
 * **Comprehensive Visualization:**
