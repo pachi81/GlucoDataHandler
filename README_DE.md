@@ -89,6 +89,6 @@ Es gibt jedoch zwei Benutzer, die speziell Zifferblätter für die Complications
 @[nevergiveup](https://github.com/nevergiveup) fürs Testen, Motivieren und dein Feeback
 
 # Unterstützt meine Arbeit
-[<img src='https://www.paypalobjects.com/webstatic/de_DE/i/de-pp-logo-100px.png'>](https://paypal.me/pachi81)
+[<img src='https://www.paypalobjects.com/webstatic/de_DE/i/de-pp-logo-100px.png'>](https://paypal.me/pachi81) (bevorzugt als Freund - ohne Gebühren)
 
-[🍺 Buy me a beer](https://www.buymeacoffee.com/pachi81)
+[🍺 Buy me a beer](https://www.buymeacoffee.com/pachi81) (hohe Gebühren)

@@ -89,6 +89,6 @@ But there are two users creating watchfaces especially for the complications of 
 @[nevergiveup](https://github.com/nevergiveup) for testing, motivation and feedback
 
 # Support my work
-[<img src='https://www.paypalobjects.com/webstatic/de_DE/i/de-pp-logo-100px.png'>](https://paypal.me/pachi81)
+[<img src='https://www.paypalobjects.com/webstatic/de_DE/i/de-pp-logo-100px.png'>](https://paypal.me/pachi81) (preferred as friend - no fees)
 
-[🍺 Buy me a beer](https://www.buymeacoffee.com/pachi81)
+[🍺 Buy me a beer](https://www.buymeacoffee.com/pachi81) (high fees)
