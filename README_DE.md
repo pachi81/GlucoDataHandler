@@ -9,18 +9,19 @@ Diese innovative App empfängt Daten von zahlreichen Quellen und visualisiert si
 
 ## Features
 
-* **Vielfältige [Datenquellen](./SOURCES_DE.md):**
+* **Vielfältige [Datenquellen](https://github.com/pachi81/GlucoDataHandler/wiki/Sensors):**
     * **Cloud-Dienste:**
-        * Empfängt Glukose Werte als **[LibreLinkUp Follower](./SOURCES_DE.md#librelinkup)**
-        * Empfängt Glukose Werte als **[Dexcom Share Follower](./SOURCES_DE.md#dexcom-share)**
+        * Empfängt Glukose Werte als **[LibreLinkUp Follower](https://github.com/pachi81/GlucoDataHandler/wiki/LibreLinkUp)**
+        * Empfängt Glukose Werte als **[Dexcom Share Follower](https://github.com/pachi81/GlucoDataHandler/wiki/Dexcom-Share)**
+        * Empfängt Glukose Werte als **[Medtrum Follower](https://github.com/pachi81/GlucoDataHandler/wiki/EasyFollow)**
         * Empfängt Glukose, IOB und COB Werte von **Nightscout** (Pebble Schnittstelle)
     * **Lokale Apps:**
-        * Empfängt Glukose, IOB und COB Werte von **[AndroidAPS](./SOURCES_DE.md#androidaps)**
-        * Empfängt Glukose Werte von **[Juggluco](./SOURCES_DE.md#juggluco)**
-        * Empfängt Glukose Werte von **[xDrip+](./SOURCES_DE.md#xdrip)**
-        * Empfängt Glukose Werte von **[Eversense](./SOURCES_DE.md#eversense)** (mittels **[ESEL](https://github.com/BernhardRo/Esel)**)
-        * Empfängt Glukose Werte von **[Dexcom BYODA](./SOURCES_DE.md#dexcom-byoda)** (bisher nicht getestet!)
-    * **Benachrichtigungen (Beta!):** Empfängt Werte von Cam APS FX, Dexcom G6/G7, Eversense und potenziell vielen weiteren Apps (kontaktiere mich einfach!).
+        * Empfängt Glukose, IOB und COB Werte von **[AndroidAPS](https://github.com/pachi81/GlucoDataHandler/wiki/Android-APS-(AAPS))**
+        * Empfängt Glukose Werte von **[Juggluco](https://github.com/pachi81/GlucoDataHandler/wiki/Juggluco)**
+        * Empfängt Glukose Werte von **[xDrip+](https://github.com/pachi81/GlucoDataHandler/wiki/xDrip)**
+        * Empfängt Glukose Werte von **Eversense** (mittels **[ESEL](https://github.com/pachi81/GlucoDataHandler/wiki/Esel)**)
+        * Empfängt Glukose Werte von **[Dexcom BYODA](https://github.com/pachi81/GlucoDataHandler/wiki/Dexcom-BYODA)** (bisher nicht getestet!)
+    * **[Benachrichtigungen](https://github.com/pachi81/GlucoDataHandler/wiki/Notification-Reader) (Beta!):** Empfängt Werte von Cam APS FX, Dexcom G6/G7, Eversense und potenziell vielen weiteren Apps (kontaktiere mich einfach!).
 
 * **Umfassende Visualisierung:**
     * Stellt mehrere **Widgets** für Android zur Verfügung.

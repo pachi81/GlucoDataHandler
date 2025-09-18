@@ -18,21 +18,27 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.setPadding
 import androidx.preference.PreferenceManager
 import de.michelinside.glucodataauto.preferences.SettingsActivity
 import de.michelinside.glucodataauto.preferences.SettingsFragmentClass
 import de.michelinside.glucodatahandler.common.Constants
+import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.SourceState
 import de.michelinside.glucodatahandler.common.SourceStateData
+import de.michelinside.glucodatahandler.common.chart.ChartBitmapHandlerView
 import de.michelinside.glucodatahandler.common.notification.AlarmHandler
 import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notification.ChannelType
@@ -41,6 +47,7 @@ import de.michelinside.glucodatahandler.common.notifier.DataSource
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.tasks.DexcomShareSourceTask
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.GitHubVersionChecker
 import de.michelinside.glucodatahandler.common.utils.Utils
@@ -64,17 +71,30 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private lateinit var tableNotes: TableLayout
     private lateinit var btnSources: Button
     private lateinit var txtNoData: TextView
+    private lateinit var btnHelp: Button
+    private lateinit var noDataLayout: LinearLayout
     private lateinit var sharedPref: SharedPreferences
     private lateinit var versionChecker: GitHubVersionChecker
     private var notificationIcon: MenuItem? = null
     private var speakIcon: MenuItem? = null
+    private lateinit var chartImage: ImageView
+    private lateinit var chartBitmap: ChartBitmapHandlerView
     private val LOG_ID = "GDH.AA.Main"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
             super.onCreate(savedInstanceState)
+            enableEdgeToEdge()
             setContentView(R.layout.activity_main)
             Log.v(LOG_ID, "onCreate called")
+
+
+            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.root)) { v, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                Log.d(LOG_ID, "Insets: " + systemBars.toString())
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+                insets
+            }
 
             txtBgValue = findViewById(R.id.txtBgValue)
             viewIcon = findViewById(R.id.viewIcon)
@@ -89,6 +109,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableNotes = findViewById(R.id.tableNotes)
             tableDetails = findViewById(R.id.tableDetails)
             txtNoData = findViewById(R.id.txtNoData)
+            chartImage = findViewById(R.id.graphImage)
+            btnHelp = findViewById(R.id.btnHelp)
+            noDataLayout = findViewById(R.id.layout_no_data)
             versionChecker = GitHubVersionChecker("GlucoDataAuto", BuildConfig.VERSION_NAME, this)
 
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
@@ -100,10 +123,26 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             txtVersion = findViewById(R.id.txtVersion)
             txtVersion.text = BuildConfig.VERSION_NAME
 
-            btnSources.setOnClickListener{
-                val intent = Intent(this, SettingsActivity::class.java)
-                intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.SORUCE_FRAGMENT.value)
-                startActivity(intent)
+            btnSources.setOnClickListener {
+                try {
+                    val intent = Intent(this, SettingsActivity::class.java)
+                    intent.putExtra(SettingsActivity.FRAGMENT_EXTRA, SettingsFragmentClass.SORUCE_FRAGMENT.value)
+                    startActivity(intent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Sources button exception: " + exc.message.toString() )
+                }
+            }
+
+            btnHelp.setOnClickListener{
+                try {
+                    val browserIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(resources.getText(CR.string.help_link).toString())
+                    )
+                    startActivity(browserIntent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "btn help exception: " + exc.message.toString() )
+                }
             }
 
             val sendToAod = sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATA_AOD, false)
@@ -129,6 +168,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 }
             }
             GlucoDataServiceAuto.init(this)
+            chartBitmap = ChartBitmapHandlerView(chartImage, this)
             requestPermission()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
@@ -141,6 +181,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             super.onPause()
             InternalNotifier.remNotifier(this, this)
             GlucoDataServiceAuto.stopDataSync(this)
+            chartBitmap.pause()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onPause exception: " + exc.message.toString() )
         }
@@ -167,11 +208,20 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 NotifySource.TTS_STATE_CHANGED))
 
             GlucoDataServiceAuto.startDataSync()
+            if(!GlucoDataService.isServiceRunning)
+                GlucoDataService.context = this.applicationContext
+            chartBitmap.resume()
             versionChecker.checkVersion(1)
             checkNewSettings()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onResume exception: " + exc.message.toString() )
         }
+    }
+
+    override fun onDestroy() {
+        Log.v(LOG_ID, "onDestroy called")
+        super.onDestroy()
+        chartBitmap.close()
     }
 
     fun requestPermission() : Boolean {
@@ -418,15 +468,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             cobText.contentDescription = getString(CR.string.info_label_cob) + " " + ReceiveData.getCobAsString()
             cobText.visibility = iobText.visibility
 
-            if(ReceiveData.time == 0L) {
-                txtLastValue.visibility = View.VISIBLE
-                txtNoData.visibility = View.VISIBLE
-                btnSources.visibility = View.VISIBLE
-            } else {
-                txtLastValue.visibility = View.GONE
-                txtNoData.visibility = View.GONE
-                btnSources.visibility = View.GONE
-            }
+            noDataLayout.visibility = if(ReceiveData.time>0) View.GONE else View.VISIBLE
+
             updateNotesTable()
             updateAlarmsTable()
             updateConnectionsTable()
@@ -446,10 +489,10 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
             tableConnections.addView(createRow(SourceStateData.lastSource.resId,msg))
             if(SourceStateData.lastState == SourceState.ERROR && SourceStateData.lastSource == DataSource.DEXCOM_SHARE) {
                 if (msg.contains("500:")) { // invalid password
-                    val us_account = sharedPref.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, false)
+                    val server = sharedPref.getString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu") ?: "eu"
                     val browserIntent = Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse(resources.getString(if(us_account)CR.string.dexcom_account_us_url else CR.string.dexcom_account_non_us_url))
+                        Uri.parse(resources.getString(DexcomShareSourceTask.getClarityUrlRes(server)))
                     )
                     val onClickListener = View.OnClickListener {
                         startActivity(browserIntent)
@@ -457,7 +500,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     tableConnections.addView(
                         createRow(
                             SourceStateData.lastSource.resId,
-                            resources.getString(if(us_account) CR.string.dexcom_share_check_us_account else CR.string.dexcom_share_check_non_us_account),
+                            resources.getString(DexcomShareSourceTask.getClarityUrlSummaryRes(server)),
                             onClickListener
                         )
                     )

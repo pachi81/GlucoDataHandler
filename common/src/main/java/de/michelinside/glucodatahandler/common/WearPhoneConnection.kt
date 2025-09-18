@@ -14,6 +14,7 @@ import de.michelinside.glucodatahandler.common.notification.AlarmType
 import de.michelinside.glucodatahandler.common.notifier.*
 import de.michelinside.glucodatahandler.common.receiver.BatteryReceiver
 import de.michelinside.glucodatahandler.common.notifier.DataSource
+import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
 import de.michelinside.glucodatahandler.common.tasks.DataSourceTask
 import de.michelinside.glucodatahandler.common.utils.Utils
 import kotlinx.coroutines.*
@@ -99,19 +100,16 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             }
         }
 
-        fun getNodeConnectionStates(context: Context, addMissing: Boolean = true): Map<String, String> {
-            val connectionStates = mutableMapOf<String, String>()
+        fun getNodeConnectionStates(context: Context, addMissing: Boolean = true): Map<String, Int> {
+            val connectionStates = mutableMapOf<String, Int>()
             connectedNodes.forEach { node ->
                 (
                     if (nodeBatteryLevel.containsKey(node.key)) {
                         val level = nodeBatteryLevel.getValue(node.key)
-                        connectionStates[getDisplayName(node.value)] = if (level > 0) "${level}%" else context.getString(R.string.state_connected)
-                        /*if(nodeVersions.contains(node.key) && nodeVersions.getValue(node.key) >= 0 && nodeVersions.getValue(node.key) < BuildConfig.BASE_VERSION) {
-                            connectionStates[getDisplayName(node.value)] += "\n" + context.getString(R.string.state_update_required)
-                        } else {}*/
+                        connectionStates[getDisplayName(node.value)] = if (level > 0) level else 0
                     }
                     else if (addMissing) {
-                        connectionStates[getDisplayName(node.value)] = context.getString(R.string.state_await_data)
+                        connectionStates[getDisplayName(node.value)] = -1
                     } else {}
                 )
             }
@@ -169,6 +167,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         this.context = context
         openConnection()
         if (sendSettings) {
+            filter.add(NotifySource.TASKER_SETTINGS)
             filter.add(NotifySource.SETTINGS)   // only send setting changes from phone to wear!
             filter.add(NotifySource.SOURCE_SETTINGS)
             filter.add(NotifySource.ALARM_SETTINGS)
@@ -351,7 +350,8 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         val path = when(dataSource) {
             NotifySource.BATTERY_LEVEL -> Constants.BATTERY_INTENT_MESSAGE_PATH
             NotifySource.CAPILITY_INFO -> Constants.REQUEST_DATA_MESSAGE_PATH
-            NotifySource.SETTINGS -> Constants.SETTINGS_INTENT_MESSAGE_PATH
+            NotifySource.TASKER_SETTINGS -> Constants.TASKER_SETTINGS_INTENT_MESSAGE_PATH
+            NotifySource.SETTINGS -> Constants.GENERAL_SETTINGS_INTENT_MESSAGE_PATH
             NotifySource.SOURCE_SETTINGS -> Constants.SOURCE_SETTINGS_INTENT_MESSAGE_PATH
             NotifySource.ALARM_SETTINGS -> Constants.ALARM_SETTINGS_INTENT_MESSAGE_PATH
             NotifySource.LOGCAT_REQUEST -> Constants.REQUEST_LOGCAT_MESSAGE_PATH
@@ -369,18 +369,19 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             Log.v(LOG_ID, "sendMessage called for $dataSource filter receiver $filterReceiverId ignoring receiver $ignoreReceiverId with extras $extras")
             if( nodesConnected && dataSource != NotifySource.NODE_BATTERY_LEVEL ) {
                 Log.d(LOG_ID, connectedNodes.size.toString() + " nodes found for sending message for " + dataSource.toString())
-                if(extras != null) {
+                if(extras != null && dataSource != NotifySource.TASKER_SETTINGS) {
+                    if(dataSource == NotifySource.SETTINGS && !extras.containsKey(Constants.SETTINGS_BUNDLE) && getMinNodeVersion() < 150) {
+                        Log.i(LOG_ID, "Move settings to bundle because of old version ${getMinNodeVersion()}")
+                        val newExtras = Bundle()
+                        newExtras.putBundle(Constants.SETTINGS_BUNDLE, extras.deepCopy())
+                        extras.clear()
+                        extras.putAll(newExtras)
+                    }
                     extras.putInt(Constants.VERSION_CODE, BuildConfig.BASE_VERSION)  // add current version to bundle
                     if (dataSource != NotifySource.BATTERY_LEVEL && BatteryReceiver.batteryPercentage >= 0) {
                         extras.putInt(BatteryReceiver.LEVEL, BatteryReceiver.batteryPercentage)
                     }
                     if (dataSource == NotifySource.CAPILITY_INFO) {
-                        if(GlucoDataService.appSource == AppSource.PHONE_APP) {
-                            Log.d(LOG_ID, "Adding settings for sending")
-                            extras.putBundle(Constants.SETTINGS_BUNDLE, GlucoDataService.getSettings())
-                            extras.putBundle(Constants.SOURCE_SETTINGS_BUNDLE, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)))
-                            extras.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings())
-                        }
                         extras.putBundle(Constants.ALARM_EXTRA_BUNDLE, AlarmHandler.getExtras())
                     }
                 }
@@ -465,8 +466,15 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
             if(notConnectedNodes.isEmpty())
                 removeTimer()
             if (GlucoDataService.appSource == AppSource.PHONE_APP) {
+                Log.i(LOG_ID, "Send settings to watch $nodeId")
+                sendMessage(NotifySource.SETTINGS, GlucoDataService.getSettings(), filterReceiverId = nodeId)
+                sendMessage(NotifySource.SOURCE_SETTINGS, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)), filterReceiverId = nodeId)
+                sendMessage(NotifySource.ALARM_SETTINGS, AlarmHandler.getSettings(), filterReceiverId = nodeId)
                 dbSync.requestDbSync(context)   // update data on phone first, before sending data to wear
             }
+            val bundle = Bundle()
+            bundle.putString(Constants.EXTRA_NODE_ID, nodeId)
+            InternalNotifier.notify(context, NotifySource.NODE_CONNECTED, bundle)
         } else if(noDataReceived.contains(nodeId)) {
             Log.i(LOG_ID, "Node with id " + nodeId + " still waiting for receiving data!")
         } else if(noDataSend.contains(nodeId)) {
@@ -481,12 +489,6 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
         commandBundle.putString(Constants.COMMAND_EXTRA, command.toString())
         if(extras != null) {
             commandBundle.putBundle(Constants.COMMAND_BUNDLE, extras)
-            if (GlucoDataService.appSource == AppSource.PHONE_APP) {
-                Log.d(LOG_ID, "Adding settings for sending command")
-                commandBundle.putBundle(Constants.SETTINGS_BUNDLE, GlucoDataService.getSettings())
-                commandBundle.putBundle(Constants.SOURCE_SETTINGS_BUNDLE, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)))
-                commandBundle.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings())
-            }
             if(BatteryReceiver.batteryPercentage >= 0) {
                 commandBundle.putInt(BatteryReceiver.LEVEL, BatteryReceiver.batteryPercentage)
             }
@@ -529,6 +531,8 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                 checkNodeConnect(p0.sourceNodeId)
             }
             if(extras!= null) {
+                if(Log.isLoggable(LOG_ID, Log.VERBOSE))
+                    Log.v(LOG_ID, "Received extras: ${Utils.dumpBundle(extras)}")
                 if (extras.containsKey(Constants.SETTINGS_BUNDLE)) {
                     val bundle = extras.getBundle(Constants.SETTINGS_BUNDLE)
                     Log.d(LOG_ID, "Glucose settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(bundle))
@@ -584,9 +588,10 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                                 DateFormat.getTimeInstance(DateFormat.DEFAULT).format((extras.getLong(ReceiveData.TIME))) +
                                 " - current value time: " +
                                 DateFormat.getTimeInstance(DateFormat.DEFAULT).format((ReceiveData.time)))
-                        if (extras.getLong(ReceiveData.TIME) >= ReceiveData.time)
+                        if (ReceiveData.hasNewValue(extras)) {
                             ReceiveData.handleIntent(context, dataSource, extras, true)
-                        else
+                            GlucoseDataReceiver.checkHandleWebServerRequests(context)
+                        } else if(extras.getLong(ReceiveData.TIME) < ReceiveData.time)
                             forceSend = true  //  received data is older than current one, send current one
 
                         if (GlucoDataService.appSource == AppSource.PHONE_APP && connectedNodes.size > 1) {
@@ -599,27 +604,37 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                     }
                 }
 
+                if (p0.path.contains(Constants.GENERAL_SETTINGS_INTENT_MESSAGE_PATH)) {
+                    if (!extras.isEmpty) {
+                        Log.d(LOG_ID, "Glucose settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(extras))
+                        GlucoDataService.setSettings(context, extras)
+                        InternalNotifier.notify(context, NotifySource.SETTINGS, extras)
+                    }
+                }
+
                 if (p0.path.contains(Constants.SOURCE_SETTINGS_INTENT_MESSAGE_PATH)) {
                     if (!extras.isEmpty) {
-                        Log.d(LOG_ID, "Glucose source settings received from " + p0.sourceNodeId + ": " + extras.toString())
+                        Log.d(LOG_ID, "Glucose source settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(extras))
                         DataSourceTask.updateSettings(context, extras)
                     }
                 }
 
                 if (p0.path.contains(Constants.ALARM_SETTINGS_INTENT_MESSAGE_PATH)) {
                     if (!extras.isEmpty) {
-                        Log.d(LOG_ID, "Glucose alarm settings received from " + p0.sourceNodeId + ": " + extras.toString())
+                        Log.d(LOG_ID, "Glucose alarm settings received from " + p0.sourceNodeId + ": " + Utils.dumpBundle(extras))
                         AlarmHandler.setSettings(context, extras)
                     }
                 }
 
-                if (p0.path.contains(Constants.SETTINGS_INTENT_MESSAGE_PATH)) {
-                    // check for other settings send...
+                if (p0.path.contains(Constants.TASKER_SETTINGS_INTENT_MESSAGE_PATH)) {
+                    // check for other settings send... (by Tasker)
                     extras.remove(Constants.SETTINGS_BUNDLE)
                     extras.remove(Constants.SOURCE_SETTINGS_BUNDLE)
                     extras.remove(Constants.ALARM_SETTINGS_BUNDLE)
                     extras.remove(BatteryReceiver.LEVEL)
+                    extras.remove(Constants.VERSION_CODE)
                     if (!extras.isEmpty) {
+                        // this section should only be called for Tasker settings which are only Booleans at the moment
                         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
                         val keys = extras.keySet()
                         Log.d(LOG_ID, keys.size.toString() + " settings received")
@@ -627,7 +642,7 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                             keys.forEach {
                                 try {
                                     val value = extras.getBoolean(it)
-                                    Log.d(LOG_ID, "Setting value " + value + " for " + it)
+                                    Log.d(LOG_ID, "Setting tasker value " + value + " for " + it)
                                         putBoolean(it, value)
                                 } catch (exc: ClassCastException) {
                                     Log.w(LOG_ID,"Getting value for key " + it + " caused exception: " + exc.message)
@@ -648,12 +663,6 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
                         source = NotifySource.BATTERY_LEVEL
                     }
                     if (bundle != null) {
-                        if (GlucoDataService.appSource == AppSource.PHONE_APP) {
-                            Log.d(LOG_ID, "Adding settings for sending")
-                            bundle.putBundle(Constants.SETTINGS_BUNDLE, GlucoDataService.getSettings())
-                            bundle.putBundle(Constants.SOURCE_SETTINGS_BUNDLE, DataSourceTask.getSettingsBundle(context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)))
-                            bundle.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings())
-                        }
                         bundle.putBundle(Constants.ALARM_EXTRA_BUNDLE, AlarmHandler.getExtras())
                         sendMessage(source, bundle)
                     }
@@ -795,6 +804,12 @@ class WearPhoneConnection : MessageClient.OnMessageReceivedListener, CapabilityC
 
     private fun nodeHasJson(nodeId: String): Boolean {
         return nodeVersions.contains(nodeId) && nodeVersions.getValue(nodeId) > 0
+    }
+
+    private fun getMinNodeVersion(): Int {
+        if(nodeVersions.isNotEmpty())
+            return nodeVersions.values.min()
+        return 0
     }
 
     private fun setNodeVersion(nodeId: String, version: Int, force: Boolean = false) {

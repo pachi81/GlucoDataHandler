@@ -9,19 +9,20 @@ Ta innowacyjna aplikacja odbiera dane z różnych źródeł i wizualizuje je w p
 
 ## Funkcje
 
-* **Różne [źródła](./SOURCES_PL.md) danych:**
+* **Różne [źródła](https://github.com/pachi81/GlucoDataHandler/wiki/Sensors) danych:**
   
   * **Usługi chmurowe:**
-    * Odbiera wartości glukozy jako **[LibreLinkUp follower](./SOURCES_PL.md#librelinkup)**
-    * Odbiera wartości glukozy jako **[Dexcom Share follower](./SOURCES_PL.md#dexcom-share)**
+    * Odbiera wartości glukozy jako **[LibreLinkUp follower](https://github.com/pachi81/GlucoDataHandler/wiki/LibreLinkUp)**
+    * Odbiera wartości glukozy jako **[Dexcom Share follower](https://github.com/pachi81/GlucoDataHandler/wiki/Dexcom-Share)**
+    * Odbiera wartości glukozy jako **[Medtrum follower](https://github.com/pachi81/GlucoDataHandler/wiki/EasyFollow)**
     * Odbiera wartości glukozy, IOB i COB z **Nightscout** (interfejs pebble).
   * **Aplikacje lokalne:**
-    * Odbiera wartości glukozy, IOB i COB z **[AndroidAPS](./SOURCES_PL.md#androidaps)**.
-    * Odbiera wartości glukozy z **[Juggluco](./SOURCES_PL.md#juggluco)**
-    * Odbiera wartości glukozy z **[xDrip+](./SOURCES_PL.md#xdrip)**
-    * Odbiera wartości glukozy z **[Eversense](./SOURCES_PL.md#eversense)** (przy użyciu **[ESEL](https://github.com/BernhardRo/Esel)**).
-    * Odbiera wartości glukozy z **[Dexcom BYODA](./SOURCES_PL.md#dexcom-byoda)** (funkcja jeszcze nie została przetestowana!)
-  * **Powiadomienia (Beta!):** Odbiera wartości z aplikacji Cam APS FX, Dexcom G6/G7, Eversense i potencjalnie wielu innych.
+    * Odbiera wartości glukozy, IOB i COB z **[AndroidAPS](https://github.com/pachi81/GlucoDataHandler/wiki/Android-APS-(AAPS))**.
+    * Odbiera wartości glukozy z **[Juggluco](https://github.com/pachi81/GlucoDataHandler/wiki/Juggluco)**
+    * Odbiera wartości glukozy z **[xDrip+](https://github.com/pachi81/GlucoDataHandler/wiki/xDrip)**
+    * Odbiera wartości glukozy z **Eversense** (przy użyciu **[ESEL](https://github.com/pachi81/GlucoDataHandler/wiki/Esel)**).
+    * Odbiera wartości glukozy z **[Dexcom BYODA](https://github.com/pachi81/GlucoDataHandler/wiki/Dexcom-BYODA)** (funkcja jeszcze nie została przetestowana!)
+  * **[Powiadomienia](https://github.com/pachi81/GlucoDataHandler/wiki/Notification-Reader) (Beta!):** Odbiera wartości z aplikacji Cam APS FX, Dexcom G6/G7, Eversense i potencjalnie wielu innych.
 
 * **Kompleksowa wizualizacja:**
   

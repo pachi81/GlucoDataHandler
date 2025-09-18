@@ -34,6 +34,11 @@ import de.michelinside.glucodatahandler.common.utils.Utils
 class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
     private val LOG_ID = "GDH.Main.AlarmType"
 
+    companion object {
+        private var ringtonePickerSupportsSilent = true
+        private var ringtonePickerSupportsDefault = true
+    }
+
     private lateinit var sharedPref: SharedPreferences
     private lateinit var txtAlarmTitle: TextView
     private lateinit var switchUseCustomSound: SwitchCompat
@@ -114,7 +119,10 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
                         apply()
                     }
                     btnSelectSound.isEnabled = isChecked
-                    updateSoundText()
+                    if(isChecked && !ringtonePickerSupportsSilent)
+                        setRingtoneResult(null)
+                    else
+                        updateSoundText()
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "Changing notification exception: " + exc.message.toString() )
                 }
@@ -124,21 +132,42 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
             updateSoundText()
 
             btnTestAlarm.setOnClickListener {
-                Log.d(LOG_ID, "Test alarm button clicked!")
-                btnTestAlarm.isEnabled = false
-                AlarmNotificationWear.triggerTest(alarmType, this)
+                try {
+                    Log.d(LOG_ID, "Test alarm button clicked!")
+                    btnTestAlarm.isEnabled = false
+                    AlarmNotificationWear.triggerTest(alarmType, this)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Test alarm exception: " + exc.message.toString() )
+                }
             }
 
-            setRingtoneSelect(Uri.parse(sharedPref.getString(customSoundPref, "")))
+            ringtoneSelecter = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+                try {
+                    handleRingtoneResult(result.resultCode, result.data)
+                } catch( exc: Exception ) {
+                    Log.e(LOG_ID, "Error setting ringtone: " + exc.message)
+                }
+            }
+
+            btnSelectSound.setOnClickListener {
+                try {
+                    Log.d(LOG_ID, "Select custom sound clicked")
+                    showRingtonePicker()
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Select custom sound exception: " + exc.message.toString())
+                }
+            }
 
             // vibration
-
-
             btnSelectVibration.setOnClickListener {
-                Log.v(LOG_ID, "${btnSelectVibration.text} button clicked!")
-                val intent = Intent(this, VibrationPatternActivity::class.java)
-                intent.putExtra("type", alarmType.ordinal)
-                startActivity(intent)
+                try {
+                    Log.v(LOG_ID, "${btnSelectVibration.text} button clicked!")
+                    val intent = Intent(this, VibrationPatternActivity::class.java)
+                    intent.putExtra("type", alarmType.ordinal)
+                    startActivity(intent)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "Select vibration exception: " + exc.message.toString() )
+                }
             }
 
             val vibatrionAmbituteLayout = findViewById<RelativeLayout>(R.id.vibrationAmplitudeHead)
@@ -187,38 +216,57 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
         }
     }
 
-    private fun setRingtoneSelect(curUri: Uri?) {
+
+    private fun handleRingtoneResult(resultCode: Int, data: Intent?) {
         try {
-            Log.v(LOG_ID, "setRingtoneSelect called with uri $curUri" )
-            if(ringtoneSelecter == null) {
-                ringtoneSelecter = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-                    Log.v(LOG_ID, "$alarmType result ${result.resultCode}: ${result.data}")
-                    if (result.resultCode == Activity.RESULT_OK) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            setRingtoneResult(result.data!!.getParcelableExtra(
-                                RingtoneManager.EXTRA_RINGTONE_PICKED_URI, Uri::class.java))
-                        } else {
-                            @Suppress("DEPRECATION")
-                            setRingtoneResult(result.data!!.getParcelableExtra(
-                                RingtoneManager.EXTRA_RINGTONE_PICKED_URI))
-                        }
-                    }
+            Log.i(LOG_ID, "handleRingtoneResult for $alarmType: $resultCode, ${Utils.dumpBundle(data?.extras)}")
+            if(resultCode == Activity.RESULT_OK && data != null && data.extras != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    setRingtoneResult(data.getParcelableExtra(
+                        RingtoneManager.EXTRA_RINGTONE_PICKED_URI, Uri::class.java))
+                } else {
+                    @Suppress("DEPRECATION")
+                    setRingtoneResult(data.getParcelableExtra(
+                        RingtoneManager.EXTRA_RINGTONE_PICKED_URI))
                 }
+            } else if(resultCode == Activity.RESULT_CANCELED) {
+                Log.d(LOG_ID, "Ringtone select canceled - supportsSilent=$ringtonePickerSupportsSilent, supportsDefault=$ringtonePickerSupportsDefault")
+                if(ringtonePickerSupportsDefault) {
+                    ringtonePickerSupportsDefault = false
+                    showRingtonePicker()
+                    return
+                }
+                if(ringtonePickerSupportsSilent) {
+                    ringtonePickerSupportsSilent = false
+                    showRingtonePicker()
+                    return
+                }
+                Log.e(LOG_ID, "Ringtone picker could not be shown!")
             }
-            btnSelectSound.setOnClickListener {
-                Log.v(LOG_ID, "Select custom sound clicked")
+        } catch( exc: Exception ) {
+            Log.e(LOG_ID, "Error handleRingtoneResult: " + exc.message)
+        }
+    }
+
+    private fun showRingtonePicker() {
+        try {
+            if(ringtoneSelecter != null) {
+                val curUri = Uri.parse(sharedPref.getString(customSoundPref, ""))
+                Log.i(LOG_ID, "showRingtonePicker called with uri $curUri - supportsSilent=$ringtonePickerSupportsSilent, supportsDefault=$ringtonePickerSupportsDefault")
                 val ringtoneIntent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
                 ringtoneIntent.putExtra(
                     RingtoneManager.EXTRA_RINGTONE_TYPE,
                     RingtoneManager.TYPE_ALL
                 )
-                ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true)
-                ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)
+                ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, ringtonePickerSupportsSilent)
+                ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, ringtonePickerSupportsDefault)
                 ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, curUri)
-                ringtoneSelecter!!.launch(ringtoneIntent)
+                ringtoneSelecter!!.launch(Intent.createChooser(ringtoneIntent, null))
+            } else {
+                Log.e(LOG_ID, "Ringtone selecter is null!")
             }
-        } catch( exc: Exception ) {
-            Log.e(LOG_ID, "setRingtoneSelect exception: " + exc.message + ": " + exc.stackTraceToString())
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Select custom sound exception: " + exc.message.toString())
         }
     }
 
@@ -228,7 +276,6 @@ class AlarmTypeActivity : AppCompatActivity(), NotifierInterface {
             putString(customSoundPref, newUri?.toString())
             apply()
         }
-        setRingtoneSelect(newUri)
         updateSoundText()
     }
 

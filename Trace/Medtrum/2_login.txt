@@ -1,0 +1,59 @@
+METHOD: POST
+URL
+https://easyview.medtrum.eu/mobile/ajax/login
+HEADERS
+Accept-Encoding:
+gzip
+AppTag:
+v=1.2.70(112);n=eyfo;p=android
+Connection:
+Keep-Alive
+Content-Length:
+364
+Content-Type:
+application/x-www-form-urlencoded
+DevInfo:
+Android 11;Google generic_x86_arm;Android 11
+Host:
+easyview.medtrum.eu
+RegionCode:
+DE
+User-Agent:
+okhttp/3.5.0
+
+BODY
+user_type=M&user_name=user&password=xxx&deviceToken=[FCM token]&platform=google&apptype=Follow&push_platform=google&app_version=1.2.70%28112%29&device_name=sdk_gphone_x86&bundleID=com.medtrum.easyfollowforandroidmg
+
+---------------------------- RESPONSE -----------------------------------------------------
+
+STATUS: 200 OK
+HEADERS
+Connection:
+keep-alive
+Content-Length:
+268
+Content-Type:
+application/json
+Date:
+Tue, 15 Jul 2025 07:11:46 GMT
+Server:
+nginx/1.26.1
+Set-Cookie:
+[cookie]
+Vary:
+Cookie
+
+BODY
+{
+  "app_sid": "xxx",
+  "auto_mode_enable": false,
+  "auto_mode_gestational": false,
+  "created_by": "register",
+  "device_option": "cgms,pump",
+  "patch_enable": false,
+  "res": "OK",
+  "smart_run_enable": false,
+  "smart_run_gestational": false,
+  "uid": 12345,
+  "usertype": "M"
+}

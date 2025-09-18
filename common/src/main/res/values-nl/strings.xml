@@ -34,6 +34,10 @@
     <string name="alarm_low">laag</string>
     <string name="alarm_high">hoog</string>
     <string name="alarm_very_high">zeer hoog</string>
+    <string name="very_low">Zeer laag</string>
+    <string name="low">Laag</string>
+    <string name="high">Hoog</string>
+    <string name="very_high">Zeer hoog</string>
 
     <!-- mobile -->
 
@@ -299,12 +303,12 @@
     <string name="src_xdrip_noise_blocking">Noise-Block actief in xDrip+ Inter-app-instellingen!\nWijzig dit in \"Extreem luid\"!</string>
     <string name="pref_cat_follower">Cloudservices</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
-    <string name="pref_source_juggluco_info_summary">Om waarden van Juggluco te ontvangen:\n- open Juggluco\n- ga naar \"Instellingen\"\n- schakel \"Glucodata-broadcast\" in\n- schakel \"de.michelinside.glucodatahandler\" in</string>
-    <string name="pref_gda_source_juggluco_info_summary">Om waarden van Juggluco te ontvangen:\n- open Juggluco\n- ga naar \"Instellingen\"\n- schakel \"Glucodata-broadcast\" in\n- schakel \"de.michelinside.glucodataauto\" in</string>
+    <string name="pref_source_juggluco_info_summary">Om waarden van Juggluco te ontvangen:\n- open Juggluco\n- ga naar \"Instellingen\"\n- ga naar \"Deel gegevens\"\n- schakel \"Glucodata-broadcast\" in\n- schakel \"de.michelinside.glucodatahandler\" in</string>
+    <string name="pref_gda_source_juggluco_info_summary">Om waarden van Juggluco te ontvangen:\n- open Juggluco\n- ga naar \"Instellingen\"\n- ga naar \"Deel gegevens\"\n- schakel \"Glucodata-broadcast\" in\n- schakel \"de.michelinside.glucodataauto\" in</string>
     <string name="pref_source_xdrip_info">xDrip+</string>
     <string name="pref_source_xdrip_info_1_summary">Om waarden van xDrip+ te ontvangen:\n- open xDrip+\n- ga naar instellingen\n- ga naar Inter-app-instellingen\n- schakel \"Lokaal uitzenden\" in\n- stel \"Ruisblokkering\" in op \"Verzend zelfs extreem luide signalen\"</string>
     <string name="pref_source_xdrip_info_2_summary">- schakel \"Compatibele broadcast\" in - controleer of \"Ontvanger identificeren\" leeg is of als er al een item bestaat, voeg \"de.michelinside.glucodatahandler\" toe, gescheiden door een spatie</string>
-    <string name="pref_gda_source_xdrip_info_2_summary">- schakel \"Compatibele broadcast\" in\n- controleer of \"Ontvangers identificeren\" leeg is of voeg een nieuwe regel toe met \"de.michelinside.glucodataauto\"</string>
+    <string name="pref_gda_source_xdrip_info_2_summary">- schakel \"Compatibele broadcast\" in - controleer of \"Ontvanger identificeren\" leeg is of als er al een item bestaat, voeg \"de.michelinside.glucodataauto\" toe, gescheiden door een spatie</string>
     <string name="pref_source_librelinkup_info">LibreLinkUp instellen</string>
     <string name="pref_source_librelinkup_info_summary">BELANGRIJK: dit is niet het account dat wordt gebruikt voor de FreeStyle Libre app!\nOm LibreLinkUp-volger te activeren:\n- open uw FreeStyle Libre app en selecteer in het menu Delen of Verbonden apps\n- activeer LibreLinkUp-verbinding\n- installeer LibreLinkUp vanuit de Play Store\n- stel uw account in en wacht op de uitnodiging</string>
     <string name="menu_contact">Contact</string>
@@ -315,7 +319,7 @@
     <string name="pref_source_aaps_info">AndroidAPS</string>
     <string name="pref_source_aaps_info_summary">Om waarden van AAPS te ontvangen:\n- open de AAPS-app\n- ga naar \"Config Builder\"\n- schakel \"Samsung Tizen\" of \"Data Broadcaster\" in</string>
     <string name="pref_switch_watchdrip_enabled">WatchDrip+</string>
-    <string name="pref_switch_watchdrip_enabled_summary">"Schakel WatchDrip+ communicatie in.\nBELANGRIJK: schakel \"Service inschakelen\" in WatchDrip+ in nadat u deze instelling hier hebt ingeschakeld!"</string>
+    <string name="pref_switch_watchdrip_enabled_summary">Schakel WatchDrip+ communicatie in.\nBELANGRIJK: schakel \"Service inschakelen\" in WatchDrip+ in nadat u deze instelling hier hebt ingeschakeld!</string>
     <string name="pref_car_notification_reappear_interval">Opnieuw verschijnen</string>
     <string name="pref_car_notification_reappear_interval_summary">Interval wanneer de melding opnieuw moet verschijnen als er geen nieuwe waarde is. (0 voor nooit).</string>
     <string name="pref_aa_media_player_icon_style_summary">Stijl van het dummy mediaspelerpictogram/afbeelding.</string>
@@ -434,7 +438,7 @@
     <string name="pref_source_gdh_info_summary">Om waarden van GlucoDataHandler te ontvangen:\n- open GlucoDataHandler\n- ga naar instellingen\n- schakel \"Doorsturen naar GlucoDataAuto\" in\n- om dezelfde instellingen te gebruiken, schakel \"Instellingen opnemen\" in</string>
     <string name="very_low_alarm_summary">Als u Android Auto-meldingen gebruikt, zullen zeer lage alarmen altijd een melding activeren en dit kan niet worden gedeactiveerd of gewijzigd.</string>
     <string name="pref_source_juggluco_iob_info">IOB van Juggluco</string>
-    <string name="pref_source_juggluco_iob_info_summary">Om IOB van Juggluco te ontvangen:\n- open Juggluco\n- ga naar \"Instellingen\"\n- schakel \"IOB\" in\n- ga naar \"Webserver\"\n- schakel \"Actief\" in\n- optioneel: schakel \"Alleen lokaal\" in</string>
+    <string name="pref_source_juggluco_iob_info_summary">Om IOB van Juggluco te ontvangen:\n- open Juggluco\n- ga naar \"Instellingen\"\n- ga naar \"Weergave\"\n- schakel \"IOB\" in</string>
     <string name="pref_source_xdrip_iob_info">IOB van xDrip+</string>
     <string name="pref_source_xdrip_iob_info_summary">Om waarden van xDrip+ te ontvangen:\n- open xDrip+\n- ga naar instellingen\n- ga naar Inter-app-instellingen\n- schakel \"xDrip-webservice\" in</string>
     <string name="pref_source_activate_local_nightscout_iob">IOB-gebruik activeren</string>
@@ -524,7 +528,7 @@
     <string name="obsolete_time_summary">Tijd in minuten waarna de waarde als verouderd wordt behandeld.\nNa tweemaal deze tijd wordt de waarde verwijderd.</string>
     <string name="pref_source_offline">Lokale applicaties</string>
     <string name="pref_source_offline_summary">Applicaties op hetzelfde apparaat die glucosewaarden leveren als intern broadcastbericht, zoals Juggluco, xDrip+, AAPS, enzovoort.</string>
-    <string name="pref_cat_follower_summary">Cloudservices die glucosewaarden leveren via internet, zoals LibreLinkUp, Dexcom Share en Nightscout.</string>
+    <string name="pref_cat_follower_summary">Cloudservices die glucosewaarden leveren via internet, zoals LibreLinkUp, Dexcom Share, Nightscout en Medtrum.</string>
     <string name="pref_source_xdrip_broadcast">Alternatief: Lokaal uitzenden</string>
     <string name="pref_source_dexcom_byoda_info_summary">Om waarden van Dexcom BYODA te ontvangen, moet u uitzenden naar AAPS inschakelen tijdens het bouwen van de app.</string>
     <string name="pref_source_eversense_info_summary">Om waarden van Eversense te ontvangen, moet u ESEL gebruiken in de companion-modus (melding lezen) of verbonden met de gepatchte Eversense-app.\nVoor meer informatie over ESEL, drukt u hier.</string>
@@ -771,8 +775,6 @@
     <string name="notification_reader_five_minute_interval">5 minuten interval</string>
     <string name="notification_reader_five_minute_interval_summary">Sommige apps, zoals Dexcom, werken hun meldingen vrij vaak bij. Om deze updates met dezelfde waarde te negeren, schakel je het interval van 5 minuten in.\nIndien ingeschakeld, is er slechts om de 5 minuten een nieuwe waarde of als de waarde in de melding is gewijzigd.</string>
     <string name="pref_source_notification_info_summary">Om waarden te ontvangen van meldingen van andere apps, is een toestemming nodig om toegang te krijgen tot de meldingen!\nDe melding moet de glucosewaarde of IOB als string bevatten.\nAangezien elke melding een andere lay-out heeft, werkt het mogelijk niet met elke app. Neem in geval van problemen contact met mij op met een screenshot van de melding en de logs.</string>
-    <string name="notification_dexcom_info">Belangrijk</string>
-    <string name="notification_dexcom_info_summary">Vanwege het speciale gedrag van Dexcom G7-meldingen, moet je ook de voorgrondmelding van Dexcom inschakelen.</string>
     <string name="sensor_age_label">Sensorleeftijd</string>
     <string name="sensor_age_value">%1$dd %2$dh</string>
     <string name="vibrate_pattern_shorty">Kort</string>
@@ -803,4 +805,60 @@
     <string name="pref_cat_ui_graph_settings_summary">Algemene instellingen voor de gebruikersinterface en de grafiek op het hoofdscherm en in widgets.</string>
     <string name="pref_cat_ui_graph_settings">Gebruikersinterface en grafiek</string>
     <string name="state_update_required">Update vereist!</string>
+
+    <string name="pref_notification_recreate">Notificaties opnieuw aanmaken</string>
+    <string name="pref_notification_recreate_summary">Verwijder en maak de tweede en derde notificatie opnieuw aan.\nDit is alleen vereist voor speciale AOD-schermen, die het icoon van de notificaties niet bijwerken.\nHet is niet mogelijk om het icoon van de voorgrondnotificatie opnieuw aan te maken.</string>
+    <string name="source_dexcom_server_eu">Internationaal/EU</string>
+    <string name="source_dexcom_server_us">Verenigde Staten</string>
+    <string name="source_dexcom_server_jp">Japan</string>
+    <string name="source_dexcom_server_summary">Selecteer de server afhankelijk van het land waaraan uw Dexcom Clarity is gerelateerd.</string>
+    <string name="dexcom_share_check_jp_account">Druk hier om uw Dexcom Share-accountgegevens voor uw Japanse account te controleren.</string>
+    <string name="src_cat_medtrum">Medtrum</string>
+    <string name="src_medtrum_enabled_summary">Schakel Medtrum-verbinding in na het instellen van gebruiker en wachtwoord.</string>
+    <string name="src_medtrum_user">Gebruiker</string>
+    <string name="src_medtrum_user_summary">Medtrum-gebruikersnaam voor volgersaccount.</string>
+    <string name="src_medtrum_password_summary">Wachtwoord voor Medtrum-volgersaccount.</string>
+    <string name="src_medtrum_patient_summary">Als er meer dan één patiënt aan het Medtrum-account is gekoppeld, selecteer dan de patiënt voor wie de gegevens worden ontvangen.</string>
+    <string name="source_medtrum_server_default">Standaard (.eu)</string>
+    <string name="source_medtrum_server_france">Frankrijk (.fr)</string>
+    <string name="source_medtrum">Medtrum</string>
+    <string name="source_request_interval_2">2 minuten</string>
+    <string name="source_select_patient">Selecteer eerst een patiënt!</string>
+    <string name="source_no_patient">Geen patiënt gevonden!</string>
+    <string name="source_new_sensor_starting">Nieuwe sensor start…</string>
+    <string name="source_sensor_need_calibration">Sensor moet gekalibreerd worden!</string>
+    <string name="source_no_valid_value">Geen geldige glucosewaarde gevonden!</string>
+    <string name="source_invalid_patient">Ongeldige patiëntgegevens!</string>
+    <string name="pref_source_libre_patched_info_summary">Als u de gepatchte Libre-app of andere apps gebruikt die deze broadcast leveren.</string>
+    <string name="pref_sensor_runtime">Draagtijd sensor</string>
+    <string name="pref_sensor_runtime_summary">Aantal dagen dat de sensor gedragen kan worden.</string>
+    <string name="runtime_10_days">10 dagen</string>
+    <string name="runtime_14_days">14 dagen</string>
+    <string name="runtime_15_days">15 dagen</string>
+    <string name="runtime_24_days">24 dagen</string>
+    <string name="table_header_statistics">Statistieken</string>
+    <string name="info_label_average">Gemiddelde</string>
+    <string name="time_in_range">TIR</string>
+    <string name="src_webserver">Webserver</string>
+    <string name="src_juggluco_webserver_summary">Gebruik van de Juggluco Webserver voor het ophalen van de sensorleeftijd en gemiste gegevens, indien aanwezig. Schakel eerst de Webserver in Juggluco in zonder SSL en api_secret.</string>
+
+    <string name="src_iob_support">IOB-ondersteuning</string>
+    <string name="src_juggluco_iob_support_summary">IOB-waarden ontvangen van de Juggluco Webserver.</string>
+    <string name="pref_source_juggluco_setup_info">Juggluco instellen</string>
+    <string name="pref_source_juggluco_webserver_info">Webserver instellen</string>
+    <string name="pref_source_juggluco_webserver_info_summary">Om de webserver in Juggluco in te schakelen:\n- open Juggluco\n- ga naar \"Instellingen\"\n- open \"Gegevens uitwisselen\"\n- open \"Webserver\"\n- Schakel \"Actief\" in\n- stel \"api_secret\" en \"SSL gebruiken\" NIET in!\n- optioneel: schakel \"Alleen lokaal\" in</string>
+
+    <string name="pref_source_medtrum_info">Medtrum instellen</string>
+    <string name="pref_source_medtrum_info_summary">Om gegevens als Medtrum-volger te ontvangen:\n- Registreer een account in de EasyFollower-app of op EasyView\n-> BELANGRIJK: u kunt uw Medtrum-account hiervoor niet gebruiken!\n- Nodig uzelf uit\n- Accepteer de uitnodiging\n- Gebruik dit account voor GlucoDataHandler\n- Optioneel: Verwijder de EasyFollower-app</string>
+
+    <string name="pref_battery_complication_percent">% weergeven (batterij)</string>
+
+    <string name="source_help_summary">Druk hier voor de GDH-wiki, die ondersteunde sensoren en compatibele bronnen vermeldt.</string>
+
+    <string name="pref_switch_standard_statistics">Standaardstatistieken gebruiken</string>
+    <string name="pref_switch_standard_statistics_summary">Gebruik de standaard statistische bereikwaarden of de aangepaste doelbereikinstellingen van GDH voor statistische berekeningen.</string>
+
+    <string name="aa_media_player_colored">Gekleurde hoes</string>
+    <string name="aa_media_player_colored_summary_off">Toon witte waarde, trend en grafiek</string>
+    <string name="aa_media_player_colored_summary_on">Toon gekleurde waarde, trend en grafiek</string>
 </resources>

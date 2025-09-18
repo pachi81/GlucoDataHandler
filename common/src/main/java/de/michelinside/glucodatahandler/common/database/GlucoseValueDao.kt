@@ -50,6 +50,12 @@ interface GlucoseValueDao {
     @Query("SELECT MAX(value) FROM glucose_values WHERE timestamp >= :minTime")
     fun getMaxValueByTime(minTime: Long): Int
 
+    @Query("SELECT AVG(value) FROM glucose_values WHERE timestamp >= :minTime")
+    fun getAverageValue(minTime: Long): Float
+
+    @Query("SELECT COUNT(*) FROM glucose_values WHERE value >= :minVal AND value <= :maxVal AND timestamp >= :minTime")
+    fun getValuesInRangeCount(minTime: Long, minVal: Int, maxVal: Int): Int
+
     @Query("DELETE FROM glucose_values WHERE timestamp = :timestamp")
     fun deleteValue(timestamp: Long)
 

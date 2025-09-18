@@ -2,21 +2,30 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-        android:title="@string/pref_aa_media_player_icon_style"
+        android:title="@string/pref_cat_general"
         app:iconSpaceReserved="false">
-        <androidx.preference.ListPreference
-            android:defaultValue="glucose_trend"
-            android:entries="@array/pref_aa_media_player_icon_labels"
-            android:entryValues="@array/pref_aa_media_player_icon_values"
-            android:key="aa_media_player_icon_style"
-            android:summary="@string/pref_aa_media_player_icon_style_summary"
-            android:title="@string/pref_floating_widget_style"
+        <androidx.preference.SeekBarPreference
+            app:showSeekBarValue="true"
+            app:seekBarIncrement="1"
+            app:min="0"
+            android:max="4"
+            android:defaultValue="2"
+            android:key="graph_bitmap_duration"
+            android:summary="@string/graph_duration_summary"
+            android:title="@string/graph_duration"
             app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="aa_media_player_show_iob_cob"
             android:title="@string/pref_show_iob_cob"
             android:summary="@string/pref_show_iob_cob_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="aa_media_player_colored"
+            android:summaryOn="@string/aa_media_player_colored_summary_on"
+            android:summaryOff="@string/aa_media_player_colored_summary_off"
+            android:title="@string/aa_media_player_colored"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory

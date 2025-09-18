@@ -89,12 +89,13 @@
             android:title="@string/src_enabled"
             android:summary="@string/src_dexcom_share_enabled_summary"
             app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="source_dexcom_share_use_us_url"
-            android:title="@string/src_dexcom_share_us_server"
-            android:summaryOn="@string/src_dexcom_share_us_server_summary_on"
-            android:summaryOff="@string/src_dexcom_share_us_server_summary_off"
+        <androidx.preference.ListPreference
+            android:defaultValue="eu"
+            android:entries="@array/source_dexcom_server_labels"
+            android:entryValues="@array/source_dexcom_server_values"
+            android:key="source_dexcom_server"
+            android:title="@string/src_libre_server"
+            android:summary="@string/source_dexcom_server_summary"
             app:iconSpaceReserved="false" />
         <androidx.preference.EditTextPreference
             android:defaultValue=""
@@ -164,6 +165,54 @@
             android:key="src_ns_iob_cob"
             android:title="@string/src_ns_iob_cob"
             android:summary="@string/src_ns_iob_cob_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/src_cat_medtrum"
+        app:iconSpaceReserved="false"
+        app:initialExpandedChildrenCount="1">
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="source_medtrum_enabled"
+            android:title="@string/src_enabled"
+            android:summary="@string/src_medtrum_enabled_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.EditTextPreference
+            android:defaultValue=""
+            android:key="source_medtrum_user"
+            android:title="@string/src_medtrum_user"
+            android:summary="@string/src_medtrum_user_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.EditTextPreference
+            android:defaultValue=""
+            android:key="source_medtrum_password"
+            android:title="@string/src_password"
+            android:summary="@string/src_medtrum_password_summary"
+            android:inputType="textPassword"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.ListPreference
+            android:defaultValue="eu"
+            android:entries="@array/source_medtrum_server_labels"
+            android:entryValues="@array/source_medtrum_server_values"
+            android:key="source_medtrum_server"
+            android:title="@string/src_libre_server"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.ListPreference
+            android:key="source_medtrum_patient_id"
+            android:title="@string/src_libre_patient"
+            android:summary="@string/src_medtrum_patient_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="source_medtrum_reconnect"
+            android:title="@string/src_libre_reconnect"
+            android:summary="@string/src_libre_reconnect_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="source_medtrumlinkup_info"
+            android:title="@string/pref_source_medtrum_info"
+            android:summary="@string/pref_source_medtrum_info_summary"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 </PreferenceScreen>

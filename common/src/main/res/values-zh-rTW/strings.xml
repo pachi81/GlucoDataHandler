@@ -34,6 +34,10 @@
     <string name="alarm_low">低</string>
     <string name="alarm_high">高</string>
     <string name="alarm_very_high">非常高</string>
+    <string name="very_low">非常低</string>
+    <string name="low">低</string>
+    <string name="high">高</string>
+    <string name="very_high">非常高</string>
 
     <!-- mobile -->
 
@@ -298,12 +302,12 @@
     <string name="src_xdrip_noise_blocking">xDrip+ Inter-app Settings 中已啟用 Noise-Block！\n請變更為「Extremely noisy」！</string>
     <string name="pref_cat_follower">雲端服務</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
-    <string name="pref_source_juggluco_info_summary">若要從 Juggluco 接收血糖值:\n- 開啟 Juggluco\n- 點選「Settings」\n- 啟用「Glucodata broadcast」\n- 啟用「de.michelinside.glucodatahandler」</string>
-    <string name="pref_gda_source_juggluco_info_summary">若要從 Juggluco 接收血糖值:\n- 開啟 Juggluco\n- 點選「Settings」\n- 啟用「Glucodata broadcast」\n- 啟用「de.michelinside.glucodataauto」</string>
+    <string name="pref_source_juggluco_info_summary">若要從 Juggluco 接收血糖值:\n- 開啟 Juggluco\n- 點選「Settings」\n- 點選「Exchange data」\n- 啟用「Glucodata broadcast」\n- 啟用「de.michelinside.glucodatahandler」</string>
+    <string name="pref_gda_source_juggluco_info_summary">若要從 Juggluco 接收血糖值:\n- 開啟 Juggluco\n- 點選「Settings」\n- 點選「Exchange data」\n- 啟用「Glucodata broadcast」\n- 啟用「de.michelinside.glucodataauto」</string>
     <string name="pref_source_xdrip_info">xDrip+</string>
     <string name="pref_source_xdrip_info_1_summary">若要從 xDrip+ 接收血糖值:\n- 開啟 xDrip+\n- 點選 Settings\n- 前往 Inter-app Settings\n- 啟用「Broadcast locally」\n- 將「Noise Blocking」設為「Send even Extremely noisy signals」</string>
     <string name="pref_source_xdrip_info_2_summary">- 啟用「Compatible Broadcast」- 檢查「Identify receiver」是否為空或已存在內容，然後加入「de.michelinside.glucodatahandler」並以空白分隔</string>
-    <string name="pref_gda_source_xdrip_info_2_summary">- 啟用「Compatible Broadcast」\n- 檢查「Identify receiver」是否為空，然後新增一行「de.michelinside.glucodataauto」</string>
+    <string name="pref_gda_source_xdrip_info_2_summary">- 啟用「Compatible Broadcast」- 檢查「Identify receiver」是否為空或已存在內容，然後加入「de.michelinside.glucodataauto」並以空白分隔</string>
     <string name="pref_source_librelinkup_info">設定 LibreLinkUp</string>
     <string name="pref_source_librelinkup_info_summary">重要提示: 這不是登入 FreeStyle Libre 程式的帳號！\n若要啟用 LibreLinkUp 追蹤器：\n- 開啟 FreeStyle Libre 程式，並在選單中選擇「分享」或「已連結的應用程式」\n- 啟用 LibreLinkUp 連線\n- 從 Play 商店安裝 LibreLinkUp\n- 設定帳號並等候邀請</string>
     <string name="menu_contact">聯絡作者</string>
@@ -433,7 +437,7 @@
     <string name="pref_source_gdh_info_summary">若要從 GlucoDataHandler 接收血糖值:\n- 開啟 GlucoDataHandler\n- 點選設定\n- 啟用「轉發到 GlucoDataAuto」\n- 若要使用同樣的設定，請啟用「包含設定」</string>
     <string name="very_low_alarm_summary">如果您使用 Android Auto 通知，非常低血糖警報會強制啟用且無法停用或變更</string>
     <string name="pref_source_juggluco_iob_info">Juggluco 的 IOB</string>
-    <string name="pref_source_juggluco_iob_info_summary">若要從 Juggluco 接收 IOB:\n- 開啟 Juggluco\n- 點選「Settings」\n- 啟用「IOB」\n- 點選「Web server」\n- 啟用「Active」\n- 選用: 啟用「Local only」</string>
+    <string name="pref_source_juggluco_iob_info_summary">若要從 Juggluco 接收 IOB:\n- 開啟 Juggluco\n- 點選「Settings」\n- 點選「Display」\n- 啟用「IOB」</string>
     <string name="pref_source_xdrip_iob_info">xDrip+ 的 IOB</string>
     <string name="pref_source_xdrip_iob_info_summary">若要從 xDrip+ 接收血糖值:\n- 開啟 xDrip+\n- 前往 Settings\n- 點選 Inter-app settings\n- 啟用「xDrip Web Service」</string>
     <string name="pref_source_activate_local_nightscout_iob">啟用 IOB 使用</string>
@@ -766,8 +770,6 @@
     <string name="notification_reader_five_minute_interval">5 分鐘間隔</string>
     <string name="notification_reader_five_minute_interval_summary">某些應用程式（例如 Dexcom）會相當頻繁地更新其通知。若要忽略具有相同數值的更新，請啟用 5 分鐘間隔。\n如果已啟用，則只會每 5 分鐘出現一個新數值，或當通知中的數值已變更時。</string>
     <string name="pref_source_notification_info_summary">若要從其他應用程式的通知接收數值，需要有存取通知的權限！\n通知必須包含字串形式的血糖值或 IOB。\n由於每個通知都有不同的版面配置，因此可能無法與所有應用程式搭配使用。如果發生問題，請透過通知的螢幕截圖和記錄與我聯絡。</string>
-    <string name="notification_dexcom_info">重要</string>
-    <string name="notification_dexcom_info_summary">由於 Dexcom G7 通知的特殊行為，您也必須啟用 Dexcom 的前景通知。</string>
     <string name="sensor_age_label">感測器使用時間</string>
     <string name="sensor_age_value">%1$d 天 %2$d 小時</string>
     <string name="vibrate_pattern_shorty">短</string>
@@ -799,4 +801,59 @@
     <string name="pref_cat_ui_graph_settings_summary">主畫面和 Widget 中使用者介面和圖表的一般設定。</string>
     <string name="pref_cat_ui_graph_settings">使用者介面和圖表</string>
     <string name="state_update_required">需要更新！</string>
+
+    <string name="pref_notification_recreate">重新建立通知</string>
+    <string name="pref_notification_recreate_summary">移除並重新建立第二和第三則通知。\n這僅適用於特殊的 AOD 顯示器，這些顯示器不會更新通知圖示。\n無法重新建立前景通知的圖示。</string>
+    <string name="source_dexcom_server_eu">國際/歐盟</string>
+    <string name="source_dexcom_server_us">美國</string>
+    <string name="source_dexcom_server_jp">日本</string>
+    <string name="source_dexcom_server_summary">根據您的 Dexcom Clarity 相關國家/地區選取伺服器。</string>
+    <string name="dexcom_share_check_jp_account">按此處檢查您日本帳戶的 Dexcom Share 帳戶資料。</string>
+    <string name="src_cat_medtrum">Medtrum</string>
+    <string name="src_medtrum_enabled_summary">設定使用者和密碼後啟用 Medtrum 連線。</string>
+    <string name="src_medtrum_user">使用者</string>
+    <string name="src_medtrum_user_summary">追蹤者帳戶的 Medtrum 使用者名稱。</string>
+    <string name="src_medtrum_password_summary">Medtrum 追蹤者帳戶的密碼。</string>
+    <string name="src_medtrum_patient_summary">如果 Medtrum 帳戶連接了多個病患，請選取接收資料的病患。</string>
+    <string name="source_medtrum_server_default">預設 (.eu)</string>
+    <string name="source_medtrum_server_france">法國 (.fr)</string>
+    <string name="source_medtrum">Medtrum</string>
+    <string name="source_request_interval_2">2 分鐘</string>
+    <string name="source_select_patient">請先選取病患！</string>
+    <string name="source_no_patient">找不到病患！</string>
+    <string name="source_new_sensor_starting">新感應器正在啟動…</string>
+    <string name="source_sensor_need_calibration">感應器需要校準！</string>
+    <string name="source_no_valid_value">找不到有效的葡萄糖值！</string>
+    <string name="source_invalid_patient">病患資料無效！</string>
+    <string name="pref_source_libre_patched_info_summary">如果您正在使用修補過的 Libre 應用程式或其他提供此廣播的應用程式。</string>
+    <string name="pref_sensor_runtime">感應器佩戴時間</string>
+    <string name="pref_sensor_runtime_summary">感應器可佩戴的天數。</string>
+    <string name="runtime_10_days">10 天</string>
+    <string name="runtime_14_days">14 天</string>
+    <string name="runtime_15_days">15 天</string>
+    <string name="runtime_24_days">24 天</string>
+    <string name="table_header_statistics">統計資料</string>
+    <string name="info_label_average">平均值</string>
+    <string name="time_in_range">TIR</string>
+    <string name="src_webserver">網路伺服器</string>
+    <string name="src_juggluco_webserver_summary">使用 Juggluco 網路伺服器取得感應器使用時間和遺失的資料 (如果有的話)。請先在 Juggluco 中啟用網路伺服器，且不使用 SSL 和 api_secret。</string>
+
+    <string name="src_iob_support">IOB 支援</string>
+    <string name="src_juggluco_iob_support_summary">從 Juggluco 網路伺服器接收 IOB 值。</string>
+    <string name="pref_source_juggluco_setup_info">設定 Juggluco</string>
+    <string name="pref_source_juggluco_webserver_info">設定網路伺服器</string>
+    <string name="pref_source_juggluco_webserver_info_summary">若要在 Juggluco 中啟用網路伺服器：\n- 開啟 Juggluco\n- 前往「設定」\n- 開啟「交換資料」\n- 開啟「網路伺服器」\n- 啟用「作用中」\n- 請勿設定 「api_secret」和「使用 SSL」！\n- 選用：啟用「僅限本機」</string>
+
+    <string name="pref_source_medtrum_info">設定 Medtrum</string>
+    <string name="pref_source_medtrum_info_summary">若要以 Medtrum 追蹤者身分接收資料：\n- 在 EasyFollower 應用程式或 EasyView 上註冊帳戶\n-> 重要：您不能為此使用您的 Medtrum 帳戶！\n- 邀請自己\n- 接受邀請\n- 將此帳戶用於 GlucoDataHandler\n- 選用：解除安裝 EasyFollower 應用程式</string>
+
+    <string name="pref_battery_complication_percent">顯示 % (電池)</string>
+    <string name="source_help_summary">按此處前往 GDH 維基，其中列出了支援的感應器和相容來源。</string>
+
+    <string name="pref_switch_standard_statistics">使用標準統計數據</string>
+    <string name="pref_switch_standard_statistics_summary">使用標準統計範圍值或 GDH 中的自訂目標範圍設定進行統計計算。</string>
+
+    <string name="aa_media_player_colored">彩色封面</string>
+    <string name="aa_media_player_colored_summary_off">顯示白色數值、趨勢和圖表</string>
+    <string name="aa_media_player_colored_summary_on">顯示彩色數值、趨勢和圖表</string>
 </resources>

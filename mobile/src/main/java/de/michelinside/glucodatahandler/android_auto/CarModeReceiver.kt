@@ -112,7 +112,7 @@ object CarModeReceiver {
         }
     }
 
-    fun sendToGlucoDataAuto(context: Context, withSettings: Boolean = false) {
+    fun sendToGlucoDataAuto(context: Context, withSettings: Boolean = false, withGraph: Boolean = false) {
         try {
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             if (connected && sharedPref.getBoolean(Constants.SHARED_PREF_SEND_TO_GLUCODATAAUTO, true) && PackageUtils.isGlucoDataAutoAvailable(context)) {
@@ -128,12 +128,12 @@ object CarModeReceiver {
                             extras.putBundle(Constants.SETTINGS_BUNDLE, settings)
                             extras.putBundle(Constants.ALARM_SETTINGS_BUNDLE, AlarmHandler.getSettings(true))
                         }
-                        if(graph_duration > 0) {
-                            val minTime = System.currentTimeMillis() - (graph_duration*60*60*1000)
-                            val data = dbAccess.getGlucoseValuesAsJson(minTime)
-                            Log.i(LOG_ID, "Sending graph data since: ${Utils.getUiTimeStamp(minTime)} - size: ${data.length}")
-                            extras.putString(Constants.EXTRA_GRAPH_DATA, data)
-                        }
+                    }
+                    if(withGraph && graph_duration > 0) {
+                        val minTime = System.currentTimeMillis() - (graph_duration*60*60*1000)
+                        val data = dbAccess.getGlucoseValuesAsJson(minTime)
+                        Log.i(LOG_ID, "Sending graph data since: ${Utils.getUiTimeStamp(minTime)} - size: ${data.length}")
+                        extras.putString(Constants.EXTRA_GRAPH_DATA, data)
                     }
                     intent.putExtras(extras)
                     intent.setPackage(Constants.PACKAGE_GLUCODATAAUTO)

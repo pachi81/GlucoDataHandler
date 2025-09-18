@@ -23,16 +23,21 @@ import java.net.HttpURLConnection
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.math.max
 
 abstract class DataSourceTask(private val enabledKey: String, protected val source: DataSource) : BackgroundTask() {
     private var enabled = false
-    private var interval = 1L
+    private var prefInterval = 1L
+    protected open var minInterval = 1L
     private var delaySec = 10L
     private var httpRequest = HttpRequest()
     protected var retry = false
     protected var firstGetValue = false
     private var isFirstRequest = true  // first request after startup
 
+    private val interval: Long get() {
+        return max(minInterval, prefInterval)
+    }
 
     companion object {
         private val LOG_ID = "GDH.Task.Source.DataSourceTask"
@@ -52,8 +57,13 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
             Constants.SHARED_PREF_NIGHTSCOUT_IOB_COB,
             Constants.SHARED_PREF_DEXCOM_SHARE_USER,
             Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD,
-            Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL,
-            Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT
+            Constants.SHARED_PREF_DEXCOM_SHARE_SERVER,
+            Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT,
+            Constants.SHARED_PREF_MEDTRUM_USER,
+            Constants.SHARED_PREF_MEDTRUM_PASSWORD,
+            Constants.SHARED_PREF_MEDTRUM_RECONNECT,
+            Constants.SHARED_PREF_MEDTRUM_PATIENT_ID,
+            Constants.SHARED_PREF_MEDTRUM_SERVER
         )
         fun updateSettings(context: Context, bundle: Bundle) {
             val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
@@ -75,8 +85,15 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
 
                 putString(Constants.SHARED_PREF_DEXCOM_SHARE_USER, bundle.getString(Constants.SHARED_PREF_DEXCOM_SHARE_USER, ""))
                 putString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, bundle.getString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, ""))
-                putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, bundle.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, false))
+                putString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, bundle.getString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu"))
                 putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, bundle.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, false))
+
+                putString(Constants.SHARED_PREF_MEDTRUM_USER, bundle.getString(Constants.SHARED_PREF_MEDTRUM_USER, ""))
+                putString(Constants.SHARED_PREF_MEDTRUM_PASSWORD, bundle.getString(Constants.SHARED_PREF_MEDTRUM_PASSWORD, ""))
+                putBoolean(Constants.SHARED_PREF_MEDTRUM_RECONNECT, bundle.getBoolean(Constants.SHARED_PREF_MEDTRUM_RECONNECT, false))
+                putString(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID, bundle.getString(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID, ""))
+                putString(Constants.SHARED_PREF_MEDTRUM_SERVER, bundle.getString(Constants.SHARED_PREF_MEDTRUM_SERVER, "eu"))
+
                 apply()
             }
             InternalNotifier.notify(context, NotifySource.SOURCE_SETTINGS, null)
@@ -100,9 +117,33 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
 
             bundle.putString(Constants.SHARED_PREF_DEXCOM_SHARE_USER, sharedPref.getString(Constants.SHARED_PREF_DEXCOM_SHARE_USER, ""))
             bundle.putString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, sharedPref.getString(Constants.SHARED_PREF_DEXCOM_SHARE_PASSWORD, ""))
-            bundle.putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, sharedPref.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, false))
+            bundle.putString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, sharedPref.getString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu"))
             bundle.putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, sharedPref.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_RECONNECT, false))
+
+            bundle.putString(Constants.SHARED_PREF_MEDTRUM_USER, sharedPref.getString(Constants.SHARED_PREF_MEDTRUM_USER, ""))
+            bundle.putString(Constants.SHARED_PREF_MEDTRUM_PASSWORD, sharedPref.getString(Constants.SHARED_PREF_MEDTRUM_PASSWORD, ""))
+            bundle.putBoolean(Constants.SHARED_PREF_MEDTRUM_RECONNECT, sharedPref.getBoolean(Constants.SHARED_PREF_MEDTRUM_RECONNECT, false))
+            bundle.putString(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID, sharedPref.getString(Constants.SHARED_PREF_MEDTRUM_PATIENT_ID, ""))
+            bundle.putString(Constants.SHARED_PREF_MEDTRUM_SERVER, sharedPref.getString(Constants.SHARED_PREF_MEDTRUM_SERVER, "eu"))
+
             return bundle
+        }
+
+        fun getFirstNeedGraphValueTime(interval: Long, isFirstRequest: Boolean = false): Long {
+            val firstLastPair = dbAccess.getFirstLastTimestamp()
+            val minTime = if(GlucoDataService.appSource == AppSource.AUTO_APP)
+                System.currentTimeMillis() - Constants.DB_MAX_DATA_GDA_TIME_MS     // only for delta calculation
+            else
+                System.currentTimeMillis() - Constants.DB_MAX_DATA_WEAR_TIME_MS    // 24h for init the first time
+            if(firstLastPair.first == 0L || (isFirstRequest && firstLastPair.first > minTime)) {
+                Log.i(LOG_ID, "First value is ${Utils.getElapsedTimeMinute(firstLastPair.first)} minutes old - try get older data on first request")
+                return minTime
+            }
+            if(firstLastPair.second > 0L && Utils.getElapsedTimeMinute(firstLastPair.second) > interval) {
+                Log.i(LOG_ID, "Last value is ${Utils.getElapsedTimeMinute(firstLastPair.second)} minutes old - try get newer data")
+                return maxOf(firstLastPair.second + 30000, minTime)
+            }
+            return 0L
         }
     }
 
@@ -215,6 +256,23 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
 
     open fun getNoNewValueInfo(time: Long): String = ""
 
+    protected fun handleIobResult(extras: Bundle) {
+        Log.d(LOG_ID, "handleIobResult for $source: ${Utils.dumpBundle(extras)}")
+        if(!ReceiveData.hasNewIobCob(extras)) {
+            setState(SourceState.CONNECTED)
+            return
+        }
+        Handler(Looper.getMainLooper()).post {
+            try {
+                ReceiveData.handleIobCob(GlucoDataService.context!!, source, extras)
+                setState(SourceState.CONNECTED)
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "Handle IOB exception: " + exc.message.toString() )
+                SourceStateData.setError(source, exc.message.toString())
+            }
+        }
+    }
+
     protected fun handleResult(extras: Bundle) {
         Log.d(LOG_ID, "handleResult for $source: ${Utils.dumpBundle(extras)}")
         if(!ReceiveData.hasNewValue(extras)) {
@@ -321,6 +379,10 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         return httpRequest.response
     }
 
+    protected fun getHeaderField(name: String): String? {
+        return httpRequest.getHeaderField(name)
+    }
+
     protected fun httpGet(url: String, header: MutableMap<String, String>): String? {
         return checkResponse(httpRequest.get(url, header, getTrustAllCertificates()))
     }
@@ -363,7 +425,7 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
         Log.d(LOG_ID, "checkPreferenceChanged for $key")
         if(key == null) {
             setEnabled(sharedPreferences.getBoolean(enabledKey, false))
-            interval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
+            prefInterval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
             delaySec = sharedPreferences.getInt(Constants.SHARED_PREF_SOURCE_DELAY, 30).toLong()
             if(GlucoDataService.appSource == AppSource.WEAR_APP)
                 delaySec += 5L  // add 5 seconds delay to receive by phone if connected
@@ -375,8 +437,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                     result = setEnabled(sharedPreferences.getBoolean(enabledKey, false))
                 }
                 Constants.SHARED_PREF_SOURCE_INTERVAL -> {
-                    if (interval != (sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L)) {
-                        interval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
+                    if (prefInterval != (sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L)) {
+                        prefInterval = sharedPreferences.getString(Constants.SHARED_PREF_SOURCE_INTERVAL, "1")?.toLong() ?: 1L
                         result = true
                     }
                 }
@@ -394,16 +456,6 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
     }
 
     protected fun getFirstNeedGraphValueTime(): Long {
-        val firstLastPair = dbAccess.getFirstLastTimestamp()
-        val minTime = System.currentTimeMillis() - Constants.DB_MAX_DATA_WEAR_TIME_MS    // 24h for init the first time
-        if(firstLastPair.first == 0L || (isFirstRequest && firstLastPair.first > minTime)) {
-            Log.i(LOG_ID, "First value is ${Utils.getElapsedTimeMinute(firstLastPair.first)} minutes old - try get older data on first request")
-            return minTime
-        }
-        if(firstLastPair.second > 0L && Utils.getElapsedTimeMinute(firstLastPair.second) > interval) {
-            Log.i(LOG_ID, "Last value is ${Utils.getElapsedTimeMinute(firstLastPair.second)} minutes old - try get newer data")
-            return maxOf(firstLastPair.second + 30000, minTime)
-        }
-        return 0L
+        return getFirstNeedGraphValueTime(interval, isFirstRequest)
     }
 }

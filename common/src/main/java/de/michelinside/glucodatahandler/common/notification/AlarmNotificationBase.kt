@@ -27,6 +27,7 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.common.utils.WakeLockHelper
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
 import kotlin.concurrent.write
@@ -265,22 +266,24 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
 
     private fun triggerNotification(alarmType: AlarmType, context: Context, forTest: Boolean = false) {
         try {
-            Log.d(LOG_ID, "triggerNotification called for $alarmType - active=$active - curNotification=$curNotification - forTest=$forTest")
-            if (getAlarmState(context, alarmType) == AlarmState.ACTIVE || forTest) {
-                stopCurrentNotification(context, true)  // do not send stop to client! -> to prevent, that the client will stop the newly created notification!
-                curNotification = getNotificationId(alarmType)
-                retriggerCount = 0
-                retriggerOnDestroy = false
-                retriggerTime = getTriggerTime(alarmType)
-                curAlarmTime = System.currentTimeMillis()
-                curTestAlarmType = if(forTest)
-                    alarmType
-                else
-                    AlarmType.NONE
-                Log.i(LOG_ID, "Create notification for $alarmType with ID=$curNotification - triggerTime=$retriggerTime")
-                if(canShowNotification())
-                    showNotification(alarmType, context)
-                triggerVibrationAndSound(alarmType, context)
+            WakeLockHelper(context).use {
+                Log.d(LOG_ID, "triggerNotification called for $alarmType - active=$active - curNotification=$curNotification - forTest=$forTest")
+                if (getAlarmState(context, alarmType) == AlarmState.ACTIVE || forTest) {
+                    stopCurrentNotification(context, true)  // do not send stop to client! -> to prevent, that the client will stop the newly created notification!
+                    curNotification = getNotificationId(alarmType)
+                    retriggerCount = 0
+                    retriggerOnDestroy = false
+                    retriggerTime = getTriggerTime(alarmType)
+                    curAlarmTime = System.currentTimeMillis()
+                    curTestAlarmType = if(forTest)
+                        alarmType
+                    else
+                        AlarmType.NONE
+                    Log.i(LOG_ID, "Create notification for $alarmType with ID=$curNotification - triggerTime=$retriggerTime")
+                    if(canShowNotification())
+                        showNotification(alarmType, context)
+                    triggerVibrationAndSound(alarmType, context)
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "triggerNotification exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
@@ -443,13 +446,15 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
             // else
             startDelayThread = Thread {
                 try {
-                    val startDelay = getStartDelayMs(context)
-                    Log.i(LOG_ID, "Start sound and vibration with a delay of $startDelay ms")
-                    if (startDelay > 0)
-                        Thread.sleep(startDelay.toLong())
-                    if (curNotification > 0) {
-                        checkCreateSound(alarmType, context)
-                        startVibrationAndSound(alarmType, context)
+                    WakeLockHelper(context).use {
+                        val startDelay = getStartDelayMs(context)
+                        Log.i(LOG_ID, "Start sound and vibration with a delay of $startDelay ms")
+                        if (startDelay > 0)
+                            Thread.sleep(startDelay.toLong())
+                        if (curNotification > 0) {
+                            checkCreateSound(alarmType, context)
+                            startVibrationAndSound(alarmType, context)
+                        }
                     }
                 } catch (exc: InterruptedException) {
                     Log.d(LOG_ID, "Delay thread interrupted")
@@ -457,6 +462,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                     Log.e(LOG_ID, "Exception in delay thread: " + exc.toString())
                 }
             }
+            startDelayThread!!.priority = Thread.MAX_PRIORITY
             startDelayThread!!.start()
         }
     }
@@ -537,6 +543,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
                 Log.e(LOG_ID, "Exception in sound thread: " + exc.toString())
             }
         }
+        checkSoundThread!!.priority = Thread.MAX_PRIORITY
         checkSoundThread!!.start()
     }
 

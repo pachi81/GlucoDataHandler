@@ -9,9 +9,11 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.text.InputType
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
 import androidx.preference.MultiSelectListPreference
 import androidx.preference.Preference
@@ -24,10 +26,13 @@ import de.michelinside.glucodatahandler.android_auto.CarModeReceiver
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.Intents
+import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.preferences.PreferenceHelper
+import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
 import de.michelinside.glucodatahandler.common.ui.SelectReceiverPreference
+import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import kotlin.collections.HashMap
 import kotlin.collections.List
@@ -131,6 +136,11 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
                 Constants.SHARED_PREF_LARGE_ARROW_ICON -> {
                     InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SETTINGS, null)
                 }
+                Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_ENABLED -> {
+                    // update last 24 hours to fill data
+                    GlucoseDataReceiver.resetLastServerTime()
+                    GlucoseDataReceiver.checkHandleWebServerRequests(requireContext(), true)
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
@@ -204,6 +214,8 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : SettingsFragme
             setEnableState<SeekBarPreference>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_SIZE, Constants.SHARED_PREF_AOD_WP_ENABLED)
             setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_AOD_WP_COLOURED, Constants.SHARED_PREF_AOD_WP_ENABLED)
 
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_ENABLED, Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED)
+            setEnableState<SwitchPreferenceCompat>(sharedPreferences, Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_IOB_SUPPORT, Constants.SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_ENABLED, Constants.SHARED_PREF_SOURCE_JUGGLUCO_ENABLED)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "updateEnableStates exception: " + exc.toString())
         }
@@ -250,6 +262,13 @@ class GeneralSettingsFragment: SettingsFragmentBase(R.xml.pref_general) {
     override fun initPreferences() {
         Log.v(LOG_ID, "initPreferences called")
         super.initPreferences()
+        val prefSensorRuntime = findPreference<EditTextPreference>(Constants.SHARED_PREF_SENSOR_RUNTIME)
+        if(prefSensorRuntime != null) {
+            prefSensorRuntime.isVisible = ReceiveData.sensorStartTime > 0
+            prefSensorRuntime.setOnBindEditTextListener {
+                it.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+            }
+        }
         updateSummary()
     }
 
@@ -258,6 +277,12 @@ class GeneralSettingsFragment: SettingsFragmentBase(R.xml.pref_general) {
             super.onSharedPreferenceChanged(sharedPreferences, key)
             when (key) {
                 Constants.SHARED_PREF_USE_MMOL -> updateSummary()
+                Constants.SHARED_PREF_SENSOR_RUNTIME -> {
+                    InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SETTINGS, null)
+                }
+                Constants.SHARED_PREF_STANDARD_STATISTICS -> {
+                    GlucoseStatistics.reset()
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())

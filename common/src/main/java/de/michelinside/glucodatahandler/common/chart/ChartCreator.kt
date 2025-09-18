@@ -25,6 +25,8 @@ import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
 import de.michelinside.glucodatahandler.common.utils.Utils
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -60,8 +62,10 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
     protected open val circleRadius = 2F
     protected open val touchEnabled = true
     protected open var graphDays = 0
+    protected open val showAverage = true
     private var graphStartTime = 0L
     private var recreateThread: Thread? = null
+    private var averageLine: LimitLine? = null
     protected open var backgroundTransparency = 0
     var labelColor: Int = 0
     protected open val textColor: Int get() {
@@ -175,6 +179,8 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
 
     fun pause() {
         try {
+            if(touchEnabled)
+                chart.highlightValue(null)
             remNotifier()
             stopDataSync()
         } catch (exc: Exception) {
@@ -263,11 +269,38 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         }
     }
 
-    private fun createLimitLine(limit: Float): LimitLine {
+    private fun createLimitLine(limit: Float, dasched: Boolean = false, label: String? = null): LimitLine {
         Log.v(LOG_ID, "Create limit line for limit: $limit")
         val line = LimitLine(limit)
         line.lineColor = limitLineColor
+        if(dasched) {
+            line.lineWidth = 1F
+            //line.lineColor = context.resources.getColor(R.color.main)
+            line.enableDashedLine(15F, 10F, 0F)
+        }
+        if(!label.isNullOrEmpty()) {
+            line.label = label
+            line.textSize = 15F
+            line.textColor = limitLineColor
+            line.labelPosition = LimitLine.LimitLabelPosition.RIGHT_BOTTOM
+        }
         return line
+    }
+
+    private fun updateAverageLine() {
+        if(touchEnabled) {
+            if(averageLine != null) {
+                chart.axisRight.removeLimitLine(averageLine)
+                averageLine = null
+            }
+            if(showAverage) {
+                GlucoseStatistics.update(sharedPref.getBoolean(Constants.SHARED_PREF_STANDARD_STATISTICS, false))
+                if(!GlucoseStatistics.statData7d.averageGlucose.isNaN()) {
+                    averageLine = createLimitLine(GlucoseStatistics.statData7d.averageGlucose, true, "⌀")
+                    chart.axisRight.addLimitLine(averageLine)
+                }
+            }
+        }
     }
 
     protected fun initDataSet() {
@@ -476,6 +509,7 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
         }
 
         if(added) {
+            updateAverageLine()
             dataSet.notifyDataSetChanged()
             updateChart(dataSet)
             if(touchEnabled)
@@ -639,6 +673,9 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             if(Utils.getTimeDiffMinute(it.timestamp, lastTime, RoundingMode.HALF_UP) == 0L) {
                 Log.d(LOG_ID, "Delete duplicate value with timestamp ${Utils.getUiTimeStamp(it.timestamp)} (${it.timestamp}) - previous timestamp ${Utils.getUiTimeStamp(lastTime)} (${lastTime}) - diff: ${it.timestamp - lastTime}ms")
                 deleteValues.add(it.timestamp)
+            } else if(!GlucoDataUtils.isGlucoseValid(it.value)) {
+                Log.d(LOG_ID, "Delete invalid value with timestamp ${Utils.getUiTimeStamp(it.timestamp)} (${it.timestamp}) - value: ${it.value}")
+                deleteValues.add(it.timestamp)
             } else {
                 lastTime = it.timestamp
             }
@@ -656,12 +693,15 @@ open class ChartCreator(protected val chart: GlucoseChart, protected val context
             if(!checkValues(values))
                 return false
             if(values.isNotEmpty()) {
-                Log.d(LOG_ID, "update called for ${values.size} values - resetChart: $resetChart - entries: ${getEntryCount()} - first value: ${TimeValueFormatter.to_chart_x(values.first().timestamp)} - first: ${getFirstTimestamp()}")
-                if(resetChart || TimeValueFormatter.to_chart_x(values.first().timestamp) != getFirstTimestamp() || (getEntryCount() > 0 && abs(values.size-getEntryCount()) > 1)) {
+                val newValues = values.filter { data -> data.timestamp > getLastTimestamp() }
+                Log.d(LOG_ID, "update called for ${values.size} values (${newValues.size} new) - resetChart: $resetChart - entries: ${getEntryCount()} - first value: ${TimeValueFormatter.to_chart_x(values.first().timestamp)} - first: ${getFirstTimestamp()}")
+                if(resetChart
+                    || TimeValueFormatter.to_chart_x(values.first().timestamp) != getFirstTimestamp()
+                    || (getEntryCount() > 0 && abs(values.size-getEntryCount()) != newValues.size)
+                    ) {
                     resetData(values)
                     return true
                 }
-                val newValues = values.filter { data -> data.timestamp > getLastTimestamp() }
                 addEntries(newValues)
             } else if(getEntryCount() > 0) {
                 Log.d(LOG_ID, "Reset chart after db clean up")

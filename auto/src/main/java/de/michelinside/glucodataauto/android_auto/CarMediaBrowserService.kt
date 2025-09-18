@@ -4,6 +4,8 @@ import de.michelinside.glucodataauto.R
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.Paint
 import android.media.session.PlaybackState
 import android.os.Bundle
 import android.os.SystemClock
@@ -27,6 +29,12 @@ import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import de.michelinside.glucodatahandler.common.utils.TextToSpeechUtils
 import android.support.v4.media.session.MediaControllerCompat
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import de.michelinside.glucodatahandler.common.chart.ChartBitmapHandler
+import de.michelinside.glucodatahandler.common.utils.BitmapPool
 import de.michelinside.glucodatahandler.common.R as CR
 
 
@@ -42,6 +50,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     private var curMediaItem = MEDIA_ROOT_ID
     private var playBackState = PlaybackState.STATE_NONE
     private var lastGlucoseTime = 0L
+    private var curBitmap: Bitmap? = null
 
     companion object {
         var active = false
@@ -55,6 +64,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             GlucoDataServiceAuto.init(this)
             GlucoDataServiceAuto.start(this)
             CarMediaPlayer.enable(this)
+            ChartBitmapHandler.register(this, this.javaClass.simpleName)
             sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
             sharedPref.registerOnSharedPreferenceChangeListener(this)
 
@@ -107,6 +117,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 }
             })
 
+            session.isActive = true
             session.setPlaybackState(buildState(PlaybackState.STATE_STOPPED))
 
             // set callback depending on the current speak value to prevent speaking for values in background as affect on state!
@@ -119,7 +130,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 NotifySource.BROADCAST,
                 NotifySource.MESSAGECLIENT,
                 NotifySource.SETTINGS,
-                NotifySource.TIME_VALUE))
+                NotifySource.TIME_VALUE,
+                NotifySource.GRAPH_CHANGED))
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
@@ -134,6 +146,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             sharedPref.unregisterOnSharedPreferenceChangeListener(this)
             session.release()
             GlucoDataServiceAuto.stop(this)
+            ChartBitmapHandler.unregister(this.javaClass.simpleName)
+            BitmapPool.returnBitmap(curBitmap)
             super.onDestroy()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )
@@ -183,6 +197,20 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     override fun OnNotifyData(context: Context, dataSource: NotifySource, extras: Bundle?) {
         Log.d(LOG_ID, "OnNotifyData called for source $dataSource")
         try {
+            if(dataSource == NotifySource.GRAPH_CHANGED && (!ChartBitmapHandler.isRegistered(this.javaClass.simpleName) || extras?.getInt(Constants.GRAPH_ID) != ChartBitmapHandler.chartId)) {
+                Log.d(LOG_ID, "Ignore graph change")
+                return // ignore
+            }
+            if(ChartBitmapHandler.hasBitmap(this.javaClass.simpleName)) {
+                if(dataSource == NotifySource.BROADCAST || dataSource == NotifySource.MESSAGECLIENT) {
+                    Log.d(LOG_ID, "Ignore glucose value and wait for chart update")
+                    return
+                }
+                if(dataSource == NotifySource.TIME_VALUE && ReceiveData.getElapsedTimeMinute().mod(2) == 0) {
+                    Log.d(LOG_ID, "Ignore time value and wait for chart update")
+                    return
+                }
+            }
             notifyChildrenChanged(MEDIA_ROOT_ID)
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception: " + exc.message.toString() )
@@ -197,6 +225,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                 Constants.AA_MEDIA_PLAYER_SPEAK_NEW_VALUE,
                 Constants.SHARED_PREF_CAR_MEDIA,
                 Constants.AA_MEDIA_ICON_STYLE,
+                Constants.AA_MEDIA_PLAYER_COLORED,
                 Constants.AA_MEDIA_SHOW_IOB_COB -> {
                     notifyChildrenChanged(MEDIA_ROOT_ID)
                 }
@@ -232,18 +261,52 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
         }
     }
 
-    private fun getIcon(size: Int = 100): Bitmap? {
-        return when(sharedPref.getString(Constants.AA_MEDIA_ICON_STYLE, Constants.AA_MEDIA_ICON_STYLE_GLUCOSE_TREND)) {
-            Constants.AA_MEDIA_ICON_STYLE_TREND -> {
-                BitmapUtils.getRateAsBitmap(width = size, height = size)
+    private fun getBackgroundImage(): Bitmap? {
+        val coloredCover = sharedPref.getBoolean(Constants.AA_MEDIA_PLAYER_COLORED, true)
+        try {
+            if(ChartBitmapHandler.hasBitmap(this.javaClass.simpleName)) {
+                Log.i(LOG_ID, "Create bitmap")
+                val lockscreenView = LayoutInflater.from(this).inflate(R.layout.media_layout, null)
+                val txtBgValue: TextView = lockscreenView.findViewById(R.id.glucose)
+                val viewIcon: ImageView = lockscreenView.findViewById(R.id.trendImage)
+                val graphImage: ImageView = lockscreenView.findViewById(R.id.graphImage)
+
+
+                txtBgValue.text = ReceiveData.getGlucoseAsString()
+                if(coloredCover)
+                    txtBgValue.setTextColor(ReceiveData.getGlucoseColor())
+                else
+                    txtBgValue.setTextColor(Color.WHITE)
+                if (ReceiveData.isObsoleteShort() && !ReceiveData.isObsoleteLong()) {
+                    txtBgValue.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+                } else {
+                    txtBgValue.paintFlags = 0
+                }
+                viewIcon.setImageIcon(BitmapUtils.getRateAsIcon(LOG_ID +"_trend", color = if(coloredCover) null else Color.WHITE,  width = 400, height = 400))
+
+                Log.d(LOG_ID, "Update graphImage bitmap")
+                lockscreenView.measure(
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
+                Log.d(LOG_ID, "Mesasured width ${lockscreenView.measuredWidth} and height ${lockscreenView.measuredHeight} for chart")
+                graphImage.setImageBitmap(ChartBitmapHandler.getBitmap())
+                if (!coloredCover) {
+                    graphImage.setColorFilter(Color.WHITE)
+                }
+                graphImage.requestLayout()
+
+                lockscreenView.measure(
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
+                lockscreenView.layout(0, 0, lockscreenView.measuredWidth, lockscreenView.measuredHeight)
+                Log.d(LOG_ID, "Mesasured width ${lockscreenView.measuredWidth} and height ${lockscreenView.measuredHeight}")
+                curBitmap = BitmapUtils.loadBitmapFromView(lockscreenView, curBitmap)
+                return curBitmap
             }
-            Constants.AA_MEDIA_ICON_STYLE_GLUCOSE -> {
-                BitmapUtils.getGlucoseAsBitmap(width = size, height = size)
-            }
-            else -> {
-                BitmapUtils.getGlucoseTrendBitmap(width = size, height = size)
-            }
+        } catch (e: Exception) {
+            Log.e(LOG_ID, "Error creating bitmap", e)
         }
+        return BitmapUtils.getGlucoseTrendBitmap( color = if(coloredCover) null else Color.WHITE, width = 400, height = 400)
     }
 
     fun setItem() {
@@ -305,7 +368,8 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
                         subtitle
                     )
                     .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, getDuration())
-                    .putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, getIcon(400)!!)
+                    .putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, BitmapUtils.getRateAsBitmap()!!)
+                    .putBitmap(MediaMetadataCompat.METADATA_KEY_ART, getBackgroundImage()!!)
                     .build()
             )
             if(playBackState == PlaybackState.STATE_PLAYING && lastGlucoseTime < ReceiveData.time) {
@@ -323,7 +387,7 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
             .setMediaId(MEDIA_GLUCOSE_ID)
             .setTitle(ReceiveData.getGlucoseAsString() + " (Δ " + ReceiveData.getDeltaAsString() + ")\n" + ReceiveData.getElapsedTimeMinuteAsString(this))
             //.setSubtitle(ReceiveData.timeformat.format(Date(ReceiveData.time)))
-            .setIconBitmap(getIcon()!!)
+            .setIconBitmap(BitmapUtils.getRateAsBitmap())
         return MediaBrowserCompat.MediaItem(
             mediaDescriptionBuilder.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE)
     }
@@ -384,22 +448,33 @@ class CarMediaBrowserService: MediaBrowserServiceCompat(), NotifierInterface, Sh
     }
 
     private fun buildState(state: Int): PlaybackStateCompat? {
-        val duration = getDuration()
-        val position = if(state==PlaybackState.STATE_PLAYING) getPosition() else 0L
-        Log.d(LOG_ID, "buildState called for state $state - pos: ${position}/${duration}")
-        playBackState = state
-        val bundleWithDuration = if (duration == 0L) null else Bundle().apply {
-            putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration) // duration in Millisekunden
+        try {
+            Log.i(LOG_ID, "buildState called for state $state")
+            val duration = getDuration()
+            if(duration == 0L) {
+                Log.d(LOG_ID, "buildState with duration 0")
+                return PlaybackStateCompat.Builder().setActions(
+                    PlaybackStateCompat.ACTION_PLAY or PlaybackStateCompat.ACTION_STOP).setState(state, 0L, 1f).build()
+            }
+            val position = if(state==PlaybackState.STATE_PLAYING) getPosition() else 0L
+            Log.d(LOG_ID, "buildState called for state $state - pos: ${position}/${duration}")
+            playBackState = state
+            val bundleWithDuration = if (duration == 0L) null else Bundle().apply {
+                putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration) // duration in Millisekunden
+            }
+            return PlaybackStateCompat.Builder().setActions(
+                PlaybackStateCompat.ACTION_PLAY or PlaybackStateCompat.ACTION_STOP)
+                .setState(
+                    state,
+                    position,
+                    1f,
+                    SystemClock.elapsedRealtime()
+                ).setExtras(bundleWithDuration)
+                .build()
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "buildState exception: " + exc.message.toString() )
+            return null
         }
-        return PlaybackStateCompat.Builder().setActions(
-            PlaybackStateCompat.ACTION_PLAY or PlaybackStateCompat.ACTION_STOP)
-            .setState(
-                state,
-                position,
-                1f,
-                SystemClock.elapsedRealtime()
-            ).setExtras(bundleWithDuration)
-            .build()
     }
 
     private fun getPosition(): Long {

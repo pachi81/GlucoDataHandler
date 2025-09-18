@@ -7,7 +7,8 @@ object Constants {
     const val CAPABILITY_WEAR = "glucodata_intent_wear"
     const val GLUCODATA_INTENT_MESSAGE_PATH = "/glucodata_intent"
     const val BATTERY_INTENT_MESSAGE_PATH = "/battery_intent"
-    const val SETTINGS_INTENT_MESSAGE_PATH = "/settings_intent"
+    const val TASKER_SETTINGS_INTENT_MESSAGE_PATH = "/settings_intent"
+    const val GENERAL_SETTINGS_INTENT_MESSAGE_PATH = "/general_settings_intent"
     const val SOURCE_SETTINGS_INTENT_MESSAGE_PATH = "/source_settings_intent"
     const val ALARM_SETTINGS_INTENT_MESSAGE_PATH = "/alarm_settings_intent"
     const val REQUEST_DATA_MESSAGE_PATH = "/request_data_intent"
@@ -26,9 +27,8 @@ object Constants {
     const val COMMAND_EXTRA = "command"
     const val COMMAND_BUNDLE = "command_bundle"
     const val GLUCOSE_CONVERSION_FACTOR = 18.0182F
-    const val GLUCOSE_MIN_VALUE = 40
-    const val GLUCOSE_MAX_VALUE = 600
-    const val GLUCOSE_MAX_NOTIFICATION_VALUE = 400
+    const val GLUCOSE_MIN_VALUE = 36    // 2 mmol/l
+    const val GLUCOSE_MAX_VALUE = 600   // 33,3 mmol/l
     const val ACTION_STOP_FOREGROUND = "stop_foreground"
     const val ACTION_START_FOREGROUND = "start_foreground"
     const val VERSION_CODE = "gdh.version_code"
@@ -51,8 +51,10 @@ object Constants {
     const val EXTRA_AA_CONNECTED = "gdh.aa_connected"
     const val EXTRA_GRAPH_DURATION_HOURS = "gdh.graph_duration_hours"
     const val EXTRA_GRAPH_DATA = "gdh.graph_data"
+    const val EXTRA_NODE_ID = "gdh.node_id"
 
     const val XDRIP_ACTION_GLUCOSE_READING = "com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING"
+    const val XDRIP_ACTION_SENSOR_ACTIVATE = "com.librelink.app.ThirdPartyIntegration.SENSOR_ACTIVATE"
 
     const val GLUCODATAAUTO_STATE_ACTION = "de.michelinside.glucodataauto.state"
     const val GLUCODATAAUTO_STATE_EXTRA = "state"
@@ -63,6 +65,7 @@ object Constants {
     const val VALUE_IOB_COBOBSOLETE_SEC  = 1800
 
     const val SHARED_PREF_TAG = "GlucoDataHandlerPrefs"
+    const val SHARED_PREF_GDH_VERSION = "gdh_version"
     const val SHARED_PREF_AUTO_TAG = "GlucoDataAutoPrefs"
     const val SHARED_PREF_EXTRAS_TAG = "GlucoDataExtrasPrefs"
     const val SHARED_PREF_NO_GLUCODATAAUTO = "no_gda_info"
@@ -155,14 +158,19 @@ object Constants {
     const val SHARED_PREF_SOURCE_INTERVAL="source_interval"
     const val SHARED_PREF_SOURCE_DELAY="source_delay"
 
+    const val SHARED_PREF_SOURCE_HELP="source_help"
+
     // offline sources
     const val SHARED_PREF_SOURCE_GDH_ENABLED="source_gdh_enabled"
     const val SHARED_PREF_SOURCE_JUGGLUCO_ENABLED="source_juggluco_enabled"
+    const val SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_ENABLED="source_juggluco_webserver_enabled"
+    const val SHARED_PREF_SOURCE_JUGGLUCO_WEBSERVER_IOB_SUPPORT="source_juggluco_webserver_iob_support"
     const val SHARED_PREF_SOURCE_XDRIP_ENABLED="source_xdrip_enabled"
     const val SHARED_PREF_SOURCE_AAPS_ENABLED="source_aaps_enabled"
     const val SHARED_PREF_SOURCE_BYODA_ENABLED="source_byoda_enabled"
     const val SHARED_PREF_SOURCE_EVERSENSE_ENABLED="source_eversense_enabled"
     const val SHARED_PREF_SOURCE_DIABOX_ENABLED="source_diabox_enabled"
+    const val SHARED_PREF_SOURCE_LIBRE_PATCHED_ENABLED="source_libre_patched_enabled"
 
     // notification reader
     const val SHARED_PREF_SOURCE_NOTIFICATION_ENABLED="source_notification_enabled"
@@ -191,12 +199,21 @@ object Constants {
     const val SHARED_PREF_DEXCOM_SHARE_USE_US_URL="source_dexcom_share_use_us_url"
     const val SHARED_PREF_DEXCOM_SHARE_RECONNECT="source_dexcom_share_reconnect"
     const val SHARED_PREF_DEXCOM_SHARE_ACCOUNT_LINK="source_dexcom_account_link"
+    const val SHARED_PREF_DEXCOM_SHARE_SERVER="source_dexcom_server"
 
     const val SHARED_PREF_NIGHTSCOUT_ENABLED="src_ns_enabled"
     const val SHARED_PREF_NIGHTSCOUT_URL="src_ns_url"
     const val SHARED_PREF_NIGHTSCOUT_SECRET="src_ns_secret"
     const val SHARED_PREF_NIGHTSCOUT_TOKEN="src_ns_token"
     const val SHARED_PREF_NIGHTSCOUT_IOB_COB="src_ns_iob_cob"
+
+    const val SHARED_PREF_MEDTRUM_ENABLED="source_medtrum_enabled"
+    const val SHARED_PREF_MEDTRUM_USER="source_medtrum_user"
+    const val SHARED_PREF_MEDTRUM_PASSWORD="source_medtrum_password"
+    const val SHARED_PREF_MEDTRUM_RECONNECT="source_medtrum_reconnect"
+    const val SHARED_PREF_MEDTRUM_COOKIE="source_medtrum_cookie"
+    const val SHARED_PREF_MEDTRUM_PATIENT_ID="source_medtrum_patient_id"
+    const val SHARED_PREF_MEDTRUM_SERVER="source_medtrum_server"
 
     const val SHARED_PREF_DUMMY_VALUES = "dummy_values"
 
@@ -286,6 +303,7 @@ object Constants {
     const val SHARED_PREF_ALARM_TYPE_SETTINGS_CAT = "cat_alarm_settings"
 
     const val SHARED_PREF_BATTERY_RECEIVER_ENABLED = "battery_receiver_enabled"
+    const val SHARED_PREF_SHOW_BATTERY_PERCENT = "battery_show_percent"
     const val SHARED_PREF_SEND_TO_WATCH_INTERVAL = "send_to_watch_interval"
     const val SHARED_PREF_SEND_TO_RECEIVER_INTERVAL = "send_to_receiver_interval"
 
@@ -315,14 +333,22 @@ object Constants {
     const val AA_MEDIA_PLAYER_SPEAK_INTERVAL = "aa_media_player_speak_interval"
     const val AA_MEDIA_PLAYER_SPEAK_TEST = "aa_media_player_speak_test"
     const val AA_MEDIA_PLAYER_DURATION = "aa_media_player_duration"
+    const val AA_MEDIA_PLAYER_COLORED = "aa_media_player_colored"
 
     const val PATIENT_NAME = "patient_name"
+    const val SHARED_PREF_FULLSCREEN_LANDSCAPE = "fullscreen_landscape"
+    const val SHARED_PREF_SENSOR_RUNTIME = "sensor_runtime"
+    const val SHARED_PREF_STANDARD_STATISTICS = "standard_statistics"
+    const val SHARED_PREF_SHOW_SENSOR_AGE_REMAIN_TIME = "main_show_sensor_age_remain_time"
+
+    const val SHARED_PREF_MAIN_STATISTICS_DAYS = "main_statistics_days"
 
     // database
     const val DB_MAX_DATA_WEAR_DAYS = 1 // 24h
     const val DB_MAX_DATA_WEAR_TIME_MS = (DB_MAX_DATA_WEAR_DAYS*24*60*60*1000)
     const val DB_MAX_DATA_DAYS = 7 // 7 days
     const val DB_MAX_DATA_TIME_MS = (DB_MAX_DATA_DAYS*24*60*60*1000)
+    const val DB_MAX_DATA_GDA_TIME_MS = (4*60*60*1000)  // max 4 hours
     const val SHARED_PREF_RESET_DATABASE = "reset_db"
     const val SHARED_PREF_USE_RATE_CALCULATION = "rate_calculation"
 

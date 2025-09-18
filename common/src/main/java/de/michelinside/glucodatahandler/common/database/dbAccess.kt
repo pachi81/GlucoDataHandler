@@ -3,16 +3,19 @@ package de.michelinside.glucodatahandler.common.database
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Handler
 import android.util.Log
 import androidx.room.Room
 import com.google.gson.Gson
 import de.michelinside.glucodatahandler.common.Command
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
+import de.michelinside.glucodatahandler.common.ReceiveData
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import kotlinx.coroutines.CoroutineScope
@@ -22,9 +25,11 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.io.File
 
 object dbAccess {
     private val LOG_ID = "GDH.dbAccess"
+    private val DATABASE_NAME = "gdh_database"
     private var database: Database? = null
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -46,18 +51,80 @@ object dbAccess {
     fun init(context: Context) {
         Log.v(LOG_ID, "init")
         try {
-            database = Room.databaseBuilder(
-                context.applicationContext,
-                Database::class.java,
-                "gdh_database"
-            )
-                .addMigrations(migration_1_2)
-                .build()
+            createDatabase(context.applicationContext, true)
             cleanUpOldData()
-            PackageUtils.registerReceiver(context, InternalActionReceiver(), IntentFilter(Intent.ACTION_DATE_CHANGED))
+            PackageUtils.registerReceiver(context.applicationContext, InternalActionReceiver(), IntentFilter(Intent.ACTION_DATE_CHANGED))
         } catch (exc: Exception) {
             Log.e(LOG_ID, "init exception: " + exc.toString() + ": " + exc.stackTraceToString() )
         }
+    }
+
+    private fun createDatabase(context: Context, retryOnError: Boolean) {
+        Log.v(LOG_ID, "createDatabase")
+        try {
+            database = Room.databaseBuilder(
+                context.applicationContext,
+                Database::class.java,
+                DATABASE_NAME
+            )
+                .addMigrations(migration_1_2)
+                .build()
+
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "createDatabase exception: " + exc.toString() + ": " + exc.stackTraceToString() )
+            if(retryOnError) {
+                if(deleteDatabase(context))
+                    createDatabase(context, false)
+            }
+        }
+    }
+
+    private fun deleteDatabase(context: Context): Boolean {
+        Log.w(LOG_ID, "Attempting to delete and recreate the database. USER DATA WILL BE LOST for $DATABASE_NAME.")
+        try {
+            val dbPath = context.getDatabasePath(DATABASE_NAME)
+            val walPath = File(dbPath.path + "-wal")
+            val shmPath = File(dbPath.path + "-shm")
+
+            val deletedMain: Boolean
+            val deletedWal: Boolean
+            val deletedShm: Boolean
+
+            if (dbPath.exists()) {
+                deletedMain = dbPath.delete()
+                Log.i(LOG_ID, "Main database file ($DATABASE_NAME) deletion result: $deletedMain")
+            } else {
+                Log.i(LOG_ID, "Main database file ($DATABASE_NAME) did not exist.")
+                deletedMain = true // Consider it "successfully deleted" if it wasn't there
+            }
+
+            if (walPath.exists()) {
+                deletedWal = walPath.delete()
+                Log.i(LOG_ID, "WAL file (${walPath.name}) deletion result: $deletedWal")
+            } else {
+                Log.i(LOG_ID, "WAL file (${walPath.name}) did not exist.")
+                deletedWal = true
+            }
+
+            if (shmPath.exists()) {
+                deletedShm = shmPath.delete()
+                Log.i(LOG_ID, "SHM file (${shmPath.name}) deletion result: $deletedShm")
+            } else {
+                Log.i(LOG_ID, "SHM file (${shmPath.name}) did not exist.")
+                deletedShm = true
+            }
+
+            if (deletedMain && deletedWal && deletedShm) {
+                Log.i(LOG_ID, "All relevant database files for $DATABASE_NAME deleted (or did not exist). Attempting to recreate.")
+                // Try building again
+                return true
+            } else {
+                Log.e(LOG_ID, "Failed to delete all database files. Main: $deletedMain, WAL: $deletedWal, SHM: $deletedShm. Cannot recreate.")
+            }
+        } catch (deleteException: Exception) {
+            Log.e(LOG_ID, "Exception during database deletion/recreation process.", deleteException)
+        }
+        return false
     }
 
     fun getGlucoseValues(minTime: Long = 0L): List<GlucoseValue> = runBlocking {
@@ -124,14 +191,19 @@ object dbAccess {
 
     private fun updateTimestamps(values: List<GlucoseValue>): List<GlucoseValue> {
         val updated = mutableListOf<GlucoseValue>()
+        val minTime = System.currentTimeMillis()-Constants.DB_MAX_DATA_TIME_MS
         values.forEach {
-            updated.add(GlucoseValue(GlucoDataUtils.getGlucoseTime(it.timestamp), it.value))
+            if(it.timestamp > minTime && GlucoDataUtils.isGlucoseValid(it.value)) {
+                updated.add(GlucoseValue(GlucoDataUtils.getGlucoseTime(it.timestamp), it.value))
+            } else {
+                Log.w(LOG_ID, "Invalid value ${it.value} at ${Utils.getUiTimeStamp(it.timestamp)} (${it.timestamp})")
+            }
         }
         return updated
     }
 
     fun addGlucoseValue(time: Long, value: Int) {
-        if(active) {
+        if(active && GlucoDataUtils.isGlucoseValid(value)) {
             scope.launch {
                 try {
                     Log.d(LOG_ID, "Add new value $value at ${Utils.getUiTimeStamp(time)} ($time)")
@@ -149,17 +221,39 @@ object dbAccess {
                 try {
                     Log.d(LOG_ID, "Add ${values.size} values from ${values.first().timestamp} to ${values.last().timestamp}")
                     database!!.glucoseValuesDao().insertValues(updateTimestamps(values))
+                    Handler(GlucoDataService.context!!.mainLooper).post {
+                        if(Utils.getElapsedTimeMinute(values.last().timestamp) < 20 && GlucoDataService.context != null) {
+                            ReceiveData.triggerRecalculateDeltaAndTime()
+                        }
+                        if(values.size > 10) {
+                            GlucoseStatistics.reset()  // trigger re-calculation!
+                        }
+                        // trigger update of db data
+                        InternalNotifier.notify(GlucoDataService.context!!, NotifySource.DB_DATA_CHANGED, null)
+                        if(!internal) {
+                            // trigger dbsync with watch
+                            GlucoDataService.sendCommand(Command.REQUEST_DB_SYNC)
+                        }
+                    }
                 } catch (exc: Exception) {
                     Log.e(LOG_ID, "addGlucoseValues exception: $exc")
                 }
             }
-            if(internal) {
-                // trigger update of db data
-                InternalNotifier.notify(GlucoDataService.context!!, NotifySource.DB_DATA_CHANGED, null)
-            } else {
-                // trigger dbsync with watch
-                GlucoDataService.sendCommand(Command.REQUEST_DB_SYNC)
-            }
+        }
+    }
+
+    fun getFirstTimestamp(): Long = runBlocking {
+        if (active) {
+            scope.async {
+                try {
+                    database!!.glucoseValuesDao().getFirstTimestamp()
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "getFirstTimestamp exception: $exc")
+                    0L
+                }
+            }.await()
+        } else {
+            0L
         }
     }
 
@@ -197,8 +291,37 @@ object dbAccess {
         } else 0
     }
 
+    fun getAverageValue(minTime: Long = 0L): Float = runBlocking {
+        if(active) {
+            scope.async {
+                try {
+                    Log.v(LOG_ID, "getAverageValue - minTime: ${Utils.getUiTimeStamp(minTime)}")
+                    database!!.glucoseValuesDao().getAverageValue(minTime)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "getAverageValue exception: $exc")
+                    Float.NaN
+                }
+            }.await()
+        } else Float.NaN
+    }
+
+    fun getValuesInRangeCount(minTime: Long, minVal: Int, maxVal: Int): Int = runBlocking {
+        if(active) {
+            scope.async {
+                try {
+                    Log.v(LOG_ID, "getValuesInRangeCount - minTime: ${Utils.getUiTimeStamp(minTime)} - from $minVal to $maxVal")
+                    database!!.glucoseValuesDao().getValuesInRangeCount(minTime, minVal, maxVal)
+                } catch (exc: Exception) {
+                    Log.e(LOG_ID, "getValuesInRangeCount exception: $exc")
+                    0
+                }
+            }.await()
+        } else 0
+    }
+
     fun deleteValues(timestamps: List<Long>) = runBlocking {
         if(active) {
+            GlucoseStatistics.reset()  // trigger re-calculation!
             scope.launch {
                 try {
                     Log.i(LOG_ID, "delete - ${timestamps.size} values")
@@ -212,6 +335,7 @@ object dbAccess {
 
     fun deleteAllValues() = runBlocking {
         if(active) {
+            GlucoseStatistics.reset()  // trigger re-calculation!
             scope.launch {
                 try {
                     Log.i(LOG_ID, "deleteAllValues")
@@ -225,6 +349,7 @@ object dbAccess {
 
     fun deleteOldValues(minTime: Long) {
         if(active) {
+            GlucoseStatistics.reset()  // trigger re-calculation!
             scope.launch {
                 try {
                     Log.i(LOG_ID, "deleteOldValues - minTime: ${Utils.getUiTimeStamp(minTime)}")
@@ -242,7 +367,15 @@ object dbAccess {
 
     fun getGlucoseValuesAsJson(minTime: Long): String {
         val data = getGlucoseValues(minTime)
+        Log.i(LOG_ID, "Convert ${data.size} values to json")
         val gson = Gson()
         return gson.toJson(data)
+    }
+
+    fun addGlucoseValuesFromJson(jsonData: String) {
+        val gson = Gson()
+        val data = gson.fromJson(jsonData, Array<GlucoseValue>::class.java).toList()
+        Log.i(LOG_ID, "${data.size} values received")
+        addGlucoseValues(data, true)
     }
 }

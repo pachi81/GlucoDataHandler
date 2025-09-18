@@ -32,4 +32,9 @@
         android:summaryOff="@string/pref_switch_use_rate_calculation_summary_off"
         android:title="@string/pref_switch_use_rate_calculation"
         app:iconSpaceReserved="false" />
+    <Preference
+        android:key="source_help"
+        android:summary="@string/source_help_summary"
+        android:title="@string/menu_help"
+        app:iconSpaceReserved="false" />
 </PreferenceScreen>

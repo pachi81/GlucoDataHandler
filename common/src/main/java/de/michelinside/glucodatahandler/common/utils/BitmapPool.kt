@@ -1,9 +1,6 @@
 package de.michelinside.glucodatahandler.common.utils
 
 import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.PorterDuff
 import android.util.Log
 import java.util.concurrent.ConcurrentHashMap
 
@@ -25,7 +22,7 @@ object BitmapPool {
     fun getBitmap(
         width: Int,
         height: Int,
-        config: Bitmap.Config = Bitmap.Config.ARGB_8888
+        config: Bitmap.Config? = Bitmap.Config.ARGB_8888
     ): Bitmap {
         val dimensionKey = "$width-$height"
         synchronized(pool) {
@@ -40,7 +37,7 @@ object BitmapPool {
             }
         }
         Log.i(LOG_ID, "New bitmap created for dimensions: $dimensionKey")
-        return Bitmap.createBitmap(width, height, config)
+        return Bitmap.createBitmap(width, height, config?: Bitmap.Config.ARGB_8888)
     }
 
     /**

@@ -9,17 +9,6 @@
             app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
-            android:key="show_other_unit"
-            android:title="@string/pref_show_other_unit"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="relative_time"
-            android:summary="@string/pref_relative_time_summary"
-            android:title="@string/pref_relative_time"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
             android:key="five_minute_delta"
             android:summary="@string/pref_switch_use_5_min_delta_summary"
             android:title="@string/pref_switch_use_5_min_delta"
@@ -40,5 +29,28 @@
             android:key="obsolete_time"
             android:title="@string/obsolete_time"
             android:summary="@string/obsolete_time_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.EditTextPreference
+            android:defaultValue="14"
+            android:key="sensor_runtime"
+            android:title="@string/pref_sensor_runtime"
+            android:summary="@string/pref_sensor_runtime_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="standard_statistics"
+            android:title="@string/pref_switch_standard_statistics"
+            android:summary="@string/pref_switch_standard_statistics_summary"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="relative_time"
+            android:summary="@string/pref_relative_time_summary"
+            android:title="@string/pref_relative_time"
+            app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="show_other_unit"
+            android:title="@string/pref_show_other_unit"
             app:iconSpaceReserved="false" />
 </PreferenceScreen>

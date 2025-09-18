@@ -1,5 +1,6 @@
 package de.michelinside.glucodatahandler.common.chart
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -14,11 +15,14 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
 import de.michelinside.glucodatahandler.common.R
+import de.michelinside.glucodatahandler.common.ReceiveData
 import java.text.DateFormat
+import java.time.Duration
 import java.util.Date
 
+@SuppressLint("ViewConstructor")
 class CustomBubbleMarker(context: Context, private val showDate: Boolean = false) : MarkerView(context, R.layout.marker_layout) {
-    private val LOG_ID = "GDH.Chart.MarkerView"
+    private val LOG_ID = "GDH.Chart.BubbleMarker"
     private val arrowSize = 35
     private val arrowCircleOffset = 0f
     private var isGlucose = true
@@ -34,16 +38,25 @@ class CustomBubbleMarker(context: Context, private val showDate: Boolean = false
                 date.visibility = if(showDate && !DateUtils.isToday(timeValue)) VISIBLE else GONE
                 val time: TextView = this.findViewById(R.id.time)
                 val glucose: TextView = this.findViewById(R.id.glucose)
+                val delta: TextView = this.findViewById(R.id.delta)
                 val layout: LinearLayoutCompat = this.findViewById(R.id.marker_layout)
                 if(isGlucose) {
                     date.text = DateFormat.getDateInstance(DateFormat.SHORT).format(dateValue)
                     time.text = DateFormat.getTimeInstance(DateFormat.DEFAULT).format(dateValue)
                     glucose.text = GlucoseFormatter.getValueAsString(e.y)
+                    val timeDiff = Duration.ofMillis(ReceiveData.time - timeValue)
+                    if(timeDiff.toMinutes() > 0) {
+                        delta.visibility = VISIBLE
+                        "Δ ${GlucoseFormatter.getValueAsString(ReceiveData.rawValue - e.y)} (${resources.getString(R.string.elapsed_time, timeDiff.toMinutes())})".also { delta.text = it }
+                    } else {
+                        delta.visibility = GONE
+                    }
                     layout.visibility = VISIBLE
                 } else {
                     date.text = ""
                     time.text = ""
                     glucose.text = ""
+                    delta.text = ""
                     layout.visibility = GONE
                 }
             }

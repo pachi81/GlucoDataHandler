@@ -34,6 +34,10 @@
     <string name="alarm_low">basso</string>
     <string name="alarm_high">alto</string>
     <string name="alarm_very_high">molto alto</string>
+    <string name="very_low">Molto basso</string>
+    <string name="low">Basso</string>
+    <string name="high">Alto</string>
+    <string name="very_high">Molto alto</string>
 
     <string name="activity_main_battery_optimization_disabled">L\'ottimizzazione della batteria è abilitata.</string>
     <string name="activity_main_no_source_label">Fonte: non attiva</string>
@@ -296,12 +300,12 @@
     <string name="src_xdrip_noise_blocking">Blocco rumore attivo nelle impostazioni Inter-app di xDrip+!\nSi prega di cambiarlo in \"Estremamente rumoroso\"!</string>
     <string name="pref_cat_follower">Servizi cloud</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
-    <string name="pref_source_juggluco_info_summary">Per ricevere valori da Juggluco:\n- apri Juggluco\n- vai su \"Impostazioni\"\n- abilita \"Trasmissione Glucodata\"\n- abilita \"de.michelinside.glucodatahandler\"</string>
-    <string name="pref_gda_source_juggluco_info_summary">Per ricevere valori da Juggluco:\n- apri Juggluco\n- vai su \"Impostazioni\"\n- abilita \"Trasmissione Glucodata\"\n- abilita \"de.michelinside.glucodataauto\"</string>
+    <string name="pref_source_juggluco_info_summary">Per ricevere valori da Juggluco:\n- apri Juggluco\n- vai su \"Impostazioni\"\n- vai su \"Exchange data\"\n- abilita \"Trasmissione Glucodata\"\n- abilita \"de.michelinside.glucodatahandler\"</string>
+    <string name="pref_gda_source_juggluco_info_summary">Per ricevere valori da Juggluco:\n- apri Juggluco\n- vai su \"Impostazioni\"\n- vai su \"Exchange data\"\n- abilita \"Trasmissione Glucodata\"\n- abilita \"de.michelinside.glucodataauto\"</string>
     <string name="pref_source_xdrip_info">xDrip+</string>
     <string name="pref_source_xdrip_info_1_summary">Per ricevere valori da xDrip+:\n- apri xDrip+\n- vai su impostazioni\n- vai su Impostazioni Inter-app\n- abilita \"Trasmetti localmente\"\n- imposta \"Blocco rumore\" su \"Invia anche segnali estremamente rumorosi\"</string>
     <string name="pref_source_xdrip_info_2_summary">- abilita \"Trasmissione compatibile\" - verifica che \"Identifica destinatario\" sia vuoto o, se esiste già una voce, aggiungi \"de.michelinside.glucodatahandler\" separato da uno spazio</string>
-    <string name="pref_gda_source_xdrip_info_2_summary">- abilita \"Trasmissione compatibile\"\n- verifica che \"Identifica destinatari\" sia vuoto o aggiungi una nuova riga con \"de.michelinside.glucodataauto\"</string>
+    <string name="pref_gda_source_xdrip_info_2_summary">- abilita \"Trasmissione compatibile\" - verifica che \"Identifica destinatario\" sia vuoto o, se esiste già una voce, aggiungi \"de.michelinside.glucodataauto\" separato da uno spazio</string>
     <string name="pref_source_librelinkup_info">Configura LibreLinkUp</string>
     <string name="pref_source_librelinkup_info_summary">IMPORTANTE: questo non è l\'account utilizzato per l\'app FreeStyle Libre!\nPer attivare il follower LibreLinkUp:\n- apri l\'app FreeStyle Libre e seleziona nel menu Condividi o App connesse\n- attiva la connessione LibreLinkUp\n- installa LibreLinkUp da Play Store\n- configura il tuo account e attendi l\'invito</string>
     <string name="menu_contact">Contatto</string>
@@ -430,7 +434,7 @@
     <string name="pref_source_gdh_info_summary">Per ricevere valori da GlucoDataHandler:\n- apri GlucoDataHandler\n- vai su impostazioni\n- abilita \"Inoltra a GlucoDataAuto\"\n- per utilizzare le stesse impostazioni, abilita \"Includi impostazioni\"</string>
     <string name="very_low_alarm_summary">Se utilizzi le notifiche di Android Auto, gli allarmi molto bassi attiveranno sempre una notifica e questo non può essere disattivato o modificato.</string>
     <string name="pref_source_juggluco_iob_info">IOB da Juggluco</string>
-    <string name="pref_source_juggluco_iob_info_summary">Per ricevere IOB da Juggluco:\n- apri Juggluco\n- vai su \"Impostazioni\"\n- abilita \"IOB\"\n- vai su \"Server Web\"\n- abilita \"Attivo\"\n- facoltativo: abilita \"Solo locale\"</string>
+    <string name="pref_source_juggluco_iob_info_summary">Per ricevere IOB da Juggluco:\n- apri Juggluco\n- vai su \"Impostazioni\"\n- vai su \"Display\"\n- abilita \"IOB\"</string>
     <string name="pref_source_xdrip_iob_info">IOB da xDrip+</string>
     <string name="pref_source_xdrip_iob_info_summary">Per ricevere valori da xDrip+:\n- apri xDrip+\n- vai su impostazioni\n- vai su Impostazioni Inter-app\n- abilita \"Servizio Web xDrip\"</string>
     <string name="pref_source_activate_local_nightscout_iob">Attiva l\'utilizzo di IOB</string>
@@ -520,7 +524,7 @@
     <string name="obsolete_time_summary">Tempo in minuti dopo il quale il valore viene considerato obsoleto.\nDopo il doppio di questo tempo, il valore viene rimosso.</string>
     <string name="pref_source_offline">Applicazioni locali</string>
     <string name="pref_source_offline_summary">Applicazioni sullo stesso dispositivo che forniscono valori di glucosio come messaggio di trasmissione interno, come Juggluco, xDrip+, AAPS e così via.</string>
-    <string name="pref_cat_follower_summary">Servizi cloud che forniscono valori di glucosio tramite Internet, come LibreLinkUp, Dexcom Share e Nightscout.</string>
+    <string name="pref_cat_follower_summary">Servizi cloud che forniscono valori di glucosio tramite Internet, come LibreLinkUp, Dexcom Share, Nightscout e Medtrum.</string>
     <string name="pref_source_xdrip_broadcast">Alternativa: trasmissione locale</string>
     <string name="pref_source_dexcom_byoda_info_summary">Per ricevere valori da Dexcom BYODA, devi abilitare la trasmissione ad AAPS durante la creazione dell\'app.</string>
     <string name="pref_source_eversense_info_summary">Per ricevere valori da Eversense, devi utilizzare ESEL in modalità companion (lettura notifiche) o connesso all\'app Eversense con patch.\nPer ulteriori informazioni su ESEL, premi qui.</string>
@@ -658,7 +662,7 @@
     <string name="gdh_disclaimer_title">Nota dello sviluppatore</string>
     <string name="gdh_disclaimer_message">Questa app è stata sviluppata nel mio tempo libero come progetto hobby. Pertanto, non posso garantire che tutte le funzionalità funzionino perfettamente su ogni dispositivo. Tuttavia, lavoro costantemente a miglioramenti.\nSe riscontri problemi o hai domande, contattami direttamente prima di lasciare una recensione negativa. \nPer rimanere informato su importanti aggiornamenti e correzioni di bug, sei invitato a unirti al gruppo Facebook o ai Gruppi Google.</string>
 
-    <string name="pref_source_dexcom_share_info_1_summary">Per ricevere dati dai server Dexcom Share:\nNell\'app Dexcom:\n - Crea un follower\n - In "Connessioni", assicurati che sia visualizzato "Condividi"</string>
+    <string name="pref_source_dexcom_share_info_1_summary">Per ricevere dati dai server Dexcom Share:\nNell\'app Dexcom:\n - Crea un follower\n - In \"Connessioni\", assicurati che sia visualizzato \"Condividi\"</string>
     <string name="pref_source_dexcom_share_info_2_summary">In GlucoDataHandler:\n - Inserisci il tuo nome utente e password di Dexcom Clarity\n   (se usi il tuo numero di telefono come nome utente, includi il prefisso internazionale)\n - Controlla l\'impostazione per un account USA\nImportante: questo non funziona con un account follower!</string>
 
     <string name="request_timestamp">Aggiornato</string>
@@ -670,9 +674,9 @@
     <string name="pref_watchfaces_cat">Quadranti di terze parti</string>
     <string name="pref_watchfaces_info_summary">Questa app non fornisce un quadrante, ma diverse complicazioni (le piccole parti rotonde del quadrante), che possono essere utilizzate per quadranti che supportano complicazioni di terze parti.</string>
     <string name="pref_watchfaces_default">Standard</string>
-    <string name="pref_watchfaces_default_summary">La maggior parte dei produttori di orologi fornisce già quadranti che possono essere utilizzati con la complicazione GlucoDataHandler.\nAd esempio, la maggior parte dei quadranti "Info" di Samsung sono compatibili.</string>
+    <string name="pref_watchfaces_default_summary">La maggior parte dei produttori di orologi fornisce già quadranti che possono essere utilizzati con la complicazione GlucoDataHandler.\nAd esempio, la maggior parte dei quadranti \"Info\" di Samsung sono compatibili.</string>
     <string name="pref_watchfaces_pujie">Pujie</string>
-    <string name="pref_watchfaces_pujie_summary">Pujie è un\'app per la creazione di quadranti con una libreria cloud.\nPer trovare quadranti compatibili, cerca nella libreria i quadranti che iniziano con "GDH_".\nNota: Pujie non è compatibile con i dispositivi Wear OS 5.\nTocca qui per aprire l\'app nel Play Store.</string>
+    <string name="pref_watchfaces_pujie_summary">Pujie è un\'app per la creazione di quadranti con una libreria cloud.\nPer trovare quadranti compatibili, cerca nella libreria i quadranti che iniziano con \"GDH_\".\nNota: Pujie non è compatibile con i dispositivi Wear OS 5.\nTocca qui per aprire l\'app nel Play Store.</string>
     <string name="pref_watchfaces_dmm">Diabetic Masked Man</string>
     <string name="pref_watchfaces_dmm_summary">Diabetic Masked Man crea quadranti di terze parti progettati specificamente per l\'uso con GlucoDataHandler.\nTocca qui per aprire la sua pagina del Play Store.</string>
     <string name="pref_watchfaces_gdc">Quadranti GDC</string>
@@ -758,8 +762,6 @@
     <string name="notification_reader_five_minute_interval">Intervallo di 5 minuti</string>
     <string name="notification_reader_five_minute_interval_summary">Alcune app, come Dexcom, aggiornano le loro notifiche abbastanza spesso. Per ignorare questi aggiornamenti con lo stesso valore, abilita l\'intervallo di 5 minuti.\nSe abilitato, ci sarà un nuovo valore solo ogni 5 minuti o se il valore nella notifica è cambiato.</string>
     <string name="pref_source_notification_info_summary">Per ricevere valori dalle notifiche di altre app, è necessaria l\'autorizzazione per accedere alle notifiche!\nLa notifica deve includere il valore del glucosio o l\'IOB come stringa.\nPoiché ogni notifica ha un layout diverso, potrebbe non funzionare con tutte le app. In caso di problemi, contattami con uno screenshot della notifica e i log.</string>
-    <string name="notification_dexcom_info">Importante</string>
-    <string name="notification_dexcom_info_summary">A causa del comportamento speciale delle notifiche Dexcom G7, devi anche abilitare la notifica in primo piano di Dexcom.</string>
     <string name="sensor_age_label">Età del sensore</string>
     <string name="sensor_age_value">%1$dd %2$dh</string>
     <string name="vibrate_pattern_shorty">Breve</string>
@@ -791,4 +793,60 @@
     <string name="pref_cat_ui_graph_settings_summary">Impostazioni generali per l\'interfaccia utente e il grafico nella schermata principale e nei widget.</string>
     <string name="pref_cat_ui_graph_settings">Interfaccia utente e grafico</string>
     <string name="state_update_required">Aggiornamento richiesto!</string>
+
+    <string name="pref_notification_recreate">Ricrea notifiche</string>
+    <string name="pref_notification_recreate_summary">Rimuovi e ricrea la seconda e la terza notifica.\nQuesto è necessario solo per display AOD speciali, che non aggiornano l\'icona delle notifiche.\nNon è possibile ricreare l\'icona della notifica in primo piano.</string>
+    <string name="source_dexcom_server_eu">Internazionale/UE</string>
+    <string name="source_dexcom_server_us">Stati Uniti</string>
+    <string name="source_dexcom_server_jp">Giappone</string>
+    <string name="source_dexcom_server_summary">Seleziona il server a seconda del paese a cui è correlato il tuo Dexcom Clarity.</string>
+    <string name="dexcom_share_check_jp_account">Premi qui per controllare i dati del tuo account Dexcom Share per il tuo account giapponese.</string>
+    <string name="src_cat_medtrum">Medtrum</string>
+    <string name="src_medtrum_enabled_summary">Abilita la connessione Medtrum dopo aver impostato utente e password.</string>
+    <string name="src_medtrum_user">Utente</string>
+    <string name="src_medtrum_user_summary">Nome utente Medtrum per l\'account follower.</string>
+    <string name="src_medtrum_password_summary">Password per l\'account follower Medtrum.</string>
+    <string name="src_medtrum_patient_summary">Se c\'è più di un paziente connesso all\'account Medtrum, seleziona il paziente per cui ricevere i dati.</string>
+    <string name="source_medtrum_server_default">Predefinito (.eu)</string>
+    <string name="source_medtrum_server_france">Francia (.fr)</string>
+    <string name="source_medtrum">Medtrum</string>
+    <string name="source_request_interval_2">2 minuti</string>
+    <string name="source_select_patient">Seleziona prima un paziente!</string>
+    <string name="source_no_patient">Nessun paziente trovato!</string>
+    <string name="source_new_sensor_starting">Nuovo sensore in avvio…</string>
+    <string name="source_sensor_need_calibration">Il sensore necessita di calibrazione!</string>
+    <string name="source_no_valid_value">Nessun valore glicemico valido trovato!</string>
+    <string name="source_invalid_patient">Dati paziente non validi!</string>
+    <string name="pref_source_libre_patched_info_summary">Se stai usando l\'app Libre patchata o altre app che forniscono questo broadcast.</string>
+    <string name="pref_sensor_runtime">Durata sensore</string>
+    <string name="pref_sensor_runtime_summary">Numero di giorni per cui il sensore può essere indossato.</string>
+    <string name="runtime_10_days">10 giorni</string>
+    <string name="runtime_14_days">14 giorni</string>
+    <string name="runtime_15_days">15 giorni</string>
+    <string name="runtime_24_days">24 giorni</string>
+    <string name="table_header_statistics">Statistiche</string>
+    <string name="info_label_average">Media</string>
+    <string name="time_in_range">TIR</string>
+    <string name="src_webserver">Server Web</string>
+    <string name="src_juggluco_webserver_summary">Utilizzo del server Web Juggluco per ottenere l\'età del sensore e i dati mancanti, se presenti. Abilitare prima il server Web in Juggluco senza SSL e api_secret.</string>
+
+    <string name="src_iob_support">Supporto IOB</string>
+    <string name="src_juggluco_iob_support_summary">Ricezione dei valori IOB dal server Web Juggluco.</string>
+    <string name="pref_source_juggluco_setup_info">Configura Juggluco</string>
+    <string name="pref_source_juggluco_webserver_info">Configura server Web</string>
+    <string name="pref_source_juggluco_webserver_info_summary">Per abilitare il server Web in Juggluco:\n- apri Juggluco\n- vai su \"Impostazioni\"\n- apri \"Scambia dati\"\n- apri \"Server Web\"\n- Abilita \"Attivo\"\n- NON impostare \"api_secret\" e \"Usa SSL\"!\n- opzionale: abilita \"Solo locale\"</string>
+
+    <string name="pref_source_medtrum_info">Configura Medtrum</string>
+    <string name="pref_source_medtrum_info_summary">Per ricevere dati come follower Medtrum:\n- Registra un account nell\'app EasyFollower o su EasyView\n-> IMPORTANTE: non puoi usare il tuo account Medtrum per questo!\n- Invita te stesso\n- Accetta l\'invito\n- Usa questo account per GlucoDataHandler\n- Opzionale: Disinstalla l\'app EasyFollower</string>
+
+    <string name="pref_battery_complication_percent">Mostra % (batteria)</string>
+
+    <string name="source_help_summary">Premi qui per il wiki GDH, che elenca i sensori supportati e le fonti compatibili.</string>
+
+    <string name="pref_switch_standard_statistics">Usa statistiche standard</string>
+    <string name="pref_switch_standard_statistics_summary">Utilizza i valori di intervallo statistico standard o le impostazioni di intervallo target personalizzate da GDH per i calcoli statistici.</string>
+
+    <string name="aa_media_player_colored">Copertina colorata</string>
+    <string name="aa_media_player_colored_summary_off">Mostra valore, tendenza e grafico in bianco</string>
+    <string name="aa_media_player_colored_summary_on">Mostra valore, tendenza e grafico a colori</string>
 </resources>

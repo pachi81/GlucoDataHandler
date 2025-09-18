@@ -17,12 +17,14 @@ import android.widget.ImageView
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.utils.BitmapUtils
 import android.provider.Settings
+import android.view.Display
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.widget.AodWidget
+import kotlin.math.abs
 import kotlin.math.max
 
 
@@ -33,6 +35,17 @@ class AODAccessibilityService : AccessibilityService() {
     private val LOG_ID = "GDH.Aod"
 
     private var aodWidget: AodWidget? = null
+
+    private var yPosOffset = 0
+    private var yPosOffsetFactor = 1
+    private val MAX_Y_POS_OFFSET = 10
+    val offset: Int get() {
+        if(abs(yPosOffset) >= MAX_Y_POS_OFFSET)
+            yPosOffsetFactor *= -1
+        yPosOffset += yPosOffsetFactor
+        Log.d(LOG_ID, "Offset: $yPosOffset")
+        return yPosOffset
+    }
 
     companion object {
         val LOG_ID = "GDH.Aod"
@@ -107,6 +120,21 @@ class AODAccessibilityService : AccessibilityService() {
                 addAction(Intent.ACTION_SCREEN_OFF)
             }
             registerReceiver(screenStateReceiver, filter)
+            val displayManager = BitmapUtils.getDisplayManager(this)
+            if(displayManager != null && displayManager.displays.isNotEmpty()) {
+                val display = displayManager.displays[0]
+                Log.d(LOG_ID, "Display state: ${display.state}")
+                if(display.state != Display.STATE_ON) {
+                    val sharedPref = this.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+                    val enabled = sharedPref.getBoolean(Constants.SHARED_PREF_AOD_WP_ENABLED, false)
+                    Log.i(LOG_ID, "Initial screen state is ${display.state} - enabled: $enabled")
+                    if (enabled) {
+                        checkAndCreateOverlay()
+                    }
+                }
+            } else {
+                Log.w(LOG_ID, "No displays found")
+            }
         } catch (e: Exception) {
             Log.e(LOG_ID, "Error in onCreate", e)
         }
@@ -162,7 +190,7 @@ class AODAccessibilityService : AccessibilityService() {
             )
 
             imageView.setImageBitmap(bitmap)
-            val yOffset = max(0F, ((BitmapUtils.getScreenHeight(this)-bitmap.height)*aodWidget!!.getYPos()/100F))
+            val yOffset = max(0F, ((BitmapUtils.getScreenHeight(this)-bitmap.height)*aodWidget!!.getYPos()/100F)+offset)
 
             val layoutParams = WindowManager.LayoutParams().apply {
                 type = WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY
@@ -177,7 +205,7 @@ class AODAccessibilityService : AccessibilityService() {
                 y = yOffset.toInt()
             }
 
-            Log.d(LOG_ID, "Adding overlay")
+            Log.d(LOG_ID, "Adding overlay at y-pos ${layoutParams.y}")
 
             windowManager.addView(imageView, layoutParams)
             overlayView = imageView

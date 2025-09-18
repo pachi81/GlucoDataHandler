@@ -27,6 +27,7 @@ import de.michelinside.glucodatahandler.common.receiver.BroadcastServiceAPI
 import de.michelinside.glucodatahandler.common.receiver.DexcomBroadcastReceiver
 import de.michelinside.glucodatahandler.common.receiver.DiaboxReceiver
 import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
+import de.michelinside.glucodatahandler.common.receiver.LibrePatchedReceiver
 import de.michelinside.glucodatahandler.common.receiver.NamedBroadcastReceiver
 import de.michelinside.glucodatahandler.common.receiver.NamedReceiver
 import de.michelinside.glucodatahandler.common.receiver.NotificationReceiver
@@ -82,7 +83,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         }
 
         val isServiceRunning: Boolean get() {
-            return service != null
+            return service != null || extContext != null
         }
 
         @SuppressLint("StaticFieldLeak")
@@ -259,6 +260,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
 
         private var glucoDataReceiver: GlucoseDataReceiver? = null
         private var xDripReceiver: XDripBroadcastReceiver?  = null
+        private var librePatchedReceiver: LibrePatchedReceiver?  = null
         private var aapsReceiver: AAPSReceiver?  = null
         private var dexcomReceiver: DexcomBroadcastReceiver? = null
         private var nsEmulatorReceiver: NsEmulatorReceiver? = null
@@ -384,35 +386,62 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     }
                 }
 
-                if (key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED) {
-                    // default to false because reading notifications is a scary permission to give for no reason
-                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
-                        Log.d(LOG_ID, "Notification source enabled")
-                        val notificationListeners = Settings.Secure.getString(context.contentResolver, "enabled_notification_listeners")
-                        if (!notificationListeners.contains(context.packageName)) {
-                            // disable until permission is granted:
-                            with(sharedPref.edit()) {
-                                putBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)
-                                apply()
-                            }
-                            // request permissions
-                            val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            context.startActivity(intent)
-                        } else {
-                            notificationReceiver = NotificationReceiver()
-                            registerReceiver(context, notificationReceiver!!, IntentFilter())
+                if(key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_LIBRE_PATCHED_ENABLED) {
+                    if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_LIBRE_PATCHED_ENABLED, true)) {
+                        if(librePatchedReceiver == null) {
+                            librePatchedReceiver = LibrePatchedReceiver()
+                            val filter = IntentFilter()
+                            filter.addAction(Constants.XDRIP_ACTION_GLUCOSE_READING)
+                            filter.addAction(Constants.XDRIP_ACTION_SENSOR_ACTIVATE)
+                            if(!registerReceiver(context, librePatchedReceiver!!, filter))
+                                librePatchedReceiver = null
                         }
-                    } else if(notificationReceiver!=null) {
-                        unregisterReceiver(context, notificationReceiver)
-                        notificationReceiver = null
+                    } else if (librePatchedReceiver != null) {
+                        unregisterReceiver(context, librePatchedReceiver)
+                        librePatchedReceiver = null
                     }
-                    // notification listeners can not be unregistered
+                }
+
+                if (key.isNullOrEmpty() || key == Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED) {
+                    updateNotificationReceiver(sharedPref, context)
                 }
 
 
             } catch (exc: Exception) {
                 Log.e(LOG_ID, "registerSourceReceiver exception: " + exc.toString())
+            }
+        }
+
+        fun checkNotificationReceiverPermission(context: Context, requestPermission: Boolean): Boolean {
+            val notificationListeners = Settings.Secure.getString(context.contentResolver, "enabled_notification_listeners")
+            if(!notificationListeners.contains(context.packageName)) {
+                if(requestPermission) {
+                    // request permissions
+                    val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(intent)
+                }
+                return false
+            }
+            return true
+        }
+
+        fun updateNotificationReceiver(sharedPref: SharedPreferences, context: Context) {
+            try {
+                // default to false because reading notifications is a scary permission to give for no reason
+                if (sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {
+                    Log.i(LOG_ID, "Notification source enabled")
+                    checkNotificationReceiverPermission(context, true)
+                    notificationReceiver = NotificationReceiver()
+                    registerReceiver(context, notificationReceiver!!, IntentFilter())
+                } else if(notificationReceiver!=null) {
+                    Log.i(LOG_ID, "Notification source disabled")
+                    unregisterReceiver(context, notificationReceiver)
+                    notificationReceiver = null
+                }
+                // notification listeners can not be unregistered
+            } catch (exc: Exception) {
+                Log.e(LOG_ID, "updateNotificationReceiver exception: " + exc.toString())
             }
         }
 
@@ -443,6 +472,10 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     unregisterReceiver(context, diaboxReceiver)
                     diaboxReceiver = null
                 }
+                if (librePatchedReceiver != null) {
+                    unregisterReceiver(context, librePatchedReceiver)
+                    librePatchedReceiver = null
+                }
                 if(notificationReceiver != null) {
                     unregisterReceiver(context, notificationReceiver)
                     notificationReceiver = null
@@ -455,6 +488,16 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
         fun migrateSettings(context: Context) {
             val sharedPrefs = context.getSharedPreferences(Constants.SHARED_PREF_TAG, MODE_PRIVATE)
             Log.v(LOG_ID, "migrateSettings called")
+
+            val oldVersion = sharedPrefs.getInt(Constants.SHARED_PREF_GDH_VERSION, 0)
+            if(oldVersion != BuildConfig.BASE_VERSION) {
+                Log.i(LOG_ID, "Migrate settings from version $oldVersion to ${BuildConfig.BASE_VERSION}")
+                with(sharedPrefs.edit()) {
+                    putInt(Constants.SHARED_PREF_GDH_VERSION, BuildConfig.BASE_VERSION)
+                    apply()
+                }
+            }
+
             if(!sharedPrefs.contains(Constants.SHARED_PREF_OBSOLETE_TIME)) {
                 val sharedGlucosePref = context.getSharedPreferences(Constants.GLUCODATA_BROADCAST_ACTION, MODE_PRIVATE)
                 var obsoleteTime = 6
@@ -483,17 +526,37 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 }
             }
 
-            if(!sharedPrefs.contains(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL)) {
-                // check local for US and set to true if set
-                val currentLocale = Locale.getDefault()
-                val countryCode = currentLocale.country
-                Log.i(LOG_ID, "Using country code $countryCode")
-                if(countryCode == "US") {
+            if(!sharedPrefs.contains(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER)) {
+                if(!sharedPrefs.contains(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL)) {
+                    // check local for US and set to true if set
+                    val currentLocale = Locale.getDefault()
+                    val countryCode = currentLocale.country
+                    Log.i(LOG_ID, "Using country code $countryCode")
                     with(sharedPrefs.edit()) {
-                        putBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, true)
+                        when (countryCode.lowercase()) {
+                            "us" -> {
+                                putString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "us")
+                            }
+                            "jp" -> {
+                                putString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "jp")
+                            }
+                            else -> {
+                                putString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu")
+                            }
+                        }
+                        apply()
+                    }
+                } else {
+                    with(sharedPrefs.edit()) {
+                        if(sharedPrefs.getBoolean(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL, false))
+                            putString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "us")
+                        else
+                            putString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu")
+                        remove(Constants.SHARED_PREF_DEXCOM_SHARE_USE_US_URL)
                         apply()
                     }
                 }
+                Log.i(LOG_ID, "Using dexcom server ${sharedPrefs.getString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu")}")
             }
 
             if(sharedPrefs.contains(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION)) {
@@ -504,6 +567,25 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 }
             }
 
+            if(!sharedPrefs.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false)) {  // only of notification reader is not enabled!
+                // change old notification regex
+                if(sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX)) {
+                    if(sharedPrefs.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, "") == "(\\d*\\.?\\d+)") {
+                        with(sharedPrefs.edit()) {
+                            putString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP_REGEX, NotificationReceiver.defaultGlucoseRegex)
+                            apply()
+                        }
+                    }
+                }
+                if(sharedPrefs.contains(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX)) {
+                    if(sharedPrefs.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, "") == "IOB: (\\d*\\.?\\d+) U") {
+                        with(sharedPrefs.edit()) {
+                            putString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_IOB_APP_REGEX, NotificationReceiver.defaultIobRegex)
+                            apply()
+                        }
+                    }
+                }
+            }
         }
 
         fun getSettings(): Bundle {
@@ -519,6 +601,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 bundle.putBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true))
                 bundle.putBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, sharedPref!!.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false))
                 bundle.putBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, sharedPref!!.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true))
+                bundle.putString(Constants.SHARED_PREF_SENSOR_RUNTIME, sharedPref!!.getString(Constants.SHARED_PREF_SENSOR_RUNTIME, "14"))
             }
             Log.v(LOG_ID, "getSettings called with bundle ${(Utils.dumpBundle(bundle))}")
             return bundle
@@ -537,6 +620,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 putBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_DIABOX_ENABLED, true))
                 putBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, bundle.getBoolean(Constants.SHARED_PREF_PHONE_WEAR_SCREEN_OFF_UPDATE, true))
                 putBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, bundle.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_ENABLED, false))
+                putString(Constants.SHARED_PREF_SENSOR_RUNTIME, bundle.getString(Constants.SHARED_PREF_SENSOR_RUNTIME, "14"))
                 apply()
             }
             ReceiveData.setSettings(sharedPref, bundle)
@@ -545,6 +629,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
 
     init {
         appSource = source
+        Log.i(LOG_ID, "Init for $appSource")
     }
 
     abstract fun getNotification() : Notification
@@ -555,12 +640,12 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
             Log.i(LOG_ID, "onStartCommand called foregroundService: $isForegroundService")
             GdhUncaughtExecptionHandler.init()
             if (!isForegroundService) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    Log.i(LOG_ID, "Starting service in foreground with type ${ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC}!")
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    Log.i(LOG_ID, "Starting service in foreground with type ${ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE}!")
                     startForeground(
                         NOTIFICATION_ID,
                         getNotification(),
-                        ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+                        ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
                     )
                 } else {
                     Log.i(LOG_ID, "Starting service in foreground!")
@@ -700,7 +785,8 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                     updateSourceReceiver(this, key)
                     shareSettings = true
                 }
-                Constants.SHARED_PREF_SHOW_OTHER_UNIT -> {
+                Constants.SHARED_PREF_SHOW_OTHER_UNIT,
+                Constants.SHARED_PREF_SENSOR_RUNTIME -> {
                     shareSettings = true
                 }
                 Constants.SHARED_PREF_BATTERY_RECEIVER_ENABLED -> {
@@ -712,9 +798,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 }
             }
             if (shareSettings) {
-                val extras = Bundle()
-                extras.putBundle(Constants.SETTINGS_BUNDLE, getSettings())
-                InternalNotifier.notify(this, NotifySource.SETTINGS, extras)
+                InternalNotifier.notify(this, NotifySource.SETTINGS, getSettings())
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString())
@@ -730,5 +814,11 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 Log.e(LOG_ID, "SendMessage exception: " + exc.toString())
             }
         }.start()
+    }
+
+    override fun onTimeout(startId: Int, fgsType: Int) {
+        super.onTimeout(startId, fgsType)
+        Log.e(LOG_ID, "onTimeout called with startId $startId and fgsType $fgsType")
+        //stopSelf() better force crash to see, what happens...
     }
 }

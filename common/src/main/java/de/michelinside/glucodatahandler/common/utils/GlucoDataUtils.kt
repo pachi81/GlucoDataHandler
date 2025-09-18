@@ -22,17 +22,37 @@ object GlucoDataUtils {
         return isGlucoseValid(mgdl.toInt())
     }
     fun isGlucoseValid(mgdl: Int): Boolean {
-        return mgdl >= Constants.GLUCOSE_MIN_VALUE.toFloat() && mgdl <= Constants.GLUCOSE_MAX_VALUE.toFloat()
+        return mgdl >= Constants.GLUCOSE_MIN_VALUE && mgdl <= Constants.GLUCOSE_MAX_VALUE
     }
 
-    fun isMmolValue(value: Float): Boolean = value < Constants.GLUCOSE_MIN_VALUE.toFloat()
+    fun getDisplayGlucose(rawValue: Float): Float {
+        if (ReceiveData.isMmol)
+            return mgToMmol(Utils.round(rawValue,1))
+        return Utils.round(rawValue, 0)
+    }
 
-    fun mgToMmol(value: Float): Float {
-        return Utils.round(value / Constants.GLUCOSE_CONVERSION_FACTOR, if(abs(value) > 1.7F) 1 else 2)
+    fun getDisplayGlucoseAsString(rawValue: Float, withUnit: Boolean = false): String {
+        if(rawValue.isNaN() || !isGlucoseValid(rawValue))
+            return "---"
+        val glucose = getDisplayGlucose(rawValue)
+        val result = if (ReceiveData.isMmol) "%.1f".format(glucose) else glucose.toInt().toString()
+        if(withUnit)
+            return result + " " + ReceiveData.getUnit()
+        return result
+    }
+
+    fun isMmolValue(value: Float): Boolean = value <= mgToMmol(Constants.GLUCOSE_MAX_VALUE.toFloat())
+
+    fun mgToMmol(value: Float, ignoreMax: Boolean = false): Float {
+        if(ignoreMax || abs(value.toInt()) <= Constants.GLUCOSE_MAX_VALUE)  // only check for max value as the min value can be used for delta calculation
+            return Utils.round(value / Constants.GLUCOSE_CONVERSION_FACTOR, if(abs(value) > 1.7F) 1 else 2)
+        return Float.NaN
     }
 
     fun mmolToMg(value: Float): Float {
-        return Utils.round(value * Constants.GLUCOSE_CONVERSION_FACTOR, 0)
+        if(isMmolValue(value))
+            return Utils.round(value * Constants.GLUCOSE_CONVERSION_FACTOR, 0)
+        return Float.NaN
     }
 
     fun deltaToString(delta: Float, withUnit: Boolean = false): String {
@@ -160,5 +180,14 @@ object GlucoDataUtils {
         intent.putExtra(ReceiveData.IOB, Utils.round(rate, 2))
         intent.putExtra(ReceiveData.COB, Utils.round(rate, 2)*10F+Utils.round(rate, 2))
         return intent
+    }
+
+    fun checkSerial(serial: String?): String? {
+        if(serial.isNullOrEmpty())
+            return serial
+        if(serial.startsWith("XX") && serial.length >= 11) {
+            return serial.substring(2)
+        }
+        return serial
     }
 }

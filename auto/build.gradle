@@ -3,7 +3,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
-project.ext.set("releasePath", "D:/Daten/Michel/OneDrive/Projekte/Release")
+project.ext.set("versionCode", 1030)
+project.ext.set("versionName", "2.0")
 
 android {
     namespace 'de.michelinside.glucodataauto'
@@ -13,8 +14,8 @@ android {
         applicationId "de.michelinside.glucodataauto"
         minSdk rootProject.minSdk
         targetSdk rootProject.targetSdk
-        versionCode 1029
-        versionName "1.3"
+        versionCode project.ext.versionCode
+        versionName project.ext.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -29,7 +30,7 @@ android {
         dev_release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-dev-rules.pro'
-            versionNameSuffix '-dev.' + rootProject.versionCode
+            versionNameSuffix '-dev.' + project.ext.versionCode
             resValue "string", "app_name", "GlucoDataAuto"
             signingConfig signingConfigs.debug
         }

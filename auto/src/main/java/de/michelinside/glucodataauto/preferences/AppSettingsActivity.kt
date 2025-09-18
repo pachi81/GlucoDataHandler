@@ -4,9 +4,11 @@ package de.michelinside.glucodataauto.preferences
 import android.R
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import de.michelinside.glucodatahandler.common.preferences.PreferenceHelper
 import de.michelinside.glucodatahandler.common.R as RC
 
 enum class SettingsFragmentClass(val value: Int, val titleRes: Int) {
@@ -26,6 +28,8 @@ class SettingsActivity : AppCompatActivity(),
         try {
             Log.v(LOG_ID, "onCreate called for fragment ${intent.getIntExtra(FRAGMENT_EXTRA, -1)} with instance: ${(savedInstanceState!=null)} count=${supportFragmentManager.backStackEntryCount}" )
             super.onCreate(savedInstanceState)
+            PreferenceHelper.resetViewPadding()
+            enableEdgeToEdge()
             if(savedInstanceState==null) {
                 titleMap.clear()
                 when (intent.getIntExtra(FRAGMENT_EXTRA, 0)) {
@@ -59,6 +63,10 @@ class SettingsActivity : AppCompatActivity(),
                 if (titleMap.containsKey(supportFragmentManager.backStackEntryCount)) {
                     this.supportActionBar!!.title = titleMap[supportFragmentManager.backStackEntryCount]
                     titleMap.remove(supportFragmentManager.backStackEntryCount+1)
+                }
+                Log.i(LOG_ID, "Update params for previous view entry ${supportFragmentManager.backStackEntryCount} - size ${supportFragmentManager.fragments.size}")
+                if(supportFragmentManager.backStackEntryCount < supportFragmentManager.fragments.size && supportFragmentManager.fragments[supportFragmentManager.backStackEntryCount].view != null) {
+                    PreferenceHelper.updateViewPadding(supportFragmentManager.fragments[supportFragmentManager.backStackEntryCount].requireView())
                 }
             }
             supportActionBar?.setDisplayHomeAsUpEnabled(true)

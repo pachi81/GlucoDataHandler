@@ -76,6 +76,15 @@
                 android:textAlignment="viewStart"
                 tools:ignore="TouchTargetSizeCheck" />
 
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/showBatteryPercent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/pref_battery_complication_percent"
+                android:textAlignment="viewStart"
+                tools:ignore="TouchTargetSizeCheck" />
+
             <Button
                 android:id="@+id/btnComplicationTapAction"
                 android:layout_height="wrap_content"

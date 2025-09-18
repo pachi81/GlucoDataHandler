@@ -34,6 +34,10 @@
     <string name="alarm_low">bajo</string>
     <string name="alarm_high">alto</string>
     <string name="alarm_very_high">muy alto</string>
+    <string name="very_low">Muy bajo</string>
+    <string name="low">Bajo</string>
+    <string name="high">Alto</string>
+    <string name="very_high">Muy alto</string>
 
     <!-- mobile -->
 
@@ -55,7 +59,6 @@
 
     <!-- tasker -->
 
-    <string name="help_link">https://github.com/pachi81/GlucoDataHandler/blob/master/README.md</string>
     <string name="tasker_event_glucodata">Nuevo valor de glucosa</string>
     <string name="tasker_event_glucodata_obsolete">Valor obsoleto</string>
     <string name="tasker_event_glucodata_alarm">Alarma de glucosa</string>
@@ -278,7 +281,7 @@
     <!-- GlucoDataAuto -->
 
     <string name="glucodataauto_link">https://github.com/pachi81/GlucoDataAuto/blob/main/README.md</string>
-    <string name="gda_no_data">Para usar esta aplicación en Android Auto, debes activar la configuración para desarrolladores en Android Auto haciendo clic varias veces en la versión. Luego debes habilitar "Fuentes desconocidas" en el menú de configuración para desarrolladores.</string>
+    <string name="gda_no_data">Para usar esta aplicación en Android Auto, debes activar la configuración para desarrolladores en Android Auto haciendo clic varias veces en la versión. Luego debes habilitar \"Fuentes desconocidas\" en el menú de configuración para desarrolladores.</string>
     <string name="pref_information">Información</string>
     <string name="pref_gda_info_summary">Si estás utilizando GlucoDataHandler como fuente, estos ajustes serán sobrescritos por GlucoDataHandler, por lo que no necesitas cambiarlos aquí.</string>
     <string name="pref_no_gda_info">Falta GlucoDataAuto</string>
@@ -300,26 +303,26 @@
     <string name="wear_foreground_notification_descr">Notificación en primer plano que evita que la aplicación se detenga mientras se ejecuta en segundo plano.</string>
     <string name="android_auto_notification_name">Notificación para Android Auto</string>
     <string name="android_auto_notification_descr">Notificación que se muestra en Android Auto</string>
-    <string name="src_xdrip_noise_blocking">¡Bloqueo de ruido activo en la configuración interaplicaciones de xDrip+!\n¡Por favor, cámbialo a "Extremadamente ruidoso"!</string>
+    <string name="src_xdrip_noise_blocking">¡Bloqueo de ruido activo en la configuración interaplicaciones de xDrip+!\n¡Por favor, cámbialo a \"Extremadamente ruidoso\"!</string>
     <string name="pref_cat_follower">Servicios en la nube</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
-    <string name="pref_source_juggluco_info_summary">Para recibir valores de Juggluco:\n- abre Juggluco\n- ve a "Configuración"\n- habilita "Transmisión de glucodata"\n- habilita "de.michelinside.glucodatahandler"</string>
-    <string name="pref_gda_source_juggluco_info_summary">Para recibir valores de Juggluco:\n- abre Juggluco\n- ve a "Configuración"\n- habilita "Transmisión de glucodata"\n- habilita "de.michelinside.glucodataauto"</string>
+    <string name="pref_source_juggluco_info_summary">Para recibir valores de Juggluco:\n- abre Juggluco\n- ve a \"Configuración\"\n- ve a \"Exchange data\"\n- habilita \"Transmisión de glucodata\"\n- habilita \"de.michelinside.glucodatahandler\"</string>
+    <string name="pref_gda_source_juggluco_info_summary">Para recibir valores de Juggluco:\n- abre Juggluco\n- ve a \"Configuración\"\n- ve a \"Exchange data\"\n- habilita \"Transmisión de glucodata\"\n- habilita \"de.michelinside.glucodataauto\"</string>
     <string name="pref_source_xdrip_info">xDrip+</string>
-    <string name="pref_source_xdrip_info_1_summary">Para recibir valores de xDrip+:\n- abre xDrip+\n- ve a configuración\n- ve a configuración interaplicaciones\n- habilita "Transmitir localmente"\n- configura "Bloqueo de ruido" en "Enviar incluso señales extremadamente ruidosas"</string>
+    <string name="pref_source_xdrip_info_1_summary">Para recibir valores de xDrip+:\n- abre xDrip+\n- ve a configuración\n- ve a configuración interaplicaciones\n- habilita \"Transmitir localmente\"\n- configura \"Bloqueo de ruido\" en \"Enviar incluso señales extremadamente ruidosas\"</string>
     <string name="pref_source_xdrip_info_2_summary">- habilita Transmisión compatible\n- verifica que \"Identificar receptor\" esté vacío o, si ya existe una entrada, agrega \"de.michelinside.glucodatahandler\" separado por un espacio</string>
-    <string name="pref_gda_source_xdrip_info_2_summary">- habilita "Transmisión compatible"\n- verifica que "Identificar receptores" esté vacío o agrega una nueva línea con "de.michelinside.glucodataauto"</string>
+    <string name="pref_gda_source_xdrip_info_2_summary">- habilita Transmisión compatible\n- verifica que \"Identificar receptor\" esté vacío o, si ya existe una entrada, agrega \"de.michelinside.glucodataauto\" separado por un espacio</string>
     <string name="pref_source_librelinkup_info">Configurar LibreLinkUp</string>
     <string name="pref_source_librelinkup_info_summary">IMPORTANTE: esto no es la cuenta de LibreView!\nPara activar LibreLinkUp:\n- abre tu aplicación FreeStyle Libre y selecciona en el menú Compartir o Aplicaciones conectadas\n- activa la conexión de LibreLinkUp\n- instala LibreLinkUp desde Play Store\n- configura tu cuenta y espera la invitación</string>
     <string name="menu_contact">Contacto</string>
     <string name="src_ns_iob_cob">Soporte de IOB/COB</string>
     <string name="src_ns_iob_cob_summary">Recibe también valores de IOB y COB del punto de conexión pebble de nightscout.</string>
-    <string name="pref_permanent_notification_info_summary">La notificación es obligatoria para el correcto funcionamiento de la aplicación.\nA partir de Android 13 puedes deslizar esta notificación. Si no quieres que vuelva la notificación, configura el "Icono de la barra de estado" en "Icono de la aplicación" y habilita "Ocultar contenido".</string>
+    <string name="pref_permanent_notification_info_summary">La notificación es obligatoria para el correcto funcionamiento de la aplicación.\nA partir de Android 13 puedes deslizar esta notificación. Si no quieres que vuelva la notificación, configura el \"Icono de la barra de estado\" en \"Icono de la aplicación\" y habilita \"Ocultar contenido\".</string>
     <string name="source_aaps">AAPS</string>
     <string name="pref_source_aaps_info">AndroidAPS</string>
-    <string name="pref_source_aaps_info_summary">Para recibir valores de AAPS:\n- abre la aplicación AAPS\n- ve a "Constructor de configuración"\n- habilita "Samsung Tizen"</string>
+    <string name="pref_source_aaps_info_summary">Para recibir valores de AAPS:\n- abre la aplicación AAPS\n- ve a \"Constructor de configuración\"\n- habilita \"Samsung Tizen\"</string>
     <string name="pref_switch_watchdrip_enabled">WatchDrip+</string>
-    <string name="pref_switch_watchdrip_enabled_summary">"Habilitar comunicación de WatchDrip+.\n¡IMPORTANTE: habilita "Habilitar servicio" en WatchDrip+ después de habilitar esta configuración aquí!"</string>
+    <string name="pref_switch_watchdrip_enabled_summary">Habilitar comunicación de WatchDrip+.\n¡IMPORTANTE: habilita \"Habilitar servicio\" en WatchDrip+ después de habilitar esta configuración aquí!</string>
     <string name="pref_car_notification_reappear_interval">Reaparición</string>
     <string name="pref_car_notification_reappear_interval_summary">Intervalo en el que la notificación volverá a aparecer si no hay un nuevo valor. (0 para nunca).</string>
     <string name="pref_aa_media_player_icon_style_summary">Estilo del icono/imagen del reproductor multimedia falso.</string>
@@ -389,10 +392,10 @@
     <string name="alarm_fullscreen_dismiss_keyguard">Descartar protección de pantalla</string>
     <string name="alarm_fullscreen_dismiss_keyguard_summary">Por favor, habilita esta configuración si tienes problemas con la notificación a pantalla completa.\nEn algunos dispositivos, esto causará la pantalla de desbloqueo mientras se activa la notificación a pantalla completa.\nPor lo tanto, no la habilites si no tienes ningún problema.</string>
     <string name="alarm_force_sound">Forzar sonido de alarma</string>
-    <string name="alarm_force_sound_summary">Esto forzará un sonido de alarma y vibración incluso si el teléfono está en modo silencioso o vibración. ¡Siempre detendrá el modo "No molestar"!\nPara habilitar esta configuración, es posible que se te solicite permitir que esta aplicación cambie el modo "No molestar".</string>
+    <string name="alarm_force_sound_summary">Esto forzará un sonido de alarma y vibración incluso si el teléfono está en modo silencioso o vibración. ¡Siempre detendrá el modo \"No molestar\"!\nPara habilitar esta configuración, es posible que se te solicite permitir que esta aplicación cambie el modo \"No molestar\".</string>
     <string name="wear_alarm_force_sound">Wear: Forzar sonido de alarma</string>
     <string name="alarm_force_vibration">Forzar vibración</string>
-    <string name="alarm_force_vibration_summary">Forzar vibración, incluso si el teléfono está en modo silencioso. ¡Siempre detendrá el modo "No molestar"!\nPara habilitar esta configuración, es posible que se te solicite permitir que esta aplicación cambie el modo "No molestar".</string>
+    <string name="alarm_force_vibration_summary">Forzar vibración, incluso si el teléfono está en modo silencioso. ¡Siempre detendrá el modo \"No molestar\"!\nPara habilitar esta configuración, es posible que se te solicite permitir que esta aplicación cambie el modo \"No molestar\".</string>
     <string name="alarm_sound_level">Nivel de sonido</string>
     <string name="alarm_sound_level_summary">Configuración forzada del nivel de sonido para el sonido de la alarma.\n-1 para usar la configuración predeterminada del teléfono.</string>
     <string name="advanced_settings">Avanzado</string>
@@ -433,12 +436,12 @@
     <string name="alarm_app_sound">Sonido interno de la aplicación</string>
     <string name="pref_send_pref_to_glucodataauto">Incluir ajustes</string>
     <string name="pref_send_pref_to_glucodataauto_summary">Incluir ajustes en el mensaje a GlucoDataAuto.\nEsto sobrescribirá los ajustes en GlucoDataAuto.</string>
-    <string name="pref_source_gdh_info_summary">Para recibir valores de GlucoDataHandler:\n- abre GlucoDataHandler\n- ve a configuración\n- habilita "Reenviar a GlucoDataAuto"\n- para usar los mismos ajustes, habilita "Incluir ajustes"</string>
+    <string name="pref_source_gdh_info_summary">Para recibir valores de GlucoDataHandler:\n- abre GlucoDataHandler\n- ve a configuración\n- habilita \"Reenviar a GlucoDataAuto\"\n- para usar los mismos ajustes, habilita \"Incluir ajustes\"</string>
     <string name="very_low_alarm_summary">Si estás utilizando notificaciones de Android Auto, las alarmas muy bajas siempre activarán una notificación y esto no se puede desactivar ni cambiar.</string>
     <string name="pref_source_juggluco_iob_info">IOB de Juggluco</string>
-    <string name="pref_source_juggluco_iob_info_summary">Para recibir IOB de Juggluco:\n- abre Juggluco\n- ve a "Configuración"\n- habilita "IOB"\n- ve a "Servidor web"\n- habilita "Activo"\n- opcional: habilita "Solo local"</string>
+    <string name="pref_source_juggluco_iob_info_summary">Para recibir IOB de Juggluco:\n- abre Juggluco\n- ve a \"Configuración\"\n- ve a \"Display\"\n- habilita \"IOB\"</string>
     <string name="pref_source_xdrip_iob_info">IOB de xDrip+</string>
-    <string name="pref_source_xdrip_iob_info_summary">Para recibir valores de xDrip+:\n- abre xDrip+\n- ve a configuración\n- ve a Configuración entre aplicaciones\n- habilita "Servicio web de xDrip"</string>
+    <string name="pref_source_xdrip_iob_info_summary">Para recibir valores de xDrip+:\n- abre xDrip+\n- ve a configuración\n- ve a Configuración entre aplicaciones\n- habilita \"Servicio web de xDrip\"</string>
     <string name="pref_source_activate_local_nightscout_iob">Activar uso de IOB local de Nightscout</string>
     <string name="pref_source_activate_local_nightscout_iob_summary">Presiona aquí para configurar los ajustes de Nightscout para usar el servidor web local y recibir valores adicionales de IOB.</string>
     <string name="activate_local_nightscout_iob_title">Sobrescribir Nightscout</string>
@@ -526,7 +529,7 @@
     <string name="obsolete_time_summary">Tiempo en minutos después del cual el valor se considera obsoleto.\nDespués del doble de este tiempo, el valor se elimina.</string>
     <string name="pref_source_offline">Aplicaciones locales</string>
     <string name="pref_source_offline_summary">Aplicaciones en el mismo dispositivo que proporcionan valores de glucosa como mensaje de transmisión interna, como Juggluco, xDrip+, AAPS y así sucesivamente.</string>
-    <string name="pref_cat_follower_summary">Servicios en la nube que proporcionan valores de glucosa a través de internet, como LibreLinkUp, Dexcom Share y Nightscout.</string>
+    <string name="pref_cat_follower_summary">Servicios en la nube que proporcionan valores de glucosa a través de internet, como LibreLinkUp, Dexcom Share, Nightscout y Medtrum.</string>
     <string name="pref_source_xdrip_broadcast">Alternativa: Transmitir localmente</string>
     <string name="pref_source_dexcom_byoda_info_summary">Para recibir valores de Dexcom BYODA, debes habilitar la transmisión a AAPS mientras construyes la aplicación.</string>
     <string name="pref_source_eversense_info_summary">Para recibir los valores de Eversense, debes usar ESEL, ya sea en modo compañero (notificación de lectura) o conectado a la aplicación Eversense parcheada.\nPara obtener más información sobre ESEL, presiona aquí.</string>
@@ -768,8 +771,6 @@
     <string name="notification_reader_five_minute_interval">Intervalo de 5 minutos</string>
     <string name="notification_reader_five_minute_interval_summary">Algunas aplicaciones, como Dexcom, actualizan sus notificaciones con bastante frecuencia. Para ignorar estas actualizaciones con el mismo valor, habilita el intervalo de 5 minutos.\nSi está habilitado, solo habrá un nuevo valor cada 5 minutos o si el valor en la notificación ha cambiado.</string>
     <string name="pref_source_notification_info_summary">Para recibir valores de notificaciones de otras aplicaciones, ¡se necesita un permiso para acceder a las notificaciones!\nLa notificación debe incluir el valor de glucosa o IOB como cadena.\nComo cada notificación tiene un diseño diferente, es posible que no funcione con todas las aplicaciones. En caso de problemas, por favor contáctame con una captura de pantalla de la notificación y los registros.</string>
-    <string name="notification_dexcom_info">Importante</string>
-    <string name="notification_dexcom_info_summary">Debido al comportamiento especial de las notificaciones de Dexcom G7, también debes habilitar la notificación en primer plano de Dexcom.</string>
     <string name="sensor_age_label">Antigüedad del sensor</string>
     <string name="sensor_age_value">%1$dd %2$dh</string>
     <string name="vibrate_pattern_shorty">Corto</string>
@@ -783,7 +784,7 @@
 
     <string name="widget_chart_glucose_trend_delta_time_iob_cob">Valores y gráfico</string>
 
-    <string name="aod_permission_info">Para habilitar la visualización de glucosa en la pantalla Always On Display, esta aplicación requiere el permiso del Servicio de Accesibilidad.\nEste permiso se utiliza exclusivamente para mostrar datos de glucosa en la AOD. Su privacidad es importante y no se accede, recopila ni comparte ningún otro dato personal.\nPulse "OK" para ir a la pantalla de permisos.</string>
+    <string name="aod_permission_info">Para habilitar la visualización de glucosa en la pantalla Always On Display, esta aplicación requiere el permiso del Servicio de Accesibilidad.\nEste permiso se utiliza exclusivamente para mostrar datos de glucosa en la AOD. Su privacidad es importante y no se accede, recopila ni comparte ningún otro dato personal.\nPulse \"OK\" para ir a la pantalla de permisos.</string>
 
     <string name="graph_duration_phone_main_summary">Número de horas mostradas en el gráfico en la pantalla principal.\nUtilice 0 para desactivar el gráfico.</string>
     <string name="graph_circle_radius">Tamaño del punto</string>
@@ -802,4 +803,59 @@
     <string name="pref_cat_ui_graph_settings">Interfaz de usuario y gráfico</string>
 
     <string name="state_update_required">¡Actualización requerida!</string>
+
+    <string name="pref_notification_recreate">Recrear notificaciones</string>
+    <string name="pref_notification_recreate_summary">Eliminar y recrear la segunda y tercera notificación.\nEsto solo es necesario para pantallas AOD especiales que no actualizan el ícono de las notificaciones.\nNo es posible recrear el ícono de la notificación en primer plano.</string>
+    <string name="source_dexcom_server_eu">Internacional/UE</string>
+    <string name="source_dexcom_server_us">Estados Unidos</string>
+    <string name="source_dexcom_server_jp">Japón</string>
+    <string name="source_dexcom_server_summary">Seleccione el servidor según el país al que esté vinculado su Dexcom Clarity.</string>
+    <string name="dexcom_share_check_jp_account">Presione aquí para verificar los datos de su cuenta Dexcom Share para su cuenta japonesa.</string>
+    <string name="src_cat_medtrum">Medtrum</string>
+    <string name="src_medtrum_enabled_summary">Habilitar la conexión Medtrum después de configurar el usuario y la contraseña.</string>
+    <string name="src_medtrum_user">Usuario</string>
+    <string name="src_medtrum_user_summary">Nombre de usuario de Medtrum para la cuenta de seguidor.</string>
+    <string name="src_medtrum_password_summary">Contraseña para la cuenta de seguidor de Medtrum.</string>
+    <string name="src_medtrum_patient_summary">Si hay más de un paciente conectado a la cuenta de Medtrum, seleccione el paciente para el que se reciben los datos.</string>
+    <string name="source_medtrum_server_default">Predeterminado (.eu)</string>
+    <string name="source_medtrum_server_france">Francia (.fr)</string>
+    <string name="source_medtrum">Medtrum</string>
+    <string name="source_request_interval_2">2 minutos</string>
+    <string name="source_select_patient">¡Por favor, seleccione primero un paciente!</string>
+    <string name="source_no_patient">¡No se encontró ningún paciente!</string>
+    <string name="source_new_sensor_starting">Iniciando nuevo sensor…</string>
+    <string name="source_sensor_need_calibration">¡El sensor necesita calibración!</string>
+    <string name="source_no_valid_value">¡No se encontró ningún valor de glucosa válido!</string>
+    <string name="source_invalid_patient">¡Datos del paciente no válidos!</string>
+    <string name="pref_source_libre_patched_info_summary">Si está utilizando la aplicación Libre parcheada u otras aplicaciones que proporcionan esta transmisión.</string>
+    <string name="pref_sensor_runtime">Tiempo de uso del sensor</string>
+    <string name="pref_sensor_runtime_summary">Número de días que se puede usar el sensor.</string>
+    <string name="runtime_10_days">10 días</string>
+    <string name="runtime_14_days">14 días</string>
+    <string name="runtime_15_days">15 días</string>
+    <string name="runtime_24_days">24 días</string>
+    <string name="table_header_statistics">Estadísticas</string>
+    <string name="info_label_average">Promedio</string>
+    <string name="time_in_range">TIR</string>
+    <string name="src_webserver">Servidor web</string>
+    <string name="src_juggluco_webserver_summary">Uso del servidor web de Juggluco para obtener la antigüedad del sensor y los datos omitidos, si existen. Habilite primero el servidor web en Juggluco sin SSL ni api_secret.</string>
+    <string name="src_iob_support">Soporte IOB</string>
+    <string name="src_juggluco_iob_support_summary">Recepción de valores IOB desde el servidor web de Juggluco.</string>
+    <string name="pref_source_juggluco_setup_info">Configurar Juggluco</string>
+    <string name="pref_source_juggluco_webserver_info">Configurar servidor web</string>
+    <string name="pref_source_juggluco_webserver_info_summary">Para habilitar el servidor web en Juggluco:\n- abra Juggluco\n- vaya a \"Ajustes\"\n- abra \"Intercambiar datos\"\n- abra \"Servidor web\"\n- Habilite \"Activo\"\n- ¡NO configure \"api_secret\" ni \"Usar SSL\"!\n- opcional: habilite \"Solo local\"</string>
+
+    <string name="pref_source_medtrum_info">Configurar Medtrum</string>
+    <string name="pref_source_medtrum_info_summary">Para recibir datos como seguidor de Medtrum:\n- Registre una cuenta en la aplicación EasyFollower o en EasyView\n-> IMPORTANTE: ¡no puede usar su cuenta de Medtrum para esto!\n- Invítese a sí mismo\n- Acepte la invitación\n- Use esta cuenta para GlucoDataHandler\n- Opcional: Desinstale la aplicación EasyFollower</string>
+
+    <string name="pref_battery_complication_percent">Mostrar % (batería)</string>
+
+    <string name="source_help_summary">Pulse aquí para acceder a la wiki de GDH, que enumera los sensores compatibles y las fuentes compatibles.</string>
+
+    <string name="pref_switch_standard_statistics">Usar estadísticas estándar</string>
+    <string name="pref_switch_standard_statistics_summary">Utilice los valores de rango estadístico estándar o la configuración de rango objetivo personalizada de GDH para los cálculos estadísticos.</string>
+
+    <string name="aa_media_player_colored">Portada coloreada</string>
+    <string name="aa_media_player_colored_summary_off">Mostrar valor, tendencia y gráfico en blanco</string>
+    <string name="aa_media_player_colored_summary_on">Mostrar valor, tendencia y gráfico en color</string>
 </resources>

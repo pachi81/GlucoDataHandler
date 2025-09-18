@@ -34,6 +34,10 @@
     <string name="alarm_low">Ниска</string>
     <string name="alarm_high">Висока</string>
     <string name="alarm_very_high">Много висока</string>
+    <string name="very_low">Много ниска</string>
+    <string name="low">Ниска</string>
+    <string name="high">Висока</string>
+    <string name="very_high">Много висока</string>
 
     <!-- mobile -->
 
@@ -298,12 +302,12 @@
     <string name="src_xdrip_noise_blocking">Noise-Block е активен в настройките за между приложения на xDrip+!\nМоля, променете го на \"Изключително шумно\"!</string>
     <string name="pref_cat_follower">Облачни услуги</string>
     <string name="pref_source_juggluco_info">Juggluco</string>
-    <string name="pref_source_juggluco_info_summary">За да получавате стойности от Juggluco:\n- отворете Juggluco\n- отидете на \"Настройки\"\n- активирайте \"Glucodata broadcast\"\n- активирайте \"de.michelinside.glucodatahandler\"</string>
-    <string name="pref_gda_source_juggluco_info_summary">За да получавате стойности от Juggluco:\n- отворете Juggluco\n- отидете на \"Настройки\"\n- активирайте \"Glucodata broadcast\"\n- активирайте \"de.michelinside.glucodataauto\"</string>
+    <string name="pref_source_juggluco_info_summary">За да получавате стойности от Juggluco:\n- отворете Juggluco\n- отидете на \"Настройки\"\n- отидете на \"Exchange data\"\n- активирайте \"Glucodata broadcast\"\n- активирайте \"de.michelinside.glucodatahandler\"</string>
+    <string name="pref_gda_source_juggluco_info_summary">За да получавате стойности от Juggluco:\n- отворете Juggluco\n- отидете на \"Настройки\"\n- отидете на \"Exchange data\"\n- активирайте \"Glucodata broadcast\"\n- активирайте \"de.michelinside.glucodataauto\"</string>
     <string name="pref_source_xdrip_info">xDrip+</string>
     <string name="pref_source_xdrip_info_1_summary">За да получавате стойности от xDrip+:\n- отворете xDrip+\n- отидете на настройки\n- отидете на настройки за между приложения\n- активирайте \"Broadcast locally\"\n- задайте \"Noise Blocking\" на \"Send even Extremely noisy signals\"</string>
     <string name="pref_source_xdrip_info_2_summary">- активирайте \"Compatible Broadcast\" - проверете дали \"Identify receiver\" е празно или ако вече съществува запис, добавете \"de.michelinside.glucodatahandler\", разделено с интервал</string>
-    <string name="pref_gda_source_xdrip_info_2_summary">- активирайте \"Compatible Broadcast\"\n- проверете дали \"Identify receivers\" е празно или добавете нов ред с \"de.michelinside.glucodataauto\"</string>
+    <string name="pref_gda_source_xdrip_info_2_summary">- активирайте \"Compatible Broadcast\" - проверете дали \"Identify receiver\" е празно или ако вече съществува запис, добавете \"de.michelinside.glucodataauto\", разделено с интервал</string>
     <string name="pref_source_librelinkup_info">Настройка на LibreLinkUp</string>
     <string name="pref_source_librelinkup_info_summary">ВАЖНО: това не е акаунтът, използван за приложението FreeStyle Libre!\nЗа да активирате LibreLinkUp follower:\n- отворете приложението FreeStyle Libre и изберете в менюто Споделяне или Свързани приложения\n- активирайте LibreLinkUp връзката\n- инсталирайте LibreLinkUp от Play Store\n- настройте акаунта си и изчакайте поканата</string>
     <string name="menu_contact">Контакт</string>
@@ -314,7 +318,7 @@
     <string name="pref_source_aaps_info">AndroidAPS</string>
     <string name="pref_source_aaps_info_summary">За да получавате стойности от AAPS:\n- отворете приложението AAPS\n- отидете на \"Config Builder\"\n- активирайте \"Samsung Tizen\" или \"Data Broadcaster\"</string>
     <string name="pref_switch_watchdrip_enabled">WatchDrip+</string>
-    <string name="pref_switch_watchdrip_enabled_summary">"Активиране на комуникацията с WatchDrip+.\nВАЖНО: активирайте \"Enable service\" в WatchDrip+ след активиране на тази настройка тук!"</string>
+    <string name="pref_switch_watchdrip_enabled_summary">Активиране на комуникацията с WatchDrip+.\nВАЖНО: активирайте \"Enable service\" в WatchDrip+ след активиране на тази настройка тук!</string>
     <string name="pref_car_notification_reappear_interval">Повторно появяване</string>
     <string name="pref_car_notification_reappear_interval_summary">Интервал, през който известието ще се появява отново, ако няма нова стойност. (0 за никога).</string>
     <string name="pref_aa_media_player_icon_style_summary">Стил на иконата/изображението на фиктивния медиен плейър.</string>
@@ -432,7 +436,7 @@
     <string name="pref_source_gdh_info_summary">За да получавате стойности от GlucoDataHandler:\n- отворете GlucoDataHandler\n- отидете на настройки\n- активирайте \"Препращане към GlucoDataAuto\"\n- за да използвате същите настройки, активирайте \"Включване на настройки\"</string>
     <string name="very_low_alarm_summary">Ако използвате известия за Android Auto, алармите за много ниска стойност винаги ще задействат известие и това не може да бъде деактивирано или променено.</string>
     <string name="pref_source_juggluco_iob_info">IOB от Juggluco</string>
-    <string name="pref_source_juggluco_iob_info_summary">За да получавате IOB от Juggluco:\n- отворете Juggluco\n- отидете на \"Настройки\"\n- активирайте \"IOB\"\n- отидете на \"Web server\"\n- активирайте \"Active\"\n- по избор: активирайте \"Local only\"</string>
+    <string name="pref_source_juggluco_iob_info_summary">За да получавате IOB от Juggluco:\n- отворете Juggluco\n- отидете на \"Settings\"\n- отидете на \"Display\"\n- активирайте \"IOB\"</string>
     <string name="pref_source_xdrip_iob_info">IOB от xDrip+</string>
     <string name="pref_source_xdrip_iob_info_summary">За да получавате стойности от xDrip+:\n- отворете xDrip+\n- отидете на настройки\n- отидете на настройки за между приложения\n- активирайте \"xDrip Web Service\"</string>
     <string name="pref_source_activate_local_nightscout_iob">Активиране на използването на IOB</string>
@@ -522,7 +526,7 @@
     <string name="obsolete_time_summary">Време в минути, след което стойността се третира като остаряла.\nСлед два пъти това време стойността се премахва.</string>
     <string name="pref_source_offline">Локални приложения</string>
     <string name="pref_source_offline_summary">Приложения на същото устройство, предоставящи стойности на глюкозата като вътрешно broadcast съобщение, като Juggluco, xDrip+, AAPS и т.н.</string>
-    <string name="pref_cat_follower_summary">Облачни услуги, предоставящи стойности на глюкозата през интернет, като LibreLinkUp, Dexcom Share и Nightscout.</string>
+    <string name="pref_cat_follower_summary">Облачни услуги, предоставящи стойности на глюкозата през интернет, като LibreLinkUp, Dexcom Share, Nightscout и Medtrum.</string>
     <string name="pref_source_xdrip_broadcast">Алтернатива: Broadcast локално</string>
     <string name="pref_source_dexcom_byoda_info_summary">За да получавате стойности от Dexcom BYODA, трябва да активирате broadcast към AAPS, докато изграждате приложението.</string>
     <string name="pref_source_eversense_info_summary">За да получавате стойности от Eversense, трябва да използвате ESEL или в режим на компаньон (четене на известия), или свързан с patched приложението Eversense.\nЗа повече информация относно ESEL, натиснете тук.</string>
@@ -769,8 +773,6 @@
     <string name="notification_reader_five_minute_interval">Интервал от 5 минути</string>
     <string name="notification_reader_five_minute_interval_summary">Някои приложения, като Dexcom, актуализират известията си доста често. За да игнорирате тези актуализации със същата стойност, активирайте интервала от 5 минути.\nАко е активирано, ще има нова стойност само на всеки 5 минути или ако стойността в известието се е променила.</string>
     <string name="pref_source_notification_info_summary">За да получавате стойности от известия на други приложения, е необходимо разрешение за достъп до известията!\nИзвестието трябва да включва или стойността на глюкозата, или IOB като низ.\nТъй като всяко известие има различно оформление, може да не работи с всяко приложение. В случай на проблеми, моля, свържете се с мен със снимка на известието и логовете.</string>
-    <string name="notification_dexcom_info">Важно</string>
-    <string name="notification_dexcom_info_summary">Поради специалното поведение на известията на Dexcom G7, трябва да активирате и известието на преден план на Dexcom.</string>
     <string name="sensor_age_label">Възраст на сензора</string>
     <string name="sensor_age_value">%1$dd %2$dh</string>
     <string name="vibrate_pattern_shorty">Кратко</string>
@@ -803,4 +805,60 @@
     <string name="pref_cat_ui_graph_settings">Потребителски интерфейс и графика</string>
 
     <string name="state_update_required">Нужна е актуализация!</string>
+
+    <string name="pref_notification_recreate">Повторно създаване на известия</string>
+    <string name="pref_notification_recreate_summary">Премахване и повторно създаване на второ и трето известие.\nТова е необходимо само за специални AOD дисплеи, които не актуализират иконата на известията.\nНе е възможно да се създаде отново иконата на известието на преден план.</string>
+    <string name="source_dexcom_server_eu">Международен/ЕС</string>
+    <string name="source_dexcom_server_us">Съединени щати</string>
+    <string name="source_dexcom_server_jp">Япония</string>
+    <string name="source_dexcom_server_summary">Изберете сървъра в зависимост от държавата, с която е свързан вашият Dexcom Clarity.</string>
+    <string name="dexcom_share_check_jp_account">Натиснете тук, за да проверите данните на вашия Dexcom Share акаунт за японския ви акаунт.</string>
+    <string name="src_cat_medtrum">Medtrum</string>
+    <string name="src_medtrum_enabled_summary">Активирайте Medtrum връзка след задаване на потребител и парола.</string>
+    <string name="src_medtrum_user">Потребител</string>
+    <string name="src_medtrum_user_summary">Потребителско име на Medtrum за акаунт на последовател.</string>
+    <string name="src_medtrum_password_summary">Парола за Medtrum акаунт на последовател.</string>
+    <string name="src_medtrum_patient_summary">Ако има повече от един пациент, свързан с Medtrum акаунта, моля, изберете пациента, за когото се получават данните.</string>
+    <string name="source_medtrum_server_default">По подразбиране (.eu)</string>
+    <string name="source_medtrum_server_france">Франция (.fr)</string>
+    <string name="source_medtrum">Medtrum</string>
+    <string name="source_request_interval_2">2 минути</string>
+    <string name="source_select_patient">Моля, първо изберете пациент!</string>
+    <string name="source_no_patient">Няма намерен пациент!</string>
+    <string name="source_new_sensor_starting">Нов сензор стартира…</string>
+    <string name="source_sensor_need_calibration">Сензорът се нуждае от калибриране!</string>
+    <string name="source_no_valid_value">Няма намерена валидна стойност на глюкозата!</string>
+    <string name="source_invalid_patient">Невалидни данни за пациента!</string>
+    <string name="pref_source_libre_patched_info_summary">Ако използвате пачнатото приложение Libre или други приложения, предоставящи това излъчване.</string>
+    <string name="pref_sensor_runtime">Време за носене на сензора</string>
+    <string name="pref_sensor_runtime_summary">Брой дни, през които сензорът може да се носи.</string>
+    <string name="runtime_10_days">10 дни</string>
+    <string name="runtime_14_days">14 дни</string>
+    <string name="runtime_15_days">15 дни</string>
+    <string name="runtime_24_days">24 дни</string>
+    <string name="table_header_statistics">статистика</string>
+    <string name="info_label_average">Средно</string>
+    <string name="time_in_range">TIR</string>
+    <string name="src_webserver">Уеб сървър</string>
+    <string name="src_juggluco_webserver_summary">Използване на уеб сървъра на Juggluco за получаване на възрастта на сензора и пропуснати данни, ако има такива. Моля, първо активирайте уеб сървъра в Juggluco без SSL и api_secret.</string>
+
+    <string name="src_iob_support">Поддръжка на IOB</string>
+    <string name="src_juggluco_iob_support_summary">Получаване на IOB стойности от уеб сървъра на Juggluco.</string>
+    <string name="pref_source_juggluco_setup_info">Настройка на Juggluco</string>
+    <string name="pref_source_juggluco_webserver_info">Настройка на уеб сървър</string>
+    <string name="pref_source_juggluco_webserver_info_summary">За да активирате уеб сървъра в Juggluco:\n- отворете Juggluco\n- отидете на \"Настройки\"\n- отворете \"Обмен на данни\"\n- отворете \"Уеб сървър\"\n- Активирайте \"Активен\"\n- НЕ задавайте \"api_secret\" и \"Използване на SSL\"!\n- по избор: активирайте \"Само локално\"</string>
+
+    <string name="pref_source_medtrum_info">Настройка на Medtrum</string>
+    <string name="pref_source_medtrum_info_summary">За да получавате данни като последовател на Medtrum:\n- Регистрирайте акаунт в приложението EasyFollower или в EasyView\n-> ВАЖНО: не можете да използвате вашия Medtrum акаунт за това!\n- Поканете себе си\n- Приемете поканата\n- Използвайте този акаунт за GlucoDataHandler\n- По избор: Деинсталирайте приложението EasyFollower</string>
+
+    <string name="pref_battery_complication_percent">Покажи % (батерия)</string>
+
+    <string name="source_help_summary">Натиснете тук за GDH wiki, което изброява поддържаните сензори и съвместимите източници.</string>
+
+    <string name="pref_switch_standard_statistics">Използване на стандартна статистика</string>
+    <string name="pref_switch_standard_statistics_summary">Използвайте стандартните стойности на статистическия диапазон или персонализираните настройки на целевия диапазон от GDH за статистически изчисления.</string>
+
+    <string name="aa_media_player_colored">Цветна обложка</string>
+    <string name="aa_media_player_colored_summary_off">Показване на бяла стойност, тенденция и графика</string>
+    <string name="aa_media_player_colored_summary_on">Показване на цветна стойност, тенденция и графика</string>
 </resources>

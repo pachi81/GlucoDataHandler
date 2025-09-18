@@ -16,6 +16,7 @@ import de.michelinside.glucodatahandler.common.receiver.ScreenEventReceiver
 import de.michelinside.glucodatahandler.common.tasks.ElapsedTimeTask
 import de.michelinside.glucodatahandler.common.tasks.TimeTaskService
 import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
+import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.utils.WakeLockHelper
 import java.math.RoundingMode
@@ -46,7 +47,12 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     const val RATE_CALC = "gdh.rate.calculated"
 
     var sensorID: String? = null
-    var sensorStartTime: Long = 0L
+    private var startTimePair = Pair("", 0L)
+    val sensorStartTime: Long get() {
+        if(!sensorID.isNullOrEmpty() && startTimePair.first == sensorID)
+            return startTimePair.second
+        return 0L
+    }
     var rawValue: Int = 0
     var glucose: Float = 0.0F
     var sourceRate = Float.NaN
@@ -313,7 +319,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return deltaVal
     }
 
-    fun isIobCob() : Boolean {
+    private fun isIobCob() : Boolean {
         if (isIobCobObsolete()) {
             iob = Float.NaN
             cob = Float.NaN
@@ -401,6 +407,14 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         } else if(!sourceRate.isNaN()) {
             calculatedRate = sourceRate
         }
+    }
+
+    fun triggerRecalculateDeltaAndTime() {
+        val lastRate = rate
+        val lastDelta = delta
+        calculateDeltasAndRate(time, rawValue)
+        if(rate != lastRate || delta != lastDelta)
+            InternalNotifier.notify(GlucoDataService.context!!, NotifySource.MESSAGECLIENT, createExtras())
     }
 
     private fun calculateDeltasAndRate(new_time: Long, new_value: Int) {
@@ -596,6 +610,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
 
                 if (!GlucoDataUtils.isGlucoseValid(extras.getInt(MGDL))) {
                     Log.w(LOG_ID, "Invalid glucose values received! " + extras.toString())
+                    SourceStateData.setError(dataSource,"Invalid glucose value: ${extras.getInt(MGDL)}")
                     return false
                 }
 
@@ -610,8 +625,10 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                         handleFirstValue(context, dataSource, extras)
                     receiveTime = System.currentTimeMillis()
                     source = dataSource
-                    sensorID = extras.getString(SERIAL) //Name of sensor
-                    sensorStartTime = extras.getLong(SENSOR_START_TIME)
+                    sensorID = GlucoDataUtils.checkSerial(extras.getString(SERIAL)) //Name of sensor
+                    if(extras.containsKey(SENSOR_START_TIME))
+                        setSensorStartTime(sensorID, extras.getLong(SENSOR_START_TIME))
+
                     sourceRate = extras.getFloat(RATE) //Rate of change of glucose. See libre and dexcom label functions
 
                     if(!readCalculatedBundle(extras)) {
@@ -698,7 +715,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         return result
     }
 
-    private fun hasNewIobCob(extras: Bundle?): Boolean {
+    fun hasNewIobCob(extras: Bundle?): Boolean {
         if(extras != null && (extras.containsKey(IOB) || extras.containsKey(COB))) {
             if (!isIobCob() && extras.getFloat(IOB, Float.NaN).isNaN() && extras.getFloat(COB, Float.NaN).isNaN()) {
                 Log.d(LOG_ID, "Ignore NaN IOB and COB")
@@ -718,7 +735,7 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     fun handleIobCob(context: Context, dataSource: DataSource, extras: Bundle, interApp: Boolean = false) {
-        Log.v(LOG_ID, "handleIobCob for source " + dataSource + ": " + extras.toString())
+        Log.v(LOG_ID, "handleIobCob for source " + dataSource + ": " + Utils.dumpBundle(extras))
         if (hasNewIobCob(extras)) {
             var iobCobChange = false
             iobCobTime = if(extras.containsKey(IOBCOB_TIME))
@@ -998,6 +1015,14 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
         try {
             Log.d(LOG_ID, "onSharedPreferenceChanged called for key " + key)
             if (GlucoDataService.context != null) {
+                when(key) {
+                    Constants.SHARED_PREF_TARGET_MIN,
+                    Constants.SHARED_PREF_TARGET_MAX,
+                    Constants.SHARED_PREF_LOW_GLUCOSE,
+                    Constants.SHARED_PREF_HIGH_GLUCOSE -> {
+                        GlucoseStatistics.reset()
+                    }
+                }
                 when (key) {
                     Constants.SHARED_PREF_USE_MMOL,
                     Constants.SHARED_PREF_TARGET_MIN,
@@ -1012,14 +1037,20 @@ object ReceiveData: SharedPreferences.OnSharedPreferenceChangeListener {
                     Constants.SHARED_PREF_OBSOLETE_TIME,
                     Constants.SHARED_PREF_USE_RATE_CALCULATION -> {
                         updateSettings(sharedPreferences!!)
-                        val extras = Bundle()
-                        extras.putBundle(Constants.SETTINGS_BUNDLE, GlucoDataService.getSettings())
-                        InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SETTINGS, extras)
+                        InternalNotifier.notify(GlucoDataService.context!!, NotifySource.SETTINGS, GlucoDataService.getSettings())
                     }
                 }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onSharedPreferenceChanged exception: " + exc.toString() + "\n" + exc.stackTraceToString() )
+        }
+    }
+
+    fun setSensorStartTime(serialId: String?, startTime: Long) {
+        if(!serialId.isNullOrEmpty() && startTime > 0 && startTimePair.first != serialId) {
+            val serial = GlucoDataUtils.checkSerial(serialId)!!
+            Log.i(LOG_ID, "setSensorStartTime for " + serial + ": " + Utils.getUiTimeStamp(startTime))
+            startTimePair = Pair(serial, startTime)
         }
     }
 }

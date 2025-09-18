@@ -6,10 +6,11 @@ import android.util.Log
 import androidx.preference.*
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodataauto.R
+import de.michelinside.glucodatahandler.common.preferences.PreferenceFragmentCompatBase
 
 
-abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
-    protected val LOG_ID = "GDH.AA.SettingsFragmentBase"
+abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFragmentCompatBase(), SharedPreferences.OnSharedPreferenceChangeListener {
+    protected open val LOG_ID = "GDH.AA.SettingsFragmentBase"
     protected val updateEnablePrefs = mutableSetOf<String>()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -69,7 +70,7 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
     fun <T : Preference?> setEnableState(sharedPreferences: SharedPreferences, key: String, enableKey: String, secondEnableKey: String? = null, defValue: Boolean = false) {
         val pref = findPreference<T>(key)
         if (pref != null) {
-            pref.isEnabled = sharedPreferences.getBoolean(enableKey, defValue) && (if (secondEnableKey != null) !sharedPreferences.getBoolean(secondEnableKey, defValue) else true)
+            pref.isEnabled = sharedPreferences.getBoolean(enableKey, defValue) && (if (secondEnableKey != null) sharedPreferences.getBoolean(secondEnableKey, defValue) else true)
             if(!updateEnablePrefs.contains(enableKey)) {
                 Log.v(LOG_ID, "Add update enable pref $enableKey")
                 updateEnablePrefs.add(enableKey)

@@ -7,8 +7,9 @@
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
     <!-- xDrip+ integration -->
     <uses-permission android:name="com.eveningoutpost.dexdrip.permissions.RECEIVE_BG_ESTIMATE" />
@@ -66,8 +67,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GlucoDataHandler"
-        android:usesCleartextTraffic="true"
-        tools:targetApi="31">
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -94,13 +94,17 @@
 
 
         <service android:name="androidx.work.impl.foreground.SystemForegroundService"
-            android:foregroundServiceType="dataSync"
+            android:foregroundServiceType="specialUse"
             tools:node="merge" />
         <service
             android:name=".GlucoDataServiceAuto"
             android:enabled="true"
             android:exported="true"
-            android:foregroundServiceType="dataSync"/>
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Continuous real-time glucose data synchronization for critical diabetes management and alerting." />
+        </service>
 
         <receiver
             android:name=".receiver.GlucoDataActionReceiver"
@@ -158,7 +162,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".receiver.BroadcastServiceAPI"
+            android:name="de.michelinside.glucodatahandler.common.receiver.BroadcastServiceAPI"
             android:enabled="true"
             android:exported="true"
             tools:ignore="ExportedReceiver">
@@ -175,6 +179,16 @@
                 <action android:name="com.outshineiot.diabox.BgEstimate" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".receiver.LibrePatchedReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING" />
+                <action android:name="com.librelink.app.ThirdPartyIntegration.SENSOR_ACTIVATE" />
+            </intent-filter>
+        </receiver>
         <receiver android:name="de.michelinside.glucodatahandler.common.tasks.TimeAlarmReceiver" />
         <receiver android:name="de.michelinside.glucodatahandler.common.tasks.SourceAlarmReceiver" />
         <receiver android:name="de.michelinside.glucodatahandler.common.receiver.InternalActionReceiver" />
@@ -188,12 +202,19 @@
                 <action android:name= "android.intent.action.LOCALE_CHANGED" />
             </intent-filter>
         </receiver>
+        <receiver android:name="androidx.media.session.MediaButtonReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
 
         <service
             android:name=".android_auto.CarMediaBrowserService"
             android:exported="true"
             tools:ignore="ExportedService">
             <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
                 <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>
         </service>
@@ -201,6 +222,19 @@
         <meta-data
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />
+
+    <service
+        android:name="de.michelinside.glucodatahandler.common.receiver.NotificationReceiver"
+        android:label="Notification Listener"
+        android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.service.notification.NotificationListenerService" />
+        </intent-filter>
+        <meta-data
+            android:name="android.service.notification.default_filter_types"
+            android:value="alerting|ongoing|silent" />
+    </service>
     </application>
 
 </manifest>
