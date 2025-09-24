@@ -912,6 +912,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     fun getSettings(): Bundle {
         val bundle = Bundle()
         bundle.putStringArray(Constants.SHARED_PREF_ALARM_SNOOZE_NOTIFICATION_BUTTONS, getSnoozeNotificationButtons().toTypedArray())
+        bundle.putBoolean(Constants.SHARED_PREF_NOTIFICATION_AUTO_CLOSE, autoCloseNotification)
         if(GlucoDataService.sharedPref != null) {
             bundle.putBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED,  GlucoDataService.sharedPref!!.getBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED, false))
         }
@@ -921,6 +922,7 @@ abstract class AlarmNotificationBase: NotifierInterface, SharedPreferences.OnSha
     fun saveSettings(bundle: Bundle, editor: Editor) {
         if(bundle.containsKey(Constants.SHARED_PREF_ALARM_SNOOZE_NOTIFICATION_BUTTONS)) {
             editor.putStringSet(Constants.SHARED_PREF_ALARM_SNOOZE_NOTIFICATION_BUTTONS, bundle.getStringArray(Constants.SHARED_PREF_ALARM_SNOOZE_NOTIFICATION_BUTTONS)?.toMutableSet()?:  getSnoozeNotificationButtons())
+            editor.putBoolean(Constants.SHARED_PREF_NOTIFICATION_AUTO_CLOSE, bundle.getBoolean(Constants.SHARED_PREF_NOTIFICATION_AUTO_CLOSE, autoCloseNotification))
             if(bundle.containsKey(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED)) {
                 editor.putBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED, bundle.getBoolean(Constants.SHARED_PREF_NO_ALARM_NOTIFICATION_AUTO_CONNECTED))
             }

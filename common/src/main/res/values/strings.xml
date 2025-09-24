@@ -911,6 +911,8 @@
     <string name="aa_media_player_colored">Colored cover</string>
     <string name="aa_media_player_colored_summary_off">Show white value, trend and graph</string>
     <string name="aa_media_player_colored_summary_on">Show colored value, trend and graph</string>
+    <string name="alarm_general_settings_summary">General alarm settings for all alarms.</string>
+    <string name="alarm_cat_quiet_hours">Quiet hours</string>
 
     <plurals name="duration_days_short" translatable="false">
         <item quantity="one">%dd</item>

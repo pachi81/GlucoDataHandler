@@ -559,7 +559,7 @@ abstract class GlucoDataService(source: AppSource) : WearableListenerService(), 
                 Log.i(LOG_ID, "Using dexcom server ${sharedPrefs.getString(Constants.SHARED_PREF_DEXCOM_SHARE_SERVER, "eu")}")
             }
 
-            if(sharedPrefs.contains(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION)) {
+            if(sharedPrefs.contains(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION) || !sharedPrefs.contains(Constants.SHARED_PREF_ALARM_SNOOZE_NOTIFICATION_BUTTONS) ) {
                 with(sharedPrefs.edit()) {
                     remove(Constants.SHARED_PREF_ALARM_SNOOZE_ON_NOTIFICATION)
                     putStringSet(Constants.SHARED_PREF_ALARM_SNOOZE_NOTIFICATION_BUTTONS, mutableSetOf("60", "90", "120"))

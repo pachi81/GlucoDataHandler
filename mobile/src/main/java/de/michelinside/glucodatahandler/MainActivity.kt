@@ -68,7 +68,7 @@ import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.notification.AlarmNotification
-import de.michelinside.glucodatahandler.preferences.AlarmFragment
+import de.michelinside.glucodatahandler.preferences.AlarmGeneralFragment
 import de.michelinside.glucodatahandler.preferences.LockscreenSettingsFragment
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import de.michelinside.glucodatahandler.widget.BatteryLevelWidget
@@ -350,7 +350,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     resources.getString(CR.string.permission_missing_title),
                     resources.getString(CR.string.setting_permission_missing_message, resources.getString(CR.string.alarm_fullscreen_notification_enabled)),
                     { _, _ ->
-                        AlarmFragment.requestFullScreenPermission(this)
+                        AlarmGeneralFragment.requestFullScreenPermission(this)
                     },
                     { _, _ ->
                         with(sharedPref.edit()) {

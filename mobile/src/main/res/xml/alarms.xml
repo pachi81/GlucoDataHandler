@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
         android:title="@string/alarm_cat_all"
-        app:iconSpaceReserved="false"
-        app:initialExpandedChildrenCount="3">
+        app:iconSpaceReserved="false">
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="alarm_notifications_enabled"
@@ -12,39 +11,11 @@
             android:summaryOn="@string/alarm_notifications_enabled_summary_on"
             android:summaryOff="@string/alarm_notifications_enabled_summary_off"
             app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="alarm_fullscreen_notification_enabled"
-            android:title="@string/alarm_fullscreen_notification_enabled"
-            android:summary="@string/alarm_fullscreen_notification_enabled_summary"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.SwitchPreferenceCompat
-            android:key="alarm_inactive_enabled"
-            android:defaultValue="false"
-            android:title="@string/alarm_inactive_enabled"
-            android:summary="@string/all_alarm_inactive_enabled_summary"
-            app:iconSpaceReserved="false" />
-        <de.michelinside.glucodatahandler.preferences.MyTimeTickerPreference
-            android:key="alarm_inactive_start_time"
-            android:title="@string/alarm_inactive_start_time"
-            android:summary="@string/alarm_inactive_start_time_summary"
-            app:pref_hourFormat="auto"
-            app:pref_pickerTime="23:00"
-            app:pref_summaryHasTime="%s"
-            app:iconSpaceReserved="false" />
-        <de.michelinside.glucodatahandler.preferences.MyTimeTickerPreference
-            android:key="alarm_inactive_end_time"
-            android:title="@string/alarm_inactive_end_time"
-            android:summary="@string/alarm_inactive_end_time_summary"
-            app:pref_hourFormat="auto"
-            app:pref_pickerTime="07:00"
-            app:pref_summaryHasTime="%s"
-            app:iconSpaceReserved="false" />
-        <androidx.preference.MultiSelectListPreference
-            android:key="alarm_inactive_weekdays"
-            android:title="@string/alarm_inactive_weekdays"
-            android:summary="@string/alarm_inactive_weekdays_summary"
-            app:iconSpaceReserved="false" />
+        <Preference
+            android:title="@string/pref_cat_general"
+            android:summary="@string/alarm_general_settings_summary"
+            app:fragment="de.michelinside.glucodatahandler.preferences.AlarmGeneralFragment"
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/alarm_cat_categories"
