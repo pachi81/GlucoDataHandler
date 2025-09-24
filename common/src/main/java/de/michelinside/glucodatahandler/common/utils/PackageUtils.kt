@@ -163,6 +163,7 @@ object PackageUtils {
             receiverFilter.add("com.camdiab.")   // Cam APS FX
             receiverFilter.add("com.medtronic.")  // Medtronic MiniMed
             receiverFilter.add("com.microtech.aidexx.") // LinX CGM
+            receiverFilter.add("com.medtrum.")  // Medtrum
         }
         return receiverFilter
     }
