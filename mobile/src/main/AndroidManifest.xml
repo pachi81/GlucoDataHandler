@@ -24,6 +24,9 @@
     <!-- BYODA integration -->
     <uses-permission android:name="com.dexcom.cgm.EXTERNAL_PERMISSION" />
 
+    <!-- Health Connect Permissions -->
+    <uses-permission android:name="android.permission.health.WRITE_BLOOD_GLUCOSE"/>
+
     <queries>
         <package android:name="com.eveningoutpost.dexdrip" />
         <package android:name="info.nightscout.androidaps" />
@@ -56,6 +59,8 @@
         <package android:name="com.dexcom.follow.region6.mgdl" />
         <package android:name="com.dexcom.follow.region7.mgdl" />
         <package android:name="tk.glucodata" />
+        <!-- Health Connect App -->
+        <package android:name="com.google.android.apps.healthdata" />
         <intent>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
@@ -76,6 +81,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GlucoDataHandler"
         android:usesCleartextTraffic="true">
+
+        <!-- Health Connect Permission Rationale Activity -->
+        <activity
+            android:name=".healthconnect.HealthConnectPermissionActivity"
+            android:exported="true"
+            tools:ignore="DiscouragedApi">
+            <intent-filter>
+                <action android:name="androidx.health.connect.client.ACTION_REQUEST_PERMISSIONS" />
+            </intent-filter>
+        </activity>
+
         <receiver
             android:name=".widget.GlucoseWidget"
             android:label="@string/widget_glucose"
