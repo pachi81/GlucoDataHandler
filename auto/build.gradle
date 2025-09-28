@@ -3,8 +3,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
-project.ext.set("versionCode", 1030)
-project.ext.set("versionName", "2.0.1-test2")
+project.ext.set("versionCode", 1031)
+project.ext.set("versionName", "2.0.1")
 
 android {
     namespace 'de.michelinside.glucodataauto'
