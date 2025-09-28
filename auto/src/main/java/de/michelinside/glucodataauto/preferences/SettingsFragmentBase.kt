@@ -67,10 +67,10 @@ abstract class SettingsFragmentBase(private val prefResId: Int) : PreferenceFrag
     }
 
 
-    fun <T : Preference?> setEnableState(sharedPreferences: SharedPreferences, key: String, enableKey: String, secondEnableKey: String? = null, defValue: Boolean = false) {
+    fun <T : Preference?> setEnableState(sharedPreferences: SharedPreferences, key: String, enableKey: String, secondEnableKey: String? = null, defValue: Boolean = false, invertSecond: Boolean = false) {
         val pref = findPreference<T>(key)
         if (pref != null) {
-            pref.isEnabled = sharedPreferences.getBoolean(enableKey, defValue) && (if (secondEnableKey != null) sharedPreferences.getBoolean(secondEnableKey, defValue) else true)
+            pref.isEnabled = sharedPreferences.getBoolean(enableKey, defValue) && (if (secondEnableKey != null) (invertSecond != sharedPreferences.getBoolean(secondEnableKey, defValue)) else true)
             if(!updateEnablePrefs.contains(enableKey)) {
                 Log.v(LOG_ID, "Add update enable pref $enableKey")
                 updateEnablePrefs.add(enableKey)
