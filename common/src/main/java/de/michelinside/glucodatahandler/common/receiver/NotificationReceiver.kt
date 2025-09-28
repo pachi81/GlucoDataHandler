@@ -25,7 +25,6 @@ import kotlin.math.abs
 class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     private val LOG_ID = "GDH.NotificationReceiver"
     private var parsedTextViews = mutableListOf<String>()
-    private var lastDexcomForegroundTime = 0L
     private var lastValueNotificationTime = 0L
     private var lastIobNotificationTime = 0L
     private var updateOnlyChangedValue = false
@@ -100,6 +99,8 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
             return true
         if(packageName.lowercase().startsWith("com.medtronic."))  // MiniMed
             return true
+        if(packageName.lowercase().startsWith("com.signos."))  // Signos (uses Dexcom Sensor)
+            return true
 
         if(onGoingNotificationPackage == packageName)
             return true
@@ -110,6 +111,8 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     // returns true, if the notification is only updated by a new value, so no special handing is needed
     private fun hasRegularNotification(packageName: String): Boolean {
         if(packageName.lowercase().startsWith("com.camdiab."))  // CamAPS FX
+            return true
+        if(packageName.lowercase().startsWith("com.signos."))  // Signos (uses Dexcom Sensor)
             return true
         return false
     }
@@ -133,10 +136,53 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         return sharedPref.getBoolean(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_5_MINUTE_INTERVAl, true)
     }
 
+    private fun isSpecialNotification(sbn: StatusBarNotification): Boolean {
+        // some apps also provides foreground notifications, which should be ignored...
+        if(PackageUtils.isDexcomApp(sbn.packageName)) {
+            /* special Dexcom handling (only for G7!)
+               - value notification is updated quite often and all must be ignored, until the "Dexcom app is running" notification is received
+               - this can be detected using the title of the notification -> null: value -> not null: foreground
+               - value notifications with an update of 30s must be ignored
+               - value notification with an update of 0s should be used, even with 50s diff as after a long disconnect, a new value can come within this time frame
+               - foreground notifications will normally updated direct before value notification (less 1s diff), but can also update in the mean time, for example during connection lost (keep 250s diff)
+             */
+            val extras = sbn.notification?.extras
+            val title: String? = if(!sbn.isOngoing && PackageUtils.isDexcomG7App(sbn.packageName)) extras?.getCharSequence("android.title")?.toString() else null
+            if(title != null) {
+                val text = extras?.getCharSequence("android.text")?.toString()
+                if(text != null) {
+                    Log.i(LOG_ID, "Dexcom notification with title '$title' and text '$text' - ignore it!")
+                    return true
+                }
+                Log.i(LOG_ID, "Dexcom foreground notification updated with title '${title}' and text '${text}' at ${Utils.getUiTimeStamp(sbn.postTime)} -> ignore and wait for next value notification")
+                //lastDexcomForegroundTime = sbn.postTime
+                return true
+            }
+        }
+        if(sbn.packageName.lowercase().startsWith("com.signos.")) {
+            /* special Signos handling
+               - Signos has 2 notification, one foreground showing "Reconnecting ..." in text and the when time is and older timestamp
+                  GDH.NotificationReceiver: New notification from com.signos.core - ongoing: true (flags: 106, prio: 0) - posted: 12:47:43 PM (1758991663788) - when 3:03:41 AM (1758956621129) - diff notify: 326, diff recv value: 327
+                  GDH.NotificationReceiver: extracted title `Signos` and text `Reconnecting ...`
+               - the value notification contains the value in the text element and the posted and when time are nearly the same
+                   GDH.NotificationReceiver: New notification from com.signos.core - ongoing: true (flags: 98, prio: 0) - posted: 12:47:43 PM (1758991663822) - when 12:47:43 PM (1758991663821) - diff notify: 326, diff recv value: 327
+                   GDH.NotificationReceiver: extracted title `Signos` and text `114 mg/dL`
+             */
+            val extras = sbn.notification?.extras
+            val text = extras?.getCharSequence("android.text")?.toString()
+            if(text != null && text.contains(" ...")) {
+                Log.i(LOG_ID, "Signos notification with text '$text' - ignore it!")
+                return true
+            }
+        }
+
+        return false
+    }
+
     private fun validGlucoseNotification(sbn: StatusBarNotification, sharedPref: SharedPreferences): Boolean {
         if (sbn.packageName == sharedPref.getString(Constants.SHARED_PREF_SOURCE_NOTIFICATION_READER_APP, "")) {
             updateOnlyChangedValue = false
-            var minDiff = 50
+            val minDiff = 50
             val diffValueTime = (sbn.postTime - ReceiveData.time)/1000 // in seconds
             val diffNotifyTime = (sbn.postTime - lastValueNotificationTime)/1000 // in seconds
             Log.i(LOG_ID, "New notification from ${sbn.packageName} - ongoing: ${sbn.isOngoing} (flags: ${sbn.notification?.flags}, prio: ${sbn.notification?.priority}) - posted: ${Utils.getUiTimeStamp(sbn.postTime)} (${sbn.postTime}) - when ${Utils.getUiTimeStamp(sbn.notification.`when`)} (${sbn.notification.`when`}) - diff notify: $diffNotifyTime, diff recv value: $diffValueTime")
@@ -144,119 +190,33 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
                 return false
             if(!sbn.isOngoing && hasOngoingNotification(sbn.packageName))
                 return false
-            if(PackageUtils.isDexcomApp(sbn.packageName)) {
-                /* special Dexcom handling (only for G7!)
-                   - value notification is updated quite often and all must be ignored, until the "Dexcom app is running" notification is received
-                   - this can be detected using the title of the notification -> null: value -> not null: foreground
-                   - value notifications with an update of 30s must be ignored
-                   - value notification with an update of 0s should be used, even with 50s diff as after a long disconnect, a new value can come within this time frame
-                   - foreground notifications will normally updated direct before value notification (less 1s diff), but can also update in the mean time, for example during connection lost (keep 250s diff)
-                 */
-                val extras = sbn.notification?.extras
-                val title: String? = if(!sbn.isOngoing && PackageUtils.isDexcomG7App(sbn.packageName)) extras?.getCharSequence("android.title")?.toString() else null
-                if(title != null) {
-                    val text = extras?.getCharSequence("android.text")?.toString()
-                    if(text != null) {
-                        Log.i(LOG_ID, "Dexcom notification with title '$title' and text '$text' - ignore it!")
-                        return false
-                    }
-                    Log.i(LOG_ID, "Dexcom foreground notification updated with title '${title}' and text '${text}' at ${Utils.getUiTimeStamp(sbn.postTime)} -> ignore and wait for next value notification")
-                    //lastDexcomForegroundTime = sbn.postTime
-                    return false
-                } /*else {
-                    if(!sbn.isOngoing) {
-                        Log.i(LOG_ID, "Ignoring Dexcom notification as it is not ongoing and no foreground")
-                        return false // ignore this notification as it is not ongoing and no foreground
-                    }
-                    val diffForegroundTime = (sbn.postTime - lastDexcomForegroundTime)/1000 // in seconds
-                    lastValueNotificationTime = sbn.postTime
-                    Log.i(LOG_ID, "Dexcom value notification updated at ${Utils.getUiTimeStamp(sbn.postTime)} - diff foreground: $diffForegroundTime, diff value notify: $diffNotifyTime, diff recv value: $diffValueTime")
-
-                    if(diffNotifyTime > 0 && diffNotifyTime == 30L) {
-                        Log.i(LOG_ID, "Ignoring Dexcom value notification with fix 30s update")
-                        return false
-                    }
-                    if(lastDexcomForegroundTime == 0L || diffForegroundTime > 900) {   // no foreground notification
-                        Log.w(LOG_ID, "Dexcom foreground notification is disabled!")
-                        lastDexcomForegroundTime = 0L
-                        if(diffNotifyTime == 0L || isWaitThreadActive()) {
-                            stopWaitThread()
-                            Log.i(LOG_ID, "Check for new value for 0s update")
-                            updateOnlyChangedValue = diffValueTime < 250
-                        } else if(diffValueTime in 297..303) {
-                            startWaitThread(sbn, 10000)  // wait for a new notification with a value update otherwise use this one
-                            return false
-                        } else {
-                            Log.i(LOG_ID, "New value without foreground notification -> check for 5 min interval")
-                            minDiff = 250
-                        }
-                    } else if(diffForegroundTime <= 3) {   // new value after update of foreground notification
-                        if(diffNotifyTime == 0L) {
-                            Log.i(LOG_ID, "Check for new value for 0s update")
-                            updateOnlyChangedValue = diffValueTime < 250
-                        } else {
-                            Log.i(LOG_ID, "New value after foreground notification -> check for 5 min interval")
-                            minDiff = 250  // ignore other updates of the foreground notification -> wait for the next one for value (~300s)
-                        }
-                    } else {
-                        Log.i(LOG_ID, "Ignoring Dexcom value notification -> wait for foreground notification")
-                        return false
-                    }
-                }*/
-            }
+            if(isSpecialNotification(sbn))
+                return false
             if(has5MinuteInterval(sbn.packageName, sharedPref)) {
-                lastValueNotificationTime = sbn.postTime
-
-                //if(sbn.packageName.lowercase().startsWith("com.medtronic.")) { // MiniMed
-                    Log.i(LOG_ID, "Handle 5 min notification - lastValueChanged: $lastValueChanged - diff: $diffValueTime")
-                    stopWaitThread()
-                    // special MiniMed handling as MiniMed has completely irregular notification updates: TODO: if this is working well, also try for Dexcom and so on...
-                    /*
-                        - time to ignore notifications: 60s if the last value was not a new one and 180s if the last value was a new one
-                        - until 250s only update for changed values
-                        - after 250s wait until 315s for a newer notification if the value has not changed - if there is no new one, use this one
-                        - after 310s use the value
-                     */
-                    val ignoreTime = if(lastValueChanged) 60 else 180
-                    if(diffValueTime<=ignoreTime) {
-                        Log.i(LOG_ID, "Ignoring notification")
-                        return false
-                    }
-                    if(diffValueTime<=250) {
-                        Log.i(LOG_ID, "Check for changed value only")
-                        updateOnlyChangedValue = true
-                        return true
-                    }
-                    if(diffValueTime>=310)  // use this value
-                        return true
-                    Log.i(LOG_ID, "Check for changed value and wait for newer notification until 315s")
-                    startWaitThread(sbn, (315-diffValueTime)*1000)   // wait for the case, the value is the same and there is no newer notification
-                    updateOnlyChangedValue=true
-                    return true
-                /*}
-                if(diffNotifyTime <= 1L || isWaitThreadActive()) {
-                    stopWaitThread()
-                    Log.i(LOG_ID, "Check for new value for ${diffNotifyTime}s update")
-                    if(diffNotifyTime == 0L && (multiValueNotificationPackage.isNullOrEmpty() || multiValueNotificationPackage != sbn.packageName)) {
-                        Log.i(LOG_ID, "Multi value package discovered: ${sbn.packageName}")
-                        multiValueNotificationPackage = sbn.packageName
-                    }
-                    updateOnlyChangedValue = diffValueTime < 250
-                } else if(multiValueNotificationPackage == sbn.packageName) {
-                    Log.i(LOG_ID, "Check for changed value or wait for multi value package with 0s interval")
-                    minDiff = 250  // ignore values not in 5 minute interval
-                    updateOnlyChangedValue = true  // check for new values only
-                } else if(diffValueTime >= 250) {
-                    if(multiValueNotificationPackage != "") {
-                        startWaitThread(sbn, 20000)  // wait for a new notification with a value update otherwise use this one
-                        return false
-                    }
-                } else {
-                    Log.i(LOG_ID, "New value notification -> check for changed value within 5 min interval")
+                Log.i(LOG_ID, "Handle 5 min notification - lastValueChanged: $lastValueChanged - diff: $diffValueTime")
+                stopWaitThread()
+                /*
+                    - time to ignore notifications: 60s if the last value was not a new one and 180s if the last value was a new one
+                    - until 250s only update for changed values
+                    - after 250s wait until 315s for a newer notification if the value has not changed - if there is no new one, use this one
+                    - after 310s use the value
+                 */
+                val ignoreTime = if(lastValueChanged) 60 else 180
+                if(diffValueTime<=ignoreTime) {
+                    Log.i(LOG_ID, "Ignoring notification")
+                    return false
+                }
+                if(diffValueTime<=250) {
+                    Log.i(LOG_ID, "Check for changed value only")
                     updateOnlyChangedValue = true
-                }*/
-            } else {
-                lastValueNotificationTime = sbn.postTime
+                    return true
+                }
+                if(diffValueTime>=310)  // use this value
+                    return true
+                Log.i(LOG_ID, "Check for changed value and wait for newer notification until 315s")
+                startWaitThread(sbn, (315-diffValueTime)*1000)   // wait for the case, the value is the same and there is no newer notification
+                updateOnlyChangedValue=true
+                return true
             }
 
             if(diffValueTime < minDiff) {
@@ -301,6 +261,7 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
         Log.i(LOG_ID, "using regex $regex")
         val value = parseValueFromNotification(sbn, false, regex)
         if(!value.isNaN()) {
+            lastValueNotificationTime = sbn.postTime
             handleGlucoseValue(value, sbn)
         } else if(parsedTextViews.size > 0) {
             SourceStateData.setError(DataSource.NOTIFICATION, "Could not parse glucose from $parsedTextViews")
@@ -395,7 +356,10 @@ class NotificationReceiver : NotificationListenerService(), NamedReceiver {
     }
 
     private fun processRemoteViews(remoteViews: RemoteViews?, isIobCob: Boolean, regex: Regex): Float {
-        if (remoteViews == null) return Float.NaN
+        if (remoteViews == null) {
+            Log.i(LOG_ID, "No RemoteViews found")
+            return Float.NaN
+        }
 
         try {
             // Apply the RemoteViews to get the actual View hierarchy

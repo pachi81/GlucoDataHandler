@@ -117,6 +117,14 @@ object TextToSpeechUtils {
         }
     }
 
+    private fun escapeSsml(text: String): String {
+        return text.replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+            .replace("\"", "&quot;")
+            .replace("'", "&apos;")
+    }
+
     fun getAsFile(text: String, context: Context): File? {
         try {
             Log.d(LOG_ID, "getAsFile called with text='${text}'")
@@ -140,7 +148,19 @@ object TextToSpeechUtils {
                 })
                 if(result == TextToSpeech.SUCCESS){
                     val tempFile = kotlin.io.path.createTempFile(prefix = "gdh_tts", suffix = ".wav")
-                    textToSpeech!!.synthesizeToFile(text, null, tempFile.toFile(), "createFile")
+
+                    val delayMs = 500
+
+                    // Construct the SSML string
+                    val ssmlText = """
+                        <?xml version="1.0"?>
+                        <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="$curLocal">
+                            <break time="${delayMs}ms"/>
+                            <s>${escapeSsml(text)}</s>
+                        </speak>
+                    """.trimIndent()
+
+                    textToSpeech!!.synthesizeToFile(ssmlText, null, tempFile.toFile(), "createFile")
                     var count = 0
                     while(!created.get() && count++ < 100) {
                         Thread.sleep(50)
