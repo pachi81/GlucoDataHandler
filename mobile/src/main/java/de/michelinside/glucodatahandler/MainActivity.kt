@@ -72,6 +72,7 @@ import de.michelinside.glucodatahandler.preferences.AlarmGeneralFragment
 import de.michelinside.glucodatahandler.preferences.LockscreenSettingsFragment
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import de.michelinside.glucodatahandler.widget.BatteryLevelWidget
+import de.michelinside.glucodatahandler.xdripserver.XDripServer
 import java.text.DateFormat
 import java.text.DecimalFormat
 import java.time.Duration
@@ -118,6 +119,8 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
     private var doNotUpdate = false
     private lateinit var chartCreator: ChartCreator
     private var systemBars: Insets? = null
+
+    private lateinit var xdripServer: XDripServer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -232,6 +235,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                 GlucoDataServiceMobile.start(this)
             chartCreator = MainChartCreator(chart, this, Constants.SHARED_PREF_GRAPH_DURATION_PHONE_MAIN, Constants.SHARED_PREF_GRAPH_TRANSPARENCY_PHONE_MAIN)
             chartCreator.create()
+
+            xdripServer = XDripServer()
+            xdripServer.startServer()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onCreate exception: " + exc.message.toString() )
         }
