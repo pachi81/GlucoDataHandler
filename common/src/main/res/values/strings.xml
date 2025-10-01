@@ -911,14 +911,28 @@
     <string name="aa_media_player_colored">Colored cover</string>
     <string name="aa_media_player_colored_summary_off">Show white value, trend and graph</string>
     <string name="aa_media_player_colored_summary_on">Show colored value, trend and graph</string>
-    <string name="alarm_general_settings_summary">General alarm settings for all alarms.</string>
-    <string name="alarm_cat_quiet_hours">Quiet hours</string>
-    <string name="source_delay_too_short">New value is older than the interval. If this happens more often, go to sources - Cloud services and increase delay!</string>
 
     <plurals name="duration_days_short" translatable="false">
         <item quantity="one">%dd</item>
         <item quantity="other">%dd</item>
     </plurals>
+
+    <string name="alarm_general_settings_summary">General alarm settings for all alarms.</string>
+    <string name="alarm_cat_quiet_hours">Quiet hours</string>
+    <string name="source_delay_too_short">New value is older than the interval. If this happens more often, go to sources - Cloud services and increase delay!</string>
+
+    <string name="health_connect_permission_rationale_title">Health Connect Integration</string>
+    <string name="health_connect_permission_rationale_long">
+To help you manage your diabetes, GlucoDataHandler can share your blood glucose data with Health Connect.\n\n
+This allows you to: \n
+  - Securely store your glucose readings in one central place on your device.\n
+  - Share your glucose data with other health and fitness apps that you authorize, giving you a more complete picture of your health.\n\n
+GlucoDataHandler only writes blood glucose data to Health Connect and will not read other health data types unless you explicitly grant separate permissions for those.\n\n
+You can manage these permissions at any time in the Health Connect app settings.
+</string>
+    <string name="pref_healthconnect">Health Connect</string>
+    <string name="pref_healthconnect_summary">To share your data with Health Connect, you have to grant the permission to GDH.\nIf you want to use Samsung Health, you have to enable read from Health Connect in Samsung Health App.</string>
+
 
 </resources>
 

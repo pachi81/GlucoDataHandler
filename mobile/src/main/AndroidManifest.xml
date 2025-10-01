@@ -82,15 +82,35 @@
         android:theme="@style/Theme.GlucoDataHandler"
         android:usesCleartextTraffic="true">
 
-        <!-- Health Connect Permission Rationale Activity -->
+        <!-- Health Connect Permission Rationale and Request Activity -->
+        <!-- This activity handles ACTION_REQUEST_PERMISSIONS (for all supported versions) -->
+        <!-- and ACTION_SHOW_PERMISSIONS_RATIONALE (for Android 13 and below, or if HC falls back to it) -->
         <activity
             android:name=".healthconnect.HealthConnectPermissionActivity"
             android:exported="true"
             tools:ignore="DiscouragedApi">
             <intent-filter>
                 <action android:name="androidx.health.connect.client.ACTION_REQUEST_PERMISSIONS" />
+                <category android:name="android.intent.category.DEFAULT" /> 
+            </intent-filter>
+            <intent-filter>
+                <action android:name="androidx.health.connect.client.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+                <category android:name="android.intent.category.DEFAULT" /> 
             </intent-filter>
         </activity>
+
+        <!-- For versions starting Android 14, create an activity alias to show the rationale 
+             (data usage explanation) once users click the privacy policy link from Health Connect settings. -->
+        <activity-alias
+            android:name="ViewPermissionUsageActivity" 
+            android:exported="true"
+            android:targetActivity=".healthconnect.HealthConnectPermissionActivity"
+            android:permission="android.permission.START_VIEW_PERMISSION_USAGE">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW_PERMISSION_USAGE" />
+                <category android:name="android.intent.category.HEALTH_PERMISSIONS" />
+            </intent-filter>
+        </activity-alias>
 
         <receiver
             android:name=".widget.GlucoseWidget"

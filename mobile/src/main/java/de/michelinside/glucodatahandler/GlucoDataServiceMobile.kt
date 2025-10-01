@@ -21,6 +21,7 @@ import de.michelinside.glucodatahandler.common.receiver.GlucoseDataReceiver
 import de.michelinside.glucodatahandler.common.receiver.XDripBroadcastReceiver
 import de.michelinside.glucodatahandler.common.utils.Utils
 import de.michelinside.glucodatahandler.common.utils.Utils.isScreenReaderOn
+import de.michelinside.glucodatahandler.healthconnect.HealthConnectManager
 import de.michelinside.glucodatahandler.tasker.setWearConnectionState
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import de.michelinside.glucodatahandler.widget.BatteryLevelWidgetNotifier
@@ -252,6 +253,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             floatingWidget.create()
             lockScreenWallpaper.create()
             AlarmNotification.initNotifications(this)
+            HealthConnectManager.init(this.applicationContext)
             InternalNotifier.addNotifier(
                 this,
                 TaskerDataReceiver,
@@ -301,6 +303,7 @@ class GlucoDataServiceMobile: GlucoDataService(AppSource.PHONE_APP), NotifierInt
             WatchDrip.close(applicationContext)
             floatingWidget.destroy()
             lockScreenWallpaper.destroy()
+            HealthConnectManager.close(this.applicationContext)
             super.onDestroy()
         } catch (exc: Exception) {
             Log.e(LOG_ID, "onDestroy exception: " + exc.message.toString() )
