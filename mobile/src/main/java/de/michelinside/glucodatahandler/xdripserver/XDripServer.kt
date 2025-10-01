@@ -21,8 +21,11 @@ class XDripServer {
         embeddedServer(CIO, port = 17580) {
             routing {
                 get("/sgv.json") {
-                    val values = getGlucoseValues()
-                    val response = values.createResponse()
+                    val brief = call.request.queryParameters["brief_mode"]?.lowercase() == "y"
+                    val count: Int = call.request.queryParameters["count"]?.toIntOrNull() ?: 25
+
+                    val values = getGlucoseValues(count)
+                    val response = values.createResponse(brief)
                     call.respondText(response)
                 }
             }
@@ -30,25 +33,26 @@ class XDripServer {
     }
 
 
-    fun List<GlucoseValue>.createResponse(): String {
+    fun List<GlucoseValue>.createResponse(brief: Boolean): String {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
         val sortedValues = this.sortedByDescending { it.timestamp } // oldest -> newest
 
+
         val entries = sortedValues.mapIndexed { index, glucose ->
             XDripSvgEntry(
-                _id = "${ReceiveData.sensorID}#${index + 1}",
-                dateString = dateFormat.format(Date(glucose.timestamp)),
-                sysTime = dateFormat.format(Date(glucose.timestamp)),
+                _id = if (brief) null else "${ReceiveData.sensorID}#${index + 1}",
+                dateString = if (brief) null else dateFormat.format(Date(glucose.timestamp)),
+                sysTime = if (brief) null else dateFormat.format(Date(glucose.timestamp)),
                 date = glucose.timestamp,
                 sgv = glucose.value,
                 delta = 0.0,
-                filtered = glucose.value * 1000,
-                unfiltered = glucose.value * 1000,
-                device = "GDH",
+                filtered = if (brief) null else glucose.value * 1000,
+                unfiltered = if (brief) null else glucose.value * 1000,
+                device = if (brief) null else "GDH",
                 direction = "flat",
                 noise = 1,
-                rssi = 100,
-                type = "svg",
+                rssi = if (brief) null else 100,
+                type = if (brief) null else "svg",
                 units_hint = if (index == 0) "mmol" else null
             )
         }
@@ -56,12 +60,12 @@ class XDripServer {
         return Json { prettyPrint = true }.encodeToString(entries)
     }
 
-    fun getGlucoseValues(): List<GlucoseValue> {
+    fun getGlucoseValues(count: Int): List<GlucoseValue> {
         val values = dbAccess.getGlucoseValues(12)
         values.forEach { glucose ->
             Log.i(LOG_ID, "Glucose: ${glucose.value} ${glucose.timestamp}")
         }
-        return values.takeLast(25)
+        return values.takeLast(count)
     }
 
 }
