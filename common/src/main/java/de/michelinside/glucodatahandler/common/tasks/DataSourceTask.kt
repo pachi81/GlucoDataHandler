@@ -19,6 +19,7 @@ import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
 import de.michelinside.glucodatahandler.common.utils.HttpRequest
 import de.michelinside.glucodatahandler.common.utils.Utils
+import java.math.RoundingMode
 import java.net.HttpURLConnection
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -305,7 +306,14 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                 active.set(true)
                 Log.d(LOG_ID, "handleResult for $source in main thread")
                 ReceiveData.handleIntent(GlucoDataService.context!!, source, extras)
-                setState(SourceState.CONNECTED)
+                if(ReceiveData.getElapsedTimeMinute(RoundingMode.UP) > interval) {
+                    setState(
+                        SourceState.NO_NEW_VALUE
+                        //GlucoDataService.context!!.resources.getString(R.string.source_delay_too_short)
+                    )
+                } else {
+                    setState(SourceState.CONNECTED)
+                }
             } catch (ex: Exception) {
                 Log.e(LOG_ID, "Exception during task run: " + ex)
                 setLastError(ex.message.toString())
