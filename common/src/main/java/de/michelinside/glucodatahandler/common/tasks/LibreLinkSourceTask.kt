@@ -61,7 +61,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
     private fun getHeader(): MutableMap<String, String> {
         val result = mutableMapOf(
             "product" to "llu.android",
-            "version" to "4.14.0",
+            "version" to "4.16.0",
             "Accept" to "application/json",
             "Content-Type" to "application/json",
             "cache-control" to "no-cache",
@@ -560,10 +560,10 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
                 }
             }
             if (checkPatienId && !patientData.keys.contains(patientId)) {
-                Log.i(LOG_ID, "Reset patient ID as it is not in the list")
-                patientId = ""
+                patientId = if(patientData.isNotEmpty()) patientData.keys.first() else ""
+                Log.w(LOG_ID, "Reset patient as it is not in the list to ${getPatient(patientId)}")
                 with (GlucoDataService.sharedPref!!.edit()) {
-                    putString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, "")
+                    putString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, patientId)
                     apply()
                 }
             }
@@ -572,7 +572,7 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             }
         }
         if(patientId.isNotEmpty()) {
-            Log.d(LOG_ID, "Using patient ID $patientId")
+            Log.i(LOG_ID, "Using current patient ${getPatient(patientId)}")
             for (i in 0 until dataArray.length()) {
                 val data = dataArray.getJSONObject(i)
                 if (data.has("patientId") && data.getString("patientId") == patientId) {
@@ -582,10 +582,21 @@ class LibreLinkSourceTask : DataSourceTask(Constants.SHARED_PREF_LIBRE_ENABLED, 
             return false
         } else if (patientData.isNotEmpty()) {
             patientId = patientData.keys.first()
-            Log.d(LOG_ID, "Using patient ID $patientId")
+            Log.i(LOG_ID, "Using patient ${getPatient(patientId)}")
+            with (GlucoDataService.sharedPref!!.edit()) {
+                putString(Constants.SHARED_PREF_LIBRE_PATIENT_ID, patientId)
+                apply()
+            }
             return true
         }
         return false  // no patient found
+    }
+
+    private fun getPatient(id: String): String {
+        if(patientData.containsKey(id)) {
+            return patientData[id]?: ""
+        }
+        return ""
     }
 
     override fun interrupt() {
