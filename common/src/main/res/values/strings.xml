@@ -931,7 +931,10 @@ GlucoDataHandler only writes blood glucose data to Health Connect and will not r
 You can manage these permissions at any time in the Health Connect app settings.
 </string>
     <string name="pref_healthconnect">Health Connect</string>
-    <string name="pref_healthconnect_summary">To share your data with Health Connect, you have to grant the permission to GDH.\nIf you want to use Samsung Health, you have to enable read from Health Connect in Samsung Health App.</string>
+    <string name="pref_healthconnect_summary">To share your data with Health Connect, grant permission to GDH.\nTo sync with Samsung Health, you must also enable "read from Health Connect" in the Samsung Health app.</string>
+    <string name="health_connect_error">Error occured, please send logs to developer.</string>
+    <string name="health_connect_not_available">Not available!</string>
+    <string name="health_connect_no_permission">Missing permission!</string>
 
 
 </resources>

@@ -17,12 +17,16 @@ import androidx.health.connect.client.records.BloodGlucoseRecord
 import androidx.health.connect.client.records.metadata.Device
 import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.BloodGlucose
+import de.michelinside.glucodatahandler.common.R
 import de.michelinside.glucodatahandler.common.Constants
 import de.michelinside.glucodatahandler.common.GlucoDataService
 import de.michelinside.glucodatahandler.common.ReceiveData
+import de.michelinside.glucodatahandler.common.database.GlucoseValue
+import de.michelinside.glucodatahandler.common.database.dbAccess
 import de.michelinside.glucodatahandler.common.notifier.InternalNotifier
 import de.michelinside.glucodatahandler.common.notifier.NotifierInterface
 import de.michelinside.glucodatahandler.common.notifier.NotifySource
+import de.michelinside.glucodatahandler.common.utils.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -30,11 +34,24 @@ import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZonedDateTime
 
+enum class HealthConnectState(val resId: Int) {
+    UNKNOWN(0),
+    DISABLED(0),
+    NOT_AVAILABLE(R.string.health_connect_not_available),
+    NO_PERMISSION(R.string.health_connect_no_permission),
+    CONNECTED(R.string.state_connected),
+    ERROR(R.string.health_connect_error)
+}
+
 object HealthConnectManager: OnSharedPreferenceChangeListener, NotifierInterface {
 
     private const val LOG_ID = "GDH.HealthConnectManager"
     private var healthConnectClient: HealthConnectClient? = null
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private lateinit var sharedExtraPref: SharedPreferences
+    var state = HealthConnectState.UNKNOWN
+        private set
+    private var lastValueTime: Long = 0
     var enabled = false
         private set
 
@@ -44,6 +61,7 @@ object HealthConnectManager: OnSharedPreferenceChangeListener, NotifierInterface
 
     fun init(context: Context) {
         val sharedPref = context.getSharedPreferences(Constants.SHARED_PREF_TAG, Context.MODE_PRIVATE)
+        sharedExtraPref = context.getSharedPreferences(Constants.SHARED_PREF_EXTRAS_TAG, Context.MODE_PRIVATE)
         sharedPref.registerOnSharedPreferenceChangeListener(this)
         onSharedPreferenceChanged(sharedPref, null)
     }
@@ -55,15 +73,20 @@ object HealthConnectManager: OnSharedPreferenceChangeListener, NotifierInterface
 
     private fun enable() {
         enabled = true
-        InternalNotifier.addNotifier(
-            GlucoDataService.context!!, this, mutableSetOf(
-            NotifySource.BROADCAST,
-            NotifySource.MESSAGECLIENT)
+        InternalNotifier.addNotifier( GlucoDataService.context!!, this,
+            mutableSetOf(
+                NotifySource.BROADCAST,
+                NotifySource.MESSAGECLIENT,
+                NotifySource.DB_DATA_CHANGED
+            )
         )
+        lastValueTime = sharedExtraPref.getLong(Constants.SHARED_PREF_HEALTH_CONNECT_LAST_VALUE_TIME, 0L)
+        writeLastValues(GlucoDataService.context!!)
     }
 
     private fun disable() {
         enabled = false
+        state = HealthConnectState.DISABLED
         InternalNotifier.remNotifier(
             GlucoDataService.context!!, this
         )
@@ -159,23 +182,32 @@ object HealthConnectManager: OnSharedPreferenceChangeListener, NotifierInterface
         return true
     }
 
-    /**
-     * Writes a BloodGlucoseRecord to Health Connect.
-     * @param context The application context.
-     * @param glucoseValue The glucose concentration value (assuming mg/dL).
-     * @param time The time the measurement was taken.
-     */
-    private fun writeGlucoseData(context: Context, glucoseValue: Int, time: Long) {
+    private fun writeLastValues(context: Context) {
+        try {
+            val minTime = maxOf(lastValueTime, System.currentTimeMillis() - Constants.DB_MAX_DATA_WEAR_TIME_MS)
+            Log.d(LOG_ID, "Write last values from ${Utils.getUiTimeStamp(minTime)}")
+            writeGlucoseData(context, dbAccess.getGlucoseValues(minTime))
+        } catch (exc: Exception) {
+            Log.e(LOG_ID, "Error writing last values: ${exc.message}")
+        }
+    }
+
+    private fun writeGlucoseData(context: Context, glucoseValues: List<GlucoseValue>) {
+        if(!enabled || glucoseValues.isEmpty())
+            return
         val client = getHealthConnectClient(context)
         if (client == null) {
+            state = HealthConnectState.NOT_AVAILABLE
             Log.e(LOG_ID, "HealthConnectClient is not available (client is null).") // Changed log message
             return
         }
 
         scope.launch {
             try {
-                if(!hasAllPermissions(context))
+                if(!hasAllPermissions(context)) {
+                    state = HealthConnectState.NO_PERMISSION
                     return@launch
+                }
                 // Using Metadata.autoRecorded() based on the web example for StepsRecord
                 // Device.TYPE_PHONE (1) is used as it's running on a phone.
                 val deviceInfo = Device(
@@ -184,19 +216,27 @@ object HealthConnectManager: OnSharedPreferenceChangeListener, NotifierInterface
                     type = Device.Companion.TYPE_PHONE
                 )
                 val currentMeta = Metadata.Companion.autoRecorded(device = deviceInfo)
-                val bloodGlucoseRecord = BloodGlucoseRecord(
-                    time = Instant.ofEpochMilli(time),
-                    zoneOffset = ZonedDateTime.now().offset,
-                    level = BloodGlucose.Companion.milligramsPerDeciliter(glucoseValue.toDouble()),
-                    metadata = currentMeta
-                )
+                val recordsToInsert = mutableListOf<BloodGlucoseRecord>()
 
-                val recordsToInsert = listOf(bloodGlucoseRecord)
+                glucoseValues.forEach {
+                    recordsToInsert.add(BloodGlucoseRecord(
+                        time = Instant.ofEpochMilli(it.timestamp),
+                        zoneOffset = ZonedDateTime.now().offset,
+                        level = BloodGlucose.Companion.milligramsPerDeciliter(it.value.toDouble()),
+                        metadata = currentMeta
+                    ))
+                }
+
                 client.insertRecords(recordsToInsert)
-                Log.i(LOG_ID, "Successfully wrote glucose data to Health Connect: $glucoseValue at $time")
-
+                Log.i(LOG_ID, "Successfully wrote ${recordsToInsert.size} glucose data to Health Connect")
+                with(sharedExtraPref.edit()) {
+                    putLong(Constants.SHARED_PREF_HEALTH_CONNECT_LAST_VALUE_TIME, glucoseValues.last().timestamp)
+                    apply()
+                }
+                state = HealthConnectState.CONNECTED
             } catch (e: Exception) {
                 Log.e(LOG_ID, "Error writing glucose data to Health Connect: ${e.message}")
+                state = HealthConnectState.ERROR
             }
         }
     }
@@ -241,7 +281,17 @@ object HealthConnectManager: OnSharedPreferenceChangeListener, NotifierInterface
         try {
             Log.d(LOG_ID, "OnNotifyData - dataSource: $dataSource - enable: $enabled")
             if(enabled) {
-                writeGlucoseData(context, ReceiveData.rawValue, ReceiveData.time)
+                if(dataSource == NotifySource.DB_DATA_CHANGED && extras != null) {
+                    val startTime = extras.getLong(Constants.EXTRA_START_TIME)
+                    val endTime = extras.getLong(Constants.EXTRA_END_TIME)
+                    if(startTime > 0 && endTime > 0 && startTime <= endTime) {
+                        writeGlucoseData(context, dbAccess.getGlucoseValuesInRange(startTime, endTime+1))
+                    } else {
+                        Log.w(LOG_ID, "Invalid time range: $startTime - $endTime")
+                    }
+                } else {
+                    writeGlucoseData(context, listOf(GlucoseValue(ReceiveData.time, ReceiveData.rawValue)))
+                }
             }
         } catch (exc: Exception) {
             Log.e(LOG_ID, "OnNotifyData exception for $dataSource: " + exc.message.toString())

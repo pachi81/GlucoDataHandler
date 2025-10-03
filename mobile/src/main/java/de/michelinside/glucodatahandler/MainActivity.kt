@@ -67,6 +67,7 @@ import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.healthconnect.HealthConnectManager
 import de.michelinside.glucodatahandler.notification.AlarmNotification
 import de.michelinside.glucodatahandler.preferences.AlarmGeneralFragment
 import de.michelinside.glucodatahandler.preferences.LockscreenSettingsFragment
@@ -828,7 +829,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         if (WatchDrip.connected) {
             tableConnections.addView(createRow(CR.string.pref_switch_watchdrip_enabled, resources.getString(CR.string.connected_label)))
         }
-
+        if(HealthConnectManager.enabled && HealthConnectManager.state.resId != 0) {
+            tableConnections.addView(createRow(CR.string.pref_healthconnect, resources.getString(HealthConnectManager.state.resId)))
+        }
         if (CarModeReceiver.AA_connected) {
             tableConnections.addView(createRow(CR.string.pref_cat_android_auto, resources.getString(CR.string.connected_label)))
         }
