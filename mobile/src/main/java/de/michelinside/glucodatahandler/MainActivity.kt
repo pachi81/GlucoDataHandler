@@ -67,8 +67,9 @@ import de.michelinside.glucodatahandler.common.utils.GlucoDataUtils
 import de.michelinside.glucodatahandler.common.utils.GlucoseStatistics
 import de.michelinside.glucodatahandler.common.utils.PackageUtils
 import de.michelinside.glucodatahandler.common.utils.Utils
+import de.michelinside.glucodatahandler.healthconnect.HealthConnectManager
 import de.michelinside.glucodatahandler.notification.AlarmNotification
-import de.michelinside.glucodatahandler.preferences.AlarmFragment
+import de.michelinside.glucodatahandler.preferences.AlarmGeneralFragment
 import de.michelinside.glucodatahandler.preferences.LockscreenSettingsFragment
 import de.michelinside.glucodatahandler.watch.WatchDrip
 import de.michelinside.glucodatahandler.widget.BatteryLevelWidget
@@ -350,7 +351,7 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
                     resources.getString(CR.string.permission_missing_title),
                     resources.getString(CR.string.setting_permission_missing_message, resources.getString(CR.string.alarm_fullscreen_notification_enabled)),
                     { _, _ ->
-                        AlarmFragment.requestFullScreenPermission(this)
+                        AlarmGeneralFragment.requestFullScreenPermission(this)
                     },
                     { _, _ ->
                         with(sharedPref.edit()) {
@@ -828,7 +829,9 @@ class MainActivity : AppCompatActivity(), NotifierInterface {
         if (WatchDrip.connected) {
             tableConnections.addView(createRow(CR.string.pref_switch_watchdrip_enabled, resources.getString(CR.string.connected_label)))
         }
-
+        if(HealthConnectManager.enabled && HealthConnectManager.state.resId != 0) {
+            tableConnections.addView(createRow(CR.string.pref_healthconnect, resources.getString(HealthConnectManager.state.resId)))
+        }
         if (CarModeReceiver.AA_connected) {
             tableConnections.addView(createRow(CR.string.pref_cat_android_auto, resources.getString(CR.string.connected_label)))
         }

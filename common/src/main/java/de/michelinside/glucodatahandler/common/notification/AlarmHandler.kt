@@ -291,6 +291,7 @@ object AlarmHandler: SharedPreferences.OnSharedPreferenceChangeListener, Notifie
             Constants.SHARED_PREF_ALARM_INACTIVE_START_TIME,
             Constants.SHARED_PREF_ALARM_INACTIVE_END_TIME,
             Constants.SHARED_PREF_ALARM_INACTIVE_WEEKDAYS,
+            Constants.SHARED_PREF_NOTIFICATION_AUTO_CLOSE,
             Constants.SHARED_PREF_ALARM_FORCE_VERY_LOW -> return true
             else -> {
                 AlarmType.entries.forEach {

@@ -3,6 +3,7 @@ package de.michelinside.glucodatahandler.common.database
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import androidx.room.Room
@@ -229,7 +230,10 @@ object dbAccess {
                             GlucoseStatistics.reset()  // trigger re-calculation!
                         }
                         // trigger update of db data
-                        InternalNotifier.notify(GlucoDataService.context!!, NotifySource.DB_DATA_CHANGED, null)
+                        val extras = Bundle()
+                        extras.putLong(Constants.EXTRA_START_TIME, values.first().timestamp)
+                        extras.putLong(Constants.EXTRA_END_TIME, values.last().timestamp)
+                        InternalNotifier.notify(GlucoDataService.context!!, NotifySource.DB_DATA_CHANGED, extras)
                         if(!internal) {
                             // trigger dbsync with watch
                             GlucoDataService.sendCommand(Command.REQUEST_DB_SYNC)

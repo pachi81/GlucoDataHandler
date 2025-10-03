@@ -39,12 +39,6 @@
             android:title="@string/alarm_advanced_cat_notifcation"
             app:iconSpaceReserved="false">
                 <androidx.preference.SwitchPreferenceCompat
-                    android:key="auto_close_notification"
-                    android:defaultValue="false"
-                    android:title="@string/auto_close_notification"
-                    android:summary="@string/auto_close_notification_summary"
-                    app:iconSpaceReserved="false" />
-                <androidx.preference.SwitchPreferenceCompat
                     android:defaultValue="false"
                     android:key="alarm_no_notification_wear_connected"
                     android:title="@string/alarm_no_notification_wear_connected"
@@ -58,13 +52,6 @@
                     android:summaryOn="@string/alarm_no_notification_auto_connected_summary_on"
                     android:summaryOff="@string/alarm_no_notification_auto_connected_summary_off"
                     app:enabled="false"
-                    app:iconSpaceReserved="false" />
-                <androidx.preference.MultiSelectListPreference
-                    android:key="alarm_snooze_notification_buttons"
-                    android:entries="@array/snooze_labels"
-                    android:entryValues="@array/snooze_values"
-                    android:title="@string/alarm_snooze_on_notification_enabled"
-                    android:summary="@string/alarm_snooze_on_notification_summary"
                     app:iconSpaceReserved="false" />
                 <androidx.preference.SwitchPreferenceCompat
                     android:key="alarm_fullscreen_dismiss_keyguard"

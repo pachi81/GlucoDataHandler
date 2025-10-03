@@ -308,8 +308,8 @@ abstract class DataSourceTask(private val enabledKey: String, protected val sour
                 ReceiveData.handleIntent(GlucoDataService.context!!, source, extras)
                 if(ReceiveData.getElapsedTimeMinute(RoundingMode.UP) > interval) {
                     setState(
-                        SourceState.NO_NEW_VALUE
-                        //GlucoDataService.context!!.resources.getString(R.string.source_delay_too_short)
+                        SourceState.NO_NEW_VALUE,
+                        GlucoDataService.context!!.resources.getString(R.string.source_delay_too_short)
                     )
                 } else {
                     setState(SourceState.CONNECTED)

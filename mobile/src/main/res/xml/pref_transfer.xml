@@ -35,6 +35,12 @@
             android:summary="@string/pref_button_select_target_summary"
             android:title="@string/pref_button_select_target"
             app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="send_to_health_connect"
+            android:summary="@string/pref_healthconnect_summary"
+            android:title="@string/pref_healthconnect"
+            app:iconSpaceReserved="false" />
         <PreferenceCategory
             android:title="@string/advanced_settings"
             app:iconSpaceReserved="false">
