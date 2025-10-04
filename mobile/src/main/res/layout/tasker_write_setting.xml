@@ -3,8 +3,9 @@
     <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="20dp"
+        android:paddingTop="40dp"
         android:paddingHorizontal="10dp"
+        android:id="@+id/main_layout"
         android:stretchColumns="*">
 
         <TableRow
@@ -26,7 +27,8 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="10dp">
+            android:paddingTop="10dp"
+            android:paddingHorizontal="5dp">
 
             <Button
                 android:id="@+id/apply"
